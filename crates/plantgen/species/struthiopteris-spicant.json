@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "id": "struthiopteris-spicant",
+  "taxon": {
+    "scientific_name": "Struthiopteris spicant",
+    "common_name": "deer fern",
+    "usda_symbol": "BLSP"
+  },
+  "growth_form": "fern",
+  "generator": {
+    "program": "herb",
+    "params": {
+      "stems": 16,
+      "stem_rate": 0.4,
+      "clump_radius": 0.06,
+      "stem_lean": 70,
+      "maturity": 2,
+      "stem_height": 0.39,
+      "height_spread": 0.15,
+      "stem_radius": 0.002,
+      "wiggle": 1.5,
+      "arch": 0.03,
+      "nodes": 22,
+      "opposite": 1,
+      "bare": 0.1,
+      "leaf_length": 0.045,
+      "leaf_peak": 0.5,
+      "leaf_top": 0.3,
+      "leaf_base": 0.2,
+      "leaf_angle": 80,
+      "flower_age": 0,
+      "raceme": 0,
+      "flowers": 0,
+      "leaf_area": 0.197,
+      "basal_area": 0.235,
+      "basal_piece_area": 0.235,
+      "flower_area": 0.639,
+      "bud_area": 0.89,
+      "fruit_area": 0.89
+    }
+  },
+  "growth": {
+    "years": 8,
+    "step": 1,
+    "keyframes": [2, 4, 8]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.15, 0.1, 0.05],
+    "foliage": [0.035, 0.1, 0.03],
+    "foliage_shade": [0.01, 0.032, 0.01],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "width": 0.28,
+          "widest": 0.4,
+          "tip": 0.2,
+          "base": 0.9,
+          "teeth": 0,
+          "petiole": 0.0
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 8,
+      "environment": "open",
+      "height": 0.35,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a small evergreen fern: a flat rosette of narrow, ladder-like, once-divided fronds with rounded pinnae. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 0.35 m tall at 8 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: dark glossy green fronds."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

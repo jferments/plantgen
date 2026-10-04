@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "species": "abies-grandis",
+  "layers": {
+    "canopy": 0.4,
+    "subcanopy": 0.6,
+    "shrub": 0.5
+  },
+  "moisture": [0.3, 0.45, 0.8, 0.92],
+  "heat_load": [0.2, 0.5, 1.3, 1.6],
+  "elevation_m": [-50, -10, 1500, 2000],
+  "max_slope_deg": 40,
+  "shade_tolerance": 0.7,
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "note": "Scattered in the canopy and understory of lowland Douglas-fir forest, more often in the drier south Sound than elsewhere in the lowlands."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "note": "Moist to moderately dry, well-drained ground; not in standing water."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "note": "Grows on any aspect."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "note": "Sea level to about 1,500 m in western Washington; the upper limits are loose."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "note": "Grows on slopes as well as flats."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "note": "Shade tolerant: regenerates under Douglas-fir."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Authored from general knowledge of the species in the south Puget Sound lowlands; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS)."
+  }
+}

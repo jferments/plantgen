@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "id": "dryopteris-expansa",
+  "taxon": {
+    "scientific_name": "Dryopteris expansa",
+    "common_name": "spreading wood fern",
+    "usda_symbol": "DREX2"
+  },
+  "growth_form": "fern",
+  "generator": {
+    "program": "herb",
+    "params": {
+      "stems": 10,
+      "stem_rate": 0.4,
+      "clump_radius": 0.08,
+      "stem_lean": 40,
+      "maturity": 2,
+      "stem_height": 0.7,
+      "height_spread": 0.2,
+      "stem_radius": 0.0025,
+      "wiggle": 1.5,
+      "arch": 0.03,
+      "nodes": 16,
+      "opposite": 1,
+      "bare": 0.3,
+      "leaf_length": 0.14,
+      "leaf_peak": 0.15,
+      "leaf_top": 0.2,
+      "leaf_base": 0.9,
+      "leaf_angle": 72,
+      "flower_age": 0,
+      "raceme": 0,
+      "flowers": 0,
+      "leaf_area": 0.144,
+      "basal_area": 0.235,
+      "basal_piece_area": 0.235,
+      "flower_area": 0.639,
+      "bud_area": 0.89,
+      "fruit_area": 0.89
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [2, 4, 6]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.2, 0.16, 0.08],
+    "foliage": [0.07, 0.17, 0.04],
+    "foliage_shade": [0.022, 0.052, 0.012],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": { "template": "frond", "pinnae": 9, "width": 0.4, "divided": 1.0, "stipe": 0.08 }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.7,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a lacy fern with broad, triangular, finely divided fronds in a loose crown. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 0.7 m tall at 4 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: mid-green fronds."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

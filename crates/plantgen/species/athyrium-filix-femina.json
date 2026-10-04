@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "id": "athyrium-filix-femina",
+  "taxon": {
+    "scientific_name": "Athyrium filix-femina",
+    "common_name": "lady fern",
+    "usda_symbol": "ATFI"
+  },
+  "growth_form": "fern",
+  "generator": {
+    "program": "herb",
+    "params": {
+      "stems": 14,
+      "stem_rate": 0.4,
+      "clump_radius": 0.1,
+      "stem_lean": 35,
+      "maturity": 2,
+      "stem_height": 1.0,
+      "height_spread": 0.2,
+      "stem_radius": 0.003,
+      "wiggle": 1.5,
+      "arch": 0.03,
+      "nodes": 22,
+      "opposite": 1,
+      "bare": 0.12,
+      "leaf_length": 0.13,
+      "leaf_peak": 0.35,
+      "leaf_top": 0.2,
+      "leaf_base": 0.4,
+      "leaf_angle": 75,
+      "flower_age": 0,
+      "raceme": 0,
+      "flowers": 0,
+      "leaf_area": 0.129,
+      "basal_area": 0.235,
+      "basal_piece_area": 0.235,
+      "flower_area": 0.639,
+      "bud_area": 0.89,
+      "fruit_area": 0.89
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [2, 4, 6]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.25, 0.22, 0.12],
+    "foliage": [0.1, 0.21, 0.05],
+    "foliage_shade": [0.03, 0.065, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": { "template": "frond", "pinnae": 10, "width": 0.35, "divided": 1.0, "stipe": 0.05 }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 1.0,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a delicate, deciduous fern: a vase of soft, lacy, twice-divided fronds widest in the middle. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 1 m tall at 4 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: light yellow-green fronds."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

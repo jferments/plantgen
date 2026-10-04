@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "species": "carex-obnupta",
+  "layers": {
+    "herb": 1.5
+  },
+  "moisture": [0.78, 0.88, 1.0, 1.01],
+  "heat_load": [0.0, 0.2, 1.6, 2.0],
+  "elevation_m": [-50, -10, 800, 1300],
+  "max_slope_deg": 15,
+  "shade_tolerance": 0.5,
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "note": "Forms dense stands in swamps, wet forest hollows, marshes and on stream and lake margins."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "note": "Wet to saturated ground; shallow standing water in winter."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "note": "Grows on any aspect."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "note": "Sea level to about 800 m in western Washington; the upper limits are loose."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "note": "Flat wet ground."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "note": "Grows in sun or the part shade of swamp forest."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Authored from general knowledge of the species in the south Puget Sound lowlands; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS)."
+  }
+}

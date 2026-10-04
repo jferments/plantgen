@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "species": "thuja-plicata",
+  "layers": {
+    "canopy": 0.8,
+    "subcanopy": 1.0,
+    "shrub": 0.8
+  },
+  "moisture": [0.4, 0.62, 0.92, 0.99],
+  "heat_load": [0.0, 0.1, 1.1, 1.5],
+  "elevation_m": [-50, -10, 1000, 1500],
+  "max_slope_deg": 40,
+  "shade_tolerance": 0.9,
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "note": "Shares the canopy with Douglas-fir on moist ground and fills the understory beneath it."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "note": "Commonest on moist to wet ground (seeps, stream bottoms, swamps, lower slopes); tolerates saturated soil better than Douglas-fir, but not standing water."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "note": "Favours cool, moist aspects and shaded ravines; scarce on hot south-west slopes."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "note": "Lowlands to about 1,200 m in western Washington."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "note": "Grows on slopes but most often on benches, bottoms and toe slopes."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "note": "Very shade tolerant: seedlings and saplings persist under closed canopy."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Authored from general knowledge of the species in western Washington lowland forests; not yet checked against Silvics of North America (Burns and Honkala, 1990) or the Fire Effects Information System, both public-domain USDA Forest Service works."
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "id": "populus-tremuloides",
+  "taxon": {
+    "scientific_name": "Populus tremuloides",
+    "common_name": "quaking aspen",
+    "usda_symbol": "POTR5"
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 16,
+      "crown_radius": 3.5,
+      "crown_base": 5,
+      "crown_rate": 0.06,
+      "space_density": 25,
+      "bud_years": 15,
+      "internode": 0.3,
+      "max_shoot": 4,
+      "branch_angle": 45,
+      "apical_young": 0.75,
+      "apical": 0.62,
+      "alternate": 1,
+      "leaf_size": 0.3,
+      "spur_leaf": 0.26,
+      "spur_pairs": 3,
+      "leaf_angle": 55,
+      "wiggle": 4,
+      "lean": 2,
+      "extinction": 0.45,
+      "pipe_rings": 1.2e-05,
+      "leaf_area": 0.288,
+      "bloom_area": 0.639
+    }
+  },
+  "growth": {
+    "years": 40,
+    "step": 1,
+    "keyframes": [4, 10, 20, 40]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.62, 0.62, 0.55],
+    "foliage": [0.09, 0.17, 0.04],
+    "foliage_shade": [0.03, 0.06, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 7,
+          "angle": 55,
+          "width": 0.95,
+          "widest": 0.45,
+          "tip": 0.25,
+          "base": 0.6,
+          "teeth": 14,
+          "tooth_depth": 0.01,
+          "petiole": 0.35
+        },
+        "accent": [0.4, 0.4, 0.2]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 40,
+      "environment": "open",
+      "height": 15,
+      "dbh": 0.25,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a slender, clonal tree with a narrow crown and small, round, finely toothed leaves on flattened stalks. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 15 m tall and 25 cm across at breast height at 40 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: bright green leaves; smooth, chalky white bark with dark scars."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

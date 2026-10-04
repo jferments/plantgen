@@ -1,0 +1,104 @@
+{
+  "schema": 1,
+  "id": "pinus-contorta",
+  "taxon": {
+    "scientific_name": "Pinus contorta var. contorta",
+    "common_name": "shore pine",
+    "usda_symbol": "PICO"
+  },
+  "growth_form": "excurrent_tree",
+  "generator": {
+    "program": "conifer",
+    "params": {
+      "height_max": 16,
+      "height_rate": 0.045,
+      "height_shape": 1.2,
+      "leader_shade": 0.25,
+      "whorl": 4,
+      "interwhorl": 1,
+      "branch_angle": 55,
+      "branch_sag": 0.6,
+      "max_sag": 20,
+      "upturn": 0.025,
+      "branch_growth": 0.22,
+      "branch_ageing": 0.975,
+      "side_chance": 0.6,
+      "needle_years": 4,
+      "spray_base": 0.15,
+      "spray_length": 0.9,
+      "shade_death": 0.15,
+      "shade_years": 2,
+      "pipe_organ": 0.012,
+      "pipe_rings": 2.2e-05,
+      "spray_area": 0.208
+    }
+  },
+  "growth": {
+    "years": 40,
+    "step": 1,
+    "keyframes": [4, 10, 20, 40]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.12, 0.09, 0.07],
+    "foliage": [0.07, 0.12, 0.035],
+    "foliage_shade": [0.025, 0.045, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "spray": {
+        "shape": {
+          "template": "needles",
+          "ranks": 0,
+          "twigs": 2,
+          "aspect": 0.5,
+          "needle": 0.14,
+          "twig_angle": 35
+        },
+        "accent": [0.3, 0.2, 0.1]
+      }
+    },
+    "ridges": {
+      "spacing": 0.05,
+      "depth": 0.04,
+      "twist": 0,
+      "contrast": 0.5
+    }
+  },
+  "allometry": [
+    {
+      "age": 40,
+      "environment": "open",
+      "height": 11,
+      "dbh": 0.3,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a small, irregular pine with a rounded to flat-topped crown, stout upturned branches and tufts of short, paired needles at the twig ends. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 11 m tall and 30 cm across at breast height at 40 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: yellow-green needles; dark, thick, furrowed bark."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

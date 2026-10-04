@@ -1,0 +1,235 @@
+//! The built-in species: they grow to their reference sizes, and their
+//! growth history stays consistent from keyframe to keyframe.
+
+use std::collections::HashMap;
+
+use after_plants::graph::PlantGraph;
+use after_plants::grow::{Growth, GrowthSettings, grow};
+use after_plants::lsys::Limits;
+use after_plants::package;
+use after_plants::spec::{self, GrowthForm, PlantSpec, SPECIES, Variant};
+use after_plants::templates::{self, Templates};
+
+fn grow_variant(spec: &PlantSpec, variant: &Variant, years: f64, keyframes: Vec<f64>) -> Growth {
+    let (program, params) = spec.program().unwrap();
+    grow(
+        &program,
+        &params,
+        &GrowthSettings {
+            seed: variant.seed,
+            dt: spec.growth.step,
+            years,
+            keyframes,
+            neighbourhood: variant.neighbourhood,
+            limits: Limits::default(),
+        },
+    )
+    .unwrap()
+}
+
+/// Every built-in species, grown in each environment it has reference
+/// sizes for, matches them within the spec's tolerance. This is the
+/// acceptance check for a species' parameters: a change to the engine or a
+/// program that breaks it needs the species retuned, not the reference
+/// loosened.
+#[test]
+fn builtin_species_grow_to_their_reference_sizes() {
+    let mut failures = Vec::new();
+    let mut checked = 0;
+    for (id, _) in SPECIES {
+        let spec = PlantSpec::builtin(id).unwrap();
+        assert!(!spec.allometry.is_empty(), "{id} has no reference sizes");
+        for variant in spec.variant_list() {
+            let ages: Vec<f64> = spec
+                .allometry
+                .iter()
+                .filter(|point| point.environment == variant.environment)
+                .map(|point| point.age)
+                .collect();
+            if ages.is_empty() {
+                continue;
+            }
+            let years = ages.iter().copied().fold(0.0, f64::max);
+            let growth = grow_variant(&spec, &variant, years, ages.clone());
+            let records = package::compare_allometry(&spec, &variant, &growth);
+            assert_eq!(records.len(), ages.len());
+            for record in records {
+                checked += 1;
+                if !record.within_tolerance {
+                    failures.push(format!(
+                        "{id} {} seed {} at {} years: {}",
+                        variant.environment.name(),
+                        variant.seed,
+                        record.age,
+                        record.describe()
+                    ));
+                }
+            }
+        }
+    }
+    assert!(checked >= 8, "only {checked} reference sizes were checked");
+    assert!(failures.is_empty(), "{}", failures.join("\n"));
+}
+
+/// Every organ type of every built-in species shades with about the leaf
+/// area its look draws, so the light a plant grows by matches the foliage
+/// a viewer sees.
+#[test]
+fn builtin_species_shade_with_the_area_they_draw() {
+    let mut failures = Vec::new();
+    for (id, _) in SPECIES {
+        let spec = PlantSpec::builtin(id).unwrap();
+        let (program, params) = spec.program().unwrap();
+        let looks = spec.appearance.looks(program.organs());
+        let templates = Templates::for_looks(&looks);
+        let shading = spec::organ_areas(&program, &params).unwrap();
+        assert_eq!(shading.len(), looks.len());
+        for ((look, template), shaded) in looks.iter().zip(&templates.templates).zip(shading) {
+            let drawn = templates::drawn_area(look, template);
+            if !spec::areas_agree(drawn, shaded) {
+                failures.push(format!(
+                    "{id} `{}` draws {drawn:.3} m² on an organ 1 m long but shades with {shaded:.3} m²",
+                    look.organ
+                ));
+            }
+        }
+    }
+    assert!(failures.is_empty(), "{}", failures.join("\n"));
+}
+
+/// Grasses and herbs renew their shoots every year: at every keyframe
+/// each stem, culm, leaf and flower grew that year, so nothing lives on
+/// from the year before but a grass's thatch, the dead blades of last
+/// year's tillers.
+#[test]
+fn grasses_and_herbs_renew_their_shoots_every_year() {
+    let mut checked = 0;
+    for (id, _) in SPECIES {
+        let spec = PlantSpec::builtin(id).unwrap();
+        if !matches!(spec.growth_form, GrowthForm::Graminoid | GrowthForm::Forb) {
+            continue;
+        }
+        checked += 1;
+        let variant = spec.variant_list()[0];
+        let ages = vec![1.0, 2.0, 3.0, 4.0];
+        let growth = grow_variant(&spec, &variant, 4.0, ages);
+        let thatch = growth
+            .organ_types
+            .iter()
+            .position(|organ| organ.name == "thatch");
+        for graph in &growth.keyframes {
+            assert!(
+                graph.height > 0.0 && !graph.organs.is_empty(),
+                "{id} at {}",
+                graph.age
+            );
+            for segment in &graph.segments {
+                assert_eq!(
+                    segment.born.to_bits(),
+                    graph.age.to_bits(),
+                    "{id}: a stem outlived its year"
+                );
+                assert_eq!(segment.shed, (graph.age < 4.0).then_some(graph.age + 1.0));
+            }
+            for organ in &graph.organs {
+                assert_eq!(
+                    organ.born.to_bits(),
+                    graph.age.to_bits(),
+                    "{id}: an organ outlived its year"
+                );
+            }
+            if let Some(thatch) = thatch {
+                let dead = graph
+                    .organs
+                    .iter()
+                    .filter(|organ| usize::from(organ.organ) == thatch)
+                    .count();
+                // Thatch from the second year on, when the first tillers die.
+                assert_eq!(
+                    dead > 0,
+                    graph.age >= 2.0,
+                    "{id} at {}: {dead} thatch",
+                    graph.age
+                );
+            }
+        }
+    }
+    assert!(checked >= 2, "only {checked} grasses and herbs");
+}
+
+fn by_id(graph: &PlantGraph) -> HashMap<u64, usize> {
+    graph
+        .segments
+        .iter()
+        .enumerate()
+        .map(|(index, segment)| (segment.id, index))
+        .collect()
+}
+
+/// Parts keep their identity, birth age and girth from one keyframe to the
+/// next, and a part that disappears records when it was shed.
+#[test]
+fn growth_history_is_consistent_between_keyframes() {
+    for (id, _) in SPECIES {
+        let spec = PlantSpec::builtin(id).unwrap();
+        let variant = spec.variant_list()[0];
+        let ages = vec![4.0, 8.0, 12.0, 16.0];
+        let growth = grow_variant(&spec, &variant, 16.0, ages.clone());
+        assert_eq!(
+            growth
+                .keyframes
+                .iter()
+                .map(|graph| graph.age)
+                .collect::<Vec<_>>(),
+            ages
+        );
+        for graph in &growth.keyframes {
+            assert!(graph.height > 0.0, "{id} at {} has no height", graph.age);
+            for (index, segment) in graph.segments.iter().enumerate() {
+                assert!(
+                    segment.born <= graph.age,
+                    "{id}: a segment is born after its keyframe"
+                );
+                assert!(segment.shed.is_none_or(|shed| shed > graph.age));
+                assert!(segment.radius > 0.0 && segment.radius.is_finite());
+                if let Some(parent) = segment.parent {
+                    let parent = &graph.segments[parent as usize];
+                    assert!((parent.order..=parent.order + 1).contains(&segment.order));
+                    // The pipe model and annual rings: no branch is thicker
+                    // than the wood it grows from.
+                    assert!(
+                        segment.radius <= parent.radius * (1.0 + 1e-9),
+                        "{id} at {}: segment {index} is thicker than its parent",
+                        graph.age
+                    );
+                    assert!(
+                        parent
+                            .parent
+                            .is_none_or(|grandparent| (grandparent as usize) < index)
+                    );
+                }
+            }
+            for organ in &graph.organs {
+                assert!(organ.born <= graph.age && organ.shed.is_none_or(|shed| shed > graph.age));
+                assert!((0.0..=1.0).contains(&organ.light));
+            }
+        }
+        for pair in growth.keyframes.windows(2) {
+            let (young, old) = (&pair[0], &pair[1]);
+            let later = by_id(old);
+            for segment in &young.segments {
+                if let Some(&index) = later.get(&segment.id) {
+                    let same = &old.segments[index];
+                    assert_eq!(same.born.to_bits(), segment.born.to_bits());
+                    assert_eq!(same.shed, segment.shed);
+                    assert!(same.radius >= segment.radius, "{id}: a segment got thinner");
+                } else {
+                    let shed = segment
+                        .shed
+                        .expect("a segment that disappears has a shed age");
+                    assert!(shed > young.age && shed <= old.age, "{id}: shed at {shed}");
+                }
+            }
+        }
+    }
+}

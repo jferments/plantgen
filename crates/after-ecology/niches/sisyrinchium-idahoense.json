@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "species": "sisyrinchium-idahoense",
+  "layers": {
+    "herb": 0.5
+  },
+  "moisture": [0.35, 0.5, 0.85, 0.95],
+  "heat_load": [0.7, 0.9, 2.0, 2.5],
+  "elevation_m": [-50, -10, 2000, 2500],
+  "max_slope_deg": 20,
+  "shade_tolerance": 0.05,
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "note": "A herb of moist prairies and meadows."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "note": "Ground moist in spring."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "note": "Grows on any aspect."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "note": "Sea level to about 2,000 m in western Washington; the upper limits are loose."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "note": "Flat to rolling ground."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "note": "Needs full sun."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Authored from general knowledge of the species in the south Puget Sound lowlands; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS)."
+  }
+}

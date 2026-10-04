@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "species": "athyrium-filix-femina",
+  "layers": {
+    "herb": 1.0
+  },
+  "moisture": [0.6, 0.72, 1.0, 1.01],
+  "heat_load": [0.0, 0.1, 1.4, 1.8],
+  "elevation_m": [-50, -10, 1500, 2000],
+  "max_slope_deg": 40,
+  "shade_tolerance": 0.75,
+  "sun_tolerance": 0.6,
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "note": "A fern of wet forest hollows, stream banks, seeps and swamp margins."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "note": "Moist to wet ground."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "note": "Favours cool, shaded aspects and ravines; scarce on hot south-west slopes."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "note": "Sea level to about 1,500 m in western Washington; the upper limits are loose."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "note": "Grows on slopes and flats."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "note": "Shade tolerant."
+    },
+    "sun_tolerance": {
+      "evidence": "Authored",
+      "note": "Grows in sun only where the ground stays wet; its fronds scorch in dry sun."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Authored from general knowledge of the species in the south Puget Sound lowlands; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS)."
+  }
+}

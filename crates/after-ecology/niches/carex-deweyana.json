@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "species": "carex-deweyana",
+  "layers": {
+    "herb": 0.6
+  },
+  "moisture": [0.35, 0.5, 0.85, 0.95],
+  "heat_load": [0.0, 0.2, 1.4, 1.8],
+  "elevation_m": [-50, -10, 1500, 2000],
+  "max_slope_deg": 45,
+  "shade_tolerance": 0.7,
+  "sun_tolerance": 0.6,
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "note": "A sedge of the floor of moist woods and forest edges."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "note": "Moist ground."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "note": "Grows on any aspect."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "note": "Sea level to about 1,500 m in western Washington; the upper limits are loose."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "note": "Grows on slopes and flats."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "note": "Shade tolerant: grows under open and mixed canopy."
+    },
+    "sun_tolerance": {
+      "evidence": "Authored",
+      "note": "A sedge of shaded woods; scarcer in full sun."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Authored from general knowledge of the species in the south Puget Sound lowlands; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS)."
+  }
+}

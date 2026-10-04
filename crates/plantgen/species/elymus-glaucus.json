@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "id": "elymus-glaucus",
+  "taxon": {
+    "scientific_name": "Elymus glaucus",
+    "common_name": "blue wildrye",
+    "usda_symbol": "ELGL"
+  },
+  "growth_form": "graminoid",
+  "generator": {
+    "program": "grass",
+    "params": {
+      "tillers": 30,
+      "tiller_rate": 0.5,
+      "tussock_radius": 0.08,
+      "tiller_lean": 10,
+      "leaves": 3,
+      "leaf_length": 0.3,
+      "leaf_spread": 0.3,
+      "leaf_angle": 25,
+      "arch": 10,
+      "pieces": 6,
+      "flowering": 0.5,
+      "culm_height": 1.1,
+      "culm_radius": 0.0015,
+      "culm_leaves": 3,
+      "culm_lean": 6,
+      "panicle_length": 0.14,
+      "panicle_nod": 25,
+      "blade_area": 0.064,
+      "tip_area": 0.035,
+      "thatch_area": 0.064,
+      "panicle_area": 0.052
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [1, 2, 4]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.3, 0.3, 0.2],
+    "foliage": [0.08, 0.15, 0.09],
+    "foliage_shade": [0.025, 0.045, 0.028],
+    "variation": 0.2,
+    "organs": {
+      "blade": {
+        "shape": { "template": "blade", "taper": 0, "aspect": 0.07 }
+      },
+      "blade_tip": {
+        "shape": { "template": "blade", "taper": 1, "aspect": 0.07 }
+      },
+      "thatch": {
+        "shape": { "template": "blade", "taper": 0, "aspect": 0.07 },
+        "colour": [0.38, 0.31, 0.18],
+        "shade": [0.12, 0.1, 0.05]
+      },
+      "panicle": {
+        "shape": { "template": "spike", "florets": 16, "aspect": 0.12, "plume": 0.0, "stalk": 0.02 },
+        "colour": [0.35, 0.42, 0.3]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 1.1,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a loose bunchgrass with broad, flat, bluish blades and tall culms ending in slender, bristly spikes. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 1.1 m tall at 4 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: blue-green blades; green to straw spikes."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

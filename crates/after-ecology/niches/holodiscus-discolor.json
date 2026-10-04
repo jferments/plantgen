@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "species": "holodiscus-discolor",
+  "layers": {
+    "shrub": 1.0,
+    "subcanopy": 0.2
+  },
+  "moisture": [0.05, 0.15, 0.5, 0.65],
+  "heat_load": [0.8, 1.0, 2.0, 2.5],
+  "elevation_m": [-50, -10, 900, 1400],
+  "max_slope_deg": 55,
+  "shade_tolerance": 0.3,
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "note": "A shrub of dry, open forest, rocky slopes and forest edges, with oak, madrone and Douglas-fir."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "note": "Dry, well-drained ground."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "note": "Warm, sunny ground; favours slopes facing south and west."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "note": "Sea level to about 900 m in western Washington; the upper limits are loose."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "note": "Holds steep, rocky slopes."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "note": "Needs light; grows in part shade at most."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Authored from general knowledge of the species in the south Puget Sound lowlands; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS)."
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "schema": 1,
+  "id": "sambucus-racemosa",
+  "taxon": {
+    "scientific_name": "Sambucus racemosa",
+    "common_name": "red elderberry",
+    "usda_symbol": "SARA2"
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 4.0,
+      "crown_radius": 2.0,
+      "crown_base": 0,
+      "crown_rate": 0.22,
+      "space_density": 44.8,
+      "internode": 0.18,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 40,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "bud_years": 6,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 10,
+      "fork_height": 0.03,
+      "fork_stems": 6,
+      "fork_angle": 35,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 1.53,
+      "space_kill": 0.378,
+      "leaf_size": 0.25,
+      "spur_leaf": 0.22,
+      "spur_pairs": 1,
+      "leaf_angle": 55,
+      "blooms": 1,
+      "bloom_age": 3,
+      "bloom_size": 0.1,
+      "bloom_angle": 40,
+      "leaf_area": 0.246,
+      "bloom_area": 0.36
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [3, 6, 12]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.4, 0.33, 0.25],
+    "foliage": [0.07, 0.15, 0.04],
+    "foliage_shade": [0.022, 0.045, 0.012],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "compound",
+          "leaflets": 7,
+          "leaflet_width": 0.35,
+          "teeth": 9,
+          "petiole": 0.12
+        }
+      },
+      "bloom": {
+        "shape": { "template": "umbel", "clusters": 9, "florets": 12 },
+        "colour": [0.78, 0.1, 0.06],
+        "accent": [0.6, 0.05, 0.03]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 3.5,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a tall, coarse shrub with opposite pinnate leaves of sharp-toothed leaflets and dome-shaped clusters of bright red berries. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 3.5 m tall at 12 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: mid-green leaflets; red berry clusters; grey-brown warty bark."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

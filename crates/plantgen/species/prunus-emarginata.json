@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "id": "prunus-emarginata",
+  "taxon": {
+    "scientific_name": "Prunus emarginata",
+    "common_name": "bitter cherry",
+    "usda_symbol": "PREM"
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 12,
+      "crown_radius": 3.5,
+      "crown_base": 3,
+      "crown_rate": 0.06,
+      "space_density": 14,
+      "internode": 0.25,
+      "max_shoot": 3,
+      "branch_angle": 40,
+      "apical_young": 0.72,
+      "apical": 0.6,
+      "alternate": 1,
+      "leaf_size": 0.26,
+      "spur_leaf": 0.22,
+      "spur_pairs": 2,
+      "leaf_angle": 50,
+      "lean": 4,
+      "wiggle": 5,
+      "blooms": 3,
+      "bloom_age": 5,
+      "bloom_size": 0.04,
+      "bloom_angle": 40,
+      "extinction": 0.45,
+      "space_reach": 2.0,
+      "space_kill": 0.6,
+      "pipe_rings": 1.2e-05,
+      "leaf_area": 0.248,
+      "bloom_area": 0.639
+    }
+  },
+  "growth": {
+    "years": 30,
+    "step": 1,
+    "keyframes": [3, 8, 15, 30]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.33, 0.15, 0.1],
+    "foliage": [0.07, 0.14, 0.04],
+    "foliage_shade": [0.025, 0.05, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 7,
+          "angle": 45,
+          "width": 0.4,
+          "widest": 0.55,
+          "tip": 0.15,
+          "base": 0.4,
+          "teeth": 14,
+          "tooth_depth": 0.01,
+          "petiole": 0.1
+        },
+        "accent": [0.4, 0.2, 0.12]
+      },
+      "bloom": {
+        "shape": { "template": "flower", "petals": 5, "petal_width": 1.0, "centre": 0.2 },
+        "colour": [0.92, 0.9, 0.85],
+        "accent": [0.8, 0.75, 0.4]
+      }
+    },
+    "ridges": {
+      "spacing": 0.03,
+      "depth": 0.005,
+      "twist": 0,
+      "contrast": 0.4
+    }
+  },
+  "allometry": [
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 12,
+      "dbh": 0.22,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a slender tree with a narrow crown, alternate oblong, finely toothed leaves and small clusters of white flowers. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 12 m tall and 22 cm across at breast height at 30 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: green leaves; smooth, shiny reddish-brown bark."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

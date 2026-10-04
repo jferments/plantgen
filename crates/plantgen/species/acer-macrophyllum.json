@@ -1,0 +1,131 @@
+{
+  "schema": 1,
+  "id": "acer-macrophyllum",
+  "taxon": {
+    "scientific_name": "Acer macrophyllum",
+    "common_name": "bigleaf maple",
+    "usda_symbol": "ACMA3"
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 24,
+      "crown_radius": 11,
+      "crown_base": 4.5,
+      "crown_rate": 0.032,
+      "space_density": 7,
+      "extinction": 0.35,
+      "bud_break": 1.6,
+      "apical_young": 0.75,
+      "leaf_size": 0.5,
+      "spur_leaf": 0.4,
+      "spur_pairs": 2,
+      "leaf_area": 0.29,
+      "lean": 9,
+      "wiggle": 7,
+      "fork_height": 3.5,
+      "fork_stems": 3,
+      "fork_angle": 28,
+      "pipe_tip": 0.003,
+      "pipe_organ": 0.006,
+      "pipe_rings": 8e-06
+    }
+  },
+  "growth": {
+    "years": 50,
+    "step": 1,
+    "keyframes": [5, 15, 30, 50]
+  },
+  "variants": {
+    "environments": ["open", "interior"],
+    "seeds": [1, 2]
+  },
+  "appearance": {
+    "bark": [0.13, 0.11, 0.085],
+    "foliage": [0.09, 0.2, 0.03],
+    "foliage_shade": [0.03, 0.08, 0.02],
+    "variation": 0.25,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "palmate",
+          "lobes": 5,
+          "depth": 0.66,
+          "lobe_width": 0.55,
+          "teeth": 2,
+          "spread": 1.05,
+          "petiole": 0.42
+        },
+        "accent": [0.25, 0.3, 0.06],
+        "face_up": 0.35
+      }
+    },
+    "ridges": {
+      "spacing": 0.07,
+      "depth": 0.04,
+      "twist": 6,
+      "contrast": 0.3
+    },
+    "flare": {
+      "height": 0.7,
+      "amount": 0.45,
+      "buttresses": 4,
+      "ridge": 0.4
+    },
+    "moss": {
+      "colour": [0.06, 0.12, 0.02],
+      "amount": 0.75,
+      "min_radius": 0.06
+    }
+  },
+  "allometry": [
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 15,
+      "dbh": 0.35,
+      "tolerance": 0.4
+    },
+    {
+      "age": 50,
+      "environment": "open",
+      "height": 20,
+      "dbh": 0.55,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from photographs of open-grown trees: a broad, dense, rounded crown about as wide as it is tall; a short trunk that leans and divides low into three stems; opposite buds; leaves on long petioles about 0.3 m across, and leaf area per card matched to the drawn leaf. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough open-grown sizes from general knowledge of the species. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs. Leaf: five deep, sparsely toothed lobes on a long petiole. Bark: shallow twisting ridges, a buttressed base and moss on the upper side of thick limbs, as on coastal trees."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Runions, Lane and Prusinkiewicz 2007, Modeling trees with a space colonization algorithm (method only)",
+        "licence": "method citation; no data used"
+      },
+      {
+        "title": "Pałubicki et al. 2009, Self-organizing tree models for image synthesis (method only)",
+        "licence": "method citation; no data used"
+      },
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy for milestone P0. Calibration against measurements and photographs is milestone P4."
+  }
+}

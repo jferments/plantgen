@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "species": "cornus-sericea",
+  "layers": {
+    "shrub": 1.0
+  },
+  "moisture": [0.7, 0.82, 1.0, 1.01],
+  "heat_load": [0.2, 0.5, 1.8, 2.2],
+  "elevation_m": [-50, -10, 1000, 1500],
+  "max_slope_deg": 20,
+  "shade_tolerance": 0.3,
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "note": "Lines streams, ponds and wet meadows."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "note": "Wet ground: stream banks, shores and swamps."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "note": "Grows on any aspect."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "note": "Sea level to about 1,000 m in western Washington; the upper limits are loose."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "note": "Grows on flats and gentle slopes."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "note": "Needs light; thins under canopy."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Authored from general knowledge of the species in the south Puget Sound lowlands; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS)."
+  }
+}

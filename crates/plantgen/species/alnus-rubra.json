@@ -1,0 +1,134 @@
+{
+  "schema": 1,
+  "id": "alnus-rubra",
+  "taxon": {
+    "scientific_name": "Alnus rubra",
+    "common_name": "red alder",
+    "usda_symbol": "ALRU2"
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 22,
+      "crown_radius": 5,
+      "crown_base": 6,
+      "crown_rate": 0.045,
+      "space_density": 14,
+      "bud_years": 18,
+      "internode": 0.3,
+      "max_shoot": 4,
+      "bud_break": 1.3,
+      "branch_angle": 50,
+      "apical_young": 0.72,
+      "apical": 0.6,
+      "apical_years": 20,
+      "leaf_size": 0.36,
+      "spur_leaf": 0.3,
+      "spur_pairs": 2,
+      "alternate": 1,
+      "leaf_angle": 55,
+      "droop": 0.02,
+      "lean": 3,
+      "wiggle": 4,
+      "pipe_tip": 0.003,
+      "pipe_organ": 0.006,
+      "pipe_rings": 1.4e-05,
+      "extinction": 0.45,
+      "blooms": 3,
+      "bloom_age": 6,
+      "bloom_size": 0.08,
+      "bloom_angle": 150,
+      "leaf_area": 0.302,
+      "bloom_area": 0.06
+    }
+  },
+  "growth": {
+    "years": 40,
+    "step": 1,
+    "keyframes": [5, 12, 25, 40]
+  },
+  "variants": {
+    "environments": ["open", "interior"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.38, 0.37, 0.33],
+    "foliage": [0.07, 0.16, 0.035],
+    "foliage_shade": [0.025, 0.06, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 7,
+          "angle": 50,
+          "width": 0.62,
+          "widest": 0.45,
+          "tip": 0.35,
+          "base": 0.55,
+          "teeth": 14,
+          "tooth_depth": 0.02,
+          "petiole": 0.15
+        },
+        "accent": [0.3, 0.2, 0.12]
+      },
+      "bloom": {
+        "shape": { "template": "spike", "florets": 20, "aspect": 0.12, "plume": 0.3, "stalk": 0.05 },
+        "colour": [0.45, 0.32, 0.18]
+      }
+    },
+    "ridges": {
+      "spacing": 0.2,
+      "depth": 0.005,
+      "twist": 0,
+      "contrast": 0.15
+    },
+    "moss": {
+      "colour": [0.3, 0.33, 0.24],
+      "amount": 0.35,
+      "min_radius": 0.05
+    }
+  },
+  "allometry": [
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 15,
+      "dbh": 0.22,
+      "tolerance": 0.35
+    },
+    {
+      "age": 40,
+      "environment": "open",
+      "height": 24,
+      "dbh": 0.4,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a fast-growing tree with a straight stem, a narrow, rounded crown, alternate oval leaves with double-toothed edges, and hanging catkins. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 15 m tall and 22 cm across at breast height at 20 years in the open; 24 m tall and 40 cm across at breast height at 40 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: dark green leaves; smooth, pale grey bark, often blotched with lichen."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

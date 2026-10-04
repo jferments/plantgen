@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "species": "asarum-caudatum",
+  "layers": {
+    "herb": 0.6
+  },
+  "moisture": [0.5, 0.62, 0.92, 0.98],
+  "heat_load": [0.0, 0.1, 1.1, 1.4],
+  "elevation_m": [-50, -10, 1200, 1700],
+  "max_slope_deg": 40,
+  "shade_tolerance": 0.95,
+  "sun_tolerance": 0.25,
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "note": "A herb of the floor of moist conifer and mixed forest."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "note": "Moist ground."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "note": "Favours cool, shaded aspects and ravines; scarce on hot south-west slopes."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "note": "Sea level to about 1,200 m in western Washington; the upper limits are loose."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "note": "Grows on slopes and flats."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "note": "Very shade tolerant: needs forest shade."
+    },
+    "sun_tolerance": {
+      "evidence": "Authored",
+      "note": "Shade obligate; it declines in clearings."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Authored from general knowledge of the species in the south Puget Sound lowlands; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS)."
+  }
+}

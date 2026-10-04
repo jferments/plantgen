@@ -1,0 +1,120 @@
+{
+  "schema": 1,
+  "id": "trillium-ovatum",
+  "taxon": {
+    "scientific_name": "Trillium ovatum",
+    "common_name": "western trillium",
+    "usda_symbol": "TROV2"
+  },
+  "growth_form": "forb",
+  "generator": {
+    "program": "herb",
+    "params": {
+      "stems": 2,
+      "stem_rate": 0.3,
+      "clump_radius": 0.04,
+      "stem_lean": 8,
+      "maturity": 2,
+      "stem_height": 0.27,
+      "stem_radius": 0.003,
+      "wiggle": 2,
+      "nodes": 1,
+      "whorl": 3,
+      "bare": 0.82,
+      "leaf_length": 0.14,
+      "leaf_peak": 0.5,
+      "leaf_top": 1,
+      "leaf_base": 1,
+      "leaf_angle": 78,
+      "raceme": 0.12,
+      "flowers": 1,
+      "flower_size": 0.07,
+      "pedicel": 0.04,
+      "flower_angle": 25,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0,
+      "flower_age": 3,
+      "leaf_area": 0.511,
+      "basal_area": 0.235,
+      "basal_piece_area": 0.235,
+      "flower_area": 0.793,
+      "bud_area": 0.89,
+      "fruit_area": 0.89
+    }
+  },
+  "growth": {
+    "years": 8,
+    "step": 1,
+    "keyframes": [3, 5, 8]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.2, 0.3, 0.12],
+    "foliage": [0.05, 0.14, 0.04],
+    "foliage_shade": [0.015, 0.045, 0.012],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "width": 0.8,
+          "widest": 0.45,
+          "tip": 0.5,
+          "base": 0.55,
+          "teeth": 0,
+          "tooth_depth": 0.03,
+          "petiole": 0
+        }
+      },
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petals": 3,
+          "petal_width": 1.3,
+          "point": 0.5,
+          "notch": 0.0,
+          "centre": 0.15
+        },
+        "colour": [0.95, 0.94, 0.9],
+        "accent": [0.9, 0.85, 0.5]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 8,
+      "environment": "open",
+      "height": 0.33,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a woodland lily: a single stem with a whorl of three broad leaves and one white, three-petalled flower above them. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 0.33 m tall at 8 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: dark green leaves; white flowers that age to pink."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

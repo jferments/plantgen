@@ -1,0 +1,122 @@
+{
+  "schema": 1,
+  "id": "holodiscus-discolor",
+  "taxon": {
+    "scientific_name": "Holodiscus discolor",
+    "common_name": "oceanspray",
+    "usda_symbol": "HODI"
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 3.5,
+      "crown_radius": 2.0,
+      "crown_base": 0,
+      "crown_rate": 0.22,
+      "space_density": 51.2,
+      "internode": 0.15,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 40,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "bud_years": 6,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.04,
+      "wiggle": 10,
+      "fork_height": 0.03,
+      "fork_stems": 7,
+      "fork_angle": 35,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 1.275,
+      "space_kill": 0.315,
+      "alternate": 1,
+      "leaf_size": 0.14,
+      "spur_leaf": 0.12,
+      "spur_pairs": 1,
+      "leaf_angle": 50,
+      "blooms": 1,
+      "bloom_age": 3,
+      "bloom_size": 0.18,
+      "bloom_angle": 120,
+      "leaf_area": 0.34,
+      "bloom_area": 0.359
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [3, 6, 12]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.38, 0.28, 0.2],
+    "foliage": [0.08, 0.15, 0.05],
+    "foliage_shade": [0.025, 0.045, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 7,
+          "angle": 50,
+          "stalk": 0.1,
+          "width": 0.7,
+          "widest": 0.4,
+          "tip": 0.3,
+          "base": 0.5,
+          "teeth": 7,
+          "tooth_depth": 0.08,
+          "petiole": 0.08
+        }
+      },
+      "bloom": {
+        "shape": { "template": "spike", "florets": 30, "aspect": 0.45, "plume": 1.0, "stalk": 0.1 },
+        "colour": [0.9, 0.87, 0.75]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 3.2,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a tall shrub of arching stems with small, lobed and toothed leaves and drooping, frothy plumes of cream flowers. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 3.2 m tall at 12 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: dull green leaves, paler beneath; cream plumes that turn tan."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

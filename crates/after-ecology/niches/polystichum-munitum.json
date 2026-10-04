@@ -1,0 +1,53 @@
+{
+  "schema": 1,
+  "species": "polystichum-munitum",
+  "layers": {
+    "herb": 2.0
+  },
+  "moisture": [0.25, 0.4, 0.85, 0.95],
+  "heat_load": [0.0, 0.1, 1.3, 1.6],
+  "elevation_m": [-50, -10, 1000, 1500],
+  "max_slope_deg": 55,
+  "shade_tolerance": 0.9,
+  "sun_tolerance": 0.6,
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "note": "The commonest fern of lowland conifer forest, often covering the forest floor."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "note": "Moist, well-drained ground."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "note": "Favours cool, shaded aspects and ravines; scarce on hot south-west slopes."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "note": "Sea level to about 1,000 m in western Washington; the upper limits are loose."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "note": "Grows on steep slopes and ravine sides."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "note": "Very shade tolerant: grows under closed conifer canopy."
+    },
+    "sun_tolerance": {
+      "evidence": "Authored",
+      "note": "Persists in clearings, but its fronds yellow and shorten in hot, dry sun."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Authored from general knowledge of the species in the south Puget Sound lowlands; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS)."
+  }
+}

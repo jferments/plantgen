@@ -1,0 +1,185 @@
+# Herb: a clump of leafy stems from a perennial crown, after the forbs of
+# meadows, clearings and forest floors. Each year the crown sends up a new
+# cohort of stems on a sunflower spiral, more of them and spread wider as
+# the clump ages, and last year's stems are gone. A stem has basal leaves
+# at its foot, leaves along its lower part, alternate in a spiral or in
+# opposite pairs, and a raceme at its top that opens from the bottom up:
+# fruit below, open flowers in the middle, buds above, the bud-tipped end
+# nodding over. A plant younger than flower_age grows short stems without
+# a raceme.
+#
+# A basal leaf is one card or, with basal_pieces above 1, an arching strap
+# of pieces like a grass blade, each 12% shorter than the one before.
+#
+# A stem may arch over under its own weight (arch: a fern's fronds, a
+# bleeding heart's racemes), and its leaves may stand in whorls (whorl:
+# horsetails, trilliums) instead of singly or in pairs.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem herb 2;
+
+# The clump.
+param stems = 6;              # stems in a mature clump
+param stem_rate = 0.6;        # cohort size: stems * (1 - exp(-stem_rate * age))
+param clump_radius = 0.2;     # radius a mature clump's stems spread over
+param stem_lean = 6;          # how far the outermost stems lean out
+param maturity = 1.2;         # years over which stems reach full size
+param flower_age = 2;         # the first year the plant flowers
+# A stem.
+param stem_height = 1.0;      # stem height at maturity, raceme included
+param height_spread = 0.12;   # stems are stem_height * (1 ± height_spread)
+param young_height = 0.35;    # a stem without a raceme, as a share of stem_height
+param stem_radius = 0.004;    # radius at the base; it halves toward the top
+param wiggle = 2;             # spread of the random turn at each node
+param arch = 0;               # how strongly a stem bends toward the ground at each node
+# Leaves along the stem.
+param nodes = 24;             # nodes with leaves
+param opposite = 0;           # 1: a pair of leaves at each node
+param phyllotaxis = 137.5;    # roll from one node to the next; pairs use 90
+param whorl = 0;              # leaves in a whorl at each node, if more than 2
+param bare = 0.1;             # share of the stem below the raceme without leaves
+param leaf_length = 0.12;     # the longest leaf
+param leaf_peak = 0.3;        # where it sits along the leafy part, 0 to 1
+param leaf_top = 0.3;         # the topmost leaf, as a share of the longest
+param leaf_base = 0.6;        # the lowest leaf, as a share of the longest
+param leaf_angle = 50;        # angle of a leaf to the stem
+param leaf_area = 0.23;       # leaf area of a leaf 1 m long, m²
+# Basal leaves.
+param basal_leaves = 0;       # basal leaves at the foot of each stem
+param basal_length = 0.2;
+param basal_angle = 35;       # mean angle of a basal leaf to the vertical
+param basal_pieces = 1;       # pieces in a basal leaf
+param basal_arch = 12;        # degrees an arching basal leaf bends at each joint
+param basal_area = 0.23;      # leaf area of a basal leaf, or of its last piece, 1 m long
+param basal_piece_area = 0.23;
+# The raceme.
+param raceme = 0.3;           # share of the stem's height that flowers
+param flowers = 30;           # flowers, fruit and buds on a raceme
+param flower_size = 0.025;    # flower diameter
+param pedicel = 0.015;        # flower stalk length
+param flower_angle = 60;      # angle of a flower stalk to the stem
+param fruit_below = 0.4;      # share of the raceme, from the bottom, in fruit
+param buds_above = 0.75;      # share of the raceme above which are buds
+param fruit_length = 0.06;
+param fruit_angle = 25;
+param bud_size = 0.012;
+param nod = 30;               # degrees the bud-tipped end bends over
+param flower_area = 0.64;
+param bud_area = 0.89;
+param fruit_area = 0.89;
+param light_cell = 0.05;      # light voxel edge
+
+module Y;                     # the crown: sends up a cohort each year
+module Ss(k, m, n);           # stems k to k + m - 1 of a cohort of n
+module Sm;                    # the base of a stem
+module Bs(j);                 # j basal leaves still to place
+module Bl(len, a);            # a basal leaf len long bending a at each joint
+module Pc(k, s, a);           # piece k of a basal leaf, s long
+module St(h, r);              # a stem h tall with a raceme r long
+module Nd(i, m, h, r);        # leaf nodes i to i + m - 1 of a stem
+module Rc(i, m, h, r);        # raceme nodes i to i + m - 1
+module Lf(s);                 # the leaves at one node
+module Wl(j, s);              # j leaves of a whorl still to place
+
+organ leaf leaf area leaf_area;
+organ basal leaf area basal_area;
+organ basal_piece leaf area basal_piece_area;
+organ flower flower area flower_area;
+organ bud fruit area bud_area;
+organ fruit fruit area fruit_area;
+
+tool light@1 { cell = light_cell, extinction = 0.5 };
+
+axiom Y;
+
+# The cohort grows toward full size with the plant's age; t is the age the
+# cohort is drawn at.
+rule Y -> Ss(0, -1, 0) Y;
+decompose Ss(k, m, n) : m < 0 ->
+    Ss(0, max(1, round(stems * (1 - exp(-stem_rate * t)))),
+          max(1, round(stems * (1 - exp(-stem_rate * t)))));
+decompose Ss(k, m, n) : m > 1 ->
+    Ss(k, floor(m / 2), n) Ss(k + floor(m / 2), m - floor(m / 2), n);
+# One stem: out along the sunflower spiral, up, and leaning out.
+decompose Ss(k, m, n) : m == 1 ->
+    [ Sm /(k * 137.508 + uniform(-15, 15)) &(90)
+      f(clump_radius * sqrt(n / stems) * sqrt((k + uniform(0.2, 0.8)) / n)) ^(90)
+      &(stem_lean * sqrt((k + 0.5) / n) + uniform(0, 3))
+      Bs(basal_leaves)
+      St(stem_height * (1 - exp(-t / maturity)) * uniform(1 - height_spread, 1 + height_spread)
+         * (t >= flower_age ? 1 : young_height),
+         t >= flower_age ? raceme : 0) ];
+decompose Ss(k, m, n) -> ;
+
+# Basal leaves, spread round the stem's foot.
+decompose Bs(j) : j > 0 ->
+    [ /(j * 137.5 + uniform(-30, 30)) &(basal_angle * uniform(0.6, 1.4)) $
+      Bl(basal_length * (1 - exp(-t / maturity)) * uniform(0.75, 1.25),
+         basal_arch * uniform(0.6, 1.4)) ]
+    Bs(j - 1);
+decompose Bs(j) -> ;
+decompose Bl(len, a) -> Pc(0, len * 0.12 / (1 - pow(0.88, basal_pieces)), a);
+decompose Pc(k, s, a) : k < basal_pieces - 1 ->
+    basal_piece(s) f(s) /(gauss() * 4) &(a) Pc(k + 1, s * 0.88, a);
+decompose Pc(k, s, a) -> basal(s);
+
+# A stem h tall: a bare foot, the leafy part, then the raceme, r of the
+# height. Nodes split in halves so a long stem stays within the
+# decomposition depth.
+decompose St(h, r) : arch > 0 ->
+    T(0, -1, 0, arch) !(stem_radius) F(h * (1 - r) * bare)
+    Nd(0, nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
+decompose St(h, r) ->
+    !(stem_radius) F(h * (1 - r) * bare)
+    Nd(0, nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
+decompose Nd(i, m, h, r) : m > 1 ->
+    Nd(i, floor(m / 2), h, r) Nd(i + floor(m / 2), m - floor(m / 2), h, r);
+# One node: an internode, then the leaf or pair of leaves, sized by where
+# the node sits between the foot and the top of the leafy part.
+decompose Nd(i, m, h, r) : m == 1 ->
+    ^(gauss() * wiggle) +(gauss() * wiggle)
+    !(stem_radius * (1 - 0.5 * ((h * (1 - r) * bare + (i + 1) * h * (1 - r) * (1 - bare) / nodes) / h)))
+    F(h * (1 - r) * (1 - bare) / nodes)
+    Lf(leaf_length * (1 - exp(-t / maturity))
+       * ((i + 0.5) / nodes < leaf_peak
+          ? lerp(leaf_base, 1, (i + 0.5) / nodes / leaf_peak)
+          : lerp(1, leaf_top, ((i + 0.5) / nodes - leaf_peak) / (1 - leaf_peak))))
+    /(opposite > 0 ? 90 : phyllotaxis);
+decompose Nd(i, m, h, r) -> ;
+decompose Lf(s) : whorl > 2 -> Wl(whorl, s);
+decompose Lf(s) : opposite > 0 ->
+    [ &(leaf_angle) $ leaf(s) ] [ /(180) &(leaf_angle) $ leaf(s) ];
+decompose Lf(s) -> [ &(leaf_angle * uniform(0.85, 1.15)) $ leaf(s * uniform(0.9, 1.1)) ];
+
+# The raceme: fruit, then open flowers, then buds, the buds' part bending
+# over toward its tip.
+decompose Rc(i, m, h, r) : m > 1 ->
+    Rc(i, floor(m / 2), h, r) Rc(i + floor(m / 2), m - floor(m / 2), h, r);
+decompose Rc(i, m, h, r) : m == 1 && (i + 0.5) / flowers < fruit_below ->
+    !(stem_radius * 0.5) F(h * r / flowers)
+    [ &(fruit_angle * uniform(0.8, 1.2)) fruit(fruit_length * uniform(0.85, 1.1)) ]
+    /(phyllotaxis);
+decompose Rc(i, m, h, r) : m == 1 && (i + 0.5) / flowers < buds_above ->
+    !(stem_radius * 0.5) F(h * r / flowers)
+    [ &(flower_angle * uniform(0.8, 1.2)) !(stem_radius * 0.2) F(pedicel)
+      flower(flower_size * uniform(0.9, 1.1)) ]
+    /(phyllotaxis);
+decompose Rc(i, m, h, r) : m == 1 ->
+    &(nod / max(1, flowers * (1 - buds_above))) !(stem_radius * 0.5) F(h * r / flowers)
+    [ &(flower_angle * 0.6) !(stem_radius * 0.2) F(pedicel * 0.5)
+      bud(bud_size * lerp(1, 0.5, ((i + 0.5) / flowers - buds_above) / max(0.01, 1 - buds_above))) ]
+    /(phyllotaxis);
+decompose Rc(i, m, h, r) -> ;
+
+# Last year's stems are gone.
+rule Sm -> %;
+
+# A whorl of leaves spread evenly round the node. (Rules with random draws
+# that later programs add go last, so the draws of the rules above keep
+# their sites and species that do not use them grow as before.)
+decompose Wl(j, s) : j > 0 ->
+    [ /(360 * j / whorl + uniform(-10, 10)) &(leaf_angle * uniform(0.85, 1.15)) $
+      leaf(s * uniform(0.9, 1.1)) ]
+    Wl(j - 1, s);
+decompose Wl(j, s) -> ;

@@ -1,0 +1,118 @@
+{
+  "schema": 1,
+  "id": "dicentra-formosa",
+  "taxon": {
+    "scientific_name": "Dicentra formosa",
+    "common_name": "Pacific bleeding heart",
+    "usda_symbol": "DIFO"
+  },
+  "growth_form": "forb",
+  "generator": {
+    "program": "herb",
+    "params": {
+      "stems": 6,
+      "stem_rate": 0.5,
+      "clump_radius": 0.12,
+      "stem_lean": 8,
+      "maturity": 1.2,
+      "stem_height": 0.4,
+      "stem_radius": 0.002,
+      "wiggle": 2,
+      "arch": 0.02,
+      "nodes": 0,
+      "bare": 1.0,
+      "basal_leaves": 3,
+      "basal_length": 0.3,
+      "basal_angle": 25,
+      "raceme": 0.35,
+      "flowers": 8,
+      "flower_size": 0.02,
+      "pedicel": 0.01,
+      "flower_angle": 120,
+      "fruit_below": 0.1,
+      "buds_above": 0.9,
+      "nod": 10,
+      "bud_size": 0.01,
+      "fruit_length": 0.03,
+      "leaf_area": 0.235,
+      "basal_area": 0.171,
+      "basal_piece_area": 0.235,
+      "flower_area": 0.758,
+      "bud_area": 0.763,
+      "fruit_area": 0.383
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [2, 4, 6]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.35, 0.3, 0.3],
+    "foliage": [0.08, 0.15, 0.09],
+    "foliage_shade": [0.025, 0.045, 0.028],
+    "variation": 0.2,
+    "organs": {
+      "basal": {
+        "shape": { "template": "frond", "pinnae": 9, "width": 0.6, "divided": 1.0, "stipe": 0.3 }
+      },
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petals": 4,
+          "petal_width": 1.2,
+          "point": 0.0,
+          "notch": 0.0,
+          "centre": 0.2
+        },
+        "colour": [0.85, 0.4, 0.6],
+        "accent": [0.95, 0.8, 0.85]
+      },
+      "bud": {
+        "shape": { "template": "fruit", "aspect": 0.6 },
+        "colour": [0.8, 0.45, 0.6]
+      },
+      "fruit": {
+        "shape": { "template": "fruit", "aspect": 0.3 },
+        "colour": [0.3, 0.35, 0.2]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.4,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a delicate herb with lacy, fern-like, blue-green leaves and arching stems hung with pink, heart-shaped flowers. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 0.4 m tall at 4 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: blue-green leaves; pink flowers."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

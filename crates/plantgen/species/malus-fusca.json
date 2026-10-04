@@ -1,0 +1,121 @@
+{
+  "schema": 1,
+  "id": "malus-fusca",
+  "taxon": {
+    "scientific_name": "Malus fusca",
+    "common_name": "Pacific crabapple",
+    "usda_symbol": "MAFU"
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 8,
+      "crown_radius": 4,
+      "crown_base": 1,
+      "crown_rate": 0.06,
+      "space_density": 18,
+      "internode": 0.18,
+      "max_shoot": 3,
+      "branch_angle": 50,
+      "apical_young": 0.6,
+      "apical": 0.5,
+      "alternate": 1,
+      "leaf_size": 0.24,
+      "spur_leaf": 0.2,
+      "spur_pairs": 2,
+      "leaf_angle": 55,
+      "lean": 8,
+      "wiggle": 9,
+      "fork_height": 1.0,
+      "fork_stems": 3,
+      "fork_angle": 30,
+      "blooms": 3,
+      "bloom_age": 5,
+      "bloom_size": 0.035,
+      "bloom_angle": 40,
+      "space_reach": 1.6,
+      "space_kill": 0.45,
+      "extinction": 0.45,
+      "pipe_rings": 1.2e-05,
+      "leaf_area": 0.26,
+      "bloom_area": 0.668
+    }
+  },
+  "growth": {
+    "years": 30,
+    "step": 1,
+    "keyframes": [3, 8, 15, 30]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.3, 0.25, 0.2],
+    "foliage": [0.07, 0.14, 0.04],
+    "foliage_shade": [0.025, 0.05, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 7,
+          "angle": 50,
+          "width": 0.55,
+          "widest": 0.4,
+          "tip": 0.5,
+          "base": 0.5,
+          "teeth": 12,
+          "tooth_depth": 0.015,
+          "petiole": 0.18
+        },
+        "accent": [0.35, 0.25, 0.15]
+      },
+      "bloom": {
+        "shape": { "template": "flower", "petals": 5, "petal_width": 1.1, "centre": 0.2 },
+        "colour": [0.95, 0.88, 0.88],
+        "accent": [0.9, 0.8, 0.4]
+      }
+    },
+    "ridges": {
+      "spacing": 0.03,
+      "depth": 0.02,
+      "twist": 0,
+      "contrast": 0.35
+    }
+  },
+  "allometry": [
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 8,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a small, thicket-forming tree with crooked branches, alternate toothed leaves and clusters of white to pink flowers. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 8 m tall at 30 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: green leaves; white flowers flushed pink; grey-brown, scaly bark."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

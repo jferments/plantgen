@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "id": "carex-inops",
+  "taxon": {
+    "scientific_name": "Carex inops",
+    "common_name": "long-stolon sedge",
+    "usda_symbol": "CAIN11"
+  },
+  "growth_form": "graminoid",
+  "generator": {
+    "program": "grass",
+    "params": {
+      "tillers": 40,
+      "tiller_rate": 0.5,
+      "tussock_radius": 0.12,
+      "tiller_lean": 15,
+      "leaves": 3,
+      "leaf_length": 0.18,
+      "leaf_spread": 0.3,
+      "leaf_angle": 20,
+      "arch": 12,
+      "pieces": 5,
+      "flowering": 0.3,
+      "culm_height": 0.2,
+      "culm_radius": 0.0008,
+      "culm_leaves": 0,
+      "culm_lean": 10,
+      "panicle_length": 0.04,
+      "panicle_nod": 10,
+      "blade_area": 0.027,
+      "tip_area": 0.015,
+      "thatch_area": 0.027,
+      "panicle_area": 0.319
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [1, 2, 4]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.3, 0.3, 0.18],
+    "foliage": [0.08, 0.15, 0.05],
+    "foliage_shade": [0.025, 0.045, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "blade": {
+        "shape": { "template": "blade", "taper": 0, "aspect": 0.03 }
+      },
+      "blade_tip": {
+        "shape": { "template": "blade", "taper": 1, "aspect": 0.03 }
+      },
+      "thatch": {
+        "shape": { "template": "blade", "taper": 0, "aspect": 0.03 },
+        "colour": [0.38, 0.31, 0.18],
+        "shade": [0.12, 0.1, 0.05]
+      },
+      "panicle": {
+        "shape": { "template": "fruit", "aspect": 0.25 },
+        "colour": [0.28, 0.2, 0.12]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.22,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a low, mat-forming sedge spreading by runners, with narrow, curving leaves and short stems bearing small dark spikes. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 0.22 m tall at 4 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: mid-green leaves; brown spikes."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

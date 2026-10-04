@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "id": "juniperus-scopulorum",
+  "taxon": {
+    "scientific_name": "Juniperus scopulorum",
+    "common_name": "Rocky Mountain juniper",
+    "usda_symbol": "JUSC2"
+  },
+  "growth_form": "scale_leaved_tree",
+  "generator": {
+    "program": "conifer",
+    "params": {
+      "height_max": 10,
+      "height_rate": 0.04,
+      "height_shape": 1.2,
+      "leader_shade": 0.7,
+      "whorl": 4,
+      "interwhorl": 2,
+      "branch_angle": 55,
+      "branch_sag": 0.5,
+      "max_sag": 20,
+      "upturn": 0.03,
+      "branch_growth": 0.18,
+      "side_order": 2,
+      "side_chance": 0.8,
+      "needle_years": 14,
+      "spray_droop": 15,
+      "shade_death": 0.03,
+      "shade_years": 6,
+      "dead_years": 8,
+      "pipe_organ": 0.004,
+      "pipe_rings": 3e-06,
+      "spray_area": 0.24
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [5, 15, 30, 60]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.3, 0.17, 0.1],
+    "foliage": [0.07, 0.11, 0.08],
+    "foliage_shade": [0.025, 0.04, 0.03],
+    "variation": 0.2,
+    "organs": {
+      "spray": {
+        "shape": { "template": "scales", "branchlets": 5, "angle": 40, "cord": 0.025, "aspect": 0.7 }
+      }
+    },
+    "ridges": {
+      "spacing": 0.03,
+      "depth": 0.03,
+      "twist": 10,
+      "contrast": 0.4
+    }
+  },
+  "allometry": [
+    {
+      "age": 60,
+      "environment": "open",
+      "height": 7,
+      "dbh": 0.25,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a small, bushy tree with a rounded crown of upswept branches and fine sprays of overlapping scale leaves. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 7 m tall and 25 cm across at breast height at 60 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: grey-green scale leaves; reddish-brown fibrous, shredding bark."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

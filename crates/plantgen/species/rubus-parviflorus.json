@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "id": "rubus-parviflorus",
+  "taxon": {
+    "scientific_name": "Rubus parviflorus",
+    "common_name": "thimbleberry",
+    "usda_symbol": "RUPA"
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 1.8,
+      "crown_radius": 1.2,
+      "crown_base": 0,
+      "crown_rate": 0.22,
+      "space_density": 276.3,
+      "internode": 0.12,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 35,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "bud_years": 6,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 10,
+      "fork_height": 0.03,
+      "fork_stems": 9,
+      "fork_angle": 35,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 1.02,
+      "space_kill": 0.252,
+      "alternate": 1,
+      "leaf_size": 0.3,
+      "spur_leaf": 0.25,
+      "spur_pairs": 1,
+      "leaf_angle": 60,
+      "blooms": 1,
+      "bloom_age": 3,
+      "bloom_size": 0.045,
+      "bloom_angle": 50,
+      "leaf_area": 0.517,
+      "bloom_area": 0.704
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [3, 6, 12]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.42, 0.33, 0.22],
+    "foliage": [0.08, 0.18, 0.04],
+    "foliage_shade": [0.025, 0.055, 0.012],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "palmate",
+          "lobes": 5,
+          "depth": 0.3,
+          "lobe_width": 0.8,
+          "teeth": 4,
+          "spread": 1.0,
+          "petiole": 0.35
+        },
+        "face_up": 0.4
+      },
+      "bloom": {
+        "shape": {
+          "template": "flower",
+          "petals": 5,
+          "petal_width": 1.3,
+          "point": 0.0,
+          "notch": 0.0,
+          "centre": 0.25
+        },
+        "colour": [0.95, 0.95, 0.92],
+        "accent": [0.85, 0.75, 0.35]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 1.6,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a thornless shrub of upright stems carrying big, soft, maple-like leaves and white flowers like crumpled tissue paper. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 1.6 m tall at 12 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: bright green leaves; white flowers; red berries later; shredding tan bark."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "id": "fraxinus-latifolia",
+  "taxon": {
+    "scientific_name": "Fraxinus latifolia",
+    "common_name": "Oregon ash",
+    "usda_symbol": "FRLA"
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 20,
+      "crown_radius": 6,
+      "crown_base": 4,
+      "crown_rate": 0.04,
+      "space_density": 7,
+      "internode": 0.25,
+      "max_shoot": 3,
+      "branch_angle": 40,
+      "apical_young": 0.7,
+      "apical": 0.55,
+      "leaf_size": 0.32,
+      "spur_leaf": 0.28,
+      "spur_pairs": 1,
+      "leaf_angle": 50,
+      "wiggle": 4,
+      "lean": 4,
+      "extinction": 0.45,
+      "pipe_rings": 1.5e-05,
+      "leaf_area": 0.318,
+      "bloom_area": 0.639
+    }
+  },
+  "growth": {
+    "years": 50,
+    "step": 1,
+    "keyframes": [5, 15, 30, 50]
+  },
+  "variants": {
+    "environments": ["open", "interior"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.3, 0.28, 0.24],
+    "foliage": [0.07, 0.14, 0.04],
+    "foliage_shade": [0.025, 0.05, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "compound",
+          "leaflets": 7,
+          "leaflet_width": 0.45,
+          "teeth": 0,
+          "petiole": 0.15
+        }
+      }
+    },
+    "ridges": {
+      "spacing": 0.05,
+      "depth": 0.05,
+      "twist": 0,
+      "contrast": 0.45
+    }
+  },
+  "allometry": [
+    {
+      "age": 50,
+      "environment": "open",
+      "height": 18,
+      "dbh": 0.4,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a medium-sized tree with a narrow, rounded crown, opposite branching and pinnately compound leaves of five to seven broad leaflets. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 18 m tall and 40 cm across at breast height at 50 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: light green leaves; grey-brown bark in interlacing diamond ridges."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}
