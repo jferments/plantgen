@@ -12,9 +12,10 @@
 //! Each [`LodSpec`] removes thin branches, drops rings where an axis
 //! barely bends, and merges organs into larger cluster cards, which is how
 //! the far levels stay cheap. A cluster draws its merged card plus upright
-//! cards facing out from the plant's axis and around it, so a crown of
-//! leaves turned to the light still shows from the side. Stems stay at
-//! every level.
+//! cards facing out from the plant's axis and around it, sized so that
+//! the cluster covers about as much as its organs do from every side a
+//! walker sees it from: a coarser level shows the same crown, as open or
+//! as dense. Stems stay at every level.
 //!
 //! Every vertex and card records the plant ages at which its part appears
 //! and is shed, so a renderer can grow a plant smoothly between keyframes,
@@ -219,6 +220,20 @@ pub const LOD_REFERENCE_HEIGHT: f64 = 15.0;
 /// facing and the merged card's is above this (within about 30°), since
 /// the merged card already covers that side.
 pub const CLUSTER_UPRIGHT_SKIP: f64 = 0.866;
+
+/// Directions over the half sphere along which a cluster's cards are
+/// sized to cover as much as its organs ([`card_areas`]).
+const CLUSTER_DIRECTIONS: usize = 32;
+
+/// Views at most this sine of elevation (40°) above or below level, the
+/// way a walker sees crowns at the distances clusters are drawn, count
+/// fully in the fit; steeper views count [`HIGH_VIEW_WEIGHT`].
+const SIDE_VIEW_SINE: f64 = 0.643;
+const HIGH_VIEW_WEIGHT: f64 = 0.25;
+
+/// A cluster card is never narrower than this over its length, so a
+/// cluster of needles stays a spray rather than a sliver.
+const MIN_CLUSTER_ASPECT: f64 = 0.05;
 
 impl LodSpec {
     /// This level for a plant `height` metres tall. A plant lower than
@@ -743,13 +758,162 @@ struct Cluster {
     position: Vec3,
     normal: Vec3,
     heading: Vec3,
-    area: f64,
     light: f64,
     count: f64,
     born: f64,
     /// Infinity while any organ is never shed.
     shed: f64,
     id: u64,
+    /// Every card of its organs: unit normal and area, metres squared.
+    faces: Vec<(Vec3, f64)>,
+}
+
+impl Cluster {
+    /// The area its organs' cards cover seen along the unit vector `axis`.
+    fn cover(&self, axis: Vec3) -> f64 {
+        self.faces
+            .iter()
+            .map(|&(normal, area)| normal.dot(axis).abs() * area)
+            .sum()
+    }
+}
+
+/// Directions a cluster's cover is matched along: a Fibonacci lattice of
+/// [`CLUSTER_DIRECTIONS`] points on the upper half of the unit sphere
+/// (cover is the same seen from opposite sides).
+fn cover_directions() -> Vec<Vec3> {
+    // The golden angle, radians.
+    const TURN: f64 = 2.399_963_229_728_653;
+    (0..CLUSTER_DIRECTIONS)
+        .map(|i| {
+            let i = f64::from(u32::try_from(i).unwrap_or(0));
+            let count = f64::from(u32::try_from(CLUSTER_DIRECTIONS).unwrap_or(1));
+            let y = (i + 0.5) / count;
+            let ring = math::sqrt(1.0 - y * y);
+            let turn = TURN * i;
+            Vec3::new(ring * math::cos(turn), y, ring * math::sin(turn))
+        })
+        .collect()
+}
+
+/// Areas for cards facing `normals` (unit vectors) so that together they
+/// cover as much as `cluster`'s organs seen from every side: the
+/// non-negative least-squares fit
+///
+/// ```text
+/// minimise  sum_d ( sum_k |n_k . d| a_k  -  C(d) )^2   over a_k >= 0
+/// ```
+///
+/// over the directions `d` of [`cover_directions`], `C(d)` being the
+/// organs' cover along `d` ([`Cluster::cover`]). Every subset of the cards
+/// is solved by its normal equations and the best fit with no negative
+/// area is kept; a single card always gives one.
+fn card_areas(normals: &[Vec3], cluster: &Cluster) -> Vec<f64> {
+    let directions = cover_directions();
+    let weights: Vec<f64> = directions
+        .iter()
+        .map(|d| {
+            if d.y <= SIDE_VIEW_SINE {
+                1.0
+            } else {
+                HIGH_VIEW_WEIGHT
+            }
+        })
+        .collect();
+    let cover: Vec<f64> = directions.iter().map(|&d| cluster.cover(d)).collect();
+    // Each direction's row scaled by the square root of its weight, so the
+    // normal equations below fit the weighted sum.
+    let root: Vec<f64> = weights.iter().map(|&w| math::sqrt(w)).collect();
+    let seen: Vec<Vec<f64>> = normals
+        .iter()
+        .map(|&normal| directions.iter().map(|&d| normal.dot(d).abs()).collect())
+        .collect();
+    let seen_weighted: Vec<Vec<f64>> = seen
+        .iter()
+        .map(|row| row.iter().zip(&root).map(|(s, r)| s * r).collect())
+        .collect();
+    let cover_weighted: Vec<f64> = cover.iter().zip(&root).map(|(c, r)| c * r).collect();
+    let mut best: Option<(f64, Vec<f64>)> = None;
+    for subset in 1_usize..(1 << normals.len()) {
+        let kept: Vec<usize> = (0..normals.len())
+            .filter(|k| subset & (1 << k) != 0)
+            .collect();
+        let gram: Vec<Vec<f64>> = kept
+            .iter()
+            .map(|&j| {
+                kept.iter()
+                    .map(|&k| {
+                        seen_weighted[j]
+                            .iter()
+                            .zip(&seen_weighted[k])
+                            .map(|(a, b)| a * b)
+                            .sum()
+                    })
+                    .collect()
+            })
+            .collect();
+        let target: Vec<f64> = kept
+            .iter()
+            .map(|&j| {
+                seen_weighted[j]
+                    .iter()
+                    .zip(&cover_weighted)
+                    .map(|(a, c)| a * c)
+                    .sum()
+            })
+            .collect();
+        let Some(solution) = solve(gram, target) else {
+            continue;
+        };
+        if solution.iter().any(|&area| area < 0.0) {
+            continue;
+        }
+        let mut areas = vec![0.0; normals.len()];
+        for (&k, &area) in kept.iter().zip(&solution) {
+            areas[k] = area;
+        }
+        let error: f64 = cover
+            .iter()
+            .enumerate()
+            .map(|(d, c)| {
+                let drawn: f64 = areas.iter().zip(&seen).map(|(a, s)| a * s[d]).sum();
+                weights[d] * (drawn - c) * (drawn - c)
+            })
+            .sum();
+        if best.as_ref().is_none_or(|(least, _)| error < *least) {
+            best = Some((error, areas));
+        }
+    }
+    best.map_or_else(|| vec![0.0; normals.len()], |(_, areas)| areas)
+}
+
+/// The solution of the small linear system `matrix · x = rhs` by Gaussian
+/// elimination with partial pivoting; `None` when it is singular.
+fn solve(mut matrix: Vec<Vec<f64>>, mut rhs: Vec<f64>) -> Option<Vec<f64>> {
+    let n = rhs.len();
+    for column in 0..n {
+        let pivot = (column..n)
+            .max_by(|&a, &b| matrix[a][column].abs().total_cmp(&matrix[b][column].abs()))?;
+        if matrix[pivot][column].abs() < 1e-12 {
+            return None;
+        }
+        matrix.swap(column, pivot);
+        rhs.swap(column, pivot);
+        let pivot_row = matrix[column].clone();
+        for row in column + 1..n {
+            let factor = matrix[row][column] / pivot_row[column];
+            for (value, above) in matrix[row][column..n].iter_mut().zip(&pivot_row[column..n]) {
+                *value -= factor * above;
+            }
+            rhs[row] -= factor * rhs[column];
+        }
+    }
+    let mut x = vec![0.0; n];
+    for row in (0..n).rev() {
+        let rest: f64 = (row + 1..n).map(|k| matrix[row][k] * x[k]).sum();
+        x[row] = (rhs[row] - rest) / matrix[row][row];
+    }
+    Some(x)
 }
 
 /// Organs merged per template and cell of edge `lod.cluster`: a card
@@ -777,10 +941,16 @@ fn cluster_cards(graph: &PlantGraph, looks: &[Look], variation: f32, lod: &LodSp
             ..Cluster::default()
         });
         let area = look.shape.aspect() * organ.size * organ.size;
+        let normal = heading.cross(left);
         entry.position += organ.position;
-        entry.normal += heading.cross(left) * area;
+        entry.normal += normal * area;
         entry.heading += heading * area;
-        entry.area += area;
+        entry.faces.push((normal, area));
+        if let Some(cross) = look.shape.cross() {
+            // The card across faces along the organ's left (see
+            // `organ_cards`).
+            entry.faces.push((left, area * cross));
+        }
         entry.light += organ.light;
         entry.count += 1.0;
         // A cluster shows from its first organ's birth until its last
@@ -796,43 +966,48 @@ fn cluster_cards(graph: &PlantGraph, looks: &[Look], variation: f32, lod: &LodSp
         let heading = (cluster.heading - normal * normal.dot(cluster.heading))
             .normalize_or(any_perpendicular(normal));
         let left = normal.cross(heading);
-        // A cluster card covers about half the cell, never less than the
-        // organs' summed area, so far crowns keep their density.
-        let side = math::sqrt(cluster.area).max(lod.cluster * 0.5);
-        let card = Placed {
-            base: position - heading * (side * 0.5),
-            heading,
-            left,
-            length: side,
-            width: side,
-            color: organ_color(look, variation, cluster.light / cluster.count, cluster.id),
-            template,
-            born: cluster.born,
-            shed: cluster.shed.is_finite().then_some(cluster.shed),
-        };
-        cards.push(card.finish());
         // Leaves turned to the light merge into a level card, which
-        // vanishes edge on, so a crown seen from the side would show
-        // only its branches. Two upright cards, one facing out from the
-        // plant's axis and one around it, keep the cluster's cover from
-        // every side; one facing nearly as the merged card is left out.
-        // A cluster never has more cards than organs, so a coarser
-        // level never draws more cards than a finer one.
+        // vanishes edge on, so two upright cards, one facing out from the
+        // plant's axis and one around it, carry the cover the leaves give
+        // from the side; one facing nearly as the merged card is left out.
+        // A cluster never has more cards than organs, so a coarser level
+        // never draws more cards than a finer one.
         let level = |v: Vec3| Vec3::new(v.x, 0.0, v.z);
         let out = level(position).normalize_or(level(heading).normalize_or(Vec3::X));
         let around = Vec3::Y.cross(out);
+        let mut facings = vec![(normal, heading, left)];
         let mut spare = cluster.count - 1.0;
-        for (facing, across) in [(out, around), (around, out)] {
+        for facing in [out, around] {
             if spare < 1.0 || facing.dot(normal).abs() > CLUSTER_UPRIGHT_SKIP {
                 continue;
             }
             spare -= 1.0;
+            // Along the organs' mean heading as it shows on the upright
+            // card, so a spray of needles along a level shoot stays level.
+            let along =
+                (cluster.heading - facing * facing.dot(cluster.heading)).normalize_or(Vec3::Y);
+            facings.push((facing, along, facing.cross(along)));
+        }
+        let normals: Vec<Vec3> = facings.iter().map(|&(facing, ..)| facing).collect();
+        // Each card keeps the organs' proportions: length by width at the
+        // look's aspect.
+        let aspect = look.shape.aspect().max(MIN_CLUSTER_ASPECT);
+        for ((_, heading, left), area) in facings.into_iter().zip(card_areas(&normals, &cluster)) {
+            if area <= 0.0 {
+                continue;
+            }
+            let (length, width) = (math::sqrt(area / aspect), math::sqrt(area * aspect));
             cards.push(
                 Placed {
-                    base: position - Vec3::Y * (side * 0.5),
-                    heading: Vec3::Y,
-                    left: across,
-                    ..card
+                    base: position - heading * (length * 0.5),
+                    heading,
+                    left,
+                    length,
+                    width,
+                    color: organ_color(look, variation, cluster.light / cluster.count, cluster.id),
+                    template,
+                    born: cluster.born,
+                    shed: cluster.shed.is_finite().then_some(cluster.shed),
                 }
                 .finish(),
             );
@@ -973,8 +1148,9 @@ mod tests {
     #[test]
     fn clustering_merges_organs_and_keeps_birth_ages() {
         let clustered = build(&graph(), &looks(), &appearance(), &lod(0.0, 1.0, 0.0));
-        // Two cells of ten level leaves: each a level card and two upright.
-        assert_eq!(clustered.cards.len(), 2 * 3);
+        // Two cells of ten level leaves: each a level card, and no upright
+        // card, since level leaves cover nothing seen from the side.
+        assert_eq!(clustered.cards.len(), 2);
         assert!(
             clustered
                 .cards
@@ -998,27 +1174,69 @@ mod tests {
             .sum()
     }
 
-    /// Leaves turned to the light cover a crown from above only; merged
-    /// into clusters they cover it from the side too, as much as from
-    /// above, so far crowns do not thin to their branches.
-    #[test]
-    fn clusters_cover_a_crown_from_every_side() {
-        let detailed = build(&graph(), &looks(), &appearance(), &lod(0.0, 0.0, 0.0));
-        let clustered = build(&graph(), &looks(), &appearance(), &lod(0.0, 1.0, 0.0));
-        assert!(cover(&detailed, Vec3::X) < 1e-9 && cover(&detailed, Vec3::Z) < 1e-9);
-        let above = cover(&clustered, Vec3::Y);
-        assert!(above > 0.0);
-        for side in [
-            Vec3::X,
-            Vec3::Z,
-            Vec3::new(1.0, 0.0, 1.0).normalize_or(Vec3::X),
-        ] {
-            let seen = cover(&clustered, side);
-            assert!(
-                seen >= 0.9 * above,
-                "{seen} from the side, {above} from above"
-            );
+    /// Twenty leaves in one cell, tilted up to 50° from level toward
+    /// every side in turn.
+    fn tilted_leaves() -> PlantGraph {
+        let mut graph = graph();
+        for (i, organ) in (0_u32..).zip(&mut graph.organs) {
+            let turn = f64::from(i) * 2.399_963;
+            let tilt = 0.87 * f64::from(i % 5) / 4.0;
+            let toward = Vec3::new(math::cos(turn), 0.0, math::sin(turn));
+            let normal = Vec3::Y * math::cos(tilt) + toward * math::sin(tilt);
+            organ.heading = any_perpendicular(normal);
+            organ.left = normal.cross(organ.heading);
+            organ.position = Vec3::new(0.3 + 0.02 * f64::from(i), 2.5, 0.0);
         }
+        graph
+    }
+
+    /// Merged into clusters, leaves cover a crown about as much as they do
+    /// themselves, seen from any side a walker sees it from, so a coarser
+    /// level is neither denser nor sparser than a finer one: within a
+    /// third at every level and side view, and within a tenth on average.
+    /// Level leaves give no cover from the side, and neither do their
+    /// clusters.
+    #[test]
+    fn clusters_cover_a_crown_as_its_leaves_do() {
+        let tilted = tilted_leaves();
+        let detailed = build(&tilted, &looks(), &appearance(), &lod(0.0, 0.0, 0.0));
+        let clustered = build(&tilted, &looks(), &appearance(), &lod(0.0, 1.0, 0.0));
+        assert_eq!(clustered.cards.len(), 3);
+        let mut ratios = Vec::new();
+        for elevation in [-45.0_f64, -20.0, 0.0, 20.0, 45.0] {
+            for k in 0..8 {
+                let (e, azimuth) = (elevation.to_radians(), f64::from(k) * 45.0_f64.to_radians());
+                let axis = Vec3::new(
+                    math::cos(e) * math::cos(azimuth),
+                    math::sin(e),
+                    math::cos(e) * math::sin(azimuth),
+                );
+                let ratio = cover(&clustered, axis) / cover(&detailed, axis);
+                assert!(
+                    (0.67..=1.33).contains(&ratio),
+                    "clusters cover {ratio} times the leaves at {elevation} degrees, azimuth {k} x 45"
+                );
+                ratios.push(ratio);
+            }
+        }
+        let count = f64::from(u32::try_from(ratios.len()).unwrap());
+        let mean = ratios.iter().sum::<f64>() / count;
+        assert!(
+            (mean - 1.0).abs() < 0.1,
+            "clusters cover {mean} times the leaves on average"
+        );
+        let level = build(&graph(), &looks(), &appearance(), &lod(0.0, 1.0, 0.0));
+        assert!(cover(&level, Vec3::X) < 1e-9 && cover(&level, Vec3::Z) < 1e-9);
+        assert!(
+            (cover(&level, Vec3::Y)
+                / cover(
+                    &build(&graph(), &looks(), &appearance(), &lod(0.0, 0.0, 0.0)),
+                    Vec3::Y
+                )
+                - 1.0)
+                .abs()
+                < 1e-6
+        );
         // One leaf alone stays one card, so a coarse level never has more
         // cards than the organs it merges.
         let mut lone = graph();

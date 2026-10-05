@@ -34,5 +34,7 @@ pub mod templates;
 /// Revision of the generator as a whole: the L-system engine, its tools and
 /// the bakers. Bump it whenever output for an unchanged spec changes; it is
 /// part of every package key. 3: cluster cards of the far levels gained
-/// upright cards, so far crowns show from the side.
-pub const GENERATOR_REVISION: u32 = 3;
+/// upright cards, so far crowns show from the side. 4: cluster cards cover
+/// what their organs cover, no more, and keep the organs' proportions, so
+/// far levels are not denser than near ones.
+pub const GENERATOR_REVISION: u32 = 4;
