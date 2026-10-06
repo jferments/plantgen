@@ -13,7 +13,9 @@ use std::time::Instant;
 use std::{env, fmt, fs};
 
 use after_plants::graph::{OrganType, PlantGraph};
+use after_plants::ground::{self, GROUND_LOOK_SIZE};
 use after_plants::grow::{Growth, GrowthSettings, grow};
+use after_plants::litter;
 use after_plants::looks::Look;
 use after_plants::lsys::{Limits, Neighbourhood, Program};
 use after_plants::mesh;
@@ -85,6 +87,7 @@ fn run() -> Result<(), Failure> {
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
         "atlas" => atlas_command(&args),
+        "ground" => ground_command(&args),
         "build" => build_command(&args),
         "inspect" => inspect_command(&args),
         "help" | "--help" | "-h" => print_usage(),
@@ -113,6 +116,10 @@ Usage:
   plantc atlas <species|spec.json> --out FILE.png
       Draw the species' organ card textures (leaves, needles, flowers) in
       their colours, one per organ, side by side.
+  plantc ground --out FILE.png [--seed N] [--looks words|litter]
+      Draw the 26 ground looks the terrain wears, seven to a row in the
+      order of the ground's words, or with `--looks litter` the 23 canopy
+      species' litters: each look's colour above its relief.
   plantc build <species|spec.json> [--out DIR] [--quality draft|standard]
                [--threads N]
       Build a .afterplant package in DIR (default `plants`) and print its
@@ -551,6 +558,78 @@ fn atlas_command(args: &[String]) -> Result<(), Failure> {
     }
     Ok(())
 }
+
+fn ground_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &["out", "seed", "looks"])?;
+    if !options.positional.is_empty() {
+        return Err("`ground` takes no species".into());
+    }
+    let out = options.flags.get("out").ok_or("missing `--out FILE.png`")?;
+    let seed = options.number::<u64>("seed")?.unwrap_or(1);
+    let (looks, drawn) = match options.flags.get("looks").map_or("words", String::as_str) {
+        "words" => (ground::ground_looks(seed), Vec::new()),
+        "litter" => {
+            let drawn: Vec<_> = (0..litter::LITTERS.len())
+                .filter_map(|index| litter::litter_drawn(index, seed))
+                .collect();
+            (
+                drawn.iter().map(|drawn| drawn.look.clone()).collect(),
+                drawn,
+            )
+        }
+        other => return Err(format!("`--looks` is `words` or `litter`, not `{other}`").into()),
+    };
+    let size = GROUND_LOOK_SIZE;
+    let columns = GROUND_SHEET_COLUMNS.min(looks.len());
+    let rows = looks.len().div_ceil(columns);
+    let (width, height) = (size * columns, size * 2 * rows);
+    let mut pixels = vec![0_u8; width * height * 4];
+    for (index, look) in looks.iter().enumerate() {
+        let (left, top) = (index % columns * size, index / columns * 2 * size);
+        for y in 0..size {
+            for x in 0..size {
+                let from = (y * size + x) * 4;
+                let colour = ((top + y) * width + left + x) * 4;
+                let relief = ((top + size + y) * width + left + x) * 4;
+                pixels[colour..colour + 3].copy_from_slice(&look.rgba[from..from + 3]);
+                pixels[colour + 3] = 255;
+                let height = look.rgba[from + 3];
+                pixels[relief..relief + 4].copy_from_slice(&[height, height, height, 255]);
+            }
+        }
+    }
+    let png = raster::encode_png(width, height, &pixels)
+        .map_err(|error| format!("cannot encode PNG: {error}"))?;
+    fs::write(out, png).map_err(|error| format!("cannot write {out}: {error}"))?;
+    out!("wrote {out}: {width}x{height}, colour above relief, row by row:");
+    for look in &looks {
+        let [r, g, b] = look.mean;
+        out!(
+            "  {:<8} repeats every {:.2} m, relief {:.0} mm, mean linear colour {r:.3} {g:.3} {b:.3}",
+            look.name,
+            look.tile_m,
+            look.relief_m * 1000.0
+        );
+    }
+    // What each litter's drawing gives, for tuning its declared mean and
+    // relief: the drawn hue at the declared green, and the drawn relief.
+    for drawn in &drawn {
+        let [r, g, b] = drawn.drawn_mean;
+        let green = f64::from(drawn.look.mean[1]) / g.max(1.0e-9);
+        out!(
+            "  {:<22} drawn: hue {:.3} {:.3} {:.3}, relief {:.0} mm",
+            drawn.look.name,
+            r * green,
+            g * green,
+            b * green,
+            drawn.drawn_relief_m * 1000.0
+        );
+    }
+    Ok(())
+}
+
+/// Looks to a row of the sheet `ground` draws.
+const GROUND_SHEET_COLUMNS: usize = 7;
 
 /// Light grey, linear RGB: behind the card textures `atlas` draws.
 const SWATCH_BACKGROUND: [f32; 3] = [0.6, 0.6, 0.6];

@@ -7,7 +7,9 @@
 //! Meshes, level-of-detail chains and impostors are baked from those graphs
 //! ([`mesh`], [`raster`], [`impostor`]), with organ cards cut out by
 //! templates drawn from the species' looks ([`looks`], [`templates`]), into
-//! a content-addressed `.afterplant` package ([`package`]).
+//! a content-addressed `.afterplant` package ([`package`]). The textures
+//! of the ground between plants (litter, moss, grass, soil, sand, gravel
+//! and rock) are drawn here too ([`ground`]).
 //!
 //! Everything here is engine-independent and deterministic: the same spec,
 //! generator revision and seed give bit-identical output on every machine,
@@ -16,9 +18,11 @@
 //! ([`math`]).
 
 pub mod graph;
+pub mod ground;
 pub mod grow;
 pub mod impostor;
 pub mod json;
+pub mod litter;
 pub mod looks;
 pub mod lsys;
 pub mod math;
