@@ -1,5 +1,5 @@
 {
-  "schema": 1,
+  "schema": 2,
   "species": "achillea-millefolium",
   "layers": {
     "herb": 0.8
@@ -9,6 +9,13 @@
   "elevation_m": [-50, -10, 2000, 2500],
   "max_slope_deg": 40,
   "shade_tolerance": 0.1,
+  "coldest_c": [-40, -30, 16, 22],
+  "hard_freeze_c": [-60, -50, 14, 20],
+  "warmest_c": [4, 7, 28, 32],
+  "degree_days_0": [300, 600, 9000, 11000],
+  "degree_days_5": [50, 200, 6500, 8000],
+  "moisture_index": [0.2, 0.3, 1, 1.01],
+  "summer_rain": [0, 0, 1, 1.01],
   "evidence": {
     "layers": {
       "evidence": "Authored",
@@ -33,6 +40,34 @@
     "shade_tolerance": {
       "evidence": "Authored",
       "note": "Needs light."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "note": "Across its range (see the provenance note), coldest-month means from about −30 °C, gone by −40 °C, up to about 16 °C."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "note": "Across its range, lows to about −50 °C borne, gone where the year's coldest night falls below about −60 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "note": "Across its range, warmest-month means from about 7 to 28 °C; gone below 4 °C, where summers are too short, and above 32 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "note": "Across its range, about 600 or more degree-days above 0 °C, none below 300."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "note": "Across its range, about 200 or more degree-days above 5 °C, none below 50."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "note": "A moisture index from about 0.3, gone by 0.2."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "note": "No limit: it grows under summer-dry and summer-wet climates alike."
     }
   },
   "provenance": {
@@ -40,9 +75,19 @@
       {
         "title": "Project After contributors: hand-set niche values",
         "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "Fire Effects Information System (FEIS), USDA Forest Service, Rocky Mountain Research Station: species reviews",
+        "url": "https://www.fs.usda.gov/database/feis/",
+        "licence": "public domain (work of the US federal government)"
+      },
+      {
+        "title": "USDA NRCS PLANTS Database: distribution by state and province",
+        "url": "https://plants.usda.gov",
+        "licence": "public domain (work of the US federal government)"
       }
     ],
     "contributors": ["Project After"],
-    "notes": "Authored from general knowledge of the species in the south Puget Sound lowlands; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS)."
+    "notes": "Authored from general knowledge of the species in the south Puget Sound lowlands; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS). Climate ranges (niche schema 2, 2026-10-06): Common yarrow is circumboreal, from sea level to above the tree line (FEIS, the PLANTS Database). Each climate range brackets the climate of that range at the 2.8° ERA5 product's scale, an approximate envelope read from these descriptions, not fitted to occurrence records."
   }
 }
