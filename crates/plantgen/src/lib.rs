@@ -7,9 +7,11 @@
 //! Meshes, level-of-detail chains and impostors are baked from those graphs
 //! ([`mesh`], [`raster`], [`impostor`]), with organ cards cut out by
 //! templates drawn from the species' looks ([`looks`], [`templates`]), into
-//! a content-addressed `.afterplant` package ([`package`]). The textures
-//! of the ground between plants (litter, moss, grass, soil, sand, gravel
-//! and rock) are drawn here too ([`ground`]).
+//! a content-addressed `.afterplant` package ([`package`]). Fleshy bodies,
+//! the stems of cacti and other succulents, are meshed by [`body`], and
+//! their spines grow per areole from a pattern per species ([`spines`]).
+//! The textures of the ground between plants (litter, moss, grass, soil,
+//! sand, gravel and rock) are drawn here too ([`ground`]).
 //!
 //! Everything here is engine-independent and deterministic: the same spec,
 //! generator revision and seed give bit-identical output on every machine,
@@ -17,6 +19,7 @@
 //! ([`rng`]) and every transcendental function goes through `libm`
 //! ([`math`]).
 
+pub mod body;
 pub mod graph;
 pub mod ground;
 pub mod grow;
@@ -33,6 +36,7 @@ pub mod quality;
 pub mod raster;
 pub mod rng;
 pub mod spec;
+pub mod spines;
 pub mod templates;
 
 /// Revision of the generator as a whole: the L-system engine, its tools and

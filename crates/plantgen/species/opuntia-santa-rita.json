@@ -1,0 +1,164 @@
+{
+  "schema": 1,
+  "id": "opuntia-santa-rita",
+  "taxon": {
+    "scientific_name": "Opuntia santa-rita",
+    "common_name": "Santa Rita prickly pear",
+    "usda_symbol": "OPSA3"
+  },
+  "growth_form": "stem_succulent",
+  "generator": {
+    "program": "succulent",
+    "params": {
+      "vigour_spread": 0.12,
+      "lean": 8,
+      "stems": 2,
+      "stem_rate": 0.15,
+      "clump_radius": 0.15,
+      "stem_lean": 20,
+      "joints": 1,
+      "pad": 1,
+      "joint_length": 0.17,
+      "joint_radius": 0.085,
+      "joint_spread": 0.15,
+      "daughters_low": 0.8,
+      "daughters_high": 2.4,
+      "generations": 12,
+      "margin": 50,
+      "twist": 30,
+      "sag": 0.4,
+      "swell": 0.2,
+      "swell_years": 10,
+      "dome": 1.0,
+      "bloom_age": 3,
+      "joint_flowers": 4,
+      "flower_angle": 30,
+      "flower_size": 0.07,
+      "bud_share": 0.2,
+      "fruit_share": 0.3,
+      "bud_size": 0.025,
+      "fruit_size": 0.04,
+      "bud_rate": 0.5,
+      "flower_area": 0.583,
+      "bud_area": 0.7,
+      "fruit_area": 0.89
+    }
+  },
+  "growth": {
+    "years": 20,
+    "step": 1,
+    "keyframes": [2, 5, 10, 20]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3, 4]
+  },
+  "appearance": {
+    "bark": [0.2, 0.17, 0.13],
+    "foliage": [0.22, 0.12, 0.2],
+    "foliage_shade": [0.099, 0.054, 0.09],
+    "variation": 0.1,
+    "organs": {
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petals": 8,
+          "petal_width": 1.0,
+          "point": 0.0,
+          "notch": 0.0,
+          "centre": 0.35
+        },
+        "colour": [0.85, 0.75, 0.15],
+        "accent": [0.6, 0.1, 0.05]
+      },
+      "bud": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.55
+        },
+        "colour": [0.35, 0.2, 0.25]
+      },
+      "fruit": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.7
+        },
+        "colour": [0.35, 0.05, 0.15]
+      }
+    },
+    "bodies": {
+      "stem": {
+        "colour": [0.22, 0.12, 0.2],
+        "flatten": 0.12,
+        "dome": 1.0,
+        "base": 1.0,
+        "areoles": {
+          "spacing": 0.03,
+          "felt_radius": 0.004,
+          "felt": [0.35, 0.25, 0.2]
+        },
+        "spines": [
+          {
+            "count": [0, 2],
+            "angle": 30,
+            "length": 0.04,
+            "width": 0.001,
+            "colour": [0.35, 0.2, 0.12],
+            "angle_spread": 15,
+            "aim": 180,
+            "arc": 120,
+            "length_spread": 0.4
+          },
+          {
+            "count": [10, 20],
+            "angle": 60,
+            "length": 0.004,
+            "width": 0.00015,
+            "colour": [0.4, 0.3, 0.15],
+            "angle_spread": 20,
+            "length_spread": 0.3
+          }
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 10,
+      "environment": "open",
+      "height": 0.9,
+      "tolerance": 0.5
+    },
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 1.1,
+      "tolerance": 0.45
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: an upright shrub about a metre tall of round pads 10 to 20 cm across. Yellow flowers with red centres along the top of the pads in spring. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge: about a metre within 10 to 20 years. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: pads blue-green flushed violet to deep purple in cold and drought, drawn purple; few or no long spines, reddish brown where present, and brown glochids."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (milestone F1). Calibration against measurements and photographs comes later."
+  }
+}

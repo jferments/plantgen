@@ -30,6 +30,12 @@ pub struct Segment {
     pub born: f64,
     /// Branch order: the bracket depth the segment was drawn at.
     pub order: u16,
+    /// 0 for wood drawn with `F`; for a segment drawn with a declared
+    /// body, that body's index plus one.
+    pub body: u8,
+    /// The turtle's left vector while the segment was drawn, which orients
+    /// a flattened body; zero for wood.
+    pub left: Vec3,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -279,6 +285,9 @@ impl<'a> Interpreter<'a> {
         }
         match &program.symbols[usize::from(symbol)].kind {
             SymbolKind::Turtle(turtle) => self.turtle(*turtle, params, owner, state, saved, scene),
+            SymbolKind::Body { index } => {
+                self.forward(params[0], index.saturating_add(1), owner, state, scene)
+            }
             SymbolKind::Module { .. } => Ok(()),
             SymbolKind::Organ { .. } => {
                 if scene.organs.len() >= self.limits.max_segments {
@@ -329,38 +338,7 @@ impl<'a> Interpreter<'a> {
                 }
             }
             Turtle::Cut => {}
-            Turtle::Forward => {
-                if scene.segments.len() >= self.limits.max_segments {
-                    return Err(GrowthError::Limit {
-                        what: "segments",
-                        limit: self.limits.max_segments as u64,
-                    });
-                }
-                let start = state.position;
-                let end = start + frame.h * params[0];
-                let index = index_u32(scene.segments.len());
-                let node = add_node(scene, state, NodeKind::Segment(index));
-                scene.segments.push(Segment {
-                    id: owner.lineage.element(KIND_SEGMENT, owner.segments),
-                    node,
-                    start,
-                    end,
-                    width: state.width,
-                    born: owner.born,
-                    order: state.depth,
-                });
-                owner.segments += 1;
-                scene.height = scene.height.max(end.y);
-                state.position = end;
-                state.segment = Some(index);
-                if state.elasticity != 0.0 {
-                    let axis = frame.h.cross(state.tropism);
-                    let strength = axis.length();
-                    if strength > 1e-12 {
-                        state.frame = frame.rotated(axis / strength, state.elasticity * strength);
-                    }
-                }
-            }
+            Turtle::Forward => self.forward(params[0], 0, owner, state, scene)?,
             Turtle::Move => state.position += frame.h * params[0],
             Turtle::Left => state.frame = frame.rotated(frame.u, math::radians(params[0])),
             Turtle::Right => state.frame = frame.rotated(frame.u, -math::radians(params[0])),
@@ -399,6 +377,54 @@ impl<'a> Interpreter<'a> {
                     };
                     state.frame = frame.rotated(axis, angle * params[3].clamp(0.0, 1.0));
                 }
+            }
+        }
+        Ok(())
+    }
+}
+
+impl Interpreter<'_> {
+    /// Draw a segment of length `length` along the heading, of wood (`body`
+    /// 0) or of a declared body, then apply the tropism.
+    fn forward(
+        &self,
+        length: f64,
+        body: u8,
+        owner: &mut Owner,
+        state: &mut State,
+        scene: &mut Scene,
+    ) -> Result<(), GrowthError> {
+        if scene.segments.len() >= self.limits.max_segments {
+            return Err(GrowthError::Limit {
+                what: "segments",
+                limit: self.limits.max_segments as u64,
+            });
+        }
+        let frame = state.frame;
+        let start = state.position;
+        let end = start + frame.h * length;
+        let index = index_u32(scene.segments.len());
+        let node = add_node(scene, state, NodeKind::Segment(index));
+        scene.segments.push(Segment {
+            id: owner.lineage.element(KIND_SEGMENT, owner.segments),
+            node,
+            start,
+            end,
+            width: state.width,
+            born: owner.born,
+            order: state.depth,
+            body,
+            left: if body == 0 { Vec3::ZERO } else { frame.l },
+        });
+        owner.segments += 1;
+        scene.height = scene.height.max(end.y);
+        state.position = end;
+        state.segment = Some(index);
+        if state.elasticity != 0.0 {
+            let axis = frame.h.cross(state.tropism);
+            let strength = axis.length();
+            if strength > 1e-12 {
+                state.frame = frame.rotated(axis / strength, state.elasticity * strength);
             }
         }
         Ok(())

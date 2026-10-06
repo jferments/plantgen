@@ -6,6 +6,7 @@
 //! statement  = "param" name "=" expr ";"
 //!            | "module" name [ "(" names ")" ] [ "queries" names ] ";"
 //!            | "organ" name kind [ "area" expr ] ";"
+//!            | "body" name ";"
 //!            | "tool" name "@" integer "{" [ setting { "," setting } [ "," ] ] "}" ";"
 //!            | "axiom" { item } ";"
 //!            | ( "rule" | "decompose" | "interpret" ) name [ "(" names ")" ]
@@ -28,8 +29,8 @@
 
 use super::ProgramError;
 use super::ast::{
-    BinaryOp, Expr, ModuleCall, ModuleDecl, OrganDecl, ParamDecl, ProgramAst, Rule, RuleKind,
-    ToolDecl, UnaryOp,
+    BinaryOp, BodyDecl, Expr, ModuleCall, ModuleDecl, OrganDecl, ParamDecl, ProgramAst, Rule,
+    RuleKind, ToolDecl, UnaryOp,
 };
 use super::lexer::{Span, Spanned, Token, tokenize};
 
@@ -144,6 +145,7 @@ impl Parser {
             params: Vec::new(),
             modules: Vec::new(),
             organs: Vec::new(),
+            bodies: Vec::new(),
             tools: Vec::new(),
             axiom: Vec::new(),
             axiom_span: Span::default(),
@@ -157,6 +159,7 @@ impl Parser {
                 "param" => ast.params.push(self.param(span)?),
                 "module" => ast.modules.push(self.module(span)?),
                 "organ" => ast.organs.push(self.organ(span)?),
+                "body" => ast.bodies.push(self.body(span)?),
                 "tool" => ast.tools.push(self.tool(span)?),
                 "axiom" => {
                     if have_axiom {
@@ -177,7 +180,7 @@ impl Parser {
                         span,
                         message: format!(
                             "unknown statement `{other}`; expected param, module, organ, \
-                             tool, axiom, rule, decompose or interpret"
+                             body, tool, axiom, rule, decompose or interpret"
                         ),
                     });
                 }
@@ -249,6 +252,12 @@ impl Parser {
             area,
             span,
         })
+    }
+
+    fn body(&mut self, span: Span) -> Parsed<BodyDecl> {
+        let (name, _) = self.name("a body name")?;
+        self.expect(&Token::Semicolon, "after the body declaration")?;
+        Ok(BodyDecl { name, span })
     }
 
     fn tool(&mut self, span: Span) -> Parsed<ToolDecl> {

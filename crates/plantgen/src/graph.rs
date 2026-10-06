@@ -31,6 +31,15 @@ pub struct GraphSegment {
     /// Plant age at which the segment is shed, if it is shed before the end
     /// of growth.
     pub shed: Option<f64>,
+    /// 0 for wood; for a segment drawn with one of the program's bodies,
+    /// that body's index among them plus one (see
+    /// [`crate::lsys::Program::bodies`]).
+    #[serde(default)]
+    pub body: u8,
+    /// The turtle's left vector where a body segment was drawn: the wide
+    /// direction of a flattened body such as a pad. Zero for wood.
+    #[serde(default)]
+    pub left: Vec3,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -255,6 +264,8 @@ mod tests {
             radius: 0.003,
             born: 1.0,
             shed: None,
+            body: 0,
+            left: Vec3::ZERO,
         };
         let leaf = GraphOrgan {
             id: 2,

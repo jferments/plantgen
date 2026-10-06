@@ -1,5 +1,6 @@
-//! The built-in species: they grow to their reference sizes, and their
-//! growth history stays consistent from keyframe to keyframe.
+//! The built-in species, the forest's and the Sonoran cacti: they grow to
+//! their reference sizes, and their growth history stays consistent from
+//! keyframe to keyframe.
 
 use std::collections::HashMap;
 
@@ -7,7 +8,7 @@ use after_plants::graph::PlantGraph;
 use after_plants::grow::{Growth, GrowthSettings, grow};
 use after_plants::lsys::Limits;
 use after_plants::package;
-use after_plants::spec::{self, GrowthForm, PlantSpec, SPECIES, Variant};
+use after_plants::spec::{self, GrowthForm, PlantSpec, Variant};
 use after_plants::templates::{self, Templates};
 
 fn grow_variant(spec: &PlantSpec, variant: &Variant, years: f64, keyframes: Vec<f64>) -> Growth {
@@ -36,7 +37,7 @@ fn grow_variant(spec: &PlantSpec, variant: &Variant, years: f64, keyframes: Vec<
 fn builtin_species_grow_to_their_reference_sizes() {
     let mut failures = Vec::new();
     let mut checked = 0;
-    for (id, _) in SPECIES {
+    for (id, _) in spec::all_species() {
         let spec = PlantSpec::builtin(id).unwrap();
         assert!(!spec.allometry.is_empty(), "{id} has no reference sizes");
         for variant in spec.variant_list() {
@@ -77,7 +78,7 @@ fn builtin_species_grow_to_their_reference_sizes() {
 #[test]
 fn builtin_species_shade_with_the_area_they_draw() {
     let mut failures = Vec::new();
-    for (id, _) in SPECIES {
+    for (id, _) in spec::all_species() {
         let spec = PlantSpec::builtin(id).unwrap();
         let (program, params) = spec.program().unwrap();
         let looks = spec.appearance.looks(program.organs());
@@ -104,7 +105,7 @@ fn builtin_species_shade_with_the_area_they_draw() {
 #[test]
 fn grasses_and_herbs_renew_their_shoots_every_year() {
     let mut checked = 0;
-    for (id, _) in SPECIES {
+    for (id, _) in spec::all_species() {
         let spec = PlantSpec::builtin(id).unwrap();
         if !matches!(spec.growth_form, GrowthForm::Graminoid | GrowthForm::Forb) {
             continue;
@@ -170,7 +171,7 @@ fn by_id(graph: &PlantGraph) -> HashMap<u64, usize> {
 /// next, and a part that disappears records when it was shed.
 #[test]
 fn growth_history_is_consistent_between_keyframes() {
-    for (id, _) in SPECIES {
+    for (id, _) in spec::all_species() {
         let spec = PlantSpec::builtin(id).unwrap();
         let variant = spec.variant_list()[0];
         let ages = vec![4.0, 8.0, 12.0, 16.0];
@@ -196,9 +197,11 @@ fn growth_history_is_consistent_between_keyframes() {
                     let parent = &graph.segments[parent as usize];
                     assert!((parent.order..=parent.order + 1).contains(&segment.order));
                     // The pipe model and annual rings: no branch is thicker
-                    // than the wood it grows from.
+                    // than the wood it grows from. A fleshy body is not
+                    // wood: a cactus pad can be wider than the pad it
+                    // grows from.
                     assert!(
-                        segment.radius <= parent.radius * (1.0 + 1e-9),
+                        segment.body > 0 || segment.radius <= parent.radius * (1.0 + 1e-9),
                         "{id} at {}: segment {index} is thicker than its parent",
                         graph.age
                     );

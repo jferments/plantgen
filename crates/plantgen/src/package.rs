@@ -32,15 +32,19 @@
 //!
 //! Binary objects are little-endian with 32-bit floats. A graph is a
 //! 24-byte header (magic, age, height, segment count, organ count), then
-//! 52-byte segments, then 68-byte organs:
+//! 52-byte segments, then 68-byte organs, then, only for a plant with
+//! bodies, the left vector of each body segment:
 //!
 //! ```text
 //! segment: u64 id, u32 parent (0xFFFFFFFF: none), u16 order, u8 flags
-//!          (bit 0: lateral), u8 0, f32×3 start, f32×3 end, f32 radius,
-//!          f32 born, f32 shed (+inf: never)
+//!          (bit 0: lateral), u8 body (0: wood), f32×3 start, f32×3 end,
+//!          f32 radius, f32 born, f32 shed (+inf: never)
 //! organ:   u64 id, u32 segment (0xFFFFFFFF: none), u16 organ type, u16 0,
 //!          f32×3 position, f32×3 heading, f32×3 left, f32 size,
 //!          f32 born, f32 shed (+inf: never), f32 light
+//! bodies:  u32 count B, then B × (u32 segment, f32×3 left), in segment
+//!          order; absent when no segment is a body, so a plant without
+//!          bodies has the bytes it had before bodies existed
 //! ```
 //!
 //! A mesh is the magic, then the wood and then the organ cards, each as one
@@ -55,7 +59,14 @@
 //! cards: u32 card count C, bases f32×3C, headings f32×3C, lefts f32×3C,
 //!        lengths f32×C, widths f32×C, colours f32×3C, births f32×C,
 //!        sheds f32×C, templates u8×C
+//! tufts: u32 tuft count T, positions f32×3T, normals f32×3T, ups f32×3T,
+//!        scales f32×T, greys f32×T, seeds u32×T, births f32×T,
+//!        sheds f32×T, body types u8×T
 //! ```
+//!
+//! Tufts, the areoles of fleshy bodies whose spines a renderer expands
+//! (see [`crate::spines`]), follow the cards only on a level that has any,
+//! so a plant without bodies has the bytes it had before bodies existed.
 
 use std::collections::BTreeMap;
 use std::fmt;
@@ -69,6 +80,7 @@ use std::time::Instant;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
+use crate::body::BodyLook;
 use crate::graph::{GraphOrgan, GraphSegment, OrganType, PlantGraph};
 use crate::grow::{Growth, GrowthSettings, GrowthStats, grow};
 use crate::impostor;
@@ -81,6 +93,7 @@ use crate::mesh::{self, Card, LodSpec, Mesh, PlantMesh};
 use crate::quality::Quality;
 use crate::raster;
 use crate::spec::{Environment, PlantSpec, SpecError, Variant, builtin_program};
+use crate::spines::Tuft;
 use crate::templates::Templates;
 
 /// Version of the package layout and object formats.
@@ -98,6 +111,7 @@ pub const IMPOSTOR_SUPERSAMPLE: usize = 2;
 const GRAPH_HEADER: usize = 24;
 const SEGMENT_BYTES: usize = 52;
 const ORGAN_BYTES: usize = 68;
+const BODY_LEFT_BYTES: usize = 16;
 const NONE: u32 = u32::MAX;
 
 /// A package that could not be built, written or read.
@@ -182,7 +196,9 @@ pub struct AtlasRecord {
     pub width: usize,
     pub height: usize,
     /// One square template per organ type, side by side in the program's
-    /// order; a card's template is its organ type's index.
+    /// order; a card's template is its organ type's index. Then two per
+    /// body type: its spines face on (`spine-star`) and from the side
+    /// (`spine-fan`).
     pub layers: Vec<AtlasLayer>,
 }
 
@@ -235,6 +251,15 @@ pub struct LodRecord {
     pub wood_vertices: usize,
     pub wood_triangles: usize,
     pub cards: usize,
+    /// Areoles of fleshy bodies, on the nearest level only.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub tufts: usize,
+}
+
+// Serde's `skip_serializing_if` passes a reference.
+#[allow(clippy::trivially_copy_pass_by_ref)]
+fn is_zero(value: &usize) -> bool {
+    *value == 0
 }
 
 impl LodRecord {
@@ -362,6 +387,10 @@ pub struct Manifest {
     pub quality: QualityRecord,
     pub program: ProgramRecord,
     pub organ_types: Vec<OrganType>,
+    /// The program's fleshy body types, by name in declaration order; each
+    /// has two templates after the organs' in the atlas.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub body_types: Vec<String>,
     pub organ_atlas: AtlasRecord,
     pub variants: Vec<VariantRecord>,
     pub validation: Vec<ValidationRecord>,
@@ -394,6 +423,8 @@ pub struct Inputs {
     pub key: String,
     /// One look per organ type of the program.
     pub looks: Vec<Look>,
+    /// One look per body type of the program.
+    pub bodies: Vec<BodyLook>,
     templates: Templates,
     atlas: (usize, usize, Vec<u8>),
 }
@@ -432,7 +463,9 @@ impl Inputs {
         spec.validate()?;
         let (program, _) = spec.program_from(source)?;
         let looks = spec.appearance.looks(program.organs());
-        let templates = Templates::for_looks(&looks);
+        let bodies = spec.appearance.body_looks(program.bodies());
+        let named: Vec<(&str, &BodyLook)> = program.bodies().zip(&bodies).collect();
+        let templates = Templates::for_plant(&looks, &named);
         let (width, height, pixels) = templates.atlas_rgba();
         let atlas_png = png(width, height, &pixels)?;
         let quality_json = json::to_vec(&QualityRecord::from(quality)).map_err(format_error)?;
@@ -459,6 +492,7 @@ impl Inputs {
             quality: *quality,
             key: hex(&hasher.finalize()),
             looks,
+            bodies,
             templates,
             atlas: (width, height, atlas_png),
         })
@@ -726,12 +760,15 @@ fn bake_keyframe(graph: &PlantGraph, inputs: &Inputs) -> Result<BakedKeyframe, P
         .quality
         .lods
         .iter()
-        .map(|lod| {
+        .enumerate()
+        .map(|(level, lod)| {
             mesh::build(
                 graph,
                 &inputs.looks,
+                &inputs.bodies,
                 &inputs.spec.appearance,
                 &lod.for_height(graph.height),
+                level,
             )
         })
         .collect();
@@ -755,6 +792,7 @@ fn bake_keyframe(graph: &PlantGraph, inputs: &Inputs) -> Result<BakedKeyframe, P
                         wood_vertices: plant.wood.vertex_count(),
                         wood_triangles: plant.wood.triangle_count(),
                         cards: plant.cards.len(),
+                        tufts: plant.tufts.len(),
                     },
                 )
             })
@@ -898,6 +936,7 @@ fn assemble(
             .first()
             .map(|growth| growth.organ_types.clone())
             .unwrap_or_default(),
+        body_types: program.bodies().map(str::to_string).collect(),
         organ_atlas: AtlasRecord {
             object: atlas_object,
             width: *atlas_width,
@@ -1342,7 +1381,7 @@ pub fn encode_graph(graph: &PlantGraph) -> Vec<u8> {
         out.u32(segment.parent.unwrap_or(NONE));
         out.u16(segment.order);
         out.u8(u8::from(segment.lateral));
-        out.u8(0);
+        out.u8(segment.body);
         out.vec3(segment.start);
         out.vec3(segment.end);
         out.real(segment.radius);
@@ -1362,6 +1401,19 @@ pub fn encode_graph(graph: &PlantGraph) -> Vec<u8> {
         out.shed(organ.shed);
         out.real(organ.light);
     }
+    let bodies: Vec<(usize, &GraphSegment)> = graph
+        .segments
+        .iter()
+        .enumerate()
+        .filter(|(_, segment)| segment.body != 0)
+        .collect();
+    if !bodies.is_empty() {
+        out.count(bodies.len());
+        for (index, segment) in bodies {
+            out.count(index);
+            out.vec3(segment.left);
+        }
+    }
     out.0
 }
 
@@ -1370,7 +1422,9 @@ pub fn encode_graph(graph: &PlantGraph) -> Vec<u8> {
 /// # Errors
 ///
 /// Fails on a wrong magic, a wrong length, a parent that does not come
-/// before its child, or a segment index out of range.
+/// before its child, a segment index out of range, or a body section that
+/// does not list exactly the body segments in order.
+#[allow(clippy::too_many_lines)]
 pub fn decode_graph(bytes: &[u8]) -> Result<PlantGraph, PackageError> {
     let mut input = Reader {
         bytes,
@@ -1389,7 +1443,13 @@ pub fn decode_graph(bytes: &[u8]) -> Result<PlantGraph, PackageError> {
         .zip(organs.checked_mul(ORGAN_BYTES))
         .and_then(|(a, b)| a.checked_add(b))
         .and_then(|body| body.checked_add(GRAPH_HEADER));
-    if expected != Some(bytes.len()) {
+    // A plant with bodies adds a count and a left vector per body segment;
+    // the count itself is checked when the section is read.
+    let fits = expected.is_some_and(|base| {
+        bytes.len() == base
+            || (bytes.len() >= base + 4 && (bytes.len() - base - 4).is_multiple_of(BODY_LEFT_BYTES))
+    });
+    if !fits {
         return Err(format_error(format!(
             "a graph of {segments} segments and {organs} organs cannot be {} bytes",
             bytes.len()
@@ -1411,7 +1471,7 @@ pub fn decode_graph(bytes: &[u8]) -> Result<PlantGraph, PackageError> {
         }
         let order = input.u16()?;
         let flags = input.u8()?;
-        input.u8()?;
+        let body = input.u8()?;
         graph.segments.push(GraphSegment {
             id,
             parent,
@@ -1422,6 +1482,8 @@ pub fn decode_graph(bytes: &[u8]) -> Result<PlantGraph, PackageError> {
             radius: input.real()?,
             born: input.real()?,
             shed: input.shed()?,
+            body,
+            left: Vec3::ZERO,
         });
     }
     for index in 0..organs {
@@ -1446,6 +1508,31 @@ pub fn decode_graph(bytes: &[u8]) -> Result<PlantGraph, PackageError> {
             shed: input.shed()?,
             light: input.real()?,
         });
+    }
+    let body_segments: Vec<usize> = graph
+        .segments
+        .iter()
+        .enumerate()
+        .filter(|(_, segment)| segment.body != 0)
+        .map(|(index, _)| index)
+        .collect();
+    if input.at < bytes.len() || !body_segments.is_empty() {
+        let count = input.u32()? as usize;
+        if count != body_segments.len() {
+            return Err(format_error(format!(
+                "a graph with {} body segments lists {count} body left vectors",
+                body_segments.len()
+            )));
+        }
+        for expected in body_segments {
+            let index = input.u32()? as usize;
+            if index != expected {
+                return Err(format_error(format!(
+                    "the body left vectors list segment {index} where segment {expected} was due"
+                )));
+            }
+            graph.segments[index].left = input.vec3()?;
+        }
     }
     input.finish()?;
     Ok(graph)
@@ -1502,12 +1589,31 @@ pub fn encode_mesh(plant: &PlantMesh) -> Vec<u8> {
         out.u8(card.template);
     }
     out.pad();
+    let tufts = &plant.tufts;
+    if !tufts.is_empty() {
+        out.count(tufts.len());
+        out.f32s(tufts.iter().flat_map(|tuft| &tuft.position));
+        out.f32s(tufts.iter().flat_map(|tuft| &tuft.normal));
+        out.f32s(tufts.iter().flat_map(|tuft| &tuft.up));
+        out.f32s(tufts.iter().map(|tuft| &tuft.scale));
+        out.f32s(tufts.iter().map(|tuft| &tuft.grey));
+        for tuft in tufts {
+            out.u32(tuft.seed);
+        }
+        out.f32s(tufts.iter().map(|tuft| &tuft.born));
+        out.f32s(tufts.iter().map(|tuft| &tuft.shed));
+        for tuft in tufts {
+            out.u8(tuft.body);
+        }
+        out.pad();
+    }
     out.0
 }
 
-/// Bytes per wood vertex and per card, without padding.
+/// Bytes per wood vertex, per card and per tuft, without padding.
 const WOOD_VERTEX_BYTES: usize = 57;
 const CARD_BYTES: usize = 65;
+const TUFT_BYTES: usize = 57;
 
 fn triples(values: &[f32]) -> Vec<[f32; 3]> {
     values.as_chunks::<3>().0.to_vec()
@@ -1602,6 +1708,41 @@ fn decode_cards(input: &mut Reader<'_>) -> Result<Vec<Card>, PackageError> {
     Ok(cards)
 }
 
+fn decode_tufts(input: &mut Reader<'_>) -> Result<Vec<Tuft>, PackageError> {
+    let count = input.u32()? as usize;
+    if count == 0 {
+        return Err(format_error("a mesh's tuft section is empty"));
+    }
+    input.check_room(count.saturating_mul(TUFT_BYTES))?;
+    let positions = triples(&input.f32s(count * 3)?);
+    let normals = triples(&input.f32s(count * 3)?);
+    let ups = triples(&input.f32s(count * 3)?);
+    let scales = input.f32s(count)?;
+    let greys = input.f32s(count)?;
+    let mut seeds = Vec::with_capacity(count);
+    for _ in 0..count {
+        seeds.push(input.u32()?);
+    }
+    let births = input.f32s(count)?;
+    let shed_ages = input.f32s(count)?;
+    let bodies = input.take(count)?;
+    let tufts = (0..count)
+        .map(|index| Tuft {
+            position: positions[index],
+            normal: normals[index],
+            up: ups[index],
+            scale: scales[index],
+            grey: greys[index],
+            seed: seeds[index],
+            body: bodies[index],
+            born: births[index],
+            shed: shed_ages[index],
+        })
+        .collect();
+    input.skip_padding()?;
+    Ok(tufts)
+}
+
 /// Decode an `APMESH1` level of detail.
 ///
 /// # Errors
@@ -1618,6 +1759,11 @@ pub fn decode_mesh(bytes: &[u8]) -> Result<PlantMesh, PackageError> {
     }
     let wood = decode_wood(&mut input)?;
     let cards = decode_cards(&mut input)?;
+    let tufts = if input.at < bytes.len() {
+        decode_tufts(&mut input)?
+    } else {
+        Vec::new()
+    };
     input.finish()?;
-    Ok(PlantMesh { wood, cards })
+    Ok(PlantMesh { wood, cards, tufts })
 }

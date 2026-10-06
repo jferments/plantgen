@@ -17,6 +17,11 @@ pub const MAX_PROGRAM_BYTES: usize = 256 * 1024;
 /// template in a package's organ atlas, and cards name it in one byte.
 pub const MAX_ORGAN_TYPES: usize = 64;
 
+/// Most body types one program may declare. A segment names its body in
+/// one byte of a graph (see [`crate::graph::GraphSegment::body`]), and each
+/// body's spines add templates to the organ atlas after the organs'.
+pub const MAX_BODY_TYPES: usize = 8;
+
 /// Turtle commands and other built-in symbols.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Turtle {
@@ -141,6 +146,11 @@ pub enum SymbolKind {
     Organ {
         kind: OrganKind,
         area: Code,
+    },
+    /// A body declared with `body`: drawn like `F`, its segments meshed as
+    /// a fleshy body. `index` is its position among the program's bodies.
+    Body {
+        index: u8,
     },
 }
 
@@ -299,6 +309,16 @@ impl Program {
         })
     }
 
+    /// The body types the program declares, in declaration order. The
+    /// position of a body here, plus one, is what a graph segment drawn
+    /// with it records (0 is wood).
+    pub fn bodies(&self) -> impl Iterator<Item = &str> {
+        self.symbols.iter().filter_map(|symbol| match symbol.kind {
+            SymbolKind::Body { .. } => Some(symbol.name.as_str()),
+            _ => None,
+        })
+    }
+
     #[must_use]
     pub fn symbol_id(&self, name: &str) -> Option<u16> {
         self.symbols
@@ -373,11 +393,12 @@ pub(crate) fn hex(bytes: &[u8]) -> String {
         })
 }
 
-const KEYWORDS: [&str; 12] = [
+const KEYWORDS: [&str; 13] = [
     "lsystem",
     "param",
     "module",
     "organ",
+    "body",
     "tool",
     "axiom",
     "rule",
@@ -486,6 +507,7 @@ impl Compiler {
         self.declare_params(ast)?;
         self.declare_modules(ast)?;
         self.declare_organs(ast)?;
+        self.declare_bodies(ast)?;
         let tools = self.configure_tools(ast)?;
         check_queries(ast, &tools)?;
 
@@ -609,6 +631,23 @@ impl Compiler {
                 None => Code::constant(kind.default_area()),
             };
             self.add_symbol(&decl.name, SymbolKind::Organ { kind, area }, 1, decl.span)?;
+        }
+        Ok(())
+    }
+
+    /// Bodies after the organs, so a program without bodies keeps its
+    /// symbol numbers.
+    fn declare_bodies(&mut self, ast: &ProgramAst) -> Result<(), ProgramError> {
+        if let Some(decl) = ast.bodies.get(MAX_BODY_TYPES) {
+            return err(
+                decl.span,
+                format!("a program may declare at most {MAX_BODY_TYPES} body types"),
+            );
+        }
+        for (index, decl) in ast.bodies.iter().enumerate() {
+            self.check_new_name(&decl.name, decl.span)?;
+            let index = u8::try_from(index).unwrap_or(u8::MAX);
+            self.add_symbol(&decl.name, SymbolKind::Body { index }, 1, decl.span)?;
         }
         Ok(())
     }
@@ -825,7 +864,7 @@ impl Compiler {
                 return err(
                     call.span,
                     format!(
-                        "`{}` is not declared; declare it with `module` or `organ`",
+                        "`{}` is not declared; declare it with `module`, `organ` or `body`",
                         call.symbol
                     ),
                 );
@@ -838,7 +877,8 @@ impl Compiler {
             if args.len() != usize::from(info.arity) {
                 let default = match info.kind {
                     SymbolKind::Turtle(Turtle::Forward | Turtle::Move)
-                    | SymbolKind::Organ { .. } => Some(Code::constant(1.0)),
+                    | SymbolKind::Organ { .. }
+                    | SymbolKind::Body { .. } => Some(Code::constant(1.0)),
                     SymbolKind::Turtle(kind) if kind.is_turn() => match self.angle {
                         Some(index) => Some(Code(Box::new([Op::Global(index)]))),
                         None => {
@@ -883,6 +923,7 @@ impl Compiler {
                 SymbolKind::Turtle(Turtle::Forward | Turtle::Move)
                     | SymbolKind::Module { .. }
                     | SymbolKind::Organ { .. }
+                    | SymbolKind::Body { .. }
             );
             let ordinal = if carries_identity {
                 identity += 1;

@@ -3,9 +3,11 @@
 //! side by side. The scale is a 1.8 m figure beside plants of at least
 //! [`SMALL_PLANT`], and a rod striped in 10 cm bands beside smaller ones.
 
+use crate::body::BodyLook;
 use crate::math::Vec3;
 use crate::mesh::{Mesh, PlantMesh, Vertex};
 use crate::raster::{self, Camera, Image, Lighting, Material, Projection, RenderOptions};
+use crate::spines;
 use crate::templates::Templates;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -42,6 +44,10 @@ pub struct PreviewOptions {
     /// Frame this height (metres) instead of the plant's own, so renders
     /// of different ages share a scale.
     pub frame_height: Option<f64>,
+    /// Frame a close-up instead: this point of the plant frame, with this
+    /// many metres of it from the bottom of the picture to the top, and
+    /// no figure.
+    pub focus: Option<(Vec3, f64)>,
 }
 
 pub const SKY: [f32; 3] = [0.52, 0.62, 0.74];
@@ -177,11 +183,40 @@ fn scale(height: f64, x: f64) -> (Mesh, f64, f64) {
     }
 }
 
-/// Render a plant mesh for review.
+/// Render a plant mesh for review. A level with tufts draws them as solid
+/// spines, from the body looks `templates` carries, in place of their spine
+/// cards, as a renderer does near the camera.
 #[must_use]
+#[allow(clippy::too_many_lines)]
 pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions) -> Image {
-    let cards = plant.card_mesh();
-    let items = [(&plant.wood, Material::Opaque), (&cards, Material::Card)];
+    let solid = !plant.tufts.is_empty() && !templates.bodies.is_empty();
+    let cards = if solid {
+        let first = templates.first_spine_template();
+        PlantMesh {
+            wood: Mesh::default(),
+            cards: plant
+                .cards
+                .iter()
+                .filter(|card| usize::from(card.template) < first)
+                .copied()
+                .collect(),
+            tufts: Vec::new(),
+        }
+        .card_mesh()
+    } else {
+        plant.card_mesh()
+    };
+    let spines = if solid {
+        let looks: Vec<&BodyLook> = templates.bodies.iter().collect();
+        spines::tuft_mesh(&plant.tufts, &looks)
+    } else {
+        Mesh::default()
+    };
+    let items = [
+        (&plant.wood, Material::Opaque),
+        (&cards, Material::Card),
+        (&spines, Material::Opaque),
+    ];
     let (low, high) = raster::bounds(&items).unwrap_or((Vec3::ZERO, Vec3::new(1.0, 1.0, 1.0)));
     let reach = low
         .x
@@ -211,12 +246,26 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
     // Ground far past the frame, so its edge never shows below the horizon.
     let ground_mesh = ground((distance * 30.0).max(200.0));
     let mut meshes = vec![(&ground_mesh, Material::Opaque)];
-    if options.figure {
+    if options.figure && options.focus.is_none() {
         meshes.push((&figure_mesh, Material::Opaque));
     }
     meshes.extend(items);
-    let camera = match options.view {
-        View::Side | View::ThreeQuarter => {
+    let camera = match (options.view, options.focus) {
+        (View::Side | View::ThreeQuarter, Some((target, span))) => {
+            let direction = if options.view == View::Side {
+                Vec3::new(0.0, 0.04, 1.0)
+            } else {
+                Vec3::new(0.7, 0.3, 0.7)
+            }
+            .normalize_or(Vec3::Z);
+            Camera {
+                eye: target + direction * (span * 0.5 / half_fov),
+                target,
+                up: Vec3::Y,
+                projection: Projection::Perspective { fov_y: fov },
+            }
+        }
+        (View::Side | View::ThreeQuarter, None) => {
             let target = Vec3::new(center_x, height * 0.5, 0.0);
             let direction = if options.view == View::Side {
                 Vec3::new(0.0, 0.04, 1.0)
@@ -231,7 +280,7 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
                 projection: Projection::Perspective { fov_y: fov },
             }
         }
-        View::Top => Camera {
+        (View::Top, _) => Camera {
             eye: Vec3::new(center_x, height + 50.0, 0.0),
             target: Vec3::new(center_x, 0.0, 0.0),
             up: Vec3::new(0.0, 0.0, -1.0),

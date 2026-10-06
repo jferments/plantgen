@@ -17,12 +17,14 @@
 //! a point `p`, a parameter `t` along a curve, a radius `r`).
 #![allow(clippy::many_single_char_names)]
 
+use crate::body::BodyLook;
 use crate::looks::{
     Blade, Compound, Flower, Frond, Fruit, Head, Lobed, Look, Needles, Palmate, Panicle, Scales,
     Shape, Simple, Spike, Sprig, Umbel,
 };
 use crate::math::{self, PI};
 use crate::rng::{mix64, unit};
+use crate::spines::{self, View};
 
 /// Edge length of each template, in texels.
 pub const TEMPLATE_SIZE: usize = 128;
@@ -42,7 +44,8 @@ pub struct Texel {
 /// One organ type's template.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Template {
-    /// The organ's name in the program.
+    /// The organ's name in the program, or for a spine template its
+    /// body's.
     pub organ: String,
     /// The shape's template name, for example `palmate`.
     pub shape: &'static str,
@@ -74,11 +77,15 @@ pub fn drawn_area(look: &Look, template: &Template) -> f64 {
     template.area() * (1.0 + look.shape.cross().unwrap_or(0.0))
 }
 
-/// One template per organ type, indexed like the program's organ types.
+/// One template per organ type, indexed like the program's organ types,
+/// then two per body type, its spines seen face on and from the side.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Templates {
     pub size: usize,
     pub templates: Vec<Template>,
+    /// The looks of the program's body types, whose spines the last
+    /// templates are drawn from and which a renderer expands tufts with.
+    pub bodies: Vec<BodyLook>,
 }
 
 /// No templates: for scenes without organ cards. Cards that name a
@@ -88,11 +95,43 @@ impl Default for Templates {
         Self {
             size: TEMPLATE_SIZE,
             templates: Vec::new(),
+            bodies: Vec::new(),
         }
     }
 }
 
 impl Templates {
+    /// The templates of a plant: one per organ type of `looks`, then a
+    /// star and a fan per body type of `bodies`, by name and look in the
+    /// program's order (see [`crate::spines::template`]).
+    #[must_use]
+    pub fn for_plant(looks: &[Look], bodies: &[(&str, &BodyLook)]) -> Self {
+        let mut templates = Self::for_looks(looks);
+        for &(name, body) in bodies {
+            for (view, shape) in [(View::Star, "spine-star"), (View::Fan, "spine-fan")] {
+                let drawn = spines::template(body, view, TEMPLATE_SIZE);
+                templates.templates.push(Template {
+                    organ: name.to_string(),
+                    shape,
+                    aspect: drawn.aspect,
+                    colour: drawn.colour,
+                    accent_colour: body.areoles.felt,
+                    coverage: drawn.coverage,
+                    brightness: drawn.brightness,
+                    accent: drawn.accent,
+                });
+            }
+        }
+        templates.bodies = bodies.iter().map(|&(_, body)| body.clone()).collect();
+        templates
+    }
+
+    /// Index of the first spine template: the number of organ templates.
+    #[must_use]
+    pub fn first_spine_template(&self) -> usize {
+        self.templates.len() - 2 * self.bodies.len()
+    }
+
     /// Draw the templates of `looks`, in order.
     #[must_use]
     pub fn for_looks(looks: &[Look]) -> Self {
@@ -145,6 +184,7 @@ impl Templates {
         Self {
             size: TEMPLATE_SIZE,
             templates,
+            bodies: Vec::new(),
         }
     }
 

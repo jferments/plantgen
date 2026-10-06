@@ -304,7 +304,7 @@ mod tests {
         }
         let plant = PlantMesh {
             wood,
-            cards: Vec::new(),
+            ..PlantMesh::default()
         };
         let templates = Templates::default();
         let impostor = bake(&plant, &templates, 4, 16, 1);

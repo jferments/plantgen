@@ -11,6 +11,7 @@ use std::collections::BTreeMap;
 pub use after_world::semantics::{FieldEvidence, Provenance, SourceRef};
 use serde::{Deserialize, Serialize};
 
+use crate::body::BodyLook;
 use crate::looks::{self, Flare, Look, Moss, OrganLook, Ridges};
 use crate::lsys::program::SymbolKind;
 use crate::lsys::{Neighbourhood, OrganKind, Program, ProgramError, tools};
@@ -18,11 +19,12 @@ use crate::lsys::{Neighbourhood, OrganKind, Program, ProgramError, tools};
 pub const SPEC_SCHEMA: u32 = 1;
 
 /// Built-in plant programs, by name.
-pub const PROGRAMS: [(&str, &str); 4] = [
+pub const PROGRAMS: [(&str, &str); 5] = [
     ("conifer", include_str!("../programs/conifer.lsys")),
     ("broadleaf", include_str!("../programs/broadleaf.lsys")),
     ("grass", include_str!("../programs/grass.lsys")),
     ("herb", include_str!("../programs/herb.lsys")),
+    ("succulent", include_str!("../programs/succulent.lsys")),
 ];
 
 /// Built-in species, by id: the catalogue of the south Puget Sound
@@ -430,12 +432,72 @@ pub fn builtin_program(name: &str) -> Option<&'static str> {
         .map(|(_, source)| *source)
 }
 
+/// Built-in cacti of the Sonoran Desert (milestone F1): columns,
+/// barrels, hedgehogs, a pincushion, chollas and prickly pears, grown by
+/// the `succulent` program. No habitat places them yet, so they are not in
+/// [`SPECIES`], the forest's catalogue; the desert milestone (F8) gives them
+/// niches.
+pub const SONORAN_SPECIES: [(&str, &str); 12] = [
+    (
+        "carnegiea-gigantea",
+        include_str!("../species/carnegiea-gigantea.json"),
+    ),
+    (
+        "stenocereus-thurberi",
+        include_str!("../species/stenocereus-thurberi.json"),
+    ),
+    (
+        "ferocactus-wislizeni",
+        include_str!("../species/ferocactus-wislizeni.json"),
+    ),
+    (
+        "ferocactus-cylindraceus",
+        include_str!("../species/ferocactus-cylindraceus.json"),
+    ),
+    (
+        "echinocereus-engelmannii",
+        include_str!("../species/echinocereus-engelmannii.json"),
+    ),
+    (
+        "mammillaria-grahamii",
+        include_str!("../species/mammillaria-grahamii.json"),
+    ),
+    (
+        "cylindropuntia-bigelovii",
+        include_str!("../species/cylindropuntia-bigelovii.json"),
+    ),
+    (
+        "cylindropuntia-fulgida",
+        include_str!("../species/cylindropuntia-fulgida.json"),
+    ),
+    (
+        "cylindropuntia-acanthocarpa",
+        include_str!("../species/cylindropuntia-acanthocarpa.json"),
+    ),
+    (
+        "opuntia-engelmannii",
+        include_str!("../species/opuntia-engelmannii.json"),
+    ),
+    (
+        "opuntia-basilaris",
+        include_str!("../species/opuntia-basilaris.json"),
+    ),
+    (
+        "opuntia-santa-rita",
+        include_str!("../species/opuntia-santa-rita.json"),
+    ),
+];
+
+/// Every built-in catalogue: the forest's, then the Sonoran cacti.
+pub fn all_species() -> impl Iterator<Item = (&'static str, &'static str)> {
+    SPECIES.iter().chain(SONORAN_SPECIES.iter()).copied()
+}
+
 #[must_use]
 pub fn builtin_species(id: &str) -> Option<&'static str> {
-    SPECIES
-        .iter()
+    all_species()
         .find(|(species, _)| *species == id)
-        .map(|(_, source)| *source)
+        .map(|(_, source)| source)
 }
 
 /// How far an organ type's shading area may stray from the leaf area its
@@ -493,6 +555,10 @@ pub enum GrowthForm {
     Forb,
     Fern,
     Vine,
+    /// A cactus or another plant whose fleshy stems store water and do
+    /// the work of leaves: columns, barrels, globes, chollas and prickly
+    /// pears.
+    StemSucculent,
 }
 
 /// Which plant program grows the species, and its parameter values.
@@ -622,6 +688,11 @@ pub struct Appearance {
     /// Moss on thick wood.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub moss: Option<Moss>,
+    /// How each fleshy body of the program looks, by body name: ribs,
+    /// areoles, spines (see [`crate::body`]). Bodies not listed get the
+    /// default look.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub bodies: BTreeMap<String, BodyLook>,
 }
 
 impl Appearance {
@@ -630,6 +701,16 @@ impl Appearance {
     #[must_use]
     pub fn looks<'a>(&self, organs: impl IntoIterator<Item = (&'a str, OrganKind)>) -> Vec<Look> {
         looks::resolve(organs, &self.organs, self.foliage, self.foliage_shade)
+    }
+
+    /// The look of each of a program's body types, in its declaration
+    /// order (see [`Program::bodies`]).
+    #[must_use]
+    pub fn body_looks<'a>(&self, bodies: impl IntoIterator<Item = &'a str>) -> Vec<BodyLook> {
+        bodies
+            .into_iter()
+            .map(|name| self.bodies.get(name).cloned().unwrap_or_default())
+            .collect()
     }
 
     /// Check colours, looks and wood settings.
@@ -661,6 +742,10 @@ impl Appearance {
         if let Some(moss) = &self.moss {
             moss.validate()
                 .map_err(|message| format!("appearance: {message}"))?;
+        }
+        for (body, look) in &self.bodies {
+            look.validate()
+                .map_err(|message| format!("appearance.bodies.{body}: {message}"))?;
         }
         Ok(())
     }
@@ -753,7 +838,7 @@ impl PlantSpec {
     /// Fails if there is no such species.
     pub fn builtin(id: &str) -> Result<Self, SpecError> {
         let text = builtin_species(id).ok_or_else(|| {
-            let known: Vec<&str> = SPECIES.iter().map(|(name, _)| *name).collect();
+            let known: Vec<&str> = all_species().map(|(name, _)| name).collect();
             SpecError(format!(
                 "no built-in species `{id}`; built-in species: {}",
                 known.join(", ")
@@ -872,6 +957,21 @@ impl PlantSpec {
                 )));
             }
         }
+        for body in self.appearance.bodies.keys() {
+            if !program.bodies().any(|name| name == body) {
+                let declared: Vec<&str> = program.bodies().collect();
+                return Err(SpecError(format!(
+                    "species `{}`: appearance.bodies names `{body}`, which program `{}` does not declare; it declares {}",
+                    self.id,
+                    program.name,
+                    if declared.is_empty() {
+                        "no bodies".to_string()
+                    } else {
+                        declared.join(", ")
+                    }
+                )));
+            }
+        }
         Ok((program, params))
     }
 
@@ -903,7 +1003,7 @@ mod tests {
 
     #[test]
     fn builtin_species_parse_validate_and_compile() {
-        for (id, _) in SPECIES {
+        for (id, _) in all_species() {
             let spec = PlantSpec::builtin(id).unwrap();
             assert_eq!(spec.id, id);
             spec.program().unwrap();

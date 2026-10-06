@@ -12,18 +12,22 @@ use std::process::ExitCode;
 use std::time::Instant;
 use std::{env, fmt, fs};
 
+use after_plants::body::BodyLook;
 use after_plants::graph::{OrganType, PlantGraph};
 use after_plants::ground::{self, GROUND_LOOK_SIZE};
 use after_plants::grow::{Growth, GrowthSettings, grow};
 use after_plants::litter;
 use after_plants::looks::Look;
 use after_plants::lsys::{Limits, Neighbourhood, Program};
+use after_plants::math::Vec3;
 use after_plants::mesh;
 use after_plants::package::{self, Inputs};
 use after_plants::preview::{self, PreviewOptions, View};
 use after_plants::quality::{self, Quality};
 use after_plants::raster;
-use after_plants::spec::{self, Environment, PROGRAMS, PlantSpec, SPECIES, Variant};
+use after_plants::spec::{
+    self, Environment, PROGRAMS, PlantSpec, SONORAN_SPECIES, SPECIES, Variant,
+};
 use after_plants::templates::{self, Templates};
 
 /// Why a command stopped early.
@@ -86,6 +90,7 @@ fn run() -> Result<(), Failure> {
         "grow" => grow_command(&args),
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
+        "lineup" => lineup_command(&args),
         "atlas" => atlas_command(&args),
         "ground" => ground_command(&args),
         "build" => build_command(&args),
@@ -109,10 +114,17 @@ Usage:
   plantc render <species|spec.json> --out FILE.png [--env ENV] [--seed N]
                 [--age N] [--view side|three-quarter|top] [--lod 0-3]
                 [--size PIXELS] [--quality draft|standard]
+                [--focus X,Y,Z [--span METRES]]
       Render one variant at one age, with a 1.8 m figure for scale, or
-      a rod in 10 cm stripes beside a plant lower than 1.5 m.
+      a rod in 10 cm stripes beside a plant lower than 1.5 m. --focus
+      frames a close-up of SPAN metres (default 0.5) round a point of
+      the plant, metres from its foot with +Y up.
   plantc sheet <species|spec.json> --out FILE.png [--seed N] [--size PIXELS]
       Render every keyframe age (columns) in every environment (rows).
+  plantc lineup <species|spec.json>... --out FILE.png [--age N] [--seeds N]
+                [--view side|three-quarter|top] [--size PIXELS]
+      Render a row per species of its first N seeds (default 4) at one
+      age (default its oldest keyframe), each row at one scale.
   plantc atlas <species|spec.json> --out FILE.png
       Draw the species' organ card textures (leaves, needles, flowers) in
       their colours, one per organ, side by side.
@@ -220,16 +232,24 @@ fn load_spec(name: &str) -> Result<PlantSpec, String> {
 }
 
 fn list() -> Result<(), Failure> {
-    out!("Species:");
-    let width = SPECIES.iter().map(|(id, _)| id.len()).max().unwrap_or(0);
-    for (id, _) in SPECIES {
-        let spec = PlantSpec::builtin(id).map_err(|error| error.to_string())?;
-        out!(
-            "  {id:<width$}  {} ({}), program `{}`",
-            spec.taxon.common_name,
-            spec.taxon.scientific_name,
-            spec.generator.program
-        );
+    let width = spec::all_species()
+        .map(|(id, _)| id.len())
+        .max()
+        .unwrap_or(0);
+    for (title, catalogue) in [
+        ("Species of the forest:", &SPECIES[..]),
+        ("Cacti of the Sonoran Desert:", &SONORAN_SPECIES[..]),
+    ] {
+        out!("{title}");
+        for (id, _) in catalogue {
+            let spec = PlantSpec::builtin(id).map_err(|error| error.to_string())?;
+            out!(
+                "  {id:<width$}  {} ({}), program `{}`",
+                spec.taxon.common_name,
+                spec.taxon.scientific_name,
+                spec.generator.program
+            );
+        }
     }
     out!("Programs:");
     for (name, _) in PROGRAMS {
@@ -392,7 +412,8 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
         args,
         &[
-            "env", "seed", "age", "view", "lod", "size", "out", "quality", "program",
+            "env", "seed", "age", "view", "lod", "size", "out", "quality", "program", "focus",
+            "span",
         ],
     )?;
     let program = options.program()?;
@@ -411,16 +432,34 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     let quality = options.quality()?;
     let lod = quality.lods.get(level).ok_or("`--lod` must be 0 to 3")?;
     let size: usize = options.number("size")?.unwrap_or(900);
+    let focus = match options.flags.get("focus") {
+        Some(text) => {
+            let point: Vec<f64> = text
+                .split(',')
+                .map(|part| part.trim().parse::<f64>())
+                .collect::<Result<_, _>>()
+                .map_err(|_| format!("`--focus` expects X,Y,Z in metres, found `{text}`"))?;
+            let [x, y, z] = point[..] else {
+                return Err(format!("`--focus` expects X,Y,Z in metres, found `{text}`").into());
+            };
+            let span: f64 = options.number("span")?.unwrap_or(0.5);
+            Some((Vec3::new(x, y, z), span))
+        }
+        None => None,
+    };
     let growth = grow_variant(&spec, program.as_deref(), environment, seed, vec![age], age)?;
     let graph = &growth.keyframes[0];
     let looks = looks_of(&spec, &growth);
+    let bodies = bodies_of(&spec, &growth);
     let plant = mesh::build(
         graph,
         &looks,
+        &bodies,
         &spec.appearance,
         &lod.for_height(graph.height),
+        level,
     );
-    let templates = Templates::for_looks(&looks);
+    let templates = templates_of(&looks, &bodies, &growth);
     let image = preview::render(
         &plant,
         &templates,
@@ -431,6 +470,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             supersample: 2,
             figure: true,
             frame_height: None,
+            focus,
         },
     );
     let png = raster::encode_png(
@@ -442,10 +482,15 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     fs::write(out, png).map_err(|error| format!("cannot write {out}: {error}"))?;
     out!("{}", describe(graph, &growth.organ_types));
     out!(
-        "wrote {out}: LOD{level}, {} triangles ({} wood, {} cards)",
+        "wrote {out}: LOD{level}, {} triangles ({} wood, {} cards){}",
         plant.triangle_count(),
         plant.wood.triangle_count(),
-        plant.cards.len() * 2
+        plant.cards.len() * 2,
+        if plant.tufts.is_empty() {
+            String::new()
+        } else {
+            format!(", {} areoles of solid spines", plant.tufts.len())
+        }
     );
     Ok(())
 }
@@ -469,7 +514,8 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
             spec.growth.years,
         )?;
         let looks = looks_of(&spec, &growth);
-        let templates = Templates::for_looks(&looks);
+        let bodies = bodies_of(&spec, &growth);
+        let templates = templates_of(&looks, &bodies, &growth);
         let tallest = growth
             .keyframes
             .iter()
@@ -484,8 +530,10 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
             let plant = mesh::build(
                 graph,
                 &looks,
+                &bodies,
                 &spec.appearance,
                 &quality.lods[0].for_height(graph.height),
+                0,
             );
             images.push(preview::render(
                 &plant,
@@ -501,6 +549,7 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
                     } else {
                         tallest
                     }),
+                    focus: None,
                 },
             ));
         }
@@ -522,6 +571,88 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
     Ok(())
 }
 
+fn lineup_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &["age", "seeds", "size", "view", "out", "quality"])?;
+    let out = options.flags.get("out").ok_or("missing `--out FILE.png`")?;
+    if options.positional.is_empty() {
+        return Err("name at least one species".into());
+    }
+    let count: usize = options.number("seeds")?.unwrap_or(4).max(1);
+    let size: usize = options.number("size")?.unwrap_or(300);
+    let view = match options.flags.get("view") {
+        Some(name) => View::from_name(name).ok_or_else(|| format!("unknown view `{name}`"))?,
+        None => View::Side,
+    };
+    let quality = options.quality()?;
+    let mut images = Vec::new();
+    for name in &options.positional {
+        let spec = load_spec(name)?;
+        let age = options
+            .number("age")?
+            .unwrap_or_else(|| spec.growth.keyframes.iter().copied().fold(0.0, f64::max));
+        let environment = spec.variants.environments[0];
+        // The spec's seeds, then the numbers after its largest.
+        let largest = spec.variants.seeds.iter().copied().max().unwrap_or(0);
+        let seeds: Vec<u64> = spec
+            .variants
+            .seeds
+            .iter()
+            .copied()
+            .chain((1..).map(|extra| largest + extra))
+            .take(count)
+            .collect();
+        let mut grown = Vec::with_capacity(seeds.len());
+        for seed in seeds {
+            let growth = grow_variant(&spec, None, environment, seed, vec![age], age)?;
+            out!(
+                "  {:<26} seed {seed:<3} {}",
+                spec.id,
+                describe(&growth.keyframes[0], &growth.organ_types)
+            );
+            grown.push(growth);
+        }
+        let tallest = grown
+            .iter()
+            .map(|growth| growth.keyframes[0].height)
+            .fold(0.0, f64::max);
+        for growth in &grown {
+            let graph = &growth.keyframes[0];
+            let looks = looks_of(&spec, growth);
+            let bodies = bodies_of(&spec, growth);
+            let plant = mesh::build(
+                graph,
+                &looks,
+                &bodies,
+                &spec.appearance,
+                &quality.lods[0].for_height(graph.height),
+                0,
+            );
+            images.push(preview::render(
+                &plant,
+                &templates_of(&looks, &bodies, growth),
+                &PreviewOptions {
+                    width: size,
+                    height: size * 3 / 2,
+                    view,
+                    supersample: 2,
+                    figure: true,
+                    frame_height: Some(tallest),
+                    focus: None,
+                },
+            ));
+        }
+    }
+    let (width, height, pixels) = preview::contact_sheet(&images, count, 8);
+    let png = raster::encode_png(width, height, &pixels)
+        .map_err(|error| format!("cannot encode PNG: {error}"))?;
+    fs::write(out, png).map_err(|error| format!("cannot write {out}: {error}"))?;
+    out!(
+        "wrote {out}: a row per species ({}), {count} seeds each",
+        options.positional.join(", ")
+    );
+    Ok(())
+}
+
 fn atlas_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(args, &["out", "program"])?;
     let program = options.program()?;
@@ -533,7 +664,9 @@ fn atlas_command(args: &[String]) -> Result<(), Failure> {
     }
     .map_err(|error| error.to_string())?;
     let looks = spec.appearance.looks(program.organs());
-    let templates = Templates::for_looks(&looks);
+    let bodies = spec.appearance.body_looks(program.bodies());
+    let named: Vec<(&str, &BodyLook)> = program.bodies().zip(&bodies).collect();
+    let templates = Templates::for_plant(&looks, &named);
     let (width, height, pixels) = templates.swatches_rgba(SWATCH_BACKGROUND, 2);
     let png = raster::encode_png(width, height, &pixels)
         .map_err(|error| format!("cannot encode PNG: {error}"))?;
@@ -554,6 +687,16 @@ fn atlas_command(args: &[String]) -> Result<(), Failure> {
             "  {:<16} {:<10} drawn {drawn:.3} m²  shaded {shades:.3} m²{note}",
             look.organ,
             look.shape.name()
+        );
+    }
+    if !named.is_empty() {
+        out!(
+            "Then two spine cards per body, the spine cluster face on and from the side:\n  {}",
+            named
+                .iter()
+                .map(|(name, _)| *name)
+                .collect::<Vec<_>>()
+                .join(", ")
         );
     }
     Ok(())
@@ -642,6 +785,23 @@ fn looks_of(spec: &PlantSpec, growth: &Growth) -> Vec<Look> {
             .iter()
             .map(|organ| (organ.name.as_str(), organ.kind)),
     )
+}
+
+/// One body look per body type of a grown plant.
+fn bodies_of(spec: &PlantSpec, growth: &Growth) -> Vec<BodyLook> {
+    spec.appearance
+        .body_looks(growth.body_types.iter().map(String::as_str))
+}
+
+/// A grown plant's card templates: its organs', then its bodies' spines.
+fn templates_of(looks: &[Look], bodies: &[BodyLook], growth: &Growth) -> Templates {
+    let named: Vec<(&str, &BodyLook)> = growth
+        .body_types
+        .iter()
+        .map(String::as_str)
+        .zip(bodies)
+        .collect();
+    Templates::for_plant(looks, &named)
 }
 
 fn build_command(args: &[String]) -> Result<(), Failure> {

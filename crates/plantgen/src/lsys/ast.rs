@@ -89,6 +89,14 @@ pub struct OrganDecl {
     pub span: Span,
 }
 
+/// `body name;`: a fleshy body drawn like `F`, whose segments are meshed
+/// as smooth succulent stems rather than wood (see [`crate::mesh`]).
+#[derive(Debug, Clone, PartialEq)]
+pub struct BodyDecl {
+    pub name: String,
+    pub span: Span,
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct ToolDecl {
     pub name: String,
@@ -104,6 +112,7 @@ pub struct ProgramAst {
     pub params: Vec<ParamDecl>,
     pub modules: Vec<ModuleDecl>,
     pub organs: Vec<OrganDecl>,
+    pub bodies: Vec<BodyDecl>,
     pub tools: Vec<ToolDecl>,
     pub axiom: Vec<ModuleCall>,
     pub axiom_span: Span,

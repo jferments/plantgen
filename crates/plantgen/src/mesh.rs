@@ -26,11 +26,13 @@ use std::collections::BTreeMap;
 
 use serde::{Deserialize, Serialize};
 
+use crate::body::{self, BodyLook};
 use crate::graph::{GraphOrgan, PlantGraph};
 use crate::looks::{Flare, Look, Moss, Mount, Ridges};
 use crate::math::{self, Vec3, any_perpendicular};
 use crate::rng::{mix64, unit};
 use crate::spec::Appearance;
+use crate::spines::Tuft;
 
 /// One drawable surface: wood or organ cards.
 #[derive(Debug, Clone, Default, PartialEq)]
@@ -130,11 +132,15 @@ pub struct Card {
     pub shed: f32,
 }
 
-/// Wood and organ cards of one plant at one level of detail.
+/// Wood and organ cards of one plant at one level of detail, and on the
+/// nearest level the areoles of its fleshy bodies, whose spines a renderer
+/// expands (see [`crate::spines`]). Fleshy bodies are part of the wood
+/// mesh, and their spine cards follow the organ cards.
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct PlantMesh {
     pub wood: Mesh,
     pub cards: Vec<Card>,
+    pub tufts: Vec<Tuft>,
 }
 
 impl PlantMesh {
@@ -254,19 +260,25 @@ impl LodSpec {
     }
 }
 
-/// Build the mesh of `graph` at one level of detail. `looks` holds one look
-/// per organ type of the plant's program (see [`Appearance::looks`]). The
-/// caller scales the level to the plant (see [`LodSpec::for_height`]).
+/// Build the mesh of `graph` at level of detail `level` (0 nearest).
+/// `looks` holds one look per organ type of the plant's program (see
+/// [`Appearance::looks`]) and `bodies` one per body type (see
+/// [`Appearance::body_looks`]). The caller scales the level to the plant
+/// (see [`LodSpec::for_height`]); fleshy bodies keep their own detail per
+/// level (see [`crate::body`]).
 #[must_use]
 pub fn build(
     graph: &PlantGraph,
     looks: &[Look],
+    bodies: &[BodyLook],
     appearance: &Appearance,
     lod: &LodSpec,
+    level: usize,
 ) -> PlantMesh {
     let mut mesh = PlantMesh::default();
     wood(graph, appearance, lod, &mut mesh.wood);
     mesh.cards = cards(graph, looks, appearance.variation, lod);
+    body::build(graph, bodies, looks.len(), level, &mut mesh);
     mesh
 }
 
@@ -301,7 +313,9 @@ fn axis_rings(
     let mut cursor = start;
     while let Some(next) = continuations[cursor] {
         let next = next as usize;
-        if graph.segments[next].radius < min_radius {
+        // Thin wood ends the tube, and so does a fleshy body, which
+        // `crate::body` draws.
+        if graph.segments[next].radius < min_radius || graph.segments[next].body != 0 {
             break;
         }
         chain.push(next);
@@ -522,8 +536,13 @@ fn wood(graph: &PlantGraph, appearance: &Appearance, lod: &LodSpec, out: &mut Me
     let continuations = graph.continuations();
     let end_radii = graph.end_radii();
     for (start, segment) in graph.segments.iter().enumerate() {
-        // An axis starts at a segment that does not continue its parent.
-        if !(segment.lateral || segment.parent.is_none()) {
+        // An axis starts at a segment that does not continue its parent,
+        // or continues a fleshy body; bodies themselves are drawn by
+        // `crate::body`.
+        let after_body = segment
+            .parent
+            .is_some_and(|parent| graph.segments[parent as usize].body != 0);
+        if segment.body != 0 || !(segment.lateral || segment.parent.is_none() || after_body) {
             continue;
         }
         // Thin branches drop out; a stem stays at every level, as a tree
@@ -1024,6 +1043,16 @@ mod tests {
     use crate::looks::{Flower, Needles, OrganLook, Shape};
     use crate::lsys::OrganKind;
 
+    /// A plant without bodies at its nearest level.
+    fn build_plain(
+        graph: &PlantGraph,
+        looks: &[Look],
+        appearance: &Appearance,
+        lod: &LodSpec,
+    ) -> PlantMesh {
+        build(graph, looks, &[], appearance, lod, 0)
+    }
+
     fn appearance() -> Appearance {
         Appearance {
             bark: [0.3, 0.2, 0.1],
@@ -1034,6 +1063,7 @@ mod tests {
             ridges: None,
             flare: None,
             moss: None,
+            bodies: BTreeMap::new(),
         }
     }
 
@@ -1069,6 +1099,8 @@ mod tests {
             radius,
             born: 0.0,
             shed: None,
+            body: 0,
+            left: Vec3::ZERO,
         }
     }
 
@@ -1102,15 +1134,15 @@ mod tests {
 
     #[test]
     fn straight_axes_collapse_to_two_rings_and_thin_wood_is_pruned() {
-        let detailed = build(&graph(), &looks(), &appearance(), &lod(0.0, 0.0, 0.0));
-        let coarse = build(&graph(), &looks(), &appearance(), &lod(0.01, 0.0, 10.0));
+        let detailed = build_plain(&graph(), &looks(), &appearance(), &lod(0.0, 0.0, 0.0));
+        let coarse = build_plain(&graph(), &looks(), &appearance(), &lod(0.01, 0.0, 10.0));
         // Stem: 4 rings of 7 sides (8 vertices with the seam); the 2 mm
         // branch gets the 3-side minimum.
         assert_eq!(detailed.wood.vertex_count(), 4 * 8 + 2 * 4);
         // The straight stem needs only its end rings; the thin branch is gone.
         assert_eq!(coarse.wood.vertex_count(), 2 * 8);
         // The stem stays even below a minimum radius thicker than itself.
-        let coarsest = build(&graph(), &looks(), &appearance(), &lod(0.1, 0.0, 10.0));
+        let coarsest = build_plain(&graph(), &looks(), &appearance(), &lod(0.1, 0.0, 10.0));
         assert_eq!(coarsest.wood.vertex_count(), 2 * 8);
         assert_eq!(detailed.cards.len(), 20);
         assert_eq!(detailed.card_mesh().triangle_count(), 40);
@@ -1135,8 +1167,8 @@ mod tests {
         assert!((coarse.for_height(0.0).min_radius - 0.0001).abs() < 1e-12);
 
         let graph = graph();
-        let tree_scale = build(&graph, &looks(), &appearance(), &coarse);
-        let plant_scale = build(&graph, &looks(), &appearance(), &scaled);
+        let tree_scale = build_plain(&graph, &looks(), &appearance(), &coarse);
+        let plant_scale = build_plain(&graph, &looks(), &appearance(), &scaled);
         // At a tree's scale the straight stem has two rings of 7 sides and
         // the thin branch is gone. Scaled, the 1 cm ring edge gives the
         // stem the 8-side maximum and the branch is back with 3 sides.
@@ -1147,7 +1179,7 @@ mod tests {
 
     #[test]
     fn clustering_merges_organs_and_keeps_birth_ages() {
-        let clustered = build(&graph(), &looks(), &appearance(), &lod(0.0, 1.0, 0.0));
+        let clustered = build_plain(&graph(), &looks(), &appearance(), &lod(0.0, 1.0, 0.0));
         // Two cells of ten level leaves: each a level card, and no upright
         // card, since level leaves cover nothing seen from the side.
         assert_eq!(clustered.cards.len(), 2);
@@ -1199,8 +1231,8 @@ mod tests {
     #[test]
     fn clusters_cover_a_crown_as_its_leaves_do() {
         let tilted = tilted_leaves();
-        let detailed = build(&tilted, &looks(), &appearance(), &lod(0.0, 0.0, 0.0));
-        let clustered = build(&tilted, &looks(), &appearance(), &lod(0.0, 1.0, 0.0));
+        let detailed = build_plain(&tilted, &looks(), &appearance(), &lod(0.0, 0.0, 0.0));
+        let clustered = build_plain(&tilted, &looks(), &appearance(), &lod(0.0, 1.0, 0.0));
         assert_eq!(clustered.cards.len(), 3);
         let mut ratios = Vec::new();
         for elevation in [-45.0_f64, -20.0, 0.0, 20.0, 45.0] {
@@ -1225,12 +1257,12 @@ mod tests {
             (mean - 1.0).abs() < 0.1,
             "clusters cover {mean} times the leaves on average"
         );
-        let level = build(&graph(), &looks(), &appearance(), &lod(0.0, 1.0, 0.0));
+        let level = build_plain(&graph(), &looks(), &appearance(), &lod(0.0, 1.0, 0.0));
         assert!(cover(&level, Vec3::X) < 1e-9 && cover(&level, Vec3::Z) < 1e-9);
         assert!(
             (cover(&level, Vec3::Y)
                 / cover(
-                    &build(&graph(), &looks(), &appearance(), &lod(0.0, 0.0, 0.0)),
+                    &build_plain(&graph(), &looks(), &appearance(), &lod(0.0, 0.0, 0.0)),
                     Vec3::Y
                 )
                 - 1.0)
@@ -1242,7 +1274,7 @@ mod tests {
         let mut lone = graph();
         lone.organs.truncate(1);
         assert_eq!(
-            build(&lone, &looks(), &appearance(), &lod(0.0, 1.0, 0.0))
+            build_plain(&lone, &looks(), &appearance(), &lod(0.0, 1.0, 0.0))
                 .cards
                 .len(),
             1
@@ -1251,7 +1283,7 @@ mod tests {
 
     #[test]
     fn tube_rings_wrap_the_axis() {
-        let mesh = build(&graph(), &looks(), &appearance(), &lod(0.0, 0.0, 0.0));
+        let mesh = build_plain(&graph(), &looks(), &appearance(), &lod(0.0, 0.0, 0.0));
         for (position, normal) in mesh.wood.positions.iter().zip(&mesh.wood.normals).take(8) {
             // First ring of the stem: radius 0.05 around the Y axis. The
             // stem narrows by 1 cm per metre, so its surface faces up by
@@ -1294,8 +1326,8 @@ mod tests {
             max_sides: 32,
             ..lod(0.0, 0.0, 0.0)
         };
-        let plain = build(&stem(), &looks(), &appearance(), &fine);
-        let flared = build(&stem(), &looks(), &look, &fine);
+        let plain = build_plain(&stem(), &looks(), &appearance(), &fine);
+        let flared = build_plain(&stem(), &looks(), &look, &fine);
         // Extra rings near the ground show the flare's curve.
         assert!(flared.wood.vertex_count() > plain.wood.vertex_count());
         let ground: Vec<f32> = flared
@@ -1337,7 +1369,7 @@ mod tests {
             max_sides: 32,
             ..lod(0.0, 0.0, 0.0)
         };
-        let mesh = build(&stem(), &looks(), &look, &fine).wood;
+        let mesh = build_plain(&stem(), &looks(), &look, &fine).wood;
         let base: Vec<(f32, f32)> = mesh
             .positions
             .iter()
@@ -1378,7 +1410,7 @@ mod tests {
             )],
             organs: Vec::new(),
         };
-        let mesh = build(&limb, &looks(), &look, &lod(0.0, 0.0, 0.0)).wood;
+        let mesh = build_plain(&limb, &looks(), &look, &lod(0.0, 0.0, 0.0)).wood;
         let green = |above: bool| -> f32 {
             mesh.normals
                 .iter()
@@ -1416,7 +1448,7 @@ mod tests {
             segments: Vec::new(),
             organs: vec![organ(heading, left)],
         };
-        build(&graph, &looks, &appearance, &lod(0.0, 0.0, 0.0)).cards
+        build_plain(&graph, &looks, &appearance, &lod(0.0, 0.0, 0.0)).cards
     }
 
     fn look(shape: Shape, face_up: f64) -> OrganLook {

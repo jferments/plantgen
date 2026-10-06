@@ -55,6 +55,8 @@ fn small_spec_file(dir: &Path) -> PathBuf {
 fn list_and_check_name_the_built_in_species() {
     let listed = stdout(&plantc(&["list"]));
     assert!(listed.contains("pseudotsuga-menziesii"), "{listed}");
+    assert!(listed.contains("Cacti of the Sonoran Desert:"), "{listed}");
+    assert!(listed.contains("carnegiea-gigantea"), "{listed}");
     assert!(listed.contains("Programs:"));
     let checked = stdout(&plantc(&["check", "pseudotsuga-menziesii"]));
     assert!(!checked.trim().is_empty());
@@ -165,6 +167,61 @@ fn render_writes_a_png() {
     ]));
     let bytes = fs::read(&image).unwrap();
     assert_eq!(&bytes[..8], b"\x89PNG\r\n\x1a\n");
+    fs::remove_dir_all(&dir).unwrap();
+}
+
+#[test]
+fn lineup_and_close_ups_write_pngs() {
+    let dir = scratch("lineup");
+    let image = dir.join("cacti.png");
+    let printed = stdout(&plantc(&[
+        "lineup",
+        "mammillaria-grahamii",
+        "opuntia-basilaris",
+        "--seeds",
+        "2",
+        "--age",
+        "5",
+        "--size",
+        "64",
+        "--out",
+        image.to_str().unwrap(),
+    ]));
+    // A row of two seeds for each species.
+    assert_eq!(
+        printed.matches("mammillaria-grahamii").count(),
+        3,
+        "{printed}"
+    );
+    assert!(printed.contains("seed 2"), "{printed}");
+    let bytes = fs::read(&image).unwrap();
+    assert_eq!(&bytes[..8], b"\x89PNG\r\n\x1a\n");
+
+    let close = dir.join("close.png");
+    let printed = stdout(&plantc(&[
+        "render",
+        "mammillaria-grahamii",
+        "--age",
+        "10",
+        "--focus",
+        "0,0.05,0",
+        "--span",
+        "0.1",
+        "--size",
+        "64",
+        "--out",
+        close.to_str().unwrap(),
+    ]));
+    assert!(printed.contains("areoles of solid spines"), "{printed}");
+    let failed = plantc(&[
+        "render",
+        "mammillaria-grahamii",
+        "--focus",
+        "0,0.05",
+        "--out",
+        close.to_str().unwrap(),
+    ]);
+    assert!(!failed.status.success());
     fs::remove_dir_all(&dir).unwrap();
 }
 

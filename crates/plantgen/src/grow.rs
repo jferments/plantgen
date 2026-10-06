@@ -53,6 +53,9 @@ pub struct GrowthStats {
 #[derive(Debug, Clone, PartialEq)]
 pub struct Growth {
     pub organ_types: Vec<OrganType>,
+    /// The program's body types by name, in declaration order: a graph
+    /// segment's body, less one, indexes them.
+    pub body_types: Vec<String>,
     pub keyframes: Vec<PlantGraph>,
     pub stats: GrowthStats,
 }
@@ -284,6 +287,7 @@ pub fn grow(
     }
     Ok(Growth {
         organ_types,
+        body_types: program.bodies().map(str::to_string).collect(),
         keyframes,
         stats,
     })
@@ -329,6 +333,8 @@ fn snapshot(
                 radius: *radius,
                 born: segment.born,
                 shed: None,
+                body: segment.body,
+                left: segment.left,
             }
         })
         .collect();
