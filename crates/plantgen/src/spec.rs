@@ -19,13 +19,15 @@ use crate::lsys::{Neighbourhood, OrganKind, Program, ProgramError, tools};
 pub const SPEC_SCHEMA: u32 = 1;
 
 /// Built-in plant programs, by name.
-pub const PROGRAMS: [(&str, &str); 6] = [
+pub const PROGRAMS: [(&str, &str); 8] = [
     ("conifer", include_str!("../programs/conifer.lsys")),
     ("broadleaf", include_str!("../programs/broadleaf.lsys")),
     ("grass", include_str!("../programs/grass.lsys")),
     ("herb", include_str!("../programs/herb.lsys")),
     ("succulent", include_str!("../programs/succulent.lsys")),
     ("rosette", include_str!("../programs/rosette.lsys")),
+    ("fern", include_str!("../programs/fern.lsys")),
+    ("palm", include_str!("../programs/palm.lsys")),
 ];
 
 /// Built-in species, by id: the catalogue of the south Puget Sound
@@ -514,12 +516,68 @@ pub const ROSETTE_SPECIES: [(&str, &str); 6] = [
     ),
 ];
 
-/// The species a world's `sonoran` garden grows beside the forest: the
-/// cacti, then the rosettes.
+/// Palms, a cycad and a tree fern (plant forms F4): the California fan
+/// palm of desert oases, the date palm, the cabbage palm, the royal palm,
+/// the creeping saw palmetto, the sago cycad and the soft tree fern. No
+/// habitat places them yet.
+pub const PALM_SPECIES: [(&str, &str); 7] = [
+    (
+        "washingtonia-filifera",
+        include_str!("../species/washingtonia-filifera.json"),
+    ),
+    (
+        "phoenix-dactylifera",
+        include_str!("../species/phoenix-dactylifera.json"),
+    ),
+    (
+        "sabal-palmetto",
+        include_str!("../species/sabal-palmetto.json"),
+    ),
+    (
+        "roystonea-regia",
+        include_str!("../species/roystonea-regia.json"),
+    ),
+    (
+        "serenoa-repens",
+        include_str!("../species/serenoa-repens.json"),
+    ),
+    (
+        "cycas-revoluta",
+        include_str!("../species/cycas-revoluta.json"),
+    ),
+    (
+        "dicksonia-antarctica",
+        include_str!("../species/dicksonia-antarctica.json"),
+    ),
+];
+
+/// The gardens a world can grow beside the forest, by name: `sonoran`,
+/// the cacti then the rosettes; `palms`, the palms.
+pub const GARDENS: [&str; 2] = ["sonoran", "palms"];
+
+/// The species of the garden `name`, in planting order; `None` for an
+/// unknown garden.
+#[must_use]
+pub fn garden(name: &str) -> Option<Vec<(&'static str, &'static str)>> {
+    match name {
+        "sonoran" => Some(
+            SONORAN_SPECIES
+                .iter()
+                .chain(ROSETTE_SPECIES.iter())
+                .copied()
+                .collect(),
+        ),
+        "palms" => Some(PALM_SPECIES.to_vec()),
+        _ => None,
+    }
+}
+
+/// Every garden's species, garden by garden in [`GARDENS`] order.
 pub fn garden_species() -> impl Iterator<Item = (&'static str, &'static str)> {
     SONORAN_SPECIES
         .iter()
         .chain(ROSETTE_SPECIES.iter())
+        .chain(PALM_SPECIES.iter())
         .copied()
 }
 
@@ -598,6 +656,9 @@ pub enum GrowthForm {
     /// yuccas, sotols and desert bromeliads, and with forking stems the
     /// Joshua tree.
     RosetteSucculent,
+    /// A crown of large fronds on an unbranched trunk that does not
+    /// thicken: palms, cycads and tree ferns.
+    Palm,
 }
 
 /// Which plant program grows the species, and its parameter values.

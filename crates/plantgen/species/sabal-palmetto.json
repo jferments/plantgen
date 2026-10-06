@@ -1,0 +1,135 @@
+{
+  "schema": 1,
+  "id": "sabal-palmetto",
+  "taxon": {
+    "scientific_name": "Sabal palmetto",
+    "common_name": "cabbage palm",
+    "usda_symbol": "SAPA"
+  },
+  "growth_form": "palm",
+  "generator": {
+    "program": "palm",
+    "params": {
+      "lean": 4,
+      "trunk_rate": 0.1,
+      "trunk_radius": 0.2,
+      "stemless_years": 12,
+      "internode": 0.002,
+      "fronds_per_year": 14,
+      "frond_life": 2.2,
+      "frond_length": 3.0,
+      "size_years": 10,
+      "young_angle": 10,
+      "old_angle": 70,
+      "open_years": 1,
+      "petiole": 0.42,
+      "petiole_radius": 0.025,
+      "pieces": 6,
+      "fan": 1,
+      "rays": 50,
+      "fan_spread": 160,
+      "fan_length": 0.45,
+      "fan_cup": 30,
+      "costa": 0.3,
+      "droop": 0.012,
+      "droop_years": 2.5,
+      "boots": 1,
+      "boot_life": 25,
+      "boot_length": 0.3,
+      "leaflet_area": 0.235,
+      "ray_area": 0.057,
+      "dead_area": 0.205,
+      "boot_area": 0.374
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [10, 30, 60]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3, 4]
+  },
+  "appearance": {
+    "bark": [0.48, 0.42, 0.33],
+    "foliage": [0.25, 0.37, 0.2],
+    "foliage_shade": [0.1125, 0.1665, 0.09],
+    "variation": 0.1,
+    "organs": {
+      "ray": {
+        "shape": {
+          "template": "blade",
+          "taper": 0.5,
+          "aspect": 0.08
+        },
+        "colour": [0.25, 0.37, 0.2],
+        "bend": {
+          "fold": 25,
+          "cup": 0,
+          "droop": 35,
+          "twist": 0
+        }
+      },
+      "boot": {
+        "shape": {
+          "template": "blade",
+          "taper": 0.2,
+          "aspect": 0.45
+        },
+        "colour": [0.45, 0.37, 0.27]
+      },
+      "dead": {
+        "shape": {
+          "template": "palmate",
+          "lobes": 9,
+          "depth": 0.8,
+          "lobe_width": 0.18,
+          "teeth": 0,
+          "spread": 1.0,
+          "petiole": 0.4
+        },
+        "colour": [0.5, 0.42, 0.3]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 5,
+      "tolerance": 0.5
+    },
+    {
+      "age": 60,
+      "environment": "open",
+      "height": 10,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a trunk 10 to 20 m tall, crossed by split leaf bases (boots) below the crown, under a round head of costapalmate fans about 1.5 m across whose segments fold along a curved midrib and droop; it spends years building its trunk below ground first. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 5 m at 30 years and 10 m at 60. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: dark green fans, grey-brown boots."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F4). Calibration against measurements and photographs comes later."
+  }
+}

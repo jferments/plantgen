@@ -279,3 +279,59 @@ fn conifers_bear_cones_once_old() {
     }
     assert_eq!(checked, 10, "the ten conifers");
 }
+
+/// Fronds open and sag as they age (plant forms F4): on a fern, palms and
+/// a tree fern, the leaflets of each year's fronds hang lower, on average,
+/// than those of the fronds a year younger. (On a palm the younger fronds
+/// also stand a little higher up the trunk; a year's growth is a small
+/// part of a frond's length.)
+#[test]
+fn older_fronds_hang_lower() {
+    for (id, organ) in [
+        ("polystichum-munitum", "pinna"),
+        ("phoenix-dactylifera", "leaflet"),
+        ("washingtonia-filifera", "ray"),
+        ("dicksonia-antarctica", "leaflet"),
+    ] {
+        let spec = PlantSpec::builtin(id).unwrap();
+        let variant = spec.variant_list()[0];
+        let oldest = *spec.growth.keyframes.last().unwrap();
+        let growth = grow_variant(&spec, &variant, oldest, vec![oldest]);
+        let index = growth
+            .organ_types
+            .iter()
+            .position(|kind| kind.name == organ)
+            .unwrap();
+        let graph = &growth.keyframes[0];
+        // Mean height of the leaflets of the fronds born each year.
+        let mut by_year: Vec<(f64, f64, usize)> = Vec::new();
+        for leaflet in graph
+            .organs
+            .iter()
+            .filter(|o| usize::from(o.organ) == index)
+        {
+            let age = (graph.age - leaflet.born).round();
+            match by_year.iter_mut().find(|(year, _, _)| *year == age) {
+                Some((_, sum, count)) => {
+                    *sum += leaflet.position.y;
+                    *count += 1;
+                }
+                None => by_year.push((age, leaflet.position.y, 1)),
+            }
+        }
+        by_year.sort_by(|a, b| a.0.total_cmp(&b.0));
+        let means: Vec<(f64, f64)> = by_year
+            .iter()
+            .map(|&(year, sum, count)| (year, sum / count as f64))
+            .collect();
+        assert!(means.len() >= 2, "{id}: fronds of one age only: {means:?}");
+        for pair in means.windows(2) {
+            assert!(
+                pair[1].1 < pair[0].1,
+                "{id}: fronds {} years old hang no lower than {} years old: {means:?}",
+                pair[1].0,
+                pair[0].0
+            );
+        }
+    }
+}
