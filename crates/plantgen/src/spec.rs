@@ -19,7 +19,7 @@ use crate::lsys::{Neighbourhood, OrganKind, Program, ProgramError, tools};
 pub const SPEC_SCHEMA: u32 = 1;
 
 /// Built-in plant programs, by name.
-pub const PROGRAMS: [(&str, &str); 11] = [
+pub const PROGRAMS: [(&str, &str); 14] = [
     ("conifer", include_str!("../programs/conifer.lsys")),
     ("broadleaf", include_str!("../programs/broadleaf.lsys")),
     ("grass", include_str!("../programs/grass.lsys")),
@@ -31,6 +31,9 @@ pub const PROGRAMS: [(&str, &str); 11] = [
     ("cane", include_str!("../programs/cane.lsys")),
     ("sedge", include_str!("../programs/sedge.lsys")),
     ("aquatic", include_str!("../programs/aquatic.lsys")),
+    ("climber", include_str!("../programs/climber.lsys")),
+    ("epiphyte", include_str!("../programs/epiphyte.lsys")),
+    ("cushion", include_str!("../programs/cushion.lsys")),
 ];
 
 /// Built-in species, by id: the catalogue of the south Puget Sound
@@ -645,11 +648,52 @@ pub const WETLAND_SPECIES: [(&str, &str); 8] = [
     ),
 ];
 
+/// Plants that grow on a host (plant forms F7): each is grown on, and
+/// stood under in a garden, its `host` model.
+pub const GUEST_SPECIES: [(&str, &str); 4] = [
+    ("hedera-helix", include_str!("../species/hedera-helix.json")),
+    (
+        "tillandsia-usneoides",
+        include_str!("../species/tillandsia-usneoides.json"),
+    ),
+    (
+        "phoradendron-californicum",
+        include_str!("../species/phoradendron-californicum.json"),
+    ),
+    (
+        "vitis-californica",
+        include_str!("../species/vitis-californica.json"),
+    ),
+];
+
+/// Cushions, tussocks and wind-pruned trees of the high Andes and the
+/// Patagonian steppe (plant forms F7): llareta, neneo, coirón and a lenga
+/// flagged by the wind.
+pub const ALPINE_SPECIES: [(&str, &str); 4] = [
+    (
+        "azorella-compacta",
+        include_str!("../species/azorella-compacta.json"),
+    ),
+    (
+        "mulinum-spinosum",
+        include_str!("../species/mulinum-spinosum.json"),
+    ),
+    (
+        "festuca-gracillima",
+        include_str!("../species/festuca-gracillima.json"),
+    ),
+    (
+        "nothofagus-pumilio",
+        include_str!("../species/nothofagus-pumilio.json"),
+    ),
+];
+
 /// The gardens a world can grow beside the forest, by name: `sonoran`,
 /// the cacti, the rosettes and the desert's trees and shrubs; `palms`, the
 /// palms; `savanna`, the savanna's trees; `wetland`, the plants of swamps,
-/// coasts and open water.
-pub const GARDENS: [&str; 4] = ["sonoran", "palms", "savanna", "wetland"];
+/// coasts and open water; `hosts`, plants that grow on a host; `alpine`,
+/// cushions, tussocks and wind-pruned trees.
+pub const GARDENS: [&str; 6] = ["sonoran", "palms", "savanna", "wetland", "hosts", "alpine"];
 
 /// The species of the garden `name`, in planting order; `None` for an
 /// unknown garden.
@@ -667,8 +711,29 @@ pub fn garden(name: &str) -> Option<Vec<(&'static str, &'static str)>> {
         "palms" => Some(PALM_SPECIES.to_vec()),
         "savanna" => Some(SAVANNA_SPECIES.to_vec()),
         "wetland" => Some(WETLAND_SPECIES.to_vec()),
+        "hosts" => Some(GUEST_SPECIES.to_vec()),
+        "alpine" => Some(ALPINE_SPECIES.to_vec()),
         _ => None,
     }
+}
+
+/// The species a world growing the garden `name` needs: the garden's,
+/// then each guest's host that is not among them (plant forms F7).
+#[must_use]
+pub fn garden_with_hosts(name: &str) -> Option<Vec<&'static str>> {
+    let mut ids: Vec<&'static str> = garden(name)?.into_iter().map(|(id, _)| id).collect();
+    for index in 0..ids.len() {
+        let Ok(spec) = PlantSpec::builtin(ids[index]) else {
+            continue;
+        };
+        if let Some(host) = spec.host
+            && let Some((id, _)) = all_species().find(|(id, _)| *id == host.species)
+            && !ids.contains(&id)
+        {
+            ids.push(id);
+        }
+    }
+    Some(ids)
 }
 
 /// Every garden's species, garden by garden in [`GARDENS`] order.
@@ -680,6 +745,8 @@ pub fn garden_species() -> impl Iterator<Item = (&'static str, &'static str)> {
         .chain(PALM_SPECIES.iter())
         .chain(SAVANNA_SPECIES.iter())
         .chain(WETLAND_SPECIES.iter())
+        .chain(GUEST_SPECIES.iter())
+        .chain(ALPINE_SPECIES.iter())
         .copied()
 }
 
@@ -761,6 +828,10 @@ pub enum GrowthForm {
     /// A crown of large fronds on an unbranched trunk that does not
     /// thicken: palms, cycads and tree ferns.
     Palm,
+    /// A plant living on another's branches: Spanish moss.
+    Epiphyte,
+    /// A hard cushion of packed rosettes: llareta.
+    Cushion,
 }
 
 /// Which plant program grows the species, and its parameter values.
@@ -1006,6 +1077,82 @@ pub struct PlantSpec {
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub evidence: BTreeMap<String, FieldEvidence>,
     pub provenance: Provenance,
+    /// The plant a climber, epiphyte or parasite grows on (plant forms F7).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub host: Option<HostSpec>,
+}
+
+/// A guest's host: a built-in species grown in `environment` from `seed`
+/// to `age`, one of its keyframes. The guest is grown on that model, and a
+/// garden stands that model under it.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct HostSpec {
+    pub species: String,
+    pub age: f64,
+    pub environment: Environment,
+    pub seed: u64,
+}
+
+impl PlantSpec {
+    /// The host's wood for `host@1`, grown from the host's spec; `None`
+    /// without a host.
+    ///
+    /// # Errors
+    ///
+    /// Fails on an unknown host, a host without that variant or keyframe,
+    /// or a host that will not grow.
+    pub fn host_geometry(
+        &self,
+    ) -> Result<Option<std::sync::Arc<crate::lsys::tools::Host>>, SpecError> {
+        let Some(host) = &self.host else {
+            return Ok(None);
+        };
+        let spec = PlantSpec::builtin(&host.species)
+            .map_err(|error| SpecError(format!("host {}: {error}", host.species)))?;
+        if spec.host.is_some() {
+            return Err(SpecError(format!(
+                "host {} has a host of its own",
+                host.species
+            )));
+        }
+        if !spec.growth.keyframes.contains(&host.age) {
+            return Err(SpecError(format!(
+                "host {} has no keyframe at {} years",
+                host.species, host.age
+            )));
+        }
+        let variant = spec
+            .variant_list()
+            .into_iter()
+            .find(|variant| variant.environment == host.environment && variant.seed == host.seed)
+            .ok_or_else(|| SpecError(format!("host {} has no such variant", host.species)))?;
+        let (program, params) = spec.program()?;
+        let growth = crate::grow::grow(
+            &program,
+            &params,
+            &crate::grow::GrowthSettings {
+                seed: variant.seed,
+                dt: spec.growth.step,
+                years: host.age,
+                keyframes: vec![host.age],
+                neighbourhood: variant.neighbourhood,
+                limits: crate::lsys::Limits::default(),
+                host: None,
+            },
+        )
+        .map_err(|error| SpecError(format!("host {}: {error}", host.species)))?;
+        let graph = &growth.keyframes[0];
+        let capsules = graph
+            .segments
+            .iter()
+            .filter(|segment| segment.body == 0)
+            .map(|segment| (segment.start, segment.end, segment.radius))
+            .collect();
+        Ok(Some(std::sync::Arc::new(crate::lsys::tools::Host::new(
+            capsules,
+        ))))
+    }
 }
 
 /// A spec that cannot be used.

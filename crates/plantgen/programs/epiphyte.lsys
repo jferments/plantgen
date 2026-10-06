@@ -1,0 +1,117 @@
+# Epiphyte: a plant that lives on its host's branches, after Spanish moss
+# and the mistletoes. Each year `seeds_per_year` seeds land in the host's
+# crown, at random points of a cylinder crown_radius wide from crown_low
+# to crown_high above the ground, until there are `colonies`. A seed reads
+# the host (`host@1`): within the tool's reach it turns to the nearest
+# point of the host's wood and moves onto it (drawing nothing); with no
+# wood in reach it is lost. There it grows into a colony (kind):
+#
+# - kind 0, festoons (Spanish moss): `strands` wiry strands hang from the
+#   branch, each l(a) long for the colony's age a,
+#
+#     l(a) = strand_length (1 - exp(-a / size_years)),
+#
+#   in `pieces` pieces that zigzag by kink degrees, under a tropism
+#   toward the ground, with scales (small leaves) at every piece;
+# - kind 1, a clump (mistletoe): `stems` jointed stems radiating from the
+#   attachment and forking `forks` times, the clump reaching
+#   clump_radius (1 - exp(-a / size_years)), with three fruit at each stem
+#   tip from fruit_age.
+#
+# A colony is drawn afresh each year at its age, and last year's drawing
+# is cut, so its strands and stems lengthen as it ages.
+#
+# A colony lives colony_life years. One step is one year. Angles are
+# degrees; lengths are metres.
+
+lsystem epiphyte 1;
+
+param colonies = 30;
+param seeds_per_year = 4;
+param crown_low = 2;
+param crown_high = 8;
+param crown_radius = 4;
+param reach = 2.5;
+param kind = 0;               # 0 festoons, 1 a clump
+param colony_life = 30;
+param size_years = 6;
+# Festoons.
+param strands = 6;
+param strand_length = 0.8;
+param pieces = 10;
+param kink = 25;
+param hang = 0.6;             # tropism of a strand toward the ground
+param strand_radius = 0.0012;
+param scale_size = 0.05;
+# A clump.
+param stems = 8;
+param forks = 3;
+param clump_radius = 0.3;
+param stem_radius = 0.003;
+param fork_angle = 35;
+param fruit_age = 3;
+param fruit_size = 0.008;
+param scale_area = 0.1;
+param fruit_area = 0.89;
+
+module Y(n);                  # the seed rain: colonies so far
+module Sw(k, m);              # seeds k to k + m - 1 of this year's rain
+module Sd queries host;       # a seed looking for wood
+module Co;                    # a colony; its age is the colony's
+module Ch;                    # the foot of a colony's drawing for one year
+module Cz(a);                 # a colony a years old, drawn
+module Fs(j, m, a);           # strands j to j + m - 1 of a festoon a years old
+module Sp(k, m, l, d);        # pieces k to k + m - 1 of a strand l long, kinking toward d degrees
+module Cs(j, m, a);           # stems j to j + m - 1 of a clump a years old
+module St(q, l, a);           # a stem with q forks to go, l long, of a clump a years old
+module Ft;                    # the fruit at a stem's tip
+
+organ scale leaf area scale_area;
+organ fruit fruit area fruit_area;
+
+tool host@1 { reach = reach };
+
+axiom Y(0);
+
+# Seeds land in the crown each year until the colonies are all there.
+rule Y(n) : n < colonies ->
+    Sw(n, min(colonies - n, max(1, round(seeds_per_year)))) Y(n + min(colonies - n, max(1, round(seeds_per_year))));
+decompose Sw(k, m) : m > 1 -> Sw(k, floor(m / 2)) Sw(k + floor(m / 2), m - floor(m / 2));
+decompose Sw(k, m) : m == 1 ->
+    [ /(uniform(0, 360)) &(90) f(crown_radius * sqrt(rand())) ^(90)
+      f(uniform(crown_low, crown_high)) Sd ];
+decompose Sw(k, m) -> ;
+
+# A seed turns to the nearest wood and lands on it, or is lost.
+rule Sd : gd < reach -> steer(gx, gy, gz, 1) f(max(0, gd)) Co;
+rule Sd -> ;
+
+# A colony is drawn afresh each year at its age; last year's drawing goes.
+rule Co : age >= colony_life -> ;
+rule Co -> [ Ch Cz(age) ] Co;
+rule Ch -> %;
+
+# Festoons: strands hanging from the branch, kinking as they go.
+decompose Cz(a) : kind == 0 -> Fs(0, max(1, round(strands)), a);
+decompose Fs(j, m, a) : m > 1 -> Fs(j, floor(m / 2), a) Fs(j + floor(m / 2), m - floor(m / 2), a);
+decompose Fs(j, m, a) ->
+    [ steer(0, -1, 0, 1) /(j * 137.5) &(15 + uniform(0, 25))
+      T(0, -1, 0, hang) !(strand_radius)
+      Sp(0, max(1, round(pieces)), strand_length * (1 - exp(-(a + 1) / size_years)) * uniform(0.6, 1.0), uniform(0, 360)) ];
+decompose Sp(k, m, l, d) : m > 1 -> Sp(k, floor(m / 2), l, d) Sp(k + floor(m / 2), m - floor(m / 2), l, d);
+decompose Sp(k, m, l, d) ->
+    /(d + k * 131) &(kink) F(l / max(1, pieces))
+    [ &(60) scale(scale_size) ] [ /(180) &(60) scale(scale_size) ];
+
+# A clump: stems radiating and forking, fruit at their tips.
+decompose Cz(a) -> Cs(0, max(1, round(stems)), a);
+decompose Cs(j, m, a) : m > 1 -> Cs(j, floor(m / 2), a) Cs(j + floor(m / 2), m - floor(m / 2), a);
+decompose Cs(j, m, a) ->
+    [ /(j * 137.5 + uniform(-15, 15)) &(uniform(20, 120)) !(stem_radius)
+      St(forks, clump_radius * (1 - exp(-(a + 1) / size_years)) / max(1, forks), a) ];
+decompose St(q, l, a) : q > 0 ->
+    F(l) [ +(fork_angle) St(q - 1, l * 0.85, a) ] [ -(fork_angle) St(q - 1, l * 0.85, a) ];
+decompose St(q, l, a) : a >= fruit_age -> F(l) Ft;
+decompose St(q, l, a) -> F(l);
+decompose Ft ->
+    [ &(40) fruit(fruit_size) ] [ /(120) &(40) fruit(fruit_size) ] [ /(240) &(40) fruit(fruit_size) ];

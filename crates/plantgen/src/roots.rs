@@ -97,6 +97,7 @@ const AROUND: u32 = 6;
 
 /// Draw the roots of `graph` into `mesh` in `colour` (the bark's), those of
 /// the nearest levels only when `near`.
+#[allow(clippy::too_many_lines)]
 pub fn build(graph: &PlantGraph, roots: &Roots, colour: [f32; 3], near: bool, mesh: &mut Mesh) {
     let Some(stem) = graph.segments.first() else {
         return;
@@ -121,7 +122,7 @@ pub fn build(graph: &PlantGraph, roots: &Roots, colour: [f32; 3], near: bool, me
     while let Some(next) = graph
         .segments
         .iter()
-        .position(|s| s.parent == Some(at as u32) && !s.lateral)
+        .position(|s| s.parent == u32::try_from(at).ok() && !s.lateral)
     {
         trunk.push((graph.segments[next].start, graph.segments[next].radius));
         at = next;
@@ -176,7 +177,11 @@ pub fn build(graph: &PlantGraph, roots: &Roots, colour: [f32; 3], near: bool, me
             break;
         }
         let wanted = crown_radius * roots.aerial_reach * (0.6 + 0.6 * jitter(i, 5));
-        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        #[allow(
+            clippy::cast_possible_truncation,
+            clippy::cast_sign_loss,
+            clippy::cast_precision_loss
+        )]
         let pick = crown[(jitter(i, 6) * crown.len() as f64) as usize % crown.len()];
         let segment = &graph.segments[pick];
         let distance = horizontal(segment.end - foot);
@@ -283,7 +288,7 @@ fn tube(
     born: f64,
     mesh: &mut Mesh,
 ) {
-    if !(r0 > 0.0) || (c - a).length() <= 1.0e-6 {
+    if r0.is_nan() || r0 <= 0.0 || (c - a).length() <= 1.0e-6 {
         return;
     }
     let point = |t: f64| a * ((1.0 - t) * (1.0 - t)) + b * (2.0 * (1.0 - t) * t) + c * (t * t);
@@ -302,7 +307,7 @@ fn tube(
         for k in 0..AROUND {
             let theta = std::f64::consts::TAU * f64::from(k) / f64::from(AROUND);
             let normal = side * math::cos(theta) + other * math::sin(theta);
-            #[allow(clippy::cast_possible_truncation)]
+            #[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss)]
             mesh.push(Vertex {
                 position: centre + normal * radius,
                 normal,

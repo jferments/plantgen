@@ -1,0 +1,61 @@
+# Cushion: a hard, domed cushion of tightly packed rosettes, after the
+# llareta of the high Andes. The cushion is a fleshy dome (the body
+# `mound`, as long as the dome is tall, its look's dome large enough that
+# the whole body rounds over: a half ellipsoid dome * R tall) that widens
+# as
+#
+#   R(a) = max_radius (1 - exp(-a / size_years))
+#
+# and its surface is packed with small rosettes, rosette_density a square
+# metre of the dome's area (at most max_rosettes), drawn afresh each year
+# on a golden-angle spiral over the dome, each turned to face out from it.
+# A cushion may grow into several merging lobes: `lobes` domes,
+# lobe_spread apart, each a little smaller than the first.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem cushion 1;
+
+param max_radius = 1;
+param size_years = 80;
+param dome = 0.5;             # the dome's height over its radius
+param rosette_density = 900;  # rosettes a square metre of the dome
+param max_rosettes = 6000;
+param rosette_size = 0.03;
+param lobes = 1;
+param lobe_spread = 0.6;      # lobes are this share of the radius apart
+param rosette_area = 0.3;
+
+module Y;                     # the cushion
+module Lo(i, m);              # lobes i to i + m - 1
+module Ch;                    # the foot of a year's rosettes
+module Rs(k, m, n, r);        # rosettes k to k + m - 1 of n over a dome of radius r
+
+body mound;
+
+organ rosette leaf area rosette_area;
+
+axiom Y;
+
+# Each year the cushion's lobes and their rosettes are drawn afresh at its
+# size; last year's go.
+rule Y -> [ Ch Lo(0, max(1, round(lobes))) ] Y;
+rule Ch -> %;
+
+decompose Lo(i, m) : m > 1 -> Lo(i, floor(m / 2)) Lo(i + floor(m / 2), m - floor(m / 2));
+decompose Lo(i, m) ->
+    [ /(i * 137.5) &(90) f(i > 0 ? lobe_spread * max_radius * (1 - exp(-t / size_years)) : 0) ^(90)
+      Lb(max_radius * (1 - exp(-t / size_years)) * (i > 0 ? 0.75 : 1)) ];
+module Lb(r);                 # a lobe of radius r: its dome and rosettes
+decompose Lb(r) ->
+    [ !(max(r, 0.01)) mound(max(0.01, dome * r)) ]
+    Rs(0, min(max_rosettes, max(1, round(rosette_density * 3.14159 * r * r * (1 + dome * dome)))),
+       min(max_rosettes, max(1, round(rosette_density * 3.14159 * r * r * (1 + dome * dome)))), r);
+
+# Rosette k of n sits at the height share z = (k + 1/2) / n of the dome,
+# turned k times the golden angle round it, facing out.
+decompose Rs(k, m, n, r) : m > 1 -> Rs(k, floor(m / 2), n, r) Rs(k + floor(m / 2), m - floor(m / 2), n, r);
+decompose Rs(k, m, n, r) ->
+    [ /(k * 137.508) &(90) f(r * sqrt(1 - ((k + 0.5) / n) * ((k + 0.5) / n))) ^(90)
+      f(dome * r * (k + 0.5) / n)
+      &(deg(acos((k + 0.5) / n))) rosette(rosette_size * uniform(0.85, 1.15)) ];

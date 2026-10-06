@@ -196,6 +196,7 @@ pub enum ToolKind {
     Space = 1,
     Vigour = 2,
     Pipe = 3,
+    Host = 4,
 }
 
 pub struct ToolSpec {
@@ -207,7 +208,7 @@ pub struct ToolSpec {
 
 /// The tool registry. A new capability is a new entry or a new version of an
 /// entry; a version, once released, never changes behaviour.
-pub const TOOLS: [ToolSpec; 4] = [
+pub const TOOLS: [ToolSpec; 5] = [
     ToolSpec {
         kind: ToolKind::Light,
         name: "light",
@@ -246,6 +247,12 @@ pub const TOOLS: [ToolSpec; 4] = [
             ("rings", 0.0),
         ],
     },
+    ToolSpec {
+        kind: ToolKind::Host,
+        name: "host",
+        version: 1,
+        keys: &[("reach", 2.0)],
+    },
 ];
 
 /// A configured tool: one expression per registry key, re-evaluated each step.
@@ -274,7 +281,7 @@ pub struct Program {
     pub productions: Vec<Vec<CompiledRule>>,
     pub decompositions: Vec<Vec<CompiledRule>>,
     pub interpretations: Vec<Vec<CompiledRule>>,
-    pub tools: [Option<ToolConfig>; 4],
+    pub tools: [Option<ToolConfig>; 5],
 }
 
 impl Program {
@@ -450,13 +457,14 @@ struct Compiler {
 }
 
 /// Every module that queries light, vigour or space needs that tool.
-fn check_queries(ast: &ProgramAst, tools: &[Option<ToolConfig>; 4]) -> Result<(), ProgramError> {
+fn check_queries(ast: &ProgramAst, tools: &[Option<ToolConfig>; 5]) -> Result<(), ProgramError> {
     for decl in &ast.modules {
         for (name, span) in &decl.queries {
             let tool = match Query::from_name(name) {
                 Some(Query::Light) => ToolKind::Light,
                 Some(Query::Vigour) => ToolKind::Vigour,
                 Some(Query::Space) => ToolKind::Space,
+                Some(Query::Host) => ToolKind::Host,
                 _ => continue,
             };
             if tools[tool as usize].is_none() {
@@ -657,8 +665,8 @@ impl Compiler {
     fn configure_tools(
         &mut self,
         ast: &ProgramAst,
-    ) -> Result<[Option<ToolConfig>; 4], ProgramError> {
-        let mut tools: [Option<ToolConfig>; 4] = [None, None, None, None];
+    ) -> Result<[Option<ToolConfig>; 5], ProgramError> {
+        let mut tools: [Option<ToolConfig>; 5] = [None, None, None, None, None];
         let context = Context {
             what: "a tool setting",
             globals: self.params.len(),
@@ -1034,6 +1042,7 @@ impl Compiler {
                             Query::Vigour => "vigour",
                             Query::Space => "space",
                             Query::Position => "position",
+                            Query::Host => "host",
                         };
                         err(
                             span,

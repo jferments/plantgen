@@ -20,14 +20,15 @@ use after_plants::litter;
 use after_plants::looks::Look;
 use after_plants::lsys::{Limits, Neighbourhood, Program};
 use after_plants::math::Vec3;
-use after_plants::mesh;
+use after_plants::mesh::{self, PlantMesh};
 use after_plants::package::{self, Inputs};
 use after_plants::preview::{self, PreviewOptions, View};
 use after_plants::quality::{self, Quality};
 use after_plants::raster;
 use after_plants::spec::{
-    self, DESERT_SPECIES, Environment, PALM_SPECIES, PROGRAMS, PlantSpec, ROSETTE_SPECIES,
-    SAVANNA_SPECIES, SONORAN_SPECIES, SPECIES, Variant, WETLAND_SPECIES,
+    self, ALPINE_SPECIES, DESERT_SPECIES, Environment, GUEST_SPECIES, PALM_SPECIES, PROGRAMS,
+    PlantSpec, ROSETTE_SPECIES, SAVANNA_SPECIES, SONORAN_SPECIES, SPECIES, Variant,
+    WETLAND_SPECIES,
 };
 use after_plants::templates::{self, Templates};
 
@@ -248,6 +249,11 @@ fn list() -> Result<(), Failure> {
         ("Palms, a cycad and a tree fern:", &PALM_SPECIES[..]),
         ("Trees of the African savanna:", &SAVANNA_SPECIES[..]),
         ("Plants of swamps, coasts and water:", &WETLAND_SPECIES[..]),
+        ("Plants that grow on a host:", &GUEST_SPECIES[..]),
+        (
+            "Cushions, tussocks and wind-pruned trees:",
+            &ALPINE_SPECIES[..],
+        ),
     ] {
         out!("{title}");
         for (id, _) in catalogue {
@@ -330,6 +336,7 @@ fn grow_variant(
         keyframes,
         neighbourhood: neighbourhood(spec, environment),
         limits: Limits::default(),
+        host: spec.host_geometry().map_err(|error| error.to_string())?,
     };
     grow(&program, &params, &settings).map_err(|error| format!("{}: {error}", spec.id))
 }
@@ -422,11 +429,12 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         args,
         &[
             "env", "seed", "age", "view", "lod", "size", "out", "quality", "program", "focus",
-            "span",
+            "span", "alone",
         ],
     )?;
     let program = options.program()?;
     let spec = load_spec(options.one_positional("a species")?)?;
+    let alone = options.flags.contains_key("alone");
     let out = options.flags.get("out").ok_or("missing `--out FILE.png`")?;
     let environment = options.environment(&spec)?;
     let seed = options.number("seed")?.unwrap_or(spec.variants.seeds[0]);
@@ -458,9 +466,9 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     };
     let growth = grow_variant(&spec, program.as_deref(), environment, seed, vec![age], age)?;
     let graph = &growth.keyframes[0];
-    let looks = looks_of(&spec, &growth);
+    let mut looks = looks_of(&spec, &growth);
     let bodies = bodies_of(&spec, &growth);
-    let plant = mesh::build(
+    let mut plant = mesh::build(
         graph,
         &looks,
         &bodies,
@@ -468,7 +476,40 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         &lod.for_height(graph.height),
         level,
     );
-    let templates = templates_of(&looks, &bodies, &growth);
+    // A guest is drawn on its host (plant forms F7), unless `--alone`.
+    // Neither has fleshy bodies, so the templates are the organs' alone.
+    let mut on = false;
+    if let (Some(host), false, true) = (&spec.host, alone, bodies.is_empty()) {
+        let host_spec = PlantSpec::builtin(&host.species).map_err(|error| error.to_string())?;
+        let host_growth = grow_variant(
+            &host_spec,
+            None,
+            host.environment,
+            host.seed,
+            vec![host.age],
+            host.age,
+        )?;
+        let host_graph = &host_growth.keyframes[0];
+        let host_looks = looks_of(&host_spec, &host_growth);
+        let host_plant = mesh::build(
+            host_graph,
+            &host_looks,
+            &[],
+            &host_spec.appearance,
+            &lod.for_height(host_graph.height),
+            level,
+        );
+        plant = on_host(host_plant, plant, host_looks.len());
+        let mut both = host_looks;
+        both.append(&mut looks);
+        looks = both;
+        on = true;
+    }
+    let templates = if on {
+        Templates::for_plant(&looks, &[])
+    } else {
+        templates_of(&looks, &bodies, &growth)
+    };
     let image = preview::render(
         &plant,
         &templates,
@@ -502,6 +543,31 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         }
     );
     Ok(())
+}
+
+/// A guest's mesh drawn on its host's: the host's wood and cards, then the
+/// guest's, its cards' templates after the host's `host_types` organ types.
+fn on_host(host: PlantMesh, guest: PlantMesh, host_types: usize) -> PlantMesh {
+    let mut plant = host;
+    let first = u32::try_from(plant.wood.positions.len()).unwrap_or(u32::MAX);
+    let wood = guest.wood;
+    plant.wood.positions.extend(wood.positions);
+    plant.wood.normals.extend(wood.normals);
+    plant.wood.uvs.extend(wood.uvs);
+    plant.wood.colors.extend(wood.colors);
+    plant.wood.births.extend(wood.births);
+    plant.wood.sheds.extend(wood.sheds);
+    plant.wood.levels.extend(wood.levels);
+    plant
+        .wood
+        .indices
+        .extend(wood.indices.iter().map(|index| index + first));
+    let shift = u8::try_from(host_types).unwrap_or(u8::MAX);
+    plant.cards.extend(guest.cards.into_iter().map(|mut card| {
+        card.template = card.template.saturating_add(shift);
+        card
+    }));
+    plant
 }
 
 fn sheet_command(args: &[String]) -> Result<(), Failure> {

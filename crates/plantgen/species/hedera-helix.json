@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "id": "hedera-helix",
+  "taxon": {
+    "scientific_name": "Hedera helix",
+    "common_name": "English ivy"
+  },
+  "growth_form": "vine",
+  "generator": {
+    "program": "climber",
+    "params": {
+      "shoots": 5,
+      "internode": 0.12,
+      "max_shoot": 3,
+      "cling": 0.2,
+      "hug": 0.5,
+      "climb": 0.35,
+      "seek": 0.6,
+      "drape": 0.03,
+      "free_years": 1.5,
+      "branch_chance": 0.15,
+      "branch_angle": 50,
+      "max_order": 2,
+      "leaf_size": 0.1,
+      "leaf_angle": 70,
+      "leaf_years": 3,
+      "fruit_age": 8,
+      "fruiting": 0.15,
+      "fruit_size": 0.07,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 4e-06,
+      "renew": 0.35,
+      "leaf_area": 0.435,
+      "fruit_area": 1.27
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 0.25,
+    "keyframes": [3, 8, 15]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.35, 0.3, 0.24],
+    "foliage": [0.06, 0.16, 0.05],
+    "foliage_shade": [0.021, 0.056, 0.0175],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "palmate",
+          "lobes": 5,
+          "depth": 0.35,
+          "lobe_width": 0.45,
+          "teeth": 0,
+          "spread": 0.8,
+          "petiole": 0.35
+        },
+        "face_up": 0.6
+      },
+      "fruit": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 1.0
+        },
+        "colour": [0.08, 0.08, 0.12]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 8,
+      "environment": "open",
+      "height": 6.0,
+      "tolerance": 0.6
+    },
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 12.0,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: an evergreen woody vine that climbs by clinging roots up trunks into the crowns of trees, with glossy, dark, three- to five-lobed leaves on climbing shoots and flowering, black-berried shoots where it reaches the light; introduced and invasive in the forests of the Pacific Northwest, where it smothers bigleaf maples. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 6 m up its host at 8 years and 12 m at 15. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: dark glossy green leaves, black berries."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F7). Calibration against measurements and photographs comes later."
+  },
+  "host": {
+    "species": "acer-macrophyllum",
+    "age": 30,
+    "environment": "open",
+    "seed": 1
+  }
+}

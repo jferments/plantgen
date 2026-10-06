@@ -165,6 +165,7 @@ fn written_packages_read_back_losslessly_and_detect_corruption() {
             keyframes: vec![4.0, 8.0],
             neighbourhood: variant.neighbourhood,
             limits: Limits::default(),
+            host: None,
         },
     )
     .unwrap();

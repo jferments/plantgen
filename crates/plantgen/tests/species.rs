@@ -23,6 +23,7 @@ fn grow_variant(spec: &PlantSpec, variant: &Variant, years: f64, keyframes: Vec<
             keyframes,
             neighbourhood: variant.neighbourhood,
             limits: Limits::default(),
+            host: spec.host_geometry().unwrap(),
         },
     )
     .unwrap()
@@ -307,13 +308,14 @@ fn older_fronds_hang_lower() {
             .unwrap();
         let graph = &growth.keyframes[0];
         // Mean height of the leaflets of the fronds born each year.
-        let mut by_year: Vec<(f64, f64, usize)> = Vec::new();
+        let mut by_year: Vec<(i64, f64, usize)> = Vec::new();
         for leaflet in graph
             .organs
             .iter()
             .filter(|o| usize::from(o.organ) == index)
         {
-            let age = (graph.age - leaflet.born).round();
+            #[allow(clippy::cast_possible_truncation)]
+            let age = (graph.age - leaflet.born).round() as i64;
             match by_year.iter_mut().find(|(year, _, _)| *year == age) {
                 Some((_, sum, count)) => {
                     *sum += leaflet.position.y;
@@ -322,8 +324,9 @@ fn older_fronds_hang_lower() {
                 None => by_year.push((age, leaflet.position.y, 1)),
             }
         }
-        by_year.sort_by(|a, b| a.0.total_cmp(&b.0));
-        let means: Vec<(f64, f64)> = by_year
+        by_year.sort_by_key(|row| row.0);
+        #[allow(clippy::cast_precision_loss)]
+        let means: Vec<(i64, f64)> = by_year
             .iter()
             .map(|&(year, sum, count)| (year, sum / count as f64))
             .collect();
@@ -368,5 +371,62 @@ fn a_tree_past_its_life_stands_as_a_snag() {
         "dead branches fall: {} of {}",
         snag.segments.len(),
         alive.segments.len()
+    );
+}
+
+/// A guest grows on its host (plant forms F7): every segment of a climber
+/// or an epiphyte's colony stays near the wood of the host it is grown on.
+#[test]
+fn guests_grow_on_their_hosts() {
+    for (id, near) in [
+        ("hedera-helix", 0.6),
+        ("vitis-californica", 4.0),
+        ("tillandsia-usneoides", 2.5),
+        ("phoradendron-californicum", 1.0),
+    ] {
+        let spec = PlantSpec::builtin(id).unwrap();
+        let host = spec.host_geometry().unwrap().expect("a host");
+        let variant = spec.variant_list()[0];
+        let oldest = *spec.growth.keyframes.last().unwrap();
+        let growth = grow_variant(&spec, &variant, oldest, vec![oldest]);
+        let graph = &growth.keyframes[0];
+        assert!(!graph.segments.is_empty(), "{id} grew nothing");
+        let far = graph
+            .segments
+            .iter()
+            .filter(|segment| host.nearest(segment.start, near).is_none())
+            .count();
+        // A vine's first stems cross open ground to reach its host.
+        assert!(
+            far * 20 <= graph.segments.len(),
+            "{id}: {far} of {} segments farther than {near} m from the host",
+            graph.segments.len()
+        );
+        let up = graph
+            .segments
+            .iter()
+            .map(|segment| segment.end.y)
+            .fold(0.0, f64::max);
+        assert!(up > 3.0, "{id} stays near the ground ({up} m)");
+    }
+}
+
+/// A tree grown in a steady wind leans its crown downwind (plant forms
+/// F7): the lenga's leaves lie mostly on the lee side (+X) of its stem.
+#[test]
+fn a_tree_in_a_steady_wind_flags_downwind() {
+    let spec = PlantSpec::builtin("nothofagus-pumilio").unwrap();
+    let variant = spec.variant_list()[0];
+    let growth = grow_variant(&spec, &variant, 60.0, vec![60.0]);
+    let graph = &growth.keyframes[0];
+    let lee = graph
+        .organs
+        .iter()
+        .filter(|organ| organ.position.x > 0.0)
+        .count();
+    assert!(
+        lee * 10 >= graph.organs.len() * 7,
+        "{lee} of {} organs downwind",
+        graph.organs.len()
     );
 }

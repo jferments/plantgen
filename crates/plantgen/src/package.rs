@@ -476,15 +476,35 @@ impl Inputs {
         let (width, height, pixels) = templates.atlas_rgba();
         let atlas_png = png(width, height, &pixels)?;
         let quality_json = json::to_vec(&QualityRecord::from(quality)).map_err(format_error)?;
+        // A guest grows on its host (plant forms F7): the host's spec and
+        // program are inputs too. A spec without a host hashes as before.
+        let host_bytes = match &spec.host {
+            Some(host) => {
+                let host_spec = PlantSpec::builtin(&host.species)?;
+                let mut bytes = json::to_vec(&host_spec).map_err(format_error)?;
+                bytes.extend_from_slice(
+                    crate::spec::builtin_program(&host_spec.generator.program)
+                        .unwrap_or_default()
+                        .as_bytes(),
+                );
+                Some(bytes)
+            }
+            None => None,
+        };
         let mut hasher = Sha256::new();
-        let parts: [(&str, &[u8]); 6] = [
-            ("format", &PACKAGE_FORMAT.to_le_bytes()),
-            ("generator", &crate::GENERATOR_REVISION.to_le_bytes()),
+        let format = PACKAGE_FORMAT.to_le_bytes();
+        let generator = crate::GENERATOR_REVISION.to_le_bytes();
+        let mut parts: Vec<(&str, &[u8])> = vec![
+            ("format", &format),
+            ("generator", &generator),
             ("spec", &spec_json),
             ("program", source.as_bytes()),
             ("quality", &quality_json),
             ("organ-atlas", &atlas_png),
         ];
+        if let Some(bytes) = &host_bytes {
+            parts.push(("host", bytes));
+        }
         // Each part is labelled and length-prefixed, so no two different
         // sets of inputs hash the same bytes.
         for (label, bytes) in parts {
@@ -704,6 +724,9 @@ fn grow_variant(
             keyframes,
             neighbourhood: variant.neighbourhood,
             limits: Limits::default(),
+            host: spec
+                .host_geometry()
+                .map_err(|error| GrowthError::Settings(error.to_string()))?,
         },
     )
 }

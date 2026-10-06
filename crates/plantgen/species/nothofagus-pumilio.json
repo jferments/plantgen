@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "id": "nothofagus-pumilio",
+  "taxon": {
+    "scientific_name": "Nothofagus pumilio",
+    "common_name": "lenga"
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 10,
+      "crown_radius": 4.5,
+      "crown_base": 1,
+      "crown_rate": 0.05,
+      "space_density": 12,
+      "bud_years": 14,
+      "internode": 0.28,
+      "max_shoot": 4,
+      "branch_angle": 45,
+      "apical_young": 0.72,
+      "apical": 0.6,
+      "alternate": 1,
+      "leaf_size": 0.22,
+      "spur_leaf": 0.2,
+      "spur_pairs": 2,
+      "leaf_angle": 55,
+      "wiggle": 5,
+      "lean": 0,
+      "droop": 0.025,
+      "extinction": 0.45,
+      "blooms": 0,
+      "bloom_age": 10,
+      "bloom_size": 0.05,
+      "bloom_angle": 150,
+      "leaf_area": 0.304,
+      "bloom_area": 0.639,
+      "wind": 1.0,
+      "wind_bend": 0.12,
+      "wind_kill": 0.0
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [5, 20, 60]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3]
+  },
+  "appearance": {
+    "bark": [0.35, 0.3, 0.27],
+    "foliage": [0.12, 0.2, 0.07],
+    "foliage_shade": [0.042, 0.07, 0.0245],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 7,
+          "angle": 50,
+          "width": 0.6,
+          "widest": 0.4,
+          "tip": 0.6,
+          "base": 0.7,
+          "teeth": 8,
+          "tooth_depth": 0.05,
+          "petiole": 0.08
+        }
+      }
+    },
+    "ridges": {
+      "spacing": 0.05,
+      "depth": 0.01,
+      "twist": 0,
+      "contrast": 0.25
+    }
+  },
+  "allometry": [
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 5.0,
+      "tolerance": 0.5
+    },
+    {
+      "age": 60,
+      "environment": "open",
+      "height": 8.0,
+      "tolerance": 0.45
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a deciduous southern beech of the Patagonian Andes, a tall forest tree where sheltered but, at the tree line and on the windward plains, a low, leaning tree flagged by the westerlies, its crown streaming downwind; small crinkled leaves turning red in autumn. Grown here in a steady wind. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 5 m at 20 years and 8 m at 60, wind-pruned. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: fresh green leaves, grey bark."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F7). Calibration against measurements and photographs comes later."
+  }
+}

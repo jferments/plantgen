@@ -12,7 +12,7 @@ use crate::rng::{hash_words, normal, unit};
 /// Values the environment tools wrote for one module in the last step.
 pub type EnvValues = [f64; ENV_FIELDS];
 
-pub const ENV_FIELDS: usize = 17;
+pub const ENV_FIELDS: usize = 21;
 
 /// The environment fields a rule can read, grouped by the query that
 /// provides them.
@@ -44,6 +44,14 @@ pub enum EnvField {
     Order,
     /// `height`: current height of the whole plant.
     Height,
+    /// `gd`: distance from the module to its host's surface, metres
+    /// (`host@1`; the tool's reach or more when there is no host near).
+    Gd,
+    /// `gx`, `gy`, `gz`: unit direction from the module to the nearest
+    /// point of its host's surface.
+    Gx,
+    Gy,
+    Gz,
 }
 
 impl EnvField {
@@ -65,6 +73,10 @@ impl EnvField {
         (Self::Hz, "hz"),
         (Self::Order, "order"),
         (Self::Height, "height"),
+        (Self::Gd, "gd"),
+        (Self::Gx, "gx"),
+        (Self::Gy, "gy"),
+        (Self::Gz, "gz"),
     ];
 
     #[must_use]
@@ -82,6 +94,7 @@ impl EnvField {
             Self::Light => Query::Light,
             Self::Vigour | Self::Qsum | Self::Nseg | Self::Ntip => Query::Vigour,
             Self::Space | Self::Sx | Self::Sy | Self::Sz => Query::Space,
+            Self::Gd | Self::Gx | Self::Gy | Self::Gz => Query::Host,
             _ => Query::Position,
         }
     }
@@ -94,6 +107,8 @@ pub enum Query {
     Vigour,
     Space,
     Position,
+    /// The host plant a climber, epiphyte or parasite grows on (`host@1`).
+    Host,
 }
 
 impl Query {
@@ -104,6 +119,7 @@ impl Query {
             "vigour" => Self::Vigour,
             "space" => Self::Space,
             "position" => Self::Position,
+            "host" => Self::Host,
             _ => return None,
         })
     }
@@ -115,6 +131,7 @@ impl Query {
             Self::Vigour => 2,
             Self::Space => 4,
             Self::Position => 8,
+            Self::Host => 16,
         }
     }
 }

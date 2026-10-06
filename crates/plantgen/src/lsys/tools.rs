@@ -124,6 +124,84 @@ pub struct ToolState {
     killed: HashSet<(i32, i32, i32)>,
     /// Lattice spacing fixed at the first step, so cells keep their identity.
     lattice: Option<f64>,
+    /// The host a guest grows on, for `host@1`.
+    pub host: Option<std::sync::Arc<Host>>,
+}
+
+/// A host plant's wood as `host@1` sees it: its segments as capsules, in a
+/// grid of `HOST_CELL` cells for nearest-point queries (plant forms F7).
+#[derive(Debug, Clone, PartialEq)]
+pub struct Host {
+    capsules: Vec<(Vec3, Vec3, f64)>,
+    cells: std::collections::HashMap<(i32, i32, i32), Vec<u32>>,
+}
+
+/// Edge of a host grid cell, metres.
+pub const HOST_CELL: f64 = 0.5;
+
+impl Host {
+    /// The host whose wood is `capsules`: each a segment's start, end and
+    /// radius, in the guest's frame (the host stands at the origin).
+    #[must_use]
+    pub fn new(capsules: Vec<(Vec3, Vec3, f64)>) -> Self {
+        let mut cells: std::collections::HashMap<(i32, i32, i32), Vec<u32>> =
+            std::collections::HashMap::new();
+        for (index, &(a, b, r)) in capsules.iter().enumerate() {
+            let low = cell_of(a.min(b) - Vec3::new(r, r, r));
+            let high = cell_of(a.max(b) + Vec3::new(r, r, r));
+            for x in low.0..=high.0 {
+                for y in low.1..=high.1 {
+                    for z in low.2..=high.2 {
+                        #[allow(clippy::cast_possible_truncation)]
+                        cells.entry((x, y, z)).or_default().push(index as u32);
+                    }
+                }
+            }
+        }
+        Self { capsules, cells }
+    }
+
+    /// The distance from `point` to the host's surface (negative inside
+    /// its wood) and the unit direction to the nearest surface point, when
+    /// the host is within `reach`.
+    #[must_use]
+    pub fn nearest(&self, point: Vec3, reach: f64) -> Option<(f64, Vec3)> {
+        let low = cell_of(point - Vec3::new(reach, reach, reach));
+        let high = cell_of(point + Vec3::new(reach, reach, reach));
+        let mut best: Option<(f64, Vec3)> = None;
+        let mut seen = HashSet::new();
+        for x in low.0..=high.0 {
+            for y in low.1..=high.1 {
+                for z in low.2..=high.2 {
+                    let Some(list) = self.cells.get(&(x, y, z)) else {
+                        continue;
+                    };
+                    for &index in list {
+                        if !seen.insert(index) {
+                            continue;
+                        }
+                        let (a, b, r) = self.capsules[index as usize];
+                        let axis = b - a;
+                        let along = (point - a).dot(axis) / axis.dot(axis).max(1.0e-12);
+                        let closest = a + axis * along.clamp(0.0, 1.0);
+                        let offset = closest - point;
+                        let centre = offset.length();
+                        let surface = centre - r;
+                        if surface <= reach && best.is_none_or(|(d, _)| surface < d) {
+                            best = Some((surface, offset * (1.0 / centre.max(1.0e-9))));
+                        }
+                    }
+                }
+            }
+        }
+        best
+    }
+}
+
+fn cell_of(point: Vec3) -> (i32, i32, i32) {
+    #[allow(clippy::cast_possible_truncation)]
+    let cell = |v: f64| (v / HOST_CELL).floor() as i32;
+    (cell(point.x), cell(point.y), cell(point.z))
 }
 
 /// Results of running the tools on one scene.
@@ -206,6 +284,12 @@ pub fn run(
         None => None,
     };
 
+    // The host: distance and direction to its surface from each module.
+    let host_reach = program.tool(ToolKind::Host).map(|config| {
+        let values = settings(config, globals, clock, &mut stack);
+        values[0].max(0.0)
+    });
+
     let mut env = Vec::with_capacity(scene.queries.len());
     for (index, query) in scene.queries.iter().enumerate() {
         let mut values = [0.0; ENV_FIELDS];
@@ -230,6 +314,17 @@ pub fn run(
         values[EnvField::Hz as usize] = query.heading.z;
         values[EnvField::Order as usize] = f64::from(query.order);
         values[EnvField::Height as usize] = scene.height;
+        if let Some(reach) = host_reach {
+            let found = state
+                .host
+                .as_ref()
+                .and_then(|host| host.nearest(query.position, reach));
+            let (distance, direction) = found.unwrap_or((reach + 1.0, Vec3::ZERO));
+            values[EnvField::Gd as usize] = distance;
+            values[EnvField::Gx as usize] = direction.x;
+            values[EnvField::Gy as usize] = direction.y;
+            values[EnvField::Gz as usize] = direction.z;
+        }
         env.push((query.module, values));
     }
     Ok(ToolOutput { env, organ_light })
@@ -1129,6 +1224,28 @@ mod tests {
         assert_eq!(marker[EnvField::Ntip as usize], 2.0);
         let tip = output.env[1].1;
         assert_eq!(tip[EnvField::Ntip as usize], 0.0);
+    }
+
+    #[test]
+    fn a_host_s_surface_is_found_within_reach() {
+        // A trunk 0.2 m thick from the ground to 5 m, and a limb out to +X.
+        let host = Host::new(vec![
+            (Vec3::ZERO, Vec3::new(0.0, 5.0, 0.0), 0.2),
+            (Vec3::new(0.0, 4.0, 0.0), Vec3::new(3.0, 4.5, 0.0), 0.08),
+        ]);
+        let (distance, direction) = host.nearest(Vec3::new(-1.0, 2.0, 0.0), 2.0).unwrap();
+        assert!((distance - 0.8).abs() < 1e-9, "{distance}");
+        assert!((direction - Vec3::X).length() < 1e-9);
+        // Under the limb, the limb is nearest.
+        let (distance, direction) = host.nearest(Vec3::new(2.0, 3.0, 0.0), 2.0).unwrap();
+        assert!(
+            distance < 1.5 && direction.y > 0.9,
+            "{distance} {direction:?}"
+        );
+        // Out of reach, nothing.
+        assert!(host.nearest(Vec3::new(10.0, 2.0, 0.0), 2.0).is_none());
+        // Inside the wood the distance is negative.
+        assert!(host.nearest(Vec3::new(0.05, 1.0, 0.0), 2.0).unwrap().0 < 0.0);
     }
 
     #[test]

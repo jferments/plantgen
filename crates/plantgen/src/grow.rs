@@ -39,6 +39,8 @@ pub struct GrowthSettings {
     pub keyframes: Vec<f64>,
     pub neighbourhood: Neighbourhood,
     pub limits: Limits,
+    /// The host a climber, epiphyte or parasite grows on (`host@1`).
+    pub host: Option<std::sync::Arc<crate::lsys::tools::Host>>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
@@ -208,6 +210,7 @@ pub fn grow(
     let mut deriver = Deriver::new(program, params, &limits);
     let mut interpreter = Interpreter::new(program, params, &limits);
     let mut tool_state = ToolState::default();
+    tool_state.host.clone_from(&settings.host);
     let mut string = deriver.axiom(settings.seed, settings.dt)?;
     let mut stats = GrowthStats {
         steps,
@@ -393,6 +396,7 @@ mod tests {
             keyframes,
             neighbourhood: Neighbourhood::OPEN,
             limits: Limits::default(),
+            host: None,
         }
     }
 

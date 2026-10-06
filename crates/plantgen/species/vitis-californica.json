@@ -1,0 +1,122 @@
+{
+  "schema": 1,
+  "id": "vitis-californica",
+  "taxon": {
+    "scientific_name": "Vitis californica",
+    "common_name": "California wild grape",
+    "usda_symbol": "VICA5"
+  },
+  "growth_form": "vine",
+  "generator": {
+    "program": "climber",
+    "params": {
+      "shoots": 3,
+      "internode": 0.15,
+      "max_shoot": 3,
+      "cling": 0.3,
+      "hug": 0.35,
+      "climb": 0.3,
+      "seek": 0.6,
+      "drape": 0.12,
+      "free_years": 3,
+      "branch_chance": 0.12,
+      "branch_angle": 45,
+      "max_order": 3,
+      "leaf_size": 0.14,
+      "leaf_angle": 60,
+      "leaf_years": 1,
+      "renew": 0,
+      "fruit_age": 4,
+      "fruiting": 0.15,
+      "fruit_size": 0.1,
+      "pipe_tip": 0.002,
+      "pipe_organ": 0.004,
+      "pipe_rings": 6e-06,
+      "leaf_area": 0.624,
+      "fruit_area": 0.423
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 0.25,
+    "keyframes": [3, 8, 15]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.42, 0.3, 0.2],
+    "foliage": [0.2, 0.33, 0.12],
+    "foliage_shade": [0.07, 0.1155, 0.042],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "palmate",
+          "lobes": 3,
+          "depth": 0.25,
+          "lobe_width": 0.6,
+          "teeth": 4,
+          "spread": 0.7,
+          "petiole": 0.3
+        }
+      },
+      "fruit": {
+        "shape": {
+          "template": "spike",
+          "florets": 20,
+          "aspect": 0.45,
+          "plume": 0,
+          "stalk": 0.15
+        },
+        "colour": [0.3, 0.15, 0.35]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 8,
+      "environment": "open",
+      "height": 9.0,
+      "tolerance": 0.6
+    },
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 14.0,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a deciduous woody vine of streams and woodland in California and southern Oregon that climbs by tendrils into the crowns of oaks and willows and drapes over them in curtains of broad, heart-shaped, shallowly lobed leaves, turning red in autumn, with small purple grapes. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 9 m up its host at 8 years and 14 m at 15. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: mid-green leaves, purple grapes."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F7). Calibration against measurements and photographs comes later."
+  },
+  "host": {
+    "species": "quercus-garryana",
+    "age": 80,
+    "environment": "open",
+    "seed": 1
+  }
+}

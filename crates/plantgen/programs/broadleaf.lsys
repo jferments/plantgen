@@ -22,10 +22,16 @@
 # beside each bud, thorn_length long at thorn_angle to its shoot. A tree
 # with a `life` dies at that age: its buds die and its leaves fall, and its
 # dead branches drop one by one, each with the chance snag_fall a year, so
-# it stands as a snag. One step is one year. Angles are degrees; lengths
-# are metres.
+# it stands as a snag.
+#
+# Revision 5 (plant forms F7): in a steady wind (wind above 0, blowing
+# toward +X) shoots bend downwind under a tropism toward (wind, -1, 0)
+# of elasticity droop + wind_bend * wind, and a shoot tip heading upwind
+# (its heading's X below -wind_kill) dies, so the crown grows as a flag
+# on its lee side. One step is one year. Angles are degrees; lengths are
+# metres.
 
-lsystem broadleaf 4;
+lsystem broadleaf 5;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height = 22;
@@ -67,6 +73,9 @@ param thorns = 0;             # 1: a thorn beside each bud
 param thorn_length = 0.02;
 param thorn_angle = 60;       # angle of a thorn to its shoot
 param thorn_area = 0.235;     # leaf area of a thorn card 1 m long, m² (the default leaf card's)
+param wind = 0;               # strength of a steady wind toward +X; 0 none
+param wind_bend = 0.05;       # extra downwind bending per unit of wind
+param wind_kill = 0.3;        # a tip heading upwind beyond this dies
 param life = 0;               # age at which the plant dies; 0 never
 param snag_fall = 0.15;       # chance a year that a dead branch falls
 param pipe_tip = 0.004;       # radius of the twig behind one living bud
@@ -114,8 +123,11 @@ tool pipe@1 { exponent = 2.3, tip = pipe_tip, organ = pipe_organ, rings = pipe_r
 
 # The stem leans a little in a random direction; each tree forks at its own
 # height.
-axiom !(0.004) T(0, -1, 0, droop) /(uniform(0, 360)) &(uniform(0, lean))
+axiom !(0.004) T(wind, -1, 0, droop + wind_bend * wind) /(uniform(0, 360)) &(uniform(0, lean))
       A(fork_height * uniform(0.7, 1.3));
+
+# In a steady wind, a tip heading upwind dies.
+rule A(split) : wind > 0 && hx < -wind_kill -> ;
 
 # A plant past its life dies: its buds die.
 rule A(split) : life > 0 && t >= life -> ;
