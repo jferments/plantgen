@@ -1,0 +1,138 @@
+{
+  "schema": 1,
+  "id": "taxodium-distichum",
+  "taxon": {
+    "scientific_name": "Taxodium distichum",
+    "common_name": "bald cypress",
+    "usda_symbol": "TADI2"
+  },
+  "growth_form": "excurrent_tree",
+  "generator": {
+    "program": "conifer",
+    "params": {
+      "cone_age": 15,
+      "cone_chance": 0.15,
+      "cone_length": 0.03,
+      "cone_pitch": 100,
+      "cone_years": 1,
+      "cone_area": 1.176,
+      "height_max": 35,
+      "height_rate": 0.025,
+      "height_shape": 1.3,
+      "leader_shade": 0.5,
+      "nod": 0,
+      "nod_years": 2,
+      "whorl": 4,
+      "interwhorl": 3,
+      "interwhorl_vigour": 0.6,
+      "branch_angle": 75,
+      "branch_sag": 0.6,
+      "max_sag": 25,
+      "upturn": 0.008,
+      "branch_growth": 0.28,
+      "side_growth": 0.6,
+      "side_chance": 0.85,
+      "side_angle": 55,
+      "needle_years": 1,
+      "spray_droop": 20,
+      "shade_death": 0.06,
+      "shade_years": 5,
+      "pipe_organ": 0.009,
+      "spray_area": 0.109
+    }
+  },
+  "growth": {
+    "years": 80,
+    "step": 1,
+    "keyframes": [5, 25, 80]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3]
+  },
+  "appearance": {
+    "bark": [0.45, 0.3, 0.22],
+    "foliage": [0.18, 0.32, 0.1],
+    "foliage_shade": [0.063, 0.112, 0.035],
+    "variation": 0.15,
+    "organs": {
+      "cone": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.9,
+          "cone": 1
+        },
+        "colour": [0.4, 0.45, 0.25]
+      },
+      "spray": {
+        "shape": {
+          "template": "needles",
+          "ranks": 2,
+          "twigs": 5,
+          "aspect": 0.6,
+          "needle": 0.015,
+          "twig_angle": 55
+        },
+        "accent": [0.3, 0.2, 0.12]
+      }
+    },
+    "ridges": {
+      "spacing": 0.04,
+      "depth": 0.03,
+      "twist": 8,
+      "contrast": 0.3
+    },
+    "flare": {
+      "height": 1.5,
+      "amount": 1.2,
+      "buttresses": 8,
+      "ridge": 0.6
+    },
+    "roots": {
+      "mature_age": 30,
+      "knees": 30,
+      "knee_height": 0.6,
+      "knee_reach": 3.0,
+      "knee_radius": 0.1
+    }
+  },
+  "allometry": [
+    {
+      "age": 25,
+      "environment": "open",
+      "height": 12.0,
+      "tolerance": 0.5
+    },
+    {
+      "age": 80,
+      "environment": "open",
+      "height": 25.0,
+      "tolerance": 0.45
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a deciduous conifer of southern swamps and rivers, 20 to 35 m tall, with soft, feathery two-ranked needles that turn rust in autumn, a strongly buttressed, fluted base and woody knees rising from its roots round it; round cones. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 12 m at 25 years and 25 m at 80. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: fresh green needles, red-brown fibrous bark."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F6). Calibration against measurements and photographs comes later."
+  }
+}

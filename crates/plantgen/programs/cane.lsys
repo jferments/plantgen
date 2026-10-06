@@ -18,6 +18,12 @@
 # bloom for each cane old enough, a cane carries a panicle of red tubular
 # flowers at its tip. Canes sag a little under a tropism toward the ground.
 #
+# The same program grows a running bamboo: canes (culms) scattered by the
+# rhizome over a disc stand_radius wide, reaching nearly their full height
+# in their first year (a high cane_growth), dying after cane_life years,
+# thornless (thorns 0), always in leaf (leafy 1), with their leaves only
+# above the share leaf_from of a full cane's length.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
 lsystem cane 1;
@@ -44,13 +50,18 @@ param flower_angle = 35;
 param thorn_area = 0.02;
 param leaf_area = 0.24;
 param flower_area = 0.64;
+param stand_radius = 0;       # radius the canes are scattered over; 0 one crown
+param cane_life = 0;          # years a cane lives; 0 for ever
+param thorns = 1;             # 0: no thorns
+param leaf_from = 0;          # share of a full cane's length below which it bears no leaves
 
 module Y(n, v);               # the crown: canes so far, vigour
 module Cs(k, m, v);           # canes k to k + m - 1 of this year's cohort
 module Ca(v, p);              # a cane's growing tip: vigour, its bloom phase
-module G(g, r);               # one year's growth of a cane, g long, r thick
-module Nd(i, m, g);           # nodes i to i + m - 1 of a year's growth g long
-module Lf;                    # the leaves at a node
+module G(g, r, u);            # one year's growth of a cane, g long, r thick, from the share u of a full cane
+module Nd(i, m, g, u);        # nodes i to i + m - 1 of a year's growth g long, from the share u
+module Lf(u);                 # the leaves at a node at the share u of a full cane
+module Cb;                    # a cane's foot: it dies after cane_life years
 module Pn(i, m);              # flowers i to i + m - 1 of a cane's panicle
 
 organ thorn leaf area thorn_area;
@@ -68,29 +79,38 @@ rule Y(n, v) : n < canes ->
 decompose Cs(k, m, v) : m > 1 ->
     Cs(k, floor(m / 2), v) Cs(k + floor(m / 2), m - floor(m / 2), v);
 decompose Cs(k, m, v) : m == 1 ->
-    [ /(k * 137.5 + uniform(-15, 15)) &(cane_lean * sqrt((k + 0.5) / canes) + uniform(0, 4))
-      T(0, -1, 0, sag) Ca(v * uniform(0.85, 1.15), rand()) ];
+    [ /(k * 137.5 + uniform(-15, 15)) &(90) f(stand_radius * sqrt(rand())) ^(90)
+      &(cane_lean * sqrt((k + 0.5) / canes) + uniform(0, 4))
+      Cb T(0, -1, 0, sag) Ca(v * uniform(0.85, 1.15), rand()) ];
 decompose Cs(k, m, v) -> ;
 
 # A cane's tip lays down this year's growth.
 rule Ca(v, p) ->
     G(cane_length * v * (pow(1 - exp(-cane_growth * (age + 1)), 1.5) - pow(1 - exp(-cane_growth * age), 1.5)),
-      cane_radius * (1 - 0.66 * pow(1 - exp(-cane_growth * age), 1.5)))
+      cane_radius * (1 - 0.66 * pow(1 - exp(-cane_growth * age), 1.5)),
+      pow(1 - exp(-cane_growth * age), 1.5))
     Ca(v, p);
 
-decompose G(g, r) -> !(r) Nd(0, max(1, round(g * node_rate)), g);
-decompose Nd(i, m, g) : m > 1 ->
-    Nd(i, floor(m / 2), g) Nd(i + floor(m / 2), m - floor(m / 2), g);
-decompose Nd(i, m, g) : m == 1 ->
+# A cane dies after its life, with everything on it.
+rule Cb : cane_life > 0 && age >= cane_life -> %;
+
+decompose G(g, r, u) -> !(r) Nd(0, max(1, round(g * node_rate)), g, u);
+decompose Nd(i, m, g, u) : m > 1 ->
+    Nd(i, floor(m / 2), g, u) Nd(i + floor(m / 2), m - floor(m / 2), g, u);
+decompose Nd(i, m, g, u) : m == 1 && thorns > 0 ->
     F(g / max(1, round(g * node_rate))) /(137.5)
-    [ &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ] Lf;
-decompose Nd(i, m, g) -> ;
+    [ &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
+    Lf(u + (i + 1) * g / max(1, round(g * node_rate)) / max(cane_length, 1.0e-6));
+decompose Nd(i, m, g, u) : m == 1 ->
+    F(g / max(1, round(g * node_rate))) /(137.5)
+    Lf(u + (i + 1) * g / max(1, round(g * node_rate)) / max(cane_length, 1.0e-6));
+decompose Nd(i, m, g, u) -> ;
 
 # The leaves, in a leafy year.
-interpret Lf : frac(43758.5453 * sin(12.9898 * t)) < leafy ->
+interpret Lf(u) : u >= leaf_from && frac(43758.5453 * sin(12.9898 * t)) < leafy ->
     [ /(40) &(leaf_angle) leaf(leaf_size) ] [ /(-40) &(leaf_angle) leaf(leaf_size * 0.9) ]
     [ /(110) &(leaf_angle) leaf(leaf_size * 0.8) ] [ /(-110) &(leaf_angle) leaf(leaf_size * 0.7) ];
-interpret Lf -> ;
+interpret Lf(u) -> ;
 
 # The tip's panicle, in a year the cane blooms: its flowers only (no
 # wood), as they come and go with the year.

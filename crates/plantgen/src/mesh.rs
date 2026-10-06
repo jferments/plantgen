@@ -351,6 +351,9 @@ pub fn build(
     bent.extend(flat);
     mesh.cards = bent;
     body::build(graph, bodies, looks.len(), level, &mut mesh);
+    if let Some(roots) = &appearance.roots {
+        crate::roots::build(graph, roots, appearance.bark, level <= 1, &mut mesh.wood);
+    }
     mesh
 }
 
@@ -1167,6 +1170,7 @@ mod tests {
             flare: None,
             moss: None,
             bottle: None,
+            roots: None,
             bodies: BTreeMap::new(),
         }
     }

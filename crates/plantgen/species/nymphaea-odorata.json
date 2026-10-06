@@ -1,0 +1,124 @@
+{
+  "schema": 1,
+  "id": "nymphaea-odorata",
+  "taxon": {
+    "scientific_name": "Nymphaea odorata",
+    "common_name": "American white water lily",
+    "usda_symbol": "NYOD"
+  },
+  "growth_form": "forb",
+  "generator": {
+    "program": "aquatic",
+    "params": {
+      "water_depth": 1.0,
+      "rhizome_rate": 0.12,
+      "leaves_per_year": 14,
+      "leaf_lean": 55,
+      "slack": 1.12,
+      "pad_size": 0.25,
+      "pad_seed": 0.3,
+      "size_years": 3,
+      "flowers_per_year": 4,
+      "flower_rise": 0.06,
+      "flower_size": 0.13,
+      "petiole_radius": 0.004,
+      "flower_area": 0.456
+    }
+  },
+  "growth": {
+    "years": 10,
+    "step": 1,
+    "keyframes": [1, 3, 10]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2]
+  },
+  "appearance": {
+    "bark": [0.35, 0.2, 0.15],
+    "foliage": [0.12, 0.3, 0.08],
+    "foliage_shade": [0.042, 0.105, 0.028],
+    "variation": 0.15,
+    "organs": {
+      "pad": {
+        "shape": {
+          "template": "simple",
+          "width": 0.95,
+          "widest": 0.5,
+          "tip": 1.0,
+          "base": 1.0,
+          "teeth": 0,
+          "petiole": 0.0
+        },
+        "face_up": 1.0,
+        "bend": {
+          "fold": 0,
+          "cup": 0.03,
+          "droop": 0,
+          "twist": 0
+        }
+      },
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petals": 12,
+          "petal_width": 0.9,
+          "point": 0.6,
+          "notch": 0,
+          "centre": 0.25
+        },
+        "colour": [0.97, 0.96, 0.92],
+        "accent": [0.95, 0.8, 0.15],
+        "form": {
+          "flower": {
+            "cup": 35,
+            "curl": 0,
+            "tube": 0,
+            "stamens": 30,
+            "stamen_length": 0.25,
+            "levels": 2
+          }
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.18,
+      "tolerance": 0.5
+    },
+    {
+      "age": 10,
+      "environment": "open",
+      "height": 0.2,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a water lily of ponds and slow water across eastern North America, rooted in the mud a metre or so down by a creeping rhizome, with round, notched, floating pads 15 to 30 cm across on long petioles and fragrant white many-petalled flowers held just above the water. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species, measured from the water's surface (the plant's origin) to the tops of its flowers: about 18 cm at 3 years and 20 cm at 10. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: green pads, white flowers with a yellow centre."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F6). Calibration against measurements and photographs comes later."
+  }
+}

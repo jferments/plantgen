@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "id": "ficus-aurea",
+  "taxon": {
+    "scientific_name": "Ficus aurea",
+    "common_name": "Florida strangler fig",
+    "usda_symbol": "FIAU"
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 14,
+      "crown_radius": 8,
+      "crown_base": 2.5,
+      "crown_rate": 0.05,
+      "space_density": 6,
+      "internode": 0.25,
+      "max_shoot": 3,
+      "branch_angle": 55,
+      "apical_young": 0.62,
+      "apical": 0.5,
+      "apical_years": 15,
+      "alternate": 1,
+      "bud_years": 12,
+      "leaf_size": 0.3,
+      "spur_leaf": 0.27,
+      "spur_pairs": 2,
+      "leaf_angle": 50,
+      "leaf_years": 2,
+      "lean": 8,
+      "wiggle": 10,
+      "fork_height": 2.0,
+      "fork_stems": 4,
+      "fork_angle": 40,
+      "droop": 0.01,
+      "pipe_tip": 0.004,
+      "pipe_organ": 0.007,
+      "pipe_rings": 2e-05
+    }
+  },
+  "growth": {
+    "years": 80,
+    "step": 1,
+    "keyframes": [5, 25, 80]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3]
+  },
+  "appearance": {
+    "bark": [0.55, 0.53, 0.48],
+    "foliage": [0.1, 0.24, 0.07],
+    "foliage_shade": [0.035, 0.084, 0.0245],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 7,
+          "angle": 50,
+          "stalk": 0.1,
+          "width": 0.45,
+          "widest": 0.5,
+          "tip": 0.5,
+          "base": 0.6,
+          "teeth": 0,
+          "petiole": 0.06
+        }
+      }
+    },
+    "roots": {
+      "mature_age": 40,
+      "aerial": 24,
+      "aerial_reach": 0.6,
+      "aerial_radius": 0.08,
+      "surface": 10,
+      "surface_length": 3.0,
+      "surface_radius": 0.12
+    },
+    "flare": {
+      "height": 1.2,
+      "amount": 0.6,
+      "buttresses": 7,
+      "ridge": 0.7
+    }
+  },
+  "allometry": [
+    {
+      "age": 25,
+      "environment": "open",
+      "height": 9.0,
+      "tolerance": 0.5
+    },
+    {
+      "age": 80,
+      "environment": "open",
+      "height": 14.0,
+      "tolerance": 0.45
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: an evergreen fig of southern Florida, 10 to 20 m tall, that often starts as a seedling high in another tree and sends roots down round it; its broad crown drops aerial roots that thicken into pillars where they reach the ground, over a buttressed base and long surface roots; leathery, glossy oval leaves. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 9 m at 25 years and 14 m at 80; this proxy grows from the ground. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: dark glossy leaves, smooth pale grey bark."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F6). Calibration against measurements and photographs comes later."
+  }
+}

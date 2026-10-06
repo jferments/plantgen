@@ -1,0 +1,105 @@
+# Sedge: a clonal stand of shoots on a spreading rhizome, after cattail,
+# papyrus, sawgrass and the bulrushes of marshes and lake shores. Each year
+# the stand sends up shoots_per_year shoots, scattered over a disc that
+# widens as the rhizome runs out,
+#
+#   R(a) = stand_radius (1 - exp(-a / spread_years))
+#
+# each at a distance sqrt(u) R(a) from the first for u uniform, so the
+# stand stays evenly dense. A shoot lives shoot_life years. It carries
+# `leaves` long, narrow leaves from its foot, leaning out by up to
+# leaf_angle and arching, and, with the chance flowering, a culm
+# culm_height tall (± height_spread) topped by its head:
+#
+# - head 0, a spike: a cylinder spike_length long at the culm's top (a
+#   cattail's brown spike);
+# - head 1, an umbel: `rays` thin rays spreading from the top over
+#   ray_angle, each ray_length long and ending in a tuft (papyrus);
+# - head 2, a panicle: `rays` short branches up the top panicle_length of
+#   the culm, each with a cluster of spikelets (sawgrass).
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem sedge 1;
+
+param vigour_spread = 0.1;
+param shoots_per_year = 20;
+param shoot_life = 1;         # years a shoot lives
+param stand_radius = 2;       # radius the stand spreads to
+param spread_years = 8;       # how fast it spreads
+param leaves = 6;             # leaves a shoot
+param leaf_length = 1.5;
+param leaf_spread = 0.15;     # leaves are leaf_length (1 ± leaf_spread) long
+param leaf_angle = 12;        # most a leaf leans out from upright
+param flowering = 0.5;        # chance that a shoot flowers
+param flower_age = 1;         # the stand's first year of flowering
+param culm_height = 2;
+param height_spread = 0.12;
+param culm_radius = 0.006;
+param culm_lean = 3;
+param head = 0;               # 0 spike, 1 umbel, 2 panicle
+param spike_length = 0.2;
+param rays = 12;
+param ray_angle = 60;         # half the spread of an umbel's rays, or a panicle branch's angle
+param ray_length = 0.25;
+param tuft_length = 0.12;     # an umbel tuft's or a panicle cluster's length
+param panicle_length = 0.4;
+param leaf_area = 0.06;
+param spike_area = 0.14;
+param tuft_area = 0.2;
+
+module Y(v);                  # the stand: vigour
+module Sh(k, m, c);           # shoots k to k + m - 1 of this year's cohort, the stand c years old
+module Lv(j, m, s);           # leaves j to j + m - 1 of a shoot, s long
+module Cu(h);                 # a culm h tall with its head
+module Ry(j, m);              # rays or branches j to j + m - 1 of a head
+module Sm;                    # a shoot's foot: it dies after shoot_life years
+
+organ leaf leaf area leaf_area;
+organ spike fruit area spike_area;
+organ tuft leaf area tuft_area;
+
+axiom Y(exp(gauss() * vigour_spread));
+
+rule Y(v) -> Sh(0, max(1, round(shoots_per_year * v)), age) Y(v);
+
+decompose Sh(k, m, c) : m > 1 ->
+    Sh(k, floor(m / 2), c) Sh(k + floor(m / 2), m - floor(m / 2), c);
+decompose Sh(k, m, c) : m == 1 ->
+    [ /(uniform(0, 360)) &(90)
+      f(stand_radius * (1 - exp(-c / spread_years)) * sqrt(rand()))
+      ^(90) /(uniform(0, 360)) &(uniform(0, culm_lean))
+      Sm Lv(0, max(1, round(leaves)), leaf_length * uniform(1 - leaf_spread, 1 + leaf_spread))
+      Cu(c >= flower_age && rand() < flowering ? culm_height * uniform(1 - height_spread, 1 + height_spread) : 0) ];
+decompose Sh(k, m, c) -> ;
+
+# A shoot dies with everything on it.
+rule Sm : age + 1 >= shoot_life -> %;
+
+# Leaves round the shoot's foot, each leaning out a little more.
+decompose Lv(j, m, s) : m > 1 ->
+    Lv(j, floor(m / 2), s) Lv(j + floor(m / 2), m - floor(m / 2), s);
+decompose Lv(j, m, s) : m == 1 ->
+    [ /(j * 137.5 + uniform(-20, 20)) &(leaf_angle * (j + 1) / max(1, leaves))
+      leaf(s * (0.7 + 0.3 * (j + 1) / max(1, leaves))) ];
+decompose Lv(j, m, s) -> ;
+
+# The culm and its head; no culm on a shoot that does not flower.
+decompose Cu(h) : h <= 0 -> ;
+decompose Cu(h) : head == 0 ->
+    !(culm_radius) F(h - spike_length) spike(spike_length);
+decompose Cu(h) : head == 1 ->
+    !(culm_radius) F(h) !(culm_radius * 0.25) Ry(0, max(1, round(rays)));
+decompose Cu(h) ->
+    !(culm_radius) F(h - panicle_length) !(culm_radius * 0.6) Ry(0, max(1, round(rays)));
+
+decompose Ry(j, m) : m > 1 ->
+    Ry(j, floor(m / 2)) Ry(j + floor(m / 2), m - floor(m / 2));
+# An umbel's ray: out from the top, arching over, with its tuft.
+decompose Ry(j, m) : head == 1 ->
+    [ /(j * 137.5) &(ray_angle * sqrt((j + 0.5) / max(1, rays))) T(0, -1, 0, 0.3)
+      F(ray_length * 0.5) F(ray_length * 0.5) tuft(tuft_length) ];
+# A panicle's branch: up the culm's top, a cluster of spikelets on each.
+decompose Ry(j, m) ->
+    F(panicle_length / max(1, rays)) /(137.5)
+    [ &(ray_angle) F(ray_length) tuft(tuft_length) ];

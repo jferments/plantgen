@@ -8,34 +8,27 @@
   },
   "growth_form": "graminoid",
   "generator": {
-    "program": "grass",
+    "program": "sedge",
     "params": {
-      "tillers": 12,
-      "tiller_rate": 0.5,
-      "tussock_radius": 0.12,
-      "tiller_lean": 4,
-      "leaves": 7,
-      "leaf_length": 1.7,
+      "shoots_per_year": 14,
+      "shoot_life": 1,
+      "stand_radius": 0.8,
+      "spread_years": 3,
+      "leaves": 8,
+      "leaf_length": 1.8,
       "leaf_spread": 0.15,
-      "leaf_angle": 3,
-      "arch": 1,
-      "twist": 2,
-      "pieces": 8,
-      "maturity": 1.5,
-      "flower_age": 2,
-      "flowering": 0.5,
+      "leaf_angle": 10,
+      "flowering": 0.45,
+      "flower_age": 1,
       "culm_height": 2.0,
+      "height_spread": 0.1,
       "culm_radius": 0.008,
-      "culm_leaves": 0,
       "culm_lean": 2,
-      "panicle_length": 0.2,
-      "panicle_nod": 0,
-      "thatch_years": 1,
-      "thatch_droop": 6,
-      "blade_area": 0.064,
-      "tip_area": 0.035,
-      "thatch_area": 0.064,
-      "panicle_area": 0.142
+      "head": 0,
+      "spike_length": 0.2,
+      "leaf_area": 0.017,
+      "spike_area": 0.142,
+      "tuft_area": 0.235
     }
   },
   "growth": {
@@ -53,19 +46,24 @@
     "foliage_shade": [0.025, 0.05, 0.015],
     "variation": 0.2,
     "organs": {
-      "blade": {
-        "shape": { "template": "blade", "taper": 0, "aspect": 0.07 }
+      "leaf": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.035
+        },
+        "bend": {
+          "fold": 15,
+          "cup": 0,
+          "droop": 25,
+          "twist": 12
+        }
       },
-      "blade_tip": {
-        "shape": { "template": "blade", "taper": 1, "aspect": 0.07 }
-      },
-      "thatch": {
-        "shape": { "template": "blade", "taper": 0, "aspect": 0.07 },
-        "colour": [0.4, 0.33, 0.2],
-        "shade": [0.13, 0.1, 0.06]
-      },
-      "panicle": {
-        "shape": { "template": "fruit", "aspect": 0.11 },
+      "spike": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.11
+        },
         "colour": [0.3, 0.17, 0.08],
         "shade": [0.1, 0.06, 0.03]
       }
@@ -83,7 +81,7 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
-      "note": "Hand-set from general knowledge of the species: a tall emergent with long, flat, strap-shaped leaves sheathing a stout stem topped by a dense brown sausage of female flowers. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a tall emergent spreading by rhizomes into dense stands, with long, flat, strap-shaped leaves sheathing a stout stem topped by a dense brown sausage of female flowers. Redone on the sedge program as a clonal stand (plant forms F6). Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",

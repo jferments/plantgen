@@ -1,0 +1,130 @@
+{
+  "schema": 1,
+  "id": "rhizophora-mangle",
+  "taxon": {
+    "scientific_name": "Rhizophora mangle",
+    "common_name": "red mangrove",
+    "usda_symbol": "RHMA2"
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 7,
+      "crown_radius": 4,
+      "crown_base": 1.5,
+      "crown_rate": 0.06,
+      "space_density": 12,
+      "internode": 0.2,
+      "max_shoot": 3,
+      "branch_angle": 45,
+      "apical_young": 0.62,
+      "apical": 0.52,
+      "apical_years": 10,
+      "alternate": 0,
+      "bud_years": 10,
+      "leaf_size": 0.28,
+      "spur_leaf": 0.25200000000000006,
+      "spur_pairs": 2,
+      "leaf_angle": 45,
+      "leaf_years": 2,
+      "lean": 6,
+      "wiggle": 10,
+      "fork_height": 1.5,
+      "fork_stems": 3,
+      "fork_angle": 30,
+      "droop": 0.01,
+      "pipe_tip": 0.003,
+      "pipe_organ": 0.005,
+      "pipe_rings": 1e-05,
+      "blooms": 1,
+      "bloom_age": 6,
+      "bloom_size": 0.03,
+      "bloom_angle": 80
+    }
+  },
+  "growth": {
+    "years": 50,
+    "step": 1,
+    "keyframes": [5, 20, 50]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3]
+  },
+  "appearance": {
+    "bark": [0.38, 0.3, 0.24],
+    "foliage": [0.12, 0.24, 0.08],
+    "foliage_shade": [0.042, 0.084, 0.028],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 7,
+          "angle": 50,
+          "stalk": 0.1,
+          "width": 0.45,
+          "widest": 0.5,
+          "tip": 0.5,
+          "base": 0.6,
+          "teeth": 0,
+          "petiole": 0.06
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "flower",
+          "petals": 4
+        },
+        "colour": [0.92, 0.9, 0.7]
+      }
+    },
+    "roots": {
+      "mature_age": 20,
+      "prop": 36,
+      "prop_height": 0.35,
+      "prop_reach": 2.2,
+      "prop_radius": 0.04
+    }
+  },
+  "allometry": [
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 5.0,
+      "tolerance": 0.5
+    },
+    {
+      "age": 50,
+      "environment": "open",
+      "height": 7.0,
+      "tolerance": 0.45
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: an evergreen tree of tropical coasts, 5 to 10 m tall, standing on a tangle of arching prop roots that leave the trunk and lower branches and reach down into the mud; glossy, leathery, opposite leaves and small pale yellow flowers. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 5 m at 20 years and 7 m at 50. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: dark glossy green leaves, grey-brown bark and roots."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F6). Calibration against measurements and photographs comes later."
+  }
+}

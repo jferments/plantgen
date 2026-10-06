@@ -1,0 +1,130 @@
+{
+  "schema": 1,
+  "id": "avicennia-germinans",
+  "taxon": {
+    "scientific_name": "Avicennia germinans",
+    "common_name": "black mangrove",
+    "usda_symbol": "AVGE"
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 8,
+      "crown_radius": 4,
+      "crown_base": 1,
+      "crown_rate": 0.06,
+      "space_density": 12,
+      "internode": 0.2,
+      "max_shoot": 3,
+      "branch_angle": 45,
+      "apical_young": 0.62,
+      "apical": 0.52,
+      "apical_years": 10,
+      "alternate": 0,
+      "bud_years": 10,
+      "leaf_size": 0.22,
+      "spur_leaf": 0.198,
+      "spur_pairs": 2,
+      "leaf_angle": 45,
+      "leaf_years": 2,
+      "lean": 6,
+      "wiggle": 10,
+      "fork_height": 1.0,
+      "fork_stems": 3,
+      "fork_angle": 30,
+      "droop": 0.01,
+      "pipe_tip": 0.003,
+      "pipe_organ": 0.005,
+      "pipe_rings": 1e-05,
+      "blooms": 2,
+      "bloom_age": 6,
+      "bloom_size": 0.015,
+      "bloom_angle": 40,
+      "leaf_area": 0.243
+    }
+  },
+  "growth": {
+    "years": 50,
+    "step": 1,
+    "keyframes": [5, 20, 50]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3]
+  },
+  "appearance": {
+    "bark": [0.25, 0.22, 0.2],
+    "foliage": [0.2, 0.3, 0.15],
+    "foliage_shade": [0.07, 0.105, 0.0525],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 7,
+          "angle": 50,
+          "stalk": 0.1,
+          "width": 0.35,
+          "widest": 0.5,
+          "tip": 0.5,
+          "base": 0.6,
+          "teeth": 0,
+          "petiole": 0.06
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "flower",
+          "petals": 4
+        },
+        "colour": [0.95, 0.95, 0.9]
+      }
+    },
+    "roots": {
+      "mature_age": 15,
+      "pneumatophores": 400,
+      "pneumatophore_height": 0.25,
+      "pneumatophore_reach": 4.0
+    }
+  },
+  "allometry": [
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 5.0,
+      "tolerance": 0.5
+    },
+    {
+      "age": 50,
+      "environment": "open",
+      "height": 8.0,
+      "tolerance": 0.45
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: an evergreen tree of tropical and subtropical coasts, 5 to 10 m tall, with dark, scaly bark and narrow leaves grey-felted beneath, whose shallow roots send up hundreds of pencil-like breathing roots through the mud round it. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 5 m at 20 years and 8 m at 50. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: grey-green leaves, very dark bark."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F6). Calibration against measurements and photographs comes later."
+  }
+}

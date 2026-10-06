@@ -1,0 +1,78 @@
+# Aquatic: a plant rooted under water whose leaves float on its surface,
+# after the water lilies. The plant's origin is the water's surface: its
+# rhizome lies water_depth below it and runs out by rhizome_rate a year,
+# and each year it sends up leaves_per_year leaves on long, slack petioles
+# that reach the surface leaning out by up to leaf_lean, where each pad
+# lies flat (its look's face_up), and flowers_per_year flowers on stalks
+# that hold them just above the water. Leaves and flowers last a year.
+# On dry ground (a garden) the pads lie on the ground as on still water,
+# and the petioles run below it unseen.
+#
+# A petiole reaching the surface at an angle a off the vertical is
+# water_depth / cos(a) long, times slack, and bends over at the top; a
+# pad's size follows the plant's age:
+#
+#   s(a) = pad_size (pad_seed + (1 - pad_seed) (1 - exp(-a / size_years)))
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem aquatic 1;
+
+param water_depth = 1;
+param rhizome_rate = 0.15;    # metres a year the rhizome runs
+param leaves_per_year = 12;
+param leaf_lean = 50;         # most a petiole leans off the vertical
+param slack = 1.1;
+param pad_size = 0.25;
+param pad_seed = 0.3;
+param size_years = 3;
+param flowers_per_year = 3;
+param flower_rise = 0.08;     # how far a flower stands above the water
+param flower_size = 0.12;
+param petiole_radius = 0.004;
+param pad_area = 0.6;
+param flower_area = 0.64;
+
+module R(v);                  # the rhizome's growing tip
+module Lf(k, m, s);           # leaves k to k + m - 1 of this year's, pads s across
+module Fl(k, m);              # flowers k to k + m - 1 of this year's
+module Ch;                    # the foot of a year's leaves and flowers
+module Lp(s, a, r);           # a leaf: its pad s across, its petiole a degrees off the vertical, rolled r
+module Fs(b, r);              # a flower on its stalk, b degrees off the vertical, rolled r
+
+organ pad leaf area pad_area;
+organ flower flower area flower_area;
+
+axiom &(180) f(water_depth) ^(180) /(uniform(0, 360)) R(exp(gauss() * 0.1));
+
+# The rhizome creeps along the bottom, sending up this year's leaves and
+# flowers.
+rule R(v) ->
+    [ &(90) f(rhizome_rate * v) ^(90) Ch
+      Lf(0, max(1, round(leaves_per_year * v)), pad_size * (pad_seed + (1 - pad_seed) * (1 - exp(-age / size_years))))
+      Fl(0, max(0, round(flowers_per_year * v * min(1, age / 3)))) ]
+    &(90) f(rhizome_rate * v) ^(90) R(v);
+
+decompose Lf(k, m, s) : m > 1 ->
+    Lf(k, floor(m / 2), s) Lf(k + floor(m / 2), m - floor(m / 2), s);
+decompose Lf(k, m, s) : m == 1 ->
+    Lp(s * uniform(0.85, 1.15), leaf_lean * sqrt((k + 0.5) / max(1, leaves_per_year)) * uniform(0.8, 1.1),
+       k * 137.5 + uniform(-20, 20));
+# A petiole a degrees off the vertical, just long enough to reach the
+# surface, then bent over flat and slack along it, with its pad.
+decompose Lp(s, a, r) ->
+    [ /(r) &(a) !(petiole_radius) F(water_depth / cos(rad(a)))
+      &(90 - a) F(water_depth * (slack - 1)) pad(s) ];
+decompose Lf(k, m, s) -> ;
+
+decompose Fl(k, m) : m > 1 -> Fl(k, floor(m / 2)) Fl(k + floor(m / 2), m - floor(m / 2));
+decompose Fl(k, m) : m == 1 -> Fs(uniform(5, 25), k * 137.5 + 60);
+# A flower's stalk b degrees off the vertical, reaching flower_rise above
+# the surface.
+decompose Fs(b, r) ->
+    [ /(r) &(b) !(petiole_radius * 1.2)
+      F((water_depth + flower_rise) / cos(rad(b))) flower(flower_size * uniform(0.85, 1.15)) ];
+decompose Fl(k, m) -> ;
+
+# Leaves and flowers last a year: each year's cohort goes, petioles and all.
+rule Ch -> %;

@@ -38,6 +38,7 @@ pub mod preview;
 pub mod quality;
 pub mod raster;
 pub mod rng;
+pub mod roots;
 pub mod spec;
 pub mod spines;
 pub mod templates;

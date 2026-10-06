@@ -19,7 +19,7 @@ use crate::lsys::{Neighbourhood, OrganKind, Program, ProgramError, tools};
 pub const SPEC_SCHEMA: u32 = 1;
 
 /// Built-in plant programs, by name.
-pub const PROGRAMS: [(&str, &str); 9] = [
+pub const PROGRAMS: [(&str, &str); 11] = [
     ("conifer", include_str!("../programs/conifer.lsys")),
     ("broadleaf", include_str!("../programs/broadleaf.lsys")),
     ("grass", include_str!("../programs/grass.lsys")),
@@ -29,6 +29,8 @@ pub const PROGRAMS: [(&str, &str); 9] = [
     ("fern", include_str!("../programs/fern.lsys")),
     ("palm", include_str!("../programs/palm.lsys")),
     ("cane", include_str!("../programs/cane.lsys")),
+    ("sedge", include_str!("../programs/sedge.lsys")),
+    ("aquatic", include_str!("../programs/aquatic.lsys")),
 ];
 
 /// Built-in species, by id: the catalogue of the south Puget Sound
@@ -608,10 +610,46 @@ pub const SAVANNA_SPECIES: [(&str, &str); 2] = [
     ),
 ];
 
+/// Plants of swamps, coasts and open water (plant forms F6): red and
+/// black mangrove, bald cypress, strangler fig, sawgrass, papyrus, a
+/// bamboo and a water lily. No habitat places them yet.
+pub const WETLAND_SPECIES: [(&str, &str); 8] = [
+    (
+        "rhizophora-mangle",
+        include_str!("../species/rhizophora-mangle.json"),
+    ),
+    (
+        "avicennia-germinans",
+        include_str!("../species/avicennia-germinans.json"),
+    ),
+    (
+        "taxodium-distichum",
+        include_str!("../species/taxodium-distichum.json"),
+    ),
+    ("ficus-aurea", include_str!("../species/ficus-aurea.json")),
+    (
+        "cyperus-papyrus",
+        include_str!("../species/cyperus-papyrus.json"),
+    ),
+    (
+        "cladium-jamaicense",
+        include_str!("../species/cladium-jamaicense.json"),
+    ),
+    (
+        "phyllostachys-aurea",
+        include_str!("../species/phyllostachys-aurea.json"),
+    ),
+    (
+        "nymphaea-odorata",
+        include_str!("../species/nymphaea-odorata.json"),
+    ),
+];
+
 /// The gardens a world can grow beside the forest, by name: `sonoran`,
 /// the cacti, the rosettes and the desert's trees and shrubs; `palms`, the
-/// palms; `savanna`, the savanna's trees.
-pub const GARDENS: [&str; 3] = ["sonoran", "palms", "savanna"];
+/// palms; `savanna`, the savanna's trees; `wetland`, the plants of swamps,
+/// coasts and open water.
+pub const GARDENS: [&str; 4] = ["sonoran", "palms", "savanna", "wetland"];
 
 /// The species of the garden `name`, in planting order; `None` for an
 /// unknown garden.
@@ -628,6 +666,7 @@ pub fn garden(name: &str) -> Option<Vec<(&'static str, &'static str)>> {
         ),
         "palms" => Some(PALM_SPECIES.to_vec()),
         "savanna" => Some(SAVANNA_SPECIES.to_vec()),
+        "wetland" => Some(WETLAND_SPECIES.to_vec()),
         _ => None,
     }
 }
@@ -640,6 +679,7 @@ pub fn garden_species() -> impl Iterator<Item = (&'static str, &'static str)> {
         .chain(DESERT_SPECIES.iter())
         .chain(PALM_SPECIES.iter())
         .chain(SAVANNA_SPECIES.iter())
+        .chain(WETLAND_SPECIES.iter())
         .copied()
 }
 
@@ -853,6 +893,9 @@ pub struct Appearance {
     /// A swollen trunk (plant forms F5).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bottle: Option<crate::looks::Bottle>,
+    /// Roots above the ground (plant forms F6).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub roots: Option<crate::roots::Roots>,
     /// How each fleshy body of the program looks, by body name: ribs,
     /// areoles, spines (see [`crate::body`]). Bodies not listed get the
     /// default look.

@@ -277,7 +277,10 @@ fn conifers_bear_cones_once_old() {
             &old[..old.len().min(5)]
         );
     }
-    assert_eq!(checked, 10, "the ten conifers");
+    assert_eq!(
+        checked, 11,
+        "the ten conifers of the forest and the bald cypress"
+    );
 }
 
 /// Fronds open and sag as they age (plant forms F4): on a fern, palms and
