@@ -45,6 +45,14 @@ pub struct OrganLook {
     /// trees.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub face_up: f64,
+    /// Draw the organ as a solid leaf on the nearest levels of detail
+    /// (`crate::leaves`); its card stands for it farther away.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub solid: Option<crate::leaves::SolidLeaf>,
+    /// How the organ's card bends on the levels that keep a card per
+    /// organ (`crate::bend`); the shape's default if absent.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bend: Option<crate::bend::Bend>,
 }
 
 // Serde's `skip_serializing_if` passes a reference.
@@ -826,6 +834,8 @@ pub struct Look {
     pub shade: [f32; 3],
     pub accent: [f32; 3],
     pub face_up: f64,
+    pub solid: Option<crate::leaves::SolidLeaf>,
+    pub bend: crate::bend::Bend,
 }
 
 impl Look {
@@ -863,15 +873,21 @@ pub fn resolve<'a>(
                     shade,
                     accent: look.accent.unwrap_or(colour),
                     face_up: look.face_up,
+                    solid: look.solid.clone(),
+                    bend: look
+                        .bend
+                        .unwrap_or_else(|| crate::bend::Bend::default_for(&look.shape)),
                 }
             }
             None => Look {
                 organ: name.to_string(),
+                bend: crate::bend::Bend::default_for(&Shape::default_for(kind)),
                 shape: Shape::default_for(kind),
                 colour: foliage,
                 shade: foliage_shade,
                 accent: foliage,
                 face_up: 0.0,
+                solid: None,
             },
         })
         .collect()
@@ -1103,6 +1119,8 @@ mod tests {
                 shade: None,
                 accent: Some([0.9, 0.7, 0.1]),
                 face_up: 0.0,
+                solid: None,
+                bend: None,
             },
         );
         let green = [0.1, 0.3, 0.05];

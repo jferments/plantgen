@@ -1,0 +1,165 @@
+# Rosette: thick leaves held in a tight spiral round a short or tall stem,
+# after the agaves, aloes, yuccas, sotols and bromeliads of dry country.
+# Each year the crown adds leaf_rate leaves on a golden-angle spiral (or
+# in two ranks, a fan), each one a little above the last on the stem. A
+# leaf stands nearly upright in the central cone as it unfolds and opens
+# out as it ages, toward old_angle, then dies after leaf_life years: a
+# dead leaf falls (skirt 0) or folds down against the stem and hangs there
+# as a skirt (skirt 1), for dead_life years. A leaf's length follows the
+# rosette's own age, so the first leaves are small and an old rosette's
+# leaves full size:
+#
+#   l(a) = leaf_length (leaf_seed + (1 - leaf_seed) (1 - exp(-a v / size_years)))
+#
+# where a is the age of the crown that bears it and v its vigour.
+#
+# A stem grows trunk_rate metres a year under the crown (0: a stemless
+# rosette on the ground). Once flower_age old, a crown flowers: a stalk
+# stalk_height tall rises from its centre with stalk_branches side
+# branches in its top stalk_head share, each ending in a cluster of
+# flowers, or flowers all along a spike (stalk_branches 0). A monocarpic
+# rosette (once 1: an agave) flowers once and dies: it grows no more
+# leaves, and its leaves die off over the next years. Others flower every
+# year with the chance bloom; a forking rosette (fork 1: a Joshua tree)
+# stops where it flowered and two or three crowns wake below it, so the
+# number of forks is the plant's flowering history. Old stalks stand dry
+# for stalk_life years.
+#
+# A rosette may send out pups: from pup_age, with the chance pup_rate a
+# year, a small crown appears pup_distance out on a runner, at most pups
+# of them.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem rosette 1;
+
+# The plant.
+param vigour_spread = 0.15;   # a rosette grows exp(gauss() * vigour_spread) times as fast
+param lean = 3;               # most degrees the stem leans at its foot
+# Leaves.
+param leaf_rate = 8;          # leaves a crown adds a year
+param leaf_life = 5;          # years a leaf lives
+param leaf_length = 0.4;      # a full-size leaf's length
+param leaf_seed = 0.15;       # a seedling's leaves, as a share of full size
+param size_years = 8;         # leaves reach full size over about this many years
+param leaf_spread = 0.1;      # leaves are l (1 ± leaf_spread) long
+param divergence = 137.5;     # roll from one leaf to the next; 180 for two ranks
+param young_angle = 8;        # angle of a new leaf to the stem's axis
+param old_angle = 65;         # the angle an old leaf opens to
+param open_years = 2;         # how fast a leaf opens, years
+param angle_spread = 6;       # spread of each leaf's angle
+param internode = 0.004;      # stem between one leaf and the next
+param skirt = 0;              # 1: dead leaves fold down and hang
+param dead_angle = 160;       # angle of a hanging dead leaf to the stem's axis
+param dead_life = 0;          # years a dead leaf hangs before it falls
+param leaf_area = 0.08;       # leaf area of a leaf 1 m long, m²
+param dead_area = 0.08;       # and of a dead leaf
+# The stem.
+param trunk_rate = 0;         # metres a year the stem grows under the crown
+param trunk_radius = 0.04;    # the stem's radius under the crown
+param fork = 0;               # 1: flowering ends a crown, which forks below
+param forks_low = 2;          # crowns that wake below a flowered tip
+param forks_high = 3;
+param fork_angle = 35;        # angle a new crown leans out from the old axis
+param upturn = 0;             # how strongly a leaning crown's stem turns back up, radians a metre
+# Flowering.
+param flower_age = 8;         # the first year a crown may flower
+param once = 0;               # 1: a crown flowers once and dies
+param bloom = 0.7;            # chance a year an old enough crown flowers
+param stalk_height = 1.5;     # the stalk's height above the crown
+param stalk_radius = 0.015;   # its radius at the foot, at most trunk_radius
+param stalk_head = 0.4;       # share of the stalk, from the top, that flowers
+param stalk_branches = 0;     # side branches of the flowering head; 0 a spike
+param branch_length = 0.3;    # a side branch's length at the foot of the head
+param branch_angle = 50;      # angle of a side branch to the stalk
+param flowers = 30;           # flowers on a spike, or on each branch
+param flower_size = 0.04;
+param flower_angle = 60;      # angle of a flower to its stalk
+param stalk_life = 2;         # years a dry stalk stands
+param flower_area = 0.64;
+# Pups.
+param pups = 0;               # most pups a rosette sends out
+param pup_age = 6;            # the rosette's first year of pups
+param pup_rate = 0.3;         # chance a year of a new pup
+param pup_distance = 0.3;     # how far out a pup appears
+
+module Y(v, n, p);            # a crown: vigour, flowers so far (once: dying), pups so far
+module Lc(i, m, c);           # leaves i to i + m - 1 of this year's cohort, on a crown c years old
+module Lv(s, a);              # a living leaf s long at a degrees out from the axis
+module Dv(s);                 # a dead leaf hanging
+module Sm;                    # the foot of a stalk: it falls, and the stalk with it
+module Sk;                    # a flowering stalk
+module Hd(i, m, h, b);        # flowering nodes i to i + m - 1 of a head h long; b 1 on the main stalk
+module Bh(l);                 # a side branch l long with its flowers
+module Fk(j);                 # j crowns still to wake below a flowered tip
+module Pp;                    # a pup on its runner
+
+organ blade leaf area leaf_area;
+organ dead leaf area dead_area;
+organ flower flower area flower_area;
+
+axiom /(uniform(0, 360)) &(uniform(0, lean)) Y(exp(gauss() * vigour_spread), 0, 0);
+
+# The crown. A dying monocarpic crown (n < 0) grows nothing more.
+rule Y(v, n, p) : n < 0 -> Y(v, n, p);
+# A monocarpic crown in flower: the stalk, then it dies.
+rule Y(v, n, p) : once > 0 && age * v >= flower_age && rand() < bloom ->
+    [ Sm Sk ] Y(v, -1, p);
+# A forking crown in flower: the stalk ends it, and crowns wake below.
+rule Y(v, n, p) : fork > 0 && age * v >= flower_age && rand() < bloom ->
+    [ Sm Sk ] Fk(round(uniform(forks_low, forks_high + 0.999) - 0.5));
+# A crown in flower that goes on.
+rule Y(v, n, p) : once == 0 && fork == 0 && age * v >= flower_age && rand() < bloom ->
+    [ Sm Sk ] !(trunk_radius) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n + 1, p);
+# A pup.
+rule Y(v, n, p) : pups > p && age >= pup_age && rand() < pup_rate ->
+    [ Pp ] !(trunk_radius) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n, p + 1);
+rule Y(v, n, p) -> !(trunk_radius) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n, p);
+
+# This year's leaves, a little apart up the stem, each turned on round
+# the spiral and opening out. Leaves are sized by the crown's age.
+decompose Lc(i, m, c) : m > 1 ->
+    Lc(i, floor(m / 2), c) Lc(i + floor(m / 2), m - floor(m / 2), c);
+decompose Lc(i, m, c) : m == 1 ->
+    !(trunk_radius) F(internode) /(divergence + gauss() * 3)
+    [ Lv(leaf_length * (leaf_seed + (1 - leaf_seed) * (1 - exp(-c / size_years)))
+         * uniform(1 - leaf_spread, 1 + leaf_spread),
+         gauss() * angle_spread) ];
+decompose Lc(i, m, c) -> ;
+
+# A leaf opens with age, then dies: it falls, or folds down and hangs.
+rule Lv(s, a) : age >= leaf_life && skirt > 0 -> Dv(s);
+rule Lv(s, a) : age >= leaf_life -> ;
+rule Dv(s) : age >= dead_life -> ;
+interpret Lv(s, a) ->
+    &(lerp(young_angle, old_angle, 1 - exp(-age / open_years)) + a) blade(s);
+interpret Dv(s) -> &(dead_angle) dead(s);
+
+# The stalk: the bare foot, then the flowering head, as a spike or a
+# panicle of side branches. It stands dry for stalk_life years.
+rule Sm : age >= stalk_life -> %;
+decompose Sk ->
+    !(stalk_radius) F(stalk_height * (1 - stalk_head))
+    Hd(0, stalk_branches > 0 ? stalk_branches : flowers, stalk_height * stalk_head, 1);
+decompose Hd(i, m, h, b) : m > 1 ->
+    Hd(i, floor(m / 2), h, b) Hd(i + floor(m / 2), m - floor(m / 2), h, b);
+decompose Hd(i, m, h, b) : m == 1 && b > 0 && stalk_branches > 0 ->
+    !(stalk_radius * 0.6) F(h / stalk_branches) /(137.5)
+    [ &(branch_angle) Bh(branch_length * (1 - 0.6 * (i + 0.5) / stalk_branches)) ];
+decompose Hd(i, m, h, b) : m == 1 ->
+    !(stalk_radius * (b > 0 ? 0.5 : 0.25)) F(h / max(1, b > 0 ? flowers : max(3, round(flowers / 3)))) /(137.5)
+    [ &(flower_angle) flower(flower_size * uniform(0.9, 1.1)) ];
+decompose Hd(i, m, h, b) -> ;
+decompose Bh(l) -> !(stalk_radius * 0.3) F(l * 0.4) Hd(0, max(3, round(flowers / 3)), l * 0.6, 0);
+
+# Crowns that wake below a flowered tip, leaning out round it.
+decompose Fk(j) : j > 0 ->
+    [ /(360 * j / max(1, forks_high) + uniform(-25, 25)) &(fork_angle * uniform(0.7, 1.3))
+      Y(exp(gauss() * vigour_spread), 0, pups) ]
+    Fk(j - 1);
+decompose Fk(j) -> ;
+
+# A pup: out along a runner at the foot, then up, a small crown of its own.
+decompose Pp ->
+    /(uniform(0, 360)) &(90) f(pup_distance * uniform(0.6, 1.4)) ^(90)
+    Y(exp(gauss() * vigour_spread), 0, pups);

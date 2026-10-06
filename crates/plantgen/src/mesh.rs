@@ -26,8 +26,10 @@ use std::collections::BTreeMap;
 
 use serde::{Deserialize, Serialize};
 
+use crate::bend::Bend;
 use crate::body::{self, BodyLook};
 use crate::graph::{GraphOrgan, PlantGraph};
+use crate::leaves;
 use crate::looks::{Flare, Look, Moss, Mount, Ridges};
 use crate::math::{self, Vec3, any_perpendicular};
 use crate::rng::{mix64, unit};
@@ -130,6 +132,9 @@ pub struct Card {
     pub born: f32,
     /// Plant age at which it is shed; infinity when it never is.
     pub shed: f32,
+    /// How it bends on the levels that keep a card per organ
+    /// ([`crate::bend`]); flat elsewhere. A level's bent cards come first.
+    pub bend: Bend,
 }
 
 /// Wood and organ cards of one plant at one level of detail, and on the
@@ -146,7 +151,18 @@ pub struct PlantMesh {
 impl PlantMesh {
     #[must_use]
     pub fn triangle_count(&self) -> usize {
-        self.wood.triangle_count() + self.cards.len() * 2
+        self.wood.triangle_count()
+            + self.cards.len() * 2
+            + self.bent_cards() * (crate::bend::VERTICES as usize / 3 - 2)
+    }
+
+    /// The bent cards, which lead the level's cards.
+    #[must_use]
+    pub fn bent_cards(&self) -> usize {
+        self.cards
+            .iter()
+            .take_while(|card| !card.bend.is_flat())
+            .count()
     }
 
     /// The cards as a triangle mesh: four vertices and two triangles per
@@ -159,6 +175,10 @@ impl PlantMesh {
         for card in &self.cards {
             let (base, heading, left) =
                 (vector(card.base), vector(card.heading), vector(card.left));
+            if !card.bend.is_flat() {
+                bent_card(card, base, heading, left, &mut out);
+                continue;
+            }
             let normal = heading.cross(left);
             let half = left * f64::from(card.width * 0.5);
             let tip = heading * f64::from(card.length);
@@ -198,6 +218,35 @@ impl PlantMesh {
             ]);
         }
         out
+    }
+}
+
+/// A bent card as the renderer draws it: [`crate::bend::VERTICES`]
+/// corners of its grid, each its own vertex.
+fn bent_card(card: &Card, base: Vec3, heading: Vec3, left: Vec3, out: &mut Mesh) {
+    let color = [
+        card.color[0],
+        card.color[1],
+        card.color[2],
+        f32::from(card.template),
+    ];
+    let shed = card.shed.is_finite().then_some(f64::from(card.shed));
+    let half = f64::from(card.width) * 0.5;
+    let length = f64::from(card.length);
+    for k in 0..crate::bend::VERTICES {
+        let (x, v) = crate::bend::corner(k);
+        let (position, normal) = card.bend.point(base, heading, left, half, length, x, v);
+        #[allow(clippy::cast_possible_truncation)]
+        let index = out.push(Vertex {
+            position,
+            normal,
+            uv: [((x + 1.0) * 0.5) as f32, v as f32],
+            color,
+            born: f64::from(card.born),
+            shed,
+            level: 3,
+        });
+        out.indices.push(index);
     }
 }
 
@@ -277,7 +326,22 @@ pub fn build(
 ) -> PlantMesh {
     let mut mesh = PlantMesh::default();
     wood(graph, appearance, lod, &mut mesh.wood);
-    mesh.cards = cards(graph, looks, appearance.variation, lod);
+    // Organs drawn as solid leaves at this level leave the cards.
+    let solid = leaves::solid_types(looks, level);
+    let variation = appearance.variation;
+    leaves::build(
+        graph,
+        looks,
+        level,
+        &|look, organ| organ_color(look, variation, organ.light, organ.id),
+        &mut mesh.wood,
+    );
+    mesh.cards = cards(graph, looks, &solid, appearance.variation, lod);
+    // Bent cards first, so a renderer draws them as one range.
+    let (mut bent, flat): (Vec<Card>, Vec<Card>) =
+        mesh.cards.drain(..).partition(|card| !card.bend.is_flat());
+    bent.extend(flat);
+    mesh.cards = bent;
     body::build(graph, bodies, looks.len(), level, &mut mesh);
     mesh
 }
@@ -652,6 +716,7 @@ struct Placed {
     template: u8,
     born: f64,
     shed: Option<f64>,
+    bend: Bend,
 }
 
 impl Placed {
@@ -669,6 +734,7 @@ impl Placed {
             template: self.template,
             born: self.born as f32,
             shed: self.shed.map_or(f32::INFINITY, |shed| shed as f32),
+            bend: self.bend,
         }
     }
 }
@@ -725,20 +791,29 @@ fn place(organ: &GraphOrgan, look: &Look) -> (Vec3, Vec3, Vec3) {
     }
 }
 
-fn cards(graph: &PlantGraph, looks: &[Look], variation: f32, lod: &LodSpec) -> Vec<Card> {
+fn cards(
+    graph: &PlantGraph,
+    looks: &[Look],
+    solid: &[bool],
+    variation: f32,
+    lod: &LodSpec,
+) -> Vec<Card> {
     if lod.cluster <= 0.0 {
-        organ_cards(graph, looks, variation)
+        organ_cards(graph, looks, solid, variation)
     } else {
-        cluster_cards(graph, looks, variation, lod)
+        cluster_cards(graph, looks, solid, variation, lod)
     }
 }
 
 /// One card per organ, and a second across it for organs that stand out
 /// all round their axis.
-fn organ_cards(graph: &PlantGraph, looks: &[Look], variation: f32) -> Vec<Card> {
+fn organ_cards(graph: &PlantGraph, looks: &[Look], solid: &[bool], variation: f32) -> Vec<Card> {
     let mut cards = Vec::new();
     for organ in &graph.organs {
         let index = usize::from(organ.organ);
+        if solid.get(index).copied().unwrap_or(false) {
+            continue;
+        }
         let (Some(look), Ok(template)) = (looks.get(index), u8::try_from(index)) else {
             continue;
         };
@@ -753,6 +828,7 @@ fn organ_cards(graph: &PlantGraph, looks: &[Look], variation: f32) -> Vec<Card> 
             template,
             born: organ.born,
             shed: organ.shed,
+            bend: look.bend,
         };
         if let Some(cross) = look.shape.cross() {
             // A second card across the first keeps organs that stand
@@ -937,11 +1013,20 @@ fn solve(mut matrix: Vec<Vec<f64>>, mut rhs: Vec<f64>) -> Option<Vec<f64>> {
 
 /// Organs merged per template and cell of edge `lod.cluster`: a card
 /// facing as its organs do, and upright cards beside it.
-fn cluster_cards(graph: &PlantGraph, looks: &[Look], variation: f32, lod: &LodSpec) -> Vec<Card> {
+fn cluster_cards(
+    graph: &PlantGraph,
+    looks: &[Look],
+    solid: &[bool],
+    variation: f32,
+    lod: &LodSpec,
+) -> Vec<Card> {
     // BTreeMap keeps the output order independent of hashing.
     let mut clusters: BTreeMap<(u8, i64, i64, i64), Cluster> = BTreeMap::new();
     for organ in &graph.organs {
         let index = usize::from(organ.organ);
+        if solid.get(index).copied().unwrap_or(false) {
+            continue;
+        }
         let (Some(look), Ok(template)) = (looks.get(index), u8::try_from(index)) else {
             continue;
         };
@@ -1027,6 +1112,7 @@ fn cluster_cards(graph: &PlantGraph, looks: &[Look], variation: f32, lod: &LodSp
                     template,
                     born: cluster.born,
                     shed: cluster.shed.is_finite().then_some(cluster.shed),
+                    bend: Bend::FLAT,
                 }
                 .finish(),
             );
@@ -1145,7 +1231,12 @@ mod tests {
         let coarsest = build_plain(&graph(), &looks(), &appearance(), &lod(0.1, 0.0, 10.0));
         assert_eq!(coarsest.wood.vertex_count(), 2 * 8);
         assert_eq!(detailed.cards.len(), 20);
-        assert_eq!(detailed.card_mesh().triangle_count(), 40);
+        // Simple leaves bend by default: each card a grid of 16 triangles.
+        assert_eq!(detailed.bent_cards(), 20);
+        assert_eq!(
+            detailed.card_mesh().triangle_count(),
+            20 * crate::bend::VERTICES as usize / 3
+        );
     }
 
     /// A level scaled to a small plant keeps the wood it would drop at a
@@ -1458,6 +1549,8 @@ mod tests {
             shade: None,
             accent: None,
             face_up,
+            solid: None,
+            bend: None,
         }
     }
 

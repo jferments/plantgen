@@ -1,0 +1,213 @@
+{
+  "schema": 1,
+  "id": "agave-deserti",
+  "taxon": {
+    "scientific_name": "Agave deserti",
+    "common_name": "desert agave",
+    "usda_symbol": "AGDE"
+  },
+  "growth_form": "rosette_succulent",
+  "generator": {
+    "program": "rosette",
+    "params": {
+      "vigour_spread": 0.15,
+      "lean": 4,
+      "leaf_rate": 6,
+      "leaf_life": 7,
+      "leaf_length": 0.32,
+      "leaf_seed": 0.15,
+      "size_years": 10,
+      "leaf_spread": 0.12,
+      "young_angle": 10,
+      "old_angle": 62,
+      "open_years": 2.5,
+      "angle_spread": 6,
+      "internode": 0.0012,
+      "trunk_radius": 0.035,
+      "flower_age": 25,
+      "once": 1,
+      "bloom": 0.5,
+      "stalk_height": 3.5,
+      "stalk_radius": 0.03,
+      "stalk_head": 0.35,
+      "stalk_branches": 10,
+      "branch_length": 0.25,
+      "branch_angle": 55,
+      "flowers": 12,
+      "flower_size": 0.05,
+      "flower_angle": 50,
+      "stalk_life": 4,
+      "pups": 5,
+      "pup_age": 8,
+      "pup_rate": 0.3,
+      "pup_distance": 0.4,
+      "leaf_area": 0.1,
+      "flower_area": 0.335,
+      "dead_area": 0.1
+    }
+  },
+  "growth": {
+    "years": 40,
+    "step": 1,
+    "keyframes": [
+      5,
+      15,
+      30
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.18,
+      0.15,
+      0.11
+    ],
+    "foliage": [
+      0.13,
+      0.18,
+      0.15
+    ],
+    "foliage_shade": [
+      0.0585,
+      0.081,
+      0.0675
+    ],
+    "variation": 0.1,
+    "organs": {
+      "blade": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.2
+        },
+        "colour": [
+          0.13,
+          0.18,
+          0.15
+        ],
+        "solid": {
+          "section": "channelled",
+          "fold": 0.5,
+          "thickness": 0.35,
+          "widest": 0.25,
+          "base": 0.75,
+          "taper": 1.0,
+          "arch": 12,
+          "margin": [
+            0.2,
+            0.23,
+            0.18
+          ],
+          "teeth": {
+            "spacing": 0.016,
+            "length": 0.004,
+            "hook": 25,
+            "start": 0.15,
+            "colour": [
+              0.22,
+              0.12,
+              0.06
+            ]
+          },
+          "spine": {
+            "length": 0.03,
+            "width": 0.005,
+            "colour": [
+              0.2,
+              0.1,
+              0.05
+            ]
+          }
+        }
+      },
+      "dead": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.2
+        },
+        "colour": [
+          0.3,
+          0.25,
+          0.18
+        ],
+        "shade": [
+          0.15,
+          0.125,
+          0.09
+        ]
+      },
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petals": 6,
+          "petal_width": 0.5,
+          "point": 0.3,
+          "notch": 0.0,
+          "centre": 0.25
+        },
+        "colour": [
+          0.75,
+          0.6,
+          0.1
+        ],
+        "accent": [
+          0.55,
+          0.4,
+          0.05
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 5,
+      "environment": "open",
+      "height": 0.15,
+      "tolerance": 0.6
+    },
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 0.32,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a stemless, blue-grey rosette 30 to 60 cm tall of 20 to 50 channelled leaves 20 to 40 cm long, toothed along the margins and tipped with a spine, spreading by pups into clonal colonies; it flowers once, after about 20 to 40 years, on a branched stalk 2 to 5 m tall with yellow flowers, and dies. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough rosette heights from general knowledge, before the flowering stalk: about 15 cm at 5 years, 30 cm at 15. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: glaucous blue-grey leaves with paler margins and reddish-brown teeth and spines; yellow flowers."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (milestone F2). Calibration against measurements and photographs comes later."
+  }
+}

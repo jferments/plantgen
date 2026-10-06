@@ -19,12 +19,13 @@ use crate::lsys::{Neighbourhood, OrganKind, Program, ProgramError, tools};
 pub const SPEC_SCHEMA: u32 = 1;
 
 /// Built-in plant programs, by name.
-pub const PROGRAMS: [(&str, &str); 5] = [
+pub const PROGRAMS: [(&str, &str); 6] = [
     ("conifer", include_str!("../programs/conifer.lsys")),
     ("broadleaf", include_str!("../programs/broadleaf.lsys")),
     ("grass", include_str!("../programs/grass.lsys")),
     ("herb", include_str!("../programs/herb.lsys")),
     ("succulent", include_str!("../programs/succulent.lsys")),
+    ("rosette", include_str!("../programs/rosette.lsys")),
 ];
 
 /// Built-in species, by id: the catalogue of the south Puget Sound
@@ -488,9 +489,43 @@ pub const SONORAN_SPECIES: [(&str, &str); 12] = [
     ),
 ];
 
-/// Every built-in catalogue: the forest's, then the Sonoran cacti.
+/// Built-in rosette plants of the deserts of the American Southwest
+/// (milestone F2), grown by the `rosette` program: an agave, a yucca, a
+/// sotol, the Joshua tree, an aloe and a desert bromeliad. Like the
+/// cacti, no habitat places them yet.
+pub const ROSETTE_SPECIES: [(&str, &str); 6] = [
+    (
+        "agave-deserti",
+        include_str!("../species/agave-deserti.json"),
+    ),
+    ("yucca-elata", include_str!("../species/yucca-elata.json")),
+    (
+        "dasylirion-wheeleri",
+        include_str!("../species/dasylirion-wheeleri.json"),
+    ),
+    (
+        "yucca-brevifolia",
+        include_str!("../species/yucca-brevifolia.json"),
+    ),
+    ("aloe-vera", include_str!("../species/aloe-vera.json")),
+    (
+        "hechtia-montana",
+        include_str!("../species/hechtia-montana.json"),
+    ),
+];
+
+/// The species a world's `sonoran` garden grows beside the forest: the
+/// cacti, then the rosettes.
+pub fn garden_species() -> impl Iterator<Item = (&'static str, &'static str)> {
+    SONORAN_SPECIES
+        .iter()
+        .chain(ROSETTE_SPECIES.iter())
+        .copied()
+}
+
+/// Every built-in catalogue: the forest's, then the garden's.
 pub fn all_species() -> impl Iterator<Item = (&'static str, &'static str)> {
-    SPECIES.iter().chain(SONORAN_SPECIES.iter()).copied()
+    SPECIES.iter().copied().chain(garden_species())
 }
 
 #[must_use]
@@ -559,6 +594,10 @@ pub enum GrowthForm {
     /// the work of leaves: columns, barrels, globes, chollas and prickly
     /// pears.
     StemSucculent,
+    /// A rosette of thick leaves on a short or tall stem: agaves, aloes,
+    /// yuccas, sotols and desert bromeliads, and with forking stems the
+    /// Joshua tree.
+    RosetteSucculent,
 }
 
 /// Which plant program grows the species, and its parameter values.

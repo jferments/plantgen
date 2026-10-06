@@ -1,0 +1,195 @@
+{
+  "schema": 1,
+  "id": "dasylirion-wheeleri",
+  "taxon": {
+    "scientific_name": "Dasylirion wheeleri",
+    "common_name": "common sotol",
+    "usda_symbol": "DAWH"
+  },
+  "growth_form": "rosette_succulent",
+  "generator": {
+    "program": "rosette",
+    "params": {
+      "vigour_spread": 0.15,
+      "lean": 4,
+      "leaf_rate": 40,
+      "leaf_life": 4,
+      "leaf_length": 0.75,
+      "leaf_seed": 0.15,
+      "size_years": 8,
+      "leaf_spread": 0.15,
+      "young_angle": 8,
+      "old_angle": 58,
+      "open_years": 1.5,
+      "angle_spread": 10,
+      "internode": 0.0002,
+      "trunk_rate": 0.004,
+      "trunk_radius": 0.09,
+      "skirt": 1,
+      "dead_angle": 150,
+      "dead_life": 8,
+      "flower_age": 12,
+      "bloom": 0.9,
+      "stalk_height": 3.2,
+      "stalk_radius": 0.025,
+      "stalk_head": 0.6,
+      "stalk_branches": 0,
+      "flowers": 60,
+      "flower_size": 0.03,
+      "flower_angle": 45,
+      "stalk_life": 2,
+      "leaf_area": 0.015,
+      "flower_area": 0.335,
+      "dead_area": 0.015
+    }
+  },
+  "growth": {
+    "years": 40,
+    "step": 1,
+    "keyframes": [
+      5,
+      15,
+      30,
+      40
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.18,
+      0.15,
+      0.11
+    ],
+    "foliage": [
+      0.14,
+      0.19,
+      0.13
+    ],
+    "foliage_shade": [
+      0.063,
+      0.0855,
+      0.0585
+    ],
+    "variation": 0.1,
+    "organs": {
+      "blade": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.03
+        },
+        "colour": [
+          0.14,
+          0.19,
+          0.13
+        ],
+        "solid": {
+          "section": "flat",
+          "thickness": 0.15,
+          "widest": 0.08,
+          "base": 1.6,
+          "taper": 1.0,
+          "arch": 28,
+          "teeth": {
+            "spacing": 0.02,
+            "length": 0.004,
+            "hook": 40,
+            "start": 0.08,
+            "colour": [
+              0.45,
+              0.38,
+              0.18
+            ]
+          }
+        }
+      },
+      "dead": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.03
+        },
+        "colour": [
+          0.38,
+          0.33,
+          0.22
+        ],
+        "shade": [
+          0.19,
+          0.165,
+          0.11
+        ]
+      },
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petals": 6,
+          "petal_width": 0.5,
+          "point": 0.3,
+          "notch": 0.0,
+          "centre": 0.25
+        },
+        "colour": [
+          0.8,
+          0.75,
+          0.55
+        ],
+        "accent": [
+          0.6,
+          0.55,
+          0.35
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 3.4,
+      "tolerance": 0.6
+    },
+    {
+      "age": 40,
+      "environment": "open",
+      "height": 3.4,
+      "tolerance": 0.7
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a dense, nearly stemless rosette of a hundred or more narrow blue-green leaves 50 cm to 1 m long, spoon-shaped at the base and armed with curved prickles along both edges; old leaves hang as a skirt; a narrow flowering spike 2 to 5 m tall rises most years once the plant is mature. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge, with the flowering spike a mature sotol sends up most years: about 3 to 3.5 m at 30 and 40 years. Wide tolerances: a plant between spikes is only its leaves' height, about 1 m. Young plants flower from about 12 years, some later, so no reference is set before 30."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: blue-green leaves with yellowish prickles, a straw-coloured skirt, a cream flowering spike."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (milestone F2). Calibration against measurements and photographs comes later."
+  }
+}

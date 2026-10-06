@@ -215,6 +215,10 @@ pub struct AtlasLayer {
     /// texel's accent weight (see [`Templates::albedo`]).
     pub colour: [f32; 3],
     pub accent: [f32; 3],
+    /// How the template's cards bend where they are drawn one per organ
+    /// (`crate::bend`); absent for flat cards.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bend: Option<crate::bend::Bend>,
 }
 
 /// Sizes of the plant at one keyframe.
@@ -254,6 +258,9 @@ pub struct LodRecord {
     /// Areoles of fleshy bodies, on the nearest level only.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub tufts: usize,
+    /// Bent cards, which lead the level's cards (`crate::bend`).
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub bent: usize,
 }
 
 // Serde's `skip_serializing_if` passes a reference.
@@ -793,6 +800,7 @@ fn bake_keyframe(graph: &PlantGraph, inputs: &Inputs) -> Result<BakedKeyframe, P
                         wood_triangles: plant.wood.triangle_count(),
                         cards: plant.cards.len(),
                         tufts: plant.tufts.len(),
+                        bent: plant.bent_cards(),
                     },
                 )
             })
@@ -950,6 +958,7 @@ fn assemble(
                     shape: template.shape.to_string(),
                     colour: template.colour,
                     accent: template.accent_colour,
+                    bend: (!template.bend.is_flat()).then_some(template.bend),
                 })
                 .collect(),
         },
@@ -1702,6 +1711,7 @@ fn decode_cards(input: &mut Reader<'_>) -> Result<Vec<Card>, PackageError> {
             template: templates[index],
             born: births[index],
             shed: sheds[index],
+            bend: crate::bend::Bend::FLAT,
         })
         .collect();
     input.skip_padding()?;

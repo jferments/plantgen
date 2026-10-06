@@ -1,0 +1,206 @@
+{
+  "schema": 1,
+  "id": "yucca-elata",
+  "taxon": {
+    "scientific_name": "Yucca elata",
+    "common_name": "soaptree yucca",
+    "usda_symbol": "YUEL"
+  },
+  "growth_form": "rosette_succulent",
+  "generator": {
+    "program": "rosette",
+    "params": {
+      "vigour_spread": 0.15,
+      "lean": 5,
+      "leaf_rate": 30,
+      "leaf_life": 4,
+      "leaf_length": 0.6,
+      "leaf_seed": 0.2,
+      "size_years": 6,
+      "leaf_spread": 0.15,
+      "young_angle": 6,
+      "old_angle": 50,
+      "open_years": 1.5,
+      "angle_spread": 8,
+      "internode": 0.0007,
+      "trunk_rate": 0.025,
+      "trunk_radius": 0.07,
+      "skirt": 1,
+      "dead_angle": 165,
+      "dead_life": 20,
+      "flower_age": 10,
+      "bloom": 0.9,
+      "stalk_height": 1.6,
+      "stalk_radius": 0.02,
+      "stalk_head": 0.55,
+      "stalk_branches": 8,
+      "branch_length": 0.25,
+      "branch_angle": 40,
+      "flowers": 12,
+      "flower_size": 0.05,
+      "flower_angle": 70,
+      "stalk_life": 2,
+      "leaf_area": 0.0125,
+      "flower_area": 0.335,
+      "dead_area": 0.0125
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [
+      5,
+      20,
+      40,
+      60
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.18,
+      0.15,
+      0.11
+    ],
+    "foliage": [
+      0.12,
+      0.17,
+      0.08
+    ],
+    "foliage_shade": [
+      0.054,
+      0.0765,
+      0.036
+    ],
+    "variation": 0.1,
+    "organs": {
+      "blade": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.025
+        },
+        "colour": [
+          0.12,
+          0.17,
+          0.08
+        ],
+        "solid": {
+          "section": "flat",
+          "thickness": 0.3,
+          "widest": 0.3,
+          "base": 0.6,
+          "taper": 1.2,
+          "arch": 6,
+          "margin": [
+            0.55,
+            0.52,
+            0.42
+          ],
+          "spine": {
+            "length": 0.01,
+            "width": 0.002,
+            "colour": [
+              0.3,
+              0.25,
+              0.15
+            ]
+          }
+        }
+      },
+      "dead": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.025
+        },
+        "colour": [
+          0.35,
+          0.3,
+          0.2
+        ],
+        "shade": [
+          0.175,
+          0.15,
+          0.1
+        ]
+      },
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petals": 6,
+          "petal_width": 0.5,
+          "point": 0.3,
+          "notch": 0.0,
+          "centre": 0.25
+        },
+        "colour": [
+          0.85,
+          0.83,
+          0.75
+        ],
+        "accent": [
+          0.7,
+          0.68,
+          0.55
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 1.9,
+      "tolerance": 0.5
+    },
+    {
+      "age": 40,
+      "environment": "open",
+      "height": 2.9,
+      "tolerance": 0.5
+    },
+    {
+      "age": 60,
+      "environment": "open",
+      "height": 3.6,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a trunk 1 to 5 m tall, branched or not, crowned by a dense rosette of narrow, flexible leaves 25 to 70 cm long and under 1.5 cm wide with fine white fibres along their edges; dead leaves hang down the trunk as a skirt; a panicle of white bell flowers rises 1 to 2 m above the leaves most summers. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge, with a flowering stalk most years: about 2 m at 20 years, 3 m at 40, 3.5 m at 60. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: yellow-green leaves with pale fibrous margins, a straw-coloured skirt, creamy white flowers."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (milestone F2). Calibration against measurements and photographs comes later."
+  }
+}

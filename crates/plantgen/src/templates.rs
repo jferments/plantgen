@@ -54,6 +54,9 @@ pub struct Template {
     /// The look's colour in full light and its accent colour, linear RGB.
     pub colour: [f32; 3],
     pub accent_colour: [f32; 3],
+    /// How cards of this template bend on the levels that keep a card per
+    /// organ (`crate::bend`).
+    pub bend: crate::bend::Bend,
     pub coverage: Vec<f32>,
     pub brightness: Vec<f32>,
     pub accent: Vec<f32>,
@@ -116,6 +119,7 @@ impl Templates {
                     aspect: drawn.aspect,
                     colour: drawn.colour,
                     accent_colour: body.areoles.felt,
+                    bend: crate::bend::Bend::FLAT,
                     coverage: drawn.coverage,
                     brightness: drawn.brightness,
                     accent: drawn.accent,
@@ -175,6 +179,7 @@ impl Templates {
                     aspect,
                     colour: look.colour,
                     accent_colour: look.accent,
+                    bend: look.bend,
                     coverage,
                     brightness,
                     accent,
@@ -1433,6 +1438,8 @@ mod tests {
                     shade: None,
                     accent: Some([0.8, 0.7, 0.1]),
                     face_up: 0.0,
+                    solid: None,
+                    bend: None,
                 },
             );
         }

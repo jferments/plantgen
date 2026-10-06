@@ -1826,6 +1826,7 @@ impl Body<'_> {
                 template: star,
                 born: tuft.born,
                 shed: tuft.shed,
+                bend: crate::bend::Bend::FLAT,
             });
             // Fans stand along the axis and across it in turn, so the
             // outline bristles from every side.
@@ -1840,6 +1841,7 @@ impl Body<'_> {
                 template: fan,
                 born: tuft.born,
                 shed: tuft.shed,
+                bend: crate::bend::Bend::FLAT,
             });
         }
     }

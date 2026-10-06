@@ -19,12 +19,14 @@
 //! ([`rng`]) and every transcendental function goes through `libm`
 //! ([`math`]).
 
+pub mod bend;
 pub mod body;
 pub mod graph;
 pub mod ground;
 pub mod grow;
 pub mod impostor;
 pub mod json;
+pub mod leaves;
 pub mod litter;
 pub mod looks;
 pub mod lsys;
@@ -44,5 +46,7 @@ pub mod templates;
 /// part of every package key. 3: cluster cards of the far levels gained
 /// upright cards, so far crowns show from the side. 4: cluster cards cover
 /// what their organs cover, no more, and keep the organs' proportions, so
-/// far levels are not denser than near ones.
-pub const GENERATOR_REVISION: u32 = 4;
+/// far levels are not denser than near ones. 5: leaf, blade and frond
+/// cards bend where they are drawn one per organ (plant forms F2), which
+/// changes the impostors and the atlas records.
+pub const GENERATOR_REVISION: u32 = 5;
