@@ -46,6 +46,9 @@ pub enum Form {
     Flower(FlowerForm),
     /// A fruit, a bud or a cone.
     Fruit(FruitForm),
+    /// A thorn (plant forms F5): a slender cone along the organ, as wide at
+    /// its foot as the card's aspect allows, on the nearest level.
+    Thorn,
     /// No solid: the card everywhere.
     Card,
 }
@@ -130,6 +133,7 @@ impl Form {
         let levels = match self {
             Self::Flower(form) => form.levels,
             Self::Fruit(form) => form.levels,
+            Self::Thorn => 1,
             Self::Card => 0,
         };
         level < usize::from(levels.min(2))
@@ -149,9 +153,13 @@ fn triangles_per_organ(look: &Look) -> usize {
             ELLIPSOID_TRIANGLES + scales(form, fruit.aspect) as usize * WEDGE_TRIANGLES
         }
         (Form::Fruit(_), _) => ELLIPSOID_TRIANGLES,
+        (Form::Thorn, _) => THORN_TRIANGLES,
         _ => 0,
     }
 }
+
+/// Triangles a thorn takes: a frustum's sides.
+const THORN_TRIANGLES: usize = 16;
 
 /// Triangles a cone scale takes.
 const WEDGE_TRIANGLES: usize = 4;
@@ -253,6 +261,23 @@ pub fn build(
                     form,
                     fruit.aspect,
                     fruit.cone,
+                    painted,
+                    part,
+                    mesh,
+                );
+            }
+            (Form::Thorn, shape) => {
+                let width = match shape {
+                    Shape::Blade(blade) => blade.aspect,
+                    _ => 0.08,
+                };
+                frustum(
+                    organ.position,
+                    axis,
+                    side,
+                    organ.size,
+                    organ.size * width * 0.5,
+                    0.0,
                     painted,
                     part,
                     mesh,
@@ -733,6 +758,46 @@ mod tests {
             &mut cone,
         );
         assert!(cone.triangle_count() >= ELLIPSOID_TRIANGLES + 20 * 4);
+    }
+
+    #[test]
+    fn a_thorn_is_a_cone_its_organ_s_length() {
+        let mut graph = PlantGraph {
+            age: 1.0,
+            height: 1.0,
+            segments: Vec::new(),
+            organs: vec![organ(0.03)],
+        };
+        graph.organs[0].born = 0.0;
+        graph.organs[0].shed = None;
+        let looks = crate::looks::resolve(
+            [("thorn", crate::lsys::OrganKind::Leaf)],
+            &std::collections::BTreeMap::from([(
+                "thorn".to_string(),
+                crate::looks::OrganLook {
+                    shape: Shape::Blade(crate::looks::Blade {
+                        taper: 1.0,
+                        aspect: 0.12,
+                    }),
+                    colour: None,
+                    shade: None,
+                    accent: None,
+                    face_up: 0.0,
+                    solid: None,
+                    bend: None,
+                    form: Some(Form::Thorn),
+                },
+            )]),
+            [0.3; 3],
+            [0.1; 3],
+        );
+        assert!(fits(&graph, &looks[0], 0));
+        let mut mesh = Mesh::default();
+        build(&graph, &looks, &[true], &|look, _| look.colour, &mut mesh);
+        assert_eq!(mesh.triangle_count(), THORN_TRIANGLES);
+        let top = mesh.positions.iter().map(|p| p[1]).fold(f32::MIN, f32::max);
+        assert!((top - 0.03).abs() < 1e-6, "the tip at the thorn's length");
+        assert!(Form::Thorn.solid_at(0) && !Form::Thorn.solid_at(1));
     }
 
     #[test]

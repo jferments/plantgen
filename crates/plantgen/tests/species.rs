@@ -335,3 +335,35 @@ fn older_fronds_hang_lower() {
         }
     }
 }
+
+/// A tree past its `life` stands as a snag (plant forms F5): the velvet
+/// mesquite dies at 100 years; at 120 it holds no leaf, stands about as
+/// tall as it was, and has lost dead branches.
+#[test]
+fn a_tree_past_its_life_stands_as_a_snag() {
+    let spec = PlantSpec::builtin("prosopis-velutina").unwrap();
+    let variant = spec.variant_list()[0];
+    let growth = grow_variant(&spec, &variant, 120.0, vec![99.0, 120.0]);
+    let leaf = growth
+        .organ_types
+        .iter()
+        .position(|kind| kind.name == "leaf")
+        .unwrap();
+    let (alive, snag) = (&growth.keyframes[0], &growth.keyframes[1]);
+    let leaves = |graph: &PlantGraph| {
+        graph
+            .organs
+            .iter()
+            .filter(|organ| usize::from(organ.organ) == leaf)
+            .count()
+    };
+    assert!(leaves(alive) > 0);
+    assert_eq!(leaves(snag), 0, "a snag holds no leaves");
+    assert!(snag.height > alive.height * 0.6, "the trunk still stands");
+    assert!(
+        snag.segments.len() < alive.segments.len(),
+        "dead branches fall: {} of {}",
+        snag.segments.len(),
+        alive.segments.len()
+    );
+}

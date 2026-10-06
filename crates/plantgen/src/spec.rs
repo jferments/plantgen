@@ -19,7 +19,7 @@ use crate::lsys::{Neighbourhood, OrganKind, Program, ProgramError, tools};
 pub const SPEC_SCHEMA: u32 = 1;
 
 /// Built-in plant programs, by name.
-pub const PROGRAMS: [(&str, &str); 8] = [
+pub const PROGRAMS: [(&str, &str); 9] = [
     ("conifer", include_str!("../programs/conifer.lsys")),
     ("broadleaf", include_str!("../programs/broadleaf.lsys")),
     ("grass", include_str!("../programs/grass.lsys")),
@@ -28,6 +28,7 @@ pub const PROGRAMS: [(&str, &str); 8] = [
     ("rosette", include_str!("../programs/rosette.lsys")),
     ("fern", include_str!("../programs/fern.lsys")),
     ("palm", include_str!("../programs/palm.lsys")),
+    ("cane", include_str!("../programs/cane.lsys")),
 ];
 
 /// Built-in species, by id: the catalogue of the south Puget Sound
@@ -551,9 +552,66 @@ pub const PALM_SPECIES: [(&str, &str); 7] = [
     ),
 ];
 
+/// Trees and shrubs of the Sonoran Desert (plant forms F5): foothill palo
+/// verde, velvet mesquite (which dies at 100 and stands as a snag), desert
+/// ironwood, creosote bush, white bursage, brittlebush, jojoba, desert
+/// willow and ocotillo. No habitat places them yet (milestone F8).
+pub const DESERT_SPECIES: [(&str, &str); 9] = [
+    (
+        "parkinsonia-microphylla",
+        include_str!("../species/parkinsonia-microphylla.json"),
+    ),
+    (
+        "prosopis-velutina",
+        include_str!("../species/prosopis-velutina.json"),
+    ),
+    (
+        "olneya-tesota",
+        include_str!("../species/olneya-tesota.json"),
+    ),
+    (
+        "larrea-tridentata",
+        include_str!("../species/larrea-tridentata.json"),
+    ),
+    (
+        "ambrosia-dumosa",
+        include_str!("../species/ambrosia-dumosa.json"),
+    ),
+    (
+        "encelia-farinosa",
+        include_str!("../species/encelia-farinosa.json"),
+    ),
+    (
+        "simmondsia-chinensis",
+        include_str!("../species/simmondsia-chinensis.json"),
+    ),
+    (
+        "chilopsis-linearis",
+        include_str!("../species/chilopsis-linearis.json"),
+    ),
+    (
+        "fouquieria-splendens",
+        include_str!("../species/fouquieria-splendens.json"),
+    ),
+];
+
+/// Two trees of the African savanna (plant forms F5): the umbrella thorn
+/// acacia's flat crown and the baobab's bottle trunk.
+pub const SAVANNA_SPECIES: [(&str, &str); 2] = [
+    (
+        "vachellia-tortilis",
+        include_str!("../species/vachellia-tortilis.json"),
+    ),
+    (
+        "adansonia-digitata",
+        include_str!("../species/adansonia-digitata.json"),
+    ),
+];
+
 /// The gardens a world can grow beside the forest, by name: `sonoran`,
-/// the cacti then the rosettes; `palms`, the palms.
-pub const GARDENS: [&str; 2] = ["sonoran", "palms"];
+/// the cacti, the rosettes and the desert's trees and shrubs; `palms`, the
+/// palms; `savanna`, the savanna's trees.
+pub const GARDENS: [&str; 3] = ["sonoran", "palms", "savanna"];
 
 /// The species of the garden `name`, in planting order; `None` for an
 /// unknown garden.
@@ -564,10 +622,12 @@ pub fn garden(name: &str) -> Option<Vec<(&'static str, &'static str)>> {
             SONORAN_SPECIES
                 .iter()
                 .chain(ROSETTE_SPECIES.iter())
+                .chain(DESERT_SPECIES.iter())
                 .copied()
                 .collect(),
         ),
         "palms" => Some(PALM_SPECIES.to_vec()),
+        "savanna" => Some(SAVANNA_SPECIES.to_vec()),
         _ => None,
     }
 }
@@ -577,7 +637,9 @@ pub fn garden_species() -> impl Iterator<Item = (&'static str, &'static str)> {
     SONORAN_SPECIES
         .iter()
         .chain(ROSETTE_SPECIES.iter())
+        .chain(DESERT_SPECIES.iter())
         .chain(PALM_SPECIES.iter())
+        .chain(SAVANNA_SPECIES.iter())
         .copied()
 }
 
@@ -788,6 +850,9 @@ pub struct Appearance {
     /// Moss on thick wood.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub moss: Option<Moss>,
+    /// A swollen trunk (plant forms F5).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bottle: Option<crate::looks::Bottle>,
     /// How each fleshy body of the program looks, by body name: ribs,
     /// areoles, spines (see [`crate::body`]). Bodies not listed get the
     /// default look.

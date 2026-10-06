@@ -1,0 +1,101 @@
+# Cane: a clump of long, unbranched canes from one crown, after the
+# ocotillo of the Sonoran and Chihuahuan Deserts. Each year the crown may
+# send up new canes, cane_rate a year until there are `canes`, spread round
+# it and leaning out by up to cane_lean degrees, so the clump opens like a
+# vase. A cane grows along a Chapman-Richards curve toward cane_length,
+#
+#   l(a) = cane_length v (1 - exp(-cane_growth a))^1.5
+#
+# for its vigour v, each year's growth laid down as nodes 1 / node_rate
+# apart. At every node it carries a thorn, the hardened stalk of its first
+# leaf, and a cluster of small leaves beside it. The leaves stand only in a
+# year the whole plant is in leaf (after rain; an ocotillo drops its leaves
+# within weeks of drying out): a year t is leafy when
+#
+#   frac(43758.5453 sin(12.9898 t)) < leafy
+#
+# which is the same for every cane. In a year it blooms, with the chance
+# bloom for each cane old enough, a cane carries a panicle of red tubular
+# flowers at its tip. Canes sag a little under a tropism toward the ground.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem cane 1;
+
+param vigour_spread = 0.12;
+param canes = 30;             # canes in a mature clump
+param cane_rate = 4;          # new canes a year
+param cane_lean = 30;         # how far the outermost canes lean out
+param cane_length = 5;
+param cane_growth = 0.12;     # rate of the Chapman-Richards curve, a year
+param cane_radius = 0.025;    # radius at the foot; a third of it at the tip
+param sag = 0.004;            # tropism toward the ground along a cane
+param node_rate = 20;         # nodes a metre
+param thorn_length = 0.025;
+param thorn_angle = 55;       # angle of a thorn to its cane
+param leafy = 0.5;            # chance a year that the plant is in leaf
+param leaf_size = 0.035;
+param leaf_angle = 50;
+param bloom_age = 4;          # the first year a cane may bloom
+param bloom = 0.6;            # chance a year that an old enough cane blooms
+param flowers = 14;           # flowers in a panicle
+param flower_size = 0.025;
+param flower_angle = 35;
+param thorn_area = 0.02;
+param leaf_area = 0.24;
+param flower_area = 0.64;
+
+module Y(n, v);               # the crown: canes so far, vigour
+module Cs(k, m, v);           # canes k to k + m - 1 of this year's cohort
+module Ca(v, p);              # a cane's growing tip: vigour, its bloom phase
+module G(g, r);               # one year's growth of a cane, g long, r thick
+module Nd(i, m, g);           # nodes i to i + m - 1 of a year's growth g long
+module Lf;                    # the leaves at a node
+module Pn(i, m);              # flowers i to i + m - 1 of a cane's panicle
+
+organ thorn leaf area thorn_area;
+organ leaf leaf area leaf_area;
+organ flower flower area flower_area;
+
+# A short crown, thicker than any cane, that the canes rise from.
+axiom !(cane_radius * 2.5) F(0.06) Y(0, exp(gauss() * vigour_spread));
+
+# The crown sends up this year's canes.
+rule Y(n, v) : n < canes ->
+    Cs(n, min(canes - n, max(1, round(cane_rate * v))), v)
+    Y(n + min(canes - n, max(1, round(cane_rate * v))), v);
+
+decompose Cs(k, m, v) : m > 1 ->
+    Cs(k, floor(m / 2), v) Cs(k + floor(m / 2), m - floor(m / 2), v);
+decompose Cs(k, m, v) : m == 1 ->
+    [ /(k * 137.5 + uniform(-15, 15)) &(cane_lean * sqrt((k + 0.5) / canes) + uniform(0, 4))
+      T(0, -1, 0, sag) Ca(v * uniform(0.85, 1.15), rand()) ];
+decompose Cs(k, m, v) -> ;
+
+# A cane's tip lays down this year's growth.
+rule Ca(v, p) ->
+    G(cane_length * v * (pow(1 - exp(-cane_growth * (age + 1)), 1.5) - pow(1 - exp(-cane_growth * age), 1.5)),
+      cane_radius * (1 - 0.66 * pow(1 - exp(-cane_growth * age), 1.5)))
+    Ca(v, p);
+
+decompose G(g, r) -> !(r) Nd(0, max(1, round(g * node_rate)), g);
+decompose Nd(i, m, g) : m > 1 ->
+    Nd(i, floor(m / 2), g) Nd(i + floor(m / 2), m - floor(m / 2), g);
+decompose Nd(i, m, g) : m == 1 ->
+    F(g / max(1, round(g * node_rate))) /(137.5)
+    [ &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ] Lf;
+decompose Nd(i, m, g) -> ;
+
+# The leaves, in a leafy year.
+interpret Lf : frac(43758.5453 * sin(12.9898 * t)) < leafy ->
+    [ /(40) &(leaf_angle) leaf(leaf_size) ] [ /(-40) &(leaf_angle) leaf(leaf_size * 0.9) ]
+    [ /(110) &(leaf_angle) leaf(leaf_size * 0.8) ] [ /(-110) &(leaf_angle) leaf(leaf_size * 0.7) ];
+interpret Lf -> ;
+
+# The tip's panicle, in a year the cane blooms: its flowers only (no
+# wood), as they come and go with the year.
+interpret Ca(v, p) : age >= bloom_age && frac(43758.5453 * sin(12.9898 * t + 78.233 * p)) < bloom ->
+    Pn(0, max(1, round(flowers)));
+interpret Pn(i, m) : m > 1 -> Pn(i, floor(m / 2)) Pn(i + floor(m / 2), m - floor(m / 2));
+interpret Pn(i, m) ->
+    [ /(i * 137.5) &(flower_angle) f(flower_size * 0.3) flower(flower_size) ] f(flower_size * 0.25);

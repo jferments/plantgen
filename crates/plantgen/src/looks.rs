@@ -903,6 +903,44 @@ pub fn resolve<'a>(
         .collect()
 }
 
+/// A swollen stem (plant forms F5): a baobab's or a bottle tree's trunk.
+/// At height `h` below `height` the stem is `1 + amount * w(h / height)`
+/// times as thick, with `w(x) = max(0, 1 - ((x - peak) / s)^2)` and
+/// `s = max(peak, 1 - peak)`: thickest at the share `peak` of `height`.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct Bottle {
+    /// Height of the swollen part, metres.
+    pub height: f64,
+    /// How much thicker the stem is where it is thickest, as a fraction.
+    pub amount: f64,
+    /// Where it is thickest, as a share of `height`.
+    pub peak: f64,
+}
+
+impl Default for Bottle {
+    fn default() -> Self {
+        Self {
+            height: 6.0,
+            amount: 1.0,
+            peak: 0.3,
+        }
+    }
+}
+
+impl Bottle {
+    /// How much thicker the stem is `height` metres above the ground.
+    #[must_use]
+    pub fn factor(&self, height: f64) -> f64 {
+        if self.height <= 0.0 {
+            return 1.0;
+        }
+        let x = (height / self.height).max(0.0);
+        let span = self.peak.max(1.0 - self.peak).max(1.0e-3);
+        1.0 + self.amount * (1.0 - ((x - self.peak) / span).powi(2)).max(0.0)
+    }
+}
+
 /// A widened stem base: root flare and buttresses. At height `h` the stem
 /// is up to `1 + amount * exp(-h / height)` times as thick: all round, or
 /// with `ridge` above 0 most at its buttresses.
@@ -1115,6 +1153,19 @@ mod tests {
             ..Palmate::default()
         });
         assert!(bad.validate().unwrap_err().contains("3, 5, 7 or 9"));
+    }
+
+    #[test]
+    fn a_bottle_trunk_is_thickest_at_its_peak() {
+        let bottle = Bottle {
+            height: 10.0,
+            amount: 1.5,
+            peak: 0.3,
+        };
+        assert!((bottle.factor(3.0) - 2.5).abs() < 1e-12);
+        assert!(bottle.factor(0.0) > 1.0 && bottle.factor(0.0) < bottle.factor(3.0));
+        assert!((bottle.factor(10.0) - 1.0).abs() < 1e-12);
+        assert!((bottle.factor(20.0) - 1.0).abs() < 1e-12);
     }
 
     #[test]

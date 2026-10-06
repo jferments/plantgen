@@ -26,8 +26,8 @@ use after_plants::preview::{self, PreviewOptions, View};
 use after_plants::quality::{self, Quality};
 use after_plants::raster;
 use after_plants::spec::{
-    self, Environment, PALM_SPECIES, PROGRAMS, PlantSpec, ROSETTE_SPECIES, SONORAN_SPECIES,
-    SPECIES, Variant,
+    self, DESERT_SPECIES, Environment, PALM_SPECIES, PROGRAMS, PlantSpec, ROSETTE_SPECIES,
+    SAVANNA_SPECIES, SONORAN_SPECIES, SPECIES, Variant,
 };
 use after_plants::templates::{self, Templates};
 
@@ -241,7 +241,12 @@ fn list() -> Result<(), Failure> {
         ("Species of the forest:", &SPECIES[..]),
         ("Cacti of the Sonoran Desert:", &SONORAN_SPECIES[..]),
         ("Rosettes of the desert Southwest:", &ROSETTE_SPECIES[..]),
+        (
+            "Trees and shrubs of the Sonoran Desert:",
+            &DESERT_SPECIES[..],
+        ),
         ("Palms, a cycad and a tree fern:", &PALM_SPECIES[..]),
+        ("Trees of the African savanna:", &SAVANNA_SPECIES[..]),
     ] {
         out!("{title}");
         for (id, _) in catalogue {

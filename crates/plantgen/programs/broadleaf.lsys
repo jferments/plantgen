@@ -16,10 +16,16 @@
 # a spiral (alternate), as in alders, oaks and cherries. Leaves fall every
 # year or, on evergreens, stay leaf_years. Once old enough, short shoots in
 # the light carry flowers or fruit at their tips (blooms): blossoms, berry
-# clusters or hanging catkins, whichever look the species gives them. One
-# step is one year. Angles are degrees; lengths are metres.
+# clusters or hanging catkins, whichever look the species gives them.
+#
+# Revision 4 (plant forms F5): a thorny species (thorns 1) carries a thorn
+# beside each bud, thorn_length long at thorn_angle to its shoot. A tree
+# with a `life` dies at that age: its buds die and its leaves fall, and its
+# dead branches drop one by one, each with the chance snag_fall a year, so
+# it stands as a snag. One step is one year. Angles are degrees; lengths
+# are metres.
 
-lsystem broadleaf 3;
+lsystem broadleaf 4;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height = 22;
@@ -57,6 +63,12 @@ param wiggle = 0;             # spread of the random turn at each internode
 param fork_height = 0;        # height at which the stem divides; 0: never
 param fork_stems = 3;         # stems it divides into
 param fork_angle = 28;        # angle between the stem and each new stem
+param thorns = 0;             # 1: a thorn beside each bud
+param thorn_length = 0.02;
+param thorn_angle = 60;       # angle of a thorn to its shoot
+param thorn_area = 0.235;     # leaf area of a thorn card 1 m long, m² (the default leaf card's)
+param life = 0;               # age at which the plant dies; 0 never
+param snag_fall = 0.15;       # chance a year that a dead branch falls
 param pipe_tip = 0.004;       # radius of the twig behind one living bud
 param pipe_organ = 0.008;     # pipe radius per metre of leaf card
 param pipe_rings = 0.00002;   # ring area laid down per m² of leaf a year
@@ -81,6 +93,7 @@ module Bo(n);                             # n blooms still to place at a short s
 
 organ leaf leaf area leaf_area;
 organ bloom flower area bloom_area;
+organ thorn leaf area thorn_area;
 
 tool light@1 { cell = light_cell, extinction = extinction, bud = 0.01 };
 tool space@1 {
@@ -104,6 +117,10 @@ tool pipe@1 { exponent = 2.3, tip = pipe_tip, organ = pipe_organ, rings = pipe_r
 axiom !(0.004) T(0, -1, 0, droop) /(uniform(0, 360)) &(uniform(0, lean))
       A(fork_height * uniform(0.7, 1.3));
 
+# A plant past its life dies: its buds die.
+rule A(split) : life > 0 && t >= life -> ;
+rule B : life > 0 && t >= life -> ;
+
 # Buds die in deep shade.
 rule A(split) : light < shade_death -> ;
 rule B : light < shade_death || age >= bud_years -> ;
@@ -124,7 +141,7 @@ rule B : light >= spur_light -> P(spur_pairs) B;
 # One internode, turned a little at random, with a pair of buds and a pair
 # of leaves; the next pair is turned a quarter turn (decussate). Alternate
 # species grow theirs by the last rules of the program.
-decompose M(n) : n > 0 && alternate <= 0 ->
+decompose M(n) : n > 0 && alternate <= 0 && thorns <= 0 ->
     ^(gauss() * wiggle) +(gauss() * wiggle) F(internode)
     [ &(branch_angle) S B ] [ /(180) &(branch_angle) S B ]
     [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
@@ -153,8 +170,9 @@ decompose P(n) -> ;
 rule leaf(s) : age >= leaf_years -> ;
 rule bloom(s) : age >= 1 -> ;
 
-# A branch with no living bud is shed.
-rule S : age > 1 && ntip == 0 -> %;
+# A branch with no living bud is shed; on a dead plant, one by one (the
+# last rules).
+rule S : age > 1 && ntip == 0 && (life <= 0 || t < life) -> %;
 
 # Rules with random draws that later revisions add go last, so the draws of
 # the rules above keep their sites and species that do not use them grow as
@@ -162,7 +180,7 @@ rule S : age > 1 && ntip == 0 -> %;
 
 # An alternate species' internode: one bud and one leaf, the next turned
 # 137.5° on the spiral.
-decompose M(n) : n > 0 && alternate > 0 ->
+decompose M(n) : n > 0 && alternate > 0 && thorns <= 0 ->
     ^(gauss() * wiggle) +(gauss() * wiggle) F(internode)
     [ &(branch_angle) S B ] [ &(leaf_angle) $ leaf(leaf_size) ]
     /(137.5) M(n - 1);
@@ -173,3 +191,22 @@ decompose Bo(n) : n > 0 ->
       bloom(bloom_size * uniform(0.85, 1.15)) ]
     Bo(n - 1);
 decompose Bo(n) -> ;
+
+# Revision 4 (plant forms F5). A thorny species' internodes: as above, with
+# a thorn beside each bud.
+decompose M(n) : n > 0 && alternate <= 0 ->
+    ^(gauss() * wiggle) +(gauss() * wiggle) F(internode)
+    [ &(branch_angle) S B ] [ /(180) &(branch_angle) S B ]
+    [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
+    [ /(90) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
+    [ /(270) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
+    /(90) M(n - 1);
+decompose M(n) : n > 0 && alternate > 0 ->
+    ^(gauss() * wiggle) +(gauss() * wiggle) F(internode)
+    [ &(branch_angle) S B ] [ &(leaf_angle) $ leaf(leaf_size) ]
+    [ /(70) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
+    [ /(-70) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
+    /(137.5) M(n - 1);
+
+# A dead plant's branches fall one by one.
+rule S : age > 1 && ntip == 0 && rand() < snag_fall -> %;

@@ -29,7 +29,7 @@ use serde::{Deserialize, Serialize};
 use crate::bend::Bend;
 use crate::body::{self, BodyLook};
 use crate::graph::{GraphOrgan, PlantGraph};
-use crate::looks::{Flare, Look, Moss, Mount, Ridges};
+use crate::looks::{Bottle, Flare, Look, Moss, Mount, Ridges};
 use crate::math::{self, Vec3, any_perpendicular};
 use crate::rng::{mix64, unit};
 use crate::spec::Appearance;
@@ -466,6 +466,8 @@ struct Bark<'a> {
     /// The stem's flare and the angle its buttresses start from; only on
     /// the plant's first axis.
     flare: Option<(&'a Flare, f64)>,
+    /// The stem's swelling; only on the plant's first axis.
+    bottle: Option<&'a Bottle>,
     /// Furrows: the ridges, how many round this axis, and their contrast.
     ridges: Option<(&'a Ridges, f64)>,
     moss: Option<&'a Moss>,
@@ -479,6 +481,7 @@ impl<'a> Bark<'a> {
     fn new(
         appearance: &'a Appearance,
         flare: Option<&'a Flare>,
+        bottle: Option<&'a Bottle>,
         radius: f64,
         sides: u32,
         id: u64,
@@ -493,6 +496,7 @@ impl<'a> Bark<'a> {
         Self {
             colour: appearance.bark,
             flare: flare.map(|flare| (flare, unit(mix64(id ^ 0xF1A2)) * 2.0 * math::PI)),
+            bottle,
             ridges,
             moss: appearance.moss.as_ref(),
             phase: (
@@ -519,6 +523,9 @@ impl<'a> Bark<'a> {
                 1.0
             };
             r *= 1.0 + flare.amount * fade * (1.0 - flare.ridge * (1.0 - buttress));
+        }
+        if let Some(bottle) = self.bottle {
+            r *= bottle.factor(height);
         }
         let mut furrow = 0.0;
         if let Some((ridges, count)) = self.ridges {
@@ -630,14 +637,16 @@ fn wood(graph: &PlantGraph, appearance: &Appearance, lod: &LodSpec, out: &mut Me
         if let Some(flare) = flare {
             kept = flare_rings(&kept, flare);
         }
+        let bottle = appearance.bottle.as_ref().filter(|_| root);
 
-        let base_radius =
-            kept[0].radius.max(1e-4) * (1.0 + flare.map_or(0.0, |flare| flare.amount));
+        let base_radius = kept[0].radius.max(1e-4)
+            * (1.0 + flare.map_or(0.0, |flare| flare.amount))
+            * (1.0 + bottle.map_or(0.0, |bottle| bottle.amount));
         let around = 2.0 * math::PI * base_radius / lod.ring_edge.max(1e-4);
         // Clamped to a small whole number of sides.
         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
         let sides = (around.ceil() as u32).clamp(lod.min_sides.max(3), lod.max_sides.max(3));
-        let bark = Bark::new(appearance, flare, kept[0].radius, sides, segment.id);
+        let bark = Bark::new(appearance, flare, bottle, kept[0].radius, sides, segment.id);
         let level = match segment.order {
             0 => 0,
             1 => 1,
@@ -1157,6 +1166,7 @@ mod tests {
             ridges: None,
             flare: None,
             moss: None,
+            bottle: None,
             bodies: BTreeMap::new(),
         }
     }

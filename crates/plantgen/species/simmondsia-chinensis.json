@@ -1,0 +1,116 @@
+{
+  "schema": 1,
+  "id": "simmondsia-chinensis",
+  "taxon": {
+    "scientific_name": "Simmondsia chinensis",
+    "common_name": "jojoba",
+    "usda_symbol": "SICH"
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_base": 0,
+      "fork_height": 0.03,
+      "alternate": 0,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 10,
+      "crown_height": 1.6,
+      "crown_radius": 1.0,
+      "crown_rate": 0.22,
+      "space_density": 384.0,
+      "internode": 0.05,
+      "branch_angle": 40,
+      "bud_years": 8,
+      "leaf_size": 0.06,
+      "spur_leaf": 0.055,
+      "spur_pairs": 2,
+      "leaf_angle": 35,
+      "leaf_years": 3,
+      "fork_stems": 10,
+      "fork_angle": 30,
+      "pipe_tip": 0.0012,
+      "pipe_organ": 0.002,
+      "pipe_rings": 2e-06,
+      "space_reach": 0.68,
+      "space_kill": 0.168,
+      "leaf_area": 0.275
+    }
+  },
+  "growth": {
+    "years": 40,
+    "step": 1,
+    "keyframes": [3, 10, 40]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3]
+  },
+  "appearance": {
+    "bark": [0.5, 0.46, 0.38],
+    "foliage": [0.35, 0.43, 0.33],
+    "foliage_shade": [0.1225, 0.1505, 0.1155],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "width": 0.45,
+          "widest": 0.5,
+          "tip": 0.6,
+          "base": 0.6,
+          "teeth": 0,
+          "petiole": 0.02
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 10,
+      "environment": "open",
+      "height": 1.1,
+      "tolerance": 0.5
+    },
+    {
+      "age": 40,
+      "environment": "open",
+      "height": 1.6,
+      "tolerance": 0.45
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a dense, rounded evergreen shrub 1 to 2 m tall with stiff, leathery, oblong grey-green leaves in opposite pairs held nearly upright, edge to the midday sun. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 1.1 m at 10 years and 1.6 m at 40. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: dull grey-green leaves."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F5). Calibration against measurements and photographs comes later."
+  }
+}
