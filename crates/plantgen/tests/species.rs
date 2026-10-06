@@ -236,3 +236,46 @@ fn growth_history_is_consistent_between_keyframes() {
         }
     }
 }
+
+/// Every conifer bears cones once old enough and none as a sapling, each
+/// cone within a span of its species' length (plant forms F3).
+#[test]
+fn conifers_bear_cones_once_old() {
+    let mut checked = 0;
+    for (id, _) in spec::all_species() {
+        let spec = PlantSpec::builtin(id).unwrap();
+        if spec.generator.program != "conifer" {
+            continue;
+        }
+        checked += 1;
+        let variant = spec.variant_list()[0];
+        let oldest = *spec.growth.keyframes.last().unwrap();
+        let growth = grow_variant(&spec, &variant, oldest, vec![5.0, oldest]);
+        let cone = growth
+            .organ_types
+            .iter()
+            .position(|organ| organ.name == "cone")
+            .unwrap_or_else(|| panic!("{id}: no cone organ"));
+        let cones = |graph: &PlantGraph| {
+            graph
+                .organs
+                .iter()
+                .filter(|organ| usize::from(organ.organ) == cone)
+                .map(|organ| organ.size)
+                .collect::<Vec<f64>>()
+        };
+        assert!(
+            cones(&growth.keyframes[0]).is_empty(),
+            "{id}: cones on a sapling"
+        );
+        let old = cones(&growth.keyframes[1]);
+
+        assert!(!old.is_empty(), "{id}: no cones at {oldest} years");
+        assert!(
+            old.iter().all(|&size| size > 0.005 && size < 0.3),
+            "{id}: cone sizes {:?}",
+            &old[..old.len().min(5)]
+        );
+    }
+    assert_eq!(checked, 10, "the ten conifers");
+}

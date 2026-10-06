@@ -672,6 +672,7 @@ pub(crate) fn organ_templates(shapes: &[Shape]) -> Templates {
             // Litter lies flat: its pieces are drawn into the ground's
             // textures, never as bent cards.
             bend: crate::bend::Bend::FLAT,
+            form: crate::blooms::Form::Card,
         })
         .collect();
     Templates::for_looks(&looks)

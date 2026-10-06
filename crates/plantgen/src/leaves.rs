@@ -261,19 +261,19 @@ pub fn detail_of(detail: usize, length: f64, width: f64) -> (usize, usize) {
 }
 
 /// One leaf to draw.
-struct Leaf {
-    base: Vec3,
-    heading: Vec3,
-    left: Vec3,
-    length: f64,
-    width: f64,
-    colour: [f32; 3],
-    born: f64,
-    shed: Option<f64>,
+pub(crate) struct Leaf {
+    pub(crate) base: Vec3,
+    pub(crate) heading: Vec3,
+    pub(crate) left: Vec3,
+    pub(crate) length: f64,
+    pub(crate) width: f64,
+    pub(crate) colour: [f32; 3],
+    pub(crate) born: f64,
+    pub(crate) shed: Option<f64>,
 }
 
 impl Leaf {
-    fn vertex(&self, position: Vec3, colour: [f32; 3]) -> Vertex {
+    pub(crate) fn vertex(&self, position: Vec3, colour: [f32; 3]) -> Vertex {
         Vertex {
             position,
             normal: Vec3::Y,
@@ -285,7 +285,7 @@ impl Leaf {
         }
     }
 
-    fn draw(&self, solid: &SolidLeaf, stations: usize, across: usize, mesh: &mut Mesh) {
+    pub(crate) fn draw(&self, solid: &SolidLeaf, stations: usize, across: usize, mesh: &mut Mesh) {
         if !(self.length > 0.0 && self.width > 0.0) {
             return;
         }
@@ -445,7 +445,7 @@ impl Leaf {
 
 /// A three-sided cone from `base` along `tangent`.
 #[allow(clippy::too_many_arguments)]
-fn cone(
+pub(crate) fn cone(
     leaf: &Leaf,
     base: Vec3,
     tangent: Vec3,
@@ -476,7 +476,7 @@ fn shade(colour: [f32; 3], factor: f32) -> [f32; 3] {
 
 /// Normals of the vertices from `first`, as the area-weighted sum of the
 /// faces from `first_index` that use them.
-fn smooth_normals(mesh: &mut Mesh, first: usize, first_index: usize) {
+pub(crate) fn smooth_normals(mesh: &mut Mesh, first: usize, first_index: usize) {
     let count = mesh.positions.len() - first;
     let mut sums = vec![Vec3::ZERO; count];
     let position = |index: u32| {

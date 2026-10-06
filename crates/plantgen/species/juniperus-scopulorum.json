@@ -10,6 +10,12 @@
   "generator": {
     "program": "conifer",
     "params": {
+      "cone_age": 10,
+      "cone_chance": 0.25,
+      "cone_length": 0.007,
+      "cone_pitch": 90,
+      "cone_years": 2,
+      "cone_area": 1.27,
       "height_max": 10,
       "height_rate": 0.04,
       "height_shape": 1.2,
@@ -48,6 +54,10 @@
     "foliage_shade": [0.025, 0.04, 0.03],
     "variation": 0.2,
     "organs": {
+      "cone": {
+        "shape": {"template": "fruit", "aspect": 1.0},
+        "colour": [0.3, 0.38, 0.55]
+      },
       "spray": {
         "shape": { "template": "scales", "branchlets": 5, "angle": 40, "cord": 0.025, "aspect": 0.7 }
       }
@@ -72,7 +82,7 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
-      "note": "Hand-set from general knowledge of the species: a small, bushy tree with a rounded crown of upswept branches and fine sprays of overlapping scale leaves. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a small, bushy tree with a rounded crown of upswept branches and fine sprays of overlapping scale leaves. Not fitted to measurements. Cones (plant forms F3): berry-like cones about 6 mm, blue under a pale bloom; set from general knowledge of the species, not measured."
     },
     "allometry": {
       "evidence": "Authored",

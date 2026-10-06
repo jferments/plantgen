@@ -10,6 +10,12 @@
   "generator": {
     "program": "conifer",
     "params": {
+      "cone_age": 15,
+      "cone_chance": 0.12,
+      "cone_length": 0.075,
+      "cone_pitch": 110,
+      "cone_years": 1,
+      "cone_area": 0.589,
       "height_max": 70,
       "height_rate": 0.018,
       "height_shape": 1.5,
@@ -39,6 +45,10 @@
     "foliage_shade": [0.018, 0.045, 0.02],
     "variation": 0.2,
     "organs": {
+      "cone": {
+        "shape": {"template": "fruit", "aspect": 0.45, "cone": 1},
+        "colour": [0.5, 0.35, 0.2]
+      },
       "spray": {
         "shape": {
           "template": "needles",
@@ -83,7 +93,7 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
-      "note": "Hand-set to give a plausible Douglas-fir: annual whorls of about five branches, upper branches swept up and lower ones level to drooping with upturned tips, a stiff leader, foliage kept about six years, height near 35 m at 50 years on a good site. Spray area matched to the drawn needle sprays. Not fitted to data."
+      "note": "Hand-set to give a plausible Douglas-fir: annual whorls of about five branches, upper branches swept up and lower ones level to drooping with upturned tips, a stiff leader, foliage kept about six years, height near 35 m at 50 years on a good site. Spray area matched to the drawn needle sprays. Not fitted to data. Cones (plant forms F3): 5 to 10 cm hang, with three-pointed bracts between the scales; set from general knowledge of the species, not measured."
     },
     "allometry": {
       "evidence": "Authored",

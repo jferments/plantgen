@@ -10,6 +10,12 @@
   "generator": {
     "program": "conifer",
     "params": {
+      "cone_age": 15,
+      "cone_chance": 0.1,
+      "cone_length": 0.11,
+      "cone_pitch": 90,
+      "cone_years": 2,
+      "cone_area": 0.785,
       "height_max": 45,
       "height_rate": 0.022,
       "height_shape": 1.4,
@@ -44,6 +50,10 @@
     "foliage_shade": [0.02, 0.04, 0.015],
     "variation": 0.2,
     "organs": {
+      "cone": {
+        "shape": {"template": "fruit", "aspect": 0.6, "cone": 1},
+        "colour": [0.45, 0.32, 0.2]
+      },
       "spray": {
         "shape": {
           "template": "needles",
@@ -76,7 +86,7 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
-      "note": "Hand-set from general knowledge of the species: a large pine with an open, rounded crown, stout branches and long needles in bundles of three, tufted at the twig ends. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a large pine with an open, rounded crown, stout branches and long needles in bundles of three, tufted at the twig ends. Not fitted to measurements. Cones (plant forms F3): 8 to 14 cm, spreading to hanging; set from general knowledge of the species, not measured."
     },
     "allometry": {
       "evidence": "Authored",

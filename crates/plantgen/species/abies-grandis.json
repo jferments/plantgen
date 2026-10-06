@@ -10,6 +10,12 @@
   "generator": {
     "program": "conifer",
     "params": {
+      "cone_age": 20,
+      "cone_chance": 0.12,
+      "cone_length": 0.09,
+      "cone_pitch": -70,
+      "cone_years": 1,
+      "cone_area": 0.524,
       "height_max": 60,
       "height_rate": 0.02,
       "height_shape": 1.5,
@@ -43,6 +49,10 @@
     "foliage_shade": [0.015, 0.045, 0.015],
     "variation": 0.2,
     "organs": {
+      "cone": {
+        "shape": {"template": "fruit", "aspect": 0.4, "cone": 1},
+        "colour": [0.35, 0.3, 0.2]
+      },
       "spray": {
         "shape": {
           "template": "needles",
@@ -75,7 +85,7 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
-      "note": "Hand-set from general knowledge of the species: a tall fir with a narrow, domed crown, level branches and flat sprays of long, glossy needles in two ranks. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a tall fir with a narrow, domed crown, level branches and flat sprays of long, glossy needles in two ranks. Not fitted to measurements. Cones (plant forms F3): 6 to 11 cm stand upright on the top branches and shed their scales on the tree; set from general knowledge of the species, not measured."
     },
     "allometry": {
       "evidence": "Authored",

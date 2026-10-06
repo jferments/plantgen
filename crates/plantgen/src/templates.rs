@@ -1440,6 +1440,7 @@ mod tests {
                     face_up: 0.0,
                     solid: None,
                     bend: None,
+                    form: None,
                 },
             );
         }

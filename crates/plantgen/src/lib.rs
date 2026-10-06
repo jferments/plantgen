@@ -20,6 +20,7 @@
 //! ([`math`]).
 
 pub mod bend;
+pub mod blooms;
 pub mod body;
 pub mod graph;
 pub mod ground;
@@ -49,4 +50,4 @@ pub mod templates;
 /// far levels are not denser than near ones. 5: leaf, blade and frond
 /// cards bend where they are drawn one per organ (plant forms F2), which
 /// changes the impostors and the atlas records.
-pub const GENERATOR_REVISION: u32 = 5;
+pub const GENERATOR_REVISION: u32 = 6;

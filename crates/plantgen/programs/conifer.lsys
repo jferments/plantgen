@@ -10,6 +10,13 @@
 # in cedars and hemlocks; side shoots may branch again; and the foliage
 # sprays may hang below their shoots.
 #
+# From cone_age, a branch apex in good light bears a cone (a seed cone,
+# or a juniper's berry-like cone) with the chance cone_chance a year,
+# cone_length long and pitched cone_pitch degrees down from its shoot
+# (hanging, as in spruces; negative stands it up, as in firs), the shoot
+# first rolled level. A cone
+# stays cone_years.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
 lsystem conifer 2;
@@ -50,6 +57,13 @@ param spray_area = 0.3;        # leaf area of a spray 1 m long, m²
 param pipe_tip = 0.003;        # radius of the twig behind one living apex
 param pipe_organ = 0.012;      # pipe radius per metre of spray
 param pipe_rings = 0.000016;   # ring area laid down per m² of foliage a year
+param cone_age = 20;           # the first year the tree bears cones
+param cone_chance = 0.1;       # chance a year a well-lit branch apex bears one
+param cone_light = 0.4;        # least light at an apex that bears
+param cone_length = 0.08;
+param cone_pitch = 100;        # degrees down from the shoot; negative stands it up
+param cone_years = 2;          # years a cone stays on the tree
+param cone_area = 0.55;        # area a cone 1 m long draws, m² (its template's)
 
 module A queries light;                 # the leader's apex
 module N;                               # nods a young leader shoot over
@@ -62,8 +76,10 @@ module I(n);                            # interwhorl branches still to be formed
 module G(order, length);                # this year's shoot
 module L(order);                        # a possible side shoot on the left
 module R(order);                        # and on the right
+module Z(light);                        # a cone, perhaps, at a branch apex
 
 organ spray foliage area spray_area;
+organ cone cone area cone_area;
 
 tool light@1 { cell = 0.4, extinction = 0.35, bud = 0.01 };
 tool vigour@1 { lambda = 0.7, alpha = 2 };
@@ -104,7 +120,7 @@ rule C(o, v, s) : branch_growth * v * pow(side_growth, o - 1) * pow(branch_agein
                   * (0.3 + 0.7 * light) < min_shoot -> ;
 rule C(o, v, s) -> G(o, branch_growth * v * pow(side_growth, o - 1) * pow(branch_ageing, age)
                         * (0.3 + 0.7 * light))
-                   C(o, v, light < shade_death ? s + 1 : 0);
+                   Z(light) C(o, v, light < shade_death ? s + 1 : 0);
 
 # One year's leader shoot: its foliage, with the interwhorl branches halfway.
 decompose G(o, l) : o == 0 ->
@@ -127,6 +143,13 @@ decompose R(o) -> ;
 
 # Foliage falls after needle_years.
 rule spray(s) : age >= needle_years -> ;
+
+# A well-lit apex of a tree old enough bears a cone, which falls after
+# cone_years.
+decompose Z(l) : t >= cone_age && l >= cone_light && rand() < cone_chance ->
+    [ $ /(uniform(-20, 20)) &(cone_pitch + uniform(-15, 15)) cone(cone_length * uniform(0.85, 1.15)) ];
+decompose Z(l) -> ;
+rule cone(s) : age >= cone_years -> ;
 
 # A branch with no living apex dies, and falls dead_years later.
 rule S : age > 2 && ntip == 0 -> K;

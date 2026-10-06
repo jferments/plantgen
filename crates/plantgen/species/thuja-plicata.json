@@ -10,6 +10,12 @@
   "generator": {
     "program": "conifer",
     "params": {
+      "cone_age": 15,
+      "cone_chance": 0.15,
+      "cone_length": 0.012,
+      "cone_pitch": -40,
+      "cone_years": 1,
+      "cone_area": 0.72,
       "height_max": 60,
       "height_rate": 0.016,
       "height_shape": 1.4,
@@ -41,6 +47,10 @@
     "foliage_shade": [0.02, 0.05, 0.015],
     "variation": 0.2,
     "organs": {
+      "cone": {
+        "shape": {"template": "fruit", "aspect": 0.55, "cone": 1},
+        "colour": [0.5, 0.35, 0.2]
+      },
       "spray": {
         "shape": {
           "template": "scales"
@@ -80,7 +90,7 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
-      "note": "Hand-set for a western redcedar: a leader that nods over and straightens, branches that sweep down and turn up at the tips, flat scale-leaved sprays hanging below them, foliage kept about five years. Spray area matched to the drawn sprays. Not fitted to data."
+      "note": "Hand-set for a western redcedar: a leader that nods over and straightens, branches that sweep down and turn up at the tips, flat scale-leaved sprays hanging below them, foliage kept about five years. Spray area matched to the drawn sprays. Not fitted to data. Cones (plant forms F3): about 1 cm, upright, in clusters; set from general knowledge of the species, not measured."
     },
     "allometry": {
       "evidence": "Authored",

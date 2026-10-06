@@ -29,12 +29,12 @@ use serde::{Deserialize, Serialize};
 use crate::bend::Bend;
 use crate::body::{self, BodyLook};
 use crate::graph::{GraphOrgan, PlantGraph};
-use crate::leaves;
 use crate::looks::{Flare, Look, Moss, Mount, Ridges};
 use crate::math::{self, Vec3, any_perpendicular};
 use crate::rng::{mix64, unit};
 use crate::spec::Appearance;
 use crate::spines::Tuft;
+use crate::{blooms, leaves};
 
 /// One drawable surface: wood or organ cards.
 #[derive(Debug, Clone, Default, PartialEq)]
@@ -326,16 +326,24 @@ pub fn build(
 ) -> PlantMesh {
     let mut mesh = PlantMesh::default();
     wood(graph, appearance, lod, &mut mesh.wood);
-    // Organs drawn as solid leaves at this level leave the cards.
-    let solid = leaves::solid_types(looks, level);
+    // Organs drawn as solid leaves, flowers or fruit at this level leave
+    // the cards.
+    let mut solid = leaves::solid_types(looks, level);
+    let blooms: Vec<bool> = looks
+        .iter()
+        .enumerate()
+        .map(|(index, look)| {
+            look.solid.is_none() && look.form.solid_at(level) && blooms::fits(graph, look, index)
+        })
+        .collect();
+    for (solid, bloom) in solid.iter_mut().zip(&blooms) {
+        *solid |= *bloom;
+    }
     let variation = appearance.variation;
-    leaves::build(
-        graph,
-        looks,
-        level,
-        &|look, organ| organ_color(look, variation, organ.light, organ.id),
-        &mut mesh.wood,
-    );
+    let colour =
+        |look: &Look, organ: &GraphOrgan| organ_color(look, variation, organ.light, organ.id);
+    leaves::build(graph, looks, level, &colour, &mut mesh.wood);
+    blooms::build(graph, looks, &blooms, &colour, &mut mesh.wood);
     mesh.cards = cards(graph, looks, &solid, appearance.variation, lod);
     // Bent cards first, so a renderer draws them as one range.
     let (mut bent, flat): (Vec<Card>, Vec<Card>) =
@@ -1551,6 +1559,7 @@ mod tests {
             face_up,
             solid: None,
             bend: None,
+            form: None,
         }
     }
 
@@ -1578,11 +1587,12 @@ mod tests {
 
     #[test]
     fn flowers_face_along_their_heading_centred_on_the_organ() {
-        let cards = one_organ(
-            look(Shape::Flower(Flower::default()), 0.0),
-            Vec3::Y,
-            Vec3::X,
-        );
+        // Drawn as a card (a flower's default form is solid up close).
+        let flower = OrganLook {
+            form: Some(crate::blooms::Form::Card),
+            ..look(Shape::Flower(Flower::default()), 0.0)
+        };
+        let cards = one_organ(flower, Vec3::Y, Vec3::X);
         assert_eq!(cards.len(), 1);
         let card = cards[0];
         let normal = vector(card.heading).cross(vector(card.left));

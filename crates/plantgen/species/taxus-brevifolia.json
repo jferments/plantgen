@@ -10,6 +10,12 @@
   "generator": {
     "program": "conifer",
     "params": {
+      "cone_age": 20,
+      "cone_chance": 0.15,
+      "cone_length": 0.008,
+      "cone_pitch": 90,
+      "cone_years": 1,
+      "cone_area": 1.143,
       "height_max": 14,
       "height_rate": 0.025,
       "height_shape": 1.2,
@@ -50,6 +56,10 @@
     "foliage_shade": [0.01, 0.03, 0.012],
     "variation": 0.2,
     "organs": {
+      "cone": {
+        "shape": {"template": "fruit", "aspect": 0.9},
+        "colour": [0.75, 0.08, 0.06]
+      },
       "spray": {
         "shape": {
           "template": "needles",
@@ -82,7 +92,7 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
-      "note": "Hand-set from general knowledge of the species: a small, slow, often crooked understory tree with long, drooping branches and flat sprays of soft, pointed needles. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a small, slow, often crooked understory tree with long, drooping branches and flat sprays of soft, pointed needles. Not fitted to measurements. Cones (plant forms F3): seeds in a red fleshy aril about 8 mm; set from general knowledge of the species, not measured."
     },
     "allometry": {
       "evidence": "Authored",

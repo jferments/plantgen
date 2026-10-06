@@ -53,6 +53,10 @@ pub struct OrganLook {
     /// organ (`crate::bend`); the shape's default if absent.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bend: Option<crate::bend::Bend>,
+    /// How a flower, head or fruit is drawn as a solid on the nearest
+    /// levels of detail (`crate::blooms`); the shape's default if absent.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub form: Option<crate::blooms::Form>,
 }
 
 // Serde's `skip_serializing_if` passes a reference.
@@ -836,6 +840,7 @@ pub struct Look {
     pub face_up: f64,
     pub solid: Option<crate::leaves::SolidLeaf>,
     pub bend: crate::bend::Bend,
+    pub form: crate::blooms::Form,
 }
 
 impl Look {
@@ -877,11 +882,16 @@ pub fn resolve<'a>(
                     bend: look
                         .bend
                         .unwrap_or_else(|| crate::bend::Bend::default_for(&look.shape)),
+                    form: look
+                        .form
+                        .clone()
+                        .unwrap_or_else(|| crate::blooms::Form::default_for(&look.shape)),
                 }
             }
             None => Look {
                 organ: name.to_string(),
                 bend: crate::bend::Bend::default_for(&Shape::default_for(kind)),
+                form: crate::blooms::Form::default_for(&Shape::default_for(kind)),
                 shape: Shape::default_for(kind),
                 colour: foliage,
                 shade: foliage_shade,
@@ -1121,6 +1131,7 @@ mod tests {
                 face_up: 0.0,
                 solid: None,
                 bend: None,
+                form: None,
             },
         );
         let green = [0.1, 0.3, 0.05];
