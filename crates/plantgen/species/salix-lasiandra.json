@@ -76,6 +76,9 @@
           "tooth_depth": 0.005,
           "petiole": 0.08
         },
+        "families": {
+          "plasticity": 0.2
+        },
         "accent": [0.4, 0.35, 0.15]
       }
     },
@@ -106,7 +109,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: glossy green leaves; dark, furrowed bark. Bark pattern (plant roadmap P4, `bark_pattern`): dark grey-brown bark furrowed into flat interlacing ridges; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: glossy green leaves; dark, furrowed bark. Bark pattern (plant roadmap P4, `bark_pattern`): dark grey-brown bark furrowed into flat interlacing ridges; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): a sun-loving willow whose leaves change little with light; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
     }
   },
   "provenance": {

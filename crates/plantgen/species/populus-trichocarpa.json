@@ -77,6 +77,9 @@
           "tooth_depth": 0.01,
           "petiole": 0.3
         },
+        "families": {
+          "plasticity": 0.4
+        },
         "accent": [0.35, 0.3, 0.15]
       }
     },
@@ -108,7 +111,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: dark, glossy leaves; grey bark, deeply furrowed with age. Bark pattern (plant roadmap P4, `bark_pattern`): smooth grey-green when young, deeply furrowed and dark grey when old; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: dark, glossy leaves; grey bark, deeply furrowed with age. Bark pattern (plant roadmap P4, `bark_pattern`): smooth grey-green when young, deeply furrowed and dark grey when old; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves somewhat smaller and narrower than shade leaves; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
     }
   },
   "provenance": {

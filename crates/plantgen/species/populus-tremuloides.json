@@ -69,6 +69,9 @@
           "tooth_depth": 0.01,
           "petiole": 0.35
         },
+        "families": {
+          "plasticity": 0.4
+        },
         "accent": [0.4, 0.4, 0.2]
       }
     }
@@ -94,7 +97,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: bright green leaves; smooth, chalky white bark with dark scars. Bark pattern (plant roadmap P4, `bark_pattern`): smooth whitish bark with dark marks and lenticels; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: bright green leaves; smooth, chalky white bark with dark scars. Bark pattern (plant roadmap P4, `bark_pattern`): smooth whitish bark with dark marks and lenticels; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves somewhat smaller and narrower than shade leaves; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
     }
   },
   "provenance": {

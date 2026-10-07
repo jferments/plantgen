@@ -46,6 +46,7 @@ pub mod shoots;
 pub mod spec;
 pub mod spines;
 pub mod templates;
+pub mod venation;
 
 /// Revision of the generator as a whole: the L-system engine, its tools and
 /// the bakers. Bump it whenever output for an unchanged spec changes; it is
@@ -62,5 +63,7 @@ pub mod templates;
 /// package stores their part meshes. 9: needle sprays are solid shoots on
 /// the nearest level (`crate::shoots`), and each part mesh stores its span
 /// (`APPARTS2`). 10: bark vertices carry the stem's radius in their
-/// colour's alpha, for the species' bark pattern (`crate::bark`).
-pub const GENERATOR_REVISION: u32 = 10;
+/// colour's alpha, for the species' bark pattern (`crate::bark`). 11: leaf
+/// templates draw their veins grown by space colonization
+/// (`crate::venation`).
+pub const GENERATOR_REVISION: u32 = 11;

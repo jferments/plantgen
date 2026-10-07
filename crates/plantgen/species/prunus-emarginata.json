@@ -74,6 +74,9 @@
           "tooth_depth": 0.01,
           "petiole": 0.1
         },
+        "families": {
+          "plasticity": 0.3
+        },
         "accent": [0.4, 0.2, 0.12]
       },
       "bloom": {
@@ -137,7 +140,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: green leaves; smooth, shiny reddish-brown bark. Fruit (plant roadmap P4), as in mid-July: corymbs of bright red cherries about 1 cm across, a few still green. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: white flowers in April and May; cherries red in July, gone by early September. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth reddish-brown bark with prominent horizontal lenticels; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: green leaves; smooth, shiny reddish-brown bark. Fruit (plant roadmap P4), as in mid-July: corymbs of bright red cherries about 1 cm across, a few still green. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: white flowers in April and May; cherries red in July, gone by early September. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth reddish-brown bark with prominent horizontal lenticels; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves a little smaller and narrower than shade leaves; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
     }
   },
   "provenance": {

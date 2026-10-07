@@ -73,6 +73,9 @@
           "spread": 1.05,
           "petiole": 0.42
         },
+        "families": {
+          "plasticity": 0.6
+        },
         "accent": [0.25, 0.3, 0.06],
         "face_up": 0.35
       },
@@ -155,7 +158,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye from photographs. Leaf: five deep, sparsely toothed lobes on a long petiole. Bark: shallow twisting ridges, a buttressed base and moss on the upper side of thick limbs, as on coastal trees. Fruit (plant roadmap P4), as in mid-July: hanging racemes of paired samaras about 4 cm long, green and bristly at the seed. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: hanging racemes of yellow-green flowers in April; samaras green all summer, brown in September and October, falling into the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth when young, then grey-brown and shallowly furrowed into narrow interlacing ridges; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye from photographs. Leaf: five deep, sparsely toothed lobes on a long petiole. Bark: shallow twisting ridges, a buttressed base and moss on the upper side of thick limbs, as on coastal trees. Fruit (plant roadmap P4), as in mid-July: hanging racemes of paired samaras about 4 cm long, green and bristly at the seed. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: hanging racemes of yellow-green flowers in April; samaras green all summer, brown in September and October, falling into the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth when young, then grey-brown and shallowly furrowed into narrow interlacing ridges; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves smaller and more deeply lobed than the large thin shade leaves inside the crown; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
     }
   },
   "provenance": {

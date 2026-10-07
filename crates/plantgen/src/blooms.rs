@@ -854,6 +854,7 @@ mod tests {
                     bend: None,
                     form: Some(Form::Thorn),
                     season: None,
+                    families: None,
                 },
             )]),
             [0.3; 3],

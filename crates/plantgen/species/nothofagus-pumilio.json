@@ -79,6 +79,9 @@
           "teeth": 8,
           "tooth_depth": 0.05,
           "petiole": 0.08
+        },
+        "families": {
+          "plasticity": 0.5
         }
       }
     },
@@ -115,7 +118,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye from photographs: fresh green leaves, grey bark. Bark pattern (plant roadmap P4, `bark_pattern`): dark grey bark with lenticels, smooth when young and fissured on old trees; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye from photographs: fresh green leaves, grey bark. Bark pattern (plant roadmap P4, `bark_pattern`): dark grey bark with lenticels, smooth when young and fissured on old trees; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves smaller and narrower than shade leaves; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
     }
   },
   "provenance": {

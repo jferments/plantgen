@@ -80,6 +80,25 @@
           "base": 0.6,
           "teeth": 0,
           "petiole": 0.1
+        },
+        "families": {
+          "plasticity": 0.3,
+          "juvenile": {
+            "until": 8,
+            "shape": {
+              "template": "sprig",
+              "leaves": 9,
+              "angle": 45,
+              "stalk": 0.08,
+              "width": 0.5,
+              "widest": 0.45,
+              "tip": 0.3,
+              "base": 0.6,
+              "teeth": 14,
+              "tooth_depth": 0.03,
+              "petiole": 0.1
+            }
+          }
         }
       },
       "bloom": {
@@ -136,7 +155,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: glossy dark green leaves; smooth, peeling orange-red bark. Fruit (plant roadmap P4), as in mid-July: drooping panicles of pebbly berries about 1 cm across, still yellow-green, a few turning orange. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: white urn-shaped flowers in April and May; berries green in summer, orange-red from October, eaten into the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): red-brown bark peeling in thin papery flakes from smooth greenish-tan inner bark; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: glossy dark green leaves; smooth, peeling orange-red bark. Fruit (plant roadmap P4), as in mid-July: drooping panicles of pebbly berries about 1 cm across, still yellow-green, a few turning orange. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: white urn-shaped flowers in April and May; berries green in summer, orange-red from October, eaten into the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): red-brown bark peeling in thin papery flakes from smooth greenish-tan inner bark; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves a little smaller than shade leaves; a young tree's leaves sharply toothed, an older tree's entire (juvenile until about 8 years); set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
     }
   },
   "provenance": {

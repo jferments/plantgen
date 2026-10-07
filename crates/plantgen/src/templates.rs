@@ -5,8 +5,11 @@
 //! (see [`crate::looks`]), one per organ type of its program, by a small
 //! procedural generator per [`Shape`]: needle shoots, scale sprays,
 //! palmate, simple, lobed and compound leaves, leafy sprigs, grass blades,
-//! fern fronds, flowers, flower heads, umbels, spikes, panicles and fruit. Milestone P4 replaces
-//! the leaf generators with grown leaves (Runions et al. 2005).
+//! fern fronds, flowers, flower heads, umbels, spikes, panicles and fruit.
+//! Simple, lobed, palmate and compound leaves and the leaves of sprigs are
+//! lit along veins grown by space colonization ([`grown_veins`],
+//! [`crate::venation`]; Runions et al. 2005) from the primary veins their
+//! generator draws.
 //!
 //! A generator works in card units, card lengths: `x` across the card from
 //! its centre line and `y` from its base (0) to its tip (1), so the card
@@ -25,6 +28,7 @@ use crate::looks::{
 use crate::math::{self, PI};
 use crate::rng::{mix64, unit};
 use crate::spines::{self, View};
+use crate::venation::{Growth, Lamina, Venation};
 
 /// Edge length of each template, in texels.
 pub const TEMPLATE_SIZE: usize = 128;
@@ -158,6 +162,7 @@ impl Templates {
                 let mut brightness = Vec::with_capacity(texels);
                 let mut accent = Vec::with_capacity(texels);
                 let aspect = look.shape.aspect();
+                let veins = grown_veins(&look.shape);
                 for y in 0..TEMPLATE_SIZE {
                     for x in 0..TEMPLATE_SIZE {
                         // Four samples per texel give soft edges.
@@ -165,7 +170,7 @@ impl Templates {
                         for (dx, dy) in [(0.25, 0.25), (0.75, 0.25), (0.25, 0.75), (0.75, 0.75)] {
                             let u = (to_f64(x) + dx) / to_f64(TEMPLATE_SIZE);
                             let v = (to_f64(y) + dy) / to_f64(TEMPLATE_SIZE);
-                            let paint = draw(&look.shape, (u - 0.5) * aspect, v);
+                            let paint = draw(&look.shape, (u - 0.5) * aspect, v, veins.as_ref());
                             sum.cover += paint.cover;
                             // Brightness and accent of the covered samples.
                             sum.bright += paint.bright * paint.cover;
@@ -403,7 +408,9 @@ pub(crate) fn fine(shape: &Shape) -> f64 {
     0.85 * shape.aspect().max(1.0) / to_f64(TEMPLATE_SIZE)
 }
 
-fn draw(shape: &Shape, x: f64, y: f64) -> Paint {
+/// The point `x`, `y` of a card drawn with `shape`, its leaves lit along
+/// their grown `veins` (see [`grown_veins`]) where it has them.
+fn draw(shape: &Shape, x: f64, y: f64, veins: Option<&Venation>) -> Paint {
     // Shapes are drawn into the card less its border: stretch the point
     // instead.
     let (across, along) = drawn_share(shape);
@@ -412,11 +419,11 @@ fn draw(shape: &Shape, x: f64, y: f64) -> Paint {
     match shape {
         Shape::Needles(s) => needles(s, x, y, fine),
         Shape::Scales(s) => scales(s, x, y, fine),
-        Shape::Palmate(s) => palmate(s, x, y, fine),
-        Shape::Simple(s) => simple(s, x, y, fine),
-        Shape::Lobed(s) => lobed(s, x, y, fine),
-        Shape::Compound(s) => compound(s, x, y, fine),
-        Shape::Sprig(s) => sprig(s, x, y, fine),
+        Shape::Palmate(s) => palmate(s, x, y, fine, veins),
+        Shape::Simple(s) => simple(s, x, y, fine, veins),
+        Shape::Lobed(s) => lobed(s, x, y, fine, veins),
+        Shape::Compound(s) => compound(s, x, y, fine, veins),
+        Shape::Sprig(s) => sprig(s, x, y, fine, veins),
         Shape::Blade(s) => blade(s, x, y),
         Shape::Frond(s) => frond(s, x, y, fine),
         Shape::Flower(s) => flower(s, x, y - 0.5),
@@ -496,12 +503,263 @@ fn blade_profile(t: f64, widest: f64, base: f64, tip: f64) -> f64 {
 
 /// Faint pinnate side veins: brighter along lines leaving a midrib at
 /// `angle` (radians) every `spacing`, for a point `along` the midrib and
-/// `across` from it.
+/// `across` from it. Leaves with grown veins draw those instead
+/// ([`grown`]).
 fn side_veins(along: f64, across: f64, spacing: f64, angle: f64) -> f64 {
     let u = along - across.abs() * math::cos(angle) / math::sin(angle);
     let nearest = (u / spacing).round() * spacing;
     let distance = (u - nearest).abs() * math::sin(angle);
     if distance < 0.0028 { 0.12 } else { 0.0 }
+}
+
+/// How much a grown vein lightens its blade at its middle: the finest by
+/// the first, the widest by both.
+const VEIN: (f64, f64) = (0.12, 0.1);
+/// The half-widths grown veins are drawn at, card units: the finest and
+/// the widest (about 0.15 and 0.45 of a texel), true widths being far
+/// under a texel; and the soft edge's half-width.
+const VEIN_WIDTHS: (f64, f64, f64) = (0.0012, 0.0035, 0.0008);
+
+/// The lightening of grown `veins` at `(a, t)` of a blade's frame, whose
+/// blade is `unit` card units long, or the painted `side` veins for a leaf
+/// without grown ones.
+fn grown(veins: Option<&Venation>, a: f64, t: f64, unit: f64, side: impl FnOnce() -> f64) -> f64 {
+    let Some(veins) = veins else {
+        return side();
+    };
+    let (finest, widest, soft) = VEIN_WIDTHS;
+    veins
+        .near(a, t)
+        .map(|(distance, share)| {
+            let half = finest + (widest - finest) * share;
+            let on = 1.0 - math::smoothstep(half - soft, half + soft, distance * unit);
+            (VEIN.0 + VEIN.1 * share) * on
+        })
+        .fold(0.0, f64::max)
+}
+
+/// A simple leaf's half-width at `t` along its blade of `length` card
+/// units, with its teeth.
+fn simple_width(s: &Simple, length: f64, t: f64) -> f64 {
+    let mut width = s.width * length * 0.5 * blade_profile(t, s.widest, s.base, s.tip);
+    if s.teeth > 0 {
+        let fade = math::smoothstep(0.04, 0.18, t) * (1.0 - math::smoothstep(0.88, 1.0, t));
+        let phase = frac(t * f64::from(s.teeth));
+        width -= s.tooth_depth * math::pow(1.0 - phase, 1.5) * fade;
+    }
+    width
+}
+
+/// A pinnately lobed leaf's half-width at `t` along its blade of `length`
+/// card units, on its `left` side or its right.
+fn lobed_width(s: &Lobed, length: f64, t: f64, left: bool) -> f64 {
+    let envelope = blade_profile(t, 0.55, 0.35, 0.3);
+    let mut sinus = 1.0;
+    if (0.06..0.9).contains(&t) {
+        let offset = if left { 0.35 } else { 0.0 };
+        let phase = frac((t - 0.06) / 0.84 * f64::from(s.lobes) + offset);
+        let pointed = 1.0 - (2.0 * phase - 1.0).abs();
+        let rounded = math::sin(PI * phase);
+        let bump = math::pow(pointed + (rounded - pointed) * s.round, 0.7);
+        // Sinuses shallow out toward the base and the tip.
+        let fade = math::sin(PI * (t - 0.06) / 0.84);
+        sinus = 1.0 - s.depth * (1.0 - bump) * math::pow(fade, 0.4);
+    }
+    s.width * length * 0.5 * envelope * sinus
+}
+
+/// A leaflet's half-width at `t` along it, for a leaflet `length` card
+/// units long.
+fn leaflet_width(s: &Compound, length: f64, t: f64) -> f64 {
+    let mut width = s.leaflet_width * length * 0.5 * blade_profile(t, 0.45, 0.5, 0.45);
+    if s.teeth > 0 {
+        let fade = math::smoothstep(0.1, 0.25, t) * (1.0 - math::smoothstep(0.85, 1.0, t));
+        width -= 0.012 * length * (1.0 - frac(t * f64::from(s.teeth))) * fade * 3.0;
+    }
+    width
+}
+
+/// A sprig leaf's half-width at `t` along its blade of `blade` card units.
+fn sprig_width(s: &Sprig, blade: f64, t: f64) -> f64 {
+    let mut width = s.width * blade * 0.5 * blade_profile(t, s.widest, s.base, s.tip);
+    if s.teeth > 0 {
+        let fade = math::smoothstep(0.04, 0.18, t) * (1.0 - math::smoothstep(0.88, 1.0, t));
+        let phase = frac(t * f64::from(s.teeth));
+        width -= s.tooth_depth * blade * tooth_notch(phase, s.round) * fade;
+    }
+    width
+}
+
+/// How far a tooth's margin falls back, 0 to 1, at `phase` along the
+/// tooth: saw teeth (`round` 0) rise slowly to their tip and fall back at
+/// once; rounded lobes (`round` 1) swell and narrow evenly.
+fn tooth_notch(phase: f64, round: f64) -> f64 {
+    let saw = math::pow(1.0 - phase, 1.5);
+    if round <= 0.0 {
+        return saw;
+    }
+    let lobe = 1.0 - math::pow(math::sin(PI * phase), 0.6);
+    saw + (lobe - saw) * round
+}
+
+/// The tips of a blade's `teeth` (each where its margin stands out
+/// farthest, for teeth as `round` as [`tooth_notch`] draws them) on both
+/// sides, in the blade's frame, for its half-width `half` (blade lengths)
+/// at `t` and the share of the blade the teeth fade in by.
+fn tooth_tips(
+    teeth: u32,
+    round: f64,
+    half: impl Fn(f64) -> f64,
+    fade: impl Fn(f64) -> f64,
+) -> Vec<(f64, f64)> {
+    // Where a tooth's notch is least, sampled within the tooth short of
+    // its end, where a saw tooth meets the next one's notch and a vein
+    // could not grow in.
+    let tip = (0..200)
+        .map(|i| f64::from(i) * 0.94 / 199.0)
+        .min_by(|a, b| tooth_notch(*a, round).total_cmp(&tooth_notch(*b, round)))
+        .unwrap_or(0.94);
+    let mut tips = Vec::new();
+    for k in 0..teeth {
+        let t = (f64::from(k) + tip) / f64::from(teeth);
+        if fade(t) < 0.3 {
+            continue;
+        }
+        let a = 0.96 * half(t);
+        tips.push((a, t));
+        tips.push((-a, t));
+    }
+    tips
+}
+
+/// The seed a look's veins grow from: a hash of its shape.
+fn shape_seed(shape: &Shape) -> u64 {
+    format!("{shape:?}")
+        .bytes()
+        .fold(0xcbf2_9ce4_8422_2325_u64, |hash, byte| {
+            (hash ^ u64::from(byte)).wrapping_mul(0x0100_0000_01b3)
+        })
+}
+
+/// The veins of a leaf drawn with `shape`, grown in its blade's frame
+/// (see [`crate::venation`]): a simple or lobed leaf's from its midrib, a
+/// palmate leaf's from its main veins, and one leaflet's of a compound
+/// leaf or one leaf's of a sprig, which every leaflet or leaf draws scaled
+/// to its own length. `None` for shapes without them.
+#[must_use]
+pub fn grown_veins(shape: &Shape) -> Option<Venation> {
+    let seed = shape_seed(shape);
+    let midrib = vec![vec![(0.0, 0.0), (0.0, 0.96)]];
+    let simple_fade =
+        |t: f64| math::smoothstep(0.04, 0.18, t) * (1.0 - math::smoothstep(0.88, 1.0, t));
+    let grow = |inside: &dyn Fn((f64, f64)) -> bool, half: f64, primaries, tips, growth: Growth| {
+        let blade = Lamina {
+            inside,
+            bounds: ((-half, 0.0), (half, 1.0)),
+            primaries,
+            tips,
+        };
+        Some(Venation::grow(&blade, &growth, seed))
+    };
+    match shape {
+        Shape::Simple(s) => {
+            let length = 1.0 - s.petiole;
+            let half = |t: f64| simple_width(s, length, t) / length;
+            let inside = |p: (f64, f64)| (0.0..=1.0).contains(&p.1) && p.0.abs() < half(p.1);
+            let tips = tooth_tips(s.teeth, 0.0, half, simple_fade);
+            grow(
+                &inside,
+                0.5 * s.width + 0.02,
+                midrib,
+                tips,
+                Growth::default(),
+            )
+        }
+        Shape::Lobed(s) => {
+            let length = 1.0 - s.petiole;
+            let half = |t: f64, left: bool| lobed_width(s, length, t, left) / length;
+            let inside =
+                |p: (f64, f64)| (0.0..=1.0).contains(&p.1) && p.0.abs() < half(p.1, p.0 < 0.0);
+            // A vein to the tip of every lobe.
+            let mut tips = Vec::new();
+            for left in [false, true] {
+                let offset = if left { 0.35 } else { 0.0 };
+                for k in 0..=s.lobes {
+                    let t = 0.06 + 0.84 * (f64::from(k) + 0.5 - offset) / f64::from(s.lobes);
+                    if (0.1..0.88).contains(&t) {
+                        let a = 0.92 * half(t, left);
+                        tips.push((if left { -a } else { a }, t));
+                    }
+                }
+            }
+            let growth = Growth {
+                secondary: 0.84 / f64::from(s.lobes.max(1) * 2 + 1),
+                ..Growth::default()
+            };
+            grow(&inside, 0.5 * s.width + 0.02, midrib, tips, growth)
+        }
+        Shape::Compound(s) => {
+            let half = |t: f64| leaflet_width(s, 1.0, t);
+            let inside = |p: (f64, f64)| (0.0..=1.0).contains(&p.1) && p.0.abs() < half(p.1);
+            let fade =
+                |t: f64| math::smoothstep(0.1, 0.25, t) * (1.0 - math::smoothstep(0.85, 1.0, t));
+            let tips = tooth_tips(s.teeth, 0.0, half, fade);
+            grow(
+                &inside,
+                0.5 * s.leaflet_width + 0.02,
+                midrib,
+                tips,
+                Growth::default(),
+            )
+        }
+        Shape::Sprig(s) => {
+            let half = |t: f64| sprig_width(s, 1.0, t);
+            let inside = |p: (f64, f64)| (0.0..=1.0).contains(&p.1) && p.0.abs() < half(p.1);
+            let tips = tooth_tips(s.teeth, s.round, half, simple_fade);
+            grow(
+                &inside,
+                0.5 * s.width + 0.02,
+                midrib,
+                tips,
+                Growth::default(),
+            )
+        }
+        Shape::Palmate(s) => Some(palmate_veins(s, fine(shape), seed)),
+        _ => None,
+    }
+}
+
+/// A palmate leaf's veins, grown outward from its main veins in the frame
+/// of their junction and the blade's radius, inside the painter's own
+/// blade less its petiole.
+fn palmate_veins(s: &Palmate, fine: f64, seed: u64) -> Venation {
+    let (junction, radius) = s.junction();
+    let inside = |p: (f64, f64)| {
+        !(p.1 < 0.02 && p.0.abs() < 0.05)
+            && palmate(s, p.0 * radius, junction + p.1 * radius, fine, None).cover > 0.0
+    };
+    let half = i32::try_from(s.lobes / 2).unwrap_or(0);
+    let primaries = (-half..=half)
+        .map(|k| {
+            let (angle, length) = s.lobe(k);
+            let reach = 0.92 * length / radius;
+            vec![
+                (0.0, 0.0),
+                (math::sin(angle) * reach, math::cos(angle) * reach),
+            ]
+        })
+        .collect();
+    let blade = Lamina {
+        inside: &inside,
+        bounds: ((-1.05, -1.05), (1.05, 1.05)),
+        primaries,
+        tips: Vec::new(),
+    };
+    let growth = Growth {
+        outward: true,
+        ..Growth::default()
+    };
+    Venation::grow(&blade, &growth, seed)
 }
 
 /// One axis of a needle spray in its card's frame (units of the card's
@@ -784,7 +1042,7 @@ fn scales(s: &Scales, x: f64, y: f64, fine: f64) -> Paint {
 /// main veins meet, each widest near its middle and drawn out to a point,
 /// with a few large teeth, deep sinuses between them, and a heart-shaped
 /// base round the petiole.
-fn palmate(s: &Palmate, x: f64, y: f64, fine: f64) -> Paint {
+fn palmate(s: &Palmate, x: f64, y: f64, fine: f64, veins: Option<&Venation>) -> Paint {
     let (junction, radius) = s.junction();
     let p = (x, y - junction);
     if y < junction + 0.01 {
@@ -854,11 +1112,16 @@ fn palmate(s: &Palmate, x: f64, y: f64, fine: f64) -> Paint {
         let sinus = along * math::tan(half_gap) - radius * (0.018 + 0.05 * along / radius);
         if across.abs() < width.min(sinus) {
             inside = true;
-            vein = vein.max(side_veins(along, across, length / 6.0, math::radians(48.0)));
+            if veins.is_none() {
+                vein = vein.max(side_veins(along, across, length / 6.0, math::radians(48.0)));
+            }
         }
     }
     if !inside {
         return Paint::EMPTY;
+    }
+    if veins.is_some() {
+        vein = vein.max(grown(veins, p.0 / radius, p.1 / radius, radius, || 0.0));
     }
     Paint {
         cover: 1.0,
@@ -869,19 +1132,14 @@ fn palmate(s: &Palmate, x: f64, y: f64, fine: f64) -> Paint {
 
 /// An undivided leaf: a blade from ovate to lanceolate, with an optional
 /// toothed margin, a midrib, faint side veins and a petiole.
-fn simple(s: &Simple, x: f64, y: f64, fine: f64) -> Paint {
+fn simple(s: &Simple, x: f64, y: f64, fine: f64, veins: Option<&Venation>) -> Paint {
     let base = s.petiole;
     if y < base + 0.01 && x.abs() < fine {
         return Paint::solid(0.9, 1.0);
     }
     let length = 1.0 - base;
     let t = (y - base) / length.max(1e-6);
-    let mut width = s.width * length * 0.5 * blade_profile(t, s.widest, s.base, s.tip);
-    if s.teeth > 0 {
-        let fade = math::smoothstep(0.04, 0.18, t) * (1.0 - math::smoothstep(0.88, 1.0, t));
-        let phase = frac(t * f64::from(s.teeth));
-        width -= s.tooth_depth * math::pow(1.0 - phase, 1.5) * fade;
-    }
+    let width = simple_width(s, length, t);
     if x.abs() >= width {
         return Paint::EMPTY;
     }
@@ -891,33 +1149,23 @@ fn simple(s: &Simple, x: f64, y: f64, fine: f64) -> Paint {
     let along = y - base;
     Paint::solid(
         0.92 + 0.08 * x.abs() / width.max(1e-6)
-            + side_veins(along, x, length / 9.0, math::radians(52.0)),
+            + grown(veins, x / length, t, length, || {
+                side_veins(along, x, length / 9.0, math::radians(52.0))
+            }),
         0.0,
     )
 }
 
 /// A pinnately lobed leaf: rounded or pointed lobes along both sides of a
 /// midrib, alternating a little between the sides.
-fn lobed(s: &Lobed, x: f64, y: f64, fine: f64) -> Paint {
+fn lobed(s: &Lobed, x: f64, y: f64, fine: f64, veins: Option<&Venation>) -> Paint {
     let base = s.petiole;
     if y < base + 0.01 && x.abs() < fine {
         return Paint::solid(0.9, 1.0);
     }
     let length = 1.0 - base;
     let t = (y - base) / length.max(1e-6);
-    let envelope = blade_profile(t, 0.55, 0.35, 0.3);
-    let mut sinus = 1.0;
-    if (0.06..0.9).contains(&t) {
-        let offset = if x < 0.0 { 0.35 } else { 0.0 };
-        let phase = frac((t - 0.06) / 0.84 * f64::from(s.lobes) + offset);
-        let pointed = 1.0 - (2.0 * phase - 1.0).abs();
-        let rounded = math::sin(PI * phase);
-        let bump = math::pow(pointed + (rounded - pointed) * s.round, 0.7);
-        // Sinuses shallow out toward the base and the tip.
-        let fade = math::sin(PI * (t - 0.06) / 0.84);
-        sinus = 1.0 - s.depth * (1.0 - bump) * math::pow(fade, 0.4);
-    }
-    let width = s.width * length * 0.5 * envelope * sinus;
+    let width = lobed_width(s, length, t, x < 0.0);
     if x.abs() >= width {
         return Paint::EMPTY;
     }
@@ -926,19 +1174,21 @@ fn lobed(s: &Lobed, x: f64, y: f64, fine: f64) -> Paint {
     }
     Paint::solid(
         0.92 + 0.08 * x.abs() / width.max(1e-6)
-            + side_veins(
-                y - base,
-                x,
-                length / f64::from(s.lobes * 2 + 1),
-                math::radians(55.0),
-            ),
+            + grown(veins, x / length, t, length, || {
+                side_veins(
+                    y - base,
+                    x,
+                    length / f64::from(s.lobes * 2 + 1),
+                    math::radians(55.0),
+                )
+            }),
         0.0,
     )
 }
 
 /// A pinnately compound leaf: a rachis with opposite pairs of leaflets and
 /// a terminal one.
-fn compound(s: &Compound, x: f64, y: f64, fine: f64) -> Paint {
+fn compound(s: &Compound, x: f64, y: f64, fine: f64, veins: Option<&Venation>) -> Paint {
     let leaflet = s.leaflet_length();
     let pairs = s.leaflets / 2;
     let top = 1.0 - leaflet;
@@ -967,18 +1217,16 @@ fn compound(s: &Compound, x: f64, y: f64, fine: f64) -> Paint {
         if !(0.0..=1.0).contains(&t) {
             continue;
         }
-        let mut width = s.leaflet_width * length * 0.5 * blade_profile(t, 0.45, 0.5, 0.45);
-        if s.teeth > 0 {
-            let fade = math::smoothstep(0.1, 0.25, t) * (1.0 - math::smoothstep(0.85, 1.0, t));
-            width -= 0.012 * length * (1.0 - frac(t * f64::from(s.teeth))) * fade * 3.0;
-        }
+        let width = leaflet_width(s, length, t);
         if across.abs() < width {
             if t < 0.95 && across.abs() < fine * 0.6 {
                 return Paint::solid(1.15, 0.4);
             }
             return Paint::solid(
                 0.92 + 0.08 * across.abs() / width.max(1e-6)
-                    + side_veins(along, across, length / 7.0, math::radians(55.0)),
+                    + grown(veins, across / length, t, length, || {
+                        side_veins(along, across, length / 7.0, math::radians(55.0))
+                    }),
                 0.0,
             );
         }
@@ -991,7 +1239,7 @@ fn compound(s: &Compound, x: f64, y: f64, fine: f64) -> Paint {
 /// one leaf continuing the twig at its tip. Side leaves are largest in the
 /// shoot's middle; each is turned a little at random and drawn a little
 /// lighter or darker, so that overlapping leaves stay apart.
-fn sprig(s: &Sprig, x: f64, y: f64, fine: f64) -> Paint {
+fn sprig(s: &Sprig, x: f64, y: f64, fine: f64, veins: Option<&Venation>) -> Paint {
     let half = s.aspect() * 0.5;
     let longest = s.leaf_length();
     let top = 1.0 - longest;
@@ -1033,12 +1281,7 @@ fn sprig(s: &Sprig, x: f64, y: f64, fine: f64) -> Paint {
         }
         let blade = length - stalk;
         let t = (along - stalk) / blade.max(1e-6);
-        let mut width = s.width * blade * 0.5 * blade_profile(t, s.widest, s.base, s.tip);
-        if s.teeth > 0 {
-            let fade = math::smoothstep(0.04, 0.18, t) * (1.0 - math::smoothstep(0.88, 1.0, t));
-            let phase = frac(t * f64::from(s.teeth));
-            width -= s.tooth_depth * blade * math::pow(1.0 - phase, 1.5) * fade;
-        }
+        let width = sprig_width(s, blade, t);
         if across.abs() >= width {
             continue;
         }
@@ -1048,7 +1291,9 @@ fn sprig(s: &Sprig, x: f64, y: f64, fine: f64) -> Paint {
             Paint::solid(
                 bright
                     + 0.08 * across.abs() / width.max(1e-6)
-                    + side_veins(along - stalk, across, blade / 8.0, math::radians(52.0)),
+                    + grown(veins, across / blade, t, blade, || {
+                        side_veins(along - stalk, across, blade / 8.0, math::radians(52.0))
+                    }),
                 0.0,
             )
         };
@@ -1800,6 +2045,7 @@ mod tests {
                     bend: None,
                     form: None,
                     season: None,
+                    families: None,
                 },
             );
         }
@@ -1883,6 +2129,67 @@ mod tests {
                 ..Fruit::default()
             }),
         ]
+    }
+
+    #[test]
+    #[allow(clippy::cast_precision_loss)]
+    fn leaves_are_lit_along_their_grown_veins() {
+        // Every leaf shape grows its veins and no other shape does; on a
+        // simple, lobed, palmate or compound leaf they lighten a share of
+        // the blade off its midrib (whose texels carry the accent).
+        for shape in every_shape() {
+            let leaf = matches!(
+                shape,
+                Shape::Simple(_)
+                    | Shape::Lobed(_)
+                    | Shape::Palmate(_)
+                    | Shape::Compound(_)
+                    | Shape::Sprig(_)
+            );
+            let veins = grown_veins(&shape);
+            assert_eq!(veins.is_some(), leaf, "{shape:?}");
+            let Some(veins) = veins else { continue };
+            assert!(
+                veins.segments().len() > 40,
+                "{shape:?}: {}",
+                veins.segments().len()
+            );
+            if matches!(shape, Shape::Sprig(_)) {
+                continue;
+            }
+            let looks = looks_of(std::slice::from_ref(&shape));
+            let template = &Templates::for_looks(&looks).templates[0];
+            let blade = (0..template.coverage.len())
+                .filter(|&i| template.coverage[i] > 0.5 && template.accent[i] == 0.0)
+                .collect::<Vec<_>>();
+            let lit = blade
+                .iter()
+                .filter(|&&i| template.brightness[i] > 1.025)
+                .count();
+            let share = lit as f64 / blade.len() as f64;
+            assert!((0.02..0.4).contains(&share), "{shape:?}: {share}");
+        }
+    }
+
+    #[test]
+    fn a_vein_runs_to_every_tooth() {
+        let s = Simple {
+            teeth: 14,
+            ..Simple::default()
+        };
+        let length = 1.0 - s.petiole;
+        let fade =
+            |t: f64| math::smoothstep(0.04, 0.18, t) * (1.0 - math::smoothstep(0.88, 1.0, t));
+        let tips = tooth_tips(s.teeth, 0.0, |t| simple_width(&s, length, t) / length, fade);
+        assert!(tips.len() >= 16, "{}", tips.len());
+        let segments = grown_veins(&Shape::Simple(s)).unwrap().segments();
+        for tip in tips {
+            let reach = segments
+                .iter()
+                .map(|&(_, b, _)| (b.0 - tip.0).hypot(b.1 - tip.1))
+                .fold(f64::INFINITY, f64::min);
+            assert!(reach < 0.07, "{tip:?}: {reach}");
+        }
     }
 
     #[test]

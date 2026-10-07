@@ -68,6 +68,110 @@ pub struct OrganLook {
     /// day, and how it looks then. Without one it looks the same all year.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub season: Option<Season>,
+    /// Its leaves' families (plant roadmap P4): sun and shade leaves, and
+    /// juvenile leaves on a young plant. Without them every leaf is alike.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub families: Option<Families>,
+}
+
+/// How an organ type's leaves differ with the light they grew in and the
+/// plant's age when they grew (plant roadmap P4, phenotype families).
+#[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct Families {
+    /// Sun and shade leaves, 0 (alike) to 1: how far a leaf grown in more
+    /// light than [`SUN`] is smaller, narrower and more deeply lobed or
+    /// toothed, and one grown in less than [`SHADE`] larger, broader and
+    /// shallower ([`Shape::in_light`]).
+    pub plasticity: f64,
+    /// Juvenile leaves, on a plant younger than their `until` when they
+    /// grew.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub juvenile: Option<Juvenile>,
+}
+
+/// An organ type's juvenile leaves: their shape, grown while the plant is
+/// younger than `until` years (a juniper's needles before its scales, a
+/// pine seedling's single needles, a young madrone's toothed leaves).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Juvenile {
+    pub until: f64,
+    pub shape: Shape,
+}
+
+/// The light (0 to 1) above which a leaf grows as a sun leaf, and below
+/// which as a shade leaf; between, as its type's own look.
+pub const SUN: f64 = 2.0 / 3.0;
+pub const SHADE: f64 = 1.0 / 3.0;
+
+impl Families {
+    /// Check the plasticity, the juvenile leaves and that `shape` has sun
+    /// and shade forms if they are asked for.
+    ///
+    /// # Errors
+    ///
+    /// Describes the first problem.
+    pub fn validate(&self, shape: &Shape) -> Result<(), String> {
+        within("families plasticity", self.plasticity, 0.0, 1.0)?;
+        if self.plasticity > 0.0 && shape.in_light(true, self.plasticity).is_none() {
+            return Err(format!(
+                "families plasticity needs a simple, lobed, palmate or compound leaf or a sprig, found {}",
+                shape.name()
+            ));
+        }
+        if let Some(juvenile) = &self.juvenile {
+            within("families juvenile until", juvenile.until, 0.1, 200.0)?;
+            juvenile.shape.validate()?;
+            if matches!(
+                juvenile.shape,
+                Shape::Flower(_)
+                    | Shape::Head(_)
+                    | Shape::Umbel(_)
+                    | Shape::Spike(_)
+                    | Shape::Panicle(_)
+                    | Shape::Fruit(_)
+            ) {
+                return Err(format!(
+                    "families juvenile shape must be foliage, found {}",
+                    juvenile.shape.name()
+                ));
+            }
+        }
+        Ok(())
+    }
+}
+
+/// Where an organ type's leaves of each family are drawn (plant roadmap
+/// P4): the indices of its sun, shade and juvenile looks among the
+/// plant's looks, when a leaf is juvenile, and the sizes of sun and shade
+/// leaves as shares of the type's. The default draws every leaf with the
+/// type's own look.
+#[derive(Debug, Clone, Copy, PartialEq, Default)]
+pub struct Forms {
+    pub sun: Option<usize>,
+    pub shade: Option<usize>,
+    pub juvenile: Option<(usize, f64)>,
+    pub sizes: (f64, f64),
+}
+
+impl Forms {
+    /// The look, of the plant's looks, that a leaf of the type whose own
+    /// look is `own` is drawn with, grown in `light` on a plant `born`
+    /// years old, and its size as a share of the type's.
+    #[must_use]
+    pub fn of(&self, own: usize, light: f64, born: f64) -> (usize, f64) {
+        if let Some((juvenile, until)) = self.juvenile
+            && born < until
+        {
+            return (juvenile, 1.0);
+        }
+        match (self.sun, self.shade) {
+            (Some(sun), _) if light > SUN => (sun, self.sizes.0),
+            (_, Some(shade)) if light < SHADE => (shade, self.sizes.1),
+            _ => (own, 1.0),
+        }
+    }
 }
 
 /// An organ's year (plant roadmap P4): the days of the year, at the
@@ -459,6 +563,10 @@ pub struct Sprig {
     pub base: f64,
     pub teeth: u32,
     pub tooth_depth: f64,
+    /// How rounded the teeth are, from 0 (saw teeth pointing to the tip)
+    /// to 1 (rounded lobes, as an oak's).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub round: f64,
     /// Length of each leaf's petiole, as a fraction of the leaf's length.
     pub petiole: f64,
 }
@@ -475,6 +583,7 @@ impl Default for Sprig {
             base: 0.5,
             teeth: 0,
             tooth_depth: 0.03,
+            round: 0.0,
             petiole: 0.12,
         }
     }
@@ -863,6 +972,63 @@ impl Shape {
         }
     }
 
+    /// This leaf as grown in the sun (`sun`) or the shade, for a
+    /// `plasticity` 0 to 1 (plant roadmap P4), and its size as a share of
+    /// the leaf's own: a sun leaf is smaller, narrower and more deeply
+    /// lobed or toothed; a shade leaf larger, broader and shallower (sun
+    /// and shade leaves of one crown, as of oaks and maples). `None` for
+    /// shapes without the two forms.
+    #[must_use]
+    pub fn in_light(&self, sun: bool, plasticity: f64) -> Option<(Shape, f64)> {
+        let p = plasticity.clamp(0.0, 1.0);
+        // Narrower in the sun, broader in the shade.
+        let wide = |value: f64, low: f64, high: f64, narrow: f64, broad: f64| {
+            (if sun {
+                value * (1.0 - narrow * p)
+            } else {
+                value * (1.0 + broad * p)
+            })
+            .clamp(low, high)
+        };
+        // Deeper in the sun, toward `most`; shallower in the shade.
+        let deep = |value: f64, most: f64, toward: f64| {
+            if sun {
+                value + (most - value).max(0.0) * toward * p
+            } else {
+                value * (1.0 - toward * p)
+            }
+        };
+        let size = if sun { 1.0 - 0.12 * p } else { 1.0 + 0.12 * p };
+        let shape = match self {
+            Self::Simple(s) => Self::Simple(Simple {
+                width: wide(s.width, 0.03, 1.5, 0.25, 0.15),
+                tooth_depth: deep(s.tooth_depth, 0.2, 0.3),
+                ..s.clone()
+            }),
+            Self::Lobed(s) => Self::Lobed(Lobed {
+                width: wide(s.width, 0.1, 1.5, 0.12, 0.1),
+                depth: deep(s.depth, 0.9, 0.5),
+                ..s.clone()
+            }),
+            Self::Palmate(s) => Self::Palmate(Palmate {
+                lobe_width: wide(s.lobe_width, 0.1, 1.2, 0.15, 0.1),
+                depth: deep(s.depth, 0.9, 0.4),
+                ..s.clone()
+            }),
+            Self::Compound(s) => Self::Compound(Compound {
+                leaflet_width: wide(s.leaflet_width, 0.1, 1.0, 0.2, 0.15),
+                ..s.clone()
+            }),
+            Self::Sprig(s) => Self::Sprig(Sprig {
+                width: wide(s.width, 0.1, 1.2, 0.2, 0.15),
+                tooth_depth: deep(s.tooth_depth, 0.2, 0.4),
+                ..s.clone()
+            }),
+            _ => return None,
+        };
+        Some((shape, size))
+    }
+
     /// Check the parameters.
     ///
     /// # Errors
@@ -964,6 +1130,7 @@ impl Shape {
                 check("base", s.base, 0.0, 1.0)?;
                 count("teeth", s.teeth, 0, 40)?;
                 check("tooth_depth", s.tooth_depth, 0.0, 0.2)?;
+                check("round", s.round, 0.0, 1.0)?;
                 check("petiole", s.petiole, 0.0, 0.5)
             }
             Self::Blade(s) => {
@@ -1130,6 +1297,8 @@ pub struct Look {
     pub solid: Option<crate::leaves::SolidLeaf>,
     pub bend: crate::bend::Bend,
     pub form: crate::blooms::Form,
+    /// Its leaves' families' looks; the default for none.
+    pub forms: Forms,
 }
 
 impl Look {
@@ -1175,6 +1344,7 @@ pub fn resolve<'a>(
                         .form
                         .clone()
                         .unwrap_or_else(|| crate::blooms::Form::default_for(&look.shape)),
+                    forms: Forms::default(),
                 }
             }
             None => Look {
@@ -1187,9 +1357,67 @@ pub fn resolve<'a>(
                 accent: foliage,
                 face_up: 0.0,
                 solid: None,
+                forms: Forms::default(),
             },
         })
-        .collect()
+        .collect::<Vec<_>>()
+        .with_families(looks)
+}
+
+/// Looks extended by their leaves' families.
+trait WithFamilies {
+    fn with_families(self, looks: &BTreeMap<String, OrganLook>) -> Self;
+}
+
+impl WithFamilies for Vec<Look> {
+    /// The looks of the organ types, then each family's look (sun, shade,
+    /// juvenile) of the types that have families, which each type's
+    /// [`Forms`] point to.
+    fn with_families(mut self, looks: &BTreeMap<String, OrganLook>) -> Self {
+        let types = self.len();
+        for index in 0..types {
+            let Some(families) = looks
+                .get(&self[index].organ)
+                .and_then(|own| own.families.as_ref())
+            else {
+                continue;
+            };
+            let own = self[index].clone();
+            let mut forms = Forms::default();
+            let variant = |shape: Shape| Look {
+                bend: crate::bend::Bend::default_for(&shape),
+                form: crate::blooms::Form::default_for(&shape),
+                shape,
+                solid: None,
+                forms: Forms::default(),
+                ..own.clone()
+            };
+            if families.plasticity > 0.0
+                && let (Some((sun, sun_size)), Some((shade, shade_size))) = (
+                    own.shape.in_light(true, families.plasticity),
+                    own.shape.in_light(false, families.plasticity),
+                )
+            {
+                forms.sun = Some(self.len());
+                self.push(Look {
+                    bend: own.bend,
+                    ..variant(sun)
+                });
+                forms.shade = Some(self.len());
+                self.push(Look {
+                    bend: own.bend,
+                    ..variant(shade)
+                });
+                forms.sizes = (sun_size, shade_size);
+            }
+            if let Some(juvenile) = &families.juvenile {
+                forms.juvenile = Some((self.len(), juvenile.until));
+                self.push(variant(juvenile.shape.clone()));
+            }
+            self[index].forms = forms;
+        }
+        self
+    }
 }
 
 /// The looks of [`resolve`] on day `day` of the year, with each organ
@@ -1304,6 +1532,7 @@ fn in_stage(look: &Look, stage: &StageLook) -> Look {
         solid: None,
         bend: crate::bend::Bend::default_for(&stage.shape),
         form: crate::blooms::Form::default_for(&stage.shape),
+        forms: Forms::default(),
     }
 }
 
@@ -1495,6 +1724,12 @@ impl OrganLook {
         if let Some(season) = &self.season {
             season.validate()?;
         }
+        if let Some(families) = &self.families {
+            if self.season.is_some() {
+                return Err("families are for leaves, without a season".to_string());
+            }
+            families.validate(&self.shape)?;
+        }
         within("face_up", self.face_up, 0.0, 1.0)
     }
 }
@@ -1503,6 +1738,104 @@ impl OrganLook {
 #[allow(clippy::float_cmp)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn sun_leaves_are_smaller_narrower_and_deeper_than_shade_leaves() {
+        let shapes = [
+            Shape::Simple(Simple {
+                teeth: 12,
+                ..Simple::default()
+            }),
+            Shape::Lobed(Lobed::default()),
+            Shape::Palmate(Palmate::default()),
+            Shape::Compound(Compound::default()),
+            Shape::Sprig(Sprig {
+                teeth: 4,
+                tooth_depth: 0.1,
+                ..Sprig::default()
+            }),
+        ];
+        // (width, depth) of each leaf shape.
+        let measure = |shape: &Shape| match shape {
+            Shape::Simple(s) => (s.width, s.tooth_depth),
+            Shape::Lobed(s) => (s.width, s.depth),
+            Shape::Palmate(s) => (s.lobe_width, s.depth),
+            Shape::Compound(s) => (s.leaflet_width, 0.0),
+            Shape::Sprig(s) => (s.width, s.tooth_depth),
+            _ => unreachable!(),
+        };
+        for shape in shapes {
+            let (sun, sun_size) = shape.in_light(true, 0.8).unwrap();
+            let (shade, shade_size) = shape.in_light(false, 0.8).unwrap();
+            sun.validate().unwrap();
+            shade.validate().unwrap();
+            let (own, sun, shade) = (measure(&shape), measure(&sun), measure(&shade));
+            assert!(sun.0 < own.0 && own.0 < shade.0, "{shape:?}");
+            assert!(sun.1 >= own.1 && own.1 >= shade.1, "{shape:?}");
+            assert!(sun_size < 1.0 && shade_size > 1.0);
+            assert_eq!(shape.in_light(true, 0.0).unwrap().1, 1.0);
+        }
+        assert!(
+            Shape::Needles(Needles::default())
+                .in_light(true, 1.0)
+                .is_none()
+        );
+    }
+
+    #[test]
+    fn a_leafs_family_picks_its_look() {
+        let organs = BTreeMap::from([(
+            "leaf".to_string(),
+            OrganLook {
+                shape: Shape::Lobed(Lobed::default()),
+                colour: None,
+                shade: None,
+                accent: None,
+                face_up: 0.0,
+                solid: None,
+                bend: None,
+                form: None,
+                season: None,
+                families: Some(Families {
+                    plasticity: 0.5,
+                    juvenile: Some(Juvenile {
+                        until: 3.0,
+                        shape: Shape::Simple(Simple::default()),
+                    }),
+                }),
+            },
+        )]);
+        organs["leaf"].validate().unwrap();
+        let looks = resolve(
+            [("leaf", OrganKind::Leaf), ("bloom", OrganKind::Flower)],
+            &organs,
+            [0.1, 0.3, 0.1],
+            [0.05, 0.1, 0.05],
+        );
+        // The two types' looks, then the leaf's sun, shade and juvenile.
+        assert_eq!(looks.len(), 5);
+        let forms = looks[0].forms;
+        assert_eq!(
+            (forms.sun, forms.shade, forms.juvenile),
+            (Some(2), Some(3), Some((4, 3.0)))
+        );
+        assert_eq!(looks[1].forms, Forms::default());
+        assert!(
+            looks[2..]
+                .iter()
+                .all(|look| look.organ == "leaf" && look.forms == Forms::default())
+        );
+        assert!(matches!(looks[4].shape, Shape::Simple(_)));
+        // Juvenile on a young plant whatever its light; then by its light.
+        assert_eq!(forms.of(0, 0.9, 1.0), (4, 1.0));
+        assert_eq!(forms.of(0, 0.9, 10.0), (2, forms.sizes.0));
+        assert_eq!(forms.of(0, 0.5, 10.0), (0, 1.0));
+        assert_eq!(forms.of(0, 0.1, 10.0), (3, forms.sizes.1));
+        // Families are for leaves.
+        let mut flower = organs["leaf"].clone();
+        flower.shape = Shape::Flower(Flower::default());
+        assert!(flower.validate().is_err());
+    }
 
     #[test]
     fn looks_parse_with_defaults_and_reject_unknown_fields() {
@@ -1591,6 +1924,7 @@ mod tests {
                 bend: None,
                 form: None,
                 season: None,
+                families: None,
             },
         );
         let green = [0.1, 0.3, 0.05];
@@ -1679,6 +2013,7 @@ mod tests {
             bend: None,
             form: None,
             season,
+            families: None,
         };
         let mut organs = BTreeMap::new();
         organs.insert("bloom".to_string(), fruit(Some(cherry())));

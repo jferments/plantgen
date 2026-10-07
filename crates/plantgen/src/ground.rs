@@ -673,6 +673,7 @@ pub(crate) fn organ_templates(shapes: &[Shape]) -> Templates {
             // textures, never as bent cards.
             bend: crate::bend::Bend::FLAT,
             form: crate::blooms::Form::Card,
+            forms: crate::looks::Forms::default(),
         })
         .collect();
     Templates::for_looks(&looks)

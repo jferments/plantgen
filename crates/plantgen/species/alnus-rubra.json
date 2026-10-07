@@ -78,6 +78,9 @@
           "tooth_depth": 0.02,
           "petiole": 0.15
         },
+        "families": {
+          "plasticity": 0.4
+        },
         "accent": [0.3, 0.2, 0.12]
       },
       "bloom": {
@@ -152,7 +155,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: dark green leaves; smooth, pale grey bark, often blotched with lichen. Fruit (plant roadmap P4), as in mid-July: small green cones (strobiles) about 2 cm long, three to eight on a short raceme. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: catkins in February; the cones green through the summer, brown from September, hanging on into the next winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth thin grey bark, whitened in patches by lichens, with lenticels; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: dark green leaves; smooth, pale grey bark, often blotched with lichen. Fruit (plant roadmap P4), as in mid-July: small green cones (strobiles) about 2 cm long, three to eight on a short raceme. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: catkins in February; the cones green through the summer, brown from September, hanging on into the next winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth thin grey bark, whitened in patches by lichens, with lenticels; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves somewhat smaller and narrower than shade leaves; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
     }
   },
   "provenance": {

@@ -70,7 +70,22 @@
         "colour": [0.3, 0.38, 0.55]
       },
       "spray": {
-        "shape": { "template": "scales", "branchlets": 5, "angle": 40, "cord": 0.025, "aspect": 0.7 }
+        "shape": { "template": "scales", "branchlets": 5, "angle": 40, "cord": 0.025, "aspect": 0.7 },
+        "families": {
+          "juvenile": {
+            "until": 6,
+            "shape": {
+              "template": "needles",
+              "twigs": 4,
+              "needle": 0.14,
+              "twig_angle": 50,
+              "ranks": 0,
+              "aspect": 0.7,
+              "width": 0.07,
+              "bundle": 1
+            }
+          }
+        }
       }
     },
     "ridges": {
@@ -101,7 +116,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: grey-green scale leaves; reddish-brown fibrous, shredding bark. Bark pattern (plant roadmap P4, `bark_pattern`): thin reddish-brown bark shredding in long fibrous strips; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: grey-green scale leaves; reddish-brown fibrous, shredding bark. Bark pattern (plant roadmap P4, `bark_pattern`): thin reddish-brown bark shredding in long fibrous strips; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): a young plant bears juvenile awl-shaped needles in place of the adult scale leaves (juvenile until about 6 years; foliage lives about 14 years, so inner shoots keep them longer); set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
     }
   },
   "provenance": {

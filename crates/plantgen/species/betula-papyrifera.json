@@ -79,6 +79,9 @@
           "tooth_depth": 0.02,
           "petiole": 0.18
         },
+        "families": {
+          "plasticity": 0.4
+        },
         "accent": [0.3, 0.2, 0.12]
       },
       "bloom": {
@@ -138,7 +141,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: green leaves; white bark peeling in papery strips. Fruit (plant roadmap P4), as in mid-July: slender hanging fruiting catkins 3 to 5 cm long, green going brown. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: catkins in April and May; the fruiting catkins green in summer, brown in August and September, breaking up in the autumn. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): white bark peeling in papery strips round the stem from orange-brown inner bark, with dark horizontal lenticels; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: green leaves; white bark peeling in papery strips. Fruit (plant roadmap P4), as in mid-July: slender hanging fruiting catkins 3 to 5 cm long, green going brown. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: catkins in April and May; the fruiting catkins green in summer, brown in August and September, breaking up in the autumn. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): white bark peeling in papery strips round the stem from orange-brown inner bark, with dark horizontal lenticels; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves somewhat smaller and narrower than shade leaves; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
     }
   },
   "provenance": {

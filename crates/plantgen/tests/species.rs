@@ -85,12 +85,47 @@ fn builtin_species_shade_with_the_area_they_draw() {
         let looks = spec.appearance.looks(program.organs());
         let templates = Templates::for_looks(&looks);
         let shading = spec::organ_areas(&program, &params).unwrap();
-        assert_eq!(shading.len(), looks.len());
-        for ((look, template), shaded) in looks.iter().zip(&templates.templates).zip(shading) {
+        // One look per organ type, then its leaves' families' looks.
+        assert!(shading.len() <= looks.len());
+        for ((look, template), shaded) in looks.iter().zip(&templates.templates).zip(&shading) {
             let drawn = templates::drawn_area(look, template);
-            if !spec::areas_agree(drawn, shaded) {
+            if !spec::areas_agree(drawn, *shaded) {
                 failures.push(format!(
                     "{id} `{}` draws {drawn:.3} m² on an organ 1 m long but shades with {shaded:.3} m²",
+                    look.organ
+                ));
+            }
+        }
+        // Sun leaves draw less than their type's look and shade leaves
+        // more, about evenly, so a crown with as many of each draws what
+        // the light model shades with.
+        for (index, look) in looks.iter().enumerate().take(shading.len()) {
+            let forms = look.forms;
+            let area = |index: usize, size: f64| {
+                templates::drawn_area(&looks[index], &templates.templates[index]) * size * size
+            };
+            // Juvenile leaves draw about what the type's own look draws.
+            if let Some((juvenile, _)) = forms.juvenile
+                && !spec::areas_agree(area(juvenile, 1.0), area(index, 1.0))
+            {
+                failures.push(format!(
+                    "{id} `{}`: juvenile leaves draw {:.3} m², its own look {:.3}",
+                    look.organ,
+                    area(juvenile, 1.0),
+                    area(index, 1.0)
+                ));
+            }
+            let (Some(sun), Some(shade)) = (forms.sun, forms.shade) else {
+                continue;
+            };
+            let (own, sun, shade) = (
+                area(index, 1.0),
+                area(sun, forms.sizes.0),
+                area(shade, forms.sizes.1),
+            );
+            if !(sun < own && own < shade && spec::areas_agree(f64::midpoint(sun, shade), own)) {
+                failures.push(format!(
+                    "{id} `{}`: sun leaves draw {sun:.3} m², its own look {own:.3}, shade leaves {shade:.3}",
                     look.organ
                 ));
             }
@@ -408,7 +443,10 @@ fn needled_species_grow_solid_shoots() {
             );
         }
     }
-    assert_eq!(checked, 9, "the needled conifers and the bald cypress");
+    assert_eq!(
+        checked, 10,
+        "the needled conifers, the bald cypress and the juniper's juvenile needles"
+    );
 }
 
 /// Fronds open and sag as they age (plant forms F4): on a fern, palms and

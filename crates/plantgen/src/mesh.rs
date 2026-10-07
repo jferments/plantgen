@@ -913,7 +913,13 @@ fn organ_cards(graph: &PlantGraph, looks: &[Look], solid: &[bool], variation: f3
         if solid.get(index).copied().unwrap_or(false) {
             continue;
         }
-        let (Some(look), Ok(template)) = (looks.get(index), u8::try_from(index)) else {
+        let Some(look) = looks.get(index) else {
+            continue;
+        };
+        // A sun, shade or juvenile leaf is drawn with its family's look
+        // (plant roadmap P4), placed and coloured as its type's.
+        let (drawn, share) = look.forms.of(index, organ.light, organ.born);
+        let (Some(shown), Ok(template)) = (looks.get(drawn), u8::try_from(drawn)) else {
             continue;
         };
         let (base, heading, left) = place(organ, look);
@@ -921,15 +927,15 @@ fn organ_cards(graph: &PlantGraph, looks: &[Look], solid: &[bool], variation: f3
             base,
             heading,
             left,
-            length: organ.size,
-            width: organ.size * look.shape.aspect(),
+            length: organ.size * share,
+            width: organ.size * share * shown.shape.aspect(),
             color: organ_color(look, variation, organ.light, organ.id),
             template,
             born: organ.born,
             shed: organ.shed,
-            bend: look.bend,
+            bend: shown.bend,
         };
-        if let Some(cross) = look.shape.cross() {
+        if let Some(cross) = shown.shape.cross() {
             // A second card across the first keeps organs that stand
             // out all round their axis full when seen edge on.
             cards.push(
@@ -1655,11 +1661,72 @@ mod tests {
             bend: None,
             form: None,
             season: None,
+            families: None,
         }
     }
 
     fn vector(v: [f32; 3]) -> Vec3 {
         Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]))
+    }
+
+    #[test]
+    fn leaves_are_drawn_by_their_family() {
+        // Sun and shade leaves by their light, juvenile leaves while the
+        // plant was young (plant roadmap P4).
+        let mut appearance = appearance();
+        appearance.organs.insert(
+            "leaf".into(),
+            OrganLook {
+                families: Some(crate::looks::Families {
+                    plasticity: 0.6,
+                    juvenile: Some(crate::looks::Juvenile {
+                        until: 4.0,
+                        shape: Shape::Simple(crate::looks::Simple::default()),
+                    }),
+                }),
+                ..look(Shape::Lobed(crate::looks::Lobed::default()), 0.0)
+            },
+        );
+        let looks = appearance.looks([("leaf", OrganKind::Leaf)]);
+        let forms = looks[0].forms;
+        let leaf = |light: f64, born: f64| GraphOrgan {
+            born,
+            light,
+            ..organ(Vec3::Y, Vec3::X)
+        };
+        let graph = PlantGraph {
+            age: 12.0,
+            height: 1.0,
+            segments: Vec::new(),
+            organs: vec![
+                leaf(0.9, 8.0),
+                leaf(0.5, 8.0),
+                leaf(0.1, 8.0),
+                leaf(0.9, 2.0),
+            ],
+        };
+        let cards = build_plain(&graph, &looks, &appearance, &lod(0.0, 0.0, 0.0)).cards;
+        let template = |at: usize| usize::from(cards[at].template);
+        assert_eq!(cards.len(), 4);
+        let by_template = |index: usize| {
+            cards
+                .iter()
+                .find(|card| usize::from(card.template) == index)
+                .copied()
+                .unwrap()
+        };
+        let (sun, own, shade) = (
+            by_template(forms.sun.unwrap()),
+            by_template(0),
+            by_template(forms.shade.unwrap()),
+        );
+        assert!(sun.length < own.length && own.length < shade.length);
+        assert!(
+            cards
+                .iter()
+                .any(|card| usize::from(card.template) == forms.juvenile.unwrap().0)
+        );
+        assert!((0..4).all(|at| template(at) < looks.len()));
     }
 
     #[test]
