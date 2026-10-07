@@ -32,10 +32,10 @@
       "extinction": 0.45,
       "blooms": 2,
       "bloom_age": 10,
-      "bloom_size": 0.05,
-      "bloom_angle": 150,
+      "bloom_size": 0.045,
+      "bloom_angle": 130,
       "leaf_area": 0.304,
-      "bloom_area": 0.071
+      "bloom_area": 0.289
     }
   },
   "growth": {
@@ -69,8 +69,32 @@
         "accent": [0.3, 0.2, 0.12]
       },
       "bloom": {
-        "shape": { "template": "spike", "florets": 18, "aspect": 0.14, "plume": 0.3, "stalk": 0.05 },
-        "colour": [0.4, 0.33, 0.18]
+        "shape": {
+          "template": "fruit",
+          "cone": 1,
+          "aspect": 0.22
+        },
+        "colour": [0.42, 0.3, 0.16],
+        "accent": [0.33, 0.38, 0.16],
+        "season": {
+          "bud": 95,
+          "flower": 110,
+          "fruit": 140,
+          "ripe": 220,
+          "ripening": 30,
+          "fall": 320,
+          "flower_look": {
+            "shape": {
+              "template": "spike",
+              "florets": 18,
+              "aspect": 0.14,
+              "plume": 0.3,
+              "stalk": 0.05
+            },
+            "colour": [0.4, 0.33, 0.18],
+            "size": 1.1
+          }
+        }
       }
     },
     "ridges": {
@@ -101,7 +125,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: green leaves; white bark peeling in papery strips."
+      "note": "Colours chosen by eye: green leaves; white bark peeling in papery strips. Fruit (plant roadmap P4), as in mid-July: slender hanging fruiting catkins 3 to 5 cm long, green going brown. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: catkins in April and May; the fruiting catkins green in summer, brown in August and September, breaking up in the autumn. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     }
   },
   "provenance": {

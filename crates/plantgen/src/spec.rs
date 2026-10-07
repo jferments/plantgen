@@ -982,6 +982,25 @@ impl Appearance {
         looks::resolve(organs, &self.organs, self.foliage, self.foliage_shade)
     }
 
+    /// The looks of [`Appearance::looks`] on day `day` of the year, with
+    /// each organ type's size then as a share of its size in fruit (0 when
+    /// gone); see [`looks::resolve_on`].
+    #[must_use]
+    pub fn looks_on<'a>(
+        &self,
+        organs: impl IntoIterator<Item = (&'a str, OrganKind)>,
+        day: Option<f64>,
+    ) -> (Vec<Look>, Vec<f64>) {
+        looks::resolve_on(organs, &self.organs, self.foliage, self.foliage_shade, day)
+    }
+
+    /// Whether any organ has a season ([`looks::Season`]): then the day a
+    /// package is grown for changes it.
+    #[must_use]
+    pub fn has_seasons(&self) -> bool {
+        self.organs.values().any(|look| look.season.is_some())
+    }
+
     /// The look of each of a program's body types, in its declaration
     /// order (see [`Program::bodies`]).
     #[must_use]

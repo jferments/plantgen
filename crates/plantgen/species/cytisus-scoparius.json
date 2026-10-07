@@ -44,10 +44,10 @@
       "leaf_angle": 30,
       "blooms": 3,
       "bloom_age": 2,
-      "bloom_size": 0.022,
-      "bloom_angle": 60,
+      "bloom_size": 0.05,
+      "bloom_angle": 45,
       "leaf_area": 0.205,
-      "bloom_area": 0.671
+      "bloom_area": 0.434
     }
   },
   "growth": {
@@ -81,15 +81,38 @@
       },
       "bloom": {
         "shape": {
-          "template": "flower",
-          "petals": 5,
-          "petal_width": 1.2,
-          "point": 0.1,
-          "notch": 0.0,
-          "centre": 0.1
+          "template": "fruit",
+          "kind": "pod",
+          "count": 2,
+          "cluster": "pair",
+          "size": 0.8,
+          "spread": 20,
+          "aspect": 0.22,
+          "unripe": 0.4
         },
-        "colour": [0.92, 0.78, 0.08],
-        "accent": [0.85, 0.6, 0.05]
+        "colour": [0.12, 0.1, 0.08],
+        "accent": [0.33, 0.45, 0.15],
+        "season": {
+          "bud": 90,
+          "flower": 110,
+          "fruit": 160,
+          "ripe": 185,
+          "ripening": 30,
+          "fall": 260,
+          "flower_look": {
+            "shape": {
+              "template": "flower",
+              "petals": 5,
+              "petal_width": 1.2,
+              "point": 0.1,
+              "notch": 0.0,
+              "centre": 0.1
+            },
+            "colour": [0.92, 0.78, 0.08],
+            "accent": [0.85, 0.6, 0.05],
+            "size": 0.44
+          }
+        }
       }
     }
   },
@@ -113,7 +136,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: green stems and tiny leaves; yellow flowers."
+      "note": "Colours chosen by eye: green stems and tiny leaves; yellow flowers. Fruit (plant roadmap P4), as in mid-July: flat pods 4 to 5 cm long, green ripening black. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: yellow flowers in April to June; pods green, black and bursting in July and August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     }
   },
   "provenance": {

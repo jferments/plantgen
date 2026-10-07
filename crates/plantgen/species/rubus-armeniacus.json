@@ -45,10 +45,10 @@
       "leaf_angle": 55,
       "blooms": 2,
       "bloom_age": 2,
-      "bloom_size": 0.03,
-      "bloom_angle": 60,
+      "bloom_size": 0.08,
+      "bloom_angle": 80,
       "leaf_area": 0.33,
-      "bloom_area": 0.668
+      "bloom_area": 0.521
     }
   },
   "growth": {
@@ -77,15 +77,37 @@
       },
       "bloom": {
         "shape": {
-          "template": "flower",
-          "petals": 5,
-          "petal_width": 1.1,
-          "point": 0.0,
-          "notch": 0.0,
-          "centre": 0.25
+          "template": "fruit",
+          "kind": "drupelets",
+          "count": 8,
+          "size": 0.25,
+          "spread": 40,
+          "aspect": 0.85,
+          "unripe": 0.8
         },
-        "colour": [0.92, 0.85, 0.85],
-        "accent": [0.85, 0.85, 0.6]
+        "colour": [0.06, 0.04, 0.06],
+        "accent": [0.6, 0.08, 0.08],
+        "season": {
+          "bud": 140,
+          "flower": 160,
+          "fruit": 190,
+          "ripe": 215,
+          "ripening": 30,
+          "fall": 290,
+          "flower_look": {
+            "shape": {
+              "template": "flower",
+              "petals": 5,
+              "petal_width": 1.1,
+              "point": 0.0,
+              "notch": 0.0,
+              "centre": 0.25
+            },
+            "colour": [0.92, 0.85, 0.85],
+            "accent": [0.85, 0.85, 0.6],
+            "size": 0.375
+          }
+        }
       }
     }
   },
@@ -109,7 +131,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: dark green leaflets, pale beneath; pale pink flowers; red-purple canes."
+      "note": "Colours chosen by eye: dark green leaflets, pale beneath; pale pink flowers; red-purple canes. Fruit (plant roadmap P4), as in mid-July: panicles of berries, most still green or red, the first black. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: white to pink flowers in June and July; berries green, red, then black from August into October. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     }
   },
   "provenance": {

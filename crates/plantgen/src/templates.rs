@@ -1381,6 +1381,9 @@ fn panicle(s: &Panicle, x: f64, y: f64, fine: f64) -> Paint {
 /// A berry, fruit or cone seen from the side, on a short stalk in the
 /// accent colour.
 fn fruit(s: &Fruit, x: f64, y: f64, fine: f64) -> Paint {
+    if !crate::fruit::is_single(s) {
+        return fruit_cluster(s, x, y, fine);
+    }
     if y < 0.08 {
         return if x.abs() < fine * 1.2 {
             Paint::solid(0.85, 1.0)
@@ -1416,6 +1419,226 @@ fn fruit(s: &Fruit, x: f64, y: f64, fine: f64) -> Paint {
     Paint::solid(0.68 + 0.4 * math::sqrt(1.0 - d) + 0.5 * highlight, 0.0)
 }
 
+/// A cluster, or a fruit of a kind beyond the plain berry (plant roadmap
+/// P4): the layout the solid is drawn from (`crate::fruit`), seen face on
+/// and unturned, with the frontmost fruit or stalk drawn at each point.
+/// Stalks and unripe fruit take the accent colour; a single fruit is as
+/// unripe as the template's share, its mean colour.
+fn fruit_cluster(s: &Fruit, x: f64, y: f64, fine: f64) -> Paint {
+    let placed = crate::fruit::layout(s, 0.0, 0);
+    let mut best: Option<(f64, Paint)> = None;
+    let mut consider = |depth: f64, paint: Paint| {
+        if paint.cover > 0.0 && best.is_none_or(|(front, _)| depth > front) {
+            best = Some((depth, paint));
+        }
+    };
+    let single = placed.len() == 1;
+    let reach = crate::fruit::axis_length(s, &placed);
+    if reach > 0.0 {
+        // The cluster's own axis.
+        let (distance, _) = segment((x, y), (0.0, 0.0), (0.0, reach));
+        if distance < fine * 1.4 {
+            consider(-2.0, Paint::solid(0.8, 1.0));
+        }
+    }
+    for p in &placed {
+        if (p.base - p.attach).length() > 1e-9 {
+            let (distance, _) = segment((x, y), (p.attach.x, p.attach.y), (p.base.x, p.base.y));
+            if distance < fine * 1.1 {
+                consider(p.attach.z.min(p.base.z) - 1.0, Paint::solid(0.8, 1.0));
+            }
+        }
+        let mut paint = one_fruit(s, p, x, y, fine);
+        if single {
+            // A ripening fruit blushes: its share still unripe in the
+            // accent colour, from the shaded lower side up.
+            let (along, across) = local((x, y), (p.base.x, p.base.y), (0.0, 1.0));
+            let side = 0.5 * (along + 0.5 * across / (s.aspect * 0.5).max(0.05) + 0.5);
+            let green = 1.0 - math::smoothstep(s.unripe - 0.15, s.unripe + 0.15, side);
+            paint.accent = paint.accent.max(if s.unripe > 0.0 { green } else { 0.0 });
+        } else if p.unripe {
+            paint.accent = 1.0;
+        }
+        consider(p.base.z + p.direction.z * p.length * 0.5, paint);
+    }
+    best.map_or(Paint::EMPTY, |(_, paint)| paint)
+}
+
+/// One fruit of a cluster at card point `(x, y)`: its kind's outline and
+/// shading along its projected axis.
+#[allow(clippy::too_many_lines)]
+fn one_fruit(s: &Fruit, p: &crate::fruit::Placed, x: f64, y: f64, fine: f64) -> Paint {
+    use crate::looks::FruitKind;
+    let half_width = (p.length * s.aspect * 0.5).max(fine);
+    let projected = hypot(p.direction.x, p.direction.y);
+    let axis = if projected > 0.05 {
+        (p.direction.x / projected, p.direction.y / projected)
+    } else {
+        (0.0, 1.0)
+    };
+    // Seen from the side the fruit is its length; seen end on, round.
+    let length = (p.length * projected).max(2.0 * half_width);
+    let (along, across) = local((x, y), (p.base.x, p.base.y), axis);
+    let t = along / length;
+    let v = across / half_width;
+    if !(-0.05..=1.05).contains(&t) {
+        return Paint::EMPTY;
+    }
+    // An ellipse centred at `middle` along the fruit, `reach` long each
+    // way, `wide` of the half-width: its d², under 1 inside.
+    let ellipse = |middle: f64, reach: f64, wide: f64| {
+        let dt = (t - middle) / reach;
+        let dv = v / wide;
+        dt * dt + dv * dv
+    };
+    let ball = |d: f64, middle: f64, reach: f64| {
+        let dt = (t - middle) / reach;
+        let highlight = math::exp(-((v + 0.35).powi(2) + (dt - 0.4).powi(2)) * 9.0);
+        0.68 + 0.4 * math::sqrt((1.0 - d).max(0.0)) + 0.5 * highlight
+    };
+    if s.cone >= 0.5 {
+        let d = ellipse(0.5, 0.5, 1.0);
+        if d >= 1.0 {
+            return Paint::EMPTY;
+        }
+        let rows = 7.0;
+        let tip = frac(t * rows + v).min(frac(t * rows - v));
+        return Paint::solid(ball(d, 0.5, 0.5) * (0.55 + 0.75 * tip) * 0.85, 0.0);
+    }
+    match s.kind {
+        FruitKind::Berry => {
+            let d = ellipse(0.5, 0.5, 1.0);
+            if d >= 1.0 {
+                return Paint::EMPTY;
+            }
+            Paint::solid(ball(d, 0.5, 0.5), 0.0)
+        }
+        FruitKind::Crowned | FruitKind::Pome => {
+            let wide = if s.kind == FruitKind::Pome { 1.08 } else { 1.0 };
+            let d = ellipse(0.5, 0.5, wide);
+            if d >= 1.0 {
+                return Paint::EMPTY;
+            }
+            // The calyx's dark eye at the tip.
+            let eye = ellipse(0.93, 0.07, 0.28);
+            let bright = if eye < 1.0 { 0.4 } else { ball(d, 0.5, 0.5) };
+            Paint::solid(bright, 0.0)
+        }
+        FruitKind::Drupelets => {
+            // Drupelets in offset rows scallop the outline.
+            let cell = 0.32;
+            let row = (t * 0.5 / cell * (length / half_width)).floor();
+            let offset = if row % 2.0 == 0.0 { 0.0 } else { 0.5 };
+            let fu = frac(t * 0.5 / cell * (length / half_width));
+            let fv = frac(v / (2.0 * cell) + offset);
+            let bump = (1.0 - ((fu - 0.5).powi(2) + (fv - 0.5).powi(2)) * 4.0).clamp(0.0, 1.0);
+            let d = ellipse(0.5, 0.5, 1.0) * (1.0 + 0.08 * (1.0 - bump));
+            if d >= 1.0 {
+                return Paint::EMPTY;
+            }
+            Paint::solid(0.5 + 0.55 * bump + 0.25 * math::sqrt(1.0 - d), 0.0)
+        }
+        FruitKind::Hip => {
+            let d = ellipse(0.4, 0.4, 1.0);
+            if d < 1.0 {
+                return Paint::solid(ball(d, 0.4, 0.4), 0.0);
+            }
+            // Three of the five sepals spreading from the mouth.
+            for k in [-1.0, 0.0, 1.0] {
+                let angle = math::radians(32.0) * k;
+                let reach = 0.2;
+                let end = (
+                    0.78 + reach * math::cos(angle),
+                    math::sin(angle) * reach * length / half_width,
+                );
+                let (distance, _) = segment((t, v), (0.78, 0.0), end);
+                if distance * half_width < fine * 1.2 {
+                    return Paint::solid(0.75, 1.0);
+                }
+            }
+            Paint::EMPTY
+        }
+        FruitKind::Samara => {
+            // The seed in the first fifth.
+            if ellipse(0.11, 0.11, 0.34) < 1.0 {
+                return Paint::solid(0.72, 0.0);
+            }
+            // The wing beyond it, widest past its middle, a little to one
+            // side, with veins fanning from the seed.
+            let w = ((t - 0.12) / 0.88).clamp(0.0, 1.0);
+            if t < 0.12 {
+                return Paint::EMPTY;
+            }
+            let half = math::pow(math::sin(math::PI * math::pow(w, 0.8)).max(0.0), 0.7);
+            let shifted = v + 0.35 * w * (1.0 - w);
+            if shifted.abs() >= half {
+                return Paint::EMPTY;
+            }
+            let veins = 0.5 + 0.5 * math::cos(28.0 * (w + 0.35 * shifted));
+            Paint::solid(0.82 + 0.18 * veins - 0.15 * w * w, 0.0)
+        }
+        FruitKind::Acorn => {
+            // The cup over the nut's first third, in the accent colour.
+            let cup = ellipse(0.18, 0.2, 1.06);
+            if cup < 1.0 && t < 0.36 {
+                // Overlapping scales in offset rows.
+                let row = (t * 26.0).floor();
+                let scale = frac(v * 3.0 + if row % 2.0 == 0.0 { 0.0 } else { 0.5 });
+                let edge = frac(t * 26.0);
+                return Paint::solid(
+                    0.55 + 0.25 * edge + 0.15 * (1.0 - (scale - 0.5).abs() * 2.0),
+                    1.0,
+                );
+            }
+            let d = ellipse(0.55, 0.45, 0.94);
+            if d >= 1.0 {
+                return Paint::EMPTY;
+            }
+            Paint::solid(ball(d, 0.55, 0.45), 0.0)
+        }
+        FruitKind::Husked => {
+            // A husk round the nut, drawn out into a beak; all accent.
+            let bulb = ellipse(0.22, 0.22, 1.0);
+            // The husk's half-width over the fruit's: 0.84 where the beak
+            // starts, 0.2 at its end.
+            let beak = 0.84 - 0.64 * math::sqrt(((t - 0.42) / 0.58).clamp(0.0, 1.0));
+            if bulb < 1.0 || ((0.3..=1.0).contains(&t) && v.abs() < beak) {
+                let bristle = hash(
+                    (t * 90.0).floor().to_bits(),
+                    (v * 12.0).floor().to_bits(),
+                    0x4A2E,
+                );
+                let round = if bulb < 1.0 {
+                    0.25 * math::sqrt(1.0 - bulb)
+                } else {
+                    0.0
+                };
+                return Paint::solid(0.68 + 0.12 * bristle + round, 1.0);
+            }
+            Paint::EMPTY
+        }
+        FruitKind::Pod => {
+            let bulge = 1.0 + 0.1 * math::cos(std::f64::consts::TAU * 5.0 * t);
+            let d = ellipse(0.5, 0.5, bulge);
+            if d >= 1.0 {
+                return Paint::EMPTY;
+            }
+            let seeds = (math::cos(std::f64::consts::TAU * 5.0 * t)).max(0.0);
+            Paint::solid(0.65 + 0.25 * seeds + 0.2 * math::sqrt(1.0 - d), 0.0)
+        }
+        FruitKind::Capsule => {
+            let d = ellipse(0.5, 0.5, 1.0);
+            if d >= 1.0 {
+                return Paint::EMPTY;
+            }
+            let rib = [-0.6, 0.0, 0.6]
+                .iter()
+                .any(|r| (v - r).abs() < 0.07 + fine / half_width);
+            Paint::solid(if rib { 0.5 } else { ball(d, 0.5, 0.5) }, 0.0)
+        }
+    }
+}
+
 #[cfg(test)]
 // Tests check exact results: clamped, integral and copied values.
 #[allow(clippy::float_cmp)]
@@ -1441,6 +1664,7 @@ mod tests {
                     solid: None,
                     bend: None,
                     form: None,
+                    season: None,
                 },
             );
         }
@@ -1521,6 +1745,7 @@ mod tests {
             Shape::Fruit(Fruit {
                 aspect: 0.5,
                 cone: 1.0,
+                ..Fruit::default()
             }),
         ]
     }

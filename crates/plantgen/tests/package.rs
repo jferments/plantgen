@@ -190,6 +190,7 @@ fn written_packages_read_back_losslessly_and_detect_corruption() {
             assert_eq!(package::encode_mesh(&mesh), bytes);
             assert_eq!(mesh.cards.len(), lod.cards);
             assert_eq!(mesh.wood.triangle_count(), lod.wood_triangles);
+            assert_eq!(mesh.sites.len(), lod.sites);
         }
         for image in [&keyframe.impostor.albedo, &keyframe.impostor.normal_depth] {
             let bytes = package::read_object(&path, image).unwrap();
@@ -213,6 +214,119 @@ fn written_packages_read_back_losslessly_and_detect_corruption() {
         "{error}"
     );
     fs::remove_dir_all(&out).unwrap();
+}
+
+/// A fruiting shrub's package (plant roadmap P4): its fruit's part
+/// meshes read back as built, and level 0 lists every fruit as a site on
+/// a card of the fruit's type, while the wood holds no fruit.
+#[test]
+fn the_day_is_an_input_for_seasons_alone() {
+    // Plant roadmap P4: an organ with a season shows the stage of the day
+    // its package is grown for. A spec without seasons hashes the same on
+    // any day; one with them differs, and on a day its fruit has fallen
+    // draws no bloom cards.
+    let spec = small_spec();
+    assert!(!spec.appearance.has_seasons());
+    let on = |spec: &PlantSpec, day| Inputs::on_day(spec, &TINY, day).unwrap();
+    assert_eq!(on(&spec, 20.0).key, on(&spec, 196.0).key);
+    assert_eq!(on(&spec, 20.0).day, None);
+    let mut cherry = PlantSpec::builtin("prunus-emarginata").unwrap();
+    cherry.growth.years = 8.0;
+    cherry.growth.keyframes = vec![8.0];
+    cherry.variants.seeds = vec![1];
+    cherry.allometry.clear();
+    let summer = on(&cherry, package::DEFAULT_DAY);
+    assert_eq!(summer.day, Some(package::DEFAULT_DAY));
+    assert_eq!(summer.key, Inputs::new(&cherry, &TINY).unwrap().key);
+    let winter = on(&cherry, 20.0);
+    assert_ne!(summer.key, winter.key);
+    assert!(Inputs::on_day(&cherry, &TINY, 400.0).is_err());
+    let bloom_cards = |inputs: &Inputs| {
+        let built = package::build(inputs, 2, &mut |_| {}).unwrap();
+        assert_eq!(built.manifest.day, inputs.day);
+        let bloom = built
+            .manifest
+            .organ_types
+            .iter()
+            .position(|organ| organ.name == "bloom")
+            .unwrap();
+        let lods = &built.manifest.variants[0].keyframes[0].lods;
+        let mesh = package::decode_mesh(&built.objects[&lods[0].mesh]).unwrap();
+        (
+            mesh.cards
+                .iter()
+                .filter(|card| usize::from(card.template) == bloom)
+                .count(),
+            built.manifest.parts.is_some(),
+        )
+    };
+    let (cards, parts) = bloom_cards(&summer);
+    assert!(
+        cards > 0 && parts,
+        "an eight-year cherry bears fruit in July"
+    );
+    assert_eq!(bloom_cards(&winter), (0, false), "and nothing in January");
+}
+
+#[test]
+fn part_meshes_and_sites_read_back() {
+    let mut spec = PlantSpec::builtin("symphoricarpos-albus").unwrap();
+    spec.growth.years = 6.0;
+    spec.growth.keyframes = vec![6.0];
+    spec.variants.environments = vec![Environment::Open];
+    spec.variants.seeds = vec![1];
+    spec.allometry.clear();
+    let inputs = Inputs::new(&spec, &TINY).unwrap();
+    let built = package::build(&inputs, 2, &mut |_| {}).unwrap();
+    let parts = built
+        .manifest
+        .parts
+        .as_ref()
+        .expect("fruit has part meshes");
+    let bloom = built
+        .manifest
+        .organ_types
+        .iter()
+        .position(|organ| organ.name == "bloom")
+        .unwrap();
+    assert_eq!(
+        parts
+            .types
+            .iter()
+            .map(|part| part.template)
+            .collect::<Vec<_>>(),
+        vec![bloom]
+    );
+    let bytes = &built.objects[&parts.object];
+    let decoded = package::decode_parts(bytes).unwrap();
+    assert_eq!(&package::encode_parts(&decoded), bytes);
+    assert_eq!(decoded[0].variants.len(), parts.types[0].variants);
+    assert!(decoded[0].triangles() <= after_plants::parts::TRIANGLES);
+
+    let lods = &built.manifest.variants[0].keyframes[0].lods;
+    let mesh = package::decode_mesh(&built.objects[&lods[0].mesh]).unwrap();
+    assert!(!mesh.sites.is_empty(), "a six-year snowberry fruits");
+    assert_eq!(mesh.sites.len(), lods[0].sites);
+    for &site in &mesh.sites {
+        assert_eq!(usize::from(mesh.cards[site as usize].template), bloom);
+    }
+    let fruit_cards = mesh
+        .cards
+        .iter()
+        .filter(|card| usize::from(card.template) == bloom)
+        .count();
+    // Fruit draw a crossing card and their own: two cards a site.
+    assert_eq!(fruit_cards, 2 * mesh.sites.len());
+    // Farther levels list no sites.
+    for lod in &lods[1..] {
+        assert_eq!(lod.sites, 0);
+    }
+    // Sites out of order are refused.
+    assert!(mesh.sites.len() > 1);
+    let mut swapped = mesh.clone();
+    swapped.sites.swap(0, 1);
+    let error = package::decode_mesh(&package::encode_mesh(&swapped)).unwrap_err();
+    assert!(error.to_string().contains("sites"), "{error}");
 }
 
 #[test]

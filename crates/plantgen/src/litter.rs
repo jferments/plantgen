@@ -1521,6 +1521,7 @@ fn draw_extra(canvas: &mut Canvas, extra: &Extra, draws: Draws, scales: [f64; 3]
         organ_templates(&[Shape::Fruit(Fruit {
             aspect: extra.aspect,
             cone: 1.0,
+            ..Fruit::default()
         })])
     });
     for i in 0..count {

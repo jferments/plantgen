@@ -43,7 +43,11 @@
       "spur_pairs": 1,
       "leaf_angle": 55,
       "leaf_area": 0.493,
-      "bloom_area": 0.639
+      "bloom_area": 0.236,
+      "blooms": 1,
+      "bloom_age": 6,
+      "bloom_size": 0.055,
+      "bloom_angle": 80
     }
   },
   "growth": {
@@ -72,6 +76,38 @@
           "petiole": 0.3
         },
         "face_up": 0.6
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "kind": "samara",
+          "count": 4,
+          "cluster": "pair",
+          "size": 0.45,
+          "spread": 85,
+          "aspect": 0.35,
+          "unripe": 0.4
+        },
+        "colour": [0.6, 0.15, 0.1],
+        "accent": [0.4, 0.5, 0.15],
+        "season": {
+          "bud": 95,
+          "flower": 110,
+          "fruit": 140,
+          "ripe": 175,
+          "ripening": 40,
+          "fall": 300,
+          "flower_look": {
+            "shape": {
+              "template": "umbel",
+              "clusters": 1,
+              "florets": 8
+            },
+            "colour": [0.78, 0.3, 0.25],
+            "accent": [0.95, 0.92, 0.85],
+            "size": 0.8
+          }
+        }
       }
     }
   },
@@ -95,7 +131,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: bright green leaves, red and orange in autumn; smooth greenish-brown bark."
+      "note": "Colours chosen by eye: bright green leaves, red and orange in autumn; smooth greenish-brown bark. Fruit (plant roadmap P4), as in mid-July: samara pairs with wings spread almost straight apart, red and green. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: small red-and-white flowers in April and May; samaras red-winged from July, brown in the autumn. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     }
   },
   "provenance": {

@@ -29,7 +29,12 @@
       "fork_angle": 28,
       "pipe_tip": 0.003,
       "pipe_organ": 0.006,
-      "pipe_rings": 8e-06
+      "pipe_rings": 8e-06,
+      "blooms": 1,
+      "bloom_age": 10,
+      "bloom_size": 0.16,
+      "bloom_angle": 150,
+      "bloom_area": 0.297
     }
   },
   "growth": {
@@ -59,6 +64,38 @@
         },
         "accent": [0.25, 0.3, 0.06],
         "face_up": 0.35
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "kind": "samara",
+          "count": 10,
+          "cluster": "pair",
+          "size": 0.3,
+          "spread": 30,
+          "aspect": 0.32
+        },
+        "colour": [0.55, 0.42, 0.22],
+        "accent": [0.42, 0.45, 0.2],
+        "season": {
+          "bud": 80,
+          "flower": 95,
+          "fruit": 125,
+          "ripe": 245,
+          "ripening": 35,
+          "fall": 330,
+          "flower_look": {
+            "shape": {
+              "template": "spike",
+              "florets": 25,
+              "aspect": 0.35,
+              "plume": 0.0,
+              "stalk": 0.15
+            },
+            "colour": [0.72, 0.74, 0.28],
+            "size": 0.8
+          }
+        }
       }
     },
     "ridges": {
@@ -107,7 +144,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye from photographs. Leaf: five deep, sparsely toothed lobes on a long petiole. Bark: shallow twisting ridges, a buttressed base and moss on the upper side of thick limbs, as on coastal trees."
+      "note": "Colours chosen by eye from photographs. Leaf: five deep, sparsely toothed lobes on a long petiole. Bark: shallow twisting ridges, a buttressed base and moss on the upper side of thick limbs, as on coastal trees. Fruit (plant roadmap P4), as in mid-July: hanging racemes of paired samaras about 4 cm long, green and bristly at the seed. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: hanging racemes of yellow-green flowers in April; samaras green all summer, brown in September and October, falling into the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     }
   },
   "provenance": {
@@ -117,7 +154,7 @@
         "licence": "method citation; no data used"
       },
       {
-        "title": "Pałubicki et al. 2009, Self-organizing tree models for image synthesis (method only)",
+        "title": "Pa\u0142ubicki et al. 2009, Self-organizing tree models for image synthesis (method only)",
         "licence": "method citation; no data used"
       },
       {

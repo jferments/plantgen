@@ -29,14 +29,14 @@
       "wiggle": 5,
       "blooms": 3,
       "bloom_age": 5,
-      "bloom_size": 0.04,
-      "bloom_angle": 40,
+      "bloom_size": 0.045,
+      "bloom_angle": 90,
       "extinction": 0.45,
       "space_reach": 2.0,
       "space_kill": 0.6,
       "pipe_rings": 1.2e-05,
       "leaf_area": 0.248,
-      "bloom_area": 0.639
+      "bloom_area": 0.479
     }
   },
   "growth": {
@@ -70,9 +70,36 @@
         "accent": [0.4, 0.2, 0.12]
       },
       "bloom": {
-        "shape": { "template": "flower", "petals": 5, "petal_width": 1.0, "centre": 0.2 },
-        "colour": [0.92, 0.9, 0.85],
-        "accent": [0.8, 0.75, 0.4]
+        "shape": {
+          "template": "fruit",
+          "count": 6,
+          "cluster": "umbel",
+          "size": 0.25,
+          "spread": 35,
+          "aspect": 0.95,
+          "unripe": 0.25
+        },
+        "colour": [0.62, 0.05, 0.06],
+        "accent": [0.45, 0.5, 0.15],
+        "season": {
+          "bud": 95,
+          "flower": 110,
+          "fruit": 135,
+          "ripe": 175,
+          "ripening": 25,
+          "fall": 245,
+          "flower_look": {
+            "shape": {
+              "template": "flower",
+              "petals": 5,
+              "petal_width": 1.0,
+              "centre": 0.2
+            },
+            "colour": [0.92, 0.9, 0.85],
+            "accent": [0.8, 0.75, 0.4],
+            "size": 0.9
+          }
+        }
       }
     },
     "ridges": {
@@ -103,7 +130,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: green leaves; smooth, shiny reddish-brown bark."
+      "note": "Colours chosen by eye: green leaves; smooth, shiny reddish-brown bark. Fruit (plant roadmap P4), as in mid-July: corymbs of bright red cherries about 1 cm across, a few still green. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: white flowers in April and May; cherries red in July, gone by early September. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     }
   },
   "provenance": {

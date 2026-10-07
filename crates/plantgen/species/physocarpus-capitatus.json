@@ -44,10 +44,10 @@
       "leaf_angle": 50,
       "blooms": 1,
       "bloom_age": 3,
-      "bloom_size": 0.06,
+      "bloom_size": 0.05,
       "bloom_angle": 20,
       "leaf_area": 0.573,
-      "bloom_area": 0.494
+      "bloom_area": 0.715
     }
   },
   "growth": {
@@ -77,9 +77,35 @@
         }
       },
       "bloom": {
-        "shape": { "template": "umbel", "clusters": 1, "florets": 30 },
-        "colour": [0.95, 0.93, 0.88],
-        "accent": [0.8, 0.6, 0.6]
+        "shape": {
+          "template": "fruit",
+          "kind": "capsule",
+          "count": 15,
+          "cluster": "head",
+          "size": 0.35,
+          "aspect": 0.5,
+          "unripe": 0.5
+        },
+        "colour": [0.55, 0.2, 0.12],
+        "accent": [0.4, 0.48, 0.2],
+        "season": {
+          "bud": 120,
+          "flower": 135,
+          "fruit": 165,
+          "ripe": 180,
+          "ripening": 30,
+          "fall": 380,
+          "flower_look": {
+            "shape": {
+              "template": "umbel",
+              "clusters": 1,
+              "florets": 30
+            },
+            "colour": [0.95, 0.93, 0.88],
+            "accent": [0.8, 0.6, 0.6],
+            "size": 1.2
+          }
+        }
       }
     }
   },
@@ -103,7 +129,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: glossy mid-green leaves; white flower heads; peeling brown bark."
+      "note": "Colours chosen by eye: glossy mid-green leaves; white flower heads; peeling brown bark. Fruit (plant roadmap P4), as in mid-July: round heads of small inflated follicles, green turning reddish. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: white heads in May and June; follicles reddish from July, dry and brown into the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     }
   },
   "provenance": {

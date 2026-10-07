@@ -32,14 +32,14 @@
       "fork_angle": 30,
       "blooms": 3,
       "bloom_age": 5,
-      "bloom_size": 0.035,
-      "bloom_angle": 40,
+      "bloom_size": 0.045,
+      "bloom_angle": 90,
       "space_reach": 1.6,
       "space_kill": 0.45,
       "extinction": 0.45,
       "pipe_rings": 1.2e-05,
       "leaf_area": 0.26,
-      "bloom_area": 0.668
+      "bloom_area": 0.567
     }
   },
   "growth": {
@@ -73,9 +73,37 @@
         "accent": [0.35, 0.25, 0.15]
       },
       "bloom": {
-        "shape": { "template": "flower", "petals": 5, "petal_width": 1.1, "centre": 0.2 },
-        "colour": [0.95, 0.88, 0.88],
-        "accent": [0.9, 0.8, 0.4]
+        "shape": {
+          "template": "fruit",
+          "kind": "pome",
+          "count": 6,
+          "cluster": "umbel",
+          "size": 0.3,
+          "spread": 35,
+          "aspect": 0.85,
+          "unripe": 0.7
+        },
+        "colour": [0.85, 0.5, 0.12],
+        "accent": [0.45, 0.55, 0.18],
+        "season": {
+          "bud": 100,
+          "flower": 115,
+          "fruit": 140,
+          "ripe": 220,
+          "ripening": 35,
+          "fall": 320,
+          "flower_look": {
+            "shape": {
+              "template": "flower",
+              "petals": 5,
+              "petal_width": 1.1,
+              "centre": 0.2
+            },
+            "colour": [0.95, 0.88, 0.88],
+            "accent": [0.9, 0.8, 0.4],
+            "size": 0.78
+          }
+        }
       }
     },
     "ridges": {
@@ -105,7 +133,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: green leaves; white flowers flushed pink; grey-brown, scaly bark."
+      "note": "Colours chosen by eye: green leaves; white flowers flushed pink; grey-brown, scaly bark. Fruit (plant roadmap P4), as in mid-July: clusters of little apples 1 to 1.5 cm long on long stalks, green turning yellow and red. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: pinkish-white flowers in April and May; little apples green in summer, yellow to red in August and September, hanging into November. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     }
   },
   "provenance": {

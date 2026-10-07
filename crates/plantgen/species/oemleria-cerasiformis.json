@@ -44,10 +44,10 @@
       "leaf_angle": 40,
       "blooms": 1,
       "bloom_age": 3,
-      "bloom_size": 0.08,
-      "bloom_angle": 130,
+      "bloom_size": 0.035,
+      "bloom_angle": 120,
       "leaf_area": 0.177,
-      "bloom_area": 0.18
+      "bloom_area": 0.355
     }
   },
   "growth": {
@@ -77,9 +77,36 @@
         }
       },
       "bloom": {
-        "shape": { "template": "spike", "florets": 8, "aspect": 0.35, "plume": 0.0, "stalk": 0.2 },
-        "colour": [0.93, 0.93, 0.85],
-        "accent": [0.6, 0.7, 0.4]
+        "shape": {
+          "template": "fruit",
+          "count": 4,
+          "size": 0.3,
+          "spread": 45,
+          "aspect": 0.7,
+          "unripe": 0.4
+        },
+        "colour": [0.08, 0.07, 0.14],
+        "accent": [0.85, 0.45, 0.15],
+        "season": {
+          "bud": 40,
+          "flower": 55,
+          "fruit": 95,
+          "ripe": 150,
+          "ripening": 40,
+          "fall": 210,
+          "flower_look": {
+            "shape": {
+              "template": "spike",
+              "florets": 8,
+              "aspect": 0.35,
+              "plume": 0.0,
+              "stalk": 0.2
+            },
+            "colour": [0.93, 0.93, 0.85],
+            "accent": [0.6, 0.7, 0.4],
+            "size": 2.3
+          }
+        }
       }
     }
   },
@@ -103,7 +130,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: light green leaves; white hanging flowers; purple-brown bark."
+      "note": "Colours chosen by eye: light green leaves; white hanging flowers; purple-brown bark. Fruit (plant roadmap P4), as in mid-July: short hanging racemes of plum-like drupes, orange ripening blue-black. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: hanging white racemes in February and March; fruit orange, then blue-black from June, gone by August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     }
   },
   "provenance": {

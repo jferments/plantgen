@@ -43,10 +43,10 @@
       "leaf_angle": 55,
       "blooms": 1,
       "bloom_age": 3,
-      "bloom_size": 0.1,
-      "bloom_angle": 40,
+      "bloom_size": 0.06,
+      "bloom_angle": 60,
       "leaf_area": 0.246,
-      "bloom_area": 0.36
+      "bloom_area": 0.774
     }
   },
   "growth": {
@@ -74,9 +74,34 @@
         }
       },
       "bloom": {
-        "shape": { "template": "umbel", "clusters": 9, "florets": 12 },
-        "colour": [0.78, 0.1, 0.06],
-        "accent": [0.6, 0.05, 0.03]
+        "shape": {
+          "template": "fruit",
+          "count": 40,
+          "cluster": "head",
+          "size": 0.16,
+          "aspect": 1.0,
+          "unripe": 0.15
+        },
+        "colour": [0.8, 0.08, 0.06],
+        "accent": [0.4, 0.5, 0.15],
+        "season": {
+          "bud": 85,
+          "flower": 100,
+          "fruit": 130,
+          "ripe": 165,
+          "ripening": 25,
+          "fall": 230,
+          "flower_look": {
+            "shape": {
+              "template": "umbel",
+              "clusters": 9,
+              "florets": 12
+            },
+            "colour": [0.92, 0.9, 0.75],
+            "accent": [0.85, 0.82, 0.6],
+            "size": 1.67
+          }
+        }
       }
     }
   },
@@ -100,7 +125,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: mid-green leaflets; red berry clusters; grey-brown warty bark."
+      "note": "Colours chosen by eye: mid-green leaflets; red berry clusters; grey-brown warty bark. Fruit (plant roadmap P4), as in mid-July: dome-shaped clusters of bright red berries about 5 mm across. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: creamy pyramidal clusters in April and May; berries red in late June and July, eaten by August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     }
   },
   "provenance": {

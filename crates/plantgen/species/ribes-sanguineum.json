@@ -44,10 +44,10 @@
       "leaf_angle": 50,
       "blooms": 1,
       "bloom_age": 3,
-      "bloom_size": 0.08,
+      "bloom_size": 0.05,
       "bloom_angle": 120,
       "leaf_area": 0.518,
-      "bloom_area": 0.236
+      "bloom_area": 0.445
     }
   },
   "growth": {
@@ -77,9 +77,37 @@
         }
       },
       "bloom": {
-        "shape": { "template": "spike", "florets": 12, "aspect": 0.35, "plume": 0.0, "stalk": 0.15 },
-        "colour": [0.85, 0.25, 0.35],
-        "accent": [0.95, 0.75, 0.8]
+        "shape": {
+          "template": "fruit",
+          "kind": "crowned",
+          "count": 6,
+          "size": 0.22,
+          "spread": 40,
+          "aspect": 1.0,
+          "unripe": 0.3
+        },
+        "colour": [0.18, 0.2, 0.32],
+        "accent": [0.45, 0.5, 0.25],
+        "season": {
+          "bud": 60,
+          "flower": 75,
+          "fruit": 110,
+          "ripe": 170,
+          "ripening": 30,
+          "fall": 250,
+          "flower_look": {
+            "shape": {
+              "template": "spike",
+              "florets": 12,
+              "aspect": 0.35,
+              "plume": 0.0,
+              "stalk": 0.15
+            },
+            "colour": [0.85, 0.25, 0.35],
+            "accent": [0.95, 0.75, 0.8],
+            "size": 1.6
+          }
+        }
       }
     }
   },
@@ -103,7 +131,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: dull green leaves; pink-red flowers; reddish-brown bark."
+      "note": "Colours chosen by eye: dull green leaves; pink-red flowers; reddish-brown bark. Fruit (plant roadmap P4), as in mid-July: hanging racemes of blue-black berries with a waxy bloom. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: pink-red racemes in March and April; berries blue-black with a bloom from late June into August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     }
   },
   "provenance": {

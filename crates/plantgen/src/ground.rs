@@ -732,6 +732,7 @@ fn draw_needles(canvas: &mut Canvas, seed: u64) {
     let cones = organ_templates(&[Shape::Fruit(Fruit {
         aspect: 0.45,
         cone: 1.0,
+        ..Fruit::default()
     })]);
     let spots = draws.stream(4);
     for i in 0..4 {

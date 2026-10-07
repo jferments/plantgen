@@ -46,9 +46,9 @@
       "blooms": 3,
       "bloom_age": 3,
       "bloom_size": 0.07,
-      "bloom_angle": 30,
+      "bloom_angle": 100,
       "leaf_area": 0.335,
-      "bloom_area": 0.323
+      "bloom_area": 0.412
     }
   },
   "growth": {
@@ -67,11 +67,43 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": { "template": "compound", "leaflets": 7, "leaflet_width": 0.5, "teeth": 6, "petiole": 0.1 }
+        "shape": {
+          "template": "compound",
+          "leaflets": 7,
+          "leaflet_width": 0.5,
+          "teeth": 6,
+          "petiole": 0.1
+        }
       },
       "bloom": {
-        "shape": { "template": "spike", "florets": 14, "aspect": 0.4, "plume": 0.0, "stalk": 0.1 },
-        "colour": [0.88, 0.72, 0.1]
+        "shape": {
+          "template": "fruit",
+          "count": 14,
+          "size": 0.15,
+          "spread": 40,
+          "aspect": 0.95,
+          "unripe": 0.7
+        },
+        "colour": [0.2, 0.25, 0.45],
+        "accent": [0.35, 0.5, 0.15],
+        "season": {
+          "bud": 60,
+          "flower": 80,
+          "fruit": 130,
+          "ripe": 185,
+          "ripening": 30,
+          "fall": 290,
+          "flower_look": {
+            "shape": {
+              "template": "spike",
+              "florets": 14,
+              "aspect": 0.4,
+              "plume": 0.0,
+              "stalk": 0.1
+            },
+            "colour": [0.88, 0.72, 0.1]
+          }
+        }
       }
     }
   },
@@ -95,7 +127,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: glossy dark green leaflets; yellow flower clusters; grey-tan stems."
+      "note": "Colours chosen by eye: glossy dark green leaflets; yellow flower clusters; grey-tan stems. Fruit (plant roadmap P4), as in mid-July: grape-like racemes of berries, green turning powdery blue. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: yellow racemes in March to May; berries blue with a bloom in July and August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     }
   },
   "provenance": {

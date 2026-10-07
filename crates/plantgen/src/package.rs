@@ -29,6 +29,7 @@
 //! | `impostor-albedo` | PNG, sRGB colour with coverage in alpha |
 //! | `impostor-normal-depth` | PNG, world normal · 0.5 + 0.5, depth in alpha |
 //! | `organ-atlas` | PNG, one template per organ type, side by side in the program's order: brightness / 2 in red, accent weight in green, coverage in alpha |
+//! | `parts` | the part meshes, `APPARTS1` (below) |
 //!
 //! Binary objects are little-endian with 32-bit floats. A graph is a
 //! 24-byte header (magic, age, height, segment count, organ count), then
@@ -67,6 +68,21 @@
 //! Tufts, the areoles of fleshy bodies whose spines a renderer expands
 //! (see [`crate::spines`]), follow the cards only on a level that has any,
 //! so a plant without bodies has the bytes it had before bodies existed.
+//! On the nearest level, the organs a renderer may draw as part meshes
+//! (`crate::parts`, plant roadmap P4) follow them, the tuft section then
+//! present even when empty:
+//!
+//! ```text
+//! sites: u32 site count S, card indices u32×S (increasing)
+//! ```
+//!
+//! The part meshes themselves are one object, `parts`, for the package:
+//!
+//! ```text
+//! APPARTS1, u32 type count N, then per type: u32 template, u32 variants
+//! V, then per variant: u32 vertex count P, u32 index count Q, positions
+//! f32×3P, normals f32×3P, colours f32×3P, indices u32×Q
+//! ```
 
 use std::collections::BTreeMap;
 use std::fmt;
@@ -98,11 +114,18 @@ use crate::templates::Templates;
 
 /// Version of the package layout and object formats.
 pub const PACKAGE_FORMAT: u32 = 1;
+
+/// The day of the year a package shows unless another is chosen: mid-July,
+/// when most of the region's plants carry flowers or fruit. Only organs
+/// with a season (`crate::looks::Season`) read it; the phenology of plant
+/// roadmap P5 is to set it from the date and the local climate.
+pub const DEFAULT_DAY: f64 = 196.0;
 pub const EXTENSION: &str = "afterplant";
 pub const MANIFEST: &str = "manifest.json";
 pub const OBJECTS: &str = "objects";
 pub const GRAPH_MAGIC: [u8; 8] = *b"APGRAPH1";
 pub const MESH_MAGIC: [u8; 8] = *b"APMESH1\0";
+pub const PARTS_MAGIC: [u8; 8] = *b"APPARTS1";
 /// The level of detail impostors are rendered from.
 pub const IMPOSTOR_LOD: usize = 1;
 /// Samples per impostor texel along each axis.
@@ -261,6 +284,27 @@ pub struct LodRecord {
     /// Bent cards, which lead the level's cards (`crate::bend`).
     #[serde(default, skip_serializing_if = "is_zero")]
     pub bent: usize,
+    /// Organs a renderer may draw as part meshes, on the nearest level
+    /// only (`crate::parts`).
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub sites: usize,
+}
+
+/// The package's part meshes (`crate::parts`).
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct PartsRecord {
+    pub object: String,
+    /// The organ types that have them.
+    pub types: Vec<PartTypeRecord>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct PartTypeRecord {
+    /// The organ type (its template).
+    pub template: usize,
+    pub variants: usize,
+    /// The most triangles a variant holds.
+    pub triangles: usize,
 }
 
 // Serde's `skip_serializing_if` passes a reference.
@@ -399,6 +443,13 @@ pub struct Manifest {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub body_types: Vec<String>,
     pub organ_atlas: AtlasRecord,
+    /// Part meshes, when any organ type has one.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub parts: Option<PartsRecord>,
+    /// The day of the year the package shows, when an organ has a season
+    /// (`crate::looks::Season`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub day: Option<f64>,
     pub variants: Vec<VariantRecord>,
     pub validation: Vec<ValidationRecord>,
     /// The spec the package was built from, sources and licences included.
@@ -428,12 +479,21 @@ pub struct Inputs {
     pub program_source: String,
     pub quality: Quality,
     pub key: String,
-    /// One look per organ type of the program.
+    /// The day of the year the package shows, when an organ has a season;
+    /// [`DEFAULT_DAY`] unless chosen.
+    pub day: Option<f64>,
+    /// One look per organ type of the program, as on `day`.
     pub looks: Vec<Look>,
+    /// Each organ type's size on `day` as a share of its size in fruit; 0
+    /// for organs gone that day, which are not drawn.
+    sizes: Vec<f64>,
     /// One look per body type of the program.
     pub bodies: Vec<BodyLook>,
     templates: Templates,
     atlas: (usize, usize, Vec<u8>),
+    /// The organ types' part meshes, and each type, whether it has one.
+    parts: Vec<crate::parts::PartMesh>,
+    part_types: Vec<bool>,
 }
 
 impl Inputs {
@@ -443,9 +503,19 @@ impl Inputs {
     ///
     /// Fails if the spec is invalid or names no built-in program.
     pub fn new(spec: &PlantSpec, quality: &Quality) -> Result<Self, PackageError> {
+        Self::on_day(spec, quality, DEFAULT_DAY)
+    }
+
+    /// Inputs for a spec grown by its built-in program, showing day `day`
+    /// of the year (1 to 365): what each organ with a season is then.
+    ///
+    /// # Errors
+    ///
+    /// Fails if the spec is invalid or names no built-in program.
+    pub fn on_day(spec: &PlantSpec, quality: &Quality, day: f64) -> Result<Self, PackageError> {
         let source = builtin_program(&spec.generator.program)
             .ok_or_else(|| SpecError(format!("unknown program `{}`", spec.generator.program)))?;
-        Self::with_program(spec, source, quality)
+        Self::with_program_on_day(spec, source, quality, day)
     }
 
     /// Inputs for a spec grown by `source` in place of its built-in
@@ -461,6 +531,25 @@ impl Inputs {
         source: &str,
         quality: &Quality,
     ) -> Result<Self, PackageError> {
+        Self::with_program_on_day(spec, source, quality, DEFAULT_DAY)
+    }
+
+    /// [`Inputs::with_program`] showing day `day` of the year. The day is
+    /// an input, and part of the key, only for a spec with seasons.
+    ///
+    /// # Errors
+    ///
+    /// Fails if the spec is invalid, the day is not one of the year, or the
+    /// program does not compile with the spec's parameters.
+    pub fn with_program_on_day(
+        spec: &PlantSpec,
+        source: &str,
+        quality: &Quality,
+        day: f64,
+    ) -> Result<Self, PackageError> {
+        if !(1.0..=365.0).contains(&day) {
+            return Err(SpecError(format!("day must be between 1 and 365, found {day}")).into());
+        }
         // Build from the spec as the manifest records it, numbers rounded
         // to 15 digits (see `crate::json`), so a manifest's copy of its spec
         // rebuilds the same package.
@@ -469,7 +558,8 @@ impl Inputs {
             serde_json::from_slice(&spec_json).map_err(|error| format_error(error.to_string()))?;
         spec.validate()?;
         let (program, _) = spec.program_from(source)?;
-        let looks = spec.appearance.looks(program.organs());
+        let day = spec.appearance.has_seasons().then_some(day);
+        let (looks, sizes) = spec.appearance.looks_on(program.organs(), day);
         let bodies = spec.appearance.body_looks(program.bodies());
         let named: Vec<(&str, &BodyLook)> = program.bodies().zip(&bodies).collect();
         let templates = Templates::for_plant(&looks, &named);
@@ -505,6 +595,12 @@ impl Inputs {
         if let Some(bytes) = &host_bytes {
             parts.push(("host", bytes));
         }
+        // The day, for a spec whose organs have seasons; any other hashes
+        // as before.
+        let day_bytes = day.map(f64::to_le_bytes);
+        if let Some(bytes) = &day_bytes {
+            parts.push(("day", bytes));
+        }
         // Each part is labelled and length-prefixed, so no two different
         // sets of inputs hash the same bytes.
         for (label, bytes) in parts {
@@ -513,15 +609,23 @@ impl Inputs {
             hasher.update((bytes.len() as u64).to_le_bytes());
             hasher.update(bytes);
         }
+        // Part meshes for the organ types drawn on the day.
+        let mut parts = crate::parts::part_meshes(&looks);
+        parts.retain(|part| sizes.get(part.template).is_none_or(|&size| size > 0.0));
+        let part_types = crate::parts::types(&looks, &parts);
         Ok(Self {
             spec,
             program_source: source.to_string(),
             quality: *quality,
             key: hex(&hasher.finalize()),
+            day,
             looks,
+            sizes,
             bodies,
             templates,
             atlas: (width, height, atlas_png),
+            parts,
+            part_types,
         })
     }
 
@@ -786,19 +890,24 @@ struct BakedKeyframe {
 }
 
 fn bake_keyframe(graph: &PlantGraph, inputs: &Inputs) -> Result<BakedKeyframe, PackageError> {
+    // The package's graph object keeps every organ; the meshes draw them as
+    // they are on the inputs' day.
+    let staged = crate::looks::staged(graph, &inputs.sizes);
+    let drawn = staged.as_ref().unwrap_or(graph);
     let meshes: Vec<PlantMesh> = inputs
         .quality
         .lods
         .iter()
         .enumerate()
         .map(|(level, lod)| {
-            mesh::build(
-                graph,
+            mesh::build_with(
+                drawn,
                 &inputs.looks,
                 &inputs.bodies,
                 &inputs.spec.appearance,
                 &lod.for_height(graph.height),
                 level,
+                Some(&inputs.part_types),
             )
         })
         .collect();
@@ -824,6 +933,7 @@ fn bake_keyframe(graph: &PlantGraph, inputs: &Inputs) -> Result<BakedKeyframe, P
                         cards: plant.cards.len(),
                         tufts: plant.tufts.len(),
                         bent: plant.bent_cards(),
+                        sites: plant.sites.len(),
                     },
                 )
             })
@@ -933,6 +1043,18 @@ fn assemble(
     let program_object = store.add("program", inputs.program_source.as_bytes().to_vec());
     let (atlas_width, atlas_height, atlas_png) = &inputs.atlas;
     let atlas_object = store.add("organ-atlas", atlas_png.clone());
+    let parts = (!inputs.parts.is_empty()).then(|| PartsRecord {
+        object: store.add("parts", encode_parts(&inputs.parts)),
+        types: inputs
+            .parts
+            .iter()
+            .map(|part| PartTypeRecord {
+                template: part.template,
+                variants: part.variants.len(),
+                triangles: part.triangles(),
+            })
+            .collect(),
+    });
     let mut records: Vec<VariantRecord> = variants
         .iter()
         .zip(grown)
@@ -985,6 +1107,8 @@ fn assemble(
                 })
                 .collect(),
         },
+        parts,
+        day: inputs.day,
         variants: records,
         validation,
         spec: spec.clone(),
@@ -1622,7 +1746,7 @@ pub fn encode_mesh(plant: &PlantMesh) -> Vec<u8> {
     }
     out.pad();
     let tufts = &plant.tufts;
-    if !tufts.is_empty() {
+    if !tufts.is_empty() || !plant.sites.is_empty() {
         out.count(tufts.len());
         out.f32s(tufts.iter().flat_map(|tuft| &tuft.position));
         out.f32s(tufts.iter().flat_map(|tuft| &tuft.normal));
@@ -1639,7 +1763,91 @@ pub fn encode_mesh(plant: &PlantMesh) -> Vec<u8> {
         }
         out.pad();
     }
+    if !plant.sites.is_empty() {
+        out.count(plant.sites.len());
+        for site in &plant.sites {
+            out.u32(*site);
+        }
+    }
     out.0
+}
+
+/// Encode part meshes as `APPARTS1`.
+#[must_use]
+pub fn encode_parts(parts: &[crate::parts::PartMesh]) -> Vec<u8> {
+    let mut out = Writer(Vec::new());
+    out.bytes(&PARTS_MAGIC);
+    out.count(parts.len());
+    for part in parts {
+        out.count(part.template);
+        out.count(part.variants.len());
+        for mesh in &part.variants {
+            out.count(mesh.vertex_count());
+            out.count(mesh.indices.len());
+            out.f32s(mesh.positions.as_flattened());
+            out.f32s(mesh.normals.as_flattened());
+            out.f32s(mesh.colors.iter().flat_map(|colour| &colour[..3]));
+            for index in &mesh.indices {
+                out.u32(*index);
+            }
+        }
+    }
+    out.0
+}
+
+/// Decode `APPARTS1` part meshes. Each mesh keeps its positions, normals,
+/// colours (alpha 1) and indices.
+///
+/// # Errors
+///
+/// Fails on a wrong magic, a wrong length or an index out of range.
+pub fn decode_parts(bytes: &[u8]) -> Result<Vec<crate::parts::PartMesh>, PackageError> {
+    let mut input = Reader {
+        bytes,
+        at: 0,
+        what: "parts",
+    };
+    if input.array::<8>()? != PARTS_MAGIC {
+        return Err(format_error("not APPARTS1 part meshes"));
+    }
+    let types = input.u32()? as usize;
+    input.check_room(types.saturating_mul(8))?;
+    let mut parts = Vec::with_capacity(types);
+    for _ in 0..types {
+        let template = input.u32()? as usize;
+        let count = input.u32()? as usize;
+        input.check_room(count.saturating_mul(8))?;
+        let mut variants = Vec::with_capacity(count);
+        for _ in 0..count {
+            let vertices = input.u32()? as usize;
+            let indices = input.u32()? as usize;
+            input.check_room(
+                vertices
+                    .saturating_mul(36)
+                    .saturating_add(indices.saturating_mul(4)),
+            )?;
+            let mut mesh = Mesh {
+                positions: triples(&input.f32s(vertices * 3)?),
+                normals: triples(&input.f32s(vertices * 3)?),
+                colors: triples(&input.f32s(vertices * 3)?)
+                    .into_iter()
+                    .map(|[r, g, b]| [r, g, b, 1.0])
+                    .collect(),
+                ..Mesh::default()
+            };
+            for _ in 0..indices {
+                let index = input.u32()?;
+                if index as usize >= vertices {
+                    return Err(format_error("a part mesh's index is out of range"));
+                }
+                mesh.indices.push(index);
+            }
+            variants.push(mesh);
+        }
+        parts.push(crate::parts::PartMesh { template, variants });
+    }
+    input.finish()?;
+    Ok(parts)
 }
 
 /// Bytes per wood vertex, per card and per tuft, without padding.
@@ -1741,11 +1949,7 @@ fn decode_cards(input: &mut Reader<'_>) -> Result<Vec<Card>, PackageError> {
     Ok(cards)
 }
 
-fn decode_tufts(input: &mut Reader<'_>) -> Result<Vec<Tuft>, PackageError> {
-    let count = input.u32()? as usize;
-    if count == 0 {
-        return Err(format_error("a mesh's tuft section is empty"));
-    }
+fn decode_tufts(input: &mut Reader<'_>, count: usize) -> Result<Vec<Tuft>, PackageError> {
     input.check_room(count.saturating_mul(TUFT_BYTES))?;
     let positions = triples(&input.f32s(count * 3)?);
     let normals = triples(&input.f32s(count * 3)?);
@@ -1792,11 +1996,42 @@ pub fn decode_mesh(bytes: &[u8]) -> Result<PlantMesh, PackageError> {
     }
     let wood = decode_wood(&mut input)?;
     let cards = decode_cards(&mut input)?;
-    let tufts = if input.at < bytes.len() {
-        decode_tufts(&mut input)?
-    } else {
-        Vec::new()
-    };
+    let mut tufts = Vec::new();
+    let mut sites = Vec::new();
+    if input.at < bytes.len() {
+        let count = input.u32()? as usize;
+        if count > 0 {
+            tufts = decode_tufts(&mut input, count)?;
+        }
+        if input.at < bytes.len() {
+            sites = decode_sites(&mut input, cards.len())?;
+        } else if count == 0 {
+            return Err(format_error("a mesh's tuft section is empty"));
+        }
+    }
     input.finish()?;
-    Ok(PlantMesh { wood, cards, tufts })
+    Ok(PlantMesh {
+        wood,
+        cards,
+        tufts,
+        sites,
+    })
+}
+
+/// A level's sites: card indices, increasing and in range.
+fn decode_sites(input: &mut Reader<'_>, cards: usize) -> Result<Vec<u32>, PackageError> {
+    let count = input.u32()? as usize;
+    if count == 0 {
+        return Err(format_error("a mesh's site section is empty"));
+    }
+    input.check_room(count.saturating_mul(4))?;
+    let mut sites: Vec<u32> = Vec::with_capacity(count);
+    for _ in 0..count {
+        let site = input.u32()?;
+        if site as usize >= cards || sites.last().is_some_and(|&last| site <= last) {
+            return Err(format_error("a mesh's sites are out of range or order"));
+        }
+        sites.push(site);
+    }
+    Ok(sites)
 }

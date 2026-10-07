@@ -15,6 +15,13 @@
 //!
 //! Wood is a tube per axis (see [`crate::mesh`]); [`Flare`], [`Ridges`] and
 //! [`Moss`] shape and colour it.
+//!
+//! An organ that flowers and fruits may have a [`Season`]: the days of the
+//! year it is a bud, a flower, unripe and ripe fruit, and when it falls,
+//! with its looks in bud and in flower. Its stage is then a parameter, the
+//! day a package is grown for ([`resolve_on`]), never fixed to one time of
+//! year; a later phenology stage (plant roadmap P5) sets the day from the
+//! date and the local climate.
 
 use std::collections::BTreeMap;
 
@@ -57,6 +64,149 @@ pub struct OrganLook {
     /// levels of detail (`crate::blooms`); the shape's default if absent.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub form: Option<crate::blooms::Form>,
+    /// Its year, for an organ that flowers and fruits: what it is on each
+    /// day, and how it looks then. Without one it looks the same all year.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub season: Option<Season>,
+}
+
+/// An organ's year (plant roadmap P4): the days of the year, at the
+/// species' reference climate, on which it is a bud, a flower, unripe
+/// fruit and ripe fruit, and on which it falls or is eaten. The organ's own
+/// look is its look in fruit.
+///
+/// On day `d` the organ is gone before `bud` and from `fall` on; a bud
+/// from `bud`, a flower from `flower` and fruit from `fruit`. Of its fruit
+/// a share
+///
+/// ```text
+/// u = 1 - clamp((d - ripe) / ripening, 0, 1)
+/// ```
+///
+/// is still unripe, so it ripens over `ripening` days from `ripe`. A
+/// `fall` past 365 keeps the fruit into the next year (rose hips,
+/// snowberries): on a day before `bud`, `d + 365` counts while it is before
+/// `fall`.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Season {
+    pub bud: f64,
+    pub flower: f64,
+    pub fruit: f64,
+    pub ripe: f64,
+    #[serde(default = "default_ripening")]
+    pub ripening: f64,
+    pub fall: f64,
+    /// Its look in bud; without one, a closed bud a third the size of its
+    /// flower, in the flower's colour half turned to the foliage's.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bud_look: Option<StageLook>,
+    /// Its look in flower; without one it shows its own look then, or
+    /// nothing if that is fruit.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub flower_look: Option<StageLook>,
+}
+
+fn default_ripening() -> f64 {
+    20.0
+}
+
+/// An organ's look in one stage of its [`Season`].
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct StageLook {
+    pub shape: Shape,
+    /// Colours as in [`OrganLook`]; the organ's own if absent.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub colour: Option<[f32; 3]>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub accent: Option<[f32; 3]>,
+    /// The organ's size in this stage as a share of its size in fruit.
+    #[serde(default = "full_size", skip_serializing_if = "is_full_size")]
+    pub size: f64,
+}
+
+fn full_size() -> f64 {
+    1.0
+}
+
+// Serde's `skip_serializing_if` passes a reference; a size left at its
+// default is exactly 1.
+#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
+fn is_full_size(value: &f64) -> bool {
+    *value == 1.0
+}
+
+/// What an organ with a [`Season`] is on a day.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum Stage {
+    /// Not on the plant: before its bud shows, or after it fell.
+    Gone,
+    Bud,
+    Flower,
+    /// Fruit, `unripe` of it still unripe.
+    Fruit {
+        unripe: f64,
+    },
+}
+
+impl Season {
+    /// The stage on day `day` of the year (1 to 365).
+    #[must_use]
+    pub fn stage(&self, day: f64) -> Stage {
+        let d = if day < self.bud && day + 365.0 < self.fall {
+            day + 365.0
+        } else {
+            day
+        };
+        if d < self.bud || d >= self.fall {
+            Stage::Gone
+        } else if d < self.flower {
+            Stage::Bud
+        } else if d < self.fruit {
+            Stage::Flower
+        } else if self.ripening > 0.0 {
+            Stage::Fruit {
+                unripe: 1.0 - ((d - self.ripe) / self.ripening).clamp(0.0, 1.0),
+            }
+        } else {
+            Stage::Fruit {
+                unripe: if d < self.ripe { 1.0 } else { 0.0 },
+            }
+        }
+    }
+
+    /// Check the days, in order within one year, and the stage looks.
+    ///
+    /// # Errors
+    ///
+    /// Describes the first problem.
+    pub fn validate(&self) -> Result<(), String> {
+        within("season bud", self.bud, 1.0, 365.0)?;
+        let days = [self.bud, self.flower, self.fruit, self.ripe, self.fall];
+        if days.windows(2).any(|pair| pair[1] < pair[0]) {
+            return Err(format!(
+                "season days must run bud, flower, fruit, ripe, fall in order, found {days:?}"
+            ));
+        }
+        if self.fall - self.bud > 365.0 {
+            return Err(format!(
+                "season fall must come within a year of bud, found {} after",
+                self.fall - self.bud
+            ));
+        }
+        within("season ripening", self.ripening, 0.0, 200.0)?;
+        for look in [&self.bud_look, &self.flower_look].into_iter().flatten() {
+            look.shape.validate()?;
+            for colour in [look.colour, look.accent].into_iter().flatten() {
+                for channel in colour {
+                    within("colours", f64::from(channel), 0.0, 1.0)?;
+                }
+            }
+            within("stage size", look.size, 0.05, 4.0)?;
+        }
+        Ok(())
+    }
 }
 
 // Serde's `skip_serializing_if` passes a reference.
@@ -489,10 +639,30 @@ impl Default for Panicle {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct Fruit {
-    /// Width over length.
+    /// Width over length of one fruit.
     pub aspect: f64,
     /// 1 for the overlapping scales of a cone.
     pub cone: f64,
+    /// What the fruit is (plant roadmap P4, `crate::fruit`); a berry or
+    /// bud unless set.
+    #[serde(skip_serializing_if = "FruitKind::is_berry")]
+    pub kind: FruitKind,
+    /// Fruit in the organ: 1, or a cluster of up to 60 (`crate::fruit`).
+    #[serde(skip_serializing_if = "is_one")]
+    pub count: u32,
+    /// How a cluster's fruit sit on it.
+    #[serde(skip_serializing_if = "Cluster::is_raceme")]
+    pub cluster: Cluster,
+    /// In a cluster, one fruit's length as a share of the organ's.
+    #[serde(skip_serializing_if = "is_default_size")]
+    pub size: f64,
+    /// In a cluster, degrees a fruit's stalk leans out from its axis.
+    #[serde(skip_serializing_if = "is_default_spread")]
+    pub spread: f64,
+    /// Share of the fruit still unripe, drawn in the look's accent colour
+    /// (which also draws stalks, and the cup or husk of a nut).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub unripe: f64,
 }
 
 impl Default for Fruit {
@@ -500,7 +670,104 @@ impl Default for Fruit {
         Self {
             aspect: 0.7,
             cone: 0.0,
+            kind: FruitKind::Berry,
+            count: 1,
+            cluster: Cluster::Raceme,
+            size: DEFAULT_FRUIT_SIZE,
+            spread: DEFAULT_FRUIT_SPREAD,
+            unripe: 0.0,
         }
+    }
+}
+
+const DEFAULT_FRUIT_SIZE: f64 = 0.3;
+const DEFAULT_FRUIT_SPREAD: f64 = 35.0;
+
+// Serde's `skip_serializing_if` passes a reference.
+#[allow(clippy::trivially_copy_pass_by_ref)]
+fn is_one(value: &u32) -> bool {
+    *value == 1
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
+fn is_default_size(value: &f64) -> bool {
+    *value == DEFAULT_FRUIT_SIZE
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
+fn is_default_spread(value: &f64) -> bool {
+    *value == DEFAULT_FRUIT_SPREAD
+}
+
+impl Fruit {
+    /// Card width over card length: one fruit's aspect, or for a cluster
+    /// the width its fruit spread over (`crate::fruit::card_aspect`).
+    #[must_use]
+    pub fn card_aspect(&self) -> f64 {
+        crate::fruit::card_aspect(self)
+    }
+}
+
+/// What a fruit is: the solid drawn up close and the card drawn from the
+/// same layout (`crate::fruit`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum FruitKind {
+    /// A berry, drupe or bud: an ellipsoid.
+    #[default]
+    Berry,
+    /// A berry crowned by its dried calyx (huckleberries, salal,
+    /// serviceberry, currants).
+    Crowned,
+    /// A pome (crabapples): a rounded fruit dimpled at its top.
+    Pome,
+    /// An aggregate of drupelets (blackberries, salmonberry,
+    /// thimbleberry).
+    Drupelets,
+    /// A rose hip: an urn with the sepals at its tip.
+    Hip,
+    /// A samara (maples, ashes): a seed at the base of a flat wing.
+    Samara,
+    /// An acorn: a nut in a scaly cup.
+    Acorn,
+    /// A nut in a husk drawn out into a beak (hazelnuts).
+    Husked,
+    /// A legume pod: long, flat and bulging over its seeds.
+    Pod,
+    /// A capsule or follicle: ribbed lengthwise.
+    Capsule,
+}
+
+impl FruitKind {
+    #[allow(clippy::trivially_copy_pass_by_ref)]
+    fn is_berry(&self) -> bool {
+        *self == Self::Berry
+    }
+}
+
+/// How a cluster's fruit sit on it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum Cluster {
+    /// On stalks spiralling up an axis (cherries in a raceme, elderberry
+    /// panicles, alder cones).
+    #[default]
+    Raceme,
+    /// On stalks from one point, spread like an umbrella (cascara,
+    /// dogwood, snowberry).
+    Umbel,
+    /// In pairs from one point, each pair turned square to the last up a
+    /// short axis (maple samaras, twinberries, hazelnuts).
+    Pair,
+    /// Packed into a round head at the end of one stalk (dogwood drupes,
+    /// ninebark follicles).
+    Head,
+}
+
+impl Cluster {
+    #[allow(clippy::trivially_copy_pass_by_ref)]
+    fn is_raceme(&self) -> bool {
+        *self == Self::Raceme
     }
 }
 
@@ -516,6 +783,7 @@ impl Shape {
             OrganKind::Cone => Self::Fruit(Fruit {
                 aspect: 0.5,
                 cone: 1.0,
+                ..Fruit::default()
             }),
         }
     }
@@ -581,7 +849,7 @@ impl Shape {
             Self::Flower(_) | Self::Head(_) | Self::Umbel(_) => 1.0,
             Self::Spike(spike) => spike.aspect,
             Self::Panicle(panicle) => panicle.aspect,
-            Self::Fruit(fruit) => fruit.aspect,
+            Self::Fruit(fruit) => fruit.card_aspect(),
         }
     }
 
@@ -723,7 +991,11 @@ impl Shape {
             }
             Self::Fruit(s) => {
                 check("aspect", s.aspect, 0.1, 2.0)?;
-                check("cone", s.cone, 0.0, 1.0)
+                check("cone", s.cone, 0.0, 1.0)?;
+                count("count", s.count, 1, 60)?;
+                check("size", s.size, 0.05, 1.0)?;
+                check("spread", s.spread, 0.0, 90.0)?;
+                check("unripe", s.unripe, 0.0, 1.0)
             }
         }
     }
@@ -901,6 +1173,121 @@ pub fn resolve<'a>(
             },
         })
         .collect()
+}
+
+/// The looks of [`resolve`] on day `day` of the year, with each organ
+/// type's size there as a share of its size in fruit, 0 for organs gone
+/// that day. An organ with a [`Season`] shows its stage's look: in bud its
+/// bud look; in flower its flower look, or its own if that is not fruit;
+/// in fruit its own look, its fruit that share unripe, or nothing if its
+/// own look is a flower. Organs without one, and every organ when `day` is
+/// `None`, keep their own look at full size.
+#[must_use]
+pub fn resolve_on<'a>(
+    organs: impl IntoIterator<Item = (&'a str, OrganKind)>,
+    looks: &BTreeMap<String, OrganLook>,
+    foliage: [f32; 3],
+    foliage_shade: [f32; 3],
+    day: Option<f64>,
+) -> (Vec<Look>, Vec<f64>) {
+    resolve(organs, looks, foliage, foliage_shade)
+        .into_iter()
+        .map(|look| {
+            let season = looks.get(&look.organ).and_then(|own| own.season.as_ref());
+            match (season, day) {
+                (Some(season), Some(day)) => in_season(look, season, season.stage(day), foliage),
+                _ => (look, 1.0),
+            }
+        })
+        .unzip()
+}
+
+/// `graph` as drawn with each organ type's `sizes` from [`resolve_on`]:
+/// organs gone that day left out, the others at their stage's size; `None`
+/// when every size is 1, so the graph is drawn as it is.
+#[must_use]
+pub fn staged(graph: &crate::graph::PlantGraph, sizes: &[f64]) -> Option<crate::graph::PlantGraph> {
+    if sizes.iter().all(is_full_size) {
+        return None;
+    }
+    let size = |organ: &crate::graph::GraphOrgan| {
+        sizes.get(usize::from(organ.organ)).copied().unwrap_or(1.0)
+    };
+    Some(crate::graph::PlantGraph {
+        organs: graph
+            .organs
+            .iter()
+            .filter(|organ| size(organ) > 0.0)
+            .map(|organ| crate::graph::GraphOrgan {
+                size: organ.size * size(organ),
+                ..organ.clone()
+            })
+            .collect(),
+        ..graph.clone()
+    })
+}
+
+/// `look` as it is in `stage` of `season`, and its size as a share.
+fn in_season(look: Look, season: &Season, stage: Stage, foliage: [f32; 3]) -> (Look, f64) {
+    let is_fruit = matches!(look.shape, Shape::Fruit(_));
+    match stage {
+        Stage::Gone => (look, 0.0),
+        Stage::Bud => {
+            let bud = season.bud_look.clone().unwrap_or_else(|| {
+                // A closed bud of the flower's colours, half turned to the
+                // foliage's (its sepals).
+                let (colour, size) = season
+                    .flower_look
+                    .as_ref()
+                    .map_or((look.colour, 1.0), |flower| {
+                        (flower.colour.unwrap_or(look.colour), flower.size)
+                    });
+                let closed: [f32; 3] =
+                    std::array::from_fn(|channel| f32::midpoint(colour[channel], foliage[channel]));
+                StageLook {
+                    shape: Shape::Fruit(Fruit {
+                        aspect: 0.7,
+                        ..Fruit::default()
+                    }),
+                    colour: Some(closed),
+                    accent: Some(closed),
+                    size: size / 3.0,
+                }
+            });
+            (in_stage(&look, &bud), bud.size)
+        }
+        Stage::Flower => match &season.flower_look {
+            Some(flower) => (in_stage(&look, flower), flower.size),
+            None if is_fruit => (look, 0.0),
+            None => (look, 1.0),
+        },
+        Stage::Fruit { unripe } => {
+            if matches!(look.shape, Shape::Flower(_)) {
+                return (look, 0.0);
+            }
+            let mut look = look;
+            if let Shape::Fruit(fruit) = &mut look.shape {
+                fruit.unripe = unripe;
+            }
+            (look, 1.0)
+        }
+    }
+}
+
+/// `look` with a stage's shape and colours.
+fn in_stage(look: &Look, stage: &StageLook) -> Look {
+    let colour = stage.colour.unwrap_or(look.colour);
+    Look {
+        organ: look.organ.clone(),
+        shape: stage.shape.clone(),
+        colour,
+        shade: [colour[0] * 0.35, colour[1] * 0.42, colour[2] * 0.55],
+        accent: stage.accent.unwrap_or(colour),
+        face_up: look.face_up,
+        solid: None,
+        bend: crate::bend::Bend::default_for(&stage.shape),
+        form: crate::blooms::Form::default_for(&stage.shape),
+    }
 }
 
 /// A swollen stem (plant forms F5): a baobab's or a bottle tree's trunk.
@@ -1088,6 +1475,9 @@ impl OrganLook {
                 within("colours", f64::from(channel), 0.0, 1.0)?;
             }
         }
+        if let Some(season) = &self.season {
+            season.validate()?;
+        }
         within("face_up", self.face_up, 0.0, 1.0)
     }
 }
@@ -1183,6 +1573,7 @@ mod tests {
                 solid: None,
                 bend: None,
                 form: None,
+                season: None,
             },
         );
         let green = [0.1, 0.3, 0.05];
@@ -1196,5 +1587,162 @@ mod tests {
         assert_eq!(looks[1].accent, [0.9, 0.7, 0.1]);
         // A look with its own colour darkens it for shade.
         assert!(looks[1].shade[0] < 0.6 && looks[1].shade[0] > 0.0);
+    }
+
+    fn cherry() -> Season {
+        Season {
+            bud: 95.0,
+            flower: 110.0,
+            fruit: 135.0,
+            ripe: 175.0,
+            ripening: 20.0,
+            fall: 245.0,
+            bud_look: None,
+            flower_look: Some(StageLook {
+                shape: Shape::Flower(Flower::default()),
+                colour: Some([0.95, 0.95, 0.9]),
+                accent: None,
+                size: 0.5,
+            }),
+        }
+    }
+
+    #[test]
+    fn a_season_runs_from_bud_to_fall() {
+        let season = cherry();
+        assert!(season.validate().is_ok());
+        assert_eq!(season.stage(1.0), Stage::Gone);
+        assert_eq!(season.stage(100.0), Stage::Bud);
+        assert_eq!(season.stage(120.0), Stage::Flower);
+        assert_eq!(season.stage(150.0), Stage::Fruit { unripe: 1.0 });
+        assert_eq!(season.stage(185.0), Stage::Fruit { unripe: 0.5 });
+        assert_eq!(season.stage(200.0), Stage::Fruit { unripe: 0.0 });
+        assert_eq!(season.stage(245.0), Stage::Gone);
+        // Fruit kept into the winter shows on the next year's early days.
+        let hips = Season {
+            fall: 430.0,
+            ..cherry()
+        };
+        assert!(hips.validate().is_ok());
+        assert_eq!(hips.stage(20.0), Stage::Fruit { unripe: 0.0 });
+        assert_eq!(hips.stage(66.0), Stage::Gone);
+        // Days out of order, or a year too long, are refused.
+        for wrong in [
+            Season {
+                fruit: 100.0,
+                ..cherry()
+            },
+            Season {
+                fall: 470.0,
+                ..cherry()
+            },
+            Season {
+                bud: 0.0,
+                ..cherry()
+            },
+        ] {
+            assert!(wrong.validate().is_err(), "{wrong:?}");
+        }
+    }
+
+    #[test]
+    fn an_organ_looks_as_it_is_on_the_day() {
+        let types = [("leaf", OrganKind::Leaf), ("bloom", OrganKind::Flower)];
+        let fruit = |season: Option<Season>| OrganLook {
+            shape: Shape::Fruit(Fruit {
+                count: 6,
+                cluster: Cluster::Umbel,
+                ..Fruit::default()
+            }),
+            colour: Some([0.6, 0.05, 0.06]),
+            shade: None,
+            accent: Some([0.45, 0.5, 0.15]),
+            face_up: 0.0,
+            solid: None,
+            bend: None,
+            form: None,
+            season,
+        };
+        let mut organs = BTreeMap::new();
+        organs.insert("bloom".to_string(), fruit(Some(cherry())));
+        let green = [0.1, 0.3, 0.05];
+        let dark = [0.03, 0.1, 0.03];
+        let on = |organs: &BTreeMap<String, OrganLook>, day| {
+            resolve_on(types, organs, green, dark, Some(day))
+        };
+        // Leaves keep their look all year.
+        for day in [1.0, 100.0, 200.0] {
+            let (looks, sizes) = on(&organs, day);
+            assert_eq!(looks[0], resolve(types, &organs, green, dark)[0]);
+            assert_eq!(sizes[0], 1.0);
+        }
+        // Gone before its bud shows.
+        assert_eq!(on(&organs, 50.0).1[1], 0.0);
+        // A closed bud a third of its flower's size.
+        let (looks, sizes) = on(&organs, 100.0);
+        assert!(matches!(
+            looks[1].shape,
+            Shape::Fruit(Fruit { count: 1, .. })
+        ));
+        assert!((sizes[1] - 0.5 / 3.0).abs() < 1e-12);
+        // Its flower look in flower.
+        let (looks, sizes) = on(&organs, 120.0);
+        assert!(matches!(looks[1].shape, Shape::Flower(_)));
+        assert_eq!(looks[1].colour, [0.95, 0.95, 0.9]);
+        assert_eq!(sizes[1], 0.5);
+        // Its own look in fruit, ripening.
+        let (looks, sizes) = on(&organs, 185.0);
+        let Shape::Fruit(drawn) = &looks[1].shape else {
+            panic!("not fruit: {:?}", looks[1].shape);
+        };
+        assert_eq!(drawn.unripe, 0.5);
+        assert_eq!(drawn.count, 6);
+        assert_eq!(sizes[1], 1.0);
+        // Without a day it keeps its own look; without a season too.
+        let (looks, sizes) = resolve_on(types, &organs, green, dark, None);
+        assert_eq!(looks, resolve(types, &organs, green, dark));
+        assert_eq!(sizes, vec![1.0, 1.0]);
+        // A flower without a fruit look is gone once its fruit sets.
+        organs.insert(
+            "bloom".to_string(),
+            OrganLook {
+                shape: Shape::Flower(Flower::default()),
+                ..fruit(Some(Season {
+                    flower_look: None,
+                    ..cherry()
+                }))
+            },
+        );
+        assert_eq!(on(&organs, 120.0).1[1], 1.0);
+        assert_eq!(on(&organs, 150.0).1[1], 0.0);
+    }
+
+    #[test]
+    fn a_staged_graph_leaves_out_gone_organs_and_resizes_the_rest() {
+        let organ = |organ: u16, size: f64| crate::graph::GraphOrgan {
+            id: u64::from(organ),
+            organ,
+            segment: None,
+            position: crate::math::Vec3::ZERO,
+            heading: crate::math::Vec3::Y,
+            left: crate::math::Vec3::X,
+            size,
+            born: 0.0,
+            shed: None,
+            light: 1.0,
+        };
+        let graph = crate::graph::PlantGraph {
+            age: 5.0,
+            height: 2.0,
+            segments: Vec::new(),
+            organs: vec![organ(0, 0.1), organ(1, 0.04), organ(2, 0.2)],
+        };
+        assert!(staged(&graph, &[1.0, 1.0, 1.0]).is_none());
+        let drawn = staged(&graph, &[1.0, 0.0, 0.5]).unwrap();
+        assert_eq!(drawn.organs.len(), 2);
+        assert_eq!(drawn.organs[0].size, 0.1);
+        assert_eq!(drawn.organs[1].organ, 2);
+        assert_eq!(drawn.organs[1].size, 0.1);
+        assert_eq!(drawn.height, graph.height);
     }
 }

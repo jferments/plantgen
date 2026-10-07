@@ -200,7 +200,7 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
                 .filter(|card| usize::from(card.template) < first)
                 .copied()
                 .collect(),
-            tufts: Vec::new(),
+            ..PlantMesh::default()
         }
         .card_mesh()
     } else {

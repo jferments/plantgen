@@ -43,7 +43,11 @@
       "spur_pairs": 1,
       "leaf_angle": 55,
       "leaf_area": 0.345,
-      "bloom_area": 0.639
+      "bloom_area": 0.51,
+      "blooms": 1,
+      "bloom_age": 6,
+      "bloom_size": 0.05,
+      "bloom_angle": 70
     }
   },
   "growth": {
@@ -75,6 +79,38 @@
           "tooth_depth": 0.04,
           "petiole": 0.08
         }
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "kind": "husked",
+          "count": 2,
+          "cluster": "pair",
+          "size": 0.7,
+          "spread": 25,
+          "aspect": 0.45
+        },
+        "colour": [0.38, 0.55, 0.18],
+        "accent": [0.42, 0.56, 0.2],
+        "season": {
+          "bud": 35,
+          "flower": 45,
+          "fruit": 100,
+          "ripe": 230,
+          "ripening": 30,
+          "fall": 290,
+          "flower_look": {
+            "shape": {
+              "template": "spike",
+              "florets": 20,
+              "aspect": 0.12,
+              "plume": 0.3,
+              "stalk": 0.05
+            },
+            "colour": [0.8, 0.7, 0.3],
+            "size": 1.2
+          }
+        }
       }
     }
   },
@@ -98,7 +134,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: soft mid-green leaves; smooth grey-brown stems."
+      "note": "Colours chosen by eye: soft mid-green leaves; smooth grey-brown stems. Fruit (plant roadmap P4), as in mid-July: nuts in pairs, each in a green, bristly husk drawn out into a long beak. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: yellow catkins in February and March; nuts in green husks through the summer, ripe in August and September. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     }
   },
   "provenance": {

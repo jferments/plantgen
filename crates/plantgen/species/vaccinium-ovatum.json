@@ -45,10 +45,10 @@
       "leaf_angle": 45,
       "blooms": 2,
       "bloom_age": 4,
-      "bloom_size": 0.05,
-      "bloom_angle": 110,
+      "bloom_size": 0.022,
+      "bloom_angle": 70,
       "leaf_area": 0.257,
-      "bloom_area": 0.123
+      "bloom_area": 0.548
     }
   },
   "growth": {
@@ -82,9 +82,37 @@
         }
       },
       "bloom": {
-        "shape": { "template": "spike", "florets": 7, "aspect": 0.3, "plume": 0.0, "stalk": 0.15 },
-        "colour": [0.9, 0.7, 0.75],
-        "accent": [0.75, 0.4, 0.5]
+        "shape": {
+          "template": "fruit",
+          "kind": "crowned",
+          "count": 4,
+          "size": 0.3,
+          "spread": 45,
+          "aspect": 1.0,
+          "unripe": 0.9
+        },
+        "colour": [0.06, 0.05, 0.09],
+        "accent": [0.4, 0.5, 0.2],
+        "season": {
+          "bud": 95,
+          "flower": 115,
+          "fruit": 170,
+          "ripe": 225,
+          "ripening": 40,
+          "fall": 345,
+          "flower_look": {
+            "shape": {
+              "template": "spike",
+              "florets": 7,
+              "aspect": 0.3,
+              "plume": 0.0,
+              "stalk": 0.15
+            },
+            "colour": [0.9, 0.7, 0.75],
+            "accent": [0.75, 0.4, 0.5],
+            "size": 2.3
+          }
+        }
       }
     }
   },
@@ -108,7 +136,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: very dark glossy green leaves, bronze when new; pink bells; black berries."
+      "note": "Colours chosen by eye: very dark glossy green leaves, bronze when new; pink bells; black berries. Fruit (plant roadmap P4), as in mid-July: small clusters of green berries that ripen black from August. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: pink bells in April to June; berries green in summer, black from mid-August into the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     }
   },
   "provenance": {

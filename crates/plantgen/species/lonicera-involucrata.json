@@ -43,10 +43,10 @@
       "leaf_angle": 50,
       "blooms": 1,
       "bloom_age": 3,
-      "bloom_size": 0.035,
-      "bloom_angle": 70,
+      "bloom_size": 0.025,
+      "bloom_angle": 60,
       "leaf_area": 0.282,
-      "bloom_area": 0.144
+      "bloom_area": 0.812
     }
   },
   "growth": {
@@ -76,9 +76,37 @@
         }
       },
       "bloom": {
-        "shape": { "template": "spike", "florets": 2, "aspect": 0.6, "plume": 0.0, "stalk": 0.3 },
-        "colour": [0.9, 0.75, 0.15],
-        "accent": [0.6, 0.15, 0.1]
+        "shape": {
+          "template": "fruit",
+          "count": 2,
+          "cluster": "pair",
+          "size": 0.55,
+          "spread": 25,
+          "aspect": 1.0,
+          "unripe": 0.3
+        },
+        "colour": [0.04, 0.03, 0.05],
+        "accent": [0.4, 0.48, 0.18],
+        "season": {
+          "bud": 115,
+          "flower": 130,
+          "fruit": 170,
+          "ripe": 180,
+          "ripening": 30,
+          "fall": 260,
+          "flower_look": {
+            "shape": {
+              "template": "spike",
+              "florets": 2,
+              "aspect": 0.6,
+              "plume": 0.0,
+              "stalk": 0.3
+            },
+            "colour": [0.9, 0.75, 0.15],
+            "accent": [0.6, 0.15, 0.1],
+            "size": 1.4
+          }
+        }
       }
     }
   },
@@ -102,7 +130,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: bright green leaves; yellow flowers with red bracts."
+      "note": "Colours chosen by eye: bright green leaves; yellow flowers with red bracts. Fruit (plant roadmap P4), as in mid-July: twin glossy black berries. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: paired yellow tubular flowers in May to July; twin black berries in July and August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     }
   },
   "provenance": {

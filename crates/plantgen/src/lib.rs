@@ -22,6 +22,7 @@
 pub mod bend;
 pub mod blooms;
 pub mod body;
+pub mod fruit;
 pub mod graph;
 pub mod ground;
 pub mod grow;
@@ -34,6 +35,7 @@ pub mod lsys;
 pub mod math;
 pub mod mesh;
 pub mod package;
+pub mod parts;
 pub mod preview;
 pub mod quality;
 pub mod raster;
@@ -50,5 +52,10 @@ pub mod templates;
 /// what their organs cover, no more, and keep the organs' proportions, so
 /// far levels are not denser than near ones. 5: leaf, blade and frond
 /// cards bend where they are drawn one per organ (plant forms F2), which
-/// changes the impostors and the atlas records.
-pub const GENERATOR_REVISION: u32 = 7;
+/// changes the impostors and the atlas records. 6: flowers, fruit and cones
+/// drawn as solids on the nearest level (F3). 7: every broadleaf package
+/// gains the thorn organ type (F5). 8: organ types with part meshes
+/// (`crate::parts`, plant roadmap P4) keep their cards on level 0, listed
+/// as sites, instead of being drawn solid into its wood mesh, and the
+/// package stores their part meshes.
+pub const GENERATOR_REVISION: u32 = 8;

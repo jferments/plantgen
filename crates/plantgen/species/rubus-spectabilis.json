@@ -44,10 +44,10 @@
       "leaf_angle": 50,
       "blooms": 1,
       "bloom_age": 3,
-      "bloom_size": 0.04,
+      "bloom_size": 0.02,
       "bloom_angle": 60,
       "leaf_area": 0.199,
-      "bloom_area": 0.697
+      "bloom_area": 1.279
     }
   },
   "growth": {
@@ -76,15 +76,34 @@
       },
       "bloom": {
         "shape": {
-          "template": "flower",
-          "petals": 5,
-          "petal_width": 1.25,
-          "point": 0.0,
-          "notch": 0.0,
-          "centre": 0.25
+          "template": "fruit",
+          "kind": "drupelets",
+          "aspect": 0.9,
+          "unripe": 0.2
         },
-        "colour": [0.75, 0.15, 0.4],
-        "accent": [0.9, 0.75, 0.5]
+        "colour": [0.9, 0.45, 0.1],
+        "accent": [0.4, 0.45, 0.15],
+        "season": {
+          "bud": 60,
+          "flower": 80,
+          "fruit": 125,
+          "ripe": 145,
+          "ripening": 25,
+          "fall": 200,
+          "flower_look": {
+            "shape": {
+              "template": "flower",
+              "petals": 5,
+              "petal_width": 1.25,
+              "point": 0.0,
+              "notch": 0.0,
+              "centre": 0.25
+            },
+            "colour": [0.75, 0.15, 0.4],
+            "accent": [0.9, 0.75, 0.5],
+            "size": 2.0
+          }
+        }
       }
     }
   },
@@ -108,7 +127,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: bright green leaflets; magenta flowers; shredding golden-brown bark."
+      "note": "Colours chosen by eye: bright green leaflets; magenta flowers; shredding golden-brown bark. Fruit (plant roadmap P4), as in mid-July: the last salmonberries, raspberry-like, yellow-orange to red, about 2 cm long. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: magenta flowers in March to May; berries yellow-orange to red in late May into July. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     }
   },
   "provenance": {

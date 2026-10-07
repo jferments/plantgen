@@ -94,6 +94,9 @@ pub struct FruitForm {
     pub scales: u32,
     /// Levels, from the nearest, drawn solid: 1 or 2.
     pub levels: u8,
+    /// Colour of a cluster's stalks (`crate::fruit`); green unless set.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stalk: Option<[f32; 3]>,
 }
 
 impl Default for FruitForm {
@@ -101,6 +104,7 @@ impl Default for FruitForm {
         Self {
             scales: 0,
             levels: 1,
+            stalk: None,
         }
     }
 }
@@ -149,6 +153,9 @@ fn triangles_per_organ(look: &Look) -> usize {
         (Form::Flower(form), Shape::Head(head)) => {
             head.rays as usize * 24 + DOME_TRIANGLES + form.stamens as usize * 3
         }
+        (Form::Fruit(form), Shape::Fruit(fruit)) if !crate::fruit::is_single(fruit) => {
+            crate::fruit::triangles(form, fruit)
+        }
         (Form::Fruit(form), Shape::Fruit(fruit)) if fruit.cone >= 0.5 => {
             ELLIPSOID_TRIANGLES + scales(form, fruit.aspect) as usize * WEDGE_TRIANGLES
         }
@@ -162,12 +169,12 @@ fn triangles_per_organ(look: &Look) -> usize {
 const THORN_TRIANGLES: usize = 16;
 
 /// Triangles a cone scale takes.
-const WEDGE_TRIANGLES: usize = 4;
+pub(crate) const WEDGE_TRIANGLES: usize = 4;
 
 /// The scales on a cone of width over length `aspect`: the form's, or
 /// more on a slender cone, from 16 to 40.
 #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-fn scales(form: &FruitForm, aspect: f64) -> u32 {
+pub(crate) fn scales(form: &FruitForm, aspect: f64) -> u32 {
     if form.scales > 0 {
         form.scales
     } else {
@@ -197,6 +204,19 @@ pub fn build(
     colour: &dyn Fn(&Look, &GraphOrgan) -> [f32; 3],
     mesh: &mut Mesh,
 ) {
+    build_coarse(graph, looks, solid, colour, 0, mesh);
+}
+
+/// [`build`], with fruit clusters drawn `coarse` steps coarser
+/// (`crate::fruit::COARSER`), for part meshes that must fit a budget.
+pub(crate) fn build_coarse(
+    graph: &PlantGraph,
+    looks: &[Look],
+    solid: &[bool],
+    colour: &dyn Fn(&Look, &GraphOrgan) -> [f32; 3],
+    coarse: usize,
+    mesh: &mut Mesh,
+) {
     for organ in &graph.organs {
         let index = usize::from(organ.organ);
         let Some(look) = looks.get(index) else {
@@ -213,6 +233,7 @@ pub fn build(
         let part = Part {
             born: organ.born,
             shed: organ.shed,
+            coarse,
         };
         match (&look.form, &look.shape) {
             (Form::Flower(form), Shape::Flower(flower)) => {
@@ -253,7 +274,7 @@ pub fn build(
                     mesh,
                 );
             }
-            (Form::Fruit(form), Shape::Fruit(fruit)) => {
+            (Form::Fruit(form), Shape::Fruit(fruit)) if crate::fruit::is_single(fruit) => {
                 draw_fruit(
                     organ,
                     axis,
@@ -265,6 +286,12 @@ pub fn build(
                     part,
                     mesh,
                 );
+            }
+            (Form::Fruit(form), Shape::Fruit(fruit)) => {
+                // Unripe fruit, stalks and cups in the accent colour,
+                // darkened with the organ as its colour is.
+                let accent = with_shading(look.accent, look.colour, painted);
+                crate::fruit::draw(organ, axis, side, form, fruit, painted, accent, part, mesh);
             }
             (Form::Thorn, shape) => {
                 let width = match shape {
@@ -291,13 +318,16 @@ pub fn build(
 
 /// When a part appears and is shed.
 #[derive(Clone, Copy)]
-struct Part {
-    born: f64,
-    shed: Option<f64>,
+pub(crate) struct Part {
+    pub(crate) born: f64,
+    pub(crate) shed: Option<f64>,
+    /// Steps coarser than its own detail it is drawn (part meshes that
+    /// must fit a budget, `crate::parts`); 0 in a plant's mesh.
+    pub(crate) coarse: usize,
 }
 
 impl Part {
-    fn leaf(
+    pub(crate) fn leaf(
         self,
         base: Vec3,
         heading: Vec3,
@@ -327,9 +357,9 @@ struct Petals {
     pointed: f64,
 }
 
-const DOME_TRIANGLES: usize = 2 * 8 * 3;
+pub(crate) const DOME_TRIANGLES: usize = 2 * 8 * 3;
 // Two fans at the poles and a band between each pair of the six inner rings.
-const ELLIPSOID_TRIANGLES: usize = 2 * 10 * (7 - 1);
+pub(crate) const ELLIPSOID_TRIANGLES: usize = 2 * 10 * (7 - 1);
 
 #[allow(clippy::too_many_arguments)]
 fn draw_flower(
@@ -384,7 +414,17 @@ fn draw_flower(
         }
         let leaf = part.leaf(base + radial * start, heading, left, length, width, colour);
         let (stations, across) = leaves::detail_of(0, length, width);
-        leaf.draw(&petal, stations.min(6), across.min(2), mesh);
+        let (most_stations, most_across) = match part.coarse {
+            0 => (6, 2),
+            1 => (4, 1),
+            _ => (3, 1),
+        };
+        leaf.draw(
+            &petal,
+            stations.min(most_stations),
+            across.min(most_across),
+            mesh,
+        );
     }
     if tube > 0.0 {
         frustum(
@@ -412,9 +452,9 @@ fn draw_flower(
         );
     }
     let stamen = form.stamen_length * radius;
-    for k in 0..form.stamens {
-        let angle =
-            std::f64::consts::TAU * f64::from(k) / f64::from(form.stamens.max(1)) + turn * 0.5;
+    let stamens = form.stamens >> part.coarse.min(4);
+    for k in 0..stamens {
+        let angle = std::f64::consts::TAU * f64::from(k) / f64::from(stamens.max(1)) + turn * 0.5;
         let radial = side * math::cos(angle) + other * math::sin(angle);
         let direction = (axis + radial * 0.35).normalize_or(axis);
         let leaf = part.leaf(
@@ -440,7 +480,7 @@ fn draw_flower(
 }
 
 #[allow(clippy::too_many_arguments)]
-fn draw_fruit(
+pub(crate) fn draw_fruit(
     organ: &GraphOrgan,
     axis: Vec3,
     side: Vec3,
@@ -483,7 +523,7 @@ fn draw_fruit(
         part,
         mesh,
     );
-    let count = scales(form, aspect);
+    let count = (scales(form, aspect) >> part.coarse.min(2)).max(8);
     let other = axis.cross(side);
     let golden = math::radians(137.507_764);
     for i in 0..count {
@@ -511,7 +551,7 @@ fn draw_fruit(
 
 /// An ellipsoid of half-length `a` along `axis` and half-width `b`.
 #[allow(clippy::too_many_arguments)]
-fn ellipsoid(
+pub(crate) fn ellipsoid(
     centre: Vec3,
     axis: Vec3,
     side: Vec3,
@@ -555,7 +595,7 @@ fn ellipsoid(
 
 /// A dome over `base` along `axis`: `radius` wide, `height` tall.
 #[allow(clippy::too_many_arguments)]
-fn dome(
+pub(crate) fn dome(
     base: Vec3,
     axis: Vec3,
     side: Vec3,
@@ -598,7 +638,7 @@ fn dome(
 /// An open frustum along `axis` from `base`, `length` long, from radius
 /// `r0` to `r1`.
 #[allow(clippy::too_many_arguments)]
-fn frustum(
+pub(crate) fn frustum(
     base: Vec3,
     axis: Vec3,
     side: Vec3,
@@ -628,7 +668,15 @@ fn frustum(
 }
 
 /// A scale: a wedge on the edge `a`–`b` reaching to `tip`, `lift` thick.
-fn wedge(a: Vec3, b: Vec3, tip: Vec3, lift: Vec3, colour: [f32; 3], part: Part, mesh: &mut Mesh) {
+pub(crate) fn wedge(
+    a: Vec3,
+    b: Vec3,
+    tip: Vec3,
+    lift: Vec3,
+    colour: [f32; 3],
+    part: Part,
+    mesh: &mut Mesh,
+) {
     let leaf = part.leaf(a, Vec3::Y, Vec3::X, 0.0, 0.0, colour);
     let first = u32::try_from(mesh.positions.len()).unwrap_or(0);
     let middle = (a + b) * 0.5 + lift;
@@ -652,8 +700,15 @@ fn wedge(a: Vec3, b: Vec3, tip: Vec3, lift: Vec3, colour: [f32; 3], part: Part, 
     ]);
 }
 
-fn shade(colour: [f32; 3], factor: f32) -> [f32; 3] {
+pub(crate) fn shade(colour: [f32; 3], factor: f32) -> [f32; 3] {
     colour.map(|channel| (channel * factor).clamp(0.0, 1.0))
+}
+
+/// `accent` darkened or lightened as `painted` is from `colour`, by
+/// luminance: an organ's second colour shaded with the organ.
+fn with_shading(accent: [f32; 3], colour: [f32; 3], painted: [f32; 3]) -> [f32; 3] {
+    let luminance = |c: [f32; 3]| 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+    shade(accent, luminance(painted) / luminance(colour).max(1e-4))
 }
 
 #[cfg(test)]
@@ -692,6 +747,7 @@ mod tests {
         let part = Part {
             born: 2.0,
             shed: Some(3.0),
+            coarse: 0,
         };
         draw_flower(
             &organ(0.05),
@@ -722,6 +778,7 @@ mod tests {
         let part = Part {
             born: 0.0,
             shed: None,
+            coarse: 0,
         };
         let mut berry = Mesh::default();
         draw_fruit(
@@ -786,6 +843,7 @@ mod tests {
                     solid: None,
                     bend: None,
                     form: Some(Form::Thorn),
+                    season: None,
                 },
             )]),
             [0.3; 3],

@@ -146,6 +146,11 @@ pub struct PlantMesh {
     pub wood: Mesh,
     pub cards: Vec<Card>,
     pub tufts: Vec<Tuft>,
+    /// On the nearest level built for a renderer that draws part meshes
+    /// ([`build_with`]), the organs it may draw as their part mesh: each
+    /// the index in `cards` of the organ's card (the second of a crossed
+    /// pair), in order. Empty otherwise.
+    pub sites: Vec<u32>,
 }
 
 impl PlantMesh {
@@ -324,6 +329,28 @@ pub fn build(
     lod: &LodSpec,
     level: usize,
 ) -> PlantMesh {
+    build_with(graph, looks, bodies, appearance, lod, level, None)
+}
+
+/// [`build`] for a renderer that draws part meshes (`crate::parts`): on
+/// level 0 the organ types marked in `parts` are not drawn solid into the
+/// wood mesh but keep their cards, and their organs are listed as
+/// [`PlantMesh::sites`], where the renderer draws their part meshes near
+/// the camera instead of the cards. Other levels, and `None`, build as
+/// [`build`] does.
+#[must_use]
+pub fn build_with(
+    graph: &PlantGraph,
+    looks: &[Look],
+    bodies: &[BodyLook],
+    appearance: &Appearance,
+    lod: &LodSpec,
+    level: usize,
+    parts: Option<&[bool]>,
+) -> PlantMesh {
+    let parts = parts.filter(|_| level == 0);
+    let is_part =
+        |index: usize| parts.is_some_and(|parts| parts.get(index).copied().unwrap_or(false));
     let mut mesh = PlantMesh::default();
     wood(graph, appearance, lod, &mut mesh.wood);
     // Organs drawn as solid leaves, flowers or fruit at this level leave
@@ -333,7 +360,10 @@ pub fn build(
         .iter()
         .enumerate()
         .map(|(index, look)| {
-            look.solid.is_none() && look.form.solid_at(level) && blooms::fits(graph, look, index)
+            look.solid.is_none()
+                && !is_part(index)
+                && look.form.solid_at(level)
+                && blooms::fits(graph, look, index)
         })
         .collect();
     for (solid, bloom) in solid.iter_mut().zip(&blooms) {
@@ -350,11 +380,40 @@ pub fn build(
         mesh.cards.drain(..).partition(|card| !card.bend.is_flat());
     bent.extend(flat);
     mesh.cards = bent;
+    if parts.is_some() {
+        mesh.sites = sites(&mesh.cards, looks, &is_part);
+    }
     body::build(graph, bodies, looks.len(), level, &mut mesh);
     if let Some(roots) = &appearance.roots {
         crate::roots::build(graph, roots, appearance.bark, level <= 1, &mut mesh.wood);
     }
     mesh
+}
+
+/// The organs of part types among `cards`: each organ's card, or the
+/// second of its crossed pair (`organ_cards` pushes the crossing card
+/// first, and the two share a base, heading and template).
+fn sites(cards: &[Card], looks: &[Look], is_part: &dyn Fn(usize) -> bool) -> Vec<u32> {
+    let mut sites = Vec::new();
+    let mut index = 0;
+    while index < cards.len() {
+        let template = usize::from(cards[index].template);
+        let crossed = looks
+            .get(template)
+            .is_some_and(|look| look.shape.cross().is_some());
+        let pair = crossed
+            && cards.get(index + 1).is_some_and(|next| {
+                next.template == cards[index].template
+                    && next.base == cards[index].base
+                    && next.heading == cards[index].heading
+            });
+        let card = if pair { index + 1 } else { index };
+        if is_part(template) {
+            sites.push(u32::try_from(card).unwrap_or(u32::MAX));
+        }
+        index = card + 1;
+    }
+    sites
 }
 
 /// One ring of a tube: its centre, the radius of its segment, and the age
@@ -793,7 +852,7 @@ fn face_up(heading: Vec3, left: Vec3, amount: f64) -> (Vec3, Vec3) {
 }
 
 /// Where an organ's card goes: its base, heading and left.
-fn place(organ: &GraphOrgan, look: &Look) -> (Vec3, Vec3, Vec3) {
+pub(crate) fn place(organ: &GraphOrgan, look: &Look) -> (Vec3, Vec3, Vec3) {
     match look.mount() {
         // Standing on the organ, reaching along it.
         Mount::Along => {
@@ -1574,6 +1633,7 @@ mod tests {
             solid: None,
             bend: None,
             form: None,
+            season: None,
         }
     }
 

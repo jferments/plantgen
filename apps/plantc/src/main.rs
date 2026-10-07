@@ -5,6 +5,7 @@
 //! never opens a window. Run `plantc help` for usage; see
 //! `docs/user/PLANTS.md` and `docs/developer/PLANTS.md`.
 
+use std::borrow::Cow;
 use std::collections::BTreeMap;
 use std::io::{self, Write};
 use std::path::{Path, PathBuf};
@@ -13,11 +14,11 @@ use std::time::Instant;
 use std::{env, fmt, fs};
 
 use after_plants::body::BodyLook;
-use after_plants::graph::{OrganType, PlantGraph};
+use after_plants::graph::{GraphOrgan, OrganType, PlantGraph};
 use after_plants::ground::{self, GROUND_LOOK_SIZE};
 use after_plants::grow::{Growth, GrowthSettings, grow};
 use after_plants::litter;
-use after_plants::looks::Look;
+use after_plants::looks::{self, Look, Stage};
 use after_plants::lsys::{Limits, Neighbourhood, Program};
 use after_plants::math::Vec3;
 use after_plants::mesh::{self, PlantMesh};
@@ -92,6 +93,8 @@ fn run() -> Result<(), Failure> {
         "grow" => grow_command(&args),
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
+        "parts" => parts_command(&args),
+        "year" => year_command(&args),
         "lineup" => lineup_command(&args),
         "atlas" => atlas_command(&args),
         "ground" => ground_command(&args),
@@ -123,6 +126,18 @@ Usage:
       the plant, metres from its foot with +Y up.
   plantc sheet <species|spec.json> --out FILE.png [--seed N] [--size PIXELS]
       Render every keyframe age (columns) in every environment (rows).
+  plantc parts <species|spec.json> --out FILE.png [--env ENV] [--seed N]
+               [--size PIXELS]
+      Render each organ type alone, its median size at the oldest age
+      printed (drawn at least 25 cm long): a row per type, its solid
+      (LOD0) left and its card (LOD1) right.
+  plantc year <species|spec.json> --out FILE.png [--env ENV] [--seed N]
+              [--size PIXELS] [--days D,D,...|stages]
+      Draw each organ type with a season through the year: a row per
+      type, a column per day (default the middle of each month; `stages`
+      the middle of its bud, flower, unripe, ripening and ripe stages),
+      the organ alone and solid (LOD0) as it is that day, at one scale
+      per row; each day's stage printed.
   plantc lineup <species|spec.json>... --out FILE.png [--age N] [--seeds N]
                 [--view side|three-quarter|top] [--size PIXELS]
       Render a row per species of its first N seeds (default 4) at one
@@ -143,7 +158,9 @@ Usage:
 
 A species is a built-in id (see `plantc list`) or a path to a spec file.
 grow, render, sheet, atlas and build accept --program FILE.lsys to try a
-changed program in place of the species' built-in one.
+changed program in place of the species' built-in one. render, sheet,
+parts, lineup and build accept --day N (1 to 365, default 196): the day
+of the year organs with a season show.
 ENV is open, edge, interior or suppressed."
     );
     Ok(())
@@ -213,6 +230,17 @@ impl Options {
                 format!("unknown environment `{name}`; use open, edge, interior or suppressed")
             }),
             None => Ok(spec.variants.environments[0]),
+        }
+    }
+
+    /// `--day N`, the day of the year (1 to 365) organs with a season show;
+    /// the packages' default day otherwise.
+    fn day(&self) -> Result<f64, String> {
+        let day = self.number("day")?.unwrap_or(package::DEFAULT_DAY);
+        if (1.0..=365.0).contains(&day) {
+            Ok(day)
+        } else {
+            Err(format!("`--day` must be 1 to 365, found {day}"))
         }
     }
 
@@ -424,14 +452,16 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
     Ok(())
 }
 
+#[allow(clippy::too_many_lines)]
 fn render_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
         args,
         &[
             "env", "seed", "age", "view", "lod", "size", "out", "quality", "program", "focus",
-            "span", "alone",
+            "span", "alone", "day",
         ],
     )?;
+    let day = options.day()?;
     let program = options.program()?;
     let spec = load_spec(options.one_positional("a species")?)?;
     let alone = options.flags.contains_key("alone");
@@ -465,8 +495,8 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         None => None,
     };
     let growth = grow_variant(&spec, program.as_deref(), environment, seed, vec![age], age)?;
-    let graph = &growth.keyframes[0];
-    let mut looks = looks_of(&spec, &growth);
+    let (mut looks, sizes) = looks_of(&spec, &growth, day);
+    let graph = &*drawn(&growth.keyframes[0], &sizes);
     let bodies = bodies_of(&spec, &growth);
     let mut plant = mesh::build(
         graph,
@@ -489,8 +519,8 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             vec![host.age],
             host.age,
         )?;
-        let host_graph = &host_growth.keyframes[0];
-        let host_looks = looks_of(&host_spec, &host_growth);
+        let (host_looks, host_sizes) = looks_of(&host_spec, &host_growth, day);
+        let host_graph = &*drawn(&host_growth.keyframes[0], &host_sizes);
         let host_plant = mesh::build(
             host_graph,
             &host_looks,
@@ -571,12 +601,13 @@ fn on_host(host: PlantMesh, guest: PlantMesh, host_types: usize) -> PlantMesh {
 }
 
 fn sheet_command(args: &[String]) -> Result<(), Failure> {
-    let options = Options::parse(args, &["seed", "size", "out", "quality", "program"])?;
+    let options = Options::parse(args, &["seed", "size", "out", "quality", "program", "day"])?;
     let program = options.program()?;
     let spec = load_spec(options.one_positional("a species")?)?;
     let out = options.flags.get("out").ok_or("missing `--out FILE.png`")?;
     let seed = options.number("seed")?.unwrap_or(spec.variants.seeds[0]);
     let size: usize = options.number("size")?.unwrap_or(360);
+    let day = options.day()?;
     let quality = options.quality()?;
     let mut images = Vec::new();
     for environment in &spec.variants.environments {
@@ -588,7 +619,7 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
             spec.growth.keyframes.clone(),
             spec.growth.years,
         )?;
-        let looks = looks_of(&spec, &growth);
+        let (looks, sizes) = looks_of(&spec, &growth, day);
         let bodies = bodies_of(&spec, &growth);
         let templates = templates_of(&looks, &bodies, &growth);
         let tallest = growth
@@ -597,6 +628,7 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
             .map(|graph| graph.height)
             .fold(0.0, f64::max);
         for graph in &growth.keyframes {
+            let graph = &*drawn(graph, &sizes);
             out!(
                 "  {:<10} {}",
                 environment.name(),
@@ -646,9 +678,288 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
     Ok(())
 }
 
-fn lineup_command(args: &[String]) -> Result<(), Failure> {
-    let options = Options::parse(args, &["age", "seeds", "size", "view", "out", "quality"])?;
+#[allow(clippy::too_many_lines)]
+fn parts_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(
+        args,
+        &["env", "seed", "size", "out", "quality", "program", "day"],
+    )?;
+    let program = options.program()?;
+    let spec = load_spec(options.one_positional("a species")?)?;
     let out = options.flags.get("out").ok_or("missing `--out FILE.png`")?;
+    let environment = options.environment(&spec)?;
+    let day = options.day()?;
+    let seed = options.number("seed")?.unwrap_or(spec.variants.seeds[0]);
+    let size: usize = options.number("size")?.unwrap_or(320);
+    let quality = options.quality()?;
+    let age = spec.growth.keyframes.iter().copied().fold(0.0, f64::max);
+    let growth = grow_variant(&spec, program.as_deref(), environment, seed, vec![age], age)?;
+    let graph = &growth.keyframes[0];
+    let (looks, stage_sizes) = looks_of(&spec, &growth, day);
+    let bodies = bodies_of(&spec, &growth);
+    let templates = templates_of(&looks, &bodies, &growth);
+    let mut images = Vec::new();
+    let mut rows = Vec::new();
+    for (index, look) in looks.iter().enumerate() {
+        // A type gone on the day is left out too.
+        let stage_size = stage_sizes.get(index).copied().unwrap_or(1.0);
+        if stage_size <= 0.0 {
+            continue;
+        }
+        // The type's median size; a type the plant does not carry at its
+        // oldest age is left out.
+        let mut sizes: Vec<f64> = graph
+            .organs
+            .iter()
+            .filter(|organ| usize::from(organ.organ) == index)
+            .map(|organ| organ.size)
+            .collect();
+        if sizes.is_empty() {
+            continue;
+        }
+        sizes.sort_by(f64::total_cmp);
+        let median = sizes[sizes.len() / 2] * stage_size;
+        // Drawn at least 25 cm long, so the camera keeps clear of its near
+        // plane; the shape is the same at any size. Framed round its card's
+        // length or width, whichever is more.
+        let length = median.max(0.25);
+        let frame = 1.3 * look.shape.aspect().max(1.0);
+        let alone = PlantGraph {
+            age,
+            height: length,
+            segments: Vec::new(),
+            organs: vec![GraphOrgan {
+                id: 1,
+                organ: u16::try_from(index).map_err(|_| "too many organ types")?,
+                segment: None,
+                position: Vec3::ZERO,
+                heading: Vec3::Y,
+                left: Vec3::X,
+                size: length,
+                born: 0.0,
+                shed: None,
+                light: 1.0,
+            }],
+        };
+        for level in [0, 1] {
+            let lod = quality
+                .lods
+                .get(level)
+                .ok_or("the quality has too few levels")?;
+            let plant = mesh::build(
+                &alone,
+                &looks,
+                &bodies,
+                &spec.appearance,
+                &lod.for_height(length),
+                level,
+            );
+            images.push(preview::render(
+                &plant,
+                &templates,
+                &PreviewOptions {
+                    width: size,
+                    height: size,
+                    view: View::ThreeQuarter,
+                    supersample: 3,
+                    figure: false,
+                    frame_height: None,
+                    focus: Some((Vec3::Y * (length * 0.5), length * frame)),
+                },
+            ));
+        }
+        rows.push(format!(
+            "{} ({}, {:.3} m)",
+            look.organ,
+            look.shape.name(),
+            median
+        ));
+    }
+    if images.is_empty() {
+        return Err("the plant carries no organs at its oldest age".into());
+    }
+    let (width, height, pixels) = preview::contact_sheet(&images, 2, 8);
+    let png = raster::encode_png(width, height, &pixels)
+        .map_err(|error| format!("cannot encode PNG: {error}"))?;
+    fs::write(out, png).map_err(|error| format!("cannot write {out}: {error}"))?;
+    out!(
+        "wrote {out}: a row per organ type, its solid (LOD0) left and its card (LOD1) right:\n  {}",
+        rows.join("\n  ")
+    );
+    Ok(())
+}
+
+/// The middle of a season's bud, flower, unripe, ripening and ripe stages,
+/// as days of the year.
+fn stage_days(season: &looks::Season) -> Vec<f64> {
+    let ripe = season.ripe + season.ripening;
+    let year = |day: f64| ((day - 1.0).rem_euclid(365.0) + 1.0).round();
+    [
+        f64::midpoint(season.bud, season.flower),
+        f64::midpoint(season.flower, season.fruit),
+        f64::midpoint(season.fruit, season.ripe.max(season.fruit)),
+        season.ripe + season.ripening * 0.5,
+        f64::midpoint(ripe, season.fall),
+    ]
+    .map(year)
+    .to_vec()
+}
+
+/// The middle of each month: `plantc year`'s days unless given.
+const MONTHS: [f64; 12] = [
+    15.0, 46.0, 74.0, 105.0, 135.0, 166.0, 196.0, 227.0, 258.0, 288.0, 319.0, 349.0,
+];
+
+#[allow(clippy::too_many_lines)]
+fn year_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &["env", "seed", "size", "out", "quality", "days"])?;
+    let spec = load_spec(options.one_positional("a species")?)?;
+    let out = options.flags.get("out").ok_or("missing `--out FILE.png`")?;
+    let environment = options.environment(&spec)?;
+    let seed = options.number("seed")?.unwrap_or(spec.variants.seeds[0]);
+    let size: usize = options.number("size")?.unwrap_or(220);
+    let quality = options.quality()?;
+    let stages = options
+        .flags
+        .get("days")
+        .is_some_and(|text| text == "stages");
+    let days: Vec<f64> = match options.flags.get("days").filter(|_| !stages) {
+        Some(text) => text
+            .split(',')
+            .map(|part| part.trim().parse::<f64>())
+            .collect::<Result<_, _>>()
+            .ok()
+            .filter(|days: &Vec<f64>| {
+                !days.is_empty() && days.iter().all(|day| (1.0..=365.0).contains(day))
+            })
+            .ok_or_else(|| format!("`--days` expects days 1 to 365, found `{text}`"))?,
+        None => MONTHS.to_vec(),
+    };
+    let age = spec.growth.keyframes.iter().copied().fold(0.0, f64::max);
+    let growth = grow_variant(&spec, None, environment, seed, vec![age], age)?;
+    let graph = &growth.keyframes[0];
+    let bodies = bodies_of(&spec, &growth);
+    let lod = quality.lods.first().ok_or("the quality has no levels")?;
+    let mut images = Vec::new();
+    let mut rows = Vec::new();
+    for (index, organ) in growth.organ_types.iter().enumerate() {
+        let Some(season) = spec
+            .appearance
+            .organs
+            .get(&organ.name)
+            .and_then(|look| look.season.as_ref())
+        else {
+            continue;
+        };
+        let mut sizes: Vec<f64> = graph
+            .organs
+            .iter()
+            .filter(|grown| usize::from(grown.organ) == index)
+            .map(|grown| grown.size)
+            .collect();
+        if sizes.is_empty() {
+            continue;
+        }
+        sizes.sort_by(f64::total_cmp);
+        // Each day's organ at its stage's share of the median size in
+        // fruit, framed as the fruit at least 25 cm long would be.
+        let length = sizes[sizes.len() / 2].max(0.25);
+        let row_days = if stages {
+            stage_days(season)
+        } else {
+            days.clone()
+        };
+        // The row is framed round its largest stage, by its card's length
+        // or width, whichever is more.
+        let largest = row_days
+            .iter()
+            .map(|&day| {
+                let (looks, shares) = looks_of(&spec, &growth, day);
+                shares.get(index).copied().unwrap_or(1.0)
+                    * looks
+                        .get(index)
+                        .map_or(1.0, |look| look.shape.aspect().max(1.0))
+            })
+            .fold(1.0, f64::max);
+        let mut stages = Vec::new();
+        for &day in &row_days {
+            let (looks, shares) = looks_of(&spec, &growth, day);
+            let share = shares.get(index).copied().unwrap_or(1.0);
+            let alone = PlantGraph {
+                age,
+                height: length,
+                segments: Vec::new(),
+                organs: if share > 0.0 {
+                    vec![GraphOrgan {
+                        id: 1,
+                        organ: u16::try_from(index).map_err(|_| "too many organ types")?,
+                        segment: None,
+                        position: Vec3::ZERO,
+                        heading: Vec3::Y,
+                        left: Vec3::X,
+                        size: length * share,
+                        born: 0.0,
+                        shed: None,
+                        light: 1.0,
+                    }]
+                } else {
+                    Vec::new()
+                },
+            };
+            let plant = mesh::build(
+                &alone,
+                &looks,
+                &bodies,
+                &spec.appearance,
+                &lod.for_height(length),
+                0,
+            );
+            images.push(preview::render(
+                &plant,
+                &templates_of(&looks, &bodies, &growth),
+                &PreviewOptions {
+                    width: size,
+                    height: size,
+                    view: View::ThreeQuarter,
+                    supersample: 3,
+                    figure: false,
+                    frame_height: None,
+                    focus: Some((Vec3::Y * (length * largest * 0.5), length * largest * 1.3)),
+                },
+            ));
+            stages.push(match season.stage(day) {
+                Stage::Gone => format!("{day}: gone"),
+                Stage::Bud => format!("{day}: bud"),
+                Stage::Flower => format!("{day}: flower"),
+                Stage::Fruit { unripe } => {
+                    format!("{day}: fruit, {:.0}% unripe", unripe * 100.0)
+                }
+            });
+        }
+        rows.push(format!("{}: {}", organ.name, stages.join("; ")));
+    }
+    if images.is_empty() {
+        return Err(format!("{} has no organ with a season", spec.id).into());
+    }
+    let columns = if stages { 5 } else { days.len() };
+    let (width, height, pixels) = preview::contact_sheet(&images, columns, 6);
+    let png = raster::encode_png(width, height, &pixels)
+        .map_err(|error| format!("cannot encode PNG: {error}"))?;
+    fs::write(out, png).map_err(|error| format!("cannot write {out}: {error}"))?;
+    out!(
+        "wrote {out}: a row per organ type with a season, a column per day:\n  {}",
+        rows.join("\n  ")
+    );
+    Ok(())
+}
+
+fn lineup_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(
+        args,
+        &["age", "seeds", "size", "view", "out", "quality", "day"],
+    )?;
+    let out = options.flags.get("out").ok_or("missing `--out FILE.png`")?;
+    let day = options.day()?;
     if options.positional.is_empty() {
         return Err("name at least one species".into());
     }
@@ -691,8 +1002,8 @@ fn lineup_command(args: &[String]) -> Result<(), Failure> {
             .map(|growth| growth.keyframes[0].height)
             .fold(0.0, f64::max);
         for growth in &grown {
-            let graph = &growth.keyframes[0];
-            let looks = looks_of(&spec, growth);
+            let (looks, sizes) = looks_of(&spec, growth, day);
+            let graph = &*drawn(&growth.keyframes[0], &sizes);
             let bodies = bodies_of(&spec, growth);
             let plant = mesh::build(
                 graph,
@@ -853,13 +1164,20 @@ const GROUND_SHEET_COLUMNS: usize = 7;
 const SWATCH_BACKGROUND: [f32; 3] = [0.6, 0.6, 0.6];
 
 /// One look per organ type of a grown plant.
-fn looks_of(spec: &PlantSpec, growth: &Growth) -> Vec<Look> {
-    spec.appearance.looks(
+fn looks_of(spec: &PlantSpec, growth: &Growth, day: f64) -> (Vec<Look>, Vec<f64>) {
+    spec.appearance.looks_on(
         growth
             .organ_types
             .iter()
             .map(|organ| (organ.name.as_str(), organ.kind)),
+        Some(day),
     )
+}
+
+/// `graph` as drawn with its organ types' `sizes` on a day: organs gone
+/// left out, the others at their stage's size (`looks::staged`).
+fn drawn<'a>(graph: &'a PlantGraph, sizes: &[f64]) -> Cow<'a, PlantGraph> {
+    looks::staged(graph, sizes).map_or(Cow::Borrowed(graph), Cow::Owned)
 }
 
 /// One body look per body type of a grown plant.
@@ -880,18 +1198,19 @@ fn templates_of(looks: &[Look], bodies: &[BodyLook], growth: &Growth) -> Templat
 }
 
 fn build_command(args: &[String]) -> Result<(), Failure> {
-    let options = Options::parse(args, &["out", "quality", "threads", "program"])?;
+    let options = Options::parse(args, &["out", "quality", "threads", "program", "day"])?;
     let program = options.program()?;
     let spec = load_spec(options.one_positional("a species")?)?;
     let quality = options.quality()?;
+    let day = options.day()?;
     let threads = options
         .number("threads")?
         .unwrap_or_else(package::default_threads)
         .max(1);
     let out = PathBuf::from(options.flags.get("out").map_or("plants", String::as_str));
     let inputs = match &program {
-        Some(source) => Inputs::with_program(&spec, source, &quality),
-        None => Inputs::new(&spec, &quality),
+        Some(source) => Inputs::with_program_on_day(&spec, source, &quality, day),
+        None => Inputs::on_day(&spec, &quality, day),
     }
     .map_err(|error| error.to_string())?;
     if let Some(path) = package::existing(&out, &spec.id, &inputs.key) {

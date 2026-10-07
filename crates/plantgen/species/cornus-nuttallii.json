@@ -28,15 +28,15 @@
       "wiggle": 5,
       "blooms": 2,
       "bloom_age": 6,
-      "bloom_size": 0.1,
-      "bloom_angle": 15,
+      "bloom_size": 0.04,
+      "bloom_angle": 30,
       "shade_death": 0.04,
       "extinction": 0.4,
       "space_reach": 1.8,
       "space_kill": 0.5,
       "pipe_rings": 1.2e-05,
       "leaf_area": 0.273,
-      "bloom_area": 0.566
+      "bloom_area": 0.871
     }
   },
   "growth": {
@@ -70,15 +70,36 @@
       },
       "bloom": {
         "shape": {
-          "template": "flower",
-          "petals": 6,
-          "petal_width": 1.3,
-          "point": 0.6,
-          "notch": 0,
-          "centre": 0.22
+          "template": "fruit",
+          "count": 30,
+          "cluster": "head",
+          "size": 0.25,
+          "aspect": 0.7,
+          "unripe": 0.9
         },
-        "colour": [0.93, 0.93, 0.88],
-        "accent": [0.4, 0.45, 0.2]
+        "colour": [0.75, 0.08, 0.06],
+        "accent": [0.35, 0.48, 0.15],
+        "season": {
+          "bud": 90,
+          "flower": 110,
+          "fruit": 145,
+          "ripe": 250,
+          "ripening": 30,
+          "fall": 320,
+          "flower_look": {
+            "shape": {
+              "template": "flower",
+              "petals": 6,
+              "petal_width": 1.3,
+              "point": 0.6,
+              "notch": 0,
+              "centre": 0.22
+            },
+            "colour": [0.93, 0.93, 0.88],
+            "accent": [0.4, 0.45, 0.2],
+            "size": 2.5
+          }
+        }
       }
     }
   },
@@ -103,7 +124,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: green leaves; white bracts round a greenish button; smooth grey-brown bark."
+      "note": "Colours chosen by eye: green leaves; white bracts round a greenish button; smooth grey-brown bark. Fruit (plant roadmap P4), as in mid-July: tight heads of green drupes that turn red in autumn. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: white bracts in April and May; the fruit heads green in summer, red in September and October. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     }
   },
   "provenance": {

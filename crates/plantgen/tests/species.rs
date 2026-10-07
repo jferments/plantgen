@@ -241,6 +241,91 @@ fn growth_history_is_consistent_between_keyframes() {
 /// Every conifer bears cones once old enough and none as a sapling, each
 /// cone within a span of its species' length (plant forms F3).
 #[test]
+fn woody_species_bear_their_fruit_when_old() {
+    // Plant roadmap P4: every tree and shrub whose blooms are fruit (as in
+    // mid-July) carries them at its oldest keyframe, at sizes from a small
+    // berry to a long raceme of samaras.
+    let mut checked = 0;
+    for (id, _) in spec::all_species() {
+        let spec = PlantSpec::builtin(id).unwrap();
+        let fruiting = spec
+            .appearance
+            .organs
+            .get("bloom")
+            .is_some_and(|look| matches!(look.shape, after_plants::looks::Shape::Fruit(_)));
+        if spec.generator.program != "broadleaf" || !fruiting {
+            continue;
+        }
+        checked += 1;
+        let variant = spec.variant_list()[0];
+        let oldest = *spec.growth.keyframes.last().unwrap();
+        let growth = grow_variant(&spec, &variant, oldest, vec![oldest]);
+        let bloom = growth
+            .organ_types
+            .iter()
+            .position(|organ| organ.name == "bloom")
+            .unwrap_or_else(|| panic!("{id}: no bloom organ"));
+        let sizes: Vec<f64> = growth.keyframes[0]
+            .organs
+            .iter()
+            .filter(|organ| usize::from(organ.organ) == bloom)
+            .map(|organ| organ.size)
+            .collect();
+        assert!(!sizes.is_empty(), "{id}: no fruit at {oldest} years");
+        assert!(
+            sizes.iter().all(|&size| size > 0.005 && size < 0.25),
+            "{id}: fruit sizes {:?}",
+            &sizes[..sizes.len().min(5)]
+        );
+    }
+    assert!(checked >= 29, "{checked} fruiting trees and shrubs");
+}
+
+#[test]
+fn fruiting_species_have_a_year() {
+    // Plant roadmap P4: the bloom organ of every tree and shrub whose
+    // blooms are fruit has a season, so its stage (bud, flower, unripe,
+    // ripe, gone) follows the day a package is grown for, never one time
+    // of year. Each stage comes round in the year, and on the forest's
+    // default day each still bears its fruit.
+    use after_plants::looks::{Shape, Stage};
+    let mut checked = 0;
+    for (id, _) in spec::all_species() {
+        let spec = PlantSpec::builtin(id).unwrap();
+        let Some(bloom) = spec.appearance.organs.get("bloom") else {
+            continue;
+        };
+        if spec.generator.program != "broadleaf" || !matches!(bloom.shape, Shape::Fruit(_)) {
+            continue;
+        }
+        checked += 1;
+        let season = bloom
+            .season
+            .as_ref()
+            .unwrap_or_else(|| panic!("{id}: no season"));
+        season.validate().unwrap();
+        assert!(season.flower_look.is_some(), "{id}: no flower look");
+        let day = after_plants::package::DEFAULT_DAY;
+        assert!(
+            matches!(season.stage(day), Stage::Fruit { .. }),
+            "{id}: {:?} on day {day}",
+            season.stage(day)
+        );
+        let stages: Vec<Stage> = (1..=365).map(|day| season.stage(f64::from(day))).collect();
+        for wanted in [Stage::Gone, Stage::Bud, Stage::Flower] {
+            assert!(stages.contains(&wanted), "{id}: never {wanted:?}");
+        }
+        for share in [1.0, 0.0] {
+            assert!(
+                stages.contains(&Stage::Fruit { unripe: share }),
+                "{id}: never fruit {share} unripe"
+            );
+        }
+    }
+    assert!(checked >= 29, "{checked} fruiting trees and shrubs");
+}
+
+#[test]
 fn conifers_bear_cones_once_old() {
     let mut checked = 0;
     for (id, _) in spec::all_species() {

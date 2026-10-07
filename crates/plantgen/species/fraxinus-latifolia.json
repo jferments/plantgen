@@ -29,7 +29,11 @@
       "extinction": 0.45,
       "pipe_rings": 1.5e-05,
       "leaf_area": 0.318,
-      "bloom_area": 0.639
+      "bloom_area": 0.372,
+      "blooms": 1,
+      "bloom_age": 10,
+      "bloom_size": 0.12,
+      "bloom_angle": 130
     }
   },
   "growth": {
@@ -54,6 +58,37 @@
           "leaflet_width": 0.45,
           "teeth": 0,
           "petiole": 0.15
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "kind": "samara",
+          "count": 15,
+          "size": 0.3,
+          "spread": 30,
+          "aspect": 0.22
+        },
+        "colour": [0.6, 0.5, 0.28],
+        "accent": [0.4, 0.46, 0.18],
+        "season": {
+          "bud": 65,
+          "flower": 80,
+          "fruit": 110,
+          "ripe": 245,
+          "ripening": 30,
+          "fall": 335,
+          "flower_look": {
+            "shape": {
+              "template": "spike",
+              "florets": 14,
+              "aspect": 0.3,
+              "plume": 0.2,
+              "stalk": 0.05
+            },
+            "colour": [0.45, 0.42, 0.2],
+            "size": 0.6
+          }
         }
       }
     },
@@ -85,7 +120,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: light green leaves; grey-brown bark in interlacing diamond ridges."
+      "note": "Colours chosen by eye: light green leaves; grey-brown bark in interlacing diamond ridges. Fruit (plant roadmap P4), as in mid-July: dense hanging clusters of single green samaras 3 to 5 cm long. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: small flowers before the leaves in March and April; samaras green in summer, tan from September, falling into the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     }
   },
   "provenance": {

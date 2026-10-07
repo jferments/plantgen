@@ -43,10 +43,10 @@
       "leaf_angle": 50,
       "blooms": 1,
       "bloom_age": 3,
-      "bloom_size": 0.06,
+      "bloom_size": 0.05,
       "bloom_angle": 10,
       "leaf_area": 0.276,
-      "bloom_area": 0.339
+      "bloom_area": 1.13
     }
   },
   "growth": {
@@ -76,9 +76,35 @@
         }
       },
       "bloom": {
-        "shape": { "template": "umbel", "clusters": 7, "florets": 9 },
-        "colour": [0.93, 0.92, 0.85],
-        "accent": [0.85, 0.85, 0.7]
+        "shape": {
+          "template": "fruit",
+          "count": 16,
+          "cluster": "umbel",
+          "size": 0.28,
+          "spread": 55,
+          "aspect": 1.0,
+          "unripe": 0.6
+        },
+        "colour": [0.92, 0.92, 0.9],
+        "accent": [0.45, 0.55, 0.25],
+        "season": {
+          "bud": 115,
+          "flower": 135,
+          "fruit": 170,
+          "ripe": 205,
+          "ripening": 35,
+          "fall": 310,
+          "flower_look": {
+            "shape": {
+              "template": "umbel",
+              "clusters": 7,
+              "florets": 9
+            },
+            "colour": [0.93, 0.92, 0.85],
+            "accent": [0.85, 0.85, 0.7],
+            "size": 1.2
+          }
+        }
       }
     }
   },
@@ -102,7 +128,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: mid-green leaves; red stems; white flower clusters."
+      "note": "Colours chosen by eye: mid-green leaves; red stems; white flower clusters. Fruit (plant roadmap P4), as in mid-July: flat-topped clusters of berries, green turning white. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: flat white clusters in May and June; berries green, white from late July, eaten into November. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     }
   },
   "provenance": {
