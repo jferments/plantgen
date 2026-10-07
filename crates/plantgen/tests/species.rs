@@ -4,12 +4,12 @@
 
 use std::collections::HashMap;
 
-use after_plants::graph::PlantGraph;
-use after_plants::grow::{Growth, GrowthSettings, grow};
-use after_plants::lsys::Limits;
-use after_plants::package;
-use after_plants::spec::{self, GrowthForm, PlantSpec, Variant};
-use after_plants::templates::{self, Templates};
+use plantgen::graph::PlantGraph;
+use plantgen::grow::{Growth, GrowthSettings, grow};
+use plantgen::lsys::Limits;
+use plantgen::package;
+use plantgen::spec::{self, GrowthForm, PlantSpec, Variant};
+use plantgen::templates::{self, Templates};
 
 fn grow_variant(spec: &PlantSpec, variant: &Variant, years: f64, keyframes: Vec<f64>) -> Growth {
     let (program, params) = spec.program().unwrap();
@@ -287,7 +287,7 @@ fn woody_species_bear_their_fruit_when_old() {
             .appearance
             .organs
             .get("bloom")
-            .is_some_and(|look| matches!(look.shape, after_plants::looks::Shape::Fruit(_)));
+            .is_some_and(|look| matches!(look.shape, plantgen::looks::Shape::Fruit(_)));
         if spec.generator.program != "broadleaf" || !fruiting {
             continue;
         }
@@ -323,7 +323,7 @@ fn fruiting_species_have_a_year() {
     // ripe, gone) follows the day a package is grown for, never one time
     // of year. Each stage comes round in the year, and on the forest's
     // default day each still bears its fruit.
-    use after_plants::looks::{Shape, Stage};
+    use plantgen::looks::{Shape, Stage};
     let mut checked = 0;
     for (id, _) in spec::all_species() {
         let spec = PlantSpec::builtin(id).unwrap();
@@ -340,7 +340,7 @@ fn fruiting_species_have_a_year() {
             .unwrap_or_else(|| panic!("{id}: no season"));
         season.validate().unwrap();
         assert!(season.flower_look.is_some(), "{id}: no flower look");
-        let day = after_plants::package::DEFAULT_DAY;
+        let day = plantgen::package::DEFAULT_DAY;
         assert!(
             matches!(season.stage(day), Stage::Fruit { .. }),
             "{id}: {:?} on day {day}",
@@ -409,8 +409,8 @@ fn conifers_bear_cones_once_old() {
 /// is its needles' width, so it shows only where they are a pixel wide.
 #[test]
 fn needled_species_grow_solid_shoots() {
-    use after_plants::looks::Shape;
-    use after_plants::parts;
+    use plantgen::looks::Shape;
+    use plantgen::parts;
     let mut checked = 0;
     for (id, _) in spec::all_species() {
         let spec = PlantSpec::builtin(id).unwrap();

@@ -13,25 +13,22 @@ use std::process::ExitCode;
 use std::time::Instant;
 use std::{env, fmt, fs};
 
-use after_plants::body::BodyLook;
-use after_plants::graph::{GraphOrgan, OrganType, PlantGraph};
-use after_plants::ground::{self, GROUND_LOOK_SIZE};
-use after_plants::grow::{Growth, GrowthSettings, grow};
-use after_plants::litter;
-use after_plants::looks::{self, Look, Stage};
-use after_plants::lsys::{Limits, Neighbourhood, Program};
-use after_plants::math::Vec3;
-use after_plants::mesh::{self, PlantMesh};
-use after_plants::package::{self, Inputs};
-use after_plants::preview::{self, PreviewOptions, View};
-use after_plants::quality::{self, Quality};
-use after_plants::raster;
-use after_plants::spec::{
-    self, ALPINE_SPECIES, DESERT_SPECIES, Environment, GUEST_SPECIES, PALM_SPECIES, PROGRAMS,
-    PlantSpec, ROSETTE_SPECIES, SAVANNA_SPECIES, SONORAN_SPECIES, SPECIES, Variant,
-    WETLAND_SPECIES,
-};
-use after_plants::templates::{self, Templates};
+use plantgen::body::BodyLook;
+use plantgen::graph::{GraphOrgan, OrganType, PlantGraph};
+use plantgen::ground::{self, GROUND_LOOK_SIZE};
+use plantgen::grow::{Growth, GrowthSettings, grow};
+use plantgen::library;
+use plantgen::litter;
+use plantgen::looks::{self, Look, Stage};
+use plantgen::lsys::{Limits, Neighbourhood, Program};
+use plantgen::math::Vec3;
+use plantgen::mesh::{self, PlantMesh};
+use plantgen::package::{self, Inputs};
+use plantgen::preview::{self, PreviewOptions, View};
+use plantgen::quality::{self, Quality};
+use plantgen::raster;
+use plantgen::spec::{self, Environment, PROGRAMS, PlantSpec, Variant};
+use plantgen::templates::{self, Templates};
 
 /// Why a command stopped early.
 enum Failure {
@@ -264,37 +261,27 @@ fn load_spec(name: &str) -> Result<PlantSpec, String> {
 }
 
 fn list() -> Result<(), Failure> {
-    let width = spec::all_species()
-        .map(|(id, _)| id.len())
+    let width = library::LIBRARY
+        .iter()
+        .map(|species| species.id.len())
         .max()
         .unwrap_or(0);
-    for (title, catalogue) in [
-        ("Species of the forest:", &SPECIES[..]),
-        ("Cacti of the Sonoran Desert:", &SONORAN_SPECIES[..]),
-        ("Rosettes of the desert Southwest:", &ROSETTE_SPECIES[..]),
-        (
-            "Trees and shrubs of the Sonoran Desert:",
-            &DESERT_SPECIES[..],
-        ),
-        ("Palms, a cycad and a tree fern:", &PALM_SPECIES[..]),
-        ("Trees of the African savanna:", &SAVANNA_SPECIES[..]),
-        ("Plants of swamps, coasts and water:", &WETLAND_SPECIES[..]),
-        ("Plants that grow on a host:", &GUEST_SPECIES[..]),
-        (
-            "Cushions, tussocks and wind-pruned trees:",
-            &ALPINE_SPECIES[..],
-        ),
-    ] {
-        out!("{title}");
-        for (id, _) in catalogue {
-            let spec = PlantSpec::builtin(id).map_err(|error| error.to_string())?;
-            out!(
-                "  {id:<width$}  {} ({}), program `{}`",
-                spec.taxon.common_name,
-                spec.taxon.scientific_name,
-                spec.generator.program
-            );
+    let mut family = "";
+    for species in library::LIBRARY {
+        if species.family != family {
+            family = species.family;
+            let mut name = family.to_owned();
+            name[..1].make_ascii_uppercase();
+            out!("{name}:");
         }
+        let id = species.id;
+        let spec = PlantSpec::builtin(id).map_err(|error| error.to_string())?;
+        out!(
+            "  {id:<width$}  {} ({}), program `{}`",
+            spec.taxon.common_name,
+            spec.taxon.scientific_name,
+            spec.generator.program
+        );
     }
     out!("Programs:");
     for (name, _) in PROGRAMS {
@@ -511,8 +498,8 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     let mut plant = if parted {
         // As a renderer that draws part meshes shows the plant near the
         // camera: each organ of a type with them drawn as one.
-        let parts = after_plants::parts::part_meshes(&looks);
-        let types = after_plants::parts::types(&looks, &parts);
+        let parts = plantgen::parts::part_meshes(&looks);
+        let types = plantgen::parts::types(&looks, &parts);
         let mut plant = mesh::build_with(
             graph,
             &looks,
@@ -522,7 +509,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
             level,
             Some(&types),
         );
-        after_plants::parts::place(&mut plant, &looks, &parts);
+        plantgen::parts::place(&mut plant, &looks, &parts);
         plant
     } else {
         mesh::build(

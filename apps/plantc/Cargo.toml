@@ -5,7 +5,7 @@ edition.workspace = true
 publish.workspace = true
 
 [dependencies]
-after-plants = { path = "../../crates/after-plants" }
+plantgen = { path = "../../crates/plantgen" }
 serde_json = "=1.0.145"
 
 [lints]

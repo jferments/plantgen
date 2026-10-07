@@ -118,7 +118,7 @@ const fn extra(
 /// What one canopy species sheds, and how its litter looks.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Litter {
-    /// The species, as in `spec::SPECIES`.
+    /// The species' id in the built-in library ([`crate::library`]).
     pub species: &'static str,
     /// Metres of ground its look covers before it repeats.
     pub tile_m: f32,
@@ -1680,13 +1680,13 @@ fn draw_extra(canvas: &mut Canvas, extra: &Extra, draws: Draws, scales: [f64; 3]
 mod tests {
     use super::*;
     use crate::ground::{GROUND_LOOK_NAMES, mip_chain, srgb_to_linear};
-    use crate::spec::SPECIES;
+    use crate::library;
 
     #[test]
     fn every_litter_names_a_builtin_species_once() {
         for (index, litter) in LITTERS.iter().enumerate() {
             let name = litter.species;
-            assert!(SPECIES.iter().any(|(id, _)| *id == name), "{name}");
+            assert!(library::species(name).is_some(), "{name}");
             assert_eq!(litter_index(name), Some(index));
             assert!(!GROUND_LOOK_NAMES.contains(&name));
             assert!(!litter.shed.is_empty() && !litter.dry.is_empty(), "{name}");

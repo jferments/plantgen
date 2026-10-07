@@ -1,4 +1,4 @@
-//! Procedural plants for Project After.
+//! PlantGen: procedural plants, grown from species data.
 //!
 //! A species is data (a [`spec::PlantSpec`]); its form comes from a plant
 //! program written in an open L-system language ([`lsys`]). The compiler
@@ -11,7 +11,9 @@
 //! the stems of cacti and other succulents, are meshed by [`body`], and
 //! their spines grow per areole from a pattern per species ([`spines`]).
 //! The textures of the ground between plants (litter, moss, grass, soil,
-//! sand, gravel and rock) are drawn here too ([`ground`]).
+//! sand, gravel and rock) are drawn here too ([`ground`]). The built-in
+//! species are compiled in from the library tree ([`library`]); Project
+//! After uses all of this through its `after-plants` crate.
 //!
 //! Everything here is engine-independent and deterministic: the same spec,
 //! generator revision and seed give bit-identical output on every machine,
@@ -30,6 +32,7 @@ pub mod grow;
 pub mod impostor;
 pub mod json;
 pub mod leaves;
+pub mod library;
 pub mod litter;
 pub mod looks;
 pub mod lsys;

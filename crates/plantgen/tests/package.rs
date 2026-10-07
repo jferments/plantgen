@@ -4,11 +4,11 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use after_plants::grow::{GrowthSettings, grow};
-use after_plants::lsys::Limits;
-use after_plants::package::{self, Inputs, PackageError};
-use after_plants::quality::{self, Quality};
-use after_plants::spec::{AllometryPoint, Environment, PlantSpec, builtin_program};
+use plantgen::grow::{GrowthSettings, grow};
+use plantgen::lsys::Limits;
+use plantgen::package::{self, Inputs, PackageError};
+use plantgen::quality::{self, Quality};
+use plantgen::spec::{AllometryPoint, Environment, PlantSpec, builtin_program};
 
 /// A young Douglas-fir: two seeds in the open, eight years.
 fn small_spec() -> PlantSpec {
@@ -303,7 +303,7 @@ fn needle_shoots_are_stored_with_their_span() {
     assert_eq!(&package::encode_parts(&decoded), bytes);
     let shoot = decoded.iter().find(|part| part.template == spray).unwrap();
     assert!((shoot.span - record.span).abs() < 1e-6 * record.span);
-    assert!(shoot.triangles() <= after_plants::parts::SHOOT_TRIANGLES);
+    assert!(shoot.triangles() <= plantgen::parts::SHOOT_TRIANGLES);
     let lods = &built.manifest.variants[0].keyframes[0].lods;
     let mesh = package::decode_mesh(&built.objects[&lods[0].mesh]).unwrap();
     assert!(
@@ -346,7 +346,7 @@ fn part_meshes_and_sites_read_back() {
     let decoded = package::decode_parts(bytes).unwrap();
     assert_eq!(&package::encode_parts(&decoded), bytes);
     assert_eq!(decoded[0].variants.len(), parts.types[0].variants);
-    assert!(decoded[0].triangles() <= after_plants::parts::TRIANGLES);
+    assert!(decoded[0].triangles() <= plantgen::parts::TRIANGLES);
 
     let lods = &built.manifest.variants[0].keyframes[0].lods;
     let mesh = package::decode_mesh(&built.objects[&lods[0].mesh]).unwrap();

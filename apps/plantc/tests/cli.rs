@@ -4,7 +4,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Output};
 
-use after_plants::spec::{AllometryPoint, Environment, PlantSpec};
+use plantgen::spec::{AllometryPoint, Environment, PlantSpec};
 
 fn plantc(args: &[&str]) -> Output {
     Command::new(env!("CARGO_BIN_EXE_plantc"))
@@ -55,7 +55,7 @@ fn small_spec_file(dir: &Path) -> PathBuf {
 fn list_and_check_name_the_built_in_species() {
     let listed = stdout(&plantc(&["list"]));
     assert!(listed.contains("pseudotsuga-menziesii"), "{listed}");
-    assert!(listed.contains("Cacti of the Sonoran Desert:"), "{listed}");
+    assert!(listed.contains("Cactaceae:"), "{listed}");
     assert!(listed.contains("carnegiea-gigantea"), "{listed}");
     assert!(listed.contains("Programs:"));
     let checked = stdout(&plantc(&["check", "pseudotsuga-menziesii"]));
@@ -248,7 +248,7 @@ fn atlas_draws_the_looks_and_compares_their_areas() {
 
     // A look for an organ the program does not declare is a mistake.
     let mut spec: serde_json::Value =
-        serde_json::from_str(after_plants::spec::builtin_species("acer-macrophyllum").unwrap())
+        serde_json::from_str(plantgen::spec::builtin_species("acer-macrophyllum").unwrap())
             .unwrap();
     spec["appearance"]["organs"]["petal"] =
         serde_json::json!({ "shape": { "template": "flower" } });
