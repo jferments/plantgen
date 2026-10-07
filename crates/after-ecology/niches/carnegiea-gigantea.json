@@ -2,7 +2,7 @@
   "schema": 2,
   "species": "carnegiea-gigantea",
   "layers": {
-    "subcanopy": 0.6
+    "subcanopy": 0.3
   },
   "moisture": [0, 0.15, 0.55, 0.7],
   "heat_load": [0.5, 0.9, 1.8, 2.2],
@@ -19,7 +19,7 @@
   "evidence": {
     "layers": {
       "evidence": "Authored",
-      "note": "A columnar cactus to 12 m standing above the shrubs of the Arizona Upland, at most a few dozen a hectare: placed in the open subcanopy, never a closed canopy."
+      "note": "A columnar cactus to 12 m standing above the shrubs of the Arizona Upland, at most a few dozen a hectare, about one for every three foothill palo verdes on a bajada: placed in the open subcanopy, never a closed canopy."
     },
     "moisture": {
       "evidence": "Authored",
