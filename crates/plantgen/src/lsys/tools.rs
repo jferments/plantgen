@@ -11,6 +11,8 @@
 //! - `vigour@1`: the Borchert-Honda resource model: light collected by the
 //!   tips flows to the base and back out, split by apical control.
 //! - `pipe@1`: the pipe model of stem radii (Shinozaki et al. 1964).
+//! - `host@1`: the distance and direction from each module to the wood of
+//!   the host a climber, epiphyte or parasite grows on (plant forms F7).
 //!
 //! Every tool is deterministic: the same scene gives the same values on every
 //! machine.

@@ -224,7 +224,7 @@ impl Parser {
         let (name, _) = self.name("a module name")?;
         let params = self.param_names()?;
         let queries = if self.keyword("queries") {
-            self.name_list("an environment query (light, vigour, space or position)")?
+            self.name_list("an environment query (light, vigour, space, position or host)")?
         } else {
             Vec::new()
         };

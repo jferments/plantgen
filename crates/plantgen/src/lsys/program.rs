@@ -596,7 +596,7 @@ impl Compiler {
                     return err(
                         *span,
                         format!(
-                            "unknown query `{name}`; expected light, vigour, space or position"
+                            "unknown query `{name}`; expected light, vigour, space, position or host"
                         ),
                     );
                 };
@@ -767,8 +767,8 @@ impl Compiler {
             return err(
                 rule.span,
                 format!(
-                    "`{}` is not declared; declare it with `module {}` or `organ {} <kind>`",
-                    rule.symbol, rule.symbol, rule.symbol
+                    "`{}` is not declared; declare it with `module {}`, `organ {} <kind>` or `body {}`",
+                    rule.symbol, rule.symbol, rule.symbol, rule.symbol
                 ),
             );
         };

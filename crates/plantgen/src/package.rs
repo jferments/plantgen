@@ -13,7 +13,9 @@
 //! The key is a SHA-256 over everything that decides the contents: the
 //! package format, [`crate::GENERATOR_REVISION`], the spec, the program
 //! source, the quality profile and the organ atlas drawn from the spec's
-//! looks. The same inputs
+//! looks; for a guest, its host's spec and program; and for a species
+//! whose organs have seasons, the day of the year it is built for
+//! ([`DEFAULT_DAY`] unless chosen). The same inputs
 //! give byte-identical packages on every machine, so a key names a package
 //! before it is built, and a build whose directory already exists can be
 //! skipped. A package is written into a temporary directory and renamed
