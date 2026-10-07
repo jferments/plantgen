@@ -11,7 +11,7 @@
   "elevation_m": [-50, -10, 900, 1400],
   "max_slope_deg": 35,
   "shade_tolerance": 0.15,
-  "coldest_c": [-35, -25, 5, 9],
+  "coldest_c": [-35, -25, 6, 10],
   "hard_freeze_c": [-60, -50, 10, 14],
   "warmest_c": [9, 11.5, 22, 25],
   "degree_days_0": [700, 1100, 5500, 7000],
@@ -45,7 +45,7 @@
     },
     "coldest_c": {
       "evidence": "Authored",
-      "note": "Across its range (see the provenance note), coldest-month means from about −25 °C, gone by −35 °C, up to about 5 °C."
+      "note": "Across its range (see the provenance note), coldest-month means from about −25 °C, gone by −35 °C, up to about 6 °C: the mildest winters of the Puget Sound lowlands where it grows, which CHELSA's 1 km climate puts at about 5 °C at sea level (raised from 5 °C on 2026-10-06 for the fine climate)."
     },
     "hard_freeze_c": {
       "evidence": "Authored",
