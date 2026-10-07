@@ -1,6 +1,7 @@
 //! PlantGen: procedural plants, grown from species data.
 //!
-//! A species is data (a [`spec::PlantSpec`]); its form comes from a plant
+//! A species is data (a [`spec::PlantSpec`]), with a note on how each of
+//! its values is known ([`evidence`]); its form comes from a plant
 //! program written in an open L-system language ([`lsys`]). The compiler
 //! grows each variant once, from seed to old age, inside a synthetic
 //! neighbourhood, and keeps a [`graph::PlantGraph`] at each keyframe age.
@@ -25,6 +26,7 @@ pub mod bark;
 pub mod bend;
 pub mod blooms;
 pub mod body;
+pub mod evidence;
 pub mod fruit;
 pub mod graph;
 pub mod ground;

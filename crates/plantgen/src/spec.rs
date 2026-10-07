@@ -8,10 +8,10 @@
 
 use std::collections::BTreeMap;
 
-pub use after_world::semantics::{FieldEvidence, Provenance, SourceRef};
 use serde::{Deserialize, Serialize};
 
 use crate::body::BodyLook;
+pub use crate::evidence::{Evidence, FieldEvidence, Provenance, SourceRef};
 use crate::looks::{self, Flare, Look, Moss, OrganLook, Ridges};
 use crate::lsys::program::SymbolKind;
 use crate::lsys::{Neighbourhood, OrganKind, Program, ProgramError, tools};
@@ -598,6 +598,11 @@ impl PlantSpec {
         if self.provenance.sources.is_empty() {
             return fail("provenance needs at least one source".into());
         }
+        for (path, note) in &self.evidence {
+            if let Err(message) = note.check(&self.provenance) {
+                return fail(format!("the evidence note on `{path}`: {message}"));
+            }
+        }
         if builtin_program(&self.generator.program).is_none() {
             let known: Vec<&str> = PROGRAMS.iter().map(|(name, _)| *name).collect();
             return fail(format!(
@@ -723,5 +728,22 @@ mod tests {
             .unwrap()
             .replace("\"tier\"", "\"tear\"");
         assert!(PlantSpec::from_json(&text).is_err());
+        let mut spec = PlantSpec::builtin("pseudotsuga-menziesii").unwrap();
+        let note = spec.evidence.get_mut("allometry").unwrap();
+        note.tier = Some(4);
+        note.source = Some(spec.provenance.sources.len() - 1);
+        spec.validate().unwrap();
+        let note = spec.evidence.get_mut("allometry").unwrap();
+        note.source = Some(spec.provenance.sources.len());
+        assert!(
+            spec.validate()
+                .unwrap_err()
+                .0
+                .contains("note on `allometry`: source")
+        );
+        let note = spec.evidence.get_mut("allometry").unwrap();
+        note.source = None;
+        note.tier = Some(5);
+        assert!(spec.validate().unwrap_err().0.contains("tier 5"));
     }
 }
