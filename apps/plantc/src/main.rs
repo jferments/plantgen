@@ -119,11 +119,13 @@ Usage:
   plantc render <species|spec.json> --out FILE.png [--env ENV] [--seed N]
                 [--age N] [--view side|three-quarter|top] [--lod 0-3]
                 [--size PIXELS] [--quality draft|standard]
-                [--focus X,Y,Z [--span METRES]]
+                [--focus X,Y,Z [--span METRES]] [--parts on]
       Render one variant at one age, with a 1.8 m figure for scale, or
       a rod in 10 cm stripes beside a plant lower than 1.5 m. --focus
       frames a close-up of SPAN metres (default 0.5) round a point of
-      the plant, metres from its foot with +Y up.
+      the plant, metres from its foot with +Y up. --parts on (level 0)
+      draws every flower, fruit, cone and needle shoot as its part mesh,
+      as WorldLab does near the camera.
   plantc sheet <species|spec.json> --out FILE.png [--seed N] [--size PIXELS]
       Render every keyframe age (columns) in every environment (rows).
   plantc parts <species|spec.json> --out FILE.png [--env ENV] [--seed N]
@@ -458,7 +460,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         args,
         &[
             "env", "seed", "age", "view", "lod", "size", "out", "quality", "program", "focus",
-            "span", "alone", "day",
+            "span", "alone", "day", "parts",
         ],
     )?;
     let day = options.day()?;
@@ -476,6 +478,14 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         None => View::Side,
     };
     let level: usize = options.number("lod")?.unwrap_or(0);
+    let parted = match options.flags.get("parts").map(String::as_str) {
+        None | Some("off") => false,
+        Some("on") => true,
+        Some(other) => return Err(format!("`--parts` must be on or off, found `{other}`").into()),
+    };
+    if parted && level != 0 {
+        return Err("`--parts` draws the nearest level: use it with `--lod 0`".into());
+    }
     let quality = options.quality()?;
     let lod = quality.lods.get(level).ok_or("`--lod` must be 0 to 3")?;
     let size: usize = options.number("size")?.unwrap_or(900);
@@ -498,14 +508,32 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     let (mut looks, sizes) = looks_of(&spec, &growth, day);
     let graph = &*drawn(&growth.keyframes[0], &sizes);
     let bodies = bodies_of(&spec, &growth);
-    let mut plant = mesh::build(
-        graph,
-        &looks,
-        &bodies,
-        &spec.appearance,
-        &lod.for_height(graph.height),
-        level,
-    );
+    let mut plant = if parted {
+        // As a renderer that draws part meshes shows the plant near the
+        // camera: each organ of a type with them drawn as one.
+        let parts = after_plants::parts::part_meshes(&looks);
+        let types = after_plants::parts::types(&looks, &parts);
+        let mut plant = mesh::build_with(
+            graph,
+            &looks,
+            &bodies,
+            &spec.appearance,
+            &lod.for_height(graph.height),
+            level,
+            Some(&types),
+        );
+        after_plants::parts::place(&mut plant, &looks, &parts);
+        plant
+    } else {
+        mesh::build(
+            graph,
+            &looks,
+            &bodies,
+            &spec.appearance,
+            &lod.for_height(graph.height),
+            level,
+        )
+    };
     // A guest is drawn on its host (plant forms F7), unless `--alone`.
     // Neither has fleshy bodies, so the templates are the organs' alone.
     let mut on = false;

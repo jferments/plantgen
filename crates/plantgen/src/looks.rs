@@ -281,6 +281,14 @@ pub struct Needles {
     pub ranks: u32,
     /// Card width over card length.
     pub aspect: f64,
+    /// A needle's width over its length, as the solid shoot draws it
+    /// (`crate::shoots`): about 0.1 for a yew's flat needles, 0.01 for a
+    /// pine's long thin ones. The card draws needles as fine lines.
+    pub width: f64,
+    /// Needles in a fascicle, which fan a little round the shoot from one
+    /// place on it: 2, 3 or 5 for a pine; 1 for needles borne singly. Only
+    /// all round a shoot.
+    pub bundle: u32,
 }
 
 impl Default for Needles {
@@ -291,6 +299,8 @@ impl Default for Needles {
             twig_angle: 45.0,
             ranks: 2,
             aspect: 0.85,
+            width: 0.06,
+            bundle: 1,
         }
     }
 }
@@ -888,6 +898,13 @@ impl Shape {
                 check("twig_angle", s.twig_angle, 10.0, 80.0)?;
                 if s.ranks != 0 && s.ranks != 2 {
                     return Err(format!("needles ranks must be 0 or 2, found {}", s.ranks));
+                }
+                check("width", s.width, 0.003, 0.3)?;
+                count("bundle", s.bundle, 1, 5)?;
+                if s.bundle > 1 && s.ranks != 0 {
+                    return Err(
+                        "needles in bundles stand all round the shoot: ranks must be 0".to_string(),
+                    );
                 }
                 check("aspect", s.aspect, 0.1, 2.0)
             }

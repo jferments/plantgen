@@ -49,6 +49,9 @@ pub enum Form {
     /// A thorn (plant forms F5): a slender cone along the organ, as wide at
     /// its foot as the card's aspect allows, on the nearest level.
     Thorn,
+    /// A needle shoot (plant roadmap P4): the card's shoot, axes and
+    /// needles, as a solid on the nearest level (`crate::shoots`).
+    Shoot,
     /// No solid: the card everywhere.
     Card,
 }
@@ -114,8 +117,8 @@ pub const TYPE_TRIANGLES: usize = 200_000;
 
 impl Form {
     /// The form a look of `shape` takes unless it sets its own: flowers
-    /// and heads are floral diagrams, fruit, buds and cones solids;
-    /// everything else is drawn as cards.
+    /// and heads are floral diagrams, fruit, buds and cones solids, needle
+    /// sprays shoots; everything else is drawn as cards.
     #[must_use]
     pub fn default_for(shape: &Shape) -> Self {
         match shape {
@@ -127,6 +130,7 @@ impl Form {
                 ..FlowerForm::default()
             }),
             Shape::Fruit(_) => Self::Fruit(FruitForm::default()),
+            Shape::Needles(_) => Self::Shoot,
             _ => Self::Card,
         }
     }
@@ -137,7 +141,7 @@ impl Form {
         let levels = match self {
             Self::Flower(form) => form.levels,
             Self::Fruit(form) => form.levels,
-            Self::Thorn => 1,
+            Self::Thorn | Self::Shoot => 1,
             Self::Card => 0,
         };
         level < usize::from(levels.min(2))
@@ -161,6 +165,7 @@ fn triangles_per_organ(look: &Look) -> usize {
         }
         (Form::Fruit(_), _) => ELLIPSOID_TRIANGLES,
         (Form::Thorn, _) => THORN_TRIANGLES,
+        (Form::Shoot, Shape::Needles(needles)) => crate::shoots::triangles(needles, 0),
         _ => 0,
     }
 }
@@ -292,6 +297,11 @@ pub(crate) fn build_coarse(
                 // darkened with the organ as its colour is.
                 let accent = with_shading(look.accent, look.colour, painted);
                 crate::fruit::draw(organ, axis, side, form, fruit, painted, accent, part, mesh);
+            }
+            (Form::Shoot, Shape::Needles(needles)) => {
+                // The axes in the accent colour, shaded with the organ.
+                let accent = with_shading(look.accent, look.colour, painted);
+                crate::shoots::draw(organ, look, needles, painted, accent, part, mesh);
             }
             (Form::Thorn, shape) => {
                 let width = match shape {

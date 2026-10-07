@@ -369,6 +369,48 @@ fn conifers_bear_cones_once_old() {
     );
 }
 
+/// Plant roadmap P4: every species whose foliage is needles draws them
+/// near the camera as a solid shoot, a part mesh within its cap whose span
+/// is its needles' width, so it shows only where they are a pixel wide.
+#[test]
+fn needled_species_grow_solid_shoots() {
+    use after_plants::looks::Shape;
+    use after_plants::parts;
+    let mut checked = 0;
+    for (id, _) in spec::all_species() {
+        let spec = PlantSpec::builtin(id).unwrap();
+        let (program, _) = spec.program().unwrap();
+        let looks = spec.appearance.looks(program.organs());
+        let meshes = parts::part_meshes(&looks);
+        for (index, look) in looks.iter().enumerate() {
+            let Shape::Needles(needles) = &look.shape else {
+                continue;
+            };
+            checked += 1;
+            let part = meshes
+                .iter()
+                .find(|part| part.template == index)
+                .unwrap_or_else(|| panic!("{id}: no shoot"));
+            assert!(
+                part.triangles() <= parts::SHOOT_TRIANGLES,
+                "{id}: {}",
+                part.triangles()
+            );
+            assert!(
+                part.span > 0.0 && part.span < 0.1,
+                "{id}: span {}",
+                part.span
+            );
+            assert!(
+                (0.008..=0.15).contains(&needles.width),
+                "{id}: needles {} as wide as long",
+                needles.width
+            );
+        }
+    }
+    assert_eq!(checked, 9, "the needled conifers and the bald cypress");
+}
+
 /// Fronds open and sag as they age (plant forms F4): on a fern, palms and
 /// a tree fern, the leaflets of each year's fronds hang lower, on average,
 /// than those of the fronds a year younger. (On a palm the younger fronds

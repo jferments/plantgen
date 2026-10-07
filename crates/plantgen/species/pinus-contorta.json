@@ -36,7 +36,7 @@
       "shade_years": 2,
       "pipe_organ": 0.012,
       "pipe_rings": 2.2e-05,
-      "spray_area": 0.208
+      "spray_area": 0.273
     }
   },
   "growth": {
@@ -65,7 +65,9 @@
           "twigs": 2,
           "aspect": 0.5,
           "needle": 0.14,
-          "twig_angle": 35
+          "twig_angle": 35,
+          "width": 0.03,
+          "bundle": 2
         },
         "accent": [0.3, 0.2, 0.1]
       }
@@ -90,7 +92,7 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
-      "note": "Hand-set from general knowledge of the species: a small, irregular pine with a rounded to flat-topped crown, stout upturned branches and tufts of short, paired needles at the twig ends. Not fitted to measurements. Cones (plant forms F3): 3 to 6 cm, often closed and kept on the tree for years; set from general knowledge of the species, not measured."
+      "note": "Hand-set from general knowledge of the species: a small, irregular pine with a rounded to flat-topped crown, stout upturned branches and tufts of short, paired needles at the twig ends. Not fitted to measurements. Cones (plant forms F3): 3 to 6 cm, often closed and kept on the tree for years; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles."
     },
     "allometry": {
       "evidence": "Authored",
@@ -98,7 +100,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: yellow-green needles; dark, thick, furrowed bark."
+      "note": "Colours chosen by eye: yellow-green needles; dark, thick, furrowed bark. Needle shoots (plant roadmap P4): needles in pairs, 3 to 7 cm long and 1 to 2 mm wide, so a needle 0.03 as wide as it is long (`width`), 2 to a fascicle (`bundle`), from general knowledge of the species, not measured."
     }
   },
   "provenance": {

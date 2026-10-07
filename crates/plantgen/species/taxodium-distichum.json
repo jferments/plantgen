@@ -38,7 +38,7 @@
       "shade_death": 0.06,
       "shade_years": 5,
       "pipe_organ": 0.009,
-      "spray_area": 0.109
+      "spray_area": 0.23
     }
   },
   "growth": {
@@ -70,8 +70,9 @@
           "ranks": 2,
           "twigs": 5,
           "aspect": 0.6,
-          "needle": 0.015,
-          "twig_angle": 55
+          "needle": 0.055,
+          "twig_angle": 55,
+          "width": 0.08
         },
         "accent": [0.3, 0.2, 0.12]
       }
@@ -114,7 +115,7 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
-      "note": "Hand-set from general knowledge of the species: a deciduous conifer of southern swamps and rivers, 20 to 35 m tall, with soft, feathery two-ranked needles that turn rust in autumn, a strongly buttressed, fluted base and woody knees rising from its roots round it; round cones. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a deciduous conifer of southern swamps and rivers, 20 to 35 m tall, with soft, feathery two-ranked needles that turn rust in autumn, a strongly buttressed, fluted base and woody knees rising from its roots round it; round cones. Not fitted to measurements. Spray area (plant roadmap P4): the area its card draws with needles of their true length."
     },
     "allometry": {
       "evidence": "Authored",
@@ -122,7 +123,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye from photographs: fresh green needles, red-brown fibrous bark."
+      "note": "Colours chosen by eye from photographs: fresh green needles, red-brown fibrous bark. Needle shoots (plant roadmap P4): flat leaves 1 to 2 cm long and 1 to 1.5 mm wide, so a needle 0.08 as wide as it is long (`width`), and needles about 1.5 cm on a spray 27 cm long (`needle` 0.055), from general knowledge of the species, not measured."
     }
   },
   "provenance": {

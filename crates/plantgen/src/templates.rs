@@ -372,17 +372,31 @@ impl Paint {
 /// renderer that filters the atlas never bleeds one template into the next.
 const BORDER: f64 = 2.0;
 
-fn draw(shape: &Shape, x: f64, y: f64) -> Paint {
+/// How much of the card's width and length a shape is drawn into: all of
+/// it less [`BORDER`] at the sides and tip. Blade pieces run on into the
+/// next card, so only their tips keep clear of the top.
+pub(crate) fn drawn_share(shape: &Shape) -> (f64, f64) {
     let size = to_f64(TEMPLATE_SIZE);
-    // Shapes are drawn into the card less its border: stretch the point
-    // instead. Blade pieces run on into the next card, so only their tips
-    // keep clear of the top.
-    let x = x / (1.0 - 2.0 * BORDER / size);
     let tiles = matches!(shape, Shape::Blade(blade) if blade.taper < 1.0);
-    let y = if tiles { y } else { y / (1.0 - BORDER / size) };
-    // Half the width of the finest line that survives the cut-out: a
-    // little under one texel, so lines are almost two texels wide.
-    let fine = 0.85 * shape.aspect().max(1.0) / size;
+    (
+        1.0 - 2.0 * BORDER / size,
+        if tiles { 1.0 } else { 1.0 - BORDER / size },
+    )
+}
+
+/// Half the width of the finest line that survives the cut-out, in units
+/// of the card's length: a little under one texel, so lines are almost
+/// two texels wide.
+pub(crate) fn fine(shape: &Shape) -> f64 {
+    0.85 * shape.aspect().max(1.0) / to_f64(TEMPLATE_SIZE)
+}
+
+fn draw(shape: &Shape, x: f64, y: f64) -> Paint {
+    // Shapes are drawn into the card less its border: stretch the point
+    // instead.
+    let (across, along) = drawn_share(shape);
+    let (x, y) = (x / across, y / along);
+    let fine = fine(shape);
     match shape {
         Shape::Needles(s) => needles(s, x, y, fine),
         Shape::Scales(s) => scales(s, x, y, fine),
@@ -478,84 +492,193 @@ fn side_veins(along: f64, across: f64, spacing: f64, angle: f64) -> f64 {
     if distance < 0.0028 { 0.12 } else { 0.0 }
 }
 
-/// A conifer shoot: a central axis and side twigs, set with needles in two
-/// flat ranks or all round, which seen from the side radiate at every angle.
-fn needles(s: &Needles, x: f64, y: f64, fine: f64) -> Paint {
+/// One axis of a needle spray in its card's frame (units of the card's
+/// length, `x` across and `y` along): the shoot, then its side twigs.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub(crate) struct NeedleAxis {
+    pub start: (f64, f64),
+    /// Unit direction in the card's plane.
+    pub direction: (f64, f64),
+    pub length: f64,
+    /// The length of its longest needles.
+    pub needle: f64,
+}
+
+/// The axes of a spray: the shoot, then `twigs` side twigs alternating
+/// left and right, reaching no farther than the card holds.
+pub(crate) fn needle_axes(s: &Needles) -> Vec<NeedleAxis> {
     let half = s.aspect * 0.5;
     let twig_angle = math::radians(s.twig_angle);
     let reach = ((half - s.needle * 0.75) / math::sin(twig_angle)).clamp(0.04, 0.75);
-    // (start, unit direction, length, needle length)
-    let mut axes = Vec::with_capacity(13);
-    axes.push(((0.0, 0.0), (0.0, 1.0), 0.97, s.needle));
+    let mut axes = Vec::with_capacity(1 + s.twigs as usize);
+    axes.push(NeedleAxis {
+        start: (0.0, 0.0),
+        direction: (0.0, 1.0),
+        length: 0.97,
+        needle: s.needle,
+    });
     for k in 0..s.twigs {
         let at = 0.08 + 0.78 * (f64::from(k) + 0.5) / f64::from(s.twigs);
         let side = if k % 2 == 0 { 1.0 } else { -1.0 };
         let length = (reach * (1.0 - 0.55 * at)).min((0.97 - at) / math::cos(twig_angle));
-        axes.push((
-            (0.0, at),
-            (side * math::sin(twig_angle), math::cos(twig_angle)),
+        axes.push(NeedleAxis {
+            start: (0.0, at),
+            direction: (side * math::sin(twig_angle), math::cos(twig_angle)),
             length,
-            s.needle * 0.8,
-        ));
+            needle: s.needle * 0.8,
+        });
     }
-    let p = (x, y);
+    axes
+}
+
+/// The spacing of needles along an axis whose needles are `needle` long:
+/// close all round a shoot, wider in two ranks.
+pub(crate) fn needle_pitch(s: &Needles, needle: f64) -> f64 {
+    needle * if s.ranks == 0 { 0.085 } else { 0.22 }
+}
+
+/// The needles that leave an axis at one place: a fascicle of `bundle`
+/// all round a shoot, or one to each side in two ranks.
+pub(crate) fn needles_per_place(s: &Needles) -> usize {
+    if s.ranks == 0 {
+        s.bundle.max(1) as usize
+    } else {
+        2
+    }
+}
+
+/// How far apart the needles of a fascicle fan round the shoot, radians.
+const FAN: f64 = 0.25;
+
+/// One needle of a spray, in the frame of its axis: from `along` on the
+/// axis, `length` long, leaving at `tilt` from the axis; across the axis
+/// (in the card's plane, to its left) by the share `across` of its length
+/// and out of the card by `out`, with `along_share` along the axis.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub(crate) struct NeedleDraw {
+    pub along: f64,
+    pub length: f64,
+    pub along_share: f64,
+    pub across: f64,
+    pub out: f64,
+    /// Its own draw in `[0, 1)`, which shades it.
+    pub jitter: f64,
+}
+
+/// Needle `k` of place `i` (of [`needles_per_place`]) on axis `index` of
+/// a spray `s` on a card of half-width `half`, shortened to stay inside
+/// the card with `fine` to spare: the card's painter and the solid shoot
+/// (`crate::shoots`) both draw it. The painter draws the places' own
+/// needles (`between` 0); the solid shoot also those `between` 1 to
+/// `steps - 1`, which stand `between / steps` of the pitch farther along
+/// (`crate::shoots::fill`).
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn needle_at(
+    s: &Needles,
+    index: usize,
+    axis: &NeedleAxis,
+    i: i64,
+    k: usize,
+    (between, steps): (usize, usize),
+    half: f64,
+    fine: f64,
+) -> NeedleDraw {
     let lean = math::radians(58.0);
+    let pitch = needle_pitch(s, axis.needle);
+    let salt = u64::try_from(index).unwrap_or(0);
+    let n = u64::try_from(i).unwrap_or(0);
+    #[allow(clippy::cast_precision_loss)]
+    let shift = between as f64 / steps.max(1) as f64;
+    #[allow(clippy::cast_precision_loss)]
+    let along = (i as f64 + 0.5 + shift) * pitch;
+    let shorten = 1.0 - 0.35 * along / axis.length;
+    // A fascicle's needles share their place's draw of its azimuth.
+    let per_place = needles_per_place(s);
+    let place = n * u64::try_from(per_place.max(2)).unwrap_or(2)
+        + (u64::try_from(between).unwrap_or(0) << 40);
+    let key = place + u64::try_from(k).unwrap_or(0);
+    let jitter = hash(key, salt, 11);
+    let full = axis.needle * shorten * (0.85 + 0.3 * jitter);
+    let tilt = lean + math::radians(16.0) * (hash(key, salt, 12) - 0.5);
+    // A needle at azimuth `phi` round the shoot, a fascicle's fanned; in
+    // two ranks, flat in the card's plane, the first to the left.
+    let (across, out) = if s.ranks == 0 {
+        #[allow(clippy::cast_precision_loss)]
+        let fan = (k as f64 - (per_place as f64 - 1.0) * 0.5) * FAN;
+        #[allow(clippy::cast_precision_loss)]
+        let phi = (i as f64 + shift) * 2.399_963 + hash(place, salt, 13) + fan;
+        (
+            math::sin(tilt) * math::cos(phi),
+            math::sin(tilt) * math::sin(phi),
+        )
+    } else {
+        let side = if k == 0 { 1.0 } else { -1.0 };
+        (side * math::sin(tilt), 0.0)
+    };
+    let along_share = math::cos(tilt);
+    // Shorten needles that would leave the card.
+    let (d, start) = (axis.direction, axis.start);
+    let from = (start.0 + d.0 * along, start.1 + d.1 * along);
+    let offset = (
+        (d.0 * along_share - d.1 * across) * full,
+        (d.1 * along_share + d.0 * across) * full,
+    );
+    NeedleDraw {
+        along,
+        length: full * fit(from, offset, half, fine * 1.2),
+        along_share,
+        across,
+        out,
+        jitter,
+    }
+}
+
+/// How many places along an axis needles leave it at.
+pub(crate) fn needle_count(s: &Needles, axis: &NeedleAxis) -> i64 {
+    #[allow(clippy::cast_possible_truncation)]
+    let count = (axis.length / needle_pitch(s, axis.needle))
+        .floor()
+        .max(0.0) as i64;
+    count
+}
+
+/// A conifer shoot: a central axis and side twigs, set with needles in two
+/// flat ranks or all round, which seen from the side radiate at every angle.
+fn needles(s: &Needles, x: f64, y: f64, fine: f64) -> Paint {
+    let half = s.aspect * 0.5;
+    let p = (x, y);
     let mut best = Paint::EMPTY;
-    for (index, &(start, direction, length, needle)) in axes.iter().enumerate() {
-        let (along, across) = local(p, start, direction);
-        if along < -needle || along > length + needle {
+    for (index, axis) in needle_axes(s).iter().enumerate() {
+        let (along, across) = local(p, axis.start, axis.direction);
+        if along < -axis.needle || along > axis.length + axis.needle {
             continue;
         }
         // The twig itself.
         let wood = if index == 0 { fine * 1.3 } else { fine };
-        if (0.0..=length).contains(&along) && across.abs() < wood {
+        if (0.0..=axis.length).contains(&along) && across.abs() < wood {
             return Paint::solid(0.75, 1.0);
         }
-        let all_round = s.ranks == 0;
-        let pitch = needle * if all_round { 0.085 } else { 0.22 };
+        let pitch = needle_pitch(s, axis.needle);
+        let count = needle_count(s, axis);
         #[allow(clippy::cast_possible_truncation)]
-        let count = (length / pitch).floor().max(0.0) as i64;
-        #[allow(clippy::cast_possible_truncation)]
-        let first = (((along - needle) / pitch).floor() as i64).max(0);
+        let first = (((along - axis.needle) / pitch).floor() as i64).max(0);
         #[allow(clippy::cast_possible_truncation)]
         let last = (((along + 0.01) / pitch).ceil() as i64).min(count - 1);
-        let salt = u64::try_from(index).unwrap_or(0);
         for i in first..=last {
-            let n = u64::try_from(i).unwrap_or(0);
-            #[allow(clippy::cast_precision_loss)]
-            let base = (i as f64 + 0.5) * pitch;
-            let shorten = 1.0 - 0.35 * base / length;
-            let sides: &[f64] = if all_round { &[1.0] } else { &[1.0, -1.0] };
-            for (side_index, &side) in sides.iter().enumerate() {
-                let key = n * 2 + u64::try_from(side_index).unwrap_or(0);
-                let jitter = hash(key, salt, 11);
-                let full = needle * shorten * (0.85 + 0.3 * jitter);
-                let tilt = lean + math::radians(16.0) * (hash(key, salt, 12) - 0.5);
-                // Seen from the side, a needle at azimuth `phi` round the
-                // shoot shows its across component foreshortened.
-                let spread = if all_round {
-                    #[allow(clippy::cast_precision_loss)]
-                    let phi = i as f64 * 2.399_963 + hash(key, salt, 13);
-                    math::sin(tilt) * math::cos(phi)
-                } else {
-                    side * math::sin(tilt)
-                };
-                let (fa, fc) = (math::cos(tilt), spread);
+            for k in 0..needles_per_place(s) {
+                let needle = needle_at(s, index, axis, i, k, (0, 1), half, fine);
+                let (fa, fc) = (needle.along_share, needle.across);
                 let shown = hypot(fa, fc);
-                // Shorten needles that would leave the card.
-                let from = (start.0 + direction.0 * base, start.1 + direction.1 * base);
-                let offset = (
-                    (direction.0 * fa - direction.1 * fc) * full,
-                    (direction.1 * fa + direction.0 * fc) * full,
+                let tip_along = needle.along + fa * needle.length;
+                let tip_across = fc * needle.length;
+                let (distance, t) = segment(
+                    (along, across),
+                    (needle.along, 0.0),
+                    (tip_along, tip_across),
                 );
-                let full = full * fit(from, offset, half, fine * 1.2);
-                let tip_along = base + fa * full;
-                let tip_across = fc * full;
-                let (distance, t) = segment((along, across), (base, 0.0), (tip_along, tip_across));
                 if distance < fine && shown > 0.05 {
-                    let paint = Paint::solid(0.78 + 0.32 * t + 0.1 * (jitter - 0.5), 0.0);
                     // Prefer the needle drawn on top: the later one.
-                    best = paint;
+                    best = Paint::solid(0.78 + 0.32 * t + 0.1 * (needle.jitter - 0.5), 0.0);
                 }
             }
         }

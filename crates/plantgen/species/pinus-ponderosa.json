@@ -32,7 +32,7 @@
       "spray_length": 1.0,
       "shade_death": 0.15,
       "pipe_rings": 8e-06,
-      "spray_area": 0.263
+      "spray_area": 0.471
     }
   },
   "growth": {
@@ -61,7 +61,9 @@
           "twigs": 2,
           "aspect": 0.8,
           "needle": 0.28,
-          "twig_angle": 30
+          "twig_angle": 30,
+          "width": 0.009,
+          "bundle": 3
         },
         "accent": [0.35, 0.22, 0.12]
       }
@@ -86,7 +88,7 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
-      "note": "Hand-set from general knowledge of the species: a large pine with an open, rounded crown, stout branches and long needles in bundles of three, tufted at the twig ends. Not fitted to measurements. Cones (plant forms F3): 8 to 14 cm, spreading to hanging; set from general knowledge of the species, not measured."
+      "note": "Hand-set from general knowledge of the species: a large pine with an open, rounded crown, stout branches and long needles in bundles of three, tufted at the twig ends. Not fitted to measurements. Cones (plant forms F3): 8 to 14 cm, spreading to hanging; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles."
     },
     "allometry": {
       "evidence": "Authored",
@@ -94,7 +96,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: yellow-green needles; orange-brown bark in large plates."
+      "note": "Colours chosen by eye: yellow-green needles; orange-brown bark in large plates. Needle shoots (plant roadmap P4): needles in threes, 12 to 25 cm long and about 1.5 mm wide, so a needle 0.009 as wide as it is long (`width`), 3 to a fascicle (`bundle`), from general knowledge of the species, not measured."
     }
   },
   "provenance": {

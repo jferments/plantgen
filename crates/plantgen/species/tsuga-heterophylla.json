@@ -38,7 +38,7 @@
       "shade_death": 0.06,
       "shade_years": 5,
       "pipe_organ": 0.009,
-      "spray_area": 0.203
+      "spray_area": 0.242
     }
   },
   "growth": {
@@ -66,8 +66,9 @@
           "ranks": 2,
           "twigs": 5,
           "aspect": 0.7,
-          "needle": 0.035,
-          "twig_angle": 50
+          "needle": 0.047,
+          "twig_angle": 50,
+          "width": 0.12
         },
         "accent": [0.25, 0.17, 0.1]
       }
@@ -98,7 +99,7 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
-      "note": "Hand-set from general knowledge of the species: a tall, narrow conifer with a drooping leader, slender level to drooping branches and feathery, flat sprays of short needles in two ranks; very shade tolerant. Not fitted to measurements. Cones (plant forms F3): 1.5 to 3 cm hang from the shoot tips; set from general knowledge of the species, not measured."
+      "note": "Hand-set from general knowledge of the species: a tall, narrow conifer with a drooping leader, slender level to drooping branches and feathery, flat sprays of short needles in two ranks; very shade tolerant. Not fitted to measurements. Cones (plant forms F3): 1.5 to 3 cm hang from the shoot tips; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws with needles of their true length."
     },
     "allometry": {
       "evidence": "Authored",
@@ -106,7 +107,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: soft dark green needles with paler undersides; dark reddish-brown furrowed bark."
+      "note": "Colours chosen by eye: soft dark green needles with paler undersides; dark reddish-brown furrowed bark. Needle shoots (plant roadmap P4): flat needles of mixed lengths, 0.5 to 2 cm long and 1.5 to 2 mm wide, so a needle 0.12 as wide as it is long (`width`), and needles about 1.2 cm on a spray 25 cm long (`needle` 0.047), from general knowledge of the species, not measured."
     }
   },
   "provenance": {

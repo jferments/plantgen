@@ -29,7 +29,7 @@
 //! | `impostor-albedo` | PNG, sRGB colour with coverage in alpha |
 //! | `impostor-normal-depth` | PNG, world normal · 0.5 + 0.5, depth in alpha |
 //! | `organ-atlas` | PNG, one template per organ type, side by side in the program's order: brightness / 2 in red, accent weight in green, coverage in alpha |
-//! | `parts` | the part meshes, `APPARTS1` (below) |
+//! | `parts` | the part meshes, `APPARTS2` (below) |
 //!
 //! Binary objects are little-endian with 32-bit floats. A graph is a
 //! 24-byte header (magic, age, height, segment count, organ count), then
@@ -79,9 +79,9 @@
 //! The part meshes themselves are one object, `parts`, for the package:
 //!
 //! ```text
-//! APPARTS1, u32 type count N, then per type: u32 template, u32 variants
-//! V, then per variant: u32 vertex count P, u32 index count Q, positions
-//! f32×3P, normals f32×3P, colours f32×3P, indices u32×Q
+//! APPARTS2, u32 type count N, then per type: u32 template, f32 span, u32
+//! variants V, then per variant: u32 vertex count P, u32 index count Q,
+//! positions f32×3P, normals f32×3P, colours f32×3P, indices u32×Q
 //! ```
 
 use std::collections::BTreeMap;
@@ -125,7 +125,7 @@ pub const MANIFEST: &str = "manifest.json";
 pub const OBJECTS: &str = "objects";
 pub const GRAPH_MAGIC: [u8; 8] = *b"APGRAPH1";
 pub const MESH_MAGIC: [u8; 8] = *b"APMESH1\0";
-pub const PARTS_MAGIC: [u8; 8] = *b"APPARTS1";
+pub const PARTS_MAGIC: [u8; 8] = *b"APPARTS2";
 /// The level of detail impostors are rendered from.
 pub const IMPOSTOR_LOD: usize = 1;
 /// Samples per impostor texel along each axis.
@@ -291,20 +291,28 @@ pub struct LodRecord {
 }
 
 /// The package's part meshes (`crate::parts`).
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct PartsRecord {
     pub object: String,
     /// The organ types that have them.
     pub types: Vec<PartTypeRecord>,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct PartTypeRecord {
     /// The organ type (its template).
     pub template: usize,
     pub variants: usize,
     /// The most triangles a variant holds.
     pub triangles: usize,
+    /// The share of its card's length that must cover a renderer's least
+    /// pixels for it to be drawn (`crate::parts::PartMesh::span`).
+    #[serde(default = "full_span")]
+    pub span: f64,
+}
+
+fn full_span() -> f64 {
+    1.0
 }
 
 // Serde's `skip_serializing_if` passes a reference.
@@ -1052,6 +1060,7 @@ fn assemble(
                 template: part.template,
                 variants: part.variants.len(),
                 triangles: part.triangles(),
+                span: part.span,
             })
             .collect(),
     });
@@ -1772,7 +1781,7 @@ pub fn encode_mesh(plant: &PlantMesh) -> Vec<u8> {
     out.0
 }
 
-/// Encode part meshes as `APPARTS1`.
+/// Encode part meshes as `APPARTS2`.
 #[must_use]
 pub fn encode_parts(parts: &[crate::parts::PartMesh]) -> Vec<u8> {
     let mut out = Writer(Vec::new());
@@ -1780,6 +1789,8 @@ pub fn encode_parts(parts: &[crate::parts::PartMesh]) -> Vec<u8> {
     out.count(parts.len());
     for part in parts {
         out.count(part.template);
+        #[allow(clippy::cast_possible_truncation)]
+        out.f32(part.span as f32);
         out.count(part.variants.len());
         for mesh in &part.variants {
             out.count(mesh.vertex_count());
@@ -1795,7 +1806,7 @@ pub fn encode_parts(parts: &[crate::parts::PartMesh]) -> Vec<u8> {
     out.0
 }
 
-/// Decode `APPARTS1` part meshes. Each mesh keeps its positions, normals,
+/// Decode `APPARTS2` part meshes. Each mesh keeps its positions, normals,
 /// colours (alpha 1) and indices.
 ///
 /// # Errors
@@ -1808,13 +1819,17 @@ pub fn decode_parts(bytes: &[u8]) -> Result<Vec<crate::parts::PartMesh>, Package
         what: "parts",
     };
     if input.array::<8>()? != PARTS_MAGIC {
-        return Err(format_error("not APPARTS1 part meshes"));
+        return Err(format_error("not APPARTS2 part meshes"));
     }
     let types = input.u32()? as usize;
-    input.check_room(types.saturating_mul(8))?;
+    input.check_room(types.saturating_mul(12))?;
     let mut parts = Vec::with_capacity(types);
     for _ in 0..types {
         let template = input.u32()? as usize;
+        let span = f64::from(input.f32()?);
+        if !(span > 0.0 && span <= 1.0) {
+            return Err(format_error("a part mesh's span is out of range"));
+        }
         let count = input.u32()? as usize;
         input.check_room(count.saturating_mul(8))?;
         let mut variants = Vec::with_capacity(count);
@@ -1844,7 +1859,11 @@ pub fn decode_parts(bytes: &[u8]) -> Result<Vec<crate::parts::PartMesh>, Package
             }
             variants.push(mesh);
         }
-        parts.push(crate::parts::PartMesh { template, variants });
+        parts.push(crate::parts::PartMesh {
+            template,
+            variants,
+            span,
+        });
     }
     input.finish()?;
     Ok(parts)

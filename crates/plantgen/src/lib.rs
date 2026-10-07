@@ -41,6 +41,7 @@ pub mod quality;
 pub mod raster;
 pub mod rng;
 pub mod roots;
+pub mod shoots;
 pub mod spec;
 pub mod spines;
 pub mod templates;
@@ -57,5 +58,7 @@ pub mod templates;
 /// gains the thorn organ type (F5). 8: organ types with part meshes
 /// (`crate::parts`, plant roadmap P4) keep their cards on level 0, listed
 /// as sites, instead of being drawn solid into its wood mesh, and the
-/// package stores their part meshes.
-pub const GENERATOR_REVISION: u32 = 8;
+/// package stores their part meshes. 9: needle sprays are solid shoots on
+/// the nearest level (`crate::shoots`), and each part mesh stores its span
+/// (`APPARTS2`).
+pub const GENERATOR_REVISION: u32 = 9;

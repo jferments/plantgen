@@ -32,7 +32,7 @@
       "shade_death": 0.12,
       "pipe_organ": 0.009,
       "pipe_rings": 8e-06,
-      "spray_area": 0.219
+      "spray_area": 0.428
     }
   },
   "growth": {
@@ -61,7 +61,9 @@
           "twigs": 2,
           "aspect": 0.55,
           "needle": 0.18,
-          "twig_angle": 35
+          "twig_angle": 35,
+          "width": 0.012,
+          "bundle": 5
         },
         "accent": [0.3, 0.25, 0.18]
       }
@@ -86,7 +88,7 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
-      "note": "Hand-set from general knowledge of the species: a tall, straight pine with a narrow crown of slender, level branches and soft needles in fives. Not fitted to measurements. Cones (plant forms F3): 10 to 25 cm, long and slender, hanging from the top; set from general knowledge of the species, not measured."
+      "note": "Hand-set from general knowledge of the species: a tall, straight pine with a narrow crown of slender, level branches and soft needles in fives. Not fitted to measurements. Cones (plant forms F3): 10 to 25 cm, long and slender, hanging from the top; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles."
     },
     "allometry": {
       "evidence": "Authored",
@@ -94,7 +96,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: blue-green needles; grey bark broken into small square plates."
+      "note": "Colours chosen by eye: blue-green needles; grey bark broken into small square plates. Needle shoots (plant roadmap P4): slender needles in fives, 5 to 13 cm long and under 1 mm wide, so a needle 0.012 as wide as it is long (`width`), 5 to a fascicle (`bundle`), from general knowledge of the species, not measured."
     }
   },
   "provenance": {

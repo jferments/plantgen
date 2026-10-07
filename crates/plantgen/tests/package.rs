@@ -268,6 +268,51 @@ fn the_day_is_an_input_for_seasons_alone() {
     assert_eq!(bloom_cards(&winter), (0, false), "and nothing in January");
 }
 
+/// Plant roadmap P4: a conifer's needle sprays are part meshes, stored
+/// with the span that keeps their needles a pixel wide, and level 0 lists
+/// them as sites.
+#[test]
+fn needle_shoots_are_stored_with_their_span() {
+    let mut spec = PlantSpec::builtin("taxus-brevifolia").unwrap();
+    spec.growth.years = 4.0;
+    spec.growth.keyframes = vec![4.0];
+    spec.variants.environments = vec![Environment::Open];
+    spec.variants.seeds = vec![1];
+    spec.allometry.clear();
+    let inputs = Inputs::new(&spec, &TINY).unwrap();
+    let built = package::build(&inputs, 2, &mut |_| {}).unwrap();
+    let parts = built
+        .manifest
+        .parts
+        .as_ref()
+        .expect("needles have part meshes");
+    let spray = built
+        .manifest
+        .organ_types
+        .iter()
+        .position(|organ| organ.name == "spray")
+        .unwrap();
+    let record = parts
+        .types
+        .iter()
+        .find(|part| part.template == spray)
+        .expect("the spray is a part");
+    assert!(record.span > 0.0 && record.span < 0.1, "{}", record.span);
+    let bytes = &built.objects[&parts.object];
+    let decoded = package::decode_parts(bytes).unwrap();
+    assert_eq!(&package::encode_parts(&decoded), bytes);
+    let shoot = decoded.iter().find(|part| part.template == spray).unwrap();
+    assert!((shoot.span - record.span).abs() < 1e-6 * record.span);
+    assert!(shoot.triangles() <= after_plants::parts::SHOOT_TRIANGLES);
+    let lods = &built.manifest.variants[0].keyframes[0].lods;
+    let mesh = package::decode_mesh(&built.objects[&lods[0].mesh]).unwrap();
+    assert!(
+        mesh.sites
+            .iter()
+            .any(|&site| usize::from(mesh.cards[site as usize].template) == spray)
+    );
+}
+
 #[test]
 fn part_meshes_and_sites_read_back() {
     let mut spec = PlantSpec::builtin("symphoricarpos-albus").unwrap();

@@ -1681,7 +1681,14 @@ mod tests {
             ranks: 0,
             ..Needles::default()
         });
-        let cards = one_organ(look(round, 0.0), Vec3::X, Vec3::Z);
+        // The nearest level draws the shoot solid (`crate::shoots`) and
+        // leaves its cards; drawn as a card, it crosses a second.
+        assert!(one_organ(look(round.clone(), 0.0), Vec3::X, Vec3::Z).is_empty());
+        let card = OrganLook {
+            form: Some(crate::blooms::Form::Card),
+            ..look(round, 0.0)
+        };
+        let cards = one_organ(card, Vec3::X, Vec3::Z);
         assert_eq!(cards.len(), 2);
         assert!((cards[0].width - cards[1].width).abs() < 1e-6);
         assert!(vector(cards[0].left).dot(vector(cards[1].left)).abs() < 1e-6);

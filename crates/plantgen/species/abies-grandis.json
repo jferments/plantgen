@@ -60,7 +60,8 @@
           "twigs": 6,
           "aspect": 0.85,
           "needle": 0.1,
-          "twig_angle": 55
+          "twig_angle": 55,
+          "width": 0.065
         },
         "accent": [0.25, 0.2, 0.12]
       }
@@ -93,7 +94,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: glossy dark green needles; smooth grey bark with resin blisters, furrowed with age."
+      "note": "Colours chosen by eye: glossy dark green needles; smooth grey bark with resin blisters, furrowed with age. Needle shoots (plant roadmap P4): flat needles 2 to 5 cm long and about 2 mm wide, so a needle 0.065 as wide as it is long (`width`), from general knowledge of the species, not measured."
     }
   },
   "provenance": {
