@@ -52,6 +52,17 @@
   },
   "appearance": {
     "bark": [0.2, 0.12, 0.09],
+    "bark_pattern": {
+      "kind": "furrowed",
+      "scale": 0.035,
+      "elongation": 3.0,
+      "fissure": 0.25,
+      "depth": 0.3,
+      "contrast": 0.45,
+      "variation": 0.15,
+      "smooth_below": 0.05,
+      "roughness": 0.35
+    },
     "foliage": [0.06, 0.13, 0.04],
     "foliage_shade": [0.02, 0.045, 0.015],
     "variation": 0.2,
@@ -107,7 +118,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: soft dark green needles with paler undersides; dark reddish-brown furrowed bark. Needle shoots (plant roadmap P4): flat needles of mixed lengths, 0.5 to 2 cm long and 1.5 to 2 mm wide, so a needle 0.12 as wide as it is long (`width`), and needles about 1.2 cm on a spray 25 cm long (`needle` 0.047), from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: soft dark green needles with paler undersides; dark reddish-brown furrowed bark. Needle shoots (plant roadmap P4): flat needles of mixed lengths, 0.5 to 2 cm long and 1.5 to 2 mm wide, so a needle 0.12 as wide as it is long (`width`), and needles about 1.2 cm on a spray 25 cm long (`needle` 0.047), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): thin dark reddish-brown bark furrowed into flat ridges; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

@@ -55,6 +55,17 @@
   },
   "appearance": {
     "bark": [0.4, 0.33, 0.27],
+    "bark_pattern": {
+      "kind": "furrowed",
+      "scale": 0.025,
+      "elongation": 4.0,
+      "fissure": 0.3,
+      "depth": 0.3,
+      "contrast": 0.45,
+      "variation": 0.15,
+      "smooth_below": 0.03,
+      "roughness": 0.4
+    },
     "foliage": [0.25, 0.38, 0.15],
     "foliage_shade": [0.0875, 0.133, 0.0525],
     "variation": 0.15,
@@ -113,7 +124,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye from photographs: bright green narrow leaves, pink trumpet flowers."
+      "note": "Colours chosen by eye from photographs: bright green narrow leaves, pink trumpet flowers. Bark pattern (plant roadmap P4, `bark_pattern`): dark brown bark in fibrous furrowed ridges; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

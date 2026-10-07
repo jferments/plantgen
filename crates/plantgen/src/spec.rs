@@ -967,6 +967,10 @@ pub struct Appearance {
     /// Roots above the ground (plant forms F6).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub roots: Option<crate::roots::Roots>,
+    /// The bark's fissures, plates, strips, scales or lenticels, drawn
+    /// pixel by pixel on the wood (plant roadmap P4, `crate::bark`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bark_pattern: Option<crate::bark::BarkPattern>,
     /// How each fleshy body of the program looks, by body name: ribs,
     /// areoles, spines (see [`crate::body`]). Bodies not listed get the
     /// default look.
@@ -975,6 +979,15 @@ pub struct Appearance {
 }
 
 impl Appearance {
+    /// The numbers its bark pattern is drawn from, if it has one
+    /// ([`crate::bark::BarkPattern::params`]).
+    #[must_use]
+    pub fn bark_params(&self) -> Option<crate::bark::BarkParams> {
+        self.bark_pattern
+            .as_ref()
+            .map(|pattern| pattern.params(self.bark))
+    }
+
     /// The look of each of a program's organ types, in its declaration
     /// order (see [`Program::organs`]).
     #[must_use]
@@ -1039,6 +1052,11 @@ impl Appearance {
         }
         if let Some(moss) = &self.moss {
             moss.validate()
+                .map_err(|message| format!("appearance: {message}"))?;
+        }
+        if let Some(pattern) = &self.bark_pattern {
+            pattern
+                .validate()
                 .map_err(|message| format!("appearance: {message}"))?;
         }
         for (body, look) in &self.bodies {

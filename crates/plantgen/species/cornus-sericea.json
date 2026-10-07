@@ -60,6 +60,13 @@
   },
   "appearance": {
     "bark": [0.45, 0.08, 0.06],
+    "bark_pattern": {
+      "kind": "smooth",
+      "scale": 0.02,
+      "variation": 0.1,
+      "lenticels": 600,
+      "smooth_below": 0.0
+    },
     "foliage": [0.07, 0.15, 0.04],
     "foliage_shade": [0.022, 0.045, 0.012],
     "variation": 0.2,
@@ -128,7 +135,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: mid-green leaves; red stems; white flower clusters. Fruit (plant roadmap P4), as in mid-July: flat-topped clusters of berries, green turning white. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: flat white clusters in May and June; berries green, white from late July, eaten into November. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
+      "note": "Colours chosen by eye: mid-green leaves; red stems; white flower clusters. Fruit (plant roadmap P4), as in mid-July: flat-topped clusters of berries, green turning white. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: flat white clusters in May and June; berries green, white from late July, eaten into November. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth red stems with lenticels; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

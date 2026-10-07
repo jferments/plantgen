@@ -50,6 +50,12 @@
   },
   "appearance": {
     "bark": [0.55, 0.53, 0.48],
+    "bark_pattern": {
+      "kind": "smooth",
+      "scale": 0.1,
+      "variation": 0.15,
+      "smooth_below": 0.0
+    },
     "foliage": [0.1, 0.24, 0.07],
     "foliage_shade": [0.035, 0.084, 0.0245],
     "variation": 0.15,
@@ -111,7 +117,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye from photographs: dark glossy leaves, smooth pale grey bark."
+      "note": "Colours chosen by eye from photographs: dark glossy leaves, smooth pale grey bark. Bark pattern (plant roadmap P4, `bark_pattern`): smooth light grey bark; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

@@ -49,6 +49,19 @@
   },
   "appearance": {
     "bark": [0.7, 0.68, 0.62],
+    "bark_pattern": {
+      "kind": "peeling",
+      "scale": 0.1,
+      "elongation": 0.6,
+      "fissure": 0.04,
+      "depth": 0.08,
+      "contrast": 0.15,
+      "variation": 0.1,
+      "peeled": 0.25,
+      "inner": [0.55, 0.35, 0.22],
+      "lenticels": 400,
+      "smooth_below": 0.0
+    },
     "foliage": [0.08, 0.16, 0.04],
     "foliage_shade": [0.025, 0.055, 0.015],
     "variation": 0.2,
@@ -125,7 +138,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: green leaves; white bark peeling in papery strips. Fruit (plant roadmap P4), as in mid-July: slender hanging fruiting catkins 3 to 5 cm long, green going brown. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: catkins in April and May; the fruiting catkins green in summer, brown in August and September, breaking up in the autumn. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
+      "note": "Colours chosen by eye: green leaves; white bark peeling in papery strips. Fruit (plant roadmap P4), as in mid-July: slender hanging fruiting catkins 3 to 5 cm long, green going brown. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: catkins in April and May; the fruiting catkins green in summer, brown in August and September, breaking up in the autumn. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): white bark peeling in papery strips round the stem from orange-brown inner bark, with dark horizontal lenticels; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

@@ -43,7 +43,9 @@ pub struct Mesh {
     pub normals: Vec<[f32; 3]>,
     pub uvs: Vec<[f32; 2]>,
     /// Linear RGB colour and, for cards, the organ template in alpha: the
-    /// index of the organ's type in its program.
+    /// index of the organ's type in its program. On wood, alpha is minus
+    /// the radius of the stem where the vertex is bark (`bark_alpha`), and
+    /// 1 on organs drawn solid.
     pub colors: Vec<[f32; 4]>,
     /// Plant age at which the vertex's part appears, in years.
     pub births: Vec<f32>,
@@ -401,6 +403,8 @@ fn sites(cards: &[Card], looks: &[Look], is_part: &dyn Fn(usize) -> bool) -> Vec
         let crossed = looks
             .get(template)
             .is_some_and(|look| look.shape.cross().is_some());
+        // The crossing card copies the organ's card's base and heading.
+        #[allow(clippy::float_cmp)]
         let pair = crossed
             && cards.get(index + 1).is_some_and(|next| {
                 next.template == cards[index].template
@@ -641,6 +645,19 @@ impl<'a> Bark<'a> {
     }
 }
 
+/// A bark vertex's colour: `colour` with minus the radius of the wood it
+/// lies on, metres, in alpha, which a renderer drawing a bark pattern
+/// (`crate::bark`) reads; other wood keeps alpha 1 (see [`Mesh::colors`]).
+#[allow(clippy::cast_possible_truncation)]
+pub(crate) fn bark_alpha(colour: [f32; 4], radius: f64) -> [f32; 4] {
+    [
+        colour[0],
+        colour[1],
+        colour[2],
+        -(radius.max(1.0e-4) as f32),
+    ]
+}
+
 /// Tangent, normal and binormal at each ring of an axis, with the distance
 /// along the axis. Normals follow the axis by parallel transport, so the
 /// tube does not twist.
@@ -756,13 +773,16 @@ fn wood(graph: &PlantGraph, appearance: &Appearance, lod: &LodSpec, out: &mut Me
                     position: current.centre + direction * radius,
                     normal: surface,
                     uv,
-                    color: bark.colour(
+                    color: bark_alpha(
+                        bark.colour(
+                            current.radius,
+                            surface,
+                            current.centre.y,
+                            along,
+                            angle,
+                            furrow,
+                        ),
                         current.radius,
-                        surface,
-                        current.centre.y,
-                        along,
-                        angle,
-                        furrow,
                     ),
                     born: current.born,
                     shed: current.shed,
@@ -1230,6 +1250,7 @@ mod tests {
             moss: None,
             bottle: None,
             roots: None,
+            bark_pattern: None,
             bodies: BTreeMap::new(),
         }
     }

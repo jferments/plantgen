@@ -55,6 +55,17 @@
   },
   "appearance": {
     "bark": [0.25, 0.22, 0.2],
+    "bark_pattern": {
+      "kind": "scaly",
+      "scale": 0.03,
+      "elongation": 1.4,
+      "fissure": 0.12,
+      "depth": 0.25,
+      "contrast": 0.35,
+      "variation": 0.2,
+      "smooth_below": 0.03,
+      "roughness": 0.3
+    },
     "foliage": [0.2, 0.3, 0.15],
     "foliage_shade": [0.07, 0.105, 0.0525],
     "variation": 0.15,
@@ -114,7 +125,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye from photographs: grey-green leaves, very dark bark."
+      "note": "Colours chosen by eye from photographs: grey-green leaves, very dark bark. Bark pattern (plant roadmap P4, `bark_pattern`): dark brown bark in irregular flat scales; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

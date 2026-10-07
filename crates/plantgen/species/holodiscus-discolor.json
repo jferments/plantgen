@@ -61,6 +61,17 @@
   },
   "appearance": {
     "bark": [0.38, 0.28, 0.2],
+    "bark_pattern": {
+      "kind": "fibrous",
+      "scale": 0.008,
+      "elongation": 8.0,
+      "fissure": 0.3,
+      "depth": 0.2,
+      "contrast": 0.35,
+      "variation": 0.2,
+      "smooth_below": 0.004,
+      "roughness": 0.3
+    },
     "foliage": [0.08, 0.15, 0.05],
     "foliage_shade": [0.025, 0.045, 0.015],
     "variation": 0.2,
@@ -106,7 +117,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: dull green leaves, paler beneath; cream plumes that turn tan."
+      "note": "Colours chosen by eye: dull green leaves, paler beneath; cream plumes that turn tan. Bark pattern (plant roadmap P4, `bark_pattern`): reddish-brown bark shredding in strips; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

@@ -55,6 +55,17 @@
   },
   "appearance": {
     "bark": [0.3, 0.25, 0.22],
+    "bark_pattern": {
+      "kind": "furrowed",
+      "scale": 0.025,
+      "elongation": 2.5,
+      "fissure": 0.3,
+      "depth": 0.4,
+      "contrast": 0.5,
+      "variation": 0.15,
+      "smooth_below": 0.03,
+      "roughness": 0.45
+    },
     "foliage": [0.3, 0.4, 0.18],
     "foliage_shade": [0.105, 0.14, 0.063],
     "variation": 0.15,
@@ -105,7 +116,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye from photographs: dark bark, white thorns, sparse grey-green leaves."
+      "note": "Colours chosen by eye from photographs: dark bark, white thorns, sparse grey-green leaves. Bark pattern (plant roadmap P4, `bark_pattern`): grey to black bark, rough and deeply fissured; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

@@ -46,6 +46,17 @@
   },
   "appearance": {
     "bark": [0.38, 0.2, 0.1],
+    "bark_pattern": {
+      "kind": "plated",
+      "scale": 0.12,
+      "elongation": 2.2,
+      "fissure": 0.1,
+      "depth": 0.4,
+      "contrast": 0.75,
+      "variation": 0.2,
+      "smooth_below": 0.06,
+      "roughness": 0.4
+    },
     "foliage": [0.06, 0.11, 0.04],
     "foliage_shade": [0.02, 0.04, 0.015],
     "variation": 0.2,
@@ -96,7 +107,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: yellow-green needles; orange-brown bark in large plates. Needle shoots (plant roadmap P4): needles in threes, 12 to 25 cm long and about 1.5 mm wide, so a needle 0.009 as wide as it is long (`width`), 3 to a fascicle (`bundle`), from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: yellow-green needles; orange-brown bark in large plates. Needle shoots (plant roadmap P4): needles in threes, 12 to 25 cm long and about 1.5 mm wide, so a needle 0.009 as wide as it is long (`width`), 3 to a fascicle (`bundle`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): large cinnamon-orange plates between deep dark fissures on old trees; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

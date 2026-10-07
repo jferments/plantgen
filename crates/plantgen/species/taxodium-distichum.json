@@ -52,6 +52,17 @@
   },
   "appearance": {
     "bark": [0.45, 0.3, 0.22],
+    "bark_pattern": {
+      "kind": "fibrous",
+      "scale": 0.03,
+      "elongation": 10.0,
+      "fissure": 0.3,
+      "depth": 0.25,
+      "contrast": 0.35,
+      "variation": 0.2,
+      "smooth_below": 0.03,
+      "roughness": 0.3
+    },
     "foliage": [0.18, 0.32, 0.1],
     "foliage_shade": [0.063, 0.112, 0.035],
     "variation": 0.15,
@@ -123,7 +134,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye from photographs: fresh green needles, red-brown fibrous bark. Needle shoots (plant roadmap P4): flat leaves 1 to 2 cm long and 1 to 1.5 mm wide, so a needle 0.08 as wide as it is long (`width`), and needles about 1.5 cm on a spray 27 cm long (`needle` 0.055), from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye from photographs: fresh green needles, red-brown fibrous bark. Needle shoots (plant roadmap P4): flat leaves 1 to 2 cm long and 1 to 1.5 mm wide, so a needle 0.08 as wide as it is long (`width`), and needles about 1.5 cm on a spray 27 cm long (`needle` 0.055), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): fibrous reddish-brown bark in long shallow strips; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

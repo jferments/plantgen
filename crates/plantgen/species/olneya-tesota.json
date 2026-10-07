@@ -60,6 +60,17 @@
   },
   "appearance": {
     "bark": [0.45, 0.43, 0.4],
+    "bark_pattern": {
+      "kind": "fibrous",
+      "scale": 0.02,
+      "elongation": 6.0,
+      "fissure": 0.3,
+      "depth": 0.25,
+      "contrast": 0.35,
+      "variation": 0.2,
+      "smooth_below": 0.04,
+      "roughness": 0.3
+    },
     "foliage": [0.27, 0.36, 0.27],
     "foliage_shade": [0.0945, 0.126, 0.0945],
     "variation": 0.15,
@@ -117,7 +128,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye from photographs: grey bark, grey-green leaves, lavender flowers."
+      "note": "Colours chosen by eye from photographs: grey bark, grey-green leaves, lavender flowers. Bark pattern (plant roadmap P4, `bark_pattern`): grey bark, smooth when young and shredding in strips when old; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

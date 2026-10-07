@@ -51,6 +51,18 @@
   },
   "appearance": {
     "bark": [0.35, 0.3, 0.27],
+    "bark_pattern": {
+      "kind": "furrowed",
+      "scale": 0.025,
+      "elongation": 2.5,
+      "fissure": 0.2,
+      "depth": 0.2,
+      "contrast": 0.35,
+      "variation": 0.15,
+      "lenticels": 100,
+      "smooth_below": 0.08,
+      "roughness": 0.3
+    },
     "foliage": [0.12, 0.2, 0.07],
     "foliage_shade": [0.042, 0.07, 0.0245],
     "variation": 0.15,
@@ -103,7 +115,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye from photographs: fresh green leaves, grey bark."
+      "note": "Colours chosen by eye from photographs: fresh green leaves, grey bark. Bark pattern (plant roadmap P4, `bark_pattern`): dark grey bark with lenticels, smooth when young and fissured on old trees; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

@@ -570,7 +570,8 @@ impl Inputs {
         let (looks, sizes) = spec.appearance.looks_on(program.organs(), day);
         let bodies = spec.appearance.body_looks(program.bodies());
         let named: Vec<(&str, &BodyLook)> = program.bodies().zip(&bodies).collect();
-        let templates = Templates::for_plant(&looks, &named);
+        let templates =
+            Templates::for_plant(&looks, &named).with_bark(spec.appearance.bark_params());
         let (width, height, pixels) = templates.atlas_rgba();
         let atlas_png = png(width, height, &pixels)?;
         let quality_json = json::to_vec(&QualityRecord::from(quality)).map_err(format_error)?;

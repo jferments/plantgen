@@ -46,6 +46,17 @@
   },
   "appearance": {
     "bark": [0.22, 0.2, 0.19],
+    "bark_pattern": {
+      "kind": "plated",
+      "scale": 0.035,
+      "elongation": 1.1,
+      "fissure": 0.12,
+      "depth": 0.3,
+      "contrast": 0.5,
+      "variation": 0.15,
+      "smooth_below": 0.06,
+      "roughness": 0.3
+    },
     "foliage": [0.05, 0.1, 0.07],
     "foliage_shade": [0.018, 0.035, 0.028],
     "variation": 0.2,
@@ -96,7 +107,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: blue-green needles; grey bark broken into small square plates. Needle shoots (plant roadmap P4): slender needles in fives, 5 to 13 cm long and under 1 mm wide, so a needle 0.012 as wide as it is long (`width`), 5 to a fascicle (`bundle`), from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: blue-green needles; grey bark broken into small square plates. Needle shoots (plant roadmap P4): slender needles in fives, 5 to 13 cm long and under 1 mm wide, so a needle 0.012 as wide as it is long (`width`), 5 to a fascicle (`bundle`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): smooth and grey when young, then cut into small square plates; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

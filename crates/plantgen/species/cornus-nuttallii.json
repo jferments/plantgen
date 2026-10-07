@@ -50,6 +50,17 @@
   },
   "appearance": {
     "bark": [0.28, 0.24, 0.2],
+    "bark_pattern": {
+      "kind": "plated",
+      "scale": 0.02,
+      "elongation": 1.1,
+      "fissure": 0.12,
+      "depth": 0.2,
+      "contrast": 0.35,
+      "variation": 0.15,
+      "smooth_below": 0.05,
+      "roughness": 0.25
+    },
     "foliage": [0.06, 0.13, 0.04],
     "foliage_shade": [0.02, 0.045, 0.015],
     "variation": 0.2,
@@ -124,7 +135,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: green leaves; white bracts round a greenish button; smooth grey-brown bark. Fruit (plant roadmap P4), as in mid-July: tight heads of green drupes that turn red in autumn. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: white bracts in April and May; the fruit heads green in summer, red in September and October. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
+      "note": "Colours chosen by eye: green leaves; white bracts round a greenish button; smooth grey-brown bark. Fruit (plant roadmap P4), as in mid-July: tight heads of green drupes that turn red in autumn. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: white bracts in April and May; the fruit heads green in summer, red in September and October. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth thin grey-brown bark becoming checkered into small plates; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

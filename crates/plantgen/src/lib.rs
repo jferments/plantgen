@@ -19,6 +19,7 @@
 //! ([`rng`]) and every transcendental function goes through `libm`
 //! ([`math`]).
 
+pub mod bark;
 pub mod bend;
 pub mod blooms;
 pub mod body;
@@ -60,5 +61,6 @@ pub mod templates;
 /// as sites, instead of being drawn solid into its wood mesh, and the
 /// package stores their part meshes. 9: needle sprays are solid shoots on
 /// the nearest level (`crate::shoots`), and each part mesh stores its span
-/// (`APPARTS2`).
-pub const GENERATOR_REVISION: u32 = 9;
+/// (`APPARTS2`). 10: bark vertices carry the stem's radius in their
+/// colour's alpha, for the species' bark pattern (`crate::bark`).
+pub const GENERATOR_REVISION: u32 = 10;

@@ -49,6 +49,17 @@
   },
   "appearance": {
     "bark": [0.33, 0.32, 0.29],
+    "bark_pattern": {
+      "kind": "furrowed",
+      "scale": 0.05,
+      "elongation": 4.0,
+      "fissure": 0.3,
+      "depth": 0.45,
+      "contrast": 0.7,
+      "variation": 0.12,
+      "smooth_below": 0.1,
+      "roughness": 0.5
+    },
     "foliage": [0.06, 0.13, 0.035],
     "foliage_shade": [0.02, 0.05, 0.015],
     "variation": 0.2,
@@ -97,7 +108,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: dark, glossy leaves; grey bark, deeply furrowed with age."
+      "note": "Colours chosen by eye: dark, glossy leaves; grey bark, deeply furrowed with age. Bark pattern (plant roadmap P4, `bark_pattern`): smooth grey-green when young, deeply furrowed and dark grey when old; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

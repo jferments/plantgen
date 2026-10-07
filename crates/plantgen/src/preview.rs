@@ -212,8 +212,9 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
     } else {
         Mesh::default()
     };
+    let wood = templates.bark.map_or(Material::Opaque, Material::Bark);
     let items = [
-        (&plant.wood, Material::Opaque),
+        (&plant.wood, wood),
         (&cards, Material::Card),
         (&spines, Material::Opaque),
     ];

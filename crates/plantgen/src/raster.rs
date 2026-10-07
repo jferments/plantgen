@@ -70,13 +70,23 @@ impl Lighting {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Material {
     /// Opaque and one-sided.
     Opaque,
     /// Two-sided, cut out and coloured by the organ template named in the
     /// vertex alpha, and lit through from behind.
     Card,
+    /// A plant's wood: opaque and one-sided, with this bark pattern drawn
+    /// where its vertices are bark (alpha minus the stem's radius,
+    /// `crate::mesh::Mesh::colors`; `crate::bark`).
+    Bark(crate::bark::BarkParams),
+}
+
+impl Material {
+    fn one_sided(self) -> bool {
+        matches!(self, Self::Opaque | Self::Bark(_))
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -435,9 +445,53 @@ struct Surface<'a> {
     eye: Vec3,
     forward: Vec3,
     perspective: bool,
+    /// A pixel's width at unit depth (perspective) or in metres.
+    pixel: f64,
 }
 
 impl Surface<'_> {
+    /// The bark pattern at a pixel of triangle `corners` at weights `k`,
+    /// `depth` from the eye, and the triangle's unit directions round and
+    /// along its stem; `None` off bark.
+    fn bark(
+        &self,
+        corners: [usize; 3],
+        k: [f64; 3],
+        depth: f64,
+    ) -> Option<(crate::bark::BarkSample, Vec3, Vec3)> {
+        let Material::Bark(params) = self.material else {
+            return None;
+        };
+        let mesh = self.mesh;
+        if corners.iter().any(|&i| mesh.colors[i][3] >= 0.0) {
+            return None;
+        }
+        let mix = |values: [f64; 3]| k[0] * values[0] + k[1] * values[1] + k[2] * values[2];
+        let radius = -mix(corners.map(|i| f64::from(mesh.colors[i][3])));
+        let u = mix(corners.map(|i| f64::from(mesh.uvs[i][0])));
+        let v = mix(corners.map(|i| f64::from(mesh.uvs[i][1])));
+        let footprint = if self.perspective {
+            self.pixel * depth
+        } else {
+            self.pixel
+        };
+        #[allow(clippy::cast_possible_truncation)]
+        let sample =
+            crate::bark::sample(&params, u as f32, v as f32, radius as f32, footprint as f32);
+        // The directions in which u and v grow across the triangle.
+        let [p0, p1, p2] = corners.map(|i| vec3(mesh.positions[i]));
+        let [t0, t1, t2] = corners.map(|i| mesh.uvs[i].map(f64::from));
+        let (e1, e2) = (p1 - p0, p2 - p0);
+        let (du1, dv1, du2, dv2) = (t1[0] - t0[0], t1[1] - t0[1], t2[0] - t0[0], t2[1] - t0[1]);
+        let det = du1 * dv2 - du2 * dv1;
+        if det.abs() < 1e-12 {
+            return Some((sample, Vec3::ZERO, Vec3::ZERO));
+        }
+        let round = ((e1 * dv2 - e2 * dv1) * (1.0 / det)).normalize_or(Vec3::ZERO);
+        let along = ((e2 * du1 - e1 * du2) * (1.0 / det)).normalize_or(Vec3::ZERO);
+        Some((sample, round, along))
+    }
+
     /// Depth-test, cut out and shade one pixel of the triangle with vertex
     /// indices `corners` at barycentric weights `k`.
     fn fragment(
@@ -455,6 +509,14 @@ impl Surface<'_> {
         let mix = |values: [f64; 3]| k[0] * values[0] + k[1] * values[1] + k[2] * values[2];
         let mut albedo =
             [0, 1, 2].map(|channel| mix(corners.map(|i| f64::from(mesh.colors[i][channel]))));
+        let bark = self.bark(corners, k, depth);
+        if let (Some((sample, _, _)), Material::Bark(params)) = (bark, self.material) {
+            for (channel, value) in albedo.iter_mut().enumerate() {
+                let shaded = *value * f64::from(sample.shade);
+                *value =
+                    shaded + (f64::from(params.inner[channel]) - shaded) * f64::from(sample.inner);
+            }
+        }
         if self.material == Material::Card {
             let u = mix(corners.map(|i| f64::from(mesh.uvs[i][0])));
             let v = mix(corners.map(|i| f64::from(mesh.uvs[i][1])));
@@ -476,6 +538,12 @@ impl Surface<'_> {
         let positions = corners.map(|i| vec3(mesh.positions[i]));
         let mut normal =
             (normals[0] * k[0] + normals[1] * k[1] + normals[2] * k[2]).normalize_or(Vec3::Y);
+        if let Some((sample, round, along)) = bark {
+            // The relief tilts the normal against its slope.
+            normal =
+                (normal - round * f64::from(sample.slope[0]) - along * f64::from(sample.slope[1]))
+                    .normalize_or(normal);
+        }
         let world = positions[0] * k[0] + positions[1] * k[1] + positions[2] * k[2];
         let view = if self.perspective {
             (self.eye - world).normalize_or(-self.forward)
@@ -531,6 +599,7 @@ fn draw(
         eye: camera.eye,
         forward: basis.2,
         perspective: viewport.perspective,
+        pixel: 2.0 * viewport.half_y / viewport.height,
     };
     let views: Vec<Vec3> = mesh
         .positions
@@ -544,7 +613,7 @@ fn draw(
             triangle[1] as usize,
             triangle[2] as usize,
         ];
-        if material == Material::Opaque {
+        if material.one_sided() {
             // One-sided: skip triangles facing away from the viewer.
             let [p0, p1, p2] = corners.map(|i| vec3(mesh.positions[i]));
             let face = (p1 - p0).cross(p2 - p0);

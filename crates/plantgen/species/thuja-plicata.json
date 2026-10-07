@@ -43,6 +43,17 @@
   },
   "appearance": {
     "bark": [0.16, 0.075, 0.045],
+    "bark_pattern": {
+      "kind": "fibrous",
+      "scale": 0.03,
+      "elongation": 15.0,
+      "fissure": 0.35,
+      "depth": 0.3,
+      "contrast": 0.45,
+      "variation": 0.25,
+      "smooth_below": 0.02,
+      "roughness": 0.4
+    },
     "foliage": [0.06, 0.14, 0.03],
     "foliage_shade": [0.02, 0.05, 0.015],
     "variation": 0.2,
@@ -98,7 +109,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: yellow-green foliage, red-brown fibrous bark in twisting strips, a fluted, buttressed base."
+      "note": "Colours chosen by eye: yellow-green foliage, red-brown fibrous bark in twisting strips, a fluted, buttressed base. Bark pattern (plant roadmap P4, `bark_pattern`): stringy grey to reddish-brown bark in long fibrous strips; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

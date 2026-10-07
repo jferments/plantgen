@@ -52,6 +52,19 @@
   },
   "appearance": {
     "bark": [0.35, 0.13, 0.08],
+    "bark_pattern": {
+      "kind": "peeling",
+      "scale": 0.04,
+      "elongation": 2.5,
+      "fissure": 0.06,
+      "depth": 0.15,
+      "contrast": 0.3,
+      "variation": 0.2,
+      "peeled": 0.4,
+      "inner": [0.6, 0.25, 0.15],
+      "smooth_below": 0.01,
+      "roughness": 0.2
+    },
     "foliage": [0.03, 0.08, 0.03],
     "foliage_shade": [0.01, 0.03, 0.012],
     "variation": 0.2,
@@ -101,7 +114,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: dark yellowish-green needles; thin, scaly, reddish-purple bark. Needle shoots (plant roadmap P4): flat needles 1 to 3 cm long and about 2 mm wide, so a needle 0.09 as wide as it is long (`width`), from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: dark yellowish-green needles; thin, scaly, reddish-purple bark. Needle shoots (plant roadmap P4): flat needles 1 to 3 cm long and about 2 mm wide, so a needle 0.09 as wide as it is long (`width`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): thin purplish scales peeling to show red inner bark; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

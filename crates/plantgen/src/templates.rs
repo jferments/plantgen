@@ -89,6 +89,9 @@ pub struct Templates {
     /// The looks of the program's body types, whose spines the last
     /// templates are drawn from and which a renderer expands tufts with.
     pub bodies: Vec<BodyLook>,
+    /// The plant's bark pattern, which previews and impostors draw on its
+    /// wood (`crate::bark`); `None` for plain bark.
+    pub bark: Option<crate::bark::BarkParams>,
 }
 
 /// No templates: for scenes without organ cards. Cards that name a
@@ -99,11 +102,19 @@ impl Default for Templates {
             size: TEMPLATE_SIZE,
             templates: Vec::new(),
             bodies: Vec::new(),
+            bark: None,
         }
     }
 }
 
 impl Templates {
+    /// These templates with the plant's bark pattern (see [`Self::bark`]).
+    #[must_use]
+    pub fn with_bark(mut self, bark: Option<crate::bark::BarkParams>) -> Self {
+        self.bark = bark;
+        self
+    }
+
     /// The templates of a plant: one per organ type of `looks`, then a
     /// star and a fan per body type of `bodies`, by name and look in the
     /// program's order (see [`crate::spines::template`]).
@@ -190,6 +201,7 @@ impl Templates {
             size: TEMPLATE_SIZE,
             templates,
             bodies: Vec::new(),
+            bark: None,
         }
     }
 

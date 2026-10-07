@@ -61,6 +61,13 @@
   },
   "appearance": {
     "bark": [0.35, 0.22, 0.15],
+    "bark_pattern": {
+      "kind": "smooth",
+      "scale": 0.03,
+      "variation": 0.1,
+      "lenticels": 300,
+      "smooth_below": 0.0
+    },
     "foliage": [0.09, 0.18, 0.05],
     "foliage_shade": [0.028, 0.055, 0.015],
     "variation": 0.2,
@@ -130,7 +137,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: light green leaves; white hanging flowers; purple-brown bark. Fruit (plant roadmap P4), as in mid-July: short hanging racemes of plum-like drupes, orange ripening blue-black. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: hanging white racemes in February and March; fruit orange, then blue-black from June, gone by August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
+      "note": "Colours chosen by eye: light green leaves; white hanging flowers; purple-brown bark. Fruit (plant roadmap P4), as in mid-July: short hanging racemes of plum-like drupes, orange ripening blue-black. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: hanging white racemes in February and March; fruit orange, then blue-black from June, gone by August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth purplish-brown bark with lenticels; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

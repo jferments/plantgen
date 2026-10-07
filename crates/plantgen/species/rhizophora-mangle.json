@@ -54,6 +54,13 @@
   },
   "appearance": {
     "bark": [0.38, 0.3, 0.24],
+    "bark_pattern": {
+      "kind": "smooth",
+      "scale": 0.05,
+      "variation": 0.15,
+      "lenticels": 60,
+      "smooth_below": 0.0
+    },
     "foliage": [0.12, 0.24, 0.08],
     "foliage_shade": [0.042, 0.084, 0.028],
     "variation": 0.15,
@@ -114,7 +121,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye from photographs: dark glossy green leaves, grey-brown bark and roots."
+      "note": "Colours chosen by eye from photographs: dark glossy green leaves, grey-brown bark and roots. Bark pattern (plant roadmap P4, `bark_pattern`): smooth grey-brown bark with lenticels; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

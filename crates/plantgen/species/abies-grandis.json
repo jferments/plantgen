@@ -45,6 +45,17 @@
   },
   "appearance": {
     "bark": [0.3, 0.27, 0.24],
+    "bark_pattern": {
+      "kind": "furrowed",
+      "scale": 0.05,
+      "elongation": 3.0,
+      "fissure": 0.25,
+      "depth": 0.35,
+      "contrast": 0.45,
+      "variation": 0.15,
+      "smooth_below": 0.12,
+      "roughness": 0.35
+    },
     "foliage": [0.04, 0.12, 0.035],
     "foliage_shade": [0.015, 0.045, 0.015],
     "variation": 0.2,
@@ -94,7 +105,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: glossy dark green needles; smooth grey bark with resin blisters, furrowed with age. Needle shoots (plant roadmap P4): flat needles 2 to 5 cm long and about 2 mm wide, so a needle 0.065 as wide as it is long (`width`), from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: glossy dark green needles; smooth grey bark with resin blisters, furrowed with age. Needle shoots (plant roadmap P4): flat needles 2 to 5 cm long and about 2 mm wide, so a needle 0.065 as wide as it is long (`width`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): smooth and grey with resin blisters when young, then furrowed into flat grey-brown ridges; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

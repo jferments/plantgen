@@ -45,6 +45,13 @@
   },
   "appearance": {
     "bark": [0.62, 0.62, 0.55],
+    "bark_pattern": {
+      "kind": "smooth",
+      "scale": 0.1,
+      "variation": 0.2,
+      "lenticels": 120,
+      "smooth_below": 0.0
+    },
     "foliage": [0.09, 0.17, 0.04],
     "foliage_shade": [0.03, 0.06, 0.015],
     "variation": 0.2,
@@ -87,7 +94,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye: bright green leaves; smooth, chalky white bark with dark scars."
+      "note": "Colours chosen by eye: bright green leaves; smooth, chalky white bark with dark scars. Bark pattern (plant roadmap P4, `bark_pattern`): smooth whitish bark with dark marks and lenticels; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

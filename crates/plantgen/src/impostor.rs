@@ -112,7 +112,8 @@ pub fn bake(
     supersample: usize,
 ) -> Impostor {
     let cards = plant.card_mesh();
-    let items = [(&plant.wood, Material::Opaque), (&cards, Material::Card)];
+    let wood = templates.bark.map_or(Material::Opaque, Material::Bark);
+    let items = [(&plant.wood, wood), (&cards, Material::Card)];
     let (low, high) = raster::bounds(&items).unwrap_or((Vec3::ZERO, Vec3::ZERO));
     let center = (low + high) * 0.5;
     let radius = ((high - low).length() * 0.5).max(0.05);

@@ -41,6 +41,17 @@
   },
   "appearance": {
     "bark": [0.11, 0.065, 0.045],
+    "bark_pattern": {
+      "kind": "furrowed",
+      "scale": 0.06,
+      "elongation": 4.5,
+      "fissure": 0.3,
+      "depth": 0.5,
+      "contrast": 0.75,
+      "variation": 0.15,
+      "smooth_below": 0.06,
+      "roughness": 0.5
+    },
     "foliage": [0.05, 0.11, 0.035],
     "foliage_shade": [0.018, 0.045, 0.02],
     "variation": 0.2,
@@ -102,7 +113,7 @@
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye. Needles stand all round the twigs (bottlebrush), unlike the flat sprays of true firs and cedars; bark thick and furrowed with a modest flare. Needle shoots (plant roadmap P4): needles 2 to 3 cm long and 1 to 1.5 mm wide, so a needle 0.05 as wide as it is long (`width`), from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye. Needles stand all round the twigs (bottlebrush), unlike the flat sprays of true firs and cedars; bark thick and furrowed with a modest flare. Needle shoots (plant roadmap P4): needles 2 to 3 cm long and 1 to 1.5 mm wide, so a needle 0.05 as wide as it is long (`width`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): smooth with resin blisters when young, then very thick and deeply furrowed into dark brown ridges; set from general knowledge of the species, not measured."
     }
   },
   "provenance": {

@@ -564,9 +564,15 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         on = true;
     }
     let templates = if on {
-        Templates::for_plant(&looks, &[])
+        // The host's trunk carries its own bark.
+        let host_bark = spec
+            .host
+            .as_ref()
+            .and_then(|host| PlantSpec::builtin(&host.species).ok())
+            .and_then(|host| host.appearance.bark_params());
+        Templates::for_plant(&looks, &[]).with_bark(host_bark)
     } else {
-        templates_of(&looks, &bodies, &growth)
+        templates_of(&spec, &looks, &bodies, &growth)
     };
     let image = preview::render(
         &plant,
@@ -649,7 +655,7 @@ fn sheet_command(args: &[String]) -> Result<(), Failure> {
         )?;
         let (looks, sizes) = looks_of(&spec, &growth, day);
         let bodies = bodies_of(&spec, &growth);
-        let templates = templates_of(&looks, &bodies, &growth);
+        let templates = templates_of(&spec, &looks, &bodies, &growth);
         let tallest = growth
             .keyframes
             .iter()
@@ -725,7 +731,7 @@ fn parts_command(args: &[String]) -> Result<(), Failure> {
     let graph = &growth.keyframes[0];
     let (looks, stage_sizes) = looks_of(&spec, &growth, day);
     let bodies = bodies_of(&spec, &growth);
-    let templates = templates_of(&looks, &bodies, &growth);
+    let templates = templates_of(&spec, &looks, &bodies, &growth);
     let mut images = Vec::new();
     let mut rows = Vec::new();
     for (index, look) in looks.iter().enumerate() {
@@ -944,7 +950,7 @@ fn year_command(args: &[String]) -> Result<(), Failure> {
             );
             images.push(preview::render(
                 &plant,
-                &templates_of(&looks, &bodies, &growth),
+                &templates_of(&spec, &looks, &bodies, &growth),
                 &PreviewOptions {
                     width: size,
                     height: size,
@@ -1043,7 +1049,7 @@ fn lineup_command(args: &[String]) -> Result<(), Failure> {
             );
             images.push(preview::render(
                 &plant,
-                &templates_of(&looks, &bodies, growth),
+                &templates_of(&spec, &looks, &bodies, growth),
                 &PreviewOptions {
                     width: size,
                     height: size * 3 / 2,
@@ -1214,15 +1220,21 @@ fn bodies_of(spec: &PlantSpec, growth: &Growth) -> Vec<BodyLook> {
         .body_looks(growth.body_types.iter().map(String::as_str))
 }
 
-/// A grown plant's card templates: its organs', then its bodies' spines.
-fn templates_of(looks: &[Look], bodies: &[BodyLook], growth: &Growth) -> Templates {
+/// A grown plant's card templates: its organs', then its bodies' spines,
+/// with the bark pattern of `spec` for its wood.
+fn templates_of(
+    spec: &PlantSpec,
+    looks: &[Look],
+    bodies: &[BodyLook],
+    growth: &Growth,
+) -> Templates {
     let named: Vec<(&str, &BodyLook)> = growth
         .body_types
         .iter()
         .map(String::as_str)
         .zip(bodies)
         .collect();
-    Templates::for_plant(looks, &named)
+    Templates::for_plant(looks, &named).with_bark(spec.appearance.bark_params())
 }
 
 fn build_command(args: &[String]) -> Result<(), Failure> {
