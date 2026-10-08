@@ -118,6 +118,7 @@ fn run() -> Result<(), Failure> {
         "ground" => ground_command(&args),
         "build" => build_command(&args),
         "inspect" => inspect_command(&args),
+        "sources" => sources_command(&args),
         "help" | "--help" | "-h" => print_usage(),
         other => Err(format!("unknown command `{other}`; run `plantc help`").into()),
     }
@@ -183,6 +184,10 @@ Usage:
       key. A package that is already built is not built again.
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
+  plantc sources [list | cite ID]
+      List the sources evidence notes cite (library/sources/<id>.json),
+      or every value that cites the source ID: species, section file and
+      the note's path, one per line.
 
 A species is an id (see `plantc list`) or a path to a spec file.
 Every command accepts --library DIR: a folder holding a species tree,
@@ -340,6 +345,46 @@ fn list() -> Result<(), Failure> {
         out!("  {name}");
     }
     Ok(())
+}
+
+fn sources_command(args: &[String]) -> Result<(), Failure> {
+    let library = library();
+    match args.first().map(String::as_str) {
+        None | Some("list") => {
+            for source in library.sources() {
+                out!(
+                    "{}  tier {}, {:?}: {}, {} ({})",
+                    source.id,
+                    source.tier,
+                    source.kind,
+                    source.title,
+                    source.authors,
+                    source.year
+                );
+            }
+            Ok(())
+        }
+        Some("cite") => {
+            let id = args.get(1).ok_or("`sources cite` needs a source id")?;
+            let found = library.citations(id)?;
+            for citation in &found {
+                out!(
+                    "{} {} {}",
+                    citation.species,
+                    citation.section,
+                    citation.path
+                );
+            }
+            if library.source(id).is_none() {
+                eprintln!("plantc: the library holds no source `{id}`");
+            }
+            eprintln!("plantc: {} values cite `{id}`", found.len());
+            Ok(())
+        }
+        Some(other) => {
+            Err(format!("unknown `sources` command `{other}`; use `list` or `cite ID`").into())
+        }
+    }
 }
 
 fn check(args: &[String]) -> Result<(), Failure> {
