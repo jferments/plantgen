@@ -316,6 +316,12 @@ impl Look {
     }
 }
 
+/// How much brighter the photo looks are exposed than the review look,
+/// in stops. The review look shows linear light as it is; a filmic tone
+/// map (ACES) draws middle grey about a stop and a half darker, so without
+/// this the photos read dark (measured on a path-traced ground, 2026-10-08).
+pub const PHOTO_EXPOSURE_BOOST_EV: f32 = 1.5;
+
 /// The sun's angular diameter, radians: 0.53°.
 pub const SUN_ANGULAR_DIAMETER: f32 = 0.00925;
 

@@ -821,6 +821,9 @@ pub(crate) fn camera_look(
             camera.insert((
                 // Filmic, and needs no lookup table.
                 Tonemapping::AcesFitted,
+                Exposure {
+                    ev100: ev100 - plantlab_scene::PHOTO_EXPOSURE_BOOST_EV,
+                },
                 environment,
                 // Ambient occlusion reads the depth and normal prepasses,
                 // which take no multisampling: supersampling smooths edges.

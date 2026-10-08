@@ -13,7 +13,10 @@
 //!   goes into one palette texture, each vertex's UV pointing at its
 //!   colour's texel;
 //! - light comes from directional lights and emissive meshes: the sun, and
-//!   a dome of sky around the plant.
+//!   a dome of sky around the plant, open around the sun, because shadow
+//!   rays toward the sun would otherwise all hit the dome;
+//! - a hit is shaded by its triangle's own normal: so leaves get a back face
+//!   each, or a leaf turned from the sun draws black.
 //!
 //! `--mode realtime` uses Solari's real-time lighting (ReSTIR, temporal
 //! accumulation); `--mode pathtrace` its reference path tracer, which
@@ -33,10 +36,10 @@ use bevy::light::GlobalAmbientLight;
 use bevy::mesh::{Indices, PrimitiveTopology, VertexAttributeValues};
 use bevy::prelude::*;
 use bevy::render::mesh::allocator::MeshAllocatorSettings;
-use bevy::render::slab_allocator::SlabAllocatorSettings;
 use bevy::render::render_resource::{
     BufferUsages, Extent3d, TextureDimension, TextureFormat, TextureUsages,
 };
+use bevy::render::slab_allocator::SlabAllocatorSettings;
 use bevy::render::view::screenshot::{Screenshot, ScreenshotCaptured};
 use bevy::render::{Render, RenderApp, RenderSystems};
 use bevy::solari::pathtracer::{Pathtracer, PathtracingPlugin};
@@ -340,29 +343,93 @@ fn ground(radius: f32, texel: u32, palette: &Palette) -> Option<Mesh> {
     Some(mesh)
 }
 
-/// A dome of sky around the plant, facing in, that lights it.
-fn sky_dome(radius: f32) -> Option<Mesh> {
-    let mut mesh = Sphere::new(radius).mesh().uv(48, 24);
-    if let Some(VertexAttributeValues::Float32x3(normals)) =
-        mesh.attribute_mut(Mesh::ATTRIBUTE_NORMAL)
-    {
-        for n in normals.iter_mut() {
-            *n = [-n[0], -n[1], -n[2]];
-        }
+/// How far a leaf's back face sits behind its front, metres: enough that
+/// rays never confuse the two, far below what a picture shows.
+const BACK_FACE_OFFSET_M: f32 = 0.000_3;
+
+/// `mesh` with a back face for every triangle: Solari shades a hit by the
+/// triangle's own normal, so a one-sided leaf seen or lit from behind
+/// would be black. Each back face is its front reversed, a hair behind it.
+fn two_sided(mesh: &SceneMesh) -> SceneMesh {
+    let mut out = mesh.clone();
+    let first = u32::try_from(mesh.positions.len()).unwrap_or(u32::MAX);
+    for (p, n) in mesh.positions.iter().zip(&mesh.normals) {
+        out.positions.push([
+            p[0] - n[0] * BACK_FACE_OFFSET_M,
+            p[1] - n[1] * BACK_FACE_OFFSET_M,
+            p[2] - n[2] * BACK_FACE_OFFSET_M,
+        ]);
+        out.normals.push([-n[0], -n[1], -n[2]]);
     }
-    let indices: Vec<u32> = match mesh.indices() {
-        Some(Indices::U16(i)) => i.iter().map(|&i| u32::from(i)).collect(),
-        Some(Indices::U32(i)) => i.clone(),
-        None => return None,
+    out.uvs.extend_from_slice(&mesh.uvs);
+    out.colors.extend_from_slice(&mesh.colors);
+    for t in mesh.indices.as_chunks::<3>().0 {
+        out.indices
+            .extend([t[0] + first, t[2] + first, t[1] + first]);
+    }
+    out
+}
+
+/// Degrees per cell of the sky dome's grid.
+const DOME_STEP_DEG: f32 = 2.0;
+/// The dome is open this many degrees around the sun, so rays toward the
+/// sun's disc (0.53° across) pass through it: a closed dome would shadow
+/// the sun everywhere.
+const SUN_HOLE_DEG: f32 = 3.0;
+/// The distant ground's luminance as a share of an open Lambertian
+/// ground's under the same light: the ground patch, which the plant and the
+/// horizon partly shade, renders at about this share (measured on lavapipe,
+/// 2026-10-08), so the horizon shows no step.
+const DISTANT_GROUND_SHARE: f32 = 0.75;
+
+/// A band of the sphere around the plant, from elevation `low` to `high`
+/// degrees, facing in, open around the sun (`toward_sun`, a unit vector).
+/// The upper band is the sky; the lower one stands for distant ground.
+fn sky_dome(radius: f32, toward_sun: Vec3, (low, high): (f32, f32)) -> Option<Mesh> {
+    let mut positions = Vec::new();
+    let mut normals = Vec::new();
+    let mut uvs = Vec::new();
+    let mut indices = Vec::new();
+    let point = |azimuth: f32, elevation: f32| {
+        let (a, e) = (azimuth.to_radians(), elevation.to_radians());
+        Vec3::new(e.cos() * a.sin(), e.sin(), e.cos() * a.cos())
     };
-    // Reverse each triangle so it faces in.
-    let flipped: Vec<u32> = indices
-        .as_chunks::<3>()
-        .0
-        .iter()
-        .flat_map(|t| [t[0], t[2], t[1]])
-        .collect();
-    mesh.insert_indices(Indices::U32(flipped));
+    let hole = SUN_HOLE_DEG.to_radians().cos();
+    let mut elevation = low;
+    while elevation < high {
+        let top = (elevation + DOME_STEP_DEG).min(high);
+        let mut azimuth = 0.0_f32;
+        while azimuth < 360.0 {
+            let next = azimuth + DOME_STEP_DEG;
+            let corners = [
+                point(azimuth, elevation),
+                point(next, elevation),
+                point(next, top),
+                point(azimuth, top),
+            ];
+            let centre = (corners[0] + corners[1] + corners[2] + corners[3]).normalize();
+            if centre.dot(toward_sun) < hole {
+                let first = u32::try_from(positions.len()).unwrap_or(u32::MAX);
+                for corner in corners {
+                    positions.push((corner * radius).to_array());
+                    normals.push((-corner).to_array());
+                    uvs.push([0.0, 0.0]);
+                }
+                // Counter-clockwise seen from inside the dome.
+                indices.extend([first, first + 2, first + 1, first, first + 3, first + 2]);
+            }
+            azimuth = next;
+        }
+        elevation = top;
+    }
+    let mut mesh = Mesh::new(
+        PrimitiveTopology::TriangleList,
+        RenderAssetUsages::RENDER_WORLD,
+    );
+    mesh.insert_attribute(Mesh::ATTRIBUTE_POSITION, positions);
+    mesh.insert_attribute(Mesh::ATTRIBUTE_NORMAL, normals);
+    mesh.insert_attribute(Mesh::ATTRIBUTE_UV_0, uvs);
+    mesh.insert_indices(Indices::U32(indices));
     let mut mesh = mesh.with_generated_tangents().ok()?;
     mesh.enable_raytracing = true;
     Some(mesh)
@@ -380,7 +447,8 @@ fn setup(
     let mut palette = Palette::new();
     let [gr, gg, gb] = plantlab_scene::GROUND;
     let ground_texel = palette.texel([gr, gg, gb, 1.0]);
-    let parts: Vec<(&SceneMesh, Vec<u32>)> = [&scene.wood, &scene.solids, &scene.cut_cards]
+    let leaves = two_sided(&scene.cut_cards);
+    let parts: Vec<(&SceneMesh, Vec<u32>)> = [&scene.wood, &scene.solids, &leaves]
         .into_iter()
         .map(|mesh| (mesh, texels(mesh, &mut palette)))
         .collect();
@@ -410,13 +478,31 @@ fn setup(
     }
     let light = scene.light;
     let sky = LinearRgba::rgb(light.sky_color[0], light.sky_color[1], light.sky_color[2]);
-    if let Some(dome) = sky_dome(scene.ground_radius * 20.0 + 100.0) {
+    let radius = scene.ground_radius * 20.0 + 100.0;
+    let toward_sun = Vec3::from_array(light.sun);
+    if let Some(dome) = sky_dome(radius, toward_sun, (0.0, 90.0)) {
         commands.spawn((
             RaytracingMesh3d(meshes.add(dome)),
             MeshMaterial3d(materials.add(StandardMaterial {
                 base_color: Color::BLACK,
                 // Emission in cd/m², the sky's luminance.
                 emissive: sky * light.sky_brightness,
+                ..default()
+            })),
+        ));
+    }
+    // Below the horizon, distant ground lit as the ground patch is: its
+    // albedo times the sun's and the sky's light, as a Lambertian
+    // surface's luminance.
+    let [gr, gg, gb] = plantlab_scene::GROUND;
+    let lit = (light.sun_lux * light.sun[1].max(0.0) / std::f32::consts::PI + light.sky_brightness)
+        * DISTANT_GROUND_SHARE;
+    if let Some(below) = sky_dome(radius, toward_sun, (-90.0, 0.0)) {
+        commands.spawn((
+            RaytracingMesh3d(meshes.add(below)),
+            MeshMaterial3d(materials.add(StandardMaterial {
+                base_color: Color::BLACK,
+                emissive: LinearRgba::rgb(gr, gg, gb) * lit,
                 ..default()
             })),
         ));
@@ -436,7 +522,9 @@ fn setup(
     let mut camera = commands.spawn((
         Camera3d::default(),
         RenderTarget::Image(job.target.clone().into()),
-        Exposure { ev100 },
+        Exposure {
+            ev100: ev100 - plantlab_scene::PHOTO_EXPOSURE_BOOST_EV,
+        },
         Tonemapping::AcesFitted,
         // Solari writes the main texture from compute passes.
         CameraMainTextureUsages::default().with(TextureUsages::STORAGE_BINDING),
