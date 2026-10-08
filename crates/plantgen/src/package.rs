@@ -941,23 +941,36 @@ fn bake_keyframe(graph: &PlantGraph, inputs: &Inputs) -> Result<BakedKeyframe, P
     // they are on the inputs' day.
     let staged = crate::looks::staged(graph, &inputs.sizes);
     let drawn = staged.as_ref().unwrap_or(graph);
-    let meshes: Vec<PlantMesh> = inputs
-        .quality
-        .lods
-        .iter()
-        .enumerate()
-        .map(|(level, lod)| {
-            mesh::build_with(
+    // A coarser level never draws more wood than the one before it: where
+    // the sticks standing in for the thin wood it drops (`mesh::twigs`)
+    // would make it, it is built again with fewer, thicker sticks covering
+    // as much.
+    let mut meshes: Vec<PlantMesh> = Vec::with_capacity(inputs.quality.lods.len());
+    for (level, lod) in inputs.quality.lods.iter().enumerate() {
+        let lod = lod.for_height(graph.height);
+        let build = |sticks: Option<usize>| {
+            mesh::build_capped(
                 drawn,
                 &inputs.looks,
                 &inputs.bodies,
                 &inputs.spec.appearance,
-                &lod.for_height(graph.height),
+                &lod,
                 level,
                 Some(&inputs.part_types),
+                sticks,
             )
-        })
-        .collect();
+        };
+        let mut level_mesh = build(None);
+        if let Some(finer) = meshes
+            .last()
+            .map(|finer: &PlantMesh| finer.wood.triangle_count())
+            && level_mesh.wood.triangle_count() > finer
+        {
+            let tubes = build(Some(0)).wood.triangle_count();
+            level_mesh = build(Some(finer.saturating_sub(tubes) / mesh::STICK_TRIANGLES));
+        }
+        meshes.push(level_mesh);
+    }
     let impostor = impostor::bake(
         &meshes[IMPOSTOR_LOD],
         &inputs.templates,
