@@ -559,11 +559,16 @@ fn lod_widths() {
 /// Species the test holds, one or more of each form whose coarse levels
 /// drew wider or sparser than level 0 before generator revision 12: a fan
 /// palm, rosettes, a scale-leaved conifer, twiggy desert trees and shrubs,
-/// a cattail and broad-leaved herbs. Conifers that take minutes to render
-/// are measured by `lod_widths` only.
-const HELD: [&str; 10] = [
+/// a cattail and broad-leaved herbs; and since revision 14 the rosettes
+/// whose coarse levels became a cross of cards (render review S1): soaptree
+/// yucca, desert agave and aloe. Conifers that take minutes to render are
+/// measured by `lod_widths` only.
+const HELD: [&str; 13] = [
     "washingtonia-filifera",
     "yucca-brevifolia",
+    "yucca-elata",
+    "agave-deserti",
+    "aloe-vera",
     "dasylirion-wheeleri",
     "juniperus-scopulorum",
     "parkinsonia-microphylla",
