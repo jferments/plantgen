@@ -1,19 +1,7 @@
 {
   "schema": 1,
   "about": "Every trait a record, a rank file or a species' spec may state (growth plan G2.2): its group, its type and its unit, values or range. Vocabulary only: the rules that turn traits into spec values live in the taxa they hold for. Types: number (a quantity in its unit), count (a whole number), bool, enum (one of its values), enums (a list of its values), months (a list of months, 1 to 12), colour (sRGB, three numbers 0 to 255), text (a line in PlantGen's own words), ids (species ids).",
-  "groups": [
-    "form",
-    "size",
-    "stem_and_bark",
-    "leaves",
-    "flowers",
-    "fruit_and_cones",
-    "seasons",
-    "ecology",
-    "interactions",
-    "shedding",
-    "architecture"
-  ],
+  "groups": ["form", "size", "stem_and_bark", "leaves", "flowers", "fruit_and_cones", "seasons", "ecology", "interactions", "shedding", "architecture"],
   "traits": {
     "library_form": {
       "group": "form",
@@ -117,13 +105,13 @@
     "spines": {
       "group": "stem_and_bark",
       "type": "enum",
-      "values": ["none", "areoles", "thorns", "prickles"],
-      "why": "what a stem is armed with"
+      "values": ["none", "areoles", "thorns", "prickles", "leaf_spines"],
+      "why": "what a plant is armed with: spines from areoles, thorns from shoots, prickles from bark, or spines on its leaves"
     },
     "leaf_type": {
       "group": "leaves",
       "type": "enum",
-      "values": ["simple", "compound", "needle", "scale", "frond", "blade"],
+      "values": ["simple", "pinnate", "bipinnate", "palmate", "needle", "scale", "frond", "blade"],
       "why": "what a leaf is"
     },
     "leaf_arrangement": {
@@ -177,6 +165,11 @@
       "range": [1, 8],
       "why": "needles in a pine's bundle"
     },
+    "stipules": {
+      "group": "leaves",
+      "type": "bool",
+      "why": "whether leaves bear stipules at their base"
+    },
     "leaf_colour": {
       "group": "leaves",
       "type": "colour",
@@ -202,8 +195,26 @@
     "inflorescence": {
       "group": "flowers",
       "type": "enum",
-      "values": ["solitary", "raceme", "panicle", "umbel", "head", "spike", "catkin", "cyme"],
-      "why": "how flowers are grouped"
+      "values": ["solitary", "raceme", "spike", "catkin", "corymb", "umbel", "compound_umbel", "panicle", "cyme", "scorpioid", "head", "spadix"],
+      "why": "how flowers are grouped: L1's cluster kinds, a single flower, or a spadix"
+    },
+    "flower_merosity": {
+      "group": "flowers",
+      "type": "count",
+      "range": [2, 12],
+      "why": "petals (or tepals) in one whorl of a flower"
+    },
+    "flower_symmetry": {
+      "group": "flowers",
+      "type": "enum",
+      "values": ["actinomorphic", "zygomorphic", "asymmetric"],
+      "why": "a flower's symmetry: radial, one plane, or none"
+    },
+    "sexual_system": {
+      "group": "flowers",
+      "type": "enum",
+      "values": ["hermaphrodite", "monoecious", "dioecious", "polygamous"],
+      "why": "where the sexes sit: in a dioecious species only half the plants bear fruit"
     },
     "flowering_months": {
       "group": "flowers",
@@ -213,8 +224,8 @@
     "fruit_type": {
       "group": "fruit_and_cones",
       "type": "enum",
-      "values": ["berry", "drupe", "pome", "capsule", "pod", "nut", "samara", "achene", "cone"],
-      "why": "what a fruit is"
+      "values": ["berry", "drupe", "pome", "capsule", "pod", "legume", "nut", "samara", "achene", "caryopsis", "follicle", "schizocarp", "aggregate", "multiple", "cone"],
+      "why": "what a fruit is (pod for dry pods that split other than a legume)"
     },
     "fruit_size_m": {
       "group": "fruit_and_cones",
@@ -266,21 +277,21 @@
     },
     "light": {
       "group": "ecology",
-      "type": "enum",
+      "type": "enums",
       "values": ["shade", "part", "sun"],
-      "why": "the light it grows best in"
+      "why": "the light it grows in, every class it spans"
     },
     "moisture": {
       "group": "ecology",
-      "type": "enum",
+      "type": "enums",
       "values": ["aquatic", "wet", "mesic", "dry", "xeric"],
-      "why": "the water its ground holds"
+      "why": "the water its ground holds, every class it spans"
     },
     "soil_texture": {
       "group": "ecology",
-      "type": "enum",
+      "type": "enums",
       "values": ["sand", "loam", "clay", "rock"],
-      "why": "the ground it roots in"
+      "why": "the ground it roots in, every class it spans"
     },
     "habitat_notes": {
       "group": "ecology",

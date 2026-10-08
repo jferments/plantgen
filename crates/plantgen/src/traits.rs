@@ -264,6 +264,71 @@ mod tests {
 
     use super::Vocabulary;
 
+    /// The growth forms a trait names are the spec's, so the two lists
+    /// cannot drift apart.
+    #[test]
+    fn growth_forms_are_the_specs() {
+        use crate::spec::GrowthForm;
+        // A form added to the spec fails this match until `ALL` has it.
+        for form in GrowthForm::ALL {
+            match form {
+                GrowthForm::ExcurrentTree
+                | GrowthForm::DecurrentTree
+                | GrowthForm::ScaleLeavedTree
+                | GrowthForm::Shrub
+                | GrowthForm::Graminoid
+                | GrowthForm::Forb
+                | GrowthForm::Fern
+                | GrowthForm::Vine
+                | GrowthForm::StemSucculent
+                | GrowthForm::RosetteSucculent
+                | GrowthForm::Palm
+                | GrowthForm::Epiphyte
+                | GrowthForm::Cushion => {}
+            }
+        }
+        let names: Vec<String> = GrowthForm::ALL
+            .iter()
+            .map(|form| {
+                serde_json::to_value(form)
+                    .unwrap()
+                    .as_str()
+                    .unwrap()
+                    .to_string()
+            })
+            .collect();
+        assert_eq!(
+            Vocabulary::builtin().traits["growth_form"].values.as_ref(),
+            Some(&names)
+        );
+    }
+
+    /// Every flower cluster kind of the forms plan's L1 is an
+    /// `inflorescence`. L1 is not in the code yet: once it is, this reads
+    /// its kinds from there.
+    #[test]
+    fn inflorescences_hold_the_cluster_kinds() {
+        const CLUSTERS: [&str; 10] = [
+            "raceme",
+            "spike",
+            "catkin",
+            "corymb",
+            "umbel",
+            "compound_umbel",
+            "panicle",
+            "cyme",
+            "scorpioid",
+            "head",
+        ];
+        let values = Vocabulary::builtin().traits["inflorescence"]
+            .values
+            .clone()
+            .unwrap();
+        for kind in CLUSTERS {
+            assert!(values.iter().any(|value| value == kind), "{kind}");
+        }
+    }
+
     /// The built-in vocabulary is valid, holds RECORD.md's groups and the
     /// architecture group, and checks values by type.
     #[test]
