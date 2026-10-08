@@ -298,13 +298,14 @@ impl<'a> Interpreter<'a> {
                 }
                 let id = owner.lineage.element(KIND_ORGAN, owner.organs);
                 owner.organs += 1;
-                let reach = state.position + state.frame.h * params[0];
+                let frame = organ_frame(state.frame, params);
+                let reach = state.position + frame.h * params[0];
                 scene.height = scene.height.max(state.position.y).max(reach.y);
                 scene.organs.push(OrganInstance {
                     id,
                     symbol,
                     position: state.position,
-                    frame: state.frame,
+                    frame,
                     size: params[0],
                     born: owner.born,
                     segment: state.segment,
@@ -347,18 +348,7 @@ impl<'a> Interpreter<'a> {
             Turtle::RollRight => state.frame = frame.rotated(frame.h, math::radians(params[0])),
             Turtle::RollLeft => state.frame = frame.rotated(frame.h, -math::radians(params[0])),
             Turtle::Around => state.frame = frame.rotated(frame.u, math::PI),
-            Turtle::Level => {
-                let left = Vec3::Y.cross(frame.h);
-                if left.length() > 1e-9 {
-                    let l = left.normalize_or(frame.l);
-                    state.frame = Frame {
-                        h: frame.h,
-                        l,
-                        u: frame.h.cross(l),
-                    }
-                    .orthonormalized();
-                }
-            }
+            Turtle::Level => state.frame = level(frame),
             Turtle::Width => state.width = params[0].max(0.0),
             Turtle::Tropism => {
                 state.tropism = Vec3::new(params[0], params[1], params[2]);
@@ -552,5 +542,77 @@ mod tests {
         assert_eq!(s.organs.len(), 1);
         assert_eq!(s.organs[0].size, 0.5);
         assert_eq!(s.organs[0].segment, Some(0));
+    }
+}
+
+/// `frame` turned so its left points level (`$`), or as it is when it heads
+/// straight up or down.
+fn level(frame: Frame) -> Frame {
+    let left = Vec3::Y.cross(frame.h);
+    if left.length() > 1e-9 {
+        let l = left.normalize_or(frame.l);
+        Frame {
+            h: frame.h,
+            l,
+            u: frame.h.cross(l),
+        }
+        .orthonormalized()
+    } else {
+        frame
+    }
+}
+
+/// The frame an organ is placed in: the turtle's, or for an organ called
+/// with its own turn, `organ(size, roll, pitch[, level])`, the turtle's
+/// rolled by `roll` (`/`), pitched down by `pitch` (`&`) and, with a level
+/// above 0, levelled (`$`), the same operations `[ /(roll) &(pitch) $
+/// organ(size) ]` applies, without changing the turtle.
+fn organ_frame(frame: Frame, params: &[f64]) -> Frame {
+    let [_, roll, pitch, rest @ ..] = params else {
+        return frame;
+    };
+    let rolled = frame.rotated(frame.h, math::radians(*roll));
+    let pitched = rolled.rotated(rolled.l, math::radians(*pitch));
+    match rest.first() {
+        Some(flag) if *flag > 0.0 => level(pitched),
+        _ => pitched,
+    }
+}
+
+#[cfg(test)]
+mod organ_turn_tests {
+    use crate::conditions::Conditions;
+    use crate::grow::{GrowthSettings, grow};
+    use crate::lsys::{Limits, Program};
+
+    #[test]
+    fn an_organ_with_its_own_turn_lies_as_the_bracketed_turn_puts_it() {
+        let grow_with = |successor: &str| {
+            let program = Program::compile(&format!(
+                "lsystem p 1; organ leaf leaf; module A; axiom /(30) &(20) F(1) A;
+                 rule A -> {successor};"
+            ))
+            .unwrap();
+            let settings = GrowthSettings {
+                seed: 3,
+                dt: 1.0,
+                years: 1.0,
+                keyframes: vec![1.0],
+                conditions: Conditions::preset(crate::spec::Environment::Open),
+                limits: Limits::default(),
+                host: None,
+            };
+            let growth = grow(&program, &[], &settings).unwrap();
+            growth.keyframes[0].organs.clone()
+        };
+        let bracketed = grow_with("[ /(70) &(55) $ leaf(0.3) ] [ /(250) &(40) leaf(0.2) ] F(0.5)");
+        let turned = grow_with("leaf(0.3, 70, 55, 1) leaf(0.2, 250, 40) F(0.5)");
+        assert_eq!(bracketed.len(), 2);
+        for (a, b) in bracketed.iter().zip(&turned) {
+            assert_eq!(a.position, b.position);
+            assert_eq!(a.heading, b.heading);
+            assert_eq!(a.left, b.left);
+            assert_eq!(a.size.to_bits(), b.size.to_bits());
+        }
     }
 }

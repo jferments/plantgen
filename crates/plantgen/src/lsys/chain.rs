@@ -13,7 +13,9 @@
 //! - **modules, organs and bodies**: adds new ones after the parent's; it
 //!   may not declare one its parent declares;
 //! - **tools**: replaces single settings of a tool its parent configures
-//!   (the same tool and version) and adds new tools;
+//!   and adds new tools; naming another version of the parent's tool
+//!   (`tool space@2 { ... }` over `space@1`) moves it to that version with
+//!   the parent's settings under its own;
 //! - **axiom**: replaces the parent's, or keeps it when it has none;
 //! - **rules**: adds its rules, which are tried before the parent's for
 //!   the same module (an L-system applies the first rule whose condition
@@ -40,8 +42,7 @@ pub const MAX_DEPTH: usize = 8;
 ///
 /// Fails when a program extends another than the next in the chain, the
 /// last extends one that is not given, the chain is too deep, or a
-/// program redeclares a module, organ or body or reconfigures a tool at
-/// another version.
+/// program redeclares a module, organ or body.
 pub fn resolve(mut chain: Vec<ProgramAst>) -> Result<ProgramAst, ProgramError> {
     if chain.len() > MAX_DEPTH {
         return err(
@@ -144,16 +145,11 @@ fn merge(mut parent: ProgramAst, child: ProgramAst, depth: u8) -> Result<Program
     }
     for tool in child.tools {
         match parent.tools.iter_mut().find(|t| t.name == tool.name) {
-            Some(existing) if existing.version != tool.version => {
-                return err(
-                    tool.span,
-                    format!(
-                        "tool `{}@{}` is configured at version {} by program `{}`, which this one extends",
-                        tool.name, tool.version, existing.version, parent.name
-                    ),
-                );
-            }
             Some(existing) => {
+                // A newer version keeps the parent's settings (the compiler
+                // refuses one the version lacks) under the program's own.
+                existing.version = tool.version;
+                existing.span = tool.span;
                 for (key, value, span) in tool.settings {
                     match existing.settings.iter_mut().find(|(k, _, _)| *k == key) {
                         Some(setting) => *setting = (key, value, span),
@@ -256,6 +252,25 @@ rule B -> ;
         let pipe = crate::lsys::program::ToolKind::Pipe;
         assert_ne!(child.tool(pipe), parent.tool(pipe));
         assert_eq!(child.axiom, parent.axiom);
+    }
+
+    #[test]
+    fn a_draw_in_a_tool_setting_moves_no_rule_draw() {
+        let parent = compile(PARENT);
+        let child = compile(&format!(
+            "lsystem leafy 1 extends base;\ntool pipe@1 {{ tip = uniform(0.01, 0.02) }};\n{PARENT}"
+        ));
+        let a = usize::from(parent.symbol_id("A").unwrap());
+        assert_eq!(
+            child.productions[a][0].successor[0].args,
+            parent.productions[a][0].successor[0].args
+        );
+        let pipe = crate::lsys::program::ToolKind::Pipe;
+        let tip = format!("{:?}", child.tool(pipe).unwrap().settings[1]);
+        assert!(
+            tip.contains(&format!("Uniform({})", crate::lsys::program::TOOL_SITES)),
+            "{tip}"
+        );
     }
 
     #[test]

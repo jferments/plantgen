@@ -1406,7 +1406,16 @@ mod tests {
         }
         assert_eq!(library.programs().count(), PROGRAMS.len());
         for (name, program) in PROGRAMS {
-            assert_eq!(library.program(name), Some(program));
+            // A program is its own text, joined with the programs it
+            // extends when it extends one (growth plan G1).
+            assert_eq!(library.program_text(name), Some(program));
+            assert_eq!(
+                library.program(name),
+                Some(library.chain_of(program).as_ref())
+            );
+            if crate::lsys::parser::extends_of(program).is_none() {
+                assert_eq!(library.program(name), Some(program));
+            }
         }
         assert!(
             library
