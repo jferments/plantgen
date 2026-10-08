@@ -18,10 +18,10 @@ it, and turns what grew into meshes, levels of detail and impostors. No
 3D models are stored or shipped: you grow them on your own machine, and the
 same species and seed give the same plant, bit for bit, on every machine.
 
-| | |
-| --- | --- |
-| ![Saguaros and a pale-barked desert tree over gravel and sand, with more saguaros and red hills behind](docs/images/saguaro-desert.jpg) | ![Fireweed in flower across a meadow of grasses and bare rock, with a mountain behind](docs/images/fireweed-meadow.jpg) |
-| *A Sonoran Desert bajada: saguaros among shrubs and smaller cacti.* | *Fireweed in flower across a subalpine meadow in the Cascades.* |
+| | | |
+| --- | --- | --- |
+| ![Saguaros and a pale-barked desert tree over gravel and sand, with more saguaros and red hills behind](docs/images/saguaro-desert.jpg) | ![Fireweed in flower across a meadow of grasses and bare rock, with a mountain behind](docs/images/fireweed-meadow.jpg) | ![The Hoh River from the air, its valley filled with conifer forest around a grassy clearing](docs/images/hoh-river.jpg) |
+| *A Sonoran Desert bajada: saguaros among shrubs and smaller cacti.* | *Fireweed in flower across a subalpine meadow in the Cascades.* | *The Hoh River from the air: rainforest conifers down to the water.* |
 
 *Rendered in real time, with each species placed where its habitat fits.*
 
