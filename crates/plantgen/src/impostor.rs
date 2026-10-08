@@ -126,6 +126,7 @@ pub fn bake(
         supersample,
         shadows: false,
         shadow_bounds: None,
+        shadow_texels: raster::SHADOW_TEXELS,
     };
     for row in 0..views {
         for column in 0..views {

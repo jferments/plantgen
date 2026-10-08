@@ -52,6 +52,9 @@ pub struct PreviewOptions {
 
 pub const SKY: [f32; 3] = [0.52, 0.62, 0.74];
 const GROUND: [f32; 3] = [0.16, 0.19, 0.11];
+/// Texels along each side of a close-up's shadow map: over the box round
+/// what it frames, finer than a spine.
+const CLOSE_UP_SHADOW_TEXELS: usize = 8192;
 const FIGURE: [f32; 3] = [0.55, 0.22, 0.12];
 const ROD_LIGHT: [f32; 3] = [0.7, 0.7, 0.66];
 
@@ -292,17 +295,33 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
     };
     let mut shaded = vec![(&figure_mesh, Material::Opaque)];
     shaded.extend(items);
-    let shadow_bounds = raster::bounds(&shaded).map(|(low, high)| {
-        // Room on the ground for the shadows of a low sun.
-        let pad = Vec3::new(high.y * 1.5, 0.0, high.y * 1.5);
-        (low - pad, high + pad)
-    });
+    // A close-up's shadow map covers only a box round what it frames, so its
+    // texels are finer than its pixels: the whole plant's map would leave
+    // shadows in blocks tens of pixels wide. Everything between the box and
+    // the sun still casts into it, because the sun's view is orthographic
+    // and keeps what lies behind its eye.
+    let shadow_bounds = if let Some((target, span)) = options.focus {
+        let half = Vec3::new(span, span, span);
+        Some((target - half, target + half))
+    } else {
+        raster::bounds(&shaded).map(|(low, high)| {
+            // Room on the ground for the shadows of a low sun.
+            let pad = Vec3::new(high.y * 1.5, 0.0, high.y * 1.5);
+            (low - pad, high + pad)
+        })
+    };
     let render_options = RenderOptions {
         width: options.width,
         height: options.height,
         supersample: options.supersample,
         shadows: true,
         shadow_bounds,
+        // A close-up's sub-millimetre texels catch the shadow of a spine.
+        shadow_texels: if options.focus.is_some() {
+            CLOSE_UP_SHADOW_TEXELS
+        } else {
+            raster::SHADOW_TEXELS
+        },
     };
     raster::render(
         &meshes,

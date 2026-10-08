@@ -99,7 +99,13 @@ pub struct RenderOptions {
     /// The region the sun's shadow map covers; every mesh's bounds when
     /// `None`. A large ground plane would otherwise spread the map thin.
     pub shadow_bounds: Option<(Vec3, Vec3)>,
+    /// Texels along each side of the shadow map ([`SHADOW_TEXELS`] for a
+    /// whole plant).
+    pub shadow_texels: usize,
 }
+
+/// Texels along each side of a whole plant's shadow map.
+pub const SHADOW_TEXELS: usize = 2048;
 
 /// A rendered image. Colour is linear RGB with coverage in alpha; normals are
 /// in world space; depth is distance along the view direction (infinite
@@ -167,7 +173,7 @@ pub fn render(
                         half_height: radius,
                     },
                 };
-                let size = 2048;
+                let size = options.shadow_texels.max(1);
                 let mut target = Target::new(size, size);
                 for (mesh, material) in meshes {
                     draw(&mut target, mesh, *material, &camera, None, templates, None);
@@ -784,6 +790,7 @@ mod tests {
             supersample: 2,
             shadows: false,
             shadow_bounds: None,
+            shadow_texels: SHADOW_TEXELS,
         };
         let templates = Templates::default();
         let render_once = || {
@@ -813,6 +820,7 @@ mod tests {
             supersample: 1,
             shadows: true,
             shadow_bounds: None,
+            shadow_texels: SHADOW_TEXELS,
         };
         let mut flipped = quad(0.0);
         flipped.indices = vec![0, 1, 2, 0, 2, 3];
@@ -877,6 +885,7 @@ mod tests {
             supersample: 1,
             shadows: false,
             shadow_bounds: None,
+            shadow_texels: SHADOW_TEXELS,
         };
         let image = render(
             &[(&ground, Material::Opaque)],
