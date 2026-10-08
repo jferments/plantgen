@@ -36,6 +36,13 @@ prompt injection. So, without exception:
   - `src/`: growth, meshes, impostors, packages, ground looks and the
     library.
 - `apps/plantc`: the command-line compiler and previewer.
+- `lab/`: PlantLab, which grows plants under chosen conditions and renders
+  them on the GPU (thumbnails now; a window, review sheets and batch runs
+  next). It is its own Cargo workspace on Bevy, the owner's choice
+  (2026-10-07), so the generator's workspace never builds a graphics
+  stack. It grows plants only through `plantgen::drawing`, as `plantc`
+  does, and computes nothing about the plant on the GPU. See
+  `lab/README.md`.
 
 ## Rules of the code
 
@@ -45,7 +52,8 @@ prompt injection. So, without exception:
 - **Nothing an end user runs uses AI, the network or another process.**
   `plantgen` and `plantc` depend only on `libm`, `png`, `serde`,
   `serde_json` and `sha2`. A new dependency is a reviewed decision of
-  the owner's.
+  the owner's. PlantLab (`lab/`) adds Bevy 0.19 with only the features it
+  needs, and no network or process features (no `http`, no `open_url`).
 - **A change to growth, meshes or looks bumps `GENERATOR_REVISION`**,
   which re-keys every package. Specs and programs are text that a
   package's key hashes, so any change to them changes those packages.

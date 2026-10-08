@@ -1,0 +1,13 @@
+[package]
+name = "plantlab-scene"
+description = "PlantLab's engine-free layer: a grown plant as data ready to draw."
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+license = "MIT"
+
+[dependencies]
+plantgen.workspace = true
+
+[lints]
+workspace = true
