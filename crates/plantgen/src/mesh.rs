@@ -288,9 +288,11 @@ pub const CLUSTER_UPRIGHT_SKIP: f64 = 0.866;
 /// Directions over the half sphere along which a cluster's cards are
 /// sized to cover as much as its organs ([`card_areas`]). Each costs a
 /// count of the cluster's cover ([`painted`]) and another of its cards',
-/// the most of a coarse level's bake: 12 keep the levels' widths as 32 did
-/// (revision 15, `tests/lod_widths.rs`) at under half the cost.
-const CLUSTER_DIRECTIONS: usize = 12;
+/// the most of a coarse level's bake: 16 keep the levels' widths and
+/// heights as 32 did (revision 15, `tests/lod_widths.rs`) at half the cost;
+/// 12 leave gaps between them, and skunk cabbage's cards grew 1.24 times as
+/// tall as its leaves.
+const CLUSTER_DIRECTIONS: usize = 16;
 
 /// Views at most this sine of elevation (40°) above or below level, the
 /// way a walker sees crowns at the distances clusters are drawn, count

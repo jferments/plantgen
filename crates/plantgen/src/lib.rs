@@ -92,6 +92,6 @@ pub mod venation;
 /// plant's leaves (`crate::occlusion`). 14: a rosette's blades become a
 /// star of its own blades at coarse levels, fewer and wider, with thick
 /// leaves' edges (render review S1), instead of a cross of cluster cards.
-/// 15: a cluster's cover is counted from 12 directions on a 24-cell grid,
-/// not 32 on 48, so coarse levels bake about ten times faster.
+/// 15: a cluster's cover is counted from 16 directions on a 24-cell grid,
+/// not 32 on 48, so coarse levels bake several times faster.
 pub const GENERATOR_REVISION: u32 = 15;
