@@ -146,7 +146,7 @@ struct Current {
 /// Pipelines the render world is still compiling, counted after each
 /// frame's render.
 #[derive(Resource, Clone, Default)]
-struct Compiling(Arc<AtomicUsize>);
+pub(crate) struct Compiling(pub(crate) Arc<AtomicUsize>);
 
 /// Run `jobs`, writing pictures into `out`, on GPU `gpu` (an index of
 /// `plantlab gpus`), else the one Bevy chooses.
@@ -229,7 +229,7 @@ pub fn run(jobs: Vec<Job>, out: PathBuf, gpu: Option<usize>) -> Result<(), Strin
     }
 }
 
-fn count_compiling(cache: Res<PipelineCache>, compiling: Res<Compiling>) {
+pub(crate) fn count_compiling(cache: Res<PipelineCache>, compiling: Res<Compiling>) {
     compiling
         .0
         .store(cache.waiting_pipelines().count(), Ordering::Relaxed);
@@ -412,7 +412,7 @@ fn write(
 }
 
 /// The picture as sRGB RGBA8, whatever the readback's format.
-fn to_rgba8(data: &[u8], format: TextureFormat) -> Vec<u8> {
+pub(crate) fn to_rgba8(data: &[u8], format: TextureFormat) -> Vec<u8> {
     match format {
         TextureFormat::Bgra8UnormSrgb | TextureFormat::Bgra8Unorm => data
             .as_chunks::<4>()
@@ -474,7 +474,7 @@ fn shows_only_background(rgba: &[u8]) -> bool {
     rgba.as_chunks::<4>().0.iter().all(|p| p[..] == *first)
 }
 
-fn target_image(width: u32, height: u32) -> Image {
+pub(crate) fn target_image(width: u32, height: u32) -> Image {
     let mut image = Image::new_target_texture(width, height, TextureFormat::Rgba8UnormSrgb, None);
     image.texture_descriptor.usage |= TextureUsages::COPY_SRC;
     image
@@ -837,7 +837,28 @@ fn spawn_scene(
                 .id(),
         );
     }
-    if !scene.cards.is_empty() {
+    if !scene.cut_cards.is_empty() {
+        // Cards cut into triangles: two-sided solids in their colours.
+        let cut = standard.add(StandardMaterial {
+            base_color: Color::WHITE,
+            perceptual_roughness: 0.8,
+            reflectance: 0.3,
+            double_sided: true,
+            cull_mode: None,
+            diffuse_transmission: 0.35,
+            ..default()
+        });
+        entities.push(
+            commands
+                .spawn((
+                    Mesh3d(meshes.add(bevy_mesh(&scene.cut_cards))),
+                    MeshMaterial3d(cut),
+                    Transform::from_translation(offset),
+                    layer.clone(),
+                ))
+                .id(),
+        );
+    } else if !scene.cards.is_empty() {
         let mut accents = [Vec4::ZERO; MAX_TEMPLATES];
         for (slot, accent) in accents.iter_mut().zip(&scene.template_accents) {
             *slot = Vec3::from_array(*accent).extend(1.0);

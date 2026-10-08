@@ -11,6 +11,8 @@
 
 mod gpu;
 mod render;
+#[cfg(feature = "solari")]
+mod solari;
 
 use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
@@ -38,6 +40,12 @@ usage:
       \"review\"} with any of size, day, age, view, quality and look. A
       picture whose sidecar shows the same inputs is skipped, so a stopped
       batch resumes where it stopped.
+  plantlab solari SPECIES --out DIR [--size PX] [--mode realtime|pathtrace]
+                  [--frames N] [--cut-cards N] [OPTIONS]
+      A spike: one plant lit by Bevy's experimental ray tracing (Solari),
+      on an RTX-class GPU, written as DIR/ID-solari.png. Leaf cards are cut
+      into triangles (24 by 24 cells unless --cut-cards says otherwise).
+      Needs a build with `--features solari`.
   plantlab gpus
       List the GPUs, for --gpu.
   plantlab help
@@ -50,6 +58,8 @@ options:
   --look review|photo  review (default) is fixed so species compare fairly;
                        photo adds soft shadows, sky light, ambient occlusion,
                        a tone map and supersampling
+  --cut-cards N        draw leaf cards cut into triangles on an N by N grid,
+                       as ray tracing needs them, instead of cut by texture
   --gpu I              render on GPU I of `plantlab gpus`
   --force              render even what is already rendered
 ";
@@ -70,6 +80,7 @@ fn run(args: &[String]) -> Result<(), String> {
         Some("thumbs") => pictures(&args[1..], Kind::Thumb),
         Some("review") => pictures(&args[1..], Kind::Review),
         Some("batch") => batch(&args[1..]),
+        Some("solari") => solari(&args[1..]),
         Some("gpus") => {
             for line in gpu::list() {
                 println!("{line}");
@@ -126,7 +137,7 @@ fn parse(args: &[String]) -> Result<Request, String> {
                 );
             }
             "--force" => force = true,
-            flag @ ("--day" | "--age" | "--view" | "--quality" | "--look") => {
+            flag @ ("--day" | "--age" | "--view" | "--quality" | "--look" | "--cut-cards") => {
                 apply(&mut shot, flag.trim_start_matches("--"), &value(flag)?)?;
             }
             flag if flag.starts_with("--") => return Err(format!("unknown flag `{flag}`")),
@@ -186,6 +197,13 @@ fn apply(shot: &mut Shot, name: &str, value: &str) -> Result<(), String> {
         "quality" => {
             shot.quality = quality::profile(value)
                 .ok_or_else(|| format!("unknown quality `{value}`; use draft or standard"))?;
+        }
+        "cut-cards" => {
+            shot.cut_cards = value
+                .parse()
+                .ok()
+                .filter(|cells| *cells <= 64)
+                .ok_or("`--cut-cards` takes a grid of 0 to 64 cells a side")?;
         }
         "look" => {
             shot.look = Look::from_name(value)
@@ -275,6 +293,64 @@ fn pictures(args: &[String], kind: Kind) -> Result<(), String> {
         .map(|id| job(id, kind, &request.shot, request.size))
         .collect::<Result<Vec<_>, _>>()?;
     run_jobs(jobs, request.out, request.gpu, request.force)
+}
+
+#[cfg(feature = "solari")]
+fn solari(args: &[String]) -> Result<(), String> {
+    let mut rest = Vec::new();
+    let mut mode = solari::Mode::Pathtrace;
+    let mut frames = None;
+    let mut iter = args.iter();
+    while let Some(arg) = iter.next() {
+        match arg.as_str() {
+            "--mode" => {
+                mode = match iter.next().map(String::as_str) {
+                    Some("realtime") => solari::Mode::Realtime,
+                    Some("pathtrace") => solari::Mode::Pathtrace,
+                    _ => return Err("`--mode` is realtime or pathtrace".into()),
+                };
+            }
+            "--frames" => {
+                frames = Some(
+                    iter.next()
+                        .and_then(|value| value.parse().ok())
+                        .ok_or("`--frames` takes a number")?,
+                );
+            }
+            _ => rest.push(arg.clone()),
+        }
+    }
+    let mut request = parse(&rest)?;
+    if request.gpu.is_some() {
+        return Err(
+            "`solari` lets Bevy choose the GPU (WGPU_ADAPTER_NAME picks one by name)".into(),
+        );
+    }
+    let [species] = request.species.as_slice() else {
+        return Err("`solari` takes one species".into());
+    };
+    if request.shot.cut_cards == 0 {
+        request.shot.cut_cards = 24;
+    }
+    solari::run(solari::Photo {
+        shot: Shot {
+            species: species.clone(),
+            ..request.shot
+        },
+        out: request.out,
+        size: request.size,
+        mode,
+        frames: frames.unwrap_or(match mode {
+            solari::Mode::Realtime => 120,
+            solari::Mode::Pathtrace => 1_000,
+        }),
+    })
+}
+
+#[cfg(not(feature = "solari"))]
+fn solari(_args: &[String]) -> Result<(), String> {
+    Err("this plantlab was built without Solari:          `cargo run --release -p plantlab --features solari -- solari ...`"
+        .into())
 }
 
 /// Read a batch file: one job a line.
