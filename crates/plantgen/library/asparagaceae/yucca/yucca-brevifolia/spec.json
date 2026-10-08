@@ -193,15 +193,43 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: a tree 3 to 12 m tall whose trunk and branches carry dense rosettes of stiff, dagger-like, finely toothed leaves 15 to 35 cm long; a branch tip that flowers, or is damaged, stops and two or three branches grow from below it, so old trees branch every 0.6 to 0.9 m of growth (FEIS); dead leaves cling to the branches as a shaggy skirt; flowering is irregular, in good years only. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Rough heights from general knowledge: slow, a few centimetres a year; about 1 m at 20 years, 2.5 to 3 m at 50, 4 to 5 m at 90. Wide tolerances."
     },
     "appearance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Colours chosen by eye from photographs: bluish green leaves, grey-brown dead leaves on the branches, creamy flower clusters."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
     }
   },
   "provenance": {

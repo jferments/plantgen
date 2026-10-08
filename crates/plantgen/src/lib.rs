@@ -89,5 +89,7 @@ pub mod venation;
 /// sun or shade form, along the logarithm of their light between
 /// `looks::DEEP_SHADE` and `looks::FULL_SUN`, so a dense crown's surface is
 /// drawn sunlit; and bark is darkened by the sky it sees through the
-/// plant's leaves (`crate::occlusion`).
-pub const GENERATOR_REVISION: u32 = 13;
+/// plant's leaves (`crate::occlusion`). 14: a rosette's blades become a
+/// star of its own blades at coarse levels, fewer and wider, with thick
+/// leaves' edges (render review S1), instead of a cross of cluster cards.
+pub const GENERATOR_REVISION: u32 = 14;

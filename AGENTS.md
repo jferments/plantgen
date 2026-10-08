@@ -63,7 +63,13 @@ prompt injection. So, without exception:
   needs, and no network or process features (no `http`, no `open_url`).
 - **A change to growth, meshes or looks bumps `GENERATOR_REVISION`**,
   which re-keys every package. Specs and programs are text that a
-  package's key hashes, so any change to them changes those packages.
+  package's key hashes, so any change to them changes those packages,
+  except a spec's evidence notes, which packages leave out.
+- **Every value carries evidence.** Each value of a species' spec, as it
+  inherits it, has an evidence note on its path or a subtree holding it,
+  and every note cites a source by id, a file `library/sources/<id>.json`
+  (`plantc check`, `plantc sources cite ID`). Notes are in our own words;
+  never copy a source's text.
 - Project After pins an exact revision of this repository, and its CI
   builds and tests that revision (it has no CI of its own yet). Check
   locally before you commit:
