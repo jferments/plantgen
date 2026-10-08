@@ -19,6 +19,16 @@
 //! evidence notes cite by id ([`crate::evidence::Source`]), one file each,
 //! so every value from one source can be listed ([`Library::citations`])
 //! and removed together.
+//!
+//! Taxa above species may have specs of their own, *rank files*
+//! ([`crate::inherit`], growth plan G2): `<family>/family.json`,
+//! `<family>/<genus>/genus.json`, and `_ranks/<rank>/<name>.json` for the
+//! orders, clades and other ranks, each naming its parent. A species'
+//! spec is then its own `spec.json` merged onto the rank files above it,
+//! the nearer winning ([`Entry::source`]); [`Library::inherited`] says
+//! which file set each value. A folder's rank files replace built-in ones
+//! at the same path and add to them, and built-in species inherit them
+//! too.
 
 use std::borrow::Cow;
 use std::collections::BTreeMap;
@@ -27,11 +37,14 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::OnceLock;
 
+use serde_json::Value;
+
 use crate::conditions::Conditions;
 use crate::evidence::{FieldEvidence, Source};
+use crate::inherit::{self, Inherited, Part, RankFile};
 use crate::niche::Niche;
 use crate::shed::Shed;
-use crate::spec::{PROGRAMS, PlantSpec, SpecError};
+use crate::spec::{GrowthForm, PROGRAMS, PlantSpec, SpecError};
 
 /// One species of the built-in library.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -43,8 +56,11 @@ pub struct Species {
     pub family: &'static str,
     /// Its genus's folder: the genus the id is written with, in lower case.
     pub genus: &'static str,
-    /// Its spec, as JSON.
+    /// Its spec, as JSON: its own `spec.json`, merged onto the rank files
+    /// above it where there are any ([`crate::inherit`]).
     pub source: &'static str,
+    /// Its own `spec.json`, as written.
+    pub own: &'static str,
     /// Its typical site, a conditions document, as JSON.
     pub conditions: Option<&'static str>,
     /// What falls from it ([`crate::shed`]), as JSON.
@@ -118,15 +134,17 @@ pub struct Library {
     chains: BTreeMap<String, String>,
     /// The sources evidence notes cite, by id.
     sources: BTreeMap<String, Source>,
+    /// The specs of taxa above species, by their path in the tree
+    /// ([`crate::inherit`]).
+    ranks: BTreeMap<String, RankFile>,
 }
 
-/// One value that cites a source: the species, the section's file and the
-/// note's path within it.
+/// One value that cites a source: the file holding its evidence note, by
+/// its path in the tree (a species' `spec.json`, `niche.json` or
+/// `shed.json`, or a rank file), and the note's path within it.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Citation {
-    pub species: String,
-    /// `spec.json`, `niche.json` or `shed.json`.
-    pub section: &'static str,
+    pub file: String,
     pub path: String,
 }
 
@@ -139,17 +157,35 @@ pub struct Entry {
     /// The spec's file, for a species read from a folder; `None` for a
     /// built-in one.
     pub path: Option<PathBuf>,
-    source: Cow<'static, str>,
+    /// Its own `spec.json`, as written.
+    own: Cow<'static, str>,
+    /// Its spec merged onto the rank files above it, where there are any.
+    merged: Option<Cow<'static, str>>,
     conditions: Option<Cow<'static, str>>,
     shed: Option<Cow<'static, str>>,
     niche: Option<Cow<'static, str>>,
 }
 
 impl Entry {
-    /// Its spec, as JSON.
+    /// Its spec, as JSON: its own `spec.json`, merged onto the rank files
+    /// above it where there are any (growth plan G2), else that file's
+    /// text as written.
     #[must_use]
     pub fn source(&self) -> &str {
-        &self.source
+        self.merged.as_deref().unwrap_or(&self.own)
+    }
+
+    /// Its own `spec.json`, as written.
+    #[must_use]
+    pub fn own_source(&self) -> &str {
+        &self.own
+    }
+
+    /// Its own `spec.json`'s path in the library tree, which names it
+    /// where values and notes say where they came from.
+    #[must_use]
+    pub fn file(&self) -> String {
+        format!("{}/{}/{}/spec.json", self.family, self.genus, self.id)
     }
 
     /// Its typical site (`conditions.json`), as JSON, if it has one.
@@ -212,16 +248,36 @@ impl Entry {
         Ok(Some(niche))
     }
 
-    /// The evidence notes of its spec, niche and shed, by section file.
-    fn notes(&self) -> Result<Vec<(&'static str, BTreeMap<String, FieldEvidence>)>, String> {
-        let spec: PlantSpec = serde_json::from_str(&self.source)
+    /// The evidence notes of its own spec, niche and shed, each with the
+    /// file holding it, by its path in the tree, and its path.
+    fn notes(&self) -> Result<Vec<Note>, String> {
+        let folder = format!("{}/{}/{}", self.family, self.genus, self.id);
+        let own: Value = serde_json::from_str(&self.own)
             .map_err(|error| format!("{}'s spec.json: {error}", self.id))?;
-        let mut notes = vec![("spec.json", spec.evidence)];
+        let evidence: BTreeMap<String, FieldEvidence> = own
+            .get("evidence")
+            .map(|evidence| serde_json::from_value(evidence.clone()))
+            .transpose()
+            .map_err(|error| format!("{}'s spec.json: evidence: {error}", self.id))?
+            .unwrap_or_default();
+        let mut notes: Vec<Note> = evidence
+            .into_iter()
+            .map(|(path, note)| (format!("{folder}/spec.json"), path, note))
+            .collect();
         if let Some(niche) = self.niche()? {
-            notes.push(("niche.json", niche.evidence));
+            notes.extend(
+                niche
+                    .evidence
+                    .into_iter()
+                    .map(|(path, note)| (format!("{folder}/niche.json"), path, note)),
+            );
         }
         if let Some(shed) = self.shed()? {
-            notes.push(("shed.json", shed.evidence));
+            notes.extend(
+                shed.evidence
+                    .into_iter()
+                    .map(|(path, note)| (format!("{folder}/shed.json"), path, note)),
+            );
         }
         Ok(notes)
     }
@@ -233,6 +289,30 @@ impl Entry {
         self.niche()?;
         Ok(())
     }
+}
+
+/// An evidence note, with the file holding it (by its path in the tree)
+/// and its path there.
+type Note = (String, String, FieldEvidence);
+
+/// A rank file's evidence notes, each with the file and its path there
+/// (a form's under `forms.<growth form>.`).
+fn rank_notes(rank: &RankFile) -> Result<Vec<Note>, String> {
+    let mut notes = Vec::new();
+    for (at, part) in rank.parts() {
+        for (path, note) in &part.notes {
+            let path = if at.is_empty() {
+                path.clone()
+            } else {
+                format!("{at}.{path}")
+            };
+            let note = serde_json::from_value(note.clone()).map_err(|error| {
+                format!("{}: the evidence note on `{path}`: {error}", rank.file)
+            })?;
+            notes.push((rank.file.clone(), path, note));
+        }
+    }
+    Ok(notes)
 }
 
 /// A library folder that cannot be read, with the reason.
@@ -249,6 +329,11 @@ impl std::error::Error for LibraryError {}
 
 impl Library {
     /// The built-in library: the species and programs compiled in.
+    ///
+    /// # Panics
+    ///
+    /// Panics on a compiled-in source or rank file that is invalid, which
+    /// the library's tests rule out.
     #[must_use]
     pub fn builtin() -> &'static Self {
         static BUILTIN: OnceLock<Library> = OnceLock::new();
@@ -260,7 +345,11 @@ impl Library {
                     family: species.family.to_string(),
                     genus: species.genus.to_string(),
                     path: None,
-                    source: Cow::Borrowed(species.source),
+                    own: Cow::Borrowed(species.own),
+                    // The build script merged it where rank files stand
+                    // above it.
+                    merged: (species.source != species.own)
+                        .then_some(Cow::Borrowed(species.source)),
                     conditions: species.conditions.map(Cow::Borrowed),
                     shed: species.shed.map(Cow::Borrowed),
                     niche: species.niche.map(Cow::Borrowed),
@@ -287,6 +376,14 @@ impl Library {
                         ((*id).to_string(), source)
                     })
                     .collect(),
+                ranks: RANKS
+                    .iter()
+                    .map(|(file, text)| {
+                        let rank = RankFile::parse(file, text)
+                            .unwrap_or_else(|error| panic!("library/{file}: {error}"));
+                        ((*file).to_string(), rank)
+                    })
+                    .collect(),
             }
             .with_chains()
         })
@@ -296,18 +393,20 @@ impl Library {
     /// species tree in `root/library/<family>/<genus>/<id>/spec.json` and
     /// programs in `root/programs/<name>.lsys`, either of which may be
     /// missing but not both. A species or program replaces a built-in one
-    /// of the same id or name. Every spec and the sections beside it
-    /// (`conditions.json`, `shed.json`, `niche.json`) are read and checked
-    /// now; other files beside them (sections a later revision reads) are
-    /// left alone.
+    /// of the same id or name, and a rank file (`library/_ranks/…`,
+    /// `family.json`, `genus.json`) the built-in one at the same path.
+    /// Every spec, merged onto the rank files above it, the sections
+    /// beside it (`conditions.json`, `shed.json`, `niche.json`) and every
+    /// rank file are read and checked now; other files beside them
+    /// (sections a later revision reads) are left alone.
     ///
     /// # Errors
     ///
     /// Fails on a folder or file that cannot be read, a folder named
     /// against the tree's rules, a species folder without its
     /// `spec.json`, a spec whose `id` is not its folder's, an invalid
-    /// section or one naming another species, an id twice, or a program
-    /// file whose name is not a program name.
+    /// spec, section or rank file, a section naming another species, an
+    /// id twice, or a program file whose name is not a program name.
     pub fn from_dir(root: &Path) -> Result<Self, LibraryError> {
         let tree = root.join("library");
         let programs = root.join("programs");
@@ -349,10 +448,27 @@ impl Library {
                 library.sources.insert(id.to_string(), source);
             }
         }
+        let rank_files = if tree.is_dir() {
+            rank_files_in(&tree)?
+        } else {
+            Vec::new()
+        };
+        let ranks_read = !rank_files.is_empty();
+        for (file, path) in rank_files {
+            let text = fs::read_to_string(&path).map_err(|error| {
+                LibraryError(format!("cannot read {}: {error}", path.display()))
+            })?;
+            let rank = RankFile::parse(&file, &text)
+                .map_err(|error| LibraryError(format!("{}: {error}", path.display())))?;
+            library.ranks.insert(file, rank);
+        }
         if tree.is_dir() {
             let mut read: BTreeMap<String, Entry> = BTreeMap::new();
             for family in folders(&tree)? {
-                if family.file_name().is_some_and(|name| name == "sources") {
+                if family
+                    .file_name()
+                    .is_some_and(|name| name == "sources" || name == inherit::RANKS)
+                {
                     continue;
                 }
                 let family_name = folder_name(&family, "a family", is_taxon_name)?;
@@ -394,7 +510,8 @@ impl Library {
                             family: family_name.clone(),
                             genus: genus_name.clone(),
                             path: Some(path),
-                            source: Cow::Owned(source),
+                            own: Cow::Owned(source),
+                            merged: None,
                             conditions: section(&folder, "conditions.json")?,
                             shed: section(&folder, "shed.json")?,
                             niche: section(&folder, "niche.json")?,
@@ -438,8 +555,77 @@ impl Library {
                     .insert(name.to_string(), Cow::Owned(source));
             }
         }
+        let at_tree = |error: String| LibraryError(format!("{}/{error}", tree.display()));
+        library.check_ranks().map_err(at_tree)?;
+        // New rank files may stand above built-in species too.
+        library.merge_specs(ranks_read).map_err(at_tree)?;
+        for entry in &library.species {
+            serde_json::from_str::<PlantSpec>(entry.source())
+                .map_err(|error| at_tree(format!("{}: invalid spec: {error}", entry.file())))?;
+        }
         library.check_citations().map_err(LibraryError)?;
         Ok(library.with_chains())
+    }
+
+    /// Merge each species' spec onto the rank files above it: every
+    /// species' when `all`, else those read from a folder.
+    fn merge_specs(&mut self, all: bool) -> Result<(), String> {
+        for entry in &mut self.species {
+            if !all && entry.path.is_none() {
+                continue;
+            }
+            let above = inherit::above(&self.ranks, &entry.family, &entry.genus)?;
+            entry.merged =
+                inherit::effective_text(&entry.file(), &entry.own, &above)?.map(Cow::Owned);
+        }
+        Ok(())
+    }
+
+    /// Check every rank file against the library: the chain above it
+    /// (each parent there, ranks in order, no loop), its forms (growth
+    /// forms), the programs it names, and its values, which must fit a
+    /// spec: laid over a built-in species' spec, without its nulls, each
+    /// part parses as one.
+    ///
+    /// # Errors
+    ///
+    /// Names the first rank file that fails, and why.
+    pub fn check_ranks(&self) -> Result<(), String> {
+        if self.ranks.is_empty() {
+            return Ok(());
+        }
+        let probes: Vec<Value> = Self::builtin()
+            .species
+            .iter()
+            .filter_map(|entry| serde_json::from_str(entry.source()).ok())
+            .collect();
+        for rank in self.ranks.values() {
+            inherit::chain(&self.ranks, &rank.file)?;
+            for (at, part) in rank.parts() {
+                let label = if at.is_empty() {
+                    rank.file.clone()
+                } else {
+                    format!("{}, {at}", rank.file)
+                };
+                if let Some(form) = at.strip_prefix("forms.")
+                    && serde_json::from_value::<GrowthForm>(Value::String(form.into())).is_err()
+                {
+                    return Err(format!("{label}: `{form}` is not a growth form"));
+                }
+                if let Some(program) = part
+                    .values
+                    .get("generator")
+                    .and_then(|generator| generator.get("program"))
+                    .and_then(Value::as_str)
+                    && self.program(program).is_none()
+                {
+                    return Err(format!("{label}: unknown program `{program}`"));
+                }
+                fits(part, &probes)
+                    .map_err(|error| format!("{label}: its values do not fit a spec: {error}"))?;
+            }
+        }
+        Ok(())
     }
 
     /// The source `id`, if the library holds it.
@@ -453,57 +639,69 @@ impl Library {
         self.sources.values()
     }
 
-    /// Every value that cites the source `id`: in each species' spec,
-    /// niche and shed, the paths of the evidence notes naming it. A source
-    /// need not be in the library to be looked for, so this also finds what
-    /// still cites a source being removed.
+    /// Every value that cites the source `id`: in each species' own spec,
+    /// niche and shed, then in each rank file, the paths of the evidence
+    /// notes naming it. A source need not be in the library to be looked
+    /// for, so this also finds what still cites a source being removed.
     ///
     /// # Errors
     ///
-    /// Fails on a section that cannot be parsed.
+    /// Fails on a section or note that cannot be parsed.
     pub fn citations(&self, id: &str) -> Result<Vec<Citation>, String> {
-        let mut found = Vec::new();
-        for entry in &self.species {
-            for (section, notes) in entry.notes()? {
-                found.extend(
-                    notes
-                        .into_iter()
-                        .filter(|(_, note)| note.source.as_deref() == Some(id))
-                        .map(|(path, _)| Citation {
-                            species: entry.id.clone(),
-                            section,
-                            path,
-                        }),
-                );
-            }
-        }
-        Ok(found)
+        Ok(self
+            .notes()?
+            .into_iter()
+            .filter(|(_, _, note)| note.source.as_deref() == Some(id))
+            .map(|(file, path, _)| Citation { file, path })
+            .collect())
     }
 
-    /// Every evidence note of every species names a source the library
-    /// holds, or none.
+    /// Every evidence note of every species and rank file names a source
+    /// the library holds, or none.
     ///
     /// # Errors
     ///
     /// Names the first note citing an unknown source.
     pub fn check_citations(&self) -> Result<(), String> {
-        for entry in &self.species {
-            for (section, notes) in entry.notes()? {
-                for (path, note) in notes {
-                    if let Some(id) = note
-                        .source
-                        .as_deref()
-                        .filter(|id| !self.sources.contains_key(*id))
-                    {
-                        return Err(format!(
-                            "{}'s {section}: the evidence note on `{path}` cites `{id}`, which is not in the library's sources/",
-                            entry.id
-                        ));
-                    }
-                }
+        for (file, path, note) in self.notes()? {
+            note.check()
+                .map_err(|error| format!("{file}: the evidence note on `{path}`: {error}"))?;
+            if let Some(id) = note
+                .source
+                .as_deref()
+                .filter(|id| !self.sources.contains_key(*id))
+            {
+                return Err(format!(
+                    "{file}: the evidence note on `{path}` cites `{id}`, which is not in the library's sources/"
+                ));
             }
         }
         Ok(())
+    }
+
+    /// Every evidence note in the library: each species' own (its spec,
+    /// niche and shed), then each rank file's.
+    fn notes(&self) -> Result<Vec<Note>, String> {
+        let mut notes = Vec::new();
+        for entry in &self.species {
+            notes.extend(entry.notes()?);
+        }
+        for rank in self.ranks.values() {
+            notes.extend(rank_notes(rank)?);
+        }
+        Ok(notes)
+    }
+
+    /// Every rank file, sorted by its path in the tree.
+    pub fn ranks(&self) -> impl Iterator<Item = &RankFile> {
+        self.ranks.values()
+    }
+
+    /// The rank file at `file`, its path in the tree
+    /// (`sapindaceae/family.json`), if the library has it.
+    #[must_use]
+    pub fn rank(&self, file: &str) -> Option<&RankFile> {
+        self.ranks.get(file)
     }
 
     /// The folder the library was read from; `None` for the built-in one.
@@ -530,7 +728,32 @@ impl Library {
     ///
     /// Fails if the library has no such species or its spec is invalid.
     pub fn spec(&self, id: &str) -> Result<PlantSpec, SpecError> {
-        let entry = self.entry(id).ok_or_else(|| {
+        let entry = self.known(id)?;
+        PlantSpec::from_json_in(entry.source(), self).map_err(|error| match &entry.path {
+            Some(path) => SpecError(format!("{}: {error}", path.display())),
+            None => error,
+        })
+    }
+
+    /// The species `id`'s spec as it inherits it: the files it is merged
+    /// from, nearest first, and the file that set each value and each
+    /// evidence note (`plantc check` prints them).
+    ///
+    /// # Errors
+    ///
+    /// Fails if the library has no such species or its own spec is not a
+    /// JSON object.
+    pub fn inherited(&self, id: &str) -> Result<Inherited, SpecError> {
+        let entry = self.known(id)?;
+        let above = inherit::above(&self.ranks, &entry.family, &entry.genus).map_err(SpecError)?;
+        let own: Value = serde_json::from_str(&entry.own)
+            .map_err(|error| SpecError(format!("{}: {error}", entry.file())))?;
+        inherit::inherit(&entry.file(), &own, &above).map_err(SpecError)
+    }
+
+    /// The species `id`, or an error listing the species there are.
+    fn known(&self, id: &str) -> Result<&Entry, SpecError> {
+        self.entry(id).ok_or_else(|| {
             let known: Vec<&str> = self.species.iter().map(|entry| entry.id.as_str()).collect();
             SpecError(match &self.root {
                 None => format!(
@@ -543,10 +766,6 @@ impl Library {
                     known.join(", ")
                 ),
             })
-        })?;
-        PlantSpec::from_json_in(entry.source(), self).map_err(|error| match &entry.path {
-            Some(path) => SpecError(format!("{}: {error}", path.display())),
-            None => error,
         })
     }
 
@@ -605,6 +824,85 @@ impl Library {
     pub fn programs(&self) -> impl Iterator<Item = &str> {
         self.programs.keys().map(String::as_str)
     }
+}
+
+/// The rank files in the library tree `tree`, by their path in it:
+/// `_ranks/<rank>/<name>.json`, `<family>/family.json` and
+/// `<family>/<genus>/genus.json`.
+fn rank_files_in(tree: &Path) -> Result<Vec<(String, PathBuf)>, LibraryError> {
+    let mut found = Vec::new();
+    let ranks = tree.join(inherit::RANKS);
+    if ranks.is_dir() {
+        for rank in folders(&ranks)? {
+            let rank_name = folder_name(&rank, "a rank", is_id)?;
+            for path in files(&rank)? {
+                if path.extension().is_none_or(|extension| extension != "json") {
+                    continue;
+                }
+                let file_name = path
+                    .file_name()
+                    .and_then(|name| name.to_str())
+                    .ok_or_else(|| LibraryError(format!("{} has no UTF-8 name", path.display())))?
+                    .to_string();
+                found.push((format!("{}/{rank_name}/{file_name}", inherit::RANKS), path));
+            }
+        }
+    }
+    for family in folders(tree)? {
+        if family
+            .file_name()
+            .is_some_and(|name| name == "sources" || name == inherit::RANKS)
+        {
+            continue;
+        }
+        let family_name = folder_name(&family, "a family", is_taxon_name)?;
+        if family.join("family.json").is_file() {
+            found.push((
+                format!("{family_name}/family.json"),
+                family.join("family.json"),
+            ));
+        }
+        for genus in folders(&family)? {
+            let genus_name = folder_name(&genus, "a genus", is_taxon_name)?;
+            if genus.join("genus.json").is_file() {
+                found.push((
+                    format!("{family_name}/{genus_name}/genus.json"),
+                    genus.join("genus.json"),
+                ));
+            }
+        }
+    }
+    Ok(found)
+}
+
+/// Whether a rank file's part fits a spec: laid over one of `probes`
+/// (complete specs), without its nulls, it parses as one. Any probe will
+/// do, so a part that sets some of a section only the species below it
+/// complete fits wherever a probe has that section.
+fn fits(part: &Part, probes: &[Value]) -> Result<(), String> {
+    let values = inherit::without_nulls(&part.values);
+    let mut first = None;
+    for probe in probes {
+        let Value::Object(mut spec) = probe.clone() else {
+            continue;
+        };
+        inherit::patch(&mut spec, &values);
+        if !part.notes.is_empty() {
+            let mut evidence = match spec.remove("evidence") {
+                Some(Value::Object(evidence)) => evidence,
+                _ => serde_json::Map::new(),
+            };
+            evidence.extend(part.notes.clone());
+            spec.insert("evidence".into(), Value::Object(evidence));
+        }
+        match serde_json::from_value::<PlantSpec>(Value::Object(spec)) {
+            Ok(_) => return Ok(()),
+            Err(error) => {
+                first.get_or_insert_with(|| error.to_string());
+            }
+        }
+    }
+    Err(first.unwrap_or_else(|| "no built-in spec to try it on".into()))
 }
 
 /// The section `name` beside a spec in `folder`, if the folder has it.
@@ -708,7 +1006,7 @@ mod tests {
     use std::fs;
     use std::path::{Path, PathBuf};
 
-    use super::{Citation, LIBRARY, Library, SOURCES, niche_source, source, species};
+    use super::{Citation, LIBRARY, Library, RANKS, SOURCES, niche_source, source, species};
     use crate::spec::{PROGRAMS, PlantSpec};
 
     fn lower_name(name: &str) -> bool {
@@ -735,16 +1033,37 @@ mod tests {
     /// typical site, `conditions.json`, and where those sections are
     /// written, where it grows, `niche.json`, and what falls from it,
     /// `shed.json`; families end in "aceae"; no id twice, and nothing
-    /// anywhere else but the `sources/` folder beside the families.
+    /// anywhere else but the `sources/` and `_ranks/` folders beside the
+    /// families and the rank files (`family.json`, `genus.json`) in a
+    /// family's and a genus's folder.
     #[test]
     fn the_library_keeps_the_tree_rules() {
         let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("library");
         let mut ids = BTreeSet::new();
         let mut walked = 0;
+        let mut ranks = 0;
         for family in entries(&root) {
             let family_name = family.file_name().unwrap().to_str().unwrap();
             // The sources values cite sit beside the families.
             if family_name == "sources" {
+                continue;
+            }
+            // So do the ranks kept flat, a folder per rank.
+            if family_name == crate::inherit::RANKS {
+                for rank in entries(&family) {
+                    assert!(rank.is_dir(), "{} is not a rank folder", rank.display());
+                    for file in entries(&rank) {
+                        assert!(
+                            file.is_file()
+                                && file
+                                    .extension()
+                                    .is_some_and(|extension| extension == "json"),
+                            "{} is not a rank file",
+                            file.display()
+                        );
+                        ranks += 1;
+                    }
+                }
                 continue;
             }
             assert!(
@@ -758,6 +1077,10 @@ mod tests {
             );
             for genus in entries(&family) {
                 let genus_name = genus.file_name().unwrap().to_str().unwrap();
+                if genus_name == "family.json" {
+                    ranks += 1;
+                    continue;
+                }
                 assert!(genus.is_dir(), "{} is not a genus folder", genus.display());
                 assert!(
                     lower_name(genus_name) && !genus_name.contains('-'),
@@ -765,6 +1088,10 @@ mod tests {
                 );
                 for folder in entries(&genus) {
                     let id = folder.file_name().unwrap().to_str().unwrap();
+                    if id == "genus.json" {
+                        ranks += 1;
+                        continue;
+                    }
                     assert!(
                         folder.is_dir(),
                         "{} is not a species folder",
@@ -809,6 +1136,7 @@ mod tests {
             LIBRARY.len(),
             "the build script compiles every folder in"
         );
+        assert_eq!(ranks, RANKS.len(), "and every rank file");
     }
 
     /// Every built-in species' typical site is valid and names a preset
@@ -838,6 +1166,70 @@ mod tests {
         let library = Library::builtin();
         assert_eq!(library.sources().count(), SOURCES.len());
         library.check_citations().unwrap();
+        // And every rank file, with the chain above it.
+        assert_eq!(library.ranks().count(), RANKS.len());
+        library.check_ranks().unwrap();
+    }
+
+    /// The paths of a JSON value's leaves (an array is one) and their
+    /// values, leaving out its `evidence`.
+    fn leaves(value: &serde_json::Value, at: &str, found: &mut Vec<(String, serde_json::Value)>) {
+        match value {
+            serde_json::Value::Object(map) => {
+                for (key, inside) in map {
+                    if at.is_empty() && key == "evidence" {
+                        continue;
+                    }
+                    let path = if at.is_empty() {
+                        key.clone()
+                    } else {
+                        format!("{at}.{key}")
+                    };
+                    leaves(inside, &path, found);
+                }
+            }
+            _ => found.push((at.to_string(), value.clone())),
+        }
+    }
+
+    /// A species' spec keeps every value and note of its own file, the
+    /// nearest in its chain, and is what the library merges at run time;
+    /// `source` gives it, as `Entry::source` does.
+    #[test]
+    fn every_species_keeps_its_own_values() {
+        let library = Library::builtin();
+        for entry in library.species() {
+            let own: serde_json::Value = serde_json::from_str(entry.own_source()).unwrap();
+            let merged: serde_json::Value = serde_json::from_str(entry.source()).unwrap();
+            let mut found = Vec::new();
+            leaves(&own, "", &mut found);
+            let merged_map = merged.as_object().unwrap();
+            for (path, value) in found {
+                assert_eq!(
+                    crate::inherit::find(merged_map, &path),
+                    Some(&value),
+                    "{} {path}",
+                    entry.id
+                );
+            }
+            if let Some(notes) = own.get("evidence").and_then(|notes| notes.as_object()) {
+                for (path, note) in notes {
+                    assert_eq!(
+                        merged["evidence"].get(path),
+                        Some(note),
+                        "{} {path}",
+                        entry.id
+                    );
+                }
+            }
+            assert_eq!(
+                library.inherited(&entry.id).unwrap().spec,
+                merged,
+                "{}",
+                entry.id
+            );
+            assert_eq!(source(&entry.id), entry.source());
+        }
     }
 
     const SOURCE: &str = r#"{"id": "flora-test", "title": "A test flora",
@@ -873,28 +1265,32 @@ mod tests {
             .unwrap()
             .clone();
         folder.write(&format!("{species}/shed.json"), &cite(shed, &shed_note));
+        // And a rank file above it, in one form's part.
+        folder.write(
+            "library/pinaceae/family.json",
+            r#"{"schema": 1, "rank": "family", "name": "Pinaceae",
+                "forms": {"excurrent_tree": {"tier": "procedural_proxy",
+                    "evidence": {"tier": {"evidence": "Authored", "source": "flora-test",
+                        "note": "Every Pinaceae tree is a proxy until fitted."}}}}}"#,
+        );
         let library = Library::from_dir(&folder.0).unwrap();
         assert_eq!(library.source("flora-test").unwrap().title, "A test flora");
         assert!(library.source("no-such-source").is_none());
         library.spec("pseudotsuga-menziesii").unwrap();
         let found = library.citations("flora-test").unwrap();
+        let at = |file: &str, path: &str| Citation {
+            file: format!("pinaceae/pseudotsuga/pseudotsuga-menziesii/{file}"),
+            path: path.into(),
+        };
         assert_eq!(
             found,
             [
+                at("spec.json", "allometry"),
+                at("niche.json", "moisture"),
+                at("shed.json", &shed_note),
                 Citation {
-                    species: "pseudotsuga-menziesii".into(),
-                    section: "spec.json",
-                    path: "allometry".into(),
-                },
-                Citation {
-                    species: "pseudotsuga-menziesii".into(),
-                    section: "niche.json",
-                    path: "moisture".into(),
-                },
-                Citation {
-                    species: "pseudotsuga-menziesii".into(),
-                    section: "shed.json",
-                    path: shed_note.clone(),
+                    file: "pinaceae/family.json".into(),
+                    path: "forms.excurrent_tree.tier".into(),
                 },
             ]
         );
@@ -910,6 +1306,16 @@ mod tests {
         fs::remove_file(folder.0.join("library/sources/flora-test.json")).unwrap();
         let error = Library::from_dir(&folder.0).unwrap_err().0;
         assert!(error.contains("cites `flora-test`"), "{error}");
+        // A rank file's too.
+        for file in ["spec.json", "niche.json", "shed.json"] {
+            fs::remove_file(folder.0.join(species).join(file)).unwrap();
+        }
+        fs::remove_dir(folder.0.join(species)).unwrap();
+        let error = Library::from_dir(&folder.0).unwrap_err().0;
+        assert!(
+            error.contains("pinaceae/family.json: the evidence note on `forms.excurrent_tree.tier` cites `flora-test`"),
+            "{error}"
+        );
     }
 
     #[test]
@@ -1236,6 +1642,168 @@ mod tests {
                 .key,
             built_in.key
         );
+    }
+
+    /// A spec split over its family's and its genus's files and an
+    /// overlay of its own is the whole spec again, and builds the package
+    /// the whole spec builds: the key hashes the merged spec. Each value
+    /// and note says which file it came from.
+    #[test]
+    fn a_spec_split_over_rank_files_builds_the_same_package() {
+        use crate::package::{DEFAULT_DAY, Inputs};
+        use crate::quality::STANDARD;
+        use serde_json::{Value, json};
+        let id = "pseudotsuga-menziesii";
+        let whole: Value = serde_json::from_str(source(id)).unwrap();
+        let mut own = whole.as_object().unwrap().clone();
+        let mut evidence = own["evidence"].as_object().unwrap().clone();
+        let mut family = json!({"schema": 1, "rank": "family", "name": "Pinaceae"});
+        family["appearance"] = own.remove("appearance").unwrap();
+        family["evidence"] = json!({"appearance": evidence.remove("appearance").unwrap()});
+        own.insert("evidence".into(), Value::Object(evidence));
+        let mut genus = json!({"schema": 1, "rank": "genus", "name": "Pseudotsuga"});
+        genus["growth"] = own.remove("growth").unwrap();
+        genus["variants"] = own.remove("variants").unwrap();
+        let folder = Folder::new("split");
+        folder.write("library/pinaceae/family.json", &family.to_string());
+        folder.write(
+            "library/pinaceae/pseudotsuga/genus.json",
+            &genus.to_string(),
+        );
+        let file = format!("pinaceae/pseudotsuga/{id}/spec.json");
+        folder.write(
+            &format!("library/{file}"),
+            &serde_json::to_string_pretty(&own).unwrap(),
+        );
+        let library = Library::from_dir(&folder.0).unwrap();
+        let spec = library.spec(id).unwrap();
+        assert_eq!(spec, PlantSpec::builtin(id).unwrap());
+        let built_in =
+            Inputs::on_day(&PlantSpec::builtin(id).unwrap(), &STANDARD, DEFAULT_DAY).unwrap();
+        let from_ranks = Inputs::on_day_in(&spec, &library, &STANDARD, DEFAULT_DAY).unwrap();
+        assert_eq!(from_ranks.key, built_in.key);
+        let entry = library.entry(id).unwrap();
+        assert_ne!(entry.own_source(), entry.source());
+        let inherited = library.inherited(id).unwrap();
+        assert_eq!(
+            inherited.chain,
+            [
+                file.as_str(),
+                "pinaceae/pseudotsuga/genus.json",
+                "pinaceae/family.json"
+            ]
+        );
+        assert_eq!(
+            inherited.origins["growth.step"],
+            "pinaceae/pseudotsuga/genus.json"
+        );
+        assert_eq!(
+            inherited.origins["appearance.foliage"],
+            "pinaceae/family.json"
+        );
+        assert_eq!(inherited.origins["taxon.common_name"], file);
+        assert_eq!(inherited.notes["appearance"], "pinaceae/family.json");
+        assert_eq!(inherited.notes["allometry"], file);
+    }
+
+    /// A folder's rank files stand above the built-in species of their
+    /// taxa too, and only those.
+    #[test]
+    fn rank_files_in_a_folder_reach_built_in_species() {
+        let folder = Folder::new("ranks");
+        folder.write(
+            "library/_ranks/order/pinales.json",
+            r#"{"schema": 1, "rank": "order", "name": "Pinales",
+                "generator": {"params": {"order_test": 2.0}},
+                "evidence": {"generator.params.order_test":
+                    {"evidence": "Authored", "note": "The order's."}}}"#,
+        );
+        folder.write(
+            "library/pinaceae/family.json",
+            r#"{"schema": 1, "rank": "family", "name": "Pinaceae", "parent": "order/pinales",
+                "forms": {"excurrent_tree": {"generator": {"params": {"family_test": 1.0}}}}}"#,
+        );
+        let library = Library::from_dir(&folder.0).unwrap();
+        assert_eq!(library.ranks().count(), RANKS.len() + 2);
+        assert_eq!(
+            library
+                .rank("pinaceae/family.json")
+                .unwrap()
+                .parent
+                .as_deref(),
+            Some("_ranks/order/pinales.json")
+        );
+        let inherited = library.inherited("pseudotsuga-menziesii").unwrap();
+        assert_eq!(
+            inherited.origins["generator.params.order_test"],
+            "_ranks/order/pinales.json"
+        );
+        assert_eq!(
+            inherited.origins["generator.params.family_test"],
+            "pinaceae/family.json, forms.excurrent_tree"
+        );
+        // The order's note stays: nothing nearer sets that param.
+        assert_eq!(
+            inherited.notes["generator.params.order_test"],
+            "_ranks/order/pinales.json"
+        );
+        let merged: serde_json::Value =
+            serde_json::from_str(library.entry("pseudotsuga-menziesii").unwrap().source()).unwrap();
+        assert_eq!(merged["generator"]["params"]["order_test"], 2.0);
+        // A maple is no conifer.
+        assert_eq!(
+            library.entry("acer-macrophyllum").unwrap().source(),
+            source("acer-macrophyllum")
+        );
+    }
+
+    #[test]
+    fn rank_files_against_the_library_are_refused() {
+        let refused = |files: &[(&str, &str)], expected: &str| {
+            let folder = Folder::new("refused-ranks");
+            for (relative, text) in files {
+                folder.write(relative, text);
+            }
+            let message = Library::from_dir(&folder.0).unwrap_err().0;
+            assert!(message.contains(expected), "{message}");
+        };
+        let family = |extra: &str| {
+            format!(r#"{{"schema": 1, "rank": "family", "name": "Pinaceae"{extra}}}"#)
+        };
+        let at = "library/pinaceae/family.json";
+        refused(&[(at, "{}")], "pinaceae/family.json: `schema` must be 1");
+        refused(
+            &[(at, &family(r#", "generator": {"program": "no-such"}"#))],
+            "pinaceae/family.json: unknown program `no-such`",
+        );
+        refused(
+            &[(at, &family(r#", "forms": {"tree": {}}"#))],
+            "pinaceae/family.json, forms.tree: `tree` is not a growth form",
+        );
+        refused(
+            &[(at, &family(r#", "generator": {"paramz": {}}"#))],
+            "pinaceae/family.json: its values do not fit a spec: unknown field `paramz`",
+        );
+        refused(
+            &[(at, &family(r#", "forms": {"shrub": {"tier": 3}}"#))],
+            "pinaceae/family.json, forms.shrub: its values do not fit a spec",
+        );
+        refused(
+            &[(at, &family(r#", "parent": "order/pinales""#))],
+            "pinaceae/family.json: its parent _ranks/order/pinales.json is not in the library",
+        );
+        refused(
+            &[("library/_ranks/Order/pinales.json", "{}")],
+            "is not named as a rank folder",
+        );
+        // A part may leave a section to the species below it, and delete
+        // what is set above it.
+        let folder = Folder::new("partial-ranks");
+        folder.write(
+            at,
+            &family(r#", "appearance": {"foliage": [0.1, 0.3, 0.1]}, "allometry": null"#),
+        );
+        Library::from_dir(&folder.0).unwrap();
     }
 
     fn source_of_program(name: &str) -> &'static str {

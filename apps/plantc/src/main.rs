@@ -107,6 +107,7 @@ fn run() -> Result<(), Failure> {
     match command.as_str() {
         "list" => list(),
         "check" => check(&args),
+        "spec" => spec_command(&args),
         "grow" => grow_command(&args),
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
@@ -132,7 +133,12 @@ Usage:
   plantc list
       List the species and plant programs, by family.
   plantc check <species|spec.json|program.lsys>
-      Check a spec or a program and report the first problem with its line.
+      Check a spec or a program and report the first problem with its line;
+      for a species, name the rank files its spec stands on.
+  plantc spec <species>
+      Print the species' spec value by value, each with the file that set
+      it: its own spec.json or a rank file above it (family.json,
+      genus.json, library/_ranks/), then each evidence note's file.
   plantc grow <species|spec.json> [--env ENV] [--seed N] [--years N]
       Grow one variant and print its size at every keyframe.
   plantc render <species|spec.json> --out FILE.png [--env ENV] [--seed N]
@@ -186,14 +192,17 @@ Usage:
       Check every object of a package and summarise it.
   plantc sources [list | cite ID]
       List the sources evidence notes cite (library/sources/<id>.json),
-      or every value that cites the source ID: species, section file and
-      the note's path, one per line.
+      or every value that cites the source ID: the file holding its note,
+      by its path in the library, and the note's path, one per line.
 
 A species is an id (see `plantc list`) or a path to a spec file.
 Every command accepts --library DIR: a folder holding a species tree,
 library/<family>/<genus>/<id>/spec.json, and programs, programs/<name>.lsys,
 which replace built-in species and programs of the same id or name and add
-to them.
+to them. Its rank files (library/<family>/family.json,
+library/<family>/<genus>/genus.json, library/_ranks/<rank>/<name>.json)
+replace built-in ones at the same path; each species' spec is its own
+spec.json merged onto those above it, the nearer file winning.
 grow, render, sheet, atlas and build accept --program FILE.lsys to try a
 changed program in place of the species' built-in one. render, sheet,
 parts, lineup and build accept --day N (1 to 365, default 196): the day
@@ -370,12 +379,7 @@ fn sources_command(args: &[String]) -> Result<(), Failure> {
             let id = args.get(1).ok_or("`sources cite` needs a source id")?;
             let found = library.citations(id)?;
             for citation in &found {
-                out!(
-                    "{} {} {}",
-                    citation.species,
-                    citation.section,
-                    citation.path
-                );
+                out!("{} {}", citation.file, citation.path);
             }
             if library.source(id).is_none() {
                 eprintln!("plantc: the library holds no source `{id}`");
@@ -421,6 +425,44 @@ fn check(args: &[String]) -> Result<(), Failure> {
         spec.variant_list().len(),
         spec.growth.keyframes
     );
+    if Path::new(target)
+        .extension()
+        .is_none_or(|ext| ext != "json")
+    {
+        let inherited = library()
+            .inherited(target)
+            .map_err(|error| error.to_string())?;
+        if inherited.chain.len() > 1 {
+            out!("  stands on {}", inherited.chain[1..].join(", "));
+        }
+    }
+    Ok(())
+}
+
+fn spec_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &[])?;
+    let id = options.one_positional("a species")?;
+    let inherited = library().inherited(id).map_err(|error| error.to_string())?;
+    match inherited.chain.split_first() {
+        Some((own, above)) if !above.is_empty() => {
+            out!("{id}: {own} on {}", above.join(", "));
+        }
+        _ => out!("{id}: {}", inherited.chain.join(", ")),
+    }
+    let spec = inherited
+        .spec
+        .as_object()
+        .ok_or("a spec is a JSON object")?;
+    for (path, file) in &inherited.origins {
+        let value = plantgen::inherit::find(spec, path).map(ToString::to_string);
+        out!("  {path} = {}  ({file})", value.unwrap_or_default());
+    }
+    if !inherited.notes.is_empty() {
+        out!("evidence:");
+        for (path, file) in &inherited.notes {
+            out!("  {path}  ({file})");
+        }
+    }
     Ok(())
 }
 
