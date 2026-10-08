@@ -11,15 +11,15 @@
     "program": "sapindaceae",
     "params": {
       "crown_height": 26,
-      "crown_radius": 8.3,
-      "crown_base": 4.5,
+      "crown_radius": 9.5,
+      "crown_base": 2.5,
       "crown_rate": 0.027,
       "height_rate": 0.038,
-      "crown_vary": 0.25,
-      "height_vary": 0.15,
+      "crown_vary": 0.3,
+      "height_vary": 0.25,
       "widest_vary": 0.1,
-      "crown_bumps": 0.3,
-      "crown_bump_size": 3,
+      "crown_bumps": 0.2,
+      "crown_bump_size": 4,
       "space_density": 30,
       "space_kill": 0.4,
       "space_reach": 1.8,
@@ -29,6 +29,7 @@
       "leaf_size": 0.5,
       "spur_leaf": 0.4,
       "spur_pairs": 1,
+      "spur_light": 0.15,
       "leaf_area": 0.29,
       "lean": 9,
       "wiggle": 7,
@@ -68,7 +69,7 @@
       "roughness": 0.4
     },
     "foliage": [0.09, 0.2, 0.03],
-    "foliage_shade": [0.03, 0.08, 0.02],
+    "foliage_shade": [0.06, 0.14, 0.03],
     "variation": 0.25,
     "organs": {
       "leaf": {
@@ -172,15 +173,15 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
-      "note": "Hand-set from photographs of open-grown trees: a broad, dense, rounded crown about as wide as it is tall; a short trunk that leans and divides low into three stems; opposite buds; leaves on long petioles about 0.3 m across, and leaf area per card matched to the drawn leaf. Not fitted to measurements. Growth plan G1 (2026-10-08): grown by the `sapindaceae` program (terminal flowering forks the shoots; shoots rise; space renews where limbs are shed, and limbs that no longer pay their way are shed) to 250 years (typical life 50-200 years, feis-acemac; \"well over 200\" in the San Juan Islands, islandhistories), with keyframes spaced roughly geometrically (and 30 years, the age ivy grows on it). Its architecture follows Scarrone's model: terminal racemes fork the shoots (Acer pseudoplatanus is Scarrone in Legner et al. 2013; see plantgen/forms/G1-ARCHITECTURE.md). Open-grown crowns are about as wide as the tree is tall and trunks 0.6-2 m dbh (feis-acemac); leaf blade 15-30 cm wide on a 15-25 cm petiole (kpu-plantdb), which the 0.4 m card with a 0.42 petiole share matches. Fitted 2026-10-08 against the Urban Tree Database (see allometry) and Joshi's photographs of open-grown trees: the crown envelope (crown_radius 8.3, crown_rate 0.027, crown_height 26, height_rate 0.038) to its crown widths and heights by age; space_density 30, space_kill 0.4 and space_reach 1.8 so shoots fill the crown finely enough that it reads as dense from the side (about 10 to 15 % see-through in plantc renders); one leaf pair a year on a short shoot (spur_pairs 1), which also keeps leaf area per crown area near the database's 6 to 7.5 m²/m²; pipe_rings 8e-6 for its dbh by age. Each plant draws its own crown: radius within 25 % and height within 15 % of the envelope's (crown_vary, height_vary; the database's trees aged 72 to 78 years span 13.9 to 21.6 m in crown diameter and 17 to 30.5 m in height), and its widest point within 0.1 of the crown's depth. Billows (crown_bumps 0.3, crown_bump_size 3 m) are set by eye from photographs of open-grown crowns, whose surfaces are mosaics of foliage domes a few metres across. Known gap: young crowns (30 to 70 years) hold about 50 % more leaf area than the database's trees."
+      "note": "Hand-set from photographs of open-grown trees: a broad, dense, rounded crown about as wide as it is tall; a short trunk that leans and divides low into three stems; opposite buds; leaves on long petioles about 0.3 m across, and leaf area per card matched to the drawn leaf. Not fitted to measurements. Growth plan G1 (2026-10-08): grown by the `sapindaceae` program (terminal flowering forks the shoots; shoots rise; space renews where limbs are shed, and limbs that no longer pay their way are shed) to 250 years (typical life 50-200 years, feis-acemac; \"well over 200\" in the San Juan Islands, islandhistories), with keyframes spaced roughly geometrically (and 30 years, the age ivy grows on it). Its architecture follows Scarrone's model: terminal racemes fork the shoots (Acer pseudoplatanus is Scarrone in Legner et al. 2013; see plantgen/forms/G1-ARCHITECTURE.md). Open-grown crowns are about as wide as the tree is tall and trunks 0.6-2 m dbh (feis-acemac); leaf blade 15-30 cm wide on a 15-25 cm petiole (kpu-plantdb), which the 0.4 m card with a 0.42 petiole share matches. Fitted 2026-10-08 against the Urban Tree Database (see allometry) and Joshi's photographs of open-grown trees: the crown's height (crown_height 26, height_rate 0.038) to the database's heights by age; its width (crown_radius 9.5, crown_rate 0.027) between the database's park and street trees, whose crowns start 2 to 6 m up and are a median 0.67 times as wide as tall, and feis-acemac's open-grown trees, \"generally as wide-spreading as they are tall\" with \"branches that often grow low to the ground\" (the 2011 champion spreads 32 m at 27 m tall), so that seeds grow crowns about 0.6 to 1.0 times as wide as tall at 120 years; crown_base 2.5 lets the lower crown reach down toward the ground; space_density 30, space_kill 0.4 and space_reach 1.8 so shoots fill the crown finely enough that it reads as dense from the side (about 10 to 15 % see-through in plantc renders); one leaf pair a year on a short shoot (spur_pairs 1), which also keeps leaf area per crown area near the database's 6 to 7.5 m²/m²; pipe_rings 8e-6 for its dbh by age. Each plant draws its own crown: radius within 30 % and height within 25 % of the envelope's (crown_vary, height_vary). The database's 30 trees over 20 years old scatter about its fitted curves with a standard deviation of 0.15 in log height and in log crown diameter, nearly independently (r = 0.13), which uniform draws within 26 % and 27 % match; crown_vary is a little wider for the broad open-grown forms. Its widest point lies within 0.1 of the crown's depth either way. Billows (crown_bumps 0.2, crown_bump_size 4 m) are set by eye from photographs of open-grown crowns, whose surfaces are mosaics of foliage domes a few metres across; at 0.3, narrow crowns grew overhanging lobes. Short shoots leaf out only in at least 0.15 of the open sky's light (spur_light, broadleaf's 0.1), which trims leaves deep in young crowns. Known gap: crowns of 20 to 50 years still hold 1.3 to 2 times the database's leaf area per crown area (8 to 13 against 3 to 7.6 m²/m²). The database estimates leaf area from photographs, and this tree's leaves are at the top of the species' size range: a 0.4 m card draws 470 cm², against a mean of 280 cm² in feis-acemac."
     },
     "allometry": {
       "evidence": "SourceInferred",
-      "note": "USDA Forest Service Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005, public domain): its fitted age-to-dbh and dbh-to-height equations for bigleaf maple in the Pacific Northwest region (Longview, WA; 40 open-grown park and street trees aged 1 to 150 years), evaluated at 30, 50, 75 and 120 years. The same equations give crown diameters of 10.7, 14.4, 17.0 and 18.9 m and leaf areas of 594, 1034, 1483 and 2117 m², which the crown envelope (crown_radius, crown_rate, crown_height, height_rate) was fitted to."
+      "note": "USDA Forest Service Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005, public domain): its fitted age-to-dbh and dbh-to-height equations for bigleaf maple in the Pacific Northwest region (Longview, WA; 40 open-grown park and street trees aged 1 to 150 years), evaluated at 30, 50, 75 and 120 years. The same equations give crown diameters of 10.7, 14.4, 17.0 and 18.9 m and leaf areas of 594, 1034, 1483 and 2117 m², which the crown's height (crown_height, height_rate) was fitted to; its width is set wider for trees grown in the open (see generator.params)."
     },
     "appearance": {
       "evidence": "Authored",
-      "note": "Colours chosen by eye from photographs. Leaf: five deep, sparsely toothed lobes on a long petiole. Bark: shallow twisting ridges, a buttressed base and moss on the upper side of thick limbs, as on coastal trees. Fruit (plant roadmap P4), as in mid-July: hanging racemes of paired samaras about 4 cm long, green and bristly at the seed. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: hanging racemes of yellow-green flowers in April; samaras green all summer, brown in September and October, falling into the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth when young, then grey-brown and shallowly furrowed into narrow interlacing ridges; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves smaller and more deeply lobed than the large thin shade leaves inside the crown; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
+      "note": "Colours chosen by eye from photographs. Leaf: five deep, sparsely toothed lobes on a long petiole. Bark: shallow twisting ridges, a buttressed base and moss on the upper side of thick limbs, as on coastal trees. Fruit (plant roadmap P4), as in mid-July: hanging racemes of paired samaras about 4 cm long, green and bristly at the seed. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: hanging racemes of yellow-green flowers in April; samaras green all summer, brown in September and October, falling into the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth when young, then grey-brown and shallowly furrowed into narrow interlacing ridges; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves smaller and more deeply lobed than the large thin shade leaves inside the crown; set from general knowledge of sun and shade leaves and juvenile foliage, not measured. Shade colour (foliage_shade, 2026-10-08) about 0.7 of the sun colour: a leaf's colour moves toward it with the shade it grows in, and most leaves of a dense crown sit in a fifth of the open sky's light or less. With the old shade colour, 0.4 of the sun colour, plantc side renders drew the crown at 0.08 of the sky's brightness, against 0.29 to 0.36 in four photographs of open-grown trees."
     }
   },
   "provenance": {
@@ -196,6 +197,16 @@
       {
         "title": "Project After contributors: hand-set species values",
         "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "McPherson, van Doorn and Peper 2016, Urban Tree Database (RDS-2016-0005), USDA Forest Service: bigleaf maple, Pacific Northwest region",
+        "url": "https://www.fs.usda.gov/rds/archive/products/RDS-2016-0005/",
+        "licence": "public domain (US Government work)"
+      },
+      {
+        "title": "Fire Effects Information System (FEIS), USDA Forest Service: Acer macrophyllum (feis-acemac)",
+        "url": "https://www.fs.usda.gov/database/feis/plants/tree/acemac/all.html",
+        "licence": "public domain (US Government work)"
       }
     ],
     "contributors": ["Project After"],
