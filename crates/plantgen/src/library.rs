@@ -14,6 +14,11 @@
 //! them. A package's key hashes a spec's and a program's text, never where
 //! they came from, so a file holding a built-in species' text builds that
 //! species' built-in package.
+//!
+//! Beside the families, `library/sources/<id>.json` holds the sources that
+//! evidence notes cite by id ([`crate::evidence::Source`]), one file each,
+//! so every value from one source can be listed ([`Library::citations`])
+//! and removed together.
 
 use std::borrow::Cow;
 use std::collections::BTreeMap;
@@ -23,6 +28,7 @@ use std::path::{Path, PathBuf};
 use std::sync::OnceLock;
 
 use crate::conditions::Conditions;
+use crate::evidence::{FieldEvidence, Source};
 use crate::niche::Niche;
 use crate::shed::Shed;
 use crate::spec::{PROGRAMS, PlantSpec, SpecError};
@@ -110,6 +116,18 @@ pub struct Library {
     /// Each program that extends another, joined with the programs it
     /// builds on (see [`Library::program`]).
     chains: BTreeMap<String, String>,
+    /// The sources evidence notes cite, by id.
+    sources: BTreeMap<String, Source>,
+}
+
+/// One value that cites a source: the species, the section's file and the
+/// note's path within it.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Citation {
+    pub species: String,
+    /// `spec.json`, `niche.json` or `shed.json`.
+    pub section: &'static str,
+    pub path: String,
 }
 
 /// One species of a [`Library`].
@@ -194,6 +212,20 @@ impl Entry {
         Ok(Some(niche))
     }
 
+    /// The evidence notes of its spec, niche and shed, by section file.
+    fn notes(&self) -> Result<Vec<(&'static str, BTreeMap<String, FieldEvidence>)>, String> {
+        let spec: PlantSpec = serde_json::from_str(&self.source)
+            .map_err(|error| format!("{}'s spec.json: {error}", self.id))?;
+        let mut notes = vec![("spec.json", spec.evidence)];
+        if let Some(niche) = self.niche()? {
+            notes.push(("niche.json", niche.evidence));
+        }
+        if let Some(shed) = self.shed()? {
+            notes.push(("shed.json", shed.evidence));
+        }
+        Ok(notes)
+    }
+
     /// Check every section beside the spec.
     fn check_sections(&self) -> Result<(), String> {
         self.conditions()?;
@@ -243,6 +275,18 @@ impl Library {
                     .map(|(name, source)| ((*name).to_string(), Cow::Borrowed(*source)))
                     .collect(),
                 chains: BTreeMap::new(),
+                sources: SOURCES
+                    .iter()
+                    .map(|(id, text)| {
+                        let source = Source::from_json(text)
+                            .unwrap_or_else(|error| panic!("library/sources/{id}.json: {error}"));
+                        assert_eq!(
+                            source.id, *id,
+                            "library/sources/{id}.json must name its own file's id"
+                        );
+                        ((*id).to_string(), source)
+                    })
+                    .collect(),
             }
             .with_chains()
         })
@@ -275,9 +319,42 @@ impl Library {
         }
         let mut library = Self::builtin().clone();
         library.root = Some(root.to_path_buf());
+        if tree.join("sources").is_dir() {
+            for path in files(&tree.join("sources"))? {
+                if path.extension().is_none_or(|extension| extension != "json") {
+                    continue;
+                }
+                let id = path
+                    .file_stem()
+                    .and_then(|stem| stem.to_str())
+                    .filter(|stem| crate::evidence::is_source_id(stem))
+                    .ok_or_else(|| {
+                        LibraryError(format!(
+                            "{} is not named as a source: lowercase letters, digits and hyphens",
+                            path.display()
+                        ))
+                    })?;
+                let text = fs::read_to_string(&path).map_err(|error| {
+                    LibraryError(format!("cannot read {}: {error}", path.display()))
+                })?;
+                let source = Source::from_json(&text)
+                    .map_err(|error| LibraryError(format!("{}: {error}", path.display())))?;
+                if source.id != id {
+                    return Err(LibraryError(format!(
+                        "{} must be the source `{id}`, its file's name; it names `{}`",
+                        path.display(),
+                        source.id
+                    )));
+                }
+                library.sources.insert(id.to_string(), source);
+            }
+        }
         if tree.is_dir() {
             let mut read: BTreeMap<String, Entry> = BTreeMap::new();
             for family in folders(&tree)? {
+                if family.file_name().is_some_and(|name| name == "sources") {
+                    continue;
+                }
                 let family_name = folder_name(&family, "a family", is_taxon_name)?;
                 for genus in folders(&family)? {
                     let genus_name = folder_name(&genus, "a genus", is_taxon_name)?;
@@ -361,7 +438,72 @@ impl Library {
                     .insert(name.to_string(), Cow::Owned(source));
             }
         }
+        library.check_citations().map_err(LibraryError)?;
         Ok(library.with_chains())
+    }
+
+    /// The source `id`, if the library holds it.
+    #[must_use]
+    pub fn source(&self, id: &str) -> Option<&Source> {
+        self.sources.get(id)
+    }
+
+    /// Every source, sorted by id.
+    pub fn sources(&self) -> impl Iterator<Item = &Source> {
+        self.sources.values()
+    }
+
+    /// Every value that cites the source `id`: in each species' spec,
+    /// niche and shed, the paths of the evidence notes naming it. A source
+    /// need not be in the library to be looked for, so this also finds what
+    /// still cites a source being removed.
+    ///
+    /// # Errors
+    ///
+    /// Fails on a section that cannot be parsed.
+    pub fn citations(&self, id: &str) -> Result<Vec<Citation>, String> {
+        let mut found = Vec::new();
+        for entry in &self.species {
+            for (section, notes) in entry.notes()? {
+                found.extend(
+                    notes
+                        .into_iter()
+                        .filter(|(_, note)| note.source.as_deref() == Some(id))
+                        .map(|(path, _)| Citation {
+                            species: entry.id.clone(),
+                            section,
+                            path,
+                        }),
+                );
+            }
+        }
+        Ok(found)
+    }
+
+    /// Every evidence note of every species names a source the library
+    /// holds, or none.
+    ///
+    /// # Errors
+    ///
+    /// Names the first note citing an unknown source.
+    pub fn check_citations(&self) -> Result<(), String> {
+        for entry in &self.species {
+            for (section, notes) in entry.notes()? {
+                for (path, note) in notes {
+                    if let Some(id) = note
+                        .source
+                        .as_deref()
+                        .filter(|id| !self.sources.contains_key(*id))
+                    {
+                        return Err(format!(
+                            "{}'s {section}: the evidence note on `{path}` cites `{id}`, which is not in the library's sources/",
+                            entry.id
+                        ));
+                    }
+                }
+            }
+        }
+        Ok(())
     }
 
     /// The folder the library was read from; `None` for the built-in one.
@@ -566,7 +708,7 @@ mod tests {
     use std::fs;
     use std::path::{Path, PathBuf};
 
-    use super::{LIBRARY, Library, niche_source, source, species};
+    use super::{Citation, LIBRARY, Library, SOURCES, niche_source, source, species};
     use crate::spec::{PROGRAMS, PlantSpec};
 
     fn lower_name(name: &str) -> bool {
@@ -593,7 +735,7 @@ mod tests {
     /// typical site, `conditions.json`, and where those sections are
     /// written, where it grows, `niche.json`, and what falls from it,
     /// `shed.json`; families end in "aceae"; no id twice, and nothing
-    /// anywhere else.
+    /// anywhere else but the `sources/` folder beside the families.
     #[test]
     fn the_library_keeps_the_tree_rules() {
         let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("library");
@@ -601,6 +743,10 @@ mod tests {
         let mut walked = 0;
         for family in entries(&root) {
             let family_name = family.file_name().unwrap().to_str().unwrap();
+            // The sources values cite sit beside the families.
+            if family_name == "sources" {
+                continue;
+            }
             assert!(
                 family.is_dir(),
                 "{} is not a family folder",
@@ -686,6 +832,110 @@ mod tests {
     fn every_built_in_section_is_valid() {
         for entry in Library::builtin().species() {
             entry.check_sections().unwrap();
+        }
+        // Every built-in source is valid (`Library::builtin` panics on one
+        // that is not) and every note cites one it holds.
+        let library = Library::builtin();
+        assert_eq!(library.sources().count(), SOURCES.len());
+        library.check_citations().unwrap();
+    }
+
+    const SOURCE: &str = r#"{"id": "flora-test", "title": "A test flora",
+        "authors": "Test authors", "year": 2026, "licence": "CC0-1.0",
+        "tier": 1, "kind": "text"}"#;
+
+    #[test]
+    fn values_cite_sources_by_id_and_are_found_by_them() {
+        let folder = Folder::new("sources");
+        folder.write("library/sources/flora-test.json", SOURCE);
+        // A spec, its niche and its shed each citing the source.
+        let cite = |text: &str, path: &str| {
+            let mut value: serde_json::Value = serde_json::from_str(text).unwrap();
+            value["evidence"][path]["source"] = "flora-test".into();
+            serde_json::to_string_pretty(&value).unwrap()
+        };
+        let species = "library/pinaceae/pseudotsuga/pseudotsuga-menziesii";
+        let entry = Library::builtin().entry("pseudotsuga-menziesii").unwrap();
+        folder.write(
+            &format!("{species}/spec.json"),
+            &cite(source("pseudotsuga-menziesii"), "allometry"),
+        );
+        folder.write(
+            &format!("{species}/niche.json"),
+            &cite(niche_source("pseudotsuga-menziesii"), "moisture"),
+        );
+        let shed = entry.shed.as_deref().expect("the Douglas-fir sheds");
+        let shed_note = serde_json::from_str::<serde_json::Value>(shed).unwrap()["evidence"]
+            .as_object()
+            .unwrap()
+            .keys()
+            .next()
+            .unwrap()
+            .clone();
+        folder.write(&format!("{species}/shed.json"), &cite(shed, &shed_note));
+        let library = Library::from_dir(&folder.0).unwrap();
+        assert_eq!(library.source("flora-test").unwrap().title, "A test flora");
+        assert!(library.source("no-such-source").is_none());
+        library.spec("pseudotsuga-menziesii").unwrap();
+        let found = library.citations("flora-test").unwrap();
+        assert_eq!(
+            found,
+            [
+                Citation {
+                    species: "pseudotsuga-menziesii".into(),
+                    section: "spec.json",
+                    path: "allometry".into(),
+                },
+                Citation {
+                    species: "pseudotsuga-menziesii".into(),
+                    section: "niche.json",
+                    path: "moisture".into(),
+                },
+                Citation {
+                    species: "pseudotsuga-menziesii".into(),
+                    section: "shed.json",
+                    path: shed_note.clone(),
+                },
+            ]
+        );
+        assert!(library.citations("no-such-source").unwrap().is_empty());
+        assert!(
+            Library::builtin()
+                .citations("flora-test")
+                .unwrap()
+                .is_empty()
+        );
+
+        // Without the source, the citing notes are refused.
+        fs::remove_file(folder.0.join("library/sources/flora-test.json")).unwrap();
+        let error = Library::from_dir(&folder.0).unwrap_err().0;
+        assert!(error.contains("cites `flora-test`"), "{error}");
+    }
+
+    #[test]
+    fn sources_against_the_rules_are_refused() {
+        for (file, text, wanted) in [
+            ("Flora.json", SOURCE.to_string(), "not named as a source"),
+            (
+                "other-flora.json",
+                SOURCE.to_string(),
+                "must be the source `other-flora`",
+            ),
+            (
+                "flora-test.json",
+                SOURCE.replace("\"tier\": 1", "\"tier\": 9"),
+                "tier 9",
+            ),
+            (
+                "flora-test.json",
+                SOURCE.replace("\"kind\"", "\"sort\""),
+                "invalid source",
+            ),
+        ] {
+            let folder = Folder::new("bad-sources");
+            folder.write(&format!("library/sources/{file}"), &text);
+            let error = Library::from_dir(&folder.0).unwrap_err().0;
+            assert!(error.contains(wanted), "{file}: {error}");
         }
     }
 

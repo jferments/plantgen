@@ -84,6 +84,42 @@ pub fn drawn_area(look: &Look, template: &Template) -> f64 {
     template.area() * (1.0 + look.shape.cross().unwrap_or(0.0))
 }
 
+/// The share of a card `shape` draws solid: its texels at least half
+/// covered, which a renderer's cut-out keeps, sampled once per texel of a
+/// [`FILL_SAMPLES`]-wide grid. Cluster cards (`crate::mesh`) need it to
+/// count how much of a cell overlapping organs fill. Remembered per shape,
+/// since a plant asks for it at every level of every keyframe.
+#[must_use]
+pub fn fill_share(shape: &Shape) -> f64 {
+    static SHARES: std::sync::OnceLock<std::sync::Mutex<std::collections::BTreeMap<String, f64>>> =
+        std::sync::OnceLock::new();
+    let key = format!("{shape:?}");
+    let shares = SHARES.get_or_init(Default::default);
+    if let Some(&share) = shares.lock().ok().as_ref().and_then(|s| s.get(&key)) {
+        return share;
+    }
+    let aspect = shape.aspect();
+    let veins = grown_veins(shape);
+    let mut kept = 0_usize;
+    for y in 0..FILL_SAMPLES {
+        for x in 0..FILL_SAMPLES {
+            let u = (to_f64(x) + 0.5) / to_f64(FILL_SAMPLES);
+            let v = (to_f64(y) + 0.5) / to_f64(FILL_SAMPLES);
+            if draw(shape, (u - 0.5) * aspect, v, veins.as_ref()).cover >= 0.5 {
+                kept += 1;
+            }
+        }
+    }
+    let solid = to_f64(kept) / to_f64(FILL_SAMPLES * FILL_SAMPLES);
+    if let Ok(mut shares) = shares.lock() {
+        shares.insert(key, solid);
+    }
+    solid
+}
+
+/// Samples a side for [`fill_share`].
+pub const FILL_SAMPLES: usize = 64;
+
 /// One template per organ type, indexed like the program's organ types,
 /// then two per body type, its spines seen face on and from the side.
 #[derive(Debug, Clone, PartialEq)]
