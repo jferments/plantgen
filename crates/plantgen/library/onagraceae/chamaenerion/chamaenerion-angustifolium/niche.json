@@ -19,54 +19,67 @@
   "evidence": {
     "layers": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "A tall perennial herb of the herb layer."
     },
     "moisture": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Colonises open, disturbed ground across most moisture levels; scarce on waterlogged soil."
     },
     "heat_load": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Grows on every aspect in the open."
     },
     "elevation_m": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Lowland clearings to subalpine slopes."
     },
     "max_slope_deg": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Colonises slides and steep, raw slopes."
     },
     "shade_tolerance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Very intolerant of shade: abundant after fire or clearing and fading as the canopy closes."
     },
     "coldest_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Very cold winters borne: coldest-month means from about −25 °C (gone by −35 °C), as across the boreal forest."
     },
     "hard_freeze_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Among the hardiest: lows to about −50 °C borne."
     },
     "warmest_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range, warmest-month means from about 8 to 24 °C; gone below 5 °C, where summers are too short, and above 28 °C."
     },
     "degree_days_0": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range, about 600 or more degree-days above 0 °C, none below 300."
     },
     "degree_days_5": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range, about 200 or more degree-days above 5 °C, none below 50."
     },
     "moisture_index": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "A moisture index from about 0.45, gone by 0.3."
     },
     "summer_rain": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "No limit in its range: summer-dry coasts to continental summer rain."
     }
   },

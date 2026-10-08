@@ -19,54 +19,67 @@
   "evidence": {
     "layers": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Forms dense thickets along streams, in wet hollows and under alder."
     },
     "moisture": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Moist to wet ground; streamsides and seeps."
     },
     "heat_load": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Grows on any aspect."
     },
     "elevation_m": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Sea level to about 900 m in western Washington; the upper limits are loose."
     },
     "max_slope_deg": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Grows on flats and moderate slopes."
     },
     "shade_tolerance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Grows in part shade under alder and in the open."
     },
     "coldest_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "A mild maritime winter: coldest-month means from about −4 °C (gone by −9 °C), as along the coast and in the lowlands west of the Cascades and Coast Mountains."
     },
     "hard_freeze_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Winter lows of the maritime Northwest: lows to about −24 °C borne, gone where the year's coldest night falls below about −32 °C."
     },
     "warmest_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range, warmest-month means from about 11.5 to 23.5 °C; gone below 9 °C, where summers are too short, and above 27 °C."
     },
     "degree_days_0": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "A long cool growing season: about 2,300 or more degree-days above 0 °C, none below 1,500."
     },
     "degree_days_5": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "About 1,000 or more degree-days above 5 °C, none below 550: the warmth of the maritime lowlands and lower mountain slopes."
     },
     "moisture_index": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range, a moisture index from about 0.62, gone by 0.5."
     },
     "summer_rain": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "The summer-dry Pacific climate: no lower limit; its range lies where at most about 0.4 of the year's precipitation falls in summer."
     }
   },

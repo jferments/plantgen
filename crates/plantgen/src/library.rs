@@ -581,6 +581,7 @@ impl Library {
         }
         library.check_citations().map_err(LibraryError)?;
         library.check_evidence().map_err(LibraryError)?;
+        library.check_taxa().map_err(LibraryError)?;
         Ok(library.with_chains())
     }
 
@@ -731,17 +732,67 @@ impl Library {
     }
 
     /// Every species' spec, as it inherits it, carries per-value evidence
-    /// ([`PlantSpec::check_evidence`]).
+    /// ([`PlantSpec::check_evidence`]), and every note of its niche and
+    /// shed cites a source (their own checks hold them to a note on every
+    /// value; [`Library::check_citations`] to sources the library holds).
     ///
     /// # Errors
     ///
-    /// Names the first species whose spec fails, and why.
+    /// Names the first species whose spec fails, or the first niche or
+    /// shed note that cites no source.
     pub fn check_evidence(&self) -> Result<(), String> {
         for entry in &self.species {
             let document: Value = serde_json::from_str(entry.source())
                 .map_err(|error| format!("{}: {error}", entry.file()))?;
             PlantSpec::check_evidence(&document, self)
                 .map_err(|error| format!("{}: {error}", entry.file()))?;
+        }
+        for (file, path, note) in self.notes()? {
+            if note.source.is_none() {
+                return Err(format!(
+                    "{file}: the evidence note on `{path}` cites no source"
+                ));
+            }
+        }
+        Ok(())
+    }
+
+    /// Every species' taxon agrees with its folders, where it names them:
+    /// its `family` is the family folder's name (WCVP's spelling, in lower
+    /// case), its `genus` the genus folder's, and the first word of its
+    /// `scientific_name` is that genus.
+    ///
+    /// # Errors
+    ///
+    /// Names the first species whose taxon disagrees, and how.
+    pub fn check_taxa(&self) -> Result<(), String> {
+        for entry in &self.species {
+            let spec: PlantSpec = serde_json::from_str(entry.source())
+                .map_err(|error| format!("{}: {error}", entry.file()))?;
+            let taxon = &spec.taxon;
+            let disagree = |what: &str, named: &str, folder: &str| {
+                Err(format!(
+                    "{}: taxon.{what} is `{named}`, but its folder is `{folder}`",
+                    entry.file()
+                ))
+            };
+            if let Some(family) = &taxon.family
+                && family.to_lowercase() != entry.family
+            {
+                return disagree("family", family, &entry.family);
+            }
+            if let Some(genus) = &taxon.genus {
+                if genus.to_lowercase() != entry.genus {
+                    return disagree("genus", genus, &entry.genus);
+                }
+                if taxon.scientific_name.split_whitespace().next() != Some(genus.as_str()) {
+                    return Err(format!(
+                        "{}: taxon.scientific_name `{}` is not written in its genus `{genus}`",
+                        entry.file(),
+                        taxon.scientific_name
+                    ));
+                }
+            }
         }
         Ok(())
     }
@@ -1291,6 +1342,17 @@ mod tests {
         library.check_citations().unwrap();
         // Every value of every species' spec has its note, citing a source.
         library.check_evidence().unwrap();
+        // Every built-in species names its WCVP family, its genus and its
+        // accepted taxon's plant_name_id, and they agree with its folders.
+        library.check_taxa().unwrap();
+        for entry in library.species() {
+            let taxon = library.spec(&entry.id).unwrap().taxon;
+            assert!(
+                taxon.family.is_some() && taxon.genus.is_some() && taxon.plant_name_id.is_some(),
+                "{}",
+                entry.id
+            );
+        }
         // And every rank file, with the chain above it, and every trait
         // and rule.
         assert_eq!(library.ranks().count(), RANKS.len());
@@ -1394,6 +1456,35 @@ mod tests {
         }
     }
 
+    #[test]
+    fn a_taxon_must_agree_with_its_folders() {
+        let species = "library/pinaceae/pseudotsuga/pseudotsuga-menziesii/spec.json";
+        for (from, to, wanted) in [
+            (
+                "\"family\": \"Pinaceae\"",
+                "\"family\": \"Cupressaceae\"",
+                "taxon.family is `Cupressaceae`",
+            ),
+            (
+                "\"genus\": \"Pseudotsuga\"",
+                "\"genus\": \"Abies\"",
+                "taxon.genus is `Abies`",
+            ),
+            (
+                "\"genus\": \"Pseudotsuga\"",
+                "\"genus\": \"pseudotsuga\"",
+                "is not written in its genus",
+            ),
+        ] {
+            let folder = Folder::new("taxa");
+            let text = source("pseudotsuga-menziesii");
+            assert!(text.contains(from), "{from}");
+            folder.write(species, &text.replace(from, to));
+            let error = Library::from_dir(&folder.0).unwrap_err().0;
+            assert!(error.contains(wanted), "{wanted}: {error}");
+        }
+    }
+
     const SOURCE: &str = r#"{"id": "flora-test", "title": "A test flora",
         "authors": "Test authors", "year": 2026, "licence": "CC0-1.0",
         "tier": 1, "kind": "text"}"#;
@@ -1463,6 +1554,25 @@ mod tests {
                 .unwrap()
                 .is_empty()
         );
+
+        // A niche note must cite a source.
+        let uncited = {
+            let mut niche: serde_json::Value =
+                serde_json::from_str(niche_source("pseudotsuga-menziesii")).unwrap();
+            niche["evidence"]["moisture"]
+                .as_object_mut()
+                .unwrap()
+                .remove("source");
+            serde_json::to_string_pretty(&niche).unwrap()
+        };
+        let kept = fs::read_to_string(folder.0.join(format!("{species}/niche.json"))).unwrap();
+        folder.write(&format!("{species}/niche.json"), &uncited);
+        let error = Library::from_dir(&folder.0).unwrap_err().0;
+        assert!(
+            error.contains("niche.json: the evidence note on `moisture` cites no source"),
+            "{error}"
+        );
+        folder.write(&format!("{species}/niche.json"), &kept);
 
         // Without the source, the citing notes are refused.
         fs::remove_file(folder.0.join("library/sources/flora-test.json")).unwrap();
@@ -1630,7 +1740,10 @@ mod tests {
         // not read.
         let new_species = source("thuja-plicata")
             .replace("\"thuja-plicata\"", "\"zelkova-test\"")
-            .replace("\"program\": \"conifer\"", "\"program\": \"conifer-test\"");
+            .replace("\"program\": \"conifer\"", "\"program\": \"conifer-test\"")
+            .replace("\"Thuja plicata\"", "\"Zelkova test\"")
+            .replace("\"family\": \"Cupressaceae\"", "\"family\": \"Ulmaceae\"")
+            .replace("\"genus\": \"Thuja\"", "\"genus\": \"Zelkova\"");
         folder.write(
             "library/ulmaceae/zelkova/zelkova-test/spec.json",
             &new_species,

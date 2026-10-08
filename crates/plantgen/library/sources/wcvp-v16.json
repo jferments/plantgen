@@ -1,0 +1,10 @@
+{
+  "id": "wcvp-v16",
+  "title": "World Checklist of Vascular Plants (WCVP), version 16 (wcvp.zip of 2026-06-04, sha256 d32ea2b3a85e489b14e83bcc9eae7274532e1d113753f7be290d4b2dfde573fa); doi:10.34885/egs6-cp24",
+  "authors": "Govaerts, R. (ed.), Royal Botanic Gardens, Kew; data paper Govaerts, Nic Lughadha, Black, Turner and Paton (2021), Scientific Data 8:215",
+  "year": 2026,
+  "url": "https://sftp.kew.org/pub/data-repositories/WCVP/wcvp.zip",
+  "licence": "CC-BY-4.0",
+  "tier": 1,
+  "kind": "dataset"
+}
