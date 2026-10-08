@@ -1,0 +1,6 @@
+{
+  "schema": 1,
+  "rank": "clade",
+  "name": "rosids",
+  "parent": "clade/superrosids"
+}

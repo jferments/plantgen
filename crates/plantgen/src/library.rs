@@ -1752,7 +1752,12 @@ mod tests {
                 "forms": {"excurrent_tree": {"generator": {"params": {"family_test": 1.0}}}}}"#,
         );
         let library = Library::from_dir(&folder.0).unwrap();
-        assert_eq!(library.ranks().count(), RANKS.len() + 2);
+        // They replace built-in files at the same paths and add the rest.
+        let added = ["_ranks/order/pinales.json", "pinaceae/family.json"]
+            .iter()
+            .filter(|file| !RANKS.iter().any(|(path, _)| path == *file))
+            .count();
+        assert_eq!(library.ranks().count(), RANKS.len() + added);
         assert_eq!(
             library
                 .rank("pinaceae/family.json")
@@ -1817,8 +1822,8 @@ mod tests {
             "pinaceae/family.json, forms.shrub: its values do not fit a spec",
         );
         refused(
-            &[(at, &family(r#", "parent": "order/pinales""#))],
-            "pinaceae/family.json: its parent _ranks/order/pinales.json is not in the library",
+            &[(at, &family(r#", "parent": "order/no-such-order""#))],
+            "pinaceae/family.json: its parent _ranks/order/no-such-order.json is not in the library",
         );
         refused(
             &[("library/_ranks/Order/pinales.json", "{}")],
