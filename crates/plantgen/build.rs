@@ -2,7 +2,8 @@
 //! `library/<family>/<genus>/<id>/spec.json`, with the `conditions.json`,
 //! `shed.json` and `niche.json` beside it, becomes one entry of `library::LIBRARY`,
 //! sorted by path, so
-//! adding a species is adding its folder. No index is kept: the tree is the index. `library`'s tests hold
+//! adding a species is adding its folder. Every `library/sources/<id>.json`
+//! becomes one entry of `library::SOURCES`, sorted by id. No index is kept: the tree is the index. `library`'s tests hold
 //! the tree to its rules.
 
 use std::fmt::Write as _;
@@ -33,6 +34,9 @@ fn main() {
     let mut entries = String::new();
     let mut count = 0_usize;
     for family in folders(&root) {
+        if name(&family) == "sources" {
+            continue;
+        }
         for genus in folders(&family) {
             for species in folders(&genus) {
                 let spec = species.join("spec.json");
@@ -61,12 +65,40 @@ fn main() {
             }
         }
     }
+    // The sources values cite by id, one file each.
+    let mut sources = String::new();
+    let sources_folder = root.join("sources");
+    if sources_folder.is_dir() {
+        let mut files: Vec<PathBuf> = fs::read_dir(&sources_folder)
+            .unwrap_or_else(|error| panic!("cannot read {}: {error}", sources_folder.display()))
+            .map(|entry| entry.expect("a directory entry").path())
+            .filter(|path| {
+                path.extension()
+                    .is_some_and(|extension| extension == "json")
+            })
+            .collect();
+        files.sort();
+        for file in files {
+            let id = file
+                .file_stem()
+                .and_then(|stem| stem.to_str())
+                .unwrap_or_else(|| panic!("{} has no UTF-8 name", file.display()));
+            writeln!(
+                sources,
+                "    ({id:?}, include_str!({:?})),",
+                file.display().to_string()
+            )
+            .expect("writing to a String");
+        }
+    }
     let out = PathBuf::from(std::env::var("OUT_DIR").expect("set by Cargo")).join("library.rs");
     fs::write(
         &out,
         format!(
             "/// Every species of the built-in library ({count}), sorted by family, genus and id.\n\
-             pub const LIBRARY: &[Species] = &[\n{entries}];\n"
+             pub const LIBRARY: &[Species] = &[\n{entries}];\n\
+             /// Every source of the built-in library, by id, as JSON, sorted by id.\n\
+             pub const SOURCES: &[(&str, &str)] = &[\n{sources}];\n"
         ),
     )
     .unwrap_or_else(|error| panic!("cannot write {}: {error}", out.display()));

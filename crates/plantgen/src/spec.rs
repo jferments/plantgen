@@ -12,7 +12,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::body::BodyLook;
 use crate::conditions::{ClassKey, Conditions};
-pub use crate::evidence::{Evidence, FieldEvidence, Provenance, SourceRef};
+pub use crate::evidence::{Evidence, FieldEvidence, Provenance, Source, SourceKind, SourceRef};
 use crate::library::{Entry, Library};
 use crate::looks::{self, Flare, Look, Moss, OrganLook, Ridges};
 use crate::lsys::program::SymbolKind;
@@ -726,8 +726,17 @@ impl PlantSpec {
             return fail("provenance needs at least one source".into());
         }
         for (path, note) in &self.evidence {
-            if let Err(message) = note.check(&self.provenance) {
+            if let Err(message) = note.check() {
                 return fail(format!("the evidence note on `{path}`: {message}"));
+            }
+            if let Some(id) = note
+                .source
+                .as_deref()
+                .filter(|id| library.source(id).is_none())
+            {
+                return fail(format!(
+                    "the evidence note on `{path}` cites `{id}`, which is not in the library's sources/"
+                ));
             }
         }
         if library.program(&self.generator.program).is_none() {
@@ -897,23 +906,19 @@ mod tests {
             .unwrap()
             .replace("\"tier\"", "\"tear\"");
         assert!(PlantSpec::from_json(&text).is_err());
+        // A note's source is a source id the library holds.
         let mut spec = PlantSpec::builtin("pseudotsuga-menziesii").unwrap();
         let note = spec.evidence.get_mut("allometry").unwrap();
-        note.tier = Some(4);
-        note.source = Some(spec.provenance.sources.len() - 1);
-        spec.validate().unwrap();
+        note.source = Some("Not An Id".into());
+        assert!(spec.validate().unwrap_err().0.contains("not a source id"));
         let note = spec.evidence.get_mut("allometry").unwrap();
-        note.source = Some(spec.provenance.sources.len());
+        note.source = Some("no-such-source".into());
         assert!(
             spec.validate()
                 .unwrap_err()
                 .0
-                .contains("note on `allometry`: source")
+                .contains("the evidence note on `allometry` cites `no-such-source`")
         );
-        let note = spec.evidence.get_mut("allometry").unwrap();
-        note.source = None;
-        note.tier = Some(5);
-        assert!(spec.validate().unwrap_err().0.contains("tier 5"));
     }
 
     #[test]
