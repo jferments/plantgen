@@ -22,6 +22,7 @@
 //! and every wood vertex a wind level (0 stem, 1 branch, 2 twig; cards are
 //! level 3) for the wind hierarchy.
 
+use std::cell::RefCell;
 use std::collections::BTreeMap;
 
 use serde::{Deserialize, Serialize};
@@ -1387,49 +1388,165 @@ fn painted(quads: &[[Vec3; 4]], low: Vec3, high: Vec3, axis: Vec3, fill: f64) ->
         (hi[1] - lo[1]).max(1e-9) / to_f64(COVER_GRID),
     ];
     let cell_area = cell[0] * cell[1];
-    let mut through = vec![1.0_f64; COVER_GRID * COVER_GRID];
-    let mut share: BTreeMap<usize, f64> = BTreeMap::new();
-    for quad in quads {
-        // The card seen along `axis`: a corner and its two edges.
-        let flat = quad.map(|c| [c.dot(side) - lo[0], c.dot(rise) - lo[1]]);
-        let edge = |a: usize, b: usize| [flat[b][0] - flat[a][0], flat[b][1] - flat[a][1]];
-        let (e1, e2) = (edge(0, 1), edge(0, 3));
-        let area = (e1[0] * e2[1] - e1[1] * e2[0]).abs();
-        if area <= 0.0 {
-            continue;
-        }
-        let steps = |e: [f64; 2]| {
-            let span = (e[0] / cell[0]).abs().max((e[1] / cell[1]).abs());
-            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-            let n = (2.0 * span).ceil().clamp(1.0, 4.0 * to_f64(COVER_GRID)) as u32;
-            n
-        };
-        let (n1, n2) = (steps(e1), steps(e2));
-        let weight = area / (f64::from(n1) * f64::from(n2)) / cell_area;
-        share.clear();
-        for i in 0..n1 {
-            for j in 0..n2 {
-                let (along, across) = (
-                    (f64::from(i) + 0.5) / f64::from(n1),
-                    (f64::from(j) + 0.5) / f64::from(n2),
-                );
-                let p = [
-                    flat[0][0] + e1[0] * along + e2[0] * across,
-                    flat[0][1] + e1[1] * along + e2[1] * across,
-                ];
+    let inverse = [1.0 / cell[0], 1.0 / cell[1]];
+    PAINT_GRID.with_borrow_mut(|grid| {
+        grid.clear();
+        for quad in quads {
+            // The card seen along `axis`: a corner and its two edges.
+            let flat = quad.map(|c| [c.dot(side) - lo[0], c.dot(rise) - lo[1]]);
+            let edge = |a: usize, b: usize| [flat[b][0] - flat[a][0], flat[b][1] - flat[a][1]];
+            let (e1, e2) = (edge(0, 1), edge(0, 3));
+            let area = (e1[0] * e2[1] - e1[1] * e2[0]).abs();
+            if area <= 0.0 {
+                continue;
+            }
+            let steps = |e: [f64; 2]| {
+                let span = (e[0] / cell[0]).abs().max((e[1] / cell[1]).abs());
                 #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-                let (column, row) = (
-                    ((p[0] / cell[0]).floor().max(0.0) as usize).min(COVER_GRID - 1),
-                    ((p[1] / cell[1]).floor().max(0.0) as usize).min(COVER_GRID - 1),
-                );
-                *share.entry(row * COVER_GRID + column).or_insert(0.0) += weight;
+                let n = (2.0 * span).ceil().clamp(1.0, 4.0 * to_f64(COVER_GRID)) as u32;
+                n
+            };
+            let (n1, n2) = (steps(e1), steps(e2));
+            let weight = area / (f64::from(n1) * f64::from(n2)) / cell_area;
+            // The samples' offsets along the second edge are the same in
+            // every row.
+            grid.offsets.clear();
+            grid.offsets.extend((0..n2).map(|j| {
+                let across = (f64::from(j) + 0.5) / f64::from(n2);
+                [e2[0] * across, e2[1] * across]
+            }));
+            for i in 0..n1 {
+                let along = (f64::from(i) + 0.5) / f64::from(n1);
+                let start = [flat[0][0] + e1[0] * along, flat[0][1] + e1[1] * along];
+                for j in 0..grid.offsets.len() {
+                    let offset = grid.offsets[j];
+                    grid.sample(
+                        cell_index(start[1] + offset[1], cell[1], inverse[1]) * COVER_GRID
+                            + cell_index(start[0] + offset[0], cell[0], inverse[0]),
+                    );
+                }
+            }
+            grid.shade(weight, fill);
+        }
+        grid.stopped() * cell_area
+    })
+}
+
+/// [`painted`]'s grid, kept on each thread between calls so a call costs
+/// what its cards cover rather than the whole grid: the light each cell
+/// lets through, the current card's samples in each cell and the running
+/// sums of its weight, its samples' offsets along its second edge, the
+/// cells it touches, and the cells any card touched (listed and flagged).
+struct PaintGrid {
+    through: Vec<f64>,
+    count: Vec<u32>,
+    sums: Vec<f64>,
+    offsets: Vec<[f64; 2]>,
+    card: Vec<usize>,
+    touched: Vec<usize>,
+    lit: Vec<bool>,
+}
+
+thread_local! {
+    static PAINT_GRID: RefCell<PaintGrid> = RefCell::new(PaintGrid {
+        through: vec![1.0; COVER_GRID * COVER_GRID],
+        count: vec![0; COVER_GRID * COVER_GRID],
+        sums: Vec::new(),
+        offsets: Vec::new(),
+        card: Vec::new(),
+        touched: Vec::new(),
+        lit: vec![false; COVER_GRID * COVER_GRID],
+    });
+}
+
+impl PaintGrid {
+    /// Clears what is left. Each call leaves the grid clear; one cut short
+    /// by a panic would not.
+    fn clear(&mut self) {
+        for &index in &self.card {
+            self.count[index] = 0;
+        }
+        for &index in &self.touched {
+            self.through[index] = 1.0;
+            self.lit[index] = false;
+        }
+        self.card.clear();
+        self.touched.clear();
+    }
+
+    /// Counts one of the current card's samples in the cell `index`.
+    fn sample(&mut self, index: usize) {
+        if self.count[index] == 0 {
+            self.card.push(index);
+        }
+        self.count[index] += 1;
+    }
+
+    /// Lets through `1 - fill o` of each cell the current card's samples
+    /// fell in. Every sample adds the same `weight` to its cell's share
+    /// `o`, so a cell's share is `weight` added once per sample there,
+    /// summed here as the samples would add it.
+    fn shade(&mut self, weight: f64, fill: f64) {
+        let most = self.card.iter().map(|&index| self.count[index]).max();
+        self.sums.clear();
+        self.sums.push(0.0);
+        let mut sum = 0.0;
+        for _ in 0..most.unwrap_or(0) {
+            sum += weight;
+            self.sums.push(sum);
+        }
+        for &index in &self.card {
+            let covered = self.sums[std::mem::take(&mut self.count[index]) as usize];
+            self.through[index] *= 1.0 - fill * covered.min(1.0);
+            if !self.lit[index] {
+                self.lit[index] = true;
+                self.touched.push(index);
             }
         }
-        for (&index, &covered) in &share {
-            through[index] *= 1.0 - fill * covered.min(1.0);
+        self.card.clear();
+    }
+
+    /// The light the cards stopped, in cells, leaving the grid clear. The
+    /// cells no card touched let all of it through and add nothing; the
+    /// others are summed in the grid's order, as the whole grid would be.
+    fn stopped(&mut self) -> f64 {
+        self.touched.sort_unstable();
+        let mut sum = 0.0;
+        for &index in &self.touched {
+            sum += 1.0 - self.through[index];
+            self.through[index] = 1.0;
+            self.lit[index] = false;
+        }
+        self.touched.clear();
+        sum
+    }
+}
+
+/// How near a cell's edge, in cells, a sample is placed by dividing rather
+/// than by multiplying ([`cell_index`]).
+const CELL_EDGE: f64 = 1e-6;
+
+/// The cell along one side of [`painted`]'s grid that `x` falls in, cells
+/// `cell` wide (`inverse` being `1 / cell`), as `floor(x / cell)` kept to
+/// the grid would place it: a float cast truncates toward zero and takes
+/// NaN and negatives to 0, which for an index is `floor().max(0.0)`
+/// without its call into libm. `x * inverse` differs from `x / cell` by a
+/// few units in the last place, so away from a cell's edge it gives the
+/// same cell, and near an edge the division decides.
+fn cell_index(x: f64, cell: f64, inverse: f64) -> usize {
+    let scaled = x * inverse;
+    // Inside the grid (which also turns NaN away).
+    if scaled >= 0.0 && scaled < to_f64(COVER_GRID) {
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let near = scaled as u32;
+        let within = scaled - f64::from(near);
+        if within > CELL_EDGE && within < 1.0 - CELL_EDGE {
+            return near as usize;
         }
     }
-    through.iter().map(|t| 1.0 - t).sum::<f64>() * cell_area
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let index = (x / cell) as usize;
+    index.min(COVER_GRID - 1)
 }
 
 impl Cluster {
