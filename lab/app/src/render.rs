@@ -793,11 +793,13 @@ pub(crate) fn camera_look(
     images: &mut Assets<Image>,
 ) {
     let sky = Color::linear_rgb(light.sky_color[0], light.sky_color[1], light.sky_color[2]);
+    let ev100 = exposure(light);
     match look {
         Look::Review => {
             camera.remove::<(EnvironmentMapLight, ScreenSpaceAmbientOcclusion)>();
             camera.insert((
                 Tonemapping::None,
+                Exposure { ev100 },
                 AmbientLight {
                     color: sky,
                     brightness: light.sky_brightness,
