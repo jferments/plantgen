@@ -1278,47 +1278,235 @@ fn cards(
 fn organ_cards(graph: &PlantGraph, looks: &[Look], solid: &[bool], variation: f32) -> Vec<Card> {
     let mut cards = Vec::new();
     for organ in &graph.organs {
-        let index = usize::from(organ.organ);
-        if solid.get(index).copied().unwrap_or(false) {
+        if solid
+            .get(usize::from(organ.organ))
+            .copied()
+            .unwrap_or(false)
+        {
             continue;
         }
-        let Some(look) = looks.get(index) else {
-            continue;
-        };
-        // A sun, shade or juvenile leaf is drawn with its family's look
-        // (plant roadmap P4), placed and coloured as its type's.
-        let (drawn, share) = look.forms.of(index, organ.light, organ.born);
-        let (Some(shown), Ok(template)) = (looks.get(drawn), u8::try_from(drawn)) else {
-            continue;
-        };
-        let (base, heading, left) = place(organ, look);
-        let card = Placed {
-            base,
-            heading,
-            left,
-            length: organ.size * share,
-            width: organ.size * share * shown.shape.aspect(),
-            color: organ_color(look, variation, organ.light, organ.id),
-            template,
-            born: organ.born,
-            shed: organ.shed,
-            bend: shown.bend,
-        };
-        if let Some(cross) = shown.shape.cross() {
-            // A second card across the first keeps organs that stand
-            // out all round their axis full when seen edge on.
-            cards.push(
-                Placed {
-                    left: heading.cross(left),
-                    width: card.width * cross,
-                    ..card
-                }
-                .finish(),
-            );
-        }
-        cards.push(card.finish());
+        organ_card(organ, looks, variation, 1.0, None, &mut cards);
     }
     cards
+}
+
+/// `organ`'s card as level 0 draws it, `widen` times as wide, and a second
+/// across it for organs that stand out all round their axis, or else, when
+/// `across` is given, one that share of the card's width (a thick leaf's
+/// edge).
+fn organ_card(
+    organ: &GraphOrgan,
+    looks: &[Look],
+    variation: f32,
+    widen: f64,
+    across: Option<f64>,
+    out: &mut Vec<Card>,
+) {
+    let index = usize::from(organ.organ);
+    let Some(look) = looks.get(index) else {
+        return;
+    };
+    // A sun, shade or juvenile leaf is drawn with its family's look
+    // (plant roadmap P4), placed and coloured as its type's.
+    let (drawn, share) = look.forms.of(index, organ.light, organ.born);
+    let (Some(shown), Ok(template)) = (looks.get(drawn), u8::try_from(drawn)) else {
+        return;
+    };
+    let (base, heading, left) = place(organ, look);
+    let card = Placed {
+        base,
+        heading,
+        left,
+        length: organ.size * share,
+        width: organ.size * share * shown.shape.aspect() * widen,
+        color: organ_color(look, variation, organ.light, organ.id),
+        template,
+        born: organ.born,
+        shed: organ.shed,
+        bend: shown.bend,
+    };
+    if let Some(cross) = shown.shape.cross().or(across) {
+        // A second card across the first keeps organs that stand
+        // out all round their axis full when seen edge on.
+        out.push(
+            Placed {
+                left: heading.cross(left),
+                width: card.width * cross,
+                ..card
+            }
+            .finish(),
+        );
+    }
+    out.push(card.finish());
+}
+
+/// The quads of `organ`'s card, `widen` times as wide, as the levels that
+/// keep it draw it: bent by its look, traced at its base, middle and tip
+/// (two quads), and the card across it for organs that stand out all
+/// round their axis.
+fn organ_quads(organ: &GraphOrgan, look: &Look, widen: f64) -> Vec<[Vec3; 4]> {
+    let (_, heading, left) = place(organ, look);
+    let half = 0.5 * look.shape.aspect() * organ.size * widen;
+    let at = |x: f64, v: f64| {
+        look.bend
+            .point(organ.position, heading, left, half, organ.size, x, v)
+            .0
+    };
+    let ring = [0.0, 0.5, 1.0].map(|v| [at(-1.0, v), at(1.0, v)]);
+    let mut quads = vec![
+        [ring[0][0], ring[0][1], ring[1][1], ring[1][0]],
+        [ring[1][0], ring[1][1], ring[2][1], ring[2][0]],
+    ];
+    if let Some(cross) = look.shape.cross() {
+        let across = heading.cross(left) * (half * cross.min(1.0));
+        quads.push([
+            organ.position - across,
+            organ.position + across,
+            organ.position + heading * organ.size + across,
+            organ.position + heading * organ.size - across,
+        ]);
+    }
+    quads
+}
+
+/// A look at most this wide for its length is a blade (yucca, sotol,
+/// agave, grasses): its organs can form a rosette.
+const STAR_ASPECT: f64 = 0.25;
+/// A cell's blades are a rosette when their bases lie within this share
+/// of their mean length of their mean base...
+const STAR_BASE_SHARE: f64 = 0.25;
+/// ...and their unit headings average to a vector at most this long, so
+/// they point every way rather than along one (blades spread evenly over
+/// the upper half of the sphere average to 0.5, a parallel bundle to 1).
+const STAR_SPREAD: f64 = 0.8;
+/// The blades a coarse level keeps of a rosette (render review S1).
+const STAR_BLADES: usize = 16;
+/// The most a kept blade is widened; past it more blades are kept.
+const STAR_WIDEN_MAX: f64 = 4.0;
+
+/// A rosette's coarse form (render review S1): cluster cards fit a cell's
+/// organs by the way they face, and a rosette's blades face every way from
+/// one point, so its cards became a flat cross through the head. Instead
+/// a coarse level keeps [`STAR_BLADES`] of its blades, spread over their
+/// directions (each next the one whose heading lies furthest from those
+/// kept), each drawn as level 0 draws it and widened alike so that the
+/// star covers what the whole rosette covers ([`Cluster::cover`], the
+/// mean over [`cover_directions`]). `None` when the cell's organs are not
+/// a rosette.
+fn star_cards(
+    cluster: &Cluster,
+    graph: &PlantGraph,
+    look: &Look,
+    looks: &[Look],
+    variation: f32,
+) -> Option<Vec<Card>> {
+    let organs: Vec<&GraphOrgan> = cluster.organs.iter().map(|&i| &graph.organs[i]).collect();
+    if look.shape.aspect() > STAR_ASPECT || organs.len() < 3 {
+        return None;
+    }
+    let count = to_f64(organs.len());
+    let base = organs
+        .iter()
+        .fold(Vec3::ZERO, |sum, organ| sum + organ.position)
+        / count;
+    let length = organs.iter().map(|organ| organ.size).sum::<f64>() / count;
+    // Where each blade reaches, its bend included: a rosette's blades
+    // often leave the head nearly together and arch out every way.
+    let headings: Vec<Vec3> = organs
+        .iter()
+        .map(|organ| {
+            let (_, heading, left) = place(organ, look);
+            let half = 0.5 * look.shape.aspect() * organ.size;
+            let tip = look
+                .bend
+                .point(organ.position, heading, left, half, organ.size, 0.0, 1.0)
+                .0;
+            (tip - organ.position).normalize_or(heading)
+        })
+        .collect();
+    let mean = headings.iter().fold(Vec3::ZERO, |sum, &h| sum + h) / count;
+    let reach = organs
+        .iter()
+        .map(|organ| (organ.position - base).length())
+        .fold(0.0, f64::max);
+    if reach > STAR_BASE_SHARE * length || mean.length() > STAR_SPREAD {
+        return None;
+    }
+    let directions = cover_directions();
+    let target = directions.iter().map(|&d| cluster.cover(d)).sum::<f64>();
+    // The kept blades' cover at `widen`, measured as the cluster's is.
+    let cover = |kept: &[usize], widen: f64| {
+        let quads: Vec<[Vec3; 4]> = kept
+            .iter()
+            .flat_map(|&i| organ_quads(organs[i], look, widen))
+            .collect();
+        let (mut low, mut high) = (cluster.low, cluster.high);
+        for corner in quads.iter().flatten() {
+            low = low.min(*corner);
+            high = high.max(*corner);
+        }
+        let area: f64 = kept
+            .iter()
+            .map(|&i| look.shape.aspect() * organs[i].size * organs[i].size * widen)
+            .sum();
+        directions
+            .iter()
+            .map(|&d| {
+                // Never more than the blades' own area.
+                let summed = area;
+                if cluster.fill <= 1e-6 {
+                    summed
+                } else {
+                    (painted(&quads, low, high, d, cluster.fill) / cluster.fill).min(summed)
+                }
+            })
+            .sum::<f64>()
+    };
+    let mut keep = STAR_BLADES.min(organs.len());
+    loop {
+        // Farthest-point picking over the headings, from the longest blade.
+        let first = (0..organs.len())
+            .max_by(|&a, &b| organs[a].size.total_cmp(&organs[b].size).then(b.cmp(&a)))
+            .unwrap_or(0);
+        let mut kept = vec![first];
+        let mut nearest: Vec<f64> = headings.iter().map(|h| h.dot(headings[first])).collect();
+        while kept.len() < keep {
+            let Some(next) = (0..organs.len())
+                .filter(|i| !kept.contains(i))
+                .min_by(|&a, &b| nearest[a].total_cmp(&nearest[b]).then(a.cmp(&b)))
+            else {
+                break;
+            };
+            kept.push(next);
+            for (i, h) in headings.iter().enumerate() {
+                nearest[i] = nearest[i].max(h.dot(headings[next]));
+            }
+        }
+        let mut widen = 1.0;
+        for _ in 0..3 {
+            let got = cover(&kept, widen);
+            if got <= 1e-12 {
+                break;
+            }
+            widen = (widen * target / got).max(1.0);
+        }
+        if widen <= STAR_WIDEN_MAX || keep >= organs.len() {
+            let widen = widen.min(STAR_WIDEN_MAX);
+            // A leaf level 0 draws solid shows its edge seen edge on: its
+            // thickness, or the depth of its channel or keel.
+            let across = look
+                .solid
+                .as_ref()
+                .map(|solid| solid.thickness.max(0.5 * solid.fold).min(1.0));
+            let mut cards = Vec::new();
+            kept.sort_unstable();
+            for &i in &kept {
+                organ_card(organs[i], looks, variation, widen, across, &mut cards);
+            }
+            return Some(cards);
+        }
+        keep = organs.len().min(keep * 2);
+    }
 }
 
 /// The organs of one template in one cell, summed.
@@ -1344,6 +1532,8 @@ struct Cluster {
     centres: Vec<Vec3>,
     /// Each organ's card's corners (the crossing card's too).
     quads: Vec<[Vec3; 4]>,
+    /// Its organs, indices into the graph's.
+    organs: Vec<usize>,
 }
 
 /// The most a cluster's card areas are scaled up for its cards hiding
@@ -1614,7 +1804,7 @@ fn cluster_cards(
 ) -> Vec<Card> {
     // BTreeMap keeps the output order independent of hashing.
     let mut clusters: BTreeMap<(u8, i64, i64, i64), Cluster> = BTreeMap::new();
-    for organ in &graph.organs {
+    for (number, organ) in graph.organs.iter().enumerate() {
         let index = usize::from(organ.organ);
         if solid.get(index).copied().unwrap_or(false) {
             continue;
@@ -1685,6 +1875,7 @@ fn cluster_cards(
         }
         entry.light += organ.light;
         entry.count += 1.0;
+        entry.organs.push(number);
         // A cluster shows from its first organ's birth until its last
         // organ is shed.
         entry.born = entry.born.min(organ.born);
@@ -1693,6 +1884,10 @@ fn cluster_cards(
     let mut cards = Vec::new();
     for ((template, ..), cluster) in clusters {
         let look = &looks[usize::from(template)];
+        if let Some(star) = star_cards(&cluster, graph, look, looks, variation) {
+            cards.extend(star);
+            continue;
+        }
         let position = cluster.position / cluster.count;
         let normal = cluster.normal.normalize_or(Vec3::Y);
         let heading = (cluster.heading - normal * normal.dot(cluster.heading))
@@ -2158,6 +2353,102 @@ mod tests {
                 normal.dot(axis).abs() * f64::from(card.length) * f64::from(card.width)
             })
             .sum()
+    }
+
+    /// A rosette: 120 narrow blades from one point, spread over the upper
+    /// half of the sphere (a golden spiral), as a yucca's head.
+    fn rosette() -> (PlantGraph, Vec<Look>) {
+        let mut graph = graph();
+        graph.organs = (0_u32..120)
+            .map(|i| {
+                let up = 0.05 + 0.9 * (f64::from(i) + 0.5) / 120.0;
+                let ring = math::sqrt(1.0 - up * up);
+                let turn = 2.399_963_229_728_653 * f64::from(i);
+                let heading = Vec3::new(ring * math::cos(turn), up, ring * math::sin(turn));
+                GraphOrgan {
+                    id: u64::from(i),
+                    organ: 0,
+                    segment: Some(2),
+                    position: Vec3::new(0.0, 2.5, 0.0),
+                    heading,
+                    left: any_perpendicular(heading),
+                    size: 0.5,
+                    born: 0.0,
+                    shed: None,
+                    light: 0.5,
+                }
+            })
+            .collect();
+        let mut looks = flat_looks();
+        looks[0].shape = Shape::Blade(crate::looks::Blade {
+            taper: 1.0,
+            aspect: 0.04,
+        });
+        (graph, looks)
+    }
+
+    /// Render review S1: a coarse level draws a rosette as a star of its
+    /// own blades, fewer and wider, covering what the rosette covers from
+    /// every side and reaching no further, not as a cross of cluster cards.
+    #[test]
+    fn rosettes_become_stars_of_their_own_blades() {
+        let (graph, looks) = rosette();
+        let detailed = build_plain(&graph, &looks, &appearance(), &lod(0.0, 0.0, 0.0));
+        let coarse = build_plain(&graph, &looks, &appearance(), &lod(0.0, 1.0, 0.0));
+        assert_eq!(detailed.cards.len(), 120);
+        assert!(
+            (STAR_BLADES..=4 * STAR_BLADES).contains(&coarse.cards.len()),
+            "{} blades",
+            coarse.cards.len()
+        );
+        // Each kept blade is one of the rosette's own, widened.
+        let vector = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
+        for card in &coarse.cards {
+            let heading = vector(card.heading);
+            assert!(
+                graph
+                    .organs
+                    .iter()
+                    .any(|organ| (place(organ, &looks[0]).1 - heading).length() < 1e-5),
+                "a blade not the rosette's own"
+            );
+            assert!(f64::from(card.width) >= 0.04 * 0.5 * 0.999);
+        }
+        // It reaches no further than the rosette.
+        let reach = |mesh: &PlantMesh| {
+            mesh.cards
+                .iter()
+                .map(|card| {
+                    let tip = vector(card.heading) * f64::from(card.length);
+                    math::sqrt(tip.x * tip.x + tip.z * tip.z)
+                })
+                .fold(0.0, f64::max)
+        };
+        assert!(reach(&coarse) <= reach(&detailed) + 1e-6);
+        // It covers as the rosette does, from the side and above.
+        let mut ratios = Vec::new();
+        for elevation in [0.0_f64, 20.0, 45.0, 90.0] {
+            for k in 0..8 {
+                let (e, azimuth) = (elevation.to_radians(), f64::from(k) * 45.0_f64.to_radians());
+                let axis = Vec3::new(
+                    math::cos(e) * math::cos(azimuth),
+                    math::sin(e),
+                    math::cos(e) * math::sin(azimuth),
+                );
+                let seen = drawn(&[&coarse, &detailed], axis);
+                let ratio = seen[0] / seen[1];
+                assert!(
+                    (0.6..=1.4).contains(&ratio),
+                    "the star covers {ratio} times the rosette at {elevation} degrees, azimuth {k} x 45"
+                );
+                ratios.push(ratio);
+            }
+        }
+        let mean = ratios.iter().sum::<f64>() / to_f64(ratios.len());
+        assert!(
+            (mean - 1.0).abs() < 0.15,
+            "the star covers {mean} times the rosette"
+        );
     }
 
     /// Twenty leaves in one cell, tilted up to 50° from level toward
