@@ -92,6 +92,48 @@ fn a_library_folder_replaces_built_in_species() {
         checked.starts_with("pseudotsuga-menziesii: valid"),
         "{checked}"
     );
+    // A family file above it: the spec says where each value came from.
+    fs::write(
+        dir.join("library/pinaceae/family.json"),
+        r#"{"schema": 1, "rank": "family", "name": "Pinaceae",
+            "generator": {"params": {"nod_years": 2.0}}}"#,
+    )
+    .unwrap();
+    let checked = stdout(&plantc(&[
+        "--library",
+        library,
+        "check",
+        "pseudotsuga-menziesii",
+    ]));
+    assert!(
+        checked.ends_with("  stands on pinaceae/family.json\n"),
+        "{checked}"
+    );
+    let spec = stdout(&plantc(&[
+        "--library",
+        library,
+        "spec",
+        "pseudotsuga-menziesii",
+    ]));
+    let own = "pinaceae/pseudotsuga/pseudotsuga-menziesii/spec.json";
+    assert!(
+        spec.starts_with(&format!(
+            "pseudotsuga-menziesii: {own} on pinaceae/family.json\n"
+        )),
+        "{spec}"
+    );
+    assert!(
+        spec.contains("  generator.params.nod_years = 2.0  (pinaceae/family.json)\n"),
+        "{spec}"
+    );
+    assert!(
+        spec.contains(&format!("  generator.program = \"conifer\"  ({own})\n")),
+        "{spec}"
+    );
+    assert!(
+        spec.contains(&format!("evidence:\n  allometry  ({own})\n")),
+        "{spec}"
+    );
     let missing = plantc(&["list", "--library", dir.join("nowhere").to_str().unwrap()]);
     assert!(!missing.status.success());
     assert!(

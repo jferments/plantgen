@@ -8,6 +8,11 @@
 //!   al. 2009) and through the synthetic [`Neighbourhood`] it grows in.
 //! - `space@1`: space colonization (Runions et al. 2007): attraction points
 //!   in a crown envelope pull the apices that perceive them.
+//! - `space@2` (growth plan G1): the same, with points that return once
+//!   the plant parts that took them are shed (`renew`), an outline widest
+//!   at any share of the crown's depth and of any fullness (`widest`,
+//!   `fullness`), lobes round its edge (`lobes`, `lobe_depth`), and billows,
+//!   its edge moved in and out by smooth noise (`bumps`, `bump_size`).
 //! - `vigour@1`: the Borchert-Honda resource model: light collected by the
 //!   tips flows to the base and back out, split by apical control.
 //! - `pipe@1`: the pipe model of stem radii (Shinozaki et al. 1964).
@@ -99,7 +104,15 @@ impl Neighbourhood {
 }
 
 /// Values of one tool's settings at one step.
-fn settings(config: &ToolConfig, globals: &[f64], clock: Clock, stack: &mut Vec<f64>) -> Vec<f64> {
+/// A tool's settings this step. A draw in a setting is keyed on the plant's
+/// seed alone, so it is one value for the plant's whole life.
+fn settings(
+    config: &ToolConfig,
+    globals: &[f64],
+    clock: Clock,
+    seed: u64,
+    stack: &mut Vec<f64>,
+) -> Vec<f64> {
     let scope = Scope {
         globals,
         locals: &[],
@@ -108,7 +121,7 @@ fn settings(config: &ToolConfig, globals: &[f64], clock: Clock, stack: &mut Vec<
         dt: clock.dt,
         age: 0.0,
         step: f64::from(clock.step),
-        key: 0,
+        key: hash_words(&[seed, SALT_SETTINGS]),
     };
     config
         .settings
@@ -243,7 +256,7 @@ pub fn run(
 
     let (query_light, organ_light) = match program.tool(ToolKind::Light) {
         Some(config) => {
-            let values = settings(config, globals, clock, &mut stack);
+            let values = settings(config, globals, clock, seed, &mut stack);
             light(scene, &anchors, organ_area, &values, surroundings, limits)?
         }
         None => (
@@ -264,15 +277,23 @@ pub fn run(
         .collect();
     let space = match program.tool(ToolKind::Space) {
         Some(config) => {
-            let values = settings(config, globals, clock, &mut stack);
-            colonize(scene, &space_queries, &values, state, limits, seed)?
+            let values = settings(config, globals, clock, seed, &mut stack);
+            colonize(
+                scene,
+                &space_queries,
+                &values,
+                config.version,
+                state,
+                limits,
+                seed,
+            )?
         }
         None => vec![(0, Vec3::ZERO); scene.queries.len()],
     };
 
     let flux = match program.tool(ToolKind::Vigour) {
         Some(config) => {
-            let values = settings(config, globals, clock, &mut stack);
+            let values = settings(config, globals, clock, seed, &mut stack);
             let lit = program.tool(ToolKind::Light).is_some();
             Some(vigour(
                 scene,
@@ -288,7 +309,7 @@ pub fn run(
 
     // The host: distance and direction to its surface from each module.
     let host_reach = program.tool(ToolKind::Host).map(|config| {
-        let values = settings(config, globals, clock, &mut stack);
+        let values = settings(config, globals, clock, seed, &mut stack);
         values[0].max(0.0)
     });
 
@@ -617,23 +638,164 @@ fn envelope_radius(shape: f64, radius: f64, h: f64) -> f64 {
 }
 
 const SALT_POINT: u64 = 0x7370_6163;
+const SALT_LOBES: u64 = 0x6c6f_6265;
+const SALT_SETTINGS: u64 = 0x7365_7474;
+const SALT_BUMPS: u64 = 0x6275_6d70;
+
+/// The outline of a `space@2` envelope and whether its points renew.
+struct Outline {
+    renew: bool,
+    widest: f64,
+    fullness: f64,
+    lobes: f64,
+    lobe_depth: f64,
+    phases: [f64; 2],
+    bumps: f64,
+    bump_size: f64,
+    seed: u64,
+}
+
+impl Outline {
+    /// Radius of the envelope at relative height `h` toward `point`.
+    ///
+    /// Shape 1 is a superellipse in profile, widest at `widest` of the
+    /// crown's depth: with $`u`$ the distance from there as a share of the
+    /// part of the crown on that side and $`p`$ the `fullness`,
+    ///
+    /// ```math
+    /// r(h) = R \left(1 - |u|^p\right)^{1/p}
+    /// ```
+    ///
+    /// $`p = 2`$ at `widest` 0.5 is `space@1`'s ellipsoid; a larger $`p`$
+    /// fills toward a cylinder with rounded ends, a smaller one draws in to
+    /// points. Shapes 2 to 4 are `space@1`'s cone, paraboloid and cylinder.
+    /// Lobes then scale the radius round the stem by
+    /// $`1 + d\,n(\theta, h)`$, with $`n`$ two waves of `lobes` and
+    /// `lobes + 1` crests round the azimuth $`\theta`$, drifting with height
+    /// and phased by the seed, so each plant's crown bulges its own way.
+    fn radius(&self, shape: f64, radius: f64, h: f64, point: Vec3) -> f64 {
+        if !(0.0..=1.0).contains(&h) {
+            return -1.0;
+        }
+        #[allow(clippy::cast_possible_truncation)]
+        let profile = if (2..=4).contains(&(shape.round() as i64)) {
+            envelope_radius(shape, radius, h)
+        } else {
+            let side = if h < self.widest {
+                self.widest
+            } else {
+                1.0 - self.widest
+            };
+            let u = ((h - self.widest) / side).abs().min(1.0);
+            radius
+                * math::pow(
+                    (1.0 - math::pow(u, self.fullness)).max(0.0),
+                    1.0 / self.fullness,
+                )
+        };
+        let billows = if self.bumps > 0.0 {
+            1.0 + self.bumps * value_noise(self.seed, point * (1.0 / self.bump_size))
+        } else {
+            1.0
+        };
+        if self.lobes <= 0.0 || self.lobe_depth <= 0.0 {
+            return profile * billows;
+        }
+        let theta = math::atan2(point.z, point.x);
+        let wave = 0.6 * math::cos(self.lobes * theta + self.phases[0] + 3.0 * h)
+            + 0.4 * math::cos((self.lobes + 1.0) * theta + self.phases[1] - 5.0 * h);
+        profile * (1.0 + self.lobe_depth * wave) * billows
+    }
+}
+
+/// Smooth value noise in [-1, 1] at `p` (lattice units): a value hashed
+/// from `seed` and each corner of the unit cell round `p`, blended by
+/// smoothstep weights, so it is continuous and the same on every machine.
+fn value_noise(seed: u64, p: Vec3) -> f64 {
+    let cell = [p.x.floor(), p.y.floor(), p.z.floor()];
+    let fraction = [p.x - cell[0], p.y - cell[1], p.z - cell[2]];
+    let smooth = fraction.map(|f| f * f * (3.0 - 2.0 * f));
+    let mut total = 0.0;
+    for corner in 0..8_u32 {
+        let offset = [corner & 1, (corner >> 1) & 1, (corner >> 2) & 1];
+        let mut weight = 1.0;
+        let mut words = [seed, SALT_BUMPS, 0, 0, 0];
+        for axis in 0..3 {
+            let up = offset[axis] == 1;
+            weight *= if up { smooth[axis] } else { 1.0 - smooth[axis] };
+            // Lattice coordinates are small whole numbers; the cast keeps
+            // their bits.
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let coordinate = (cell[axis] as i64 + i64::from(up)) as u64;
+            words[2 + axis] = coordinate;
+        }
+        total += weight * (2.0 * unit(hash_words(&words)) - 1.0);
+    }
+    total
+}
+
+/// The two lobe waves' phases for a plant grown from `seed`.
+fn lobe_phases(seed: u64) -> [f64; 2] {
+    let hash = hash_words(&[seed, SALT_LOBES]);
+    [
+        std::f64::consts::TAU * unit(hash),
+        std::f64::consts::TAU * unit(crate::rng::mix64(hash)),
+    ]
+}
 
 /// Space colonization (Runions, Lane and Prusinkiewicz 2007). Attraction
 /// points sit one per cell of a jittered lattice inside the envelope. A point
 /// within `kill` of the plant is consumed for good; otherwise it attracts the
 /// nearest apex that declared `queries space` within `influence` and inside
 /// its perception cone. Each apex gets the count and the mean direction.
+#[allow(clippy::too_many_arguments, clippy::too_many_lines)]
 fn colonize(
     scene: &Scene,
     space_queries: &[bool],
     values: &[f64],
+    version: u32,
     state: &mut ToolState,
     limits: &Limits,
     seed: u64,
 ) -> Result<Vec<(u32, Vec3)>, GrowthError> {
-    let [shape, base, height, radius, density, influence, kill, angle] = values[..] else {
+    let (first, later) = values.split_at(values.len().min(8));
+    let [shape, base, height, radius, density, influence, kill, angle] = first[..] else {
         return Err(invalid("space", "wrong number of settings".into()));
     };
+    let outline = match (version, later) {
+        (1, []) => None,
+        (2, &[renew, widest, fullness, lobes, lobe_depth, bumps, bump_size]) => {
+            if !(widest > 0.0
+                && widest < 1.0
+                && fullness > 0.0
+                && (0.0..1.0).contains(&lobe_depth)
+                && (0.0..1.0).contains(&bumps)
+                && bump_size > 0.0)
+            {
+                return Err(invalid(
+                    "space",
+                    format!(
+                        "widest must lie between 0 and 1, fullness and bump_size be positive, \
+                         and lobe_depth and bumps lie in [0, 1); found {widest}, {fullness}, \
+                         {bump_size}, {lobe_depth} and {bumps}"
+                    ),
+                ));
+            }
+            Some(Outline {
+                renew: renew > 0.0,
+                widest,
+                fullness,
+                lobes: lobes.max(0.0).round(),
+                lobe_depth,
+                phases: lobe_phases(seed),
+                bumps,
+                bump_size,
+                seed,
+            })
+        }
+        _ => return Err(invalid("space", "wrong number of settings".into())),
+    };
+    let renew = outline.as_ref().is_some_and(|outline| outline.renew);
     if values.iter().any(|value| !value.is_finite()) {
         return Err(invalid("space", "every setting must be finite".into()));
     }
@@ -699,20 +861,28 @@ fn colonize(
         for z in x0..=x1 {
             for x in x0..=x1 {
                 let key = (to_i32(x), to_i32(y), to_i32(z));
-                if state.killed.contains(&key) {
+                if !renew && state.killed.contains(&key) {
                     continue;
                 }
                 let point = attraction_point(seed, [x, y, z], spacing);
                 let relative = (point.y - base) / (height - base);
                 let radial = math::sqrt(point.x * point.x + point.z * point.z);
-                if radial > envelope_radius(shape, radius, relative) {
+                let edge = match &outline {
+                    None => envelope_radius(shape, radius, relative),
+                    Some(outline) => outline.radius(shape, radius, relative, point),
+                };
+                if radial > edge {
                     continue;
                 }
                 let consumed = plant.near(point).any(|index| {
                     (plant_points[index as usize] - point).length_squared() <= kill_sq
                 });
                 if consumed {
-                    state.killed.insert(key);
+                    // `space@1` keeps a point consumed for good; `space@2`
+                    // with `renew` frees it once the parts near it are shed.
+                    if !renew {
+                        state.killed.insert(key);
+                    }
                     continue;
                 }
                 if let Some((distance_sq, index)) =
@@ -1281,6 +1451,28 @@ mod tests {
         // The envelope is straight above, so the pull points up.
         assert!(values[EnvField::Sy as usize] > 0.9, "{values:?}");
         assert!(state.killed.is_empty());
+    }
+
+    #[test]
+    fn a_draw_in_a_tool_setting_is_one_value_for_the_plants_life() {
+        let program = Program::compile(
+            "lsystem p 1; module A; tool pipe@1 { tip = uniform(0.002, 0.02) }; axiom A;",
+        )
+        .unwrap();
+        let config = program.tool(ToolKind::Pipe).unwrap();
+        let mut stack = Vec::new();
+        let at = |step: u32, seed: u64, stack: &mut Vec<f64>| {
+            let clock = Clock {
+                step,
+                t: f64::from(step),
+                dt: 1.0,
+            };
+            settings(config, &[], clock, seed, stack)[1]
+        };
+        let first = at(0, 7, &mut stack);
+        assert!((0.002..0.02).contains(&first));
+        assert_eq!(first.to_bits(), at(40, 7, &mut stack).to_bits());
+        assert_ne!(first.to_bits(), at(0, 8, &mut stack).to_bits());
     }
 
     #[test]

@@ -208,7 +208,10 @@ pub struct ToolSpec {
 
 /// The tool registry. A new capability is a new entry or a new version of an
 /// entry; a version, once released, never changes behaviour.
-pub const TOOLS: [ToolSpec; 5] = [
+/// The first random call site of tool settings, far above any rule's.
+pub const TOOL_SITES: u32 = 1 << 24;
+
+pub const TOOLS: [ToolSpec; 6] = [
     ToolSpec {
         kind: ToolKind::Light,
         name: "light",
@@ -228,6 +231,33 @@ pub const TOOLS: [ToolSpec; 5] = [
             ("influence", 1.5),
             ("kill", 0.4),
             ("angle", 90.0),
+        ],
+    },
+    // Growth plan G1: space that returns where the plant is shed, an
+    // outline widest anywhere up the crown and as full as a box or as
+    // pointed as a cone, lobes round the edge, and billows: the edge moved
+    // in and out by smooth noise `bump_size` metres across
+    // (`super::tools`).
+    ToolSpec {
+        kind: ToolKind::Space,
+        name: "space",
+        version: 2,
+        keys: &[
+            ("shape", 1.0),
+            ("base", 0.0),
+            ("height", 4.0),
+            ("radius", 2.0),
+            ("density", 20.0),
+            ("influence", 1.5),
+            ("kill", 0.4),
+            ("angle", 90.0),
+            ("renew", 1.0),
+            ("widest", 0.5),
+            ("fullness", 2.0),
+            ("lobes", 0.0),
+            ("lobe_depth", 0.0),
+            ("bumps", 0.0),
+            ("bump_size", 3.0),
         ],
     },
     ToolSpec {
@@ -471,8 +501,12 @@ fn check_queries(ast: &ProgramAst, tools: &[Option<ToolConfig>; 5]) -> Result<()
                 return err(
                     *span,
                     format!(
-                        "module `{}` queries {name}, but the program configures no `tool {}@1`",
-                        decl.name, TOOLS[tool as usize].name
+                        "module `{}` queries {name}, but the program configures no `tool {}`",
+                        decl.name,
+                        TOOLS.iter().find(|spec| spec.kind == tool).map_or_else(
+                            String::new,
+                            |spec| format!("{}@{}", spec.name, spec.version)
+                        )
                     ),
                 );
             }
@@ -516,7 +550,12 @@ impl Compiler {
         self.declare_modules(ast)?;
         self.declare_organs(ast)?;
         self.declare_bodies(ast)?;
+        // Draws in tool settings number their sites in a block of their
+        // own, so a program that adds one never moves the sites of the
+        // axiom or of the rules it inherits.
+        let sites = std::mem::replace(&mut self.random_sites, TOOL_SITES);
         let tools = self.configure_tools(ast)?;
+        self.random_sites = sites;
         check_queries(ast, &tools)?;
 
         let axiom_context = Context {
@@ -684,8 +723,9 @@ impl Compiler {
         Ok(())
     }
 
-    /// Tool settings, defaults first; a setting may read parameters and
-    /// the time.
+    /// Tool settings, defaults first; a setting may read parameters, the
+    /// time and per-plant draws (`rand`, `gauss`, `uniform`: keyed on the
+    /// plant's seed alone, so the same every step; growth plan G1).
     fn configure_tools(
         &mut self,
         ast: &ProgramAst,
@@ -695,11 +735,13 @@ impl Compiler {
             what: "a tool setting",
             globals: self.params.len(),
             time: true,
+            random: true,
             ..PARAMS_ONLY
         };
         for decl in &ast.tools {
-            let Some(spec) = TOOLS.iter().find(|spec| spec.name == decl.name) else {
-                let known: Vec<&str> = TOOLS.iter().map(|spec| spec.name).collect();
+            if !TOOLS.iter().any(|spec| spec.name == decl.name) {
+                let mut known: Vec<&str> = TOOLS.iter().map(|spec| spec.name).collect();
+                known.dedup();
                 return err(
                     decl.span,
                     format!(
@@ -708,16 +750,26 @@ impl Compiler {
                         known.join(", ")
                     ),
                 );
-            };
-            if decl.version != spec.version {
+            }
+            let Some(spec) = TOOLS
+                .iter()
+                .find(|spec| spec.name == decl.name && spec.version == decl.version)
+            else {
+                let versions: Vec<String> = TOOLS
+                    .iter()
+                    .filter(|spec| spec.name == decl.name)
+                    .map(|spec| format!("`{}@{}`", spec.name, spec.version))
+                    .collect();
                 return err(
                     decl.span,
                     format!(
-                        "`{}@{}` does not exist; this build has `{}@{}`",
-                        decl.name, decl.version, spec.name, spec.version
+                        "`{}@{}` does not exist; this build has {}",
+                        decl.name,
+                        decl.version,
+                        versions.join(" and ")
                     ),
                 );
-            }
+            };
             if tools[spec.kind as usize].is_some() {
                 return err(
                     decl.span,
@@ -906,7 +958,14 @@ impl Compiler {
             for arg in &call.args {
                 args.push(self.expr(arg, context)?);
             }
-            if args.len() != usize::from(info.arity) {
+            // An organ may carry its own turn (growth plan G1): `leaf(s, roll,
+            // pitch)` or `leaf(s, roll, pitch, level)` places it as
+            // `[ /(roll) &(pitch) $ leaf(s) ]` would (`$` only with a level
+            // above 0), in one module instead of five
+            // (`super::turtle::organ_frame`).
+            let turned_organ =
+                matches!(info.kind, SymbolKind::Organ { .. }) && matches!(args.len(), 3 | 4);
+            if args.len() != usize::from(info.arity) && !turned_organ {
                 let default = match info.kind {
                     SymbolKind::Turtle(Turtle::Forward | Turtle::Move)
                     | SymbolKind::Organ { .. }

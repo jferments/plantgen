@@ -8,7 +8,7 @@
   },
   "growth_form": "shrub",
   "generator": {
-    "program": "broadleaf",
+    "program": "sapindaceae",
     "params": {
       "crown_height": 6.0,
       "crown_radius": 3.5,
