@@ -94,6 +94,8 @@ pub fn run(photo: Photo) -> Result<(), String> {
                 exit_condition: ExitCondition::DontExit,
                 ..default()
             })
+            // No window: drawing goes to images, and the loop is ours.
+            .disable::<bevy::winit::WinitPlugin>()
             .set(bevy::log::LogPlugin {
                 level: bevy::log::Level::WARN,
                 filter: "wgpu=error,bevy_ecs::world::command_queue=error".into(),

@@ -10,6 +10,7 @@ license = "MIT"
 plantgen.workspace = true
 plantlab-scene.workspace = true
 bevy.workspace = true
+bevy_egui.workspace = true
 # The version Bevy uses, for choosing the GPU by index (`src/gpu.rs`).
 wgpu = { version = "=29.0.4", default-features = false }
 # The versions plantgen pins: batch files and resume keys.
