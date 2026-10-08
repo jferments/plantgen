@@ -18,10 +18,11 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
+use crate::conditions::{Around, Conditions};
 use crate::graph::{GraphOrgan, GraphSegment, OrganType, PlantGraph};
 use crate::lsys::derive::{Clock, Deriver};
 use crate::lsys::program::{SymbolKind, ToolKind};
-use crate::lsys::tools::{self, Neighbourhood, ToolState};
+use crate::lsys::tools::{self, ToolState};
 use crate::lsys::turtle::{Interpreter, NodeKind, Scene};
 use crate::lsys::{GrowthError, Limits, Program};
 use crate::math;
@@ -37,9 +38,11 @@ pub struct GrowthSettings {
     pub years: f64,
     /// Ages at which to keep a [`PlantGraph`], in years.
     pub keyframes: Vec<f64>,
-    pub neighbourhood: Neighbourhood,
+    /// The conditions it grows in; `light@1` reads their neighbours.
+    pub conditions: Conditions,
     pub limits: Limits,
-    /// The host a climber, epiphyte or parasite grows on (`host@1`).
+    /// The host's wood a climber, epiphyte or parasite grows on
+    /// (`host@1`), grown from the spec's `host`.
     pub host: Option<std::sync::Arc<crate::lsys::tools::Host>>,
 }
 
@@ -60,6 +63,56 @@ pub struct Growth {
     pub body_types: Vec<String>,
     pub keyframes: Vec<PlantGraph>,
     pub stats: GrowthStats,
+    shed: ShedLog,
+}
+
+impl Growth {
+    /// Every segment and organ shed while the plant grew, as last seen:
+    /// the self-pruned branches, fallen leaves, cones and fruit a floor
+    /// under it would hold. No package stores it.
+    #[must_use]
+    pub fn shed(&self) -> &ShedLog {
+        &self.shed
+    }
+}
+
+/// What a plant shed while it grew, each part as it was the last step it
+/// stood, in id order.
+#[derive(Debug, Clone, PartialEq, Default)]
+pub struct ShedLog {
+    pub segments: Vec<ShedSegment>,
+    pub organs: Vec<ShedOrgan>,
+}
+
+/// A shed segment of wood or body.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct ShedSegment {
+    pub id: u64,
+    /// Age it grew at, and age it was shed at, years.
+    pub born: f64,
+    pub shed: f64,
+    /// Its radius and length, metres.
+    pub radius: f64,
+    pub length: f64,
+    pub order: u16,
+    /// Height of its middle above the ground, metres.
+    pub height: f64,
+    /// Its body: 0 for wood, else one more than its body type's index.
+    pub body: u8,
+}
+
+/// A shed organ.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct ShedOrgan {
+    pub id: u64,
+    /// Its organ type's index in [`Growth::organ_types`].
+    pub organ: u16,
+    /// Age it grew at, and age it was shed at, years.
+    pub born: f64,
+    pub shed: f64,
+    pub size: f64,
+    /// Height above the ground, metres.
+    pub height: f64,
 }
 
 fn steps_for(years: f64, dt: f64) -> Result<u32, GrowthError> {
@@ -210,7 +263,11 @@ pub fn grow(
     let mut deriver = Deriver::new(program, params, &limits);
     let mut interpreter = Interpreter::new(program, params, &limits);
     let mut tool_state = ToolState::default();
-    tool_state.host.clone_from(&settings.host);
+    let neighbourhood = settings.conditions.neighbourhood();
+    let around = Around {
+        neighbourhood: &neighbourhood,
+        host: settings.host.as_deref(),
+    };
     let mut string = deriver.axiom(settings.seed, settings.dt)?;
     let mut stats = GrowthStats {
         steps,
@@ -218,6 +275,9 @@ pub fn grow(
     };
     let mut girth = Girth::default();
     let mut last_seen: HashMap<u64, u32> = HashMap::new();
+    // Each part as it was the last step it stood, for the shed log.
+    let mut last_segments: HashMap<u64, (u32, ShedSegment)> = HashMap::new();
+    let mut last_organs: HashMap<u64, (u32, ShedOrgan)> = HashMap::new();
     let mut keyframes = Vec::with_capacity(keyframe_steps.len());
     let mut next_keyframe = 0;
     let mut stack = Vec::new();
@@ -244,6 +304,30 @@ pub fn grow(
         for organ in &scene.organs {
             last_seen.insert(organ.id, step);
         }
+        for (segment, radius) in scene.segments.iter().zip(&radii) {
+            let part = ShedSegment {
+                id: segment.id,
+                born: segment.born,
+                shed: 0.0,
+                radius: *radius,
+                length: segment.start.distance(segment.end),
+                order: segment.order,
+                height: 0.5 * (segment.start.y + segment.end.y),
+                body: segment.body,
+            };
+            last_segments.insert(segment.id, (step, part));
+        }
+        for organ in &scene.organs {
+            let part = ShedOrgan {
+                id: organ.id,
+                organ: organ_index[usize::from(organ.symbol)],
+                born: organ.born,
+                shed: 0.0,
+                size: organ.size,
+                height: organ.position.y,
+            };
+            last_organs.insert(organ.id, (step, part));
+        }
 
         let keyframe = keyframe_steps.get(next_keyframe) == Some(&step);
         if step == steps && !keyframe {
@@ -255,7 +339,7 @@ pub fn grow(
             &organ_area,
             clock,
             &scene,
-            &settings.neighbourhood,
+            &around,
             &mut tool_state,
             &limits,
             settings.seed,
@@ -288,11 +372,25 @@ pub fn grow(
             organ.shed = shed_at(organ.id);
         }
     }
+    let shed_age = |seen: u32| (seen < steps).then(|| f64::from(seen + 1) * settings.dt);
+    let mut shed = ShedLog {
+        segments: last_segments
+            .into_values()
+            .filter_map(|(seen, part)| shed_age(seen).map(|shed| ShedSegment { shed, ..part }))
+            .collect(),
+        organs: last_organs
+            .into_values()
+            .filter_map(|(seen, part)| shed_age(seen).map(|shed| ShedOrgan { shed, ..part }))
+            .collect(),
+    };
+    shed.segments.sort_unstable_by_key(|part| part.id);
+    shed.organs.sort_unstable_by_key(|part| part.id);
     Ok(Growth {
         organ_types,
         body_types: program.bodies().map(str::to_string).collect(),
         keyframes,
         stats,
+        shed,
     })
 }
 
@@ -394,7 +492,7 @@ mod tests {
             dt: 1.0,
             years,
             keyframes,
-            neighbourhood: Neighbourhood::OPEN,
+            conditions: Conditions::preset(crate::spec::Environment::Open),
             limits: Limits::default(),
             host: None,
         }
@@ -427,6 +525,45 @@ mod tests {
             a.keyframes[1].segments[0].id,
             other.keyframes[1].segments[0].id
         );
+    }
+
+    /// The shed log holds every part a keyframe records as shed, at the
+    /// same age, and nothing that stood to the end.
+    #[test]
+    fn the_shed_log_agrees_with_the_keyframes() {
+        let growth = bush(11);
+        let log = growth.shed();
+        // Its leaves live two years, so it sheds leaves.
+        assert!(!log.organs.is_empty());
+        let segments: HashMap<u64, &ShedSegment> =
+            log.segments.iter().map(|part| (part.id, part)).collect();
+        let organs: HashMap<u64, &ShedOrgan> =
+            log.organs.iter().map(|part| (part.id, part)).collect();
+        for graph in &growth.keyframes {
+            for segment in &graph.segments {
+                assert_eq!(
+                    segment.shed,
+                    segments.get(&segment.id).map(|part| part.shed),
+                    "segment {}",
+                    segment.id
+                );
+            }
+            for organ in &graph.organs {
+                assert_eq!(
+                    organ.shed,
+                    organs.get(&organ.id).map(|part| part.shed),
+                    "organ {}",
+                    organ.id
+                );
+                if let Some(part) = organs.get(&organ.id) {
+                    assert_eq!((part.organ, part.born), (organ.organ, organ.born));
+                }
+            }
+        }
+        for part in &log.segments {
+            assert!(part.shed > part.born && part.radius > 0.0 && part.length > 0.0);
+        }
+        assert!(log.segments.windows(2).all(|pair| pair[0].id < pair[1].id));
     }
 
     #[test]

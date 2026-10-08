@@ -4,6 +4,7 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
+use plantgen::conditions::Conditions;
 use plantgen::grow::{GrowthSettings, grow};
 use plantgen::lsys::Limits;
 use plantgen::package::{self, Inputs, PackageError};
@@ -90,6 +91,64 @@ fn packages_are_byte_identical_whatever_the_thread_count() {
     );
 }
 
+/// A variant grown in a conditions document records its class and grows
+/// exactly as the stand its neighbours describe; specs without documents
+/// write no class.
+#[test]
+fn variants_grown_in_conditions_record_their_class() {
+    let plain =
+        package::build(&Inputs::new(&small_spec(), &TINY).unwrap(), 2, &mut |_| {}).unwrap();
+    assert!(
+        plain
+            .manifest
+            .variants
+            .iter()
+            .all(|record| record.class.is_none())
+    );
+    assert!(
+        !String::from_utf8(plain.manifest_bytes().unwrap())
+            .unwrap()
+            .contains("\"class\"")
+    );
+
+    let mut spec = small_spec();
+    let document = Conditions::from_json(
+        r#"{"schema": 1, "preset": "interior",
+            "soil": {"version": 1, "depth_m": 1.2, "water_capacity_mm": 180,
+                     "nutrients": "moderate", "ph": 5.6}}"#,
+    )
+    .unwrap();
+    spec.variants.conditions = vec![document.clone()];
+    let built = package::build(&Inputs::new(&spec, &TINY).unwrap(), 2, &mut |_| {}).unwrap();
+    let grown: Vec<_> = built
+        .manifest
+        .variants
+        .iter()
+        .filter(|record| record.class.is_some())
+        .collect();
+    assert_eq!(grown.len(), 2);
+    for record in &grown {
+        assert_eq!(record.environment, Environment::Interior);
+        assert_eq!(
+            record.class.as_deref(),
+            Some(document.class().to_string().as_str())
+        );
+    }
+
+    // The same seeds grown in the interior environment grow alike.
+    let mut interior = small_spec();
+    interior.variants.environments = vec![Environment::Interior];
+    // Its reference size is for the open; the document's variants have none.
+    interior.allometry.clear();
+    let reference =
+        package::build(&Inputs::new(&interior, &TINY).unwrap(), 2, &mut |_| {}).unwrap();
+    for (record, expected) in grown.iter().zip(&reference.manifest.variants) {
+        assert_eq!(record.seed, expected.seed);
+        assert_eq!(record.stats, expected.stats);
+        assert_eq!(record.keyframes, expected.keyframes);
+    }
+}
+
 #[test]
 fn the_key_follows_every_input() {
     let spec = small_spec();
@@ -163,7 +222,7 @@ fn written_packages_read_back_losslessly_and_detect_corruption() {
             dt: spec.growth.step,
             years: spec.growth.years,
             keyframes: vec![4.0, 8.0],
-            neighbourhood: variant.neighbourhood,
+            conditions: Conditions::in_neighbourhood(variant.environment, variant.neighbourhood),
             limits: Limits::default(),
             host: None,
         },

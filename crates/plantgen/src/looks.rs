@@ -1562,6 +1562,17 @@ impl Default for Bottle {
 }
 
 impl Bottle {
+    /// Check the values.
+    ///
+    /// # Errors
+    ///
+    /// Describes the first value outside its range.
+    pub fn validate(&self) -> Result<(), String> {
+        within("bottle height", self.height, 0.1, 50.0)?;
+        within("bottle amount", self.amount, 0.0, 5.0)?;
+        within("bottle peak", self.peak, 0.0, 1.0)
+    }
+
     /// How much thicker the stem is `height` metres above the ground.
     #[must_use]
     pub fn factor(&self, height: f64) -> f64 {
@@ -1655,7 +1666,7 @@ impl Default for Moss {
 }
 
 /// Check that `value` lies in `low..=high`.
-fn within(what: &str, value: f64, low: f64, high: f64) -> Result<(), String> {
+pub(crate) fn within(what: &str, value: f64, low: f64, high: f64) -> Result<(), String> {
     if (low..=high).contains(&value) {
         Ok(())
     } else {
@@ -1729,6 +1740,15 @@ impl OrganLook {
                 return Err("families are for leaves, without a season".to_string());
             }
             families.validate(&self.shape)?;
+        }
+        if let Some(solid) = &self.solid {
+            solid.validate()?;
+        }
+        if let Some(bend) = &self.bend {
+            bend.validate()?;
+        }
+        if let Some(form) = &self.form {
+            form.validate(&self.shape)?;
         }
         within("face_up", self.face_up, 0.0, 1.0)
     }

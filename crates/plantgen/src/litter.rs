@@ -4,8 +4,9 @@
 //! The ground cover's litter words (`after_ecology::cover::Ground`'s
 //! `Needles` and `Leaves`) are generic. Where the canopy's species are
 //! known, the ground lays each species' own litter instead, by its share
-//! of the canopy overhead. [`LITTERS`] says what falls from each canopy
-//! species of the built-in catalogue: needles of its length and width,
+//! of the canopy overhead. Each canopy species' `shed` section
+//! ([`crate::shed`], its `shed.json`) says what falls from it, and
+//! [`litters`] holds every built-in species' litter: needles of its length and width,
 //! single or in the pines' bundles; flat sprays of scale leaves; or leaves
 //! of its own shape, the look its crown wears (`spec::Appearance::organs`,
 //! a sprig's leaf taken singly) unless a leaf seen whole needs a truer one;
@@ -33,15 +34,23 @@
 //! [`Litter::mean`]. Shading is never directional, since the ground's
 //! light reads the relief: only hollows are darker and crests lighter.
 
+use std::sync::OnceLock;
+
+use serde::{Deserialize, Serialize};
+
 use crate::ground::{
     Canvas, Draws, GROUND_LOOK_SIZE, GroundLook, fbm, mix, organ_templates, scale, spot, to_f64,
     value_noise,
 };
-use crate::looks::{Fruit, Lobed, Scales, Shape, Simple};
+use crate::library::Library;
+use crate::looks::{Fruit, Scales, Shape, Simple};
 use crate::math::{self, PI};
 use crate::rng::{hash_str, hash_words};
+use crate::shed::{FoliageKind, Shed};
 use crate::spec::PlantSpec;
 use crate::templates::{Templates, Texel};
+
+use ExtraKind::{Bark, Catkin, Cone, ConeScale, PairedSamara, Samara, Twig};
 
 /// What falls from a tree as its foliage.
 #[derive(Debug, Clone, PartialEq)]
@@ -66,7 +75,8 @@ pub enum Fall {
 }
 
 /// What else falls with the foliage.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
 pub enum ExtraKind {
     /// Woody cones.
     Cone,
@@ -99,23 +109,8 @@ pub struct Extra {
     pub per_m2: f64,
 }
 
-const fn extra(
-    kind: ExtraKind,
-    length_m: [f64; 2],
-    aspect: f64,
-    colour: [f64; 3],
-    per_m2: f64,
-) -> Extra {
-    Extra {
-        kind,
-        length_m,
-        aspect,
-        colour,
-        per_m2,
-    }
-}
-
-/// What one canopy species sheds, and how its litter looks.
+/// What one canopy species sheds, and how its litter looks: its `shed`
+/// section ([`crate::shed`]) as the drawing reads it.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Litter {
     /// The species' id in the built-in library ([`crate::library`]).
@@ -131,9 +126,9 @@ pub struct Litter {
     /// The colours its foliage falls in, linear RGB, as they vary between
     /// pieces: a broadleaf's autumn colours, a conifer's dead needles.
     /// The look is scaled to [`Self::mean`].
-    pub shed: &'static [[f64; 3]],
+    pub shed: Vec<[f64; 3]>,
     /// The colours its foliage dries to on the ground.
-    pub dry: &'static [[f64; 3]],
+    pub dry: Vec<[f64; 3]>,
     /// How far its leaves cup and curl as they dry: 0 they stay flat, 1
     /// their edges roll past upright.
     pub curl: f64,
@@ -143,614 +138,118 @@ pub struct Litter {
     /// How fast its litter rots, 0 to 1: how soon old pieces darken, break
     /// up and are eaten through.
     pub decay: f64,
-    pub extras: &'static [Extra],
-    /// Where its values come from.
-    pub evidence: &'static str,
+    pub extras: Vec<Extra>,
 }
 
-use ExtraKind::{Bark, Catkin, Cone, ConeScale, PairedSamara, Samara, Twig};
+impl Litter {
+    /// The litter `shed` describes, for the species `species`.
+    #[must_use]
+    pub fn from_shed(species: &'static str, shed: &Shed) -> Self {
+        let foliage = &shed.foliage;
+        Self {
+            species,
+            tile_m: shed.look.tile_m,
+            mean: shed.look.mean,
+            relief_m: shed.look.relief_m,
+            fall: match foliage.kind {
+                FoliageKind::Needles => Fall::Needles {
+                    length_m: foliage.length_m,
+                    width_m: foliage.width_m.unwrap_or_default(),
+                    bundle: foliage.bundle.unwrap_or(1),
+                },
+                FoliageKind::Sprays => Fall::Sprays {
+                    length_m: foliage.length_m,
+                },
+                FoliageKind::Leaves => Fall::Leaves {
+                    length_m: foliage.length_m,
+                    shape: foliage.shape.clone(),
+                },
+            },
+            shed: foliage.fall_colours.clone(),
+            dry: foliage.dry_colours.clone(),
+            curl: foliage.curl,
+            pale_beneath: foliage.pale_beneath,
+            decay: shed.decay,
+            extras: shed
+                .pieces
+                .iter()
+                .map(|piece| Extra {
+                    kind: piece.kind,
+                    length_m: piece.length_m,
+                    aspect: piece.aspect,
+                    colour: piece.colour,
+                    per_m2: piece.per_m2,
+                })
+                .collect(),
+        }
+    }
 
-/// Twigs under every tree: `per_m2` of them, `length_m` long.
-const fn twigs(length_m: [f64; 2], per_m2: f64) -> Extra {
-    extra(Twig, length_m, 0.04, [0.20, 0.15, 0.10], per_m2)
+    /// Whether it is a conifer's, needles or sprays of scale leaves, which
+    /// the ground's generic `Needles` word stands for; a broadleaf's leaves
+    /// stand in for its `Leaves`.
+    #[must_use]
+    pub fn needles(&self) -> bool {
+        !matches!(self.fall, Fall::Leaves { .. })
+    }
+
+    /// Its look drawn for `seed`. Each look is drawn on its own, so a
+    /// viewer can draw them on several threads.
+    #[must_use]
+    pub fn look(&self, seed: u64) -> GroundLook {
+        self.drawn(seed).look
+    }
+
+    /// [`Litter::look`] with what its drawing gives before it is scaled to
+    /// its mean: for tuning [`Litter::mean`] and [`Litter::relief_m`].
+    #[must_use]
+    pub fn drawn(&self, seed: u64) -> DrawnLitter {
+        let mut canvas = Canvas::new(GROUND_LOOK_SIZE);
+        draw(
+            &mut canvas,
+            self,
+            hash_words(&[seed, hash_str("litter"), hash_str(self.species)]),
+        );
+        DrawnLitter {
+            look: GroundLook {
+                name: self.species,
+                tile_m: self.tile_m,
+                mean: self.mean,
+                relief_m: self.relief_m,
+                rgba: canvas.finish(self.mean),
+            },
+            drawn_mean: canvas.mean_colour(),
+            drawn_relief_m: canvas.height_span(),
+        }
+    }
 }
 
-/// Needles as they fall: rusty orange to brown.
-const RUSTY: [[f64; 3]; 4] = [
-    [0.46, 0.22, 0.08],
-    [0.42, 0.21, 0.09],
-    [0.50, 0.28, 0.12],
-    [0.38, 0.22, 0.11],
-];
+/// The litter of every species of the built-in library that has a `shed`
+/// section, in the library's order (family, genus, id).
+///
+/// # Panics
+///
+/// Panics if a built-in `shed.json` is invalid, which the library's tests
+/// rule out.
+#[must_use]
+pub fn litters() -> &'static [Litter] {
+    static LITTERS: OnceLock<Vec<Litter>> = OnceLock::new();
+    LITTERS.get_or_init(|| {
+        Library::builtin()
+            .species()
+            .iter()
+            .filter_map(|entry| {
+                let shed = entry.shed().expect("a valid built-in shed section")?;
+                Some(Litter::from_shed(entry.id.as_str(), &shed))
+            })
+            .collect()
+    })
+}
 
-/// Rusty needles as they dry and weather: duller browns.
-const RUSTY_DRY: [[f64; 3]; 4] = [
-    [0.32, 0.19, 0.10],
-    [0.28, 0.17, 0.10],
-    [0.36, 0.23, 0.13],
-    [0.26, 0.18, 0.12],
-];
-
-/// How many canopy species have a litter of their own: [`LITTERS`]'s
-/// length.
-pub const LITTER_LOOKS: usize = 23;
-
-/// Every canopy species' litter, in the order the ground numbers their
-/// looks after its words.
-pub static LITTERS: [Litter; LITTER_LOOKS] = [
-    Litter {
-        species: "abies-grandis",
-        tile_m: 1.0,
-        mean: [0.113, 0.07, 0.04],
-        relief_m: 0.016,
-        fall: Fall::Needles {
-            length_m: [0.02, 0.05],
-            width_m: 0.002,
-            bundle: 1,
-        },
-        shed: &RUSTY,
-        dry: &RUSTY_DRY,
-        curl: 0.0,
-        pale_beneath: 0.0,
-        decay: 0.3,
-        extras: &[
-            extra(ConeScale, [0.02, 0.03], 0.9, [0.30, 0.20, 0.12], 12.0),
-            twigs([0.06, 0.25], 3.0),
-        ],
-        evidence: "Authored from botanical descriptions of grand fir: flat needles 2 to 5 cm long \
-            and about 2 mm wide, notched at the tip, rusty brown when shed and duller as they \
-            weather; the cones break up on the tree, so the floor holds their fan-shaped scales, \
-            about 2 to 3 cm across, not whole cones. Conifer needles rot slowly. Colours chosen \
-            by eye from photographs of fir litter; numbers of scales and twigs plausible, not \
-            measured.",
-    },
-    Litter {
-        species: "juniperus-scopulorum",
-        tile_m: 0.75,
-        mean: [0.144, 0.1, 0.061],
-        relief_m: 0.008,
-        fall: Fall::Sprays {
-            length_m: [0.02, 0.05],
-        },
-        shed: &[[0.40, 0.25, 0.13], [0.36, 0.22, 0.12], [0.44, 0.29, 0.16]],
-        dry: &[[0.30, 0.21, 0.13], [0.26, 0.19, 0.12], [0.34, 0.24, 0.15]],
-        curl: 0.2,
-        pale_beneath: 0.0,
-        decay: 0.25,
-        extras: &[
-            extra(
-                ExtraKind::Fruit,
-                [0.005, 0.007],
-                0.95,
-                [0.22, 0.26, 0.40],
-                8.0,
-            ),
-            twigs([0.04, 0.15], 6.0),
-        ],
-        evidence: "Authored from botanical descriptions of Rocky Mountain juniper: scale leaves on \
-            slender branchlets, shed as small brown sprays a few centimetres long that grey as \
-            they weather; berry-like cones 4 to 7 mm across, blue under a waxy bloom. Colours \
-            chosen by eye; numbers plausible, not measured.",
-    },
-    Litter {
-        species: "picea-sitchensis",
-        tile_m: 1.0,
-        mean: [0.103, 0.075, 0.046],
-        relief_m: 0.037,
-        fall: Fall::Needles {
-            length_m: [0.015, 0.025],
-            width_m: 0.0012,
-            bundle: 1,
-        },
-        shed: &[[0.42, 0.29, 0.15], [0.38, 0.26, 0.14], [0.46, 0.33, 0.18]],
-        dry: &[[0.30, 0.22, 0.14], [0.27, 0.20, 0.13], [0.33, 0.25, 0.16]],
-        curl: 0.0,
-        pale_beneath: 0.0,
-        decay: 0.3,
-        extras: &[
-            extra(Cone, [0.05, 0.09], 0.45, [0.42, 0.30, 0.17], 2.0),
-            twigs([0.06, 0.2], 3.0),
-        ],
-        evidence: "Authored from botanical descriptions of Sitka spruce: stiff, sharp needles 1.5 \
-            to 2.5 cm long and about 1 mm across, brown when shed; cones 5 to 9 cm long with thin, \
-            papery, wavy scales, light brown. Conifer needles rot slowly. Colours chosen by eye; \
-            cone numbers plausible, not measured.",
-    },
-    Litter {
-        species: "pinus-contorta",
-        tile_m: 1.5,
-        mean: [0.135, 0.095, 0.054],
-        relief_m: 0.043,
-        fall: Fall::Needles {
-            length_m: [0.03, 0.07],
-            width_m: 0.0015,
-            bundle: 2,
-        },
-        shed: &[[0.50, 0.32, 0.14], [0.46, 0.29, 0.13], [0.54, 0.37, 0.17]],
-        dry: &[[0.36, 0.26, 0.15], [0.32, 0.23, 0.14], [0.40, 0.29, 0.17]],
-        curl: 0.0,
-        pale_beneath: 0.0,
-        decay: 0.25,
-        extras: &[
-            extra(Cone, [0.03, 0.06], 0.65, [0.40, 0.29, 0.17], 1.0),
-            twigs([0.06, 0.2], 3.0),
-        ],
-        evidence: "Authored from botanical descriptions of lodgepole and shore pine: needles in \
-            bundles of two, 3 to 7 cm long, twisted, about 1.5 mm wide, orange-brown when shed; \
-            cones 3 to 6 cm, egg-shaped and often lopsided. Pine needles rot slowly. Colours \
-            chosen by eye; cone numbers plausible, not measured.",
-    },
-    Litter {
-        species: "pinus-monticola",
-        tile_m: 2.0,
-        mean: [0.131, 0.095, 0.058],
-        relief_m: 0.079,
-        fall: Fall::Needles {
-            length_m: [0.05, 0.10],
-            width_m: 0.0008,
-            bundle: 5,
-        },
-        shed: &[[0.46, 0.32, 0.17], [0.42, 0.29, 0.16], [0.50, 0.36, 0.20]],
-        dry: &[[0.34, 0.26, 0.16], [0.30, 0.23, 0.15], [0.38, 0.29, 0.18]],
-        curl: 0.0,
-        pale_beneath: 0.0,
-        decay: 0.25,
-        extras: &[
-            extra(Cone, [0.10, 0.25], 0.3, [0.42, 0.31, 0.19], 0.3),
-            twigs([0.08, 0.25], 2.0),
-        ],
-        evidence: "Authored from botanical descriptions of western white pine: slender needles in \
-            bundles of five, 5 to 10 cm long; long, narrow, curved cones 10 to 25 cm long. Pine \
-            needles rot slowly. Colours chosen by eye; cone numbers plausible, not measured.",
-    },
-    Litter {
-        species: "pinus-ponderosa",
-        tile_m: 3.0,
-        mean: [0.176, 0.11, 0.056],
-        relief_m: 0.11,
-        fall: Fall::Needles {
-            length_m: [0.12, 0.25],
-            width_m: 0.0016,
-            bundle: 3,
-        },
-        shed: &[[0.60, 0.31, 0.12], [0.56, 0.29, 0.11], [0.64, 0.37, 0.15]],
-        dry: &[[0.44, 0.27, 0.13], [0.40, 0.25, 0.13], [0.48, 0.31, 0.16]],
-        curl: 0.0,
-        pale_beneath: 0.0,
-        decay: 0.2,
-        extras: &[
-            extra(Cone, [0.07, 0.14], 0.7, [0.40, 0.27, 0.15], 0.5),
-            extra(Bark, [0.02, 0.06], 0.6, [0.55, 0.32, 0.18], 3.0),
-            twigs([0.08, 0.3], 2.0),
-        ],
-        evidence: "Authored from botanical descriptions of ponderosa pine: needles in bundles of \
-            three, 12 to 25 cm long, orange-brown when dead and lying in a deep, loose mat that \
-            rots slowly; cones 7 to 14 cm; jigsaw-puzzle flakes of orange bark shed from the \
-            trunk. Colours chosen by eye; numbers plausible, not measured.",
-    },
-    Litter {
-        species: "pseudotsuga-menziesii",
-        tile_m: 1.0,
-        mean: [0.105, 0.065, 0.037],
-        relief_m: 0.052,
-        fall: Fall::Needles {
-            length_m: [0.02, 0.035],
-            width_m: 0.0015,
-            bundle: 1,
-        },
-        shed: &RUSTY,
-        dry: &RUSTY_DRY,
-        curl: 0.0,
-        pale_beneath: 0.0,
-        decay: 0.3,
-        extras: &[
-            extra(Cone, [0.05, 0.10], 0.45, [0.38, 0.24, 0.13], 2.0),
-            twigs([0.08, 0.3], 3.0),
-        ],
-        evidence: "Authored from botanical descriptions of Douglas-fir: flat, blunt needles 2 to \
-            3.5 cm long and about 1.5 mm wide, rusty brown when shed and duller as they weather; \
-            cones 5 to 10 cm with three-pointed bracts. Conifer needles rot slowly. Colours chosen \
-            by eye from photographs of duff; cone numbers plausible, not measured.",
-    },
-    Litter {
-        species: "taxus-brevifolia",
-        tile_m: 0.75,
-        mean: [0.085, 0.055, 0.032],
-        relief_m: 0.014,
-        fall: Fall::Needles {
-            length_m: [0.01, 0.025],
-            width_m: 0.002,
-            bundle: 1,
-        },
-        shed: &[[0.38, 0.21, 0.09], [0.34, 0.19, 0.09], [0.42, 0.25, 0.11]],
-        dry: &[[0.26, 0.17, 0.10], [0.23, 0.15, 0.10], [0.29, 0.19, 0.11]],
-        curl: 0.0,
-        pale_beneath: 0.0,
-        decay: 0.35,
-        extras: &[twigs([0.04, 0.15], 6.0)],
-        evidence: "Authored from botanical descriptions of Pacific yew: flat, sharp-pointed needles \
-            1 to 2.5 cm long, about 2 mm wide, yellow-brown when shed; no cones (the seeds sit in \
-            red arils that animals take). Colours chosen by eye; twig numbers plausible, not \
-            measured.",
-    },
-    Litter {
-        species: "thuja-plicata",
-        tile_m: 1.0,
-        mean: [0.13, 0.07, 0.035],
-        relief_m: 0.021,
-        fall: Fall::Sprays {
-            length_m: [0.05, 0.15],
-        },
-        shed: &[[0.58, 0.24, 0.08], [0.52, 0.22, 0.08], [0.62, 0.30, 0.11]],
-        dry: &[[0.38, 0.20, 0.10], [0.33, 0.18, 0.10], [0.42, 0.24, 0.12]],
-        curl: 0.25,
-        pale_beneath: 0.0,
-        decay: 0.2,
-        extras: &[
-            extra(Cone, [0.01, 0.014], 0.55, [0.40, 0.25, 0.14], 10.0),
-            twigs([0.05, 0.2], 3.0),
-        ],
-        evidence: "Authored from botanical descriptions of western redcedar: whole flat sprays of \
-            scale leaves, 5 to 15 cm long, shed each autumn rusty orange and drying red-brown; \
-            small cones 1 to 1.4 cm long. Cedar litter rots slowly. Colours chosen by eye from \
-            photographs of cedar litter; numbers plausible, not measured.",
-    },
-    Litter {
-        species: "tsuga-heterophylla",
-        tile_m: 0.75,
-        mean: [0.087, 0.058, 0.032],
-        relief_m: 0.021,
-        fall: Fall::Needles {
-            length_m: [0.005, 0.02],
-            width_m: 0.0015,
-            bundle: 1,
-        },
-        shed: &[[0.42, 0.26, 0.11], [0.38, 0.23, 0.10], [0.46, 0.30, 0.13]],
-        dry: &[[0.28, 0.19, 0.11], [0.25, 0.17, 0.10], [0.31, 0.21, 0.12]],
-        curl: 0.0,
-        pale_beneath: 0.0,
-        decay: 0.35,
-        extras: &[
-            extra(Cone, [0.015, 0.025], 0.6, [0.36, 0.25, 0.15], 8.0),
-            twigs([0.04, 0.15], 5.0),
-        ],
-        evidence: "Authored from botanical descriptions of western hemlock: flat needles of \
-            unequal lengths, 0.5 to 2 cm, with rounded tips, yellow-brown when shed; small cones \
-            1.5 to 2.5 cm, borne in great numbers. Colours chosen by eye; numbers plausible, not \
-            measured.",
-    },
-    Litter {
-        species: "acer-macrophyllum",
-        tile_m: 3.0,
-        mean: [0.161, 0.11, 0.055],
-        relief_m: 0.19,
-        fall: Fall::Leaves {
-            length_m: [0.25, 0.5],
-            shape: None,
-        },
-        shed: &[
-            [0.62, 0.45, 0.06],
-            [0.58, 0.38, 0.05],
-            [0.62, 0.33, 0.06],
-            [0.50, 0.44, 0.08],
-        ],
-        dry: &[
-            [0.42, 0.27, 0.12],
-            [0.36, 0.23, 0.11],
-            [0.46, 0.32, 0.16],
-            [0.30, 0.20, 0.11],
-        ],
-        curl: 0.85,
-        pale_beneath: 0.25,
-        decay: 0.55,
-        extras: &[
-            extra(PairedSamara, [0.03, 0.05], 0.3, [0.46, 0.36, 0.20], 3.0),
-            twigs([0.1, 0.4], 2.0),
-        ],
-        evidence: "Authored from botanical descriptions of bigleaf maple: five-lobed blades 15 to \
-            30 cm across on petioles about as long, so 25 to 50 cm from the petiole's base to the \
-            tip, the largest leaves of any maple, yellow to gold in autumn and drying tan to \
-            brown, the large thin blades curling strongly as they dry, paler beneath; paired \
-            winged seeds, each wing 3 to 5 cm. The shape is the crown's own leaf. Colours and \
-            curl chosen by eye from photographs; numbers plausible, not measured.",
-    },
-    Litter {
-        species: "alnus-rubra",
-        tile_m: 1.5,
-        mean: [0.072, 0.058, 0.03],
-        relief_m: 0.028,
-        fall: Fall::Leaves {
-            length_m: [0.09, 0.17],
-            shape: None,
-        },
-        shed: &[[0.20, 0.24, 0.07], [0.26, 0.27, 0.09], [0.30, 0.26, 0.10]],
-        dry: &[[0.15, 0.11, 0.06], [0.12, 0.09, 0.05], [0.19, 0.14, 0.08]],
-        curl: 0.3,
-        pale_beneath: 0.2,
-        decay: 0.9,
-        extras: &[
-            extra(Cone, [0.015, 0.025], 0.6, [0.26, 0.17, 0.10], 4.0),
-            extra(Catkin, [0.05, 0.10], 0.1, [0.30, 0.18, 0.12], 2.0),
-            twigs([0.06, 0.25], 3.0),
-        ],
-        evidence: "Authored from botanical descriptions of red alder: doubly toothed blades 7 to \
-            15 cm on petioles of 1.5 to 2 cm, which fall still green and soon turn dark brown to \
-            black, lying rather flat; their nitrogen-rich litter rots within a year, the fastest \
-            here; small woody cones 1.5 to 2.5 cm and spent male catkins 5 to 10 cm long. Colours \
-            chosen by eye; numbers plausible, not measured.",
-    },
-    Litter {
-        species: "arbutus-menziesii",
-        tile_m: 1.5,
-        mean: [0.129, 0.085, 0.047],
-        relief_m: 0.05,
-        fall: Fall::Leaves {
-            length_m: [0.09, 0.17],
-            shape: None,
-        },
-        shed: &[[0.62, 0.20, 0.06], [0.56, 0.30, 0.06], [0.54, 0.42, 0.10]],
-        dry: &[[0.40, 0.26, 0.13], [0.34, 0.22, 0.12], [0.46, 0.31, 0.16]],
-        curl: 0.95,
-        pale_beneath: 0.45,
-        decay: 0.35,
-        extras: &[
-            extra(Bark, [0.03, 0.10], 0.4, [0.50, 0.20, 0.10], 5.0),
-            extra(
-                ExtraKind::Fruit,
-                [0.008, 0.012],
-                0.95,
-                [0.62, 0.18, 0.06],
-                2.0,
-            ),
-            twigs([0.05, 0.2], 2.0),
-        ],
-        evidence: "Authored from botanical descriptions of Pacific madrone: leathery, untoothed \
-            blades 7 to 15 cm on petioles of 1 to 2.5 cm, pale beneath, shed in early summer \
-            turning red-orange to yellow and drying brown into crisp curls; leathery leaves rot \
-            slowly; thin curls of red-brown bark peeling from the trunk; orange-red berries about \
-            1 cm. Colours and curl chosen by eye; numbers plausible, not measured.",
-    },
-    Litter {
-        species: "betula-papyrifera",
-        tile_m: 1.0,
-        mean: [0.162, 0.12, 0.056],
-        relief_m: 0.028,
-        fall: Fall::Leaves {
-            length_m: [0.065, 0.12],
-            shape: None,
-        },
-        shed: &[[0.64, 0.50, 0.10], [0.58, 0.44, 0.08], [0.60, 0.52, 0.14]],
-        dry: &[[0.44, 0.31, 0.14], [0.38, 0.27, 0.13], [0.48, 0.35, 0.17]],
-        curl: 0.5,
-        pale_beneath: 0.25,
-        decay: 0.6,
-        extras: &[
-            extra(Bark, [0.03, 0.10], 0.5, [0.80, 0.78, 0.72], 1.0),
-            twigs([0.05, 0.2], 3.0),
-        ],
-        evidence: "Authored from botanical descriptions of paper birch: doubly toothed blades 5 to \
-            10 cm on petioles of 1.5 to 2.5 cm, yellow in autumn and drying tan; strips of white, \
-            papery bark. Colours and curl chosen by eye; numbers plausible, not measured.",
-    },
-    Litter {
-        species: "cornus-nuttallii",
-        tile_m: 1.0,
-        mean: [0.137, 0.075, 0.053],
-        relief_m: 0.036,
-        fall: Fall::Leaves {
-            length_m: [0.08, 0.13],
-            shape: None,
-        },
-        shed: &[
-            [0.50, 0.10, 0.09],
-            [0.56, 0.18, 0.11],
-            [0.44, 0.12, 0.16],
-            [0.58, 0.30, 0.10],
-        ],
-        dry: &[[0.34, 0.18, 0.13], [0.30, 0.17, 0.12], [0.38, 0.22, 0.14]],
-        curl: 0.6,
-        pale_beneath: 0.35,
-        decay: 0.7,
-        extras: &[
-            extra(
-                ExtraKind::Fruit,
-                [0.008, 0.012],
-                0.8,
-                [0.60, 0.10, 0.06],
-                1.0,
-            ),
-            twigs([0.05, 0.2], 2.0),
-        ],
-        evidence: "Authored from botanical descriptions of Pacific dogwood: untoothed oval blades \
-            7 to 12 cm with veins curving toward the tip, on petioles of about 1 cm, red to purple \
-            in autumn, paler beneath, cupping as they dry; dogwood litter rots quickly; bright \
-            red fruits about 1 cm in heads. Colours and curl chosen by eye; numbers plausible, \
-            not measured.",
-    },
-    Litter {
-        species: "frangula-purshiana",
-        tile_m: 1.5,
-        mean: [0.127, 0.095, 0.043],
-        relief_m: 0.031,
-        fall: Fall::Leaves {
-            length_m: [0.07, 0.16],
-            shape: None,
-        },
-        shed: &[[0.60, 0.50, 0.10], [0.54, 0.44, 0.10], [0.56, 0.40, 0.08]],
-        dry: &[[0.40, 0.29, 0.13], [0.34, 0.25, 0.12], [0.44, 0.32, 0.15]],
-        curl: 0.45,
-        pale_beneath: 0.25,
-        decay: 0.6,
-        extras: &[twigs([0.05, 0.2], 3.0)],
-        evidence: "Authored from botanical descriptions of cascara: elliptic blades 5 to 15 cm \
-            with prominent, parallel side veins, on petioles of 1 to 2 cm, yellow in autumn and \
-            drying brown. Colours and curl chosen by eye; numbers plausible, not measured.",
-    },
-    Litter {
-        species: "fraxinus-latifolia",
-        tile_m: 2.0,
-        mean: [0.144, 0.115, 0.062],
-        relief_m: 0.087,
-        fall: Fall::Leaves {
-            length_m: [0.15, 0.30],
-            shape: None,
-        },
-        shed: &[[0.58, 0.52, 0.14], [0.52, 0.48, 0.15], [0.56, 0.46, 0.10]],
-        dry: &[[0.42, 0.33, 0.17], [0.36, 0.28, 0.15], [0.46, 0.36, 0.19]],
-        curl: 0.45,
-        pale_beneath: 0.3,
-        decay: 0.65,
-        extras: &[
-            extra(Samara, [0.03, 0.05], 0.22, [0.48, 0.40, 0.24], 5.0),
-            twigs([0.08, 0.3], 2.0),
-        ],
-        evidence: "Authored from botanical descriptions of Oregon ash: compound leaves 15 to 30 cm \
-            long of five to seven leaflets, yellow in autumn and falling whole, drying tan; ash \
-            litter rots quickly; single winged seeds 3 to 5 cm long. The shape is the crown's own \
-            leaf. Colours and curl chosen by eye; numbers plausible, not measured.",
-    },
-    Litter {
-        species: "malus-fusca",
-        tile_m: 1.0,
-        mean: [0.13, 0.085, 0.042],
-        relief_m: 0.025,
-        fall: Fall::Leaves {
-            length_m: [0.05, 0.12],
-            shape: None,
-        },
-        shed: &[[0.60, 0.34, 0.08], [0.56, 0.44, 0.09], [0.52, 0.22, 0.08]],
-        dry: &[[0.40, 0.25, 0.12], [0.34, 0.22, 0.11], [0.44, 0.29, 0.14]],
-        curl: 0.5,
-        pale_beneath: 0.3,
-        decay: 0.6,
-        extras: &[
-            extra(
-                ExtraKind::Fruit,
-                [0.01, 0.015],
-                0.75,
-                [0.62, 0.36, 0.10],
-                2.0,
-            ),
-            twigs([0.05, 0.2], 3.0),
-        ],
-        evidence: "Authored from botanical descriptions of Pacific crabapple: toothed blades 4 to \
-            10 cm, sometimes lobed, on petioles of 1 to 3 cm, orange to red in autumn and drying \
-            brown; small oblong apples 1 to 1.5 cm, yellow to red. Colours and curl chosen by eye; \
-            numbers plausible, not measured.",
-    },
-    Litter {
-        species: "populus-tremuloides",
-        tile_m: 1.0,
-        mean: [0.194, 0.145, 0.068],
-        relief_m: 0.025,
-        fall: Fall::Leaves {
-            length_m: [0.05, 0.12],
-            shape: None,
-        },
-        shed: &[[0.68, 0.52, 0.06], [0.64, 0.46, 0.05], [0.64, 0.38, 0.06]],
-        dry: &[[0.48, 0.36, 0.16], [0.42, 0.30, 0.14], [0.36, 0.29, 0.18]],
-        curl: 0.4,
-        pale_beneath: 0.2,
-        decay: 0.6,
-        extras: &[twigs([0.05, 0.2], 3.0)],
-        evidence: "Authored from botanical descriptions of quaking aspen: nearly round, finely \
-            toothed blades 3 to 7 cm on flattened petioles about as long, golden in autumn and \
-            drying tan to grey-brown. Colours and curl chosen by eye; numbers plausible, not \
-            measured.",
-    },
-    Litter {
-        species: "populus-trichocarpa",
-        tile_m: 2.0,
-        mean: [0.145, 0.115, 0.067],
-        relief_m: 0.047,
-        fall: Fall::Leaves {
-            length_m: [0.10, 0.20],
-            shape: None,
-        },
-        shed: &[[0.62, 0.52, 0.10], [0.56, 0.46, 0.09], [0.58, 0.42, 0.08]],
-        dry: &[[0.40, 0.30, 0.16], [0.35, 0.28, 0.18], [0.44, 0.33, 0.18]],
-        curl: 0.55,
-        pale_beneath: 0.6,
-        decay: 0.6,
-        extras: &[
-            extra(Catkin, [0.04, 0.08], 0.12, [0.34, 0.26, 0.16], 2.0),
-            twigs([0.08, 0.3], 2.0),
-        ],
-        evidence: "Authored from botanical descriptions of black cottonwood: finely toothed, \
-            broadly ovate blades 7 to 15 cm, whitish beneath, on petioles of 3 to 6 cm, yellow in \
-            autumn and drying brown; spent catkins. Colours and curl chosen by eye; numbers \
-            plausible, not measured.",
-    },
-    Litter {
-        species: "prunus-emarginata",
-        tile_m: 1.0,
-        mean: [0.124, 0.08, 0.04],
-        relief_m: 0.018,
-        fall: Fall::Leaves {
-            length_m: [0.04, 0.09],
-            shape: None,
-        },
-        shed: &[[0.60, 0.38, 0.08], [0.56, 0.22, 0.08], [0.58, 0.48, 0.10]],
-        dry: &[[0.38, 0.23, 0.12], [0.33, 0.21, 0.11], [0.42, 0.27, 0.13]],
-        curl: 0.5,
-        pale_beneath: 0.25,
-        decay: 0.6,
-        extras: &[twigs([0.04, 0.15], 4.0)],
-        evidence: "Authored from botanical descriptions of bitter cherry: finely toothed blades 3 \
-            to 8 cm with rounded tips, on petioles of 0.5 to 1.5 cm, yellow to red in autumn and \
-            drying brown. Colours and curl chosen by eye; numbers plausible, not measured.",
-    },
-    Litter {
-        species: "quercus-garryana",
-        tile_m: 1.5,
-        mean: [0.123, 0.09, 0.054],
-        relief_m: 0.048,
-        fall: Fall::Leaves {
-            length_m: [0.07, 0.16],
-            shape: Some(Shape::Lobed(Lobed {
-                width: 0.62,
-                lobes: 4,
-                depth: 0.55,
-                round: 1.0,
-                petiole: 0.08,
-            })),
-        },
-        shed: &[[0.46, 0.34, 0.12], [0.42, 0.30, 0.11], [0.50, 0.40, 0.15]],
-        dry: &[[0.38, 0.26, 0.14], [0.32, 0.22, 0.13], [0.42, 0.31, 0.18]],
-        curl: 0.7,
-        pale_beneath: 0.4,
-        decay: 0.25,
-        extras: &[
-            extra(ExtraKind::Fruit, [0.02, 0.03], 0.7, [0.40, 0.28, 0.14], 1.5),
-            twigs([0.05, 0.25], 3.0),
-        ],
-        evidence: "Authored from botanical descriptions of Oregon white oak: leathery blades 5 to \
-            15 cm, deeply cut into rounded lobes, paler beneath, on petioles of 1 to 2 cm, \
-            yellow-brown in autumn, drying brown and crinkled and slow to rot; acorns 2 to 3 cm. \
-            The crown wears sprigs of toothed leaves; a fallen leaf seen whole takes the lobed \
-            shape. Colours and curl chosen by eye; numbers plausible, not measured.",
-    },
-    Litter {
-        species: "salix-lasiandra",
-        tile_m: 1.5,
-        mean: [0.138, 0.11, 0.057],
-        relief_m: 0.029,
-        fall: Fall::Leaves {
-            length_m: [0.06, 0.16],
-            shape: None,
-        },
-        shed: &[[0.62, 0.54, 0.12], [0.54, 0.50, 0.14], [0.58, 0.46, 0.10]],
-        dry: &[[0.42, 0.32, 0.16], [0.36, 0.28, 0.15], [0.46, 0.35, 0.18]],
-        curl: 0.65,
-        pale_beneath: 0.45,
-        decay: 0.65,
-        extras: &[twigs([0.05, 0.25], 4.0)],
-        evidence: "Authored from botanical descriptions of Pacific willow: narrow, long-pointed, \
-            finely toothed blades 5 to 15 cm long and 1 to 3 cm wide, whitish beneath, on \
-            petioles of 0.5 to 1.5 cm, yellow in autumn, drying brown and rolling along their \
-            length. Colours and curl chosen by eye; numbers plausible, not measured.",
-    },
-];
+/// The litter of built-in species `species`, if it has a `shed` section.
+#[must_use]
+pub fn litter(species: &str) -> Option<&'static Litter> {
+    litters().iter().find(|litter| litter.species == species)
+}
 
 /// The newest share of a look's pieces: they fell this season and are
 /// still drying, while the older ones have dried.
@@ -765,46 +264,6 @@ const CUP_RADIANS: f64 = 2.2;
 /// starts before it reaches the middle.
 const MARGIN_REACH: f64 = 0.1;
 
-/// The number of a species' litter in [`LITTERS`].
-#[must_use]
-pub fn litter_index(species: &str) -> Option<usize> {
-    LITTERS.iter().position(|litter| litter.species == species)
-}
-
-/// Whether litter `index` of [`LITTERS`] is a conifer's, needles or
-/// sprays of scale leaves, which the ground's generic `Needles` word
-/// stands for; a broadleaf's leaves stand in for its `Leaves`.
-#[must_use]
-pub fn litter_needles(index: usize) -> Option<bool> {
-    LITTERS
-        .get(index)
-        .map(|litter| !matches!(litter.fall, Fall::Leaves { .. }))
-}
-
-/// The tile, mean colour and relief of litter look `index` without drawing
-/// it.
-#[must_use]
-pub fn litter_look_size(index: usize) -> Option<(f32, [f32; 3], f32)> {
-    LITTERS
-        .get(index)
-        .map(|litter| (litter.tile_m, litter.mean, litter.relief_m))
-}
-
-/// Draw every litter look for `seed`, in [`LITTERS`] order.
-#[must_use]
-pub fn litter_looks(seed: u64) -> Vec<GroundLook> {
-    (0..LITTERS.len())
-        .filter_map(|index| litter_look(index, seed))
-        .collect()
-}
-
-/// Draw litter look `index` of [`LITTERS`] for `seed`: each look is drawn
-/// on its own, so a viewer can draw them on several threads.
-#[must_use]
-pub fn litter_look(index: usize, seed: u64) -> Option<GroundLook> {
-    litter_drawn(index, seed).map(|drawn| drawn.look)
-}
-
 /// A drawn litter look and what its drawing gives before it is scaled to
 /// its litter's mean: for tuning [`Litter::mean`] and [`Litter::relief_m`].
 #[derive(Debug, Clone, PartialEq)]
@@ -814,29 +273,6 @@ pub struct DrawnLitter {
     pub drawn_mean: [f64; 3],
     /// The height of the highest texel over the lowest as drawn, metres.
     pub drawn_relief_m: f64,
-}
-
-/// [`litter_look`] with what its drawing gives before scaling.
-#[must_use]
-pub fn litter_drawn(index: usize, seed: u64) -> Option<DrawnLitter> {
-    let litter = LITTERS.get(index)?;
-    let mut canvas = Canvas::new(GROUND_LOOK_SIZE);
-    draw(
-        &mut canvas,
-        litter,
-        hash_words(&[seed, hash_str("litter"), hash_str(litter.species)]),
-    );
-    Some(DrawnLitter {
-        look: GroundLook {
-            name: litter.species,
-            tile_m: litter.tile_m,
-            mean: litter.mean,
-            relief_m: litter.relief_m,
-            rgba: canvas.finish(litter.mean),
-        },
-        drawn_mean: canvas.mean_colour(),
-        drawn_relief_m: canvas.height_span(),
-    })
 }
 
 /// The leaf a species' crown wears, taken singly: its `leaf` organ's
@@ -983,7 +419,7 @@ fn draw(canvas: &mut Canvas, litter: &Litter, seed: u64) {
             draw_leaves(canvas, litter, draws, per_m, *length_m, &shape);
         }
     }
-    for (k, extra) in (0_u64..).zip(litter.extras) {
+    for (k, extra) in (0_u64..).zip(&litter.extras) {
         draw_extra(
             canvas,
             extra,
@@ -1028,8 +464,8 @@ fn draw_needles(
         let colour = scale(
             rotted(
                 mix(
-                    needles.pick(i, 5, litter.shed),
-                    needles.pick(i, 13, litter.dry),
+                    needles.pick(i, 5, &litter.shed),
+                    needles.pick(i, 13, &litter.dry),
                     dried,
                 ),
                 age,
@@ -1092,7 +528,7 @@ fn draw_sprays(canvas: &mut Canvas, litter: &Litter, draws: Draws, per_m: f64, l
         let angle = bits.unit(i, 3) * 2.0 * PI;
         let colour = scale(
             rotted(
-                bits.pick(i, 4, litter.dry),
+                bits.pick(i, 4, &litter.dry),
                 bits.range(i, 5, 0.3, 1.0),
                 litter.decay,
             ),
@@ -1115,8 +551,8 @@ fn draw_sprays(canvas: &mut Canvas, litter: &Litter, draws: Draws, per_m: f64, l
         let colour = scale(
             rotted(
                 mix(
-                    sprays.pick(i, 5, litter.shed),
-                    sprays.pick(i, 13, litter.dry),
+                    sprays.pick(i, 5, &litter.shed),
+                    sprays.pick(i, 13, &litter.dry),
                     dried,
                 ),
                 age,
@@ -1494,8 +930,8 @@ fn draw_leaves(
                 bend: curled * leaves.range(i, 11, 0.0, 0.5),
                 crinkle_m: 0.03 * curled * length / per_m,
                 dryness,
-                shed: scale(leaves.pick(i, 5, litter.shed), tint),
-                dry: scale(leaves.pick(i, 13, litter.dry), tint),
+                shed: scale(leaves.pick(i, 5, &litter.shed), tint),
+                dry: scale(leaves.pick(i, 13, &litter.dry), tint),
                 age,
                 decay: litter.decay,
                 eaten: 0.8 * litter.decay * age * age,
@@ -1680,17 +1116,25 @@ fn draw_extra(canvas: &mut Canvas, extra: &Extra, draws: Draws, scales: [f64; 3]
 mod tests {
     use super::*;
     use crate::ground::{GROUND_LOOK_NAMES, mip_chain, srgb_to_linear};
-    use crate::library;
 
     #[test]
-    fn every_litter_names_a_builtin_species_once() {
-        for (index, litter) in LITTERS.iter().enumerate() {
+    fn every_shed_section_is_its_species_litter() {
+        let mut count = 0;
+        for entry in Library::builtin().species() {
+            let Some(shed) = entry.shed().unwrap() else {
+                continue;
+            };
+            count += 1;
+            assert_eq!(shed.id, entry.id);
+            let litter = litter(&entry.id).unwrap();
+            assert_eq!(litter, &Litter::from_shed(litter.species, &shed));
+        }
+        assert_eq!(count, litters().len());
+        assert_eq!(count, 23);
+        for litter in litters() {
             let name = litter.species;
-            assert!(library::species(name).is_some(), "{name}");
-            assert_eq!(litter_index(name), Some(index));
             assert!(!GROUND_LOOK_NAMES.contains(&name));
             assert!(!litter.shed.is_empty() && !litter.dry.is_empty(), "{name}");
-            assert!(litter.evidence.starts_with("Authored"), "{name}");
             assert!(litter.tile_m >= 0.75 && litter.relief_m > 0.0, "{name}");
             for value in [litter.curl, litter.pale_beneath, litter.decay] {
                 assert!((0.0..=1.0).contains(&value), "{name}");
@@ -1719,11 +1163,20 @@ mod tests {
 
     #[test]
     fn litter_looks_are_deterministic_and_average_to_their_means() {
-        for index in [0, 5, 6, 8, 10, 11, 21] {
-            let look = litter_look(index, 1).unwrap();
-            assert_eq!(Some(&look), litter_look(index, 1).as_ref());
-            assert_ne!(look.rgba, litter_look(index, 2).unwrap().rgba);
-            assert_eq!(look.name, LITTERS[index].species);
+        for species in [
+            "abies-grandis",
+            "pinus-ponderosa",
+            "pseudotsuga-menziesii",
+            "thuja-plicata",
+            "acer-macrophyllum",
+            "alnus-rubra",
+            "quercus-garryana",
+        ] {
+            let litter = litter(species).unwrap();
+            let look = litter.look(1);
+            assert_eq!(look, litter.look(1));
+            assert_ne!(look.rgba, litter.look(2).rgba);
+            assert_eq!(look.name, species);
             let texels = mip_chain(&look.rgba, GROUND_LOOK_SIZE);
             let last = texels.last().unwrap();
             for (channel, &byte) in last.iter().enumerate().take(3) {
@@ -1749,8 +1202,8 @@ mod tests {
         // mean has it: otherwise the scaling tints every piece, which
         // turned maple and alder litter olive. The relief is what the
         // pieces stand to, for the light and the parallax.
-        for (index, litter) in LITTERS.iter().enumerate() {
-            let drawn = litter_drawn(index, 1).unwrap();
+        for litter in litters() {
+            let drawn = litter.drawn(1);
             let [r, g, b] = drawn.drawn_mean;
             let mean = litter.mean.map(f64::from);
             for (declared, wanted) in [(mean[0] / mean[1], r / g), (mean[2] / mean[1], b / g)] {
@@ -1776,8 +1229,13 @@ mod tests {
     fn litter_is_not_one_flat_colour() {
         // Pieces of different browns over darker duff: a look's
         // brightness varies, but not as wildly as noise.
-        for index in [6, 8, 10, 11] {
-            let look = litter_look(index, 3).unwrap();
+        for species in [
+            "pseudotsuga-menziesii",
+            "thuja-plicata",
+            "acer-macrophyllum",
+            "alnus-rubra",
+        ] {
+            let look = litter(species).unwrap().look(3);
             let (texels, _) = look.rgba.as_chunks::<4>();
             let luminance: Vec<f64> = texels
                 .iter()

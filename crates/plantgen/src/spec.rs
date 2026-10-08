@@ -11,7 +11,9 @@ use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 
 use crate::body::BodyLook;
+use crate::conditions::{ClassKey, Conditions};
 pub use crate::evidence::{Evidence, FieldEvidence, Provenance, SourceRef};
+use crate::library::{Entry, Library};
 use crate::looks::{self, Flare, Look, Moss, OrganLook, Ridges};
 use crate::lsys::program::SymbolKind;
 use crate::lsys::{Neighbourhood, OrganKind, Program, ProgramError, tools};
@@ -36,25 +38,25 @@ pub const PROGRAMS: [(&str, &str); 14] = [
     ("cushion", include_str!("../programs/cushion.lsys")),
 ];
 
+/// A built-in program's source, by name.
 #[must_use]
 pub fn builtin_program(name: &str) -> Option<&'static str> {
-    PROGRAMS
-        .iter()
-        .find(|(program, _)| *program == name)
-        .map(|(_, source)| *source)
+    Library::builtin().program(name)
 }
 
 /// Every species of the built-in library ([`crate::library`]), by id
 /// with its spec's JSON, sorted by family, genus and id.
 pub fn all_species() -> impl Iterator<Item = (&'static str, &'static str)> {
-    crate::library::LIBRARY
+    Library::builtin()
+        .species()
         .iter()
-        .map(|species| (species.id, species.source))
+        .map(|entry| (entry.id.as_str(), entry.source()))
 }
 
+/// A built-in species' spec, as JSON, by id.
 #[must_use]
 pub fn builtin_species(id: &str) -> Option<&'static str> {
-    crate::library::species(id).map(|species| species.source)
+    Library::builtin().entry(id).map(Entry::source)
 }
 
 /// How far an organ type's shading area may stray from the leaf area its
@@ -133,7 +135,8 @@ pub enum GrowthForm {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Generator {
-    /// Name of a built-in program (see [`PROGRAMS`]).
+    /// Name of the program that grows it: a built-in one (see
+    /// [`PROGRAMS`]) or a library folder's ([`Library`]).
     pub program: String,
     /// Parameter values that replace the program's defaults.
     #[serde(default)]
@@ -221,6 +224,10 @@ pub struct VariantPlan {
     /// Replacements for the default neighbourhoods.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub neighbourhoods: BTreeMap<Environment, Neighbourhood>,
+    /// Growing conditions to build variants in as well, each grown with
+    /// every seed and labelled by its preset ([`crate::conditions`]).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub conditions: Vec<Conditions>,
 }
 
 /// One variant to grow.
@@ -229,6 +236,18 @@ pub struct Variant {
     pub environment: Environment,
     pub seed: u64,
     pub neighbourhood: Neighbourhood,
+    /// The condition class of a variant grown in a conditions document;
+    /// `None` for an environment's.
+    #[serde(skip)]
+    pub class: Option<ClassKey>,
+}
+
+impl Variant {
+    /// The conditions it grows in: its environment, with its neighbourhood.
+    #[must_use]
+    pub fn conditions(&self) -> Conditions {
+        Conditions::in_neighbourhood(self.environment, self.neighbourhood)
+    }
 }
 
 /// How the plant looks. Colours are linear RGB in 0 to 1.
@@ -354,6 +373,16 @@ impl Appearance {
                 .validate()
                 .map_err(|message| format!("appearance: {message}"))?;
         }
+        if let Some(bottle) = &self.bottle {
+            bottle
+                .validate()
+                .map_err(|message| format!("appearance: {message}"))?;
+        }
+        if let Some(roots) = &self.roots {
+            roots
+                .validate()
+                .map_err(|message| format!("appearance: {message}"))?;
+        }
         for (body, look) in &self.bodies {
             look.validate()
                 .map_err(|message| format!("appearance.bodies.{body}: {message}"))?;
@@ -437,11 +466,68 @@ impl PlantSpec {
     pub fn host_geometry(
         &self,
     ) -> Result<Option<std::sync::Arc<crate::lsys::tools::Host>>, SpecError> {
+        self.host_geometry_in(Library::builtin())
+    }
+
+    /// [`PlantSpec::host_geometry`] with the host and its program from
+    /// `library`.
+    ///
+    /// # Errors
+    ///
+    /// As [`PlantSpec::host_geometry`].
+    pub fn host_geometry_in(
+        &self,
+        library: &Library,
+    ) -> Result<Option<std::sync::Arc<crate::lsys::tools::Host>>, SpecError> {
+        match self.host_in(library)? {
+            Some((spec, source)) => self.host_wood(&spec, &source).map(Some),
+            None => Ok(None),
+        }
+    }
+
+    /// The host's spec and its program's source, from `library`: what a
+    /// guest's package hashes and grows its host from. `None` without a
+    /// host.
+    ///
+    /// # Errors
+    ///
+    /// Fails if the library lacks the host or its program, or the host's
+    /// spec is invalid.
+    pub fn host_in(&self, library: &Library) -> Result<Option<(PlantSpec, String)>, SpecError> {
         let Some(host) = &self.host else {
             return Ok(None);
         };
-        let spec = PlantSpec::builtin(&host.species)
+        let spec = library
+            .spec(&host.species)
             .map_err(|error| SpecError(format!("host {}: {error}", host.species)))?;
+        let source = library
+            .program(&spec.generator.program)
+            .ok_or_else(|| {
+                SpecError(format!(
+                    "host {}: unknown program `{}`",
+                    host.species, spec.generator.program
+                ))
+            })?
+            .to_string();
+        Ok(Some((spec, source)))
+    }
+
+    /// The wood of this guest's host, grown from the host's `spec` by its
+    /// program's `source` (see [`PlantSpec::host_in`]).
+    ///
+    /// # Errors
+    ///
+    /// Fails without a host, on a host without the variant or keyframe, or
+    /// a host that will not grow.
+    pub fn host_wood(
+        &self,
+        spec: &PlantSpec,
+        source: &str,
+    ) -> Result<std::sync::Arc<crate::lsys::tools::Host>, SpecError> {
+        let host = self
+            .host
+            .as_ref()
+            .ok_or_else(|| SpecError(format!("species `{}` has no host", self.id)))?;
         if spec.host.is_some() {
             return Err(SpecError(format!(
                 "host {} has a host of its own",
@@ -459,7 +545,7 @@ impl PlantSpec {
             .into_iter()
             .find(|variant| variant.environment == host.environment && variant.seed == host.seed)
             .ok_or_else(|| SpecError(format!("host {} has no such variant", host.species)))?;
-        let (program, params) = spec.program()?;
+        let (program, params) = spec.program_from(source)?;
         let growth = crate::grow::grow(
             &program,
             &params,
@@ -468,7 +554,7 @@ impl PlantSpec {
                 dt: spec.growth.step,
                 years: host.age,
                 keyframes: vec![host.age],
-                neighbourhood: variant.neighbourhood,
+                conditions: variant.conditions(),
                 limits: crate::lsys::Limits::default(),
                 host: None,
             },
@@ -481,9 +567,7 @@ impl PlantSpec {
             .filter(|segment| segment.body == 0)
             .map(|segment| (segment.start, segment.end, segment.radius))
             .collect();
-        Ok(Some(std::sync::Arc::new(crate::lsys::tools::Host::new(
-            capsules,
-        ))))
+        Ok(std::sync::Arc::new(crate::lsys::tools::Host::new(capsules)))
     }
 }
 
@@ -512,9 +596,19 @@ impl PlantSpec {
     ///
     /// Fails on malformed JSON or any problem [`PlantSpec::validate`] finds.
     pub fn from_json(text: &str) -> Result<Self, SpecError> {
+        Self::from_json_in(text, Library::builtin())
+    }
+
+    /// Parse a spec and check it against `library`, whose programs and
+    /// species it may name.
+    ///
+    /// # Errors
+    ///
+    /// Fails if the JSON is malformed or the spec is invalid.
+    pub fn from_json_in(text: &str, library: &Library) -> Result<Self, SpecError> {
         let spec: Self = serde_json::from_str(text)
             .map_err(|error| SpecError(format!("invalid spec: {error}")))?;
-        spec.validate()?;
+        spec.validate_in(library)?;
         Ok(spec)
     }
 
@@ -524,22 +618,24 @@ impl PlantSpec {
     ///
     /// Fails if there is no such species.
     pub fn builtin(id: &str) -> Result<Self, SpecError> {
-        let text = builtin_species(id).ok_or_else(|| {
-            let known: Vec<&str> = all_species().map(|(name, _)| name).collect();
-            SpecError(format!(
-                "no built-in species `{id}`; built-in species: {}",
-                known.join(", ")
-            ))
-        })?;
-        Self::from_json(text)
+        Library::builtin().spec(id)
     }
 
-    /// Check the spec's values.
+    /// Check the spec's values against the built-in library.
     ///
     /// # Errors
     ///
     /// Describes the first problem found.
     pub fn validate(&self) -> Result<(), SpecError> {
+        self.validate_in(Library::builtin())
+    }
+
+    /// Check the spec's values, with `library`'s programs.
+    ///
+    /// # Errors
+    ///
+    /// Describes the first problem found.
+    pub fn validate_in(&self, library: &Library) -> Result<(), SpecError> {
         let fail = |message: String| Err(SpecError(format!("species `{}`: {message}", self.id)));
         if self.schema != SPEC_SCHEMA {
             return fail(format!(
@@ -580,6 +676,37 @@ impl PlantSpec {
         if self.variants.environments.is_empty() || self.variants.seeds.is_empty() {
             return fail("variants need at least one environment and one seed".into());
         }
+        // Each variant is named by its environment and seed, so a
+        // conditions document's preset labels its variants and may not be
+        // an environment's or another document's.
+        let mut labels = self.variants.environments.clone();
+        for (index, conditions) in self.variants.conditions.iter().enumerate() {
+            let at = format!("variants.conditions[{index}]");
+            if let Err(message) = conditions.validate() {
+                return fail(format!("{at}: {message}"));
+            }
+            let Some(preset) = conditions.preset else {
+                return fail(format!(
+                    "{at} needs a preset, which names the variants grown in it"
+                ));
+            };
+            if labels.contains(&preset) {
+                return fail(format!(
+                    "{at} is labelled {}, which another variant of the spec already is",
+                    preset.name()
+                ));
+            }
+            labels.push(preset);
+            let host = conditions
+                .interactions
+                .as_ref()
+                .and_then(|interactions| interactions.host.as_ref());
+            if host.is_some() && host != self.host.as_ref() {
+                return fail(format!(
+                    "{at}: interactions.host must be the spec's own host"
+                ));
+            }
+        }
         if let Err(message) = self.appearance.validate() {
             return fail(message);
         }
@@ -587,7 +714,7 @@ impl PlantSpec {
             if !(point.height > 0.0 && point.tolerance > 0.0 && point.age <= growth.years) {
                 return fail(format!("allometry at age {} is invalid", point.age));
             }
-            if !self.variants.environments.contains(&point.environment) {
+            if !labels.contains(&point.environment) {
                 return fail(format!(
                     "allometry at age {} is for the {} environment, which no variant grows in",
                     point.age,
@@ -603,11 +730,16 @@ impl PlantSpec {
                 return fail(format!("the evidence note on `{path}`: {message}"));
             }
         }
-        if builtin_program(&self.generator.program).is_none() {
-            let known: Vec<&str> = PROGRAMS.iter().map(|(name, _)| *name).collect();
+        if library.program(&self.generator.program).is_none() {
+            let known: Vec<&str> = library.programs().collect();
             return fail(format!(
-                "unknown program `{}`; built-in programs: {}",
+                "unknown program `{}`; {}programs: {}",
                 self.generator.program,
+                if library.root().is_none() {
+                    "built-in "
+                } else {
+                    ""
+                },
                 known.join(", ")
             ));
         }
@@ -620,7 +752,19 @@ impl PlantSpec {
     ///
     /// Fails if the program does not compile or a parameter is unknown.
     pub fn program(&self) -> Result<(Program, Vec<f64>), SpecError> {
-        let source = builtin_program(&self.generator.program)
+        self.program_in(Library::builtin())
+    }
+
+    /// Compile the spec's program from `library` and resolve its
+    /// parameters.
+    ///
+    /// # Errors
+    ///
+    /// Fails if the library lacks the program, it does not compile or a
+    /// parameter is unknown.
+    pub fn program_in(&self, library: &Library) -> Result<(Program, Vec<f64>), SpecError> {
+        let source = library
+            .program(&self.generator.program)
             .ok_or_else(|| SpecError(format!("unknown program `{}`", self.generator.program)))?;
         self.program_from(source)
     }
@@ -634,6 +778,17 @@ impl PlantSpec {
     pub fn program_from(&self, source: &str) -> Result<(Program, Vec<f64>), SpecError> {
         let program = Program::compile(source)?;
         let params = program.resolve_params(&self.generator.params)?;
+        self.check_names(&program)?;
+        Ok((program, params))
+    }
+
+    /// Check the spec against the program that grows it: every organ type
+    /// and body its appearance gives a look is one the program declares.
+    ///
+    /// # Errors
+    ///
+    /// Names the first look the program has no use for.
+    pub fn check_names(&self, program: &Program) -> Result<(), SpecError> {
         for organ in self.appearance.organs.keys() {
             if !program.organs().any(|(name, _)| name == organ) {
                 let declared: Vec<&str> = program.organs().map(|(name, _)| name).collect();
@@ -664,7 +819,7 @@ impl PlantSpec {
                 )));
             }
         }
-        Ok((program, params))
+        Ok(())
     }
 
     /// Every variant the plan asks for, environments first.
@@ -682,6 +837,20 @@ impl PlantSpec {
                         .get(environment)
                         .copied()
                         .unwrap_or_else(|| environment.neighbourhood()),
+                    class: None,
+                });
+            }
+        }
+        for conditions in &self.variants.conditions {
+            let Some(environment) = conditions.preset else {
+                continue;
+            };
+            for seed in &self.variants.seeds {
+                list.push(Variant {
+                    environment,
+                    seed: *seed,
+                    neighbourhood: conditions.neighbourhood(),
+                    class: Some(conditions.class()),
                 });
             }
         }
@@ -745,5 +914,143 @@ mod tests {
         note.source = None;
         note.tier = Some(5);
         assert!(spec.validate().unwrap_err().0.contains("tier 5"));
+    }
+
+    #[test]
+    fn conditions_documents_add_variants_named_by_their_preset() {
+        let mut spec = PlantSpec::builtin("pseudotsuga-menziesii").unwrap();
+        spec.variants.environments = vec![Environment::Open];
+        spec.variants.seeds = vec![1, 2];
+        spec.allometry
+            .retain(|point| point.environment == Environment::Open);
+        let document = Conditions::preset(Environment::Suppressed);
+        spec.variants.conditions = vec![document.clone()];
+        spec.validate().unwrap();
+        let variants = spec.variant_list();
+        assert_eq!(variants.len(), 4);
+        assert!(variants[..2].iter().all(|variant| variant.class.is_none()));
+        for variant in &variants[2..] {
+            assert_eq!(variant.environment, Environment::Suppressed);
+            assert_eq!(
+                variant.neighbourhood,
+                Environment::Suppressed.neighbourhood()
+            );
+            assert_eq!(variant.class, Some(document.class()));
+        }
+
+        let refused = |change: &dyn Fn(&mut PlantSpec), expected: &str| {
+            let mut changed = spec.clone();
+            change(&mut changed);
+            let message = changed.validate().unwrap_err().0;
+            assert!(message.contains(expected), "{message}");
+        };
+        refused(
+            &|spec| spec.variants.conditions[0].preset = None,
+            "variants.conditions[0] needs a preset",
+        );
+        refused(
+            &|spec| spec.variants.conditions[0].preset = Some(Environment::Open),
+            "variants.conditions[0] is labelled open, which another variant",
+        );
+        refused(
+            &|spec| spec.variants.conditions[0].schema = 2,
+            "variants.conditions[0]: conditions schema 2",
+        );
+        refused(
+            &|spec| {
+                spec.variants.conditions[0].interactions = Some(crate::conditions::Interactions {
+                    version: 1,
+                    host: Some(HostSpec {
+                        species: "acer-macrophyllum".into(),
+                        age: 30.0,
+                        environment: Environment::Open,
+                        seed: 1,
+                    }),
+                    pollination: 1.0,
+                    herbivory: 0.0,
+                });
+            },
+            "interactions.host must be the spec's own host",
+        );
+        // A neighbourhood given in a spec names all five values and no
+        // others.
+        let text = builtin_species("pseudotsuga-menziesii").unwrap().replace(
+            "\"seeds\"",
+            "\"neighbourhoods\": {\"open\": {\"density\": 0, \"relative_height\": 0, \"canopy\": 0, \"spacing\": 0, \"one_sided\": false, \"shade\": 1}}, \"seeds\"",
+        );
+        assert!(
+            PlantSpec::from_json(&text)
+                .unwrap_err()
+                .0
+                .contains("unknown field `shade`")
+        );
+    }
+
+    /// Values the built-ins never needed checking for, refused in a spec
+    /// from a file: each message names the value and its range.
+    #[test]
+    fn looks_out_of_range_or_on_the_wrong_shape_are_refused() {
+        fn spray(spec: &mut PlantSpec) -> &mut crate::looks::OrganLook {
+            spec.appearance.organs.get_mut("spray").unwrap()
+        }
+        let refused = |change: &dyn Fn(&mut PlantSpec), expected: &str| {
+            let mut spec = PlantSpec::builtin("pseudotsuga-menziesii").unwrap();
+            change(&mut spec);
+            let message = spec.validate().unwrap_err().0;
+            assert!(message.contains(expected), "{message}");
+        };
+        refused(
+            &|spec| {
+                spray(spec).bend = Some(crate::bend::Bend {
+                    fold: 120.0,
+                    ..crate::bend::Bend::FLAT
+                });
+            },
+            "bend fold must be between -90 and 90, found 120",
+        );
+        refused(
+            &|spec| {
+                spray(spec).solid = Some(crate::leaves::SolidLeaf {
+                    taper: 0.0,
+                    ..crate::leaves::SolidLeaf::default()
+                });
+            },
+            "solid taper must be between 0.05 and 10, found 0",
+        );
+        refused(
+            &|spec| {
+                spray(spec).solid = Some(crate::leaves::SolidLeaf {
+                    levels: 3,
+                    ..crate::leaves::SolidLeaf::default()
+                });
+            },
+            "solid levels must be between 0 and 2, found 3",
+        );
+        refused(
+            &|spec| {
+                spray(spec).form = Some(crate::blooms::Form::Flower(
+                    crate::blooms::FlowerForm::default(),
+                ));
+            },
+            "appearance.organs.spray: form flower draws only on a flower or a head, found needles",
+        );
+        refused(
+            &|spec| {
+                spec.appearance.bottle = Some(crate::looks::Bottle {
+                    height: 0.0,
+                    ..crate::looks::Bottle::default()
+                });
+            },
+            "bottle height must be between 0.1 and 50, found 0",
+        );
+        refused(
+            &|spec| {
+                spec.appearance.roots = Some(crate::roots::Roots {
+                    prop: 1000,
+                    ..crate::roots::Roots::default()
+                });
+            },
+            "roots prop must be between 0 and 256, found 1000",
+        );
     }
 }

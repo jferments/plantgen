@@ -33,7 +33,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::graph::{GraphOrgan, PlantGraph};
 use crate::leaves::{self, Leaf, Section, SolidLeaf};
-use crate::looks::{Look, Shape};
+use crate::looks::{Look, Shape, within};
 use crate::math::{self, Vec3, any_perpendicular};
 use crate::mesh::Mesh;
 use crate::rng::{mix64, unit};
@@ -132,6 +132,59 @@ impl Form {
             Shape::Fruit(_) => Self::Fruit(FruitForm::default()),
             Shape::Needles(_) => Self::Shoot,
             _ => Self::Card,
+        }
+    }
+
+    /// Whether the form draws anything on an organ of `shape`: a flower
+    /// only on a flower or a head, a fruit only on a fruit, a needle shoot
+    /// only on needles. On any other shape it would take the organ's cards
+    /// away on its levels and draw nothing there.
+    #[must_use]
+    pub fn draws_on(&self, shape: &Shape) -> bool {
+        match self {
+            Self::Flower(_) => matches!(shape, Shape::Flower(_) | Shape::Head(_)),
+            Self::Fruit(_) => matches!(shape, Shape::Fruit(_)),
+            Self::Shoot => matches!(shape, Shape::Needles(_)),
+            Self::Thorn | Self::Card => true,
+        }
+    }
+
+    /// Check the values, and that the form draws on `shape`.
+    ///
+    /// # Errors
+    ///
+    /// Describes the first problem.
+    pub fn validate(&self, shape: &Shape) -> Result<(), String> {
+        if !self.draws_on(shape) {
+            // Thorns and cards draw on every shape.
+            let (form, needs) = match self {
+                Self::Flower(_) => ("flower", "a flower or a head"),
+                Self::Fruit(_) => ("fruit", "a fruit"),
+                Self::Shoot | Self::Thorn | Self::Card => ("shoot", "needles"),
+            };
+            return Err(format!(
+                "form {form} draws only on {needs}, found {}",
+                shape.name()
+            ));
+        }
+        match self {
+            Self::Flower(form) => {
+                within("form flower cup", form.cup, -90.0, 90.0)?;
+                within("form flower curl", form.curl, -180.0, 180.0)?;
+                within("form flower tube", form.tube, 0.0, 10.0)?;
+                within("form flower stamens", f64::from(form.stamens), 0.0, 200.0)?;
+                within("form flower stamen_length", form.stamen_length, 0.0, 3.0)?;
+                within("form flower levels", f64::from(form.levels), 0.0, 2.0)
+            }
+            Self::Fruit(form) => {
+                within("form fruit scales", f64::from(form.scales), 0.0, 200.0)?;
+                within("form fruit levels", f64::from(form.levels), 0.0, 2.0)?;
+                for channel in form.stalk.into_iter().flatten() {
+                    within("form fruit stalk", f64::from(channel), 0.0, 1.0)?;
+                }
+                Ok(())
+            }
+            Self::Thorn | Self::Shoot | Self::Card => Ok(()),
         }
     }
 

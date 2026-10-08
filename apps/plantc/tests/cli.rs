@@ -65,6 +65,42 @@ fn list_and_check_name_the_built_in_species() {
 }
 
 #[test]
+fn a_library_folder_replaces_built_in_species() {
+    let dir = scratch("library");
+    let folder = dir.join("library/pinaceae/pseudotsuga/pseudotsuga-menziesii");
+    fs::create_dir_all(&folder).unwrap();
+    fs::write(
+        folder.join("spec.json"),
+        plantgen::library::source("pseudotsuga-menziesii")
+            .replace("\"Douglas-fir\"", "\"Douglas-fir from a folder\""),
+    )
+    .unwrap();
+    let library = dir.to_str().unwrap();
+    let listed = stdout(&plantc(&["list", "--library", library]));
+    assert!(
+        listed.contains("Douglas-fir from a folder (Pseudotsuga menziesii), program `conifer`, from the library folder"),
+        "{listed}"
+    );
+    assert!(listed.contains("carnegiea-gigantea"), "{listed}");
+    let checked = stdout(&plantc(&[
+        "--library",
+        library,
+        "check",
+        "pseudotsuga-menziesii",
+    ]));
+    assert!(
+        checked.starts_with("pseudotsuga-menziesii: valid"),
+        "{checked}"
+    );
+    let missing = plantc(&["list", "--library", dir.join("nowhere").to_str().unwrap()]);
+    assert!(!missing.status.success());
+    assert!(
+        String::from_utf8_lossy(&missing.stderr)
+            .contains("holds neither a library/ nor a programs/ folder")
+    );
+}
+
+#[test]
 fn grow_says_when_a_plant_has_died() {
     // Under a 30 m canopy the bigleaf maple sheds everything within five
     // years; the sizes would otherwise read as a row of zeros.

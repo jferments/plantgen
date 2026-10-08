@@ -33,7 +33,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::looks::Shape;
+use crate::looks::{Shape, within};
 use crate::math::{self, Vec3};
 
 /// Cells across and along a bent card.
@@ -69,6 +69,20 @@ impl Bend {
         droop: 0.0,
         twist: 0.0,
     };
+
+    /// Check the values: folds of up to a right angle either way, a cup
+    /// of up to the half-width, a droop of up to half a turn and a twist
+    /// of up to a whole one.
+    ///
+    /// # Errors
+    ///
+    /// Describes the first value outside its range.
+    pub fn validate(&self) -> Result<(), String> {
+        within("bend fold", self.fold, -90.0, 90.0)?;
+        within("bend cup", self.cup, -1.0, 1.0)?;
+        within("bend droop", self.droop, -180.0, 180.0)?;
+        within("bend twist", self.twist, -360.0, 360.0)
+    }
 
     /// Whether the card is drawn flat.
     #[must_use]

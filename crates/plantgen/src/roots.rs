@@ -32,6 +32,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::graph::PlantGraph;
+use crate::looks::within;
 use crate::math::{self, Vec3, any_perpendicular};
 use crate::mesh::{Mesh, Vertex};
 use crate::rng::{mix64, unit};
@@ -65,6 +66,43 @@ pub struct Roots {
     pub surface_length: f64,
     /// A surface root's radius at the stem, metres.
     pub surface_radius: f64,
+}
+
+impl Roots {
+    /// Check the values.
+    ///
+    /// # Errors
+    ///
+    /// Describes the first value outside its range.
+    pub fn validate(&self) -> Result<(), String> {
+        within("roots mature_age", self.mature_age, 0.0, 1000.0)?;
+        for (what, count, most) in [
+            ("roots prop", self.prop, 256),
+            ("roots aerial", self.aerial, 256),
+            ("roots knees", self.knees, 256),
+            ("roots pneumatophores", self.pneumatophores, 5000),
+            ("roots surface", self.surface, 64),
+        ] {
+            within(what, f64::from(count), 0.0, f64::from(most))?;
+        }
+        for (what, value, high) in [
+            ("roots prop_height", self.prop_height, 1.0),
+            ("roots prop_reach", self.prop_reach, 20.0),
+            ("roots prop_radius", self.prop_radius, 1.0),
+            ("roots aerial_reach", self.aerial_reach, 1.0),
+            ("roots aerial_radius", self.aerial_radius, 2.0),
+            ("roots knee_height", self.knee_height, 3.0),
+            ("roots knee_reach", self.knee_reach, 20.0),
+            ("roots knee_radius", self.knee_radius, 1.0),
+            ("roots pneumatophore_height", self.pneumatophore_height, 1.0),
+            ("roots pneumatophore_reach", self.pneumatophore_reach, 20.0),
+            ("roots surface_length", self.surface_length, 30.0),
+            ("roots surface_radius", self.surface_radius, 2.0),
+        ] {
+            within(what, value, 0.0, high)?;
+        }
+        Ok(())
+    }
 }
 
 impl Default for Roots {

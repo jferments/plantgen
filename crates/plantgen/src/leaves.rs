@@ -36,7 +36,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::graph::PlantGraph;
-use crate::looks::Look;
+use crate::looks::{Look, within};
 use crate::math::{self, Vec3};
 use crate::mesh::{Mesh, Vertex};
 
@@ -135,6 +135,46 @@ pub struct SolidLeaf {
     /// Levels of detail, from the nearest, that draw the leaf solid: 1 or
     /// 2. The others draw its card.
     pub levels: u8,
+}
+
+impl SolidLeaf {
+    /// Check the values.
+    ///
+    /// # Errors
+    ///
+    /// Describes the first value outside its range.
+    pub fn validate(&self) -> Result<(), String> {
+        within("solid thickness", self.thickness, 0.0, 2.0)?;
+        within("solid fold", self.fold, 0.0, 2.0)?;
+        within("solid widest", self.widest, 0.001, 0.999)?;
+        within("solid base", self.base, 0.0, 4.0)?;
+        within("solid taper", self.taper, 0.05, 10.0)?;
+        within("solid arch", self.arch, -180.0, 180.0)?;
+        within("solid twist", self.twist, -720.0, 720.0)?;
+        within(
+            "solid levels",
+            f64::from(self.levels),
+            0.0,
+            f64::from(MAX_LEVELS),
+        )?;
+        let mut colours: Vec<[f32; 3]> = self.margin.into_iter().collect();
+        if let Some(teeth) = &self.teeth {
+            within("solid teeth spacing", teeth.spacing, 0.0005, 0.5)?;
+            within("solid teeth length", teeth.length, 0.0, 0.1)?;
+            within("solid teeth hook", teeth.hook, -90.0, 90.0)?;
+            within("solid teeth start", teeth.start, 0.0, 1.0)?;
+            colours.push(teeth.colour);
+        }
+        if let Some(spine) = &self.spine {
+            within("solid spine length", spine.length, 0.0, 0.5)?;
+            within("solid spine width", spine.width, 0.0, 0.05)?;
+            colours.push(spine.colour);
+        }
+        for channel in colours.into_iter().flatten() {
+            within("solid colours", f64::from(channel), 0.0, 1.0)?;
+        }
+        Ok(())
+    }
 }
 
 impl Default for SolidLeaf {

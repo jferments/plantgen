@@ -26,6 +26,7 @@ use super::expr::{ENV_FIELDS, EnvField, EnvValues, NO_ENV, Query, Scope, eval};
 use super::program::{Program, SymbolKind, ToolConfig, ToolKind};
 use super::turtle::{NodeKind, Scene};
 use super::{GrowthError, Limits};
+use crate::conditions::Surroundings;
 use crate::math::{self, Vec3};
 use crate::rng::{hash_words, unit};
 
@@ -33,6 +34,7 @@ use crate::rng::{hash_words, unit};
 /// variant inside one of these, so a forest-grown tree really has a high,
 /// narrow crown and an open-grown one keeps its low limbs.
 #[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct Neighbourhood {
     /// Shade per metre of neighbouring canopy above a point, 1/m. Zero is
     /// open ground.
@@ -126,8 +128,6 @@ pub struct ToolState {
     killed: HashSet<(i32, i32, i32)>,
     /// Lattice spacing fixed at the first step, so cells keep their identity.
     lattice: Option<f64>,
-    /// The host a guest grows on, for `host@1`.
-    pub host: Option<std::sync::Arc<Host>>,
 }
 
 /// A host plant's wood as `host@1` sees it: its segments as capsules, in a
@@ -227,7 +227,7 @@ pub fn run(
     organ_area: &[f64],
     clock: Clock,
     scene: &Scene,
-    neighbourhood: &Neighbourhood,
+    surroundings: &dyn Surroundings,
     state: &mut ToolState,
     limits: &Limits,
     seed: u64,
@@ -244,7 +244,7 @@ pub fn run(
     let (query_light, organ_light) = match program.tool(ToolKind::Light) {
         Some(config) => {
             let values = settings(config, globals, clock, &mut stack);
-            light(scene, &anchors, organ_area, &values, neighbourhood, limits)?
+            light(scene, &anchors, organ_area, &values, surroundings, limits)?
         }
         None => (
             vec![1.0; scene.queries.len()],
@@ -317,9 +317,8 @@ pub fn run(
         values[EnvField::Order as usize] = f64::from(query.order);
         values[EnvField::Height as usize] = scene.height;
         if let Some(reach) = host_reach {
-            let found = state
-                .host
-                .as_ref()
+            let found = surroundings
+                .host()
                 .and_then(|host| host.nearest(query.position, reach));
             let (distance, direction) = found.unwrap_or((reach + 1.0, Vec3::ZERO));
             values[EnvField::Gd as usize] = distance;
@@ -459,7 +458,7 @@ fn light(
     anchors: &[bool],
     organ_area: &[f64],
     values: &[f64],
-    neighbourhood: &Neighbourhood,
+    surroundings: &dyn Surroundings,
     limits: &Limits,
 ) -> Result<(Vec<f64>, Vec<f64>), GrowthError> {
     let (cell, extinction, bud) = light_settings(values)?;
@@ -468,7 +467,7 @@ fn light(
     let directions = sky_directions();
     let total_weight: f64 = directions.iter().map(|direction| direction.weight).sum();
     let neighbours = |point: Vec3, direction: &SkyDirection| {
-        neighbourhood.transmission(point, scene.height, direction.unit)
+        surroundings.transmission(point, scene.height, direction.unit)
     };
     if receivers.is_empty() {
         return Ok((Vec::new(), Vec::new()));

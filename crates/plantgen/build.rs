@@ -1,7 +1,8 @@
 //! Compiles the built-in library in: every
-//! `library/<family>/<genus>/<id>/spec.json` becomes one entry of
-//! `library::LIBRARY`, sorted by path, so adding a species is adding its
-//! folder. No index is kept: the tree is the index. `library`'s tests hold
+//! `library/<family>/<genus>/<id>/spec.json`, with the `conditions.json`,
+//! `shed.json` and `niche.json` beside it, becomes one entry of `library::LIBRARY`,
+//! sorted by path, so
+//! adding a species is adding its folder. No index is kept: the tree is the index. `library`'s tests hold
 //! the tree to its rules.
 
 use std::fmt::Write as _;
@@ -36,9 +37,20 @@ fn main() {
             for species in folders(&genus) {
                 let spec = species.join("spec.json");
                 assert!(spec.is_file(), "{} has no spec.json", species.display());
+                let section = |name: &str| {
+                    let path = species.join(name);
+                    if path.is_file() {
+                        format!("Some(include_str!({:?}))", path.display().to_string())
+                    } else {
+                        "None".to_string()
+                    }
+                };
+                let conditions = section("conditions.json");
+                let shed = section("shed.json");
+                let niche = section("niche.json");
                 writeln!(
                     entries,
-                    "    Species {{ id: {:?}, family: {:?}, genus: {:?}, source: include_str!({:?}) }},",
+                    "    Species {{ id: {:?}, family: {:?}, genus: {:?}, source: include_str!({:?}), conditions: {conditions}, shed: {shed}, niche: {niche} }},",
                     name(&species),
                     name(&family),
                     name(&genus),

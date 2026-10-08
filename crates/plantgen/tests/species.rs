@@ -21,7 +21,7 @@ fn grow_variant(spec: &PlantSpec, variant: &Variant, years: f64, keyframes: Vec<
             dt: spec.growth.step,
             years,
             keyframes,
-            neighbourhood: variant.neighbourhood,
+            conditions: variant.conditions(),
             limits: Limits::default(),
             host: spec.host_geometry().unwrap(),
         },

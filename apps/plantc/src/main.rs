@@ -10,14 +10,16 @@ use std::collections::BTreeMap;
 use std::io::{self, Write};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
+use std::sync::OnceLock;
 use std::time::Instant;
 use std::{env, fmt, fs};
 
 use plantgen::body::BodyLook;
+use plantgen::conditions::Conditions;
 use plantgen::graph::{GraphOrgan, OrganType, PlantGraph};
 use plantgen::ground::{self, GROUND_LOOK_SIZE};
 use plantgen::grow::{Growth, GrowthSettings, grow};
-use plantgen::library;
+use plantgen::library::Library;
 use plantgen::litter;
 use plantgen::looks::{self, Look, Stage};
 use plantgen::lsys::{Limits, Neighbourhood, Program};
@@ -27,7 +29,7 @@ use plantgen::package::{self, Inputs};
 use plantgen::preview::{self, PreviewOptions, View};
 use plantgen::quality::{self, Quality};
 use plantgen::raster;
-use plantgen::spec::{self, Environment, PROGRAMS, PlantSpec, Variant};
+use plantgen::spec::{self, Environment, PlantSpec, Variant};
 use plantgen::templates::{self, Templates};
 
 /// Why a command stopped early.
@@ -78,8 +80,26 @@ fn main() -> ExitCode {
     }
 }
 
+/// The library every command reads: `--library DIR`'s, else the built-in
+/// one.
+static LIBRARY: OnceLock<Library> = OnceLock::new();
+
+fn library() -> &'static Library {
+    LIBRARY.get().unwrap_or_else(|| Library::builtin())
+}
+
 fn run() -> Result<(), Failure> {
     let mut args: Vec<String> = env::args().skip(1).collect();
+    // `--library DIR` may stand anywhere and serves every command.
+    if let Some(at) = args.iter().position(|arg| arg == "--library") {
+        let folder = args
+            .get(at + 1)
+            .ok_or("`--library` needs a folder")?
+            .clone();
+        args.drain(at..=at + 1);
+        let read = Library::from_dir(Path::new(&folder)).map_err(|error| error.to_string())?;
+        let _ = LIBRARY.set(read);
+    }
     if args.is_empty() {
         return print_usage();
     }
@@ -108,7 +128,7 @@ fn print_usage() -> Result<(), Failure> {
 
 Usage:
   plantc list
-      List the built-in species and plant programs.
+      List the species and plant programs, by family.
   plantc check <species|spec.json|program.lsys>
       Check a spec or a program and report the first problem with its line.
   plantc grow <species|spec.json> [--env ENV] [--seed N] [--years N]
@@ -155,12 +175,17 @@ Usage:
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
 
-A species is a built-in id (see `plantc list`) or a path to a spec file.
+A species is an id (see `plantc list`) or a path to a spec file.
+Every command accepts --library DIR: a folder holding a species tree,
+library/<family>/<genus>/<id>/spec.json, and programs, programs/<name>.lsys,
+which replace built-in species and programs of the same id or name and add
+to them.
 grow, render, sheet, atlas and build accept --program FILE.lsys to try a
 changed program in place of the species' built-in one. render, sheet,
 parts, lineup and build accept --day N (1 to 365, default 196): the day
 of the year organs with a season show.
-ENV is open, edge, interior or suppressed."
+ENV is open, edge, interior or suppressed; without --env, the species'
+typical site (its conditions.json) chooses."
     );
     Ok(())
 }
@@ -228,7 +253,7 @@ impl Options {
             Some(name) => Environment::from_name(name).ok_or_else(|| {
                 format!("unknown environment `{name}`; use open, edge, interior or suppressed")
             }),
-            None => Ok(spec.variants.environments[0]),
+            None => Ok(typical_environment(spec)),
         }
     }
 
@@ -250,41 +275,59 @@ impl Options {
     }
 }
 
+/// The environment of the species' typical site (`conditions.json`) when
+/// its variants grow in it, else its first.
+fn typical_environment(spec: &PlantSpec) -> Environment {
+    library()
+        .entry(&spec.id)
+        .and_then(|entry| entry.conditions().ok().flatten())
+        .and_then(|conditions| conditions.preset)
+        .filter(|preset| spec.variants.environments.contains(preset))
+        .unwrap_or(spec.variants.environments[0])
+}
+
 fn load_spec(name: &str) -> Result<PlantSpec, String> {
     if Path::new(name).extension().is_some_and(|ext| ext == "json") {
         let text =
             fs::read_to_string(name).map_err(|error| format!("cannot read {name}: {error}"))?;
-        PlantSpec::from_json(&text).map_err(|error| error.to_string())
+        PlantSpec::from_json_in(&text, library()).map_err(|error| error.to_string())
     } else {
-        PlantSpec::builtin(name).map_err(|error| error.to_string())
+        library().spec(name).map_err(|error| error.to_string())
     }
 }
 
 fn list() -> Result<(), Failure> {
-    let width = library::LIBRARY
+    let library = library();
+    let width = library
+        .species()
         .iter()
-        .map(|species| species.id.len())
+        .map(|entry| entry.id.len())
         .max()
         .unwrap_or(0);
     let mut family = "";
-    for species in library::LIBRARY {
-        if species.family != family {
-            family = species.family;
+    for entry in library.species() {
+        if entry.family != family {
+            family = &entry.family;
             let mut name = family.to_owned();
             name[..1].make_ascii_uppercase();
             out!("{name}:");
         }
-        let id = species.id;
-        let spec = PlantSpec::builtin(id).map_err(|error| error.to_string())?;
+        let id = &entry.id;
+        let spec = library.spec(id).map_err(|error| error.to_string())?;
         out!(
-            "  {id:<width$}  {} ({}), program `{}`",
+            "  {id:<width$}  {} ({}), program `{}`{}",
             spec.taxon.common_name,
             spec.taxon.scientific_name,
-            spec.generator.program
+            spec.generator.program,
+            if entry.path.is_some() {
+                ", from the library folder"
+            } else {
+                ""
+            }
         );
     }
     out!("Programs:");
-    for (name, _) in PROGRAMS {
+    for name in library.programs() {
         out!("  {name}");
     }
     Ok(())
@@ -310,7 +353,9 @@ fn check(args: &[String]) -> Result<(), Failure> {
         return Ok(());
     }
     let spec = load_spec(target)?;
-    let (program, _) = spec.program().map_err(|error| error.to_string())?;
+    let (program, _) = spec
+        .program_in(library())
+        .map_err(|error| error.to_string())?;
     out!(
         "{}: valid; program `{}` revision {}, {} variants, keyframes {:?}",
         spec.id,
@@ -343,7 +388,7 @@ fn grow_variant(
 ) -> Result<Growth, String> {
     let (program, params) = match program {
         Some(source) => spec.program_from(source),
-        None => spec.program(),
+        None => spec.program_in(library()),
     }
     .map_err(|error| error.to_string())?;
     let settings = GrowthSettings {
@@ -351,9 +396,11 @@ fn grow_variant(
         dt: spec.growth.step,
         years,
         keyframes,
-        neighbourhood: neighbourhood(spec, environment),
+        conditions: Conditions::in_neighbourhood(environment, neighbourhood(spec, environment)),
         limits: Limits::default(),
-        host: spec.host_geometry().map_err(|error| error.to_string())?,
+        host: spec
+            .host_geometry_in(library())
+            .map_err(|error| error.to_string())?,
     };
     grow(&program, &params, &settings).map_err(|error| format!("{}: {error}", spec.id))
 }
@@ -434,6 +481,7 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
         environment,
         seed,
         neighbourhood: neighbourhood(&spec, environment),
+        class: None,
     };
     for record in package::compare_allometry(&spec, &variant, &growth) {
         out!("  reference at {} years: {}", record.age, record.describe());
@@ -525,7 +573,9 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     // Neither has fleshy bodies, so the templates are the organs' alone.
     let mut on = false;
     if let (Some(host), false, true) = (&spec.host, alone, bodies.is_empty()) {
-        let host_spec = PlantSpec::builtin(&host.species).map_err(|error| error.to_string())?;
+        let host_spec = library()
+            .spec(&host.species)
+            .map_err(|error| error.to_string())?;
         let host_growth = grow_variant(
             &host_spec,
             None,
@@ -555,7 +605,7 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         let host_bark = spec
             .host
             .as_ref()
-            .and_then(|host| PlantSpec::builtin(&host.species).ok())
+            .and_then(|host| library().spec(&host.species).ok())
             .and_then(|host| host.appearance.bark_params());
         Templates::for_plant(&looks, &[]).with_bark(host_bark)
     } else {
@@ -1119,8 +1169,9 @@ fn ground_command(args: &[String]) -> Result<(), Failure> {
     let (looks, drawn) = match options.flags.get("looks").map_or("words", String::as_str) {
         "words" => (ground::ground_looks(seed), Vec::new()),
         "litter" => {
-            let drawn: Vec<_> = (0..litter::LITTERS.len())
-                .filter_map(|index| litter::litter_drawn(index, seed))
+            let drawn: Vec<_> = litter::litters()
+                .iter()
+                .map(|litter| litter.drawn(seed))
                 .collect();
             (
                 drawn.iter().map(|drawn| drawn.look.clone()).collect(),
@@ -1236,8 +1287,8 @@ fn build_command(args: &[String]) -> Result<(), Failure> {
         .max(1);
     let out = PathBuf::from(options.flags.get("out").map_or("plants", String::as_str));
     let inputs = match &program {
-        Some(source) => Inputs::with_program_on_day(&spec, source, &quality, day),
-        None => Inputs::on_day(&spec, &quality, day),
+        Some(source) => Inputs::with_program_in(&spec, library(), source, &quality, day),
+        None => Inputs::on_day_in(&spec, library(), &quality, day),
     }
     .map_err(|error| error.to_string())?;
     if let Some(path) = package::existing(&out, &spec.id, &inputs.key) {

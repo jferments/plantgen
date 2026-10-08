@@ -72,6 +72,85 @@ impl FieldEvidence {
     }
 }
 
+/// The path of every value in `document` outside its `skip` keys: object
+/// keys joined by dots, array elements that are objects by their index
+/// (`pieces.0.kind`). Any other array, a colour or a range, is one value;
+/// `null` is no value.
+#[must_use]
+pub fn value_paths(document: &serde_json::Value, skip: &[&str]) -> Vec<String> {
+    fn walk(value: &serde_json::Value, path: &str, paths: &mut Vec<String>) {
+        let join = |key: &str| {
+            if path.is_empty() {
+                key.to_string()
+            } else {
+                format!("{path}.{key}")
+            }
+        };
+        match value {
+            serde_json::Value::Null => {}
+            serde_json::Value::Object(map) => {
+                for (key, inner) in map {
+                    walk(inner, &join(key), paths);
+                }
+            }
+            serde_json::Value::Array(items) if items.iter().any(serde_json::Value::is_object) => {
+                for (index, inner) in items.iter().enumerate() {
+                    walk(inner, &join(&index.to_string()), paths);
+                }
+            }
+            _ => paths.push(path.to_string()),
+        }
+    }
+    let mut paths = Vec::new();
+    if let serde_json::Value::Object(map) = document {
+        for (key, inner) in map {
+            if !skip.contains(&key.as_str()) {
+                walk(inner, key, &mut paths);
+            }
+        }
+    }
+    paths
+}
+
+/// Hold `notes` to the rule for authored data: every value of `document`
+/// (outside `skip`) has a note on its own path or on a subtree holding it
+/// (`foliage` covers `foliage.length_m`), no note names a path the document
+/// does not have, and no note is blank.
+///
+/// # Errors
+///
+/// Names the first value without a note, or the first note without a value.
+pub fn check_coverage(
+    document: &serde_json::Value,
+    notes: &std::collections::BTreeMap<String, FieldEvidence>,
+    skip: &[&str],
+) -> Result<(), String> {
+    let paths = value_paths(document, skip);
+    let covers = |key: &str, path: &str| {
+        path == key
+            || path
+                .strip_prefix(key)
+                .is_some_and(|rest| rest.starts_with('.'))
+    };
+    for (key, note) in notes {
+        if note.note.trim().is_empty() {
+            return Err(format!("the evidence note on `{key}` is blank"));
+        }
+        if !paths.iter().any(|path| covers(key, path)) {
+            return Err(format!(
+                "an evidence note names `{key}`, which holds no value"
+            ));
+        }
+    }
+    match paths
+        .iter()
+        .find(|path| !notes.keys().any(|key| covers(key, path)))
+    {
+        Some(path) => Err(format!("`{path}` has no evidence note")),
+        None => Ok(()),
+    }
+}
+
 /// A source authored data draws on.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -132,6 +211,58 @@ mod tests {
         );
         assert_eq!(serde_json::from_str::<FieldEvidence>(&text).unwrap(), note);
         assert!(serde_json::from_str::<FieldEvidence>(&text.replace("tier", "tear")).is_err());
+    }
+
+    #[test]
+    fn notes_cover_every_value_and_name_only_values() {
+        use std::collections::BTreeMap;
+        let document = serde_json::json!({
+            "id": "abies-grandis",
+            "foliage": {"length_m": [0.02, 0.05], "curl": 0.0, "shape": null},
+            "pieces": [{"kind": "twig", "per_m2": 3.0}],
+            "decay": 0.3,
+        });
+        assert_eq!(
+            super::value_paths(&document, &["id"]),
+            [
+                "decay",
+                "foliage.curl",
+                "foliage.length_m",
+                "pieces.0.kind",
+                "pieces.0.per_m2"
+            ]
+        );
+        let note = |text: &str| FieldEvidence {
+            evidence: Evidence::Authored,
+            tier: None,
+            source: None,
+            note: text.into(),
+        };
+        let mut notes: BTreeMap<String, FieldEvidence> = ["foliage", "pieces", "decay"]
+            .into_iter()
+            .map(|key| (key.to_string(), note("Hand-set.")))
+            .collect();
+        assert_eq!(super::check_coverage(&document, &notes, &["id"]), Ok(()));
+        // A more specific note may stand beside its subtree's.
+        notes.insert("foliage.curl".into(), note("Measured on photographs."));
+        assert_eq!(super::check_coverage(&document, &notes, &["id"]), Ok(()));
+        notes.remove("decay");
+        assert_eq!(
+            super::check_coverage(&document, &notes, &["id"]),
+            Err("`decay` has no evidence note".into())
+        );
+        notes.insert("decay".into(), note(" "));
+        assert!(
+            super::check_coverage(&document, &notes, &["id"])
+                .unwrap_err()
+                .contains("blank")
+        );
+        notes.insert("decay".into(), note("Hand-set."));
+        notes.insert("foli".into(), note("Hand-set."));
+        assert_eq!(
+            super::check_coverage(&document, &notes, &["id"]),
+            Err("an evidence note names `foli`, which holds no value".into())
+        );
     }
 
     #[test]

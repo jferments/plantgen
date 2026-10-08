@@ -103,6 +103,7 @@ use crate::graph::{GraphOrgan, GraphSegment, OrganType, PlantGraph};
 use crate::grow::{Growth, GrowthSettings, GrowthStats, grow};
 use crate::impostor;
 use crate::json;
+use crate::library::Library;
 use crate::looks::Look;
 use crate::lsys::program::hex;
 use crate::lsys::{GrowthError, Limits, Neighbourhood, Program};
@@ -110,7 +111,7 @@ use crate::math::Vec3;
 use crate::mesh::{self, Card, LodSpec, Mesh, PlantMesh};
 use crate::quality::Quality;
 use crate::raster;
-use crate::spec::{Environment, PlantSpec, SpecError, Variant, builtin_program};
+use crate::spec::{Environment, PlantSpec, SpecError, Variant};
 use crate::spines::Tuft;
 use crate::templates::Templates;
 
@@ -360,6 +361,10 @@ pub struct VariantRecord {
     pub environment: Environment,
     pub seed: u64,
     pub neighbourhood: Neighbourhood,
+    /// The condition class of a variant grown in a conditions document
+    /// (`crate::conditions`); left out for an environment's.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub class: Option<String>,
     pub stats: GrowthStats,
     pub keyframes: Vec<KeyframeRecord>,
 }
@@ -499,6 +504,9 @@ pub struct Inputs {
     sizes: Vec<f64>,
     /// One look per body type of the program.
     pub bodies: Vec<BodyLook>,
+    /// A guest's host: its spec and its program's source, as the key
+    /// hashes them and the build grows the host from.
+    host: Option<(PlantSpec, String)>,
     templates: Templates,
     atlas: (usize, usize, Vec<u8>),
     /// The organ types' part meshes, and each type, whether it has one.
@@ -523,9 +531,25 @@ impl Inputs {
     ///
     /// Fails if the spec is invalid or names no built-in program.
     pub fn on_day(spec: &PlantSpec, quality: &Quality, day: f64) -> Result<Self, PackageError> {
-        let source = builtin_program(&spec.generator.program)
+        Self::on_day_in(spec, Library::builtin(), quality, day)
+    }
+
+    /// [`Inputs::on_day`] with the program, and a guest's host, from
+    /// `library`.
+    ///
+    /// # Errors
+    ///
+    /// Fails if the spec is invalid or names a program the library lacks.
+    pub fn on_day_in(
+        spec: &PlantSpec,
+        library: &Library,
+        quality: &Quality,
+        day: f64,
+    ) -> Result<Self, PackageError> {
+        let source = library
+            .program(&spec.generator.program)
             .ok_or_else(|| SpecError(format!("unknown program `{}`", spec.generator.program)))?;
-        Self::with_program_on_day(spec, source, quality, day)
+        Self::with_program_in(spec, library, source, quality, day)
     }
 
     /// Inputs for a spec grown by `source` in place of its built-in
@@ -557,6 +581,22 @@ impl Inputs {
         quality: &Quality,
         day: f64,
     ) -> Result<Self, PackageError> {
+        Self::with_program_in(spec, Library::builtin(), source, quality, day)
+    }
+
+    /// [`Inputs::with_program_on_day`] with a guest's host from `library`,
+    /// against whose programs the spec is checked.
+    ///
+    /// # Errors
+    ///
+    /// As [`Inputs::with_program_on_day`].
+    pub fn with_program_in(
+        spec: &PlantSpec,
+        library: &Library,
+        source: &str,
+        quality: &Quality,
+        day: f64,
+    ) -> Result<Self, PackageError> {
         if !(1.0..=365.0).contains(&day) {
             return Err(SpecError(format!("day must be between 1 and 365, found {day}")).into());
         }
@@ -566,7 +606,7 @@ impl Inputs {
         let spec_json = json::to_vec(spec).map_err(format_error)?;
         let spec: PlantSpec =
             serde_json::from_slice(&spec_json).map_err(|error| format_error(error.to_string()))?;
-        spec.validate()?;
+        spec.validate_in(library)?;
         let (program, _) = spec.program_from(source)?;
         let day = spec.appearance.has_seasons().then_some(day);
         let (looks, sizes) = spec.appearance.looks_on(program.organs(), day);
@@ -579,15 +619,11 @@ impl Inputs {
         let quality_json = json::to_vec(&QualityRecord::from(quality)).map_err(format_error)?;
         // A guest grows on its host (plant forms F7): the host's spec and
         // program are inputs too. A spec without a host hashes as before.
-        let host_bytes = match &spec.host {
-            Some(host) => {
-                let host_spec = PlantSpec::builtin(&host.species)?;
-                let mut bytes = json::to_vec(&host_spec).map_err(format_error)?;
-                bytes.extend_from_slice(
-                    crate::spec::builtin_program(&host_spec.generator.program)
-                        .unwrap_or_default()
-                        .as_bytes(),
-                );
+        let host = spec.host_in(library)?;
+        let host_bytes = match &host {
+            Some((host_spec, host_source)) => {
+                let mut bytes = json::to_vec(host_spec).map_err(format_error)?;
+                bytes.extend_from_slice(host_source.as_bytes());
                 Some(bytes)
             }
             None => None,
@@ -633,6 +669,7 @@ impl Inputs {
             looks,
             sizes,
             bodies,
+            host,
             templates,
             atlas: (width, height, atlas_png),
             parts,
@@ -813,12 +850,13 @@ fn bake_jobs(grown: &[Growth], ages: &[f64], dt: f64) -> Vec<(usize, usize)> {
         .collect()
 }
 
-/// Grow one variant once, keeping the package's ages and the ages the
-/// spec gives reference sizes for.
+/// Grow one variant once, on the host's wood for a guest, keeping the
+/// package's ages and the ages the spec gives reference sizes for.
 fn grow_variant(
     spec: &PlantSpec,
     program: &Program,
     params: &[f64],
+    host: Option<&std::sync::Arc<crate::lsys::tools::Host>>,
     variant: &Variant,
     ages: &[f64],
 ) -> Result<Growth, GrowthError> {
@@ -837,11 +875,9 @@ fn grow_variant(
             dt: spec.growth.step,
             years: spec.growth.years,
             keyframes,
-            neighbourhood: variant.neighbourhood,
+            conditions: variant.conditions(),
             limits: Limits::default(),
-            host: spec
-                .host_geometry()
-                .map_err(|error| GrowthError::Settings(error.to_string()))?,
+            host: host.cloned(),
         },
     )
 }
@@ -969,6 +1005,12 @@ pub fn build(
 ) -> Result<Package, PackageError> {
     let spec = &inputs.spec;
     let (program, params) = spec.program_from(&inputs.program_source)?;
+    // A guest's host is grown once, from the spec and program its key
+    // hashes, and every variant grows on it.
+    let host = match &inputs.host {
+        Some((host_spec, host_source)) => Some(spec.host_wood(host_spec, host_source)?),
+        None => None,
+    };
     let progress = Mutex::new(progress);
     let say = |line: &str| {
         (progress
@@ -990,13 +1032,18 @@ pub fn build(
 
     let grown = parallel(variants.len(), threads, &|index| {
         let started = Instant::now();
-        let growth =
-            grow_variant(spec, &program, &params, &variants[index], &ages).map_err(|error| {
-                PackageError::Growth {
-                    variant: format!("{} {}", spec.id, label(index)),
-                    message: error.to_string(),
-                }
-            })?;
+        let growth = grow_variant(
+            spec,
+            &program,
+            &params,
+            host.as_ref(),
+            &variants[index],
+            &ages,
+        )
+        .map_err(|error| PackageError::Growth {
+            variant: format!("{} {}", spec.id, label(index)),
+            message: error.to_string(),
+        })?;
         say(&format!(
             "grew {}: {} years, peak {} modules, {} segments, {} organs ({:.1} s)",
             label(index),
@@ -1074,6 +1121,7 @@ fn assemble(
             environment: variant.environment,
             seed: variant.seed,
             neighbourhood: variant.neighbourhood,
+            class: variant.class.map(|class| class.to_string()),
             stats: growth.stats,
             keyframes: Vec::new(),
         })
