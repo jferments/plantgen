@@ -13,7 +13,6 @@
       "crown_radius": 6,
       "crown_base": 4.5,
       "crown_rate": 0.045,
-      "space_density": 8,
       "internode": 0.25,
       "max_shoot": 3,
       "branch_angle": 55,
@@ -21,9 +20,9 @@
       "apical": 0.5,
       "apical_years": 12,
       "alternate": 1,
-      "bud_years": 10,
+      "bud_years": 40,
       "leaf_size": 0.1,
-      "spur_leaf": 0.09,
+      "spur_leaf": 0.26,
       "spur_pairs": 3,
       "leaf_angle": 60,
       "lean": 8,
@@ -110,6 +109,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: a tree 4 to 10 m tall of the African savanna and the Arabian and Sinai deserts, whose branches spread from a short trunk into a flat-topped umbrella crown, with paired straight white thorns and short hooked ones, and tiny twice-divided leaves. Not fitted to measurements."
+    },
+    "generator.params.bud_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-urban-tree-database-2016",
+      "note": "Short shoots leaf out for up to 40 years while they have light, fitted with the seed plants' shoot spacing so that leaf area per crown area rises with age as the Urban Tree Database's city trees of Vachellia farnesiana (the database's Acacia farnesiana, Glendale, Arizona) does, rather than falling once the crown has filled."
+    },
+    "generator.params.spur_leaf": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A short shoot's leaf card draws a cluster of its small leaves, a branchlet's worth, 0.26 m long, so that the crown keeps within the module limit; the seed plants' rules space the shoots from the card's area."
     },
     "allometry": {
       "evidence": "Authored",

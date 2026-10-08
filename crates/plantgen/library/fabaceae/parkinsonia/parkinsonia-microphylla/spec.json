@@ -14,7 +14,6 @@
       "crown_radius": 3,
       "crown_base": 0.5,
       "crown_rate": 0.06,
-      "space_density": 20,
       "internode": 0.15,
       "max_shoot": 3,
       "branch_angle": 40,
@@ -22,9 +21,9 @@
       "apical": 0.5,
       "apical_years": 10,
       "alternate": 1,
-      "bud_years": 10,
+      "bud_years": 40,
       "leaf_size": 0.1,
-      "spur_leaf": 0.09,
+      "spur_leaf": 0.2,
       "spur_pairs": 3,
       "leaf_angle": 50,
       "lean": 10,
@@ -38,7 +37,6 @@
       "pipe_rings": 6e-06,
       "light_cell": 0.25,
       "space_reach": 1.2,
-      "space_kill": 0.4,
       "thorns": 1,
       "thorn_length": 0.03,
       "thorn_angle": 50,
@@ -118,6 +116,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: a small, much-branched tree 3 to 6 m tall, its yellow-green bark doing most of the photosynthesis, its twigs ending in thorns, with tiny pinnate leaves dropped in drought and pale yellow flowers in spring. Not fitted to measurements."
+    },
+    "generator.params.bud_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-urban-tree-database-2016",
+      "note": "Short shoots leaf out for up to 40 years while they have light, fitted with the seed plants' shoot spacing so that leaf area per crown area rises with age as the Urban Tree Database's city trees of Parkinsonia (P. aculeata and P. florida, Glendale, Arizona) does, rather than falling once the crown has filled."
+    },
+    "generator.params.spur_leaf": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A short shoot's leaf card draws a cluster of its small leaves, a branchlet's worth, 0.2 m long, so that the crown keeps within the module limit; the seed plants' rules space the shoots from the card's area."
     },
     "allometry": {
       "evidence": "Authored",

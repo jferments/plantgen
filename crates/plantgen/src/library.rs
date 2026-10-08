@@ -818,6 +818,27 @@ impl Library {
         inherit::inherit(&entry.file(), &own, &above, &self.params).map_err(SpecError)
     }
 
+    /// The effective spec of a spec file's `text` (`file` names it in
+    /// messages): when its `id` is a species of the library, its text
+    /// merged onto the rank files that species stands on, as the library
+    /// merges the species' own `spec.json`; else its own traits turned
+    /// into values by its own rules. `None` when that leaves the text as
+    /// it is.
+    ///
+    /// # Errors
+    ///
+    /// As [`inherit::effective_text`].
+    pub fn effective_text(&self, file: &str, text: &str) -> Result<Option<String>, String> {
+        let id = serde_json::from_str::<Value>(text)
+            .ok()
+            .and_then(|spec| spec.get("id")?.as_str().map(str::to_string));
+        let above = match id.as_deref().and_then(|id| self.entry(id)) {
+            Some(entry) => inherit::above(&self.ranks, &entry.family, &entry.genus)?,
+            None => Vec::new(),
+        };
+        inherit::effective_text(file, text, &above, &self.params)
+    }
+
     /// The species `id`, or an error listing the species there are.
     fn known(&self, id: &str) -> Result<&Entry, SpecError> {
         self.entry(id).ok_or_else(|| {
@@ -1104,7 +1125,7 @@ const fn same(a: &str, b: &str) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use std::collections::BTreeSet;
+    use std::collections::{BTreeMap, BTreeSet};
     use std::fs;
     use std::path::{Path, PathBuf};
 
@@ -1277,18 +1298,36 @@ mod tests {
         library.check_traits().unwrap();
     }
 
-    /// The parameters rules are checked against, read from the programs'
-    /// text, are those the compiled programs have.
+    /// A spec file of a library species' id stands on that species' rank
+    /// files, so a copy of its own spec is its spec; a spec of no species
+    /// of the library stands on none.
+    #[test]
+    fn a_spec_file_stands_on_its_species_rank_files() {
+        let library = Library::builtin();
+        let entry = library.entry("vachellia-tortilis").unwrap();
+        let copy = library.effective_text("copy.json", entry.own_source());
+        assert_eq!(copy.unwrap().as_deref(), Some(entry.source()));
+        let other = entry
+            .own_source()
+            .replace("\"vachellia-tortilis\"", "\"vachellia-test\"");
+        assert_eq!(library.effective_text("other.json", &other), Ok(None));
+    }
+
+    /// The parameters rules are checked against and read, from the
+    /// programs' text, are those the compiled programs have, with their
+    /// defaults.
     #[test]
     fn program_parameters_are_the_compiled_programs() {
         let library = Library::builtin();
         assert_eq!(library.program_params().len(), PROGRAMS.len());
         for (name, params) in library.program_params() {
             let program = crate::lsys::Program::compile(library.program(name).unwrap()).unwrap();
-            let compiled: BTreeSet<String> = program
+            let defaults = program.resolve_params(&BTreeMap::new()).unwrap();
+            let compiled: BTreeMap<String, Option<f64>> = program
                 .params
                 .iter()
-                .map(|param| param.name.clone())
+                .zip(defaults)
+                .map(|(param, default)| (param.name.clone(), Some(default)))
                 .collect();
             assert_eq!(params, &compiled, "{name}");
         }
@@ -2001,7 +2040,9 @@ mod tests {
         );
         let library = Library::from_dir(&folder.0).unwrap();
         let spec = library.spec("acer-test").unwrap();
+        // 8 × 0.75^0.75, to the 6 significant digits a rule keeps.
         let expected = (8.0 * crate::math::pow(0.75, 0.75)).clamp(5.0, 60.0);
+        let expected: f64 = format!("{expected:.5e}").parse().unwrap();
         assert!((spec.generator.params["space_density"] - expected).abs() < 1e-12);
         assert!(spec.generator.params["alternate"].abs() < 1e-12);
         let inherited = library.inherited("acer-test").unwrap();
@@ -2043,7 +2084,11 @@ mod tests {
         );
         refused(
             &family(r#""rules": {"generator.params.alternate": {"rule": "leaf_type * 2"}}"#),
-            "it reads `leaf_type`, which is not a number, count or bool trait",
+            "it reads `leaf_type`, which is neither a number, count or bool trait",
+        );
+        refused(
+            &family(r#""rules": {"generator.params.alternate": {"rule": "leaf_sise * 2"}}"#),
+            "it reads `leaf_sise`, which is neither",
         );
         refused(
             &family(r#""rules": {"generator.params.alternate": {"map": {"leaflets": {"1": 1}}}}"#),

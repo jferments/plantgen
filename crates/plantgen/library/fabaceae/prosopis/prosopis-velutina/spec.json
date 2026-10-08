@@ -14,7 +14,6 @@
       "crown_radius": 4.5,
       "crown_base": 1,
       "crown_rate": 0.05,
-      "space_density": 12,
       "internode": 0.2,
       "max_shoot": 3,
       "branch_angle": 45,
@@ -22,9 +21,9 @@
       "apical": 0.5,
       "apical_years": 15,
       "alternate": 1,
-      "bud_years": 12,
+      "bud_years": 40,
       "leaf_size": 0.2,
-      "spur_leaf": 0.18,
+      "spur_leaf": 0.26,
       "spur_pairs": 3,
       "leaf_angle": 55,
       "lean": 15,
@@ -133,6 +132,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: a spreading tree 6 to 9 m tall, often several-trunked and leaning, with dark, shaggy, furrowed bark, paired thorns, twice-divided leaves of many small velvety leaflets and yellow catkin spikes in spring; this proxy dies at 100 years and stands as a snag, losing its dead branches one by one. Not fitted to measurements."
+    },
+    "generator.params.bud_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-urban-tree-database-2016",
+      "note": "Short shoots leaf out for up to 40 years while they have light, fitted with the seed plants' shoot spacing so that leaf area per crown area rises with age as the Urban Tree Database's city trees of Prosopis (P. chilensis, Glendale, Arizona) does, rather than falling once the crown has filled."
+    },
+    "generator.params.spur_leaf": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A short shoot's leaf card draws a cluster of its small leaves, a branchlet's worth, 0.26 m long, so that the crown keeps within the module limit; the seed plants' rules space the shoots from the card's area."
     },
     "allometry": {
       "evidence": "Authored",

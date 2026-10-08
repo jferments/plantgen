@@ -68,9 +68,13 @@ fn list_and_check_name_the_built_in_species() {
 /// `plantc spec` shows a species' traits and what each rule did.
 #[test]
 fn rules_and_traits_say_where_they_come_from() {
+    // Corner's rules, homed at the seed plants.
     let built_in = stdout(&plantc(&["rules"]));
+    let seed_plants = "(clade Spermatophyta: _ranks/clade/spermatophyta.json)";
     assert!(
-        built_in.starts_with("Rules, by their home (0):\n"),
+        built_in.starts_with(&format!(
+            "Rules, by their home (2):\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n"
+        )),
         "{built_in}"
     );
     assert!(
@@ -100,8 +104,11 @@ fn rules_and_traits_say_where_they_come_from() {
     .unwrap();
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
+    assert!(rules.starts_with("Rules, by their home (3):\n"), "{rules}");
     assert!(
-        rules.contains("Rules, by their home (1):\n  generator.params.alternate  (family Sapindaceae: sapindaceae/family.json)\n"),
+        rules.contains(
+            "\n  generator.params.alternate  (family Sapindaceae: sapindaceae/family.json)\n"
+        ),
         "{rules}"
     );
     let spec = stdout(&plantc(&["--library", library, "spec", "acer-circinatum"]));
