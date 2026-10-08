@@ -108,6 +108,7 @@ fn run() -> Result<(), Failure> {
         "list" => list(),
         "check" => check(&args),
         "spec" => spec_command(&args),
+        "rules" => rules_command(&args),
         "grow" => grow_command(&args),
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
@@ -138,7 +139,14 @@ Usage:
   plantc spec <species>
       Print the species' spec value by value, each with the file that set
       it: its own spec.json or a rank file above it (family.json,
-      genus.json, library/_ranks/), then each evidence note's file.
+      genus.json, library/_ranks/), or a rule on its traits; then each
+      evidence note's file, its traits, and each rule it inherits with
+      what came of it.
+  plantc rules
+      List every rule that turns traits into spec values, by its home:
+      the rank file (or species) that holds it. Then the general ones,
+      with no taxonomic home: rules at all plants, and the parameter
+      defaults of programs not named for a taxon. The list should shrink.
   plantc grow <species|spec.json> [--env ENV] [--seed N] [--years N]
       Grow one variant and print its size at every keyframe.
   plantc render <species|spec.json> --out FILE.png [--env ENV] [--seed N]
@@ -315,6 +323,9 @@ fn load_spec(name: &str) -> Result<PlantSpec, String> {
     if Path::new(name).extension().is_some_and(|ext| ext == "json") {
         let text =
             fs::read_to_string(name).map_err(|error| format!("cannot read {name}: {error}"))?;
+        // Its own traits, turned into values by its own rules.
+        let text = plantgen::inherit::effective_text(name, &text, &[], library().program_params())?
+            .unwrap_or(text);
         PlantSpec::from_json_in(&text, library()).map_err(|error| error.to_string())
     } else {
         library().spec(name).map_err(|error| error.to_string())
@@ -463,6 +474,101 @@ fn spec_command(args: &[String]) -> Result<(), Failure> {
             out!("  {path}  ({file})");
         }
     }
+    if !inherited.traits.is_empty() {
+        out!("traits:");
+        for (key, (value, file)) in &inherited.traits {
+            out!("  {key} = {value}  ({file})");
+        }
+    }
+    if !inherited.rules.is_empty() {
+        out!("rules:");
+        for (path, (file, outcome)) in &inherited.rules {
+            match outcome {
+                None => out!("  {path}  ({file}): set"),
+                Some(reason) => out!("  {path}  ({file}): not set, {reason}"),
+            }
+        }
+    }
+    Ok(())
+}
+
+fn rules_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &[])?;
+    if !options.positional.is_empty() {
+        return Err("`plantc rules` takes no arguments".into());
+    }
+    let library = library();
+    let mut homed = Vec::new();
+    let mut at_all_plants = 0;
+    for rank in library.ranks() {
+        for (at, part) in rank.parts() {
+            for (path, rule) in &part.rules {
+                if rule.is_null() {
+                    continue;
+                }
+                let place = if at.is_empty() {
+                    String::new()
+                } else {
+                    format!(", {at}")
+                };
+                homed.push(format!(
+                    "  {path}  ({} {}: {}{place})",
+                    rank.rank, rank.name, rank.file
+                ));
+                if rank.rank == "kingdom" {
+                    at_all_plants += 1;
+                }
+            }
+        }
+    }
+    for entry in library.species() {
+        let own: serde_json::Value =
+            serde_json::from_str(entry.own_source()).map_err(|error| error.to_string())?;
+        if let Some(rules) = own.get("rules").and_then(serde_json::Value::as_object) {
+            for path in rules.keys() {
+                homed.push(format!(
+                    "  {path}  (species {}: {})",
+                    entry.id,
+                    entry.file()
+                ));
+            }
+        }
+    }
+    out!("Rules, by their home ({}):", homed.len());
+    for line in &homed {
+        out!("{line}");
+    }
+    // A program is homed when it is named for a taxon of the library.
+    let mut taxa: std::collections::BTreeSet<String> = library
+        .species()
+        .iter()
+        .flat_map(|entry| [entry.family.clone(), entry.genus.clone()])
+        .collect();
+    taxa.extend(
+        library
+            .ranks()
+            .map(|rank| plantgen::inherit::file_name(&rank.name)),
+    );
+    let general: Vec<(&String, usize)> = library
+        .program_params()
+        .iter()
+        .filter(|(name, _)| !taxa.contains(*name))
+        .map(|(name, params)| (name, params.len()))
+        .collect();
+    let defaults: usize = general.iter().map(|(_, count)| count).sum();
+    out!(
+        "General, with no taxonomic home: {} rules at all plants; {defaults} parameter defaults in {} programs named for no taxon",
+        at_all_plants,
+        general.len()
+    );
+    out!(
+        "  {}",
+        general
+            .iter()
+            .map(|(name, count)| format!("{name} {count}"))
+            .collect::<Vec<_>>()
+            .join(", ")
+    );
     Ok(())
 }
 

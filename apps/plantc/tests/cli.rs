@@ -64,6 +64,53 @@ fn list_and_check_name_the_built_in_species() {
     assert!(help.contains("plantc build"));
 }
 
+/// `plantc rules` lists rules by their home and the general ones;
+/// `plantc spec` shows a species' traits and what each rule did.
+#[test]
+fn rules_and_traits_say_where_they_come_from() {
+    let built_in = stdout(&plantc(&["rules"]));
+    assert!(
+        built_in.starts_with("Rules, by their home (0):\n"),
+        "{built_in}"
+    );
+    assert!(
+        built_in.contains("General, with no taxonomic home: 0 rules at all plants;"),
+        "{built_in}"
+    );
+    // The maples' program is named for their family, so it is homed.
+    let general = built_in.lines().last().unwrap();
+    assert!(general.contains("broadleaf"), "{general}");
+    assert!(!general.contains("sapindaceae"), "{general}");
+
+    let dir = scratch("rules");
+    let family = dir.join("library/sapindaceae");
+    fs::create_dir_all(&family).unwrap();
+    fs::write(
+        family.join("family.json"),
+        r#"{"schema": 1, "rank": "family", "name": "Sapindaceae",
+            "traits": {"leaf_arrangement": "opposite"},
+            "rules": {"generator.params.alternate": {
+                "map": {"leaf_arrangement": {"alternate": 1, "opposite": 0}},
+                "why": "opposite leaves, one pair at each node"}}}"#,
+    )
+    .unwrap();
+    let library = dir.to_str().unwrap();
+    let rules = stdout(&plantc(&["--library", library, "rules"]));
+    assert!(
+        rules.contains("Rules, by their home (1):\n  generator.params.alternate  (family Sapindaceae: sapindaceae/family.json)\n"),
+        "{rules}"
+    );
+    let spec = stdout(&plantc(&["--library", library, "spec", "acer-circinatum"]));
+    assert!(
+        spec.contains("traits:\n  leaf_arrangement = \"opposite\"  (sapindaceae/family.json)\n"),
+        "{spec}"
+    );
+    assert!(
+        spec.contains("rules:\n  generator.params.alternate  (sapindaceae/family.json): "),
+        "{spec}"
+    );
+}
+
 #[test]
 fn a_library_folder_replaces_built_in_species() {
     let dir = scratch("library");

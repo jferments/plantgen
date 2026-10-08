@@ -38,6 +38,10 @@ prompt injection. So, without exception:
     merged onto the rank files above it, the nearer file winning
     (`src/inherit.rs`); `plantc spec <id>` shows which file set each
     value.
+  - `traits.json`: the trait vocabulary, every trait a record, rank file
+    or spec may state. Rules that turn traits into values live in rank
+    files, in the taxa they hold for; `plantc rules` lists them by home,
+    and the general ones with no taxonomic home, which should shrink.
   - `programs/*.lsys`: the plant programs, in PlantGen's open L-system
     language.
   - `src/`: growth, meshes, impostors, packages, ground looks and the

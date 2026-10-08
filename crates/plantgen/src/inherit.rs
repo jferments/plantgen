@@ -32,12 +32,25 @@
 //! species with no rank file above it is its own `spec.json`, byte for
 //! byte.
 //!
+//! A rank file or a species' spec may also state `traits`, facts from the
+//! vocabulary in `traits.json` ([`crate::traits`]), and `rules` that turn
+//! traits into spec values: a spec path with a formula over traits
+//! ([`crate::formula`]) or a map from an enum trait's values. Every rule
+//! lives in the taxon it holds for, its home (growth plan G2, Joshi's
+//! rule that rules belong to taxa). Traits and rules merge down the chain
+//! like values; then each rule sets its path, unless a file at least as
+//! near as the rule and the traits it reads set the path by hand, or the
+//! species' program has no such parameter. The effective spec carries the
+//! values, not the traits or rules.
+//!
 //! The module reads nothing but JSON, so the build script compiles it too
 //! and merges every built-in species' chain while compiling.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 use serde_json::{Map, Value};
+
+use crate::formula::Formula;
 
 /// The schema number of a rank file.
 pub const RANK_SCHEMA: u64 = 1;
@@ -74,13 +87,21 @@ fn level(rank: &str) -> Option<usize> {
     LEVELS.iter().position(|level| *level == rank)
 }
 
-/// Values and the evidence notes on them, by path.
+/// Values, traits and rules, and the evidence notes on them, by path.
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct Part {
-    /// A partial spec, without `evidence`.
+    /// A partial spec, without `evidence`, `traits` or `rules`.
     pub values: Map<String, Value>,
-    /// Its `evidence`: each note's path and the note.
+    /// Its `evidence`: each note's path and the note. A note on a trait
+    /// sits at `traits.<key>`, one on a rule at `rules.<path>`.
     pub notes: Map<String, Value>,
+    /// Its `traits` (growth plan G2.2): facts by key, from `traits.json`'s
+    /// vocabulary; `null` deletes an inherited one.
+    pub traits: Map<String, Value>,
+    /// Its `rules`: each spec path a rule sets from traits, and the rule
+    /// (`{"rule": formula}` or `{"map": {trait: {value: spec value}}}`,
+    /// with a `why`); `null` deletes an inherited one.
+    pub rules: Map<String, Value>,
 }
 
 /// The spec of a taxon above species.
@@ -117,9 +138,8 @@ impl RankFile {
     ///
     /// Fails on a file out of place, invalid JSON, a `schema`, `rank` or
     /// `name` that does not fit its place, a `parent` that is not a rank
-    /// file's, a key only a species sets, `traits` (not read before
-    /// growth plan G2.2), or an evidence note on a value the file does not
-    /// set.
+    /// file's, a key only a species sets, a rule that is not one, or an
+    /// evidence note on a value, trait or rule the file does not set.
     pub fn parse(file: &str, text: &str) -> Result<Self, String> {
         let place = Place::of(file)?;
         let mut map = match serde_json::from_str::<Value>(text) {
@@ -204,7 +224,7 @@ impl RankFile {
 impl Part {
     /// The part of a rank file at `at` (`""` for its shared values,
     /// `forms.<growth form>` for a form's) from its keys.
-    fn read(mut values: Map<String, Value>, at: &str) -> Result<Self, String> {
+    fn read(values: Map<String, Value>, at: &str) -> Result<Self, String> {
         let within = |key: &str| {
             if at.is_empty() {
                 format!("`{key}`")
@@ -220,12 +240,6 @@ impl Part {
                 ));
             }
         }
-        if values.contains_key("traits") {
-            return Err(format!(
-                "{} are not read before growth plan G2.2 (traits.toml)",
-                within("traits")
-            ));
-        }
         if !at.is_empty() {
             for key in ["schema", "rank", "name", "parent", "forms", "growth_form"] {
                 if values.contains_key(key) {
@@ -236,18 +250,119 @@ impl Part {
                 }
             }
         }
-        let notes = match values.remove("evidence") {
-            None => Map::new(),
-            Some(Value::Object(notes)) => notes,
-            Some(_) => return Err(format!("{} is an object", within("evidence"))),
-        };
-        if let Some(path) = notes.keys().find(|path| find(&values, path).is_none()) {
+        let part = Self::take(values).map_err(|error| {
+            if at.is_empty() {
+                error
+            } else {
+                format!("in `{at}`: {error}")
+            }
+        })?;
+        if let Some(path) = part.notes.keys().find(|path| !part.sets(path)) {
             return Err(format!(
                 "the evidence note on `{path}` in {} is on a value it does not set",
                 if at.is_empty() { "the file" } else { at }
             ));
         }
-        Ok(Self { values, notes })
+        Ok(part)
+    }
+
+    /// A species' own spec as a part: its `evidence`, `traits` and
+    /// `rules` taken out of its values, each rule's shape checked.
+    ///
+    /// # Errors
+    ///
+    /// Fails if the spec is not an object, or those keys are not well
+    /// formed.
+    pub fn of_spec(spec: &Value) -> Result<Self, String> {
+        match spec {
+            Value::Object(values) => Self::take(values.clone()),
+            _ => Err("a spec is a JSON object".into()),
+        }
+    }
+
+    /// A part from a spec's keys: its `evidence`, `traits` and `rules`
+    /// taken out of its values, each rule checked.
+    fn take(mut values: Map<String, Value>) -> Result<Self, String> {
+        let mut object = |key: &str| match values.remove(key) {
+            None => Ok(Map::new()),
+            Some(Value::Object(map)) => Ok(map),
+            Some(_) => Err(format!("`{key}` is an object")),
+        };
+        let notes = object("evidence")?;
+        let traits = object("traits")?;
+        let rules = object("rules")?;
+        for (path, rule) in &rules {
+            check_rule(path, rule).map_err(|error| format!("the rule for `{path}`: {error}"))?;
+        }
+        Ok(Self {
+            values,
+            notes,
+            traits,
+            rules,
+        })
+    }
+
+    /// Whether the part sets the value, trait (`traits.<key>`) or rule
+    /// (`rules.<path>`) at `path`.
+    fn sets(&self, path: &str) -> bool {
+        if let Some(key) = path.strip_prefix("traits.") {
+            self.traits.contains_key(key)
+        } else if let Some(rule) = path.strip_prefix("rules.") {
+            self.rules.contains_key(rule)
+        } else {
+            find(&self.values, path).is_some()
+        }
+    }
+}
+
+/// The spec paths no rule may set: what names the species, its growth
+/// form (which picks the parts that apply) and its program (whose
+/// parameters the rules are checked against), and the notes.
+const UNRULED: [&str; 6] = [
+    "id",
+    "taxon",
+    "schema",
+    "growth_form",
+    "generator.program",
+    "evidence",
+];
+
+/// Checks one rule's shape: `null` (deleting an inherited rule), or an
+/// object with a `rule` (a formula over traits) or a `map` (one trait's
+/// values to spec values), and a `why`.
+fn check_rule(path: &str, rule: &Value) -> Result<(), String> {
+    if path.split('.').any(str::is_empty) {
+        return Err("its path is keys joined by dots".into());
+    }
+    if UNRULED
+        .iter()
+        .any(|unruled| path == *unruled || path.starts_with(&format!("{unruled}.")))
+    {
+        return Err("no rule may set it".into());
+    }
+    let rule = match rule {
+        Value::Null => return Ok(()),
+        Value::Object(rule) => rule,
+        _ => return Err("a rule is an object".into()),
+    };
+    if let Some(key) = rule
+        .keys()
+        .find(|key| !["rule", "map", "why"].contains(&key.as_str()))
+    {
+        return Err(format!(
+            "`{key}` is not a rule's: `rule` or `map`, and `why`"
+        ));
+    }
+    if !rule.get("why").is_none_or(Value::is_string) {
+        return Err("`why` is a line of text".into());
+    }
+    match (rule.get("rule"), rule.get("map")) {
+        (Some(Value::String(formula)), None) => Formula::parse(formula).map(|_| ()),
+        (None, Some(Value::Object(map))) => match map.iter().next() {
+            Some((_, Value::Object(_))) if map.len() == 1 => Ok(()),
+            _ => Err("a `map` names one trait, then its values' spec values".into()),
+        },
+        _ => Err("a rule has a `rule` (a formula) or a `map`, not both".into()),
     }
 }
 
@@ -454,44 +569,216 @@ pub fn chain<'a>(
     Ok(found)
 }
 
+/// The parameters of each program, by name: its own and those of the
+/// programs it extends.
+pub type Programs = BTreeMap<String, BTreeSet<String>>;
+
+/// The parameters each program declares, with those of the programs it
+/// extends, read from the programs' text (`name`, `source`): a `param`
+/// statement at the start of a line names one, and the header `lsystem
+/// <name> <revision> extends <parent>;` names the parent. The library's
+/// tests hold this to the compiled programs.
+#[must_use]
+pub fn program_params<'a>(sources: impl IntoIterator<Item = (&'a str, &'a str)>) -> Programs {
+    let mut own: BTreeMap<&str, (BTreeSet<String>, Option<String>)> = BTreeMap::new();
+    for (name, source) in sources {
+        let mut params = BTreeSet::new();
+        let mut parent = None;
+        let mut header = true;
+        for line in source.lines() {
+            let line = line.split('#').next().unwrap_or_default();
+            let words: Vec<&str> = line
+                .split(|c: char| c.is_whitespace() || c == ';' || c == '=')
+                .filter(|word| !word.is_empty())
+                .collect();
+            if words.is_empty() {
+                continue;
+            }
+            if header {
+                header = false;
+                if words[0] == "lsystem" && words.get(3) == Some(&"extends") {
+                    parent = words.get(4).map(|parent| (*parent).to_string());
+                }
+            }
+            if words[0] == "param"
+                && let Some(param) = words.get(1)
+            {
+                params.insert((*param).to_string());
+            }
+        }
+        own.insert(name, (params, parent));
+    }
+    own.keys()
+        .map(|name| {
+            let mut params = BTreeSet::new();
+            let mut next = Some(*name);
+            // As deep as `extends` chains may go, so a loop ends.
+            for _ in 0..8 {
+                let Some((own_params, parent)) = next.and_then(|at| own.get(at)) else {
+                    break;
+                };
+                params.extend(own_params.iter().cloned());
+                next = parent.as_deref();
+            }
+            ((*name).to_string(), params)
+        })
+        .collect()
+}
+
 /// A species' spec as it inherits it.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Inherited {
-    /// The effective spec.
+    /// The effective spec, its traits turned into values by its rules. It
+    /// holds no traits or rules itself, nor their notes.
     pub spec: Value,
     /// The files it was merged from, nearest first: the species' own
     /// `spec.json`, then the rank files it stands on.
     pub chain: Vec<String>,
     /// Each value's path, such as `generator.params.whorl` (an array is
     /// one value), and the file that set it: its path in the tree, then
-    /// `, forms.<growth form>` for a value from a form's part.
+    /// `, forms.<growth form>` for a value from a form's part. A value a
+    /// rule set reads `<rule's file>: rule on <trait> from <file>, …`.
     pub origins: BTreeMap<String, String>,
     /// Each evidence note's path and the file it came from, written as in
-    /// `origins`.
+    /// `origins`, the notes on traits (`traits.<key>`) and rules
+    /// (`rules.<path>`) among them.
     pub notes: BTreeMap<String, String>,
+    /// Each trait's value and the file that set it.
+    pub traits: BTreeMap<String, (Value, String)>,
+    /// Each rule, by the path it sets: the file it is in, and `None` if it
+    /// set the path, else why it did not.
+    pub rules: BTreeMap<String, (String, Option<String>)>,
 }
+
+/// Where a value or note came from: the file's label and its layer's
+/// place in the chain, counted from the top.
+type Origin = (String, usize);
 
 /// The effective spec of a species whose own `spec.json`, at `file` in the
 /// tree, holds `own`, on the rank files `above` it, nearest first as
-/// [`above`] gives them.
+/// [`above`] gives them, its rules checked against `programs`.
 ///
 /// The growth form whose parts apply is the nearest one set: the
-/// species', else the nearest rank file's.
+/// species', else the nearest rank file's. Values, traits and rules merge
+/// down the chain, the nearer winning; then each rule sets its path from
+/// the traits it reads, unless a file at least as near as the rule and
+/// those traits set the path by hand, or the path is a parameter the
+/// species' program lacks.
 ///
 /// # Errors
 ///
-/// Fails if `own` is not a JSON object or its `evidence` not an object.
-pub fn inherit(file: &str, own: &Value, above: &[&RankFile]) -> Result<Inherited, String> {
+/// Fails if `own` is not a JSON object, or its `evidence`, `traits` or
+/// `rules` not an object or not well formed.
+pub fn inherit(
+    file: &str,
+    own: &Value,
+    above: &[&RankFile],
+    programs: &Programs,
+) -> Result<Inherited, String> {
     let Value::Object(own) = own else {
         return Err(format!("{file}: a spec is a JSON object"));
     };
-    let mut values = own.clone();
-    let notes = match values.remove("evidence") {
-        None => Map::new(),
-        Some(Value::Object(notes)) => notes,
-        Some(_) => return Err(format!("{file}: `evidence` is an object")),
-    };
-    let own = Part { values, notes };
+    let own = Part::take(own.clone()).map_err(|error| format!("{file}: {error}"))?;
+    let layers = layers(file, &own, above);
+    let mut spec = Map::new();
+    let mut origins: BTreeMap<String, Origin> = BTreeMap::new();
+    let mut notes: BTreeMap<String, (Origin, Value)> = BTreeMap::new();
+    let mut traits: BTreeMap<String, (Value, usize)> = BTreeMap::new();
+    let mut rules: BTreeMap<String, (Map<String, Value>, usize)> = BTreeMap::new();
+    for (index, (label, part)) in layers.iter().enumerate() {
+        let origin = (label.clone(), index);
+        let mut touched = Vec::new();
+        merge(
+            &mut spec,
+            &part.values,
+            "",
+            &origin,
+            &mut origins,
+            &mut touched,
+        );
+        for (key, value) in &part.traits {
+            touched.push(format!("traits.{key}"));
+            if value.is_null() {
+                traits.remove(key);
+            } else {
+                traits.insert(key.clone(), (value.clone(), index));
+            }
+        }
+        for (path, rule) in &part.rules {
+            touched.push(format!("rules.{path}"));
+            match rule {
+                Value::Object(rule) => {
+                    rules.insert(path.clone(), (rule.clone(), index));
+                }
+                _ => {
+                    rules.remove(path);
+                }
+            }
+        }
+        notes.retain(|path, _| !touched.iter().any(|set| overlaps(set, path)));
+        for (path, note) in &part.notes {
+            notes.insert(path.clone(), (origin.clone(), note.clone()));
+        }
+    }
+    let program = spec
+        .get("generator")
+        .and_then(|generator| generator.get("program"))
+        .and_then(Value::as_str)
+        .map(str::to_string);
+    let mut outcomes = BTreeMap::new();
+    for (path, (rule, index)) in &rules {
+        let one = Ruled {
+            path,
+            rule,
+            index: *index,
+            layers: &layers,
+            traits: &traits,
+        };
+        let outcome = one
+            .apply(
+                program.as_deref(),
+                programs,
+                &mut spec,
+                &mut origins,
+                &mut notes,
+            )
+            .err();
+        outcomes.insert(path.clone(), (layers[*index].0.clone(), outcome));
+    }
+    let carried: Map<String, Value> = notes
+        .iter()
+        .filter(|(path, _)| !path.starts_with("traits.") && !path.starts_with("rules."))
+        .map(|(path, (_, note))| (path.clone(), note.clone()))
+        .collect();
+    if !carried.is_empty() {
+        spec.insert("evidence".into(), Value::Object(carried));
+    }
+    Ok(Inherited {
+        spec: Value::Object(spec),
+        chain: std::iter::once(file.to_string())
+            .chain(above.iter().map(|rank| rank.file.clone()))
+            .collect(),
+        origins: origins
+            .into_iter()
+            .map(|(path, (label, _))| (path, label))
+            .collect(),
+        notes: notes
+            .into_iter()
+            .map(|(path, ((label, _), _))| (path, label))
+            .collect(),
+        traits: traits
+            .into_iter()
+            .map(|(key, (value, index))| (key, (value, layers[index].0.clone())))
+            .collect(),
+        rules: outcomes,
+    })
+}
+
+/// The parts a species merges, from the top down, each with its file's
+/// label: each rank file's shared part and its part for the species'
+/// growth form, then the species' own. The growth form is the nearest one
+/// set: the species', else the nearest rank file's.
+fn layers<'a>(file: &str, own: &'a Part, above: &[&'a RankFile]) -> Vec<(String, &'a Part)> {
     let form = own
         .values
         .get("growth_form")
@@ -508,52 +795,143 @@ pub fn inherit(file: &str, own: &Value, above: &[&RankFile]) -> Result<Inherited
             layers.push((format!("{}, forms.{form}", rank.file), part));
         }
     }
-    layers.push((file.to_string(), &own));
-    let mut spec = Map::new();
-    let mut origins = BTreeMap::new();
-    let mut notes: BTreeMap<String, (String, Value)> = BTreeMap::new();
-    for (label, part) in &layers {
-        let mut touched = Vec::new();
-        merge(
-            &mut spec,
-            &part.values,
-            "",
-            label,
-            &mut origins,
-            &mut touched,
+    layers.push((file.to_string(), own));
+    layers
+}
+
+/// One rule of a species' chain, with what it reads from.
+struct Ruled<'a> {
+    path: &'a str,
+    rule: &'a Map<String, Value>,
+    /// The rule's layer in the chain.
+    index: usize,
+    layers: &'a [(String, &'a Part)],
+    traits: &'a BTreeMap<String, (Value, usize)>,
+}
+
+impl Ruled<'_> {
+    /// Set the rule's path from the traits it reads, or say why not.
+    fn apply(
+        &self,
+        program: Option<&str>,
+        programs: &Programs,
+        spec: &mut Map<String, Value>,
+        origins: &mut BTreeMap<String, Origin>,
+        notes: &mut BTreeMap<String, (Origin, Value)>,
+    ) -> Result<(), String> {
+        let reads = reads(self.rule);
+        let mut depth = self.index;
+        let mut from = Vec::new();
+        for key in &reads {
+            let (_, at) = self
+                .traits
+                .get(key)
+                .ok_or_else(|| format!("no `{key}` to read"))?;
+            depth = depth.max(*at);
+            from.push(format!("{key} from {}", self.layers[*at].0));
+        }
+        if let Some(param) = self.path.strip_prefix("generator.params.") {
+            let program = program.ok_or("the species names no program")?;
+            if !programs
+                .get(program)
+                .is_some_and(|params| params.contains(param))
+            {
+                return Err(format!("program `{program}` has no parameter `{param}`"));
+            }
+        }
+        if let Some((label, by)) = origins.get(self.path)
+            && *by >= depth
+        {
+            return Err(format!("set by hand in {label}"));
+        }
+        let value = evaluate(self.rule, self.traits)?;
+        set(spec, self.path, value);
+        forget(origins, self.path);
+        let origin = (
+            format!("{}: rule on {}", self.layers[self.index].0, from.join(", ")),
+            depth,
         );
-        notes.retain(|path, _| !touched.iter().any(|set| overlaps(set, path)));
-        for (path, note) in &part.notes {
-            notes.insert(path.clone(), (label.clone(), note.clone()));
+        origins.insert(self.path.to_string(), origin.clone());
+        notes.retain(|path, _| !overlaps(self.path, path));
+        if let Some((_, note)) = notes.get(&format!("rules.{}", self.path)).cloned() {
+            notes.insert(self.path.to_string(), (origin, note));
+        }
+        Ok(())
+    }
+}
+
+/// The traits a rule reads: its formula's names, or its map's trait.
+fn reads(rule: &Map<String, Value>) -> Vec<String> {
+    match (rule.get("rule"), rule.get("map")) {
+        (Some(Value::String(formula)), _) => Formula::parse(formula)
+            .map(|formula| formula.names().into_iter().collect())
+            .unwrap_or_default(),
+        (_, Some(Value::Object(map))) => map.keys().cloned().collect(),
+        _ => Vec::new(),
+    }
+}
+
+/// A rule's value from the traits: its formula's number (a bool trait
+/// reads as 1 or 0), or its map's value for the trait's.
+fn evaluate(
+    rule: &Map<String, Value>,
+    traits: &BTreeMap<String, (Value, usize)>,
+) -> Result<Value, String> {
+    if let Some(Value::String(formula)) = rule.get("rule") {
+        let number = |key: &str| {
+            traits
+                .get(key)
+                .and_then(|(value, _)| value.as_f64().or_else(|| value.as_bool().map(f64::from)))
+        };
+        return Formula::parse(formula)?
+            .eval(&number)
+            .and_then(serde_json::Number::from_f64)
+            .map(Value::Number)
+            .ok_or_else(|| "its traits give it no number".to_string());
+    }
+    if let Some(Value::Object(map)) = rule.get("map")
+        && let Some((key, Value::Object(table))) = map.iter().next()
+    {
+        let value = &traits
+            .get(key)
+            .ok_or_else(|| format!("no `{key}` to read"))?
+            .0;
+        let name = match value {
+            Value::String(name) => name.clone(),
+            other => other.to_string(),
+        };
+        return table
+            .get(&name)
+            .cloned()
+            .ok_or_else(|| format!("its map holds nothing for `{key}` {name}"));
+    }
+    Err("it is no rule".into())
+}
+
+/// Set the value at `path` (keys joined by dots), making the objects on
+/// the way.
+fn set(target: &mut Map<String, Value>, path: &str, value: Value) {
+    match path.split_once('.') {
+        None => {
+            target.insert(path.to_string(), value);
+        }
+        Some((key, rest)) => {
+            let entry = target
+                .entry(key.to_string())
+                .or_insert_with(|| Value::Object(Map::new()));
+            if !entry.is_object() {
+                *entry = Value::Object(Map::new());
+            }
+            if let Value::Object(inside) = entry {
+                set(inside, rest, value);
+            }
         }
     }
-    if !notes.is_empty() {
-        spec.insert(
-            "evidence".into(),
-            Value::Object(
-                notes
-                    .iter()
-                    .map(|(path, (_, note))| (path.clone(), note.clone()))
-                    .collect(),
-            ),
-        );
-    }
-    Ok(Inherited {
-        spec: Value::Object(spec),
-        chain: std::iter::once(file.to_string())
-            .chain(above.iter().map(|rank| rank.file.clone()))
-            .collect(),
-        origins,
-        notes: notes
-            .into_iter()
-            .map(|(path, (label, _))| (path, label))
-            .collect(),
-    })
 }
 
 /// The effective spec of a species, as the library stores it: `None` when
-/// no rank file stands above it, so it is its own text; else the merged
-/// spec as pretty JSON.
+/// no rank file stands above it and it states no traits or rules, so it is
+/// its own text; else the merged spec as pretty JSON.
 ///
 /// # Errors
 ///
@@ -562,13 +940,17 @@ pub fn effective_text(
     file: &str,
     own: &str,
     above: &[&RankFile],
+    programs: &Programs,
 ) -> Result<Option<String>, String> {
-    if above.is_empty() {
+    if above.is_empty() && !own.contains("\"traits\"") && !own.contains("\"rules\"") {
         return Ok(None);
     }
     let value: Value =
         serde_json::from_str(own).map_err(|error| format!("{file}: invalid JSON: {error}"))?;
-    let inherited = inherit(file, &value, above)?;
+    if above.is_empty() && value.get("traits").is_none() && value.get("rules").is_none() {
+        return Ok(None);
+    }
+    let inherited = inherit(file, &value, above, programs)?;
     let text = serde_json::to_string_pretty(&inherited.spec)
         .map_err(|error| format!("{file}: {error}"))?;
     // serde_json reads some numbers of 16 or more digits back a bit off
@@ -606,7 +988,14 @@ fn difference(a: &Value, b: &Value, at: &str) -> Option<String> {
 
 /// Lay `patch` over `target` by RFC 7396.
 pub fn patch(target: &mut Map<String, Value>, patch: &Map<String, Value>) {
-    merge(target, patch, "", "", &mut BTreeMap::new(), &mut Vec::new());
+    merge(
+        target,
+        patch,
+        "",
+        &(String::new(), 0),
+        &mut BTreeMap::new(),
+        &mut Vec::new(),
+    );
 }
 
 /// `values` with every null left out, at any depth.
@@ -622,15 +1011,15 @@ pub fn without_nulls(values: &Map<String, Value>) -> Map<String, Value> {
         .collect()
 }
 
-/// Merge `layer` into `target` by RFC 7396, noting the file `label` as
-/// the origin of each value it sets and every path it sets, replaces or
-/// deletes in `touched`.
+/// Merge `layer` into `target` by RFC 7396, noting `origin` as the origin
+/// of each value it sets and every path it sets, replaces or deletes in
+/// `touched`.
 fn merge(
     target: &mut Map<String, Value>,
     layer: &Map<String, Value>,
     at: &str,
-    label: &str,
-    origins: &mut BTreeMap<String, String>,
+    origin: &Origin,
+    origins: &mut BTreeMap<String, Origin>,
     touched: &mut Vec<String>,
 ) {
     for (key, value) in layer {
@@ -653,13 +1042,13 @@ fn merge(
                     touched.push(path.clone());
                 }
                 if let Value::Object(entry) = entry {
-                    merge(entry, inside, &path, label, origins, touched);
+                    merge(entry, inside, &path, origin, origins, touched);
                 }
             }
             _ => {
                 forget(origins, &path);
                 target.insert(key.clone(), value.clone());
-                origins.insert(path.clone(), label.to_string());
+                origins.insert(path.clone(), origin.clone());
                 touched.push(path);
             }
         }
@@ -667,7 +1056,7 @@ fn merge(
 }
 
 /// Forget the origins of the value at `path` and of everything inside it.
-fn forget(origins: &mut BTreeMap<String, String>, path: &str) {
+fn forget<V>(origins: &mut BTreeMap<String, V>, path: &str) {
     origins.remove(path);
     // The paths inside `path` sort together: from `path.` up to `path/`.
     let inside: Vec<String> = origins
@@ -693,7 +1082,28 @@ mod tests {
 
     use serde_json::{Value, json};
 
-    use super::{RankFile, above, chain, effective_text, file_name, inherit};
+    use super::{
+        Programs, RankFile, above, chain, effective_text, file_name, inherit, program_params,
+    };
+
+    /// Three programs: one with every parameter the tests set, one that
+    /// extends it, one without `space_density`.
+    fn programs() -> Programs {
+        program_params([
+            (
+                "broadleaf",
+                "# A test.\nlsystem broadleaf 1;\nparam a = 1;\nparam b = 1;\nparam c = 1;\nparam d = 1;\nparam alternate = 0;\nparam space_density = 5;",
+            ),
+            (
+                "sapindaceae",
+                "lsystem sapindaceae 1 extends broadleaf;\nparam fork = 1;",
+            ),
+            (
+                "shrub",
+                "lsystem shrub 1;\nparam a = 1;  # the first\nparam b = 1;",
+            ),
+        ])
+    }
 
     fn ranks(files: &[(&str, Value)]) -> BTreeMap<String, RankFile> {
         files
@@ -750,7 +1160,13 @@ mod tests {
             let files = ranks(&[("testaceae/family.json", family)]);
             let chain = above(&files, "testaceae", "testa").unwrap();
             let own = json!({"generator": patch});
-            let inherited = inherit("testaceae/testa/testa-one/spec.json", &own, &chain).unwrap();
+            let inherited = inherit(
+                "testaceae/testa/testa-one/spec.json",
+                &own,
+                &chain,
+                &programs(),
+            )
+            .unwrap();
             assert_eq!(
                 inherited.spec,
                 json!({"generator": wanted}),
@@ -816,7 +1232,7 @@ mod tests {
         let own = json!({"id": "acer-test", "taxon": {"x": 1},
             "generator": {"params": {"d": 4.0}},
             "evidence": {"generator.params.d": {"evidence": "Authored", "note": "Own."}}});
-        let inherited = inherit(file, &own, &chain).unwrap();
+        let inherited = inherit(file, &own, &chain, &programs()).unwrap();
         assert_eq!(
             inherited.spec,
             json!({
@@ -873,6 +1289,7 @@ mod tests {
             "sapindaceae/dodonaea/dodonaea-test/spec.json",
             &shrub,
             &chain,
+            &programs(),
         )
         .unwrap();
         assert_eq!(inherited.spec["generator"]["program"], "shrub");
@@ -889,7 +1306,7 @@ mod tests {
         let own = r#"{"id": "testa-one", "generator": {"params": {"x": 0.1}},
             "evidence": {"generator": {"evidence": "Authored", "note": "Own."}}}"#;
         assert_eq!(
-            effective_text("f/g/testa-one/spec.json", own, &[]),
+            effective_text("f/g/testa-one/spec.json", own, &[], &programs()),
             Ok(None)
         );
         let files = ranks(&[(
@@ -897,7 +1314,7 @@ mod tests {
             json!({"schema": 1, "rank": "family", "name": "Testaceae"}),
         )]);
         let chain = above(&files, "testaceae", "testa").unwrap();
-        let text = effective_text("f/g/testa-one/spec.json", own, &chain)
+        let text = effective_text("f/g/testa-one/spec.json", own, &chain, &programs())
             .unwrap()
             .unwrap();
         assert_eq!(
@@ -907,95 +1324,97 @@ mod tests {
         // A number that would not read back as merged is refused, not
         // changed.
         let long = r#"{"id": "testa-one", "generator": {"params": {"x": 0.99634467830471407}}}"#;
-        let error = effective_text("f/g/testa-one/spec.json", long, &chain).unwrap_err();
+        let error =
+            effective_text("f/g/testa-one/spec.json", long, &chain, &programs()).unwrap_err();
         assert!(
             error.contains("`generator.params.x` does not read back"),
             "{error}"
         );
     }
 
+    /// `file` holding `value` is refused, saying `wanted`.
+    fn refused(file: &str, value: &Value, wanted: &str) {
+        let error = RankFile::parse(file, &value.to_string()).unwrap_err();
+        assert!(error.contains(wanted), "{file}: {error}");
+    }
+
+    /// A family file for Testaceae with `extra`'s keys.
+    fn family(extra: Value) -> Value {
+        let mut value = json!({"schema": 1, "rank": "family", "name": "Testaceae"});
+        if let Value::Object(extra) = extra {
+            for (key, item) in extra {
+                value[key] = item;
+            }
+        }
+        value
+    }
+
     #[test]
     fn rank_files_against_the_rules_are_refused() {
-        let refused = |file: &str, value: Value, wanted: &str| {
-            let error = RankFile::parse(file, &value.to_string()).unwrap_err();
-            assert!(error.contains(wanted), "{file}: {error}");
-        };
-        let family = |extra: Value| {
-            let mut value = json!({"schema": 1, "rank": "family", "name": "Testaceae"});
-            for (key, item) in extra.as_object().unwrap() {
-                value[key] = item.clone();
-            }
-            value
-        };
         refused(
             "testaceae/x.json",
-            family(json!({})),
+            &family(json!({})),
             "not where a rank file goes",
         );
         refused(
             "_ranks/family/testaceae.json",
-            family(json!({})),
+            &family(json!({})),
             "not a rank kept",
         );
         refused(
             "_ranks/order/Test.json",
-            family(json!({})),
+            &family(json!({})),
             "named by its taxon",
         );
         refused(
             "testaceae/family.json",
-            family(json!({"schema": 2})),
+            &family(json!({"schema": 2})),
             "`schema` must be 1",
         );
         refused(
             "testaceae/family.json",
-            family(json!({"rank": "order"})),
+            &family(json!({"rank": "order"})),
             "it says `rank` order",
         );
         refused(
             "otheraceae/family.json",
-            family(json!({})),
+            &family(json!({})),
             "would be named `testaceae`",
         );
         refused(
             "testaceae/family.json",
-            family(json!({"parent": "orders"})),
+            &family(json!({"parent": "orders"})),
             "is not `<rank>/<name>`",
         );
         refused(
             "testaceae/family.json",
-            family(json!({"parent": "genus/testa"})),
+            &family(json!({"parent": "genus/testa"})),
             "is not `<rank>/<name>`",
         );
         refused(
             "testaceae/family.json",
-            family(json!({"id": "testaceae"})),
+            &family(json!({"id": "testaceae"})),
             "holds no `id`",
         );
         refused(
             "testaceae/family.json",
-            family(json!({"traits": {}})),
-            "G2.2",
-        );
-        refused(
-            "testaceae/family.json",
-            family(json!({"forms": {"shrub": {"growth_form": "shrub"}}})),
+            &family(json!({"forms": {"shrub": {"growth_form": "shrub"}}})),
             "`forms.shrub.growth_form` belongs to the whole file",
         );
         refused(
             "testaceae/family.json",
-            family(json!({"forms": {"shrub": {"taxon": {}}}})),
+            &family(json!({"forms": {"shrub": {"taxon": {}}}})),
             "holds no `forms.shrub.taxon`",
         );
         refused(
             "testaceae/family.json",
-            family(json!({"tier": "calibrated",
+            &family(json!({"tier": "calibrated",
                 "evidence": {"generator": {"evidence": "Authored", "note": "Nothing."}}})),
             "the evidence note on `generator` in the file is on a value it does not set",
         );
         refused(
             "_ranks/tribe/testeae.json",
-            json!({"schema": 1, "rank": "tribe", "name": "Testeae"}),
+            &json!({"schema": 1, "rank": "tribe", "name": "Testeae"}),
             "a tribe names its `parent`",
         );
         assert_eq!(file_name("core eudicots"), "core-eudicots");
@@ -1004,6 +1423,36 @@ mod tests {
             &json!({"schema": 1, "rank": "clade", "name": "core eudicots"}).to_string(),
         )
         .unwrap();
+    }
+
+    #[test]
+    fn rules_and_trait_notes_against_their_shape_are_refused() {
+        refused(
+            "testaceae/family.json",
+            &family(json!({"rules": {"id": {"rule": "1"}}})),
+            "the rule for `id`: no rule may set it",
+        );
+        refused(
+            "testaceae/family.json",
+            &family(json!({"rules": {"generator.params.a": {"rule": "uniform(0, 1)"}}})),
+            "`uniform` is not a function",
+        );
+        refused(
+            "testaceae/family.json",
+            &family(json!({"rules": {"generator.params.a": {"map": {"x": 1}}}})),
+            "a `map` names one trait",
+        );
+        refused(
+            "testaceae/family.json",
+            &family(json!({"rules": {"generator.params.a": {"rule": "1", "map": {}}}})),
+            "not both",
+        );
+        refused(
+            "testaceae/family.json",
+            &family(json!({"traits": {"clonal": true},
+                "evidence": {"traits.leaf_length_m": {"evidence": "Authored", "note": "None."}}})),
+            "the evidence note on `traits.leaf_length_m` in the file is on a value it does not set",
+        );
     }
 
     #[test]
@@ -1108,5 +1557,162 @@ mod tests {
         assert_eq!(above(&files, "testaceae", "other").unwrap().len(), 3);
         assert_eq!(above(&files, "testaceae", "third").unwrap().len(), 2);
         assert!(above(&files, "nothingaceae", "third").unwrap().is_empty());
+    }
+
+    /// Rules on traits: Corner's rules at the seed plants, a family's
+    /// leaf traits and a map from its leaf arrangement, a genus that sets
+    /// the shoot spacing by hand and one that deletes the rule.
+    fn corner() -> BTreeMap<String, RankFile> {
+        let note = |text: &str| json!({"evidence": "Authored", "note": text});
+        ranks(&[
+            (
+                "_ranks/clade/spermatophyta.json",
+                json!({"schema": 1, "rank": "clade", "name": "Spermatophyta",
+                    "rules": {"generator.params.space_density": {
+                        "rule": "clamp(8 * pow(0.15 / leaf_length_m, 0.75), 5, 60)",
+                        "why": "Corner's rules"}},
+                    "evidence": {"rules.generator.params.space_density": note("Corner.")}}),
+            ),
+            (
+                "testaceae/family.json",
+                json!({"schema": 1, "rank": "family", "name": "Testaceae",
+                    "parent": "clade/spermatophyta",
+                    "traits": {"leaf_length_m": 0.15, "leaf_arrangement": "opposite"},
+                    "evidence": {"traits.leaf_length_m": note("Family.")},
+                    "generator": {"program": "broadleaf"},
+                    "rules": {"generator.params.alternate": {
+                        "map": {"leaf_arrangement": {"alternate": 1, "opposite": 0}}}}}),
+            ),
+            (
+                "testaceae/manual/genus.json",
+                json!({"schema": 1, "rank": "genus", "name": "Manual",
+                    "generator": {"params": {"space_density": 20}}}),
+            ),
+            (
+                "testaceae/unruled/genus.json",
+                json!({"schema": 1, "rank": "genus", "name": "Unruled",
+                    "rules": {"generator.params.space_density": null}}),
+            ),
+        ])
+    }
+
+    /// The species `<genus>-one` of Testaceae with its own spec `own`.
+    fn grow(genus: &str, own: &Value) -> super::Inherited {
+        let files = corner();
+        let chain = above(&files, "testaceae", genus).unwrap();
+        inherit(
+            &format!("testaceae/{genus}/{genus}-one/spec.json"),
+            own,
+            &chain,
+            &programs(),
+        )
+        .unwrap()
+    }
+
+    /// Corner's rules homed at a clade, read from a family's trait: each
+    /// species below gets the rule's value unless a file at least as near
+    /// set it by hand; a map turns an enum into a value.
+    #[test]
+    fn traits_set_values_through_rules_homed_in_taxa() {
+        let note = |text: &str| json!({"evidence": "Authored", "note": text});
+        let clade = "_ranks/clade/spermatophyta.json";
+        let family = "testaceae/family.json";
+
+        // The family's leaf length through the clade's rule.
+        let plain = grow("plain", &json!({"id": "plain-one"}));
+        assert_eq!(plain.spec["generator"]["params"]["space_density"], 8.0);
+        assert_eq!(plain.spec["generator"]["params"]["alternate"], 0);
+        assert_eq!(
+            plain.origins["generator.params.space_density"],
+            format!("{clade}: rule on leaf_length_m from {family}")
+        );
+        assert_eq!(
+            plain.rules["generator.params.space_density"],
+            (clade.to_string(), None)
+        );
+        // The rule's note goes with its value; traits and rules stay out
+        // of the spec and its notes.
+        assert_eq!(
+            plain.spec["evidence"],
+            json!({"generator.params.space_density": note("Corner.")})
+        );
+        assert!(plain.spec.get("traits").is_none() && plain.spec.get("rules").is_none());
+        assert_eq!(plain.notes["traits.leaf_length_m"], family);
+        assert_eq!(
+            plain.traits["leaf_arrangement"],
+            (json!("opposite"), family.to_string())
+        );
+
+        // A genus that sets the value by hand is nearer than the trait.
+        let manual = grow("manual", &json!({"id": "manual-one"}));
+        assert_eq!(manual.spec["generator"]["params"]["space_density"], 20);
+        assert_eq!(
+            manual.rules["generator.params.space_density"].1.as_deref(),
+            Some("set by hand in testaceae/manual/genus.json")
+        );
+        // A species' own leaf length is nearer than the genus's hand.
+        let small = grow(
+            "manual",
+            &json!({"id": "manual-two", "traits": {"leaf_length_m": 0.05}}),
+        );
+        let expected = (8.0 * libm::pow(3.0, 0.75)).clamp(5.0, 60.0);
+        assert_eq!(small.spec["generator"]["params"]["space_density"], expected);
+    }
+
+    /// A deleted rule, a program without the parameter or a chain without
+    /// the trait sets nothing; a species' own traits and rules resolve with
+    /// no rank file above it.
+    #[test]
+    fn rules_set_nothing_they_cannot() {
+        // A genus may delete a rule; a program without the parameter, or a
+        // chain without the trait, sets nothing.
+        let unruled = grow("unruled", &json!({"id": "unruled-one"}));
+        assert!(!unruled.rules.contains_key("generator.params.space_density"));
+        assert!(
+            unruled.spec["generator"]["params"]
+                .get("space_density")
+                .is_none()
+        );
+        let shrub = grow(
+            "plain",
+            &json!({"id": "plain-two", "generator": {"program": "shrub"}}),
+        );
+        assert_eq!(
+            shrub.rules["generator.params.space_density"].1.as_deref(),
+            Some("program `shrub` has no parameter `space_density`")
+        );
+        let bare = grow(
+            "plain",
+            &json!({"id": "plain-three", "traits": {"leaf_length_m": null}}),
+        );
+        assert_eq!(
+            bare.rules["generator.params.space_density"].1.as_deref(),
+            Some("no `leaf_length_m` to read")
+        );
+        // A species' own traits and rules resolve with no rank file above.
+        let alone = effective_text(
+            "f/g/testa-one/spec.json",
+            r#"{"generator": {"program": "broadleaf"}, "traits": {"leaflets": 5},
+                "rules": {"generator.params.a": {"rule": "leaflets * 2"}}}"#,
+            &[],
+            &programs(),
+        )
+        .unwrap()
+        .unwrap();
+        assert_eq!(
+            serde_json::from_str::<Value>(&alone).unwrap()["generator"]["params"]["a"],
+            10.0
+        );
+    }
+
+    /// A program's parameters are its own and those of the programs it
+    /// extends.
+    #[test]
+    fn programs_inherit_their_parents_parameters() {
+        let programs = programs();
+        assert_eq!(programs["shrub"].iter().collect::<Vec<_>>(), ["a", "b"]);
+        assert!(programs["sapindaceae"].contains("fork"));
+        assert!(programs["sapindaceae"].contains("space_density"));
+        assert!(!programs["broadleaf"].contains("fork"));
     }
 }
