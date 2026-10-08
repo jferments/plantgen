@@ -114,6 +114,7 @@ fn run() -> Result<(), Failure> {
         "year" => year_command(&args),
         "lineup" => lineup_command(&args),
         "atlas" => atlas_command(&args),
+        "measure" => measure_command(&args),
         "ground" => ground_command(&args),
         "build" => build_command(&args),
         "inspect" => inspect_command(&args),
@@ -161,6 +162,13 @@ Usage:
                 [--view side|three-quarter|top] [--size PIXELS]
       Render a row per species of its first N seeds (default 4) at one
       age (default its oldest keyframe), each row at one scale.
+  plantc measure [<species|spec.json>...] [--generator PROGRAM] [--env ENV]
+                 [--seed N] [--years N]
+      Grow each species (default every one in the library; --generator
+      keeps those run by one program) to its oldest keyframe, or N years,
+      and print its form: crown width over depth, where it is widest,
+      its departure from an ellipse (0 an orb), its lobing, crown width
+      over dbh and the median leaf card length.
   plantc atlas <species|spec.json> --out FILE.png
       Draw the species' organ card textures (leaves, needles, flowers) in
       their colours, one per organ, side by side.
@@ -430,6 +438,73 @@ fn describe(graph: &PlantGraph, types: &[OrganType]) -> String {
         graph.organs.len(),
         package::size_text(graph.leaf_area(types))
     )
+}
+
+fn measure_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &["generator", "env", "seed", "years"])?;
+    let ids: Vec<String> = if options.positional.is_empty() {
+        library()
+            .species()
+            .iter()
+            .map(|entry| entry.id.clone())
+            .collect()
+    } else {
+        options.positional.clone()
+    };
+    let wanted = options.flags.get("generator");
+    out!(
+        "{:<28} {:>5} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>5} {:>6} {:>6}",
+        "species",
+        "age",
+        "height",
+        "dbh",
+        "crown",
+        "w/d",
+        "widest",
+        "ellip",
+        "lobe",
+        "w/dbh",
+        "leaf"
+    );
+    for id in &ids {
+        let spec = load_spec(id)?;
+        if wanted.is_some_and(|program| *program != spec.generator.program) {
+            continue;
+        }
+        let environment = options.environment(&spec)?;
+        let seed = options.number("seed")?.unwrap_or(spec.variants.seeds[0]);
+        let years = options.number("years")?.unwrap_or(spec.growth.years);
+        let growth = grow_variant(&spec, None, environment, seed, vec![years], years)?;
+        let Some(graph) = growth.keyframes.last() else {
+            continue;
+        };
+        let cm = |value: Option<f64>| {
+            value.map_or_else(|| "-".to_string(), |v| format!("{:.1}", v * 100.0))
+        };
+        match plantgen::form::measure(graph, &growth.organ_types) {
+            Some(form) => out!(
+                "{:<28} {:>5.0} {:>6.1} {:>6} {:>6.1} {:>6.2} {:>6.2} {:>6.2} {:>5.2} {:>6} {:>6}",
+                spec.id,
+                graph.age,
+                form.height,
+                cm(form.dbh),
+                form.crown_radius * 2.0,
+                form.width_to_depth,
+                form.widest_at,
+                form.ellipse_departure,
+                form.lobing,
+                form.width_to_dbh
+                    .map_or_else(|| "-".to_string(), |r| format!("{r:.0}")),
+                cm(form.leaf_length)
+            ),
+            None => out!(
+                "{:<28} {:>5.0} too few living organs to measure",
+                spec.id,
+                graph.age
+            ),
+        }
+    }
+    Ok(())
 }
 
 fn grow_command(args: &[String]) -> Result<(), Failure> {
