@@ -38,10 +38,6 @@ use std::sync::OnceLock;
 
 use serde::{Deserialize, Serialize};
 
-use crate::ground::{
-    Canvas, Draws, GROUND_LOOK_SIZE, GroundLook, fbm, mix, organ_templates, scale, spot, to_f64,
-    value_noise,
-};
 use crate::library::Library;
 use crate::looks::{Fruit, Scales, Shape, Simple};
 use crate::math::{self, PI};
@@ -49,6 +45,10 @@ use crate::rng::{hash_str, hash_words};
 use crate::shed::{FoliageKind, Shed};
 use crate::spec::PlantSpec;
 use crate::templates::{Templates, Texel};
+use crate::texture::{
+    Canvas, Draws, GROUND_LOOK_SIZE, GroundLook, fbm, mix, organ_templates, scale, spot, to_f64,
+    value_noise,
+};
 
 use ExtraKind::{Bark, Catkin, Cone, ConeScale, PairedSamara, Samara, Twig};
 
@@ -1115,7 +1115,8 @@ fn draw_extra(canvas: &mut Canvas, extra: &Extra, draws: Draws, scales: [f64; 3]
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::ground::{GROUND_LOOK_NAMES, mip_chain, srgb_to_linear};
+    use crate::ground::plant_recipe;
+    use crate::texture::{mip_chain, srgb_to_linear};
 
     #[test]
     fn every_shed_section_is_its_species_litter() {
@@ -1133,7 +1134,7 @@ mod tests {
         assert_eq!(count, 23);
         for litter in litters() {
             let name = litter.species;
-            assert!(!GROUND_LOOK_NAMES.contains(&name));
+            assert!(plant_recipe(name).is_none());
             assert!(!litter.shed.is_empty() && !litter.dry.is_empty(), "{name}");
             assert!(litter.tile_m >= 0.75 && litter.relief_m > 0.0, "{name}");
             for value in [litter.curl, litter.pale_beneath, litter.decay] {

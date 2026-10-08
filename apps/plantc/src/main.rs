@@ -165,9 +165,10 @@ Usage:
       Draw the species' organ card textures (leaves, needles, flowers) in
       their colours, one per organ, side by side.
   plantc ground --out FILE.png [--seed N] [--looks words|litter]
-      Draw the 26 ground looks the terrain wears, seven to a row in the
-      order of the ground's words, or with `--looks litter` the 23 canopy
-      species' litters: each look's colour above its relief.
+      Draw the nine plant-made ground looks (needles, leaves, thatch,
+      twigs, moss, sphagnum, grass, tussock and cushion), seven to a row,
+      or with `--looks litter` the 23 canopy species' litters: each look's
+      colour above its relief.
   plantc build <species|spec.json> [--out DIR] [--quality draft|standard]
                [--threads N]
       Build a .afterplant package in DIR (default `plants`) and print its
@@ -1167,7 +1168,7 @@ fn ground_command(args: &[String]) -> Result<(), Failure> {
     let out = options.flags.get("out").ok_or("missing `--out FILE.png`")?;
     let seed = options.number::<u64>("seed")?.unwrap_or(1);
     let (looks, drawn) = match options.flags.get("looks").map_or("words", String::as_str) {
-        "words" => (ground::ground_looks(seed), Vec::new()),
+        "words" => (ground::plant_looks(seed), Vec::new()),
         "litter" => {
             let drawn: Vec<_> = litter::litters()
                 .iter()

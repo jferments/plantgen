@@ -56,6 +56,7 @@ pub mod shoots;
 pub mod spec;
 pub mod spines;
 pub mod templates;
+pub mod texture;
 pub mod venation;
 
 /// Revision of the generator as a whole: the L-system engine, its tools and
