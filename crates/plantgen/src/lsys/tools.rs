@@ -664,21 +664,20 @@ impl Outline {
             return -1.0;
         }
         #[allow(clippy::cast_possible_truncation)]
-        let profile = match shape.round() as i64 {
-            2..=4 => envelope_radius(shape, radius, h),
-            _ => {
-                let side = if h < self.widest {
-                    self.widest
-                } else {
-                    1.0 - self.widest
-                };
-                let u = ((h - self.widest) / side).abs().min(1.0);
-                radius
-                    * math::pow(
-                        (1.0 - math::pow(u, self.fullness)).max(0.0),
-                        1.0 / self.fullness,
-                    )
-            }
+        let profile = if (2..=4).contains(&(shape.round() as i64)) {
+            envelope_radius(shape, radius, h)
+        } else {
+            let side = if h < self.widest {
+                self.widest
+            } else {
+                1.0 - self.widest
+            };
+            let u = ((h - self.widest) / side).abs().min(1.0);
+            radius
+                * math::pow(
+                    (1.0 - math::pow(u, self.fullness)).max(0.0),
+                    1.0 / self.fullness,
+                )
         };
         if self.lobes <= 0.0 || self.lobe_depth <= 0.0 {
             return profile;

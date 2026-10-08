@@ -231,7 +231,13 @@ fn growth_history_is_consistent_between_keyframes() {
                 assert!(segment.radius > 0.0 && segment.radius.is_finite());
                 if let Some(parent) = segment.parent {
                     let parent = &graph.segments[parent as usize];
-                    assert!((parent.order..=parent.order + 1).contains(&segment.order));
+                    assert!(
+                        (parent.order..=parent.order + 1).contains(&segment.order),
+                        "{id} at {}: segment {index} of order {} grows from one of order {}",
+                        graph.age,
+                        segment.order,
+                        parent.order
+                    );
                     // The pipe model and annual rings: no branch is thicker
                     // than the wood it grows from. A fleshy body is not
                     // wood: a cactus pad can be wider than the pad it
@@ -288,7 +294,7 @@ fn woody_species_bear_their_fruit_when_old() {
             .organs
             .get("bloom")
             .is_some_and(|look| matches!(look.shape, plantgen::looks::Shape::Fruit(_)));
-        if spec.generator.program != "broadleaf" || !fruiting {
+        if !grown_as_broadleaf(&spec) || !fruiting {
             continue;
         }
         checked += 1;
@@ -330,7 +336,7 @@ fn fruiting_species_have_a_year() {
         let Some(bloom) = spec.appearance.organs.get("bloom") else {
             continue;
         };
-        if spec.generator.program != "broadleaf" || !matches!(bloom.shape, Shape::Fruit(_)) {
+        if !grown_as_broadleaf(&spec) || !matches!(bloom.shape, Shape::Fruit(_)) {
             continue;
         }
         checked += 1;
@@ -594,4 +600,24 @@ fn a_tree_in_a_steady_wind_flags_downwind() {
         "{lee} of {} organs downwind",
         graph.organs.len()
     );
+}
+
+/// Whether `spec` is grown by `broadleaf` or by a program that extends it
+/// (growth plan G1: the maples' `sapindaceae`).
+fn grown_as_broadleaf(spec: &PlantSpec) -> bool {
+    let library = plantgen::library::Library::builtin();
+    let mut name = spec.generator.program.clone();
+    for _ in 0..plantgen::lsys::chain::MAX_DEPTH {
+        if name == "broadleaf" {
+            return true;
+        }
+        match library
+            .program_text(&name)
+            .and_then(plantgen::lsys::parser::extends_of)
+        {
+            Some(parent) => name = parent,
+            None => return false,
+        }
+    }
+    false
 }

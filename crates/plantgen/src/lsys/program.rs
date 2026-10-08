@@ -496,10 +496,10 @@ fn check_queries(ast: &ProgramAst, tools: &[Option<ToolConfig>; 5]) -> Result<()
                     format!(
                         "module `{}` queries {name}, but the program configures no `tool {}`",
                         decl.name,
-                        TOOLS
-                            .iter()
-                            .find(|spec| spec.kind == tool)
-                            .map_or("", |spec| spec.name)
+                        TOOLS.iter().find(|spec| spec.kind == tool).map_or_else(
+                            String::new,
+                            |spec| format!("{}@{}", spec.name, spec.version)
+                        )
                     ),
                 );
             }
@@ -944,7 +944,14 @@ impl Compiler {
             for arg in &call.args {
                 args.push(self.expr(arg, context)?);
             }
-            if args.len() != usize::from(info.arity) {
+            // An organ may carry its own turn (growth plan G1): `leaf(s, roll,
+            // pitch)` or `leaf(s, roll, pitch, level)` places it as
+            // `[ /(roll) &(pitch) $ leaf(s) ]` would (`$` only with a level
+            // above 0), in one module instead of five
+            // (`super::turtle::organ_frame`).
+            let turned_organ =
+                matches!(info.kind, SymbolKind::Organ { .. }) && matches!(args.len(), 3 | 4);
+            if args.len() != usize::from(info.arity) && !turned_organ {
                 let default = match info.kind {
                     SymbolKind::Turtle(Turtle::Forward | Turtle::Move)
                     | SymbolKind::Organ { .. }
