@@ -78,7 +78,7 @@ fn a_library_folder_replaces_built_in_species() {
     let library = dir.to_str().unwrap();
     let listed = stdout(&plantc(&["list", "--library", library]));
     assert!(
-        listed.contains("Douglas-fir from a folder (Pseudotsuga menziesii), program `conifer`, from the library folder"),
+        listed.contains("Douglas-fir from a folder (Pseudotsuga menziesii), program `pinaceae`, from the library folder"),
         "{listed}"
     );
     assert!(listed.contains("carnegiea-gigantea"), "{listed}");

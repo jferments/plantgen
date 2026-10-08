@@ -8,8 +8,10 @@
   },
   "growth_form": "excurrent_tree",
   "generator": {
-    "program": "conifer",
+    "program": "pinaceae",
     "params": {
+      "side_order": 2,
+      "lateral_length": 0.35,
       "cone_age": 20,
       "cone_chance": 0.15,
       "cone_length": 0.025,
@@ -31,7 +33,7 @@
       "upturn": 0.008,
       "branch_growth": 0.28,
       "side_growth": 0.6,
-      "side_chance": 0.85,
+      "side_chance": 0.6,
       "side_angle": 55,
       "needle_years": 5,
       "spray_droop": 45,
@@ -110,7 +112,7 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
-      "note": "Hand-set from general knowledge of the species: a tall, narrow conifer with a drooping leader, slender level to drooping branches and feathery, flat sprays of short needles in two ranks; very shade tolerant. Not fitted to measurements. Cones (plant forms F3): 1.5 to 3 cm hang from the shoot tips; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws with needles of their true length."
+      "note": "Hand-set from general knowledge of the species: a tall, narrow conifer with a drooping leader, slender level to drooping branches and feathery, flat sprays of short needles in two ranks; very shade tolerant. Not fitted to measurements. Cones (plant forms F3): 1.5 to 3 cm hang from the shoot tips; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws with needles of their true length. Growth plan G1 (2026-10-08): grown by the `pinaceae` program, so branches ramify into fronds clothed in needles rather than bare whips with a tuft at the tip: each year's shoot sets lateral buds by its length (side_chance on each side once lateral_length long, fewer on shorter shoots), laterals of laterals do the same to side_order deep, and side shoots live while they have light. Same values as Douglas-fir (side_order 2, lateral_length 0.35, side_chance 0.6, in place of its earlier 0.85), which the Urban Tree Database fits; it has no western hemlocks. At 60 years in the open it holds about 16 m\u00b2 of leaf per m\u00b2 of crown, more than Douglas-fir's 11 as the most shade-tolerant of the four, and side renders are about 9 % see-through (35 % before). Not fitted to measurements of this species."
     },
     "allometry": {
       "evidence": "Authored",

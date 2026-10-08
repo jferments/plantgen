@@ -9,7 +9,7 @@ use plantgen::grow::{GrowthSettings, grow};
 use plantgen::lsys::Limits;
 use plantgen::package::{self, Inputs, PackageError};
 use plantgen::quality::{self, Quality};
-use plantgen::spec::{AllometryPoint, Environment, PlantSpec, builtin_program};
+use plantgen::spec::{AllometryPoint, Environment, PlantSpec};
 
 /// A young Douglas-fir: two seeds in the open, eight years.
 fn small_spec() -> PlantSpec {
@@ -176,7 +176,11 @@ fn the_key_follows_every_input() {
             }
         )
     );
-    let source = format!("{}\n# a comment\n", builtin_program("conifer").unwrap());
+    // The species' own program, joined with the programs it extends.
+    let program = plantgen::library::Library::builtin()
+        .program(&spec.generator.program)
+        .unwrap();
+    let source = format!("{program}\n# a comment\n");
     assert_ne!(
         base,
         Inputs::with_program(&spec, &source, &TINY).unwrap().key

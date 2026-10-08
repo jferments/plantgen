@@ -21,7 +21,7 @@ use crate::lsys::{Neighbourhood, OrganKind, Program, ProgramError, tools};
 pub const SPEC_SCHEMA: u32 = 1;
 
 /// Built-in plant programs, by name.
-pub const PROGRAMS: [(&str, &str); 15] = [
+pub const PROGRAMS: [(&str, &str); 16] = [
     ("conifer", include_str!("../programs/conifer.lsys")),
     ("broadleaf", include_str!("../programs/broadleaf.lsys")),
     ("grass", include_str!("../programs/grass.lsys")),
@@ -37,6 +37,7 @@ pub const PROGRAMS: [(&str, &str); 15] = [
     ("epiphyte", include_str!("../programs/epiphyte.lsys")),
     ("cushion", include_str!("../programs/cushion.lsys")),
     ("sapindaceae", include_str!("../programs/sapindaceae.lsys")),
+    ("pinaceae", include_str!("../programs/pinaceae.lsys")),
 ];
 
 /// A built-in program's source, by name.

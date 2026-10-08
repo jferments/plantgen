@@ -294,7 +294,7 @@ fn woody_species_bear_their_fruit_when_old() {
             .organs
             .get("bloom")
             .is_some_and(|look| matches!(look.shape, plantgen::looks::Shape::Fruit(_)));
-        if !grown_as_broadleaf(&spec) || !fruiting {
+        if !grown_as(&spec, "broadleaf") || !fruiting {
             continue;
         }
         checked += 1;
@@ -336,7 +336,7 @@ fn fruiting_species_have_a_year() {
         let Some(bloom) = spec.appearance.organs.get("bloom") else {
             continue;
         };
-        if !grown_as_broadleaf(&spec) || !matches!(bloom.shape, Shape::Fruit(_)) {
+        if !grown_as(&spec, "broadleaf") || !matches!(bloom.shape, Shape::Fruit(_)) {
             continue;
         }
         checked += 1;
@@ -371,7 +371,7 @@ fn conifers_bear_cones_once_old() {
     let mut checked = 0;
     for (id, _) in spec::all_species() {
         let spec = PlantSpec::builtin(id).unwrap();
-        if spec.generator.program != "conifer" {
+        if !grown_as(&spec, "conifer") {
             continue;
         }
         checked += 1;
@@ -602,13 +602,14 @@ fn a_tree_in_a_steady_wind_flags_downwind() {
     );
 }
 
-/// Whether `spec` is grown by `broadleaf` or by a program that extends it
-/// (growth plan G1: the maples' `sapindaceae`).
-fn grown_as_broadleaf(spec: &PlantSpec) -> bool {
+/// Whether `spec` is grown by `program` or by a program that extends it
+/// (growth plan G1: the maples' `sapindaceae` extends `broadleaf`, and
+/// `pinaceae` extends `conifer`).
+fn grown_as(spec: &PlantSpec, program: &str) -> bool {
     let library = plantgen::library::Library::builtin();
     let mut name = spec.generator.program.clone();
     for _ in 0..plantgen::lsys::chain::MAX_DEPTH {
-        if name == "broadleaf" {
+        if name == program {
             return true;
         }
         match library
