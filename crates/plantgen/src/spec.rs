@@ -137,6 +137,25 @@ pub enum GrowthForm {
     Cushion,
 }
 
+impl GrowthForm {
+    /// Every growth form, in the order they are declared.
+    pub const ALL: [Self; 13] = [
+        Self::ExcurrentTree,
+        Self::DecurrentTree,
+        Self::ScaleLeavedTree,
+        Self::Shrub,
+        Self::Graminoid,
+        Self::Forb,
+        Self::Fern,
+        Self::Vine,
+        Self::StemSucculent,
+        Self::RosetteSucculent,
+        Self::Palm,
+        Self::Epiphyte,
+        Self::Cushion,
+    ];
+}
+
 /// Which plant program grows the species, and its parameter values.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
