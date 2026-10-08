@@ -1,0 +1,43 @@
+# PlantLab: a desktop lab for growing and reviewing PlantGen's plants.
+# Its own workspace, so the generator's workspace keeps its five
+# dependencies and never builds Bevy.
+[workspace]
+resolver = "3"
+members = ["scene", "app"]
+
+[workspace.package]
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[workspace.dependencies]
+plantgen = { path = "../crates/plantgen" }
+plantlab-scene = { path = "scene" }
+bevy = { version = "=0.19.1", default-features = false, features = [
+    "std",
+    "async_executor",
+    "multi_threaded",
+    "bevy_asset",
+    "bevy_log",
+    "3d_bevy_render",
+    "png",
+] }
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+[workspace.lints.clippy]
+all = "warn"
+pedantic = "warn"
+# Names such as PlantGen and PlantLab are words here, not code.
+doc_markdown = { level = "allow", priority = 1 }
+# Bevy systems take their resources by value.
+needless_pass_by_value = { level = "allow", priority = 1 }
+
+[profile.dev]
+opt-level = 1
+debug = "line-tables-only"
+incremental = true
+
+[profile.dev.package."*"]
+opt-level = 3
