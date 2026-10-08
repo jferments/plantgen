@@ -21,6 +21,11 @@ bevy = { version = "=0.19.1", default-features = false, features = [
     "bevy_log",
     "3d_bevy_render",
     "png",
+    # Captions and titles on review sheets.
+    "bevy_ui",
+    "bevy_ui_render",
+    "bevy_text",
+    "default_font",
     # Soft shadows for the photo look.
     "experimental_pbr_pcss",
 ] }
