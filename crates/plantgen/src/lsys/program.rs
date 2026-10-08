@@ -208,6 +208,9 @@ pub struct ToolSpec {
 
 /// The tool registry. A new capability is a new entry or a new version of an
 /// entry; a version, once released, never changes behaviour.
+/// The first random call site of tool settings, far above any rule's.
+pub const TOOL_SITES: u32 = 1 << 24;
+
 pub const TOOLS: [ToolSpec; 6] = [
     ToolSpec {
         kind: ToolKind::Light,
@@ -232,7 +235,9 @@ pub const TOOLS: [ToolSpec; 6] = [
     },
     // Growth plan G1: space that returns where the plant is shed, an
     // outline widest anywhere up the crown and as full as a box or as
-    // pointed as a cone, and lobes round the edge (`super::tools`).
+    // pointed as a cone, lobes round the edge, and billows: the edge moved
+    // in and out by smooth noise `bump_size` metres across
+    // (`super::tools`).
     ToolSpec {
         kind: ToolKind::Space,
         name: "space",
@@ -251,6 +256,8 @@ pub const TOOLS: [ToolSpec; 6] = [
             ("fullness", 2.0),
             ("lobes", 0.0),
             ("lobe_depth", 0.0),
+            ("bumps", 0.0),
+            ("bump_size", 3.0),
         ],
     },
     ToolSpec {
@@ -543,7 +550,12 @@ impl Compiler {
         self.declare_modules(ast)?;
         self.declare_organs(ast)?;
         self.declare_bodies(ast)?;
+        // Draws in tool settings number their sites in a block of their
+        // own, so a program that adds one never moves the sites of the
+        // axiom or of the rules it inherits.
+        let sites = std::mem::replace(&mut self.random_sites, TOOL_SITES);
         let tools = self.configure_tools(ast)?;
+        self.random_sites = sites;
         check_queries(ast, &tools)?;
 
         let axiom_context = Context {
@@ -711,8 +723,9 @@ impl Compiler {
         Ok(())
     }
 
-    /// Tool settings, defaults first; a setting may read parameters and
-    /// the time.
+    /// Tool settings, defaults first; a setting may read parameters, the
+    /// time and per-plant draws (`rand`, `gauss`, `uniform`: keyed on the
+    /// plant's seed alone, so the same every step; growth plan G1).
     fn configure_tools(
         &mut self,
         ast: &ProgramAst,
@@ -722,6 +735,7 @@ impl Compiler {
             what: "a tool setting",
             globals: self.params.len(),
             time: true,
+            random: true,
             ..PARAMS_ONLY
         };
         for decl in &ast.tools {

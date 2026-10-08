@@ -25,6 +25,8 @@ param crown_widest = 0.45;      # share of the crown's depth where it is widest
 param crown_fullness = 2.2;    # 2: an ellipse in profile; more: fuller
 param crown_lobes = 3;         # bulges round the stem
 param crown_lobe_depth = 0.18; # how far a bulge reaches, as a share of the radius
+param crown_bumps = 0;          # billows: how far smooth noise moves the crown's edge, a share of the radius
+param crown_bump_size = 3;      # billows' size, m
 param terminal_bloom = 0.35;   # chance a year that a long shoot ends in flowers and forks
 param twin_angle = 25;         # angle of each twin shoot from the old axis
 param perception = 80;         # half-angle of the cone in which a shoot senses free space
@@ -40,12 +42,25 @@ tool pipe@1 { exponent = pipe_exponent };
 # its height by 30 years but only 55 % of its crown width). 0 shares
 # crown_rate, as broadleaf does.
 param height_rate = 0;
+# Each plant draws its own crown once, for its whole life (a draw in a tool
+# setting is keyed on the plant's seed alone): its envelope's radius and
+# height scaled by up to crown_vary and height_vary either way, and its
+# widest point moved by up to widest_vary of the crown's depth. 0 grows
+# every plant to the same envelope, as broadleaf does.
+param crown_vary = 0;
+param height_vary = 0;
+param widest_vary = 0;
 tool space@2 {
-    height = crown_height * (1 - exp(-(height_rate > 0 ? height_rate : crown_rate) * (t + 3))),
-    widest = crown_widest,
+    height = crown_height * uniform(1 - height_vary, 1 + height_vary)
+        * (1 - exp(-(height_rate > 0 ? height_rate : crown_rate) * (t + 3))),
+    radius = crown_radius * uniform(1 - crown_vary, 1 + crown_vary)
+        * (1 - exp(-crown_rate * (t + 3))),
+    widest = crown_widest + uniform(-widest_vary, widest_vary),
     fullness = crown_fullness,
     lobes = crown_lobes,
     lobe_depth = crown_lobe_depth,
+    bumps = crown_bumps,
+    bump_size = crown_bump_size,
     renew = 1,
     angle = perception
 };

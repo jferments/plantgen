@@ -255,6 +255,25 @@ rule B -> ;
     }
 
     #[test]
+    fn a_draw_in_a_tool_setting_moves_no_rule_draw() {
+        let parent = compile(PARENT);
+        let child = compile(&format!(
+            "lsystem leafy 1 extends base;\ntool pipe@1 {{ tip = uniform(0.01, 0.02) }};\n{PARENT}"
+        ));
+        let a = usize::from(parent.symbol_id("A").unwrap());
+        assert_eq!(
+            child.productions[a][0].successor[0].args,
+            parent.productions[a][0].successor[0].args
+        );
+        let pipe = crate::lsys::program::ToolKind::Pipe;
+        let tip = format!("{:?}", child.tool(pipe).unwrap().settings[1]);
+        assert!(
+            tip.contains(&format!("Uniform({})", crate::lsys::program::TOOL_SITES)),
+            "{tip}"
+        );
+    }
+
+    #[test]
     fn a_broken_chain_is_refused_with_its_reason() {
         let missing = Program::compile("lsystem leafy 1 extends base;\n").unwrap_err();
         assert!(

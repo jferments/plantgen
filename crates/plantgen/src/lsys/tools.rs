@@ -11,7 +11,8 @@
 //! - `space@2` (growth plan G1): the same, with points that return once
 //!   the plant parts that took them are shed (`renew`), an outline widest
 //!   at any share of the crown's depth and of any fullness (`widest`,
-//!   `fullness`), and lobes round its edge (`lobes`, `lobe_depth`).
+//!   `fullness`), lobes round its edge (`lobes`, `lobe_depth`), and billows,
+//!   its edge moved in and out by smooth noise (`bumps`, `bump_size`).
 //! - `vigour@1`: the Borchert-Honda resource model: light collected by the
 //!   tips flows to the base and back out, split by apical control.
 //! - `pipe@1`: the pipe model of stem radii (Shinozaki et al. 1964).
@@ -103,7 +104,15 @@ impl Neighbourhood {
 }
 
 /// Values of one tool's settings at one step.
-fn settings(config: &ToolConfig, globals: &[f64], clock: Clock, stack: &mut Vec<f64>) -> Vec<f64> {
+/// A tool's settings this step. A draw in a setting is keyed on the plant's
+/// seed alone, so it is one value for the plant's whole life.
+fn settings(
+    config: &ToolConfig,
+    globals: &[f64],
+    clock: Clock,
+    seed: u64,
+    stack: &mut Vec<f64>,
+) -> Vec<f64> {
     let scope = Scope {
         globals,
         locals: &[],
@@ -112,7 +121,7 @@ fn settings(config: &ToolConfig, globals: &[f64], clock: Clock, stack: &mut Vec<
         dt: clock.dt,
         age: 0.0,
         step: f64::from(clock.step),
-        key: 0,
+        key: hash_words(&[seed, SALT_SETTINGS]),
     };
     config
         .settings
@@ -247,7 +256,7 @@ pub fn run(
 
     let (query_light, organ_light) = match program.tool(ToolKind::Light) {
         Some(config) => {
-            let values = settings(config, globals, clock, &mut stack);
+            let values = settings(config, globals, clock, seed, &mut stack);
             light(scene, &anchors, organ_area, &values, surroundings, limits)?
         }
         None => (
@@ -268,7 +277,7 @@ pub fn run(
         .collect();
     let space = match program.tool(ToolKind::Space) {
         Some(config) => {
-            let values = settings(config, globals, clock, &mut stack);
+            let values = settings(config, globals, clock, seed, &mut stack);
             colonize(
                 scene,
                 &space_queries,
@@ -284,7 +293,7 @@ pub fn run(
 
     let flux = match program.tool(ToolKind::Vigour) {
         Some(config) => {
-            let values = settings(config, globals, clock, &mut stack);
+            let values = settings(config, globals, clock, seed, &mut stack);
             let lit = program.tool(ToolKind::Light).is_some();
             Some(vigour(
                 scene,
@@ -300,7 +309,7 @@ pub fn run(
 
     // The host: distance and direction to its surface from each module.
     let host_reach = program.tool(ToolKind::Host).map(|config| {
-        let values = settings(config, globals, clock, &mut stack);
+        let values = settings(config, globals, clock, seed, &mut stack);
         values[0].max(0.0)
     });
 
@@ -630,6 +639,8 @@ fn envelope_radius(shape: f64, radius: f64, h: f64) -> f64 {
 
 const SALT_POINT: u64 = 0x7370_6163;
 const SALT_LOBES: u64 = 0x6c6f_6265;
+const SALT_SETTINGS: u64 = 0x7365_7474;
+const SALT_BUMPS: u64 = 0x6275_6d70;
 
 /// The outline of a `space@2` envelope and whether its points renew.
 struct Outline {
@@ -639,6 +650,9 @@ struct Outline {
     lobes: f64,
     lobe_depth: f64,
     phases: [f64; 2],
+    bumps: f64,
+    bump_size: f64,
+    seed: u64,
 }
 
 impl Outline {
@@ -679,14 +693,45 @@ impl Outline {
                     1.0 / self.fullness,
                 )
         };
+        let billows = if self.bumps > 0.0 {
+            1.0 + self.bumps * value_noise(self.seed, point * (1.0 / self.bump_size))
+        } else {
+            1.0
+        };
         if self.lobes <= 0.0 || self.lobe_depth <= 0.0 {
-            return profile;
+            return profile * billows;
         }
         let theta = math::atan2(point.z, point.x);
         let wave = 0.6 * math::cos(self.lobes * theta + self.phases[0] + 3.0 * h)
             + 0.4 * math::cos((self.lobes + 1.0) * theta + self.phases[1] - 5.0 * h);
-        profile * (1.0 + self.lobe_depth * wave)
+        profile * (1.0 + self.lobe_depth * wave) * billows
     }
+}
+
+/// Smooth value noise in [-1, 1] at `p` (lattice units): a value hashed
+/// from `seed` and each corner of the unit cell round `p`, blended by
+/// smoothstep weights, so it is continuous and the same on every machine.
+fn value_noise(seed: u64, p: Vec3) -> f64 {
+    let cell = [p.x.floor(), p.y.floor(), p.z.floor()];
+    let fraction = [p.x - cell[0], p.y - cell[1], p.z - cell[2]];
+    let smooth = fraction.map(|f| f * f * (3.0 - 2.0 * f));
+    let mut total = 0.0;
+    for corner in 0..8_u32 {
+        let offset = [corner & 1, (corner >> 1) & 1, (corner >> 2) & 1];
+        let mut weight = 1.0;
+        let mut words = [seed, SALT_BUMPS, 0, 0, 0];
+        for axis in 0..3 {
+            let up = offset[axis] == 1;
+            weight *= if up { smooth[axis] } else { 1.0 - smooth[axis] };
+            // Lattice coordinates are small whole numbers; the cast keeps
+            // their bits.
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let coordinate = (cell[axis] as i64 + i64::from(up)) as u64;
+            words[2 + axis] = coordinate;
+        }
+        total += weight * (2.0 * unit(hash_words(&words)) - 1.0);
+    }
+    total
 }
 
 /// The two lobe waves' phases for a plant grown from `seed`.
@@ -719,14 +764,20 @@ fn colonize(
     };
     let outline = match (version, later) {
         (1, []) => None,
-        (2, &[renew, widest, fullness, lobes, lobe_depth]) => {
-            if !(widest > 0.0 && widest < 1.0 && fullness > 0.0 && (0.0..1.0).contains(&lobe_depth))
+        (2, &[renew, widest, fullness, lobes, lobe_depth, bumps, bump_size]) => {
+            if !(widest > 0.0
+                && widest < 1.0
+                && fullness > 0.0
+                && (0.0..1.0).contains(&lobe_depth)
+                && (0.0..1.0).contains(&bumps)
+                && bump_size > 0.0)
             {
                 return Err(invalid(
                     "space",
                     format!(
-                        "widest must lie between 0 and 1, fullness be positive and lobe_depth \
-                         lie in [0, 1); found {widest}, {fullness} and {lobe_depth}"
+                        "widest must lie between 0 and 1, fullness and bump_size be positive, \
+                         and lobe_depth and bumps lie in [0, 1); found {widest}, {fullness}, \
+                         {bump_size}, {lobe_depth} and {bumps}"
                     ),
                 ));
             }
@@ -737,6 +788,9 @@ fn colonize(
                 lobes: lobes.max(0.0).round(),
                 lobe_depth,
                 phases: lobe_phases(seed),
+                bumps,
+                bump_size,
+                seed,
             })
         }
         _ => return Err(invalid("space", "wrong number of settings".into())),
@@ -1397,6 +1451,28 @@ mod tests {
         // The envelope is straight above, so the pull points up.
         assert!(values[EnvField::Sy as usize] > 0.9, "{values:?}");
         assert!(state.killed.is_empty());
+    }
+
+    #[test]
+    fn a_draw_in_a_tool_setting_is_one_value_for_the_plants_life() {
+        let program = Program::compile(
+            "lsystem p 1; module A; tool pipe@1 { tip = uniform(0.002, 0.02) }; axiom A;",
+        )
+        .unwrap();
+        let config = program.tool(ToolKind::Pipe).unwrap();
+        let mut stack = Vec::new();
+        let at = |step: u32, seed: u64, stack: &mut Vec<f64>| {
+            let clock = Clock {
+                step,
+                t: f64::from(step),
+                dt: 1.0,
+            };
+            settings(config, &[], clock, seed, stack)[1]
+        };
+        let first = at(0, 7, &mut stack);
+        assert!((0.002..0.02).contains(&first));
+        assert_eq!(first.to_bits(), at(40, 7, &mut stack).to_bits());
+        assert_ne!(first.to_bits(), at(0, 8, &mut stack).to_bits());
     }
 
     #[test]
