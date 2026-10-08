@@ -1,8 +1,9 @@
 //! Recursive-descent parser for plant programs.
 //!
 //! ```text
-//! program    = header { statement }
-//! header     = "lsystem" name integer ";"
+//! program    = header { statement }   (until the next "lsystem")
+//! chain      = program { program }
+//! header     = "lsystem" name integer [ "extends" name ] ";"
 //! statement  = "param" name "=" expr ";"
 //!            | "module" name [ "(" names ")" ] [ "queries" names ] ";"
 //!            | "organ" name kind [ "area" expr ] ";"
@@ -40,8 +41,51 @@ use super::lexer::{Span, Spanned, Token, tokenize};
 ///
 /// Returns the first lexical or syntax error with its position.
 pub fn parse(source: &str) -> Result<ProgramAst, ProgramError> {
+    let mut chain = parse_chain(source)?;
+    if chain.len() > 1 {
+        return Err(ProgramError {
+            span: Span::default(),
+            message: "expected one program, found a chain of programs".into(),
+        });
+    }
+    Ok(chain.remove(0))
+}
+
+/// Parse program text holding a program followed by the programs it
+/// builds on (`extends`), each with its own `lsystem` header: a chain, in
+/// order from the program to its furthest ancestor.
+///
+/// # Errors
+///
+/// Returns the first lexical or syntax error with its position.
+pub fn parse_chain(source: &str) -> Result<Vec<ProgramAst>, ProgramError> {
     let tokens = tokenize(source).map_err(|(span, message)| ProgramError { span, message })?;
-    Parser { tokens, index: 0 }.program()
+    let mut parser = Parser { tokens, index: 0 };
+    let mut chain = vec![parser.program()?];
+    while *parser.peek() != Token::End {
+        chain.push(parser.program()?);
+    }
+    Ok(chain)
+}
+
+/// The program that `source`'s first program extends, read from its
+/// header alone; `None` when it extends none or the header does not parse.
+#[must_use]
+pub fn extends_of(source: &str) -> Option<String> {
+    let tokens = tokenize(source).ok()?;
+    let mut parser = Parser { tokens, index: 0 };
+    if !parser.keyword("lsystem") {
+        return None;
+    }
+    parser.name("the program name").ok()?;
+    parser.integer("the program revision").ok()?;
+    if !parser.keyword("extends") {
+        return None;
+    }
+    parser
+        .name("the program it extends")
+        .ok()
+        .map(|(name, _)| name)
 }
 
 struct Parser {
@@ -132,16 +176,22 @@ impl Parser {
         }
     }
 
-    fn program(mut self) -> Parsed<ProgramAst> {
+    fn program(&mut self) -> Parsed<ProgramAst> {
         if !self.keyword("lsystem") {
             return self.error("a program starts with `lsystem <name> <revision>;`");
         }
         let (name, _) = self.name("the program name")?;
         let revision = self.integer("the program revision")?;
+        let extends = if self.keyword("extends") {
+            Some(self.name("the program it extends")?)
+        } else {
+            None
+        };
         self.expect(&Token::Semicolon, "after the lsystem header")?;
         let mut ast = ProgramAst {
             name,
             revision,
+            extends,
             params: Vec::new(),
             modules: Vec::new(),
             organs: Vec::new(),
@@ -152,7 +202,9 @@ impl Parser {
             rules: Vec::new(),
         };
         let mut have_axiom = false;
-        while *self.peek() != Token::End {
+        while *self.peek() != Token::End
+            && !matches!(self.peek(), Token::Ident(name) if name == "lsystem")
+        {
             let span = self.span();
             let (keyword, _) = self.name("a statement")?;
             match keyword.as_str() {
@@ -186,7 +238,7 @@ impl Parser {
                 }
             }
         }
-        if !have_axiom {
+        if !have_axiom && ast.extends.is_none() {
             return self.error("the program has no axiom");
         }
         Ok(ast)
@@ -308,6 +360,7 @@ impl Parser {
             weight,
             successor,
             span,
+            depth: 0,
         })
     }
 

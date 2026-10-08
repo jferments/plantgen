@@ -13,6 +13,7 @@
 //! string, the geometry, the tools' grids and every recursion.
 
 pub mod ast;
+pub mod chain;
 pub mod derive;
 pub mod expr;
 pub mod lexer;

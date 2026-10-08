@@ -257,7 +257,9 @@ impl Options {
         self.flags
             .get("program")
             .map(|path| {
-                fs::read_to_string(path).map_err(|error| format!("cannot read {path}: {error}"))
+                fs::read_to_string(path)
+                    .map(|source| library().chain_of(&source).into_owned())
+                    .map_err(|error| format!("cannot read {path}: {error}"))
             })
             .transpose()
     }
@@ -396,7 +398,8 @@ fn check(args: &[String]) -> Result<(), Failure> {
     {
         let source =
             fs::read_to_string(target).map_err(|error| format!("cannot read {target}: {error}"))?;
-        let program = Program::compile(&source).map_err(|error| format!("{target}:{error}"))?;
+        let program = Program::compile(&library().chain_of(&source))
+            .map_err(|error| format!("{target}:{error}"))?;
         out!(
             "{target}: program `{}` revision {} is valid: {} parameters, {} symbols",
             program.name,
