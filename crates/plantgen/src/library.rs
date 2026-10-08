@@ -564,6 +564,7 @@ impl Library {
                 .map_err(|error| at_tree(format!("{}: invalid spec: {error}", entry.file())))?;
         }
         library.check_citations().map_err(LibraryError)?;
+        library.check_evidence().map_err(LibraryError)?;
         Ok(library.with_chains())
     }
 
@@ -675,6 +676,22 @@ impl Library {
                     "{file}: the evidence note on `{path}` cites `{id}`, which is not in the library's sources/"
                 ));
             }
+        }
+        Ok(())
+    }
+
+    /// Every species' spec, as it inherits it, carries per-value evidence
+    /// ([`PlantSpec::check_evidence`]).
+    ///
+    /// # Errors
+    ///
+    /// Names the first species whose spec fails, and why.
+    pub fn check_evidence(&self) -> Result<(), String> {
+        for entry in &self.species {
+            let document: Value = serde_json::from_str(entry.source())
+                .map_err(|error| format!("{}: {error}", entry.file()))?;
+            PlantSpec::check_evidence(&document, self)
+                .map_err(|error| format!("{}: {error}", entry.file()))?;
         }
         Ok(())
     }
@@ -1166,6 +1183,8 @@ mod tests {
         let library = Library::builtin();
         assert_eq!(library.sources().count(), SOURCES.len());
         library.check_citations().unwrap();
+        // Every value of every species' spec has its note, citing a source.
+        library.check_evidence().unwrap();
         // And every rank file, with the chain above it.
         assert_eq!(library.ranks().count(), RANKS.len());
         library.check_ranks().unwrap();
@@ -1725,7 +1744,7 @@ mod tests {
             r#"{"schema": 1, "rank": "order", "name": "Pinales",
                 "generator": {"params": {"order_test": 2.0}},
                 "evidence": {"generator.params.order_test":
-                    {"evidence": "Authored", "note": "The order's."}}}"#,
+                    {"evidence": "Authored", "source": "plantgen-authors", "note": "The order's."}}}"#,
         );
         folder.write(
             "library/pinaceae/family.json",

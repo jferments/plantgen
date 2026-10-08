@@ -182,6 +182,38 @@ fn the_key_follows_every_input() {
         Inputs::with_program(&spec, &source, &TINY).unwrap().key
     );
     assert!(Inputs::with_program(&spec, "lsystem broken", &TINY).is_err());
+
+    // Evidence notes say how values are known, not what grows: editing,
+    // adding or removing one keeps the key. The provenance, with its credits
+    // and licences, is packaged and keyed.
+    let mut changed = spec.clone();
+    changed.evidence.get_mut("allometry").unwrap().note = "Edited.".into();
+    assert_eq!(base, key(&changed, &TINY));
+    changed.evidence.clear();
+    assert_eq!(base, key(&changed, &TINY));
+    let mut changed = spec.clone();
+    changed
+        .provenance
+        .contributors
+        .push("Another contributor".into());
+    assert_ne!(base, key(&changed, &TINY));
+}
+
+#[test]
+fn packages_hold_their_spec_without_its_evidence_notes() {
+    let spec = small_spec();
+    assert!(!spec.evidence.is_empty());
+    let inputs = Inputs::new(&spec, &TINY).unwrap();
+    assert!(inputs.spec.evidence.is_empty());
+    assert_eq!(inputs.spec.provenance, spec.provenance);
+    assert_eq!(package::packaged(&spec), inputs.spec);
+    // The manifest's copy rebuilds the same package.
+    let built = package::build(&inputs, 2, &mut |_| {}).unwrap();
+    assert!(built.manifest.spec.evidence.is_empty());
+    assert_eq!(
+        Inputs::new(&built.manifest.spec, &TINY).unwrap().key,
+        inputs.key
+    );
 }
 
 #[test]

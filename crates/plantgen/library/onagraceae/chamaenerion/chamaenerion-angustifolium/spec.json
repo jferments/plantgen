@@ -108,15 +108,43 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: a spreading clone of unbranched stems 1 to 2 m tall with many narrow, willow-like leaves in a spiral, and a long terminal raceme that opens from the bottom, with seed pods below the open flowers and nodding buds at the tip. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Rough heights from general knowledge of the species. Replace with measured data before calling this species calibrated."
     },
     "appearance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Colours chosen by eye: four broad magenta petals with a pale centre, deep pink buds, red-purple seed pods and reddish stems."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
     }
   },
   "provenance": {

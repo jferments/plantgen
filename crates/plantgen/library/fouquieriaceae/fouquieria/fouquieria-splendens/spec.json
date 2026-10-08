@@ -100,15 +100,43 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: a clump of 6 to 50 unbranched, spiny, grey canes 2 to 6 m long rising from a short crown like an upturned vase; small leaves sprout along the canes within days of rain and fall when it dries; scarlet tubular flowers in a panicle at each cane's tip in spring. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Rough heights from general knowledge of the species: about 3 m at 12 years and 5 m at 40. Wide tolerances."
     },
     "appearance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Colours chosen by eye from photographs: grey canes, bright green leaves after rain, scarlet flowers."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
     }
   },
   "provenance": {
