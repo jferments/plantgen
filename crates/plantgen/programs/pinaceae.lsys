@@ -1,0 +1,42 @@
+# Pinaceae (Douglas-fir, firs, spruces, hemlocks, pines): the conifer with
+# what this family does on top of it (growth plan G1).
+#
+# - Branches ramify into fronds. Each year's shoot on a branch sets its
+#   lateral buds by its length, as conifer shoots do: a long shoot sets its
+#   full share (side_chance on each side once it is lateral_length long),
+#   a short, shaded one fewer or none. Laterals of laterals do the same, to
+#   side_order deep, so a branch grows into a frond of shoots clothed in
+#   needles, not a bare whip with a tuft at its end; and because weak
+#   shoots set no laterals, the shoots a branch carries stay bounded by the
+#   light it gets.
+# - A side shoot lives while it has light: shade (shade_death,
+#   shade_years) and slow growth (min_shoot) end it, not a fixed span
+#   (side_years is set past any life).
+# - Needle sprays carry their own turn (`spray(size, roll, pitch, level)`),
+#   one module each.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem pinaceae 1 extends conifer;
+
+param side_order = 3;          # deepest branch order that still sets laterals
+param side_years = 1000;       # side shoots live while they have light
+param lateral_length = 0.15;   # a shoot this long sets its full share of laterals
+
+module Ls(order, length);      # a possible side shoot on the left
+module Rs(order, length);      # and on the right
+
+# One year's branch shoot: a spray along it and a twig spray to each side,
+# each with its own turn, then lateral buds by the shoot's length.
+decompose G(o, l) : o > 0 ->
+    spray(spray_base + spray_length * l, uniform(-25, 25), spray_droop * 0.5, 1)
+    spray((spray_base + spray_length * l) * 0.75, 90 - spray_droop + uniform(-20, 20), twig_angle, 1)
+    spray((spray_base + spray_length * l) * 0.75, -90 + spray_droop + uniform(-20, 20), twig_angle, 1)
+    F(l) Ls(o, l) Rs(o, l);
+
+decompose Ls(o, l) : o <= side_order && rand() < side_chance * min(1, l / lateral_length) ->
+    [ +(side_angle) S C(o + 1, 1, 0) ];
+decompose Ls(o, l) -> ;
+decompose Rs(o, l) : o <= side_order && rand() < side_chance * min(1, l / lateral_length) ->
+    [ -(side_angle) S C(o + 1, 1, 0) ];
+decompose Rs(o, l) -> ;

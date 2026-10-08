@@ -8,8 +8,11 @@
   },
   "growth_form": "excurrent_tree",
   "generator": {
-    "program": "conifer",
+    "program": "pinaceae",
     "params": {
+      "side_order": 2,
+      "lateral_length": 0.35,
+      "side_chance": 0.6,
       "cone_age": 20,
       "cone_chance": 0.12,
       "cone_length": 0.08,
@@ -102,7 +105,7 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
-      "note": "Hand-set from general knowledge of the species: a massive conifer with a broad, buttressed base, level branches with hanging branchlets and stiff, sharp needles all round the twigs; fast-growing on wet ground near the coast. Not fitted to measurements. Cones (plant forms F3): 5 to 10 cm hang from the upper branches, papery scales; set from general knowledge of the species, not measured."
+      "note": "Hand-set from general knowledge of the species: a massive conifer with a broad, buttressed base, level branches with hanging branchlets and stiff, sharp needles all round the twigs; fast-growing on wet ground near the coast. Not fitted to measurements. Cones (plant forms F3): 5 to 10 cm hang from the upper branches, papery scales; set from general knowledge of the species, not measured. Growth plan G1 (2026-10-08): grown by the `pinaceae` program, so branches ramify into fronds clothed in needles rather than bare whips with a tuft at the tip: each year's shoot sets lateral buds by its length (side_chance on each side once lateral_length long, fewer on shorter shoots), laterals of laterals do the same to side_order deep, and side shoots live while they have light. Same values as Douglas-fir (side_order 2, lateral_length 0.35, side_chance 0.6), which the Urban Tree Database fits; it has no Sitka spruces. At 60 years in the open it holds about 19 m\u00b2 of leaf per m\u00b2 of crown and side renders are about 13 % see-through (38 % before). Not fitted to measurements of this species; its trunk in the open (about 1.4 m at 60 years) is on the thick side."
     },
     "allometry": {
       "evidence": "Authored",
