@@ -29,6 +29,7 @@ pub mod bend;
 pub mod blooms;
 pub mod body;
 pub mod conditions;
+pub mod drawing;
 pub mod evidence;
 pub mod form;
 pub mod fruit;
@@ -45,6 +46,7 @@ pub mod lsys;
 pub mod math;
 pub mod mesh;
 pub mod niche;
+pub mod occlusion;
 pub mod package;
 pub mod parts;
 pub mod preview;
@@ -77,5 +79,14 @@ pub mod venation;
 /// (`APPARTS2`). 10: bark vertices carry the stem's radius in their
 /// colour's alpha, for the species' bark pattern (`crate::bark`). 11: leaf
 /// templates draw their veins grown by space colonization
-/// (`crate::venation`).
-pub const GENERATOR_REVISION: u32 = 11;
+/// (`crate::venation`). 12: every level keeps the nearest one's widths
+/// (plant leftovers L10 and L12): cluster cards count overlapping organs
+/// once, follow their bent organs, never reach past them and share their
+/// area in rows; rings widen to the stem's mean width; the thin wood a
+/// level drops comes back as sticks; and impostor alpha keeps the plant's
+/// coverage at the cut-out. 13: organs take their colour, and leaves their
+/// sun or shade form, along the logarithm of their light between
+/// `looks::DEEP_SHADE` and `looks::FULL_SUN`, so a dense crown's surface is
+/// drawn sunlit; and bark is darkened by the sky it sees through the
+/// plant's leaves (`crate::occlusion`).
+pub const GENERATOR_REVISION: u32 = 13;

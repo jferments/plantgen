@@ -20,6 +20,13 @@ same species and seed give the same plant, bit for bit, on every machine.
 
 | | | |
 | --- | --- | --- |
+| ![Saguaros and a pale-barked desert tree over gravel and sand, with more saguaros and red hills behind](docs/images/saguaro-desert.jpg) | ![Fireweed in flower across a meadow of grasses and bare rock, with a mountain behind](docs/images/fireweed-meadow.jpg) | ![The Hoh River from the air, its valley filled with conifer forest around a grassy clearing](docs/images/hoh-river.jpg) |
+| *A Sonoran Desert bajada: saguaros among shrubs and smaller cacti.* | *Fireweed in flower across a subalpine meadow in the Cascades.* | *The Hoh River from the air: rainforest conifers down to the water.* |
+
+*Rendered in real time, with each species placed where its habitat fits.*
+
+| | | |
+| --- | --- | --- |
 | ![A saguaro's ribs, each areole with its own solid spines](docs/images/saguaro-spines.jpg) | ![The crown of a fishhook barrel cactus: red-tipped hooked spines, yellow fruit and an orange flower](docs/images/barrel-cactus-crown.jpg) | ![The joints of a teddy-bear cholla, dense with pale spines](docs/images/cholla-spines.jpg) |
 | *Saguaro: every areole along every rib grows its own spines, which shade the stem.* | *Fishhook barrel cactus: hooked central spines, flowers and fruit on the crown.* | *Teddy-bear cholla: joints packed with pale spines.* |
 
@@ -68,7 +75,9 @@ cargo build --release
 
 `plantc help` lists every command: growing a plant and printing its size
 at every age, rendering it at one age or every age, its organs through the
-year, its card textures and the ground's looks, and building packages.
+year, its card textures and the ground's looks, building packages, and
+listing the sources a species' values cite (`plantc sources cite ID` finds
+every value that names one).
 `--library DIR` reads species and programs from a folder on top of the
 built-in ones, so you can write your own.
 
