@@ -18,6 +18,13 @@ it, and turns what grew into meshes, levels of detail and impostors. No
 3D models are stored or shipped: you grow them on your own machine, and the
 same species and seed give the same plant, bit for bit, on every machine.
 
+| | |
+| --- | --- |
+| ![Saguaros and a pale-barked desert tree over gravel and sand, with more saguaros and red hills behind](docs/images/saguaro-desert.jpg) | ![Fireweed in flower across a meadow of grasses and bare rock, with a mountain behind](docs/images/fireweed-meadow.jpg) |
+| *A Sonoran Desert bajada: saguaros among shrubs and smaller cacti.* | *Fireweed in flower across a subalpine meadow in the Cascades.* |
+
+*Rendered in real time, with each species placed where its habitat fits.*
+
 | | | |
 | --- | --- | --- |
 | ![A saguaro's ribs, each areole with its own solid spines](docs/images/saguaro-spines.jpg) | ![The crown of a fishhook barrel cactus: red-tipped hooked spines, yellow fruit and an orange flower](docs/images/barrel-cactus-crown.jpg) | ![The joints of a teddy-bear cholla, dense with pale spines](docs/images/cholla-spines.jpg) |
