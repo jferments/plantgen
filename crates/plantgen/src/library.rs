@@ -731,17 +731,27 @@ impl Library {
     }
 
     /// Every species' spec, as it inherits it, carries per-value evidence
-    /// ([`PlantSpec::check_evidence`]).
+    /// ([`PlantSpec::check_evidence`]), and every note of its niche and
+    /// shed cites a source (their own checks hold them to a note on every
+    /// value; [`Library::check_citations`] to sources the library holds).
     ///
     /// # Errors
     ///
-    /// Names the first species whose spec fails, and why.
+    /// Names the first species whose spec fails, or the first niche or
+    /// shed note that cites no source.
     pub fn check_evidence(&self) -> Result<(), String> {
         for entry in &self.species {
             let document: Value = serde_json::from_str(entry.source())
                 .map_err(|error| format!("{}: {error}", entry.file()))?;
             PlantSpec::check_evidence(&document, self)
                 .map_err(|error| format!("{}: {error}", entry.file()))?;
+        }
+        for (file, path, note) in self.notes()? {
+            if note.source.is_none() {
+                return Err(format!(
+                    "{file}: the evidence note on `{path}` cites no source"
+                ));
+            }
         }
         Ok(())
     }
@@ -1424,6 +1434,25 @@ mod tests {
                 .unwrap()
                 .is_empty()
         );
+
+        // A niche note must cite a source.
+        let uncited = {
+            let mut niche: serde_json::Value =
+                serde_json::from_str(niche_source("pseudotsuga-menziesii")).unwrap();
+            niche["evidence"]["moisture"]
+                .as_object_mut()
+                .unwrap()
+                .remove("source");
+            serde_json::to_string_pretty(&niche).unwrap()
+        };
+        let kept = fs::read_to_string(folder.0.join(format!("{species}/niche.json"))).unwrap();
+        folder.write(&format!("{species}/niche.json"), &uncited);
+        let error = Library::from_dir(&folder.0).unwrap_err().0;
+        assert!(
+            error.contains("niche.json: the evidence note on `moisture` cites no source"),
+            "{error}"
+        );
+        folder.write(&format!("{species}/niche.json"), &kept);
 
         // Without the source, the citing notes are refused.
         fs::remove_file(folder.0.join("library/sources/flora-test.json")).unwrap();

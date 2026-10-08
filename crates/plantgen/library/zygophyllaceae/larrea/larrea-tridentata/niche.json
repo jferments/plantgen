@@ -19,54 +19,67 @@
   "evidence": {
     "layers": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "The commonest shrub of the hot deserts, evenly spaced on the lower bajada and flats."
     },
     "moisture": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Dry, well-drained flats and lower bajadas."
     },
     "heat_load": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Any aspect."
     },
     "elevation_m": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Below about 1,300 m."
     },
     "max_slope_deg": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Flats and gentle slopes."
     },
     "shade_tolerance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Full sun."
     },
     "coldest_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Mild winters."
     },
     "hard_freeze_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Hardy to about −14 °C."
     },
     "warmest_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Hot summers."
     },
     "degree_days_0": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "A long hot growing year."
     },
     "degree_days_5": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "A long hot growing year."
     },
     "moisture_index": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "The driest of the desert shrubs: a moisture index from about 0.03, thinning above about 0.22."
     },
     "summer_rain": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "All three hot deserts, whatever the season of rain."
     }
   },

@@ -34,18 +34,22 @@
   "evidence": {
     "decay": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Authored from botanical descriptions of paper birch: doubly toothed blades 5 to 10 cm on petioles of 1.5 to 2.5 cm, yellow in autumn and drying tan; strips of white, papery bark. Colours and curl chosen by eye; numbers plausible, not measured."
     },
     "foliage": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Authored from botanical descriptions of paper birch: doubly toothed blades 5 to 10 cm on petioles of 1.5 to 2.5 cm, yellow in autumn and drying tan; strips of white, papery bark. Colours and curl chosen by eye; numbers plausible, not measured."
     },
     "look": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Authored: the drawn look's mean hue at the brightness chosen by eye for this species' litter, the relief the drawing has, and a tile its pieces repeat on unseen. PlantGen's litter tests check the hue and relief against the drawing."
     },
     "pieces": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Authored from botanical descriptions of paper birch: doubly toothed blades 5 to 10 cm on petioles of 1.5 to 2.5 cm, yellow in autumn and drying tan; strips of white, papery bark. Colours and curl chosen by eye; numbers plausible, not measured."
     }
   },
