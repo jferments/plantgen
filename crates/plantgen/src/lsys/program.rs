@@ -8,7 +8,7 @@ use super::ProgramError;
 use super::ast::{BinaryOp, Expr, ModuleCall, ProgramAst, Rule, RuleKind, UnaryOp};
 use super::expr::{Code, EnvField, Func, NO_ENV, Op, Query, Scope, Var, eval};
 use super::lexer::Span;
-use super::parser::parse;
+use super::parser::parse_chain;
 
 /// Largest program text the compiler accepts.
 pub const MAX_PROGRAM_BYTES: usize = 256 * 1024;
@@ -300,7 +300,7 @@ impl Program {
                 ),
             });
         }
-        let ast = parse(source)?;
+        let ast = super::chain::resolve(parse_chain(source)?)?;
         let mut program = Compiler::default().compile(&ast)?;
         program.source_sha256 = hex(&Sha256::digest(source.as_bytes()));
         Ok(program)
@@ -532,14 +532,38 @@ impl Compiler {
         let mut productions = vec![Vec::new(); symbol_count];
         let mut decompositions = vec![Vec::new(); symbol_count];
         let mut interpretations = vec![Vec::new(); symbol_count];
+        // Rules compile in the chain's order, the furthest ancestor's first
+        // (so their random call sites keep their numbers); a program's own
+        // rules for a module are then tried before those it inherits.
+        let mut depths = vec![vec![Vec::new(); symbol_count]; 3];
         for rule in &ast.rules {
             let (symbol, compiled) = self.rule(rule)?;
-            let list = match rule.kind {
-                RuleKind::Production => &mut productions,
-                RuleKind::Decomposition => &mut decompositions,
-                RuleKind::Interpretation => &mut interpretations,
+            let kind = match rule.kind {
+                RuleKind::Production => 0,
+                RuleKind::Decomposition => 1,
+                RuleKind::Interpretation => 2,
+            };
+            let list = match kind {
+                0 => &mut productions,
+                1 => &mut decompositions,
+                _ => &mut interpretations,
             };
             list[usize::from(symbol)].push(compiled);
+            depths[kind][usize::from(symbol)].push(rule.depth);
+        }
+        for (kind, list) in [&mut productions, &mut decompositions, &mut interpretations]
+            .into_iter()
+            .enumerate()
+        {
+            for (symbol, rules) in list.iter_mut().enumerate() {
+                let order = &depths[kind][symbol];
+                if order.windows(2).all(|pair| pair[0] <= pair[1]) {
+                    continue;
+                }
+                let mut keyed: Vec<_> = order.iter().copied().zip(rules.drain(..)).collect();
+                keyed.sort_by_key(|(depth, _)| *depth);
+                rules.extend(keyed.into_iter().map(|(_, rule)| rule));
+            }
         }
 
         Ok(Program {

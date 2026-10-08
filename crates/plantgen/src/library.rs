@@ -107,6 +107,9 @@ pub struct Library {
     /// Each species' place in `species`, by id.
     index: BTreeMap<String, usize>,
     programs: BTreeMap<String, Cow<'static, str>>,
+    /// Each program that extends another, joined with the programs it
+    /// builds on (see [`Library::program`]).
+    chains: BTreeMap<String, String>,
 }
 
 /// One species of a [`Library`].
@@ -239,7 +242,9 @@ impl Library {
                     .iter()
                     .map(|(name, source)| ((*name).to_string(), Cow::Borrowed(*source)))
                     .collect(),
+                chains: BTreeMap::new(),
             }
+            .with_chains()
         })
     }
 
@@ -356,7 +361,7 @@ impl Library {
                     .insert(name.to_string(), Cow::Owned(source));
             }
         }
-        Ok(library)
+        Ok(library.with_chains())
     }
 
     /// The folder the library was read from; `None` for the built-in one.
@@ -406,7 +411,52 @@ impl Library {
     /// The program `name`'s source, if the library has it.
     #[must_use]
     pub fn program(&self, name: &str) -> Option<&str> {
+        self.chains
+            .get(name)
+            .map(String::as_str)
+            .or_else(|| self.programs.get(name).map(AsRef::as_ref))
+    }
+
+    /// The text of program `name` alone, without the programs it extends.
+    #[must_use]
+    pub fn program_text(&self, name: &str) -> Option<&str> {
         self.programs.get(name).map(AsRef::as_ref)
+    }
+
+    /// `source` joined with the programs it extends from this library, as
+    /// [`Library::program`] gives a built-in program: the text a program
+    /// compiles from. A program that extends none, or one this library
+    /// lacks, comes back as it is, and compiling it names the problem.
+    #[must_use]
+    pub fn chain_of<'a>(&self, source: &'a str) -> Cow<'a, str> {
+        let mut text = Cow::Borrowed(source);
+        let mut parent = crate::lsys::parser::extends_of(source);
+        let mut depth = 1;
+        while let Some(name) = parent {
+            let Some(next) = self.programs.get(&name) else {
+                break;
+            };
+            depth += 1;
+            if depth > crate::lsys::chain::MAX_DEPTH {
+                break;
+            }
+            let joined = text.to_mut();
+            joined.push('\n');
+            joined.push_str(next);
+            parent = crate::lsys::parser::extends_of(next);
+        }
+        text
+    }
+
+    fn with_chains(mut self) -> Self {
+        let chains = self
+            .programs
+            .iter()
+            .filter(|(_, source)| crate::lsys::parser::extends_of(source).is_some())
+            .map(|(name, source)| (name.clone(), self.chain_of(source).into_owned()))
+            .collect();
+        self.chains = chains;
+        self
     }
 
     /// Every program's name, sorted.
@@ -708,6 +758,31 @@ mod tests {
                 .unwrap_err()
                 .0
                 .starts_with("no built-in species `acer-unknown`")
+        );
+    }
+
+    #[test]
+    fn a_program_that_extends_a_built_in_compiles_with_it() {
+        let folder = Folder::new("extends");
+        folder.write(
+            "programs/leafier.lsys",
+            "lsystem leafier 1 extends broadleaf;\nparam leaf_size = 0.5;\n",
+        );
+        let library = Library::from_dir(&folder.0).unwrap();
+        assert_eq!(
+            library.program_text("leafier"),
+            Some("lsystem leafier 1 extends broadleaf;\nparam leaf_size = 0.5;\n")
+        );
+        let program = crate::lsys::Program::compile(library.program("leafier").unwrap()).unwrap();
+        assert_eq!((program.name.as_str(), program.revision), ("leafier", 1));
+        let broadleaf =
+            crate::lsys::Program::compile(library.program("broadleaf").unwrap()).unwrap();
+        assert_eq!(program.params.len(), broadleaf.params.len());
+        // A program that extends none is its own text, so its packages
+        // keep their keys.
+        assert_eq!(
+            library.program("broadleaf"),
+            library.program_text("broadleaf")
         );
     }
 
