@@ -1,0 +1,105 @@
+# Maples (Acer, Sapindaceae): the broadleaf tree with what a maple does on
+# top of it (growth plan G1).
+#
+# - Terminal flowering forks the shoots. A maple's flowers come in clusters
+#   at the tips of leafy shoots; a shoot that flowers ends there, and the
+#   pair of buds below the cluster carry it on as two shoots (a dichasium),
+#   so an old maple's limbs fork again and again rather than running on as
+#   one axis. Each year a long shoot old enough and in the light flowers
+#   with the chance terminal_bloom and forks at twin_angle.
+# - The crown is broad and irregular, not an ellipsoid: widest above its
+#   middle (crown_widest), fuller than an ellipse (crown_fullness), with
+#   crown_lobes bulges round the stem crown_lobe_depth deep (space@2).
+# - Space renews: where a limb is shed, its space frees and the crown grows
+#   back into the gap (space@2's renew), as old trees rebuild their crowns
+#   from sprouts. Without it a crown that has filled its envelope stops
+#   making shoots and starves.
+# - Short shoots live for decades (spur years) while they have light.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem sapindaceae 1 extends broadleaf;
+
+param bud_years = 30;
+param crown_widest = 0.6;      # share of the crown's depth where it is widest
+param crown_fullness = 2.6;    # 2: an ellipse in profile; more: fuller
+param crown_lobes = 3;         # bulges round the stem
+param crown_lobe_depth = 0.18; # how far a bulge reaches, as a share of the radius
+param terminal_bloom = 0.35;   # chance a year that a long shoot ends in flowers and forks
+param twin_angle = 25;         # angle of each twin shoot from the old axis
+param perception = 80;         # half-angle of the cone in which a shoot senses free space
+param rise = 0.08;            # upward pull on shoots (negative gravitropism); 0 keeps broadleaf's droop
+param steer_weight = 0.1;     # broadleaf's 0.35 sends a renewing crown's shoots looping after free space
+
+tool space@2 {
+    widest = crown_widest,
+    fullness = crown_fullness,
+    lobes = crown_lobes,
+    lobe_depth = crown_lobe_depth,
+    renew = 1,
+    angle = perception
+};
+
+# A long shoot in the light, old enough to flower, ends in a flower cluster
+# and forks into twin shoots from the buds below it.
+rule A(split) : blooms > 0 && t >= bloom_age && split <= 0 && vigour >= 1 && space > 0
+                && light >= spur_light && (life <= 0 || t < life) && rand() < terminal_bloom ->
+    Bo(blooms) /(90) [ &(twin_angle) S A(0) ] [ /(180) &(twin_angle) S A(0) ];
+
+# Shoots rise toward the light against their weight when rise > 0, the
+# same pull broadleaf's droop gives downward otherwise.
+axiom !(0.004) T(wind, rise > 0 ? 1 : -1, 0, rise > 0 ? rise : droop + wind_bend * wind)
+      /(uniform(0, 360)) &(uniform(0, lean)) A(fork_height * uniform(0.7, 1.3));
+
+# A short shoot's yearly leaves, turned by its age rather than by a roll
+# left behind each year (broadleaf's `P` leaves one `/(90)` a year, which
+# piles up over centuries). The rules repeat broadleaf's short-shoot rules
+# with that one change, and keep their order: death, a long shoot, then
+# leaves with or without blooms.
+module Q(n, a);                # n leaf pairs still to unfold, turned a quarter turns
+
+rule B : life > 0 && t >= life -> ;
+rule B : light < shade_death || age >= bud_years -> ;
+rule B : vigour >= bud_break && space > 0 -> A(0);
+rule B : light >= spur_light && blooms > 0 && t >= bloom_age -> Q(spur_pairs, age) Bo(blooms) B;
+rule B : light >= spur_light -> Q(spur_pairs, age) B;
+
+decompose Q(n, a) : n > 0 ->
+    [ /(90 * a) &(leaf_angle) $ leaf(spur_leaf) ] [ /(90 * a + 180) &(leaf_angle) $ leaf(spur_leaf) ]
+    Q(n - 1, a + 1);
+decompose Q(n, a) -> ;
+
+# A limb that no longer pays its way is shed, as in Pałubicki et al.
+# (2009): the light its tips collect, qsum, over the internodes it carries,
+# nseg, falls below shed_ratio. Only limbs older than shed_age, so young
+# shoots have time to leaf out. Without it a shaded limb that keeps one
+# dormant bud holds its wood, and the space round it, for ever, and an old
+# crown stops renewing.
+param shed_ratio = 0.1;         # 0: shed only bare limbs, as broadleaf does
+param shed_age = 8;
+rule S : shed_ratio > 0 && age > shed_age && qsum < shed_ratio * nseg -> %;
+
+# Dormant buds and reiteration. Most of an old crown's leafy shoots do not
+# come from the branching of its limbs' tips but from sprouts of buds that
+# wait on the limbs (Ishii and Ford 2001 counted under a quarter of the
+# foliated shoots on old Douglas-fir branches as sequential branching; the
+# rest were reiterations), and sprouts are what fill a crown's gaps and
+# its inside. Each internode of a long shoot keeps one dormant bud D, a
+# quarter turn round from its pair of laterals; it sprouts into a long
+# shoot when light reaches it (sprout_light) with free space before it, and
+# dies after dormant_years (about 5 to 6 years on average in Ishii and
+# Ford's Douglas-fir).
+param dormant_years = 6;
+param sprout_light = 0.25;
+param dormant_angle = 60;
+module D queries light, space;
+
+decompose M(n) : n > 0 && alternate <= 0 && thorns <= 0 ->
+    ^(gauss() * wiggle) +(gauss() * wiggle) F(internode)
+    [ &(branch_angle) S B ] [ /(180) &(branch_angle) S B ]
+    [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
+    [ /(90) &(dormant_angle) D ]
+    /(90) M(n - 1);
+
+rule D : age >= dormant_years -> ;
+rule D : light >= sprout_light && space > 0 -> S A(0);

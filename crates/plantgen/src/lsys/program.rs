@@ -208,7 +208,7 @@ pub struct ToolSpec {
 
 /// The tool registry. A new capability is a new entry or a new version of an
 /// entry; a version, once released, never changes behaviour.
-pub const TOOLS: [ToolSpec; 5] = [
+pub const TOOLS: [ToolSpec; 6] = [
     ToolSpec {
         kind: ToolKind::Light,
         name: "light",
@@ -228,6 +228,29 @@ pub const TOOLS: [ToolSpec; 5] = [
             ("influence", 1.5),
             ("kill", 0.4),
             ("angle", 90.0),
+        ],
+    },
+    // Growth plan G1: space that returns where the plant is shed, an
+    // outline widest anywhere up the crown and as full as a box or as
+    // pointed as a cone, and lobes round the edge (`super::tools`).
+    ToolSpec {
+        kind: ToolKind::Space,
+        name: "space",
+        version: 2,
+        keys: &[
+            ("shape", 1.0),
+            ("base", 0.0),
+            ("height", 4.0),
+            ("radius", 2.0),
+            ("density", 20.0),
+            ("influence", 1.5),
+            ("kill", 0.4),
+            ("angle", 90.0),
+            ("renew", 1.0),
+            ("widest", 0.5),
+            ("fullness", 2.0),
+            ("lobes", 0.0),
+            ("lobe_depth", 0.0),
         ],
     },
     ToolSpec {
@@ -471,8 +494,12 @@ fn check_queries(ast: &ProgramAst, tools: &[Option<ToolConfig>; 5]) -> Result<()
                 return err(
                     *span,
                     format!(
-                        "module `{}` queries {name}, but the program configures no `tool {}@1`",
-                        decl.name, TOOLS[tool as usize].name
+                        "module `{}` queries {name}, but the program configures no `tool {}`",
+                        decl.name,
+                        TOOLS
+                            .iter()
+                            .find(|spec| spec.kind == tool)
+                            .map_or("", |spec| spec.name)
                     ),
                 );
             }
@@ -698,8 +725,9 @@ impl Compiler {
             ..PARAMS_ONLY
         };
         for decl in &ast.tools {
-            let Some(spec) = TOOLS.iter().find(|spec| spec.name == decl.name) else {
-                let known: Vec<&str> = TOOLS.iter().map(|spec| spec.name).collect();
+            if !TOOLS.iter().any(|spec| spec.name == decl.name) {
+                let mut known: Vec<&str> = TOOLS.iter().map(|spec| spec.name).collect();
+                known.dedup();
                 return err(
                     decl.span,
                     format!(
@@ -708,16 +736,26 @@ impl Compiler {
                         known.join(", ")
                     ),
                 );
-            };
-            if decl.version != spec.version {
+            }
+            let Some(spec) = TOOLS
+                .iter()
+                .find(|spec| spec.name == decl.name && spec.version == decl.version)
+            else {
+                let versions: Vec<String> = TOOLS
+                    .iter()
+                    .filter(|spec| spec.name == decl.name)
+                    .map(|spec| format!("`{}@{}`", spec.name, spec.version))
+                    .collect();
                 return err(
                     decl.span,
                     format!(
-                        "`{}@{}` does not exist; this build has `{}@{}`",
-                        decl.name, decl.version, spec.name, spec.version
+                        "`{}@{}` does not exist; this build has {}",
+                        decl.name,
+                        decl.version,
+                        versions.join(" and ")
                     ),
                 );
-            }
+            };
             if tools[spec.kind as usize].is_some() {
                 return err(
                     decl.span,
