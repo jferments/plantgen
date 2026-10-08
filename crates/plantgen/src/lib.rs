@@ -37,6 +37,7 @@ pub mod graph;
 pub mod ground;
 pub mod grow;
 pub mod impostor;
+pub mod inherit;
 pub mod json;
 pub mod leaves;
 pub mod library;
