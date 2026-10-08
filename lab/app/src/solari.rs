@@ -33,6 +33,7 @@ use bevy::light::GlobalAmbientLight;
 use bevy::mesh::{Indices, PrimitiveTopology, VertexAttributeValues};
 use bevy::prelude::*;
 use bevy::render::mesh::allocator::MeshAllocatorSettings;
+use bevy::render::slab_allocator::SlabAllocatorSettings;
 use bevy::render::render_resource::{
     BufferUsages, Extent3d, TextureDimension, TextureFormat, TextureUsages,
 };
@@ -132,7 +133,14 @@ pub fn run(photo: Photo) -> Result<(), String> {
     app.sub_app_mut(RenderApp)
         .insert_resource(MeshAllocatorSettings {
             extra_buffer_usages: BufferUsages::BLAS_INPUT | BufferUsages::STORAGE,
-            ..default()
+            // Solari binds every slab as a storage buffer: keep slabs within
+            // the smallest common limit (128 MiB; lavapipe's), and every
+            // piece (`PIECE_VERTICES`) under the large-object threshold.
+            slab_allocator_settings: SlabAllocatorSettings {
+                max_slab_size: 128 * 1024 * 1024,
+                large_threshold: 96 * 1024 * 1024,
+                ..default()
+            },
         })
         .insert_resource(compiling)
         .add_systems(Render, count_compiling.in_set(RenderSystems::Cleanup));
@@ -224,6 +232,56 @@ impl Palette {
         image.sampler = ImageSampler::Descriptor(ImageSamplerDescriptor::nearest());
         image
     }
+}
+
+/// Most vertices in one traced mesh. Bevy 0.19.1 gives a mesh over its
+/// allocator's large-object threshold (256 MiB) a buffer of its own, made
+/// without the allocator's extra usages, so Solari cannot trace it (a
+/// mature tree's cut leaves pass it). At 48 bytes a vertex, a million keep
+/// every piece far below it.
+const PIECE_VERTICES: usize = 1_000_000;
+
+/// `mesh` cut into meshes of at most `most` vertices each, whole
+/// triangles kept together, with their palette texels.
+fn pieces(mesh: &SceneMesh, texels: &[u32], most: usize) -> Vec<(SceneMesh, Vec<u32>)> {
+    if mesh.positions.len() <= most {
+        return vec![(mesh.clone(), texels.to_vec())];
+    }
+    let mut out = Vec::new();
+    // Each old vertex's index in the current piece, and which piece it is.
+    let mut map = vec![(usize::MAX, 0_u32); mesh.positions.len()];
+    let mut piece = SceneMesh::default();
+    let mut piece_texels = Vec::new();
+    for triangle in mesh.indices.as_chunks::<3>().0 {
+        if piece.positions.len() + 3 > most {
+            out.push((
+                std::mem::take(&mut piece),
+                std::mem::take(&mut piece_texels),
+            ));
+        }
+        let number = out.len();
+        for &old in triangle {
+            let old = old as usize;
+            let (seen, index) = map[old];
+            let index = if seen == number {
+                index
+            } else {
+                let index = u32::try_from(piece.positions.len()).unwrap_or(u32::MAX);
+                piece.positions.push(mesh.positions[old]);
+                piece.normals.push(mesh.normals[old]);
+                piece.uvs.push(mesh.uvs[old]);
+                piece.colors.push(mesh.colors[old]);
+                piece_texels.push(texels[old]);
+                map[old] = (number, index);
+                index
+            };
+            piece.indices.push(index);
+        }
+    }
+    if !piece.indices.is_empty() {
+        out.push((piece, piece_texels));
+    }
+    out
 }
 
 /// A mesh as Solari takes it: positions, normals, palette UVs, tangents,
@@ -333,11 +391,13 @@ fn setup(
         ..default()
     });
     for (mesh, texels) in &parts {
-        if let Some(traced) = traced_mesh(mesh, texels, &palette) {
-            commands.spawn((
-                RaytracingMesh3d(meshes.add(traced)),
-                MeshMaterial3d(material.clone()),
-            ));
+        for (piece, piece_texels) in pieces(mesh, texels, PIECE_VERTICES) {
+            if let Some(traced) = traced_mesh(&piece, &piece_texels, &palette) {
+                commands.spawn((
+                    RaytracingMesh3d(meshes.add(traced)),
+                    MeshMaterial3d(material.clone()),
+                ));
+            }
         }
     }
     if let Some(disc) = ground(scene.ground_radius, ground_texel, &palette) {
@@ -441,4 +501,40 @@ fn captured(event: On<ScreenshotCaptured>, job: Res<Job>, mut exit: MessageWrite
         *done = Some(result);
     }
     exit.write(AppExit::Success);
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn pieces_keep_every_triangle_and_stay_small() {
+        // A strip of 100 triangles over 102 vertices.
+        let mut mesh = SceneMesh::default();
+        for i in 0..102_u32 {
+            #[allow(clippy::cast_precision_loss)]
+            let x = i as f32;
+            mesh.positions.push([x, 0.0, 0.0]);
+            mesh.normals.push([0.0, 1.0, 0.0]);
+            mesh.uvs.push([0.0, 0.0]);
+            mesh.colors.push([1.0, 1.0, 1.0, 1.0]);
+        }
+        for i in 0..100_u32 {
+            mesh.indices.extend([i, i + 1, i + 2]);
+        }
+        let texels: Vec<u32> = (0..102).collect();
+        let parts = pieces(&mesh, &texels, 30);
+        assert!(parts.len() > 3);
+        let mut triangles = Vec::new();
+        for (piece, piece_texels) in &parts {
+            assert!(piece.positions.len() <= 30);
+            assert_eq!(piece_texels.len(), piece.positions.len());
+            for t in piece.indices.as_chunks::<3>().0 {
+                // The texel of each corner is its old vertex's index here.
+                triangles.push(t.map(|i| piece_texels[i as usize]));
+            }
+        }
+        let want: Vec<[u32; 3]> = (0..100).map(|i| [i, i + 1, i + 2]).collect();
+        assert_eq!(triangles, want);
+    }
 }
