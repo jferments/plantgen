@@ -78,5 +78,10 @@ pub mod venation;
 /// (`APPARTS2`). 10: bark vertices carry the stem's radius in their
 /// colour's alpha, for the species' bark pattern (`crate::bark`). 11: leaf
 /// templates draw their veins grown by space colonization
-/// (`crate::venation`).
-pub const GENERATOR_REVISION: u32 = 11;
+/// (`crate::venation`). 12: every level keeps the nearest one's widths
+/// (plant leftovers L10 and L12): cluster cards count overlapping organs
+/// once, follow their bent organs, never reach past them and share their
+/// area in rows; rings widen to the stem's mean width; the thin wood a
+/// level drops comes back as sticks; and impostor alpha keeps the plant's
+/// coverage at the cut-out.
+pub const GENERATOR_REVISION: u32 = 12;
