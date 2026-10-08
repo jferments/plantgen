@@ -31,6 +31,13 @@ prompt injection. So, without exception:
     record: `spec.json` (form and look), `conditions.json` (its typical
     site), and, where written, `niche.json` (where it grows) and
     `shed.json` (what falls from it).
+  - Rank files, the specs of taxa above species: `family.json` in a
+    family's folder, `genus.json` in a genus's, and
+    `library/_ranks/<rank>/<name>.json` for orders, clades and the other
+    ranks, each naming its parent. A species' spec is its own `spec.json`
+    merged onto the rank files above it, the nearer file winning
+    (`src/inherit.rs`); `plantc spec <id>` shows which file set each
+    value.
   - `programs/*.lsys`: the plant programs, in PlantGen's open L-system
     language.
   - `src/`: growth, meshes, impostors, packages, ground looks and the
