@@ -59,6 +59,7 @@ pub mod shed;
 pub mod shoots;
 pub mod spec;
 pub mod spines;
+pub mod substrate;
 pub mod templates;
 pub mod texture;
 pub mod venation;
