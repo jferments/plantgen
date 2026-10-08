@@ -346,6 +346,10 @@ pub struct Shot {
     /// metres of it from the bottom of the picture to the top, and no
     /// scale.
     pub focus: Option<([f64; 3], f64)>,
+    /// Also cut every card's outline into triangles ([`cut_cards`]), on a
+    /// grid this many cells along each side: for renderers that cannot cut
+    /// cards out by their texture, such as ray tracing. 0 for none.
+    pub cut_cards: usize,
 }
 
 impl Shot {
@@ -367,6 +371,7 @@ impl Shot {
             look: Look::Review,
             frame_height: None,
             focus: None,
+            cut_cards: 0,
         }
     }
 }
@@ -378,6 +383,9 @@ pub struct Scene {
     pub cards: SceneMesh,
     /// Opaque solids in vertex colours: spines and the scale.
     pub solids: SceneMesh,
+    /// The cards cut into opaque triangles in their colours, when the shot
+    /// asks for it ([`Shot::cut_cards`]); empty otherwise.
+    pub cut_cards: SceneMesh,
     pub templates: TemplateLayers,
     /// Each layer's accent colour, linear RGB.
     pub template_accents: Vec<[f32; 3]>,
@@ -480,6 +488,16 @@ pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Sc
     };
     let wood = SceneMesh::from_mesh(&plant.wood);
     let cards = cards(&card_mesh, templates);
+    let cut = if shot.cut_cards > 0 {
+        let first = if solid_spines {
+            templates.first_spine_template()
+        } else {
+            usize::MAX
+        };
+        cut_cards(plant, templates, shot.cut_cards, first)
+    } else {
+        SceneMesh::default()
+    };
     let mut solids = SceneMesh::from_mesh(&spines);
 
     let bounds = [&wood, &cards, &solids]
@@ -535,6 +553,7 @@ pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Sc
         wood,
         cards,
         solids,
+        cut_cards: cut,
         templates: TemplateLayers::of(templates),
         template_accents: template_accents(templates),
         ground_radius: (reach * 1.4 + gap + 0.6).max(reach + 0.3) as f32,
@@ -544,6 +563,96 @@ pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Sc
         shadow_bounds: (shadow_low.to_f32(), shadow_high.to_f32()),
         facts,
     }
+}
+
+/// Every card of `plant` (whose template is below `first_excluded`) cut
+/// into opaque triangles along its template's outline: the card's grid of
+/// `grid` by `grid` cells keeps each cell whose centre the template covers
+/// (coverage at least one half, as a renderer cuts it), each corner placed
+/// on the card as it bends ([`plantgen::bend::Bend::point`]) and coloured
+/// by [`Templates::albedo`] there. One-sided, facing the card's front.
+#[must_use]
+pub fn cut_cards(
+    plant: &PlantMesh,
+    templates: &Templates,
+    grid: usize,
+    first_excluded: usize,
+) -> SceneMesh {
+    let grid = grid.max(1);
+    let corners = grid + 1;
+    #[allow(clippy::cast_precision_loss)]
+    let step = 1.0 / grid as f64;
+    let vector = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
+    let mut out = SceneMesh::default();
+    // Each template's kept cells, computed once.
+    let mut kept: Vec<Option<Vec<bool>>> = vec![None; templates.templates.len() + 1];
+    let mut index = vec![u32::MAX; corners * corners];
+    for card in &plant.cards {
+        let template = usize::from(card.template);
+        if template >= first_excluded {
+            continue;
+        }
+        let slot = template.min(templates.templates.len());
+        let cells = kept[slot].get_or_insert_with(|| {
+            (0..grid * grid)
+                .map(|cell| {
+                    let (i, j) = (cell % grid, cell / grid);
+                    #[allow(clippy::cast_precision_loss, clippy::cast_possible_truncation)]
+                    let (u, v) = (
+                        ((i as f64 + 0.5) * step) as f32,
+                        ((j as f64 + 0.5) * step) as f32,
+                    );
+                    templates.sample(template, u, v).coverage >= 0.5
+                })
+                .collect()
+        });
+        let (base, heading, left) = (vector(card.base), vector(card.heading), vector(card.left));
+        let half = f64::from(card.width) * 0.5;
+        let length = f64::from(card.length);
+        let colour = card.color.map(f64::from);
+        index.fill(u32::MAX);
+        for (cell, &keep) in cells.iter().enumerate() {
+            if !keep {
+                continue;
+            }
+            let (i, j) = (cell % grid, cell / grid);
+            let mut quad = [0_u32; 4];
+            for (slot, (ci, cj)) in [(i, j), (i + 1, j), (i + 1, j + 1), (i, j + 1)]
+                .into_iter()
+                .enumerate()
+            {
+                let at = cj * corners + ci;
+                if index[at] == u32::MAX {
+                    #[allow(clippy::cast_precision_loss)]
+                    let (u, v) = (ci as f64 * step, cj as f64 * step);
+                    let (position, normal) =
+                        card.bend
+                            .point(base, heading, left, half, length, 2.0 * u - 1.0, v);
+                    #[allow(clippy::cast_possible_truncation)]
+                    let texel = templates.sample(template, u as f32, v as f32);
+                    let albedo = templates.albedo(template, colour, texel);
+                    index[at] = u32::try_from(out.positions.len()).unwrap_or(u32::MAX);
+                    out.positions.push(position.to_f32());
+                    out.normals.push(normal.to_f32());
+                    #[allow(clippy::cast_possible_truncation)]
+                    {
+                        out.uvs.push([u as f32, v as f32]);
+                        out.colors.push([
+                            albedo[0] as f32,
+                            albedo[1] as f32,
+                            albedo[2] as f32,
+                            1.0,
+                        ]);
+                    }
+                }
+                quad[slot] = index[at];
+            }
+            // Counter-clockwise seen from the card's front, as the cards are.
+            out.indices
+                .extend_from_slice(&[quad[0], quad[2], quad[1], quad[0], quad[3], quad[2]]);
+        }
+    }
+    out
 }
 
 /// The card mesh with each vertex's template layer (plus one) in its
@@ -1205,6 +1314,30 @@ mod tests {
             }
         }
         assert!(sheet.title.starts_with("acer-macrophyllum"));
+    }
+
+    #[test]
+    fn cut_cards_keep_the_covered_cells_of_every_card() {
+        let spec = Library::builtin().spec("acer-macrophyllum").expect("maple");
+        let quality = quality::DRAFT;
+        let mut request = Request::typical(&spec, Library::builtin(), &quality);
+        request.age = 6.0;
+        let drawing = drawing::draw(&request).expect("draws");
+        let cut = cut_cards(&drawing.plant, &drawing.templates, 12, usize::MAX);
+        let cards = drawing.plant.cards.len();
+        // Leaves cover part of their cards: some cells each, not all.
+        let triangles = cut.triangle_count();
+        assert!(
+            triangles > cards * 2,
+            "{triangles} triangles for {cards} cards"
+        );
+        assert!(triangles < cards * 12 * 12 * 2);
+        assert_eq!(cut.positions.len(), cut.colors.len());
+        assert!(
+            cut.indices
+                .iter()
+                .all(|&i| (i as usize) < cut.positions.len())
+        );
     }
 
     #[test]

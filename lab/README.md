@@ -67,6 +67,25 @@ again.
 `batch`) renders on the I-th. On a machine with two of the same card, run
 one batch per card, each with its own half of the jobs.
 
+## Ray-traced pictures (a spike)
+
+```text
+cargo run --release -p plantlab --features solari -- solari acer-macrophyllum --out photos
+```
+
+Lights one plant with Bevy's experimental hardware ray tracing (Solari),
+by default its path tracer over 1,000 frames (`--mode realtime` and
+`--frames N` change that), and writes `photos/ID-solari.png`. It needs a
+GPU with Vulkan ray queries: an RTX card, or Mesa's lavapipe, which is
+very slow. Solari treats every triangle as opaque and reads no vertex
+colours, so here leaf cards are cut into triangles along their outline
+(`--cut-cards N`, 24 by 24 cells by default) and every colour sits in one
+palette texture; a dome of sky lights the plant beside the sun. This is
+an experiment, not yet a look PlantLab promises.
+
+`--cut-cards N` also works with `thumbs` and `review`, to see the cut
+outlines with the ordinary renderer.
+
 PlantLab needs a GPU with Vulkan, Metal or DirectX 12. Without one,
 Mesa's software renderer (lavapipe; on Ubuntu, `mesa-vulkan-drivers`)
 works too, more slowly.
