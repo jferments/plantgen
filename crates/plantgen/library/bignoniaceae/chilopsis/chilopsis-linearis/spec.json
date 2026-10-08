@@ -1,0 +1,140 @@
+{
+  "schema": 1,
+  "id": "chilopsis-linearis",
+  "taxon": {
+    "scientific_name": "Chilopsis linearis",
+    "common_name": "desert willow",
+    "usda_symbol": "CHLI2"
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 6,
+      "crown_radius": 3,
+      "crown_base": 1,
+      "crown_rate": 0.08,
+      "space_density": 14,
+      "internode": 0.22,
+      "max_shoot": 3,
+      "branch_angle": 40,
+      "apical_young": 0.62,
+      "apical": 0.52,
+      "apical_years": 8,
+      "alternate": 1,
+      "bud_years": 8,
+      "leaf_size": 0.16,
+      "spur_leaf": 0.13,
+      "spur_pairs": 4,
+      "leaf_angle": 40,
+      "lean": 12,
+      "wiggle": 10,
+      "fork_height": 0.5,
+      "fork_stems": 3,
+      "fork_angle": 30,
+      "droop": 0.02,
+      "pipe_tip": 0.003,
+      "pipe_organ": 0.006,
+      "pipe_rings": 1e-05,
+      "light_cell": 0.3,
+      "blooms": 3,
+      "bloom_age": 3,
+      "bloom_size": 0.04,
+      "bloom_angle": 50,
+      "leaf_area": 0.061
+    }
+  },
+  "growth": {
+    "years": 40,
+    "step": 1,
+    "keyframes": [3, 12, 40]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3]
+  },
+  "appearance": {
+    "bark": [0.4, 0.33, 0.27],
+    "bark_pattern": {
+      "kind": "furrowed",
+      "scale": 0.025,
+      "elongation": 4.0,
+      "fissure": 0.3,
+      "depth": 0.3,
+      "contrast": 0.45,
+      "variation": 0.15,
+      "smooth_below": 0.03,
+      "roughness": 0.4
+    },
+    "foliage": [0.25, 0.38, 0.15],
+    "foliage_shade": [0.0875, 0.133, 0.0525],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "width": 0.1,
+          "widest": 0.5,
+          "tip": 0.6,
+          "base": 0.6,
+          "teeth": 0,
+          "petiole": 0.02
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "flower",
+          "petals": 5
+        },
+        "colour": [0.9, 0.6, 0.8],
+        "accent": [0.7, 0.3, 0.6],
+        "form": {
+          "flower": {
+            "cup": 55,
+            "curl": 20,
+            "tube": 0.8
+          }
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 4.0,
+      "tolerance": 0.5
+    },
+    {
+      "age": 40,
+      "environment": "open",
+      "height": 6.0,
+      "tolerance": 0.45
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a small, open, often leaning tree 4 to 8 m tall along desert washes, with long, narrow, willow-like leaves and fragrant pink to lavender trumpet flowers through the summer. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 4 m at 12 years and 6 m at 40. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: bright green narrow leaves, pink trumpet flowers. Bark pattern (plant roadmap P4, `bark_pattern`): dark brown bark in fibrous furrowed ridges; set from general knowledge of the species, not measured."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F5). Calibration against measurements and photographs comes later."
+  }
+}

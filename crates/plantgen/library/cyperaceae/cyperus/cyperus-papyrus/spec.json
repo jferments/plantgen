@@ -1,0 +1,114 @@
+{
+  "schema": 1,
+  "id": "cyperus-papyrus",
+  "taxon": {
+    "scientific_name": "Cyperus papyrus",
+    "common_name": "papyrus",
+    "usda_symbol": "CYPA14"
+  },
+  "growth_form": "graminoid",
+  "generator": {
+    "program": "sedge",
+    "params": {
+      "shoots_per_year": 18,
+      "shoot_life": 1,
+      "stand_radius": 1.2,
+      "spread_years": 4,
+      "leaves": 3,
+      "leaf_length": 0.25,
+      "leaf_angle": 20,
+      "flowering": 0.95,
+      "flower_age": 1,
+      "culm_height": 2.9,
+      "height_spread": 0.15,
+      "culm_radius": 0.018,
+      "culm_lean": 6,
+      "head": 1,
+      "rays": 60,
+      "ray_angle": 75,
+      "ray_length": 0.32,
+      "tuft_length": 0.12,
+      "leaf_area": 0.064,
+      "spike_area": 0.89,
+      "tuft_area": 0.074
+    }
+  },
+  "growth": {
+    "years": 8,
+    "step": 1,
+    "keyframes": [1, 3, 8]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2]
+  },
+  "appearance": {
+    "bark": [0.3, 0.42, 0.18],
+    "foliage": [0.25, 0.4, 0.15],
+    "foliage_shade": [0.0875, 0.14, 0.0525],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.15
+        },
+        "colour": [0.45, 0.35, 0.2]
+      },
+      "tuft": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 6,
+          "angle": 30,
+          "stalk": 0.1,
+          "width": 0.1,
+          "widest": 0.5,
+          "tip": 0.6,
+          "base": 0.6,
+          "teeth": 0,
+          "petiole": 0.0
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 3.2,
+      "tolerance": 0.4
+    },
+    {
+      "age": 8,
+      "environment": "open",
+      "height": 3.6,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a giant sedge of African swamps and the Nile, 3 to 5 m tall, its leafless, three-sided green culms each topped by a mop-like umbel of 100 or more fine rays; brown scale leaves at the foot; spreading into dense stands from stout rhizomes. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 3.2 m at 3 years and 3.6 m at 8. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: bright green culms and rays, brown sheaths."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F6). Calibration against measurements and photographs comes later."
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "schema": 1,
+  "id": "phoenix-dactylifera",
+  "taxon": {
+    "scientific_name": "Phoenix dactylifera",
+    "common_name": "date palm",
+    "usda_symbol": "PHDA4"
+  },
+  "growth_form": "palm",
+  "generator": {
+    "program": "palm",
+    "params": {
+      "lean": 4,
+      "trunk_rate": 0.2,
+      "trunk_radius": 0.25,
+      "stemless_years": 6,
+      "internode": 0.004,
+      "fronds_per_year": 15,
+      "frond_life": 4,
+      "frond_length": 4.8,
+      "size_years": 8,
+      "young_angle": 8,
+      "old_angle": 62,
+      "open_years": 1.2,
+      "petiole": 0.22,
+      "petiole_radius": 0.03,
+      "pieces": 18,
+      "fan": 0,
+      "leaflet_length": 0.09,
+      "leaflet_peak": 0.4,
+      "leaflet_base": 0.5,
+      "leaflet_tip": 0.35,
+      "leaflet_angle": 40,
+      "leaflet_lift": 35,
+      "droop": 0.006,
+      "droop_years": 4,
+      "boots": 1,
+      "boot_life": 30,
+      "boot_length": 0.3,
+      "suckers": 3,
+      "sucker_age": 6,
+      "sucker_rate": 0.2,
+      "sucker_distance": 0.5,
+      "leaflet_area": 0.067,
+      "ray_area": 0.235,
+      "dead_area": 0.099,
+      "boot_area": 0.333
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [10, 30, 60]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3, 4]
+  },
+  "appearance": {
+    "bark": [0.45, 0.37, 0.27],
+    "foliage": [0.33, 0.42, 0.36],
+    "foliage_shade": [0.1485, 0.189, 0.162],
+    "variation": 0.1,
+    "organs": {
+      "leaflet": {
+        "shape": {
+          "template": "blade",
+          "taper": 0.6,
+          "aspect": 0.1
+        },
+        "colour": [0.33, 0.42, 0.36]
+      },
+      "boot": {
+        "shape": {
+          "template": "blade",
+          "taper": 0.2,
+          "aspect": 0.4
+        },
+        "colour": [0.48, 0.38, 0.26]
+      },
+      "dead": {
+        "shape": {
+          "template": "frond",
+          "pinnae": 20,
+          "width": 0.25,
+          "divided": 0,
+          "stipe": 0.2
+        },
+        "colour": [0.5, 0.42, 0.3]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 10,
+      "tolerance": 0.5
+    },
+    {
+      "age": 60,
+      "environment": "open",
+      "height": 20,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a rough trunk 15 to 25 m tall, clothed in old leaf bases, under a crown of stiff, grey-green feather fronds 4 to 6 m long whose leaflets stand in a V, spined at the foot; offshoots at the base make a clump. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 10 m at 30 years and 20 m at 60. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: glaucous grey-green fronds, brown leaf bases."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F4). Calibration against measurements and photographs comes later."
+  }
+}

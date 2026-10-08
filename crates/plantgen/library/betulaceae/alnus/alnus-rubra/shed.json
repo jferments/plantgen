@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "id": "alnus-rubra",
+  "foliage": {
+    "kind": "leaves",
+    "length_m": [0.09, 0.17],
+    "fall_colours": [[0.2, 0.24, 0.07], [0.26, 0.27, 0.09], [0.3, 0.26, 0.1]],
+    "dry_colours": [[0.15, 0.11, 0.06], [0.12, 0.09, 0.05], [0.19, 0.14, 0.08]],
+    "curl": 0.3,
+    "pale_beneath": 0.2
+  },
+  "decay": 0.9,
+  "pieces": [
+    {
+      "kind": "cone",
+      "length_m": [0.015, 0.025],
+      "aspect": 0.6,
+      "colour": [0.26, 0.17, 0.1],
+      "per_m2": 4.0
+    },
+    {
+      "kind": "catkin",
+      "length_m": [0.05, 0.1],
+      "aspect": 0.1,
+      "colour": [0.3, 0.18, 0.12],
+      "per_m2": 2.0
+    },
+    {
+      "kind": "twig",
+      "length_m": [0.06, 0.25],
+      "aspect": 0.04,
+      "colour": [0.2, 0.15, 0.1],
+      "per_m2": 3.0
+    }
+  ],
+  "look": {
+    "tile_m": 1.5,
+    "mean": [0.072, 0.058, 0.03],
+    "relief_m": 0.028
+  },
+  "evidence": {
+    "decay": {
+      "evidence": "Authored",
+      "note": "Authored from botanical descriptions of red alder: doubly toothed blades 7 to 15 cm on petioles of 1.5 to 2 cm, which fall still green and soon turn dark brown to black, lying rather flat; their nitrogen-rich litter rots within a year, the fastest here; small woody cones 1.5 to 2.5 cm and spent male catkins 5 to 10 cm long. Colours chosen by eye; numbers plausible, not measured."
+    },
+    "foliage": {
+      "evidence": "Authored",
+      "note": "Authored from botanical descriptions of red alder: doubly toothed blades 7 to 15 cm on petioles of 1.5 to 2 cm, which fall still green and soon turn dark brown to black, lying rather flat; their nitrogen-rich litter rots within a year, the fastest here; small woody cones 1.5 to 2.5 cm and spent male catkins 5 to 10 cm long. Colours chosen by eye; numbers plausible, not measured."
+    },
+    "look": {
+      "evidence": "Authored",
+      "note": "Authored: the drawn look's mean hue at the brightness chosen by eye for this species' litter, the relief the drawing has, and a tile its pieces repeat on unseen. PlantGen's litter tests check the hue and relief against the drawing."
+    },
+    "pieces": {
+      "evidence": "Authored",
+      "note": "Authored from botanical descriptions of red alder: doubly toothed blades 7 to 15 cm on petioles of 1.5 to 2 cm, which fall still green and soon turn dark brown to black, lying rather flat; their nitrogen-rich litter rots within a year, the fastest here; small woody cones 1.5 to 2.5 cm and spent male catkins 5 to 10 cm long. Colours chosen by eye; numbers plausible, not measured."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: litter values hand-set from botanical descriptions and photographs of the species",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"]
+  }
+}

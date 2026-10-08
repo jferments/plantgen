@@ -1,0 +1,171 @@
+{
+  "schema": 1,
+  "id": "quercus-garryana",
+  "taxon": {
+    "scientific_name": "Quercus garryana",
+    "common_name": "Oregon white oak",
+    "usda_symbol": "QUGA4"
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 18,
+      "crown_radius": 9,
+      "crown_base": 2.5,
+      "crown_rate": 0.025,
+      "space_density": 8,
+      "bud_years": 15,
+      "internode": 0.2,
+      "max_shoot": 3,
+      "bud_break": 1.4,
+      "branch_angle": 55,
+      "apical_young": 0.62,
+      "apical": 0.5,
+      "apical_years": 20,
+      "alternate": 1,
+      "leaf_size": 0.34,
+      "spur_leaf": 0.3,
+      "spur_pairs": 2,
+      "leaf_angle": 55,
+      "lean": 6,
+      "wiggle": 9,
+      "fork_height": 3,
+      "fork_stems": 3,
+      "fork_angle": 35,
+      "droop": 0.02,
+      "extinction": 0.4,
+      "pipe_rings": 1.4e-05,
+      "leaf_area": 0.303,
+      "bloom_area": 0.72,
+      "blooms": 1,
+      "bloom_age": 20,
+      "bloom_size": 0.045,
+      "bloom_angle": 60
+    }
+  },
+  "growth": {
+    "years": 80,
+    "step": 1,
+    "keyframes": [8, 25, 50, 80]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.33, 0.32, 0.3],
+    "bark_pattern": {
+      "kind": "furrowed",
+      "scale": 0.035,
+      "elongation": 3.0,
+      "fissure": 0.25,
+      "depth": 0.4,
+      "contrast": 0.45,
+      "variation": 0.15,
+      "smooth_below": 0.04,
+      "roughness": 0.5
+    },
+    "foliage": [0.05, 0.11, 0.035],
+    "foliage_shade": [0.018, 0.04, 0.014],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 7,
+          "angle": 50,
+          "stalk": 0.1,
+          "width": 0.6,
+          "widest": 0.6,
+          "tip": 0.15,
+          "base": 0.35,
+          "teeth": 4,
+          "tooth_depth": 0.2,
+          "round": 0.8,
+          "petiole": 0.05
+        },
+        "families": {
+          "plasticity": 0.8
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "kind": "acorn",
+          "count": 2,
+          "cluster": "pair",
+          "size": 0.6,
+          "spread": 25,
+          "aspect": 0.65
+        },
+        "colour": [0.47, 0.32, 0.14],
+        "accent": [0.38, 0.44, 0.18],
+        "season": {
+          "bud": 100,
+          "flower": 110,
+          "fruit": 140,
+          "ripe": 250,
+          "ripening": 30,
+          "fall": 310,
+          "flower_look": {
+            "shape": {
+              "template": "spike",
+              "florets": 18,
+              "aspect": 0.14,
+              "plume": 0.3,
+              "stalk": 0.05
+            },
+            "colour": [0.6, 0.6, 0.25],
+            "size": 1.5
+          }
+        }
+      }
+    },
+    "ridges": {
+      "spacing": 0.06,
+      "depth": 0.05,
+      "twist": 0,
+      "contrast": 0.4
+    },
+    "moss": {
+      "colour": [0.25, 0.3, 0.18],
+      "amount": 0.4,
+      "min_radius": 0.04
+    }
+  },
+  "allometry": [
+    {
+      "age": 80,
+      "environment": "open",
+      "height": 15,
+      "dbh": 0.5,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a slow, long-lived oak with a broad, rounded crown of crooked, gnarled limbs and deeply lobed, leathery leaves. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 15 m tall and 50 cm across at breast height at 80 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: dark, glossy green leaves; pale grey, furrowed bark carrying moss and lichen. Fruit (plant roadmap P4), as in mid-July: green acorns about 2.5 cm long in shallow, scaly cups, singly or in pairs. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: catkins in April and May; acorns green in summer, ripe and falling in September and October. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): light grey bark, furrowed and checkered into scaly ridges; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves of the outer crown small, narrow and deeply lobed, shade leaves inside it larger, broader and shallower, as in other oaks; set from general knowledge of sun and shade leaves and juvenile foliage, not measured. Leaf (plant roadmap P4): the sprig's lobes rounded (`round` 0.8), as Oregon white oak's are, and `leaf_area` set to the 0.303 m² it then draws on a leaf 1 m long."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

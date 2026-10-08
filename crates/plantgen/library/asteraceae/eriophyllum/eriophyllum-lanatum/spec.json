@@ -1,0 +1,109 @@
+{
+  "schema": 1,
+  "id": "eriophyllum-lanatum",
+  "taxon": {
+    "scientific_name": "Eriophyllum lanatum",
+    "common_name": "Oregon sunshine",
+    "usda_symbol": "ERLA6"
+  },
+  "growth_form": "forb",
+  "generator": {
+    "program": "herb",
+    "params": {
+      "stems": 12,
+      "stem_rate": 0.5,
+      "clump_radius": 0.15,
+      "stem_lean": 25,
+      "maturity": 1.0,
+      "stem_height": 0.35,
+      "stem_radius": 0.0015,
+      "wiggle": 3,
+      "nodes": 10,
+      "bare": 0.05,
+      "leaf_length": 0.05,
+      "leaf_peak": 0.2,
+      "leaf_top": 0.4,
+      "leaf_base": 1.0,
+      "leaf_angle": 45,
+      "raceme": 0.08,
+      "flowers": 1,
+      "flower_size": 0.035,
+      "pedicel": 0.03,
+      "flower_angle": 0,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0,
+      "leaf_area": 0.242,
+      "basal_area": 0.235,
+      "basal_piece_area": 0.235,
+      "flower_area": 0.609,
+      "bud_area": 0.89,
+      "fruit_area": 0.89
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [2, 4, 6]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.35, 0.37, 0.3],
+    "foliage": [0.13, 0.17, 0.11],
+    "foliage_shade": [0.04, 0.05, 0.035],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "lobed",
+          "width": 0.5,
+          "lobes": 3,
+          "depth": 0.6,
+          "round": 0.5,
+          "petiole": 0.05
+        }
+      },
+      "flower": {
+        "shape": { "template": "head", "rays": 11, "ray_width": 0.9, "disc": 0.4 },
+        "colour": [0.95, 0.8, 0.1],
+        "accent": [0.9, 0.65, 0.05]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.4,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a low, woolly, grey herb of many stems with small lobed leaves and bright yellow daisy heads. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 0.4 m tall at 4 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: silvery grey-green leaves; yellow heads."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "schema": 1,
+  "id": "juniperus-scopulorum",
+  "foliage": {
+    "kind": "sprays",
+    "length_m": [0.02, 0.05],
+    "fall_colours": [[0.4, 0.25, 0.13], [0.36, 0.22, 0.12], [0.44, 0.29, 0.16]],
+    "dry_colours": [[0.3, 0.21, 0.13], [0.26, 0.19, 0.12], [0.34, 0.24, 0.15]],
+    "curl": 0.2,
+    "pale_beneath": 0.0
+  },
+  "decay": 0.25,
+  "pieces": [
+    {
+      "kind": "fruit",
+      "length_m": [0.005, 0.007],
+      "aspect": 0.95,
+      "colour": [0.22, 0.26, 0.4],
+      "per_m2": 8.0
+    },
+    {
+      "kind": "twig",
+      "length_m": [0.04, 0.15],
+      "aspect": 0.04,
+      "colour": [0.2, 0.15, 0.1],
+      "per_m2": 6.0
+    }
+  ],
+  "look": {
+    "tile_m": 0.75,
+    "mean": [0.144, 0.1, 0.061],
+    "relief_m": 0.008
+  },
+  "evidence": {
+    "decay": {
+      "evidence": "Authored",
+      "note": "Authored from botanical descriptions of Rocky Mountain juniper: scale leaves on slender branchlets, shed as small brown sprays a few centimetres long that grey as they weather; berry-like cones 4 to 7 mm across, blue under a waxy bloom. Colours chosen by eye; numbers plausible, not measured."
+    },
+    "foliage": {
+      "evidence": "Authored",
+      "note": "Authored from botanical descriptions of Rocky Mountain juniper: scale leaves on slender branchlets, shed as small brown sprays a few centimetres long that grey as they weather; berry-like cones 4 to 7 mm across, blue under a waxy bloom. Colours chosen by eye; numbers plausible, not measured."
+    },
+    "look": {
+      "evidence": "Authored",
+      "note": "Authored: the drawn look's mean hue at the brightness chosen by eye for this species' litter, the relief the drawing has, and a tile its pieces repeat on unseen. PlantGen's litter tests check the hue and relief against the drawing."
+    },
+    "pieces": {
+      "evidence": "Authored",
+      "note": "Authored from botanical descriptions of Rocky Mountain juniper: scale leaves on slender branchlets, shed as small brown sprays a few centimetres long that grey as they weather; berry-like cones 4 to 7 mm across, blue under a waxy bloom. Colours chosen by eye; numbers plausible, not measured."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: litter values hand-set from botanical descriptions and photographs of the species",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"]
+  }
+}

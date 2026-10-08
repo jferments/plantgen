@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "id": "tillandsia-usneoides",
+  "taxon": {
+    "scientific_name": "Tillandsia usneoides",
+    "common_name": "Spanish moss",
+    "usda_symbol": "TIUS2"
+  },
+  "growth_form": "epiphyte",
+  "generator": {
+    "program": "epiphyte",
+    "params": {
+      "colonies": 90,
+      "seeds_per_year": 8,
+      "crown_low": 3,
+      "crown_high": 13,
+      "crown_radius": 7,
+      "reach": 2.5,
+      "kind": 0,
+      "colony_life": 40,
+      "size_years": 6,
+      "strands": 14,
+      "strand_length": 1.5,
+      "pieces": 14,
+      "kink": 28,
+      "hang": 0.5,
+      "strand_radius": 0.0025,
+      "scale_size": 0.08,
+      "scale_area": 0.059
+    }
+  },
+  "growth": {
+    "years": 20,
+    "step": 1,
+    "keyframes": [5, 10, 20]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2]
+  },
+  "appearance": {
+    "bark": [0.55, 0.57, 0.5],
+    "foliage": [0.58, 0.6, 0.53],
+    "foliage_shade": [0.203, 0.21, 0.1855],
+    "variation": 0.15,
+    "organs": {
+      "scale": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.12
+        },
+        "colour": [0.6, 0.62, 0.55],
+        "bend": {
+          "fold": 0,
+          "cup": 0,
+          "droop": 30,
+          "twist": 40
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 12.0,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a rootless bromeliad of the south-eastern United States and tropical America that hangs in grey festoons up to a few metres long from the branches of live oaks and cypresses, its thread-like stems and scales silvered with absorbing hairs; it spreads by fragments and seed carried by the wind. On the Oregon white oak here as a stand-in for a live oak. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: festoons reaching about 12 m up its host's crown at 20 years. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: silver-grey strands."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F7). Calibration against measurements and photographs comes later."
+  },
+  "host": {
+    "species": "quercus-garryana",
+    "age": 80,
+    "environment": "open",
+    "seed": 1
+  }
+}

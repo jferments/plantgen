@@ -1,0 +1,90 @@
+{
+  "schema": 2,
+  "species": "juniperus-scopulorum",
+  "layers": {
+    "canopy": 0.1,
+    "subcanopy": 0.3,
+    "shrub": 0.2
+  },
+  "moisture": [0.0, 0.05, 0.3, 0.45],
+  "heat_load": [0.9, 1.1, 2.0, 2.5],
+  "elevation_m": [-50, -10, 1200, 1700],
+  "max_slope_deg": 55,
+  "shade_tolerance": 0.05,
+  "coldest_c": [-18, -12, 8, 12],
+  "hard_freeze_c": [-42, -34, 10, 14],
+  "warmest_c": [11, 14, 24, 28],
+  "degree_days_0": [1100, 1800, 6500, 8000],
+  "degree_days_5": [400, 800, 4000, 5000],
+  "moisture_index": [0.15, 0.25, 1, 1.01],
+  "summer_rain": [0, 0, 0.6, 0.8],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "note": "A local small tree of the driest rocky bluffs and balds around Puget Sound."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "note": "The driest, rockiest ground."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "note": "Warm, sunny ground; favours slopes facing south and west."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "note": "Sea level to about 1,200 m in western Washington; the upper limits are loose."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "note": "Clings to steep bluffs and rock outcrops."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "note": "Shade intolerant."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "note": "Across its range (see the provenance note), coldest-month means from about −12 °C, gone by −18 °C, up to about 8 °C."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "note": "Cold-hardy: lows to about −34 °C borne, gone where the year's coldest night falls below about −42 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "note": "Across its range, warmest-month means from about 14 to 24 °C; gone below 11 °C, where summers are too short, and above 28 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "note": "About 1,800 or more degree-days above 0 °C, none below 1,100."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "note": "About 800 or more degree-days above 5 °C, none below 400: from the lowlands to the montane forest."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "note": "Across its range, a moisture index from about 0.25, gone by 0.15."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "note": "No lower limit; across its range at most about 0.6 of the year's precipitation falls in summer, gone by 0.8."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "Burns, R. M. and Honkala, B. H. (technical coordinators), 1990. Silvics of North America, volume 1, Conifers. USDA Forest Service Agriculture Handbook 654",
+        "url": "https://www.srs.fs.usda.gov/pubs/misc/ag_654/table_of_contents.htm",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Authored from general knowledge of the species in the south Puget Sound lowlands; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS). Climate ranges (niche schema 2, 2026-10-06): Rocky Mountain juniper grows on dry ground from British Columbia through the Rockies to northern Mexico, in the Puget Sound islands at its west (Silvics of North America, vol. 1). Each climate range brackets the climate of that range at the 2.8° ERA5 product's scale, an approximate envelope read from these descriptions, not fitted to occurrence records."
+  }
+}

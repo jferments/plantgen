@@ -1,0 +1,108 @@
+{
+  "schema": 1,
+  "id": "oenanthe-sarmentosa",
+  "taxon": {
+    "scientific_name": "Oenanthe sarmentosa",
+    "common_name": "Pacific water parsley",
+    "usda_symbol": "OESA"
+  },
+  "growth_form": "forb",
+  "generator": {
+    "program": "herb",
+    "params": {
+      "stems": 8,
+      "stem_rate": 0.5,
+      "clump_radius": 0.3,
+      "stem_lean": 40,
+      "maturity": 1.0,
+      "stem_height": 0.6,
+      "stem_radius": 0.003,
+      "wiggle": 3,
+      "nodes": 6,
+      "bare": 0.1,
+      "leaf_length": 0.15,
+      "leaf_peak": 0.3,
+      "leaf_top": 0.5,
+      "leaf_base": 1.0,
+      "leaf_angle": 50,
+      "raceme": 0.08,
+      "flowers": 1,
+      "flower_size": 0.07,
+      "pedicel": 0.02,
+      "flower_angle": 10,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0,
+      "leaf_area": 0.284,
+      "basal_area": 0.235,
+      "basal_piece_area": 0.235,
+      "flower_area": 0.379,
+      "bud_area": 0.89,
+      "fruit_area": 0.89
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [2, 4, 6]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.2, 0.3, 0.12],
+    "foliage": [0.08, 0.17, 0.04],
+    "foliage_shade": [0.025, 0.05, 0.012],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "compound",
+          "leaflets": 9,
+          "leaflet_width": 0.5,
+          "teeth": 4,
+          "petiole": 0.15
+        }
+      },
+      "flower": {
+        "shape": { "template": "umbel", "clusters": 12, "florets": 10 },
+        "colour": [0.95, 0.95, 0.9],
+        "accent": [0.85, 0.85, 0.75]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a sprawling herb of soft, weak stems with parsley-like leaves and small umbels of white flowers. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 0.6 m tall at 4 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: bright green leaves; white umbels."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

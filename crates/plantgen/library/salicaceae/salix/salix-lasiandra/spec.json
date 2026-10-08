@@ -1,0 +1,125 @@
+{
+  "schema": 1,
+  "id": "salix-lasiandra",
+  "taxon": {
+    "scientific_name": "Salix lasiandra",
+    "common_name": "Pacific willow"
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 12,
+      "crown_radius": 5,
+      "crown_base": 1,
+      "crown_rate": 0.07,
+      "space_density": 12,
+      "bud_years": 10,
+      "internode": 0.3,
+      "max_shoot": 4,
+      "branch_angle": 35,
+      "apical_young": 0.62,
+      "apical": 0.52,
+      "alternate": 1,
+      "leaf_size": 0.34,
+      "spur_leaf": 0.3,
+      "spur_pairs": 2,
+      "leaf_angle": 45,
+      "lean": 10,
+      "wiggle": 6,
+      "fork_height": 0.8,
+      "fork_stems": 4,
+      "fork_angle": 25,
+      "droop": 0.025,
+      "extinction": 0.45,
+      "pipe_rings": 1.4e-05,
+      "leaf_area": 0.138,
+      "bloom_area": 0.639
+    }
+  },
+  "growth": {
+    "years": 25,
+    "step": 1,
+    "keyframes": [3, 8, 15, 25]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.25, 0.2, 0.15],
+    "bark_pattern": {
+      "kind": "furrowed",
+      "scale": 0.03,
+      "elongation": 3.0,
+      "fissure": 0.3,
+      "depth": 0.35,
+      "contrast": 0.45,
+      "variation": 0.12,
+      "smooth_below": 0.04,
+      "roughness": 0.45
+    },
+    "foliage": [0.07, 0.14, 0.035],
+    "foliage_shade": [0.025, 0.05, 0.012],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 7,
+          "angle": 35,
+          "width": 0.22,
+          "widest": 0.35,
+          "tip": 0.85,
+          "base": 0.3,
+          "teeth": 18,
+          "tooth_depth": 0.005,
+          "petiole": 0.08
+        },
+        "families": {
+          "plasticity": 0.2
+        },
+        "accent": [0.4, 0.35, 0.15]
+      }
+    },
+    "ridges": {
+      "spacing": 0.05,
+      "depth": 0.05,
+      "twist": 0,
+      "contrast": 0.45
+    }
+  },
+  "allometry": [
+    {
+      "age": 25,
+      "environment": "open",
+      "height": 10,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a many-stemmed tree with an open, irregular crown and alternate, long-pointed, glossy, finely toothed leaves. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 10 m tall at 25 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: glossy green leaves; dark, furrowed bark. Bark pattern (plant roadmap P4, `bark_pattern`): dark grey-brown bark furrowed into flat interlacing ridges; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): a sun-loving willow whose leaves change little with light; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

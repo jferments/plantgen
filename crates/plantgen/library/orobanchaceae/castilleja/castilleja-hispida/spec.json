@@ -1,0 +1,114 @@
+{
+  "schema": 1,
+  "id": "castilleja-hispida",
+  "taxon": {
+    "scientific_name": "Castilleja hispida",
+    "common_name": "harsh paintbrush",
+    "usda_symbol": "CAHI2"
+  },
+  "growth_form": "forb",
+  "generator": {
+    "program": "herb",
+    "params": {
+      "stems": 5,
+      "stem_rate": 0.5,
+      "clump_radius": 0.08,
+      "stem_lean": 10,
+      "maturity": 1.0,
+      "stem_height": 0.45,
+      "stem_radius": 0.002,
+      "wiggle": 2,
+      "nodes": 10,
+      "bare": 0.05,
+      "leaf_length": 0.05,
+      "leaf_peak": 0.4,
+      "leaf_top": 0.6,
+      "leaf_base": 0.7,
+      "leaf_angle": 45,
+      "raceme": 0.35,
+      "flowers": 16,
+      "flower_size": 0.03,
+      "pedicel": 0.003,
+      "flower_angle": 30,
+      "fruit_below": 0,
+      "buds_above": 0.85,
+      "nod": 0,
+      "bud_size": 0.02,
+      "leaf_area": 0.216,
+      "basal_area": 0.235,
+      "basal_piece_area": 0.235,
+      "flower_area": 0.654,
+      "bud_area": 0.763,
+      "fruit_area": 0.89
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [2, 4, 6]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.25, 0.28, 0.15],
+    "foliage": [0.07, 0.14, 0.05],
+    "foliage_shade": [0.022, 0.042, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": { "template": "lobed", "width": 0.4, "lobes": 2, "depth": 0.5, "round": 0.0, "petiole": 0 }
+      },
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petals": 3,
+          "petal_width": 0.8,
+          "point": 0.8,
+          "notch": 0.0,
+          "centre": 0.15
+        },
+        "colour": [0.85, 0.15, 0.08],
+        "accent": [0.9, 0.5, 0.1]
+      },
+      "bud": {
+        "shape": { "template": "fruit", "aspect": 0.6 },
+        "colour": [0.6, 0.25, 0.1]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.45,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a hairy herb of a few stems topped by spikes of scarlet, lobed bracts that hide the small greenish flowers. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 0.45 m tall at 4 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: dull green leaves; scarlet bracts."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

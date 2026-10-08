@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "id": "encelia-farinosa",
+  "taxon": {
+    "scientific_name": "Encelia farinosa",
+    "common_name": "brittlebush",
+    "usda_symbol": "ENFA"
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_base": 0,
+      "fork_height": 0.03,
+      "alternate": 1,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 10,
+      "crown_height": 1.0,
+      "crown_radius": 0.6,
+      "crown_rate": 0.22,
+      "space_density": 600,
+      "internode": 0.05,
+      "branch_angle": 40,
+      "bud_years": 4,
+      "leaf_size": 0.07,
+      "spur_leaf": 0.06,
+      "spur_pairs": 3,
+      "leaf_angle": 45,
+      "fork_stems": 10,
+      "fork_angle": 40,
+      "pipe_tip": 0.0012,
+      "pipe_organ": 0.002,
+      "pipe_rings": 1.5e-06,
+      "space_reach": 0.425,
+      "space_kill": 0.105,
+      "blooms": 2,
+      "bloom_age": 2,
+      "bloom_size": 0.045,
+      "bloom_angle": 10,
+      "leaf_area": 0.254
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [2, 5, 15]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3]
+  },
+  "appearance": {
+    "bark": [0.55, 0.52, 0.45],
+    "foliage": [0.62, 0.66, 0.58],
+    "foliage_shade": [0.217, 0.231, 0.203],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "width": 0.55,
+          "widest": 0.4,
+          "tip": 0.6,
+          "base": 0.7,
+          "teeth": 0,
+          "petiole": 0.15
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "head",
+          "rays": 11
+        },
+        "colour": [0.98, 0.82, 0.1],
+        "accent": [0.75, 0.5, 0.1]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 5,
+      "environment": "open",
+      "height": 0.8,
+      "tolerance": 0.5
+    },
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 1.0,
+      "tolerance": 0.45
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a rounded shrub 0.6 to 1.2 m tall of silvery, felted, oval leaves crowded at the stem tips, covered in spring by yellow daisy heads held above the foliage on long stalks. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 0.8 m at 5 years and 1 m at 15. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: silver-white leaves, bright yellow heads."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F5). Calibration against measurements and photographs comes later."
+  }
+}

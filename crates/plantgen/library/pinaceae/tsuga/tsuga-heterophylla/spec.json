@@ -1,0 +1,134 @@
+{
+  "schema": 1,
+  "id": "tsuga-heterophylla",
+  "taxon": {
+    "scientific_name": "Tsuga heterophylla",
+    "common_name": "western hemlock",
+    "usda_symbol": "TSHE"
+  },
+  "growth_form": "excurrent_tree",
+  "generator": {
+    "program": "conifer",
+    "params": {
+      "cone_age": 20,
+      "cone_chance": 0.15,
+      "cone_length": 0.025,
+      "cone_pitch": 120,
+      "cone_years": 1,
+      "cone_area": 0.785,
+      "height_max": 60,
+      "height_rate": 0.017,
+      "height_shape": 1.4,
+      "leader_shade": 0.5,
+      "nod": 65,
+      "nod_years": 2,
+      "whorl": 4,
+      "interwhorl": 3,
+      "interwhorl_vigour": 0.6,
+      "branch_angle": 70,
+      "branch_sag": 1.2,
+      "max_sag": 35,
+      "upturn": 0.008,
+      "branch_growth": 0.28,
+      "side_growth": 0.6,
+      "side_chance": 0.85,
+      "side_angle": 55,
+      "needle_years": 5,
+      "spray_droop": 45,
+      "shade_death": 0.06,
+      "shade_years": 5,
+      "pipe_organ": 0.009,
+      "spray_area": 0.242
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [5, 15, 30, 60]
+  },
+  "variants": {
+    "environments": ["open", "interior"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.2, 0.12, 0.09],
+    "bark_pattern": {
+      "kind": "furrowed",
+      "scale": 0.035,
+      "elongation": 3.0,
+      "fissure": 0.25,
+      "depth": 0.3,
+      "contrast": 0.45,
+      "variation": 0.15,
+      "smooth_below": 0.05,
+      "roughness": 0.35
+    },
+    "foliage": [0.06, 0.13, 0.04],
+    "foliage_shade": [0.02, 0.045, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "cone": {
+        "shape": {"template": "fruit", "aspect": 0.6, "cone": 1},
+        "colour": [0.45, 0.33, 0.2]
+      },
+      "spray": {
+        "shape": {
+          "template": "needles",
+          "ranks": 2,
+          "twigs": 5,
+          "aspect": 0.7,
+          "needle": 0.047,
+          "twig_angle": 50,
+          "width": 0.12
+        },
+        "accent": [0.25, 0.17, 0.1]
+      }
+    },
+    "ridges": {
+      "spacing": 0.05,
+      "depth": 0.03,
+      "twist": 2,
+      "contrast": 0.35
+    },
+    "flare": {
+      "height": 0.8,
+      "amount": 0.4,
+      "buttresses": 0,
+      "ridge": 0.3
+    }
+  },
+  "allometry": [
+    {
+      "age": 60,
+      "environment": "interior",
+      "height": 33,
+      "dbh": 0.45,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a tall, narrow conifer with a drooping leader, slender level to drooping branches and feathery, flat sprays of short needles in two ranks; very shade tolerant. Not fitted to measurements. Cones (plant forms F3): 1.5 to 3 cm hang from the shoot tips; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws with needles of their true length."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 33 m tall and 45 cm across at breast height at 60 years in a closed stand. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: soft dark green needles with paler undersides; dark reddish-brown furrowed bark. Needle shoots (plant roadmap P4): flat needles of mixed lengths, 0.5 to 2 cm long and 1.5 to 2 mm wide, so a needle 0.12 as wide as it is long (`width`), and needles about 1.2 cm on a spray 25 cm long (`needle` 0.047), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): thin dark reddish-brown bark furrowed into flat ridges; set from general knowledge of the species, not measured."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

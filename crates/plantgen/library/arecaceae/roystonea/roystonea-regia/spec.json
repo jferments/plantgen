@@ -1,0 +1,113 @@
+{
+  "schema": 1,
+  "id": "roystonea-regia",
+  "taxon": {
+    "scientific_name": "Roystonea regia",
+    "common_name": "royal palm",
+    "usda_symbol": "RORE2"
+  },
+  "growth_form": "palm",
+  "generator": {
+    "program": "palm",
+    "params": {
+      "lean": 2,
+      "trunk_rate": 0.4,
+      "trunk_radius": 0.3,
+      "stemless_years": 5,
+      "internode": 0.006,
+      "fronds_per_year": 15,
+      "frond_life": 1.6,
+      "frond_length": 5.0,
+      "size_years": 8,
+      "young_angle": 6,
+      "old_angle": 55,
+      "open_years": 0.8,
+      "petiole": 0.1,
+      "petiole_radius": 0.035,
+      "pieces": 18,
+      "fan": 0,
+      "leaflet_length": 0.17,
+      "leaflet_peak": 0.35,
+      "leaflet_base": 0.5,
+      "leaflet_tip": 0.25,
+      "leaflet_angle": 60,
+      "leaflet_lift": 50,
+      "droop": 0.035,
+      "droop_years": 1.6,
+      "leaflet_area": 0.04,
+      "ray_area": 0.235,
+      "dead_area": 0.235,
+      "vigour_spread": 0.06
+    }
+  },
+  "growth": {
+    "years": 50,
+    "step": 1,
+    "keyframes": [8, 25, 50]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3, 4]
+  },
+  "appearance": {
+    "bark": [0.62, 0.6, 0.55],
+    "foliage": [0.2, 0.38, 0.16],
+    "foliage_shade": [0.09, 0.171, 0.072],
+    "variation": 0.1,
+    "organs": {
+      "leaflet": {
+        "shape": {
+          "template": "blade",
+          "taper": 0.6,
+          "aspect": 0.06
+        },
+        "colour": [0.2, 0.38, 0.16],
+        "bend": {
+          "fold": 8,
+          "cup": 0,
+          "droop": 30,
+          "twist": 0
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 25,
+      "environment": "open",
+      "height": 13,
+      "tolerance": 0.5
+    },
+    {
+      "age": 50,
+      "environment": "open",
+      "height": 24,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a smooth, pale grey trunk 15 to 30 m tall, often swollen, under a shining green crownshaft and about 15 arching feather fronds 3 to 4 m long whose leaflets stand in several ranks, giving a plumed look; old fronds fall cleanly. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 13 m at 25 years and 24 m at 50. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: bright green fronds, pale grey trunk; the crownshaft is not drawn."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F4). Calibration against measurements and photographs comes later."
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "schema": 2,
+  "species": "oenanthe-sarmentosa",
+  "layers": {
+    "herb": 1.0
+  },
+  "moisture": [0.85, 0.92, 1.0, 1.01],
+  "heat_load": [0.0, 0.3, 1.6, 2.0],
+  "elevation_m": [-50, -10, 1000, 1500],
+  "max_slope_deg": 10,
+  "shade_tolerance": 0.4,
+  "coldest_c": [-9, -4, 12, 16],
+  "hard_freeze_c": [-32, -24, 12, 16],
+  "warmest_c": [11, 13.5, 23.5, 27],
+  "degree_days_0": [1500, 2300, 7000, 8500],
+  "degree_days_5": [550, 1000, 4500, 5500],
+  "moisture_index": [0.05, 0.1, 1, 1.01],
+  "summer_rain": [0, 0, 0.4, 0.6],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "note": "Sprawls in marshes, swamps, ditches and shallow, slow water."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "note": "Saturated ground and shallow water."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "note": "Grows on any aspect."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "note": "Sea level to about 1,000 m in western Washington; the upper limits are loose."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "note": "Flat wet ground."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "note": "Grows in sun or part shade."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "note": "A mild maritime winter: coldest-month means from about −4 °C (gone by −9 °C), as along the coast and in the lowlands west of the Cascades and Coast Mountains."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "note": "Winter lows of the maritime Northwest: lows to about −24 °C borne, gone where the year's coldest night falls below about −32 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "note": "Cool to warm summers: warmest-month means from about 13.5 to 23.5 °C; below 11 °C summers are too short for it and above 27 °C too hot."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "note": "A long cool growing season: about 2,300 or more degree-days above 0 °C, none below 1,500."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "note": "About 1,000 or more degree-days above 5 °C, none below 550: the warmth of the maritime lowlands and lower mountain slopes."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "note": "It grows where the ground stays wet whatever the climate's moisture index, so only the driest climates (below about 0.1) rule it out; the site's own moisture places it."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "note": "The summer-dry Pacific climate: no lower limit; its range lies where at most about 0.4 of the year's precipitation falls in summer."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "USDA NRCS PLANTS Database: distribution by state and province",
+        "url": "https://plants.usda.gov",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Authored from general knowledge of the species in the south Puget Sound lowlands; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS). Climate ranges (niche schema 2, 2026-10-06): Pacific water parsley grows in marshes and by streams from Alaska to California (the PLANTS Database). Each climate range brackets the climate of that range at the 2.8° ERA5 product's scale, an approximate envelope read from these descriptions, not fitted to occurrence records."
+  }
+}

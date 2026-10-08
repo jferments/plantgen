@@ -1,0 +1,219 @@
+{
+  "schema": 1,
+  "id": "yucca-brevifolia",
+  "taxon": {
+    "scientific_name": "Yucca brevifolia",
+    "common_name": "Joshua tree",
+    "usda_symbol": "YUBR"
+  },
+  "growth_form": "rosette_succulent",
+  "generator": {
+    "program": "rosette",
+    "params": {
+      "vigour_spread": 0.15,
+      "lean": 5,
+      "leaf_rate": 22,
+      "leaf_life": 6,
+      "leaf_length": 0.3,
+      "leaf_seed": 0.3,
+      "size_years": 10,
+      "leaf_spread": 0.15,
+      "young_angle": 15,
+      "old_angle": 60,
+      "open_years": 2,
+      "angle_spread": 10,
+      "internode": 0.0005,
+      "trunk_rate": 0.02,
+      "trunk_radius": 0.09,
+      "skirt": 1,
+      "dead_angle": 150,
+      "dead_life": 40,
+      "fork": 1,
+      "forks_low": 2,
+      "forks_high": 3,
+      "fork_angle": 45,
+      "flower_age": 25,
+      "bloom": 0.05,
+      "stalk_height": 0.35,
+      "stalk_radius": 0.02,
+      "stalk_head": 0.8,
+      "stalk_branches": 6,
+      "branch_length": 0.12,
+      "branch_angle": 45,
+      "flowers": 9,
+      "flower_size": 0.04,
+      "flower_angle": 60,
+      "stalk_life": 2,
+      "leaf_area": 0.0175,
+      "flower_area": 0.335,
+      "upturn": 0.5,
+      "dead_area": 0.0175
+    }
+  },
+  "growth": {
+    "years": 120,
+    "step": 1,
+    "keyframes": [
+      20,
+      50,
+      90,
+      120
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.18,
+      0.15,
+      0.11
+    ],
+    "foliage": [
+      0.13,
+      0.18,
+      0.12
+    ],
+    "foliage_shade": [
+      0.0585,
+      0.081,
+      0.054
+    ],
+    "variation": 0.1,
+    "organs": {
+      "blade": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.035
+        },
+        "colour": [
+          0.13,
+          0.18,
+          0.12
+        ],
+        "solid": {
+          "section": "keeled",
+          "fold": 0.35,
+          "thickness": 0.4,
+          "widest": 0.15,
+          "base": 0.8,
+          "taper": 1.0,
+          "arch": 4,
+          "teeth": {
+            "spacing": 0.006,
+            "length": 0.0015,
+            "hook": 30,
+            "start": 0.05,
+            "colour": [
+              0.4,
+              0.38,
+              0.25
+            ]
+          },
+          "spine": {
+            "length": 0.008,
+            "width": 0.002,
+            "colour": [
+              0.3,
+              0.22,
+              0.12
+            ]
+          }
+        }
+      },
+      "dead": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.035
+        },
+        "colour": [
+          0.32,
+          0.27,
+          0.18
+        ],
+        "shade": [
+          0.16,
+          0.135,
+          0.09
+        ]
+      },
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petals": 6,
+          "petal_width": 0.5,
+          "point": 0.3,
+          "notch": 0.0,
+          "centre": 0.25
+        },
+        "colour": [
+          0.82,
+          0.8,
+          0.65
+        ],
+        "accent": [
+          0.6,
+          0.62,
+          0.4
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 1.2,
+      "tolerance": 0.5
+    },
+    {
+      "age": 50,
+      "environment": "open",
+      "height": 2.7,
+      "tolerance": 0.5
+    },
+    {
+      "age": 90,
+      "environment": "open",
+      "height": 4.6,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a tree 3 to 12 m tall whose trunk and branches carry dense rosettes of stiff, dagger-like, finely toothed leaves 15 to 35 cm long; a branch tip that flowers, or is damaged, stops and two or three branches grow from below it, so old trees branch every 0.6 to 0.9 m of growth (FEIS); dead leaves cling to the branches as a shaggy skirt; flowering is irregular, in good years only. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge: slow, a few centimetres a year; about 1 m at 20 years, 2.5 to 3 m at 50, 4 to 5 m at 90. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: bluish green leaves, grey-brown dead leaves on the branches, creamy flower clusters."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (milestone F2). Calibration against measurements and photographs comes later."
+  }
+}

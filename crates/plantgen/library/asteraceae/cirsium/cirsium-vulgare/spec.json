@@ -1,0 +1,120 @@
+{
+  "schema": 1,
+  "id": "cirsium-vulgare",
+  "taxon": {
+    "scientific_name": "Cirsium vulgare",
+    "common_name": "bull thistle",
+    "usda_symbol": "CIVU"
+  },
+  "growth_form": "forb",
+  "generator": {
+    "program": "herb",
+    "params": {
+      "stems": 2,
+      "stem_rate": 0.5,
+      "clump_radius": 0.08,
+      "stem_lean": 6,
+      "maturity": 1.2,
+      "stem_height": 1.2,
+      "stem_radius": 0.006,
+      "wiggle": 2,
+      "nodes": 16,
+      "bare": 0.05,
+      "leaf_length": 0.18,
+      "leaf_peak": 0.1,
+      "leaf_top": 0.3,
+      "leaf_base": 1.0,
+      "leaf_angle": 50,
+      "basal_leaves": 6,
+      "basal_length": 0.25,
+      "basal_angle": 70,
+      "raceme": 0.2,
+      "flowers": 6,
+      "flower_size": 0.04,
+      "pedicel": 0.05,
+      "flower_angle": 30,
+      "fruit_below": 0,
+      "buds_above": 0.8,
+      "nod": 0,
+      "bud_size": 0.025,
+      "leaf_area": 0.258,
+      "basal_area": 0.215,
+      "basal_piece_area": 0.235,
+      "flower_area": 0.536,
+      "bud_area": 1.143,
+      "fruit_area": 0.89
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [2, 4, 6]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.25, 0.3, 0.15],
+    "foliage": [0.07, 0.14, 0.05],
+    "foliage_shade": [0.022, 0.042, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": { "template": "lobed", "width": 0.5, "lobes": 6, "depth": 0.6, "round": 0.0, "petiole": 0 }
+      },
+      "basal": {
+        "shape": {
+          "template": "lobed",
+          "width": 0.45,
+          "lobes": 7,
+          "depth": 0.55,
+          "round": 0.0,
+          "petiole": 0.05
+        }
+      },
+      "flower": {
+        "shape": { "template": "head", "rays": 0, "ray_width": 0.7, "disc": 0.9 },
+        "colour": [0.65, 0.15, 0.5],
+        "accent": [0.65, 0.15, 0.5]
+      },
+      "bud": {
+        "shape": { "template": "fruit", "aspect": 0.9 },
+        "colour": [0.25, 0.3, 0.15]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 1.2,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: an introduced biennial thistle: a tall, branched, spiny stem with deeply lobed, spine-tipped leaves and large magenta flower heads on spiny green balls. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 1.2 m tall at 4 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: dark grey-green leaves; magenta heads."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

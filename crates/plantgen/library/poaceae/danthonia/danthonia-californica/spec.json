@@ -1,0 +1,108 @@
+{
+  "schema": 1,
+  "id": "danthonia-californica",
+  "taxon": {
+    "scientific_name": "Danthonia californica",
+    "common_name": "California oatgrass",
+    "usda_symbol": "DACA3"
+  },
+  "growth_form": "graminoid",
+  "generator": {
+    "program": "grass",
+    "params": {
+      "tillers": 50,
+      "tiller_rate": 0.45,
+      "tussock_radius": 0.07,
+      "tiller_lean": 14,
+      "leaves": 3,
+      "leaf_length": 0.25,
+      "leaf_spread": 0.3,
+      "leaf_angle": 15,
+      "arch": 8,
+      "pieces": 6,
+      "flowering": 0.35,
+      "culm_height": 0.6,
+      "culm_radius": 0.001,
+      "culm_lean": 8,
+      "panicle_length": 0.08,
+      "panicle_nod": 10,
+      "blade_area": 0.046,
+      "tip_area": 0.025,
+      "thatch_area": 0.046,
+      "panicle_area": 0.061
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [1, 2, 4]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.3, 0.3, 0.2],
+    "foliage": [0.08, 0.15, 0.05],
+    "foliage_shade": [0.025, 0.045, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "blade": {
+        "shape": { "template": "blade", "taper": 0, "aspect": 0.05 }
+      },
+      "blade_tip": {
+        "shape": { "template": "blade", "taper": 1, "aspect": 0.05 }
+      },
+      "thatch": {
+        "shape": { "template": "blade", "taper": 0, "aspect": 0.05 },
+        "colour": [0.38, 0.31, 0.18],
+        "shade": [0.12, 0.1, 0.05]
+      },
+      "panicle": {
+        "shape": {
+          "template": "panicle",
+          "whorls": 3,
+          "branches": 2,
+          "spread": 30,
+          "spikelets": 3,
+          "aspect": 0.4,
+          "stalk": 0.1
+        },
+        "colour": [0.5, 0.45, 0.32]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a tufted bunchgrass with flat, hairy blades and a few large, plump spikelets on each culm. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 0.6 m tall at 4 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: green blades; pale straw spikelets."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

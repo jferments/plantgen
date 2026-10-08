@@ -1,0 +1,167 @@
+{
+  "schema": 1,
+  "id": "cylindropuntia-acanthocarpa",
+  "taxon": {
+    "scientific_name": "Cylindropuntia acanthocarpa",
+    "common_name": "buckhorn cholla",
+    "usda_symbol": "CYAC8"
+  },
+  "growth_form": "stem_succulent",
+  "generator": {
+    "program": "succulent",
+    "params": {
+      "vigour_spread": 0.12,
+      "lean": 5,
+      "joints": 1,
+      "joint_length": 0.2,
+      "joint_radius": 0.017,
+      "joint_spread": 0.3,
+      "daughters_low": 1.2,
+      "daughters_high": 2.6,
+      "generations": 14,
+      "branch_angle": 32,
+      "twist": 0,
+      "trunk_joints": 2,
+      "leader_lean": 8,
+      "sag": 0.05,
+      "swell": 0.6,
+      "swell_years": 12,
+      "bloom_age": 5,
+      "joint_flowers": 1,
+      "flower_angle": 30,
+      "flower_size": 0.05,
+      "bud_share": 0.2,
+      "fruit_share": 0.3,
+      "bud_size": 0.02,
+      "fruit_size": 0.03,
+      "bud_rate": 0.5,
+      "flower_area": 0.483,
+      "bud_area": 0.636,
+      "fruit_area": 0.89
+    }
+  },
+  "growth": {
+    "years": 25,
+    "step": 1,
+    "keyframes": [3, 8, 15, 25]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3, 4]
+  },
+  "appearance": {
+    "bark": [0.2, 0.17, 0.13],
+    "foliage": [0.1, 0.17, 0.06],
+    "foliage_shade": [0.045, 0.077, 0.027],
+    "variation": 0.1,
+    "organs": {
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petals": 10,
+          "petal_width": 0.8,
+          "point": 0.0,
+          "notch": 0.0,
+          "centre": 0.3
+        },
+        "colour": [0.75, 0.35, 0.08],
+        "accent": [0.55, 0.45, 0.2]
+      },
+      "bud": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.5
+        },
+        "colour": [0.45, 0.3, 0.1]
+      },
+      "fruit": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.7
+        },
+        "colour": [0.45, 0.4, 0.15]
+      }
+    },
+    "bodies": {
+      "stem": {
+        "colour": [0.13, 0.16, 0.08],
+        "valley": [0.07, 0.08, 0.04],
+        "dome": 1.0,
+        "base": 0.8,
+        "tubercles": {
+          "height": 0.3,
+          "width": 0.55,
+          "point": 0.9,
+          "stretch": 2.5
+        },
+        "areoles": {
+          "spacing": 0.02,
+          "felt_radius": 0.002,
+          "felt": [0.5, 0.45, 0.35]
+        },
+        "spines": [
+          {
+            "count": [8, 20],
+            "angle": 40,
+            "length": 0.022,
+            "width": 0.0006,
+            "colour": [0.65, 0.55, 0.35],
+            "angle_spread": 25,
+            "length_spread": 0.35,
+            "tip": [0.55, 0.45, 0.3]
+          }
+        ],
+        "greying": {
+          "colour": [0.3, 0.27, 0.22],
+          "years": 6
+        },
+        "cork": {
+          "colour": [0.15, 0.12, 0.09],
+          "start": 8,
+          "rate": 0.04,
+          "height": 0.5,
+          "spines": 0.4
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 1.2,
+      "tolerance": 0.5
+    },
+    {
+      "age": 25,
+      "environment": "open",
+      "height": 1.4,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: an open, branching shrub 1 to 2 m tall from a short trunk, its slender joints 15 to 50 cm long rising at narrow angles like antlers. Flowers at the joint tips in spring, yellow, orange, red or bronze. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge: a metre or more within 15 years. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: grey-green joints with long, raised tubercles, tan sheathed spines in spreading clusters, greying with age."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (milestone F1). Calibration against measurements and photographs comes later."
+  }
+}

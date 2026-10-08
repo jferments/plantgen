@@ -1,0 +1,90 @@
+{
+  "schema": 2,
+  "species": "prosopis-velutina",
+  "layers": {
+    "subcanopy": 0.6
+  },
+  "moisture": [0.45, 0.6, 1, 1.01],
+  "heat_load": [0.3, 0.7, 1.7, 2.1],
+  "elevation_m": [-50, 0, 1500, 1800],
+  "max_slope_deg": 20,
+  "shade_tolerance": 0.25,
+  "coldest_c": [3, 7, 24, 27],
+  "hard_freeze_c": [-18, -12, 10, 14],
+  "warmest_c": [23, 26, 36, 39],
+  "degree_days_0": [4000, 5500, 12000, 13500],
+  "degree_days_5": [2500, 3800, 10000, 11500],
+  "moisture_index": [0.04, 0.08, 0.5, 0.65],
+  "summer_rain": [0, 0, 1, 1.01],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "note": "A tree to 10 m along washes and where deep water lies, in the open subcanopy."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "note": "Washes, floodplains and flats over deep groundwater."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "note": "Any aspect."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "note": "To about 1,500 m."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "note": "Flats and washes."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "note": "Full sun."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "note": "Mild to cool winters."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "note": "Hardy to about −12 °C."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "note": "Hot summers."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "note": "A long hot growing year."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "note": "A long hot growing year."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "note": "Arid to semi-arid; it reaches groundwater."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "note": "Both rain regimes; it draws on groundwater."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "Fire Effects Information System (FEIS), USDA Forest Service",
+        "url": "https://www.fs.usda.gov/database/feis/",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Velvet mesquite. A desert niche of plant forms F8's first placement (2026-10-07): authored from general knowledge of the species in the Sonoran Desert and checked against the Saguaro National Park places' CHELSA V2.1 climate (bajada 752 m, rocky hills 1,096 m), not yet against the public-domain FEIS reviews or fitted to occurrence records; the fit to GBIF occurrences over CHELSA comes with PlantGen (F8 in docs/roadmaps/PLANTS.md). Only the climate and site ranges niches have today: no soil, wash, spacing or nurse rules yet."
+  }
+}

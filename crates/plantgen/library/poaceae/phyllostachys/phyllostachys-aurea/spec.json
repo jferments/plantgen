@@ -1,0 +1,112 @@
+{
+  "schema": 1,
+  "id": "phyllostachys-aurea",
+  "taxon": {
+    "scientific_name": "Phyllostachys aurea",
+    "common_name": "golden bamboo",
+    "usda_symbol": "PHAU8"
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "program": "cane",
+    "params": {
+      "canes": 200,
+      "cane_rate": 10,
+      "cane_lean": 8,
+      "cane_length": 5.6,
+      "cane_growth": 2.5,
+      "cane_radius": 0.022,
+      "sag": 0.006,
+      "node_rate": 4,
+      "thorns": 0,
+      "leafy": 1,
+      "leaf_size": 0.3,
+      "leaf_angle": 60,
+      "leaf_from": 0.45,
+      "bloom": 0,
+      "flowers": 1,
+      "stand_radius": 2.5,
+      "cane_life": 7,
+      "thorn_area": 0.059,
+      "leaf_area": 0.124
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [2, 6, 15]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2]
+  },
+  "appearance": {
+    "bark": [0.6, 0.58, 0.3],
+    "foliage": [0.25, 0.42, 0.12],
+    "foliage_shade": [0.0875, 0.147, 0.042],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 7,
+          "angle": 35,
+          "stalk": 0.15,
+          "width": 0.15,
+          "widest": 0.4,
+          "tip": 0.3,
+          "base": 0.6,
+          "teeth": 0,
+          "petiole": 0.02
+        }
+      },
+      "thorn": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.12
+        },
+        "form": "thorn"
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 6,
+      "environment": "open",
+      "height": 6.5,
+      "tolerance": 0.4
+    },
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 7.0,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a running bamboo 4 to 9 m tall that spreads from its rhizomes into dense groves of straight, yellow-green culms 2 to 5 cm thick, each reaching its full height within a few weeks of emerging and living about seven years, leafy above with sprays of narrow leaves at its nodes. A woody grass whose culms live for years, so its growth form is shrub. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 6.5 m at 6 years and 7 m at 15. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: yellow-green culms, fresh green leaves."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F6). Calibration against measurements and photographs comes later."
+  }
+}

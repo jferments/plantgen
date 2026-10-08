@@ -1,0 +1,172 @@
+{
+  "schema": 1,
+  "id": "stenocereus-thurberi",
+  "taxon": {
+    "scientific_name": "Stenocereus thurberi",
+    "common_name": "organ pipe cactus",
+    "usda_symbol": "STTH6"
+  },
+  "growth_form": "stem_succulent",
+  "generator": {
+    "program": "succulent",
+    "params": {
+      "vigour_spread": 0.12,
+      "lean": 0,
+      "stems": 14,
+      "stem_rate": 0.03,
+      "clump_radius": 0.35,
+      "stem_lean": 25,
+      "seedling": 0.01,
+      "height_max": 6,
+      "height_rate": 0.02,
+      "height_shape": 2.2,
+      "radius_min": 0.008,
+      "radius_max": 0.08,
+      "radius_height": 0.5,
+      "fill": 0.95,
+      "fill_years": 20,
+      "pinch": 0.03,
+      "pinch_depth": 0.1,
+      "wiggle": 0.8,
+      "bend": 0.35,
+      "dome": 0.8,
+      "bloom_age": 35,
+      "flowers": 6,
+      "ring_angle": 50,
+      "flower_angle": 40,
+      "flower_size": 0.06,
+      "bud_share": 0.25,
+      "fruit_share": 0.3,
+      "bud_size": 0.025,
+      "fruit_size": 0.05,
+      "flower_area": 0.372,
+      "bud_area": 0.636,
+      "fruit_area": 1.143
+    }
+  },
+  "growth": {
+    "years": 120,
+    "step": 1,
+    "keyframes": [8, 30, 70, 120]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3, 4]
+  },
+  "appearance": {
+    "bark": [0.2, 0.17, 0.13],
+    "foliage": [0.1, 0.17, 0.06],
+    "foliage_shade": [0.045, 0.077, 0.027],
+    "variation": 0.1,
+    "organs": {
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petals": 12,
+          "petal_width": 0.6,
+          "point": 0.0,
+          "notch": 0.0,
+          "centre": 0.3
+        },
+        "colour": [0.8, 0.7, 0.72],
+        "accent": [0.75, 0.65, 0.4]
+      },
+      "bud": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.5
+        },
+        "colour": [0.25, 0.12, 0.1]
+      },
+      "fruit": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.9
+        },
+        "colour": [0.5, 0.06, 0.05]
+      }
+    },
+    "bodies": {
+      "stem": {
+        "colour": [0.07, 0.13, 0.05],
+        "valley": [0.035, 0.07, 0.03],
+        "dome": 0.8,
+        "ribs": {
+          "count": [12, 19],
+          "spacing": 0.03,
+          "depth": 0.18,
+          "sharpness": 0.4
+        },
+        "areoles": {
+          "spacing": 0.02,
+          "felt_radius": 0.004,
+          "felt": [0.05, 0.04, 0.035]
+        },
+        "spines": [
+          {
+            "count": [7, 9],
+            "angle": 20,
+            "length": 0.01,
+            "width": 0.0006,
+            "colour": [0.12, 0.08, 0.06],
+            "angle_spread": 10,
+            "length_spread": 0.3
+          },
+          {
+            "count": [1, 3],
+            "angle": 45,
+            "length": 0.025,
+            "width": 0.0009,
+            "colour": [0.1, 0.07, 0.05],
+            "angle_spread": 15,
+            "length_spread": 0.35,
+            "tip": [0.05, 0.04, 0.035]
+          }
+        ],
+        "greying": {
+          "colour": [0.32, 0.31, 0.3],
+          "years": 8
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 70,
+      "environment": "open",
+      "height": 3.0,
+      "tolerance": 0.5
+    },
+    {
+      "age": 120,
+      "environment": "open",
+      "height": 4.6,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a clump of a dozen or more ribbed columns, 15 to 20 cm thick, that rise from a short base, spread out and curve up into a vase 3 to 7 m tall; new stems come from the base over decades. Pale flowers open near the stem tips, followed by red, spiny fruit. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough stem heights from general knowledge: a few metres by 70 years, about 5 m by 120. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: dark green stems with 12 to 19 ribs, areoles 2 cm apart with dark felt, short dark radial spines and one to three longer centrals that grey with age; creamy white to lavender flowers."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (milestone F1). Calibration against measurements and photographs comes later."
+  }
+}

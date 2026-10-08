@@ -1,0 +1,88 @@
+{
+  "schema": 2,
+  "species": "erythranthe-guttata",
+  "layers": {
+    "herb": 0.8
+  },
+  "moisture": [0.8, 0.9, 1.0, 1.01],
+  "heat_load": [0.2, 0.5, 2.0, 2.5],
+  "elevation_m": [-50, -10, 2000, 2500],
+  "max_slope_deg": 30,
+  "shade_tolerance": 0.2,
+  "coldest_c": [-20, -12, 14, 18],
+  "hard_freeze_c": [-55, -45, 14, 20],
+  "warmest_c": [7, 10, 28, 32],
+  "degree_days_0": [600, 1000, 9000, 11000],
+  "degree_days_5": [150, 400, 6500, 8000],
+  "moisture_index": [0.05, 0.1, 1, 1.01],
+  "summer_rain": [0, 0, 1, 1.01],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "note": "A herb of seeps, wet banks and stream and pond edges."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "note": "Wet ground with flowing water."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "note": "Grows on any aspect."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "note": "Sea level to about 2,000 m in western Washington; the upper limits are loose."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "note": "Grows on seepy slopes as well as flats."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "note": "Needs light."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "note": "Across its range (see the provenance note), coldest-month means from about −12 °C, gone by −20 °C, up to about 14 °C."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "note": "Lows to about −45 °C borne."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "note": "Warmest-month means from about 10 to 28 °C, gone below 7 °C and above 32 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "note": "About 1,000 or more degree-days above 0 °C, none below 600."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "note": "About 400 or more degree-days above 5 °C, none below 150."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "note": "It grows where the ground stays wet whatever the climate's moisture index, so only the driest climates (below about 0.1) rule it out; the site's own moisture places it."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "note": "No limit: it grows under summer-dry and summer-wet climates alike."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "USDA NRCS PLANTS Database: distribution by state and province",
+        "url": "https://plants.usda.gov",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Authored from general knowledge of the species in the south Puget Sound lowlands; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS). Climate ranges (niche schema 2, 2026-10-06): Seep monkeyflower grows by water from Alaska to Mexico and east to the Rockies (the PLANTS Database). Each climate range brackets the climate of that range at the 2.8° ERA5 product's scale, an approximate envelope read from these descriptions, not fitted to occurrence records."
+  }
+}

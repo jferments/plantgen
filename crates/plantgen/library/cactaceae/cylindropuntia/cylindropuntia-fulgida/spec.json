@@ -1,0 +1,172 @@
+{
+  "schema": 1,
+  "id": "cylindropuntia-fulgida",
+  "taxon": {
+    "scientific_name": "Cylindropuntia fulgida",
+    "common_name": "chain-fruit cholla",
+    "usda_symbol": "CYFU10"
+  },
+  "growth_form": "stem_succulent",
+  "generator": {
+    "program": "succulent",
+    "params": {
+      "vigour_spread": 0.12,
+      "lean": 4,
+      "joints": 1,
+      "joint_length": 0.14,
+      "joint_radius": 0.022,
+      "joint_spread": 0.3,
+      "daughters_low": 0.6,
+      "daughters_high": 2.2,
+      "generations": 10,
+      "branch_angle": 50,
+      "twist": 0,
+      "trunk_joints": 15,
+      "leader_lean": 8,
+      "resprout": 0.15,
+      "crown": 0.6,
+      "sag": 0.8,
+      "joint_life": 0,
+      "swell": 1.5,
+      "swell_years": 12,
+      "bloom_age": 6,
+      "joint_flowers": 1,
+      "flower_angle": 30,
+      "flower_size": 0.035,
+      "bud_share": 0.2,
+      "fruit_share": 0.3,
+      "bud_size": 0.015,
+      "fruit_size": 0.04,
+      "chains": 0.5,
+      "chain_max": 7,
+      "bud_rate": 0.55,
+      "flower_area": 0.49,
+      "bud_area": 0.636,
+      "fruit_area": 0.954
+    }
+  },
+  "growth": {
+    "years": 30,
+    "step": 1,
+    "keyframes": [3, 8, 15, 30]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3, 4]
+  },
+  "appearance": {
+    "bark": [0.2, 0.17, 0.13],
+    "foliage": [0.1, 0.17, 0.06],
+    "foliage_shade": [0.045, 0.077, 0.027],
+    "variation": 0.1,
+    "organs": {
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petals": 8,
+          "petal_width": 0.8,
+          "point": 0.0,
+          "notch": 0.0,
+          "centre": 0.25
+        },
+        "colour": [0.65, 0.3, 0.45],
+        "accent": [0.6, 0.5, 0.3]
+      },
+      "bud": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.5
+        },
+        "colour": [0.3, 0.3, 0.12]
+      },
+      "fruit": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.75
+        },
+        "colour": [0.12, 0.22, 0.06]
+      }
+    },
+    "bodies": {
+      "stem": {
+        "colour": [0.1, 0.17, 0.07],
+        "valley": [0.05, 0.09, 0.035],
+        "dome": 1.0,
+        "base": 0.8,
+        "tubercles": {
+          "height": 0.18,
+          "width": 0.6,
+          "point": 0.9,
+          "stretch": 1.5
+        },
+        "areoles": {
+          "spacing": 0.014,
+          "felt_radius": 0.002,
+          "felt": [0.55, 0.5, 0.35]
+        },
+        "spines": [
+          {
+            "count": [2, 12],
+            "angle": 45,
+            "length": 0.02,
+            "width": 0.0006,
+            "colour": [0.75, 0.68, 0.45],
+            "angle_spread": 25,
+            "length_spread": 0.35,
+            "tip": [0.7, 0.65, 0.5]
+          }
+        ],
+        "greying": {
+          "colour": [0.25, 0.22, 0.18],
+          "years": 6
+        },
+        "cork": {
+          "colour": [0.12, 0.1, 0.08],
+          "start": 8,
+          "rate": 0.05,
+          "height": 0.9,
+          "spines": 0.4
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 1.6,
+      "tolerance": 0.5
+    },
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 2.2,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a small tree 1.5 to 4 m tall with a short trunk and drooping branches of joints 5 to 20 cm long that break off at a touch. Pink flowers at the joint tips grow green fruit, and fruit flowers again on old fruit, so chains of up to a dozen or more fruit hang from the branches. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge: one and a half to two metres within 15 to 30 years. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: green tuberculate joints, yellowish sheathed spines that grey with age, a dark trunk; green, smooth hanging fruit."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (milestone F1). Calibration against measurements and photographs comes later."
+  }
+}

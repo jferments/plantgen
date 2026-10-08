@@ -1,0 +1,107 @@
+{
+  "schema": 1,
+  "id": "azorella-compacta",
+  "taxon": {
+    "scientific_name": "Azorella compacta",
+    "common_name": "llareta"
+  },
+  "growth_form": "cushion",
+  "generator": {
+    "program": "cushion",
+    "params": {
+      "max_radius": 0.95,
+      "size_years": 90,
+      "dome": 0.65,
+      "rosette_density": 900,
+      "max_rosettes": 6000,
+      "rosette_size": 0.035,
+      "lobes": 2,
+      "lobe_spread": 0.6
+    }
+  },
+  "growth": {
+    "years": 200,
+    "step": 1,
+    "keyframes": [20, 80, 200]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2]
+  },
+  "appearance": {
+    "bark": [0.3, 0.45, 0.12],
+    "foliage": [0.35, 0.55, 0.12],
+    "foliage_shade": [0.1225, 0.1925, 0.042],
+    "variation": 0.15,
+    "organs": {
+      "rosette": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 10,
+          "angle": 75,
+          "stalk": 0.05,
+          "width": 0.4,
+          "widest": 0.5,
+          "tip": 0.6,
+          "base": 0.6,
+          "teeth": 0,
+          "petiole": 0.0
+        },
+        "bend": {
+          "fold": 0,
+          "cup": 0.1,
+          "droop": 0,
+          "twist": 0
+        }
+      }
+    },
+    "bodies": {
+      "mound": {
+        "colour": [0.28, 0.42, 0.1],
+        "dome": 4.0,
+        "areoles": {
+          "spacing": 0
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 80,
+      "environment": "open",
+      "height": 0.42,
+      "tolerance": 0.5
+    },
+    {
+      "age": 200,
+      "environment": "open",
+      "height": 0.55,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a cushion plant of the high Andes, 3,200 to 5,200 m up, of thousands of tiny packed rosettes forming a bright green, rock-hard mound up to a metre or more high and several across, growing perhaps a centimetre and a half a year and living for centuries. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 0.42 m tall at 80 years and 0.55 m at 200. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: bright yellow-green rosettes."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F7). Calibration against measurements and photographs comes later."
+  }
+}

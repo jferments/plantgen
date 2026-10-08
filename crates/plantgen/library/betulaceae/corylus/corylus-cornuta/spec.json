@@ -1,0 +1,160 @@
+{
+  "schema": 1,
+  "id": "corylus-cornuta",
+  "taxon": {
+    "scientific_name": "Corylus cornuta",
+    "common_name": "beaked hazelnut",
+    "usda_symbol": "COCO6"
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 4.0,
+      "crown_radius": 2.0,
+      "crown_base": 0,
+      "crown_rate": 0.22,
+      "space_density": 44.8,
+      "internode": 0.16,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 40,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "bud_years": 6,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 10,
+      "fork_height": 0.03,
+      "fork_stems": 6,
+      "fork_angle": 35,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 1.36,
+      "space_kill": 0.336,
+      "alternate": 1,
+      "leaf_size": 0.2,
+      "spur_leaf": 0.18,
+      "spur_pairs": 1,
+      "leaf_angle": 55,
+      "leaf_area": 0.345,
+      "bloom_area": 0.51,
+      "blooms": 1,
+      "bloom_age": 6,
+      "bloom_size": 0.05,
+      "bloom_angle": 70
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [3, 7, 15]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.4, 0.33, 0.25],
+    "bark_pattern": {
+      "kind": "smooth",
+      "scale": 0.03,
+      "variation": 0.12,
+      "lenticels": 300,
+      "smooth_below": 0.0
+    },
+    "foliage": [0.08, 0.16, 0.045],
+    "foliage_shade": [0.025, 0.05, 0.014],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 5,
+          "angle": 55,
+          "stalk": 0.1,
+          "width": 0.8,
+          "widest": 0.45,
+          "tip": 0.45,
+          "base": 0.7,
+          "teeth": 12,
+          "tooth_depth": 0.04,
+          "petiole": 0.08
+        },
+        "families": {
+          "plasticity": 0.5
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "kind": "husked",
+          "count": 2,
+          "cluster": "pair",
+          "size": 0.7,
+          "spread": 25,
+          "aspect": 0.45
+        },
+        "colour": [0.38, 0.55, 0.18],
+        "accent": [0.42, 0.56, 0.2],
+        "season": {
+          "bud": 35,
+          "flower": 45,
+          "fruit": 100,
+          "ripe": 230,
+          "ripening": 30,
+          "fall": 290,
+          "flower_look": {
+            "shape": {
+              "template": "spike",
+              "florets": 20,
+              "aspect": 0.12,
+              "plume": 0.3,
+              "stalk": 0.05
+            },
+            "colour": [0.8, 0.7, 0.3],
+            "size": 1.2
+          }
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 3.5,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a tall, many-stemmed shrub with broad, doubly toothed, soft leaves in two rows and nuts in bristly beaked husks. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 3.5 m tall at 15 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: soft mid-green leaves; smooth grey-brown stems. Fruit (plant roadmap P4), as in mid-July: nuts in pairs, each in a green, bristly husk drawn out into a long beak. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: yellow catkins in February and March; nuts in green husks through the summer, ripe in August and September. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth grey-brown bark with lenticels; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): an understory shrub: broad shade leaves, smaller and more sharply toothed in sun; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

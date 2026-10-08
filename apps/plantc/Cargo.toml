@@ -1,0 +1,12 @@
+[package]
+name = "plantc"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+plantgen = { path = "../../crates/plantgen" }
+serde_json = "=1.0.145"
+
+[lints]
+workspace = true

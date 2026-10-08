@@ -1,0 +1,120 @@
+{
+  "schema": 1,
+  "id": "oxalis-oregana",
+  "taxon": {
+    "scientific_name": "Oxalis oregana",
+    "common_name": "redwood sorrel",
+    "usda_symbol": "OXOR"
+  },
+  "growth_form": "forb",
+  "generator": {
+    "program": "herb",
+    "params": {
+      "stems": 14,
+      "stem_rate": 0.6,
+      "clump_radius": 0.25,
+      "stem_lean": 12,
+      "maturity": 1.0,
+      "stem_height": 0.12,
+      "stem_radius": 0.001,
+      "wiggle": 2,
+      "nodes": 1,
+      "whorl": 3,
+      "bare": 0.85,
+      "leaf_length": 0.045,
+      "leaf_peak": 0.5,
+      "leaf_top": 1,
+      "leaf_base": 1,
+      "leaf_angle": 85,
+      "raceme": 0.1,
+      "flowers": 1,
+      "flower_size": 0.025,
+      "pedicel": 0.005,
+      "flower_angle": 20,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0,
+      "leaf_area": 0.621,
+      "basal_area": 0.235,
+      "basal_piece_area": 0.235,
+      "flower_area": 0.689,
+      "bud_area": 0.89,
+      "fruit_area": 0.89
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [2, 4, 6]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.2, 0.28, 0.12],
+    "foliage": [0.05, 0.13, 0.035],
+    "foliage_shade": [0.015, 0.04, 0.01],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "width": 1.0,
+          "widest": 0.8,
+          "tip": 0.0,
+          "base": 0.0,
+          "teeth": 0,
+          "tooth_depth": 0.03,
+          "petiole": 0
+        },
+        "face_up": 0.6
+      },
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petals": 5,
+          "petal_width": 1.2,
+          "point": 0.0,
+          "notch": 0.0,
+          "centre": 0.15
+        },
+        "colour": [0.92, 0.8, 0.85],
+        "accent": [0.7, 0.4, 0.5]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.15,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a low carpet of shamrock-like leaves, three heart-shaped leaflets on each stalk, with pink-veined white flowers. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 0.15 m tall at 4 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: bright green leaflets; pinkish-white flowers."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

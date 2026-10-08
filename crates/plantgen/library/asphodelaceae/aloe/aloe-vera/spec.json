@@ -1,0 +1,200 @@
+{
+  "schema": 1,
+  "id": "aloe-vera",
+  "taxon": {
+    "scientific_name": "Aloe vera",
+    "common_name": "aloe vera",
+    "usda_symbol": "ALVE2"
+  },
+  "growth_form": "rosette_succulent",
+  "generator": {
+    "program": "rosette",
+    "params": {
+      "vigour_spread": 0.15,
+      "lean": 5,
+      "leaf_rate": 6,
+      "leaf_life": 4,
+      "leaf_length": 0.4,
+      "leaf_seed": 0.2,
+      "size_years": 4,
+      "leaf_spread": 0.12,
+      "young_angle": 10,
+      "old_angle": 55,
+      "open_years": 1.5,
+      "angle_spread": 8,
+      "internode": 0.001,
+      "trunk_radius": 0.02,
+      "flower_age": 4,
+      "bloom": 0.9,
+      "stalk_height": 0.8,
+      "stalk_radius": 0.01,
+      "stalk_head": 0.4,
+      "stalk_branches": 0,
+      "flowers": 25,
+      "flower_size": 0.03,
+      "flower_angle": 70,
+      "stalk_life": 2,
+      "pups": 6,
+      "pup_age": 3,
+      "pup_rate": 0.5,
+      "pup_distance": 0.2,
+      "leaf_area": 0.08,
+      "flower_area": 0.335,
+      "dead_area": 0.08
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [
+      3,
+      8,
+      15
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.18,
+      0.15,
+      0.11
+    ],
+    "foliage": [
+      0.13,
+      0.2,
+      0.12
+    ],
+    "foliage_shade": [
+      0.0585,
+      0.09,
+      0.054
+    ],
+    "variation": 0.1,
+    "organs": {
+      "blade": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.16
+        },
+        "colour": [
+          0.13,
+          0.2,
+          0.12
+        ],
+        "solid": {
+          "section": "triangular",
+          "thickness": 0.45,
+          "widest": 0.02,
+          "base": 1.0,
+          "taper": 1.0,
+          "arch": 15,
+          "teeth": {
+            "spacing": 0.012,
+            "length": 0.002,
+            "hook": 10,
+            "start": 0.1,
+            "colour": [
+              0.55,
+              0.55,
+              0.4
+            ]
+          }
+        }
+      },
+      "dead": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.16
+        },
+        "colour": [
+          0.35,
+          0.28,
+          0.18
+        ],
+        "shade": [
+          0.175,
+          0.14,
+          0.09
+        ]
+      },
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petals": 6,
+          "petal_width": 0.5,
+          "point": 0.3,
+          "notch": 0.0,
+          "centre": 0.25
+        },
+        "colour": [
+          0.85,
+          0.65,
+          0.1
+        ],
+        "accent": [
+          0.7,
+          0.5,
+          0.05
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.25,
+      "tolerance": 0.6
+    },
+    {
+      "age": 8,
+      "environment": "open",
+      "height": 0.85,
+      "tolerance": 0.6
+    },
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 0.85,
+      "tolerance": 0.6
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a stemless clump of thick, fleshy, grey-green leaves 30 to 50 cm long and 6 to 7 cm wide at the base, triangular in section, with small soft teeth along the margins; pups crowd round it; yellow tubular flowers on a spike 60 to 90 cm tall each year. Grown in gardens across the desert Southwest rather than native there. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge, with the flowering spike: a quarter metre in its third year, about 0.8 m once it flowers. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: grey-green leaves with pale teeth, yellow flowers."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (milestone F2). Calibration against measurements and photographs comes later."
+  }
+}

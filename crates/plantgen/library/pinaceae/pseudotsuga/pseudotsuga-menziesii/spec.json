@@ -1,0 +1,133 @@
+{
+  "schema": 1,
+  "id": "pseudotsuga-menziesii",
+  "taxon": {
+    "scientific_name": "Pseudotsuga menziesii",
+    "common_name": "Douglas-fir",
+    "usda_symbol": "PSME"
+  },
+  "growth_form": "excurrent_tree",
+  "generator": {
+    "program": "conifer",
+    "params": {
+      "cone_age": 15,
+      "cone_chance": 0.12,
+      "cone_length": 0.075,
+      "cone_pitch": 110,
+      "cone_years": 1,
+      "cone_area": 0.589,
+      "height_max": 70,
+      "height_rate": 0.018,
+      "height_shape": 1.5,
+      "whorl": 5,
+      "branch_angle": 45,
+      "branch_sag": 0.9,
+      "max_sag": 50,
+      "upturn": 0.012,
+      "needle_years": 6,
+      "spray_droop": 25,
+      "spray_area": 0.23,
+      "pipe_organ": 0.0095
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [5, 15, 30, 60]
+  },
+  "variants": {
+    "environments": ["open", "interior"],
+    "seeds": [1, 2]
+  },
+  "appearance": {
+    "bark": [0.11, 0.065, 0.045],
+    "bark_pattern": {
+      "kind": "furrowed",
+      "scale": 0.06,
+      "elongation": 4.5,
+      "fissure": 0.3,
+      "depth": 0.5,
+      "contrast": 0.75,
+      "variation": 0.15,
+      "smooth_below": 0.06,
+      "roughness": 0.5
+    },
+    "foliage": [0.05, 0.11, 0.035],
+    "foliage_shade": [0.018, 0.045, 0.02],
+    "variation": 0.2,
+    "organs": {
+      "cone": {
+        "shape": {"template": "fruit", "aspect": 0.45, "cone": 1},
+        "colour": [0.5, 0.35, 0.2]
+      },
+      "spray": {
+        "shape": {
+          "template": "needles",
+          "ranks": 0,
+          "twigs": 3,
+          "aspect": 0.55,
+          "needle": 0.09,
+          "width": 0.05
+        },
+        "accent": [0.2, 0.15, 0.07]
+      }
+    },
+    "ridges": {
+      "spacing": 0.09,
+      "depth": 0.06,
+      "twist": 0,
+      "contrast": 0.45
+    },
+    "flare": {
+      "height": 0.9,
+      "amount": 0.35,
+      "buttresses": 0,
+      "ridge": 0.3
+    }
+  },
+  "allometry": [
+    {
+      "age": 30,
+      "environment": "interior",
+      "height": 20,
+      "dbh": 0.25,
+      "tolerance": 0.35
+    },
+    {
+      "age": 60,
+      "environment": "interior",
+      "height": 36,
+      "dbh": 0.45,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set to give a plausible Douglas-fir: annual whorls of about five branches, upper branches swept up and lower ones level to drooping with upturned tips, a stiff leader, foliage kept about six years, height near 35 m at 50 years on a good site. Spray area matched to the drawn needle sprays. Not fitted to data. Cones (plant forms F3): 5 to 10 cm hang, with three-pointed bracts between the scales; set from general knowledge of the species, not measured."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights and diameters for a well-stocked western Washington stand, from general forestry knowledge. Replace with a published yield or site-index table before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye. Needles stand all round the twigs (bottlebrush), unlike the flat sprays of true firs and cedars; bark thick and furrowed with a modest flare. Needle shoots (plant roadmap P4): needles 2 to 3 cm long and 1 to 1.5 mm wide, so a needle 0.05 as wide as it is long (`width`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): smooth with resin blisters when young, then very thick and deeply furrowed into dark brown ridges; set from general knowledge of the species, not measured."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Pałubicki et al. 2009, Self-organizing tree models for image synthesis (method only: light, vigour and shedding)",
+        "licence": "method citation; no data used"
+      },
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy for milestone P0. Calibration against yield tables and photographs is milestone P4."
+  }
+}

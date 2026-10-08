@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "id": "festuca-gracillima",
+  "taxon": {
+    "scientific_name": "Festuca gracillima",
+    "common_name": "coir\u00f3n"
+  },
+  "growth_form": "graminoid",
+  "generator": {
+    "program": "grass",
+    "params": {
+      "tillers": 140,
+      "tiller_rate": 0.45,
+      "tussock_radius": 0.12,
+      "tiller_lean": 12,
+      "leaves": 4,
+      "leaf_length": 0.45,
+      "leaf_spread": 0.3,
+      "leaf_angle": 10,
+      "arch": 7,
+      "pieces": 6,
+      "flowering": 0.25,
+      "culm_height": 0.6,
+      "culm_radius": 0.0008,
+      "culm_lean": 6,
+      "panicle_length": 0.12,
+      "panicle_nod": 10,
+      "blade_area": 0.027,
+      "tip_area": 0.015,
+      "thatch_area": 0.027,
+      "panicle_area": 0.095
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [1, 2, 4]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3]
+  },
+  "appearance": {
+    "bark": [0.45, 0.4, 0.25],
+    "foliage": [0.45, 0.45, 0.25],
+    "foliage_shade": [0.1575, 0.1575, 0.0875],
+    "variation": 0.15,
+    "organs": {
+      "blade": {
+        "shape": {
+          "template": "blade",
+          "taper": 0,
+          "aspect": 0.03
+        }
+      },
+      "blade_tip": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.03
+        }
+      },
+      "thatch": {
+        "shape": {
+          "template": "blade",
+          "taper": 0,
+          "aspect": 0.03
+        },
+        "colour": [0.62, 0.55, 0.35],
+        "shade": [0.12, 0.1, 0.05]
+      },
+      "panicle": {
+        "shape": {
+          "template": "panicle",
+          "whorls": 6,
+          "branches": 2,
+          "spread": 20,
+          "spikelets": 5,
+          "aspect": 0.3,
+          "stalk": 0.05
+        },
+        "colour": [0.42, 0.42, 0.3]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: the dominant tussock grass of the Patagonian steppe, a dense, wiry, yellowish-green tuft 30 to 60 cm tall of fine, rolled leaves, with much old straw-coloured thatch, standing in a sea of tussocks across the wind-swept plains. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 0.6 m at 4 years. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: yellow-green blades, straw thatch."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F7). Calibration against measurements and photographs comes later."
+  }
+}

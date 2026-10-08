@@ -1,0 +1,136 @@
+# Fern: crowns of fronds on a rhizome, after the sword, lady, wood and deer
+# ferns and bracken of wet forests. Each year a crown sends up
+# fronds_per_year fronds round it on a golden-angle spiral. A frond is a
+# rachis of `pieces` pieces, the first `stipe` share of its length bare,
+# the rest carrying a pair of pinnae at each half piece, longest at
+# pinna_peak along the blade and tapering to pinna_base and pinna_tip.
+#
+# A frond unrolls from a crozier: it emerges at a phase e of the year
+# (uniform in [0, emerge_spread)), and at the plant's keyframe, season of
+# the way through the year, it has unrolled the share
+#
+#   u = clamp((age + season - e) / unroll, 0, 1)
+#
+# of its length; each piece beyond u coils back by up to `curl` degrees and
+# its pinnae are folded small. As the frond ages it opens from young_angle
+# to old_angle off the vertical, and it sags under its own weight: a
+# tropism toward the ground of elasticity droop * min(a, droop_years) for
+# its age a since it emerged, so old fronds arch over further. A frond
+# dies after frond_life years (1 for a deciduous fern; about 2.5 for an
+# evergreen one, whose fronds outlast a winter).
+#
+# A frond's length follows the crown's age, so a young fern's fronds are
+# small:
+#
+#   l(a) = frond_length (frond_seed + (1 - frond_seed) (1 - exp(-a / size_years)))
+#
+# A fern spreads by its rhizome: from crown_age, with the chance crown_rate
+# a year, a new crown appears rhizome metres away, at most `crowns` of them
+# (bracken runs far; a tufted fern makes a clump a few crowns wide).
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem fern 1;
+
+param vigour_spread = 0.12;   # a fern grows exp(gauss() * vigour_spread) times as fast
+# Fronds.
+param fronds_per_year = 8;
+param frond_life = 1;         # years a frond lives
+param frond_length = 0.6;     # a full-size frond, stipe included
+param frond_seed = 0.2;       # a young fern's fronds, as a share of full size
+param size_years = 3;         # fronds reach full size over about this many years
+param frond_spread = 0.12;    # fronds are l (1 ± frond_spread) long
+param young_angle = 15;       # angle of a new frond to the vertical
+param old_angle = 55;         # the angle an old frond opens to
+param open_years = 0.5;       # how fast a frond opens, years
+param angle_spread = 8;       # spread of each frond's angle
+param frond_radius = 0.002;   # the rachis' radius at its foot
+param pieces = 12;            # pieces of the rachis
+param stipe = 0.25;           # share of the frond's length without pinnae
+# Pinnae.
+param pinna_length = 0.2;     # the longest pinna, as a share of the frond's length
+param pinna_peak = 0.3;       # where it sits along the blade, 0 to 1
+param pinna_base = 0.5;       # the lowest pinna, as a share of the longest
+param pinna_tip = 0.1;        # the topmost pinna, as a share of the longest
+param pinna_angle = 70;       # angle of a pinna to the rachis
+param pinna_lift = 10;        # degrees the pinnae rise out of the frond's plane
+param pinna_area = 0.23;      # leaf area of a pinna 1 m long, m²
+# Unrolling and sagging.
+param season = 0.5;           # share of the year at the keyframe
+param emerge_spread = 0.3;    # fronds emerge over this share of the year
+param unroll = 0.25;          # share of a year a frond takes to unroll
+param curl = 40;              # degrees each coiled piece turns back
+param droop = 0.02;           # sag per year of a frond's age
+param droop_years = 2;        # sag stops growing after this many years
+# The rhizome.
+param crowns = 0;             # most new crowns a fern sends out
+param crown_age = 3;          # the first year of new crowns
+param crown_rate = 0.3;       # chance a year of a new crown
+param rhizome = 0.3;          # how far away a new crown appears
+
+module Y(v, n);               # a crown: vigour, crowns sent out so far
+module Fc(i, m, c);           # fronds i to i + m - 1 of this year's cohort, on a crown c years old
+module Fr(s, a, e);           # a frond s long at a degrees, emerging at phase e of its year
+module Pc(k, m, s, e);        # pieces k to k + m - 1 of a frond's rachis
+module Pp(k, s, e);           # a drawn piece of a rachis
+module Pn(k, s, e, h);        # a pair of pinnae h of a piece along piece k
+module Pq(z);                 # a pair of pinnae z long
+module Cn(n);                 # a new crown on its rhizome, the n-th
+
+organ pinna leaf area pinna_area;
+
+axiom /(uniform(0, 360)) Y(exp(gauss() * vigour_spread), 0);
+
+# The crown: this year's fronds, and perhaps a new crown on the rhizome.
+rule Y(v, n) : crowns > n && age >= crown_age && rand() < crown_rate ->
+    [ Cn(n + 1) ] Fc(0, max(1, round(fronds_per_year * v)), age * v) Y(v, n + 1);
+rule Y(v, n) -> Fc(0, max(1, round(fronds_per_year * v)), age * v) Y(v, n);
+
+decompose Fc(i, m, c) : m > 1 ->
+    Fc(i, floor(m / 2), c) Fc(i + floor(m / 2), m - floor(m / 2), c);
+decompose Fc(i, m, c) : m == 1 ->
+    /(137.5 + gauss() * 4)
+    [ Fr(frond_length * (frond_seed + (1 - frond_seed) * (1 - exp(-c / size_years)))
+         * uniform(1 - frond_spread, 1 + frond_spread),
+         gauss() * angle_spread, uniform(0, emerge_spread)) ];
+decompose Fc(i, m, c) -> ;
+
+# A frond dies after frond_life years; its rachis pieces with it.
+rule Pc(k, m, s, e) : age >= frond_life -> ;
+
+# A frond: it opens from the vertical with age and sags as it ages, then its
+# rachis, piece by piece.
+decompose Fr(s, a, e) ->
+    !(frond_radius) Pc(0, max(1, round(pieces)), s, e);
+decompose Pc(k, m, s, e) : m > 1 ->
+    Pc(k, floor(m / 2), s, e) Pc(k + floor(m / 2), m - floor(m / 2), s, e);
+
+# One piece: the first opens and sags the frond; a piece beyond the unrolled
+# share coils back, and its pinnae are folded small.
+interpret Pc(k, m, s, e) : k == 0 ->
+    &(lerp(young_angle, old_angle, 1 - exp(-max(0, age + season - e) / open_years)))
+    T(0, -1, 0, droop * min(max(0, age + season - e), droop_years))
+    Pp(k, s, e);
+interpret Pc(k, m, s, e) -> Pp(k, s, e);
+
+interpret Pp(k, s, e) : (k + 0.5) / pieces < stipe ->
+    ^(curl * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1)))
+    F(s / pieces);
+interpret Pp(k, s, e) ->
+    ^(curl * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1)))
+    F(s / pieces * 0.5) Pn(k, s, e, 0) F(s / pieces * 0.5) Pn(k, s, e, 0.5);
+
+# A pair of pinnae half a piece along: sized along the blade (b from 0 at
+# the stipe's top to 1 at the tip), folded small while coiled.
+interpret Pn(k, s, e, h) ->
+    Pq(s * pinna_length
+       * (((k + h) / pieces - stipe) / (1 - stipe) < pinna_peak
+          ? lerp(pinna_base, 1, ((k + h) / pieces - stipe) / (1 - stipe) / pinna_peak)
+          : lerp(1, pinna_tip, (((k + h) / pieces - stipe) / (1 - stipe) - pinna_peak) / (1 - pinna_peak)))
+       * lerp(0.15, 1, 1 - smoothstep(0, 0.15, (k + h) / pieces - clamp((age + season - e) / unroll, 0, 1))));
+interpret Pq(z) -> [ +(pinna_angle) ^(pinna_lift) pinna(z) ] [ -(pinna_angle) ^(pinna_lift) pinna(z) ];
+
+# A new crown: out along the rhizome, then up.
+decompose Cn(n) ->
+    /(uniform(0, 360)) &(90) f(rhizome * uniform(0.6, 1.4)) ^(90)
+    Y(exp(gauss() * vigour_spread), n);

@@ -1,0 +1,185 @@
+{
+  "schema": 1,
+  "id": "echinocereus-engelmannii",
+  "taxon": {
+    "scientific_name": "Echinocereus engelmannii",
+    "common_name": "Engelmann's hedgehog cactus",
+    "usda_symbol": "ECEN"
+  },
+  "growth_form": "stem_succulent",
+  "generator": {
+    "program": "succulent",
+    "params": {
+      "vigour_spread": 0.12,
+      "lean": 5,
+      "stems": 20,
+      "stem_rate": 0.06,
+      "clump_radius": 0.22,
+      "stem_lean": 25,
+      "seedling": 0.01,
+      "height_max": 0.35,
+      "height_rate": 0.06,
+      "height_shape": 1.5,
+      "radius_min": 0.008,
+      "radius_max": 0.035,
+      "radius_height": 0.08,
+      "fill": 0.95,
+      "fill_years": 8,
+      "pinch": 0.02,
+      "pinch_depth": 0.06,
+      "wiggle": 1.2,
+      "bend": 1.5,
+      "dome": 0.9,
+      "bloom_age": 6,
+      "flowers": 3,
+      "ring_angle": 85,
+      "flower_angle": 55,
+      "flower_size": 0.07,
+      "bud_share": 0.2,
+      "fruit_share": 0.2,
+      "bud_size": 0.02,
+      "fruit_size": 0.03,
+      "flower_area": 0.419,
+      "bud_area": 0.636,
+      "fruit_area": 1.016
+    }
+  },
+  "growth": {
+    "years": 30,
+    "step": 1,
+    "keyframes": [3, 8, 15, 30]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3, 4]
+  },
+  "appearance": {
+    "bark": [0.2, 0.17, 0.13],
+    "foliage": [0.1, 0.17, 0.06],
+    "foliage_shade": [0.045, 0.077, 0.027],
+    "variation": 0.1,
+    "organs": {
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petals": 12,
+          "petal_width": 0.7,
+          "point": 0.0,
+          "notch": 0.0,
+          "centre": 0.2
+        },
+        "colour": [0.6, 0.06, 0.4],
+        "accent": [0.15, 0.3, 0.08]
+      },
+      "bud": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.5
+        },
+        "colour": [0.45, 0.1, 0.25]
+      },
+      "fruit": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.8
+        },
+        "colour": [0.6, 0.1, 0.1]
+      }
+    },
+    "bodies": {
+      "stem": {
+        "colour": [0.1, 0.17, 0.07],
+        "valley": [0.05, 0.085, 0.035],
+        "dome": 0.9,
+        "ribs": {
+          "count": [10, 13],
+          "spacing": 0.02,
+          "depth": 0.18,
+          "sharpness": 0.5
+        },
+        "areoles": {
+          "spacing": 0.012,
+          "felt_radius": 0.002,
+          "felt": [0.6, 0.55, 0.45]
+        },
+        "spines": [
+          {
+            "count": [8, 12],
+            "angle": 20,
+            "length": 0.012,
+            "width": 0.0005,
+            "colour": [0.75, 0.7, 0.55],
+            "angle_spread": 10,
+            "length_spread": 0.3
+          },
+          {
+            "count": [3, 5],
+            "angle": 45,
+            "length": 0.035,
+            "width": 0.0009,
+            "colour": [0.55, 0.45, 0.3],
+            "angle_spread": 15,
+            "arc": 300,
+            "length_spread": 0.35,
+            "tip": [0.3, 0.2, 0.15]
+          },
+          {
+            "count": [1, 1],
+            "angle": 30,
+            "length": 0.05,
+            "width": 0.0013,
+            "colour": [0.65, 0.6, 0.5],
+            "angle_spread": 10,
+            "aim": 180,
+            "arc": 0,
+            "length_spread": 0.25,
+            "flat": 0.5
+          }
+        ],
+        "greying": {
+          "colour": [0.5, 0.48, 0.45],
+          "years": 10
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 0.17,
+      "tolerance": 0.5
+    },
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 0.28,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: an open clump of 5 to 60 cylindrical stems 10 to 45 cm tall and 4 to 9 cm thick, from the base, the outer ones leaning out and turning up. Magenta flowers burst from the sides near the stem tips in spring, followed by red, spiny fruit. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough stem heights from general knowledge: 15 to 20 cm by 15 years, about 30 cm by 30. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: 10 to 13 ribs hidden under dense spines, pale radials, two to six coloured centrals and a flattened lower central pointing down, all greying with age."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (milestone F1). Calibration against measurements and photographs comes later."
+  }
+}

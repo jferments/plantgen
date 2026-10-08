@@ -1,0 +1,129 @@
+{
+  "schema": 1,
+  "id": "thuja-plicata",
+  "taxon": {
+    "scientific_name": "Thuja plicata",
+    "common_name": "western redcedar",
+    "usda_symbol": "THPL"
+  },
+  "growth_form": "scale_leaved_tree",
+  "generator": {
+    "program": "conifer",
+    "params": {
+      "cone_age": 15,
+      "cone_chance": 0.15,
+      "cone_length": 0.012,
+      "cone_pitch": -40,
+      "cone_years": 1,
+      "cone_area": 0.72,
+      "height_max": 60,
+      "height_rate": 0.016,
+      "height_shape": 1.4,
+      "whorl": 5,
+      "branch_angle": 72,
+      "branch_sag": 1.5,
+      "max_sag": 40,
+      "upturn": 0.025,
+      "nod": 45,
+      "nod_years": 2,
+      "needle_years": 5,
+      "spray_droop": 65,
+      "spray_area": 0.25,
+      "pipe_organ": 0.0095
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [5, 15, 30, 60]
+  },
+  "variants": {
+    "environments": ["open", "interior"],
+    "seeds": [1, 2]
+  },
+  "appearance": {
+    "bark": [0.16, 0.075, 0.045],
+    "bark_pattern": {
+      "kind": "fibrous",
+      "scale": 0.03,
+      "elongation": 15.0,
+      "fissure": 0.35,
+      "depth": 0.3,
+      "contrast": 0.45,
+      "variation": 0.25,
+      "smooth_below": 0.02,
+      "roughness": 0.4
+    },
+    "foliage": [0.06, 0.14, 0.03],
+    "foliage_shade": [0.02, 0.05, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "cone": {
+        "shape": {"template": "fruit", "aspect": 0.55, "cone": 1},
+        "colour": [0.5, 0.35, 0.2]
+      },
+      "spray": {
+        "shape": {
+          "template": "scales"
+        }
+      }
+    },
+    "ridges": {
+      "spacing": 0.06,
+      "depth": 0.035,
+      "twist": 4,
+      "contrast": 0.35
+    },
+    "flare": {
+      "height": 1.2,
+      "amount": 0.9,
+      "buttresses": 6,
+      "ridge": 0.7
+    }
+  },
+  "allometry": [
+    {
+      "age": 30,
+      "environment": "interior",
+      "height": 15,
+      "dbh": 0.25,
+      "tolerance": 0.4
+    },
+    {
+      "age": 60,
+      "environment": "interior",
+      "height": 27,
+      "dbh": 0.45,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set for a western redcedar: a leader that nods over and straightens, branches that sweep down and turn up at the tips, flat scale-leaved sprays hanging below them, foliage kept about five years. Spray area matched to the drawn sprays. Not fitted to data. Cones (plant forms F3): about 1 cm, upright, in clusters; set from general knowledge of the species, not measured."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights and diameters for redcedar in a mixed western Washington stand, from general forestry knowledge: slower in height than Douglas-fir. Replace with a published site-index table before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: yellow-green foliage, red-brown fibrous bark in twisting strips, a fluted, buttressed base. Bark pattern (plant roadmap P4, `bark_pattern`): stringy grey to reddish-brown bark in long fibrous strips; set from general knowledge of the species, not measured."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Pałubicki et al. 2009, Self-organizing tree models for image synthesis (method only: light, vigour and shedding)",
+        "licence": "method citation; no data used"
+      },
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy for milestone P1. Calibration against yield tables and photographs is milestone P4."
+  }
+}

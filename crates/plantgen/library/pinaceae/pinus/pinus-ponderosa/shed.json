@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "id": "pinus-ponderosa",
+  "foliage": {
+    "kind": "needles",
+    "length_m": [0.12, 0.25],
+    "width_m": 0.0016,
+    "bundle": 3,
+    "fall_colours": [[0.6, 0.31, 0.12], [0.56, 0.29, 0.11], [0.64, 0.37, 0.15]],
+    "dry_colours": [[0.44, 0.27, 0.13], [0.4, 0.25, 0.13], [0.48, 0.31, 0.16]],
+    "curl": 0.0,
+    "pale_beneath": 0.0
+  },
+  "decay": 0.2,
+  "pieces": [
+    {
+      "kind": "cone",
+      "length_m": [0.07, 0.14],
+      "aspect": 0.7,
+      "colour": [0.4, 0.27, 0.15],
+      "per_m2": 0.5
+    },
+    {
+      "kind": "bark",
+      "length_m": [0.02, 0.06],
+      "aspect": 0.6,
+      "colour": [0.55, 0.32, 0.18],
+      "per_m2": 3.0
+    },
+    {
+      "kind": "twig",
+      "length_m": [0.08, 0.3],
+      "aspect": 0.04,
+      "colour": [0.2, 0.15, 0.1],
+      "per_m2": 2.0
+    }
+  ],
+  "look": {
+    "tile_m": 3.0,
+    "mean": [0.176, 0.11, 0.056],
+    "relief_m": 0.11
+  },
+  "evidence": {
+    "decay": {
+      "evidence": "Authored",
+      "note": "Authored from botanical descriptions of ponderosa pine: needles in bundles of three, 12 to 25 cm long, orange-brown when dead and lying in a deep, loose mat that rots slowly; cones 7 to 14 cm; jigsaw-puzzle flakes of orange bark shed from the trunk. Colours chosen by eye; numbers plausible, not measured."
+    },
+    "foliage": {
+      "evidence": "Authored",
+      "note": "Authored from botanical descriptions of ponderosa pine: needles in bundles of three, 12 to 25 cm long, orange-brown when dead and lying in a deep, loose mat that rots slowly; cones 7 to 14 cm; jigsaw-puzzle flakes of orange bark shed from the trunk. Colours chosen by eye; numbers plausible, not measured."
+    },
+    "look": {
+      "evidence": "Authored",
+      "note": "Authored: the drawn look's mean hue at the brightness chosen by eye for this species' litter, the relief the drawing has, and a tile its pieces repeat on unseen. PlantGen's litter tests check the hue and relief against the drawing."
+    },
+    "pieces": {
+      "evidence": "Authored",
+      "note": "Authored from botanical descriptions of ponderosa pine: needles in bundles of three, 12 to 25 cm long, orange-brown when dead and lying in a deep, loose mat that rots slowly; cones 7 to 14 cm; jigsaw-puzzle flakes of orange bark shed from the trunk. Colours chosen by eye; numbers plausible, not measured."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: litter values hand-set from botanical descriptions and photographs of the species",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"]
+  }
+}

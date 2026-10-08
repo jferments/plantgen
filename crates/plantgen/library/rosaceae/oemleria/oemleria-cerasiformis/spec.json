@@ -1,0 +1,153 @@
+{
+  "schema": 1,
+  "id": "oemleria-cerasiformis",
+  "taxon": {
+    "scientific_name": "Oemleria cerasiformis",
+    "common_name": "Indian plum",
+    "usda_symbol": "OECE"
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 3.5,
+      "crown_radius": 1.5,
+      "crown_base": 0,
+      "crown_rate": 0.22,
+      "space_density": 90.9,
+      "internode": 0.15,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 35,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "bud_years": 6,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 10,
+      "fork_height": 0.03,
+      "fork_stems": 7,
+      "fork_angle": 35,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 1.275,
+      "space_kill": 0.315,
+      "alternate": 1,
+      "leaf_size": 0.12,
+      "spur_leaf": 0.11,
+      "spur_pairs": 2,
+      "leaf_angle": 40,
+      "blooms": 1,
+      "bloom_age": 3,
+      "bloom_size": 0.035,
+      "bloom_angle": 120,
+      "leaf_area": 0.177,
+      "bloom_area": 0.355
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [3, 6, 12]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.35, 0.22, 0.15],
+    "bark_pattern": {
+      "kind": "smooth",
+      "scale": 0.03,
+      "variation": 0.1,
+      "lenticels": 300,
+      "smooth_below": 0.0
+    },
+    "foliage": [0.09, 0.18, 0.05],
+    "foliage_shade": [0.028, 0.055, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "width": 0.32,
+          "widest": 0.6,
+          "tip": 0.4,
+          "base": 0.2,
+          "teeth": 0,
+          "petiole": 0.06
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "count": 4,
+          "size": 0.3,
+          "spread": 45,
+          "aspect": 0.7,
+          "unripe": 0.4
+        },
+        "colour": [0.08, 0.07, 0.14],
+        "accent": [0.85, 0.45, 0.15],
+        "season": {
+          "bud": 40,
+          "flower": 55,
+          "fruit": 95,
+          "ripe": 150,
+          "ripening": 40,
+          "fall": 210,
+          "flower_look": {
+            "shape": {
+              "template": "spike",
+              "florets": 8,
+              "aspect": 0.35,
+              "plume": 0.0,
+              "stalk": 0.2
+            },
+            "colour": [0.93, 0.93, 0.85],
+            "accent": [0.6, 0.7, 0.4],
+            "size": 2.3
+          }
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 3.2,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a tall, upright shrub of slender stems with narrow, light green leaves and hanging racemes of white bell flowers; the first shrub to leaf out in late winter. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 3.2 m tall at 12 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: light green leaves; white hanging flowers; purple-brown bark. Fruit (plant roadmap P4), as in mid-July: short hanging racemes of plum-like drupes, orange ripening blue-black. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: hanging white racemes in February and March; fruit orange, then blue-black from June, gone by August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth purplish-brown bark with lenticels; set from general knowledge of the species, not measured."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

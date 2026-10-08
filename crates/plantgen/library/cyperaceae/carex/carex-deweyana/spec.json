@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "id": "carex-deweyana",
+  "taxon": {
+    "scientific_name": "Carex deweyana",
+    "common_name": "Dewey's sedge",
+    "usda_symbol": "CADE9"
+  },
+  "growth_form": "graminoid",
+  "generator": {
+    "program": "grass",
+    "params": {
+      "tillers": 30,
+      "tiller_rate": 0.5,
+      "tussock_radius": 0.07,
+      "tiller_lean": 16,
+      "leaves": 3,
+      "leaf_length": 0.35,
+      "leaf_spread": 0.3,
+      "leaf_angle": 20,
+      "arch": 14,
+      "pieces": 6,
+      "flowering": 0.4,
+      "culm_height": 0.6,
+      "culm_radius": 0.0008,
+      "culm_leaves": 0,
+      "culm_lean": 15,
+      "panicle_length": 0.08,
+      "panicle_nod": 40,
+      "blade_area": 0.046,
+      "tip_area": 0.025,
+      "thatch_area": 0.046,
+      "panicle_area": 0.058
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [1, 2, 4]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.3, 0.3, 0.18],
+    "foliage": [0.1, 0.19, 0.05],
+    "foliage_shade": [0.03, 0.06, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "blade": {
+        "shape": { "template": "blade", "taper": 0, "aspect": 0.05 }
+      },
+      "blade_tip": {
+        "shape": { "template": "blade", "taper": 1, "aspect": 0.05 }
+      },
+      "thatch": {
+        "shape": { "template": "blade", "taper": 0, "aspect": 0.05 },
+        "colour": [0.38, 0.31, 0.18],
+        "shade": [0.12, 0.1, 0.05]
+      },
+      "panicle": {
+        "shape": { "template": "spike", "florets": 6, "aspect": 0.2, "plume": 0.0, "stalk": 0.1 },
+        "colour": [0.32, 0.36, 0.2]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.55,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a soft, loosely tufted woodland sedge with thin, light green leaves and arching stems tipped with a few small, pale spikes. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 0.55 m tall at 4 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: light green leaves; pale green spikes."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "schema": 2,
+  "species": "corylus-cornuta",
+  "layers": {
+    "shrub": 0.8,
+    "subcanopy": 0.3
+  },
+  "moisture": [0.3, 0.45, 0.8, 0.9],
+  "heat_load": [0.2, 0.5, 1.5, 1.8],
+  "elevation_m": [-50, -10, 900, 1400],
+  "max_slope_deg": 40,
+  "shade_tolerance": 0.7,
+  "coldest_c": [-35, -25, 8, 13],
+  "hard_freeze_c": [-60, -50, 10, 14],
+  "warmest_c": [10, 12.5, 24, 28],
+  "degree_days_0": [700, 1100, 5500, 7000],
+  "degree_days_5": [200, 450, 3500, 4500],
+  "moisture_index": [0.3, 0.45, 1, 1.01],
+  "summer_rain": [0, 0, 0.7, 0.9],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "note": "A tall shrub of the understory of mixed and deciduous woods and forest edges."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "note": "Moist, well-drained ground."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "note": "Grows on any aspect."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "note": "Sea level to about 900 m in western Washington; the upper limits are loose."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "note": "Grows on slopes and flats."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "note": "Shade tolerant: grows under mixed and conifer canopy."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "note": "Very cold winters borne: coldest-month means from about −25 °C (gone by −35 °C), as across the boreal forest."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "note": "Among the hardiest: lows to about −50 °C borne."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "note": "Across its range, warmest-month means from about 12.5 to 24 °C; gone below 10 °C, where summers are too short, and above 28 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "note": "About 1,100 or more degree-days above 0 °C, none below 700."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "note": "A short growing season suffices: about 450 or more degree-days above 5 °C, none below 200."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "note": "A moisture index from about 0.45, gone by 0.3."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "note": "No limit in its range: summer-dry coasts to continental summer rain."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "Fire Effects Information System (FEIS), USDA Forest Service, Rocky Mountain Research Station: species reviews",
+        "url": "https://www.fs.usda.gov/database/feis/",
+        "licence": "public domain (work of the US federal government)"
+      },
+      {
+        "title": "USDA NRCS PLANTS Database: distribution by state and province",
+        "url": "https://plants.usda.gov",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Authored from general knowledge of the species in the south Puget Sound lowlands; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS). Climate ranges (niche schema 2, 2026-10-06): Beaked hazelnut grows across southern Canada and the northern United States, south to California in the west (FEIS, the PLANTS Database). Each climate range brackets the climate of that range at the 2.8° ERA5 product's scale, an approximate envelope read from these descriptions, not fitted to occurrence records."
+  }
+}

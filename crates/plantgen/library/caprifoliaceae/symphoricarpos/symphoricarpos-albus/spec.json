@@ -1,0 +1,150 @@
+{
+  "schema": 1,
+  "id": "symphoricarpos-albus",
+  "taxon": {
+    "scientific_name": "Symphoricarpos albus",
+    "common_name": "common snowberry",
+    "usda_symbol": "SYAL"
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 1.3,
+      "crown_radius": 0.8,
+      "crown_base": 0,
+      "crown_rate": 0.22,
+      "space_density": 600,
+      "internode": 0.06,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 45,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "bud_years": 6,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 10,
+      "fork_height": 0.03,
+      "fork_stems": 9,
+      "fork_angle": 35,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 0.51,
+      "space_kill": 0.126,
+      "leaf_size": 0.09,
+      "spur_leaf": 0.08,
+      "spur_pairs": 1,
+      "leaf_angle": 50,
+      "blooms": 2,
+      "bloom_age": 3,
+      "bloom_size": 0.03,
+      "bloom_angle": 100,
+      "leaf_area": 0.403,
+      "bloom_area": 0.97
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [3, 6, 12]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.38, 0.3, 0.22],
+    "foliage": [0.07, 0.13, 0.05],
+    "foliage_shade": [0.022, 0.04, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 7,
+          "angle": 55,
+          "stalk": 0.1,
+          "width": 0.7,
+          "widest": 0.45,
+          "tip": 0.15,
+          "base": 0.6,
+          "teeth": 0,
+          "petiole": 0.05
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "count": 5,
+          "cluster": "umbel",
+          "size": 0.4,
+          "spread": 50,
+          "aspect": 1.0,
+          "unripe": 0.5
+        },
+        "colour": [0.92, 0.92, 0.9],
+        "accent": [0.6, 0.7, 0.5],
+        "season": {
+          "bud": 120,
+          "flower": 140,
+          "fruit": 185,
+          "ripe": 225,
+          "ripening": 30,
+          "fall": 440,
+          "flower_look": {
+            "shape": {
+              "template": "flower",
+              "petals": 5,
+              "petal_width": 1.0,
+              "point": 0.0,
+              "notch": 0.0,
+              "centre": 0.25
+            },
+            "colour": [0.92, 0.76, 0.78],
+            "accent": [0.85, 0.6, 0.65],
+            "size": 0.4
+          }
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 1.2,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a low, twiggy shrub of thin stems with small, opposite, oval leaves and clusters of round white berries that last into winter. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 1.2 m tall at 12 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: dull blue-green leaves; white berries. Fruit (plant roadmap P4), as in mid-July: small clusters of berries at the twig tips, pale green turning white. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: small pink bells in May to July; berries green, white from August, hanging through the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

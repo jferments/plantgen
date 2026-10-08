@@ -1,0 +1,368 @@
+# Succulent: the fleshy stems of cacti, after the Sonoran Desert's
+# saguaros, organ pipes, barrels, hedgehogs, pincushions, chollas and
+# prickly pears. A plant is a clump of one or more stems from the ground,
+# and each stem is either a column that grows at its tip or a chain of
+# joints. The stems are bodies: the species' look (`appearance.bodies.stem`)
+# folds them into ribs or raises tubercles, and sets their areoles and
+# spines.
+#
+# A column adds a piece at its tip each year, as long as its height curve
+# grows that year and as wide as its radius curve says at that height:
+#
+#   h(a) = seedling (1 - exp(-a)) + richards(a v, height_max, height_rate, height_shape)
+#   r(h) = radius_min + (radius_max - radius_min) (1 - exp(-h / radius_height))
+#
+# where a is the column's age and v the plant's vigour. Old pieces fill
+# out toward fill * radius_max over fill_years, so a young saguaro is a
+# club and an old one a pillar; a piece laid down in a hard year
+# (pinch) stays narrower. A column wanders a little as it grows (wiggle),
+# and turns toward a tilt from upright (sun_tilt: a compass barrel leaning
+# south) at bend radians a metre.
+#
+# Once old and tall enough, a column sprouts arms from its middle: a
+# piece in the band between arm_low and arm_high of the height sprouts one
+# with a chance in proportion to its length, so the column sprouts about
+# arm_rate arms a year in all, times the plant's own propensity. An arm
+# leaves nearly level, bends up at an elbow and grows like a small column
+# of its own, narrow where it joins. A drooping arm hangs for
+# droop_length, or less from a low arm, and then curls back up.
+#
+# A jointed stem is a chain of joints, each grown to full size in its
+# first year: club-shaped cholla joints from the tips of older ones, or
+# flat pads from the top margins of older ones (pad). From its second year
+# a lateral joint sprouts with the chance bud_rate a year, once:
+# uniform(daughters_low, daughters_high) daughters, fewer the deeper it
+# lies in its branch and none from depth `generations` on. Old joints
+# swell, laterals less at each level (swell_side), so the trunk and the
+# oldest branches thicken most.
+# A tree cholla's first trunk_joints joints each add one more that
+# continues the trunk's axis, so the trunk is one stem whose old joints
+# swell; trunk joints in the top `crown` of the plant sprout new laterals
+# now and then (resprout), and laterals older than joint_life fall away
+# with everything they bear, so the branches crowd the top.
+#
+# Flowers, buds and fruit (cards until milestone F3) sit in a ring on the
+# shoulder of each column's dome once the plant is bloom_age old, or along
+# the top of joints in their second year. A chain-fruit cholla hangs chains of
+# fruit from its joints, one more fruit each year.
+#
+# The plant frame's +Z is south. One step is one year. Angles are degrees;
+# lengths are metres.
+
+lsystem succulent 1;
+
+# The plant.
+param vigour_spread = 0.12;   # an individual grows exp(gauss() * vigour_spread) times as fast
+param lean = 3;               # most degrees a lone stem leans at its foot, in a random direction
+param sink = 0;               # how deep the stems' feet sit below the ground
+# A clump of stems from the ground.
+param stems = 1;              # stems in an old clump
+param stem_rate = 0.05;       # stems by age t: 1 + (stems - 1) * (1 - exp(-stem_rate * t))
+param clump_radius = 0;       # radius the feet of an old clump's stems spread over
+param stem_lean = 0;          # how far the outermost stems lean out at their feet
+# A column.
+param seedling = 0.006;       # height a seedling reaches in its first years
+param height_max = 10;
+param height_rate = 0.012;
+param height_shape = 3;
+param radius_min = 0.004;     # radius of a seedling's tip
+param radius_max = 0.25;      # radius of an adult's tip
+param radius_height = 0.8;    # the tip widens over about this much height
+param fill = 0.9;             # old pieces fill out to fill * radius_max...
+param fill_years = 25;        # ...over about this many years
+param pinch = 0;              # chance a year's piece is pinched by a hard year
+param pinch_depth = 0.12;     # how much narrower a pinched piece is
+param wiggle = 0.5;           # spread of the random turn of a piece 10 cm long
+param sun_tilt = 0;           # tilt toward the south a column turns to
+param bend = 0.05;            # how fast it turns there, radians a metre
+# Arms.
+param arm_rate = 0;           # arms a year a mature column sprouts, on average
+param arm_spread = 0.6;       # individuals sprout exp(gauss() * arm_spread) times as many
+param arm_age = 60;           # the first year a column may sprout arms
+param arm_height = 2.5;       # and the least height it must have
+param arm_low = 0.3;          # arms sprout between arm_low and arm_high of the height
+param arm_high = 0.75;
+param arm_angle = 80;         # angle an arm leaves the column at, from its axis
+param arm_out = 0.6;          # share of the column's radius out from its axis an arm starts
+param arm_length = 5;         # arm length l(a) = richards(a v, arm_length, arm_growth, arm_shape)
+param arm_growth = 0.02;
+param arm_shape = 1.2;
+param arm_radius = 0.8;       # an arm's girth as a share of radius_max
+param arm_neck = 0.65;        # its girth where it leaves the column, as a share of its own
+param arm_neck_length = 0.12; # how far out the neck widens
+param elbow = 4;              # how fast an arm turns up, radians a metre
+param elbow_spread = 0.35;    # arms turn exp(gauss() * elbow_spread) times as fast
+param droop = 0;              # share of arms that hang down and curl back up
+param droop_length = 1;       # how far a drooping arm hangs before it curls up
+# Joints.
+param joints = 0;             # 1: stems are chains of joints
+param joint_length = 0.12;    # a joint's length
+param joint_radius = 0.02;    # its radius, or a pad's half width
+param joint_spread = 0.25;    # joints are joint_length * (1 ± joint_spread) long
+param pad = 0;                # 1: a joint is a flat, obovate pad; 0: a club
+param bud_rate = 1;           # chance a year that a lateral joint not yet sprouted sprouts
+param daughters_low = 0.6;    # a joint sprouts uniform(daughters_low, daughters_high)
+param daughters_high = 2.6;   # daughters, the share (1 - (d - 1) / generations) of them
+param generations = 8;        # at depth d in a branch
+param branch_angle = 35;      # angle a club joint's daughter leaves its axis at
+param margin = 55;            # spread of a pad's daughters round its top, from its tip
+param twist = 35;             # spread of a daughter's roll out of its parent's plane
+param trunk_joints = 0;       # joints of a trunk, each continuing the one before
+param leader_lean = 6;        # most degrees a trunk joint tilts from the one before
+param resprout = 0;           # chance a year a trunk joint in the crown sprouts a lateral
+param crown = 0.5;            # share of the plant's height, from the top, that resprouts
+param sag = 0.3;              # how fast joints bend down, radians a metre
+param joint_life = 0;         # years a lateral joint lives before it falls; 0 for ever
+param swell = 0;              # an old trunk joint grows (1 + swell) times as thick...
+param swell_years = 15;       # ...over about this many years
+param swell_side = 0.5;       # a lateral at depth d swells swell_side^d as much
+param dome = 1;               # the look's dome, in radii of the tip: where rings and pads' daughters sit
+# Flowers and fruit.
+param bloom_age = 30;         # the plant's first year in flower
+param flowers = 0;            # flowers, buds and fruit in a ring round each column's tip
+param ring_angle = 40;        # where the ring sits on the dome, degrees from the tip
+param flower_angle = 35;      # angle a flower stands out from the column's axis
+param flower_size = 0.08;
+param bud_share = 0.25;       # share of the ring in bud
+param fruit_share = 0.25;     # share in fruit
+param bud_size = 0.03;
+param fruit_size = 0.06;
+param joint_flowers = 0;      # flowers along the top of each of the youngest joints
+param chains = 0;             # share of joints that hang a chain of fruit
+param chain_max = 7;          # most fruit in a chain
+param flower_area = 0.64;
+param bud_area = 0.89;
+param fruit_area = 0.89;
+
+module Y(k, v, b);                      # the crown: k stems so far, vigour, arm propensity
+module Ss(k, m, v, b);                  # stems k to k + m - 1 sprouting this year
+# The tip of a column (kind 0) or an arm (kind 1): vigour, arm
+# propensity, how far a drooping arm hangs (0 for none), how far it starts
+# inside its column, and how fast its elbow turns.
+module A(v, b, kind, dr, inside, e);
+# A year's piece of a column: its length and radius when laid down, the
+# radius it fills out to, distance along its column at its end, whether
+# it has an arm, and its column's kind, droop and elbow.
+module P(len, r0, rf, v, b, kind, armed, at, dr, e) queries position;
+module Ri(k, m, r, d);                  # flowers k to k + m - 1 of a ring
+module Fo;                              # one place in a ring: a bud, a flower or a fruit
+# A joint: its length and radius, its place (a trunk joint's number up
+# the trunk, a lateral's depth in its branch), vigour, whether it has
+# sprouted its daughters, and whether it is a lateral.
+module J(len, r, g, v, done, side) queries position;
+module Js(l, r);                        # a joint's segments
+module Jf(l, r);                        # a young joint's flowers
+# Daughters k to k + m - 1 of n at depth d; s is 1 for laterals out of
+# the side of a trunk joint pa years old, `back` below its tip, 0 for
+# daughters at a tip.
+module Dj(k, m, n, d, v, r, s, pa, back);
+module Jo(r, a, pa);                    # a lateral's way out through its trunk's side
+module Dp(th, d, v, r);                 # a pad's daughter, th degrees round its top
+module Fl(k, m, n, l, r);               # flowers k to k + m - 1 of n on a joint
+module Cb(n);                           # where a chain of fruit starts, if n is 1
+module Ch(n);                           # the growing end of a chain of n fruit
+module Cf;                              # one fruit of a chain
+
+body stem;
+
+organ flower flower area flower_area;
+organ bud fruit area bud_area;
+organ fruit fruit area fruit_area;
+
+axiom Y(0, exp(gauss() * vigour_spread), exp(gauss() * arm_spread));
+
+# New stems sprout from the crown as the clump fills.
+rule Y(k, v, b) ->
+    Ss(k, round(1 + (stems - 1) * (1 - exp(-stem_rate * t))) - k, v, b)
+    Y(max(k, round(1 + (stems - 1) * (1 - exp(-stem_rate * t)))), v, b);
+decompose Ss(k, m, v, b) : m > 1 ->
+    Ss(k, floor(m / 2), v, b) Ss(k + floor(m / 2), m - floor(m / 2), v, b);
+# One stem: out along the sunflower spiral, its foot below the ground,
+# leaning out the more the farther out it stands.
+decompose Ss(k, m, v, b) : m == 1 && joints > 0 ->
+    [ /(k == 0 ? uniform(0, 360) : k * 137.508 + uniform(-25, 25)) &(90)
+      f(clump_radius * sqrt((k + uniform(0.2, 0.8)) / stems)) ^(90) f(-sink)
+      &(k == 0 ? lean * rand() : stem_lean * sqrt((k + 0.5) / stems) * uniform(0.7, 1.3))
+      J(joint_length * uniform(1 - joint_spread, 1 + joint_spread),
+        joint_radius * uniform(0.9, 1.1), 0, v * uniform(0.85, 1.15), 0, 0) ];
+decompose Ss(k, m, v, b) : m == 1 ->
+    [ /(k == 0 ? uniform(0, 360) : k * 137.508 + uniform(-25, 25)) &(90)
+      f(clump_radius * sqrt((k + uniform(0.2, 0.8)) / stems)) ^(90) f(-sink)
+      &(k == 0 ? lean * rand() : stem_lean * sqrt((k + 0.5) / stems) * uniform(0.7, 1.3))
+      A(v * uniform(0.85, 1.15), b, 0, 0, 0, 1) ];
+decompose Ss(k, m, v, b) -> ;
+
+# A column's tip lays down a year's piece. The piece's radius is the tip's
+# at the piece's foot; a pinched piece (rand(1), the same draw in both)
+# is narrower and fills out less.
+rule A(v, b, kind, dr, inside, e) : kind == 0 ->
+    P(seedling * (exp(-age) - exp(-(age + dt)))
+        + richards((age + dt) * v, height_max, height_rate, height_shape)
+        - richards(age * v, height_max, height_rate, height_shape),
+      (radius_min + (radius_max - radius_min)
+        * (1 - exp(-(seedling * (1 - exp(-age)) + richards(age * v, height_max, height_rate, height_shape))
+                   / radius_height)))
+        * (rand(1) < pinch ? 1 - pinch_depth : 1),
+      max(radius_min + (radius_max - radius_min)
+            * (1 - exp(-(seedling * (1 - exp(-age)) + richards(age * v, height_max, height_rate, height_shape))
+                       / radius_height)),
+          fill * radius_max)
+        * (rand(1) < pinch ? 1 - pinch_depth : 1),
+      v, b, 0, 0,
+      seedling * (1 - exp(-(age + dt))) + richards((age + dt) * v, height_max, height_rate, height_shape),
+      0, e)
+    A(v, b, kind, dr, inside, e);
+# An arm: narrow where it leaves the column's skin, `inside` from its foot.
+rule A(v, b, kind, dr, inside, e) ->
+    P(richards((age + dt) * v, arm_length, arm_growth, arm_shape)
+        - richards(age * v, arm_length, arm_growth, arm_shape),
+      arm_radius * radius_max
+        * (1 - (1 - arm_neck)
+               * exp(-max(0, richards(age * v, arm_length, arm_growth, arm_shape) - inside)
+                     / arm_neck_length))
+        * (rand(1) < pinch ? 1 - pinch_depth : 1),
+      arm_radius * radius_max
+        * (1 - (1 - arm_neck)
+               * exp(-max(0, richards(age * v, arm_length, arm_growth, arm_shape) - inside)
+                     / arm_neck_length))
+        * (rand(1) < pinch ? 1 - pinch_depth : 1),
+      v, b, 1, 0, richards((age + dt) * v, arm_length, arm_growth, arm_shape), dr, e)
+    A(v, b, kind, dr, inside, e);
+
+# A column's piece sprouts an arm, nearly level, from its middle band.
+rule P(len, r0, rf, v, b, kind, armed, at, dr, e) :
+        kind == 0 && armed == 0 && arm_rate > 0 && t * v >= arm_age && height >= arm_height
+        && py >= arm_low * height && py <= arm_high * height
+        && rand() < arm_rate * b * len / max(0.1, (arm_high - arm_low) * height) ->
+    P(len, r0, rf, v, b, kind, 1, at, dr, e)
+    [ /(uniform(0, 360)) &(arm_angle * uniform(0.85, 1.1))
+      f(arm_out * (r0 + (rf - r0) * (1 - exp(-age / fill_years))))
+      A(v * uniform(0.6, 1.2), b, 1, rand() < droop ? min(droop_length, 0.4 * py) : 0,
+        (1 - arm_out) * (r0 + (rf - r0) * (1 - exp(-age / fill_years))),
+        exp(gauss() * elbow_spread)) ];
+
+# A piece: turned a little at random, bent toward its column's tropism,
+# filled out by its age. A column turns toward its tilt from upright; an
+# arm turns up, or a drooping one down until it has hung droop_length.
+interpret P(len, r0, rf, v, b, kind, armed, at, dr, e) : kind == 0 ->
+    ^(gauss() * wiggle * sqrt(len / 0.1)) +(gauss() * wiggle * sqrt(len / 0.1))
+    T(0, cos(rad(sun_tilt)), sin(rad(sun_tilt)), bend * len)
+    !(r0 + (rf - r0) * (1 - exp(-age / fill_years))) stem(len);
+interpret P(len, r0, rf, v, b, kind, armed, at, dr, e) ->
+    ^(gauss() * wiggle * sqrt(len / 0.1)) +(gauss() * wiggle * sqrt(len / 0.1))
+    T(0, at < dr ? -1 : 1, 0, elbow * e * len)
+    !(r0 + (rf - r0) * (1 - exp(-age / fill_years))) stem(len);
+
+# A flowering column's tip: a ring of flowers, buds and fruit on the
+# shoulder of its dome, `dome` tip radii long.
+interpret A(v, b, kind, dr, inside, e) : flowers > 0 && kind == 0 && t * v >= bloom_age ->
+    Ri(0, flowers,
+       radius_min + (radius_max - radius_min)
+         * (1 - exp(-(seedling * (1 - exp(-age)) + richards(age * v, height_max, height_rate, height_shape))
+                    / radius_height)),
+       dome * (radius_min + (radius_max - radius_min)
+         * (1 - exp(-(seedling * (1 - exp(-age)) + richards(age * v, height_max, height_rate, height_shape))
+                    / radius_height))));
+interpret A(v, b, kind, dr, inside, e) : flowers > 0 && kind == 1 && t * v >= bloom_age && age >= 5 ->
+    Ri(0, flowers, arm_radius * radius_max, dome * arm_radius * radius_max);
+interpret Ri(k, m, r, d) : m > 1 ->
+    Ri(k, floor(m / 2), r, d) Ri(k + floor(m / 2), m - floor(m / 2), r, d);
+interpret Ri(k, m, r, d) : m == 1 ->
+    [ /(k * 360 / flowers + uniform(-12, 12)) f(-d * (1 - cos(rad(ring_angle))))
+      &(90) f(r * sin(rad(ring_angle))) ^(90 - flower_angle * uniform(0.8, 1.2)) Fo ];
+interpret Fo : rand(1) < bud_share -> bud(bud_size * uniform(0.8, 1.2));
+interpret Fo : rand(1) < bud_share + fruit_share -> fruit(fruit_size * uniform(0.85, 1.15));
+interpret Fo -> flower(flower_size * uniform(0.85, 1.15));
+
+# A joint in its second year sprouts its daughters (a trunk joint also
+# the next trunk joint, which continues its axis), and perhaps a chain of
+# fruit. A trunk joint in the crown sprouts a lateral from its side now
+# and then. A lateral older than its life falls with everything it bears.
+rule J(len, r, g, v, done, side) :
+        side > 0 && joint_life > 0 && age > joint_life * uniform(0.7, 1.3) -> %;
+rule J(len, r, g, v, done, side) : done == 0 && age >= 1 && side == 0 && g + 1 < trunk_joints ->
+    J(len, r, g, v, 1, side)
+    Dj(0, round(lerp(daughters_low, daughters_high, rand(2))),
+       round(lerp(daughters_low, daughters_high, rand(2))), 1, v, r, 1, age, 0)
+    Cb(g >= 2 && rand() < chains ? 1 : 0)
+    /(uniform(0, 360)) &(leader_lean * rand())
+    J(joint_length * uniform(1 - joint_spread, 1 + joint_spread), r * uniform(0.95, 1.05),
+      g + 1, v, 0, 0);
+rule J(len, r, g, v, done, side) : done == 0 && age >= 1 && (side == 0 || rand() < bud_rate) ->
+    J(len, r, g, v, 1, side)
+    Dj(0, round(lerp(daughters_low, daughters_high, rand(2))
+                * (side > 0 ? max(0, 1 - g / generations) : 1)),
+       round(lerp(daughters_low, daughters_high, rand(2))
+             * (side > 0 ? max(0, 1 - g / generations) : 1)),
+       side > 0 ? g + 1 : 1, v, r, 0, 0, 0)
+    Cb((side == 0 || g >= 2) && rand() < chains ? 1 : 0);
+rule J(len, r, g, v, done, side) :
+        done > 0 && side == 0 && resprout > 0 && py >= (1 - crown) * height
+        && rand() < resprout ->
+    J(len, r, g, v, done, side) Dj(0, 1, 1, 1, v, r, 1, age, len * uniform(0.15, 0.85));
+
+# A joint grows to full size in its first year and thickens as it ages;
+# a club is narrower at its foot, which fills out on an old trunk.
+interpret J(len, r, g, v, done, side) ->
+    Js(len * (1 - exp(-(age + 0.5) / 0.4)),
+       r * (1 - exp(-(age + 0.5) / 0.4))
+       * (1 + swell * (side > 0 ? pow(swell_side, g) : 1) * (1 - exp(-age / swell_years))))
+    Jf(len * (1 - exp(-(age + 0.5) / 0.4)), r * (1 - exp(-(age + 0.5) / 0.4)));
+interpret Js(l, r) : pad > 0 ->
+    T(0, -1, 0, sag * l / 4)
+    !(r * 0.4) stem(l / 4) !(r * 0.85) stem(l / 4) !(r) stem(l / 4) !(r * 0.92) stem(l / 4);
+interpret Js(l, r) ->
+    T(0, -1, 0, sag * l / 3)
+    !(r * (1 - 0.5 * exp(-age / swell_years))) stem(l / 3) !(r) stem(l / 3) !(r) stem(l / 3);
+interpret Jf(l, r) : joint_flowers > 0 && age >= 1 && age < 2 && t >= bloom_age ->
+    Fl(0, joint_flowers, joint_flowers, l, r);
+interpret Jf(l, r) -> ;
+
+# Daughters k to k + m - 1 of n at depth d: at the tip of a club, out of
+# a trunk joint's side, or anywhere in the k-th of n stretches of a pad's
+# top margin, each starting a little inside its parent, and smaller the
+# deeper they lie.
+decompose Dj(k, m, n, d, v, r, s, pa, back) : m > 1 ->
+    Dj(k, floor(m / 2), n, d, v, r, s, pa, back)
+    Dj(k + floor(m / 2), m - floor(m / 2), n, d, v, r, s, pa, back);
+decompose Dj(k, m, n, d, v, r, s, pa, back) : m == 1 && pad > 0 ->
+    Dp(margin * (2 * (k + uniform(0.1, 0.9)) / n - 1), d, v, r);
+decompose Dj(k, m, n, d, v, r, s, pa, back) : m == 1 ->
+    [ f(-r * 0.3 * (1 - s) - back) /(k * 137.508 + uniform(0, 360))
+      &(branch_angle * lerp(0.6, 1.3, rand(3)))
+      Jo(s * r, branch_angle * lerp(0.6, 1.3, rand(3)), pa)
+      J(joint_length * uniform(1 - joint_spread, 1 + joint_spread) * (1 - 0.2 * d / generations),
+        joint_radius * uniform(0.9, 1.1), d, v, 0, 1) ];
+decompose Dj(k, m, n, d, v, r, s, pa, back) -> ;
+
+# A lateral leaves its trunk at the trunk's surface, which moves out as
+# the trunk swells, its foot sunk by half a joint's radius.
+interpret Jo(r, a, pa) : r > 0 ->
+    f(r * (1 + swell * (1 - exp(-(pa + age) / swell_years))) / max(0.5, sin(rad(a)))
+      - 0.5 * joint_radius);
+interpret Jo(r, a, pa) -> ;
+decompose Dp(th, d, v, r) ->
+    [ f(-dome * 0.92 * r * (1 - cos(rad(th)))) +(90) f(0.85 * 0.92 * r * sin(rad(th)))
+      -(90 - th) /(gauss() * twist)
+      J(joint_length * uniform(1 - joint_spread, 1 + joint_spread) * (1 - 0.2 * d / generations),
+        joint_radius * uniform(0.9, 1.1) * (1 - 0.15 * d / generations), d, v, 0, 1) ];
+
+# A joint's flowers in its second spring: at a club's tip, or along a
+# pad's top margin.
+interpret Fl(k, m, n, l, r) : m > 1 ->
+    Fl(k, floor(m / 2), n, l, r) Fl(k + floor(m / 2), m - floor(m / 2), n, l, r);
+interpret Fl(k, m, n, l, r) : m == 1 && pad > 0 ->
+    [ f(-dome * 0.92 * r * (1 - cos(rad(margin * (2 * (k + 0.5) / n - 1)))))
+      +(90) f(0.92 * r * sin(rad(margin * (2 * (k + 0.5) / n - 1))))
+      -(90 - margin * (2 * (k + 0.5) / n - 1)) /(uniform(-30, 30)) Fo ];
+interpret Fl(k, m, n, l, r) : m == 1 ->
+    [ f(-r * 0.4) /(k * 360 / n + uniform(-20, 20)) &(flower_angle * uniform(0.7, 1.3))
+      f(r * 0.6) Fo ];
+
+# A chain of fruit hangs from its joint and grows one more fruit at its
+# end each year, as the last one flowers again.
+decompose Cb(n) : n > 0 -> [ &(150 + uniform(-15, 15)) /(uniform(0, 360)) Cf Ch(1) ];
+decompose Cb(n) -> ;
+rule Ch(n) : n < chain_max -> Cf Ch(n + 1);
+interpret Cf ->
+    fruit(fruit_size * uniform(0.9, 1.1)) f(fruit_size * 0.85) +(gauss() * 18) &(gauss() * 10);

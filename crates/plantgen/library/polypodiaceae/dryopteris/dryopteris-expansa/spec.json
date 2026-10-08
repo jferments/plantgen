@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "id": "dryopteris-expansa",
+  "taxon": {
+    "scientific_name": "Dryopteris expansa",
+    "common_name": "spreading wood fern",
+    "usda_symbol": "DREX2"
+  },
+  "growth_form": "fern",
+  "generator": {
+    "program": "fern",
+    "params": {
+      "fronds_per_year": 7,
+      "frond_life": 1,
+      "frond_length": 0.8,
+      "frond_seed": 0.2,
+      "size_years": 2,
+      "young_angle": 10,
+      "old_angle": 40,
+      "open_years": 0.5,
+      "angle_spread": 8,
+      "frond_radius": 0.0022,
+      "pieces": 12,
+      "stipe": 0.32,
+      "pinna_length": 0.18,
+      "pinna_peak": 0.08,
+      "pinna_base": 0.9,
+      "pinna_tip": 0.15,
+      "pinna_angle": 70,
+      "pinna_lift": 10,
+      "pinna_area": 0.144,
+      "droop": 0.04,
+      "droop_years": 1,
+      "crowns": 1,
+      "crown_age": 3,
+      "crown_rate": 0.2,
+      "rhizome": 0.1,
+      "season": 0.5,
+      "emerge_spread": 0.3,
+      "unroll": 0.3,
+      "curl": 45
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [2, 4, 6]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.2, 0.16, 0.08],
+    "foliage": [0.07, 0.17, 0.04],
+    "foliage_shade": [0.022, 0.052, 0.012],
+    "variation": 0.2,
+    "organs": {
+      "pinna": {
+        "shape": {
+          "template": "frond",
+          "pinnae": 9,
+          "width": 0.4,
+          "divided": 1.0,
+          "stipe": 0.08
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.7,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a lacy fern with broad, triangular, finely divided fronds in a loose crown. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 0.7 m tall at 4 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: mid-green fronds."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

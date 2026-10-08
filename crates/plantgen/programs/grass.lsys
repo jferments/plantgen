@@ -1,0 +1,118 @@
+# Bunchgrass: a tussock of tillers. Each year the crown sends up a new
+# cohort of tillers on a sunflower spiral; their number and the width of
+# the tussock grow with age, and the outer tillers lean out. A tiller
+# carries a few arching leaf blades. In a plant old enough to flower, some
+# tillers raise a culm with a leaf at each node and a panicle at the top.
+# The next year the cohort is dead: its blades stay on as straw-coloured
+# thatch that has lost its tips and flops outward, its culms are gone, and
+# a year later the thatch is gone too.
+#
+# A blade is a chain of pieces, each 12% shorter than the one before. The
+# blade template narrows by 12% along one piece, so the pieces join without
+# a step, and the blade tapers to its tip. A blade bends down at every
+# joint and twists a little.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem grass 1;
+
+param tillers = 80;           # living tillers in a mature tussock
+param tiller_rate = 0.5;      # cohort size: tillers * (1 - exp(-tiller_rate * age))
+param tussock_radius = 0.08;  # radius of a mature tussock's base
+param tiller_lean = 15;       # how far the outermost tillers lean out
+param leaves = 3;             # blades on a tiller, give or take one
+param leaf_length = 0.35;     # mean blade length at maturity
+param leaf_spread = 0.3;      # blades are leaf_length * (1 ± leaf_spread)
+param leaf_angle = 18;        # mean angle of a blade to its tiller at the base
+param arch = 10;              # mean degrees a blade bends down at each joint
+param twist = 6;              # spread of the random roll at each joint
+param pieces = 6;             # pieces in a blade, its tip included
+param maturity = 1.5;         # years over which blades and culms reach full size
+param flower_age = 2;         # the first year the plant flowers
+param flowering = 0.25;       # share of tillers that flower
+param culm_height = 0.9;      # culm height at maturity, panicle included
+param culm_radius = 0.0012;
+param culm_leaves = 2;        # leaves on a culm
+param culm_lean = 6;          # most a culm leans off its tiller
+param panicle_length = 0.2;
+param panicle_nod = 15;       # degrees a panicle tips over
+param thatch_years = 1;       # years dead blades stay on
+param thatch_droop = 8;       # extra degrees a dead blade bends at each joint
+param light_cell = 0.04;      # light voxel edge: about a blade's spacing
+# Leaf area of each organ 1 m long, m². Match each to the area its look
+# draws (`plantc atlas`).
+param blade_area = 0.11;
+param tip_area = 0.06;
+param thatch_area = 0.11;
+param panicle_area = 0.25;
+
+module Y;                     # the crown: sends up a cohort each year
+module Ts(k, m, n);           # tillers k to k + m - 1 of a cohort of n
+module Tl;                    # the base of a tiller
+module Lv(j);                 # j blades still to place on a tiller
+module Bl(len, a);            # a blade len long bending a at each joint
+module Pc(k, s, a);           # piece k of a blade, s long
+module Bd(a);                 # the joint between two pieces
+module Fl;                    # where a tiller may raise a culm
+module Cm;                    # the base of a culm
+module Cu(s, j);              # a culm: j leaves still to place, s between nodes
+
+organ blade leaf area blade_area;
+organ blade_tip leaf area tip_area;
+organ thatch leaf area thatch_area;
+organ panicle flower area panicle_area;
+
+tool light@1 { cell = light_cell, extinction = 0.5 };
+
+axiom Y;
+
+# The cohort grows toward full size with the plant's age; t is the age the
+# cohort is drawn at.
+rule Y -> Ts(0, -1, 0) Y;
+decompose Ts(k, m, n) : m < 0 ->
+    Ts(0, max(1, round(tillers * (1 - exp(-tiller_rate * t)))),
+          max(1, round(tillers * (1 - exp(-tiller_rate * t)))));
+decompose Ts(k, m, n) : m > 1 ->
+    Ts(k, floor(m / 2), n) Ts(k + floor(m / 2), m - floor(m / 2), n);
+# One tiller: out along the sunflower spiral, up, and leaning out.
+decompose Ts(k, m, n) : m == 1 ->
+    [ Tl /(k * 137.508 + uniform(-12, 12)) &(90)
+      f(tussock_radius * sqrt(n / tillers) * sqrt((k + uniform(0.2, 0.8)) / n)) ^(90)
+      &(tiller_lean * sqrt((k + 0.5) / n) + uniform(0, 4))
+      Lv(floor(uniform(leaves - 0.5, leaves + 1.5))) Fl ];
+decompose Ts(k, m, n) -> ;
+
+decompose Lv(j) : j > 0 ->
+    [ /(j * 180 + uniform(-40, 40)) &(leaf_angle * uniform(0.4, 1.6)) $
+      Bl(leaf_length * (1 - exp(-t / maturity)) * uniform(1 - leaf_spread, 1 + leaf_spread),
+         arch * uniform(0.5, 1.5)) ]
+    Lv(j - 1);
+decompose Lv(j) -> ;
+
+# The pieces' lengths fall by 0.88 each, so the first is
+# len * 0.12 / (1 - 0.88^pieces).
+decompose Bl(len, a) -> Pc(0, len * 0.12 / (1 - pow(0.88, pieces)), a);
+decompose Pc(k, s, a) : k < pieces - 1 -> blade(s) f(s) Bd(a) Pc(k + 1, s * 0.88, a);
+decompose Pc(k, s, a) -> blade_tip(s);
+interpret Bd(a) -> /(gauss() * twist) &(a + thatch_droop * min(age, 1));
+
+# A flowering tiller's culm: a leaf at each node, the panicle at the top.
+decompose Fl : t >= flower_age && rand() < flowering ->
+    [ Cm /(uniform(0, 360)) &(uniform(0, culm_lean)) !(culm_radius)
+      Cu((culm_height * (1 - exp(-t / maturity)) * uniform(0.85, 1.15)
+          - panicle_length * (1 - exp(-t / maturity))) / (culm_leaves + 1),
+         culm_leaves) ];
+decompose Fl -> ;
+decompose Cu(s, j) : j > 0 ->
+    F(s) [ /(j * 180 + uniform(-30, 30)) &(leaf_angle * 1.5) $
+           Bl(leaf_length * (1 - exp(-t / maturity)) * uniform(0.35, 0.6), arch) ]
+    Cu(s, j - 1);
+decompose Cu(s, j) -> F(s) &(panicle_nod * uniform(0.5, 1.5))
+                      panicle(panicle_length * (1 - exp(-t / maturity)));
+
+# A year on, the cohort is dead: its blades become thatch without their
+# tips, and its culms fall. After thatch_years as thatch it is gone.
+rule blade(s) -> thatch(s);
+rule blade_tip(s) -> ;
+rule Cm -> %;
+rule Tl : age >= thatch_years -> %;

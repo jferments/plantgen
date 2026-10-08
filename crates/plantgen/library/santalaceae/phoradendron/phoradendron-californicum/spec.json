@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "id": "phoradendron-californicum",
+  "taxon": {
+    "scientific_name": "Phoradendron californicum",
+    "common_name": "desert mistletoe",
+    "usda_symbol": "PHCA8"
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "program": "epiphyte",
+    "params": {
+      "colonies": 14,
+      "seeds_per_year": 2,
+      "crown_low": 1.5,
+      "crown_high": 6,
+      "crown_radius": 4,
+      "reach": 2.0,
+      "kind": 1,
+      "colony_life": 40,
+      "size_years": 5,
+      "stems": 16,
+      "forks": 4,
+      "clump_radius": 0.45,
+      "stem_radius": 0.004,
+      "fork_angle": 35,
+      "fruit_age": 3,
+      "fruit_size": 0.007,
+      "scale_area": 0.235,
+      "fruit_area": 1.27
+    }
+  },
+  "growth": {
+    "years": 20,
+    "step": 1,
+    "keyframes": [4, 10, 20]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2]
+  },
+  "appearance": {
+    "bark": [0.38, 0.3, 0.18],
+    "foliage": [0.45, 0.4, 0.25],
+    "foliage_shade": [0.1575, 0.14, 0.0875],
+    "variation": 0.15,
+    "organs": {
+      "fruit": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 1.0
+        },
+        "colour": [0.85, 0.35, 0.35]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 6.0,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a leafless parasitic shrub of the Sonoran Desert that hangs in tangled clumps of jointed, olive to reddish stems up to a metre across from mesquite, palo verde, ironwood and acacia, with small translucent pink-red berries spread by phainopeplas. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: clumps up to about 6 m up its host at 20 years. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: olive-brown stems, pink-red berries."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F7). Calibration against measurements and photographs comes later."
+  },
+  "host": {
+    "species": "prosopis-velutina",
+    "age": 60,
+    "environment": "open",
+    "seed": 1
+  }
+}

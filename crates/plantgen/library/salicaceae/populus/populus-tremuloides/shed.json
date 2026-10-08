@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "id": "populus-tremuloides",
+  "foliage": {
+    "kind": "leaves",
+    "length_m": [0.05, 0.12],
+    "fall_colours": [[0.68, 0.52, 0.06], [0.64, 0.46, 0.05], [0.64, 0.38, 0.06]],
+    "dry_colours": [[0.48, 0.36, 0.16], [0.42, 0.3, 0.14], [0.36, 0.29, 0.18]],
+    "curl": 0.4,
+    "pale_beneath": 0.2
+  },
+  "decay": 0.6,
+  "pieces": [
+    {
+      "kind": "twig",
+      "length_m": [0.05, 0.2],
+      "aspect": 0.04,
+      "colour": [0.2, 0.15, 0.1],
+      "per_m2": 3.0
+    }
+  ],
+  "look": {
+    "tile_m": 1.0,
+    "mean": [0.194, 0.145, 0.068],
+    "relief_m": 0.025
+  },
+  "evidence": {
+    "decay": {
+      "evidence": "Authored",
+      "note": "Authored from botanical descriptions of quaking aspen: nearly round, finely toothed blades 3 to 7 cm on flattened petioles about as long, golden in autumn and drying tan to grey-brown. Colours and curl chosen by eye; numbers plausible, not measured."
+    },
+    "foliage": {
+      "evidence": "Authored",
+      "note": "Authored from botanical descriptions of quaking aspen: nearly round, finely toothed blades 3 to 7 cm on flattened petioles about as long, golden in autumn and drying tan to grey-brown. Colours and curl chosen by eye; numbers plausible, not measured."
+    },
+    "look": {
+      "evidence": "Authored",
+      "note": "Authored: the drawn look's mean hue at the brightness chosen by eye for this species' litter, the relief the drawing has, and a tile its pieces repeat on unseen. PlantGen's litter tests check the hue and relief against the drawing."
+    },
+    "pieces": {
+      "evidence": "Authored",
+      "note": "Authored from botanical descriptions of quaking aspen: nearly round, finely toothed blades 3 to 7 cm on flattened petioles about as long, golden in autumn and drying tan to grey-brown. Colours and curl chosen by eye; numbers plausible, not measured."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: litter values hand-set from botanical descriptions and photographs of the species",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"]
+  }
+}

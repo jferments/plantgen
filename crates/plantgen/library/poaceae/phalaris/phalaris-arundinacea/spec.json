@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "id": "phalaris-arundinacea",
+  "taxon": {
+    "scientific_name": "Phalaris arundinacea",
+    "common_name": "reed canarygrass",
+    "usda_symbol": "PHAR3"
+  },
+  "growth_form": "graminoid",
+  "generator": {
+    "program": "grass",
+    "params": {
+      "tillers": 30,
+      "tiller_rate": 0.6,
+      "tussock_radius": 0.25,
+      "tiller_lean": 6,
+      "leaves": 2,
+      "leaf_length": 0.35,
+      "leaf_spread": 0.25,
+      "leaf_angle": 30,
+      "arch": 12,
+      "pieces": 6,
+      "flowering": 0.7,
+      "culm_height": 1.6,
+      "culm_radius": 0.003,
+      "culm_leaves": 6,
+      "culm_lean": 4,
+      "panicle_length": 0.18,
+      "panicle_nod": 10,
+      "blade_area": 0.109,
+      "tip_area": 0.059,
+      "thatch_area": 0.109,
+      "panicle_area": 0.15
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [1, 2, 4]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.35, 0.36, 0.2],
+    "foliage": [0.08, 0.16, 0.04],
+    "foliage_shade": [0.025, 0.05, 0.012],
+    "variation": 0.2,
+    "organs": {
+      "blade": {
+        "shape": { "template": "blade", "taper": 0, "aspect": 0.12 }
+      },
+      "blade_tip": {
+        "shape": { "template": "blade", "taper": 1, "aspect": 0.12 }
+      },
+      "thatch": {
+        "shape": { "template": "blade", "taper": 0, "aspect": 0.12 },
+        "colour": [0.38, 0.31, 0.18],
+        "shade": [0.12, 0.1, 0.05]
+      },
+      "panicle": {
+        "shape": {
+          "template": "panicle",
+          "whorls": 8,
+          "branches": 3,
+          "spread": 15,
+          "spikelets": 8,
+          "aspect": 0.25,
+          "stalk": 0.05
+        },
+        "colour": [0.5, 0.42, 0.38],
+        "accent": [0.45, 0.3, 0.35]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 1.7,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: an invasive, tall, leafy grass that forms dense stands of reed-like stems with broad, flat blades and compact panicles that spread open in flower. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 1.7 m tall at 4 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: bright green blades; purplish then straw panicles."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

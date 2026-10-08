@@ -1,0 +1,156 @@
+{
+  "schema": 1,
+  "id": "acer-circinatum",
+  "taxon": {
+    "scientific_name": "Acer circinatum",
+    "common_name": "vine maple",
+    "usda_symbol": "ACCI"
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 6.0,
+      "crown_radius": 3.5,
+      "crown_base": 0,
+      "crown_rate": 0.15,
+      "space_density": 9.7,
+      "internode": 0.2,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 45,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "bud_years": 6,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 10,
+      "fork_height": 0.03,
+      "fork_stems": 5,
+      "fork_angle": 40,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 1.7,
+      "space_kill": 0.42,
+      "lean": 25,
+      "leaf_size": 0.16,
+      "spur_leaf": 0.15,
+      "spur_pairs": 1,
+      "leaf_angle": 55,
+      "leaf_area": 0.493,
+      "bloom_area": 0.236,
+      "blooms": 1,
+      "bloom_age": 6,
+      "bloom_size": 0.055,
+      "bloom_angle": 80
+    }
+  },
+  "growth": {
+    "years": 20,
+    "step": 1,
+    "keyframes": [4, 10, 20]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.35, 0.38, 0.22],
+    "bark_pattern": {
+      "kind": "smooth",
+      "scale": 0.03,
+      "variation": 0.15,
+      "smooth_below": 0.0
+    },
+    "foliage": [0.09, 0.18, 0.04],
+    "foliage_shade": [0.028, 0.055, 0.012],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "palmate",
+          "lobes": 7,
+          "depth": 0.45,
+          "lobe_width": 0.5,
+          "teeth": 3,
+          "spread": 1.15,
+          "petiole": 0.3
+        },
+        "families": {
+          "plasticity": 0.7
+        },
+        "face_up": 0.6
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "kind": "samara",
+          "count": 4,
+          "cluster": "pair",
+          "size": 0.45,
+          "spread": 85,
+          "aspect": 0.35,
+          "unripe": 0.4
+        },
+        "colour": [0.6, 0.15, 0.1],
+        "accent": [0.4, 0.5, 0.15],
+        "season": {
+          "bud": 95,
+          "flower": 110,
+          "fruit": 140,
+          "ripe": 175,
+          "ripening": 40,
+          "fall": 300,
+          "flower_look": {
+            "shape": {
+              "template": "umbel",
+              "clusters": 1,
+              "florets": 8
+            },
+            "colour": [0.78, 0.3, 0.25],
+            "accent": [0.95, 0.92, 0.85],
+            "size": 0.8
+          }
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 5.0,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a sprawling shrub or small tree of crooked, leaning stems that root where they touch the ground, with nearly round, seven- to nine-lobed leaves held flat in layers. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 5 m tall at 20 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: bright green leaves, red and orange in autumn; smooth greenish-brown bark. Fruit (plant roadmap P4), as in mid-July: samara pairs with wings spread almost straight apart, red and green. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: small red-and-white flowers in April and May; samaras red-winged from July, brown in the autumn. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth green to reddish-brown bark; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): in sun smaller, more deeply cut leaves; in the forest's shade larger, thinner and shallowly lobed ones; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

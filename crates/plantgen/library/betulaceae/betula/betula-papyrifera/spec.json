@@ -1,0 +1,157 @@
+{
+  "schema": 1,
+  "id": "betula-papyrifera",
+  "taxon": {
+    "scientific_name": "Betula papyrifera",
+    "common_name": "paper birch",
+    "usda_symbol": "BEPA"
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 18,
+      "crown_radius": 4.5,
+      "crown_base": 4,
+      "crown_rate": 0.05,
+      "space_density": 12,
+      "bud_years": 14,
+      "internode": 0.28,
+      "max_shoot": 4,
+      "branch_angle": 45,
+      "apical_young": 0.72,
+      "apical": 0.6,
+      "alternate": 1,
+      "leaf_size": 0.32,
+      "spur_leaf": 0.28,
+      "spur_pairs": 2,
+      "leaf_angle": 55,
+      "wiggle": 5,
+      "lean": 4,
+      "droop": 0.025,
+      "extinction": 0.45,
+      "blooms": 2,
+      "bloom_age": 10,
+      "bloom_size": 0.045,
+      "bloom_angle": 130,
+      "leaf_area": 0.304,
+      "bloom_area": 0.289
+    }
+  },
+  "growth": {
+    "years": 40,
+    "step": 1,
+    "keyframes": [4, 10, 20, 40]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.7, 0.68, 0.62],
+    "bark_pattern": {
+      "kind": "peeling",
+      "scale": 0.1,
+      "elongation": 0.6,
+      "fissure": 0.04,
+      "depth": 0.08,
+      "contrast": 0.15,
+      "variation": 0.1,
+      "peeled": 0.25,
+      "inner": [0.55, 0.35, 0.22],
+      "lenticels": 400,
+      "smooth_below": 0.0
+    },
+    "foliage": [0.08, 0.16, 0.04],
+    "foliage_shade": [0.025, 0.055, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 7,
+          "angle": 50,
+          "width": 0.7,
+          "widest": 0.35,
+          "tip": 0.5,
+          "base": 0.7,
+          "teeth": 16,
+          "tooth_depth": 0.02,
+          "petiole": 0.18
+        },
+        "families": {
+          "plasticity": 0.4
+        },
+        "accent": [0.3, 0.2, 0.12]
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "cone": 1,
+          "aspect": 0.22
+        },
+        "colour": [0.42, 0.3, 0.16],
+        "accent": [0.33, 0.38, 0.16],
+        "season": {
+          "bud": 95,
+          "flower": 110,
+          "fruit": 140,
+          "ripe": 220,
+          "ripening": 30,
+          "fall": 320,
+          "flower_look": {
+            "shape": {
+              "template": "spike",
+              "florets": 18,
+              "aspect": 0.14,
+              "plume": 0.3,
+              "stalk": 0.05
+            },
+            "colour": [0.4, 0.33, 0.18],
+            "size": 1.1
+          }
+        }
+      }
+    },
+    "ridges": {
+      "spacing": 0.06,
+      "depth": 0.004,
+      "twist": 0,
+      "contrast": 0.25
+    }
+  },
+  "allometry": [
+    {
+      "age": 40,
+      "environment": "open",
+      "height": 16,
+      "dbh": 0.25,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a slender tree with a narrow, open crown, alternate oval, toothed leaves and hanging catkins. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 16 m tall and 25 cm across at breast height at 40 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: green leaves; white bark peeling in papery strips. Fruit (plant roadmap P4), as in mid-July: slender hanging fruiting catkins 3 to 5 cm long, green going brown. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: catkins in April and May; the fruiting catkins green in summer, brown in August and September, breaking up in the autumn. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): white bark peeling in papery strips round the stem from orange-brown inner bark, with dark horizontal lenticels; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves somewhat smaller and narrower than shade leaves; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

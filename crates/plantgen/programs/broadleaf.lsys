@@ -1,0 +1,224 @@
+# Broadleaf tree after Pałubicki et al. (2009). Buds grow toward free space
+# in a crown envelope (space colonization, Runions et al. 2007); the light
+# the buds catch flows to the base and back out to them (Borchert-Honda
+# vigour); a bud grows as many internodes in a year as its vigour allows.
+# Apical control is strong in a young tree and relaxes with age, which
+# raises a trunk and then spreads the crown. A lateral bud without the
+# vigour for a long shoot still leafs out each year as a short shoot while
+# it has light. Shaded buds die, and a branch with no living bud is shed,
+# which clears the lower stem.
+#
+# A stem may lean, wander a little at every internode, and divide low into
+# several equal stems, as open-grown maples and oaks do; dividing at the
+# ground makes a many-stemmed shrub.
+#
+# Buds and leaves are opposite and decussate, as in maples, or alternate on
+# a spiral (alternate), as in alders, oaks and cherries. Leaves fall every
+# year or, on evergreens, stay leaf_years. Once old enough, short shoots in
+# the light carry flowers or fruit at their tips (blooms): blossoms, berry
+# clusters or hanging catkins, whichever look the species gives them.
+#
+# Revision 4 (plant forms F5): a thorny species (thorns 1) carries a thorn
+# beside each bud, thorn_length long at thorn_angle to its shoot. A tree
+# with a `life` dies at that age: its buds die and its leaves fall, and its
+# dead branches drop one by one, each with the chance snag_fall a year, so
+# it stands as a snag.
+#
+# Revision 5 (plant forms F7): in a steady wind (wind above 0, blowing
+# toward +X) shoots bend downwind under a tropism toward (wind, -1, 0)
+# of elasticity droop + wind_bend * wind, and a shoot tip heading upwind
+# (its heading's X below -wind_kill) dies, so the crown grows as a flag
+# on its lee side. One step is one year. Angles are degrees; lengths are
+# metres.
+
+lsystem broadleaf 5;
+
+# Crown envelope at maturity; it approaches this size at crown_rate per year.
+param crown_height = 22;
+param crown_radius = 8;
+param crown_base = 3;
+param crown_rate = 0.038;
+
+param internode = 0.25;       # length of one internode
+param max_shoot = 3;          # most internodes a bud grows in one year
+param bud_break = 1.3;        # vigour a lateral bud needs to grow a long shoot
+param branch_angle = 45;      # angle between a shoot and its lateral buds
+param apical_young = 0.68;    # Borchert-Honda lambda in a sapling
+param apical = 0.52;          # and in a mature tree: near 0.5 spreads the crown
+param apical_years = 25;      # years over which apical control relaxes
+param flux = 3;               # Borchert-Honda alpha: vigour per unit of light
+param bud_years = 12;         # years a lateral bud lives as a short shoot
+param spur_light = 0.1;       # light a short shoot needs to leaf out
+param shade_death = 0.06;     # light below which a bud dies
+param steer_weight = 0.35;    # how far a shoot turns toward free space
+param leaf_size = 0.34;       # leaf card length including the petiole
+param spur_leaf = 0.28;       # leaves on short shoots are smaller
+param spur_pairs = 1;         # pairs of leaves a short shoot unfolds each year
+param leaf_area = 0.35;       # leaf area of a leaf card 1 m long, m²
+param leaf_angle = 55;
+param alternate = 0;          # 1: one bud and leaf at each node on a 137.5° spiral
+param leaf_years = 1;         # years a leaf stays on: more than 1 for evergreens
+param blooms = 0;             # blooms at the tip of a short shoot in the light
+param bloom_age = 4;          # the first year the plant blooms
+param bloom_size = 0.05;      # bloom card length
+param bloom_angle = 35;       # angle of a bloom to its shoot; past 90 it hangs
+param bloom_area = 0.639;     # leaf area of a bloom card 1 m long, m²
+param droop = 0.015;
+param lean = 0;               # the most the stem leans from upright
+param wiggle = 0;             # spread of the random turn at each internode
+param fork_height = 0;        # height at which the stem divides; 0: never
+param fork_stems = 3;         # stems it divides into
+param fork_angle = 28;        # angle between the stem and each new stem
+param thorns = 0;             # 1: a thorn beside each bud
+param thorn_length = 0.02;
+param thorn_angle = 60;       # angle of a thorn to its shoot
+param thorn_area = 0.235;     # leaf area of a thorn card 1 m long, m² (the default leaf card's)
+param wind = 0;               # strength of a steady wind toward +X; 0 none
+param wind_bend = 0.05;       # extra downwind bending per unit of wind
+param wind_kill = 0.3;        # a tip heading upwind beyond this dies
+param life = 0;               # age at which the plant dies; 0 never
+param snag_fall = 0.15;       # chance a year that a dead branch falls
+param pipe_tip = 0.004;       # radius of the twig behind one living bud
+param pipe_organ = 0.008;     # pipe radius per metre of leaf card
+param pipe_rings = 0.00002;   # ring area laid down per m² of leaf a year
+# Light extinction per unit of leaf area density. 0.5 suits leaves spread at
+# random through each light voxel; leaves bunched on short shoots shade one
+# another and let more light past, which a lower value stands for.
+param extinction = 0.5;
+param light_cell = 0.5;       # light voxel edge; smaller for shrubs
+param space_density = 5;      # attraction points per m³ of crown envelope
+param space_reach = 2.4;       # how far a bud senses free space
+param space_kill = 0.75;       # free space within this of the plant is taken
+
+# An active bud. `split` is the height at which the stem forks: only the
+# first stem carries one; every other bud carries 0.
+module A(split) queries light, vigour, space, position;
+module B queries light, vigour, space;    # a lateral bud or short shoot
+module S queries vigour;                  # the base of a branch
+module M(n);                              # n internodes still to form this year
+module Fk(n);                             # n stems still to start at a fork
+module P(n);                              # n leaf pairs still to unfold on a short shoot
+module Bo(n);                             # n blooms still to place at a short shoot's tip
+
+organ leaf leaf area leaf_area;
+organ bloom flower area bloom_area;
+organ thorn leaf area thorn_area;
+
+tool light@1 { cell = light_cell, extinction = extinction, bud = 0.01 };
+tool space@1 {
+    shape = 1,
+    base = crown_base * (1 - exp(-crown_rate * (t + 3))),
+    height = crown_height * (1 - exp(-crown_rate * (t + 3))),
+    radius = crown_radius * (1 - exp(-crown_rate * (t + 3))),
+    density = space_density,
+    influence = space_reach,
+    kill = space_kill,
+    angle = 80
+};
+tool vigour@1 {
+    lambda = apical + (apical_young - apical) * max(0, 1 - t / apical_years),
+    alpha = flux
+};
+tool pipe@1 { exponent = 2.3, tip = pipe_tip, organ = pipe_organ, rings = pipe_rings };
+
+# The stem leans a little in a random direction; each tree forks at its own
+# height.
+axiom !(0.004) T(wind, -1, 0, droop + wind_bend * wind) /(uniform(0, 360)) &(uniform(0, lean))
+      A(fork_height * uniform(0.7, 1.3));
+
+# In a steady wind, a tip heading upwind dies.
+rule A(split) : wind > 0 && hx < -wind_kill -> ;
+
+# A plant past its life dies: its buds die.
+rule A(split) : life > 0 && t >= life -> ;
+rule B : life > 0 && t >= life -> ;
+
+# Buds die in deep shade.
+rule A(split) : light < shade_death -> ;
+rule B : light < shade_death || age >= bud_years -> ;
+
+# Where the stem reaches its fork height it divides into equal stems.
+rule A(split) : split > 0 && py >= split && vigour >= 1 -> Fk(fork_stems);
+
+# An active bud with vigour and free space ahead grows a shoot.
+rule A(split) : vigour >= 1 && space > 0 ->
+    steer(sx, sy, sz, steer_weight) M(min(floor(vigour), max_shoot)) A(split);
+
+# A lateral bud breaks into a long shoot when it has the vigour and free
+# space; otherwise, in enough light, it leafs out as a short shoot.
+rule B : vigour >= bud_break && space > 0 -> A(0);
+rule B : light >= spur_light && blooms > 0 && t >= bloom_age -> P(spur_pairs) Bo(blooms) B;
+rule B : light >= spur_light -> P(spur_pairs) B;
+
+# One internode, turned a little at random, with a pair of buds and a pair
+# of leaves; the next pair is turned a quarter turn (decussate). Alternate
+# species grow theirs by the last rules of the program.
+decompose M(n) : n > 0 && alternate <= 0 && thorns <= 0 ->
+    ^(gauss() * wiggle) +(gauss() * wiggle) F(internode)
+    [ &(branch_angle) S B ] [ /(180) &(branch_angle) S B ]
+    [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
+    /(90) M(n - 1);
+decompose M(n) : n <= 0 -> ;
+
+# The new stems of a fork, spread evenly round the old one; each is a branch
+# of its own, so a stem that dies is shed.
+decompose Fk(n) : n > 0 ->
+    [ /(360 * n / fork_stems + uniform(-25, 25)) &(fork_angle + uniform(-8, 8)) S A(0) ]
+    Fk(n - 1);
+decompose Fk(n) -> ;
+
+# A short shoot's leaves crowded at its tip: two on a spiral, or a
+# decussate pair, for each of spur_pairs.
+decompose P(n) : n > 0 && alternate > 0 ->
+    [ &(leaf_angle) $ leaf(spur_leaf) ] /(137.5) [ &(leaf_angle) $ leaf(spur_leaf) ]
+    /(137.5) P(n - 1);
+decompose P(n) : n > 0 ->
+    [ &(leaf_angle) $ leaf(spur_leaf) ] [ /(180) &(leaf_angle) $ leaf(spur_leaf) ]
+    /(90) P(n - 1);
+decompose P(n) -> ;
+
+
+# Leaves fall after leaf_years; blooms last one year.
+rule leaf(s) : age >= leaf_years -> ;
+rule bloom(s) : age >= 1 -> ;
+
+# A branch with no living bud is shed; on a dead plant, one by one (the
+# last rules).
+rule S : age > 1 && ntip == 0 && (life <= 0 || t < life) -> %;
+
+# Rules with random draws that later revisions add go last, so the draws of
+# the rules above keep their sites and species that do not use them grow as
+# before.
+
+# An alternate species' internode: one bud and one leaf, the next turned
+# 137.5° on the spiral.
+decompose M(n) : n > 0 && alternate > 0 && thorns <= 0 ->
+    ^(gauss() * wiggle) +(gauss() * wiggle) F(internode)
+    [ &(branch_angle) S B ] [ &(leaf_angle) $ leaf(leaf_size) ]
+    /(137.5) M(n - 1);
+
+# Blooms spread round a short shoot's tip.
+decompose Bo(n) : n > 0 ->
+    [ /(n * 137.5 + uniform(-20, 20)) &(bloom_angle * uniform(0.8, 1.2))
+      bloom(bloom_size * uniform(0.85, 1.15)) ]
+    Bo(n - 1);
+decompose Bo(n) -> ;
+
+# Revision 4 (plant forms F5). A thorny species' internodes: as above, with
+# a thorn beside each bud.
+decompose M(n) : n > 0 && alternate <= 0 ->
+    ^(gauss() * wiggle) +(gauss() * wiggle) F(internode)
+    [ &(branch_angle) S B ] [ /(180) &(branch_angle) S B ]
+    [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
+    [ /(90) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
+    [ /(270) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
+    /(90) M(n - 1);
+decompose M(n) : n > 0 && alternate > 0 ->
+    ^(gauss() * wiggle) +(gauss() * wiggle) F(internode)
+    [ &(branch_angle) S B ] [ &(leaf_angle) $ leaf(leaf_size) ]
+    [ /(70) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
+    [ /(-70) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
+    /(137.5) M(n - 1);
+
+# A dead plant's branches fall one by one.
+rule S : age > 1 && ntip == 0 && rand() < snag_fall -> %;

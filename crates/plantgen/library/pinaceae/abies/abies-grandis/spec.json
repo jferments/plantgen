@@ -1,0 +1,121 @@
+{
+  "schema": 1,
+  "id": "abies-grandis",
+  "taxon": {
+    "scientific_name": "Abies grandis",
+    "common_name": "grand fir",
+    "usda_symbol": "ABGR"
+  },
+  "growth_form": "excurrent_tree",
+  "generator": {
+    "program": "conifer",
+    "params": {
+      "cone_age": 20,
+      "cone_chance": 0.12,
+      "cone_length": 0.09,
+      "cone_pitch": -70,
+      "cone_years": 1,
+      "cone_area": 0.524,
+      "height_max": 60,
+      "height_rate": 0.02,
+      "height_shape": 1.5,
+      "whorl": 5,
+      "interwhorl": 2,
+      "branch_angle": 72,
+      "branch_sag": 0.8,
+      "max_sag": 30,
+      "upturn": 0.01,
+      "needle_years": 8,
+      "spray_droop": 10,
+      "shade_death": 0.07,
+      "shade_years": 4,
+      "pipe_organ": 0.009,
+      "pipe_rings": 8e-06,
+      "spray_area": 0.393
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [5, 15, 30, 60]
+  },
+  "variants": {
+    "environments": ["open", "interior"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.3, 0.27, 0.24],
+    "bark_pattern": {
+      "kind": "furrowed",
+      "scale": 0.05,
+      "elongation": 3.0,
+      "fissure": 0.25,
+      "depth": 0.35,
+      "contrast": 0.45,
+      "variation": 0.15,
+      "smooth_below": 0.12,
+      "roughness": 0.35
+    },
+    "foliage": [0.04, 0.12, 0.035],
+    "foliage_shade": [0.015, 0.045, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "cone": {
+        "shape": {"template": "fruit", "aspect": 0.4, "cone": 1},
+        "colour": [0.35, 0.3, 0.2]
+      },
+      "spray": {
+        "shape": {
+          "template": "needles",
+          "ranks": 2,
+          "twigs": 6,
+          "aspect": 0.85,
+          "needle": 0.1,
+          "twig_angle": 55,
+          "width": 0.065
+        },
+        "accent": [0.25, 0.2, 0.12]
+      }
+    },
+    "ridges": {
+      "spacing": 0.12,
+      "depth": 0.02,
+      "twist": 0,
+      "contrast": 0.25
+    }
+  },
+  "allometry": [
+    {
+      "age": 60,
+      "environment": "interior",
+      "height": 33,
+      "dbh": 0.5,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a tall fir with a narrow, domed crown, level branches and flat sprays of long, glossy needles in two ranks. Not fitted to measurements. Cones (plant forms F3): 6 to 11 cm stand upright on the top branches and shed their scales on the tree; set from general knowledge of the species, not measured."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 33 m tall and 50 cm across at breast height at 60 years in a closed stand. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: glossy dark green needles; smooth grey bark with resin blisters, furrowed with age. Needle shoots (plant roadmap P4): flat needles 2 to 5 cm long and about 2 mm wide, so a needle 0.065 as wide as it is long (`width`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): smooth and grey with resin blisters when young, then furrowed into flat grey-brown ridges; set from general knowledge of the species, not measured."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

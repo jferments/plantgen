@@ -1,0 +1,148 @@
+{
+  "schema": 1,
+  "id": "sambucus-racemosa",
+  "taxon": {
+    "scientific_name": "Sambucus racemosa",
+    "common_name": "red elderberry",
+    "usda_symbol": "SARA2"
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 4.0,
+      "crown_radius": 2.0,
+      "crown_base": 0,
+      "crown_rate": 0.22,
+      "space_density": 44.8,
+      "internode": 0.18,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 40,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "bud_years": 6,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 10,
+      "fork_height": 0.03,
+      "fork_stems": 6,
+      "fork_angle": 35,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 1.53,
+      "space_kill": 0.378,
+      "leaf_size": 0.25,
+      "spur_leaf": 0.22,
+      "spur_pairs": 1,
+      "leaf_angle": 55,
+      "blooms": 1,
+      "bloom_age": 3,
+      "bloom_size": 0.06,
+      "bloom_angle": 60,
+      "leaf_area": 0.246,
+      "bloom_area": 0.774
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [3, 6, 12]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.4, 0.33, 0.25],
+    "bark_pattern": {
+      "kind": "smooth",
+      "scale": 0.03,
+      "variation": 0.12,
+      "lenticels": 500,
+      "smooth_below": 0.0
+    },
+    "foliage": [0.07, 0.15, 0.04],
+    "foliage_shade": [0.022, 0.045, 0.012],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "compound",
+          "leaflets": 7,
+          "leaflet_width": 0.35,
+          "teeth": 9,
+          "petiole": 0.12
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "count": 40,
+          "cluster": "head",
+          "size": 0.16,
+          "aspect": 1.0,
+          "unripe": 0.15
+        },
+        "colour": [0.8, 0.08, 0.06],
+        "accent": [0.4, 0.5, 0.15],
+        "season": {
+          "bud": 85,
+          "flower": 100,
+          "fruit": 130,
+          "ripe": 165,
+          "ripening": 25,
+          "fall": 230,
+          "flower_look": {
+            "shape": {
+              "template": "umbel",
+              "clusters": 9,
+              "florets": 12
+            },
+            "colour": [0.92, 0.9, 0.75],
+            "accent": [0.85, 0.82, 0.6],
+            "size": 1.67
+          }
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 3.5,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a tall, coarse shrub with opposite pinnate leaves of sharp-toothed leaflets and dome-shaped clusters of bright red berries. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 3.5 m tall at 12 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: mid-green leaflets; red berry clusters; grey-brown warty bark. Fruit (plant roadmap P4), as in mid-July: dome-shaped clusters of bright red berries about 5 mm across. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: creamy pyramidal clusters in April and May; berries red in late June and July, eaten by August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): grey-brown bark with conspicuous warty lenticels; set from general knowledge of the species, not measured."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "schema": 1,
+  "id": "rubus-armeniacus",
+  "taxon": {
+    "scientific_name": "Rubus armeniacus",
+    "common_name": "Himalayan blackberry",
+    "usda_symbol": "RUAR9"
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 2.5,
+      "crown_radius": 2.0,
+      "crown_base": 0,
+      "crown_rate": 0.22,
+      "space_density": 71.6,
+      "internode": 0.15,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 55,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "bud_years": 6,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.06,
+      "wiggle": 10,
+      "fork_height": 0.03,
+      "fork_stems": 10,
+      "fork_angle": 45,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 1.275,
+      "space_kill": 0.315,
+      "alternate": 1,
+      "leaf_years": 2,
+      "leaf_size": 0.18,
+      "spur_leaf": 0.15,
+      "spur_pairs": 1,
+      "leaf_angle": 55,
+      "blooms": 2,
+      "bloom_age": 2,
+      "bloom_size": 0.08,
+      "bloom_angle": 80,
+      "leaf_area": 0.33,
+      "bloom_area": 0.521
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [3, 6, 12]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.3, 0.12, 0.1],
+    "foliage": [0.06, 0.14, 0.035],
+    "foliage_shade": [0.02, 0.045, 0.01],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "compound",
+          "leaflets": 5,
+          "leaflet_width": 0.65,
+          "teeth": 9,
+          "petiole": 0.15
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "kind": "drupelets",
+          "count": 8,
+          "size": 0.25,
+          "spread": 40,
+          "aspect": 0.85,
+          "unripe": 0.8
+        },
+        "colour": [0.06, 0.04, 0.06],
+        "accent": [0.6, 0.08, 0.08],
+        "season": {
+          "bud": 140,
+          "flower": 160,
+          "fruit": 190,
+          "ripe": 215,
+          "ripening": 30,
+          "fall": 290,
+          "flower_look": {
+            "shape": {
+              "template": "flower",
+              "petals": 5,
+              "petal_width": 1.1,
+              "point": 0.0,
+              "notch": 0.0,
+              "centre": 0.25
+            },
+            "colour": [0.92, 0.85, 0.85],
+            "accent": [0.85, 0.85, 0.6],
+            "size": 0.375
+          }
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 2.3,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: an invasive bramble of thick, arching, thorny canes that root at the tips and build impenetrable mounds, with leaves of five toothed leaflets and pale pink flowers. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 2.3 m tall at 12 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: dark green leaflets, pale beneath; pale pink flowers; red-purple canes. Fruit (plant roadmap P4), as in mid-July: panicles of berries, most still green or red, the first black. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: white to pink flowers in June and July; berries green, red, then black from August into October. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

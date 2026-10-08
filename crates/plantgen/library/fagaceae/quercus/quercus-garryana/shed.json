@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "id": "quercus-garryana",
+  "foliage": {
+    "kind": "leaves",
+    "length_m": [0.07, 0.16],
+    "shape": {
+      "template": "lobed",
+      "width": 0.62,
+      "lobes": 4,
+      "depth": 0.55,
+      "round": 1.0,
+      "petiole": 0.08
+    },
+    "fall_colours": [[0.46, 0.34, 0.12], [0.42, 0.3, 0.11], [0.5, 0.4, 0.15]],
+    "dry_colours": [[0.38, 0.26, 0.14], [0.32, 0.22, 0.13], [0.42, 0.31, 0.18]],
+    "curl": 0.7,
+    "pale_beneath": 0.4
+  },
+  "decay": 0.25,
+  "pieces": [
+    {
+      "kind": "fruit",
+      "length_m": [0.02, 0.03],
+      "aspect": 0.7,
+      "colour": [0.4, 0.28, 0.14],
+      "per_m2": 1.5
+    },
+    {
+      "kind": "twig",
+      "length_m": [0.05, 0.25],
+      "aspect": 0.04,
+      "colour": [0.2, 0.15, 0.1],
+      "per_m2": 3.0
+    }
+  ],
+  "look": {
+    "tile_m": 1.5,
+    "mean": [0.123, 0.09, 0.054],
+    "relief_m": 0.048
+  },
+  "evidence": {
+    "decay": {
+      "evidence": "Authored",
+      "note": "Authored from botanical descriptions of Oregon white oak: leathery blades 5 to 15 cm, deeply cut into rounded lobes, paler beneath, on petioles of 1 to 2 cm, yellow-brown in autumn, drying brown and crinkled and slow to rot; acorns 2 to 3 cm. The crown wears sprigs of toothed leaves; a fallen leaf seen whole takes the lobed shape. Colours and curl chosen by eye; numbers plausible, not measured."
+    },
+    "foliage": {
+      "evidence": "Authored",
+      "note": "Authored from botanical descriptions of Oregon white oak: leathery blades 5 to 15 cm, deeply cut into rounded lobes, paler beneath, on petioles of 1 to 2 cm, yellow-brown in autumn, drying brown and crinkled and slow to rot; acorns 2 to 3 cm. The crown wears sprigs of toothed leaves; a fallen leaf seen whole takes the lobed shape. Colours and curl chosen by eye; numbers plausible, not measured."
+    },
+    "look": {
+      "evidence": "Authored",
+      "note": "Authored: the drawn look's mean hue at the brightness chosen by eye for this species' litter, the relief the drawing has, and a tile its pieces repeat on unseen. PlantGen's litter tests check the hue and relief against the drawing."
+    },
+    "pieces": {
+      "evidence": "Authored",
+      "note": "Authored from botanical descriptions of Oregon white oak: leathery blades 5 to 15 cm, deeply cut into rounded lobes, paler beneath, on petioles of 1 to 2 cm, yellow-brown in autumn, drying brown and crinkled and slow to rot; acorns 2 to 3 cm. The crown wears sprigs of toothed leaves; a fallen leaf seen whole takes the lobed shape. Colours and curl chosen by eye; numbers plausible, not measured."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: litter values hand-set from botanical descriptions and photographs of the species",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"]
+  }
+}

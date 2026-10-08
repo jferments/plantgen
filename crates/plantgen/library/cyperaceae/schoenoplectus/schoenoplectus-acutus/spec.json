@@ -1,0 +1,110 @@
+{
+  "schema": 1,
+  "id": "schoenoplectus-acutus",
+  "taxon": {
+    "scientific_name": "Schoenoplectus acutus",
+    "common_name": "hardstem bulrush",
+    "usda_symbol": "SCAC3"
+  },
+  "growth_form": "graminoid",
+  "generator": {
+    "program": "grass",
+    "params": {
+      "tillers": 20,
+      "tiller_rate": 0.5,
+      "tussock_radius": 0.15,
+      "tiller_lean": 4,
+      "leaves": 1,
+      "leaf_length": 2.0,
+      "leaf_spread": 0.15,
+      "leaf_angle": 2,
+      "arch": 0.5,
+      "twist": 1,
+      "pieces": 8,
+      "flowering": 0.3,
+      "culm_height": 1.6,
+      "culm_radius": 0.005,
+      "culm_leaves": 0,
+      "culm_lean": 2,
+      "panicle_length": 0.06,
+      "panicle_nod": 30,
+      "blade_area": 0.023,
+      "tip_area": 0.012,
+      "thatch_area": 0.023,
+      "panicle_area": 0.09
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [1, 2, 4]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.32, 0.35, 0.22],
+    "foliage": [0.08, 0.14, 0.07],
+    "foliage_shade": [0.025, 0.045, 0.022],
+    "variation": 0.2,
+    "organs": {
+      "blade": {
+        "shape": { "template": "blade", "taper": 0, "aspect": 0.025 }
+      },
+      "blade_tip": {
+        "shape": { "template": "blade", "taper": 1, "aspect": 0.025 }
+      },
+      "thatch": {
+        "shape": { "template": "blade", "taper": 0, "aspect": 0.025 },
+        "colour": [0.38, 0.31, 0.18],
+        "shade": [0.12, 0.1, 0.05]
+      },
+      "panicle": {
+        "shape": {
+          "template": "panicle",
+          "whorls": 2,
+          "branches": 4,
+          "spread": 40,
+          "spikelets": 5,
+          "aspect": 0.8,
+          "stalk": 0.02
+        },
+        "colour": [0.38, 0.27, 0.15]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 2.0,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a tall emergent of smooth, round, grey-green stems standing in water, with small brown spikelet clusters near their tips. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 2 m tall at 4 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: grey-green stems; brown spikelets."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

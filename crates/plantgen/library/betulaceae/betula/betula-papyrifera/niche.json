@@ -1,0 +1,90 @@
+{
+  "schema": 2,
+  "species": "betula-papyrifera",
+  "layers": {
+    "canopy": 0.15,
+    "subcanopy": 0.3,
+    "shrub": 0.2
+  },
+  "moisture": [0.4, 0.55, 0.85, 0.95],
+  "heat_load": [0.3, 0.6, 1.4, 1.8],
+  "elevation_m": [-50, -10, 900, 1400],
+  "max_slope_deg": 35,
+  "shade_tolerance": 0.15,
+  "coldest_c": [-35, -25, 6, 10],
+  "hard_freeze_c": [-60, -50, 10, 14],
+  "warmest_c": [9, 11.5, 22, 25],
+  "degree_days_0": [700, 1100, 5500, 7000],
+  "degree_days_5": [200, 450, 3500, 4500],
+  "moisture_index": [0.3, 0.45, 1, 1.01],
+  "summer_rain": [0, 0, 0.7, 0.9],
+  "evidence": {
+    "layers": {
+      "evidence": "Authored",
+      "note": "Scattered in the lowlands at forest edges, in wetland margins and after disturbance."
+    },
+    "moisture": {
+      "evidence": "Authored",
+      "note": "Moist ground."
+    },
+    "heat_load": {
+      "evidence": "Authored",
+      "note": "Grows on any aspect."
+    },
+    "elevation_m": {
+      "evidence": "Authored",
+      "note": "Sea level to about 900 m in western Washington; the upper limits are loose."
+    },
+    "max_slope_deg": {
+      "evidence": "Authored",
+      "note": "On flats and gentle slopes."
+    },
+    "shade_tolerance": {
+      "evidence": "Authored",
+      "note": "Shade intolerant."
+    },
+    "coldest_c": {
+      "evidence": "Authored",
+      "note": "Across its range (see the provenance note), coldest-month means from about −25 °C, gone by −35 °C, up to about 6 °C: the mildest winters of the Puget Sound lowlands where it grows, which CHELSA's 1 km climate puts at about 5 °C at sea level (raised from 5 °C on 2026-10-06 for the fine climate)."
+    },
+    "hard_freeze_c": {
+      "evidence": "Authored",
+      "note": "Among the hardiest: lows to about −50 °C borne."
+    },
+    "warmest_c": {
+      "evidence": "Authored",
+      "note": "Across its range, warmest-month means from about 11.5 to 22 °C; gone below 9 °C, where summers are too short, and above 25 °C."
+    },
+    "degree_days_0": {
+      "evidence": "Authored",
+      "note": "About 1,100 or more degree-days above 0 °C, none below 700."
+    },
+    "degree_days_5": {
+      "evidence": "Authored",
+      "note": "A short growing season suffices: about 450 or more degree-days above 5 °C, none below 200."
+    },
+    "moisture_index": {
+      "evidence": "Authored",
+      "note": "A moisture index from about 0.45, gone by 0.3."
+    },
+    "summer_rain": {
+      "evidence": "Authored",
+      "note": "No limit in its range: summer-dry coasts to continental summer rain."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set niche values",
+        "licence": "project contribution under the repository's terms"
+      },
+      {
+        "title": "Burns, R. M. and Honkala, B. H. (technical coordinators), 1990. Silvics of North America, volume 2, Hardwoods. USDA Forest Service Agriculture Handbook 654",
+        "url": "https://www.srs.fs.usda.gov/pubs/misc/ag_654/table_of_contents.htm",
+        "licence": "public domain (work of the US federal government)"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Authored from general knowledge of the species in the south Puget Sound lowlands; not yet checked against the public-domain USDA references (Silvics of North America, the Fire Effects Information System, PLANTS). Climate ranges (niche schema 2, 2026-10-06): Paper birch spans the boreal forest from Alaska to Newfoundland; its southern limit follows a July mean of about 21 °C (Silvics of North America, vol. 2). Each climate range brackets the climate of that range at the 2.8° ERA5 product's scale, an approximate envelope read from these descriptions, not fitted to occurrence records."
+  }
+}

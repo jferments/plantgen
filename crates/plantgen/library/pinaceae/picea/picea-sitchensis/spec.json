@@ -1,0 +1,126 @@
+{
+  "schema": 1,
+  "id": "picea-sitchensis",
+  "taxon": {
+    "scientific_name": "Picea sitchensis",
+    "common_name": "Sitka spruce",
+    "usda_symbol": "PISI"
+  },
+  "growth_form": "excurrent_tree",
+  "generator": {
+    "program": "conifer",
+    "params": {
+      "cone_age": 20,
+      "cone_chance": 0.12,
+      "cone_length": 0.08,
+      "cone_pitch": 110,
+      "cone_years": 2,
+      "cone_area": 0.55,
+      "height_max": 75,
+      "height_rate": 0.02,
+      "height_shape": 1.4,
+      "whorl": 5,
+      "interwhorl": 2,
+      "branch_angle": 75,
+      "branch_sag": 1.0,
+      "max_sag": 35,
+      "upturn": 0.02,
+      "branch_growth": 0.32,
+      "needle_years": 7,
+      "spray_droop": 40,
+      "shade_death": 0.08,
+      "pipe_organ": 0.011,
+      "spray_area": 0.25
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [5, 15, 30, 60]
+  },
+  "variants": {
+    "environments": ["open", "interior"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.3, 0.24, 0.2],
+    "bark_pattern": {
+      "kind": "scaly",
+      "scale": 0.04,
+      "elongation": 1.3,
+      "fissure": 0.12,
+      "depth": 0.3,
+      "contrast": 0.4,
+      "variation": 0.2,
+      "smooth_below": 0.04,
+      "roughness": 0.35
+    },
+    "foliage": [0.05, 0.11, 0.07],
+    "foliage_shade": [0.018, 0.04, 0.03],
+    "variation": 0.2,
+    "organs": {
+      "cone": {
+        "shape": {"template": "fruit", "aspect": 0.42, "cone": 1},
+        "colour": [0.55, 0.4, 0.25]
+      },
+      "spray": {
+        "shape": {
+          "template": "needles",
+          "ranks": 0,
+          "twigs": 4,
+          "aspect": 0.6,
+          "needle": 0.07,
+          "twig_angle": 50,
+          "width": 0.06
+        },
+        "accent": [0.3, 0.2, 0.12]
+      }
+    },
+    "ridges": {
+      "spacing": 0.05,
+      "depth": 0.02,
+      "twist": 0,
+      "contrast": 0.3
+    },
+    "flare": {
+      "height": 1.2,
+      "amount": 0.7,
+      "buttresses": 6,
+      "ridge": 0.6
+    }
+  },
+  "allometry": [
+    {
+      "age": 60,
+      "environment": "interior",
+      "height": 36,
+      "dbh": 0.6,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a massive conifer with a broad, buttressed base, level branches with hanging branchlets and stiff, sharp needles all round the twigs; fast-growing on wet ground near the coast. Not fitted to measurements. Cones (plant forms F3): 5 to 10 cm hang from the upper branches, papery scales; set from general knowledge of the species, not measured."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 36 m tall and 60 cm across at breast height at 60 years in a closed stand. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: blue-green needles with silvery undersides; thin grey-brown bark in small scales. Needle shoots (plant roadmap P4): stiff, sharp needles 1.5 to 2.5 cm long and 1 to 1.5 mm wide, so a needle 0.06 as wide as it is long (`width`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): thin grey bark in small loose rounded scales; set from general knowledge of the species, not measured."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

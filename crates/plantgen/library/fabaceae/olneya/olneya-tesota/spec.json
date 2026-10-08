@@ -1,0 +1,144 @@
+{
+  "schema": 1,
+  "id": "olneya-tesota",
+  "taxon": {
+    "scientific_name": "Olneya tesota",
+    "common_name": "desert ironwood",
+    "usda_symbol": "OLTE"
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_height": 7,
+      "crown_radius": 4,
+      "crown_base": 0.5,
+      "crown_rate": 0.04,
+      "space_density": 14,
+      "internode": 0.18,
+      "max_shoot": 3,
+      "branch_angle": 45,
+      "apical_young": 0.6,
+      "apical": 0.5,
+      "apical_years": 15,
+      "alternate": 1,
+      "bud_years": 12,
+      "leaf_size": 0.14,
+      "spur_leaf": 0.12,
+      "spur_pairs": 3,
+      "leaf_angle": 50,
+      "leaf_years": 2,
+      "lean": 12,
+      "wiggle": 12,
+      "fork_height": 0.5,
+      "fork_stems": 3,
+      "fork_angle": 35,
+      "droop": 0.01,
+      "pipe_tip": 0.003,
+      "pipe_organ": 0.005,
+      "pipe_rings": 8e-06,
+      "light_cell": 0.3,
+      "thorns": 1,
+      "thorn_length": 0.015,
+      "thorn_angle": 60,
+      "blooms": 3,
+      "bloom_age": 10,
+      "bloom_size": 0.025,
+      "bloom_angle": 40,
+      "leaf_area": 0.106,
+      "thorn_area": 0.059
+    }
+  },
+  "growth": {
+    "years": 80,
+    "step": 1,
+    "keyframes": [5, 25, 80]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3]
+  },
+  "appearance": {
+    "bark": [0.45, 0.43, 0.4],
+    "bark_pattern": {
+      "kind": "fibrous",
+      "scale": 0.02,
+      "elongation": 6.0,
+      "fissure": 0.3,
+      "depth": 0.25,
+      "contrast": 0.35,
+      "variation": 0.2,
+      "smooth_below": 0.04,
+      "roughness": 0.3
+    },
+    "foliage": [0.27, 0.36, 0.27],
+    "foliage_shade": [0.0945, 0.126, 0.0945],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "frond",
+          "pinnae": 5,
+          "width": 0.35,
+          "divided": 0,
+          "stipe": 0.1
+        }
+      },
+      "thorn": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.12
+        },
+        "colour": [0.42, 0.38, 0.33],
+        "form": "thorn"
+      },
+      "bloom": {
+        "shape": {
+          "template": "flower",
+          "petals": 5
+        },
+        "colour": [0.7, 0.55, 0.8]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 25,
+      "environment": "open",
+      "height": 4.0,
+      "tolerance": 0.5
+    },
+    {
+      "age": 80,
+      "environment": "open",
+      "height": 7.0,
+      "tolerance": 0.45
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a slow evergreen tree 5 to 10 m tall with a broad crown, smooth grey bark that shreds with age, short paired thorns, grey-green pinnate leaves and lavender pea flowers in late spring. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 4 m at 25 years and 7 m at 80. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: grey bark, grey-green leaves, lavender flowers. Bark pattern (plant roadmap P4, `bark_pattern`): grey bark, smooth when young and shredding in strips when old; set from general knowledge of the species, not measured."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F5). Calibration against measurements and photographs comes later."
+  }
+}

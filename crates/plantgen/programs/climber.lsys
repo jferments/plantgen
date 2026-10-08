@@ -1,0 +1,109 @@
+# Climber: a vine that climbs its host, after ivy and the wild grapes.
+# From its foot `shoots` stems set out toward the host. A shoot's tip reads
+# the host (`host@1`): the distance gd to the host's surface and the
+# direction (gx, gy, gz) to it. Within `cling` of the host a shoot clings:
+# it turns hug of the way toward the host each internode and climbs under
+# an upward tropism of elasticity `climb`, so it runs up the trunk and out
+# along the limbs. Within the tool's reach but farther than `cling` it
+# turns seek of the way toward the host. Out of reach (above the crown,
+# or with no host) it hangs: a tropism toward the ground of elasticity
+# drape, so a liana spreads over its host's crown and drapes from it, and
+# a vine with no host sprawls over the ground.
+#
+# A shoot grows up to max_shoot internodes a year, fewer in shade, and
+# forks at each node with the chance branch_chance into a side shoot of the
+# next order, up to max_order; a shoot that has hung free for free_years
+# stops. Each node bears a leaf (evergreen for leaf_years, or a year) and
+# keeps a bud that leafs again each year with the chance renew, so old
+# stems stay clothed as ivy's do; and,
+# once the vine is fruit_age old, on a free shoot a cluster of fruit with
+# the chance fruiting.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem climber 1;
+
+param vigour_spread = 0.1;
+param shoots = 3;             # stems from the foot
+param internode = 0.12;
+param max_shoot = 12;         # most internodes a shoot grows in a year
+param shade_shoot = 0.4;      # share of them it grows in deep shade
+param cling = 0.15;           # within this of the host a shoot clings
+param hug = 0.3;              # how far a clinging shoot turns toward the host each internode
+param climb = 0.25;           # upward tropism of a clinging shoot
+param reach = 3;              # how far a shoot senses its host
+param seek = 0.5;             # how far a shoot within reach turns toward the host
+param drape = 0.08;           # downward tropism of a free shoot
+param free_years = 4;         # years a free shoot keeps growing
+param branch_chance = 0.12;   # chance of a side shoot at a node
+param branch_angle = 45;
+param max_order = 3;
+param leaf_size = 0.08;
+param leaf_angle = 50;
+param leaf_years = 1;
+param renew = 0;              # chance a year that an old node leafs again
+param fruit_age = 5;
+param fruiting = 0.05;        # chance of a fruit cluster at a free node
+param fruit_size = 0.12;
+param leaf_area = 0.3;
+param fruit_area = 0.89;
+param pipe_tip = 0.002;
+param pipe_organ = 0.003;
+param pipe_rings = 0.000004;
+
+module A(o, h) queries host, light;  # a shoot's tip: its order and h years hanging free
+module S queries vigour;      # the foot of a side shoot
+module M(n, o, w);            # n internodes still to lay this year; w 1 on a free shoot
+module Sh(k, m);              # shoots k to k + m - 1 from the foot
+
+organ leaf leaf area leaf_area;
+organ fruit fruit area fruit_area;
+
+tool host@1 { reach = reach };
+tool vigour@1 { lambda = 0.5, alpha = 2 };
+tool light@1 { cell = 0.3, extinction = 0.5, bud = 0.01 };
+tool pipe@1 { exponent = 2.4, tip = pipe_tip, organ = pipe_organ, rings = pipe_rings };
+
+axiom Sh(0, max(1, round(shoots)));
+
+decompose Sh(k, m) : m > 1 -> Sh(k, floor(m / 2)) Sh(k + floor(m / 2), m - floor(m / 2));
+decompose Sh(k, m) : m == 1 ->
+    [ /(k * 360 / max(1, shoots) + uniform(-20, 20)) &(uniform(20, 50)) S A(0, 0) ];
+decompose Sh(k, m) -> ;
+
+# A shoot's tip: clinging, seeking or hanging free.
+rule A(o, h) : h >= free_years -> ;
+rule A(o, h) : gd < cling ->
+    steer(gx, gy, gz, hug) T(0, 1, 0, climb)
+    M(max(1, round(max_shoot * lerp(shade_shoot, 1, light))), o, 0) A(o, 0);
+rule A(o, h) : gd < reach ->
+    steer(gx, gy, gz, seek)
+    M(max(1, round(max_shoot * lerp(shade_shoot, 1, light) * 0.5)), o, 0) A(o, 0);
+rule A(o, h) ->
+    T(0, -1, 0, drape)
+    M(max(1, round(max_shoot * lerp(shade_shoot, 1, light) * 0.5)), o, 1) A(o, h + dt);
+
+# One internode with its leaf, and perhaps a side shoot or fruit.
+decompose M(n, o, w) : n > 0 ->
+    F(internode) /(137.5 + gauss() * 10)
+    [ &(leaf_angle) $ leaf(leaf_size * uniform(0.85, 1.15)) ]
+    [ /(180) Lb ]
+    Mb(o, w)
+    M(n - 1, o, w);
+decompose M(n, o, w) -> ;
+module Mb(o, w);              # what a node may carry besides its leaf
+module Lb;                    # a node's bud, which may leaf again
+decompose Mb(o, w) : o < max_order && rand() < branch_chance ->
+    [ /(uniform(0, 360)) &(branch_angle) S A(o + 1, 0) ];
+decompose Mb(o, w) : w > 0 && t >= fruit_age && rand() < fruiting ->
+    [ &(150) fruit(fruit_size * uniform(0.8, 1.2)) ];
+decompose Mb(o, w) -> ;
+
+# Leaves fall after leaf_years, fruit after a year; a side shoot with no
+# living tip falls.
+rule leaf(s) : age >= leaf_years -> ;
+rule fruit(s) : age >= 1 -> ;
+rule S : age > 1 && ntip == 0 -> %;
+
+# An old node leafs again.
+rule Lb : age >= 1 && rand() < renew * dt -> [ &(leaf_angle) $ leaf(leaf_size * uniform(0.8, 1.1)) ] Lb;
