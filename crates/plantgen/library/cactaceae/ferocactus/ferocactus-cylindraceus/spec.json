@@ -154,15 +154,43 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: a single cylindrical barrel up to 2 to 2.5 m tall and 25 to 40 cm across, leaning a little south, so densely spined that the green body hardly shows. Yellow flowers in a crown ring in spring and dry yellow fruit. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Rough heights from general knowledge: about a metre by 60 years, 1.5 to 2 m by 110. Wide tolerances."
     },
     "appearance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Colours chosen by eye from photographs: 18 to 30 ribs, areoles close together, red to yellow-tipped radials and four long, curved but never hooked centrals that cover the body, greying with age."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
     }
   },
   "provenance": {

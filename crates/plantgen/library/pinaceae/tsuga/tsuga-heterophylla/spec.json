@@ -110,15 +110,43 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: a tall, narrow conifer with a drooping leader, slender level to drooping branches and feathery, flat sprays of short needles in two ranks; very shade tolerant. Not fitted to measurements. Cones (plant forms F3): 1.5 to 3 cm hang from the shoot tips; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws with needles of their true length."
     },
     "allometry": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Rough sizes from general knowledge of the species: 33 m tall and 45 cm across at breast height at 60 years in a closed stand. Replace with measured data before calling this species calibrated."
     },
     "appearance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Colours chosen by eye: soft dark green needles with paler undersides; dark reddish-brown furrowed bark. Needle shoots (plant roadmap P4): flat needles of mixed lengths, 0.5 to 2 cm long and 1.5 to 2 mm wide, so a needle 0.12 as wide as it is long (`width`), and needles about 1.2 cm on a spray 25 cm long (`needle` 0.047), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): thin dark reddish-brown bark furrowed into flat ridges; set from general knowledge of the species, not measured."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
     }
   },
   "provenance": {

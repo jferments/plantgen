@@ -113,15 +113,43 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: an evergreen tree of tropical coasts, 5 to 10 m tall, standing on a tangle of arching prop roots that leave the trunk and lower branches and reach down into the mud; glossy, leathery, opposite leaves and small pale yellow flowers. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Rough heights from general knowledge of the species: about 5 m at 20 years and 7 m at 50. Wide tolerances."
     },
     "appearance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Colours chosen by eye from photographs: dark glossy green leaves, grey-brown bark and roots. Bark pattern (plant roadmap P4, `bark_pattern`): smooth grey-brown bark with lenticels; set from general knowledge of the species, not measured."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
     }
   },
   "provenance": {
