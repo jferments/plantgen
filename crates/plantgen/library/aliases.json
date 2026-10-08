@@ -1,0 +1,79 @@
+{
+  "schema": 1,
+  "aliases": {
+    "chamaenerion-angustifolium": "epilobium-angustifolium",
+    "cladium-jamaicense": "cladium-mariscus-subsp-jamaicense",
+    "ferocactus-cylindraceus": "ferocactus-acanthodes-subsp-acanthodes",
+    "mahonia-aquifolium": "berberis-aquifolium",
+    "mahonia-nervosa": "berberis-nervosa",
+    "mammillaria-grahamii": "cochemiea-grahamii",
+    "mulinum-spinosum": "azorella-prolifera",
+    "opuntia-santa-rita": "opuntia-gosseliniana",
+    "pinus-contorta": "pinus-contorta-var-contorta",
+    "populus-trichocarpa": "populus-tristis",
+    "prosopis-velutina": "neltuma-velutina",
+    "struthiopteris-spicant": "blechnum-spicant"
+  },
+  "evidence": {
+    "aliases.chamaenerion-angustifolium": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "Chamaenerion angustifolium, the name the spec's authors wrote, is a synonym of Epilobium angustifolium in WCVP v16."
+    },
+    "aliases.cladium-jamaicense": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "Cladium jamaicense, the name the spec's authors wrote, is a synonym of Cladium mariscus subsp. jamaicense in WCVP v16."
+    },
+    "aliases.ferocactus-cylindraceus": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "Ferocactus cylindraceus, the name the spec's authors wrote, is a synonym of Ferocactus acanthodes subsp. acanthodes in WCVP v16."
+    },
+    "aliases.mahonia-aquifolium": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "Mahonia aquifolium, the name the spec's authors wrote, is a synonym of Berberis aquifolium in WCVP v16."
+    },
+    "aliases.mahonia-nervosa": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "Mahonia nervosa, the name the spec's authors wrote, is a synonym of Berberis nervosa in WCVP v16."
+    },
+    "aliases.mammillaria-grahamii": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "Mammillaria grahamii, the name the spec's authors wrote, is a synonym of Cochemiea grahamii in WCVP v16."
+    },
+    "aliases.mulinum-spinosum": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "Mulinum spinosum, the name the spec's authors wrote, is a synonym of Azorella prolifera in WCVP v16."
+    },
+    "aliases.opuntia-santa-rita": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "Opuntia santa-rita, the name the spec's authors wrote, is a synonym of Opuntia gosseliniana in WCVP v16."
+    },
+    "aliases.pinus-contorta": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "Pinus contorta var. contorta is an accepted variety in WCVP v16, and a variety's id extends its species' id."
+    },
+    "aliases.populus-trichocarpa": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "Populus trichocarpa, the name the spec's authors wrote, is a synonym of Populus tristis in WCVP v16."
+    },
+    "aliases.prosopis-velutina": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "Prosopis velutina, the name the spec's authors wrote, is a synonym of Neltuma velutina in WCVP v16."
+    },
+    "aliases.struthiopteris-spicant": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "Struthiopteris spicant, the name the spec's authors wrote, is a synonym of Blechnum spicant in WCVP v16."
+    }
+  }
+}

@@ -30,11 +30,16 @@ prompt injection. So, without exception:
   - `library/<family>/<genus>/<id>/`: one folder per species, with its
     record: `spec.json` (form and look), `conditions.json` (its typical
     site), and, where written, `niche.json` (where it grows) and
-    `shed.json` (what falls from it). A spec's `taxon` names its family
-    as the World Checklist of Vascular Plants (WCVP v16) has it, the genus
-    its name is written in, and WCVP's `plant_name_id` for the accepted
-    taxon (with `accepted_name` where WCVP treats the name as a synonym);
-    the family and genus folders are those names in lower case.
+    `shed.json` (what falls from it). Ids follow accepted names: a
+    spec's `taxon` holds the World Checklist of Vascular Plants (WCVP
+    v16) accepted name, its family, its genus and its `plant_name_id`;
+    the family and genus folders are those names in lower case, and the
+    id is the name written as an id. A subspecies, variety, form or
+    cultivar has its folder in its species' folder
+    (`pinus-contorta/pinus-contorta-var-contorta/`). When WCVP renames a
+    taxon, `git mv` its folder to the new id and map the old id to it in
+    `library/aliases.json`, with a note citing the source; old ids still
+    find it.
   - Rank files, the specs of taxa above species: `family.json` in a
     family's folder, `genus.json` in a genus's, and
     `library/_ranks/<rank>/<name>.json` for orders, clades and the other

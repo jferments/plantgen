@@ -59,7 +59,8 @@ pub fn all_species() -> impl Iterator<Item = (&'static str, &'static str)> {
         .map(|entry| (entry.id.as_str(), entry.source()))
 }
 
-/// A built-in species' spec, as JSON, by id.
+/// A built-in species' spec, as JSON, by id (an old id finds the species
+/// renamed from it).
 #[must_use]
 pub fn builtin_species(id: &str) -> Option<&'static str> {
     Library::builtin().entry(id).map(Entry::source)
@@ -97,6 +98,9 @@ pub fn areas_agree(drawn: f64, shaded: f64) -> bool {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Taxon {
+    /// Its name: in a library, the accepted name in the World Checklist of
+    /// Vascular Plants (`Pinus contorta var. contorta`), which the taxon's
+    /// id writes as an id (`pinus-contorta-var-contorta`).
     pub scientific_name: String,
     pub common_name: String,
     /// USDA PLANTS symbol, for example `PSME`.
@@ -111,18 +115,13 @@ pub struct Taxon {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub family: Option<String>,
     /// The genus `scientific_name` is written in (`Pseudotsuga`); the genus
-    /// folder is its lower case. For a name WCVP treats as a synonym it may
-    /// differ from the accepted name's genus.
+    /// folder is its lower case.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub genus: Option<String>,
-    /// WCVP's `plant_name_id` of the accepted taxon the name resolves to:
-    /// the species, or the subspecies or variety where the name is one.
+    /// WCVP's `plant_name_id` of the accepted taxon: the species, or the
+    /// subspecies or variety where the taxon is one.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub plant_name_id: Option<u64>,
-    /// WCVP's accepted name, where it differs from `scientific_name` (a
-    /// name WCVP treats as a synonym).
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub accepted_name: Option<String>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -655,7 +654,8 @@ impl PlantSpec {
         Ok(spec)
     }
 
-    /// A built-in species by id.
+    /// A built-in species by id (an old id finds the species renamed from
+    /// it).
     ///
     /// # Errors
     ///

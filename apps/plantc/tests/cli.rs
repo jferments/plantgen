@@ -307,7 +307,7 @@ fn lineup_and_close_ups_write_pngs() {
     let image = dir.join("cacti.png");
     let printed = stdout(&plantc(&[
         "lineup",
-        "mammillaria-grahamii",
+        "cochemiea-grahamii",
         "opuntia-basilaris",
         "--seeds",
         "2",
@@ -320,7 +320,7 @@ fn lineup_and_close_ups_write_pngs() {
     ]));
     // A row of two seeds for each species.
     assert_eq!(
-        printed.matches("mammillaria-grahamii").count(),
+        printed.matches("cochemiea-grahamii").count(),
         3,
         "{printed}"
     );
@@ -328,6 +328,7 @@ fn lineup_and_close_ups_write_pngs() {
     let bytes = fs::read(&image).unwrap();
     assert_eq!(&bytes[..8], b"\x89PNG\r\n\x1a\n");
 
+    // An old id finds the species renamed from it.
     let close = dir.join("close.png");
     let printed = stdout(&plantc(&[
         "render",
@@ -346,7 +347,7 @@ fn lineup_and_close_ups_write_pngs() {
     assert!(printed.contains("areoles of solid spines"), "{printed}");
     let failed = plantc(&[
         "render",
-        "mammillaria-grahamii",
+        "cochemiea-grahamii",
         "--focus",
         "0,0.05",
         "--out",
