@@ -4,10 +4,10 @@ Botanically accurate generation of 3D plant models from open data.
 
 **Website: [plantgen.io](https://plantgen.io)**
 
-![A forest of PlantGen's species: tall conifers and broadleaf trees over fireweed, shrubs and grasses beside a lake](docs/images/forest-in-worldlab.jpg)
+![A forest of PlantGen's species: tall conifers and broadleaf trees over fireweed, shrubs and grasses beside a lake](docs/images/forest.jpg)
 
 *PlantGen's species in a forest of the Pacific Northwest, placed by habitat
-and drawn by [Project After](https://github.com/jferments)'s WorldLab.*
+and rendered in real time.*
 
 PlantGen grows plants the way plants grow. A species is data: its form,
 its looks and where it lives, each value with a note on how it is known.
@@ -73,13 +73,6 @@ at every age, rendering it at one age or every age, its organs through the
 year, its card textures and the ground's looks, and building packages.
 `--library DIR` reads species and programs from a folder on top of the
 built-in ones, so you can write your own.
-
-## Where it comes from
-
-PlantGen grew up inside [Project After](https://github.com/jferments), a
-game of a world after the collapse, as its plant generator. In October
-2026 it moved here with its history. Project After now uses it at a
-pinned revision, and After's CI builds and tests that revision.
 
 ## Contributing
 
