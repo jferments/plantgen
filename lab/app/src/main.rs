@@ -16,7 +16,7 @@ use std::process::ExitCode;
 
 use plantgen::library::Library;
 use plantgen::quality;
-use plantlab_scene::{Shot, View};
+use plantlab_scene::{Look, Shot, View};
 
 const USAGE: &str = "\
 plantlab: grow PlantGen's plants and render them
@@ -24,8 +24,11 @@ plantlab: grow PlantGen's plants and render them
 usage:
   plantlab thumbs SPECIES... --out DIR [--size PX] [--day N] [--age YEARS]
                   [--view three-quarter|side|top] [--quality draft|standard]
+                  [--look review|photo]
       Render a thumbnail of each species (a library id, or `all`) on the
-      GPU: DIR/ID.png and DIR/ID.json, what the picture shows.
+      GPU: DIR/ID.png and DIR/ID.json, what the picture shows. The review
+      look (default) is fixed so species compare fairly; the photo look
+      adds soft shadows, sky light, ambient occlusion and a tone map.
   plantlab help
 ";
 
@@ -101,6 +104,11 @@ fn parse_thumbs(args: &[String]) -> Result<Thumbs, String> {
                 shot.view =
                     View::from_name(&name).ok_or_else(|| format!("unknown view `{name}`"))?;
             }
+            "--look" => {
+                let name = value("--look")?;
+                shot.look = Look::from_name(&name)
+                    .ok_or_else(|| format!("unknown look `{name}`; use review or photo"))?;
+            }
             "--quality" => {
                 let name = value("--quality")?;
                 shot.quality = quality::profile(&name)
@@ -159,13 +167,14 @@ mod tests {
     #[test]
     fn thumbs_reads_its_flags() {
         let parsed = parse_thumbs(&args(
-            "acer-macrophyllum --out /tmp/x --size 256 --day 120 --view side",
+            "acer-macrophyllum --out /tmp/x --size 256 --day 120 --view side --look photo",
         ))
         .expect("parses");
         assert_eq!(parsed.species, ["acer-macrophyllum"]);
         assert_eq!(parsed.size, 256);
         assert!((parsed.shot.day - 120.0).abs() < 1e-12);
         assert_eq!(parsed.shot.view, View::Side);
+        assert_eq!(parsed.shot.look, Look::Photo);
     }
 
     #[test]

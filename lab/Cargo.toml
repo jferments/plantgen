@@ -21,6 +21,8 @@ bevy = { version = "=0.19.1", default-features = false, features = [
     "bevy_log",
     "3d_bevy_render",
     "png",
+    # Soft shadows for the photo look.
+    "experimental_pbr_pcss",
 ] }
 
 [workspace.lints.rust]

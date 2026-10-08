@@ -277,6 +277,48 @@ impl View {
     }
 }
 
+/// How a picture is lit and finished.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Look {
+    /// The fixed review look: hard-edged shadows, even sky light, no tone
+    /// mapping, so species compare fairly.
+    Review,
+    /// A photo: soft shadows from the sun's real size, sky light from an
+    /// environment, ambient occlusion and a filmic tone map.
+    Photo,
+}
+
+impl Look {
+    #[must_use]
+    pub fn from_name(name: &str) -> Option<Self> {
+        Some(match name {
+            "review" => Self::Review,
+            "photo" => Self::Photo,
+            _ => return None,
+        })
+    }
+
+    #[must_use]
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::Review => "review",
+            Self::Photo => "photo",
+        }
+    }
+
+    /// Times the picture is drawn larger and averaged down, per side.
+    #[must_use]
+    pub fn supersample(self) -> u32 {
+        match self {
+            Self::Review => 1,
+            Self::Photo => 3,
+        }
+    }
+}
+
+/// The sun's angular diameter, radians: 0.53°.
+pub const SUN_ANGULAR_DIAMETER: f32 = 0.00925;
+
 /// What to draw and how to frame it.
 #[derive(Debug, Clone)]
 pub struct Shot {
@@ -296,6 +338,7 @@ pub struct Shot {
     pub aspect: f64,
     /// Draw the scale figure or rod beside the plant.
     pub scale: bool,
+    pub look: Look,
 }
 
 impl Shot {
@@ -314,6 +357,7 @@ impl Shot {
             view: View::ThreeQuarter,
             aspect: 1.0,
             scale: true,
+            look: Look::Review,
         }
     }
 }
@@ -333,6 +377,7 @@ pub struct Scene {
     pub ground_radius: f32,
     pub framing: Framing,
     pub light: Light,
+    pub look: Look,
     /// Room the sun's shadow must cover, low and high corners.
     pub shadow_bounds: ([f32; 3], [f32; 3]),
     /// What was drawn, for the picture's sidecar.
@@ -351,6 +396,7 @@ pub struct Facts {
     pub level: usize,
     pub quality: String,
     pub view: &'static str,
+    pub look: &'static str,
     pub height_m: f64,
     pub crown_width_m: f64,
     pub triangles: usize,
@@ -468,6 +514,7 @@ pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Sc
         level: request.level,
         quality: request.quality.name.to_string(),
         view: shot.view.name(),
+        look: shot.look.name(),
         height_m: drawing.graph.height,
         crown_width_m: 2.0 * reach,
         triangles: wood.triangle_count() + cards.triangle_count() + solids.triangle_count(),
@@ -484,6 +531,7 @@ pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Sc
         ground_radius: (reach * 1.4 + gap + 0.6).max(reach + 0.3) as f32,
         framing,
         light: review_light(),
+        look: shot.look,
         shadow_bounds: (shadow_low.to_f32(), shadow_high.to_f32()),
         facts,
     }
@@ -694,6 +742,7 @@ pub fn sidecar(facts: &Facts, picture: &str, width: u32, height: u32) -> String 
             "  \"level\": {},\n",
             "  \"quality\": {},\n",
             "  \"view\": {},\n",
+            "  \"look\": {},\n",
             "  \"height_m\": {:.3},\n",
             "  \"crown_width_m\": {:.3},\n",
             "  \"triangles\": {},\n",
@@ -713,6 +762,7 @@ pub fn sidecar(facts: &Facts, picture: &str, width: u32, height: u32) -> String 
         facts.level,
         text(&facts.quality),
         text(facts.view),
+        text(facts.look),
         facts.height_m,
         facts.crown_width_m,
         facts.triangles,

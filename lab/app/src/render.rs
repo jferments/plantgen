@@ -14,9 +14,11 @@ use bevy::asset::{RenderAssetUsages, embedded_asset};
 use bevy::camera::{Exposure, RenderTarget, ScalingMode};
 use bevy::core_pipeline::tonemapping::Tonemapping;
 use bevy::image::{ImageSampler, ImageSamplerDescriptor};
-use bevy::light::{CascadeShadowConfigBuilder, DirectionalLightShadowMap, GlobalAmbientLight};
+use bevy::light::{
+    CascadeShadowConfigBuilder, DirectionalLightShadowMap, EnvironmentMapLight, GlobalAmbientLight,
+};
 use bevy::mesh::{Indices, PrimitiveTopology};
-use bevy::pbr::{ExtendedMaterial, MaterialExtension};
+use bevy::pbr::{ExtendedMaterial, MaterialExtension, ScreenSpaceAmbientOcclusion};
 use bevy::prelude::*;
 use bevy::render::render_resource::{
     AsBindGroup, Extent3d, PipelineCache, ShaderType, TextureDimension, TextureFormat,
@@ -27,7 +29,7 @@ use bevy::render::{Render, RenderApp, RenderSystems};
 use bevy::shader::ShaderRef;
 use bevy::window::{ExitCondition, WindowPlugin};
 use plantgen::library::Library;
-use plantlab_scene::{MAX_TEMPLATES, Projection as SceneProjection, Scene, SceneMesh, Shot};
+use plantlab_scene::{Look, MAX_TEMPLATES, Projection as SceneProjection, Scene, SceneMesh, Shot};
 
 /// One picture to make.
 pub struct Job {
@@ -136,6 +138,11 @@ pub fn run(jobs: Vec<Job>, out: PathBuf, width: u32, height: u32) -> Result<(), 
     let compiling = Compiling::default();
     let failures = Failures::default();
     let total = jobs.len();
+    let shadow_map = if jobs.iter().any(|job| job.shot.look == Look::Photo) {
+        PHOTO_SHADOW_MAP
+    } else {
+        REVIEW_SHADOW_MAP
+    };
     let mut app = App::new();
     app.add_plugins(
         DefaultPlugins
@@ -156,7 +163,7 @@ pub fn run(jobs: Vec<Job>, out: PathBuf, width: u32, height: u32) -> Result<(), 
     }
     embedded_asset!(app, "shaders/card.wgsl");
     app.add_plugins(MaterialPlugin::<CardMaterial>::default())
-        .insert_resource(DirectionalLightShadowMap { size: 4096 })
+        .insert_resource(DirectionalLightShadowMap { size: shadow_map })
         .insert_resource(GlobalAmbientLight::NONE)
         .insert_resource(Jobs {
             queue: jobs.into(),
@@ -237,7 +244,8 @@ fn stage_next(
         jobs.failures.push(format!("{}: {error}", job.name));
         return;
     }
-    let target = images.add(target_image(jobs.width, jobs.height));
+    let k = scene.look.supersample();
+    let target = images.add(target_image(jobs.width * k, jobs.height * k));
     let entities = spawn_scene(
         &mut commands,
         &scene,
@@ -305,7 +313,14 @@ fn captured(event: On<ScreenshotCaptured>, mut stage: ResMut<Stage>, jobs: Res<J
         current.asked = false;
         return;
     };
-    let rgba = to_rgba8(data, image.texture_descriptor.format);
+    let k = current.scene.look.supersample();
+    let rgba = downsample(
+        &to_rgba8(data, image.texture_descriptor.format),
+        width,
+        height,
+        k,
+    );
+    let (width, height) = (width / k, height / k);
     if shows_only_background(&rgba) && current.tries < RETRIES {
         // Not drawn yet: read it back again after a few more frames.
         current.tries += 1;
@@ -363,6 +378,48 @@ fn to_rgba8(data: &[u8], format: TextureFormat) -> Vec<u8> {
             .collect(),
         _ => data.to_vec(),
     }
+}
+
+/// Average each `k` by `k` block of an sRGB picture, in linear light.
+fn downsample(rgba: &[u8], width: u32, height: u32, k: u32) -> Vec<u8> {
+    if k <= 1 {
+        return rgba.to_vec();
+    }
+    let (w, h, k) = (width as usize, height as usize, k as usize);
+    let (ow, oh) = (w / k, h / k);
+    let decode: Vec<f32> = (0..=255_u8)
+        .map(|v| {
+            let c = f32::from(v) / 255.0;
+            if c <= 0.04045 {
+                c / 12.92
+            } else {
+                ((c + 0.055) / 1.055).powf(2.4)
+            }
+        })
+        .collect();
+    let mut out = Vec::with_capacity(ow * oh * 4);
+    #[allow(clippy::cast_precision_loss)]
+    let n = (k * k) as f32;
+    for y in 0..oh {
+        for x in 0..ow {
+            let mut sum = [0.0_f32; 4];
+            for dy in 0..k {
+                for dx in 0..k {
+                    let at = ((y * k + dy) * w + x * k + dx) * 4;
+                    for c in 0..3 {
+                        sum[c] += decode[usize::from(rgba[at + c])];
+                    }
+                    sum[3] += f32::from(rgba[at + 3]);
+                }
+            }
+            for channel in &sum[..3] {
+                out.push(plantgen::raster::to_u8(plantgen::raster::srgb(channel / n)));
+            }
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            out.push((sum[3] / n).round() as u8);
+        }
+    }
+    out
 }
 
 /// Whether every pixel is the background's: nothing drawn yet.
@@ -425,6 +482,27 @@ fn vec3(v: [f32; 3]) -> Vec3 {
     Vec3::from_array(v)
 }
 
+/// The photo look's soft shadow size, in the units Bevy's percentage-closer
+/// soft shadows take: a penumbra grows as `(z_blocker - z) · size / z` in
+/// shadow-map texels, with depths in the light's 0 to 1 range. A sun of
+/// angular diameter θ casts a penumbra θ · d wide at a distance d behind its
+/// blocker, so at mid depth (z = ½) `size = θ · range / (2 · texel)`, for a
+/// cascade `range` metres deep and texels `texel` metres wide. An
+/// approximation: exact at mid depth only. `None` (hard shadows) for the
+/// review look.
+fn soft_shadows(scene: &Scene, reach: f32) -> Option<f32> {
+    if scene.look != Look::Photo {
+        return None;
+    }
+    #[allow(clippy::cast_precision_loss)]
+    let texel = reach / PHOTO_SHADOW_MAP as f32;
+    Some(plantlab_scene::SUN_ANGULAR_DIAMETER * reach / (2.0 * texel))
+}
+
+/// Shadow map side, texels, for each look.
+const REVIEW_SHADOW_MAP: usize = 4096;
+const PHOTO_SHADOW_MAP: usize = 8192;
+
 /// Spawn a scene's camera, light and meshes, drawing into `target`.
 #[allow(clippy::too_many_lines)]
 fn spawn_scene(
@@ -476,23 +554,48 @@ fn spawn_scene(
                 },
                 RenderTarget::Image(target.clone().into()),
                 projection,
-                Tonemapping::None,
                 Exposure { ev100 },
-                AmbientLight {
-                    color: Color::linear_rgb(
-                        light.sky_color[0],
-                        light.sky_color[1],
-                        light.sky_color[2],
-                    ),
-                    brightness: light.sky_brightness,
-                    affects_lightmapped_meshes: true,
-                },
-                Msaa::Sample4,
                 Transform::from_translation(vec3(framing.eye))
                     .looking_at(vec3(framing.target), vec3(framing.up)),
             ))
             .id(),
     );
+    let sky = Color::linear_rgb(light.sky_color[0], light.sky_color[1], light.sky_color[2]);
+    let camera = entities[0];
+    match scene.look {
+        Look::Review => {
+            commands.entity(camera).insert((
+                Tonemapping::None,
+                AmbientLight {
+                    color: sky,
+                    brightness: light.sky_brightness,
+                    affects_lightmapped_meshes: true,
+                },
+                Msaa::Sample4,
+            ));
+        }
+        Look::Photo => {
+            // Sky light from every direction: the sky's colour above, a
+            // paler horizon, and light bounced off the ground below.
+            let [gr, gg, gb] = plantlab_scene::GROUND;
+            let mut environment = EnvironmentMapLight::hemispherical_gradient(
+                images,
+                sky,
+                Color::linear_rgb(0.85, 0.88, 0.92),
+                Color::linear_rgb(gr * 2.0, gg * 2.0, gb * 2.0),
+            );
+            environment.intensity = light.sky_brightness;
+            commands.entity(camera).insert((
+                // Filmic, and needs no lookup table.
+                Tonemapping::AcesFitted,
+                environment,
+                // Ambient occlusion reads the depth and normal prepasses,
+                // which take no multisampling: supersampling smooths edges.
+                Msaa::Off,
+                ScreenSpaceAmbientOcclusion::default(),
+            ));
+        }
+    }
     let (low, high) = scene.shadow_bounds;
     let reach = (vec3(high) - vec3(low)).length();
     entities.push(
@@ -506,6 +609,7 @@ fn spawn_scene(
                     ),
                     illuminance: light.sun_lux,
                     shadow_maps_enabled: true,
+                    soft_shadow_size: soft_shadows(scene, reach),
                     ..default()
                 },
                 CascadeShadowConfigBuilder {
