@@ -36,18 +36,22 @@
   "evidence": {
     "decay": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Authored from botanical descriptions of Sitka spruce: stiff, sharp needles 1.5 to 2.5 cm long and about 1 mm across, brown when shed; cones 5 to 9 cm long with thin, papery, wavy scales, light brown. Conifer needles rot slowly. Colours chosen by eye; cone numbers plausible, not measured."
     },
     "foliage": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Authored from botanical descriptions of Sitka spruce: stiff, sharp needles 1.5 to 2.5 cm long and about 1 mm across, brown when shed; cones 5 to 9 cm long with thin, papery, wavy scales, light brown. Conifer needles rot slowly. Colours chosen by eye; cone numbers plausible, not measured."
     },
     "look": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Authored: the drawn look's mean hue at the brightness chosen by eye for this species' litter, the relief the drawing has, and a tile its pieces repeat on unseen. PlantGen's litter tests check the hue and relief against the drawing."
     },
     "pieces": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Authored from botanical descriptions of Sitka spruce: stiff, sharp needles 1.5 to 2.5 cm long and about 1 mm across, brown when shed; cones 5 to 9 cm long with thin, papery, wavy scales, light brown. Conifer needles rot slowly. Colours chosen by eye; cone numbers plausible, not measured."
     }
   },

@@ -19,54 +19,67 @@
   "evidence": {
     "layers": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "A tufted grass of the herb layer."
     },
     "moisture": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Wet meadows, marsh edges and streambanks, and moist open ground; not dry sites."
     },
     "heat_load": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Indifferent to aspect wherever it is wet enough."
     },
     "elevation_m": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "From sea level to alpine meadows."
     },
     "max_slope_deg": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Mostly level or gently sloping wet ground."
     },
     "shade_tolerance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Needs open or lightly shaded ground."
     },
     "coldest_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range (see the provenance note), coldest-month means from about −30 °C, gone by −40 °C, up to about 12 °C."
     },
     "hard_freeze_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range, lows to about −50 °C borne, gone where the year's coldest night falls below about −60 °C."
     },
     "warmest_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range, warmest-month means from about 6 to 24 °C; gone below 3 °C, where summers are too short, and above 28 °C."
     },
     "degree_days_0": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range, about 500 or more degree-days above 0 °C, none below 200."
     },
     "degree_days_5": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range, about 150 or more degree-days above 5 °C, none below 20."
     },
     "moisture_index": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range, a moisture index from about 0.3, gone by 0.2."
     },
     "summer_rain": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "No limit: it grows under summer-dry and summer-wet climates alike."
     }
   },

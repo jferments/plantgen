@@ -10,13 +10,18 @@
 //! `<family>/family.json`, `<family>/<genus>/genus.json`) become
 //! `library::RANKS`, by path, and each species' entry carries its
 //! effective spec, its own `spec.json` merged onto the rank files above
-//! it by [`inherit`], the same code the library runs.
+//! it and its traits resolved by their rules, by [`inherit`], the same
+//! code the library runs, against the parameters of the programs in
+//! `programs/`.
 
 use std::collections::BTreeMap;
 use std::fmt::Write as _;
 use std::fs;
 use std::path::{Path, PathBuf};
 
+#[allow(dead_code)]
+#[path = "src/formula.rs"]
+mod formula;
 #[allow(dead_code)]
 #[path = "src/inherit.rs"]
 mod inherit;
@@ -98,11 +103,17 @@ fn rank_files(root: &Path) -> Vec<(String, PathBuf)> {
 
 /// The species' spec as compiled in: its own file, or where rank files
 /// stand above it, its merged spec, written to `out_dir`.
-fn effective(species: &Path, file: &str, above: &[&inherit::RankFile], out_dir: &Path) -> PathBuf {
+fn effective(
+    species: &Path,
+    file: &str,
+    above: &[&inherit::RankFile],
+    programs: &inherit::Programs,
+    out_dir: &Path,
+) -> PathBuf {
     let spec = species.join("spec.json");
     let own = fs::read_to_string(&spec)
         .unwrap_or_else(|error| panic!("cannot read {}: {error}", spec.display()));
-    match inherit::effective_text(file, &own, above)
+    match inherit::effective_text(file, &own, above, programs)
         .unwrap_or_else(|error| panic!("library/{error}"))
     {
         None => spec,
@@ -122,6 +133,7 @@ fn effective(species: &Path, file: &str, above: &[&inherit::RankFile], out_dir: 
 fn species_entries(
     root: &Path,
     ranks: &BTreeMap<String, inherit::RankFile>,
+    programs: &inherit::Programs,
     out_dir: &Path,
 ) -> (String, usize) {
     let mut entries = String::new();
@@ -153,7 +165,7 @@ fn species_entries(
                     name(&genus),
                     name(&species)
                 );
-                let source = effective(&species, &file, &above, out_dir);
+                let source = effective(&species, &file, &above, programs, out_dir);
                 writeln!(
                     entries,
                     "    Species {{ id: {:?}, family: {:?}, genus: {:?}, source: include_str!({:?}), own: include_str!({:?}), conditions: {conditions}, shed: {shed}, niche: {niche} }},",
@@ -190,6 +202,33 @@ fn main() {
     let root = manifest.join("library");
     let out_dir = PathBuf::from(std::env::var("OUT_DIR").expect("set by Cargo"));
     println!("cargo:rerun-if-changed={}", root.display());
+    // The programs' parameters, which rules are checked against.
+    let programs_folder = manifest.join("programs");
+    println!("cargo:rerun-if-changed={}", programs_folder.display());
+    let mut sources: Vec<(String, String)> = fs::read_dir(&programs_folder)
+        .unwrap_or_else(|error| panic!("cannot read {}: {error}", programs_folder.display()))
+        .map(|entry| entry.expect("a directory entry").path())
+        .filter(|path| {
+            path.extension()
+                .is_some_and(|extension| extension == "lsys")
+        })
+        .map(|path| {
+            let text = fs::read_to_string(&path)
+                .unwrap_or_else(|error| panic!("cannot read {}: {error}", path.display()));
+            let stem = path
+                .file_stem()
+                .and_then(|stem| stem.to_str())
+                .unwrap_or_else(|| panic!("{} has no UTF-8 name", path.display()))
+                .to_string();
+            (stem, text)
+        })
+        .collect();
+    sources.sort();
+    let programs = inherit::program_params(
+        sources
+            .iter()
+            .map(|(name, text)| (name.as_str(), text.as_str())),
+    );
     let rank_files = rank_files(&root);
     let ranks: BTreeMap<String, inherit::RankFile> = rank_files
         .iter()
@@ -201,7 +240,7 @@ fn main() {
             (file.clone(), rank)
         })
         .collect();
-    let (entries, count) = species_entries(&root, &ranks, &out_dir);
+    let (entries, count) = species_entries(&root, &ranks, &programs, &out_dir);
     let ranks_table = table(
         rank_files
             .iter()
