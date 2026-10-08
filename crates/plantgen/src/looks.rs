@@ -79,10 +79,11 @@ pub struct OrganLook {
 #[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct Families {
-    /// Sun and shade leaves, 0 (alike) to 1: how far a leaf grown in more
-    /// light than [`SUN`] is smaller, narrower and more deeply lobed or
-    /// toothed, and one grown in less than [`SHADE`] larger, broader and
-    /// shallower ([`Shape::in_light`]).
+    /// Sun and shade leaves, 0 (alike) to 1: how far a leaf grown in light
+    /// past [`SUN`] of the way along [`sunlit`]'s scale is smaller,
+    /// narrower and more deeply lobed or toothed, and one grown in light
+    /// short of [`SHADE`] of the way larger, broader and shallower
+    /// ([`Shape::in_light`]).
     pub plasticity: f64,
     /// Juvenile leaves, on a plant younger than their `until` when they
     /// grew.
@@ -100,8 +101,29 @@ pub struct Juvenile {
     pub shape: Shape,
 }
 
-/// The light (0 to 1) above which a leaf grows as a sun leaf, and below
-/// which as a shade leaf; between, as its type's own look.
+/// The ends of the scale leaves acclimate on, in the growth model's light
+/// (its share of open-sky light, `light@1`). In that model a dense crown's
+/// outermost leaves see only about a third of the open sky, since each
+/// light voxel's own leaves shade it, so the scale tops out there: a leaf
+/// in [`FULL_SUN`] or more is drawn in its look's colour, one in
+/// [`DEEP_SHADE`] or less in its shade colour, and between them it moves
+/// with the logarithm of its light ([`sunlit`]), as leaves acclimate.
+pub const FULL_SUN: f64 = 0.35;
+pub const DEEP_SHADE: f64 = 0.04;
+
+/// Where `light` lies on the scale from [`DEEP_SHADE`] (0) to
+/// [`FULL_SUN`] (1), by its logarithm.
+#[must_use]
+pub fn sunlit(light: f64) -> f64 {
+    let floor = crate::math::ln(DEEP_SHADE);
+    let span = crate::math::ln(FULL_SUN) - floor;
+    ((crate::math::ln(light.max(DEEP_SHADE)) - floor) / span).clamp(0.0, 1.0)
+}
+
+/// How far along [`sunlit`]'s scale a leaf's light must lie for it to
+/// grow as a sun leaf, and short of which it grows as a shade leaf;
+/// between, as its type's own look. On the light itself they fall at
+/// about 0.17 and 0.08.
 pub const SUN: f64 = 2.0 / 3.0;
 pub const SHADE: f64 = 1.0 / 3.0;
 
@@ -166,9 +188,10 @@ impl Forms {
         {
             return (juvenile, 1.0);
         }
+        let lit = sunlit(light);
         match (self.sun, self.shade) {
-            (Some(sun), _) if light > SUN => (sun, self.sizes.0),
-            (_, Some(shade)) if light < SHADE => (shade, self.sizes.1),
+            (Some(sun), _) if lit > SUN => (sun, self.sizes.0),
+            (_, Some(shade)) if lit < SHADE => (shade, self.sizes.1),
             _ => (own, 1.0),
         }
     }
@@ -1803,6 +1826,21 @@ mod tests {
     }
 
     #[test]
+    fn leaves_acclimate_on_the_logarithm_of_their_light() {
+        assert_eq!(sunlit(0.0), 0.0);
+        assert_eq!(sunlit(DEEP_SHADE), 0.0);
+        assert_eq!(sunlit(FULL_SUN), 1.0);
+        assert_eq!(sunlit(1.0), 1.0);
+        // Equal ratios of light are equal steps along the scale.
+        let middle = crate::math::sqrt(DEEP_SHADE * FULL_SUN);
+        assert!((sunlit(middle) - 0.5).abs() < 1e-12);
+        assert!(sunlit(0.1) < sunlit(0.2) && sunlit(0.2) < sunlit(0.3));
+        // A dense crown's surface (light about 0.2 to 0.3 in the growth
+        // model) is mostly sunlit.
+        assert!(sunlit(0.2) > SUN && sunlit(0.08) < SHADE);
+    }
+
+    #[test]
     fn a_leafs_family_picks_its_look() {
         let organs = BTreeMap::from([(
             "leaf".to_string(),
@@ -1849,8 +1887,9 @@ mod tests {
         // Juvenile on a young plant whatever its light; then by its light.
         assert_eq!(forms.of(0, 0.9, 1.0), (4, 1.0));
         assert_eq!(forms.of(0, 0.9, 10.0), (2, forms.sizes.0));
-        assert_eq!(forms.of(0, 0.5, 10.0), (0, 1.0));
-        assert_eq!(forms.of(0, 0.1, 10.0), (3, forms.sizes.1));
+        assert_eq!(forms.of(0, 0.2, 10.0), (2, forms.sizes.0));
+        assert_eq!(forms.of(0, 0.12, 10.0), (0, 1.0));
+        assert_eq!(forms.of(0, 0.06, 10.0), (3, forms.sizes.1));
         // Families are for leaves.
         let mut flower = organs["leaf"].clone();
         flower.shape = Shape::Flower(Flower::default());

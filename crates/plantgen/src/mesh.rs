@@ -31,6 +31,7 @@ use crate::body::{self, BodyLook};
 use crate::graph::{GraphOrgan, PlantGraph};
 use crate::looks::{Bottle, Flare, Look, Moss, Mount, Ridges};
 use crate::math::{self, Vec3, any_perpendicular};
+use crate::occlusion::SkyLight;
 use crate::rng::{mix64, unit};
 use crate::spec::Appearance;
 use crate::spines::Tuft;
@@ -373,8 +374,11 @@ pub fn build_capped(
     let is_part =
         |index: usize| parts.is_some_and(|parts| parts.get(index).copied().unwrap_or(false));
     let mut mesh = PlantMesh::default();
-    wood(graph, appearance, lod, &mut mesh.wood);
-    twigs(graph, appearance, lod, sticks, &mut mesh.wood);
+    // The sky each piece of wood sees through the plant's leaves darkens
+    // its bark, as renderers light wood as if in the open.
+    let sky = SkyLight::of(graph, looks);
+    wood(graph, appearance, lod, sky.as_ref(), &mut mesh.wood);
+    twigs(graph, appearance, lod, sticks, sky.as_ref(), &mut mesh.wood);
     // Organs drawn as solid leaves, flowers or fruit at this level leave
     // the cards.
     let mut solid = leaves::solid_types(looks, level);
@@ -665,6 +669,32 @@ impl<'a> Bark<'a> {
     }
 }
 
+/// How dark bark is drawn in the deepest shade, as a share of its colour.
+/// Renderers light wood by the sun and an even sky, so a limb deep in a
+/// crown would read as brightly as a stem in the open. Its colour carries
+/// the sky it sees instead ([`crate::occlusion`]), as a share of the light
+/// a crown's surface gets ([`crate::looks::FULL_SUN`]): wood seeing that
+/// much or more keeps its colour.
+const WOOD_SHADE: f32 = 0.2;
+
+/// The sky light at `point` through the plant's leaves; open sky for a
+/// plant with none.
+fn light_at(sky: Option<&SkyLight>, point: Vec3) -> f64 {
+    sky.map_or(1.0, |sky| sky.at(point))
+}
+
+/// Bark `colour` darkened for the sky `light` it sees.
+fn shaded(colour: [f32; 4], light: f64) -> [f32; 4] {
+    #[allow(clippy::cast_possible_truncation)]
+    let factor = ((light / crate::looks::FULL_SUN) as f32).clamp(WOOD_SHADE, 1.0);
+    [
+        colour[0] * factor,
+        colour[1] * factor,
+        colour[2] * factor,
+        colour[3],
+    ]
+}
+
 /// A bark vertex's colour: `colour` with minus the radius of the wood it
 /// lies on, metres, in alpha, which a renderer drawing a bark pattern
 /// (`crate::bark`) reads; other wood keeps alpha 1 (see [`Mesh::colors`]).
@@ -741,6 +771,7 @@ fn twigs(
     appearance: &Appearance,
     lod: &LodSpec,
     cap: Option<usize>,
+    sky: Option<&SkyLight>,
     out: &mut Mesh,
 ) {
     if lod.min_radius <= 0.0 {
@@ -957,7 +988,10 @@ fn twigs(
                         normal: outward,
                         uv,
                         color: bark_alpha(
-                            bark.colour(radius, outward, centre.y, along, angle, 0.0),
+                            shaded(
+                                bark.colour(radius, outward, centre.y, along, angle, 0.0),
+                                light_at(sky, centre),
+                            ),
                             radius,
                         ),
                         born,
@@ -1007,7 +1041,13 @@ fn axis_frames(rings: &[Ring]) -> Vec<(Vec3, Vec3, Vec3, f64)> {
     frames
 }
 
-fn wood(graph: &PlantGraph, appearance: &Appearance, lod: &LodSpec, out: &mut Mesh) {
+fn wood(
+    graph: &PlantGraph,
+    appearance: &Appearance,
+    lod: &LodSpec,
+    sky: Option<&SkyLight>,
+    out: &mut Mesh,
+) {
     let continuations = graph.continuations();
     let end_radii = graph.end_radii();
     for (start, segment) in graph.segments.iter().enumerate() {
@@ -1073,6 +1113,7 @@ fn wood(graph: &PlantGraph, appearance: &Appearance, lod: &LodSpec, out: &mut Me
         let mut first_ring = None;
         for (ring, current) in kept.iter().enumerate() {
             let (tangent, normal, binormal, along) = frames[ring];
+            let light = light_at(sky, current.centre);
             let base = out.positions.len();
             let (before, after) = (ring.saturating_sub(1), (ring + 1).min(kept.len() - 1));
             let span = (frames[after].3 - frames[before].3).max(1e-9);
@@ -1098,13 +1139,16 @@ fn wood(graph: &PlantGraph, appearance: &Appearance, lod: &LodSpec, out: &mut Me
                     normal: surface,
                     uv,
                     color: bark_alpha(
-                        bark.colour(
-                            current.radius,
-                            surface,
-                            current.centre.y,
-                            along,
-                            angle,
-                            furrow,
+                        shaded(
+                            bark.colour(
+                                current.radius,
+                                surface,
+                                current.centre.y,
+                                along,
+                                angle,
+                                furrow,
+                            ),
+                            light,
                         ),
                         current.radius,
                     ),
@@ -1163,9 +1207,10 @@ impl Placed {
 }
 
 fn organ_color(look: &Look, variation: f32, light: f64, id: u64) -> [f32; 3] {
-    // Shaded organs are darker and bluer; each organ varies a little.
+    // Shaded organs are darker and bluer, along the scale leaves acclimate
+    // on (`looks::sunlit`); each organ varies a little.
     #[allow(clippy::cast_possible_truncation)]
-    let shade = (1.0 - light.clamp(0.0, 1.0)) as f32;
+    let shade = (1.0 - crate::looks::sunlit(light)) as f32;
     #[allow(clippy::cast_possible_truncation)]
     let jitter = 1.0 + variation * (unit(mix64(id)) as f32 - 0.5);
     std::array::from_fn(|channel| {
@@ -2489,10 +2534,10 @@ mod tests {
             height: 1.0,
             segments: Vec::new(),
             organs: vec![
-                leaf(0.9, 8.0),
-                leaf(0.5, 8.0),
-                leaf(0.1, 8.0),
-                leaf(0.9, 2.0),
+                leaf(0.3, 8.0),
+                leaf(0.12, 8.0),
+                leaf(0.05, 8.0),
+                leaf(0.3, 2.0),
             ],
         };
         let cards = build_plain(&graph, &looks, &appearance, &lod(0.0, 0.0, 0.0)).cards;

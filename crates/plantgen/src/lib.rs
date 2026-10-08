@@ -46,6 +46,7 @@ pub mod lsys;
 pub mod math;
 pub mod mesh;
 pub mod niche;
+pub mod occlusion;
 pub mod package;
 pub mod parts;
 pub mod preview;
@@ -83,5 +84,9 @@ pub mod venation;
 /// once, follow their bent organs, never reach past them and share their
 /// area in rows; rings widen to the stem's mean width; the thin wood a
 /// level drops comes back as sticks; and impostor alpha keeps the plant's
-/// coverage at the cut-out.
-pub const GENERATOR_REVISION: u32 = 12;
+/// coverage at the cut-out. 13: organs take their colour, and leaves their
+/// sun or shade form, along the logarithm of their light between
+/// `looks::DEEP_SHADE` and `looks::FULL_SUN`, so a dense crown's surface is
+/// drawn sunlit; and bark is darkened by the sky it sees through the
+/// plant's leaves (`crate::occlusion`).
+pub const GENERATOR_REVISION: u32 = 13;
