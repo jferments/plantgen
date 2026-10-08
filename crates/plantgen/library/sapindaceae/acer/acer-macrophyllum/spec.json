@@ -38,9 +38,9 @@
     }
   },
   "growth": {
-    "years": 300,
+    "years": 250,
     "step": 1,
-    "keyframes": [2, 5, 10, 20, 40, 70, 120, 200, 300]
+    "keyframes": [2, 5, 10, 20, 40, 70, 120, 180, 250]
   },
   "variants": {
     "environments": ["open", "interior"],
@@ -150,7 +150,7 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
-      "note": "Hand-set from photographs of open-grown trees: a broad, dense, rounded crown about as wide as it is tall; a short trunk that leans and divides low into three stems; opposite buds; leaves on long petioles about 0.3 m across, and leaf area per card matched to the drawn leaf. Not fitted to measurements. Growth plan G1 (2026-10-08): grown by the `sapindaceae` program (terminal flowering forks the shoots; shoots rise; space renews where limbs are shed, and limbs that no longer pay their way are shed) to 300 years, an authored lifespan for an old open-grown tree, with keyframes spaced roughly geometrically; lifespan, crown width and old-age dbh to be replaced with sourced values (plantgen/forms/G1-SPECIES-VALUES.md)."
+      "note": "Hand-set from photographs of open-grown trees: a broad, dense, rounded crown about as wide as it is tall; a short trunk that leans and divides low into three stems; opposite buds; leaves on long petioles about 0.3 m across, and leaf area per card matched to the drawn leaf. Not fitted to measurements. Growth plan G1 (2026-10-08): grown by the `sapindaceae` program (terminal flowering forks the shoots; shoots rise; space renews where limbs are shed, and limbs that no longer pay their way are shed) to 250 years (typical life 50-200 years, feis-acemac; \"well over 200\" in the San Juan Islands, islandhistories), with keyframes spaced roughly geometrically. Its architecture follows Scarrone's model: terminal racemes fork the shoots (Acer pseudoplatanus is Scarrone in Legner et al. 2013; see plantgen/forms/G1-ARCHITECTURE.md). Open-grown crowns are about as wide as the tree is tall and trunks 0.6-2 m dbh (feis-acemac); leaf blade 15-30 cm wide on a 15-25 cm petiole (kpu-plantdb), which the 0.4 m card with a 0.42 petiole share matches."
     },
     "allometry": {
       "evidence": "Authored",
