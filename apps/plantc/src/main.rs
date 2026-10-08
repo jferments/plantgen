@@ -134,7 +134,8 @@ Usage:
       List the species and plant programs, by family.
   plantc check <species|spec.json|program.lsys>
       Check a spec or a program and report the first problem with its line;
-      for a species, name the rank files its spec stands on.
+      for a species, name the rank files its spec stands on. Every value of
+      a spec needs an evidence note citing a source in library/sources/.
   plantc spec <species>
       Print the species' spec value by value, each with the file that set
       it: its own spec.json or a rank file above it (family.json,
@@ -417,8 +418,26 @@ fn check(args: &[String]) -> Result<(), Failure> {
     let (program, _) = spec
         .program_in(library())
         .map_err(|error| error.to_string())?;
+    // Per-value evidence, on the spec as written: a file's own text, or a
+    // species' spec as it inherits it.
+    let text = if Path::new(target)
+        .extension()
+        .is_some_and(|ext| ext == "json")
+    {
+        fs::read_to_string(target).map_err(|error| format!("cannot read {target}: {error}"))?
+    } else {
+        library()
+            .entry(target)
+            .ok_or_else(|| format!("no species `{target}`"))?
+            .source()
+            .to_string()
+    };
+    let document: serde_json::Value =
+        serde_json::from_str(&text).map_err(|error| format!("{target}: {error}"))?;
+    PlantSpec::check_evidence(&document, library())
+        .map_err(|error| format!("species `{}`: {error}", spec.id))?;
     out!(
-        "{}: valid; program `{}` revision {}, {} variants, keyframes {:?}",
+        "{}: valid; program `{}` revision {}, {} variants, keyframes {:?}; every value has an evidence note citing a source",
         spec.id,
         program.name,
         program.revision,

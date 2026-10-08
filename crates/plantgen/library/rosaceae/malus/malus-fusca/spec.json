@@ -139,15 +139,43 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: a small, thicket-forming tree with crooked branches, alternate toothed leaves and clusters of white to pink flowers. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Rough sizes from general knowledge of the species: 8 m tall at 30 years in the open. Replace with measured data before calling this species calibrated."
     },
     "appearance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Colours chosen by eye: green leaves; white flowers flushed pink; grey-brown, scaly bark. Fruit (plant roadmap P4), as in mid-July: clusters of little apples 1 to 1.5 cm long on long stalks, green turning yellow and red. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: pinkish-white flowers in April and May; little apples green in summer, yellow to red in August and September, hanging into November. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): grey to reddish-brown bark, smooth, then scaly and fissured; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves a little smaller and narrower than shade leaves; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
     }
   },
   "provenance": {
