@@ -18,15 +18,13 @@ it, and turns what grew into meshes, levels of detail and impostors. No
 3D models are stored or shipped: you grow them on your own machine, and the
 same species and seed give the same plant, bit for bit, on every machine.
 
-| | |
-| --- | --- |
-| ![A saguaro's ribs, each areole with its own solid spines](docs/images/saguaro-spines.jpg) | ![The crown of a fishhook barrel cactus: red-tipped hooked spines, yellow fruit and an orange flower](docs/images/barrel-cactus-crown.jpg) |
-| *Saguaro: every areole along every rib grows its own spines.* | *Fishhook barrel cactus: hooked central spines, flowers and fruit on the crown.* |
-| ![The joints of a teddy-bear cholla, dense with pale spines](docs/images/cholla-spines.jpg) | ![Fireweed's flower spikes: four-petalled magenta flowers opening up the stem below their buds](docs/images/fireweed-flowers.jpg) |
-| *Teddy-bear cholla: joints packed with pale spines.* | *Fireweed: flowers open up the spike, buds still closed above.* |
+| | | |
+| --- | --- | --- |
+| ![A saguaro's ribs, each areole with its own solid spines](docs/images/saguaro-spines.jpg) | ![The crown of a fishhook barrel cactus: red-tipped hooked spines, yellow fruit and an orange flower](docs/images/barrel-cactus-crown.jpg) | ![The joints of a teddy-bear cholla, dense with pale spines](docs/images/cholla-spines.jpg) |
+| *Saguaro: every areole along every rib grows its own spines, which shade the stem.* | *Fishhook barrel cactus: hooked central spines, flowers and fruit on the crown.* | *Teddy-bear cholla: joints packed with pale spines.* |
 
-*Rendered by `plantc render` from the built-in library, with every flower,
-fruit and spine drawn as its own mesh (`--parts on`).*
+*Close-ups rendered by `plantc render --focus` from the built-in library,
+with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
 
 ## What it does
 
