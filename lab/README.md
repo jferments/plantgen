@@ -32,6 +32,7 @@ a 1.8 m figure beside it (a rod striped in 10 cm bands beside plants under
 | `--age YEARS` | The plant's age (default: its oldest keyframe). |
 | `--view three-quarter\|side\|top` | Where the camera stands (default three-quarter). |
 | `--quality draft\|standard` | Detail of the meshes (default standard). |
+| `--look review\|photo` | `review` (default) is fixed, so species compare fairly. `photo` adds soft shadows from the sun's real size, sky light from every direction, ambient occlusion, a filmic tone map and 3×3 supersampling. |
 
 PlantLab needs a GPU with Vulkan, Metal or DirectX 12. Without one,
 Mesa's software renderer (lavapipe; on Ubuntu, `mesa-vulkan-drivers`)
