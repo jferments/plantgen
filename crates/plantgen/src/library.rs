@@ -565,6 +565,7 @@ impl Library {
         }
         library.check_citations().map_err(LibraryError)?;
         library.check_evidence().map_err(LibraryError)?;
+        library.check_taxa().map_err(LibraryError)?;
         Ok(library.with_chains())
     }
 
@@ -692,6 +693,46 @@ impl Library {
                 .map_err(|error| format!("{}: {error}", entry.file()))?;
             PlantSpec::check_evidence(&document, self)
                 .map_err(|error| format!("{}: {error}", entry.file()))?;
+        }
+        Ok(())
+    }
+
+    /// Every species' taxon agrees with its folders, where it names them:
+    /// its `family` is the family folder's name (WCVP's spelling, in lower
+    /// case), its `genus` the genus folder's, and the first word of its
+    /// `scientific_name` is that genus.
+    ///
+    /// # Errors
+    ///
+    /// Names the first species whose taxon disagrees, and how.
+    pub fn check_taxa(&self) -> Result<(), String> {
+        for entry in &self.species {
+            let spec: PlantSpec = serde_json::from_str(entry.source())
+                .map_err(|error| format!("{}: {error}", entry.file()))?;
+            let taxon = &spec.taxon;
+            let disagree = |what: &str, named: &str, folder: &str| {
+                Err(format!(
+                    "{}: taxon.{what} is `{named}`, but its folder is `{folder}`",
+                    entry.file()
+                ))
+            };
+            if let Some(family) = &taxon.family
+                && family.to_lowercase() != entry.family
+            {
+                return disagree("family", family, &entry.family);
+            }
+            if let Some(genus) = &taxon.genus {
+                if genus.to_lowercase() != entry.genus {
+                    return disagree("genus", genus, &entry.genus);
+                }
+                if taxon.scientific_name.split_whitespace().next() != Some(genus.as_str()) {
+                    return Err(format!(
+                        "{}: taxon.scientific_name `{}` is not written in its genus `{genus}`",
+                        entry.file(),
+                        taxon.scientific_name
+                    ));
+                }
+            }
         }
         Ok(())
     }
@@ -1185,6 +1226,17 @@ mod tests {
         library.check_citations().unwrap();
         // Every value of every species' spec has its note, citing a source.
         library.check_evidence().unwrap();
+        // Every built-in species names its WCVP family, its genus and its
+        // accepted taxon's plant_name_id, and they agree with its folders.
+        library.check_taxa().unwrap();
+        for entry in library.species() {
+            let taxon = library.spec(&entry.id).unwrap().taxon;
+            assert!(
+                taxon.family.is_some() && taxon.genus.is_some() && taxon.plant_name_id.is_some(),
+                "{}",
+                entry.id
+            );
+        }
         // And every rank file, with the chain above it.
         assert_eq!(library.ranks().count(), RANKS.len());
         library.check_ranks().unwrap();
@@ -1248,6 +1300,35 @@ mod tests {
                 entry.id
             );
             assert_eq!(source(&entry.id), entry.source());
+        }
+    }
+
+    #[test]
+    fn a_taxon_must_agree_with_its_folders() {
+        let species = "library/pinaceae/pseudotsuga/pseudotsuga-menziesii/spec.json";
+        for (from, to, wanted) in [
+            (
+                "\"family\": \"Pinaceae\"",
+                "\"family\": \"Cupressaceae\"",
+                "taxon.family is `Cupressaceae`",
+            ),
+            (
+                "\"genus\": \"Pseudotsuga\"",
+                "\"genus\": \"Abies\"",
+                "taxon.genus is `Abies`",
+            ),
+            (
+                "\"genus\": \"Pseudotsuga\"",
+                "\"genus\": \"pseudotsuga\"",
+                "is not written in its genus",
+            ),
+        ] {
+            let folder = Folder::new("taxa");
+            let text = source("pseudotsuga-menziesii");
+            assert!(text.contains(from), "{from}");
+            folder.write(species, &text.replace(from, to));
+            let error = Library::from_dir(&folder.0).unwrap_err().0;
+            assert!(error.contains(wanted), "{wanted}: {error}");
         }
     }
 
@@ -1485,7 +1566,10 @@ mod tests {
         // not read.
         let new_species = source("thuja-plicata")
             .replace("\"thuja-plicata\"", "\"zelkova-test\"")
-            .replace("\"program\": \"conifer\"", "\"program\": \"conifer-test\"");
+            .replace("\"program\": \"conifer\"", "\"program\": \"conifer-test\"")
+            .replace("\"Thuja plicata\"", "\"Zelkova test\"")
+            .replace("\"family\": \"Cupressaceae\"", "\"family\": \"Ulmaceae\"")
+            .replace("\"genus\": \"Thuja\"", "\"genus\": \"Zelkova\"");
         folder.write(
             "library/ulmaceae/zelkova/zelkova-test/spec.json",
             &new_species,

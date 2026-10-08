@@ -4,7 +4,10 @@
   "taxon": {
     "scientific_name": "Phoradendron californicum",
     "common_name": "desert mistletoe",
-    "usda_symbol": "PHCA8"
+    "usda_symbol": "PHCA8",
+    "family": "Santalaceae",
+    "genus": "Phoradendron",
+    "plant_name_id": 2545436
   },
   "growth_form": "shrub",
   "generator": {
@@ -82,7 +85,7 @@
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them."
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
     },
     "growth_form": {
       "evidence": "Authored",
@@ -108,6 +111,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The host the spec's authors chose for this guest, grown at the age, environment and seed given."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     }
   },
   "provenance": {

@@ -4,7 +4,10 @@
   "taxon": {
     "scientific_name": "Prunus emarginata",
     "common_name": "bitter cherry",
-    "usda_symbol": "PREM"
+    "usda_symbol": "PREM",
+    "family": "Rosaceae",
+    "genus": "Prunus",
+    "plant_name_id": 2959716
   },
   "growth_form": "decurrent_tree",
   "generator": {
@@ -148,7 +151,7 @@
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them."
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
     },
     "growth_form": {
       "evidence": "Authored",
@@ -169,6 +172,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     }
   },
   "provenance": {
