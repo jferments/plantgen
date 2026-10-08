@@ -88,6 +88,10 @@ fn rules_and_traits_say_where_they_come_from() {
     fs::write(
         family.join("family.json"),
         r#"{"schema": 1, "rank": "family", "name": "Sapindaceae",
+            "evidence": {"traits.leaf_arrangement": {"evidence": "Authored",
+                    "source": "plantgen-authors", "note": "Maples' leaves are opposite."},
+                "rules.generator.params.alternate": {"evidence": "Authored",
+                    "source": "plantgen-authors", "note": "Opposite leaves come in pairs."}},
             "traits": {"leaf_arrangement": "opposite"},
             "rules": {"generator.params.alternate": {
                 "map": {"leaf_arrangement": {"alternate": 1, "opposite": 0}},
@@ -143,7 +147,9 @@ fn a_library_folder_replaces_built_in_species() {
     fs::write(
         dir.join("library/pinaceae/family.json"),
         r#"{"schema": 1, "rank": "family", "name": "Pinaceae",
-            "generator": {"params": {"nod_years": 2.0}}}"#,
+            "generator": {"params": {"nod_years": 2.0}},
+            "evidence": {"generator.params.nod_years": {"evidence": "Authored",
+                "source": "plantgen-authors", "note": "A test of a family's value."}}}"#,
     )
     .unwrap();
     let checked = stdout(&plantc(&[

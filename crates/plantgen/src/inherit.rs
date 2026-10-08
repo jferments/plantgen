@@ -43,6 +43,11 @@
 //! species' program has no such parameter. The effective spec carries the
 //! values, not the traits or rules.
 //!
+//! Every file notes what it sets (per-value evidence): a note stays in the
+//! effective spec until a nearer file replaces or deletes what it
+//! describes, and a note on a subtree stays beside the nearer files' notes
+//! on values inside it.
+//!
 //! The module reads nothing but JSON, so the build script compiles it too
 //! and merges every built-in species' chain while compiling.
 
@@ -303,9 +308,14 @@ impl Part {
     }
 
     /// Whether the part sets the value, trait (`traits.<key>`) or rule
-    /// (`rules.<path>`) at `path`.
+    /// (`rules.<path>`) at `path`, or any trait (`traits`) or rule
+    /// (`rules`).
     fn sets(&self, path: &str) -> bool {
-        if let Some(key) = path.strip_prefix("traits.") {
+        if path == "traits" {
+            !self.traits.is_empty()
+        } else if path == "rules" {
+            !self.rules.is_empty()
+        } else if let Some(key) = path.strip_prefix("traits.") {
             self.traits.contains_key(key)
         } else if let Some(rule) = path.strip_prefix("rules.") {
             self.rules.contains_key(rule)
@@ -715,7 +725,10 @@ pub fn inherit(
                 }
             }
         }
-        notes.retain(|path, _| !touched.iter().any(|set| overlaps(set, path)));
+        // A note goes where what it describes is replaced or deleted; a
+        // note on a subtree stays when a nearer file sets something inside
+        // it, as that file notes what it sets (per-value evidence).
+        notes.retain(|path, _| !touched.iter().any(|set| within(path, set)));
         for (path, note) in &part.notes {
             notes.insert(path.clone(), (origin.clone(), note.clone()));
         }
@@ -747,7 +760,7 @@ pub fn inherit(
     }
     let carried: Map<String, Value> = notes
         .iter()
-        .filter(|(path, _)| !path.starts_with("traits.") && !path.starts_with("rules."))
+        .filter(|(path, _)| !within(path, "traits") && !within(path, "rules"))
         .map(|(path, (_, note))| (path.clone(), note.clone()))
         .collect();
     if !carried.is_empty() {
@@ -852,7 +865,7 @@ impl Ruled<'_> {
             depth,
         );
         origins.insert(self.path.to_string(), origin.clone());
-        notes.retain(|path, _| !overlaps(self.path, path));
+        notes.retain(|path, _| !within(path, self.path));
         if let Some((_, note)) = notes.get(&format!("rules.{}", self.path)).cloned() {
             notes.insert(self.path.to_string(), (origin, note));
         }
@@ -1068,12 +1081,12 @@ fn forget<V>(origins: &mut BTreeMap<String, V>, path: &str) {
     }
 }
 
-/// Whether one path is the other or lies inside it.
-fn overlaps(a: &str, b: &str) -> bool {
-    let inside = |path: &str, outer: &str| {
-        path.len() > outer.len() && path.starts_with(outer) && path.as_bytes()[outer.len()] == b'.'
-    };
-    a == b || inside(a, b) || inside(b, a)
+/// Whether `path` is `outer` or lies inside it.
+fn within(path: &str, outer: &str) -> bool {
+    path == outer
+        || (path.len() > outer.len()
+            && path.starts_with(outer)
+            && path.as_bytes()[outer.len()] == b'.')
 }
 
 #[cfg(test)]
@@ -1242,6 +1255,7 @@ mod tests {
                 "growth_form": "decurrent_tree",
                 "generator": {"program": "sapindaceae", "params": {"b": 3.0, "c": 1.0, "d": 4.0}},
                 "evidence": {
+                    "generator.params": {"evidence": "Authored", "note": "Clade."},
                     "generator.params.c": {"evidence": "Authored", "note": "Order."},
                     "generator.params.d": {"evidence": "Authored", "note": "Own."}
                 }
@@ -1261,11 +1275,16 @@ mod tests {
         assert_eq!(origin("growth_form"), "sapindaceae/acer/genus.json");
         assert_eq!(origin("generator.params.d"), file);
         assert!(!inherited.origins.contains_key("generator.params.a"));
-        // The clade's note on all the params is dropped: files below it
-        // set and delete params.
+        // The clade's note on all the params stays beside the nearer
+        // files' notes on the params they set; none of them replaces the
+        // params whole.
         assert_eq!(
             inherited.notes,
             BTreeMap::from([
+                (
+                    "generator.params".to_string(),
+                    "_ranks/clade/eudicots.json".to_string()
+                ),
                 (
                     "generator.params.c".to_string(),
                     "_ranks/order/sapindales.json".to_string()

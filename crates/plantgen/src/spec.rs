@@ -20,6 +20,11 @@ use crate::lsys::{Neighbourhood, OrganKind, Program, ProgramError, tools};
 
 pub const SPEC_SCHEMA: u32 = 1;
 
+/// The top-level keys of a spec that no evidence note covers: its schema
+/// and id, its model tier (itself the statement of how far the spec is
+/// fitted), and its evidence and provenance.
+pub const UNNOTED: &[&str] = &["schema", "id", "tier", "evidence", "provenance"];
+
 /// Built-in plant programs, by name.
 pub const PROGRAMS: [(&str, &str); 15] = [
     ("conifer", include_str!("../programs/conifer.lsys")),
@@ -641,6 +646,45 @@ impl PlantSpec {
         Library::builtin().spec(id)
     }
 
+    /// Hold a spec, as written (`document`, its JSON: a species' merged
+    /// spec, or a spec file), to per-value evidence: every value outside
+    /// [`UNNOTED`] has a note on its own path or a subtree holding it, no
+    /// note names a path the spec does not have or is blank, and every note
+    /// cites a source `library` holds. A subtree's note stands for every
+    /// value under it, so it may cover them only where they share its basis;
+    /// review holds that, as the check cannot.
+    ///
+    /// Packages are built without the notes (they are not in a package's
+    /// key), so this is the library's check, not [`PlantSpec::validate_in`]'s.
+    ///
+    /// # Errors
+    ///
+    /// Names the first value without a note, or the first note that is
+    /// blank, names no value, or cites no source or an unknown one.
+    pub fn check_evidence(document: &serde_json::Value, library: &Library) -> Result<(), String> {
+        let notes: BTreeMap<String, FieldEvidence> = document
+            .get("evidence")
+            .map(|notes| serde_json::from_value(notes.clone()))
+            .transpose()
+            .map_err(|error| format!("evidence: {error}"))?
+            .unwrap_or_default();
+        crate::evidence::check_coverage(document, &notes, UNNOTED)?;
+        for (path, note) in &notes {
+            note.check()
+                .map_err(|error| format!("the evidence note on `{path}`: {error}"))?;
+            match note.source.as_deref() {
+                None => return Err(format!("the evidence note on `{path}` cites no source")),
+                Some(id) if library.source(id).is_none() => {
+                    return Err(format!(
+                        "the evidence note on `{path}` cites `{id}`, which is not in the library's sources/"
+                    ));
+                }
+                Some(_) => {}
+            }
+        }
+        Ok(())
+    }
+
     /// Check the spec's values against the built-in library.
     ///
     /// # Errors
@@ -890,6 +934,62 @@ impl PlantSpec {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Per-value evidence: every value has a note, and every note cites a
+    /// source the library holds.
+    #[test]
+    fn every_value_needs_a_note_citing_a_source() {
+        let library = Library::builtin();
+        let good: serde_json::Value =
+            serde_json::from_str(crate::library::source("pseudotsuga-menziesii")).unwrap();
+        PlantSpec::check_evidence(&good, library).unwrap();
+        let refused = |change: &dyn Fn(&mut serde_json::Value), wanted: &str| {
+            let mut spec = good.clone();
+            change(&mut spec);
+            let error = PlantSpec::check_evidence(&spec, library).unwrap_err();
+            assert!(error.contains(wanted), "{wanted}: {error}");
+        };
+        refused(
+            &|spec| {
+                spec["evidence"].as_object_mut().unwrap().remove("growth");
+            },
+            "has no evidence note",
+        );
+        refused(
+            &|spec| {
+                spec["evidence"]["taxon"]
+                    .as_object_mut()
+                    .unwrap()
+                    .remove("source");
+            },
+            "the evidence note on `taxon` cites no source",
+        );
+        refused(
+            &|spec| spec["evidence"]["taxon"]["source"] = "no-such-source".into(),
+            "cites `no-such-source`",
+        );
+        refused(
+            &|spec| spec["evidence"]["taxon"]["note"] = " ".into(),
+            "blank",
+        );
+        refused(
+            &|spec| {
+                let note = spec["evidence"]["taxon"].clone();
+                spec["evidence"]["colour"] = note;
+            },
+            "`colour`, which holds no value",
+        );
+        // A more specific note may stand beside its subtree's.
+        let mut finer = good.clone();
+        let mut note = finer["evidence"]["generator.params"].clone();
+        note["note"] = "Measured.".into();
+        finer["evidence"]["generator.params.whorl"] = note;
+        PlantSpec::check_evidence(&finer, library).unwrap();
+        // The schema, id, model tier and provenance need no note.
+        for key in UNNOTED {
+            assert!(good.get(*key).is_some(), "{key}");
+        }
+    }
 
     #[test]
     fn builtin_species_parse_validate_and_compile() {
