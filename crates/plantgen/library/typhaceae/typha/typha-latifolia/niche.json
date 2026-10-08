@@ -19,54 +19,67 @@
   "evidence": {
     "layers": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Forms dense stands at the edges of ponds, lakes, marshes and ditches."
     },
     "moisture": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Shallow standing water and saturated shores."
     },
     "heat_load": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Grows on any aspect."
     },
     "elevation_m": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Sea level to about 1,000 m in western Washington; the upper limits are loose."
     },
     "max_slope_deg": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Flat ground at the water's edge."
     },
     "shade_tolerance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Needs full sun."
     },
     "coldest_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range (see the provenance note), coldest-month means from about −20 °C, gone by −30 °C, up to about 22 °C."
     },
     "hard_freeze_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Lows to about −45 °C borne."
     },
     "warmest_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range, warmest-month means from about 12 to 32 °C; gone below 9 °C, where summers are too short, and above 36 °C."
     },
     "degree_days_0": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range, about 1,600 or more degree-days above 0 °C, none below 1,000."
     },
     "degree_days_5": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range, about 800 or more degree-days above 5 °C, none below 400."
     },
     "moisture_index": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "It grows where the ground stays wet whatever the climate's moisture index, so only the driest climates (below about 0.1) rule it out; the site's own moisture places it."
     },
     "summer_rain": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "No limit: it grows under summer-dry and summer-wet climates alike."
     }
   },
