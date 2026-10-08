@@ -31,6 +31,9 @@ param perception = 80;         # half-angle of the cone in which a shoot senses 
 param rise = 0.08;            # upward pull on shoots (negative gravitropism); 0 keeps broadleaf's droop
 param steer_weight = 0.1;     # broadleaf's 0.35 sends a renewing crown's shoots looping after free space
 
+param pipe_exponent = 2.3;     # the pipe model's exponent (broadleaf's 2.3); Leonardo's rule is 2
+tool pipe@1 { exponent = pipe_exponent };
+
 tool space@2 {
     widest = crown_widest,
     fullness = crown_fullness,
