@@ -38,12 +38,19 @@ pub const CONDITIONS_SCHEMA: u32 = 1;
 /// The one version every section has so far.
 pub const SECTION_VERSION: u32 = 1;
 
-/// What a growing plant can sense of the world outside itself.
-pub trait Surroundings {
+/// What a growing plant can sense of the world outside itself. The light
+/// tool asks from several threads at once.
+pub trait Surroundings: Sync {
     /// Share of overcast sky light along `direction` (a unit vector up
     /// toward the sky) that reaches `point` past everything that is not
     /// this plant, for a plant `height` metres tall.
     fn transmission(&self, point: Vec3, height: f64, direction: Vec3) -> f64;
+
+    /// Whether nothing but this plant shades the sky: `transmission` is 1
+    /// everywhere.
+    fn clear_sky(&self) -> bool {
+        false
+    }
 
     /// Whether `point` is taken by something else, such as another plant's
     /// crown in a stand. No released tool reads it yet.
@@ -67,6 +74,10 @@ impl Surroundings for Neighbourhood {
     fn transmission(&self, point: Vec3, height: f64, direction: Vec3) -> f64 {
         Neighbourhood::transmission(self, point, height, direction)
     }
+
+    fn clear_sky(&self) -> bool {
+        self.density <= 0.0
+    }
 }
 
 /// A neighbourhood and a host's wood: what growth hands the tools.
@@ -80,6 +91,10 @@ pub struct Around<'a> {
 impl Surroundings for Around<'_> {
     fn transmission(&self, point: Vec3, height: f64, direction: Vec3) -> f64 {
         self.neighbourhood.transmission(point, height, direction)
+    }
+
+    fn clear_sky(&self) -> bool {
+        self.neighbourhood.density <= 0.0
     }
 
     fn host(&self) -> Option<&Host> {

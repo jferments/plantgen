@@ -29,6 +29,7 @@ pub mod bend;
 pub mod blooms;
 pub mod body;
 pub mod conditions;
+pub mod cores;
 pub mod drawing;
 pub mod evidence;
 pub mod form;

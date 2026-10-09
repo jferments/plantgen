@@ -5,10 +5,14 @@
 //! left `L` and up `U` with `H × L = U`. The plant starts at the origin with
 //! `H` along +Y.
 
+use std::sync::Mutex;
+use std::sync::atomic::{AtomicUsize, Ordering};
+
 use super::derive::{Clock, ModuleString, choose};
 use super::expr::{NO_ENV, Scope, eval};
-use super::program::{Program, SymbolKind, Turtle};
+use super::program::{POP, PUSH, Program, SymbolKind, Turtle};
 use super::{GrowthError, Limits};
+use crate::cores::{self, Lease};
 use crate::math::{self, Frame, Vec3};
 use crate::rng::{Lineage, combine};
 
@@ -146,6 +150,15 @@ pub struct Interpreter<'a> {
     globals: &'a [f64],
     limits: &'a Limits,
     stack: Vec<f64>,
+    /// An argument list for each depth of interpretation, kept between
+    /// modules.
+    arguments: Vec<Vec<f64>>,
+    /// The last scene's sizes, so the next one is laid out once.
+    sizes: [usize; 4],
+    /// Saved states a piece of the string may not pop ([`Piece`]), and
+    /// whether it popped one.
+    floor: usize,
+    breached: bool,
 }
 
 impl<'a> Interpreter<'a> {
@@ -156,65 +169,236 @@ impl<'a> Interpreter<'a> {
             globals,
             limits,
             stack: Vec::with_capacity(32),
+            arguments: Vec::new(),
+            sizes: [0; 4],
+            floor: 0,
+            breached: false,
         }
     }
 
     /// Draw a string.
+    ///
+    /// A long string is drawn in pieces side by side: a piece hands a long
+    /// branch, with the turtle as it stands at its `[`, to another thread
+    /// and goes on past its `]`. The pieces are stitched together in
+    /// string order with their parts renumbered, so the scene is the one
+    /// drawing in order gives; a step whose pieces do anything that would
+    /// not stitch (a branch that pops past its `[`, an error, a limit) is
+    /// drawn again in order.
     ///
     /// # Errors
     ///
     /// Fails if a limit is exceeded or an interpretation rule produces a
     /// non-finite parameter.
     pub fn interpret(&mut self, string: &ModuleString, clock: Clock) -> Result<Scene, GrowthError> {
-        let mut scene = Scene::default();
-        let mut state = State {
-            position: Vec3::ZERO,
-            frame: Frame::UPRIGHT,
-            width: DEFAULT_WIDTH,
-            depth: 0,
-            tropism: Vec3::ZERO,
-            elasticity: 0.0,
-            node: None,
-            segment: None,
-            lateral: false,
+        let splits = string.len() >= PARALLEL_MODULES
+            && self.program.interpretations[usize::from(PUSH)].is_empty()
+            && self.program.interpretations[usize::from(POP)].is_empty();
+        let lease = Lease::take(if splits { cores::per_task() } else { 1 });
+        let scene = if lease.threads() > 1 {
+            // Pieces small enough for the threads to share them evenly.
+            let big = (string.len() / (lease.threads() * 6)).max(4096);
+            self.in_pieces(string, clock, lease.threads(), big)
+        } else {
+            None
         };
+        drop(lease);
+        let scene = match scene {
+            Some(scene) => scene,
+            None => self.in_order(string, clock)?,
+        };
+        self.sizes = [
+            scene.segments.len(),
+            scene.organs.len(),
+            scene.nodes.len(),
+            scene.queries.len(),
+        ];
+        Ok(scene)
+    }
+
+    /// The string drawn module by module, in order.
+    fn in_order(&mut self, string: &ModuleString, clock: Clock) -> Result<Scene, GrowthError> {
+        // Room for a little more than the last step drew.
+        let room = |size: usize| size + size / 8;
+        let [segments, organs, nodes, queries] = self.sizes;
+        let mut scene = Scene {
+            segments: Vec::with_capacity(room(segments)),
+            organs: Vec::with_capacity(room(organs)),
+            nodes: Vec::with_capacity(room(nodes)),
+            queries: Vec::with_capacity(room(queries)),
+            height: 0.0,
+        };
+        let mut state = START_STATE;
         let mut saved = Vec::new();
-        for (index, module) in string.modules.iter().enumerate() {
-            let mut owner = Owner {
-                lineage: module.lineage,
-                born: module.born,
-                segments: 0,
-                organs: 0,
-                expansions: 0,
-            };
-            let params = string.params(module);
-            self.draw(
-                module.symbol,
-                params,
-                &mut owner,
-                &mut state,
-                &mut saved,
-                &mut scene,
-                clock,
-                0,
-            )?;
-            if let SymbolKind::Module { queries } =
-                self.program.symbols[usize::from(module.symbol)].kind
-                && queries != 0
-            {
-                let query = index_u32(scene.queries.len());
-                let node = add_node(&mut scene, &mut state, NodeKind::Query(query));
-                scene.queries.push(QueryPoint {
-                    module: index_u32(index),
-                    symbol: module.symbol,
-                    node,
-                    position: state.position,
-                    heading: state.frame.h,
-                    order: state.depth,
-                });
-            }
+        self.floor = 0;
+        for index in 0..string.len() {
+            self.module(string, index, &mut state, &mut saved, &mut scene, clock)?;
         }
         Ok(scene)
+    }
+
+    /// Draw module `index` of `string`, and its query point if it declared
+    /// queries.
+    fn module(
+        &mut self,
+        string: &ModuleString,
+        index: usize,
+        state: &mut State,
+        saved: &mut Vec<State>,
+        scene: &mut Scene,
+        clock: Clock,
+    ) -> Result<(), GrowthError> {
+        let module = &string.modules[index];
+        let mut owner = Owner {
+            lineage: module.lineage,
+            born: module.born,
+            segments: 0,
+            organs: 0,
+            expansions: 0,
+        };
+        let params = string.params(module);
+        self.draw(
+            module.symbol,
+            params,
+            &mut owner,
+            state,
+            saved,
+            scene,
+            clock,
+            0,
+        )?;
+        if let SymbolKind::Module { queries } =
+            self.program.symbols[usize::from(module.symbol)].kind
+            && queries != 0
+        {
+            let query = index_u32(scene.queries.len());
+            let node = add_node(scene, state, NodeKind::Query(query));
+            scene.queries.push(QueryPoint {
+                module: index_u32(index),
+                symbol: module.symbol,
+                node,
+                position: state.position,
+                heading: state.frame.h,
+                order: state.depth,
+            });
+        }
+        Ok(())
+    }
+
+    /// The string drawn in pieces of more than `least` modules on up to
+    /// `threads` threads, or `None` where the pieces would not stitch into
+    /// the scene drawing in order gives.
+    fn in_pieces(
+        &self,
+        string: &ModuleString,
+        clock: Clock,
+        threads: usize,
+        least: usize,
+    ) -> Option<Scene> {
+        let matches = bracket_matches(string);
+        let next = AtomicUsize::new(1);
+        let drawn: Mutex<Vec<(usize, Piece)>> = Mutex::new(Vec::new());
+        let root = PieceTask {
+            id: 0,
+            from: 0,
+            to: string.len(),
+            state: START_STATE,
+        };
+        let draw = |task: PieceTask, hand: &dyn Fn(PieceTask)| {
+            let mut interpreter = Interpreter::new(self.program, self.globals, self.limits);
+            let id = task.id;
+            let piece = interpreter.piece(string, &matches, &task, least, clock, &next, hand);
+            drawn
+                .lock()
+                .unwrap_or_else(std::sync::PoisonError::into_inner)
+                .push((id, piece));
+        };
+        cores::tasks(vec![root], threads, false, &draw);
+        let mut drawn = drawn
+            .into_inner()
+            .unwrap_or_else(std::sync::PoisonError::into_inner);
+        drawn.sort_by_key(|(id, _)| *id);
+        let pieces: Vec<Piece> = drawn.into_iter().map(|(_, piece)| piece).collect();
+        stitch(&pieces, self.limits)
+    }
+
+    /// Draw one piece: modules `task.from..task.to` from the turtle
+    /// `task.state`, handing on (`hand`) every branch of more than `least`
+    /// modules that opens at the piece's own level, as a new task.
+    #[allow(clippy::too_many_arguments)]
+    fn piece(
+        &mut self,
+        string: &ModuleString,
+        matches: &[u32],
+        task: &PieceTask,
+        least: usize,
+        clock: Clock,
+        next: &AtomicUsize,
+        hand: &dyn Fn(PieceTask),
+    ) -> Piece {
+        let mut scene = Scene::default();
+        let mut state = task.state;
+        // Below the root, the `[` that opened the piece is saved first:
+        // popping it would reach outside the piece.
+        let mut saved = if task.id == 0 {
+            Vec::new()
+        } else {
+            vec![state]
+        };
+        let level = saved.len();
+        self.floor = level;
+        self.breached = false;
+        let mut children = Vec::new();
+        let mut valid = true;
+        let mut index = task.from;
+        while index < task.to {
+            if string.modules[index].symbol == PUSH && saved.len() == level {
+                let close = matches[index] as usize;
+                if close < task.to && close - index > least {
+                    let id = next.fetch_add(1, Ordering::Relaxed);
+                    let mut inner = state;
+                    inner.depth = inner.depth.saturating_add(1);
+                    inner.lateral = true;
+                    children.push(Child {
+                        id,
+                        at: [
+                            index_u32(scene.segments.len()),
+                            index_u32(scene.organs.len()),
+                            index_u32(scene.nodes.len()),
+                            index_u32(scene.queries.len()),
+                        ],
+                        node: inner.node,
+                        segment: inner.segment,
+                    });
+                    inner.node = inner.node.map(|_| START);
+                    inner.segment = inner.segment.map(|_| START);
+                    hand(PieceTask {
+                        id,
+                        from: index + 1,
+                        to: close,
+                        state: inner,
+                    });
+                    index = close + 1;
+                    continue;
+                }
+            }
+            if self
+                .module(string, index, &mut state, &mut saved, &mut scene, clock)
+                .is_err()
+            {
+                valid = false;
+                break;
+            }
+            index += 1;
+        }
+        if self.breached || saved.len() != level {
+            valid = false;
+        }
+        Piece {
+            scene,
+            children,
+            valid,
+        }
     }
 
     #[allow(clippy::too_many_arguments)]
@@ -254,8 +438,12 @@ impl<'a> Interpreter<'a> {
                         ),
                     });
                 }
+                if self.arguments.len() <= depth {
+                    self.arguments.resize_with(depth + 1, Vec::new);
+                }
                 for item in &*rule.successor {
-                    let mut args = Vec::with_capacity(item.args.len());
+                    let mut args = std::mem::take(&mut self.arguments[depth]);
+                    args.clear();
                     for code in &*item.args {
                         let value = eval(code, &scope, &mut self.stack);
                         if !value.is_finite() {
@@ -269,7 +457,7 @@ impl<'a> Interpreter<'a> {
                         }
                         args.push(value);
                     }
-                    self.draw(
+                    let drawn = self.draw(
                         item.symbol,
                         &args,
                         owner,
@@ -278,7 +466,9 @@ impl<'a> Interpreter<'a> {
                         scene,
                         clock,
                         depth + 1,
-                    )?;
+                    );
+                    self.arguments[depth] = args;
+                    drawn?;
                 }
                 return Ok(());
             }
@@ -334,6 +524,9 @@ impl<'a> Interpreter<'a> {
                 state.lateral = true;
             }
             Turtle::Pop => {
+                if saved.len() <= self.floor {
+                    self.breached = true;
+                }
                 if let Some(previous) = saved.pop() {
                     *state = previous;
                 }
@@ -423,6 +616,223 @@ impl Interpreter<'_> {
 
 fn index_u32(index: usize) -> u32 {
     u32::try_from(index).unwrap_or(u32::MAX)
+}
+
+/// The turtle at the start of a string.
+const START_STATE: State = State {
+    position: Vec3::ZERO,
+    frame: Frame::UPRIGHT,
+    width: DEFAULT_WIDTH,
+    depth: 0,
+    tropism: Vec3::ZERO,
+    elasticity: 0.0,
+    node: None,
+    segment: None,
+    lateral: false,
+};
+
+/// Strings shorter than this are drawn on one thread.
+const PARALLEL_MODULES: usize = 50_000;
+
+/// In a piece's own scene, the node or segment the turtle stood on where
+/// the piece begins, which lies in the piece that handed it on.
+const START: u32 = u32::MAX;
+
+/// A piece of the string to draw: the modules after a `[` up to its `]`
+/// (the whole string for the first), from the turtle as it stood there.
+struct PieceTask {
+    id: usize,
+    from: usize,
+    to: usize,
+    state: State,
+}
+
+/// A branch a piece handed on: its piece, how many parts of each kind
+/// (segments, organs, nodes, queries) the piece had drawn when it did, and
+/// the node and segment the turtle stood on, as the piece numbers them.
+struct Child {
+    id: usize,
+    at: [u32; 4],
+    node: Option<u32>,
+    segment: Option<u32>,
+}
+
+/// A drawn piece: its scene, numbered from 0 with [`START`] for where it
+/// begins, the branches it handed on, in order, and whether it stitches.
+struct Piece {
+    scene: Scene,
+    children: Vec<Child>,
+    valid: bool,
+}
+
+/// For each `[` of the string, the index of its `]` (`u32::MAX` if none).
+fn bracket_matches(string: &ModuleString) -> Vec<u32> {
+    let mut matches = vec![u32::MAX; string.len()];
+    let mut open = Vec::new();
+    for (index, module) in string.modules.iter().enumerate() {
+        if module.symbol == PUSH {
+            open.push(index);
+        } else if module.symbol == POP
+            && let Some(at) = open.pop()
+        {
+            matches[at] = index_u32(index);
+        }
+    }
+    matches
+}
+
+/// The pieces' scenes as one, in string order: each piece's parts with
+/// its branches' parts where it handed them on, renumbered; `None` if a
+/// piece does not stitch or the scene passes a limit.
+fn stitch(pieces: &[Piece], limits: &Limits) -> Option<Scene> {
+    if pieces.iter().any(|piece| !piece.valid) {
+        return None;
+    }
+    let count = |scene: &Scene| {
+        [
+            scene.segments.len(),
+            scene.organs.len(),
+            scene.nodes.len(),
+            scene.queries.len(),
+        ]
+    };
+    // A child's id is always greater than its parent's: sizes from the
+    // last piece up, offsets from the first down.
+    let mut sizes: Vec<[usize; 4]> = pieces.iter().map(|piece| count(&piece.scene)).collect();
+    for id in (0..pieces.len()).rev() {
+        for child in &pieces[id].children {
+            let size = sizes[child.id];
+            for kind in 0..4 {
+                sizes[id][kind] += size[kind];
+            }
+        }
+    }
+    let [segments, organs, nodes, queries] = sizes[0];
+    if segments > limits.max_segments || organs > limits.max_segments {
+        return None;
+    }
+    let (offsets, starts) = place(pieces, &sizes);
+    let mut scene = Scene {
+        segments: Vec::with_capacity(segments),
+        organs: Vec::with_capacity(organs),
+        nodes: Vec::with_capacity(nodes),
+        queries: Vec::with_capacity(queries),
+        height: pieces
+            .iter()
+            .fold(0.0, |height, piece| height.max(piece.scene.height)),
+    };
+    let mut order = vec![(0_usize, [0_usize; 4], 0_usize)];
+    // Depth first: a piece's parts up to each branch, the branch, then on.
+    while let Some((id, mut at, mut child)) = order.pop() {
+        let piece = &pieces[id];
+        let until = piece
+            .children
+            .get(child)
+            .map_or_else(|| count(&piece.scene), |next| next.at.map(|at| at as usize));
+        let number =
+            |kind: usize, index: u32| renumber(pieces, &sizes, &offsets, &starts, id, kind, index);
+        for segment in &piece.scene.segments[at[SEGMENT]..until[SEGMENT]] {
+            scene.segments.push(Segment {
+                node: number(NODE, segment.node),
+                ..*segment
+            });
+        }
+        for organ in &piece.scene.organs[at[ORGAN]..until[ORGAN]] {
+            scene.organs.push(OrganInstance {
+                segment: organ.segment.map(|index| number(SEGMENT, index)),
+                node: organ.node.map(|index| number(NODE, index)),
+                ..*organ
+            });
+        }
+        for node in &piece.scene.nodes[at[NODE]..until[NODE]] {
+            scene.nodes.push(Node {
+                parent: node.parent.map(|index| number(NODE, index)),
+                kind: match node.kind {
+                    NodeKind::Segment(index) => NodeKind::Segment(number(SEGMENT, index)),
+                    NodeKind::Query(index) => NodeKind::Query(number(QUERY, index)),
+                },
+                ..*node
+            });
+        }
+        for query in &piece.scene.queries[at[QUERY]..until[QUERY]] {
+            scene.queries.push(QueryPoint {
+                node: number(NODE, query.node),
+                ..*query
+            });
+        }
+        if let Some(next) = piece.children.get(child) {
+            at = next.at.map(|at| at as usize);
+            child += 1;
+            order.push((id, at, child));
+            order.push((next.id, [0; 4], 0));
+        }
+    }
+    Some(scene)
+}
+
+/// Where each piece's parts begin in the stitched scene, by kind, and the
+/// node and segment its branch begins on, renumbered. A child's id is
+/// greater than its parent's, so parents come first.
+fn place(pieces: &[Piece], sizes: &[[usize; 4]]) -> (Vec<[usize; 4]>, Starts) {
+    let mut offsets = vec![[0_usize; 4]; pieces.len()];
+    // Where each piece's branch begins: its node and segment, renumbered.
+    let mut starts: Starts = vec![(None, None); pieces.len()];
+    for id in 0..pieces.len() {
+        let mut before = [0_usize; 4];
+        for child in &pieces[id].children {
+            for kind in 0..4 {
+                offsets[child.id][kind] =
+                    offsets[id][kind] + child.at[kind] as usize + before[kind];
+            }
+            let size = sizes[child.id];
+            for kind in 0..4 {
+                before[kind] += size[kind];
+            }
+            starts[child.id] = (
+                child
+                    .node
+                    .map(|node| renumber(pieces, sizes, &offsets, &starts, id, NODE, node)),
+                child.segment.map(|segment| {
+                    renumber(pieces, sizes, &offsets, &starts, id, SEGMENT, segment)
+                }),
+            );
+        }
+    }
+    (offsets, starts)
+}
+
+/// Each piece's start: the node and segment its branch begins on.
+type Starts = Vec<(Option<u32>, Option<u32>)>;
+
+const SEGMENT: usize = 0;
+const ORGAN: usize = 1;
+const NODE: usize = 2;
+const QUERY: usize = 3;
+
+/// The index in the stitched scene of part `index` of kind `kind` in piece
+/// `id`: its piece's offset, its own index, and every branch the piece
+/// handed on before drawing it; [`START`] is where the piece begins.
+fn renumber(
+    pieces: &[Piece],
+    sizes: &[[usize; 4]],
+    offsets: &[[usize; 4]],
+    starts: &Starts,
+    id: usize,
+    kind: usize,
+    index: u32,
+) -> u32 {
+    if index == START {
+        let (node, segment) = starts[id];
+        let start = if kind == NODE { node } else { segment };
+        return start.unwrap_or(START);
+    }
+    let before: usize = pieces[id]
+        .children
+        .iter()
+        .take_while(|child| child.at[kind] <= index)
+        .map(|child| sizes[child.id][kind])
+        .sum();
+    index_u32(offsets[id][kind] + index as usize + before)
 }
 
 fn add_node(scene: &mut Scene, state: &mut State, kind: NodeKind) -> u32 {
@@ -614,5 +1024,67 @@ mod organ_turn_tests {
             assert_eq!(a.left, b.left);
             assert_eq!(a.size.to_bits(), b.size.to_bits());
         }
+    }
+
+    /// Pieces drawn side by side and stitched give the scene drawing in
+    /// order gives: branches handed on at every level, organs and queries
+    /// on the branch they open, and interpretation rules with their own
+    /// brackets; a piece that fails leaves the step to drawing in order.
+    #[test]
+    fn pieces_stitch_into_the_scene_drawn_in_order() {
+        use crate::lsys::derive::{Clock, Deriver};
+        use crate::lsys::turtle::Interpreter;
+        use std::collections::BTreeMap;
+        let source = "
+            lsystem pieces 1;
+            module A(n) queries light;
+            module I(n);
+            organ leaf foliage area 0.02;
+            tool light@1 { cell = 0.3 };
+            axiom A(0);
+            rule A(n) : n < 7 -> F(1) leaf(0.1) [ +(30) A(n + 1) leaf(0.2) ] /(90) I(n)
+                [ -(20) &(10) A(n + 1) ] A(n + 1);
+            interpret I(n) -> F(0.5) [ leaf(0.5) ] [ &(20) F(0.2) ];
+        ";
+        let program = Program::compile(source).unwrap();
+        let globals = program.resolve_params(&BTreeMap::new()).unwrap();
+        let limits = Limits::default();
+        let mut deriver = Deriver::new(&program, &globals, &limits);
+        let mut string = deriver.axiom(3, 1.0).unwrap();
+        for step in 0..7 {
+            let clock = Clock {
+                step,
+                t: f64::from(step),
+                dt: 1.0,
+            };
+            string = deriver.derive(&string, &[], clock).unwrap();
+        }
+        let clock = Clock {
+            step: 7,
+            t: 7.0,
+            dt: 1.0,
+        };
+        let mut interpreter = Interpreter::new(&program, &globals, &limits);
+        let in_order = interpreter.in_order(&string, clock).unwrap();
+        assert!(in_order.segments.len() > 500 && !in_order.queries.is_empty());
+        for (threads, least) in [(1, 0), (4, 8), (3, 40), (2, 300)] {
+            let pieces = interpreter
+                .in_pieces(&string, clock, threads, least)
+                .expect("the pieces stitch");
+            assert_eq!(pieces, in_order, "{threads} threads, pieces over {least}");
+        }
+        // A piece that fails leaves the step to drawing in order, which
+        // reports the error.
+        let failing = Program::compile(
+            "lsystem p 1; module U(x); axiom F [ F [ F U(0) F ] F ] F; interpret U(x) -> F(1 / x);",
+        )
+        .unwrap();
+        let globals = failing.resolve_params(&BTreeMap::new()).unwrap();
+        let string = Deriver::new(&failing, &globals, &limits)
+            .axiom(1, 1.0)
+            .unwrap();
+        let mut interpreter = Interpreter::new(&failing, &globals, &limits);
+        assert!(interpreter.in_pieces(&string, clock, 2, 0).is_none());
+        assert!(interpreter.interpret(&string, clock).is_err());
     }
 }
