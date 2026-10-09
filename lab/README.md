@@ -1,9 +1,28 @@
 # PlantLab
 
 PlantLab grows PlantGen's plants under the conditions you choose and
-shows you what they look like. It has no window yet: it renders
-thumbnails and review sheets on the GPU, each picture with a JSON file
-that says what it shows.
+shows you what they look like: in a window, and without one as
+thumbnails and review sheets, each picture with a JSON file that says
+what it shows.
+
+## The window
+
+```text
+cargo run --release -p plantlab -- open acer-macrophyllum
+```
+
+One plant on its ground patch, with the scale figure or rod. Drag to turn
+around it and scroll to come closer. The panel on the left chooses the
+species (type to filter the list), its age, the day of the year, the level
+of detail, the quality (draft or standard), the look (review or photo)
+and the view. A change grows the plant again; the old one stays until the
+new one is ready, and the panel shows how long it took. Under the plant's
+height, crown width, triangles and cards, the panel gives the `plantlab
+thumbs` command that renders what you see without the window.
+`--capture FILE` saves a picture of the window once the plant stands and
+closes it.
+
+On Linux the window needs X11 and `libxkbcommon-x11`.
 
 PlantLab simulates nothing itself. Every plant is grown by PlantGen's own
 code, the same steps `plantc render` takes, so a picture from PlantLab
@@ -105,8 +124,9 @@ builds its graphics stack.
   `Templates::albedo` does; nothing else about the plant is computed on
   the GPU.
 
-Not drawn yet: the bark pattern on wood (wood shows its colour), part
-meshes, and the window that comes next.
+Not drawn yet: the bark pattern on wood (wood shows its colour) and part
+meshes. Not in the window yet: growing conditions, the timeline, wind and
+comparing plants side by side (the next steps in the design).
 
 Check before you commit, from this folder:
 
@@ -118,4 +138,8 @@ cargo test -p plantlab -- --ignored   # draws a fern; needs a GPU or lavapipe
 ```
 
 A cold build of this workspace took 10.5 minutes on a 4-core cloud
-session (2026-10-08; 388 crates in its lock).
+session (2026-10-08, before the window; 388 crates in its lock then, 479
+with the window, egui and the captions).
+
+`src/theme.rs` is a copy of Project After's `lab-ui` theme, owned here and
+never synced (no shared UI crate, by the owner's choice).

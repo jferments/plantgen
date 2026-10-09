@@ -13,6 +13,8 @@ mod gpu;
 mod render;
 #[cfg(feature = "solari")]
 mod solari;
+mod theme;
+mod window;
 
 use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
@@ -28,6 +30,11 @@ const USAGE: &str = "\
 plantlab: grow PlantGen's plants and render them
 
 usage:
+  plantlab open [SPECIES] [--capture FILE]
+      The window: one plant you can turn around, and a panel to choose
+      the species, age, day of the year, level of detail, quality, look
+      and view. --capture saves a picture of the window once the plant
+      stands, then closes it.
   plantlab thumbs SPECIES... --out DIR [--size PX] [OPTIONS]
       A thumbnail of each species (a library id, or `all`): DIR/ID.png and
       DIR/ID.json, what the picture shows.
@@ -81,6 +88,7 @@ fn run(args: &[String]) -> Result<(), String> {
         Some("review") => pictures(&args[1..], Kind::Review),
         Some("batch") => batch(&args[1..]),
         Some("solari") => solari(&args[1..]),
+        Some("open") => open(&args[1..]),
         Some("gpus") => {
             for line in gpu::list() {
                 println!("{line}");
@@ -351,6 +359,24 @@ fn solari(args: &[String]) -> Result<(), String> {
 fn solari(_args: &[String]) -> Result<(), String> {
     Err("this plantlab was built without Solari:          `cargo run --release -p plantlab --features solari -- solari ...`"
         .into())
+}
+
+fn open(args: &[String]) -> Result<(), String> {
+    let mut species = None;
+    let mut capture = None;
+    let mut rest = args.iter();
+    while let Some(arg) = rest.next() {
+        match arg.as_str() {
+            "--capture" => {
+                capture = Some(PathBuf::from(
+                    rest.next().ok_or("`--capture` needs a file")?,
+                ));
+            }
+            flag if flag.starts_with("--") => return Err(format!("unknown flag `{flag}`")),
+            id => species = Some(id.to_string()),
+        }
+    }
+    window::run(species.as_deref(), capture)
 }
 
 /// Read a batch file: one job a line.
