@@ -421,14 +421,27 @@ fn measure(id: &str) -> Result<Value, String> {
 
     // The impostor as package.rs bakes it, against level 0 and level 1
     // rendered with each low tile's own camera at 4x the tile resolution.
+    let imp_level: usize = std::env::var("LOD_IMPOSTOR").ok().and_then(|v| v.parse().ok()).unwrap_or(IMPOSTOR_LOD);
+    let imp_start = std::time::Instant::now();
     let imp = impostor::bake(
-        &meshes[IMPOSTOR_LOD],
+        &meshes[imp_level],
         &templates,
         STANDARD.impostor_views,
         STANDARD.impostor_size,
         IMPOSTOR_SUPERSAMPLE,
     );
     let (views, size) = (imp.views, imp.size);
+    let imp_seconds = imp_start.elapsed().as_secs_f64();
+    let mut colour = [0.0f64; 3];
+    let mut covered = 0.0f64;
+    for texel in imp.albedo.chunks(4) {
+        if texel[3] >= 128 {
+            for c in 0..3 { colour[c] += f64::from(texel[c]); }
+            covered += 1.0;
+        }
+    }
+    let colour: Vec<f64> = colour.iter().map(|c| (c / covered.max(1.0) * 10.0).round() / 10.0).collect();
+    let imp_triangles = meshes[imp_level].wood.triangle_count() + meshes[imp_level].card_mesh().triangle_count();
     let atlas = imp.atlas_size();
     let mut imp_area = Vec::new();
     let mut imp_strict = Vec::new();
@@ -513,6 +526,10 @@ fn measure(id: &str) -> Result<Value, String> {
             "l1_area_same_camera": median(l1_area),
             "l1_width_same_camera": median(l1_width),
             "radius_m": (imp.radius * 100.0).round() / 100.0,
+            "colour": colour,
+            "seconds": imp_seconds,
+            "triangles": imp_triangles,
+            "level": imp_level,
         },
     }))
 }
