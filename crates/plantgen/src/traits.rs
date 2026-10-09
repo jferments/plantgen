@@ -190,9 +190,10 @@ impl Vocabulary {
     }
 
     /// Check a part's traits and rules: each trait in the vocabulary with
-    /// a value that fits it; each rule reading traits a rule may read (a
-    /// formula numbers, a map one enum or bool, by its values), and a
-    /// parameter it sets declared by some program in `programs`.
+    /// a value that fits it; each rule reading what a rule may read (a
+    /// formula number traits and parameters of `programs`, a map one enum
+    /// or bool trait, by its values), and a parameter it sets declared by
+    /// some program in `programs`.
     ///
     /// # Errors
     ///
@@ -219,9 +220,15 @@ impl Vocabulary {
     ) -> Result<(), String> {
         if let Some(Value::String(formula)) = rule.get("rule") {
             for name in Formula::parse(formula)?.names() {
-                if !self.numeric(&name) {
+                let param = programs.values().any(|params| params.contains_key(&name));
+                if param && self.traits.contains_key(&name) {
                     return Err(format!(
-                        "it reads `{name}`, which is not a number, count or bool trait (a `map` reads the others)"
+                        "it reads `{name}`, both a trait and a program's parameter"
+                    ));
+                }
+                if !param && !self.numeric(&name) {
+                    return Err(format!(
+                        "it reads `{name}`, which is neither a number, count or bool trait (a `map` reads the others) nor a program's parameter"
                     ));
                 }
             }
@@ -250,7 +257,7 @@ impl Vocabulary {
             }
         }
         if let Some(param) = path.strip_prefix("generator.params.")
-            && !programs.values().any(|params| params.contains(param))
+            && !programs.values().any(|params| params.contains_key(param))
         {
             return Err(format!("no program has a parameter `{param}`"));
         }

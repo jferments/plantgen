@@ -5,10 +5,13 @@
 //! with decomposition rules, then applies cuts (`%`). Each module carries a
 //! [`Lineage`] (see [`crate::rng`]) and its birth time.
 
+use std::ops::Range;
+
 use super::expr::{Code, EnvValues, NO_ENV, Scope, eval, truthy};
 use super::lexer::Span;
 use super::program::{CUT, CompiledRule, FIRST_USER_SYMBOL, Item, MOVE, POP, PUSH, Program};
 use super::{GrowthError, Limits};
+use crate::cores::{self, Lease};
 use crate::rng::{Lineage, combine, hash_words, unit};
 
 /// One module in a string. Its parameters live in [`ModuleString::params`].
@@ -62,6 +65,62 @@ const SALT_CHOICE: u64 = 0x6368_6f69;
 const SALT_AXIOM: u64 = 0x6178_696f;
 const SALT_DECOMPOSE: u64 = 0x6465_636f;
 
+/// Where rewriting puts modules: the new string ([`Writer`]), or a chunk's
+/// record when chunks of the string are rewritten side by side ([`Raw`]).
+trait Sink {
+    fn push(
+        &mut self,
+        symbol: u16,
+        params: &[f64],
+        lineage: Lineage,
+        born: f64,
+    ) -> Result<(), GrowthError>;
+}
+
+/// A chunk's modules as its rules wrote them, before cuts and empty
+/// branches: the writer takes them in string order afterwards.
+struct Raw {
+    out: ModuleString,
+    /// The most modules a chunk records; past it the chunk stops (`full`)
+    /// and the step is rewritten in order instead.
+    cap: usize,
+    full: bool,
+}
+
+impl Sink for Raw {
+    fn push(
+        &mut self,
+        symbol: u16,
+        params: &[f64],
+        lineage: Lineage,
+        born: f64,
+    ) -> Result<(), GrowthError> {
+        if self.out.modules.len() >= self.cap {
+            self.full = true;
+            return Err(GrowthError::Limit {
+                what: "modules in the string",
+                limit: self.cap as u64,
+            });
+        }
+        let params_at = u32::try_from(self.out.params.len()).map_err(|_| GrowthError::Limit {
+            what: "parameters in the string",
+            limit: u64::from(u32::MAX),
+        })?;
+        self.out.params.extend_from_slice(params);
+        self.out.modules.push(Module {
+            symbol,
+            arity: u8::try_from(params.len()).unwrap_or(u8::MAX),
+            params_at,
+            lineage,
+            born,
+        });
+        Ok(())
+    }
+}
+
+/// Strings shorter than this are rewritten on one thread.
+const PARALLEL_MODULES: usize = 20_000;
+
 /// Appends modules to a new string, applying cuts and dropping empty
 /// branches as it goes.
 struct Writer<'l> {
@@ -82,7 +141,9 @@ impl Writer<'_> {
             && self.program.decompositions[index].is_empty()
             && self.program.interpretations[index].is_empty()
     }
+}
 
+impl Sink for Writer<'_> {
     fn push(
         &mut self,
         symbol: u16,
@@ -190,16 +251,32 @@ impl<'a> Deriver<'a> {
         };
         let program = self.program;
         let mut args = Vec::new();
+        let mut stack = std::mem::take(&mut self.stack);
         for item in &*program.axiom {
-            self.eval_args(item, &scope, &mut args, Span::default())?;
+            self.eval_args(item, &scope, &mut args, Span::default(), &mut stack)?;
             let lineage = Lineage::root(seed, item.ordinal);
-            self.emit(&mut writer, item.symbol, &args, lineage, 0.0, clock, 0.0, 0)?;
+            self.emit(
+                &mut writer,
+                item.symbol,
+                &args,
+                lineage,
+                0.0,
+                clock,
+                0.0,
+                0,
+                &mut stack,
+            )?;
         }
+        self.stack = stack;
         Ok(writer.out)
     }
 
     /// One derivation step. `env` lists, in string order, the environment
     /// values of the modules that declared queries.
+    ///
+    /// A long string is rewritten in chunks side by side, each into its own
+    /// record; the writer then takes the records in string order, so cuts,
+    /// empty branches, limits and errors come out as they would in order.
     ///
     /// # Errors
     ///
@@ -210,7 +287,22 @@ impl<'a> Deriver<'a> {
         env: &[(u32, EnvValues)],
         clock: Clock,
     ) -> Result<ModuleString, GrowthError> {
-        let program = self.program;
+        let lease = Lease::take(if input.len() >= PARALLEL_MODULES {
+            cores::per_task()
+        } else {
+            1
+        });
+        self.derive_on(input, env, clock, lease.threads())
+    }
+
+    /// [`Deriver::derive`] on `threads` threads.
+    fn derive_on(
+        &mut self,
+        input: &ModuleString,
+        env: &[(u32, EnvValues)],
+        clock: Clock,
+        threads: usize,
+    ) -> Result<ModuleString, GrowthError> {
         let mut writer = Writer {
             out: ModuleString {
                 modules: Vec::with_capacity(input.modules.len() + input.modules.len() / 4),
@@ -220,10 +312,65 @@ impl<'a> Deriver<'a> {
             limits: self.limits,
             program: self.program,
         };
+        if threads > 1 && !input.is_empty() {
+            // More chunks than threads, so that slow chunks even out.
+            let count = threads * 8;
+            let size = input.len().div_ceil(count);
+            let chunks: Vec<Range<usize>> = (0..input.len())
+                .step_by(size)
+                .map(|start| start..(start + size).min(input.len()))
+                .collect();
+            let this = &*self;
+            let rewritten = cores::map(chunks, threads, &|range| {
+                let mut raw = Raw {
+                    out: ModuleString::default(),
+                    cap: this.limits.max_modules,
+                    full: false,
+                };
+                let mut stack = Vec::with_capacity(32);
+                let result = this.rewrite(input, range, env, clock, &mut stack, &mut raw);
+                (raw, result)
+            });
+            if !rewritten.iter().any(|(raw, _)| raw.full) {
+                for (raw, result) in rewritten {
+                    for module in &raw.out.modules {
+                        writer.push(
+                            module.symbol,
+                            raw.out.params(module),
+                            module.lineage,
+                            module.born,
+                        )?;
+                    }
+                    result?;
+                }
+                return Ok(writer.out);
+            }
+        }
+        let mut stack = std::mem::take(&mut self.stack);
+        let result = self.rewrite(input, 0..input.len(), env, clock, &mut stack, &mut writer);
+        self.stack = stack;
+        result?;
+        Ok(writer.out)
+    }
+
+    /// Rewrite modules `range` of `input` into `sink`: each with its first
+    /// matching production, expanded by decomposition rules.
+    fn rewrite(
+        &self,
+        input: &ModuleString,
+        range: Range<usize>,
+        env: &[(u32, EnvValues)],
+        clock: Clock,
+        stack: &mut Vec<f64>,
+        sink: &mut dyn Sink,
+    ) -> Result<(), GrowthError> {
+        let program = self.program;
         let next_t = clock.t + clock.dt;
-        let mut cursor = 0;
+        // `env` holds each querying module once, in string order.
+        let mut cursor = env.partition_point(|(at, _)| (*at as usize) < range.start);
         let mut args = Vec::new();
-        for (index, module) in input.modules.iter().enumerate() {
+        for index in range {
+            let module = &input.modules[index];
             let module_env = match env.get(cursor) {
                 Some((at, values)) if *at as usize == index => {
                     cursor += 1;
@@ -243,9 +390,9 @@ impl<'a> Deriver<'a> {
                 step: f64::from(clock.step),
                 key: combine(module.lineage.0, u64::from(clock.step)),
             };
-            let Some(rule) = self.choose(rules, &scope)? else {
+            let Some(rule) = choose(rules, &scope, stack)? else {
                 self.emit(
-                    &mut writer,
+                    sink,
                     module.symbol,
                     locals,
                     module.lineage,
@@ -253,18 +400,19 @@ impl<'a> Deriver<'a> {
                     clock,
                     next_t,
                     0,
+                    stack,
                 )?;
                 continue;
             };
             for (position, item) in rule.successor.iter().enumerate() {
-                self.eval_args(item, &scope, &mut args, rule.span)?;
+                self.eval_args(item, &scope, &mut args, rule.span, stack)?;
                 let (lineage, born) = if rule.continuation == Some(position) {
                     (module.lineage, module.born)
                 } else {
                     (module.lineage.child(clock.step, item.ordinal), next_t)
                 };
                 self.emit(
-                    &mut writer,
+                    sink,
                     item.symbol,
                     &args,
                     lineage,
@@ -272,17 +420,18 @@ impl<'a> Deriver<'a> {
                     clock,
                     next_t,
                     0,
+                    stack,
                 )?;
             }
         }
-        Ok(writer.out)
+        Ok(())
     }
 
     /// Write a module, expanding it with decomposition rules first.
     #[allow(clippy::too_many_arguments)]
     fn emit(
-        &mut self,
-        writer: &mut Writer<'_>,
+        &self,
+        writer: &mut dyn Sink,
         symbol: u16,
         params: &[f64],
         lineage: Lineage,
@@ -290,6 +439,7 @@ impl<'a> Deriver<'a> {
         clock: Clock,
         now: f64,
         depth: usize,
+        stack: &mut Vec<f64>,
     ) -> Result<(), GrowthError> {
         let program = self.program;
         let rules = &program.decompositions[usize::from(symbol)];
@@ -306,7 +456,7 @@ impl<'a> Deriver<'a> {
             step: f64::from(clock.step),
             key: hash_words(&[lineage.0, u64::from(clock.step), SALT_DECOMPOSE]),
         };
-        let Some(rule) = self.choose(rules, &scope)? else {
+        let Some(rule) = choose(rules, &scope, stack)? else {
             return writer.push(symbol, params, lineage, born);
         };
         if depth >= self.limits.max_decomposition_depth {
@@ -320,7 +470,7 @@ impl<'a> Deriver<'a> {
         }
         let mut args = Vec::new();
         for item in &*rule.successor {
-            self.eval_args(item, &scope, &mut args, rule.span)?;
+            self.eval_args(item, &scope, &mut args, rule.span, stack)?;
             let child = lineage.child(clock.step, item.ordinal | DECOMPOSED);
             self.emit(
                 writer,
@@ -331,21 +481,23 @@ impl<'a> Deriver<'a> {
                 clock,
                 now,
                 depth + 1,
+                stack,
             )?;
         }
         Ok(())
     }
 
     fn eval_args(
-        &mut self,
+        &self,
         item: &Item,
         scope: &Scope<'_>,
         args: &mut Vec<f64>,
         span: Span,
+        stack: &mut Vec<f64>,
     ) -> Result<(), GrowthError> {
         args.clear();
         for code in &*item.args {
-            let value = eval(code, scope, &mut self.stack);
+            let value = eval(code, scope, stack);
             if !value.is_finite() {
                 return Err(GrowthError::Rule {
                     span,
@@ -540,6 +692,37 @@ mod tests {
             1,
         );
         assert_eq!(text(&program, &string), "F[/]F");
+    }
+
+    /// Chunks rewritten side by side give the string rewriting in order
+    /// gives: cuts, empty branches and lineages across chunk edges.
+    #[test]
+    fn chunks_side_by_side_rewrite_as_in_order() {
+        let source = "
+            lsystem cuts 1;
+            module A(n);
+            module B;
+            axiom A(0);
+            rule A(n) : n < 12 -> [ +(10) B ] A(n + 1) [ -(10) % B ] [ /(30) ] A(n + 2);
+            rule B -> F(1) B;
+        ";
+        let program = Program::compile(source).unwrap();
+        let globals = program.resolve_params(&BTreeMap::new()).unwrap();
+        let limits = Limits::default();
+        let mut deriver = Deriver::new(&program, &globals, &limits);
+        let mut string = deriver.axiom(7, 1.0).unwrap();
+        for step in 0..14 {
+            let clock = Clock {
+                step,
+                t: f64::from(step),
+                dt: 1.0,
+            };
+            let alone = deriver.derive_on(&string, &[], clock, 1).unwrap();
+            let shared = deriver.derive_on(&string, &[], clock, 4).unwrap();
+            assert_eq!(alone, shared, "step {step}");
+            string = alone;
+        }
+        assert!(string.len() > 1000);
     }
 
     #[test]
