@@ -518,7 +518,7 @@ fn older_fronds_hang_lower() {
 /// tall as it was, and has lost dead branches.
 #[test]
 fn a_tree_past_its_life_stands_as_a_snag() {
-    let spec = PlantSpec::builtin("prosopis-velutina").unwrap();
+    let spec = PlantSpec::builtin("neltuma-velutina").unwrap();
     let variant = spec.variant_list()[0];
     let growth = grow_variant(&spec, &variant, 120.0, vec![99.0, 120.0]);
     let leaf = growth

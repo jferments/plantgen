@@ -316,6 +316,12 @@ impl Look {
     }
 }
 
+/// How much brighter the photo looks are exposed than the review look,
+/// in stops. The review look shows linear light as it is; a filmic tone
+/// map (ACES) draws middle grey about a stop and a half darker, so without
+/// this the photos read dark (measured on a path-traced ground, 2026-10-08).
+pub const PHOTO_EXPOSURE_BOOST_EV: f32 = 1.5;
+
 /// The sun's angular diameter, radians: 0.53°.
 pub const SUN_ANGULAR_DIAMETER: f32 = 0.00925;
 
@@ -339,6 +345,17 @@ pub struct Shot {
     /// Draw the scale figure or rod beside the plant.
     pub scale: bool,
     pub look: Look,
+    /// Frame this height, metres, instead of the plant's own, so plants
+    /// of different ages share a scale.
+    pub frame_height: Option<f64>,
+    /// A close-up instead: this point of the plant, metres, with this many
+    /// metres of it from the bottom of the picture to the top, and no
+    /// scale.
+    pub focus: Option<([f64; 3], f64)>,
+    /// Also cut every card's outline into triangles ([`cut_cards`]), on a
+    /// grid this many cells along each side: for renderers that cannot cut
+    /// cards out by their texture, such as ray tracing. 0 for none.
+    pub cut_cards: usize,
 }
 
 impl Shot {
@@ -358,6 +375,9 @@ impl Shot {
             aspect: 1.0,
             scale: true,
             look: Look::Review,
+            frame_height: None,
+            focus: None,
+            cut_cards: 0,
         }
     }
 }
@@ -369,6 +389,9 @@ pub struct Scene {
     pub cards: SceneMesh,
     /// Opaque solids in vertex colours: spines and the scale.
     pub solids: SceneMesh,
+    /// The cards cut into opaque triangles in their colours, when the shot
+    /// asks for it ([`Shot::cut_cards`]); empty otherwise.
+    pub cut_cards: SceneMesh,
     pub templates: TemplateLayers,
     /// Each layer's accent colour, linear RGB.
     pub template_accents: Vec<[f32; 3]>,
@@ -471,6 +494,16 @@ pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Sc
     };
     let wood = SceneMesh::from_mesh(&plant.wood);
     let cards = cards(&card_mesh, templates);
+    let cut = if shot.cut_cards > 0 {
+        let first = if solid_spines {
+            templates.first_spine_template()
+        } else {
+            usize::MAX
+        };
+        cut_cards(plant, templates, shot.cut_cards, first)
+    } else {
+        SceneMesh::default()
+    };
     let mut solids = SceneMesh::from_mesh(&spines);
 
     let bounds = [&wood, &cards, &solids]
@@ -491,9 +524,9 @@ pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Sc
         .max(low.z.abs())
         .max(high.z.abs())
         .max(0.1);
-    let framed = high.y.max(0.05);
+    let framed = shot.frame_height.unwrap_or(high.y).max(0.05);
     let (scale_mesh, scale_height, gap) = scale(framed, reach);
-    if shot.scale {
+    if shot.scale && shot.focus.is_none() {
         append(&mut solids, &scale_mesh);
     }
     let framing = frame(shot, reach, framed, scale_height, gap);
@@ -526,6 +559,7 @@ pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Sc
         wood,
         cards,
         solids,
+        cut_cards: cut,
         templates: TemplateLayers::of(templates),
         template_accents: template_accents(templates),
         ground_radius: (reach * 1.4 + gap + 0.6).max(reach + 0.3) as f32,
@@ -535,6 +569,96 @@ pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Sc
         shadow_bounds: (shadow_low.to_f32(), shadow_high.to_f32()),
         facts,
     }
+}
+
+/// Every card of `plant` (whose template is below `first_excluded`) cut
+/// into opaque triangles along its template's outline: the card's grid of
+/// `grid` by `grid` cells keeps each cell whose centre the template covers
+/// (coverage at least one half, as a renderer cuts it), each corner placed
+/// on the card as it bends ([`plantgen::bend::Bend::point`]) and coloured
+/// by [`Templates::albedo`] there. One-sided, facing the card's front.
+#[must_use]
+pub fn cut_cards(
+    plant: &PlantMesh,
+    templates: &Templates,
+    grid: usize,
+    first_excluded: usize,
+) -> SceneMesh {
+    let grid = grid.max(1);
+    let corners = grid + 1;
+    #[allow(clippy::cast_precision_loss)]
+    let step = 1.0 / grid as f64;
+    let vector = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
+    let mut out = SceneMesh::default();
+    // Each template's kept cells, computed once.
+    let mut kept: Vec<Option<Vec<bool>>> = vec![None; templates.templates.len() + 1];
+    let mut index = vec![u32::MAX; corners * corners];
+    for card in &plant.cards {
+        let template = usize::from(card.template);
+        if template >= first_excluded {
+            continue;
+        }
+        let slot = template.min(templates.templates.len());
+        let cells = kept[slot].get_or_insert_with(|| {
+            (0..grid * grid)
+                .map(|cell| {
+                    let (i, j) = (cell % grid, cell / grid);
+                    #[allow(clippy::cast_precision_loss, clippy::cast_possible_truncation)]
+                    let (u, v) = (
+                        ((i as f64 + 0.5) * step) as f32,
+                        ((j as f64 + 0.5) * step) as f32,
+                    );
+                    templates.sample(template, u, v).coverage >= 0.5
+                })
+                .collect()
+        });
+        let (base, heading, left) = (vector(card.base), vector(card.heading), vector(card.left));
+        let half = f64::from(card.width) * 0.5;
+        let length = f64::from(card.length);
+        let colour = card.color.map(f64::from);
+        index.fill(u32::MAX);
+        for (cell, &keep) in cells.iter().enumerate() {
+            if !keep {
+                continue;
+            }
+            let (i, j) = (cell % grid, cell / grid);
+            let mut quad = [0_u32; 4];
+            for (slot, (ci, cj)) in [(i, j), (i + 1, j), (i + 1, j + 1), (i, j + 1)]
+                .into_iter()
+                .enumerate()
+            {
+                let at = cj * corners + ci;
+                if index[at] == u32::MAX {
+                    #[allow(clippy::cast_precision_loss)]
+                    let (u, v) = (ci as f64 * step, cj as f64 * step);
+                    let (position, normal) =
+                        card.bend
+                            .point(base, heading, left, half, length, 2.0 * u - 1.0, v);
+                    #[allow(clippy::cast_possible_truncation)]
+                    let texel = templates.sample(template, u as f32, v as f32);
+                    let albedo = templates.albedo(template, colour, texel);
+                    index[at] = u32::try_from(out.positions.len()).unwrap_or(u32::MAX);
+                    out.positions.push(position.to_f32());
+                    out.normals.push(normal.to_f32());
+                    #[allow(clippy::cast_possible_truncation)]
+                    {
+                        out.uvs.push([u as f32, v as f32]);
+                        out.colors.push([
+                            albedo[0] as f32,
+                            albedo[1] as f32,
+                            albedo[2] as f32,
+                            1.0,
+                        ]);
+                    }
+                }
+                quad[slot] = index[at];
+            }
+            // Counter-clockwise seen from the card's front, as the cards are.
+            out.indices
+                .extend_from_slice(&[quad[0], quad[2], quad[1], quad[0], quad[3], quad[2]]);
+        }
+    }
+    out
 }
 
 /// The card mesh with each vertex's template layer (plus one) in its
@@ -678,6 +802,25 @@ pub fn scale(height: f64, x: f64) -> (SceneMesh, f64, f64) {
 /// The camera that frames a plant `framed` metres tall reaching `reach`
 /// from its axis, with its scale `gap` beyond, as `plantc`'s previews do.
 fn frame(shot: &Shot, reach: f64, framed: f64, scale_height: f64, gap: f64) -> Framing {
+    if let Some((point, span)) = shot.focus {
+        let target = Vec3::new(point[0], point[1], point[2]);
+        let direction = if shot.view == View::Side {
+            Vec3::new(0.0, 0.04, 1.0)
+        } else {
+            Vec3::new(0.7, 0.3, 0.7)
+        }
+        .normalize_or(Vec3::Z);
+        let half_fov = (FOV_Y_DEG.to_radians() * 0.5).tan();
+        #[allow(clippy::cast_possible_truncation)]
+        return Framing {
+            eye: (target + direction * (span * 0.5 / half_fov)).to_f32(),
+            target: target.to_f32(),
+            up: [0.0, 1.0, 0.0],
+            projection: Projection::Perspective {
+                fov_y_deg: FOV_Y_DEG as f32,
+            },
+        };
+    }
     let height = if shot.scale {
         framed.max(scale_height * 1.1)
     } else {
@@ -721,6 +864,283 @@ fn frame(shot: &Shot, reach: f64, framed: f64, scale_height: f64, gap: f64) -> F
             },
         },
     }
+}
+
+/// A picture made of tiles: one plant each, with captions.
+#[derive(Debug, Clone)]
+pub struct Sheet {
+    pub width: u32,
+    pub height: u32,
+    /// The sheet's title, drawn across its top; empty for none.
+    pub title: String,
+    pub tiles: Vec<Tile>,
+    /// Row headings, at their top-left corners in pixels.
+    pub labels: Vec<Label>,
+}
+
+/// One plant's place on a sheet.
+#[derive(Debug, Clone)]
+pub struct Tile {
+    pub shot: Shot,
+    /// Left, top, width and height in pixels.
+    pub rect: [u32; 4],
+    /// Drawn under the tile.
+    pub caption: String,
+}
+
+/// Text placed on a sheet.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Label {
+    pub text: String,
+    pub x: u32,
+    pub y: u32,
+    /// Font size, pixels.
+    pub size: f32,
+}
+
+/// Room for the title above the first row, pixels.
+pub const TITLE_BAND: u32 = 56;
+/// Room for a row's heading above its tiles, and for captions under them.
+pub const ROW_BAND: u32 = 30;
+pub const CAPTION_BAND: u32 = 26;
+/// Gap between tiles.
+pub const GAP: u32 = 12;
+/// A review sheet's tiles: 380 by 460 pixels.
+pub const TILE: (u32, u32) = (380, 460);
+/// Most tiles in a review sheet's row.
+pub const ROW_TILES: usize = 6;
+
+/// A sheet of one picture filling it: a thumbnail.
+#[must_use]
+pub fn single(shot: Shot, width: u32, height: u32) -> Sheet {
+    let mut shot = shot;
+    #[allow(clippy::cast_precision_loss)]
+    {
+        shot.aspect = f64::from(width) / f64::from(height);
+    }
+    Sheet {
+        width,
+        height,
+        title: String::new(),
+        tiles: vec![Tile {
+            shot,
+            rect: [0, 0, width, height],
+            caption: String::new(),
+        }],
+        labels: Vec::new(),
+    }
+}
+
+/// Mid-month days of the year: January, March, May, July, September and
+/// November.
+pub const YEAR_DAYS: [(f64, &str); 6] = [
+    (15.0, "Jan"),
+    (74.0, "Mar"),
+    (135.0, "May"),
+    (196.0, "Jul"),
+    (258.0, "Sep"),
+    (319.0, "Nov"),
+];
+
+/// A species' review sheet, from `base` (its look, quality, seed and
+/// conditions):
+/// - **ages:** each keyframe of its growth, side view, all at the oldest
+///   plant's scale;
+/// - **mature:** the oldest plant from the side, the south-east and above,
+///   and a close-up of its crown;
+/// - **year:** the oldest plant at six times of the year, when any of its
+///   organs has seasons.
+///
+/// # Errors
+///
+/// When the species does not load or grow.
+#[allow(clippy::too_many_lines)]
+pub fn review_sheet(base: &Shot, library: &Library) -> Result<Sheet, String> {
+    let spec = load_spec(&base.species, library)?;
+    let mut ages = spec.growth.keyframes.clone();
+    ages.sort_by(f64::total_cmp);
+    ages.dedup();
+    let oldest = ages.last().copied().unwrap_or(1.0);
+    // The mature plant's height sets every age tile's scale.
+    let mature = build(
+        &Shot {
+            age: Some(oldest),
+            ..base.clone()
+        },
+        library,
+    )?;
+    let height = mature.facts.height_m;
+    let seasons = spec
+        .appearance
+        .organs
+        .values()
+        .any(|look| look.season.is_some());
+
+    let (tw, th) = TILE;
+    #[allow(clippy::cast_precision_loss)]
+    let aspect = f64::from(tw) / f64::from(th);
+    let mut rows: Vec<(String, Vec<(Shot, String)>)> = Vec::new();
+    let mut age_row: Vec<(Shot, String)> = ages
+        .iter()
+        .map(|&age| {
+            (
+                Shot {
+                    age: Some(age),
+                    view: View::Side,
+                    aspect,
+                    frame_height: Some(height),
+                    ..base.clone()
+                },
+                format!("{age} years"),
+            )
+        })
+        .collect();
+    // At most a row's worth, keeping the youngest and the oldest.
+    while age_row.len() > ROW_TILES {
+        age_row.remove(age_row.len() / 2);
+    }
+    rows.push(("Ages, side view, one scale".into(), age_row));
+    let crown = [0.0, height * 0.7, 0.0];
+    let mature_row = vec![
+        (View::Side, None, "side"),
+        (View::ThreeQuarter, None, "from the south-east"),
+        (View::Top, None, "from above"),
+        (
+            View::ThreeQuarter,
+            Some((crown, (height * 0.25).max(0.3))),
+            "close-up",
+        ),
+    ]
+    .into_iter()
+    .map(|(view, focus, caption)| {
+        (
+            Shot {
+                age: Some(oldest),
+                view,
+                aspect,
+                focus,
+                ..base.clone()
+            },
+            caption.to_string(),
+        )
+    })
+    .collect();
+    rows.push((format!("Mature, {oldest} years"), mature_row));
+    if seasons {
+        let year_row = YEAR_DAYS
+            .iter()
+            .map(|&(day, month)| {
+                (
+                    Shot {
+                        age: Some(oldest),
+                        day,
+                        view: View::ThreeQuarter,
+                        aspect,
+                        ..base.clone()
+                    },
+                    format!("mid {month} (day {day})"),
+                )
+            })
+            .collect();
+        rows.push(("The year".into(), year_row));
+    }
+
+    #[allow(clippy::cast_possible_truncation)]
+    let columns = rows.iter().map(|(_, row)| row.len()).max().unwrap_or(1) as u32;
+    let width = GAP + columns * (tw + GAP);
+    let mut tiles = Vec::new();
+    let mut labels = Vec::new();
+    let mut y = TITLE_BAND;
+    for (heading, row) in rows {
+        labels.push(Label {
+            text: heading,
+            x: GAP,
+            y: y + 4,
+            size: 20.0,
+        });
+        y += ROW_BAND;
+        for (column, (shot, caption)) in (0_u32..).zip(row) {
+            let x = GAP + column * (tw + GAP);
+            labels.push(Label {
+                text: caption.clone(),
+                x,
+                y: y + th + 3,
+                size: 16.0,
+            });
+            tiles.push(Tile {
+                shot,
+                rect: [x, y, tw, th],
+                caption,
+            });
+        }
+        y += th + CAPTION_BAND + GAP;
+    }
+    let facts = &mature.facts;
+    let title = format!(
+        "{}   |   {} m tall at {} years   |   {}, seed {}, {} quality, {} look   |   generator revision {}",
+        facts.species,
+        format_metres(facts.height_m),
+        facts.age,
+        facts.environment,
+        facts.seed,
+        facts.quality,
+        facts.look,
+        facts.generator_revision
+    );
+    labels.insert(
+        0,
+        Label {
+            text: title.clone(),
+            x: GAP,
+            y: 14,
+            size: 24.0,
+        },
+    );
+    Ok(Sheet {
+        width,
+        height: y,
+        title,
+        tiles,
+        labels,
+    })
+}
+
+fn format_metres(m: f64) -> String {
+    if m >= 10.0 {
+        format!("{m:.0}")
+    } else {
+        format!("{m:.1}")
+    }
+}
+
+/// A sheet's sidecar: the picture, its title and each tile's rectangle,
+/// caption and facts, as JSON.
+#[must_use]
+pub fn sheet_sidecar(sheet: &Sheet, picture: &str, facts: &[Facts]) -> String {
+    let mut tiles = Vec::new();
+    for (tile, facts) in sheet.tiles.iter().zip(facts) {
+        let [x, y, w, h] = tile.rect;
+        let inner = sidecar(facts, picture, w, h);
+        // Indent the tile's facts and add its place.
+        let body = inner
+            .trim()
+            .trim_start_matches('{')
+            .trim_end_matches('}')
+            .trim_end();
+        tiles.push(format!(
+            "    {{\n      \"rect\": [{x}, {y}, {w}, {h}],\n      \"caption\": {},{}\n    }}",
+            serde_json_string(&tile.caption),
+            body.replace("\n  ", "\n      ")
+        ));
+    }
+    format!(
+        "{{\n  \"picture\": {},\n  \"width\": {},\n  \"height\": {},\n  \"title\": {},\n  \"tiles\": [\n{}\n  ]\n}}\n",
+        serde_json_string(picture),
+        sheet.width,
+        sheet.height,
+        serde_json_string(&sheet.title),
+        tiles.join(",\n")
+    )
 }
 
 /// The sidecar beside a picture: what it shows, as JSON.
@@ -875,6 +1295,55 @@ mod tests {
         let (rod, tall, _) = scale(0.9, 0.3);
         assert!((tall - 1.0).abs() < 1e-12);
         assert_eq!(rod.indices.len(), 10 * 5 * 6);
+    }
+
+    #[test]
+    fn a_review_sheet_has_ages_mature_views_and_captions() {
+        let mut base = Shot::thumbnail("acer-macrophyllum");
+        base.quality = quality::DRAFT;
+        let sheet = review_sheet(&base, Library::builtin()).expect("a sheet");
+        assert!(sheet.tiles.len() >= 4 + 2);
+        // Age tiles share the mature plant's scale.
+        let scaled: Vec<_> = sheet
+            .tiles
+            .iter()
+            .filter_map(|tile| tile.shot.frame_height)
+            .collect();
+        assert!(scaled.len() >= 2 && scaled.windows(2).all(|w| (w[0] - w[1]).abs() < 1e-9));
+        // Tiles lie inside the sheet and never overlap.
+        for (i, a) in sheet.tiles.iter().enumerate() {
+            let [x, y, w, h] = a.rect;
+            assert!(x + w <= sheet.width && y + h <= sheet.height);
+            for b in &sheet.tiles[i + 1..] {
+                let [bx, by, bw, bh] = b.rect;
+                assert!(x + w <= bx || bx + bw <= x || y + h <= by || by + bh <= y);
+            }
+        }
+        assert!(sheet.title.starts_with("acer-macrophyllum"));
+    }
+
+    #[test]
+    fn cut_cards_keep_the_covered_cells_of_every_card() {
+        let spec = Library::builtin().spec("acer-macrophyllum").expect("maple");
+        let quality = quality::DRAFT;
+        let mut request = Request::typical(&spec, Library::builtin(), &quality);
+        request.age = 6.0;
+        let drawing = drawing::draw(&request).expect("draws");
+        let cut = cut_cards(&drawing.plant, &drawing.templates, 12, usize::MAX);
+        let cards = drawing.plant.cards.len();
+        // Leaves cover part of their cards: some cells each, not all.
+        let triangles = cut.triangle_count();
+        assert!(
+            triangles > cards * 2,
+            "{triangles} triangles for {cards} cards"
+        );
+        assert!(triangles < cards * 12 * 12 * 2);
+        assert_eq!(cut.positions.len(), cut.colors.len());
+        assert!(
+            cut.indices
+                .iter()
+                .all(|&i| (i as usize) < cut.positions.len())
+        );
     }
 
     #[test]

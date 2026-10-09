@@ -6,7 +6,14 @@
 //! World Checklist of Vascular Plants (WCVP v16); the genus folder is the
 //! genus the id is written with. The build script walks the tree and
 //! compiles every spec in, so the tree is the index: adding a species is
-//! adding its folder.
+//! adding its folder. A taxon below a species (a subspecies, variety,
+//! form or cultivar) has its folder in its species', named by its species'
+//! id, its rank and its epithet
+//! (`pinus/pinus-contorta/pinus-contorta-var-contorta/`); a species folder
+//! holding such folders holds nothing else yet. Ids follow WCVP's
+//! accepted names ([`Library::check_taxa`]): when a taxon is renamed its
+//! folder moves, and `library/aliases.json` maps its old id to the new one
+//! ([`Library::current`]), so a host holding the old id still finds it.
 //!
 //! A [`Library`] is the built-in one ([`Library::builtin`]), or a folder in
 //! the same layout read on top of it ([`Library::from_dir`]): its species
@@ -37,6 +44,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::OnceLock;
 
+use serde::Deserialize;
 use serde_json::Value;
 
 use crate::conditions::Conditions;
@@ -57,6 +65,9 @@ pub struct Species {
     pub family: &'static str,
     /// Its genus's folder: the genus the id is written with, in lower case.
     pub genus: &'static str,
+    /// For a taxon below a species, that species' folder, which holds its
+    /// own; `None` for a species.
+    pub species: Option<&'static str>,
     /// Its spec, as JSON: its own `spec.json`, merged onto the rank files
     /// above it where there are any ([`crate::inherit`]).
     pub source: &'static str,
@@ -72,15 +83,30 @@ pub struct Species {
 
 include!(concat!(env!("OUT_DIR"), "/library.rs"));
 
-/// The species with id `id`, if the library has it.
+/// The species with id `id`, or with the id `id` was renamed to, if the
+/// library has it.
 #[must_use]
 pub fn species(id: &str) -> Option<&'static Species> {
+    let id = followed(id);
     LIBRARY.iter().find(|species| species.id == id)
+}
+
+/// `id`, or where it is the old id of a renamed taxon
+/// (`library/aliases.json`), its current id.
+const fn followed(id: &str) -> &str {
+    let mut index = 0;
+    while index < ALIASES.len() {
+        if same(ALIASES[index].0, id) {
+            return ALIASES[index].1;
+        }
+        index += 1;
+    }
+    id
 }
 
 /// The spec of the species `id`, as JSON, for use in constants: a
 /// catalogue built from it does not compile if the library lacks a species
-/// it names.
+/// it names. An old id finds the species it was renamed to.
 ///
 /// # Panics
 ///
@@ -88,6 +114,7 @@ pub fn species(id: &str) -> Option<&'static Species> {
 /// species `id`.
 #[must_use]
 pub const fn source(id: &str) -> &'static str {
+    let id = followed(id);
     let mut index = 0;
     while index < LIBRARY.len() {
         if same(LIBRARY[index].id, id) {
@@ -108,6 +135,7 @@ pub const fn source(id: &str) -> &'static str {
 /// species `id` or it has no niche.
 #[must_use]
 pub const fn niche_source(id: &str) -> &'static str {
+    let id = followed(id);
     let mut index = 0;
     while index < LIBRARY.len() {
         if same(LIBRARY[index].id, id) {
@@ -138,6 +166,8 @@ pub struct Library {
     /// The specs of taxa above species, by their path in the tree
     /// ([`crate::inherit`]).
     ranks: BTreeMap<String, RankFile>,
+    /// The old ids of renamed taxa (`library/aliases.json`), by old id.
+    aliases: BTreeMap<String, Alias>,
     /// Each program's parameters, its inherited ones included, which
     /// rules are checked against.
     params: Programs,
@@ -152,12 +182,60 @@ pub struct Citation {
     pub path: String,
 }
 
-/// One species of a [`Library`].
+/// The id a renamed taxon now has, for its old id
+/// (`library/aliases.json`), with the evidence note saying why it moved.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Alias {
+    pub id: String,
+    pub evidence: FieldEvidence,
+}
+
+/// `library/aliases.json`: each old id with the id it stands for, and an
+/// evidence note on each (`aliases.<old id>`).
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct AliasesFile {
+    schema: u32,
+    aliases: BTreeMap<String, String>,
+    #[serde(default)]
+    evidence: BTreeMap<String, FieldEvidence>,
+}
+
+/// The aliases of the text of an `aliases.json`, each with its note.
+fn parse_aliases(text: &str) -> Result<BTreeMap<String, Alias>, String> {
+    let file: AliasesFile = serde_json::from_str(text).map_err(|error| error.to_string())?;
+    if file.schema != 1 {
+        return Err(format!("schema {} is not 1", file.schema));
+    }
+    let mut notes = file.evidence;
+    let aliases = file
+        .aliases
+        .into_iter()
+        .map(|(old, id)| {
+            let evidence = notes
+                .remove(&format!("aliases.{old}"))
+                .ok_or_else(|| format!("the alias `{old}` has no evidence note"))?;
+            evidence
+                .check()
+                .map_err(|error| format!("the evidence note on `aliases.{old}`: {error}"))?;
+            Ok((old, Alias { id, evidence }))
+        })
+        .collect::<Result<BTreeMap<_, _>, String>>()?;
+    match notes.keys().next() {
+        Some(path) => Err(format!("the evidence note on `{path}` is on no alias")),
+        None => Ok(aliases),
+    }
+}
+
+/// One species of a [`Library`], or a taxon below a species.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Entry {
     pub id: String,
     pub family: String,
     pub genus: String,
+    /// For a taxon below a species, that species' folder, which holds its
+    /// own; `None` for a species.
+    pub species: Option<String>,
     /// The spec's file, for a species read from a folder; `None` for a
     /// built-in one.
     pub path: Option<PathBuf>,
@@ -189,7 +267,16 @@ impl Entry {
     /// where values and notes say where they came from.
     #[must_use]
     pub fn file(&self) -> String {
-        format!("{}/{}/{}/spec.json", self.family, self.genus, self.id)
+        format!("{}/spec.json", self.folder())
+    }
+
+    /// Its folder's path in the library tree.
+    #[must_use]
+    pub fn folder(&self) -> String {
+        match &self.species {
+            None => format!("{}/{}/{}", self.family, self.genus, self.id),
+            Some(species) => format!("{}/{}/{species}/{}", self.family, self.genus, self.id),
+        }
     }
 
     /// Its typical site (`conditions.json`), as JSON, if it has one.
@@ -255,7 +342,7 @@ impl Entry {
     /// The evidence notes of its own spec, niche and shed, each with the
     /// file holding it, by its path in the tree, and its path.
     fn notes(&self) -> Result<Vec<Note>, String> {
-        let folder = format!("{}/{}/{}", self.family, self.genus, self.id);
+        let folder = self.folder();
         let own: Value = serde_json::from_str(&self.own)
             .map_err(|error| format!("{}'s spec.json: {error}", self.id))?;
         let evidence: BTreeMap<String, FieldEvidence> = own
@@ -348,6 +435,7 @@ impl Library {
                     id: species.id.to_string(),
                     family: species.family.to_string(),
                     genus: species.genus.to_string(),
+                    species: species.species.map(str::to_string),
                     path: None,
                     own: Cow::Borrowed(species.own),
                     // The build script merged it where rank files stand
@@ -388,6 +476,12 @@ impl Library {
                         ((*file).to_string(), rank)
                     })
                     .collect(),
+                aliases: ALIASES_FILE
+                    .map(|text| {
+                        parse_aliases(text)
+                            .unwrap_or_else(|error| panic!("library/aliases.json: {error}"))
+                    })
+                    .unwrap_or_default(),
                 params: inherit::program_params(PROGRAMS.iter().copied()),
             }
             .with_chains()
@@ -395,11 +489,14 @@ impl Library {
     }
 
     /// The built-in library with the folder `root` read on top of it: a
-    /// species tree in `root/library/<family>/<genus>/<id>/spec.json` and
+    /// species tree in `root/library/<family>/<genus>/<id>/spec.json` (a
+    /// taxon below a species in `<genus>/<species>/<id>/`) and
     /// programs in `root/programs/<name>.lsys`, either of which may be
     /// missing but not both. A species or program replaces a built-in one
-    /// of the same id or name, and a rank file (`library/_ranks/…`,
-    /// `family.json`, `genus.json`) the built-in one at the same path.
+    /// of the same id or name, a rank file (`library/_ranks/…`,
+    /// `family.json`, `genus.json`) the built-in one at the same path, and
+    /// an alias in `library/aliases.json` the built-in one of the same old
+    /// id.
     /// Every spec, merged onto the rank files above it, the sections
     /// beside it (`conditions.json`, `shed.json`, `niche.json`) and every
     /// rank file are read and checked now; other files beside them
@@ -410,8 +507,9 @@ impl Library {
     /// Fails on a folder or file that cannot be read, a folder named
     /// against the tree's rules, a species folder without its
     /// `spec.json`, a spec whose `id` is not its folder's, an invalid
-    /// spec, section or rank file, a section naming another species, an
-    /// id twice, or a program file whose name is not a program name.
+    /// spec, section, rank file or alias, a section naming another
+    /// species, an id twice, an old id still in use, or a program file
+    /// whose name is not a program name.
     pub fn from_dir(root: &Path) -> Result<Self, LibraryError> {
         let tree = root.join("library");
         let programs = root.join("programs");
@@ -487,46 +585,57 @@ impl Library {
                                 folder.display()
                             )));
                         }
-                        let path = folder.join("spec.json");
-                        let source = fs::read_to_string(&path).map_err(|error| {
-                            LibraryError(format!("cannot read {}: {error}", path.display()))
-                        })?;
-                        let named = serde_json::from_str::<serde_json::Value>(&source)
-                            .ok()
-                            .and_then(|spec| spec.get("id")?.as_str().map(str::to_string));
-                        if named.as_deref() != Some(id.as_str()) {
+                        if let Some(rank) = rank_in(&id) {
                             return Err(LibraryError(format!(
-                                "{} must be the spec of `{id}`, its folder's name; it names {}",
-                                path.display(),
-                                named.map_or_else(
-                                    || "no id".to_string(),
-                                    |named| format!("`{named}`")
-                                )
-                            )));
-                        }
-                        if read.contains_key(&id) {
-                            return Err(LibraryError(format!(
-                                "{} is the second folder for `{id}`",
+                                "{} names a taxon below a species (`-{rank}-`); its folder goes in its species' folder",
                                 folder.display()
                             )));
                         }
-                        let entry = Entry {
-                            id: id.clone(),
-                            family: family_name.clone(),
-                            genus: genus_name.clone(),
-                            path: Some(path),
-                            own: Cow::Owned(source),
-                            merged: None,
-                            conditions: section(&folder, "conditions.json")?,
-                            shed: section(&folder, "shed.json")?,
-                            niche: section(&folder, "niche.json")?,
-                        };
-                        entry.check_sections().map_err(|error| {
-                            LibraryError(format!("{}: {error}", folder.display()))
-                        })?;
-                        read.insert(id, entry);
+                        let below = folders(&folder)?;
+                        if below.is_empty() {
+                            let place = (family_name.as_str(), genus_name.as_str(), None);
+                            read_taxon(&mut read, place, &folder, id)?;
+                            continue;
+                        }
+                        if let Some(file) = files(&folder)?.into_iter().find(|file| {
+                            file.extension()
+                                .is_some_and(|extension| extension == "json")
+                        }) {
+                            return Err(LibraryError(format!(
+                                "{} holds the taxa below its species, so it holds no file of its own, as {} is: how they take the species' sections is not settled",
+                                folder.display(),
+                                file.display()
+                            )));
+                        }
+                        for taxon in below {
+                            let taxon_id = folder_name(&taxon, "a species", is_id)?;
+                            if !is_below(&id, &taxon_id) {
+                                return Err(LibraryError(format!(
+                                    "{} is filed under the species {id}; its id must be `{id}-` and a rank (`subsp`, `var`, `f`, `cv`), a hyphen and an epithet",
+                                    taxon.display()
+                                )));
+                            }
+                            if let Some(inside) = folders(&taxon)?.first() {
+                                return Err(LibraryError(format!(
+                                    "{} is a folder in a taxon below a species; such a taxon holds no folders",
+                                    inside.display()
+                                )));
+                            }
+                            let place =
+                                (family_name.as_str(), genus_name.as_str(), Some(id.as_str()));
+                            read_taxon(&mut read, place, &taxon, taxon_id)?;
+                        }
                     }
                 }
+            }
+            if tree.join("aliases.json").is_file() {
+                let path = tree.join("aliases.json");
+                let text = fs::read_to_string(&path).map_err(|error| {
+                    LibraryError(format!("cannot read {}: {error}", path.display()))
+                })?;
+                let aliases = parse_aliases(&text)
+                    .map_err(|error| LibraryError(format!("{}: {error}", path.display())))?;
+                library.aliases.extend(aliases);
             }
             library
                 .species
@@ -582,6 +691,7 @@ impl Library {
         library.check_citations().map_err(LibraryError)?;
         library.check_evidence().map_err(LibraryError)?;
         library.check_taxa().map_err(LibraryError)?;
+        library.check_aliases().map_err(LibraryError)?;
         Ok(library.with_chains())
     }
 
@@ -757,10 +867,12 @@ impl Library {
         Ok(())
     }
 
-    /// Every species' taxon agrees with its folders, where it names them:
-    /// its `family` is the family folder's name (WCVP's spelling, in lower
-    /// case), its `genus` the genus folder's, and the first word of its
-    /// `scientific_name` is that genus.
+    /// Every species' taxon agrees with its folders: its id is its
+    /// `scientific_name` written as an id (ids follow WCVP's accepted
+    /// names), and where it names them, its `family` is the family
+    /// folder's name (WCVP's spelling, in lower case), its `genus` the
+    /// genus folder's, and the first word of its `scientific_name` is that
+    /// genus.
     ///
     /// # Errors
     ///
@@ -770,6 +882,15 @@ impl Library {
             let spec: PlantSpec = serde_json::from_str(entry.source())
                 .map_err(|error| format!("{}: {error}", entry.file()))?;
             let taxon = &spec.taxon;
+            let written = id_of(&taxon.scientific_name);
+            if written != entry.id {
+                return Err(format!(
+                    "{}: its id is `{}`, but its scientific name `{}` written as an id is `{written}`; ids follow WCVP's accepted names, so a renamed taxon's folder takes the new id and `aliases.json` keeps the old one",
+                    entry.file(),
+                    entry.id,
+                    taxon.scientific_name
+                ));
+            }
             let disagree = |what: &str, named: &str, folder: &str| {
                 Err(format!(
                     "{}: taxon.{what} is `{named}`, but its folder is `{folder}`",
@@ -798,7 +919,7 @@ impl Library {
     }
 
     /// Every evidence note in the library: each species' own (its spec,
-    /// niche and shed), then each rank file's.
+    /// niche and shed), then each rank file's, then each alias'.
     fn notes(&self) -> Result<Vec<Note>, String> {
         let mut notes = Vec::new();
         for entry in &self.species {
@@ -807,6 +928,13 @@ impl Library {
         for rank in self.ranks.values() {
             notes.extend(rank_notes(rank)?);
         }
+        notes.extend(self.aliases.iter().map(|(old, alias)| {
+            (
+                "aliases.json".to_string(),
+                format!("aliases.{old}"),
+                alias.evidence.clone(),
+            )
+        }));
         Ok(notes)
     }
 
@@ -834,10 +962,71 @@ impl Library {
         &self.species
     }
 
-    /// The species `id`, if the library has it.
+    /// The species `id`, if the library has it, or the one it was
+    /// renamed to ([`Library::current`]).
     #[must_use]
     pub fn entry(&self, id: &str) -> Option<&Entry> {
-        self.index.get(id).map(|&place| &self.species[place])
+        self.current(id)
+            .and_then(|id| self.index.get(id))
+            .map(|&place| &self.species[place])
+    }
+
+    /// The current id of the taxon `id`: `id` itself if the library holds
+    /// it, else the id it was renamed to (`library/aliases.json`), if the
+    /// library holds that.
+    #[must_use]
+    pub fn current<'a>(&'a self, id: &'a str) -> Option<&'a str> {
+        if self.index.contains_key(id) {
+            return Some(id);
+        }
+        self.aliases
+            .get(id)
+            .map(|alias| alias.id.as_str())
+            .filter(|id| self.index.contains_key(*id))
+    }
+
+    /// Every old id of a renamed taxon, with the id it stands for, sorted
+    /// by old id.
+    pub fn aliases(&self) -> impl Iterator<Item = (&str, &Alias)> {
+        self.aliases
+            .iter()
+            .map(|(old, alias)| (old.as_str(), alias))
+    }
+
+    /// Every alias is the old id of a taxon the library holds: an id that
+    /// no taxon of the library now has, standing for one that a taxon has
+    /// (so no alias stands for another).
+    ///
+    /// # Errors
+    ///
+    /// Names the first alias against these rules.
+    pub fn check_aliases(&self) -> Result<(), String> {
+        for (old, alias) in &self.aliases {
+            if !is_id(old) {
+                return Err(format!(
+                    "aliases.json: `{old}` is not an id: 1 to 64 lowercase letters, digits and hyphens"
+                ));
+            }
+            if let Some(&place) = self.index.get(old) {
+                return Err(format!(
+                    "aliases.json: `{old}` is the old id of `{}`, but {} still has it",
+                    alias.id,
+                    self.species[place].file()
+                ));
+            }
+            if !self.index.contains_key(&alias.id) {
+                return Err(format!(
+                    "aliases.json: `{old}` stands for `{}`, which no taxon of the library has{}",
+                    alias.id,
+                    if self.aliases.contains_key(&alias.id) {
+                        " (it is an alias itself: point the old id at the current one)"
+                    } else {
+                        ""
+                    }
+                ));
+            }
+        }
+        Ok(())
     }
 
     /// The species `id`, parsed and checked against this library.
@@ -1080,6 +1269,100 @@ fn fits(part: &Part, probes: &[Value]) -> Result<(), String> {
 }
 
 /// The section `name` beside a spec in `folder`, if the folder has it.
+/// Where a taxon's folder sits: its family's and genus's folders, and for
+/// a taxon below a species, the species'.
+type Place<'a> = (&'a str, &'a str, Option<&'a str>);
+
+/// Read the folder of the taxon `id`, at `place` in the tree, into `read`.
+fn read_taxon(
+    read: &mut BTreeMap<String, Entry>,
+    (family, genus, species): Place<'_>,
+    folder: &Path,
+    id: String,
+) -> Result<(), LibraryError> {
+    let path = folder.join("spec.json");
+    let source = fs::read_to_string(&path)
+        .map_err(|error| LibraryError(format!("cannot read {}: {error}", path.display())))?;
+    let named = serde_json::from_str::<serde_json::Value>(&source)
+        .ok()
+        .and_then(|spec| spec.get("id")?.as_str().map(str::to_string));
+    if named.as_deref() != Some(id.as_str()) {
+        return Err(LibraryError(format!(
+            "{} must be the spec of `{id}`, its folder's name; it names {}",
+            path.display(),
+            named.map_or_else(|| "no id".to_string(), |named| format!("`{named}`"))
+        )));
+    }
+    if read.contains_key(&id) {
+        return Err(LibraryError(format!(
+            "{} is the second folder for `{id}`",
+            folder.display()
+        )));
+    }
+    let entry = Entry {
+        id: id.clone(),
+        family: family.to_string(),
+        genus: genus.to_string(),
+        species: species.map(str::to_string),
+        path: Some(path),
+        own: Cow::Owned(source),
+        merged: None,
+        conditions: section(folder, "conditions.json")?,
+        shed: section(folder, "shed.json")?,
+        niche: section(folder, "niche.json")?,
+    };
+    entry
+        .check_sections()
+        .map_err(|error| LibraryError(format!("{}: {error}", folder.display())))?;
+    read.insert(id, entry);
+    Ok(())
+}
+
+/// The ranks below species an id names (`subsp`, `var`, `f`, `cv`).
+const RANKS_BELOW_SPECIES: [&str; 4] = ["subsp", "var", "f", "cv"];
+
+/// The rank below species the id `id` names, if it names one: a word of it
+/// that is one of [`RANKS_BELOW_SPECIES`].
+fn rank_in(id: &str) -> Option<&'static str> {
+    id.split('-')
+        .find_map(|word| RANKS_BELOW_SPECIES.into_iter().find(|rank| *rank == word))
+}
+
+/// Whether `id` names a taxon below the species `species`: the species'
+/// id, a rank below species and an epithet, joined by hyphens.
+fn is_below(species: &str, id: &str) -> bool {
+    id.strip_prefix(species)
+        .and_then(|rest| rest.strip_prefix('-'))
+        .and_then(|rest| rest.split_once('-'))
+        .is_some_and(|(rank, epithet)| {
+            RANKS_BELOW_SPECIES.contains(&rank) && !epithet.is_empty() && rank_in(epithet).is_none()
+        })
+}
+
+/// A scientific name written as an id: its words in lower case, without
+/// the dot of a rank's abbreviation or any sign but a hyphen, joined by
+/// hyphens, and a cultivar's quoted name after `cv`
+/// (`Pinus contorta var. contorta`: `pinus-contorta-var-contorta`;
+/// `Acer palmatum 'Bloodgood'`: `acer-palmatum-cv-bloodgood`).
+fn id_of(name: &str) -> String {
+    let mut words: Vec<String> = Vec::new();
+    let mut quoted = false;
+    for word in name.split_whitespace() {
+        if !quoted && word.starts_with(['\'', '\u{2018}']) {
+            quoted = true;
+            words.push("cv".to_string());
+        }
+        let word: String = word
+            .chars()
+            .filter(|letter| letter.is_ascii_alphanumeric() || *letter == '-')
+            .collect();
+        if !word.is_empty() {
+            words.push(word.to_ascii_lowercase());
+        }
+    }
+    words.join("-")
+}
+
 fn section(folder: &Path, name: &str) -> Result<Option<Cow<'static, str>>, LibraryError> {
     let path = folder.join(name);
     if !path.is_file() {
@@ -1180,7 +1463,9 @@ mod tests {
     use std::fs;
     use std::path::{Path, PathBuf};
 
-    use super::{Citation, LIBRARY, Library, RANKS, SOURCES, niche_source, source, species};
+    use super::{
+        ALIASES, Citation, LIBRARY, Library, RANKS, SOURCES, niche_source, source, species,
+    };
     use crate::spec::{PROGRAMS, PlantSpec};
 
     fn lower_name(name: &str) -> bool {
@@ -1201,15 +1486,45 @@ mod tests {
         found
     }
 
+    /// A species' or lower taxon's folder holds its record's sections: its
+    /// spec and its typical site, and where it grows and what falls from
+    /// it where those sections are written; its spec names its folder.
+    fn record(folder: &Path, ids: &mut BTreeSet<String>) {
+        let id = folder.file_name().unwrap().to_str().unwrap();
+        assert!(lower_name(id), "{id}");
+        let files: Vec<String> = entries(folder)
+            .iter()
+            .map(|file| file.file_name().unwrap().to_str().unwrap().to_owned())
+            .collect();
+        let optional = ["niche.json", "shed.json"];
+        let expected: Vec<&str> = ["conditions.json", "spec.json"]
+            .into_iter()
+            .chain(
+                optional
+                    .into_iter()
+                    .filter(|name| files.iter().any(|file| file == name)),
+            )
+            .collect::<BTreeSet<_>>()
+            .into_iter()
+            .collect();
+        assert_eq!(files, expected, "{id}");
+        let spec: serde_json::Value =
+            serde_json::from_str(&fs::read_to_string(folder.join("spec.json")).unwrap()).unwrap();
+        assert_eq!(spec["id"], id, "{id}");
+        assert!(ids.insert(id.to_owned()), "{id} twice");
+    }
+
     /// The tree's rules: a folder per family, per genus and per species, in
     /// lower case; the species folder holds its `spec.json`, whose `id` is
     /// the folder's name and starts with the genus folder's, and its
     /// typical site, `conditions.json`, and where those sections are
     /// written, where it grows, `niche.json`, and what falls from it,
-    /// `shed.json`; families end in "aceae"; no id twice, and nothing
-    /// anywhere else but the `sources/` and `_ranks/` folders beside the
-    /// families and the rank files (`family.json`, `genus.json`) in a
-    /// family's and a genus's folder.
+    /// `shed.json`; or instead, a folder laid out as a species' for each
+    /// taxon below it, whose id extends the species' with a rank and an
+    /// epithet; families end in "aceae"; no id twice, and nothing anywhere
+    /// else but the `sources/` and `_ranks/` folders and `aliases.json`
+    /// beside the families and the rank files (`family.json`,
+    /// `genus.json`) in a family's and a genus's folder.
     #[test]
     fn the_library_keeps_the_tree_rules() {
         let root = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("library");
@@ -1218,8 +1533,9 @@ mod tests {
         let mut ranks = 0;
         for family in entries(&root) {
             let family_name = family.file_name().unwrap().to_str().unwrap();
-            // The sources values cite sit beside the families.
-            if family_name == "sources" {
+            // The sources values cite sit beside the families, and the
+            // old ids of renamed taxa.
+            if family_name == "sources" || family_name == "aliases.json" {
                 continue;
             }
             // So do the ranks kept flat, a folder per rank.
@@ -1276,32 +1592,25 @@ mod tests {
                         id.starts_with(&format!("{genus_name}-")),
                         "{id} under {genus_name}"
                     );
-                    let files: Vec<String> = entries(&folder)
-                        .iter()
-                        .map(|file| file.file_name().unwrap().to_str().unwrap().to_owned())
-                        .collect();
-                    // Its record's sections: the spec and its typical site,
-                    // and where it grows and what falls from it where those
-                    // sections are written.
-                    let optional = ["niche.json", "shed.json"];
-                    let expected: Vec<&str> = ["conditions.json", "spec.json"]
+                    assert_eq!(super::rank_in(id), None, "{id} is filed as a species");
+                    let below: Vec<PathBuf> = entries(&folder)
                         .into_iter()
-                        .chain(
-                            optional
-                                .into_iter()
-                                .filter(|name| files.iter().any(|file| file == name)),
-                        )
-                        .collect::<BTreeSet<_>>()
-                        .into_iter()
+                        .filter(|entry| entry.is_dir())
                         .collect();
-                    assert_eq!(files, expected, "{id}");
-                    let spec: serde_json::Value = serde_json::from_str(
-                        &fs::read_to_string(folder.join("spec.json")).unwrap(),
-                    )
-                    .unwrap();
-                    assert_eq!(spec["id"], id, "{id}");
-                    assert!(ids.insert(id.to_owned()), "{id} twice");
-                    walked += 1;
+                    if below.is_empty() {
+                        record(&folder, &mut ids);
+                        walked += 1;
+                        continue;
+                    }
+                    // A species folder holding the taxa below it holds
+                    // nothing else.
+                    assert_eq!(entries(&folder), below, "{id}");
+                    for taxon in below {
+                        let taxon_id = taxon.file_name().unwrap().to_str().unwrap();
+                        assert!(super::is_below(id, taxon_id), "{taxon_id} under {id}");
+                        record(&taxon, &mut ids);
+                        walked += 1;
+                    }
                 }
             }
         }
@@ -1475,6 +1784,12 @@ mod tests {
                 "\"genus\": \"pseudotsuga\"",
                 "is not written in its genus",
             ),
+            // Its id is not its name: a renamed taxon keeps neither.
+            (
+                "\"scientific_name\": \"Pseudotsuga menziesii\"",
+                "\"scientific_name\": \"Pseudotsuga taxifolia\"",
+                "written as an id is `pseudotsuga-taxifolia`",
+            ),
         ] {
             let folder = Folder::new("taxa");
             let text = source("pseudotsuga-menziesii");
@@ -1483,6 +1798,133 @@ mod tests {
             let error = Library::from_dir(&folder.0).unwrap_err().0;
             assert!(error.contains(wanted), "{wanted}: {error}");
         }
+    }
+
+    /// Old ids find the taxa renamed from them, in constants and in the
+    /// library; every alias stands for a taxon the library holds, with a
+    /// note citing its source; a taxon below a species sits in its
+    /// species' folder.
+    #[test]
+    fn old_ids_find_renamed_taxa() {
+        let library = Library::builtin();
+        library.check_aliases().unwrap();
+        let aliases: Vec<(&str, &str)> = library
+            .aliases()
+            .map(|(old, alias)| (old, alias.id.as_str()))
+            .collect();
+        assert!(!aliases.is_empty());
+        assert_eq!(aliases, ALIASES);
+        for &(old, current) in ALIASES {
+            assert_eq!(library.current(old), Some(current));
+            assert_eq!(library.entry(old).unwrap().id, current);
+            assert_eq!(library.spec(old).unwrap().id, current);
+            assert_eq!(species(old).unwrap().id, current);
+            assert_eq!(source(old), source(current));
+            assert_eq!(
+                super::id_of(&library.spec(current).unwrap().taxon.scientific_name),
+                current
+            );
+        }
+        assert_eq!(
+            niche_source("prosopis-velutina"),
+            niche_source("neltuma-velutina")
+        );
+        assert_eq!(library.current("no-such-plant"), None);
+        assert!(library.citations("wcvp-v16").unwrap().contains(&Citation {
+            file: "aliases.json".to_string(),
+            path: "aliases.prosopis-velutina".to_string(),
+        }));
+        let shore_pine = library.entry("pinus-contorta-var-contorta").unwrap();
+        assert_eq!(shore_pine.species.as_deref(), Some("pinus-contorta"));
+        assert_eq!(
+            shore_pine.file(),
+            "pinaceae/pinus/pinus-contorta/pinus-contorta-var-contorta/spec.json"
+        );
+        assert_eq!(
+            super::id_of("Acer palmatum 'Bloodgood'"),
+            "acer-palmatum-cv-bloodgood"
+        );
+    }
+
+    #[test]
+    fn aliases_and_lower_taxa_against_the_rules_are_refused() {
+        let refused = |files: &[(&str, &str)], expected: &str| {
+            let folder = Folder::new("aliases");
+            for (relative, text) in files {
+                folder.write(relative, text);
+            }
+            let message = Library::from_dir(&folder.0).unwrap_err().0;
+            assert!(message.contains(expected), "{expected}: {message}");
+        };
+        let aliases = |old: &str, current: &str| {
+            format!(
+                r#"{{"schema": 1, "aliases": {{"{old}": "{current}"}}, "evidence": {{"aliases.{old}": {{"evidence": "SourceInferred", "source": "wcvp-v16", "note": "A test."}}}}}}"#
+            )
+        };
+        refused(
+            &[(
+                "library/aliases.json",
+                &aliases("pseudotsuga-menziesii", "thuja-plicata"),
+            )],
+            "`pseudotsuga-menziesii` is the old id of `thuja-plicata`, but pinaceae/pseudotsuga/pseudotsuga-menziesii/spec.json still has it",
+        );
+        refused(
+            &[("library/aliases.json", &aliases("pinus-test", "pinus-none"))],
+            "`pinus-test` stands for `pinus-none`, which no taxon of the library has",
+        );
+        refused(
+            &[(
+                "library/aliases.json",
+                &aliases("prosopis-test", "prosopis-velutina"),
+            )],
+            "(it is an alias itself",
+        );
+        refused(
+            &[(
+                "library/aliases.json",
+                r#"{"schema": 1, "aliases": {"pinus-test": "pinus-contorta-var-contorta"}}"#,
+            )],
+            "the alias `pinus-test` has no evidence note",
+        );
+        // A species folder under an old id.
+        let mesquite = source("neltuma-velutina")
+            .replace("\"neltuma-velutina\"", "\"prosopis-velutina\"")
+            .replace("\"Neltuma velutina\"", "\"Prosopis velutina\"")
+            .replace("\"genus\": \"Neltuma\"", "\"genus\": \"Prosopis\"");
+        refused(
+            &[(
+                "library/fabaceae/prosopis/prosopis-velutina/spec.json",
+                &mesquite,
+            )],
+            "`prosopis-velutina` is the old id of `neltuma-velutina`, but fabaceae/prosopis/prosopis-velutina/spec.json still has it",
+        );
+        // Taxa below a species: in its folder, named from its id, and
+        // alone there.
+        let shore_pine = source("pinus-contorta-var-contorta");
+        refused(
+            &[(
+                "library/pinaceae/pinus/pinus-contorta-var-contorta/spec.json",
+                shore_pine,
+            )],
+            "names a taxon below a species (`-var-`)",
+        );
+        refused(
+            &[(
+                "library/pinaceae/pinus/pinus-contorta/pinus-contorta-contorta/spec.json",
+                shore_pine,
+            )],
+            "is filed under the species pinus-contorta; its id must be",
+        );
+        refused(
+            &[
+                (
+                    "library/pinaceae/pinus/pinus-contorta/pinus-contorta-var-contorta/spec.json",
+                    shore_pine,
+                ),
+                ("library/pinaceae/pinus/pinus-contorta/niche.json", "{}"),
+            ],
+            "holds the taxa below its species, so it holds no file of its own",
+        );
     }
 
     const SOURCE: &str = r#"{"id": "flora-test", "title": "A test flora",
@@ -1753,7 +2195,13 @@ mod tests {
             &niche_source("thuja-plicata").replace("\"thuja-plicata\"", "\"zelkova-test\""),
         );
         folder.write("library/ulmaceae/zelkova/zelkova-test/wood.json", "{}");
-        folder.write("library/aliases.json", "{}");
+        // And an old id for it.
+        folder.write(
+            "library/aliases.json",
+            r#"{"schema": 1, "aliases": {"zelkova-old": "zelkova-test"},
+                "evidence": {"aliases.zelkova-old": {"evidence": "Synthetic",
+                "source": "plantgen-authors", "note": "A test rename."}}}"#,
+        );
         let conifer = source_of_program("conifer");
         folder.write("programs/conifer-test.lsys", conifer);
         folder.write("programs/README.md", "not a program");
@@ -1798,6 +2246,8 @@ mod tests {
         spec.program_in(&library).unwrap();
         let niche = library.entry("zelkova-test").unwrap().niche().unwrap();
         assert_eq!(niche.unwrap().species, "zelkova-test");
+        assert_eq!(library.current("zelkova-old"), Some("zelkova-test"));
+        assert_eq!(library.aliases().count(), super::ALIASES.len() + 1);
         // The built-in library knows neither.
         assert!(PlantSpec::builtin("zelkova-test").is_err());
         assert!(
@@ -2144,6 +2594,7 @@ mod tests {
         // A maple of the folder's own that leaves both to the family.
         let mut own: serde_json::Value = serde_json::from_str(source("acer-circinatum")).unwrap();
         own["id"] = "acer-test".into();
+        own["taxon"]["scientific_name"] = "Acer test".into();
         let params = own["generator"]["params"].as_object_mut().unwrap();
         params.remove("space_density");
         params.remove("alternate");

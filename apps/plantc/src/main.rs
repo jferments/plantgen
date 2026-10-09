@@ -774,6 +774,7 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
         seed,
         neighbourhood: neighbourhood(&spec, environment),
         class: None,
+        substrate: None,
     };
     for record in package::compare_allometry(&spec, &variant, &growth) {
         out!("  reference at {} years: {}", record.age, record.describe());

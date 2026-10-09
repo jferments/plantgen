@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "id": "pinus-contorta-var-contorta",
+  "foliage": {
+    "kind": "needles",
+    "length_m": [0.03, 0.07],
+    "width_m": 0.0015,
+    "bundle": 2,
+    "fall_colours": [[0.5, 0.32, 0.14], [0.46, 0.29, 0.13], [0.54, 0.37, 0.17]],
+    "dry_colours": [[0.36, 0.26, 0.15], [0.32, 0.23, 0.14], [0.4, 0.29, 0.17]],
+    "curl": 0.0,
+    "pale_beneath": 0.0
+  },
+  "decay": 0.25,
+  "pieces": [
+    {
+      "kind": "cone",
+      "length_m": [0.03, 0.06],
+      "aspect": 0.65,
+      "colour": [0.4, 0.29, 0.17],
+      "per_m2": 1.0
+    },
+    {
+      "kind": "twig",
+      "length_m": [0.06, 0.2],
+      "aspect": 0.04,
+      "colour": [0.2, 0.15, 0.1],
+      "per_m2": 3.0
+    }
+  ],
+  "look": {
+    "tile_m": 1.5,
+    "mean": [0.135, 0.095, 0.054],
+    "relief_m": 0.043
+  },
+  "evidence": {
+    "decay": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Authored from botanical descriptions of lodgepole and shore pine: needles in bundles of two, 3 to 7 cm long, twisted, about 1.5 mm wide, orange-brown when shed; cones 3 to 6 cm, egg-shaped and often lopsided. Pine needles rot slowly. Colours chosen by eye; cone numbers plausible, not measured."
+    },
+    "foliage": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Authored from botanical descriptions of lodgepole and shore pine: needles in bundles of two, 3 to 7 cm long, twisted, about 1.5 mm wide, orange-brown when shed; cones 3 to 6 cm, egg-shaped and often lopsided. Pine needles rot slowly. Colours chosen by eye; cone numbers plausible, not measured."
+    },
+    "look": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Authored: the drawn look's mean hue at the brightness chosen by eye for this species' litter, the relief the drawing has, and a tile its pieces repeat on unseen. PlantGen's litter tests check the hue and relief against the drawing."
+    },
+    "pieces": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Authored from botanical descriptions of lodgepole and shore pine: needles in bundles of two, 3 to 7 cm long, twisted, about 1.5 mm wide, orange-brown when shed; cones 3 to 6 cm, egg-shaped and often lopsided. Pine needles rot slowly. Colours chosen by eye; cone numbers plausible, not measured."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: litter values hand-set from botanical descriptions and photographs of the species",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"]
+  }
+}
