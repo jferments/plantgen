@@ -488,6 +488,7 @@ pub fn build_watched(
             let frame = progress.frame.and_then(|growth| {
                 let alone = Request {
                     alone: true,
+                    age: progress.age,
                     ..self.request
                 };
                 drawing::dress(&alone, growth.clone())

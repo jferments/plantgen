@@ -20,7 +20,6 @@ use bevy::camera::visibility::RenderLayers;
 use bevy::input::mouse::{AccumulatedMouseMotion, AccumulatedMouseScroll};
 use bevy::light::{DirectionalLightShadowMap, GlobalAmbientLight};
 use bevy::prelude::*;
-use bevy::tasks::{AsyncComputeTaskPool, Task, block_on, poll_once};
 use bevy_egui::{EguiContexts, EguiPlugin, EguiPrimaryContextPass, egui};
 use plantgen::library::Library;
 use plantgen::quality;
@@ -58,7 +57,9 @@ struct Lab {
     every: u32,
     /// Move the camera with the plant as it grows.
     follow: bool,
-    growing: Option<Task<Grown>>,
+    /// The worker growing the plant: its own thread, since Bevy compiles
+    /// shaders on its async task pool and a long growth there starves it.
+    growing: Option<std::thread::JoinHandle<Grown>>,
     /// Shared with the growing worker.
     control: Arc<Control>,
     started: Instant,
@@ -151,6 +152,9 @@ impl Orbit {
 #[derive(Resource)]
 struct Capture {
     path: std::path::PathBuf,
+    /// Take it this many seconds after opening, grown or not.
+    after: Option<f64>,
+    opened: Instant,
     frames: u32,
     asked: bool,
 }
@@ -167,7 +171,7 @@ struct Sun;
 /// When `species` is not in the library.
 pub fn run(
     species: Option<&str>,
-    picture: Option<std::path::PathBuf>,
+    picture: Option<(std::path::PathBuf, Option<f64>)>,
     live: u32,
 ) -> Result<(), String> {
     let library = Library::builtin();
@@ -237,9 +241,11 @@ pub fn run(
     .add_systems(Startup, setup)
     .add_systems(EguiPrimaryContextPass, panel)
     .add_systems(Update, (grow, live_frame, show, orbit).chain());
-    if let Some(path) = picture {
+    if let Some((path, after)) = picture {
         app.insert_resource(Capture {
             path,
+            after,
+            opened: Instant::now(),
             frames: 0,
             asked: false,
         })
@@ -250,9 +256,16 @@ pub fn run(
 }
 
 fn capture(mut commands: Commands, lab: Res<Lab>, mut capture: ResMut<Capture>) {
-    // The grown plant, not a live frame of it.
-    if capture.asked || lab.shown.is_none() || lab.growing.is_some() {
+    if capture.asked || lab.shown.is_none() {
         return;
+    }
+    match capture.after {
+        // The window as it is then, the plant perhaps still growing.
+        Some(after) if capture.opened.elapsed().as_secs_f64() < after => return,
+        Some(_) => capture.frames = 30,
+        // The grown plant, not a live frame of it.
+        None if lab.growing.is_some() => return,
+        None => {}
     }
     capture.frames += 1;
     if capture.frames < 30 {
@@ -550,7 +563,7 @@ fn grow(mut lab: ResMut<Lab>) {
         .every
         .store(if lab.live { lab.every } else { 0 }, Ordering::Relaxed);
     lab.control = Arc::clone(&control);
-    lab.growing = Some(AsyncComputeTaskPool::get().spawn(async move {
+    lab.growing = Some(std::thread::spawn(move || {
         let mut viewer = Watcher(control);
         Grown {
             result: plantlab_scene::build_watched(&shot, Library::builtin(), &mut viewer),
@@ -685,13 +698,17 @@ fn show(
     mut camera: Query<(Entity, &mut Orbit)>,
     suns: Query<Entity, With<Sun>>,
 ) {
-    let Some(task) = lab.growing.as_mut() else {
+    if !lab
+        .growing
+        .as_ref()
+        .is_some_and(std::thread::JoinHandle::is_finished)
+    {
+        return;
+    }
+    let Some(Ok(grown)) = lab.growing.take().map(std::thread::JoinHandle::join) else {
+        lab.message = "the growing thread panicked".into();
         return;
     };
-    let Some(grown) = block_on(poll_once(task)) else {
-        return;
-    };
-    lab.growing = None;
     let scene = match grown.result {
         Ok(scene) => scene,
         Err(error) => {
@@ -860,7 +877,7 @@ mod tests {
         };
         assert!(watcher.step(progress, None));
         assert_eq!(control.step.load(Ordering::Relaxed), 10);
-        assert_eq!(f64::from_bits(control.age.load(Ordering::Relaxed)), 2.5);
+        assert_eq!(control.age.load(Ordering::Relaxed), 2.5_f64.to_bits());
         control.stop.store(true, Ordering::Relaxed);
         assert!(!watcher.wants_frame(10), "no frames once stopped");
         assert!(!watcher.step(progress, None));
