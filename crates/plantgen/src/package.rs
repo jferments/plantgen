@@ -89,12 +89,12 @@
 //! positions f32×3P, normals f32×3P, colours f32×3P, indices u32×Q
 //! ```
 
-use std::collections::{BTreeMap, VecDeque};
+use std::collections::BTreeMap;
 use std::fmt;
 use std::fs;
 use std::num::NonZeroUsize;
 use std::path::{Path, PathBuf};
-use std::sync::{Condvar, Mutex, OnceLock, PoisonError};
+use std::sync::{Mutex, OnceLock, PoisonError};
 use std::time::Instant;
 
 use serde::{Deserialize, Serialize};
@@ -810,82 +810,6 @@ enum Task {
     Bake(usize, usize),
 }
 
-/// Tasks waiting and how many are being worked on.
-struct Queue {
-    tasks: VecDeque<Task>,
-    running: usize,
-}
-
-/// Marks a task finished, even if it panicked, so the other workers stop
-/// waiting for it.
-struct Running<'a> {
-    queue: &'a Mutex<Queue>,
-    ready: &'a Condvar,
-}
-
-impl Drop for Running<'_> {
-    fn drop(&mut self) {
-        let mut queue = self.queue.lock().unwrap_or_else(PoisonError::into_inner);
-        queue.running -= 1;
-        self.ready.notify_all();
-    }
-}
-
-/// Run `first` and every task they lead to on up to `threads` workers:
-/// `run` returns the tasks a finished one makes ready (a variant's
-/// keyframes once it has grown), and they join the queue, so baking starts
-/// while slower variants still grow. A worker holds a core while it works
-/// ([`cores::Seat`]); the growth tools borrow the cores no worker holds.
-fn pipeline(first: Vec<Task>, threads: usize, run: &(dyn Fn(Task) -> Vec<Task> + Sync)) {
-    let queue = Mutex::new(Queue {
-        tasks: first.into(),
-        running: 0,
-    });
-    let ready = Condvar::new();
-    let work = || {
-        loop {
-            let task = {
-                let mut waiting = queue.lock().unwrap_or_else(PoisonError::into_inner);
-                loop {
-                    if let Some(task) = waiting.tasks.pop_front() {
-                        waiting.running += 1;
-                        break Some(task);
-                    }
-                    if waiting.running == 0 {
-                        break None;
-                    }
-                    waiting = ready.wait(waiting).unwrap_or_else(PoisonError::into_inner);
-                }
-            };
-            let Some(task) = task else {
-                return;
-            };
-            let running = Running {
-                queue: &queue,
-                ready: &ready,
-            };
-            let seat = cores::Seat::take();
-            let more = run(task);
-            drop(seat);
-            queue
-                .lock()
-                .unwrap_or_else(PoisonError::into_inner)
-                .tasks
-                .extend(more);
-            drop(running);
-        }
-    };
-    if threads <= 1 {
-        work();
-        return;
-    }
-    std::thread::scope(|scope| {
-        for _ in 0..threads {
-            scope.spawn(work);
-        }
-    });
-}
-
 /// Threads a build uses: every core the process may use.
 #[must_use]
 pub fn default_threads() -> usize {
@@ -1104,10 +1028,15 @@ pub fn build(
         grown: variants.iter().map(|_| OnceLock::new()).collect(),
         baked: Mutex::new(Vec::new()),
     };
-    pipeline(
+    cores::tasks(
         (0..variants.len()).map(Task::Grow).collect(),
         threads,
-        &|task| work.run(task),
+        true,
+        &|task, spawn| {
+            for next in work.run(task) {
+                spawn(next);
+            }
+        },
     );
     let Work { grown, baked, .. } = work;
     let grown = grown

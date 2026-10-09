@@ -5,8 +5,9 @@
 //! instead of crowding it with threads, and a plant growing alone uses all
 //! of it. No result depends on how many threads work on it.
 
+use std::collections::VecDeque;
 use std::sync::atomic::{AtomicIsize, Ordering};
-use std::sync::{Mutex, OnceLock, PoisonError};
+use std::sync::{Condvar, Mutex, OnceLock, PoisonError};
 
 /// Every core the process may use.
 #[must_use]
@@ -121,6 +122,89 @@ pub fn map<T: Send, R: Send>(
     let mut done = done.into_inner().unwrap_or_else(PoisonError::into_inner);
     done.sort_by_key(|(at, _)| *at);
     done.into_iter().map(|(_, result)| result).collect()
+}
+
+/// Tasks waiting and how many are being worked on.
+struct Queue<T> {
+    tasks: VecDeque<T>,
+    running: usize,
+}
+
+/// Marks a task finished, even if it panicked, so the other workers stop
+/// waiting for it.
+struct Running<'a, T> {
+    queue: &'a Mutex<Queue<T>>,
+    ready: &'a Condvar,
+}
+
+impl<T> Drop for Running<'_, T> {
+    fn drop(&mut self) {
+        let mut queue = self.queue.lock().unwrap_or_else(PoisonError::into_inner);
+        queue.running -= 1;
+        self.ready.notify_all();
+    }
+}
+
+/// A task's work, given the task and a way to queue more.
+pub type Run<'a, T> = dyn Fn(T, &dyn Fn(T)) + Sync + 'a;
+
+/// Run `first` and every task they lead to on up to `threads` workers:
+/// `run` gets a task and a way to queue more (a variant's keyframes once
+/// it has grown, a branch a piece of the string hands on), which other
+/// workers take at once. With `seated`, a worker holds a core while it
+/// works ([`Seat`]), as a build's workers do; otherwise the work runs on
+/// cores already leased.
+pub fn tasks<T: Send>(first: Vec<T>, threads: usize, seated: bool, run: &Run<'_, T>) {
+    let queue = Mutex::new(Queue {
+        tasks: first.into(),
+        running: 0,
+    });
+    let ready = Condvar::new();
+    let spawn = |task: T| {
+        queue
+            .lock()
+            .unwrap_or_else(PoisonError::into_inner)
+            .tasks
+            .push_back(task);
+        ready.notify_one();
+    };
+    let work = || {
+        loop {
+            let task = {
+                let mut waiting = queue.lock().unwrap_or_else(PoisonError::into_inner);
+                loop {
+                    if let Some(task) = waiting.tasks.pop_front() {
+                        waiting.running += 1;
+                        break Some(task);
+                    }
+                    if waiting.running == 0 {
+                        break None;
+                    }
+                    waiting = ready.wait(waiting).unwrap_or_else(PoisonError::into_inner);
+                }
+            };
+            let Some(task) = task else {
+                return;
+            };
+            let running = Running {
+                queue: &queue,
+                ready: &ready,
+            };
+            let seat = seated.then(Seat::take);
+            run(task, &spawn);
+            drop(seat);
+            drop(running);
+        }
+    };
+    if threads <= 1 {
+        work();
+        return;
+    }
+    std::thread::scope(|scope| {
+        for _ in 0..threads {
+            scope.spawn(work);
+        }
+    });
 }
 
 #[cfg(test)]
