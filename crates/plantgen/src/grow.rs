@@ -15,6 +15,7 @@
 //! any age between keyframes without regrowing it.
 
 use std::collections::HashMap;
+use std::hash::{BuildHasherDefault, Hasher};
 
 use serde::{Deserialize, Serialize};
 
@@ -182,12 +183,97 @@ fn organ_types(program: &Program, organ_area: &[f64]) -> (Vec<OrganType>, Vec<u1
     (types, organ_index)
 }
 
+/// A map keyed by a part's id. Ids are the engine's own, never read from
+/// outside, so one multiply mixes them enough and the maps a growth updates
+/// for every part at every step need not pay for `SipHash`.
+type IdMap<V> = HashMap<u64, V, BuildHasherDefault<IdHasher>>;
+
+/// The hasher of [`IdMap`]: Fx hashing (as in rustc), one rotate, xor and
+/// multiply per word.
+#[derive(Default)]
+struct IdHasher(u64);
+
+impl Hasher for IdHasher {
+    fn finish(&self) -> u64 {
+        self.0
+    }
+
+    fn write(&mut self, bytes: &[u8]) {
+        for &byte in bytes {
+            self.write_u64(u64::from(byte));
+        }
+    }
+
+    fn write_u64(&mut self, word: u64) {
+        self.0 = (self.0.rotate_left(5) ^ word).wrapping_mul(0x51_7c_c1_b7_27_22_0a_95);
+    }
+}
+
+/// The parts that stood at the last step, and every part gone before it,
+/// each as it was the last step it stood: the shed log in the making. Only
+/// standing parts are looked up, so the work follows the plant as it is,
+/// not every leaf it has ever shed.
+struct Parts<P> {
+    standing: IdMap<(u32, P)>,
+    now: IdMap<(u32, P)>,
+    gone: Vec<(u64, u32, P)>,
+}
+
+impl<P> Default for Parts<P> {
+    fn default() -> Self {
+        Self {
+            standing: IdMap::default(),
+            now: IdMap::default(),
+            gone: Vec::new(),
+        }
+    }
+}
+
+impl<P: Copy> Parts<P> {
+    /// This step's parts, by id; a part that stood at the last step and
+    /// does not now has gone.
+    fn step(&mut self, parts: impl Iterator<Item = (u64, u32, P)>) {
+        self.now.clear();
+        for (id, step, part) in parts {
+            self.now.insert(id, (step, part));
+        }
+        for (id, (seen, part)) in self.standing.drain() {
+            if !self.now.contains_key(&id) {
+                self.gone.push((id, seen, part));
+            }
+        }
+        std::mem::swap(&mut self.standing, &mut self.now);
+    }
+
+    /// Every part gone by the end, by id, as it was the last step it stood:
+    /// a part that went more than once is as it went last, and one that
+    /// came back and still stands has not gone.
+    fn gone(mut self) -> Vec<(u64, u32, P)> {
+        self.gone.sort_unstable_by_key(|(id, seen, _)| (*id, *seen));
+        let mut last: Vec<(u64, u32, P)> = Vec::with_capacity(self.gone.len());
+        for record in self.gone {
+            match last.last_mut() {
+                Some(previous) if previous.0 == record.0 => *previous = record,
+                _ => last.push(record),
+            }
+        }
+        last.retain(|(id, _, _)| !self.standing.contains_key(id));
+        last
+    }
+}
+
+/// The last step part `id` stood, if it is among the `gone` (by id).
+fn last_seen<P>(gone: &[(u64, u32, P)], id: u64) -> Option<u32> {
+    let at = gone.binary_search_by_key(&id, |(gone, _, _)| *gone).ok()?;
+    Some(gone[at].1)
+}
+
 /// Girth bookkeeping across steps: the annual rings laid down on each
 /// segment and the widest radius it has had.
 #[derive(Default)]
 struct Girth {
-    widest: HashMap<u64, f64>,
-    ring_area: HashMap<u64, f64>,
+    widest: IdMap<f64>,
+    ring_area: IdMap<f64>,
 }
 
 impl Girth {
@@ -274,10 +360,9 @@ pub fn grow(
         ..GrowthStats::default()
     };
     let mut girth = Girth::default();
-    let mut last_seen: HashMap<u64, u32> = HashMap::new();
     // Each part as it was the last step it stood, for the shed log.
-    let mut last_segments: HashMap<u64, (u32, ShedSegment)> = HashMap::new();
-    let mut last_organs: HashMap<u64, (u32, ShedOrgan)> = HashMap::new();
+    let mut segments: Parts<ShedSegment> = Parts::default();
+    let mut organs: Parts<ShedOrgan> = Parts::default();
     let mut keyframes = Vec::with_capacity(keyframe_steps.len());
     let mut next_keyframe = 0;
     let mut stack = Vec::new();
@@ -298,13 +383,7 @@ pub fn grow(
             None => None,
         };
         let radii = girth.radii(&scene, pipes.as_ref(), settings.dt);
-        for segment in &scene.segments {
-            last_seen.insert(segment.id, step);
-        }
-        for organ in &scene.organs {
-            last_seen.insert(organ.id, step);
-        }
-        for (segment, radius) in scene.segments.iter().zip(&radii) {
+        segments.step(scene.segments.iter().zip(&radii).map(|(segment, radius)| {
             let part = ShedSegment {
                 id: segment.id,
                 born: segment.born,
@@ -315,9 +394,9 @@ pub fn grow(
                 height: 0.5 * (segment.start.y + segment.end.y),
                 body: segment.body,
             };
-            last_segments.insert(segment.id, (step, part));
-        }
-        for organ in &scene.organs {
+            (segment.id, step, part)
+        }));
+        organs.step(scene.organs.iter().map(|organ| {
             let part = ShedOrgan {
                 id: organ.id,
                 organ: organ_index[usize::from(organ.symbol)],
@@ -326,8 +405,8 @@ pub fn grow(
                 size: organ.size,
                 height: organ.position.y,
             };
-            last_organs.insert(organ.id, (step, part));
-        }
+            (organ.id, step, part)
+        }));
 
         let keyframe = keyframe_steps.get(next_keyframe) == Some(&step);
         if step == steps && !keyframe {
@@ -360,31 +439,30 @@ pub fn grow(
         string = deriver.derive(&string, &output.env, clock)?;
     }
 
-    let shed_at = |id: u64| -> Option<f64> {
-        let seen = *last_seen.get(&id)?;
-        (seen < steps).then(|| f64::from(seen + 1) * settings.dt)
-    };
+    // Every part stood at some step; one gone before the last was shed the
+    // step after it was last seen.
+    let shed_age = |seen: u32| (seen < steps).then(|| f64::from(seen + 1) * settings.dt);
+    let gone_segments = segments.gone();
+    let gone_organs = organs.gone();
     for graph in &mut keyframes {
         for segment in &mut graph.segments {
-            segment.shed = shed_at(segment.id);
+            segment.shed = last_seen(&gone_segments, segment.id).and_then(shed_age);
         }
         for organ in &mut graph.organs {
-            organ.shed = shed_at(organ.id);
+            organ.shed = last_seen(&gone_organs, organ.id).and_then(shed_age);
         }
     }
-    let shed_age = |seen: u32| (seen < steps).then(|| f64::from(seen + 1) * settings.dt);
-    let mut shed = ShedLog {
-        segments: last_segments
-            .into_values()
-            .filter_map(|(seen, part)| shed_age(seen).map(|shed| ShedSegment { shed, ..part }))
+    // By id, as the gone lists are.
+    let shed = ShedLog {
+        segments: gone_segments
+            .into_iter()
+            .filter_map(|(_, seen, part)| shed_age(seen).map(|shed| ShedSegment { shed, ..part }))
             .collect(),
-        organs: last_organs
-            .into_values()
-            .filter_map(|(seen, part)| shed_age(seen).map(|shed| ShedOrgan { shed, ..part }))
+        organs: gone_organs
+            .into_iter()
+            .filter_map(|(_, seen, part)| shed_age(seen).map(|shed| ShedOrgan { shed, ..part }))
             .collect(),
     };
-    shed.segments.sort_unstable_by_key(|part| part.id);
-    shed.organs.sort_unstable_by_key(|part| part.id);
     Ok(Growth {
         organ_types,
         body_types: program.bodies().map(str::to_string).collect(),

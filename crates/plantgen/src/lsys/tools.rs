@@ -22,7 +22,7 @@
 //! Every tool is deterministic: the same scene gives the same values on every
 //! machine.
 
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 
 use serde::{Deserialize, Serialize};
 
@@ -137,10 +137,96 @@ fn invalid(tool: &'static str, message: String) -> GrowthError {
 /// State a tool keeps between steps.
 #[derive(Debug, Default)]
 pub struct ToolState {
-    /// Attraction points already consumed, by lattice cell.
-    killed: HashSet<(i32, i32, i32)>,
+    /// The attraction points drawn so far, and which `space@1` consumed.
+    points: Lattice,
     /// Lattice spacing fixed at the first step, so cells keep their identity.
     lattice: Option<f64>,
+}
+
+/// The attraction points of the lattice cells a space tool has visited,
+/// kept from step to step in a box of cells that grows with the envelope,
+/// so each point is drawn once: its position, its azimuth round the stem
+/// and its billows' noise, which never change, and whether `space@1` has
+/// consumed it.
+#[derive(Debug, Default)]
+struct Lattice {
+    /// The box's lowest cell and its extent, x, y and z.
+    low: [i64; 3],
+    size: [i64; 3],
+    cells: Vec<LatticePoint>,
+    /// The bump size the cells' noise was drawn at, as bits.
+    noise_size: Option<u64>,
+}
+
+#[derive(Debug, Clone, Copy, Default)]
+struct LatticePoint {
+    drawn: bool,
+    noise_drawn: bool,
+    killed: bool,
+    point: Vec3,
+    theta: f64,
+    noise: f64,
+}
+
+impl Lattice {
+    /// Make the box hold every cell from `low` to `high`, keeping the
+    /// points drawn so far. The box grows with a margin, so an envelope
+    /// that grows a little each step moves the points only now and then.
+    fn cover(&mut self, low: [i64; 3], high: [i64; 3]) {
+        let old_high = [0, 1, 2].map(|axis| self.low[axis] + self.size[axis] - 1);
+        let empty = self.cells.is_empty();
+        if !empty && (0..3).all(|axis| low[axis] >= self.low[axis] && high[axis] <= old_high[axis])
+        {
+            return;
+        }
+        let margin = |axis: usize| (high[axis] - low[axis] + 1) / 8 + 2;
+        let new_low = [0, 1, 2].map(|axis| {
+            let wanted = low[axis] - margin(axis);
+            if empty {
+                wanted
+            } else {
+                wanted.min(self.low[axis])
+            }
+        });
+        let new_high = [0, 1, 2].map(|axis| {
+            let wanted = high[axis] + margin(axis);
+            if empty {
+                wanted
+            } else {
+                wanted.max(old_high[axis])
+            }
+        });
+        let size = [0, 1, 2].map(|axis| new_high[axis] - new_low[axis] + 1);
+        let count = size
+            .iter()
+            .map(|s| usize::try_from(*s).unwrap_or(0))
+            .product();
+        let mut cells = vec![LatticePoint::default(); count];
+        let index = |at: [i64; 3]| -> usize {
+            let [x, y, z] = [0, 1, 2].map(|axis| at[axis] - new_low[axis]);
+            usize::try_from((y * size[2] + z) * size[0] + x).unwrap_or(0)
+        };
+        if !empty {
+            for y in 0..self.size[1] {
+                for z in 0..self.size[2] {
+                    for x in 0..self.size[0] {
+                        let cell = self.cells
+                            [self.index([x + self.low[0], y + self.low[1], z + self.low[2]])];
+                        cells[index([x + self.low[0], y + self.low[1], z + self.low[2]])] = cell;
+                    }
+                }
+            }
+        }
+        self.low = new_low;
+        self.size = size;
+        self.cells = cells;
+    }
+
+    /// Where cell `at` is kept; the box must hold it.
+    fn index(&self, at: [i64; 3]) -> usize {
+        let [x, y, z] = [0, 1, 2].map(|axis| at[axis] - self.low[axis]);
+        usize::try_from((y * self.size[2] + z) * self.size[0] + x).unwrap_or(usize::MAX)
+    }
 }
 
 /// A host plant's wood as `host@1` sees it: its segments as capsules, in a
@@ -572,50 +658,283 @@ fn light(
     Ok((light, organs))
 }
 
-/// A uniform hash grid for neighbour searches.
-struct PointGrid {
+/// Items placed at points, in a uniform grid over the points' bounding
+/// box, each cell's items stored together in the order given: neighbour
+/// searches without hashing, reading memory in order. Cells are at least
+/// `cell` wide, and wider where the box would pass `GRID_CELLS` cells
+/// along an axis.
+struct Grid<T> {
     cell: f64,
-    cells: HashMap<(i64, i64, i64), Vec<u32>>,
+    low: [i64; 3],
+    size: [i64; 3],
+    /// Where each cell's items start in `items`, and one past the last.
+    starts: Vec<u32>,
+    items: Vec<T>,
 }
 
-impl PointGrid {
-    fn new(cell: f64, points: impl Iterator<Item = (u32, Vec3)>) -> Self {
+/// The most cells a `Grid` spans along an axis.
+const GRID_CELLS: f64 = 256.0;
+
+impl<T: Copy> Grid<T> {
+    fn new(cell: f64, points: &[(Vec3, T)]) -> Self {
+        let mut low = [f64::INFINITY; 3];
+        let mut high = [f64::NEG_INFINITY; 3];
+        for (point, _) in points {
+            for (axis, value) in [point.x, point.y, point.z].into_iter().enumerate() {
+                low[axis] = low[axis].min(value);
+                high[axis] = high[axis].max(value);
+            }
+        }
+        let extent = (0..3)
+            .map(|axis| high[axis] - low[axis])
+            .fold(0.0, f64::max);
+        let cell = if extent.is_finite() {
+            cell.max(extent / (GRID_CELLS - 2.0))
+        } else {
+            cell
+        };
         let mut grid = Self {
             cell,
-            cells: HashMap::new(),
+            low: [0; 3],
+            size: [0; 3],
+            starts: vec![0],
+            items: Vec::new(),
         };
-        for (index, point) in points {
-            grid.cells.entry(grid.key(point)).or_default().push(index);
+        if points.is_empty() {
+            return grid;
         }
+        let keys: Vec<[i64; 3]> = points.iter().map(|(point, _)| grid.key(*point)).collect();
+        for axis in 0..3 {
+            let (first, last) = keys.iter().fold((i64::MAX, i64::MIN), |(a, b), key| {
+                (a.min(key[axis]), b.max(key[axis]))
+            });
+            grid.low[axis] = first;
+            grid.size[axis] = last - first + 1;
+        }
+        let cells = grid
+            .size
+            .iter()
+            .map(|s| usize::try_from(*s).unwrap_or(0))
+            .product::<usize>();
+        let mut starts = vec![0_u32; cells + 1];
+        let flat: Vec<usize> = keys
+            .iter()
+            .map(|key| grid.flat(*key).unwrap_or(0))
+            .collect();
+        for at in &flat {
+            starts[at + 1] += 1;
+        }
+        for at in 1..starts.len() {
+            starts[at] += starts[at - 1];
+        }
+        let mut next = starts.clone();
+        let mut slots: Vec<Option<T>> = vec![None; points.len()];
+        for ((_, item), at) in points.iter().zip(&flat) {
+            slots[next[*at] as usize] = Some(*item);
+            next[*at] += 1;
+        }
+        grid.items = slots.into_iter().flatten().collect();
+        grid.starts = starts;
         grid
     }
 
     #[allow(clippy::cast_possible_truncation)]
-    fn key(&self, point: Vec3) -> (i64, i64, i64) {
-        (
+    fn key(&self, point: Vec3) -> [i64; 3] {
+        [
             (point.x / self.cell).floor() as i64,
             (point.y / self.cell).floor() as i64,
             (point.z / self.cell).floor() as i64,
-        )
+        ]
     }
 
-    /// Indices stored in the 27 cells around `point`. The order depends only
-    /// on insertion order within each cell, and callers take minima, so the
-    /// result never depends on hash-map layout.
-    fn near(&self, point: Vec3) -> impl Iterator<Item = u32> + '_ {
-        let (x, y, z) = self.key(point);
-        (-1..=1).flat_map(move |dx| {
-            (-1..=1).flat_map(move |dy| {
-                (-1..=1).flat_map(move |dz| {
-                    self.cells
-                        .get(&(x + dx, y + dy, z + dz))
-                        .map(|list| list.iter().copied())
-                        .into_iter()
-                        .flatten()
-                })
-            })
+    /// Where cell `key` is kept, if the box holds it.
+    fn flat(&self, key: [i64; 3]) -> Option<usize> {
+        let [x, y, z] = [0, 1, 2].map(|axis| key[axis] - self.low[axis]);
+        if x < 0 || y < 0 || z < 0 || x >= self.size[0] || y >= self.size[1] || z >= self.size[2] {
+            return None;
+        }
+        usize::try_from((y * self.size[2] + z) * self.size[0] + x).ok()
+    }
+
+    /// The squared distance from `point` to cell `key`'s box, a nanometre
+    /// short on each axis: no item of the cell lies nearer.
+    fn gap_sq(&self, key: [i64; 3], point: Vec3) -> f64 {
+        let gap = |cell: i64, value: f64| {
+            #[allow(clippy::cast_precision_loss)]
+            let low = cell as f64 * self.cell;
+            let high = low + self.cell;
+            ((low - value).max(value - high) - 1e-9).max(0.0)
+        };
+        let (gx, gy, gz) = (
+            gap(key[0], point.x),
+            gap(key[1], point.y),
+            gap(key[2], point.z),
+        );
+        gx * gx + gy * gy + gz * gz
+    }
+
+    /// The items in cell `key`, in the order given.
+    fn cell_items(&self, key: [i64; 3]) -> &[T] {
+        match self.flat(key) {
+            Some(at) => &self.items[self.starts[at] as usize..self.starts[at + 1] as usize],
+            None => &[],
+        }
+    }
+
+    /// The cells to search round a point's own for points within `reach`,
+    /// nearest first: each as its offset and the squared distance below
+    /// which no point of it lies from any point of the centre cell.
+    fn search(&self, reach: f64) -> Vec<([i64; 3], f64)> {
+        #[allow(clippy::cast_possible_truncation)]
+        let rings = (reach / self.cell).ceil() as i64 + 1;
+        let cell_sq = self.cell * self.cell;
+        let mut offsets = Vec::new();
+        for dx in -rings..=rings {
+            for dy in -rings..=rings {
+                for dz in -rings..=rings {
+                    #[allow(clippy::cast_precision_loss)]
+                    let gap = |d: i64| (d.abs() - 1).max(0) as f64;
+                    let near = (gap(dx) * gap(dx) + gap(dy) * gap(dy) + gap(dz) * gap(dz))
+                        * cell_sq
+                        * (1.0 - 1e-9);
+                    if near <= reach * reach {
+                        offsets.push(([dx, dy, dz], near));
+                    }
+                }
+            }
+        }
+        offsets.sort_by(|a, b| a.1.total_cmp(&b.1).then(a.0.cmp(&b.0)));
+        offsets
+    }
+}
+
+impl Grid<Vec3> {
+    /// The cells round `point`'s own, its own first: with cells at least
+    /// a search's reach wide, every item within reach lies in one of them.
+    const NEAR: [[i64; 3]; 27] = {
+        let mut offsets = [[0; 3]; 27];
+        let mut at = 1;
+        let mut d = 0;
+        while d < 27 {
+            let offset = [d % 3 - 1, d / 3 % 3 - 1, d / 9 - 1];
+            if offset[0] != 0 || offset[1] != 0 || offset[2] != 0 {
+                offsets[at] = offset;
+                at += 1;
+            }
+            d += 1;
+        }
+        offsets
+    };
+
+    /// Whether a point of the grid lies within `reach_sq` (squared) of
+    /// `point`; the cells are at least the reach wide. Cells whose box lies
+    /// out of reach are passed over.
+    fn within(&self, point: Vec3, reach_sq: f64) -> bool {
+        let [x, y, z] = self.key(point);
+        Self::NEAR.iter().any(|[dx, dy, dz]| {
+            let key = [x + dx, y + dy, z + dz];
+            self.gap_sq(key, point) <= reach_sq
+                && self
+                    .cell_items(key)
+                    .iter()
+                    .any(|part| (*part - point).length_squared() <= reach_sq)
         })
     }
+}
+
+/// The cells of a grid (and round it) that some item may lie within a
+/// search's reach of: every cell within the reach of an occupied cell, by
+/// the same bound the search uses. A point in an unmarked cell has no item
+/// within reach.
+struct Reach {
+    low: [i64; 3],
+    size: [i64; 3],
+    marked: Vec<bool>,
+}
+
+impl Reach {
+    fn new<T: Copy>(grid: &Grid<T>, search: &[([i64; 3], f64)]) -> Self {
+        let rings = search
+            .iter()
+            .flat_map(|(offset, _)| offset.iter().map(|d| d.abs()))
+            .max()
+            .unwrap_or(0);
+        let low = grid.low.map(|value| value - rings);
+        let size = grid.size.map(|value| value + 2 * rings);
+        let count = size
+            .iter()
+            .map(|s| usize::try_from(*s).unwrap_or(0))
+            .product::<usize>();
+        let mut reach = Self {
+            low,
+            size,
+            marked: vec![false; count],
+        };
+        for y in 0..grid.size[1] {
+            for z in 0..grid.size[2] {
+                for x in 0..grid.size[0] {
+                    let key = [x + grid.low[0], y + grid.low[1], z + grid.low[2]];
+                    if grid.cell_items(key).is_empty() {
+                        continue;
+                    }
+                    for ([dx, dy, dz], _) in search {
+                        if let Some(at) = reach.flat([key[0] + dx, key[1] + dy, key[2] + dz]) {
+                            reach.marked[at] = true;
+                        }
+                    }
+                }
+            }
+        }
+        reach
+    }
+
+    fn flat(&self, key: [i64; 3]) -> Option<usize> {
+        let [x, y, z] = [0, 1, 2].map(|axis| key[axis] - self.low[axis]);
+        if x < 0 || y < 0 || z < 0 || x >= self.size[0] || y >= self.size[1] || z >= self.size[2] {
+            return None;
+        }
+        usize::try_from((y * self.size[2] + z) * self.size[0] + x).ok()
+    }
+
+    /// Whether cell `key` may have an item within reach.
+    fn marked(&self, key: [i64; 3]) -> bool {
+        self.flat(key).is_some_and(|at| self.marked[at])
+    }
+
+    /// For a row of boxes along x from `low` (y and z fixed, x from
+    /// `low.x` to `high.x`): the first x key of `grid` the row overlaps,
+    /// and for each x key on from it whether a cell of `grid` at that key
+    /// that the row's boxes overlap is marked.
+    fn row<T: Copy>(&self, grid: &Grid<T>, low: Vec3, high: Vec3) -> (i64, Vec<bool>) {
+        let (a, b) = (grid.key(low), grid.key(high));
+        let marks = (a[0]..=b[0])
+            .map(|x| (a[1]..=b[1]).any(|y| (a[2]..=b[2]).any(|z| self.marked([x, y, z]))))
+            .collect();
+        (a[0], marks)
+    }
+}
+
+/// Whether a box along a row reaches a marked cell: `row` from
+/// `Reach::row`, `low` and `high` its x extent, `cell` the grid's.
+fn row_covers((first, marks): &(i64, Vec<bool>), cell: f64, low: f64, high: f64) -> bool {
+    #[allow(clippy::cast_possible_truncation)]
+    let key = |value: f64| (value / cell).floor() as i64;
+    (key(low)..=key(high)).any(|x| {
+        usize::try_from(x - first)
+            .ok()
+            .and_then(|at| marks.get(at))
+            .copied()
+            .unwrap_or(false)
+    })
+}
+
+/// An apex as the space tool's search reads it: its query's index,
+/// position and heading, kept together.
+#[derive(Debug, Clone, Copy)]
+struct Apex {
+    index: u32,
+    position: Vec3,
+    heading: Vec3,
 }
 
 /// Radius of the crown envelope at relative height `h` in `[0, 1]`.
@@ -673,12 +992,33 @@ impl Outline {
     /// $`1 + d\,n(\theta, h)`$, with $`n`$ two waves of `lobes` and
     /// `lobes + 1` crests round the azimuth $`\theta`$, drifting with height
     /// and phased by the seed, so each plant's crown bulges its own way.
-    fn radius(&self, shape: f64, radius: f64, h: f64, point: Vec3) -> f64 {
+    ///
+    /// `theta` is the point's azimuth, `math::atan2(point.z, point.x)`, and
+    /// `noise` its billows' noise, `value_noise(seed, point / bump_size)`;
+    /// either is read only when the outline has lobes or billows.
+    fn radius(&self, shape: f64, radius: f64, h: f64, theta: f64, noise: f64) -> f64 {
         if !(0.0..=1.0).contains(&h) {
             return -1.0;
         }
+        let profile = self.profile(shape, radius, h);
+        let billows = if self.bumps > 0.0 {
+            1.0 + self.bumps * noise
+        } else {
+            1.0
+        };
+        if self.lobes <= 0.0 || self.lobe_depth <= 0.0 {
+            return profile * billows;
+        }
+        let wave = 0.6 * math::cos(self.lobes * theta + self.phases[0] + 3.0 * h)
+            + 0.4 * math::cos((self.lobes + 1.0) * theta + self.phases[1] - 5.0 * h);
+        profile * (1.0 + self.lobe_depth * wave) * billows
+    }
+
+    /// The envelope's radius at relative height `h` in `[0, 1]` before
+    /// lobes and billows.
+    fn profile(&self, shape: f64, radius: f64, h: f64) -> f64 {
         #[allow(clippy::cast_possible_truncation)]
-        let profile = if (2..=4).contains(&(shape.round() as i64)) {
+        if (2..=4).contains(&(shape.round() as i64)) {
             envelope_radius(shape, radius, h)
         } else {
             let side = if h < self.widest {
@@ -692,19 +1032,34 @@ impl Outline {
                     (1.0 - math::pow(u, self.fullness)).max(0.0),
                     1.0 / self.fullness,
                 )
-        };
-        let billows = if self.bumps > 0.0 {
-            1.0 + self.bumps * value_noise(self.seed, point * (1.0 / self.bump_size))
-        } else {
-            1.0
-        };
-        if self.lobes <= 0.0 || self.lobe_depth <= 0.0 {
-            return profile * billows;
         }
-        let theta = math::atan2(point.z, point.x);
-        let wave = 0.6 * math::cos(self.lobes * theta + self.phases[0] + 3.0 * h)
-            + 0.4 * math::cos((self.lobes + 1.0) * theta + self.phases[1] - 5.0 * h);
-        profile * (1.0 + self.lobe_depth * wave) * billows
+    }
+
+    /// Bounds on the envelope's radius, before billows, for relative
+    /// heights from `low` to `high` (within `[0, 1]`): a little under its
+    /// least and a little over its most. Every profile rises to one height
+    /// (`widest`, the base of a cone or paraboloid, the middle of an
+    /// ellipsoid) and falls away from it, and lobes scale it by `1 ± d`.
+    fn bounds(&self, shape: f64, radius: f64, low: f64, high: f64) -> (f64, f64) {
+        #[allow(clippy::cast_possible_truncation)]
+        let peak = match shape.round() as i64 {
+            2..=4 => 0.0,
+            1 => self.widest,
+            _ => 0.5,
+        };
+        let least = self
+            .profile(shape, radius, low)
+            .min(self.profile(shape, radius, high));
+        let most = self.profile(shape, radius, peak.clamp(low, high));
+        let lobes = if self.lobes <= 0.0 || self.lobe_depth <= 0.0 {
+            0.0
+        } else {
+            self.lobe_depth
+        };
+        (
+            least * (1.0 - lobes) * (1.0 - 1e-9),
+            most * (1.0 + lobes) * (1.0 + 1e-9),
+        )
     }
 }
 
@@ -827,67 +1182,173 @@ fn colonize(
         });
     }
 
-    let plant_points: Vec<Vec3> = scene
+    let plant_points: Vec<(Vec3, Vec3)> = scene
         .segments
         .iter()
         .flat_map(|segment| [segment.start, segment.end])
         .chain(scene.queries.iter().map(|query| query.position))
+        .map(|point| (point, point))
         .collect();
-    // Separate grids sized to each search radius keep both searches to the
-    // 27 cells around a point.
-    let plant = PointGrid::new(
-        kill.max(0.05),
-        plant_points
-            .iter()
-            .enumerate()
-            .map(|(index, point)| (u32::try_from(index).unwrap_or(u32::MAX), *point)),
-    );
-    let apices = PointGrid::new(
-        influence,
-        scene
-            .queries
-            .iter()
-            .enumerate()
-            .filter(|(index, _)| space_queries[*index])
-            .map(|(index, query)| (u32::try_from(index).unwrap_or(u32::MAX), query.position)),
-    );
+    // The plant's points in cells at least `kill` wide, so the 27 round a
+    // point hold every part within `kill`; the apices in cells half the
+    // influence wide, searched nearest first.
+    let plant = Grid::new(kill.max(0.05), &plant_points);
+    let apex_points: Vec<(Vec3, Apex)> = scene
+        .queries
+        .iter()
+        .enumerate()
+        .filter(|(index, _)| space_queries[*index])
+        .map(|(index, query)| {
+            let apex = Apex {
+                index: u32::try_from(index).unwrap_or(u32::MAX),
+                position: query.position,
+                heading: query.heading,
+            };
+            (query.position, apex)
+        })
+        .collect();
+    let apices = Grid::new(0.5 * influence, &apex_points);
+    let search = apices.search(influence);
+    let reach = Reach::new(&apices, &search);
+    let plant_reach = Reach::new(&plant, &plant.search(kill));
+    // Passing over points out of reach pays where the plant fills little
+    // of its envelope (a sapling under a canopy); in a full crown nearly
+    // every point is in reach, and the test only costs.
+    #[allow(clippy::cast_precision_loss)]
+    let sparse = {
+        let marked = reach.marked.iter().filter(|marked| **marked).count() as f64
+            * apices.cell
+            * apices.cell
+            * apices.cell;
+        let lattice_volume =
+            ((x1 - x0 + 1) * (x1 - x0 + 1) * (y1 - y0 + 1)) as f64 * spacing * spacing * spacing;
+        marked < 0.5 * lattice_volume
+    };
+
     let cone = math::cos(math::radians(angle.clamp(0.0, 180.0)));
     let mut sums = vec![Vec3::ZERO; scene.queries.len()];
     let kill_sq = kill * kill;
     let influence_sq = influence * influence;
-    let to_i32 = |value: i64| i32::try_from(value).unwrap_or(i32::MAX);
 
+    let lattice = &mut state.points;
+    let mut hint = None;
+    lattice.cover([x0, y0, x0], [x1, y1, x1]);
+    let noise_size = outline
+        .as_ref()
+        .filter(|outline| outline.bumps > 0.0)
+        .map(|outline| outline.bump_size.to_bits());
+    if noise_size.is_some() && lattice.noise_size != noise_size {
+        for cell in &mut lattice.cells {
+            cell.noise_drawn = false;
+        }
+        lattice.noise_size = noise_size;
+    }
     for y in y0..=y1 {
+        // The envelope's bounds over the heights this layer's points take,
+        // so most points fall inside or outside without its exact radius.
+        #[allow(clippy::cast_precision_loss)]
+        let heights = (
+            (y as f64 * spacing - base) / (height - base),
+            ((y + 1) as f64 * spacing - base) / (height - base),
+        );
+        let bounds = outline.as_ref().map(|outline| {
+            if heights.1 < 0.0 || heights.0 > 1.0 {
+                (-1.0, -1.0)
+            } else {
+                outline.bounds(shape, radius, heights.0.max(0.0), heights.1.min(1.0))
+            }
+        });
         for z in x0..=x1 {
+            // Which of the row's points may be in reach of the plant or of
+            // an apex; a point out of reach of both is neither consumed nor
+            // taken this step.
+            #[allow(clippy::cast_precision_loss)]
+            let (row_low, row_high) = (
+                Vec3::new(x0 as f64 * spacing, y as f64 * spacing, z as f64 * spacing),
+                Vec3::new(
+                    (x1 + 1) as f64 * spacing,
+                    (y + 1) as f64 * spacing,
+                    (z + 1) as f64 * spacing,
+                ),
+            );
+            let rows = sparse.then(|| {
+                (
+                    reach.row(&apices, row_low, row_high),
+                    plant_reach.row(&plant, row_low, row_high),
+                )
+            });
             for x in x0..=x1 {
-                let key = (to_i32(x), to_i32(y), to_i32(z));
-                if !renew && state.killed.contains(&key) {
+                #[allow(clippy::cast_precision_loss)]
+                let (low, high) = (x as f64 * spacing, (x + 1) as f64 * spacing);
+                if let Some((apex_row, plant_row)) = &rows
+                    && !row_covers(apex_row, apices.cell, low, high)
+                    && !row_covers(plant_row, plant.cell, low, high)
+                {
                     continue;
                 }
-                let point = attraction_point(seed, [x, y, z], spacing);
+                let at = lattice.index([x, y, z]);
+                let cell = &mut lattice.cells[at];
+                if !renew && cell.killed {
+                    continue;
+                }
+                if !cell.drawn {
+                    cell.point = attraction_point(seed, [x, y, z], spacing);
+                    cell.theta = math::atan2(cell.point.z, cell.point.x);
+                    cell.drawn = true;
+                }
+                let point = cell.point;
                 let relative = (point.y - base) / (height - base);
                 let radial = math::sqrt(point.x * point.x + point.z * point.z);
-                let edge = match &outline {
-                    None => envelope_radius(shape, radius, relative),
-                    Some(outline) => outline.radius(shape, radius, relative, point),
-                };
-                if radial > edge {
-                    continue;
+                match (&outline, bounds) {
+                    (Some(outline), Some((least, most))) => {
+                        if !(0.0..=1.0).contains(&relative) {
+                            continue;
+                        }
+                        if outline.bumps > 0.0 && !cell.noise_drawn {
+                            cell.noise =
+                                value_noise(outline.seed, point * (1.0 / outline.bump_size));
+                            cell.noise_drawn = true;
+                        }
+                        let billows = if outline.bumps > 0.0 {
+                            1.0 + outline.bumps * cell.noise
+                        } else {
+                            1.0
+                        };
+                        if radial > most * billows {
+                            continue;
+                        }
+                        if radial > least * billows
+                            && radial
+                                > outline.radius(shape, radius, relative, cell.theta, cell.noise)
+                        {
+                            continue;
+                        }
+                    }
+                    _ => {
+                        if radial > envelope_radius(shape, radius, relative) {
+                            continue;
+                        }
+                    }
                 }
-                let consumed = plant.near(point).any(|index| {
-                    (plant_points[index as usize] - point).length_squared() <= kill_sq
-                });
+                let consumed = plant.within(point, kill_sq);
+
                 if consumed {
                     // `space@1` keeps a point consumed for good; `space@2`
                     // with `renew` frees it once the parts near it are shed.
                     if !renew {
-                        state.killed.insert(key);
+                        cell.killed = true;
                     }
                     continue;
                 }
-                if let Some((distance_sq, index)) =
-                    claimant(scene, &apices, point, influence_sq, cone)
-                {
+                // No apex within reach of the point's cell: none takes it.
+                let claimed = if reach.marked(apices.key(point)) {
+                    claimant(&apices, &search, point, influence_sq, cone, hint)
+                } else {
+                    None
+                };
+                if let Some((distance_sq, apex)) = claimed {
+                    hint = Some(apex);
+                    let index = apex.index;
                     sums[index as usize] +=
                         (point - scene.queries[index as usize].position) / math::sqrt(distance_sq);
                     result[index as usize].0 += 1;
@@ -920,38 +1381,67 @@ fn attraction_point(seed: u64, cell: [i64; 3], spacing: f64) -> Vec3 {
 /// The apex that takes an attraction point: the nearest one that perceives
 /// it within `influence_sq` and inside its cone, with its squared distance.
 /// Buds at one node share a position, so a tie goes to the bud facing the
-/// point most directly, then to the earlier bud.
+/// point most directly, then to the earlier bud. The cells of `apices` are
+/// searched in the order of `search` (`Grid::search`), stopping where no
+/// farther cell can hold an apex as near as the best so far; `hint`, the
+/// apex that took the last point, is tried first, so that the best so far
+/// starts near.
 fn claimant(
-    scene: &Scene,
-    apices: &PointGrid,
+    apices: &Grid<Apex>,
+    search: &[([i64; 3], f64)],
     point: Vec3,
     influence_sq: f64,
     cone: f64,
-) -> Option<(f64, u32)> {
-    let mut best: Option<(f64, f64, u32)> = None;
-    for index in apices.near(point) {
-        let query = &scene.queries[index as usize];
-        let offset = point - query.position;
+    hint: Option<Apex>,
+) -> Option<(f64, Apex)> {
+    // The best so far: squared distance, facing and the apex.
+    let mut best: Option<(f64, f64, Apex)> = None;
+    let consider = |apex: &Apex, best: &mut Option<(f64, f64, Apex)>| {
+        let offset = point - apex.position;
         let distance_sq = offset.length_squared();
         if distance_sq > influence_sq || distance_sq <= 0.0 {
-            continue;
+            return;
         }
-        let facing = query.heading.dot(offset) / math::sqrt(distance_sq);
+        // Farther than the best so far: not better, whichever way it faces.
+        if best.is_some_and(|(distance, _, _)| distance_sq > distance) {
+            return;
+        }
+        let facing = apex.heading.dot(offset) / math::sqrt(distance_sq);
         if facing < cone {
-            continue;
+            return;
         }
         let better = best.is_none_or(|(distance, most_facing, earliest)| {
             distance_sq
                 .total_cmp(&distance)
                 .then(most_facing.total_cmp(&facing))
-                .then(index.cmp(&earliest))
+                .then(apex.index.cmp(&earliest.index))
                 .is_lt()
         });
         if better {
-            best = Some((distance_sq, facing, index));
+            *best = Some((distance_sq, facing, *apex));
+        }
+    };
+    if let Some(apex) = hint {
+        consider(&apex, &mut best);
+    }
+    let [x, y, z] = apices.key(point);
+    for ([dx, dy, dz], near) in search {
+        let key = [x + dx, y + dy, z + dz];
+        if let Some((distance, _, _)) = best {
+            if *near > distance {
+                break;
+            }
+            // A cell whose box lies farther than the best so far holds no
+            // apex as near (a nanometre spared for rounding).
+            if apices.gap_sq(key, point) > distance {
+                continue;
+            }
+        }
+        for apex in apices.cell_items(key) {
+            consider(apex, &mut best);
         }
     }
-    best.map(|(distance_sq, _, index)| (distance_sq, index))
+    best.map(|(distance_sq, _, apex)| (distance_sq, apex))
 }
 
 /// Per-node results of the Borchert-Honda model.
@@ -1450,7 +1940,8 @@ mod tests {
         assert!(values[EnvField::Space as usize] > 10.0);
         // The envelope is straight above, so the pull points up.
         assert!(values[EnvField::Sy as usize] > 0.9, "{values:?}");
-        assert!(state.killed.is_empty());
+        // No point is consumed: the plant stands below the envelope.
+        assert!(state.points.cells.iter().all(|cell| !cell.killed));
     }
 
     #[test]
