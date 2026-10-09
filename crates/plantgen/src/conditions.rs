@@ -36,8 +36,9 @@ pub const CONDITIONS_SCHEMA: u32 = 1;
 /// The one version every section has so far.
 pub const SECTION_VERSION: u32 = 1;
 
-/// What a growing plant can sense of the world outside itself.
-pub trait Surroundings {
+/// What a growing plant can sense of the world outside itself. The light
+/// tool asks from several threads at once.
+pub trait Surroundings: Sync {
     /// Share of overcast sky light along `direction` (a unit vector up
     /// toward the sky) that reaches `point` past everything that is not
     /// this plant, for a plant `height` metres tall.

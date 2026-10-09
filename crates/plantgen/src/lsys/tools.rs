@@ -23,6 +23,7 @@
 //! machine.
 
 use std::collections::HashSet;
+use std::sync::{Mutex, PoisonError};
 
 use serde::{Deserialize, Serialize};
 
@@ -644,12 +645,22 @@ fn light(
             }
         }
         let length = extinction * cell * direction.cells_per_layer;
-        for (receiver, ((point, own), voxel)) in receivers.iter().zip(&cells).enumerate() {
-            let past = next(*voxel, direction.step).map_or(0.0, |voxel| beyond[flat(voxel)]);
-            let shared = (density[flat(*voxel)] - own / volume).max(0.0);
-            let depth = length * (past + 0.5 * shared);
-            light[receiver] += direction.weight * neighbours(*point, direction) * math::exp(-depth);
-        }
+        // Each receiver's light from this direction, many receivers to a
+        // thread; each adds its directions in their order whoever draws it.
+        let shine = |light: &mut [f64], receivers: &[(Vec3, f64)], cells: &[[usize; 3]]| {
+            for ((value, (point, own)), voxel) in light.iter_mut().zip(receivers).zip(cells) {
+                let past = next(*voxel, direction.step).map_or(0.0, |voxel| beyond[flat(voxel)]);
+                let shared = (density[flat(*voxel)] - own / volume).max(0.0);
+                let depth = length * (past + 0.5 * shared);
+                *value += direction.weight * neighbours(*point, direction) * math::exp(-depth);
+            }
+        };
+        let threads = if receivers.len() > 20_000 {
+            threads()
+        } else {
+            1
+        };
+        in_chunks(&mut light, &receivers, &cells, threads, &shine);
     }
     for value in &mut light {
         *value = (*value / total_weight).clamp(0.0, 1.0);
@@ -1231,7 +1242,6 @@ fn colonize(
     let influence_sq = influence * influence;
 
     let lattice = &mut state.points;
-    let mut hint = None;
     lattice.cover([x0, y0, x0], [x1, y1, x1]);
     let noise_size = outline
         .as_ref()
@@ -1243,7 +1253,12 @@ fn colonize(
         }
         lattice.noise_size = noise_size;
     }
-    for y in y0..=y1 {
+    let (low, size) = (lattice.low, lattice.size);
+    // One layer of the lattice box: its points' pulls on the apices that
+    // take them, in the order its points lie (z, then x).
+    let layer_pulls = |y: i64, cells: &mut [LatticePoint]| -> Vec<(u32, Vec3)> {
+        let mut pulls = Vec::new();
+        let mut hint = None;
         // The envelope's bounds over the heights this layer's points take,
         // so most points fall inside or outside without its exact radius.
         #[allow(clippy::cast_precision_loss)]
@@ -1279,15 +1294,15 @@ fn colonize(
             });
             for x in x0..=x1 {
                 #[allow(clippy::cast_precision_loss)]
-                let (low, high) = (x as f64 * spacing, (x + 1) as f64 * spacing);
+                let (left, right) = (x as f64 * spacing, (x + 1) as f64 * spacing);
                 if let Some((apex_row, plant_row)) = &rows
-                    && !row_covers(apex_row, apices.cell, low, high)
-                    && !row_covers(plant_row, plant.cell, low, high)
+                    && !row_covers(apex_row, apices.cell, left, right)
+                    && !row_covers(plant_row, plant.cell, left, right)
                 {
                     continue;
                 }
-                let at = lattice.index([x, y, z]);
-                let cell = &mut lattice.cells[at];
+                let at = usize::try_from((z - low[2]) * size[0] + (x - low[0])).unwrap_or(0);
+                let cell = &mut cells[at];
                 if !renew && cell.killed {
                     continue;
                 }
@@ -1330,9 +1345,7 @@ fn colonize(
                         }
                     }
                 }
-                let consumed = plant.within(point, kill_sq);
-
-                if consumed {
+                if plant.within(point, kill_sq) {
                     // `space@1` keeps a point consumed for good; `space@2`
                     // with `renew` frees it once the parts near it are shed.
                     if !renew {
@@ -1348,18 +1361,111 @@ fn colonize(
                 };
                 if let Some((distance_sq, apex)) = claimed {
                     hint = Some(apex);
-                    let index = apex.index;
-                    sums[index as usize] +=
-                        (point - scene.queries[index as usize].position) / math::sqrt(distance_sq);
-                    result[index as usize].0 += 1;
+                    pulls.push((
+                        apex.index,
+                        (point - apex.position) / math::sqrt(distance_sq),
+                    ));
                 }
             }
+        }
+        pulls
+    };
+    let layer_cells = usize::try_from(size[2] * size[0]).unwrap_or(1).max(1);
+    let layers: Vec<(i64, &mut [LatticePoint])> = (low[1]..)
+        .zip(lattice.cells.chunks_mut(layer_cells))
+        .filter(|(y, _)| (y0..=y1).contains(y))
+        .collect();
+    // Many points share the work out; the pulls add up in the order the
+    // points lie, layer by layer, however many threads drew them.
+    let threads = if span((x0, x1)) * span((x0, x1)) * span((y0, y1)) > 100_000 {
+        threads()
+    } else {
+        1
+    };
+    for pulls in in_layers(layers, threads, &layer_pulls) {
+        for (index, pull) in pulls {
+            sums[index as usize] += pull;
+            result[index as usize].0 += 1;
         }
     }
     for (entry, sum) in result.iter_mut().zip(sums) {
         entry.1 = sum.normalize_or(Vec3::ZERO);
     }
     Ok(result)
+}
+
+/// Threads the space and light tools spread large work over: every core
+/// the process may use, up to eight.
+fn threads() -> usize {
+    std::thread::available_parallelism().map_or(1, |cores| cores.get().min(8))
+}
+
+/// The light tool's work on a run of receivers: their light, the
+/// receivers (position and own leaf area) and their voxels.
+type Shine<'a> = dyn Fn(&mut [f64], &[(Vec3, f64)], &[[usize; 3]]) + Sync + 'a;
+
+/// Run `work` over `light` with its `receivers` and their `cells`, in
+/// chunks spread over up to `threads` threads. Each value is worked on its
+/// own, so the result does not depend on the chunks.
+fn in_chunks(
+    light: &mut [f64],
+    receivers: &[(Vec3, f64)],
+    cells: &[[usize; 3]],
+    threads: usize,
+    work: &Shine<'_>,
+) {
+    if threads <= 1 {
+        work(light, receivers, cells);
+        return;
+    }
+    let chunk = receivers.len().div_ceil(threads).max(1);
+    std::thread::scope(|scope| {
+        for ((light, receivers), cells) in light
+            .chunks_mut(chunk)
+            .zip(receivers.chunks(chunk))
+            .zip(cells.chunks(chunk))
+        {
+            scope.spawn(move || work(light, receivers, cells));
+        }
+    });
+}
+
+/// Run `work` on every layer, spread over up to `threads` threads, and
+/// return each layer's result in the layers' order, so the result never
+/// depends on scheduling.
+fn in_layers<R: Send>(
+    layers: Vec<(i64, &mut [LatticePoint])>,
+    threads: usize,
+    work: &(dyn Fn(i64, &mut [LatticePoint]) -> R + Sync),
+) -> Vec<R> {
+    let count = layers.len();
+    if threads <= 1 || count < 2 {
+        return layers
+            .into_iter()
+            .map(|(y, cells)| work(y, cells))
+            .collect();
+    }
+    let queue = Mutex::new(layers.into_iter().enumerate());
+    let done: Mutex<Vec<(usize, R)>> = Mutex::new(Vec::with_capacity(count));
+    std::thread::scope(|scope| {
+        for _ in 0..threads.min(count) {
+            scope.spawn(|| {
+                loop {
+                    let next = queue.lock().unwrap_or_else(PoisonError::into_inner).next();
+                    let Some((at, (y, cells))) = next else {
+                        break;
+                    };
+                    let result = work(y, cells);
+                    done.lock()
+                        .unwrap_or_else(PoisonError::into_inner)
+                        .push((at, result));
+                }
+            });
+        }
+    });
+    let mut done = done.into_inner().unwrap_or_else(PoisonError::into_inner);
+    done.sort_by_key(|(at, _)| *at);
+    done.into_iter().map(|(_, result)| result).collect()
 }
 
 /// The attraction point of lattice cell `cell`: jittered inside the cell by
