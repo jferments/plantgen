@@ -146,6 +146,11 @@ pub struct Interpreter<'a> {
     globals: &'a [f64],
     limits: &'a Limits,
     stack: Vec<f64>,
+    /// An argument list for each depth of interpretation, kept between
+    /// modules.
+    arguments: Vec<Vec<f64>>,
+    /// The last scene's sizes, so the next one is laid out once.
+    sizes: [usize; 4],
 }
 
 impl<'a> Interpreter<'a> {
@@ -156,6 +161,8 @@ impl<'a> Interpreter<'a> {
             globals,
             limits,
             stack: Vec::with_capacity(32),
+            arguments: Vec::new(),
+            sizes: [0; 4],
         }
     }
 
@@ -166,7 +173,16 @@ impl<'a> Interpreter<'a> {
     /// Fails if a limit is exceeded or an interpretation rule produces a
     /// non-finite parameter.
     pub fn interpret(&mut self, string: &ModuleString, clock: Clock) -> Result<Scene, GrowthError> {
-        let mut scene = Scene::default();
+        // Room for a little more than the last step drew.
+        let room = |size: usize| size + size / 8;
+        let [segments, organs, nodes, queries] = self.sizes;
+        let mut scene = Scene {
+            segments: Vec::with_capacity(room(segments)),
+            organs: Vec::with_capacity(room(organs)),
+            nodes: Vec::with_capacity(room(nodes)),
+            queries: Vec::with_capacity(room(queries)),
+            height: 0.0,
+        };
         let mut state = State {
             position: Vec3::ZERO,
             frame: Frame::UPRIGHT,
@@ -214,6 +230,12 @@ impl<'a> Interpreter<'a> {
                 });
             }
         }
+        self.sizes = [
+            scene.segments.len(),
+            scene.organs.len(),
+            scene.nodes.len(),
+            scene.queries.len(),
+        ];
         Ok(scene)
     }
 
@@ -254,8 +276,12 @@ impl<'a> Interpreter<'a> {
                         ),
                     });
                 }
+                if self.arguments.len() <= depth {
+                    self.arguments.resize_with(depth + 1, Vec::new);
+                }
                 for item in &*rule.successor {
-                    let mut args = Vec::with_capacity(item.args.len());
+                    let mut args = std::mem::take(&mut self.arguments[depth]);
+                    args.clear();
                     for code in &*item.args {
                         let value = eval(code, &scope, &mut self.stack);
                         if !value.is_finite() {
@@ -269,7 +295,7 @@ impl<'a> Interpreter<'a> {
                         }
                         args.push(value);
                     }
-                    self.draw(
+                    let drawn = self.draw(
                         item.symbol,
                         &args,
                         owner,
@@ -278,7 +304,9 @@ impl<'a> Interpreter<'a> {
                         scene,
                         clock,
                         depth + 1,
-                    )?;
+                    );
+                    self.arguments[depth] = args;
+                    drawn?;
                 }
                 return Ok(());
             }
