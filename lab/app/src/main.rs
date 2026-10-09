@@ -30,11 +30,13 @@ const USAGE: &str = "\
 plantlab: grow PlantGen's plants and render them
 
 usage:
-  plantlab open [SPECIES] [--capture FILE]
+  plantlab open [SPECIES] [--live STEPS] [--capture FILE [--capture-after SECONDS]]
       The window: one plant you can turn around, and a panel to choose
       the species, age, day of the year, level of detail, quality, look
-      and view. --capture saves a picture of the window once the plant
-      stands, then closes it.
+      and view, with Grow, Stop and Pause, a progress bar, and the plant
+      shown growing every STEPS steps (default 10, 0 for none; also a
+      slider). --capture saves a picture of the window once the plant
+      stands, or after SECONDS with --capture-after, then closes it.
   plantlab thumbs SPECIES... --out DIR [--size PX] [OPTIONS]
       A thumbnail of each species (a library id, or `all`): DIR/ID.png and
       DIR/ID.json, what the picture shows.
@@ -364,9 +366,24 @@ fn solari(_args: &[String]) -> Result<(), String> {
 fn open(args: &[String]) -> Result<(), String> {
     let mut species = None;
     let mut capture = None;
+    let mut live = 10;
+    let mut after = None;
     let mut rest = args.iter();
     while let Some(arg) = rest.next() {
         match arg.as_str() {
+            "--live" => {
+                live = rest
+                    .next()
+                    .and_then(|value| value.parse().ok())
+                    .ok_or("`--live` needs a whole number of steps (0 for none)")?;
+            }
+            "--capture-after" => {
+                after = Some(
+                    rest.next()
+                        .and_then(|value| value.parse().ok())
+                        .ok_or("`--capture-after` needs a number of seconds")?,
+                );
+            }
             "--capture" => {
                 capture = Some(PathBuf::from(
                     rest.next().ok_or("`--capture` needs a file")?,
@@ -376,7 +393,7 @@ fn open(args: &[String]) -> Result<(), String> {
             id => species = Some(id.to_string()),
         }
     }
-    window::run(species.as_deref(), capture)
+    window::run(species.as_deref(), capture.map(|path| (path, after)), live)
 }
 
 /// Read a batch file: one job a line.

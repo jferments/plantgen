@@ -15,7 +15,7 @@ use std::borrow::Cow;
 use crate::body::BodyLook;
 use crate::conditions::Conditions;
 use crate::graph::PlantGraph;
-use crate::grow::{Growth, GrowthSettings, grow};
+use crate::grow::{Growth, GrowthSettings, Watch, grow_watched};
 use crate::library::Library;
 use crate::looks::{self, Look};
 use crate::lsys::{Limits, Neighbourhood};
@@ -65,6 +65,34 @@ pub fn grow_variant(
     keyframes: Vec<f64>,
     years: f64,
 ) -> Result<Growth, String> {
+    grow_variant_watched(
+        spec,
+        library,
+        program,
+        environment,
+        seed,
+        keyframes,
+        years,
+        None,
+    )
+}
+
+/// [`grow_variant`], telling `watch` after each step.
+///
+/// # Errors
+///
+/// As [`grow_variant`], and when the watch stops the growth.
+#[allow(clippy::too_many_arguments)]
+pub fn grow_variant_watched(
+    spec: &PlantSpec,
+    library: &Library,
+    program: Option<&str>,
+    environment: Environment,
+    seed: u64,
+    keyframes: Vec<f64>,
+    years: f64,
+    watch: Option<&mut dyn Watch>,
+) -> Result<Growth, String> {
     let (program, params) = match program {
         Some(source) => spec.program_from(source),
         None => spec.program_in(library),
@@ -81,7 +109,8 @@ pub fn grow_variant(
             .host_geometry_in(library)
             .map_err(|error| error.to_string())?,
     };
-    grow(&program, &params, &settings).map_err(|error| format!("{}: {error}", spec.id))
+    grow_watched(&program, &params, &settings, watch)
+        .map_err(|error| format!("{}: {error}", spec.id))
 }
 
 /// Each organ type's look on `day`, and its size that day as a share of
@@ -222,25 +251,57 @@ pub struct Drawing {
 /// When the level is out of range, the plant or its host does not grow, or
 /// the host is not in the library.
 pub fn draw(request: &Request<'_>) -> Result<Drawing, String> {
-    let spec = request.spec;
-    let library = request.library;
-    let lod = request
-        .quality
-        .lods
-        .get(request.level)
-        .ok_or("the level of detail must be 0 to 3")?;
-    if request.parts && request.level != 0 {
-        return Err("part meshes are drawn on the nearest level only".into());
-    }
-    let growth = grow_variant(
-        spec,
-        library,
+    draw_watched(request, None)
+}
+
+/// [`draw`], telling `watch` after each step of the plant's growth (not
+/// its host's).
+///
+/// # Errors
+///
+/// As [`draw`], and when the watch stops the growth.
+pub fn draw_watched(
+    request: &Request<'_>,
+    watch: Option<&mut dyn Watch>,
+) -> Result<Drawing, String> {
+    check(request)?;
+    let growth = grow_variant_watched(
+        request.spec,
+        request.library,
         request.program,
         request.environment,
         request.seed,
         vec![request.age],
         request.age,
+        watch,
     )?;
+    dress(request, growth)
+}
+
+fn check(request: &Request<'_>) -> Result<(), String> {
+    if request.level >= request.quality.lods.len() {
+        return Err("the level of detail must be 0 to 3".into());
+    }
+    if request.parts && request.level != 0 {
+        return Err("part meshes are drawn on the nearest level only".into());
+    }
+    Ok(())
+}
+
+/// Mesh a plant already grown to `request`'s age: its first keyframe on
+/// `request`'s day and level, on its host unless `request.alone`. `draw`
+/// is growing then this; a viewer showing growth live dresses a
+/// [`crate::grow::Progress`] frame with it.
+///
+/// # Errors
+///
+/// When the level is out of range, or the host does not grow or is not in
+/// the library.
+pub fn dress(request: &Request<'_>, growth: Growth) -> Result<Drawing, String> {
+    check(request)?;
+    let spec = request.spec;
+    let library = request.library;
+    let lod = &request.quality.lods[request.level];
     let (mut looks, sizes) = looks_of(spec, &growth, request.day);
     let graph = drawn(&growth.keyframes[0], &sizes).into_owned();
     let bodies = bodies_of(spec, &growth);
@@ -338,5 +399,73 @@ mod tests {
         assert!(first.plant.wood.triangle_count() > 0);
         assert!(!first.plant.cards.is_empty());
         assert!(!first.on_host);
+    }
+
+    struct Counting {
+        steps: u32,
+        frames: u32,
+        stop_at: Option<u32>,
+    }
+
+    impl Watch for Counting {
+        fn wants_frame(&mut self, _step: u32) -> bool {
+            true
+        }
+        fn step(&mut self, progress: crate::grow::Progress<'_>) -> bool {
+            self.steps += 1;
+            if let Some(frame) = progress.frame {
+                assert_eq!(frame.keyframes.len(), 1);
+                self.frames += 1;
+            }
+            self.stop_at != Some(progress.step)
+        }
+    }
+
+    #[test]
+    fn watching_a_growth_changes_nothing_and_can_stop_it() {
+        let library = Library::builtin();
+        let spec = library.spec("acer-macrophyllum").expect("bigleaf maple");
+        let quality = crate::quality::DRAFT;
+        let mut request = Request::typical(&spec, library, &quality);
+        request.age = 4.0;
+        let plain = draw(&request).expect("draws");
+        let mut watch = Counting {
+            steps: 0,
+            frames: 0,
+            stop_at: None,
+        };
+        let watched = draw_watched(&request, Some(&mut watch)).expect("draws");
+        assert_eq!(plain.plant, watched.plant);
+        assert_eq!(plain.graph, watched.graph);
+        assert!(watch.steps > 3 && watch.frames == watch.steps);
+
+        let frame = {
+            let mut first = None;
+            struct First<'a>(&'a mut Option<Growth>);
+            impl Watch for First<'_> {
+                fn wants_frame(&mut self, step: u32) -> bool {
+                    step == 2
+                }
+                fn step(&mut self, progress: crate::grow::Progress<'_>) -> bool {
+                    if let Some(frame) = progress.frame {
+                        *self.0 = Some(frame.clone());
+                    }
+                    true
+                }
+            }
+            draw_watched(&request, Some(&mut First(&mut first))).expect("draws");
+            first.expect("a frame at step 2")
+        };
+        let young = dress(&request, frame).expect("a frame dresses");
+        assert!(young.graph.height < plain.graph.height);
+
+        let mut stopping = Counting {
+            steps: 0,
+            frames: 0,
+            stop_at: Some(2),
+        };
+        let error = draw_watched(&request, Some(&mut stopping)).expect_err("stops");
+        assert!(error.ends_with("growth stopped"), "{error}");
+        assert_eq!(stopping.steps, 3);
     }
 }
