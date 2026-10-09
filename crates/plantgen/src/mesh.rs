@@ -286,8 +286,13 @@ pub const LOD_REFERENCE_HEIGHT: f64 = 15.0;
 pub const CLUSTER_UPRIGHT_SKIP: f64 = 0.866;
 
 /// Directions over the half sphere along which a cluster's cards are
-/// sized to cover as much as its organs ([`card_areas`]).
-const CLUSTER_DIRECTIONS: usize = 32;
+/// sized to cover as much as its organs ([`card_areas`]). Each costs a
+/// count of the cluster's cover ([`painted`]) and another of its cards',
+/// the most of a coarse level's bake: 16 keep the levels' widths and
+/// heights as 32 did (revision 15, `tests/lod_widths.rs`) at half the cost;
+/// 12 leave gaps between them, and skunk cabbage's cards grew 1.24 times as
+/// tall as its leaves.
+const CLUSTER_DIRECTIONS: usize = 16;
 
 /// Views at most this sine of elevation (40°) above or below level, the
 /// way a walker sees crowns at the distances clusters are drawn, count
@@ -1542,8 +1547,10 @@ struct Cluster {
 const CLUSTER_OVERLAP_MAX: f64 = 2.0;
 
 /// Cells a side of the grid a cluster's cover is counted on
-/// ([`Cluster::cover`]).
-const COVER_GRID: usize = 48;
+/// ([`Cluster::cover`]). A card is sampled at most half a cell apart, so
+/// the cost of a count goes with the square of this: 24 keep the levels'
+/// widths as 48 did (revision 15) at about a quarter of the cost.
+const COVER_GRID: usize = 24;
 
 fn to_f64(n: usize) -> f64 {
     f64::from(u32::try_from(n).unwrap_or(u32::MAX))
