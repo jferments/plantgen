@@ -17,7 +17,6 @@
       "crown_radius": 3,
       "crown_base": 1,
       "crown_rate": 0.08,
-      "space_density": 14,
       "internode": 0.22,
       "max_shoot": 3,
       "branch_angle": 40,
@@ -25,10 +24,10 @@
       "apical": 0.52,
       "apical_years": 8,
       "alternate": 1,
-      "bud_years": 8,
+      "bud_years": 40,
       "leaf_size": 0.16,
-      "spur_leaf": 0.13,
-      "spur_pairs": 4,
+      "spur_leaf": 0.2,
+      "spur_pairs": 2,
       "leaf_angle": 40,
       "lean": 12,
       "wiggle": 10,
@@ -121,6 +120,21 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: a small, open, often leaning tree 4 to 8 m tall along desert washes, with long, narrow, willow-like leaves and fragrant pink to lavender trumpet flowers through the summer. Not fitted to measurements."
+    },
+    "generator.params.bud_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-urban-tree-database-2016",
+      "note": "Short shoots leaf out for up to 40 years while they have light, fitted with the seed plants' shoot spacing so that leaf area per crown area rises with age as the Urban Tree Database's city trees of Chilopsis linearis (Glendale, Arizona and Albuquerque, New Mexico) does, rather than falling once the crown has filled."
+    },
+    "generator.params.spur_leaf": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A short shoot's leaf card: one of the long, narrow leaves, 0.2 m long. The seed plants' rules space the shoots from its area."
+    },
+    "generator.params.spur_pairs": {
+      "evidence": "SourceInferred",
+      "source": "usfs-urban-tree-database-2016",
+      "note": "Two pairs of leaves a year on each short shoot, fitted with the seed plants' rules so that leaf area per crown area falls near the Urban Tree Database's median for Chilopsis linearis (1.3 at 10 to 25 years; Glendale, Arizona and Albuquerque, New Mexico), an open crown."
     },
     "allometry": {
       "evidence": "Authored",
