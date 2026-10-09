@@ -4,7 +4,11 @@
   "taxon": {
     "scientific_name": "Ferocactus cylindraceus",
     "common_name": "California barrel cactus",
-    "usda_symbol": "FECY"
+    "usda_symbol": "FECY",
+    "family": "Cactaceae",
+    "genus": "Ferocactus",
+    "plant_name_id": 3264441,
+    "accepted_name": "Ferocactus acanthodes subsp. acanthodes"
   },
   "growth_form": "stem_succulent",
   "generator": {
@@ -170,7 +174,7 @@
     "taxon": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them."
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
     },
     "growth_form": {
       "evidence": "Authored",
@@ -191,6 +195,21 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted subspecies the name resolves to (a synonym; WCVP accepts Ferocactus acanthodes subsp. acanthodes)."
+    },
+    "taxon.accepted_name": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 treats Ferocactus cylindraceus as a synonym of this name."
     }
   },
   "provenance": {

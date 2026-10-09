@@ -29,18 +29,22 @@
   "evidence": {
     "decay": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Authored from botanical descriptions of Pacific yew: flat, sharp-pointed needles 1 to 2.5 cm long, about 2 mm wide, yellow-brown when shed; no cones (the seeds sit in red arils that animals take). Colours chosen by eye; twig numbers plausible, not measured."
     },
     "foliage": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Authored from botanical descriptions of Pacific yew: flat, sharp-pointed needles 1 to 2.5 cm long, about 2 mm wide, yellow-brown when shed; no cones (the seeds sit in red arils that animals take). Colours chosen by eye; twig numbers plausible, not measured."
     },
     "look": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Authored: the drawn look's mean hue at the brightness chosen by eye for this species' litter, the relief the drawing has, and a tile its pieces repeat on unseen. PlantGen's litter tests check the hue and relief against the drawing."
     },
     "pieces": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Authored from botanical descriptions of Pacific yew: flat, sharp-pointed needles 1 to 2.5 cm long, about 2 mm wide, yellow-brown when shed; no cones (the seeds sit in red arils that animals take). Colours chosen by eye; twig numbers plausible, not measured."
     }
   },

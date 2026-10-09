@@ -106,6 +106,24 @@ pub struct Taxon {
     /// GBIF backbone taxon key.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub gbif_key: Option<u64>,
+    /// The family of the accepted name in the World Checklist of Vascular
+    /// Plants (WCVP), as WCVP writes it (`Pinaceae`); the family folder is
+    /// its lower case.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub family: Option<String>,
+    /// The genus `scientific_name` is written in (`Pseudotsuga`); the genus
+    /// folder is its lower case. For a name WCVP treats as a synonym it may
+    /// differ from the accepted name's genus.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub genus: Option<String>,
+    /// WCVP's `plant_name_id` of the accepted taxon the name resolves to:
+    /// the species, or the subspecies or variety where the name is one.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub plant_name_id: Option<u64>,
+    /// WCVP's accepted name, where it differs from `scientific_name` (a
+    /// name WCVP treats as a synonym).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub accepted_name: Option<String>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -136,6 +154,25 @@ pub enum GrowthForm {
     Epiphyte,
     /// A hard cushion of packed rosettes: llareta.
     Cushion,
+}
+
+impl GrowthForm {
+    /// Every growth form, in the order they are declared.
+    pub const ALL: [Self; 13] = [
+        Self::ExcurrentTree,
+        Self::DecurrentTree,
+        Self::ScaleLeavedTree,
+        Self::Shrub,
+        Self::Graminoid,
+        Self::Forb,
+        Self::Fern,
+        Self::Vine,
+        Self::StemSucculent,
+        Self::RosetteSucculent,
+        Self::Palm,
+        Self::Epiphyte,
+        Self::Cushion,
+    ];
 }
 
 /// Which plant program grows the species, and its parameter values.

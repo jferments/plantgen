@@ -41,10 +41,11 @@ use serde_json::Value;
 
 use crate::conditions::Conditions;
 use crate::evidence::{FieldEvidence, Source};
-use crate::inherit::{self, Inherited, Part, RankFile};
+use crate::inherit::{self, Inherited, Part, Programs, RankFile};
 use crate::niche::Niche;
 use crate::shed::Shed;
 use crate::spec::{GrowthForm, PROGRAMS, PlantSpec, SpecError};
+use crate::traits::Vocabulary;
 
 /// One species of the built-in library.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -137,6 +138,9 @@ pub struct Library {
     /// The specs of taxa above species, by their path in the tree
     /// ([`crate::inherit`]).
     ranks: BTreeMap<String, RankFile>,
+    /// Each program's parameters, its inherited ones included, which
+    /// rules are checked against.
+    params: Programs,
 }
 
 /// One value that cites a source: the file holding its evidence note, by
@@ -384,6 +388,7 @@ impl Library {
                         ((*file).to_string(), rank)
                     })
                     .collect(),
+                params: inherit::program_params(PROGRAMS.iter().copied()),
             }
             .with_chains()
         })
@@ -532,7 +537,8 @@ impl Library {
                 .sort_by(|a, b| (&a.family, &a.genus, &a.id).cmp(&(&b.family, &b.genus, &b.id)));
             library.index = index(&library.species);
         }
-        if programs.is_dir() {
+        let programs_read = programs.is_dir();
+        if programs_read {
             for path in files(&programs)? {
                 if path.extension().is_none_or(|extension| extension != "lsys") {
                     continue;
@@ -555,16 +561,27 @@ impl Library {
                     .insert(name.to_string(), Cow::Owned(source));
             }
         }
+        library.params = inherit::program_params(
+            library
+                .programs
+                .iter()
+                .map(|(name, source)| (name.as_str(), source.as_ref())),
+        );
         let at_tree = |error: String| LibraryError(format!("{}/{error}", tree.display()));
         library.check_ranks().map_err(at_tree)?;
-        // New rank files may stand above built-in species too.
-        library.merge_specs(ranks_read).map_err(at_tree)?;
+        library.check_traits().map_err(at_tree)?;
+        // New rank files may stand above built-in species too, and new
+        // programs change which rules apply.
+        library
+            .merge_specs(ranks_read || programs_read)
+            .map_err(at_tree)?;
         for entry in &library.species {
             serde_json::from_str::<PlantSpec>(entry.source())
                 .map_err(|error| at_tree(format!("{}: invalid spec: {error}", entry.file())))?;
         }
         library.check_citations().map_err(LibraryError)?;
         library.check_evidence().map_err(LibraryError)?;
+        library.check_taxa().map_err(LibraryError)?;
         Ok(library.with_chains())
     }
 
@@ -577,7 +594,8 @@ impl Library {
             }
             let above = inherit::above(&self.ranks, &entry.family, &entry.genus)?;
             entry.merged =
-                inherit::effective_text(&entry.file(), &entry.own, &above)?.map(Cow::Owned);
+                inherit::effective_text(&entry.file(), &entry.own, &above, &self.params)?
+                    .map(Cow::Owned);
         }
         Ok(())
     }
@@ -624,9 +642,42 @@ impl Library {
                 }
                 fits(part, &probes)
                     .map_err(|error| format!("{label}: its values do not fit a spec: {error}"))?;
+                Vocabulary::builtin()
+                    .check_part(part, &self.params)
+                    .map_err(|error| format!("{label}: {error}"))?;
+                own_notes(&part.values, &part.traits, &part.rules, &part.notes)
+                    .map_err(|error| format!("{label}: {error}"))?;
             }
         }
         Ok(())
+    }
+
+    /// Check every species' own spec as [`Library::check_ranks`] does a
+    /// rank file's part: its traits and rules against the vocabulary and
+    /// the programs, and a note of its own, citing a source, on each value,
+    /// trait and rule it sets.
+    ///
+    /// # Errors
+    ///
+    /// Names the first species that fails, and why.
+    pub fn check_traits(&self) -> Result<(), String> {
+        for entry in &self.species {
+            let own: Value = serde_json::from_str(&entry.own)
+                .map_err(|error| format!("{}: {error}", entry.file()))?;
+            let part = Part::of_spec(&own).map_err(|error| format!("{}: {error}", entry.file()))?;
+            Vocabulary::builtin()
+                .check_part(&part, &self.params)
+                .map_err(|error| format!("{}: {error}", entry.file()))?;
+            own_notes(&part.values, &part.traits, &part.rules, &part.notes)
+                .map_err(|error| format!("{}: {error}", entry.file()))?;
+        }
+        Ok(())
+    }
+
+    /// Each program's parameters, its inherited ones included.
+    #[must_use]
+    pub fn program_params(&self) -> &Programs {
+        &self.params
     }
 
     /// The source `id`, if the library holds it.
@@ -681,17 +732,67 @@ impl Library {
     }
 
     /// Every species' spec, as it inherits it, carries per-value evidence
-    /// ([`PlantSpec::check_evidence`]).
+    /// ([`PlantSpec::check_evidence`]), and every note of its niche and
+    /// shed cites a source (their own checks hold them to a note on every
+    /// value; [`Library::check_citations`] to sources the library holds).
     ///
     /// # Errors
     ///
-    /// Names the first species whose spec fails, and why.
+    /// Names the first species whose spec fails, or the first niche or
+    /// shed note that cites no source.
     pub fn check_evidence(&self) -> Result<(), String> {
         for entry in &self.species {
             let document: Value = serde_json::from_str(entry.source())
                 .map_err(|error| format!("{}: {error}", entry.file()))?;
             PlantSpec::check_evidence(&document, self)
                 .map_err(|error| format!("{}: {error}", entry.file()))?;
+        }
+        for (file, path, note) in self.notes()? {
+            if note.source.is_none() {
+                return Err(format!(
+                    "{file}: the evidence note on `{path}` cites no source"
+                ));
+            }
+        }
+        Ok(())
+    }
+
+    /// Every species' taxon agrees with its folders, where it names them:
+    /// its `family` is the family folder's name (WCVP's spelling, in lower
+    /// case), its `genus` the genus folder's, and the first word of its
+    /// `scientific_name` is that genus.
+    ///
+    /// # Errors
+    ///
+    /// Names the first species whose taxon disagrees, and how.
+    pub fn check_taxa(&self) -> Result<(), String> {
+        for entry in &self.species {
+            let spec: PlantSpec = serde_json::from_str(entry.source())
+                .map_err(|error| format!("{}: {error}", entry.file()))?;
+            let taxon = &spec.taxon;
+            let disagree = |what: &str, named: &str, folder: &str| {
+                Err(format!(
+                    "{}: taxon.{what} is `{named}`, but its folder is `{folder}`",
+                    entry.file()
+                ))
+            };
+            if let Some(family) = &taxon.family
+                && family.to_lowercase() != entry.family
+            {
+                return disagree("family", family, &entry.family);
+            }
+            if let Some(genus) = &taxon.genus {
+                if genus.to_lowercase() != entry.genus {
+                    return disagree("genus", genus, &entry.genus);
+                }
+                if taxon.scientific_name.split_whitespace().next() != Some(genus.as_str()) {
+                    return Err(format!(
+                        "{}: taxon.scientific_name `{}` is not written in its genus `{genus}`",
+                        entry.file(),
+                        taxon.scientific_name
+                    ));
+                }
+            }
         }
         Ok(())
     }
@@ -765,7 +866,7 @@ impl Library {
         let above = inherit::above(&self.ranks, &entry.family, &entry.genus).map_err(SpecError)?;
         let own: Value = serde_json::from_str(&entry.own)
             .map_err(|error| SpecError(format!("{}: {error}", entry.file())))?;
-        inherit::inherit(&entry.file(), &own, &above).map_err(SpecError)
+        inherit::inherit(&entry.file(), &own, &above, &self.params).map_err(SpecError)
     }
 
     /// The species `id`, or an error listing the species there are.
@@ -890,6 +991,41 @@ fn rank_files_in(tree: &Path) -> Result<Vec<(String, PathBuf)>, LibraryError> {
         }
     }
     Ok(found)
+}
+
+/// Every value, trait and rule a file sets (one part of a rank file, or a
+/// species' own spec) has a note of that file's own, on its path or a
+/// subtree holding it, citing a source: a value it inherits keeps the
+/// note of the file that set it, so each file notes what it sets. The
+/// schema, id, tier and provenance need none, as in a spec
+/// ([`crate::spec::UNNOTED`]).
+fn own_notes(
+    values: &serde_json::Map<String, Value>,
+    traits: &serde_json::Map<String, Value>,
+    rules: &serde_json::Map<String, Value>,
+    notes: &serde_json::Map<String, Value>,
+) -> Result<(), String> {
+    let mut document = values.clone();
+    for (key, part) in [("traits", traits), ("rules", rules)] {
+        if !part.is_empty() {
+            document.insert(key.into(), Value::Object(part.clone()));
+        }
+    }
+    let notes: BTreeMap<String, FieldEvidence> = notes
+        .iter()
+        .map(|(path, note)| {
+            serde_json::from_value(note.clone())
+                .map(|note| (path.clone(), note))
+                .map_err(|error| format!("the evidence note on `{path}`: {error}"))
+        })
+        .collect::<Result<_, String>>()?;
+    if let Some(path) = notes
+        .iter()
+        .find_map(|(path, note)| note.source.is_none().then_some(path))
+    {
+        return Err(format!("the evidence note on `{path}` cites no source"));
+    }
+    crate::evidence::check_coverage(&Value::Object(document), &notes, crate::spec::UNNOTED)
 }
 
 /// Whether a rank file's part fits a spec: laid over one of `probes`
@@ -1185,9 +1321,39 @@ mod tests {
         library.check_citations().unwrap();
         // Every value of every species' spec has its note, citing a source.
         library.check_evidence().unwrap();
-        // And every rank file, with the chain above it.
+        // Every built-in species names its WCVP family, its genus and its
+        // accepted taxon's plant_name_id, and they agree with its folders.
+        library.check_taxa().unwrap();
+        for entry in library.species() {
+            let taxon = library.spec(&entry.id).unwrap().taxon;
+            assert!(
+                taxon.family.is_some() && taxon.genus.is_some() && taxon.plant_name_id.is_some(),
+                "{}",
+                entry.id
+            );
+        }
+        // And every rank file, with the chain above it, and every trait
+        // and rule.
         assert_eq!(library.ranks().count(), RANKS.len());
         library.check_ranks().unwrap();
+        library.check_traits().unwrap();
+    }
+
+    /// The parameters rules are checked against, read from the programs'
+    /// text, are those the compiled programs have.
+    #[test]
+    fn program_parameters_are_the_compiled_programs() {
+        let library = Library::builtin();
+        assert_eq!(library.program_params().len(), PROGRAMS.len());
+        for (name, params) in library.program_params() {
+            let program = crate::lsys::Program::compile(library.program(name).unwrap()).unwrap();
+            let compiled: BTreeSet<String> = program
+                .params
+                .iter()
+                .map(|param| param.name.clone())
+                .collect();
+            assert_eq!(params, &compiled, "{name}");
+        }
     }
 
     /// The paths of a JSON value's leaves (an array is one) and their
@@ -1251,6 +1417,35 @@ mod tests {
         }
     }
 
+    #[test]
+    fn a_taxon_must_agree_with_its_folders() {
+        let species = "library/pinaceae/pseudotsuga/pseudotsuga-menziesii/spec.json";
+        for (from, to, wanted) in [
+            (
+                "\"family\": \"Pinaceae\"",
+                "\"family\": \"Cupressaceae\"",
+                "taxon.family is `Cupressaceae`",
+            ),
+            (
+                "\"genus\": \"Pseudotsuga\"",
+                "\"genus\": \"Abies\"",
+                "taxon.genus is `Abies`",
+            ),
+            (
+                "\"genus\": \"Pseudotsuga\"",
+                "\"genus\": \"pseudotsuga\"",
+                "is not written in its genus",
+            ),
+        ] {
+            let folder = Folder::new("taxa");
+            let text = source("pseudotsuga-menziesii");
+            assert!(text.contains(from), "{from}");
+            folder.write(species, &text.replace(from, to));
+            let error = Library::from_dir(&folder.0).unwrap_err().0;
+            assert!(error.contains(wanted), "{wanted}: {error}");
+        }
+    }
+
     const SOURCE: &str = r#"{"id": "flora-test", "title": "A test flora",
         "authors": "Test authors", "year": 2026, "licence": "CC0-1.0",
         "tier": 1, "kind": "text"}"#;
@@ -1288,9 +1483,9 @@ mod tests {
         folder.write(
             "library/pinaceae/family.json",
             r#"{"schema": 1, "rank": "family", "name": "Pinaceae",
-                "forms": {"excurrent_tree": {"tier": "procedural_proxy",
-                    "evidence": {"tier": {"evidence": "Authored", "source": "flora-test",
-                        "note": "Every Pinaceae tree is a proxy until fitted."}}}}}"#,
+                "forms": {"excurrent_tree": {"generator": {"params": {"nod_years": 2.0}},
+                    "evidence": {"generator.params.nod_years": {"evidence": "Authored",
+                        "source": "flora-test", "note": "Leaders nod two years."}}}}}"#,
         );
         let library = Library::from_dir(&folder.0).unwrap();
         assert_eq!(library.source("flora-test").unwrap().title, "A test flora");
@@ -1309,7 +1504,7 @@ mod tests {
                 at("shed.json", &shed_note),
                 Citation {
                     file: "pinaceae/family.json".into(),
-                    path: "forms.excurrent_tree.tier".into(),
+                    path: "forms.excurrent_tree.generator.params.nod_years".into(),
                 },
             ]
         );
@@ -1320,6 +1515,25 @@ mod tests {
                 .unwrap()
                 .is_empty()
         );
+
+        // A niche note must cite a source.
+        let uncited = {
+            let mut niche: serde_json::Value =
+                serde_json::from_str(niche_source("pseudotsuga-menziesii")).unwrap();
+            niche["evidence"]["moisture"]
+                .as_object_mut()
+                .unwrap()
+                .remove("source");
+            serde_json::to_string_pretty(&niche).unwrap()
+        };
+        let kept = fs::read_to_string(folder.0.join(format!("{species}/niche.json"))).unwrap();
+        folder.write(&format!("{species}/niche.json"), &uncited);
+        let error = Library::from_dir(&folder.0).unwrap_err().0;
+        assert!(
+            error.contains("niche.json: the evidence note on `moisture` cites no source"),
+            "{error}"
+        );
+        folder.write(&format!("{species}/niche.json"), &kept);
 
         // Without the source, the citing notes are refused.
         fs::remove_file(folder.0.join("library/sources/flora-test.json")).unwrap();
@@ -1332,7 +1546,9 @@ mod tests {
         fs::remove_dir(folder.0.join(species)).unwrap();
         let error = Library::from_dir(&folder.0).unwrap_err().0;
         assert!(
-            error.contains("pinaceae/family.json: the evidence note on `forms.excurrent_tree.tier` cites `flora-test`"),
+            error.contains(
+                "pinaceae/family.json: the evidence note on `forms.excurrent_tree.generator.params.nod_years` cites `flora-test`"
+            ),
             "{error}"
         );
     }
@@ -1485,7 +1701,10 @@ mod tests {
         // not read.
         let new_species = source("thuja-plicata")
             .replace("\"thuja-plicata\"", "\"zelkova-test\"")
-            .replace("\"program\": \"conifer\"", "\"program\": \"conifer-test\"");
+            .replace("\"program\": \"conifer\"", "\"program\": \"conifer-test\"")
+            .replace("\"Thuja plicata\"", "\"Zelkova test\"")
+            .replace("\"family\": \"Cupressaceae\"", "\"family\": \"Ulmaceae\"")
+            .replace("\"genus\": \"Thuja\"", "\"genus\": \"Zelkova\"");
         folder.write(
             "library/ulmaceae/zelkova/zelkova-test/spec.json",
             &new_species,
@@ -1685,13 +1904,31 @@ mod tests {
         let whole: Value = serde_json::from_str(source(id)).unwrap();
         let mut own = whole.as_object().unwrap().clone();
         let mut evidence = own["evidence"].as_object().unwrap().clone();
+        // Each value moves with its notes: a file notes what it sets.
+        let mut notes_of = |key: &str| -> serde_json::Map<String, Value> {
+            let paths: Vec<String> = evidence
+                .keys()
+                .filter(|path| *path == key || path.starts_with(&format!("{key}.")))
+                .cloned()
+                .collect();
+            paths
+                .into_iter()
+                .map(|path| {
+                    let note = evidence.remove(&path).unwrap();
+                    (path, note)
+                })
+                .collect()
+        };
         let mut family = json!({"schema": 1, "rank": "family", "name": "Pinaceae"});
         family["appearance"] = own.remove("appearance").unwrap();
-        family["evidence"] = json!({"appearance": evidence.remove("appearance").unwrap()});
-        own.insert("evidence".into(), Value::Object(evidence));
+        family["evidence"] = Value::Object(notes_of("appearance"));
         let mut genus = json!({"schema": 1, "rank": "genus", "name": "Pseudotsuga"});
         genus["growth"] = own.remove("growth").unwrap();
         genus["variants"] = own.remove("variants").unwrap();
+        let mut genus_notes = notes_of("growth");
+        genus_notes.extend(notes_of("variants"));
+        genus["evidence"] = Value::Object(genus_notes);
+        own.insert("evidence".into(), Value::Object(evidence));
         let folder = Folder::new("split");
         folder.write("library/pinaceae/family.json", &family.to_string());
         folder.write(
@@ -1749,10 +1986,17 @@ mod tests {
         folder.write(
             "library/pinaceae/family.json",
             r#"{"schema": 1, "rank": "family", "name": "Pinaceae", "parent": "order/pinales",
-                "forms": {"excurrent_tree": {"generator": {"params": {"family_test": 1.0}}}}}"#,
+                "forms": {"excurrent_tree": {"generator": {"params": {"family_test": 1.0}},
+                    "evidence": {"generator.params.family_test": {"evidence": "Authored",
+                        "source": "plantgen-authors", "note": "The family's."}}}}}"#,
         );
         let library = Library::from_dir(&folder.0).unwrap();
-        assert_eq!(library.ranks().count(), RANKS.len() + 2);
+        // They replace built-in files at the same paths and add the rest.
+        let added = ["_ranks/order/pinales.json", "pinaceae/family.json"]
+            .iter()
+            .filter(|file| !RANKS.iter().any(|(path, _)| path == *file))
+            .count();
+        assert_eq!(library.ranks().count(), RANKS.len() + added);
         assert_eq!(
             library
                 .rank("pinaceae/family.json")
@@ -1817,8 +2061,8 @@ mod tests {
             "pinaceae/family.json, forms.shrub: its values do not fit a spec",
         );
         refused(
-            &[(at, &family(r#", "parent": "order/pinales""#))],
-            "pinaceae/family.json: its parent _ranks/order/pinales.json is not in the library",
+            &[(at, &family(r#", "parent": "order/no-such-order""#))],
+            "pinaceae/family.json: its parent _ranks/order/no-such-order.json is not in the library",
         );
         refused(
             &[("library/_ranks/Order/pinales.json", "{}")],
@@ -1829,9 +2073,112 @@ mod tests {
         let folder = Folder::new("partial-ranks");
         folder.write(
             at,
-            &family(r#", "appearance": {"foliage": [0.1, 0.3, 0.1]}, "allometry": null"#),
+            &family(
+                r#", "appearance": {"foliage": [0.1, 0.3, 0.1]}, "allometry": null,
+                "evidence": {
+                    "appearance.foliage": {"evidence": "Authored", "source": "plantgen-authors", "note": "A test."}}"#,
+            ),
         );
         Library::from_dir(&folder.0).unwrap();
+    }
+
+    /// A family's traits and the rules homed in it reach the species
+    /// below it, built-in ones too, unless a species sets the value by
+    /// hand; `plantc spec` reads the outcome from `Library::inherited`.
+    #[test]
+    fn traits_and_rules_in_a_folder_reach_species() {
+        let folder = Folder::new("traits");
+        folder.write(
+            "library/sapindaceae/family.json",
+            r#"{"schema": 1, "rank": "family", "name": "Sapindaceae",
+                "evidence": {
+                    "traits": {"evidence": "Authored", "source": "plantgen-authors", "note": "Test traits."},
+                    "rules": {"evidence": "Authored", "source": "plantgen-authors", "note": "Test rules."}},
+                "traits": {"leaf_length_m": 0.2, "leaf_arrangement": "opposite"},
+                "rules": {
+                    "generator.params.space_density": {
+                        "rule": "clamp(8 * pow(0.15 / leaf_length_m, 0.75), 5, 60)",
+                        "why": "Corner's rules"},
+                    "generator.params.alternate": {
+                        "map": {"leaf_arrangement": {"alternate": 1, "opposite": 0}}}}}"#,
+        );
+        // A maple of the folder's own that leaves both to the family.
+        let mut own: serde_json::Value = serde_json::from_str(source("acer-circinatum")).unwrap();
+        own["id"] = "acer-test".into();
+        let params = own["generator"]["params"].as_object_mut().unwrap();
+        params.remove("space_density");
+        params.remove("alternate");
+        folder.write(
+            "library/sapindaceae/acer/acer-test/spec.json",
+            &serde_json::to_string_pretty(&own).unwrap(),
+        );
+        let library = Library::from_dir(&folder.0).unwrap();
+        let spec = library.spec("acer-test").unwrap();
+        let expected = (8.0 * crate::math::pow(0.75, 0.75)).clamp(5.0, 60.0);
+        assert!((spec.generator.params["space_density"] - expected).abs() < 1e-12);
+        assert!(spec.generator.params["alternate"].abs() < 1e-12);
+        let inherited = library.inherited("acer-test").unwrap();
+        assert_eq!(
+            inherited.rules["generator.params.space_density"],
+            ("sapindaceae/family.json".to_string(), None)
+        );
+        // The built-in vine maple sets its shoot spacing by hand.
+        let vine = library.inherited("acer-circinatum").unwrap();
+        assert_eq!(
+            vine.rules["generator.params.space_density"].1.as_deref(),
+            Some("set by hand in sapindaceae/acer/acer-circinatum/spec.json")
+        );
+        // A maple outside the folder's family keeps its spec.
+        assert_eq!(
+            library.entry("thuja-plicata").unwrap().source(),
+            source("thuja-plicata")
+        );
+    }
+
+    #[test]
+    fn traits_and_rules_against_the_vocabulary_are_refused() {
+        let refused = |text: &str, expected: &str| {
+            let folder = Folder::new("refused-traits");
+            folder.write("library/sapindaceae/family.json", text);
+            let message = Library::from_dir(&folder.0).unwrap_err().0;
+            assert!(message.contains(expected), "{message}");
+        };
+        let family = |extra: &str| {
+            format!(r#"{{"schema": 1, "rank": "family", "name": "Sapindaceae", {extra}}}"#)
+        };
+        refused(
+            &family(r#""traits": {"leaf_size": 1}"#),
+            "sapindaceae/family.json: `leaf_size` is not a trait in traits.json",
+        );
+        refused(
+            &family(r#""traits": {"leaf_arrangement": "spiral"}"#),
+            "`leaf_arrangement` is one of alternate",
+        );
+        refused(
+            &family(r#""rules": {"generator.params.alternate": {"rule": "leaf_type * 2"}}"#),
+            "it reads `leaf_type`, which is not a number, count or bool trait",
+        );
+        refused(
+            &family(r#""rules": {"generator.params.alternate": {"map": {"leaflets": {"1": 1}}}}"#),
+            "a map reads an enum or bool trait; `leaflets` is a count",
+        );
+        refused(
+            &family(r#""rules": {"generator.params.space_densty": {"rule": "leaflets"}}"#),
+            "no program has a parameter `space_densty`",
+        );
+        // A species' own traits are checked too.
+        let folder = Folder::new("refused-own-traits");
+        let mut own: serde_json::Value = serde_json::from_str(source("acer-circinatum")).unwrap();
+        own["traits"] = serde_json::json!({"clonal": "yes"});
+        folder.write(
+            "library/sapindaceae/acer/acer-circinatum/spec.json",
+            &own.to_string(),
+        );
+        let message = Library::from_dir(&folder.0).unwrap_err().0;
+        assert!(
+            message.contains("acer-circinatum/spec.json: `clonal` is a bool"),
+            "{message}"
+        );
     }
 
     fn source_of_program(name: &str) -> &'static str {

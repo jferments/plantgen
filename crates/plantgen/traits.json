@@ -1,0 +1,365 @@
+{
+  "schema": 1,
+  "about": "Every trait a record, a rank file or a species' spec may state (growth plan G2.2): its group, its type and its unit, values or range. Vocabulary only: the rules that turn traits into spec values live in the taxa they hold for. Types: number (a quantity in its unit), count (a whole number), bool, enum (one of its values), enums (a list of its values), months (a list of months, 1 to 12), colour (sRGB, three numbers 0 to 255), text (a line in PlantGen's own words), ids (species ids).",
+  "groups": ["form", "size", "stem_and_bark", "leaves", "flowers", "fruit_and_cones", "seasons", "ecology", "interactions", "shedding", "architecture"],
+  "traits": {
+    "library_form": {
+      "group": "form",
+      "type": "enum",
+      "values": ["tree", "shrub", "graminoid", "forb", "fern", "climber_epiphyte", "succulent", "aquatic", "dwarf_shrub"],
+      "why": "Library 1.0's nine classes, for search and its quotas per class"
+    },
+    "growth_form": {
+      "group": "form",
+      "type": "enum",
+      "values": ["excurrent_tree", "decurrent_tree", "scale_leaved_tree", "shrub", "graminoid", "forb", "fern", "vine", "stem_succulent", "rosette_succulent", "palm", "epiphyte", "cushion"],
+      "why": "the spec's growth forms, which pick a rank file's part for its form"
+    },
+    "woodiness": {
+      "group": "form",
+      "type": "enum",
+      "values": ["woody", "herbaceous", "semi"],
+      "why": "whether stems lay down wood"
+    },
+    "leaf_habit": {
+      "group": "form",
+      "type": "enum",
+      "values": ["evergreen", "deciduous", "semi", "drought_deciduous", "leafless"],
+      "why": "how long leaves stay on through the year"
+    },
+    "life_span": {
+      "group": "form",
+      "type": "enum",
+      "values": ["annual", "biennial", "perennial"],
+      "why": "how many years a plant lives and sets seed in"
+    },
+    "clonal": {
+      "group": "form",
+      "type": "bool",
+      "why": "whether it spreads by its own shoots, runners or roots"
+    },
+    "habit_notes": {
+      "group": "form",
+      "type": "text",
+      "why": "what the other form traits leave unsaid"
+    },
+    "height_max_m": {
+      "group": "size",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 130],
+      "why": "the tallest a plant grows"
+    },
+    "height_typical_m": {
+      "group": "size",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 130],
+      "why": "a grown plant's usual height"
+    },
+    "crown_width_max_m": {
+      "group": "size",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 200],
+      "why": "the widest a crown or clump grows"
+    },
+    "stem_diameter_max_m": {
+      "group": "size",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 15],
+      "why": "the thickest a stem grows, at breast height for trees"
+    },
+    "age_max_years": {
+      "group": "size",
+      "type": "number",
+      "unit": "years",
+      "range": [0.05, 10000],
+      "why": "the oldest a plant lives"
+    },
+    "root_depth_max_m": {
+      "group": "size",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 100],
+      "why": "the deepest roots reach"
+    },
+    "branching": {
+      "group": "stem_and_bark",
+      "type": "enum",
+      "values": ["excurrent", "decurrent", "columnar", "cane", "unbranched"],
+      "why": "the crown's habit: a leading stem, a spreading one, a column, canes or none"
+    },
+    "bark_texture": {
+      "group": "stem_and_bark",
+      "type": "enum",
+      "values": ["smooth", "furrowed", "plated", "scaly", "peeling", "fibrous"],
+      "why": "the bark of a grown stem"
+    },
+    "bark_colour": {
+      "group": "stem_and_bark",
+      "type": "colour",
+      "why": "the bark of a grown stem"
+    },
+    "spines": {
+      "group": "stem_and_bark",
+      "type": "enum",
+      "values": ["none", "areoles", "thorns", "prickles", "leaf_spines"],
+      "why": "what a plant is armed with: spines from areoles, thorns from shoots, prickles from bark, or spines on its leaves"
+    },
+    "leaf_type": {
+      "group": "leaves",
+      "type": "enum",
+      "values": ["simple", "pinnate", "bipinnate", "palmate", "needle", "scale", "frond", "blade"],
+      "why": "what a leaf is"
+    },
+    "leaf_arrangement": {
+      "group": "leaves",
+      "type": "enum",
+      "values": ["alternate", "opposite", "whorled", "rosette", "fascicled"],
+      "why": "how leaves sit along a shoot"
+    },
+    "leaf_length_m": {
+      "group": "leaves",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 25],
+      "why": "a grown leaf's blade, without its petiole"
+    },
+    "leaf_width_m": {
+      "group": "leaves",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 5],
+      "why": "a grown leaf's blade at its widest"
+    },
+    "petiole_length_m": {
+      "group": "leaves",
+      "type": "number",
+      "unit": "m",
+      "range": [0, 5],
+      "why": "the stalk between blade and shoot"
+    },
+    "leaf_margin": {
+      "group": "leaves",
+      "type": "enum",
+      "values": ["entire", "serrate", "dentate", "crenate", "lobed", "spiny"],
+      "why": "a leaf's edge"
+    },
+    "leaf_lobes": {
+      "group": "leaves",
+      "type": "count",
+      "range": [0, 50],
+      "why": "lobes on a lobed leaf"
+    },
+    "leaflets": {
+      "group": "leaves",
+      "type": "count",
+      "range": [0, 2000],
+      "why": "leaflets on a compound leaf"
+    },
+    "needles_per_fascicle": {
+      "group": "leaves",
+      "type": "count",
+      "range": [1, 8],
+      "why": "needles in a pine's bundle"
+    },
+    "stipules": {
+      "group": "leaves",
+      "type": "bool",
+      "why": "whether leaves bear stipules at their base"
+    },
+    "leaf_colour": {
+      "group": "leaves",
+      "type": "colour",
+      "why": "a grown leaf's upper side in summer"
+    },
+    "leaf_colour_autumn": {
+      "group": "leaves",
+      "type": "colour",
+      "why": "a leaf before it falls"
+    },
+    "flower_colour": {
+      "group": "flowers",
+      "type": "colour",
+      "why": "an open flower's showiest part"
+    },
+    "flower_size_m": {
+      "group": "flowers",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 1.5],
+      "why": "an open flower across"
+    },
+    "inflorescence": {
+      "group": "flowers",
+      "type": "enum",
+      "values": ["solitary", "raceme", "spike", "catkin", "corymb", "umbel", "compound_umbel", "panicle", "cyme", "scorpioid", "head", "spadix"],
+      "why": "how flowers are grouped: L1's cluster kinds, a single flower, or a spadix"
+    },
+    "flower_merosity": {
+      "group": "flowers",
+      "type": "count",
+      "range": [2, 12],
+      "why": "petals (or tepals) in one whorl of a flower"
+    },
+    "flower_symmetry": {
+      "group": "flowers",
+      "type": "enum",
+      "values": ["actinomorphic", "zygomorphic", "asymmetric"],
+      "why": "a flower's symmetry: radial, one plane, or none"
+    },
+    "sexual_system": {
+      "group": "flowers",
+      "type": "enum",
+      "values": ["hermaphrodite", "monoecious", "dioecious", "polygamous"],
+      "why": "where the sexes sit: in a dioecious species only half the plants bear fruit"
+    },
+    "flowering_months": {
+      "group": "flowers",
+      "type": "months",
+      "why": "the months it flowers in"
+    },
+    "fruit_type": {
+      "group": "fruit_and_cones",
+      "type": "enum",
+      "values": ["berry", "drupe", "pome", "capsule", "pod", "legume", "nut", "samara", "achene", "caryopsis", "follicle", "schizocarp", "aggregate", "multiple", "cone"],
+      "why": "what a fruit is (pod for dry pods that split other than a legume)"
+    },
+    "fruit_size_m": {
+      "group": "fruit_and_cones",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 1],
+      "why": "a ripe fruit at its longest"
+    },
+    "fruit_colour_ripe": {
+      "group": "fruit_and_cones",
+      "type": "colour",
+      "why": "a ripe fruit"
+    },
+    "fruiting_months": {
+      "group": "fruit_and_cones",
+      "type": "months",
+      "why": "the months its fruit is ripe in"
+    },
+    "cone_length_m": {
+      "group": "fruit_and_cones",
+      "type": "number",
+      "unit": "m",
+      "range": [0.002, 0.7],
+      "why": "a ripe seed cone"
+    },
+    "leaf_out_months": {
+      "group": "seasons",
+      "type": "months",
+      "why": "the months new leaves unfold in"
+    },
+    "leaf_fall_months": {
+      "group": "seasons",
+      "type": "months",
+      "why": "the months leaves fall in"
+    },
+    "elevation_min_m": {
+      "group": "ecology",
+      "type": "number",
+      "unit": "m",
+      "range": [-450, 6800],
+      "why": "the lowest it grows"
+    },
+    "elevation_max_m": {
+      "group": "ecology",
+      "type": "number",
+      "unit": "m",
+      "range": [-450, 6800],
+      "why": "the highest it grows"
+    },
+    "light": {
+      "group": "ecology",
+      "type": "enums",
+      "values": ["shade", "part", "sun"],
+      "why": "the light it grows in, every class it spans"
+    },
+    "moisture": {
+      "group": "ecology",
+      "type": "enums",
+      "values": ["aquatic", "wet", "mesic", "dry", "xeric"],
+      "why": "the water its ground holds, every class it spans"
+    },
+    "soil_texture": {
+      "group": "ecology",
+      "type": "enums",
+      "values": ["sand", "loam", "clay", "rock"],
+      "why": "the ground it roots in, every class it spans"
+    },
+    "habitat_notes": {
+      "group": "ecology",
+      "type": "text",
+      "why": "what the other ecology traits leave unsaid"
+    },
+    "hosts": {
+      "group": "interactions",
+      "type": "ids",
+      "why": "the species a climber, epiphyte or parasite grows on"
+    },
+    "nurse_forms": {
+      "group": "interactions",
+      "type": "enums",
+      "values": ["tree", "shrub", "graminoid", "forb", "fern", "climber_epiphyte", "succulent", "aquatic", "dwarf_shrub"],
+      "why": "the forms its seedlings need to shelter under"
+    },
+    "nurse_species": {
+      "group": "interactions",
+      "type": "ids",
+      "why": "the species its seedlings need to shelter under"
+    },
+    "clone_radius_m": {
+      "group": "interactions",
+      "type": "number",
+      "unit": "m",
+      "range": [0, 1000],
+      "why": "how far one clone spreads"
+    },
+    "litter_kind": {
+      "group": "shedding",
+      "type": "enum",
+      "values": ["needles", "leaves", "thatch", "twigs", "moss", "sphagnum", "grass", "tussock", "cushion"],
+      "why": "the ground look its litter makes"
+    },
+    "self_pruning": {
+      "group": "shedding",
+      "type": "bool",
+      "why": "whether it sheds its own shaded limbs"
+    },
+    "architectural_model": {
+      "group": "architecture",
+      "type": "enum",
+      "values": ["holttum", "corner", "tomlinson", "chamberlain", "leeuwenberg", "schoute", "kwan_koriba", "prevost", "fagerlind", "petit", "nozeran", "aubreville", "scarrone", "stone", "rauh", "attims", "massart", "roux", "cook", "champagnat", "mangenot", "troll", "mcclure"],
+      "why": "the Halle-Oldeman model its growth follows: a label for search, set by each lineage, never a program"
+    },
+    "axis_growth": {
+      "group": "architecture",
+      "type": "enum",
+      "values": ["monopodial", "sympodial"],
+      "why": "whether an axis grows on from its own tip or is carried on by a lateral"
+    },
+    "flowering_position": {
+      "group": "architecture",
+      "type": "enum",
+      "values": ["terminal", "lateral", "both"],
+      "why": "whether flowers end a shoot or sit beside its leaves"
+    },
+    "short_shoots": {
+      "group": "architecture",
+      "type": "bool",
+      "why": "whether it grows long shoots and short ones (spurs)"
+    },
+    "ramification_order": {
+      "group": "architecture",
+      "type": "count",
+      "range": [0, 12],
+      "why": "branch orders a grown crown carries"
+    }
+  }
+}
