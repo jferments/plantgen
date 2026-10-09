@@ -1,7 +1,12 @@
-//! Drawing scenes with Bevy, without a window: each job's scene is drawn
-//! into an image, read back once every pipeline it needs is ready, and
-//! written as a PNG with its sidecar. Jobs run one after another in one
-//! app, so pipelines compile once.
+//! Drawing sheets with Bevy, without a window. A job is a sheet: one or
+//! more tiles, each a plant drawn by its own camera into its rectangle of
+//! one image, and labels drawn over them. The image is read back once every
+//! pipeline it needs is ready and written as a PNG with its sidecar. Jobs
+//! run one after another in one app, so pipelines compile once.
+//!
+//! Tiles stand [`TILE_SPACING`] metres apart and on their own render
+//! layers, so no tile sees, lights or shades another's plant. One sun
+//! lights them all: Bevy holds at most ten directional lights.
 
 use std::collections::VecDeque;
 use std::path::PathBuf;
@@ -11,6 +16,8 @@ use std::time::Duration;
 
 use bevy::app::{AppExit, ScheduleRunnerPlugin};
 use bevy::asset::{RenderAssetUsages, embedded_asset};
+use bevy::camera::Viewport;
+use bevy::camera::visibility::RenderLayers;
 use bevy::camera::{Exposure, RenderTarget, ScalingMode};
 use bevy::core_pipeline::tonemapping::Tonemapping;
 use bevy::image::{ImageSampler, ImageSamplerDescriptor};
@@ -20,6 +27,7 @@ use bevy::light::{
 use bevy::mesh::{Indices, PrimitiveTopology};
 use bevy::pbr::{ExtendedMaterial, MaterialExtension, ScreenSpaceAmbientOcclusion};
 use bevy::prelude::*;
+use bevy::render::RenderPlugin;
 use bevy::render::render_resource::{
     AsBindGroup, Extent3d, PipelineCache, ShaderType, TextureDimension, TextureFormat,
     TextureUsages, TextureViewDescriptor, TextureViewDimension,
@@ -27,16 +35,25 @@ use bevy::render::render_resource::{
 use bevy::render::view::screenshot::{Screenshot, ScreenshotCaptured};
 use bevy::render::{Render, RenderApp, RenderSystems};
 use bevy::shader::ShaderRef;
+use bevy::text::FontSize;
 use bevy::window::{ExitCondition, WindowPlugin};
 use plantgen::library::Library;
-use plantlab_scene::{Look, MAX_TEMPLATES, Projection as SceneProjection, Scene, SceneMesh, Shot};
+use plantlab_scene::{
+    Facts, Look, MAX_TEMPLATES, Projection as SceneProjection, Scene, SceneMesh, Sheet,
+};
 
 /// One picture to make.
 pub struct Job {
     /// The files' stem: `NAME.png` and `NAME.json`.
     pub name: String,
-    pub shot: Shot,
+    pub sheet: Sheet,
+    /// What decides the picture, recorded in its sidecar so a later run
+    /// can skip it when nothing changed.
+    pub key: String,
 }
+
+/// Metres between tiles' plants.
+const TILE_SPACING: f32 = 2_000.0;
 
 /// Frames a scene stands before it is read back, once nothing is still
 /// compiling: meshes, textures and materials reach the GPU over the
@@ -80,8 +97,6 @@ impl MaterialExtension for CardExtension {
 struct Jobs {
     queue: VecDeque<Job>,
     out: PathBuf,
-    width: u32,
-    height: u32,
     failures: Failures,
     library: &'static Library,
 }
@@ -114,7 +129,11 @@ struct Stage {
 
 struct Current {
     name: String,
-    scene: Scene,
+    key: String,
+    sheet: Sheet,
+    facts: Vec<Facts>,
+    /// Times the sheet is drawn larger, per side.
+    supersample: u32,
     target: Handle<Image>,
     entities: Vec<Entity>,
     frames: u32,
@@ -127,25 +146,39 @@ struct Current {
 /// Pipelines the render world is still compiling, counted after each
 /// frame's render.
 #[derive(Resource, Clone, Default)]
-struct Compiling(Arc<AtomicUsize>);
+pub(crate) struct Compiling(pub(crate) Arc<AtomicUsize>);
 
-/// Run `jobs`, writing pictures `width` by `height` into `out`.
+/// Run `jobs`, writing pictures into `out`, on GPU `gpu` (an index of
+/// `plantlab gpus`), else the one Bevy chooses.
 ///
 /// # Errors
 ///
-/// When any picture failed; the others are still written.
-pub fn run(jobs: Vec<Job>, out: PathBuf, width: u32, height: u32) -> Result<(), String> {
+/// When the GPU cannot be opened or any picture failed; the others are
+/// still written.
+pub fn run(jobs: Vec<Job>, out: PathBuf, gpu: Option<usize>) -> Result<(), String> {
     let compiling = Compiling::default();
     let failures = Failures::default();
     let total = jobs.len();
-    let shadow_map = if jobs.iter().any(|job| job.shot.look == Look::Photo) {
+    let shadow_map = if jobs
+        .iter()
+        .flat_map(|job| &job.sheet.tiles)
+        .any(|tile| tile.shot.look == Look::Photo)
+    {
         PHOTO_SHADOW_MAP
     } else {
         REVIEW_SHADOW_MAP
     };
+    let render = match gpu {
+        Some(index) => RenderPlugin {
+            render_creation: crate::gpu::creation(index)?,
+            ..default()
+        },
+        None => RenderPlugin::default(),
+    };
     let mut app = App::new();
     app.add_plugins(
         DefaultPlugins
+            .set(render)
             .set(WindowPlugin {
                 primary_window: None,
                 exit_condition: ExitCondition::DontExit,
@@ -168,8 +201,6 @@ pub fn run(jobs: Vec<Job>, out: PathBuf, width: u32, height: u32) -> Result<(), 
         .insert_resource(Jobs {
             queue: jobs.into(),
             out,
-            width,
-            height,
             failures: failures.clone(),
             library: Library::builtin(),
         })
@@ -198,7 +229,7 @@ pub fn run(jobs: Vec<Job>, out: PathBuf, width: u32, height: u32) -> Result<(), 
     }
 }
 
-fn count_compiling(cache: Res<PipelineCache>, compiling: Res<Compiling>) {
+pub(crate) fn count_compiling(cache: Res<PipelineCache>, compiling: Res<Compiling>) {
     compiling
         .0
         .store(cache.waiting_pipelines().count(), Ordering::Relaxed);
@@ -229,34 +260,47 @@ fn stage_next(
         exit.write(AppExit::Success);
         return;
     };
-    let scene = match plantlab_scene::build(&job.shot, jobs.library) {
-        Ok(scene) => scene,
-        Err(error) => {
-            jobs.failures.push(format!("{}: {error}", job.name));
-            return;
+    let mut scenes = Vec::with_capacity(job.sheet.tiles.len());
+    for tile in &job.sheet.tiles {
+        match plantlab_scene::build(&tile.shot, jobs.library) {
+            Ok(scene) if scene.templates.layers > MAX_TEMPLATES => {
+                jobs.failures.push(format!(
+                    "{}: {} templates, more than PlantLab draws ({MAX_TEMPLATES})",
+                    job.name, scene.templates.layers
+                ));
+                return;
+            }
+            Ok(scene) => scenes.push(scene),
+            Err(error) => {
+                jobs.failures.push(format!("{}: {error}", job.name));
+                return;
+            }
         }
-    };
-    if scene.templates.layers > MAX_TEMPLATES {
-        let error = format!(
-            "{} templates, more than PlantLab draws ({MAX_TEMPLATES})",
-            scene.templates.layers
-        );
-        jobs.failures.push(format!("{}: {error}", job.name));
-        return;
     }
-    let k = scene.look.supersample();
-    let target = images.add(target_image(jobs.width * k, jobs.height * k));
-    let entities = spawn_scene(
-        &mut commands,
-        &scene,
-        &target,
-        (&mut images, &mut meshes, &mut standard, &mut cards),
-        jobs.width,
-        jobs.height,
-    );
+    let k = scenes.first().map_or(1, |scene| scene.look.supersample());
+    let sheet = job.sheet;
+    let target = images.add(target_image(sheet.width * k, sheet.height * k));
+    let mut entities = vec![spawn_sun(&mut commands, &scenes)];
+    for (index, (scene, tile)) in scenes.iter().zip(&sheet.tiles).enumerate() {
+        entities.extend(spawn_scene(
+            &mut commands,
+            scene,
+            &target,
+            (&mut images, &mut meshes, &mut standard, &mut cards),
+            Placement {
+                index,
+                rect: tile.rect,
+                supersample: k,
+            },
+        ));
+    }
+    entities.extend(spawn_labels(&mut commands, &sheet, &target, k));
     stage.current = Some(Current {
         name: job.name,
-        scene,
+        key: job.key,
+        facts: scenes.into_iter().map(|scene| scene.facts).collect(),
+        sheet,
+        supersample: k,
         target,
         entities,
         frames: 0,
@@ -313,7 +357,7 @@ fn captured(event: On<ScreenshotCaptured>, mut stage: ResMut<Stage>, jobs: Res<J
         current.asked = false;
         return;
     };
-    let k = current.scene.look.supersample();
+    let k = current.supersample;
     let rgba = downsample(
         &to_rgba8(data, image.texture_descriptor.format),
         width,
@@ -328,14 +372,7 @@ fn captured(event: On<ScreenshotCaptured>, mut stage: ResMut<Stage>, jobs: Res<J
         current.settled = 0;
         return;
     }
-    let result = write(
-        &jobs.out,
-        &current.name,
-        &current.scene,
-        width,
-        height,
-        &rgba,
-    );
+    let result = write(&jobs.out, current, width, height, &rgba);
     match result {
         Ok(path) => {
             jobs.failures.finished();
@@ -348,19 +385,26 @@ fn captured(event: On<ScreenshotCaptured>, mut stage: ResMut<Stage>, jobs: Res<J
 
 fn write(
     out: &std::path::Path,
-    name: &str,
-    scene: &Scene,
+    current: &Current,
     width: u32,
     height: u32,
     rgba: &[u8],
 ) -> Result<String, String> {
+    let name = &current.name;
     let picture = format!("{name}.png");
     let png = plantgen::raster::encode_png(width as usize, height as usize, rgba)
         .map_err(|error| format!("{name}: cannot encode PNG: {error}"))?;
     let path = out.join(&picture);
     std::fs::write(&path, png)
         .map_err(|error| format!("cannot write {}: {error}", path.display()))?;
-    let sidecar = plantlab_scene::sidecar(&scene.facts, &picture, width, height);
+    let sidecar = match current.facts.as_slice() {
+        [facts] if current.sheet.labels.is_empty() => {
+            plantlab_scene::sidecar(facts, &picture, width, height)
+        }
+        facts => plantlab_scene::sheet_sidecar(&current.sheet, &picture, facts),
+    };
+    // The key first, so a later run finds it at once.
+    let sidecar = sidecar.replacen("{\n", &format!("{{\n  \"key\": \"{}\",\n", current.key), 1);
     let json = out.join(format!("{name}.json"));
     std::fs::write(&json, sidecar)
         .map_err(|error| format!("cannot write {}: {error}", json.display()))?;
@@ -368,7 +412,7 @@ fn write(
 }
 
 /// The picture as sRGB RGBA8, whatever the readback's format.
-fn to_rgba8(data: &[u8], format: TextureFormat) -> Vec<u8> {
+pub(crate) fn to_rgba8(data: &[u8], format: TextureFormat) -> Vec<u8> {
     match format {
         TextureFormat::Bgra8UnormSrgb | TextureFormat::Bgra8Unorm => data
             .as_chunks::<4>()
@@ -430,7 +474,7 @@ fn shows_only_background(rgba: &[u8]) -> bool {
     rgba.as_chunks::<4>().0.iter().all(|p| p[..] == *first)
 }
 
-fn target_image(width: u32, height: u32) -> Image {
+pub(crate) fn target_image(width: u32, height: u32) -> Image {
     let mut image = Image::new_target_texture(width, height, TextureFormat::Rgba8UnormSrgb, None);
     image.texture_descriptor.usage |= TextureUsages::COPY_SRC;
     image
@@ -482,6 +526,85 @@ fn vec3(v: [f32; 3]) -> Vec3 {
     Vec3::from_array(v)
 }
 
+/// The sheet's title, headings and captions, and a thin frame around each
+/// tile, drawn last over the tiles by a UI camera.
+#[allow(clippy::many_single_char_names)]
+fn spawn_labels(
+    commands: &mut Commands,
+    sheet: &Sheet,
+    target: &Handle<Image>,
+    k: u32,
+) -> Vec<Entity> {
+    if sheet.labels.is_empty() {
+        return Vec::new();
+    }
+    #[allow(clippy::cast_precision_loss)]
+    let k = k as f32;
+    #[allow(clippy::cast_precision_loss)]
+    let px = |v: u32| Val::Px(v as f32 * k);
+    let camera = commands
+        .spawn((
+            Camera2d,
+            Camera {
+                order: 1_000,
+                clear_color: ClearColorConfig::None,
+                ..default()
+            },
+            RenderTarget::Image(target.clone().into()),
+            // Nothing in the world: only the UI.
+            RenderLayers::layer(31),
+        ))
+        .id();
+    let root = commands
+        .spawn((
+            Node {
+                width: Val::Percent(100.0),
+                height: Val::Percent(100.0),
+                ..default()
+            },
+            UiTargetCamera(camera),
+        ))
+        .id();
+    for label in &sheet.labels {
+        let text = commands
+            .spawn((
+                Text::new(label.text.clone()),
+                TextFont {
+                    font_size: FontSize::Px(label.size * k),
+                    ..default()
+                },
+                TextColor(Color::srgb(0.93, 0.93, 0.9)),
+                Node {
+                    position_type: PositionType::Absolute,
+                    left: px(label.x),
+                    top: px(label.y),
+                    ..default()
+                },
+            ))
+            .id();
+        commands.entity(root).add_child(text);
+    }
+    for tile in &sheet.tiles {
+        let [x, y, w, h] = tile.rect;
+        let frame = commands
+            .spawn((
+                Node {
+                    position_type: PositionType::Absolute,
+                    left: px(x),
+                    top: px(y),
+                    width: px(w),
+                    height: px(h),
+                    border: UiRect::all(Val::Px(k)),
+                    ..default()
+                },
+                BorderColor::all(Color::srgb(0.45, 0.45, 0.45)),
+            ))
+            .id();
+        commands.entity(root).add_child(frame);
+    }
+    vec![camera, root]
+}
+
 /// The photo look's soft shadow size, in the units Bevy's percentage-closer
 /// soft shadows take: a penumbra grows as `(z_blocker - z) · size / z` in
 /// shadow-map texels, with depths in the light's 0 to 1 range. A sun of
@@ -491,6 +614,7 @@ fn vec3(v: [f32; 3]) -> Vec3 {
 /// approximation: exact at mid depth only. `None` (hard shadows) for the
 /// review look.
 fn soft_shadows(scene: &Scene, reach: f32) -> Option<f32> {
+    // (The cascade covers `reach` metres of the camera's view.)
     if scene.look != Look::Photo {
         return None;
     }
@@ -503,8 +627,69 @@ fn soft_shadows(scene: &Scene, reach: f32) -> Option<f32> {
 const REVIEW_SHADOW_MAP: usize = 4096;
 const PHOTO_SHADOW_MAP: usize = 8192;
 
-/// Spawn a scene's camera, light and meshes, drawing into `target`.
-#[allow(clippy::too_many_lines)]
+/// Where a tile is drawn: its index among the sheet's tiles, its
+/// rectangle in pixels and how much larger the sheet is drawn.
+struct Placement {
+    index: usize,
+    rect: [u32; 4],
+    supersample: u32,
+}
+
+impl Placement {
+    /// The tile's place in the world: far from every other tile's.
+    #[allow(clippy::cast_precision_loss)]
+    fn offset(&self) -> Vec3 {
+        Vec3::new(self.index as f32 * TILE_SPACING, 0.0, 0.0)
+    }
+
+    /// The tile's own render layer; layer 0 is left to nothing.
+    fn layer(&self) -> RenderLayers {
+        RenderLayers::layer(self.index + 1)
+    }
+}
+
+/// The sun, shared by every tile of a sheet and seeing all their layers.
+fn spawn_sun(commands: &mut Commands, scenes: &[Scene]) -> Entity {
+    let Some(scene) = scenes.first() else {
+        return commands.spawn_empty().id();
+    };
+    let light = scene.light;
+    // Room for the farthest-reaching tile's shadows.
+    let reach = scenes
+        .iter()
+        .map(|scene| {
+            let (low, high) = scene.shadow_bounds;
+            (vec3(high) - vec3(low)).length() + vec3(scene.framing.eye).length()
+        })
+        .fold(0.0_f32, f32::max);
+    commands
+        .spawn((
+            DirectionalLight {
+                color: Color::linear_rgb(
+                    light.sun_color[0],
+                    light.sun_color[1],
+                    light.sun_color[2],
+                ),
+                illuminance: light.sun_lux,
+                shadow_maps_enabled: true,
+                soft_shadow_size: soft_shadows(scene, reach),
+                ..default()
+            },
+            CascadeShadowConfigBuilder {
+                num_cascades: 1,
+                minimum_distance: 0.1,
+                maximum_distance: reach,
+                ..default()
+            }
+            .build(),
+            RenderLayers::from_layers(&(0..=scenes.len()).collect::<Vec<_>>()),
+            Transform::from_translation(vec3(light.sun)).looking_at(Vec3::ZERO, Vec3::Y),
+        ))
+        .id()
+}
+
+/// Spawn a scene's camera and meshes, drawing into its tile of `target`.
+#[allow(clippy::too_many_lines, clippy::many_single_char_names)]
 fn spawn_scene(
     commands: &mut Commands,
     scene: &Scene,
@@ -515,11 +700,14 @@ fn spawn_scene(
         &mut Assets<StandardMaterial>,
         &mut Assets<CardMaterial>,
     ),
-    width: u32,
-    height: u32,
+    place: Placement,
 ) -> Vec<Entity> {
     let mut entities = Vec::new();
     let framing = scene.framing;
+    let [x, y, width, height] = place.rect;
+    let k = place.supersample;
+    let offset = place.offset();
+    let layer = place.layer();
     let projection = match framing.projection {
         SceneProjection::Perspective { fov_y_deg } => {
             Projection::Perspective(PerspectiveProjection {
@@ -549,14 +737,28 @@ fn spawn_scene(
             .spawn((
                 Camera3d::default(),
                 Camera {
-                    clear_color: ClearColorConfig::Custom(Color::linear_rgb(r, g, b)),
+                    // A clear clears the whole image, viewport or not: only
+                    // the first tile's camera clears it.
+                    clear_color: if place.index == 0 {
+                        ClearColorConfig::Custom(Color::linear_rgb(r, g, b))
+                    } else {
+                        ClearColorConfig::None
+                    },
+                    viewport: Some(Viewport {
+                        physical_position: UVec2::new(x * k, y * k),
+                        physical_size: UVec2::new(width * k, height * k),
+                        ..default()
+                    }),
+                    #[allow(clippy::cast_possible_wrap, clippy::cast_possible_truncation)]
+                    order: place.index as isize,
                     ..default()
                 },
+                layer.clone(),
                 RenderTarget::Image(target.clone().into()),
                 projection,
                 Exposure { ev100 },
-                Transform::from_translation(vec3(framing.eye))
-                    .looking_at(vec3(framing.target), vec3(framing.up)),
+                Transform::from_translation(vec3(framing.eye) + offset)
+                    .looking_at(vec3(framing.target) + offset, vec3(framing.up)),
             ))
             .id(),
     );
@@ -588,6 +790,9 @@ fn spawn_scene(
             commands.entity(camera).insert((
                 // Filmic, and needs no lookup table.
                 Tonemapping::AcesFitted,
+                Exposure {
+                    ev100: ev100 - plantlab_scene::PHOTO_EXPOSURE_BOOST_EV,
+                },
                 environment,
                 // Ambient occlusion reads the depth and normal prepasses,
                 // which take no multisampling: supersampling smooths edges.
@@ -596,33 +801,6 @@ fn spawn_scene(
             ));
         }
     }
-    let (low, high) = scene.shadow_bounds;
-    let reach = (vec3(high) - vec3(low)).length();
-    entities.push(
-        commands
-            .spawn((
-                DirectionalLight {
-                    color: Color::linear_rgb(
-                        light.sun_color[0],
-                        light.sun_color[1],
-                        light.sun_color[2],
-                    ),
-                    illuminance: light.sun_lux,
-                    shadow_maps_enabled: true,
-                    soft_shadow_size: soft_shadows(scene, reach),
-                    ..default()
-                },
-                CascadeShadowConfigBuilder {
-                    num_cascades: 1,
-                    minimum_distance: 0.1,
-                    maximum_distance: reach + vec3(framing.eye).length(),
-                    ..default()
-                }
-                .build(),
-                Transform::from_translation(vec3(light.sun)).looking_at(Vec3::ZERO, Vec3::Y),
-            ))
-            .id(),
-    );
     let ground = Circle::new(scene.ground_radius);
     let [gr, gg, gb] = plantlab_scene::GROUND;
     entities.push(
@@ -635,7 +813,9 @@ fn spawn_scene(
                     reflectance: 0.2,
                     ..default()
                 })),
-                Transform::from_rotation(Quat::from_rotation_x(-std::f32::consts::FRAC_PI_2)),
+                Transform::from_translation(offset)
+                    .with_rotation(Quat::from_rotation_x(-std::f32::consts::FRAC_PI_2)),
+                layer.clone(),
             ))
             .id(),
     );
@@ -654,11 +834,34 @@ fn spawn_scene(
                 .spawn((
                     Mesh3d(meshes.add(bevy_mesh(mesh))),
                     MeshMaterial3d(solid.clone()),
+                    Transform::from_translation(offset),
+                    layer.clone(),
                 ))
                 .id(),
         );
     }
-    if !scene.cards.is_empty() {
+    if !scene.cut_cards.is_empty() {
+        // Cards cut into triangles: two-sided solids in their colours.
+        let cut = standard.add(StandardMaterial {
+            base_color: Color::WHITE,
+            perceptual_roughness: 0.8,
+            reflectance: 0.3,
+            double_sided: true,
+            cull_mode: None,
+            diffuse_transmission: 0.35,
+            ..default()
+        });
+        entities.push(
+            commands
+                .spawn((
+                    Mesh3d(meshes.add(bevy_mesh(&scene.cut_cards))),
+                    MeshMaterial3d(cut),
+                    Transform::from_translation(offset),
+                    layer.clone(),
+                ))
+                .id(),
+        );
+    } else if !scene.cards.is_empty() {
         let mut accents = [Vec4::ZERO; MAX_TEMPLATES];
         for (slot, accent) in accents.iter_mut().zip(&scene.template_accents) {
             *slot = Vec3::from_array(*accent).extend(1.0);
@@ -684,6 +887,8 @@ fn spawn_scene(
                 .spawn((
                     Mesh3d(meshes.add(bevy_mesh(&scene.cards))),
                     MeshMaterial3d(material),
+                    Transform::from_translation(offset),
+                    layer.clone(),
                 ))
                 .id(),
         );
@@ -702,13 +907,14 @@ mod tests {
     fn a_thumbnail_is_drawn_and_described() {
         let out = std::env::temp_dir().join(format!("plantlab-test-{}", std::process::id()));
         std::fs::create_dir_all(&out).expect("a temporary folder");
-        let mut shot = Shot::thumbnail("polystichum-munitum");
+        let mut shot = plantlab_scene::Shot::thumbnail("polystichum-munitum");
         shot.quality = plantgen::quality::DRAFT;
         let jobs = vec![Job {
             name: "fern".into(),
-            shot,
+            sheet: plantlab_scene::single(shot, 128, 128),
+            key: "test".into(),
         }];
-        run(jobs, out.clone(), 128, 128).expect("renders");
+        run(jobs, out.clone(), None).expect("renders");
         let png = std::fs::read(out.join("fern.png")).expect("the picture");
         let decoder = png::Decoder::new(std::io::Cursor::new(png));
         let mut reader = decoder.read_info().expect("a PNG");

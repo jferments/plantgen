@@ -5,7 +5,8 @@
 //! its own `version`: `neighbours` (today's stand), `light`, `climate`,
 //! `soil`, `disturbance` and `interactions`. Only `neighbours` changes how
 //! a plant grows today, through `light@1`; the others are data that later
-//! tools read, so they change nothing yet. The four environments are named
+//! tools read, so they change nothing yet, except `substrate`, which
+//! `substrate@1` and `light@2` read (G3). The four environments are named
 //! presets of the document ([`Conditions::preset`]), and a preset expands
 //! to exactly the numbers `Environment::neighbourhood` gives, so every
 //! package keeps its bytes.
@@ -29,6 +30,7 @@ use crate::json;
 use crate::lsys::tools::{Host, Neighbourhood};
 use crate::math::Vec3;
 use crate::spec::{Environment, HostSpec};
+use crate::substrate::{Substrate, SubstrateField};
 
 /// The document's schema.
 pub const CONDITIONS_SCHEMA: u32 = 1;
@@ -54,6 +56,12 @@ pub trait Surroundings: Sync {
     fn host(&self) -> Option<&Host> {
         None
     }
+
+    /// What the plant grows on, for `substrate@1` and `light@2`; `None`
+    /// is level soil at height 0.
+    fn substrate(&self) -> Option<&SubstrateField> {
+        None
+    }
 }
 
 impl Surroundings for Neighbourhood {
@@ -67,6 +75,7 @@ impl Surroundings for Neighbourhood {
 pub struct Around<'a> {
     pub neighbourhood: &'a Neighbourhood,
     pub host: Option<&'a Host>,
+    pub substrate: Option<&'a SubstrateField>,
 }
 
 impl Surroundings for Around<'_> {
@@ -76,6 +85,10 @@ impl Surroundings for Around<'_> {
 
     fn host(&self) -> Option<&Host> {
         self.host
+    }
+
+    fn substrate(&self) -> Option<&SubstrateField> {
+        self.substrate
     }
 }
 
@@ -100,6 +113,9 @@ pub struct Conditions {
     pub disturbance: Option<Disturbance>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub interactions: Option<Interactions>,
+    /// What the plant grows on (G3): a preset or a distance-field grid.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub substrate: Option<Substrate>,
 }
 
 /// The stand round the plant: today's [`Neighbourhood`], with the same
@@ -333,6 +349,7 @@ impl Conditions {
             soil: None,
             disturbance: None,
             interactions: None,
+            substrate: None,
         }
     }
 
@@ -357,12 +374,14 @@ impl Conditions {
     }
 
     /// The document with its preset expanded into `neighbours` and left
-    /// out, so documents that grow alike resolve alike.
+    /// out, and a substrate preset expanded into its grid, so documents
+    /// that grow alike resolve alike.
     #[must_use]
     pub fn resolve(&self) -> Self {
         Self {
             preset: None,
             neighbours: Some(Neighbours::of(self.neighbourhood())),
+            substrate: self.substrate.as_ref().map(Substrate::resolve),
             ..self.clone()
         }
     }
@@ -436,6 +455,9 @@ impl Conditions {
                 1.0,
             )?;
             within("interactions herbivory", interactions.herbivory, 0.0, 1.0)?;
+        }
+        if let Some(substrate) = &self.substrate {
+            substrate.validate()?;
         }
         Ok(())
     }
@@ -634,6 +656,36 @@ mod tests {
         refused(
             r#"{"schema": 1, "interactions": {"version": 1, "herbivory": 1.5}}"#,
             "interactions herbivory must be between 0 and 1, found 1.5",
+        );
+    }
+
+    #[test]
+    fn a_substrate_preset_resolves_into_its_grid() {
+        let text = r#"{"schema": 1, "preset": "open",
+            "substrate": {"version": 1, "preset": "boulders", "seed": 3}}"#;
+        let document = Conditions::from_json(text).unwrap();
+        let resolved = document.resolve();
+        let grid = resolved.substrate.as_ref().unwrap();
+        assert!(grid.preset.is_none() && grid.distance.is_some());
+        // The grid stands for the preset: spelling it out keeps the class.
+        let spelled_out = Conditions {
+            substrate: Some(grid.clone()),
+            ..document.clone()
+        };
+        assert_eq!(spelled_out.class(), document.class());
+        assert_ne!(
+            document.class(),
+            Conditions::preset(Environment::Open).class()
+        );
+        let other_seed =
+            Conditions::from_json(&text.replace("\"seed\": 3", "\"seed\": 4")).unwrap();
+        assert_ne!(other_seed.class(), document.class());
+        assert!(
+            Conditions::from_json(
+                r#"{"schema": 1, "substrate": {"version": 2, "preset": "flat"}}"#
+            )
+            .unwrap_err()
+            .contains("substrate version 2")
         );
     }
 }

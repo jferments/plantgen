@@ -331,6 +331,22 @@ fn pipe_settings(
     )
 }
 
+/// The conditions' substrate, decoded once for the whole growth (G3).
+fn substrate_field(
+    settings: &GrowthSettings,
+) -> Result<Option<crate::substrate::SubstrateField>, GrowthError> {
+    settings
+        .conditions
+        .substrate
+        .as_ref()
+        .map(crate::substrate::Substrate::field)
+        .transpose()
+        .map_err(|message| GrowthError::Tool {
+            tool: "substrate",
+            message,
+        })
+}
+
 /// Grow a plant from its axiom.
 ///
 /// # Errors
@@ -350,9 +366,11 @@ pub fn grow(
     let mut interpreter = Interpreter::new(program, params, &limits);
     let mut tool_state = ToolState::default();
     let neighbourhood = settings.conditions.neighbourhood();
+    let substrate = substrate_field(settings)?;
     let around = Around {
         neighbourhood: &neighbourhood,
         host: settings.host.as_deref(),
+        substrate: substrate.as_ref(),
     };
     let mut string = deriver.axiom(settings.seed, settings.dt)?;
     let mut stats = GrowthStats {
@@ -686,5 +704,45 @@ mod tests {
         bad.keyframes = vec![2.0];
         bad.dt = 0.0;
         assert!(grow(&program, &params, &bad).is_err());
+    }
+
+    /// A shoot that creeps west at ankle height and stops short of
+    /// whatever it meets (`substrate@1`, G3).
+    fn creeper(substrate: Option<crate::substrate::SubstratePreset>) -> f64 {
+        let program = Program::compile(
+            "lsystem creeper 1;
+             module A queries substrate;
+             tool substrate@1 {};
+             axiom f(0.1) steer(-1, 0, 0, 1) A;
+             rule A : sd > 0.06 -> F(0.05) A;",
+        )
+        .unwrap();
+        let params = program.resolve_params(&BTreeMap::new()).unwrap();
+        let mut conditions = Conditions::preset(crate::spec::Environment::Open);
+        conditions.substrate = substrate.map(crate::substrate::Substrate::preset);
+        let growth = grow(
+            &program,
+            &params,
+            &GrowthSettings {
+                conditions,
+                ..settings(12.0, vec![12.0])
+            },
+        )
+        .unwrap();
+        growth.keyframes[0]
+            .segments
+            .iter()
+            .map(|segment| segment.end.x)
+            .fold(0.0, f64::min)
+    }
+
+    #[test]
+    fn a_shoot_feels_the_substrate_it_grows_against() {
+        // On open ground it creeps its full 0.6 m; in a cleft it stops at
+        // the west block's face, 0.25 m out.
+        let open = creeper(None);
+        assert!((open + 0.6).abs() < 1.0e-9, "open ground: {open}");
+        let cleft = creeper(Some(crate::substrate::SubstratePreset::Cleft));
+        assert!((-0.25..-0.15).contains(&cleft), "cleft: {cleft}");
     }
 }

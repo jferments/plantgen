@@ -1,0 +1,193 @@
+{
+  "schema": 1,
+  "id": "azorella-prolifera",
+  "taxon": {
+    "scientific_name": "Azorella prolifera",
+    "common_name": "neneo",
+    "family": "Apiaceae",
+    "genus": "Azorella",
+    "plant_name_id": 3010553
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "program": "broadleaf",
+    "params": {
+      "crown_base": 0,
+      "fork_height": 0.03,
+      "alternate": 1,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 6,
+      "crown_height": 0.7,
+      "crown_radius": 0.6,
+      "crown_rate": 0.22,
+      "space_density": 600,
+      "space_reach": 0.297,
+      "space_kill": 0.073,
+      "internode": 0.04,
+      "branch_angle": 40,
+      "bud_years": 8,
+      "leaf_size": 0.06,
+      "spur_leaf": 0.055,
+      "spur_pairs": 4,
+      "leaf_angle": 50,
+      "leaf_years": 2,
+      "fork_stems": 14,
+      "fork_angle": 50,
+      "pipe_tip": 0.0012,
+      "pipe_organ": 0.002,
+      "pipe_rings": 2e-06,
+      "thorns": 1,
+      "thorn_length": 0.012,
+      "thorn_angle": 55,
+      "blooms": 2,
+      "bloom_age": 3,
+      "bloom_size": 0.03,
+      "bloom_angle": 20,
+      "leaf_area": 0.132,
+      "thorn_area": 0.059
+    }
+  },
+  "growth": {
+    "years": 20,
+    "step": 1,
+    "keyframes": [3, 8, 20]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3]
+  },
+  "appearance": {
+    "bark": [0.5, 0.45, 0.32],
+    "foliage": [0.35, 0.45, 0.2],
+    "foliage_shade": [0.1225, 0.1575, 0.07],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "palmate",
+          "lobes": 3,
+          "depth": 0.85,
+          "lobe_width": 0.2,
+          "teeth": 0,
+          "spread": 0.8,
+          "petiole": 0.2
+        }
+      },
+      "thorn": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.12
+        },
+        "colour": [0.7, 0.62, 0.4],
+        "form": "thorn"
+      },
+      "bloom": {
+        "shape": {
+          "template": "head",
+          "rays": 0,
+          "ray_width": 0.5,
+          "disc": 0.9
+        },
+        "colour": [0.95, 0.85, 0.3],
+        "accent": [0.9, 0.8, 0.25]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 8,
+      "environment": "open",
+      "height": 0.55,
+      "tolerance": 0.5
+    },
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 0.7,
+      "tolerance": 0.45
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hand-set from general knowledge of the species: a hemispherical, spiny cushion shrub of the Patagonian steppe, 0.4 to 1 m tall and wide, densely branched, its stiff, three-parted leaves ending in spines, with small yellow umbels in summer. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough heights from general knowledge of the species: about 0.55 m at 8 years and 0.7 m at 20. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Colours chosen by eye from photographs: yellow-green foliage, straw-coloured spines."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Common name (and USDA symbol, where given) as the spec's authors wrote them."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "taxon.scientific_name": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's accepted name for the plant the spec's authors wrote as Mulinum spinosum, which WCVP treats as a synonym."
+    },
+    "taxon.genus": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "The genus WCVP v16's accepted name is written in."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (plant forms milestone F7). Calibration against measurements and photographs comes later."
+  }
+}

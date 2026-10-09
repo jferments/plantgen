@@ -17,6 +17,7 @@ use crate::library::{Entry, Library};
 use crate::looks::{self, Flare, Look, Moss, OrganLook, Ridges};
 use crate::lsys::program::SymbolKind;
 use crate::lsys::{Neighbourhood, OrganKind, Program, ProgramError, tools};
+use crate::substrate::{Substrate, SubstratePreset};
 
 pub const SPEC_SCHEMA: u32 = 1;
 
@@ -59,7 +60,8 @@ pub fn all_species() -> impl Iterator<Item = (&'static str, &'static str)> {
         .map(|entry| (entry.id.as_str(), entry.source()))
 }
 
-/// A built-in species' spec, as JSON, by id.
+/// A built-in species' spec, as JSON, by id (an old id finds the species
+/// renamed from it).
 #[must_use]
 pub fn builtin_species(id: &str) -> Option<&'static str> {
     Library::builtin().entry(id).map(Entry::source)
@@ -97,6 +99,9 @@ pub fn areas_agree(drawn: f64, shaded: f64) -> bool {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Taxon {
+    /// Its name: in a library, the accepted name in the World Checklist of
+    /// Vascular Plants (`Pinus contorta var. contorta`), which the taxon's
+    /// id writes as an id (`pinus-contorta-var-contorta`).
     pub scientific_name: String,
     pub common_name: String,
     /// USDA PLANTS symbol, for example `PSME`.
@@ -111,18 +116,13 @@ pub struct Taxon {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub family: Option<String>,
     /// The genus `scientific_name` is written in (`Pseudotsuga`); the genus
-    /// folder is its lower case. For a name WCVP treats as a synonym it may
-    /// differ from the accepted name's genus.
+    /// folder is its lower case.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub genus: Option<String>,
-    /// WCVP's `plant_name_id` of the accepted taxon the name resolves to:
-    /// the species, or the subspecies or variety where the name is one.
+    /// WCVP's `plant_name_id` of the accepted taxon: the species, or the
+    /// subspecies or variety where the taxon is one.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub plant_name_id: Option<u64>,
-    /// WCVP's accepted name, where it differs from `scientific_name` (a
-    /// name WCVP treats as a synonym).
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub accepted_name: Option<String>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -283,13 +283,23 @@ pub struct Variant {
     /// `None` for an environment's.
     #[serde(skip)]
     pub class: Option<ClassKey>,
+    /// The substrate preset (and its seed) of a variant grown in a
+    /// conditions document that names one (G3); `None` grows on level soil.
+    #[serde(skip)]
+    pub substrate: Option<(SubstratePreset, u64)>,
 }
 
 impl Variant {
     /// The conditions it grows in: its environment, with its neighbourhood.
     #[must_use]
     pub fn conditions(&self) -> Conditions {
-        Conditions::in_neighbourhood(self.environment, self.neighbourhood)
+        Conditions {
+            substrate: self.substrate.map(|(preset, seed)| Substrate {
+                seed: Some(seed),
+                ..Substrate::preset(preset)
+            }),
+            ..Conditions::in_neighbourhood(self.environment, self.neighbourhood)
+        }
     }
 }
 
@@ -655,7 +665,8 @@ impl PlantSpec {
         Ok(spec)
     }
 
-    /// A built-in species by id.
+    /// A built-in species by id (an old id finds the species renamed from
+    /// it).
     ///
     /// # Errors
     ///
@@ -787,6 +798,15 @@ impl PlantSpec {
                 return fail(format!(
                     "{at}: interactions.host must be the spec's own host"
                 ));
+            }
+            // A spec's variants grow on named substrates; a grid comes from
+            // a host growing a plant in its own world.
+            if conditions
+                .substrate
+                .as_ref()
+                .is_some_and(|substrate| substrate.preset.is_none())
+            {
+                return fail(format!("{at}: a spec's substrate must name a preset"));
             }
         }
         if let Err(message) = self.appearance.validate() {
@@ -929,6 +949,7 @@ impl PlantSpec {
                         .copied()
                         .unwrap_or_else(|| environment.neighbourhood()),
                     class: None,
+                    substrate: None,
                 });
             }
         }
@@ -942,6 +963,11 @@ impl PlantSpec {
                     seed: *seed,
                     neighbourhood: conditions.neighbourhood(),
                     class: Some(conditions.class()),
+                    substrate: conditions.substrate.as_ref().and_then(|substrate| {
+                        substrate
+                            .preset
+                            .map(|preset| (preset, substrate.seed.unwrap_or(1)))
+                    }),
                 });
             }
         }
