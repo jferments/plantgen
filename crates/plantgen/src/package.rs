@@ -1909,6 +1909,24 @@ pub fn encode_mesh(plant: &PlantMesh) -> Vec<u8> {
     out.0
 }
 
+/// The length of [`encode_mesh`]'s bytes for `plant`, without encoding
+/// it: what one level of detail adds to a package before compression.
+#[must_use]
+pub fn encoded_mesh_size(plant: &PlantMesh) -> usize {
+    let padded = |length: usize| length.next_multiple_of(4);
+    let (wood, cards) = (&plant.wood, &plant.cards);
+    let mut length = padded(16 + wood.vertex_count() * WOOD_VERTEX_BYTES);
+    length += wood.indices.len() * 4;
+    length = padded(length + 4 + cards.len() * CARD_BYTES);
+    if !plant.tufts.is_empty() || !plant.sites.is_empty() {
+        length = padded(length + 4 + plant.tufts.len() * TUFT_BYTES);
+    }
+    if !plant.sites.is_empty() {
+        length += 4 + plant.sites.len() * 4;
+    }
+    length
+}
+
 /// Encode part meshes as `APPARTS2`.
 #[must_use]
 pub fn encode_parts(parts: &[crate::parts::PartMesh]) -> Vec<u8> {
@@ -2181,4 +2199,32 @@ fn decode_sites(input: &mut Reader<'_>, cards: usize) -> Result<Vec<u32>, Packag
         sites.push(site);
     }
     Ok(sites)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::drawing::{Request, draw};
+    use crate::library::Library;
+
+    #[test]
+    fn a_mesh_size_is_its_encoding_length() {
+        let library = Library::builtin();
+        let quality = crate::quality::DRAFT;
+        // Wood and cards; and a cactus, whose levels carry tufts and sites.
+        for (species, age) in [("acer-macrophyllum", 5.0), ("ferocactus-wislizeni", 20.0)] {
+            let spec = library.spec(species).expect("in the library");
+            let mut request = Request::typical(&spec, library, &quality);
+            request.age = age;
+            for level in [0, 3] {
+                request.level = level;
+                let drawing = draw(&request).expect("draws");
+                assert_eq!(
+                    encoded_mesh_size(&drawing.plant),
+                    encode_mesh(&drawing.plant).len(),
+                    "{species} level {level}"
+                );
+            }
+        }
+    }
 }

@@ -9,7 +9,10 @@
 //! turned into draw-ready data by `plantlab-scene`. This program only
 //! draws that data.
 
+mod gif;
 mod gpu;
+mod measure;
+mod record;
 mod render;
 #[cfg(feature = "solari")]
 mod solari;
@@ -30,13 +33,21 @@ const USAGE: &str = "\
 plantlab: grow PlantGen's plants and render them
 
 usage:
-  plantlab open [SPECIES] [--live STEPS] [--capture FILE [--capture-after SECONDS]]
+  plantlab open [SPECIES] [--age YEARS] [--live STEPS] [--no-grid] [--no-ruler]
+                [--out DIR] [--record] [--plant-only]
+                [--capture FILE [--capture-after SECONDS]]
       The window: one plant you can turn around, and a panel to choose
       the species, age, day of the year, level of detail, quality, look
       and view, with Grow, Stop and Pause, a progress bar, and the plant
       shown growing every STEPS steps (default 10, 0 for none; also a
-      slider). --capture saves a picture of the window once the plant
-      stands, or after SECONDS with --capture-after, then closes it.
+      slider). --age grows the first plant YEARS old (--years too). A grid
+      under the plant and a ruler beside it measure it (G and R toggle
+      them). Snapshots (P), recorded growth (--record) and GIFs (S), of
+      the scene or of the plant alone on a clear background
+      (--plant-only), go to DIR (default plantlab-pictures). Drag to turn, middle-drag or Shift-drag to pan,
+      scroll to zoom, F to frame the plant again. --capture saves a
+      picture of the window once the plant stands, or after SECONDS with
+      --capture-after, then closes it.
   plantlab thumbs SPECIES... --out DIR [--size PX] [OPTIONS]
       A thumbnail of each species (a library id, or `all`): DIR/ID.png and
       DIR/ID.json, what the picture shows.
@@ -364,15 +375,41 @@ fn solari(_args: &[String]) -> Result<(), String> {
 }
 
 fn open(args: &[String]) -> Result<(), String> {
-    let mut species = None;
+    let mut options = window::Options {
+        species: None,
+        age: None,
+        live: 10,
+        grid: true,
+        ruler: true,
+        out: PathBuf::from("plantlab-pictures"),
+        record: false,
+        plant_only: false,
+        capture: None,
+    };
     let mut capture = None;
-    let mut live = 10;
     let mut after = None;
     let mut rest = args.iter();
     while let Some(arg) = rest.next() {
         match arg.as_str() {
+            "--age" | "--years" => {
+                let age: f64 = rest
+                    .next()
+                    .and_then(|value| value.parse().ok())
+                    .ok_or("`--age` needs a number of years")?;
+                if !(age > 0.0 && age.is_finite()) {
+                    return Err("`--age` needs a number of years above 0".into());
+                }
+                options.age = Some(age);
+            }
+            "--no-grid" => options.grid = false,
+            "--record" => options.record = true,
+            "--plant-only" => options.plant_only = true,
+            "--no-ruler" => options.ruler = false,
+            "--out" => {
+                options.out = PathBuf::from(rest.next().ok_or("`--out` needs a folder")?);
+            }
             "--live" => {
-                live = rest
+                options.live = rest
                     .next()
                     .and_then(|value| value.parse().ok())
                     .ok_or("`--live` needs a whole number of steps (0 for none)")?;
@@ -390,10 +427,11 @@ fn open(args: &[String]) -> Result<(), String> {
                 ));
             }
             flag if flag.starts_with("--") => return Err(format!("unknown flag `{flag}`")),
-            id => species = Some(id.to_string()),
+            id => options.species = Some(id.to_string()),
         }
     }
-    window::run(species.as_deref(), capture.map(|path| (path, after)), live)
+    options.capture = capture.map(|path| (path, after));
+    window::run(options)
 }
 
 /// Read a batch file: one job a line.

@@ -32,6 +32,8 @@ bevy = { version = "=0.19.1", default-features = false, features = [
     "default_font",
     # Soft shadows for the photo look.
     "experimental_pbr_pcss",
+    # The window's measuring grid and height ruler.
+    "bevy_gizmos_render",
 ] }
 
 # The versions Project After pins for Bevy 0.19 (PlantLab pins its own,

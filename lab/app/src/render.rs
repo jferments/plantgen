@@ -772,7 +772,7 @@ fn spawn_scene(
         scene,
         (images, meshes, standard, cards),
         offset,
-        &layer,
+        (&layer, &layer),
     ));
     entities
 }
@@ -836,7 +836,9 @@ pub(crate) fn camera_look(
     }
 }
 
-/// Spawn a scene's plant, its scale and its ground at `offset` on `layer`.
+/// Spawn a scene's plant at `offset` on `layer`, and its ground and scale
+/// on `backdrop` (the same layer, except where a camera shows the plant
+/// alone).
 pub(crate) fn spawn_plant(
     commands: &mut Commands,
     scene: &Scene,
@@ -847,7 +849,7 @@ pub(crate) fn spawn_plant(
         &mut Assets<CardMaterial>,
     ),
     offset: Vec3,
-    layer: &RenderLayers,
+    (layer, backdrop): (&RenderLayers, &RenderLayers),
 ) -> Vec<Entity> {
     let mut entities = Vec::new();
     let ground = Circle::new(scene.ground_radius);
@@ -864,7 +866,7 @@ pub(crate) fn spawn_plant(
                 })),
                 Transform::from_translation(offset)
                     .with_rotation(Quat::from_rotation_x(-std::f32::consts::FRAC_PI_2)),
-                layer.clone(),
+                backdrop.clone(),
             ))
             .id(),
     );
@@ -874,7 +876,11 @@ pub(crate) fn spawn_plant(
         reflectance: 0.2,
         ..default()
     });
-    for mesh in [&scene.wood, &scene.solids] {
+    for (mesh, layer) in [
+        (&scene.wood, layer),
+        (&scene.solids, layer),
+        (&scene.scale, backdrop),
+    ] {
         if mesh.is_empty() {
             continue;
         }
