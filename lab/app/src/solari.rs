@@ -98,6 +98,8 @@ pub fn run(photo: Photo) -> Result<(), String> {
                 exit_condition: ExitCondition::DontExit,
                 ..default()
             })
+            // No window: drawing goes to images, and the loop is ours.
+            .disable::<bevy::winit::WinitPlugin>()
             .set(bevy::log::LogPlugin {
                 level: bevy::log::Level::WARN,
                 filter: "wgpu=error,bevy_ecs::world::command_queue=error".into(),
@@ -446,7 +448,7 @@ fn setup(
     let [gr, gg, gb] = plantlab_scene::GROUND;
     let ground_texel = palette.texel([gr, gg, gb, 1.0]);
     let leaves = two_sided(&scene.cut_cards);
-    let parts: Vec<(&SceneMesh, Vec<u32>)> = [&scene.wood, &scene.solids, &leaves]
+    let parts: Vec<(&SceneMesh, Vec<u32>)> = [&scene.wood, &scene.solids, &scene.scale, &leaves]
         .into_iter()
         .map(|mesh| (mesh, texels(mesh, &mut palette)))
         .collect();

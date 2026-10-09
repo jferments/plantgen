@@ -21,6 +21,10 @@ bevy = { version = "=0.19.1", default-features = false, features = [
     "bevy_log",
     "3d_bevy_render",
     "png",
+    # The window (V3); headless runs leave it out.
+    "bevy_winit",
+    "bevy_window",
+    "x11",
     # Captions and titles on review sheets.
     "bevy_ui",
     "bevy_ui_render",
@@ -28,6 +32,15 @@ bevy = { version = "=0.19.1", default-features = false, features = [
     "default_font",
     # Soft shadows for the photo look.
     "experimental_pbr_pcss",
+    # The window's measuring grid and height ruler.
+    "bevy_gizmos_render",
+] }
+
+# The versions Project After pins for Bevy 0.19 (PlantLab pins its own,
+# but starts from the same ones).
+bevy_egui = { version = "=0.42.0", default-features = false, features = [
+    "render",
+    "default_fonts",
 ] }
 
 [workspace.lints.rust]

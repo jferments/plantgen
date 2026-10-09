@@ -61,6 +61,8 @@ pub enum GrowthError {
     Tool { tool: &'static str, message: String },
     /// The growth settings themselves are invalid.
     Settings(String),
+    /// A watcher stopped the growth (`grow::Watch`).
+    Stopped,
 }
 
 impl fmt::Display for GrowthError {
@@ -71,6 +73,7 @@ impl fmt::Display for GrowthError {
             Self::Rule { span, message } => write!(f, "rule at {span}: {message}"),
             Self::Tool { tool, message } => write!(f, "tool `{tool}`: {message}"),
             Self::Settings(message) => f.write_str(message),
+            Self::Stopped => f.write_str("growth stopped"),
         }
     }
 }

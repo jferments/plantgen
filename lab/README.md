@@ -1,9 +1,62 @@
 # PlantLab
 
 PlantLab grows PlantGen's plants under the conditions you choose and
-shows you what they look like. It has no window yet: it renders
-thumbnails and review sheets on the GPU, each picture with a JSON file
-that says what it shows.
+shows you what they look like: in a window, and without one as
+thumbnails and review sheets, each picture with a JSON file that says
+what it shows.
+
+## The window
+
+```text
+cargo run --release -p plantlab -- open acer-macrophyllum
+```
+
+One plant on its ground patch, with the scale figure or rod. The panel on
+the left chooses the species (type to filter the list), its age, the day
+of the year, the level of detail, the quality (draft or standard), the
+look (review or photo) and the view. Under the plant's height, crown
+width, triangles and cards, it gives the `plantlab thumbs` command that
+renders what you see without the window.
+
+**Growing.** A change grows the plant again ("Grow when the settings
+change"; turn it off to grow only on **Grow**). **Stop** ends a growth and
+keeps the last frame; **Pause** holds it. A progress bar gives the step,
+the age and the time. "Show it growing, every N steps" draws the plant as
+it stands every N steps (`--live N`, default 10, 0 for none), and "Move
+the camera with the plant" keeps it framed as it grows. `--age YEARS`
+grows the first plant to that age instead of its oldest keyframe.
+
+**The camera.** Drag to turn around the plant, middle-drag (or Shift and
+drag) to move it, scroll to come closer; **Reset camera** or F frames it
+again.
+
+**Measures.** A grid on the ground (G; its squares' size is in the panel,
+every fifth line bold, the bold lines' distances on the rim) and a ruler
+beside the plant (R), at the ground's edge or nearer where the edge is
+off screen, labelled in metres or centimetres, with the plant's height
+marked across to it. `--no-grid` and `--no-ruler` start without them.
+
+**File sizes.** "packaged" is exactly what this level of detail's mesh
+takes in a PlantGen package; ".glb" and ".obj" estimate the drawn
+triangles as glTF binary and Wavefront OBJ with the card textures as one
+PNG. A whole package holds four levels for every keyframe and variant,
+and impostors; `plantc build` gives its size.
+
+**Pictures and animations.** **Snapshot** (P) saves a PNG; **Record
+growth** (`--record`) takes a frame each time a plant or a frame of its
+growth is shown, and **Save GIF** (S) writes them as a looping GIF, the
+last frame held (both times are in the panel), with "and PNGs" every
+frame too. Pictures are of the scene as the window shows it (ground,
+scale and measures, without the panel) or of the plant alone on a clear
+background (`--plant-only`): transparent PNGs and GIFs. They go to
+`plantlab-pictures` (`--out DIR`). For an animation that shows the plant
+grow rather than staying the same size, turn off "Move the camera with
+the plant" and frame the grown plant first.
+
+`--capture FILE` saves a picture of the window once the plant stands, or
+after `--capture-after SECONDS`, and closes it.
+
+On Linux the window needs X11 and `libxkbcommon-x11`.
 
 PlantLab simulates nothing itself. Every plant is grown by PlantGen's own
 code, the same steps `plantc render` takes, so a picture from PlantLab
@@ -105,8 +158,9 @@ builds its graphics stack.
   `Templates::albedo` does; nothing else about the plant is computed on
   the GPU.
 
-Not drawn yet: the bark pattern on wood (wood shows its colour), part
-meshes, and the window that comes next.
+Not drawn yet: the bark pattern on wood (wood shows its colour) and part
+meshes. Not in the window yet: growing conditions, the timeline, wind and
+comparing plants side by side (the next steps in the design).
 
 Check before you commit, from this folder:
 
@@ -118,4 +172,8 @@ cargo test -p plantlab -- --ignored   # draws a fern; needs a GPU or lavapipe
 ```
 
 A cold build of this workspace took 10.5 minutes on a 4-core cloud
-session (2026-10-08; 388 crates in its lock).
+session (2026-10-08, before the window; 388 crates in its lock then, 479
+with the window, egui and the captions).
+
+`src/theme.rs` is a copy of Project After's `lab-ui` theme, owned here and
+never synced (no shared UI crate, by the owner's choice).

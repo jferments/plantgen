@@ -20,6 +20,7 @@ use bevy::camera::Viewport;
 use bevy::camera::visibility::RenderLayers;
 use bevy::camera::{Exposure, RenderTarget, ScalingMode};
 use bevy::core_pipeline::tonemapping::Tonemapping;
+use bevy::ecs::system::EntityCommands;
 use bevy::image::{ImageSampler, ImageSamplerDescriptor};
 use bevy::light::{
     CascadeShadowConfigBuilder, DirectionalLightShadowMap, EnvironmentMapLight, GlobalAmbientLight,
@@ -65,7 +66,7 @@ const PATIENCE_FRAMES: u32 = 2_000;
 /// up on it.
 const RETRIES: u32 = 3;
 
-type CardMaterial = ExtendedMaterial<StandardMaterial, CardExtension>;
+pub(crate) type CardMaterial = ExtendedMaterial<StandardMaterial, CardExtension>;
 
 /// Draws the organ cards of `plantlab-scene` (see `shaders/card.wgsl`).
 #[derive(Asset, AsBindGroup, Reflect, Debug, Clone)]
@@ -184,6 +185,8 @@ pub fn run(jobs: Vec<Job>, out: PathBuf, gpu: Option<usize>) -> Result<(), Strin
                 exit_condition: ExitCondition::DontExit,
                 ..default()
             })
+            // No window: drawing goes to images, and the loop is ours.
+            .disable::<bevy::winit::WinitPlugin>()
             .set(bevy::log::LogPlugin {
                 level: bevy::log::Level::WARN,
                 // Bevy warns of commands left when the app ends; nothing is lost.
@@ -649,7 +652,7 @@ impl Placement {
 }
 
 /// The sun, shared by every tile of a sheet and seeing all their layers.
-fn spawn_sun(commands: &mut Commands, scenes: &[Scene]) -> Entity {
+pub(crate) fn spawn_sun(commands: &mut Commands, scenes: &[Scene]) -> Entity {
     let Some(scene) = scenes.first() else {
         return commands.spawn_empty().id();
     };
@@ -726,11 +729,7 @@ fn spawn_scene(
             })
         }
     };
-    let light = scene.light;
-    // Exposure that shows a white surface facing the sun as white: Bevy's
-    // diffuse is albedo / π times the illuminance, and its exposure is
-    // 1 / (1.2 · 2^EV100).
-    let ev100 = (light.sun_lux / (1.2 * std::f32::consts::PI)).log2();
+    let ev100 = exposure(&scene.light);
     let [r, g, b] = plantlab_scene::BACKGROUND;
     entities.push(
         commands
@@ -762,12 +761,45 @@ fn spawn_scene(
             ))
             .id(),
     );
+    camera_look(
+        &mut commands.entity(entities[0]),
+        scene.look,
+        &scene.light,
+        images,
+    );
+    entities.extend(spawn_plant(
+        commands,
+        scene,
+        (images, meshes, standard, cards),
+        offset,
+        (&layer, &layer),
+    ));
+    entities
+}
+
+/// Exposure that shows a white surface facing the sun as white: Bevy's
+/// diffuse is albedo / π times the illuminance, and its exposure is
+/// 1 / (1.2 · 2^EV100).
+pub(crate) fn exposure(light: &plantlab_scene::Light) -> f32 {
+    (light.sun_lux / (1.2 * std::f32::consts::PI)).log2()
+}
+
+/// The parts of a camera that make a look: tone map, sky light,
+/// multisampling or ambient occlusion.
+pub(crate) fn camera_look(
+    camera: &mut EntityCommands,
+    look: Look,
+    light: &plantlab_scene::Light,
+    images: &mut Assets<Image>,
+) {
     let sky = Color::linear_rgb(light.sky_color[0], light.sky_color[1], light.sky_color[2]);
-    let camera = entities[0];
-    match scene.look {
+    let ev100 = exposure(light);
+    match look {
         Look::Review => {
-            commands.entity(camera).insert((
+            camera.remove::<(EnvironmentMapLight, ScreenSpaceAmbientOcclusion)>();
+            camera.insert((
                 Tonemapping::None,
+                Exposure { ev100 },
                 AmbientLight {
                     color: sky,
                     brightness: light.sky_brightness,
@@ -787,7 +819,8 @@ fn spawn_scene(
                 Color::linear_rgb(gr * 2.0, gg * 2.0, gb * 2.0),
             );
             environment.intensity = light.sky_brightness;
-            commands.entity(camera).insert((
+            camera.remove::<AmbientLight>();
+            camera.insert((
                 // Filmic, and needs no lookup table.
                 Tonemapping::AcesFitted,
                 Exposure {
@@ -801,6 +834,24 @@ fn spawn_scene(
             ));
         }
     }
+}
+
+/// Spawn a scene's plant at `offset` on `layer`, and its ground and scale
+/// on `backdrop` (the same layer, except where a camera shows the plant
+/// alone).
+pub(crate) fn spawn_plant(
+    commands: &mut Commands,
+    scene: &Scene,
+    (images, meshes, standard, cards): (
+        &mut Assets<Image>,
+        &mut Assets<Mesh>,
+        &mut Assets<StandardMaterial>,
+        &mut Assets<CardMaterial>,
+    ),
+    offset: Vec3,
+    (layer, backdrop): (&RenderLayers, &RenderLayers),
+) -> Vec<Entity> {
+    let mut entities = Vec::new();
     let ground = Circle::new(scene.ground_radius);
     let [gr, gg, gb] = plantlab_scene::GROUND;
     entities.push(
@@ -815,7 +866,7 @@ fn spawn_scene(
                 })),
                 Transform::from_translation(offset)
                     .with_rotation(Quat::from_rotation_x(-std::f32::consts::FRAC_PI_2)),
-                layer.clone(),
+                backdrop.clone(),
             ))
             .id(),
     );
@@ -825,7 +876,11 @@ fn spawn_scene(
         reflectance: 0.2,
         ..default()
     });
-    for mesh in [&scene.wood, &scene.solids] {
+    for (mesh, layer) in [
+        (&scene.wood, layer),
+        (&scene.solids, layer),
+        (&scene.scale, backdrop),
+    ] {
         if mesh.is_empty() {
             continue;
         }
