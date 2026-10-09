@@ -11,7 +11,7 @@ use std::task::{Context, Poll, Wake, Waker};
 
 use wgpu::util::DeviceExt;
 
-use super::narrow::{Job, STRIDE};
+use super::narrow::{Job, STRIDE, times};
 
 const SHADER: &str = include_str!("narrow.wgsl");
 /// Invocations per workgroup, as the shader declares.
@@ -84,9 +84,11 @@ impl Gpu {
     }
 
     /// The narrowing of every point of `job`, `STRIDE` values a point, or
-    /// `None` if the GPU failed (the CPU then searches in full).
+    /// `None` if the GPU failed (the CPU then searches in full); this
+    /// thread runs `meanwhile` while the GPU works.
     #[must_use]
-    pub fn narrow(&self, job: &Job) -> Option<Vec<u32>> {
+    pub fn narrow(&self, job: &Job, meanwhile: &mut dyn FnMut()) -> Option<Vec<u32>> {
+        let mut clock = std::time::Instant::now();
         let count = u32::try_from(job.points.len()).ok()?;
         if count == 0 {
             return Some(Vec::new());
@@ -129,25 +131,12 @@ impl Gpu {
             usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::COPY_DST,
             mapped_at_creation: false,
         });
-        let mut entries = vec![wgpu::BindGroupEntry {
-            binding: 0,
-            resource: settings_buffer.as_entire_binding(),
-        }];
-        for (binding, buffer) in (1..).zip(&buffers) {
-            entries.push(wgpu::BindGroupEntry {
-                binding,
-                resource: buffer.as_entire_binding(),
-            });
-        }
-        entries.push(wgpu::BindGroupEntry {
-            binding: 8,
-            resource: narrowed.as_entire_binding(),
-        });
-        let bind_group = self.device.create_bind_group(&wgpu::BindGroupDescriptor {
-            label: Some("narrow"),
-            layout: &self.layout,
-            entries: &entries,
-        });
+        let bind_group = self.bind(
+            [&settings_buffer]
+                .into_iter()
+                .chain(&buffers)
+                .chain([&narrowed]),
+        );
         let groups = count.div_ceil(GROUP);
         let (x, y) = (groups.min(MOST_GROUPS), groups.div_ceil(MOST_GROUPS));
         let mut encoder = self
@@ -170,8 +159,12 @@ impl Gpu {
         readback.map_async(wgpu::MapMode::Read, .., move |result| {
             let _ = sender.send(result);
         });
+        times::lap(times::NARROW, &mut clock);
+        meanwhile();
+        clock = std::time::Instant::now();
         self.device.poll(wgpu::PollType::wait_indefinitely()).ok()?;
         receiver.recv().ok()?.ok()?;
+        times::lap(times::WAIT, &mut clock);
         let view = readback.get_mapped_range(..);
         let out = view
             .as_chunks::<4>()
@@ -181,7 +174,24 @@ impl Gpu {
             .collect();
         drop(view);
         readback.unmap();
+        times::lap(times::NARROW, &mut clock);
         Some(out)
+    }
+
+    /// The shader's bindings, in their order.
+    fn bind<'a>(&self, buffers: impl Iterator<Item = &'a wgpu::Buffer>) -> wgpu::BindGroup {
+        let entries: Vec<wgpu::BindGroupEntry> = (0..)
+            .zip(buffers)
+            .map(|(binding, buffer)| wgpu::BindGroupEntry {
+                binding,
+                resource: buffer.as_entire_binding(),
+            })
+            .collect();
+        self.device.create_bind_group(&wgpu::BindGroupDescriptor {
+            label: Some("narrow"),
+            layout: &self.layout,
+            entries: &entries,
+        })
     }
 }
 

@@ -35,6 +35,7 @@
 use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 use std::sync::{Mutex, PoisonError};
+use std::time::Instant;
 
 use serde::{Deserialize, Serialize};
 
@@ -355,19 +356,29 @@ pub fn run(
         .map(|query| !has_children(query.node))
         .collect();
 
-    let (query_light, organ_light) = match program.tool(ToolKind::Light) {
-        Some(config) => {
-            let values = settings(config, globals, clock, seed, &mut stack);
-            if config.version >= 2 {
-                light_below(scene, &anchors, organ_area, &values, surroundings, limits)?
-            } else {
-                light(scene, &anchors, organ_area, &values, surroundings, limits)?
-            }
+    // Each tool's settings, then light and space, which read the scene
+    // and not each other.
+    let light_tool = program.tool(ToolKind::Light).map(|config| {
+        (
+            config.version,
+            settings(config, globals, clock, seed, &mut stack),
+        )
+    });
+    let space_tool = program.tool(ToolKind::Space).map(|config| {
+        (
+            config.version,
+            settings(config, globals, clock, seed, &mut stack),
+        )
+    });
+    let lit = || match &light_tool {
+        Some((version, values)) if *version >= 2 => {
+            light_below(scene, &anchors, organ_area, values, surroundings, limits)
         }
-        None => (
+        Some((_, values)) => light(scene, &anchors, organ_area, values, surroundings, limits),
+        None => Ok((
             vec![1.0; scene.queries.len()],
             vec![1.0; scene.organs.len()],
-        ),
+        )),
     };
 
     let space_queries: Vec<bool> = scene
@@ -380,25 +391,53 @@ pub fn run(
             },
         )
         .collect();
-    let space = match program.tool(ToolKind::Space) {
-        Some(config) if config.version >= 3 => {
-            let values = settings(config, globals, clock, seed, &mut stack);
-            contact(scene, &anchors, &space_queries, &values)?
+    let spaced = |state: &mut ToolState, meanwhile: &mut dyn FnMut()| match &space_tool {
+        Some((version, values)) if *version >= 3 => {
+            contact(scene, &anchors, &space_queries, values)
         }
-        Some(config) => {
-            let values = settings(config, globals, clock, seed, &mut stack);
-            colonize(
-                scene,
-                &space_queries,
-                &values,
-                config.version,
-                state,
-                limits,
-                seed,
-            )?
-        }
-        None => vec![(0, Vec3::ZERO); scene.queries.len()],
+        Some((version, values)) => colonize(
+            scene,
+            &space_queries,
+            values,
+            (*version, seed),
+            state,
+            limits,
+            meanwhile,
+        ),
+        None => Ok(vec![(0, Vec3::ZERO); scene.queries.len()]),
     };
+    // Light and space read the scene and not each other. Where the idle
+    // cores give each its full share they run side by side; otherwise
+    // light runs while a GPU narrows space colonization, or after it.
+    // Light's error comes first, as in order.
+    let mut timer = Instant::now();
+    let both = light_tool.is_some() && space_tool.is_some();
+    let side = Lease::take(if both && cores::idle_now() >= 2 * cores::per_task() {
+        2
+    } else {
+        1
+    });
+    let (lights, space) = if side.threads() > 1 {
+        std::thread::scope(|scope| {
+            let lights = scope.spawn(lit);
+            let space = spaced(state, &mut || {});
+            let lights = lights
+                .join()
+                .unwrap_or_else(|panic| std::panic::resume_unwind(panic));
+            (lights, space)
+        })
+    } else {
+        let mut early = None;
+        let space = spaced(state, &mut || early = Some(lit()));
+        (early.unwrap_or_else(lit), space)
+    };
+    drop(side);
+    let (query_light, organ_light) = lights?;
+    let space = space?;
+    if light_tool.is_some() || space_tool.is_some() {
+        narrow::times::add(narrow::times::STEPS, 1);
+        narrow::times::lap(narrow::times::LIGHT_SPACE, &mut timer);
+    }
 
     let flux = match program.tool(ToolKind::Vigour) {
         Some(config) => {
@@ -1475,10 +1514,10 @@ fn colonize(
     scene: &Scene,
     space_queries: &[bool],
     values: &[f64],
-    version: u32,
+    (version, seed): (u32, u64),
     state: &mut ToolState,
     limits: &Limits,
-    seed: u64,
+    meanwhile: &mut dyn FnMut(),
 ) -> Result<Vec<(u32, Vec3)>, GrowthError> {
     let (first, later) = values.split_at(values.len().min(8));
     let [shape, base, height, radius, density, influence, kill, angle] = first[..] else {
@@ -1741,43 +1780,61 @@ fn colonize(
     // Many points share the work out; the pulls add up in the order the
     // points lie, layer by layer, however many threads drew them.
     let large = span((x0, x1)) * span((x0, x1)) * span((y0, y1)) > 100_000;
-    let lease = Lease::take(if large { cores::per_task() } else { 1 });
-    let threads = lease.threads();
+    let want = if large { cores::per_task() } else { 1 };
+    let started = Instant::now();
     let mut pulled = None;
     if let Some(narrower) = Narrower::find(large) {
-        // The points that may grow anything, narrowed all at once (on a
-        // GPU), then each decided in 64-bit as the full search would.
+        // The points that may grow anything, gathered layer by layer side
+        // by side with their cells in the plant's grid and in `coarse`,
+        // narrowed all at once (on a GPU, with the cores lent back while
+        // it works), then each decided in 64-bit as the full search would.
+        let mut clock = started;
+        let coarse = Grid::new(influence * (1.0 + 1e-9) + 1e-9, &apex_points);
+        let lease = Lease::take(want);
         let admitted = in_layers(
             layers(&mut lattice.cells, low[1], layer_cells, (y0, y1)),
-            threads,
+            lease.threads(),
             &|y, cells| {
-                let mut points = Vec::new();
-                admit(y, cells, &mut |at, cell| points.push((at, cell.point)));
-                points
+                let mut gathered = Admitted::default();
+                admit(y, cells, &mut |at, cell| {
+                    gathered.push(at, cell.point, &plant, &coarse);
+                });
+                gathered
             },
         );
-        let coarse = Grid::new(influence * (1.0 + 1e-9) + 1e-9, &apex_points);
+        drop(lease);
+        narrow::times::lap(narrow::times::GATHER, &mut clock);
         let job = narrow_job(&admitted, &plant, &coarse, (kill_sq, influence_sq, cone));
-        if let Some(narrowed) = narrower.narrow(&job) {
+        narrow::times::lap(narrow::times::ASSEMBLE, &mut clock);
+        let narrowed = narrower.narrow(&job, meanwhile);
+        clock = Instant::now();
+        if let Some(narrowed) = narrowed {
+            narrow::times::add(narrow::times::NARROWED, 1);
+            narrow::times::add(narrow::times::POINTS, job.points.len());
             let mut offsets = Vec::with_capacity(admitted.len());
             let mut offset = 0;
-            for points in &admitted {
+            for layer in &admitted {
                 offsets.push(offset);
-                offset += points.len();
+                offset += layer.points.len();
             }
+            let lease = Lease::take(want);
             pulled = Some(in_layers(
                 layers(&mut lattice.cells, low[1], layer_cells, (y0, y1)),
-                threads,
+                lease.threads(),
                 &|y, cells| {
                     let row_of = usize::try_from(y - y0).unwrap_or(0);
                     let mut pulls = Vec::new();
                     let mut hint = None;
-                    for (k, (at, point)) in admitted[row_of].iter().enumerate() {
+                    let (mut unsure, mut full) = (0, 0);
+                    for (k, (at, point)) in admitted[row_of].points.iter().enumerate() {
                         let row = &narrowed[(offsets[row_of] + k) * STRIDE..][..STRIDE];
                         let consumed = match row[0] {
                             CONSUMED => true,
                             LEFT => false,
-                            _ => plant.within(*point, kill_sq),
+                            _ => {
+                                unsure += 1;
+                                plant.within(*point, kill_sq)
+                            }
                         };
                         if consumed {
                             if !renew {
@@ -1787,6 +1844,7 @@ fn colonize(
                         }
                         let count = row[1] as usize;
                         let claimed = if count > CANDIDATES {
+                            full += 1;
                             claimant(&apices, &search, *point, influence_sq, cone, hint)
                         } else {
                             let mut best = None;
@@ -1809,19 +1867,27 @@ fn colonize(
                             ));
                         }
                     }
+                    narrow::times::add(narrow::times::UNSURE, unsure);
+                    narrow::times::add(narrow::times::FULL, full);
                     pulls
                 },
             ));
+            drop(lease);
+            narrow::times::lap(narrow::times::DECIDE, &mut clock);
         }
     }
     let pulled = pulled.unwrap_or_else(|| {
+        let lease = Lease::take(want);
         in_layers(
             layers(&mut lattice.cells, low[1], layer_cells, (y0, y1)),
-            threads,
+            lease.threads(),
             &layer_pulls,
         )
     });
-    drop(lease);
+    if large {
+        narrow::times::add(narrow::times::LARGE, 1);
+        narrow::times::lap(narrow::times::LARGE_TIME, &mut { started });
+    }
     for pulls in pulled {
         for (index, pull) in pulls {
             sums[index as usize] += pull;
@@ -2155,53 +2221,94 @@ fn layers(
         .collect()
 }
 
-/// A narrowing's work: the admitted points, layer by layer, each with its
-/// cell in the plant's grid and in `coarse`, the apices' grid with cells at
-/// least the influence wide (so the 27 round a point's hold every apex
-/// that can perceive it), and both grids' items in 32-bit.
+/// One layer's points for a narrowing, as they are admitted: where each
+/// lies in the layer and the point; in 32-bit the point and its cells in
+/// the plant's grid and in the coarse apex grid; and the farthest any lies
+/// from the origin along an axis.
+#[derive(Default)]
+struct Admitted {
+    points: Vec<(usize, Vec3)>,
+    narrow: Vec<[f32; 4]>,
+    plant_keys: Vec<[i32; 4]>,
+    apex_keys: Vec<[i32; 4]>,
+    extent: f64,
+}
+
+impl Admitted {
+    fn push(&mut self, at: usize, point: Vec3, plant: &Grid<Vec3>, coarse: &Grid<Apex>) {
+        self.points.push((at, point));
+        self.extent = self.extent.max(farthest(point));
+        self.narrow.push(single(point));
+        self.plant_keys.push(relative_key(plant, point));
+        self.apex_keys.push(relative_key(coarse, point));
+    }
+}
+
+/// How far `point` lies from the origin along its farthest axis.
+fn farthest(point: Vec3) -> f64 {
+    point.x.abs().max(point.y.abs()).max(point.z.abs())
+}
+
+/// A point in 32-bit, as a narrowing holds it.
 #[allow(clippy::cast_possible_truncation)]
+fn single(point: Vec3) -> [f32; 4] {
+    [point.x as f32, point.y as f32, point.z as f32, 0.0]
+}
+
+/// A point's cell in `grid`, counted from the grid's low corner; a key
+/// past the grid's edge by more than a cell has no cell near it.
+fn relative_key<T: Copy>(grid: &Grid<T>, point: Vec3) -> [i32; 4] {
+    let key = grid.key(point);
+    let at = |axis: usize| {
+        let value = (key[axis] - grid.low[axis]).clamp(-2, grid.size[axis] + 1);
+        i32::try_from(value).unwrap_or(-2)
+    };
+    [at(0), at(1), at(2), 0]
+}
+
+/// A narrowing's work: the admitted points, layer by layer, and both
+/// grids' items in 32-bit: the plant's points, and the apices of `coarse`
+/// (cells at least the influence wide, so the 27 round a point's hold every
+/// apex that can perceive it) as position then heading.
 fn narrow_job(
-    admitted: &[Vec<(usize, Vec3)>],
+    admitted: &[Admitted],
     plant: &Grid<Vec3>,
     coarse: &Grid<Apex>,
     (kill_sq, influence_sq, cone): (f64, f64, f64),
 ) -> narrow::Job {
-    let mut extent = 0.0_f64;
-    let mut wide = |point: Vec3| {
-        extent = extent
-            .max(point.x.abs())
-            .max(point.y.abs())
-            .max(point.z.abs());
-        [point.x as f32, point.y as f32, point.z as f32, 0.0]
-    };
-    // A key past the grid's edge by more than a cell has no cell near it.
-    let relative = |key: [i64; 3], grid_low: [i64; 3], size: [i64; 3]| {
-        let at = |axis: usize| {
-            let value = (key[axis] - grid_low[axis]).clamp(-2, size[axis] + 1);
-            i32::try_from(value).unwrap_or(-2)
-        };
-        [at(0), at(1), at(2), 0]
-    };
     let cells = |grid_size: [i64; 3], starts: &[u32]| narrow::Cells {
         dims: grid_size.map(|size| i32::try_from(size).unwrap_or(0)),
         starts: starts.to_vec(),
     };
-    let mut job = narrow::Job::default();
-    for (_, point) in admitted.iter().flatten() {
-        job.points.push(wide(*point));
-        job.plant_keys
-            .push(relative(plant.key(*point), plant.low, plant.size));
-        job.apex_keys
-            .push(relative(coarse.key(*point), coarse.low, coarse.size));
+    let total = admitted.iter().map(|layer| layer.points.len()).sum();
+    let mut job = narrow::Job {
+        points: Vec::with_capacity(total),
+        plant_keys: Vec::with_capacity(total),
+        apex_keys: Vec::with_capacity(total),
+        plant: cells(plant.size, &plant.starts),
+        apices: cells(coarse.size, &coarse.starts),
+        ..narrow::Job::default()
+    };
+    let mut extent = 0.0_f64;
+    for layer in admitted {
+        job.points.extend_from_slice(&layer.narrow);
+        job.plant_keys.extend_from_slice(&layer.plant_keys);
+        job.apex_keys.extend_from_slice(&layer.apex_keys);
+        extent = extent.max(layer.extent);
     }
-    job.plant = cells(plant.size, &plant.starts);
-    job.plant_items = plant.items.iter().map(|point| wide(*point)).collect();
-    job.apices = cells(coarse.size, &coarse.starts);
+    job.plant_items = plant
+        .items
+        .iter()
+        .map(|point| {
+            extent = extent.max(farthest(*point));
+            single(*point)
+        })
+        .collect();
+    job.apex_items.reserve_exact(2 * coarse.items.len());
     for apex in &coarse.items {
-        job.apex_items.push(wide(apex.position));
-        let heading = apex.heading;
-        job.apex_items
-            .push([heading.x as f32, heading.y as f32, heading.z as f32, 0.0]);
+        extent = extent.max(farthest(apex.position));
+        job.apex_items.push(single(apex.position));
+        job.apex_items.push(single(apex.heading));
     }
     let reach = kill_sq.max(influence_sq).sqrt();
     job.settings = narrow::Settings::new(kill_sq, influence_sq, cone, extent, reach);

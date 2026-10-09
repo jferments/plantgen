@@ -27,6 +27,12 @@ fn idle() -> &'static AtomicIsize {
     IDLE.get_or_init(|| AtomicIsize::new(isize::try_from(available()).unwrap_or(1)))
 }
 
+/// How many cores no worker or lease holds now.
+#[must_use]
+pub fn idle_now() -> usize {
+    usize::try_from(idle().load(Ordering::Relaxed)).unwrap_or(0)
+}
+
 /// A core a worker holds while it grows or bakes.
 pub struct Seat(());
 

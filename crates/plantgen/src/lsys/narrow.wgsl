@@ -78,9 +78,15 @@ fn main(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) g
         return;
     }
 
-    // The nearest bud that certainly perceives the point.
+    // One walk over the buds near the point: the CANDIDATES nearest that
+    // may take it, sorted by squared distance (a later bud after an equal
+    // one), and the nearest that certainly does.
     let apex_key = apex_keys[index].xyz;
     var sure = 3.0e38;
+    var kept_d2: array<f32, 8>;
+    var kept_bud: array<u32, 8>;
+    var kept = 0u;
+    var dropped = false;
     for (var dz = -1; dz <= 1; dz++) {
         for (var dy = -1; dy <= 1; dy++) {
             for (var dx = -1; dx <= 1; dx++) {
@@ -91,30 +97,7 @@ fn main(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) g
                 for (var bud = apex_starts[at]; bud < apex_starts[at + 1]; bud++) {
                     let d = point - apex_items[2u * bud].xyz;
                     let d2 = dot(d, d);
-                    if (d2 < settings.near_sq || d2 > settings.influence_sq - settings.margin_sq) {
-                        continue;
-                    }
-                    let facing = dot(apex_items[2u * bud + 1u].xyz, d) / sqrt(d2);
-                    if (facing >= settings.cone + settings.margin_facing) {
-                        sure = min(sure, d2);
-                    }
-                }
-            }
-        }
-    }
-    // Every bud that may be the nearest that perceives it.
-    var count = 0u;
-    for (var dz = -1; dz <= 1; dz++) {
-        for (var dy = -1; dy <= 1; dy++) {
-            for (var dx = -1; dx <= 1; dx++) {
-                let at = cell(apex_key + vec3<i32>(dx, dy, dz), settings.apex_dims);
-                if (at < 0) {
-                    continue;
-                }
-                for (var bud = apex_starts[at]; bud < apex_starts[at + 1]; bud++) {
-                    let d = point - apex_items[2u * bud].xyz;
-                    let d2 = dot(d, d);
-                    if (d2 > settings.influence_sq + settings.margin_sq || d2 > sure + 2.0 * settings.margin_sq) {
+                    if (d2 > settings.influence_sq + settings.margin_sq) {
                         continue;
                     }
                     if (d2 >= settings.near_sq) {
@@ -122,14 +105,44 @@ fn main(@builtin(global_invocation_id) id: vec3<u32>, @builtin(num_workgroups) g
                         if (facing < settings.cone - settings.margin_facing) {
                             continue;
                         }
+                        if (facing >= settings.cone + settings.margin_facing && d2 <= settings.influence_sq - settings.margin_sq) {
+                            sure = min(sure, d2);
+                        }
                     }
-                    if (count < CANDIDATES) {
-                        narrowed[base + 2u + count] = bud;
+                    if (kept == CANDIDATES) {
+                        dropped = true;
+                        if (d2 >= kept_d2[CANDIDATES - 1u]) {
+                            continue;
+                        }
+                    } else {
+                        kept += 1u;
                     }
-                    count += 1u;
+                    var slot = kept - 1u;
+                    while (slot > 0u && kept_d2[slot - 1u] > d2) {
+                        kept_d2[slot] = kept_d2[slot - 1u];
+                        kept_bud[slot] = kept_bud[slot - 1u];
+                        slot -= 1u;
+                    }
+                    kept_d2[slot] = d2;
+                    kept_bud[slot] = bud;
                 }
             }
         }
+    }
+    // The candidates: those kept no farther than the sure one plus twice
+    // the margin. If a bud was dropped and every kept one is that near, a
+    // dropped one may be too: the full search decides.
+    let limit = sure + 2.0 * settings.margin_sq;
+    var count = 0u;
+    while (count < kept && kept_d2[count] <= limit) {
+        count += 1u;
+    }
+    if (dropped && count == kept) {
+        narrowed[base + 1u] = CANDIDATES + 1u;
+        return;
+    }
+    for (var slot = 0u; slot < count; slot++) {
+        narrowed[base + 2u + slot] = kept_bud[slot];
     }
     narrowed[base + 1u] = count;
 }

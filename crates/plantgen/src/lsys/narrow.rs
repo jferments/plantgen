@@ -123,7 +123,12 @@ fn dot(a: [f32; 3], b: [f32; 3]) -> f32 {
     a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
 }
 
-/// The narrowing done in Rust, as the GPU's shader does it.
+/// The narrowing done in Rust, as the GPU's shader does it: one walk over
+/// the buds near each point, keeping the `CANDIDATES` nearest that may take
+/// it and the nearest that certainly does. Those kept no farther than the
+/// latter plus twice the margin are the candidates; if a bud was dropped
+/// and every kept one is that near, the point is sent to the full search
+/// (the count says more than `CANDIDATES`).
 #[must_use]
 pub fn on_cpu(job: &Job) -> Vec<u32> {
     let settings = job.settings;
@@ -146,42 +151,116 @@ pub fn on_cpu(job: &Job) -> Vec<u32> {
         if out[0] == CONSUMED {
             continue;
         }
-        let buds = || near(job.apex_keys[index], &job.apices, &job.apex_items, 2);
         let mut sure = f32::MAX;
-        for (_, bud) in buds() {
+        let mut kept: Vec<(f32, u32)> = Vec::with_capacity(CANDIDATES + 1);
+        let mut dropped = false;
+        for (bud_index, bud) in near(job.apex_keys[index], &job.apices, &job.apex_items, 2) {
             let d = sub(*point, bud[0]);
             let d2 = dot(d, d);
-            if d2 < settings.near_sq || d2 > settings.influence_sq - settings.margin_sq {
-                continue;
-            }
-            let heading = [bud[1][0], bud[1][1], bud[1][2]];
-            if dot(heading, d) / d2.sqrt() >= settings.cone + settings.margin_facing {
-                sure = sure.min(d2);
-            }
-        }
-        let mut count = 0_usize;
-        for (bud_index, bud) in buds() {
-            let d = sub(*point, bud[0]);
-            let d2 = dot(d, d);
-            if d2 > settings.influence_sq + settings.margin_sq
-                || d2 > sure + 2.0 * settings.margin_sq
-            {
+            if d2 > settings.influence_sq + settings.margin_sq {
                 continue;
             }
             if d2 >= settings.near_sq {
                 let heading = [bud[1][0], bud[1][1], bud[1][2]];
-                if dot(heading, d) / d2.sqrt() < settings.cone - settings.margin_facing {
+                let facing = dot(heading, d) / d2.sqrt();
+                if facing < settings.cone - settings.margin_facing {
                     continue;
                 }
+                if facing >= settings.cone + settings.margin_facing
+                    && d2 <= settings.influence_sq - settings.margin_sq
+                {
+                    sure = sure.min(d2);
+                }
             }
-            if count < CANDIDATES {
-                out[2 + count] = u32::try_from(bud_index).unwrap_or(u32::MAX);
+            let at = kept.partition_point(|(kept_d2, _)| *kept_d2 <= d2);
+            kept.insert(at, (d2, u32::try_from(bud_index).unwrap_or(u32::MAX)));
+            if kept.len() > CANDIDATES {
+                kept.pop();
+                dropped = true;
             }
-            count += 1;
+        }
+        let limit = sure + 2.0 * settings.margin_sq;
+        let count = kept.iter().take_while(|(d2, _)| *d2 <= limit).count();
+        if dropped && count == kept.len() {
+            out[1] = u32::try_from(CANDIDATES + 1).unwrap_or(u32::MAX);
+            continue;
+        }
+        for (slot, (_, bud)) in out[2..].iter_mut().zip(&kept[..count]) {
+            *slot = *bud;
         }
         out[1] = u32::try_from(count).unwrap_or(u32::MAX);
     }
     out
+}
+
+/// Where growth's light and space spend their time, summed over the
+/// process: `PLANTGEN_GPU_TIMES=1` makes `plantc grow` print it.
+pub mod times {
+    use std::sync::atomic::{AtomicU64, Ordering};
+    use std::time::Instant;
+
+    static COUNTS: [AtomicU64; 13] = [const { AtomicU64::new(0) }; 13];
+
+    /// Steps that ran light or space, and nanoseconds in them.
+    pub(crate) const STEPS: usize = 0;
+    pub(crate) const LIGHT_SPACE: usize = 1;
+    /// Space colonization's large steps, and nanoseconds in them.
+    pub(crate) const LARGE: usize = 2;
+    pub(crate) const LARGE_TIME: usize = 3;
+    /// Steps narrowed, their points, the points whose consumption 64-bit
+    /// decided and those sent to the full search.
+    pub(crate) const NARROWED: usize = 4;
+    pub(crate) const POINTS: usize = 5;
+    pub(crate) const UNSURE: usize = 6;
+    pub(crate) const FULL: usize = 7;
+    /// Nanoseconds gathering the points (with their cells), assembling the
+    /// job, narrowing (on a GPU: uploading, dispatching and reading back)
+    /// and deciding.
+    pub(crate) const GATHER: usize = 8;
+    pub(crate) const ASSEMBLE: usize = 9;
+    pub(crate) const NARROW: usize = 10;
+    pub(crate) const DECIDE: usize = 11;
+    /// Nanoseconds waiting for the GPU once light was done.
+    pub(crate) const WAIT: usize = 12;
+
+    pub(crate) fn add(slot: usize, value: usize) {
+        COUNTS[slot].fetch_add(value as u64, Ordering::Relaxed);
+    }
+
+    /// Add the time since `since` to `slot`, and start again.
+    pub(crate) fn lap(slot: usize, since: &mut Instant) {
+        let now = Instant::now();
+        let nanos = u64::try_from(now.duration_since(*since).as_nanos()).unwrap_or(u64::MAX);
+        COUNTS[slot].fetch_add(nanos, Ordering::Relaxed);
+        *since = now;
+    }
+
+    /// One line: the counts and times so far.
+    #[must_use]
+    #[allow(clippy::cast_precision_loss)]
+    pub fn report() -> String {
+        let value = |slot: usize| COUNTS[slot].load(Ordering::Relaxed);
+        let seconds = |slot: usize| value(slot) as f64 * 1e-9;
+        format!(
+            "light and space {:.1} s in {} steps; space colonization's large steps {:.1} s in {}, \
+             {} narrowed ({} points; on the CPU {} consumption tests, {} full searches): \
+             gathering {:.1} s, assembling {:.1} s, narrowing {:.1} s, waiting for the GPU \
+             after light {:.1} s, deciding {:.1} s",
+            seconds(LIGHT_SPACE),
+            value(STEPS),
+            seconds(LARGE_TIME),
+            value(LARGE),
+            value(NARROWED),
+            value(POINTS),
+            value(UNSURE),
+            value(FULL),
+            seconds(GATHER),
+            seconds(ASSEMBLE),
+            seconds(NARROW),
+            seconds(WAIT),
+            seconds(DECIDE),
+        )
+    }
 }
 
 /// What narrows a step's points: a GPU, or the same narrowing in Rust.
@@ -207,6 +286,16 @@ pub fn emulated<R>(work: impl FnOnce() -> R) -> R {
 }
 
 impl Narrower {
+    /// Whether a GPU narrows large steps in this process.
+    #[must_use]
+    pub fn gpu() -> bool {
+        #[cfg(feature = "gpu")]
+        let gpu = super::gpu::Gpu::get().is_some();
+        #[cfg(not(feature = "gpu"))]
+        let gpu = false;
+        gpu
+    }
+
     /// What narrows a step's points, if anything: a GPU for a `large`
     /// step, where the process has one.
     #[must_use]
@@ -228,13 +317,20 @@ impl Narrower {
     }
 
     /// The narrowing of `job`, `STRIDE` values a point; `None` if it
-    /// failed and the full search must do.
+    /// failed and the full search must do. A GPU runs `meanwhile` on this
+    /// thread while it works.
     #[must_use]
-    pub fn narrow(self, job: &Job) -> Option<Vec<u32>> {
+    pub fn narrow(self, job: &Job, meanwhile: &mut dyn FnMut()) -> Option<Vec<u32>> {
         match self {
             #[cfg(feature = "gpu")]
-            Self::Gpu(gpu) => gpu.narrow(job),
-            Self::Rust => Some(on_cpu(job)),
+            Self::Gpu(gpu) => gpu.narrow(job, meanwhile),
+            Self::Rust => {
+                let _ = meanwhile;
+                let mut clock = std::time::Instant::now();
+                let narrowed = on_cpu(job);
+                times::lap(times::NARROW, &mut clock);
+                Some(narrowed)
+            }
         }
     }
 }
