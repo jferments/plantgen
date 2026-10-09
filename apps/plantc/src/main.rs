@@ -204,7 +204,9 @@ Usage:
       or every value that cites the source ID: the file holding its note,
       by its path in the library, and the note's path, one per line.
 
-A species is an id (see `plantc list`) or a path to a spec file.
+A species is an id (see `plantc list`) or a path to a spec file; a spec
+file whose id is a species of the library stands on that species' rank
+files.
 Every command accepts --library DIR: a folder holding a species tree,
 library/<family>/<genus>/<id>/spec.json, and programs, programs/<name>.lsys,
 which replace built-in species and programs of the same id or name and add
@@ -324,9 +326,8 @@ fn load_spec(name: &str) -> Result<PlantSpec, String> {
     if Path::new(name).extension().is_some_and(|ext| ext == "json") {
         let text =
             fs::read_to_string(name).map_err(|error| format!("cannot read {name}: {error}"))?;
-        // Its own traits, turned into values by its own rules.
-        let text = plantgen::inherit::effective_text(name, &text, &[], library().program_params())?
-            .unwrap_or(text);
+        // On its species' rank files, if the library has its species.
+        let text = library().effective_text(name, &text)?.unwrap_or(text);
         PlantSpec::from_json_in(&text, library()).map_err(|error| error.to_string())
     } else {
         library().spec(name).map_err(|error| error.to_string())
