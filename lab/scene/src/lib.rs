@@ -389,8 +389,11 @@ impl Shot {
 pub struct Scene {
     pub wood: SceneMesh,
     pub cards: SceneMesh,
-    /// Opaque solids in vertex colours: spines and the scale.
+    /// Opaque solids in vertex colours: spines.
     pub solids: SceneMesh,
+    /// The scale beside the plant (a figure or a banded rod), in vertex
+    /// colours; empty without one.
+    pub scale: SceneMesh,
     /// The cards cut into opaque triangles in their colours, when the shot
     /// asks for it ([`Shot::cut_cards`]); empty otherwise.
     pub cut_cards: SceneMesh,
@@ -427,6 +430,52 @@ pub struct Facts {
     pub triangles: usize,
     pub cards: usize,
     pub on_host: bool,
+    pub export: ExportSizes,
+}
+
+/// How big the plant on screen would be as a file, in bytes.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub struct ExportSizes {
+    /// Exactly: this level's mesh as a PlantGen package stores it
+    /// (`APMESH1`, [`plantgen::package::encoded_mesh_size`]).
+    pub package_mesh: usize,
+    /// Exactly: the card templates as one PNG, layers stacked.
+    pub textures_png: usize,
+    /// About: the drawn triangles as glTF binary (positions, normals,
+    /// texture coordinates and RGBA colours as floats, 32-bit indices),
+    /// with the textures PNG.
+    pub glb: usize,
+    /// About: the drawn triangles as Wavefront OBJ text with six decimals,
+    /// with the textures PNG.
+    pub obj: usize,
+}
+
+impl ExportSizes {
+    /// The sizes of the plant drawn as `meshes`, packaged as `plant`, with
+    /// card templates `layers`.
+    #[must_use]
+    pub fn of(meshes: &[&SceneMesh], plant: &PlantMesh, layers: &TemplateLayers) -> Self {
+        let textures_png =
+            plantgen::raster::encode_png(layers.size, layers.size * layers.layers, &layers.rgba)
+                .map_or(layers.rgba.len(), |png| png.len());
+        let vertices: usize = meshes.iter().map(|mesh| mesh.positions.len()).sum();
+        let indices: usize = meshes.iter().map(|mesh| mesh.indices.len()).sum();
+        // The JSON chunk: a few accessors, buffer views and a material
+        // per mesh.
+        let json = 1_200 + 900 * meshes.len();
+        let glb = 12 + 8 + json + 8 + vertices * (12 + 12 + 8 + 16) + indices * 4 + textures_png;
+        // "v x y z", "vn x y z", "vt u v" at six decimals, and "f a/a/a b/b/b
+        // c/c/c" with indices of the vertex count's digits.
+        let digits = vertices.max(1).to_string().len();
+        let face = 2 + 3 * (3 * digits + 3);
+        let obj = vertices * (36 + 30 + 20) + indices / 3 * face + 200 + textures_png;
+        Self {
+            package_mesh: plantgen::package::encoded_mesh_size(plant),
+            textures_png,
+            glb,
+            obj,
+        }
+    }
 }
 
 /// Load a spec: a library id, or the JSON text of a spec.
@@ -566,31 +615,18 @@ pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Sc
     } else {
         SceneMesh::default()
     };
-    let mut solids = SceneMesh::from_mesh(&spines);
+    let solids = SceneMesh::from_mesh(&spines);
+    let layers = TemplateLayers::of(templates);
+    let export = ExportSizes::of(&[&wood, &cards, &solids], plant, &layers);
 
-    let bounds = [&wood, &cards, &solids]
-        .into_iter()
-        .filter_map(SceneMesh::bounds)
-        .reduce(|(l0, h0), (l1, h1)| {
-            (
-                Vec3::new(l0.x.min(l1.x), l0.y.min(l1.y), l0.z.min(l1.z)),
-                Vec3::new(h0.x.max(h1.x), h0.y.max(h1.y), h0.z.max(h1.z)),
-            )
-        })
-        .unwrap_or((Vec3::ZERO, Vec3::new(1.0, 1.0, 1.0)));
-    let (low, high) = bounds;
-    let reach = low
-        .x
-        .abs()
-        .max(high.x.abs())
-        .max(low.z.abs())
-        .max(high.z.abs())
-        .max(0.1);
+    let (reach, high) = reach_and_top(&[&wood, &cards, &solids]);
     let framed = shot.frame_height.unwrap_or(high.y).max(0.05);
     let (scale_mesh, scale_height, gap) = scale(framed, reach);
-    if shot.scale && shot.focus.is_none() {
-        append(&mut solids, &scale_mesh);
-    }
+    let scale_mesh = if shot.scale && shot.focus.is_none() {
+        scale_mesh
+    } else {
+        SceneMesh::default()
+    };
     let framing = frame(shot, reach, framed, scale_height, gap);
     let (shadow_low, shadow_high) = {
         let pad = framed * 1.5 + reach;
@@ -615,14 +651,16 @@ pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Sc
         triangles: wood.triangle_count() + cards.triangle_count() + solids.triangle_count(),
         cards: plant.cards.len(),
         on_host: drawing.on_host,
+        export,
     };
     #[allow(clippy::cast_possible_truncation)]
     Scene {
         wood,
         cards,
         solids,
+        scale: scale_mesh,
         cut_cards: cut,
-        templates: TemplateLayers::of(templates),
+        templates: layers,
         template_accents: template_accents(templates),
         ground_radius: (reach * 1.4 + gap + 0.6).max(reach + 0.3) as f32,
         framing,
@@ -631,6 +669,29 @@ pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Sc
         shadow_bounds: (shadow_low.to_f32(), shadow_high.to_f32()),
         facts,
     }
+}
+
+/// How far `meshes` reach from the plant's axis (at least 10 cm), and
+/// their highest corner.
+fn reach_and_top(meshes: &[&SceneMesh]) -> (f64, Vec3) {
+    let (low, high) = meshes
+        .iter()
+        .filter_map(|mesh| mesh.bounds())
+        .reduce(|(l0, h0), (l1, h1)| {
+            (
+                Vec3::new(l0.x.min(l1.x), l0.y.min(l1.y), l0.z.min(l1.z)),
+                Vec3::new(h0.x.max(h1.x), h0.y.max(h1.y), h0.z.max(h1.z)),
+            )
+        })
+        .unwrap_or((Vec3::ZERO, Vec3::new(1.0, 1.0, 1.0)));
+    let reach = low
+        .x
+        .abs()
+        .max(high.x.abs())
+        .max(low.z.abs())
+        .max(high.z.abs())
+        .max(0.1);
+    (reach, high)
 }
 
 /// Every card of `plant` (whose template is below `first_excluded`) cut
@@ -747,15 +808,6 @@ fn cards(mesh: &Mesh, templates: &Templates) -> SceneMesh {
     }
     out.darkening = darkening;
     out
-}
-
-fn append(to: &mut SceneMesh, mesh: &SceneMesh) {
-    let first = u32::try_from(to.positions.len()).unwrap_or(u32::MAX);
-    to.positions.extend(&mesh.positions);
-    to.normals.extend(&mesh.normals);
-    to.uvs.extend(&mesh.uvs);
-    to.colors.extend(&mesh.colors);
-    to.indices.extend(mesh.indices.iter().map(|i| i + first));
 }
 
 fn vec3(p: [f32; 3]) -> Vec3 {
