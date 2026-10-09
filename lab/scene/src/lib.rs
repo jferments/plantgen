@@ -59,6 +59,10 @@ pub struct SceneMesh {
     /// Cards only: how much the template's accent colour is darkened for
     /// this card (`Templates::albedo`). Empty on other meshes.
     pub darkening: Vec<f32>,
+    /// Wood only: the stem's radius at each vertex, metres, which the bark
+    /// pattern is drawn by ([`Scene::bark`]); 0 off bark. Empty on other
+    /// meshes and on wood without bark.
+    pub bark_radius: Vec<f32>,
     pub indices: Vec<u32>,
 }
 
@@ -84,6 +88,12 @@ impl SceneMesh {
                 .map(|c| [c[0], c[1], c[2], 1.0])
                 .collect(),
             darkening: Vec::new(),
+            // PlantGen marks bark with the negative radius in alpha.
+            bark_radius: if mesh.colors.iter().any(|c| c[3] < 0.0) {
+                mesh.colors.iter().map(|c| (-c[3]).max(0.0)).collect()
+            } else {
+                Vec::new()
+            },
             indices: mesh.indices.clone(),
         }
     }
@@ -400,6 +410,9 @@ pub struct Scene {
     pub templates: TemplateLayers,
     /// Each layer's accent colour, linear RGB.
     pub template_accents: Vec<[f32; 3]>,
+    /// The bark pattern drawn on the wood ([`SceneMesh::bark_radius`]);
+    /// `None` for plain bark.
+    pub bark: Option<plantgen::bark::BarkParams>,
     /// The ground: a patch of this radius, metres, centred under the
     /// plant, reaching past its crown and its scale.
     pub ground_radius: f32,
@@ -661,6 +674,7 @@ pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Sc
         scale: scale_mesh,
         cut_cards: cut,
         templates: layers,
+        bark: templates.bark,
         template_accents: template_accents(templates),
         ground_radius: (reach * 1.4 + gap + 0.6).max(reach + 0.3) as f32,
         framing,
