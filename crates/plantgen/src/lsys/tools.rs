@@ -33,7 +33,7 @@
 //! machine.
 
 use std::borrow::Cow;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::sync::{Mutex, PoisonError};
 
 use serde::{Deserialize, Serialize};
@@ -245,36 +245,112 @@ impl Lattice {
 }
 
 /// A host plant's wood as `host@1` sees it: its segments as capsules, in a
-/// grid of `HOST_CELL` cells for nearest-point queries (plant forms F7).
+/// grid of `HOST_CELL` cells (wider for a host over 127 m across) for
+/// nearest-point queries (plant forms F7).
 #[derive(Debug, Clone, PartialEq)]
 pub struct Host {
     capsules: Vec<(Vec3, Vec3, f64)>,
-    cells: std::collections::HashMap<(i32, i32, i32), Vec<u32>>,
+    /// Each capsule's lowest `HOST_CELL` cell.
+    lowest: Vec<[i32; 3]>,
+    /// The grid: cell edge, lowest cell, cells per axis, and where each
+    /// cell's capsules start in `items` (cell `(x · size_y + y) · size_z +
+    /// z` from the lowest), and one past the last.
+    cell: f64,
+    low: [i32; 3],
+    size: [i32; 3],
+    starts: Vec<u32>,
+    items: Vec<u32>,
 }
 
 /// Edge of a host grid cell, metres.
 pub const HOST_CELL: f64 = 0.5;
+/// The most cells a host's grid spans along an axis.
+const HOST_CELLS: f64 = 256.0;
 
 impl Host {
     /// The host whose wood is `capsules`: each a segment's start, end and
     /// radius, in the guest's frame (the host stands at the origin).
     #[must_use]
     pub fn new(capsules: Vec<(Vec3, Vec3, f64)>) -> Self {
-        let mut cells: std::collections::HashMap<(i32, i32, i32), Vec<u32>> =
-            std::collections::HashMap::new();
-        for (index, &(a, b, r)) in capsules.iter().enumerate() {
-            let low = cell_of(a.min(b) - Vec3::new(r, r, r));
-            let high = cell_of(a.max(b) + Vec3::new(r, r, r));
-            for x in low.0..=high.0 {
-                for y in low.1..=high.1 {
-                    for z in low.2..=high.2 {
-                        #[allow(clippy::cast_possible_truncation)]
-                        cells.entry((x, y, z)).or_default().push(index as u32);
-                    }
+        let bounds: Vec<(Vec3, Vec3)> = capsules
+            .iter()
+            .map(|&(a, b, r)| {
+                let r = Vec3::new(r, r, r);
+                (a.min(b) - r, a.max(b) + r)
+            })
+            .collect();
+        let lowest = bounds
+            .iter()
+            .map(|(low, _)| cell_of(*low, HOST_CELL))
+            .collect();
+        let mut low = Vec3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY);
+        let mut high = -low;
+        for (first, last) in &bounds {
+            low = low.min(*first);
+            high = high.max(*last);
+        }
+        let span = high - low;
+        let extent = span.x.max(span.y).max(span.z);
+        let cell = if extent.is_finite() {
+            HOST_CELL.max(extent / (HOST_CELLS - 2.0))
+        } else {
+            HOST_CELL
+        };
+        let mut host = Self {
+            capsules,
+            lowest,
+            cell,
+            low: [0; 3],
+            size: [0; 3],
+            starts: vec![0],
+            items: Vec::new(),
+        };
+        if bounds.is_empty() {
+            return host;
+        }
+        let (first, last) = (cell_of(low, cell), cell_of(high, cell));
+        host.low = first;
+        host.size = [0, 1, 2].map(|axis| last[axis] - first[axis] + 1);
+        let spans: Vec<([i32; 3], [i32; 3])> = bounds
+            .iter()
+            .map(|(low, high)| (cell_of(*low, cell), cell_of(*high, cell)))
+            .collect();
+        let cells = host
+            .size
+            .iter()
+            .map(|size| usize::try_from(*size).unwrap_or(0))
+            .product::<usize>();
+        let mut starts = vec![0_u32; cells + 1];
+        for (low, high) in &spans {
+            host.each_cell(*low, *high, &mut |at| starts[at + 1] += 1);
+        }
+        for at in 1..starts.len() {
+            starts[at] += starts[at - 1];
+        }
+        let mut next = starts.clone();
+        let mut items = vec![0_u32; starts[cells] as usize];
+        for (index, (low, high)) in (0_u32..).zip(&spans) {
+            host.each_cell(*low, *high, &mut |at| {
+                items[next[at] as usize] = index;
+                next[at] += 1;
+            });
+        }
+        host.starts = starts;
+        host.items = items;
+        host
+    }
+
+    /// Every cell from `low` to `high`, x, then y, then z.
+    fn each_cell(&self, low: [i32; 3], high: [i32; 3], visit: &mut dyn FnMut(usize)) {
+        for x in low[0]..=high[0] {
+            for y in low[1]..=high[1] {
+                for z in low[2]..=high[2] {
+                    let at = ((x - self.low[0]) * self.size[1] + (y - self.low[1])) * self.size[2]
+                        + (z - self.low[2]);
+                    visit(usize::try_from(at).unwrap_or(0));
                 }
             }
         }
-        Self { capsules, cells }
     }
 
     /// The distance from `point` to the host's surface (negative inside
@@ -282,42 +358,134 @@ impl Host {
     /// the host is within `reach`.
     #[must_use]
     pub fn nearest(&self, point: Vec3, reach: f64) -> Option<(f64, Vec3)> {
-        let low = cell_of(point - Vec3::new(reach, reach, reach));
-        let high = cell_of(point + Vec3::new(reach, reach, reach));
-        let mut best: Option<(f64, Vec3)> = None;
-        let mut seen = HashSet::new();
-        for x in low.0..=high.0 {
-            for y in low.1..=high.1 {
-                for z in low.2..=high.2 {
-                    let Some(list) = self.cells.get(&(x, y, z)) else {
+        self.search(point, reach, &mut Seen::new(self.capsules.len()))
+    }
+
+    /// [`Host::nearest`] for each of `points`, side by side.
+    #[must_use]
+    pub fn nearest_each(&self, points: &[Vec3], reach: f64) -> Vec<Option<(f64, Vec3)>> {
+        let lease = Lease::take(if points.len() > 2048 {
+            cores::per_task()
+        } else {
+            1
+        });
+        let threads = lease.threads();
+        let chunk = if threads > 1 {
+            points.len().div_ceil(4 * threads).max(256)
+        } else {
+            points.len().max(1)
+        };
+        cores::map(points.chunks(chunk).collect(), threads, &|chunk| {
+            let mut seen = Seen::new(self.capsules.len());
+            chunk
+                .iter()
+                .map(|point| self.search(*point, reach, &mut seen))
+                .collect::<Vec<_>>()
+        })
+        .into_iter()
+        .flatten()
+        .collect()
+    }
+
+    /// Every capsule in the cells within `reach` of `point`, each once. The
+    /// nearest surface wins; a tie goes to the capsule a walk over the
+    /// `HOST_CELL` cells round the point (x, then y, then z, each cell's
+    /// capsules in order) meets first, whatever cells the grid has.
+    fn search(&self, point: Vec3, reach: f64, seen: &mut Seen) -> Option<(f64, Vec3)> {
+        let corner = Vec3::new(reach, reach, reach);
+        let (low, high) = (
+            cell_of(point - corner, self.cell),
+            cell_of(point + corner, self.cell),
+        );
+        let [(x0, x1), (y0, y1), (z0, z1)] = [0, 1, 2].map(|axis| {
+            (
+                low[axis].max(self.low[axis]),
+                high[axis].min(self.low[axis] + self.size[axis] - 1),
+            )
+        });
+        if x0 > x1 || y0 > y1 || z0 > z1 {
+            return None;
+        }
+        seen.next();
+        let walk = cell_of(point - corner, HOST_CELL);
+        // Where a walk over `HOST_CELL` cells meets a capsule first.
+        let met = |index: u32| {
+            let lowest = self.lowest[index as usize];
+            ([0, 1, 2].map(|axis| lowest[axis].max(walk[axis])), index)
+        };
+        let mut best: Option<(f64, Vec3, u32)> = None;
+        for x in x0..=x1 {
+            for y in y0..=y1 {
+                let row = ((x - self.low[0]) * self.size[1] + (y - self.low[1])) * self.size[2]
+                    - self.low[2];
+                let from = self.starts[usize::try_from(row + z0).unwrap_or(0)] as usize;
+                let to = self.starts[usize::try_from(row + z1 + 1).unwrap_or(0)] as usize;
+                for &index in &self.items[from..to] {
+                    if !seen.first(index) {
                         continue;
-                    };
-                    for &index in list {
-                        if !seen.insert(index) {
-                            continue;
-                        }
-                        let (a, b, r) = self.capsules[index as usize];
-                        let axis = b - a;
-                        let along = (point - a).dot(axis) / axis.dot(axis).max(1.0e-12);
-                        let closest = a + axis * along.clamp(0.0, 1.0);
-                        let offset = closest - point;
-                        let centre = offset.length();
-                        let surface = centre - r;
-                        if surface <= reach && best.is_none_or(|(d, _)| surface < d) {
-                            best = Some((surface, offset * (1.0 / centre.max(1.0e-9))));
-                        }
+                    }
+                    let (a, b, r) = self.capsules[index as usize];
+                    let axis = b - a;
+                    let along = (point - a).dot(axis) / axis.dot(axis).max(1.0e-12);
+                    let closest = a + axis * along.clamp(0.0, 1.0);
+                    let offset = closest - point;
+                    let centre = offset.length();
+                    let surface = centre - r;
+                    if surface > reach {
+                        continue;
+                    }
+                    let better = best.is_none_or(|(distance, _, other)| {
+                        surface
+                            .total_cmp(&distance)
+                            .then_with(|| met(index).cmp(&met(other)))
+                            .is_lt()
+                    });
+                    if better {
+                        best = Some((surface, offset * (1.0 / centre.max(1.0e-9)), index));
                     }
                 }
             }
         }
-        best
+        best.map(|(distance, direction, _)| (distance, direction))
     }
 }
 
-fn cell_of(point: Vec3) -> (i32, i32, i32) {
+/// Which capsules a search has met: a stamp per capsule.
+struct Seen {
+    stamps: Vec<u32>,
+    now: u32,
+}
+
+impl Seen {
+    fn new(capsules: usize) -> Self {
+        Self {
+            stamps: vec![0; capsules],
+            now: 0,
+        }
+    }
+
+    /// Start a new search.
+    fn next(&mut self) {
+        self.now = self.now.wrapping_add(1);
+        if self.now == 0 {
+            self.stamps.fill(0);
+            self.now = 1;
+        }
+    }
+
+    /// Whether this search meets the capsule for the first time.
+    fn first(&mut self, index: u32) -> bool {
+        let stamp = &mut self.stamps[index as usize];
+        let first = *stamp != self.now;
+        *stamp = self.now;
+        first
+    }
+}
+
+fn cell_of(point: Vec3, cell: f64) -> [i32; 3] {
     #[allow(clippy::cast_possible_truncation)]
-    let cell = |v: f64| (v / HOST_CELL).floor() as i32;
-    (cell(point.x), cell(point.y), cell(point.z))
+    let key = |v: f64| (v / cell).floor() as i32;
+    [key(point.x), key(point.y), key(point.z)]
 }
 
 /// Results of running the tools on one scene.
@@ -421,6 +589,12 @@ pub fn run(
         let values = settings(config, globals, clock, seed, &mut stack);
         values[0].max(0.0)
     });
+    let host_found = host_reach.and_then(|reach| {
+        surroundings.host().map(|host| {
+            let points: Vec<Vec3> = scene.queries.iter().map(|query| query.position).collect();
+            host.nearest_each(&points, reach)
+        })
+    });
 
     let ground = program
         .tool(ToolKind::Substrate)
@@ -451,9 +625,7 @@ pub fn run(
         values[EnvField::Order as usize] = f64::from(query.order);
         values[EnvField::Height as usize] = scene.height;
         if let Some(reach) = host_reach {
-            let found = surroundings
-                .host()
-                .and_then(|host| host.nearest(query.position, reach));
+            let found = host_found.as_ref().and_then(|found| found[index]);
             let (distance, direction) = found.unwrap_or((reach + 1.0, Vec3::ZERO));
             values[EnvField::Gd as usize] = distance;
             values[EnvField::Gx as usize] = direction.x;
@@ -2455,6 +2627,7 @@ mod tests {
     use crate::lsys::derive::Deriver;
     use crate::lsys::turtle::Interpreter;
     use std::collections::BTreeMap;
+    use std::collections::HashSet;
 
     struct Setup {
         program: Program,
@@ -2649,6 +2822,103 @@ mod tests {
         assert_eq!(marker[EnvField::Ntip as usize], 2.0);
         let tip = output.env[1].1;
         assert_eq!(tip[EnvField::Ntip as usize], 0.0);
+    }
+
+    /// The walk `Host` made before it had a grid: a map of `HOST_CELL`
+    /// cells, walked x, then y, then z, each capsule taken where first met.
+    fn walked(capsules: &[(Vec3, Vec3, f64)], point: Vec3, reach: f64) -> Option<(f64, Vec3)> {
+        let mut cells: HashMap<[i32; 3], Vec<usize>> = HashMap::new();
+        for (index, &(a, b, r)) in capsules.iter().enumerate() {
+            let r = Vec3::new(r, r, r);
+            let (low, high) = (
+                cell_of(a.min(b) - r, HOST_CELL),
+                cell_of(a.max(b) + r, HOST_CELL),
+            );
+            for x in low[0]..=high[0] {
+                for y in low[1]..=high[1] {
+                    for z in low[2]..=high[2] {
+                        cells.entry([x, y, z]).or_default().push(index);
+                    }
+                }
+            }
+        }
+        let corner = Vec3::new(reach, reach, reach);
+        let (low, high) = (
+            cell_of(point - corner, HOST_CELL),
+            cell_of(point + corner, HOST_CELL),
+        );
+        let mut best: Option<(f64, Vec3)> = None;
+        let mut seen = HashSet::new();
+        for x in low[0]..=high[0] {
+            for y in low[1]..=high[1] {
+                for z in low[2]..=high[2] {
+                    for &index in cells.get(&[x, y, z]).into_iter().flatten() {
+                        if !seen.insert(index) {
+                            continue;
+                        }
+                        let (a, b, r) = capsules[index];
+                        let axis = b - a;
+                        let along = (point - a).dot(axis) / axis.dot(axis).max(1.0e-12);
+                        let offset = a + axis * along.clamp(0.0, 1.0) - point;
+                        let centre = offset.length();
+                        let surface = centre - r;
+                        if surface <= reach && best.is_none_or(|(d, _)| surface < d) {
+                            best = Some((surface, offset * (1.0 / centre.max(1.0e-9))));
+                        }
+                    }
+                }
+            }
+        }
+        best
+    }
+
+    #[test]
+    fn the_host_s_grid_finds_what_the_cell_walk_found() {
+        let mut state = 0x2545_f491_4f6c_dd1d_u64;
+        let mut next = move || {
+            state = state
+                .wrapping_mul(6_364_136_223_846_793_005)
+                .wrapping_add(1_442_695_040_888_963_407);
+            #[allow(clippy::cast_precision_loss)]
+            let unit = (state >> 11) as f64 / (1_u64 << 53) as f64;
+            unit
+        };
+        // Two limbs mirrored across x = 0, the one at +x first: a point
+        // between them is as near both, and the walk meets the one at -x
+        // first. Beyond 127 m the grid's cells grow past `HOST_CELL`.
+        let mirrored = [
+            (Vec3::new(1.0, 2.0, 0.0), Vec3::new(1.0, 3.0, 0.0), 0.1),
+            (Vec3::new(-1.0, 2.0, 0.0), Vec3::new(-1.0, 3.0, 0.0), 0.1),
+        ];
+        for far in [6.0, 400.0] {
+            let mut capsules = mirrored.to_vec();
+            capsules.push((Vec3::new(far, 0.0, 0.0), Vec3::new(far, 1.0, 0.0), 0.1));
+            let host = Host::new(capsules.clone());
+            let (_, direction) = host.nearest(Vec3::new(0.0, 2.5, 0.0), 2.0).unwrap();
+            assert!((direction + Vec3::X).length() < 1e-12, "{direction:?}");
+            for _ in 0..300 {
+                let a = Vec3::new(next() * 8.0 - 4.0, next() * 12.0, next() * 8.0 - 4.0);
+                let b = a + Vec3::new(next() - 0.5, next() * 1.5, next() - 0.5);
+                capsules.push((a, b, 0.02 + next() * 0.2));
+            }
+            let host = Host::new(capsules.clone());
+            let mut points: Vec<Vec3> = (0..3000)
+                .map(|_| {
+                    Vec3::new(
+                        next() * 10.0 - 5.0,
+                        next() * 14.0 - 1.0,
+                        next() * 10.0 - 5.0,
+                    )
+                })
+                .collect();
+            points.push(Vec3::new(0.0, 2.5, 0.0));
+            for reach in [0.3, 1.0, 3.0] {
+                let found = host.nearest_each(&points, reach);
+                for (point, found) in points.iter().zip(found) {
+                    assert_eq!(found, walked(&capsules, *point, reach), "{point:?} {reach}");
+                }
+            }
+        }
     }
 
     #[test]
