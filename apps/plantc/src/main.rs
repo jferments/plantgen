@@ -789,6 +789,9 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
     if digest {
         out!("  digest {}", growth.digest());
     }
+    if std::env::var_os("PLANTGEN_GPU_TIMES").is_some() {
+        out!("  times: {}", plantgen::lsys::narrow::times::report());
+    }
     Ok(())
 }
 
