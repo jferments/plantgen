@@ -2,5 +2,27 @@
   "schema": 1,
   "rank": "clade",
   "name": "Spermatophyta",
-  "parent": "clade/euphyllophytes"
+  "parent": "clade/euphyllophytes",
+  "rules": {
+    "generator.params.space_kill": {
+      "rule": "2 * pow(leaf_area * spur_leaf * spur_leaf, 1 / 3)",
+      "why": "Corner's rules: the smaller its leaves, the slenderer a plant's twigs and the more they branch. A shoot grows no nearer the plant than this, so the twigs filling a crown sit as far apart as the cube root of the area of the leaf card a short shoot bears (one leaf, or a sprig of small ones), and a crown of small leaves branches as finely as its leaves are small."
+    },
+    "generator.params.space_density": {
+      "rule": "1 / pow(space_kill, 3)",
+      "why": "One point of free space for each cube the shoot spacing spans, so the spacing, not a lack of free space, decides how finely the crown branches."
+    }
+  },
+  "evidence": {
+    "rules.generator.params.space_kill": {
+      "evidence": "SourceInferred",
+      "source": "corner-1949",
+      "note": "Corner's rules of axial conformity and ramification (Corner 1949), measured across species by Westoby and Wright (2003, Oecologia 135: 621-628): thicker twigs bear larger leaves and branch less. The spacing goes as the cube root of the short shoot's leaf card's area, so that crowns hold about as much leaf per volume whatever the card's size; its constant, 2, is fitted to the Urban Tree Database's desert genera (usfs-urban-tree-database-2016: Chilopsis, Parkinsonia, Prosopis and Vachellia farnesiana, irrigated city trees) by leaf area per crown area."
+    },
+    "rules.generator.params.space_density": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's: free space sampled as finely as shoots may be spaced (space colonization, Runions, Lane and Prusinkiewicz 2007)."
+    }
+  }
 }
