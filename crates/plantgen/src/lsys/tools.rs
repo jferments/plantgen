@@ -40,6 +40,7 @@ use serde::{Deserialize, Serialize};
 
 use super::derive::Clock;
 use super::expr::{ENV_FIELDS, EnvField, EnvValues, NO_ENV, Query, Scope, eval};
+use super::narrow::{self, CANDIDATES, CONSUMED, LEFT, Narrower, STRIDE};
 use super::program::{Program, SymbolKind, ToolConfig, ToolKind};
 use super::turtle::{NodeKind, Scene};
 use super::{GrowthError, Limits};
@@ -1609,11 +1610,13 @@ fn colonize(
         lattice.noise_size = noise_size;
     }
     let (low, size) = (lattice.low, lattice.size);
-    // One layer of the lattice box: its points' pulls on the apices that
-    // take them, in the order its points lie (z, then x).
-    let layer_pulls = |y: i64, cells: &mut [LatticePoint]| -> Vec<(u32, Vec3)> {
-        let mut pulls = Vec::new();
-        let mut hint = None;
+    // One layer of the lattice box: every point of it that may grow
+    // anything this step (in reach, not consumed for good, inside the
+    // envelope), in the order its points lie (z, then x), with its place in
+    // the layer.
+    let admit = |y: i64,
+                 cells: &mut [LatticePoint],
+                 on_point: &mut dyn FnMut(usize, &mut LatticePoint)| {
         // The envelope's bounds over the heights this layer's points take,
         // so most points fall inside or outside without its exact radius.
         #[allow(clippy::cast_precision_loss)]
@@ -1700,46 +1703,124 @@ fn colonize(
                         }
                     }
                 }
-                if plant.within(point, kill_sq) {
-                    // `space@1` keeps a point consumed for good; `space@2`
-                    // with `renew` frees it once the parts near it are shed.
-                    if !renew {
-                        cell.killed = true;
-                    }
-                    continue;
-                }
-                // No apex within reach of the point's cell: none takes it.
-                let claimed = if reach.marked(apices.key(point)) {
-                    claimant(&apices, &search, point, influence_sq, cone, hint)
-                } else {
-                    None
-                };
-                if let Some((distance_sq, apex)) = claimed {
-                    hint = Some(apex);
-                    pulls.push((
-                        apex.index,
-                        (point - apex.position) / math::sqrt(distance_sq),
-                    ));
-                }
+                on_point(at, cell);
             }
         }
+    };
+    // A point's fate in 64-bit: consumed by the plant (for good under
+    // `space@1`; `space@2` with `renew` frees it once the parts near it
+    // are shed), or taken by the apex that perceives it nearest.
+    let layer_pulls = |y: i64, cells: &mut [LatticePoint]| -> Vec<(u32, Vec3)> {
+        let mut pulls = Vec::new();
+        let mut hint = None;
+        admit(y, cells, &mut |_, cell| {
+            let point = cell.point;
+            if plant.within(point, kill_sq) {
+                if !renew {
+                    cell.killed = true;
+                }
+                return;
+            }
+            // No apex within reach of the point's cell: none takes it.
+            let claimed = if reach.marked(apices.key(point)) {
+                claimant(&apices, &search, point, influence_sq, cone, hint)
+            } else {
+                None
+            };
+            if let Some((distance_sq, apex)) = claimed {
+                hint = Some(apex);
+                pulls.push((
+                    apex.index,
+                    (point - apex.position) / math::sqrt(distance_sq),
+                ));
+            }
+        });
         pulls
     };
     let layer_cells = usize::try_from(size[2] * size[0]).unwrap_or(1).max(1);
-    let layers: Vec<(i64, &mut [LatticePoint])> = (low[1]..)
-        .zip(lattice.cells.chunks_mut(layer_cells))
-        .filter(|(y, _)| (y0..=y1).contains(y))
-        .collect();
     // Many points share the work out; the pulls add up in the order the
     // points lie, layer by layer, however many threads drew them.
-    let lease = Lease::take(
-        if span((x0, x1)) * span((x0, x1)) * span((y0, y1)) > 100_000 {
-            cores::per_task()
-        } else {
-            1
-        },
-    );
-    let pulled = in_layers(layers, lease.threads(), &layer_pulls);
+    let large = span((x0, x1)) * span((x0, x1)) * span((y0, y1)) > 100_000;
+    let lease = Lease::take(if large { cores::per_task() } else { 1 });
+    let threads = lease.threads();
+    let mut pulled = None;
+    if let Some(narrower) = Narrower::find(large) {
+        // The points that may grow anything, narrowed all at once (on a
+        // GPU), then each decided in 64-bit as the full search would.
+        let admitted = in_layers(
+            layers(&mut lattice.cells, low[1], layer_cells, (y0, y1)),
+            threads,
+            &|y, cells| {
+                let mut points = Vec::new();
+                admit(y, cells, &mut |at, cell| points.push((at, cell.point)));
+                points
+            },
+        );
+        let coarse = Grid::new(influence * (1.0 + 1e-9) + 1e-9, &apex_points);
+        let job = narrow_job(&admitted, &plant, &coarse, (kill_sq, influence_sq, cone));
+        if let Some(narrowed) = narrower.narrow(&job) {
+            let mut offsets = Vec::with_capacity(admitted.len());
+            let mut offset = 0;
+            for points in &admitted {
+                offsets.push(offset);
+                offset += points.len();
+            }
+            pulled = Some(in_layers(
+                layers(&mut lattice.cells, low[1], layer_cells, (y0, y1)),
+                threads,
+                &|y, cells| {
+                    let row_of = usize::try_from(y - y0).unwrap_or(0);
+                    let mut pulls = Vec::new();
+                    let mut hint = None;
+                    for (k, (at, point)) in admitted[row_of].iter().enumerate() {
+                        let row = &narrowed[(offsets[row_of] + k) * STRIDE..][..STRIDE];
+                        let consumed = match row[0] {
+                            CONSUMED => true,
+                            LEFT => false,
+                            _ => plant.within(*point, kill_sq),
+                        };
+                        if consumed {
+                            if !renew {
+                                cells[*at].killed = true;
+                            }
+                            continue;
+                        }
+                        let count = row[1] as usize;
+                        let claimed = if count > CANDIDATES {
+                            claimant(&apices, &search, *point, influence_sq, cone, hint)
+                        } else {
+                            let mut best = None;
+                            for bud in &row[2..2 + count] {
+                                consider(
+                                    *point,
+                                    &coarse.items[*bud as usize],
+                                    influence_sq,
+                                    cone,
+                                    &mut best,
+                                );
+                            }
+                            best.map(|(distance_sq, _, apex)| (distance_sq, apex))
+                        };
+                        if let Some((distance_sq, apex)) = claimed {
+                            hint = Some(apex);
+                            pulls.push((
+                                apex.index,
+                                (*point - apex.position) / math::sqrt(distance_sq),
+                            ));
+                        }
+                    }
+                    pulls
+                },
+            ));
+        }
+    }
+    let pulled = pulled.unwrap_or_else(|| {
+        in_layers(
+            layers(&mut lattice.cells, low[1], layer_cells, (y0, y1)),
+            threads,
+            &layer_pulls,
+        )
+    });
     drop(lease);
     for pulls in pulled {
         for (index, pull) in pulls {
@@ -1999,33 +2080,8 @@ fn claimant(
 ) -> Option<(f64, Apex)> {
     // The best so far: squared distance, facing and the apex.
     let mut best: Option<(f64, f64, Apex)> = None;
-    let consider = |apex: &Apex, best: &mut Option<(f64, f64, Apex)>| {
-        let offset = point - apex.position;
-        let distance_sq = offset.length_squared();
-        if distance_sq > influence_sq || distance_sq <= 0.0 {
-            return;
-        }
-        // Farther than the best so far: not better, whichever way it faces.
-        if best.is_some_and(|(distance, _, _)| distance_sq > distance) {
-            return;
-        }
-        let facing = apex.heading.dot(offset) / math::sqrt(distance_sq);
-        if facing < cone {
-            return;
-        }
-        let better = best.is_none_or(|(distance, most_facing, earliest)| {
-            distance_sq
-                .total_cmp(&distance)
-                .then(most_facing.total_cmp(&facing))
-                .then(apex.index.cmp(&earliest.index))
-                .is_lt()
-        });
-        if better {
-            *best = Some((distance_sq, facing, *apex));
-        }
-    };
     if let Some(apex) = hint {
-        consider(&apex, &mut best);
+        consider(point, &apex, influence_sq, cone, &mut best);
     }
     let [x, y, z] = apices.key(point);
     for ([dx, dy, dz], near) in search {
@@ -2041,10 +2097,115 @@ fn claimant(
             }
         }
         for apex in apices.cell_items(key) {
-            consider(apex, &mut best);
+            consider(point, apex, influence_sq, cone, &mut best);
         }
     }
     best.map(|(distance_sq, _, apex)| (distance_sq, apex))
+}
+
+/// Whether `apex` takes `point` rather than `best` (squared distance,
+/// facing, apex): the nearest apex that perceives the point within
+/// `influence_sq` and inside its `cone`; buds at one node share a
+/// position, so a tie goes to the bud facing the point most directly, then
+/// to the earlier bud. The best of any set of apices holding the one that
+/// takes the point is that apex, whatever their order.
+fn consider(
+    point: Vec3,
+    apex: &Apex,
+    influence_sq: f64,
+    cone: f64,
+    best: &mut Option<(f64, f64, Apex)>,
+) {
+    let offset = point - apex.position;
+    let distance_sq = offset.length_squared();
+    if distance_sq > influence_sq || distance_sq <= 0.0 {
+        return;
+    }
+    // Farther than the best so far: not better, whichever way it faces.
+    if best.is_some_and(|(distance, _, _)| distance_sq > distance) {
+        return;
+    }
+    let facing = apex.heading.dot(offset) / math::sqrt(distance_sq);
+    if facing < cone {
+        return;
+    }
+    let better = best.is_none_or(|(distance, most_facing, earliest)| {
+        distance_sq
+            .total_cmp(&distance)
+            .then(most_facing.total_cmp(&facing))
+            .then(apex.index.cmp(&earliest.index))
+            .is_lt()
+    });
+    if better {
+        *best = Some((distance_sq, facing, *apex));
+    }
+}
+
+/// The lattice's layers from `y0` to `y1` (`layer` points each, the first
+/// at height `low`), to work on side by side.
+fn layers(
+    cells: &mut [LatticePoint],
+    low: i64,
+    layer: usize,
+    (y0, y1): (i64, i64),
+) -> Vec<(i64, &mut [LatticePoint])> {
+    (low..)
+        .zip(cells.chunks_mut(layer))
+        .filter(|(y, _)| (y0..=y1).contains(y))
+        .collect()
+}
+
+/// A narrowing's work: the admitted points, layer by layer, each with its
+/// cell in the plant's grid and in `coarse`, the apices' grid with cells at
+/// least the influence wide (so the 27 round a point's hold every apex
+/// that can perceive it), and both grids' items in 32-bit.
+#[allow(clippy::cast_possible_truncation)]
+fn narrow_job(
+    admitted: &[Vec<(usize, Vec3)>],
+    plant: &Grid<Vec3>,
+    coarse: &Grid<Apex>,
+    (kill_sq, influence_sq, cone): (f64, f64, f64),
+) -> narrow::Job {
+    let mut extent = 0.0_f64;
+    let mut wide = |point: Vec3| {
+        extent = extent
+            .max(point.x.abs())
+            .max(point.y.abs())
+            .max(point.z.abs());
+        [point.x as f32, point.y as f32, point.z as f32, 0.0]
+    };
+    // A key past the grid's edge by more than a cell has no cell near it.
+    let relative = |key: [i64; 3], grid_low: [i64; 3], size: [i64; 3]| {
+        let at = |axis: usize| {
+            let value = (key[axis] - grid_low[axis]).clamp(-2, size[axis] + 1);
+            i32::try_from(value).unwrap_or(-2)
+        };
+        [at(0), at(1), at(2), 0]
+    };
+    let cells = |grid_size: [i64; 3], starts: &[u32]| narrow::Cells {
+        dims: grid_size.map(|size| i32::try_from(size).unwrap_or(0)),
+        starts: starts.to_vec(),
+    };
+    let mut job = narrow::Job::default();
+    for (_, point) in admitted.iter().flatten() {
+        job.points.push(wide(*point));
+        job.plant_keys
+            .push(relative(plant.key(*point), plant.low, plant.size));
+        job.apex_keys
+            .push(relative(coarse.key(*point), coarse.low, coarse.size));
+    }
+    job.plant = cells(plant.size, &plant.starts);
+    job.plant_items = plant.items.iter().map(|point| wide(*point)).collect();
+    job.apices = cells(coarse.size, &coarse.starts);
+    for apex in &coarse.items {
+        job.apex_items.push(wide(apex.position));
+        let heading = apex.heading;
+        job.apex_items
+            .push([heading.x as f32, heading.y as f32, heading.z as f32, 0.0]);
+    }
+    let reach = kill_sq.max(influence_sq).sqrt();
+    job.settings = narrow::Settings::new(kill_sq, influence_sq, cone, extent, reach);
+    job
 }
 
 /// Per-node results of the Borchert-Honda model.
