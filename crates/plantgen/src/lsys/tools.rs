@@ -658,9 +658,14 @@ fn light(
         density[flat(*voxel)] += own / volume;
     }
 
-    let mut light = vec![0.0_f64; receivers.len()];
-    let mut beyond = vec![0.0_f64; nx * ny * nz];
-    for direction in &directions {
+    // Receivers in one voxel with the same leaf area of their own see the
+    // same foliage along every direction: each such group takes one depth
+    // and one exponential per direction.
+    let (groups, group_of) = light_groups(&cells, &receivers, &flat, nx * ny * nz);
+    // A row per direction: `exp(−τ_j)` for every group. The directions
+    // share the threads, each sweeping its own copy of the grid.
+    let mut factors = vec![0.0_f64; directions.len() * groups.len()];
+    let sweep = |direction: &SkyDirection, row: &mut [f64], beyond: &mut [f64]| {
         // beyond[v] = Σ D over v and every voxel past it along the direction.
         for y in (0..ny).rev() {
             for z in 0..nz {
@@ -672,14 +677,48 @@ fn light(
             }
         }
         let length = extinction * cell * direction.cells_per_layer;
-        // Each receiver's light from this direction, many receivers to a
-        // thread; each adds its directions in their order whoever draws it.
-        let shine = |light: &mut [f64], receivers: &[(Vec3, f64)], cells: &[[usize; 3]]| {
-            for ((value, (point, own)), voxel) in light.iter_mut().zip(receivers).zip(cells) {
-                let past = next(*voxel, direction.step).map_or(0.0, |voxel| beyond[flat(voxel)]);
-                let shared = (density[flat(*voxel)] - own / volume).max(0.0);
-                let depth = length * (past + 0.5 * shared);
-                *value += direction.weight * neighbours(*point, direction) * math::exp(-depth);
+        for (factor, (voxel, own)) in row.iter_mut().zip(&groups) {
+            let past = next(*voxel, direction.step).map_or(0.0, |voxel| beyond[flat(voxel)]);
+            let shared = (density[flat(*voxel)] - own / volume).max(0.0);
+            let depth = length * (past + 0.5 * shared);
+            *factor = math::exp(-depth);
+        }
+    };
+    let sweepers = if nx * ny * nz + receivers.len() > 20_000 {
+        threads()
+    } else {
+        1
+    };
+    in_rows(
+        &directions,
+        &mut factors,
+        groups.len(),
+        nx * ny * nz,
+        sweepers,
+        &sweep,
+    );
+    // Each receiver adds its directions' light in their order. Where
+    // nothing but the plant shades the sky, a group's receivers add the
+    // same terms, so each group's sum is taken once.
+    let mut light = vec![0.0_f64; receivers.len()];
+    if surroundings.clear_sky() {
+        let mut sums = vec![0.0_f64; groups.len()];
+        for (direction, row) in directions.iter().zip(factors.chunks(groups.len())) {
+            for (sum, factor) in sums.iter_mut().zip(row) {
+                *sum += direction.weight * factor;
+            }
+        }
+        for (value, group) in light.iter_mut().zip(&group_of) {
+            *value = sums[*group as usize];
+        }
+    } else {
+        let width = groups.len();
+        let shine = |light: &mut [f64], receivers: &[(Vec3, f64)], group_of: &[u32]| {
+            for ((value, (point, _)), group) in light.iter_mut().zip(receivers).zip(group_of) {
+                for (j, direction) in directions.iter().enumerate() {
+                    let factor = factors[j * width + *group as usize];
+                    *value += direction.weight * neighbours(*point, direction) * factor;
+                }
             }
         };
         let threads = if receivers.len() > 20_000 {
@@ -687,7 +726,7 @@ fn light(
         } else {
             1
         };
-        in_chunks(&mut light, &receivers, &cells, threads, &shine);
+        in_chunks(&mut light, &receivers, &group_of, threads, &shine);
     }
     for value in &mut light {
         *value = (*value / total_weight).clamp(0.0, 1.0);
@@ -1736,6 +1775,101 @@ fn colonize(
     Ok(result)
 }
 
+/// Groups of light receivers that share a voxel and their own leaf area
+/// (bit for bit): each group's voxel and area, and every receiver's
+/// group. `flat` indexes the `voxels` voxels.
+fn light_groups(
+    cells: &[[usize; 3]],
+    receivers: &[(Vec3, f64)],
+    flat: &dyn Fn([usize; 3]) -> usize,
+    voxels: usize,
+) -> (Vec<([usize; 3], f64)>, Vec<u32>) {
+    // The receivers by voxel: a counting sort.
+    let mut starts = vec![0_u32; voxels + 1];
+    for voxel in cells {
+        starts[flat(*voxel) + 1] += 1;
+    }
+    for index in 1..starts.len() {
+        starts[index] += starts[index - 1];
+    }
+    let mut fill = starts.clone();
+    let mut order = vec![0_u32; cells.len()];
+    for (receiver, voxel) in cells.iter().enumerate() {
+        let slot = &mut fill[flat(*voxel)];
+        order[*slot as usize] = u32::try_from(receiver).unwrap_or(u32::MAX);
+        *slot += 1;
+    }
+    let mut groups = Vec::new();
+    let mut group_of = vec![0_u32; cells.len()];
+    let mut members: Vec<(u64, u32)> = Vec::new();
+    for voxel in 0..voxels {
+        let (from, to) = (starts[voxel] as usize, starts[voxel + 1] as usize);
+        if from == to {
+            continue;
+        }
+        members.clear();
+        members.extend(
+            order[from..to]
+                .iter()
+                .map(|receiver| (receivers[*receiver as usize].1.to_bits(), *receiver)),
+        );
+        members.sort_unstable();
+        let mut last = None;
+        for (area, receiver) in &members {
+            if last != Some(*area) {
+                groups.push((cells[*receiver as usize], f64::from_bits(*area)));
+                last = Some(*area);
+            }
+            group_of[*receiver as usize] = u32::try_from(groups.len() - 1).unwrap_or(u32::MAX);
+        }
+    }
+    (groups, group_of)
+}
+
+/// The light tool's work for one sky direction: its row of factors, and a
+/// grid of scratch.
+type Sweep<'a> = dyn Fn(&SkyDirection, &mut [f64], &mut [f64]) + Sync + 'a;
+
+/// Run `work` for every direction on its row of `rows` (`width` values a
+/// row), the directions spread over up to `threads` threads, each with a
+/// scratch grid of `scratch` values. Each row is worked on its own, so the
+/// result does not depend on the threads.
+fn in_rows(
+    directions: &[SkyDirection],
+    rows: &mut [f64],
+    width: usize,
+    scratch: usize,
+    threads: usize,
+    work: &Sweep<'_>,
+) {
+    if width == 0 {
+        return;
+    }
+    let tasks = directions.iter().zip(rows.chunks_mut(width));
+    if threads <= 1 {
+        let mut grid = vec![0.0_f64; scratch];
+        for (direction, row) in tasks {
+            work(direction, row, &mut grid);
+        }
+        return;
+    }
+    let queue = Mutex::new(tasks);
+    std::thread::scope(|scope| {
+        for _ in 0..threads.min(directions.len()) {
+            scope.spawn(|| {
+                let mut grid = vec![0.0_f64; scratch];
+                loop {
+                    let next = queue.lock().unwrap_or_else(PoisonError::into_inner).next();
+                    let Some((direction, row)) = next else {
+                        break;
+                    };
+                    work(direction, row, &mut grid);
+                }
+            });
+        }
+    });
+}
+
 /// Threads the space and light tools spread large work over: every core
 /// the process may use, up to eight.
 fn threads() -> usize {
@@ -1743,31 +1877,31 @@ fn threads() -> usize {
 }
 
 /// The light tool's work on a run of receivers: their light, the
-/// receivers (position and own leaf area) and their voxels.
-type Shine<'a> = dyn Fn(&mut [f64], &[(Vec3, f64)], &[[usize; 3]]) + Sync + 'a;
+/// receivers (position and own leaf area) and their groups.
+type Shine<'a> = dyn Fn(&mut [f64], &[(Vec3, f64)], &[u32]) + Sync + 'a;
 
-/// Run `work` over `light` with its `receivers` and their `cells`, in
+/// Run `work` over `light` with its `receivers` and their `groups`, in
 /// chunks spread over up to `threads` threads. Each value is worked on its
 /// own, so the result does not depend on the chunks.
 fn in_chunks(
     light: &mut [f64],
     receivers: &[(Vec3, f64)],
-    cells: &[[usize; 3]],
+    groups: &[u32],
     threads: usize,
     work: &Shine<'_>,
 ) {
     if threads <= 1 {
-        work(light, receivers, cells);
+        work(light, receivers, groups);
         return;
     }
     let chunk = receivers.len().div_ceil(threads).max(1);
     std::thread::scope(|scope| {
-        for ((light, receivers), cells) in light
+        for ((light, receivers), groups) in light
             .chunks_mut(chunk)
             .zip(receivers.chunks(chunk))
-            .zip(cells.chunks(chunk))
+            .zip(groups.chunks(chunk))
         {
-            scope.spawn(move || work(light, receivers, cells));
+            scope.spawn(move || work(light, receivers, groups));
         }
     });
 }
