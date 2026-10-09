@@ -18,7 +18,6 @@ use std::sync::atomic::{AtomicBool, AtomicU32, AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
-use bevy::asset::embedded_asset;
 use bevy::camera::Exposure;
 use bevy::camera::visibility::RenderLayers;
 use bevy::ecs::system::SystemParam;
@@ -38,7 +37,9 @@ use bevy::render::view::screenshot::{Screenshot, ScreenshotCaptured};
 
 use crate::measure::{self, MeasureGizmos};
 use crate::record::{self, PLANT_LAYER, Recorder, Recording, Take, WINDOW_LAYER};
-use crate::render::{CardMaterial, camera_look, exposure, spawn_plant, spawn_sun, to_rgba8};
+use crate::render::{
+    PlantAssets, add_materials, camera_look, exposure, spawn_plant, spawn_sun, to_rgba8,
+};
 use crate::theme;
 
 /// How `plantlab open` starts the window.
@@ -278,68 +279,65 @@ pub fn run(options: Options) -> Result<(), String> {
                 ..default()
             }),
     );
-    embedded_asset!(app, "shaders/card.wgsl");
+    add_materials(&mut app);
     let [r, g, b] = plantlab_scene::BACKGROUND;
-    app.add_plugins((
-        MaterialPlugin::<CardMaterial>::default(),
-        EguiPlugin::default(),
-    ))
-    .init_gizmo_group::<MeasureGizmos>()
-    .insert_resource({
-        let mut recording = Recording::new(out);
-        recording.record = record;
-        recording.plant_only = plant_only;
-        recording
-    })
-    .insert_resource(record::Background(Color::linear_rgb(r, g, b)))
-    .insert_resource(DirectionalLightShadowMap { size: 4096 })
-    .insert_resource(GlobalAmbientLight::NONE)
-    .insert_resource(Lab {
-        species: ids,
-        chosen,
-        filter: String::new(),
-        age: None,
-        asked_age: age,
-        oldest: 1.0,
-        day: plantgen::package::DEFAULT_DAY,
-        level: 0,
-        draft: true,
-        look: Look::Review,
-        view: View::ThreeQuarter,
-        dirty: true,
-        auto: true,
-        go: false,
-        live: live > 0,
-        every: live.max(1),
-        follow: true,
-        growing: None,
-        control: Arc::default(),
-        started: Instant::now(),
-        shown: None,
-        message: String::new(),
-        reframe: true,
-        reset_camera: false,
-        grid,
-        ruler,
-        panel_right: 300.0,
-    })
-    .add_systems(Startup, setup)
-    .add_systems(EguiPrimaryContextPass, panel)
-    .add_systems(
-        Update,
-        (
-            keys,
-            grow,
-            live_frame,
-            show,
-            orbit,
-            measures,
-            record::follow,
-            record::take,
-            record::keep,
-        )
-            .chain(),
-    );
+    app.add_plugins(EguiPlugin::default())
+        .init_gizmo_group::<MeasureGizmos>()
+        .insert_resource({
+            let mut recording = Recording::new(out);
+            recording.record = record;
+            recording.plant_only = plant_only;
+            recording
+        })
+        .insert_resource(record::Background(Color::linear_rgb(r, g, b)))
+        .insert_resource(DirectionalLightShadowMap { size: 4096 })
+        .insert_resource(GlobalAmbientLight::NONE)
+        .insert_resource(Lab {
+            species: ids,
+            chosen,
+            filter: String::new(),
+            age: None,
+            asked_age: age,
+            oldest: 1.0,
+            day: plantgen::package::DEFAULT_DAY,
+            level: 0,
+            draft: true,
+            look: Look::Review,
+            view: View::ThreeQuarter,
+            dirty: true,
+            auto: true,
+            go: false,
+            live: live > 0,
+            every: live.max(1),
+            follow: true,
+            growing: None,
+            control: Arc::default(),
+            started: Instant::now(),
+            shown: None,
+            message: String::new(),
+            reframe: true,
+            reset_camera: false,
+            grid,
+            ruler,
+            panel_right: 300.0,
+        })
+        .add_systems(Startup, setup)
+        .add_systems(EguiPrimaryContextPass, panel)
+        .add_systems(
+            Update,
+            (
+                keys,
+                grow,
+                live_frame,
+                show,
+                orbit,
+                measures,
+                record::follow,
+                record::take,
+                record::keep,
+            )
+                .chain(),
+        );
     if let Some((path, after)) = picture {
         app.insert_resource(Capture {
             path,
@@ -808,10 +806,7 @@ fn growth_controls(ui: &mut egui::Ui, lab: &mut Lab) {
 #[derive(SystemParam)]
 struct Stage<'w, 's> {
     commands: Commands<'w, 's>,
-    images: ResMut<'w, Assets<Image>>,
-    meshes: ResMut<'w, Assets<Mesh>>,
-    standard: ResMut<'w, Assets<StandardMaterial>>,
-    cards: ResMut<'w, Assets<CardMaterial>>,
+    assets: PlantAssets<'w>,
     camera: Query<'w, 's, (Entity, &'static mut Orbit)>,
     recorder: Query<'w, 's, Entity, With<Recorder>>,
     suns: Query<'w, 's, Entity, With<Sun>>,
@@ -891,12 +886,7 @@ fn put_on_screen(stage: &mut Stage, lab: &mut Lab, scene: Scene, shot: Shot, liv
     let entities = spawn_plant(
         commands,
         &scene,
-        (
-            &mut stage.images,
-            &mut stage.meshes,
-            &mut stage.standard,
-            &mut stage.cards,
-        ),
+        &mut stage.assets,
         Vec3::ZERO,
         (
             &RenderLayers::from_layers(&[WINDOW_LAYER, PLANT_LAYER]),
@@ -908,7 +898,7 @@ fn put_on_screen(stage: &mut Stage, lab: &mut Lab, scene: Scene, shot: Shot, liv
             &mut commands.entity(recorder),
             scene.look,
             &scene.light,
-            &mut stage.images,
+            &mut stage.assets.images,
         );
     }
     if let Ok((entity, mut orbit)) = stage.camera.single_mut() {
@@ -916,7 +906,7 @@ fn put_on_screen(stage: &mut Stage, lab: &mut Lab, scene: Scene, shot: Shot, liv
             &mut commands.entity(entity),
             scene.look,
             &scene.light,
-            &mut stage.images,
+            &mut stage.assets.images,
         );
         if lab.reframe {
             orbit.frame(&scene.framing);

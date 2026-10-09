@@ -21,6 +21,7 @@ use bevy::camera::visibility::RenderLayers;
 use bevy::camera::{Exposure, RenderTarget, ScalingMode};
 use bevy::core_pipeline::tonemapping::Tonemapping;
 use bevy::ecs::system::EntityCommands;
+use bevy::ecs::system::SystemParam;
 use bevy::image::{ImageSampler, ImageSamplerDescriptor};
 use bevy::light::{
     CascadeShadowConfigBuilder, DirectionalLightShadowMap, EnvironmentMapLight, GlobalAmbientLight,
@@ -91,6 +92,115 @@ impl MaterialExtension for CardExtension {
     fn prepass_fragment_shader() -> ShaderRef {
         "embedded://plantlab/shaders/card.wgsl".into()
     }
+}
+
+pub(crate) type WoodMaterial = ExtendedMaterial<StandardMaterial, WoodExtension>;
+
+/// Draws the wood of `plantlab-scene` with its bark pattern (see
+/// `shaders/wood.wgsl`).
+#[derive(Asset, AsBindGroup, Reflect, Debug, Clone)]
+pub struct WoodExtension {
+    #[uniform(100)]
+    bark: BarkUniform,
+}
+
+/// `plantgen::bark::BarkParams` as the wood shader reads it.
+#[derive(ShaderType, Reflect, Debug, Clone, Copy)]
+struct BarkUniform {
+    inner: Vec4,
+    kind: u32,
+    scale: f32,
+    elongation: f32,
+    fissure: f32,
+    depth: f32,
+    contrast: f32,
+    variation: f32,
+    mean: f32,
+    smooth_below: f32,
+    lenticels: f32,
+    peeled: f32,
+    roughness: f32,
+}
+
+impl From<&plantgen::bark::BarkParams> for BarkUniform {
+    fn from(params: &plantgen::bark::BarkParams) -> Self {
+        Self {
+            inner: Vec3::from_array(params.inner).extend(1.0),
+            kind: params.kind,
+            scale: params.scale,
+            elongation: params.elongation,
+            fissure: params.fissure,
+            depth: params.depth,
+            contrast: params.contrast,
+            variation: params.variation,
+            mean: params.mean,
+            smooth_below: params.smooth_below,
+            lenticels: params.lenticels,
+            peeled: params.peeled,
+            roughness: params.roughness,
+        }
+    }
+}
+
+impl MaterialExtension for WoodExtension {
+    fn fragment_shader() -> ShaderRef {
+        "embedded://plantlab/shaders/wood.wgsl".into()
+    }
+}
+
+/// The plant's materials: cards and wood with bark, from embedded shaders.
+pub(crate) fn add_materials(app: &mut App) {
+    embedded_asset!(app, "shaders/card.wgsl");
+    embedded_asset!(app, "shaders/wood.wgsl");
+    app.add_plugins((
+        MaterialPlugin::<CardMaterial>::default(),
+        MaterialPlugin::<WoodMaterial>::default(),
+    ));
+}
+
+/// The organ cards' material: their templates and accents.
+fn card_material(
+    scene: &Scene,
+    images: &mut Assets<Image>,
+    cards: &mut Assets<CardMaterial>,
+) -> Handle<CardMaterial> {
+    let mut accents = [Vec4::ZERO; MAX_TEMPLATES];
+    for (slot, accent) in accents.iter_mut().zip(&scene.template_accents) {
+        *slot = Vec3::from_array(*accent).extend(1.0);
+    }
+    cards.add(ExtendedMaterial {
+        base: StandardMaterial {
+            base_color: Color::WHITE,
+            perceptual_roughness: 0.8,
+            reflectance: 0.3,
+            double_sided: true,
+            cull_mode: None,
+            alpha_mode: AlphaMode::Mask(0.5),
+            diffuse_transmission: 0.35,
+            ..default()
+        },
+        extension: CardExtension {
+            accents: CardAccents { accents },
+            templates: images.add(templates_image(scene)),
+        },
+    })
+}
+
+/// One of the plant's materials.
+enum UntypedMaterial {
+    Standard(Handle<StandardMaterial>),
+    Card(Handle<CardMaterial>),
+    Wood(Handle<WoodMaterial>),
+}
+
+/// The assets a plant is spawned into.
+#[derive(SystemParam)]
+pub(crate) struct PlantAssets<'w> {
+    pub images: ResMut<'w, Assets<Image>>,
+    pub meshes: ResMut<'w, Assets<Mesh>>,
+    pub standard: ResMut<'w, Assets<StandardMaterial>>,
+    pub cards: ResMut<'w, Assets<CardMaterial>>,
+    pub woods: ResMut<'w, Assets<WoodMaterial>>,
 }
 
 /// The jobs still to do and where pictures go.
@@ -197,9 +307,8 @@ pub fn run(jobs: Vec<Job>, out: PathBuf, gpu: Option<usize>) -> Result<(), Strin
     if !app.is_plugin_added::<ScheduleRunnerPlugin>() {
         app.add_plugins(ScheduleRunnerPlugin::run_loop(Duration::ZERO));
     }
-    embedded_asset!(app, "shaders/card.wgsl");
-    app.add_plugins(MaterialPlugin::<CardMaterial>::default())
-        .insert_resource(DirectionalLightShadowMap { size: shadow_map })
+    add_materials(&mut app);
+    app.insert_resource(DirectionalLightShadowMap { size: shadow_map })
         .insert_resource(GlobalAmbientLight::NONE)
         .insert_resource(Jobs {
             queue: jobs.into(),
@@ -239,15 +348,11 @@ pub(crate) fn count_compiling(cache: Res<PipelineCache>, compiling: Res<Compilin
 }
 
 /// Put the next job's scene on stage, or exit when none is left.
-#[allow(clippy::too_many_arguments)]
 fn stage_next(
     mut commands: Commands,
     mut jobs: ResMut<Jobs>,
     mut stage: ResMut<Stage>,
-    mut images: ResMut<Assets<Image>>,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut standard: ResMut<Assets<StandardMaterial>>,
-    mut cards: ResMut<Assets<CardMaterial>>,
+    mut assets: PlantAssets,
     mut exit: MessageWriter<AppExit>,
 ) {
     if let Some(current) = &stage.current {
@@ -282,14 +387,16 @@ fn stage_next(
     }
     let k = scenes.first().map_or(1, |scene| scene.look.supersample());
     let sheet = job.sheet;
-    let target = images.add(target_image(sheet.width * k, sheet.height * k));
+    let target = assets
+        .images
+        .add(target_image(sheet.width * k, sheet.height * k));
     let mut entities = vec![spawn_sun(&mut commands, &scenes)];
     for (index, (scene, tile)) in scenes.iter().zip(&sheet.tiles).enumerate() {
         entities.extend(spawn_scene(
             &mut commands,
             scene,
             &target,
-            (&mut images, &mut meshes, &mut standard, &mut cards),
+            &mut assets,
             Placement {
                 index,
                 rect: tile.rect,
@@ -495,6 +602,9 @@ fn bevy_mesh(mesh: &SceneMesh) -> Mesh {
     if !mesh.darkening.is_empty() {
         let uv_b: Vec<[f32; 2]> = mesh.darkening.iter().map(|&d| [d, 0.0]).collect();
         out.insert_attribute(Mesh::ATTRIBUTE_UV_1, uv_b);
+    } else if !mesh.bark_radius.is_empty() {
+        let uv_b: Vec<[f32; 2]> = mesh.bark_radius.iter().map(|&r| [r, 0.0]).collect();
+        out.insert_attribute(Mesh::ATTRIBUTE_UV_1, uv_b);
     }
     out.insert_indices(Indices::U32(mesh.indices.clone()));
     out
@@ -697,12 +807,7 @@ fn spawn_scene(
     commands: &mut Commands,
     scene: &Scene,
     target: &Handle<Image>,
-    (images, meshes, standard, cards): (
-        &mut Assets<Image>,
-        &mut Assets<Mesh>,
-        &mut Assets<StandardMaterial>,
-        &mut Assets<CardMaterial>,
-    ),
+    assets: &mut PlantAssets,
     place: Placement,
 ) -> Vec<Entity> {
     let mut entities = Vec::new();
@@ -765,12 +870,12 @@ fn spawn_scene(
         &mut commands.entity(entities[0]),
         scene.look,
         &scene.light,
-        images,
+        &mut assets.images,
     );
     entities.extend(spawn_plant(
         commands,
         scene,
-        (images, meshes, standard, cards),
+        assets,
         offset,
         (&layer, &layer),
     ));
@@ -842,15 +947,17 @@ pub(crate) fn camera_look(
 pub(crate) fn spawn_plant(
     commands: &mut Commands,
     scene: &Scene,
-    (images, meshes, standard, cards): (
-        &mut Assets<Image>,
-        &mut Assets<Mesh>,
-        &mut Assets<StandardMaterial>,
-        &mut Assets<CardMaterial>,
-    ),
+    assets: &mut PlantAssets,
     offset: Vec3,
     (layer, backdrop): (&RenderLayers, &RenderLayers),
 ) -> Vec<Entity> {
+    let PlantAssets {
+        images,
+        meshes,
+        standard,
+        cards,
+        woods,
+    } = assets;
     let mut entities = Vec::new();
     let ground = Circle::new(scene.ground_radius);
     let [gr, gg, gb] = plantlab_scene::GROUND;
@@ -870,31 +977,48 @@ pub(crate) fn spawn_plant(
             ))
             .id(),
     );
-    let solid = standard.add(StandardMaterial {
+    let wood_look = StandardMaterial {
         base_color: Color::WHITE,
         perceptual_roughness: 0.9,
         reflectance: 0.2,
         ..default()
-    });
-    for (mesh, layer) in [
-        (&scene.wood, layer),
-        (&scene.solids, layer),
-        (&scene.scale, backdrop),
-    ] {
+    };
+    let solid = standard.add(wood_look.clone());
+    let mut spawn = |mesh: &SceneMesh, material: UntypedMaterial, layer: &RenderLayers| {
         if mesh.is_empty() {
-            continue;
+            return;
         }
-        entities.push(
-            commands
-                .spawn((
-                    Mesh3d(meshes.add(bevy_mesh(mesh))),
-                    MeshMaterial3d(solid.clone()),
-                    Transform::from_translation(offset),
-                    layer.clone(),
-                ))
-                .id(),
-        );
-    }
+        let mut entity = commands.spawn((
+            Mesh3d(meshes.add(bevy_mesh(mesh))),
+            Transform::from_translation(offset),
+            layer.clone(),
+        ));
+        match material {
+            UntypedMaterial::Standard(handle) => entity.insert(MeshMaterial3d(handle)),
+            UntypedMaterial::Card(handle) => entity.insert(MeshMaterial3d(handle)),
+            UntypedMaterial::Wood(handle) => entity.insert(MeshMaterial3d(handle)),
+        };
+        entities.push(entity.id());
+    };
+    // Wood with its bark pattern where the species has one.
+    let wood = match &scene.bark {
+        Some(bark) if !scene.wood.bark_radius.is_empty() => {
+            UntypedMaterial::Wood(woods.add(ExtendedMaterial {
+                base: wood_look,
+                extension: WoodExtension {
+                    bark: BarkUniform::from(bark),
+                },
+            }))
+        }
+        _ => UntypedMaterial::Standard(solid.clone()),
+    };
+    spawn(&scene.wood, wood, layer);
+    spawn(
+        &scene.solids,
+        UntypedMaterial::Standard(solid.clone()),
+        layer,
+    );
+    spawn(&scene.scale, UntypedMaterial::Standard(solid), backdrop);
     if !scene.cut_cards.is_empty() {
         // Cards cut into triangles: two-sided solids in their colours.
         let cut = standard.add(StandardMaterial {
@@ -906,47 +1030,10 @@ pub(crate) fn spawn_plant(
             diffuse_transmission: 0.35,
             ..default()
         });
-        entities.push(
-            commands
-                .spawn((
-                    Mesh3d(meshes.add(bevy_mesh(&scene.cut_cards))),
-                    MeshMaterial3d(cut),
-                    Transform::from_translation(offset),
-                    layer.clone(),
-                ))
-                .id(),
-        );
+        spawn(&scene.cut_cards, UntypedMaterial::Standard(cut), layer);
     } else if !scene.cards.is_empty() {
-        let mut accents = [Vec4::ZERO; MAX_TEMPLATES];
-        for (slot, accent) in accents.iter_mut().zip(&scene.template_accents) {
-            *slot = Vec3::from_array(*accent).extend(1.0);
-        }
-        let material = cards.add(ExtendedMaterial {
-            base: StandardMaterial {
-                base_color: Color::WHITE,
-                perceptual_roughness: 0.8,
-                reflectance: 0.3,
-                double_sided: true,
-                cull_mode: None,
-                alpha_mode: AlphaMode::Mask(0.5),
-                diffuse_transmission: 0.35,
-                ..default()
-            },
-            extension: CardExtension {
-                accents: CardAccents { accents },
-                templates: images.add(templates_image(scene)),
-            },
-        });
-        entities.push(
-            commands
-                .spawn((
-                    Mesh3d(meshes.add(bevy_mesh(&scene.cards))),
-                    MeshMaterial3d(material),
-                    Transform::from_translation(offset),
-                    layer.clone(),
-                ))
-                .id(),
-        );
+        let material = card_material(scene, images, cards);
+        spawn(&scene.cards, UntypedMaterial::Card(material), layer);
     }
     entities
 }

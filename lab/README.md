@@ -155,11 +155,13 @@ builds its graphics stack.
 - `app` (`plantlab`): draws scenes with Bevy 0.19 (the version Project
   After uses), without a window. `src/shaders/card.wgsl` cuts each organ
   card out by its template and blends its colour exactly as
-  `Templates::albedo` does; nothing else about the plant is computed on
-  the GPU.
+  `Templates::albedo` does. `src/shaders/wood.wgsl` draws the species'
+  bark pattern on its wood pixel by pixel: `plantgen::bark::sample`
+  operation for operation, as `plantc`'s previews and every renderer of
+  PlantGen's plants draw it, from the bark coordinates and stem radius the
+  wood mesh carries. Nothing else about the plant is computed on the GPU.
 
-Not drawn yet: the bark pattern on wood (wood shows its colour) and part
-meshes. Not in the window yet: growing conditions, the timeline, wind and
+Not drawn yet: part meshes. Not in the window yet: growing conditions, the timeline, wind and
 comparing plants side by side (the next steps in the design).
 
 Check before you commit, from this folder:
