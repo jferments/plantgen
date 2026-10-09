@@ -207,8 +207,9 @@ impl Niche {
     /// Fails on an unknown schema, a malformed id, no layers, an abundance
     /// outside (0, 10], a range out of order or not finite, a slope outside
     /// (0, 90], a shade or sun tolerance outside [0, 1], a value without an
-    /// evidence note, a note with a tier outside 1 to 4 or a source the
-    /// provenance does not list, or no source.
+    /// evidence note, a note whose source is not written as a source id, or
+    /// no provenance source. Whether a cited source exists is the
+    /// library's check (`Library::check_citations`).
     pub fn validate(&self) -> Result<(), NicheError> {
         let species = &self.species;
         let fail = |message: String| Err(NicheError(format!("niche `{species}`: {message}")));
@@ -283,7 +284,7 @@ impl Niche {
             return fail(format!("evidence for unknown value `{extra}`"));
         }
         for (field, note) in &self.evidence {
-            if let Err(message) = note.check(&self.provenance) {
+            if let Err(message) = note.check() {
                 return fail(format!("the evidence note on `{field}`: {message}"));
             }
         }
@@ -542,11 +543,7 @@ mod tests {
             "colour",
         );
         refused(
-            &|n| n.evidence.get_mut("moisture").unwrap().tier = Some(5),
-            "`moisture`",
-        );
-        refused(
-            &|n| n.evidence.get_mut("moisture").unwrap().source = Some(99),
+            &|n| n.evidence.get_mut("moisture").unwrap().source = Some("Not An Id".into()),
             "`moisture`",
         );
         refused(&|n| n.provenance.sources.clear(), "source");

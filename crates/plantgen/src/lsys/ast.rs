@@ -64,6 +64,10 @@ pub struct Rule {
     pub weight: Option<Expr>,
     pub successor: Vec<ModuleCall>,
     pub span: Span,
+    /// How far up its program's chain the rule was written: 0 in the
+    /// program itself, 1 in the program it extends, and so on. A rule of
+    /// lower depth is tried first (see `crate::lsys::chain`).
+    pub depth: u8,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -109,6 +113,8 @@ pub struct ToolDecl {
 pub struct ProgramAst {
     pub name: String,
     pub revision: u32,
+    /// `extends parent`: the program this one builds on.
+    pub extends: Option<(String, Span)>,
     pub params: Vec<ParamDecl>,
     pub modules: Vec<ModuleDecl>,
     pub organs: Vec<OrganDecl>,

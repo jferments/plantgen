@@ -4,7 +4,10 @@
   "taxon": {
     "scientific_name": "Fraxinus latifolia",
     "common_name": "Oregon ash",
-    "usda_symbol": "FRLA"
+    "usda_symbol": "FRLA",
+    "family": "Oleaceae",
+    "genus": "Fraxinus",
+    "plant_name_id": 369836
   },
   "growth_form": "decurrent_tree",
   "generator": {
@@ -126,15 +129,53 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: a medium-sized tree with a narrow, rounded crown, opposite branching and pinnately compound leaves of five to seven broad leaflets. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Rough sizes from general knowledge of the species: 18 m tall and 40 cm across at breast height at 50 years in the open. Replace with measured data before calling this species calibrated."
     },
     "appearance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Colours chosen by eye: light green leaves; grey-brown bark in interlacing diamond ridges. Fruit (plant roadmap P4), as in mid-July: dense hanging clusters of single green samaras 3 to 5 cm long. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: small flowers before the leaves in March and April; samaras green in summer, tan from September, falling into the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): grey-brown bark deeply furrowed into interlacing ridges; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaflets narrower than shade leaflets; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     }
   },
   "provenance": {

@@ -4,7 +4,10 @@
   "taxon": {
     "scientific_name": "Avicennia germinans",
     "common_name": "black mangrove",
-    "usda_symbol": "AVGE"
+    "usda_symbol": "AVGE",
+    "family": "Acanthaceae",
+    "genus": "Avicennia",
+    "plant_name_id": 18443
   },
   "growth_form": "decurrent_tree",
   "generator": {
@@ -117,15 +120,53 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: an evergreen tree of tropical and subtropical coasts, 5 to 10 m tall, with dark, scaly bark and narrow leaves grey-felted beneath, whose shallow roots send up hundreds of pencil-like breathing roots through the mud round it. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Rough heights from general knowledge of the species: about 5 m at 20 years and 8 m at 50. Wide tolerances."
     },
     "appearance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Colours chosen by eye from photographs: grey-green leaves, very dark bark. Bark pattern (plant roadmap P4, `bark_pattern`): dark brown bark in irregular flat scales; set from general knowledge of the species, not measured."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     }
   },
   "provenance": {

@@ -4,7 +4,10 @@
   "taxon": {
     "scientific_name": "Dasylirion wheeleri",
     "common_name": "common sotol",
-    "usda_symbol": "DAWH"
+    "usda_symbol": "DAWH",
+    "family": "Asparagaceae",
+    "genus": "Dasylirion",
+    "plant_name_id": 303995
   },
   "growth_form": "rosette_succulent",
   "generator": {
@@ -169,15 +172,53 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: a dense, nearly stemless rosette of a hundred or more narrow blue-green leaves 50 cm to 1 m long, spoon-shaped at the base and armed with curved prickles along both edges; old leaves hang as a skirt; a narrow flowering spike 2 to 5 m tall rises most years once the plant is mature. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Rough heights from general knowledge, with the flowering spike a mature sotol sends up most years: about 3 to 3.5 m at 30 and 40 years. Wide tolerances: a plant between spikes is only its leaves' height, about 1 m. Young plants flower from about 12 years, some later, so no reference is set before 30."
     },
     "appearance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Colours chosen by eye from photographs: blue-green leaves with yellowish prickles, a straw-coloured skirt, a cream flowering spike."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     }
   },
   "provenance": {

@@ -31,11 +31,14 @@ pub mod body;
 pub mod conditions;
 pub mod drawing;
 pub mod evidence;
+pub mod form;
+pub mod formula;
 pub mod fruit;
 pub mod graph;
 pub mod ground;
 pub mod grow;
 pub mod impostor;
+pub mod inherit;
 pub mod json;
 pub mod leaves;
 pub mod library;
@@ -45,6 +48,7 @@ pub mod lsys;
 pub mod math;
 pub mod mesh;
 pub mod niche;
+pub mod occlusion;
 pub mod package;
 pub mod parts;
 pub mod preview;
@@ -56,8 +60,10 @@ pub mod shed;
 pub mod shoots;
 pub mod spec;
 pub mod spines;
+pub mod substrate;
 pub mod templates;
 pub mod texture;
+pub mod traits;
 pub mod venation;
 
 /// Revision of the generator as a whole: the L-system engine, its tools and
@@ -77,5 +83,18 @@ pub mod venation;
 /// (`APPARTS2`). 10: bark vertices carry the stem's radius in their
 /// colour's alpha, for the species' bark pattern (`crate::bark`). 11: leaf
 /// templates draw their veins grown by space colonization
-/// (`crate::venation`).
-pub const GENERATOR_REVISION: u32 = 11;
+/// (`crate::venation`). 12: every level keeps the nearest one's widths
+/// (plant leftovers L10 and L12): cluster cards count overlapping organs
+/// once, follow their bent organs, never reach past them and share their
+/// area in rows; rings widen to the stem's mean width; the thin wood a
+/// level drops comes back as sticks; and impostor alpha keeps the plant's
+/// coverage at the cut-out. 13: organs take their colour, and leaves their
+/// sun or shade form, along the logarithm of their light between
+/// `looks::DEEP_SHADE` and `looks::FULL_SUN`, so a dense crown's surface is
+/// drawn sunlit; and bark is darkened by the sky it sees through the
+/// plant's leaves (`crate::occlusion`). 14: a rosette's blades become a
+/// star of its own blades at coarse levels, fewer and wider, with thick
+/// leaves' edges (render review S1), instead of a cross of cluster cards.
+/// 15: a cluster's cover is counted from 16 directions on a 24-cell grid,
+/// not 32 on 48, so coarse levels bake several times faster.
+pub const GENERATOR_REVISION: u32 = 15;

@@ -126,13 +126,15 @@ pub fn bake(
         supersample,
         shadows: false,
         shadow_bounds: None,
+        shadow_texels: raster::SHADOW_TEXELS,
     };
     for row in 0..views {
         for column in 0..views {
             let direction = view_direction(column, row, views);
             let camera = view_camera(direction, center, radius);
             let image = raster::render(&items, &camera, &Lighting::flat(), templates, &options);
-            let colour = image.to_srgb8(None);
+            let mut colour = image.to_srgb8(None);
+            preserve_coverage(&mut colour);
             let covered: Vec<bool> = colour
                 .as_chunks::<4>()
                 .0
@@ -171,6 +173,68 @@ pub fn bake(
         normal_depth,
     }
 }
+
+/// Scales a view's alpha so the texels a renderer's cut-out keeps (alpha
+/// at least a half, [`KEPT_ALPHA`] and up) cover as much as the plant
+/// does, the view's mean alpha (plant leftover L12). Otherwise every twig
+/// covering half a texel is drawn a whole texel wide and a far crown reads
+/// fuller and wider than the plant: about 15 % on the trees measured. The
+/// texels are kept in order of their own coverage, so the thinnest go
+/// first, as alpha-tested coverage preservation does for mips (Castaño,
+/// "Computing alpha mipmaps", 2010).
+fn preserve_coverage(rgba: &mut [u8]) {
+    let alphas: Vec<u8> = rgba
+        .as_chunks::<4>()
+        .0
+        .iter()
+        .map(|texel| texel[3])
+        .collect();
+    let total: u64 = alphas.iter().map(|&a| u64::from(a)).sum();
+    // Texels the plant's coverage fills, rounded.
+    let wanted = usize::try_from((total + 127) / 255).unwrap_or(usize::MAX);
+    if wanted == 0 {
+        return;
+    }
+    let mut sorted = alphas.clone();
+    sorted.sort_unstable_by(|a, b| b.cmp(a));
+    let last_kept = sorted[wanted.min(sorted.len()) - 1];
+    if last_kept == 0 {
+        return;
+    }
+    let scale = f64::from(KEPT_ALPHA) / f64::from(last_kept);
+    // Texels covered exactly as much as the last one kept tie; only as
+    // many of them stay as the coverage needs, picked by a hash of their
+    // place so the ones dropped are scattered, never a band.
+    let above = alphas.iter().filter(|&&a| a > last_kept).count();
+    let mut ties: Vec<(u64, usize)> = alphas
+        .iter()
+        .enumerate()
+        .filter(|&(_, &a)| a == last_kept)
+        .map(|(index, _)| (crate::rng::mix64(index as u64 ^ TIE_SALT), index))
+        .collect();
+    ties.sort_unstable();
+    let dropped: std::collections::BTreeSet<usize> = ties
+        .iter()
+        .skip(wanted.saturating_sub(above))
+        .map(|&(_, index)| index)
+        .collect();
+    for (index, texel) in rgba.as_chunks_mut::<4>().0.iter_mut().enumerate() {
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let mut scaled = (f64::from(texel[3]) * scale).round().min(255.0) as u8;
+        if dropped.contains(&index) {
+            scaled = KEPT_ALPHA - 1;
+        }
+        // A texel the plant covers at all keeps some alpha, so the depth
+        // fill and the mips still see it.
+        texel[3] = if texel[3] > 0 { scaled.max(1) } else { 0 };
+    }
+}
+
+/// Salt of the hash that orders tied texels ([`preserve_coverage`]).
+const TIE_SALT: u64 = 0x6c62_272e_07bb_0142;
+
+/// The least alpha a renderer's cut-out keeps: 128 of 255, at least a half.
+pub const KEPT_ALPHA: u8 = 128;
 
 /// For every texel of a `size × size` view, the index of a nearest covered
 /// texel, found breadth-first over the four neighbours so that ties always

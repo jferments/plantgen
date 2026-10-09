@@ -52,6 +52,21 @@ pub struct PreviewOptions {
 
 pub const SKY: [f32; 3] = [0.52, 0.62, 0.74];
 const GROUND: [f32; 3] = [0.16, 0.19, 0.11];
+
+/// How many times brighter than the lighting gives the previews draw lit
+/// surfaces against the fixed [`SKY`], as a camera exposes for a sunlit
+/// scene: one stop. Photographs of trees in sun show the crown at about a
+/// third of the sky's brightness; without it a sunlit bigleaf maple drew at
+/// about a tenth.
+pub const EXPOSURE: f32 = 2.0;
+
+/// Where the exposed highlights' shoulder starts: brighter values roll off
+/// toward white instead of clipping, so pale flowers and bark keep detail.
+const SHOULDER: f32 = 0.6;
+
+/// Texels along each side of a close-up's shadow map: over the box round
+/// what it frames, finer than a spine.
+const CLOSE_UP_SHADOW_TEXELS: usize = 8192;
 const FIGURE: [f32; 3] = [0.55, 0.22, 0.12];
 const ROD_LIGHT: [f32; 3] = [0.7, 0.7, 0.66];
 
@@ -292,25 +307,59 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
     };
     let mut shaded = vec![(&figure_mesh, Material::Opaque)];
     shaded.extend(items);
-    let shadow_bounds = raster::bounds(&shaded).map(|(low, high)| {
-        // Room on the ground for the shadows of a low sun.
-        let pad = Vec3::new(high.y * 1.5, 0.0, high.y * 1.5);
-        (low - pad, high + pad)
-    });
+    // A close-up's shadow map covers only a box round what it frames, so its
+    // texels are finer than its pixels: the whole plant's map would leave
+    // shadows in blocks tens of pixels wide. Everything between the box and
+    // the sun still casts into it, because the sun's view is orthographic
+    // and keeps what lies behind its eye.
+    let shadow_bounds = if let Some((target, span)) = options.focus {
+        let half = Vec3::new(span, span, span);
+        Some((target - half, target + half))
+    } else {
+        raster::bounds(&shaded).map(|(low, high)| {
+            // Room on the ground for the shadows of a low sun.
+            let pad = Vec3::new(high.y * 1.5, 0.0, high.y * 1.5);
+            (low - pad, high + pad)
+        })
+    };
     let render_options = RenderOptions {
         width: options.width,
         height: options.height,
         supersample: options.supersample,
         shadows: true,
         shadow_bounds,
+        // A close-up's sub-millimetre texels catch the shadow of a spine.
+        shadow_texels: if options.focus.is_some() {
+            CLOSE_UP_SHADOW_TEXELS
+        } else {
+            raster::SHADOW_TEXELS
+        },
     };
-    raster::render(
+    let mut image = raster::render(
         &meshes,
         &camera,
         &Lighting::daylight(),
         templates,
         &render_options,
-    )
+    );
+    for colour in &mut image.color {
+        for channel in colour.iter_mut().take(3) {
+            *channel = expose(*channel);
+        }
+    }
+    image
+}
+
+/// A surface's linear value times [`EXPOSURE`], unchanged up to
+/// [`SHOULDER`] and then rolling off toward 1 with no kink.
+fn expose(value: f32) -> f32 {
+    let exposed = value * EXPOSURE;
+    if exposed <= SHOULDER {
+        exposed
+    } else {
+        let room = 1.0 - SHOULDER;
+        SHOULDER + room * (1.0 - libm::expf(-(exposed - SHOULDER) / room))
+    }
 }
 
 /// Lay images out in a grid, `columns` wide, on the sky colour with a
@@ -361,5 +410,24 @@ mod tests {
         let (rod, tall, _) = scale(0.3, 0.1);
         assert!((tall - 0.5).abs() < 1e-12);
         assert_eq!(rod.indices.len(), 5 * 5 * 6);
+    }
+
+    #[test]
+    fn exposure_brightens_and_rolls_highlights_off_short_of_white() {
+        let shadow = 0.1;
+        assert!((expose(shadow) - shadow * EXPOSURE).abs() < 1e-6);
+        // Continuous through the shoulder and rising all the way; a white
+        // surface in full sun stays short of white.
+        let below = expose(SHOULDER / EXPOSURE - 1e-4);
+        let above = expose(SHOULDER / EXPOSURE + 1e-4);
+        assert!((above - below).abs() < 1e-3);
+        let mut last = 0.0;
+        for step in 0..200 {
+            #[allow(clippy::cast_precision_loss)]
+            let value = expose(step as f32 * 0.02);
+            assert!(value >= last && value <= 1.0);
+            last = value;
+        }
+        assert!(expose(1.0) < 0.99 && expose(1.5) > 0.95);
     }
 }

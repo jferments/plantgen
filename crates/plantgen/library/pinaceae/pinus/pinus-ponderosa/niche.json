@@ -21,54 +21,67 @@
   "evidence": {
     "layers": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "A small native population grows on the dry prairies and oak woodland of the south Puget Sound glacial outwash."
     },
     "moisture": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Dry, gravelly prairie soils."
     },
     "heat_load": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Warm, sunny ground; favours slopes facing south and west."
     },
     "elevation_m": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Sea level to about 1,500 m in western Washington; the upper limits are loose."
     },
     "max_slope_deg": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "On the level outwash plains rather than slopes."
     },
     "shade_tolerance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Shade intolerant."
     },
     "coldest_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range (see the provenance note), coldest-month means from about −9 °C, gone by −14 °C, up to about 10 °C."
     },
     "hard_freeze_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Cold-hardy: lows to about −34 °C borne, gone where the year's coldest night falls below about −42 °C."
     },
     "warmest_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range, warmest-month means from about 14.5 to 25 °C; gone below 12 °C, where summers are too short, and above 28 °C."
     },
     "degree_days_0": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "About 1,800 or more degree-days above 0 °C, none below 1,100."
     },
     "degree_days_5": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "About 800 or more degree-days above 5 °C, none below 400: from the lowlands to the montane forest."
     },
     "moisture_index": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range, a moisture index from about 0.3, gone by 0.2."
     },
     "summer_rain": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "No lower limit; across its range at most about 0.7 of the year's precipitation falls in summer, gone by 0.9."
     }
   },

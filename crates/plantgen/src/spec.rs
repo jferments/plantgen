@@ -12,16 +12,22 @@ use serde::{Deserialize, Serialize};
 
 use crate::body::BodyLook;
 use crate::conditions::{ClassKey, Conditions};
-pub use crate::evidence::{Evidence, FieldEvidence, Provenance, SourceRef};
+pub use crate::evidence::{Evidence, FieldEvidence, Provenance, Source, SourceKind, SourceRef};
 use crate::library::{Entry, Library};
 use crate::looks::{self, Flare, Look, Moss, OrganLook, Ridges};
 use crate::lsys::program::SymbolKind;
 use crate::lsys::{Neighbourhood, OrganKind, Program, ProgramError, tools};
+use crate::substrate::{Substrate, SubstratePreset};
 
 pub const SPEC_SCHEMA: u32 = 1;
 
+/// The top-level keys of a spec that no evidence note covers: its schema
+/// and id, its model tier (itself the statement of how far the spec is
+/// fitted), and its evidence and provenance.
+pub const UNNOTED: &[&str] = &["schema", "id", "tier", "evidence", "provenance"];
+
 /// Built-in plant programs, by name.
-pub const PROGRAMS: [(&str, &str); 14] = [
+pub const PROGRAMS: [(&str, &str); 15] = [
     ("conifer", include_str!("../programs/conifer.lsys")),
     ("broadleaf", include_str!("../programs/broadleaf.lsys")),
     ("grass", include_str!("../programs/grass.lsys")),
@@ -36,6 +42,7 @@ pub const PROGRAMS: [(&str, &str); 14] = [
     ("climber", include_str!("../programs/climber.lsys")),
     ("epiphyte", include_str!("../programs/epiphyte.lsys")),
     ("cushion", include_str!("../programs/cushion.lsys")),
+    ("sapindaceae", include_str!("../programs/sapindaceae.lsys")),
 ];
 
 /// A built-in program's source, by name.
@@ -53,7 +60,8 @@ pub fn all_species() -> impl Iterator<Item = (&'static str, &'static str)> {
         .map(|entry| (entry.id.as_str(), entry.source()))
 }
 
-/// A built-in species' spec, as JSON, by id.
+/// A built-in species' spec, as JSON, by id (an old id finds the species
+/// renamed from it).
 #[must_use]
 pub fn builtin_species(id: &str) -> Option<&'static str> {
     Library::builtin().entry(id).map(Entry::source)
@@ -91,6 +99,9 @@ pub fn areas_agree(drawn: f64, shaded: f64) -> bool {
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Taxon {
+    /// Its name: in a library, the accepted name in the World Checklist of
+    /// Vascular Plants (`Pinus contorta var. contorta`), which the taxon's
+    /// id writes as an id (`pinus-contorta-var-contorta`).
     pub scientific_name: String,
     pub common_name: String,
     /// USDA PLANTS symbol, for example `PSME`.
@@ -99,6 +110,19 @@ pub struct Taxon {
     /// GBIF backbone taxon key.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub gbif_key: Option<u64>,
+    /// The family of the accepted name in the World Checklist of Vascular
+    /// Plants (WCVP), as WCVP writes it (`Pinaceae`); the family folder is
+    /// its lower case.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub family: Option<String>,
+    /// The genus `scientific_name` is written in (`Pseudotsuga`); the genus
+    /// folder is its lower case.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub genus: Option<String>,
+    /// WCVP's `plant_name_id` of the accepted taxon: the species, or the
+    /// subspecies or variety where the taxon is one.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub plant_name_id: Option<u64>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -129,6 +153,25 @@ pub enum GrowthForm {
     Epiphyte,
     /// A hard cushion of packed rosettes: llareta.
     Cushion,
+}
+
+impl GrowthForm {
+    /// Every growth form, in the order they are declared.
+    pub const ALL: [Self; 13] = [
+        Self::ExcurrentTree,
+        Self::DecurrentTree,
+        Self::ScaleLeavedTree,
+        Self::Shrub,
+        Self::Graminoid,
+        Self::Forb,
+        Self::Fern,
+        Self::Vine,
+        Self::StemSucculent,
+        Self::RosetteSucculent,
+        Self::Palm,
+        Self::Epiphyte,
+        Self::Cushion,
+    ];
 }
 
 /// Which plant program grows the species, and its parameter values.
@@ -240,13 +283,23 @@ pub struct Variant {
     /// `None` for an environment's.
     #[serde(skip)]
     pub class: Option<ClassKey>,
+    /// The substrate preset (and its seed) of a variant grown in a
+    /// conditions document that names one (G3); `None` grows on level soil.
+    #[serde(skip)]
+    pub substrate: Option<(SubstratePreset, u64)>,
 }
 
 impl Variant {
     /// The conditions it grows in: its environment, with its neighbourhood.
     #[must_use]
     pub fn conditions(&self) -> Conditions {
-        Conditions::in_neighbourhood(self.environment, self.neighbourhood)
+        Conditions {
+            substrate: self.substrate.map(|(preset, seed)| Substrate {
+                seed: Some(seed),
+                ..Substrate::preset(preset)
+            }),
+            ..Conditions::in_neighbourhood(self.environment, self.neighbourhood)
+        }
     }
 }
 
@@ -612,13 +665,53 @@ impl PlantSpec {
         Ok(spec)
     }
 
-    /// A built-in species by id.
+    /// A built-in species by id (an old id finds the species renamed from
+    /// it).
     ///
     /// # Errors
     ///
     /// Fails if there is no such species.
     pub fn builtin(id: &str) -> Result<Self, SpecError> {
         Library::builtin().spec(id)
+    }
+
+    /// Hold a spec, as written (`document`, its JSON: a species' merged
+    /// spec, or a spec file), to per-value evidence: every value outside
+    /// [`UNNOTED`] has a note on its own path or a subtree holding it, no
+    /// note names a path the spec does not have or is blank, and every note
+    /// cites a source `library` holds. A subtree's note stands for every
+    /// value under it, so it may cover them only where they share its basis;
+    /// review holds that, as the check cannot.
+    ///
+    /// Packages are built without the notes (they are not in a package's
+    /// key), so this is the library's check, not [`PlantSpec::validate_in`]'s.
+    ///
+    /// # Errors
+    ///
+    /// Names the first value without a note, or the first note that is
+    /// blank, names no value, or cites no source or an unknown one.
+    pub fn check_evidence(document: &serde_json::Value, library: &Library) -> Result<(), String> {
+        let notes: BTreeMap<String, FieldEvidence> = document
+            .get("evidence")
+            .map(|notes| serde_json::from_value(notes.clone()))
+            .transpose()
+            .map_err(|error| format!("evidence: {error}"))?
+            .unwrap_or_default();
+        crate::evidence::check_coverage(document, &notes, UNNOTED)?;
+        for (path, note) in &notes {
+            note.check()
+                .map_err(|error| format!("the evidence note on `{path}`: {error}"))?;
+            match note.source.as_deref() {
+                None => return Err(format!("the evidence note on `{path}` cites no source")),
+                Some(id) if library.source(id).is_none() => {
+                    return Err(format!(
+                        "the evidence note on `{path}` cites `{id}`, which is not in the library's sources/"
+                    ));
+                }
+                Some(_) => {}
+            }
+        }
+        Ok(())
     }
 
     /// Check the spec's values against the built-in library.
@@ -706,6 +799,15 @@ impl PlantSpec {
                     "{at}: interactions.host must be the spec's own host"
                 ));
             }
+            // A spec's variants grow on named substrates; a grid comes from
+            // a host growing a plant in its own world.
+            if conditions
+                .substrate
+                .as_ref()
+                .is_some_and(|substrate| substrate.preset.is_none())
+            {
+                return fail(format!("{at}: a spec's substrate must name a preset"));
+            }
         }
         if let Err(message) = self.appearance.validate() {
             return fail(message);
@@ -726,8 +828,17 @@ impl PlantSpec {
             return fail("provenance needs at least one source".into());
         }
         for (path, note) in &self.evidence {
-            if let Err(message) = note.check(&self.provenance) {
+            if let Err(message) = note.check() {
                 return fail(format!("the evidence note on `{path}`: {message}"));
+            }
+            if let Some(id) = note
+                .source
+                .as_deref()
+                .filter(|id| library.source(id).is_none())
+            {
+                return fail(format!(
+                    "the evidence note on `{path}` cites `{id}`, which is not in the library's sources/"
+                ));
             }
         }
         if library.program(&self.generator.program).is_none() {
@@ -838,6 +949,7 @@ impl PlantSpec {
                         .copied()
                         .unwrap_or_else(|| environment.neighbourhood()),
                     class: None,
+                    substrate: None,
                 });
             }
         }
@@ -851,6 +963,11 @@ impl PlantSpec {
                     seed: *seed,
                     neighbourhood: conditions.neighbourhood(),
                     class: Some(conditions.class()),
+                    substrate: conditions.substrate.as_ref().and_then(|substrate| {
+                        substrate
+                            .preset
+                            .map(|preset| (preset, substrate.seed.unwrap_or(1)))
+                    }),
                 });
             }
         }
@@ -861,6 +978,62 @@ impl PlantSpec {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Per-value evidence: every value has a note, and every note cites a
+    /// source the library holds.
+    #[test]
+    fn every_value_needs_a_note_citing_a_source() {
+        let library = Library::builtin();
+        let good: serde_json::Value =
+            serde_json::from_str(crate::library::source("pseudotsuga-menziesii")).unwrap();
+        PlantSpec::check_evidence(&good, library).unwrap();
+        let refused = |change: &dyn Fn(&mut serde_json::Value), wanted: &str| {
+            let mut spec = good.clone();
+            change(&mut spec);
+            let error = PlantSpec::check_evidence(&spec, library).unwrap_err();
+            assert!(error.contains(wanted), "{wanted}: {error}");
+        };
+        refused(
+            &|spec| {
+                spec["evidence"].as_object_mut().unwrap().remove("growth");
+            },
+            "has no evidence note",
+        );
+        refused(
+            &|spec| {
+                spec["evidence"]["taxon"]
+                    .as_object_mut()
+                    .unwrap()
+                    .remove("source");
+            },
+            "the evidence note on `taxon` cites no source",
+        );
+        refused(
+            &|spec| spec["evidence"]["taxon"]["source"] = "no-such-source".into(),
+            "cites `no-such-source`",
+        );
+        refused(
+            &|spec| spec["evidence"]["taxon"]["note"] = " ".into(),
+            "blank",
+        );
+        refused(
+            &|spec| {
+                let note = spec["evidence"]["taxon"].clone();
+                spec["evidence"]["colour"] = note;
+            },
+            "`colour`, which holds no value",
+        );
+        // A more specific note may stand beside its subtree's.
+        let mut finer = good.clone();
+        let mut note = finer["evidence"]["generator.params"].clone();
+        note["note"] = "Measured.".into();
+        finer["evidence"]["generator.params.whorl"] = note;
+        PlantSpec::check_evidence(&finer, library).unwrap();
+        // The schema, id, model tier and provenance need no note.
+        for key in UNNOTED {
+            assert!(good.get(*key).is_some(), "{key}");
+        }
+    }
 
     #[test]
     fn builtin_species_parse_validate_and_compile() {
@@ -897,23 +1070,19 @@ mod tests {
             .unwrap()
             .replace("\"tier\"", "\"tear\"");
         assert!(PlantSpec::from_json(&text).is_err());
+        // A note's source is a source id the library holds.
         let mut spec = PlantSpec::builtin("pseudotsuga-menziesii").unwrap();
         let note = spec.evidence.get_mut("allometry").unwrap();
-        note.tier = Some(4);
-        note.source = Some(spec.provenance.sources.len() - 1);
-        spec.validate().unwrap();
+        note.source = Some("Not An Id".into());
+        assert!(spec.validate().unwrap_err().0.contains("not a source id"));
         let note = spec.evidence.get_mut("allometry").unwrap();
-        note.source = Some(spec.provenance.sources.len());
+        note.source = Some("no-such-source".into());
         assert!(
             spec.validate()
                 .unwrap_err()
                 .0
-                .contains("note on `allometry`: source")
+                .contains("the evidence note on `allometry` cites `no-such-source`")
         );
-        let note = spec.evidence.get_mut("allometry").unwrap();
-        note.source = None;
-        note.tier = Some(5);
-        assert!(spec.validate().unwrap_err().0.contains("tier 5"));
     }
 
     #[test]

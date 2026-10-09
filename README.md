@@ -4,10 +4,10 @@ Botanically accurate generation of 3D plant models from open data.
 
 **Website: [plantgen.io](https://plantgen.io)**
 
-![A forest of PlantGen's species: tall conifers and broadleaf trees over fireweed, shrubs and grasses beside a lake](docs/images/forest-in-worldlab.jpg)
+![A forest of PlantGen's species: tall conifers and broadleaf trees over fireweed, shrubs and grasses beside a lake](docs/images/forest.jpg)
 
 *PlantGen's species in a forest of the Pacific Northwest, placed by habitat
-and drawn by [Project After](https://github.com/jferments)'s WorldLab.*
+and rendered in real time.*
 
 PlantGen grows plants the way plants grow. A species is data: its form,
 its looks and where it lives, each value with a note on how it is known.
@@ -18,15 +18,20 @@ it, and turns what grew into meshes, levels of detail and impostors. No
 3D models are stored or shipped: you grow them on your own machine, and the
 same species and seed give the same plant, bit for bit, on every machine.
 
-| | |
-| --- | --- |
-| ![A saguaro's ribs, each areole with its own solid spines](docs/images/saguaro-spines.jpg) | ![The crown of a fishhook barrel cactus: red-tipped hooked spines, yellow fruit and an orange flower](docs/images/barrel-cactus-crown.jpg) |
-| *Saguaro: every areole along every rib grows its own spines.* | *Fishhook barrel cactus: hooked central spines, flowers and fruit on the crown.* |
-| ![The joints of a teddy-bear cholla, dense with pale spines](docs/images/cholla-spines.jpg) | ![Fireweed's flower spikes: four-petalled magenta flowers opening up the stem below their buds](docs/images/fireweed-flowers.jpg) |
-| *Teddy-bear cholla: joints packed with pale spines.* | *Fireweed: flowers open up the spike, buds still closed above.* |
+| | | |
+| --- | --- | --- |
+| ![Saguaros and a pale-barked desert tree over gravel and sand, with more saguaros and red hills behind](docs/images/saguaro-desert.jpg) | ![Fireweed in flower across a meadow of grasses and bare rock, with a mountain behind](docs/images/fireweed-meadow.jpg) | ![The Hoh River from the air, its valley filled with conifer forest around a grassy clearing](docs/images/hoh-river.jpg) |
+| *A Sonoran Desert bajada: saguaros among shrubs and smaller cacti.* | *Fireweed in flower across a subalpine meadow in the Cascades.* | *The Hoh River from the air: rainforest conifers down to the water.* |
 
-*Rendered by `plantc render` from the built-in library, with every flower,
-fruit and spine drawn as its own mesh (`--parts on`).*
+*Rendered in real time, with each species placed where its habitat fits.*
+
+| | | |
+| --- | --- | --- |
+| ![A saguaro's ribs, each areole with its own solid spines](docs/images/saguaro-spines.jpg) | ![The crown of a fishhook barrel cactus: red-tipped hooked spines, yellow fruit and an orange flower](docs/images/barrel-cactus-crown.jpg) | ![The joints of a teddy-bear cholla, dense with pale spines](docs/images/cholla-spines.jpg) |
+| *Saguaro: every areole along every rib grows its own spines, which shade the stem.* | *Fishhook barrel cactus: hooked central spines, flowers and fruit on the crown.* | *Teddy-bear cholla: joints packed with pale spines.* |
+
+*Close-ups rendered by `plantc render --focus` from the built-in library,
+with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
 
 ## What it does
 
@@ -70,16 +75,11 @@ cargo build --release
 
 `plantc help` lists every command: growing a plant and printing its size
 at every age, rendering it at one age or every age, its organs through the
-year, its card textures and the ground's looks, and building packages.
+year, its card textures and the ground's looks, building packages, and
+listing the sources a species' values cite (`plantc sources cite ID` finds
+every value that names one).
 `--library DIR` reads species and programs from a folder on top of the
 built-in ones, so you can write your own.
-
-## Where it comes from
-
-PlantGen grew up inside [Project After](https://github.com/jferments), a
-game of a world after the collapse, as its plant generator. In October
-2026 it moved here with its history. Project After now uses it at a
-pinned revision, and After's CI builds and tests that revision.
 
 ## Contributing
 

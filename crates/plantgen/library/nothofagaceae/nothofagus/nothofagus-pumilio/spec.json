@@ -3,7 +3,10 @@
   "id": "nothofagus-pumilio",
   "taxon": {
     "scientific_name": "Nothofagus pumilio",
-    "common_name": "lenga"
+    "common_name": "lenga",
+    "family": "Nothofagaceae",
+    "genus": "Nothofagus",
+    "plant_name_id": 135793
   },
   "growth_form": "decurrent_tree",
   "generator": {
@@ -110,15 +113,53 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: a deciduous southern beech of the Patagonian Andes, a tall forest tree where sheltered but, at the tree line and on the windward plains, a low, leaning tree flagged by the westerlies, its crown streaming downwind; small crinkled leaves turning red in autumn. Grown here in a steady wind. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Rough heights from general knowledge of the species: about 5 m at 20 years and 8 m at 60, wind-pruned. Wide tolerances."
     },
     "appearance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Colours chosen by eye from photographs: fresh green leaves, grey bark. Bark pattern (plant roadmap P4, `bark_pattern`): dark grey bark with lenticels, smooth when young and fissured on old trees; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves smaller and narrower than shade leaves; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     }
   },
   "provenance": {

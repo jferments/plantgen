@@ -11,7 +11,10 @@
 //! ```
 //!
 //! The key is a SHA-256 over everything that decides the contents: the
-//! package format, [`crate::GENERATOR_REVISION`], the spec, the program
+//! package format, [`crate::GENERATOR_REVISION`], the spec without its
+//! evidence notes (they say how values are known, not what grows, so
+//! editing one rebuilds nothing; the provenance, with its credits and
+//! licences, stays in the spec and the key), the program
 //! source, the quality profile and the organ atlas drawn from the spec's
 //! looks; for a guest, its host's spec and program; and for a species
 //! whose organs have seasons, the day of the year it is built for
@@ -467,7 +470,8 @@ pub struct Manifest {
     pub day: Option<f64>,
     pub variants: Vec<VariantRecord>,
     pub validation: Vec<ValidationRecord>,
-    /// The spec the package was built from, sources and licences included.
+    /// The spec the package was built from, sources and licences included,
+    /// without its evidence notes (the library keeps those).
     pub spec: PlantSpec,
     /// Every object, by hex SHA-256.
     pub objects: BTreeMap<String, ObjectRecord>,
@@ -479,6 +483,14 @@ impl Manifest {
     pub fn directory_name(&self) -> String {
         directory_name(&self.species, &self.key)
     }
+}
+
+/// A spec as a package holds and hashes it: without its evidence notes.
+#[must_use]
+pub fn packaged(spec: &PlantSpec) -> PlantSpec {
+    let mut packaged = spec.clone();
+    packaged.evidence.clear();
+    packaged
 }
 
 /// `<species>-<first 16 hex digits of key>.afterplant`.
@@ -601,9 +613,10 @@ impl Inputs {
             return Err(SpecError(format!("day must be between 1 and 365, found {day}")).into());
         }
         // Build from the spec as the manifest records it, numbers rounded
-        // to 15 digits (see `crate::json`), so a manifest's copy of its spec
-        // rebuilds the same package.
-        let spec_json = json::to_vec(spec).map_err(format_error)?;
+        // to 15 digits (see `crate::json`) and its evidence notes left out
+        // (`packaged`), so a manifest's copy of its spec rebuilds the same
+        // package and a note's edit changes no key.
+        let spec_json = json::to_vec(&packaged(spec)).map_err(format_error)?;
         let spec: PlantSpec =
             serde_json::from_slice(&spec_json).map_err(|error| format_error(error.to_string()))?;
         spec.validate_in(library)?;
@@ -622,7 +635,7 @@ impl Inputs {
         let host = spec.host_in(library)?;
         let host_bytes = match &host {
             Some((host_spec, host_source)) => {
-                let mut bytes = json::to_vec(host_spec).map_err(format_error)?;
+                let mut bytes = json::to_vec(&packaged(host_spec)).map_err(format_error)?;
                 bytes.extend_from_slice(host_source.as_bytes());
                 Some(bytes)
             }
@@ -941,23 +954,36 @@ fn bake_keyframe(graph: &PlantGraph, inputs: &Inputs) -> Result<BakedKeyframe, P
     // they are on the inputs' day.
     let staged = crate::looks::staged(graph, &inputs.sizes);
     let drawn = staged.as_ref().unwrap_or(graph);
-    let meshes: Vec<PlantMesh> = inputs
-        .quality
-        .lods
-        .iter()
-        .enumerate()
-        .map(|(level, lod)| {
-            mesh::build_with(
+    // A coarser level never draws more wood than the one before it: where
+    // the sticks standing in for the thin wood it drops (`mesh::twigs`)
+    // would make it, it is built again with fewer, thicker sticks covering
+    // as much.
+    let mut meshes: Vec<PlantMesh> = Vec::with_capacity(inputs.quality.lods.len());
+    for (level, lod) in inputs.quality.lods.iter().enumerate() {
+        let lod = lod.for_height(graph.height);
+        let build = |sticks: Option<usize>| {
+            mesh::build_capped(
                 drawn,
                 &inputs.looks,
                 &inputs.bodies,
                 &inputs.spec.appearance,
-                &lod.for_height(graph.height),
+                &lod,
                 level,
                 Some(&inputs.part_types),
+                sticks,
             )
-        })
-        .collect();
+        };
+        let mut level_mesh = build(None);
+        if let Some(finer) = meshes
+            .last()
+            .map(|finer: &PlantMesh| finer.wood.triangle_count())
+            && level_mesh.wood.triangle_count() > finer
+        {
+            let tubes = build(Some(0)).wood.triangle_count();
+            level_mesh = build(Some(finer.saturating_sub(tubes) / mesh::STICK_TRIANGLES));
+        }
+        meshes.push(level_mesh);
+    }
     let impostor = impostor::bake(
         &meshes[IMPOSTOR_LOD],
         &inputs.templates,

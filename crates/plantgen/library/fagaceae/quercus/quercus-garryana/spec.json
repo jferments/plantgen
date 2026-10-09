@@ -4,7 +4,10 @@
   "taxon": {
     "scientific_name": "Quercus garryana",
     "common_name": "Oregon white oak",
-    "usda_symbol": "QUGA4"
+    "usda_symbol": "QUGA4",
+    "family": "Fagaceae",
+    "genus": "Quercus",
+    "plant_name_id": 172855
   },
   "growth_form": "decurrent_tree",
   "generator": {
@@ -147,15 +150,53 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: a slow, long-lived oak with a broad, rounded crown of crooked, gnarled limbs and deeply lobed, leathery leaves. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Rough sizes from general knowledge of the species: 15 m tall and 50 cm across at breast height at 80 years in the open. Replace with measured data before calling this species calibrated."
     },
     "appearance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Colours chosen by eye: dark, glossy green leaves; pale grey, furrowed bark carrying moss and lichen. Fruit (plant roadmap P4), as in mid-July: green acorns about 2.5 cm long in shallow, scaly cups, singly or in pairs. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: catkins in April and May; acorns green in summer, ripe and falling in September and October. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): light grey bark, furrowed and checkered into scaly ridges; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves of the outer crown small, narrow and deeply lobed, shade leaves inside it larger, broader and shallower, as in other oaks; set from general knowledge of sun and shade leaves and juvenile foliage, not measured. Leaf (plant roadmap P4): the sprig's lobes rounded (`round` 0.8), as Oregon white oak's are, and `leaf_area` set to the 0.303 m² it then draws on a leaf 1 m long."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     }
   },
   "provenance": {

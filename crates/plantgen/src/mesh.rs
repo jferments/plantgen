@@ -22,6 +22,7 @@
 //! and every wood vertex a wind level (0 stem, 1 branch, 2 twig; cards are
 //! level 3) for the wind hierarchy.
 
+use std::cell::RefCell;
 use std::collections::BTreeMap;
 
 use serde::{Deserialize, Serialize};
@@ -31,6 +32,7 @@ use crate::body::{self, BodyLook};
 use crate::graph::{GraphOrgan, PlantGraph};
 use crate::looks::{Bottle, Flare, Look, Moss, Mount, Ridges};
 use crate::math::{self, Vec3, any_perpendicular};
+use crate::occlusion::SkyLight;
 use crate::rng::{mix64, unit};
 use crate::spec::Appearance;
 use crate::spines::Tuft;
@@ -284,8 +286,13 @@ pub const LOD_REFERENCE_HEIGHT: f64 = 15.0;
 pub const CLUSTER_UPRIGHT_SKIP: f64 = 0.866;
 
 /// Directions over the half sphere along which a cluster's cards are
-/// sized to cover as much as its organs ([`card_areas`]).
-const CLUSTER_DIRECTIONS: usize = 32;
+/// sized to cover as much as its organs ([`card_areas`]). Each costs a
+/// count of the cluster's cover ([`painted`]) and another of its cards',
+/// the most of a coarse level's bake: 16 keep the levels' widths and
+/// heights as 32 did (revision 15, `tests/lod_widths.rs`) at half the cost;
+/// 12 leave gaps between them, and skunk cabbage's cards grew 1.24 times as
+/// tall as its leaves.
+const CLUSTER_DIRECTIONS: usize = 16;
 
 /// Views at most this sine of elevation (40°) above or below level, the
 /// way a walker sees crowns at the distances clusters are drawn, count
@@ -350,11 +357,34 @@ pub fn build_with(
     level: usize,
     parts: Option<&[bool]>,
 ) -> PlantMesh {
+    build_capped(graph, looks, bodies, appearance, lod, level, parts, None)
+}
+
+/// [`build_with`] with at most `sticks` stand-in sticks for the thin wood
+/// the level drops ([`twigs`]); `None` for as many as cover it. A package
+/// caps them where a level would otherwise draw more wood than the level
+/// before it.
+#[must_use]
+#[allow(clippy::too_many_arguments)]
+pub fn build_capped(
+    graph: &PlantGraph,
+    looks: &[Look],
+    bodies: &[BodyLook],
+    appearance: &Appearance,
+    lod: &LodSpec,
+    level: usize,
+    parts: Option<&[bool]>,
+    sticks: Option<usize>,
+) -> PlantMesh {
     let parts = parts.filter(|_| level == 0);
     let is_part =
         |index: usize| parts.is_some_and(|parts| parts.get(index).copied().unwrap_or(false));
     let mut mesh = PlantMesh::default();
-    wood(graph, appearance, lod, &mut mesh.wood);
+    // The sky each piece of wood sees through the plant's leaves darkens
+    // its bark, as renderers light wood as if in the open.
+    let sky = SkyLight::of(graph, looks);
+    wood(graph, appearance, lod, sky.as_ref(), &mut mesh.wood);
+    twigs(graph, appearance, lod, sticks, sky.as_ref(), &mut mesh.wood);
     // Organs drawn as solid leaves, flowers or fruit at this level leave
     // the cards.
     let mut solid = leaves::solid_types(looks, level);
@@ -645,6 +675,32 @@ impl<'a> Bark<'a> {
     }
 }
 
+/// How dark bark is drawn in the deepest shade, as a share of its colour.
+/// Renderers light wood by the sun and an even sky, so a limb deep in a
+/// crown would read as brightly as a stem in the open. Its colour carries
+/// the sky it sees instead ([`crate::occlusion`]), as a share of the light
+/// a crown's surface gets ([`crate::looks::FULL_SUN`]): wood seeing that
+/// much or more keeps its colour.
+const WOOD_SHADE: f32 = 0.2;
+
+/// The sky light at `point` through the plant's leaves; open sky for a
+/// plant with none.
+fn light_at(sky: Option<&SkyLight>, point: Vec3) -> f64 {
+    sky.map_or(1.0, |sky| sky.at(point))
+}
+
+/// Bark `colour` darkened for the sky `light` it sees.
+fn shaded(colour: [f32; 4], light: f64) -> [f32; 4] {
+    #[allow(clippy::cast_possible_truncation)]
+    let factor = ((light / crate::looks::FULL_SUN) as f32).clamp(WOOD_SHADE, 1.0);
+    [
+        colour[0] * factor,
+        colour[1] * factor,
+        colour[2] * factor,
+        colour[3],
+    ]
+}
+
 /// A bark vertex's colour: `colour` with minus the radius of the wood it
 /// lies on, metres, in alpha, which a renderer drawing a bark pattern
 /// (`crate::bark`) reads; other wood keeps alpha 1 (see [`Mesh::colors`]).
@@ -656,6 +712,307 @@ pub(crate) fn bark_alpha(colour: [f32; 4], radius: f64) -> [f32; 4] {
         colour[2],
         -(radius.max(1.0e-4) as f32),
     ]
+}
+
+/// Which segments [`wood`] draws as tubes at a level whose thinnest wood
+/// is `min_radius`: the axes it starts (a stem, a lateral, or the first
+/// past a fleshy body; not thinner than `min_radius` unless a stem) and
+/// the segments each continues through until one is thinner or a body.
+fn drawn_segments(graph: &PlantGraph, continuations: &[Option<u32>], min_radius: f64) -> Vec<bool> {
+    let mut drawn = vec![false; graph.segments.len()];
+    for (start, segment) in graph.segments.iter().enumerate() {
+        let after_body = segment
+            .parent
+            .is_some_and(|parent| graph.segments[parent as usize].body != 0);
+        if segment.body != 0 || !(segment.lateral || segment.parent.is_none() || after_body) {
+            continue;
+        }
+        let root = segment.parent.is_none();
+        if segment.radius < min_radius && !root {
+            continue;
+        }
+        let limit = if root { 0.0 } else { min_radius };
+        drawn[start] = true;
+        let mut cursor = start;
+        while let Some(next) = continuations[cursor] {
+            let next = next as usize;
+            let following = &graph.segments[next];
+            if following.radius < limit || following.body != 0 {
+                break;
+            }
+            drawn[next] = true;
+            cursor = next;
+        }
+    }
+    drawn
+}
+
+/// Sides of a stand-in stick ([`twigs`]), and its triangles: two rings.
+pub const STICK_SIDES: u32 = 3;
+pub const STICK_TRIANGLES: usize = 2 * STICK_SIDES as usize;
+
+/// A twig a level drops (see [`twigs`]): its middle, its direction
+/// (pointing up), its length, its mean radius, and its birth and shed ages.
+type Twig = (Vec3, Vec3, f64, f64, f64, Option<f64>);
+
+/// A cell for gathering the twigs a level drops, in its `min_radius`s,
+/// where the level merges no organs (see [`twigs`]).
+const TWIG_CELL_RADII: f64 = 50.0;
+
+/// Stand-ins for the thin wood a level drops (plant leftovers L10 and
+/// L12): a leafless crown of twigs (a palo verde, a mesquite in winter)
+/// otherwise thins to bare posts at its coarse levels. The dropped
+/// segments (those the nearest level draws and this one does not,
+/// [`drawn_segments`]) are gathered per cell (the level's `cluster` edge, else
+/// [`TWIG_CELL_RADII`] of its `min_radius`). A cell's twigs cover `A =
+/// sum 2 r l` seen across them; they are cut, in order across the cell,
+/// into `k` groups, `k` as many sticks as the level's thinnest wood a cell
+/// long would need for `A` (at most one per twig), and each group becomes
+/// one three-sided stick along its twigs' mean direction, at their mean
+/// place, as long as they reach along it and as thick as covers their
+/// `A`. The wood keeps its colour and the level its look from afar.
+#[allow(clippy::too_many_lines)]
+fn twigs(
+    graph: &PlantGraph,
+    appearance: &Appearance,
+    lod: &LodSpec,
+    cap: Option<usize>,
+    sky: Option<&SkyLight>,
+    out: &mut Mesh,
+) {
+    if lod.min_radius <= 0.0 {
+        return;
+    }
+    let cell = if lod.cluster > 0.0 {
+        lod.cluster
+    } else {
+        TWIG_CELL_RADII * lod.min_radius
+    };
+    // Each dropped segment: its middle, direction (pointing up, so
+    // opposite twigs agree), length and radius.
+    let mut cells: BTreeMap<(i64, i64, i64), Vec<Twig>> = BTreeMap::new();
+    // A segment tapers to the next's radius, a tip to six tenths of its
+    // own, as `wood` draws it: its mean radius is what it covers.
+    let end_radii = graph.end_radii();
+    // What the nearest level draws and this one does not.
+    let continuations = graph.continuations();
+    let finest = drawn_segments(graph, &continuations, 0.0);
+    let here = drawn_segments(graph, &continuations, lod.min_radius);
+    for (index, (segment, &end_radius)) in graph.segments.iter().zip(&end_radii).enumerate() {
+        if !finest[index] || here[index] {
+            continue;
+        }
+        let axis = segment.end - segment.start;
+        let length = axis.length();
+        if length <= 1e-9 {
+            continue;
+        }
+        let mut direction = axis / length;
+        if direction.y < 0.0 {
+            direction = -direction;
+        }
+        let middle = (segment.start + segment.end) * 0.5;
+        #[allow(clippy::cast_possible_truncation)]
+        let key = (
+            (middle.x / cell).floor() as i64,
+            (middle.y / cell).floor() as i64,
+            (middle.z / cell).floor() as i64,
+        );
+        cells.entry(key).or_default().push((
+            middle,
+            direction,
+            length,
+            f64::midpoint(segment.radius, end_radius),
+            segment.born,
+            segment.shed,
+        ));
+    }
+    let widen = math::PI / (f64::from(STICK_SIDES) * math::sin(math::PI / f64::from(STICK_SIDES)));
+    // Sticks per cell: as many as the level's thinnest wood a cell long
+    // would need for the cell's cover, at most one per twig; under a cap,
+    // fewer and thicker, at least one for the cells covering most while
+    // the cap allows.
+    let counts: Vec<usize> = {
+        let wanted: Vec<(f64, usize)> = cells
+            .values()
+            .map(|twigs| {
+                let cover: f64 = twigs.iter().map(|t| 2.0 * t.3 * t.2).sum();
+                #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                let wanted = ((cover / (2.0 * lod.min_radius * cell)).round().max(1.0) as usize)
+                    .min(twigs.len())
+                    .max(1);
+                (cover, wanted)
+            })
+            .collect();
+        let total: usize = wanted.iter().map(|&(_, w)| w).sum();
+        match cap {
+            Some(cap) if total > cap => {
+                let mut counts: Vec<usize> = wanted
+                    .iter()
+                    .map(|&(_, w)| (w * cap / total).max(1))
+                    .collect();
+                if counts.iter().sum::<usize>() > cap {
+                    // One stick each for the cells covering most.
+                    let mut order: Vec<usize> = (0..wanted.len()).collect();
+                    order.sort_by(|&a, &b| wanted[b].0.total_cmp(&wanted[a].0).then(a.cmp(&b)));
+                    counts = vec![0; wanted.len()];
+                    for &index in order.iter().take(cap) {
+                        counts[index] = 1;
+                    }
+                }
+                counts
+            }
+            _ => wanted.iter().map(|&(_, w)| w).collect(),
+        }
+    };
+    for ((key, twigs), groups) in cells.into_iter().zip(counts) {
+        if groups == 0 {
+            continue;
+        }
+        let mean_direction = twigs
+            .iter()
+            .fold(Vec3::ZERO, |sum, t| sum + t.1 * (t.3 * t.2))
+            .normalize_or(Vec3::Y);
+        // Across the cell: the direction its twigs spread most, of two
+        // square to their mean direction.
+        let across_a = any_perpendicular(mean_direction);
+        let across_b = mean_direction.cross(across_a);
+        let spread = |axis: Vec3| {
+            let (low, high) = twigs
+                .iter()
+                .fold((f64::INFINITY, f64::NEG_INFINITY), |(l, h), t| {
+                    (l.min(t.0.dot(axis)), h.max(t.0.dot(axis)))
+                });
+            high - low
+        };
+        let across = if spread(across_a) >= spread(across_b) {
+            across_a
+        } else {
+            across_b
+        };
+        let mut order: Vec<usize> = (0..twigs.len()).collect();
+        order.sort_by(|&a, &b| {
+            twigs[a]
+                .0
+                .dot(across)
+                .total_cmp(&twigs[b].0.dot(across))
+                .then(a.cmp(&b))
+        });
+        for g in 0..groups {
+            let share = &order[g * twigs.len() / groups..(g + 1) * twigs.len() / groups];
+            if share.is_empty() {
+                continue;
+            }
+            let weight: f64 = share.iter().map(|&i| twigs[i].3 * twigs[i].2).sum();
+            let centre = share.iter().fold(Vec3::ZERO, |sum, &i| {
+                sum + twigs[i].0 * (twigs[i].3 * twigs[i].2)
+            }) / weight.max(1e-12);
+            let direction = share
+                .iter()
+                .fold(Vec3::ZERO, |sum, &i| {
+                    sum + twigs[i].1 * (twigs[i].3 * twigs[i].2)
+                })
+                .normalize_or(mean_direction);
+            // As long as its twigs reach along it, ends included.
+            let (low, high) =
+                share
+                    .iter()
+                    .fold((f64::INFINITY, f64::NEG_INFINITY), |(l, h), &i| {
+                        let t = &twigs[i];
+                        let along = (t.0 - centre).dot(direction);
+                        let half = 0.5 * t.2 * t.1.dot(direction).abs();
+                        (l.min(along - half), h.max(along + half))
+                    });
+            let length = (high - low).max(1e-3);
+            // Twigs crossing each other cover their crossing once: their
+            // cover counted cell by cell as cluster cards count organs
+            // ([`painted`]), seen across the stick both ways, never more
+            // than their summed `2 r l`.
+            let summed = 2.0 * weight;
+            let (mut low_box, mut high_box) = (
+                Vec3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY),
+                Vec3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY),
+            );
+            for &i in share {
+                let t = &twigs[i];
+                for end in [t.0 - t.1 * (0.5 * t.2), t.0 + t.1 * (0.5 * t.2)] {
+                    low_box = low_box.min(end - Vec3::new(t.3, t.3, t.3));
+                    high_box = high_box.max(end + Vec3::new(t.3, t.3, t.3));
+                }
+            }
+            let side_a = any_perpendicular(direction);
+            let side_b = direction.cross(side_a);
+            let seen = |axis: Vec3| {
+                let quads: Vec<[Vec3; 4]> = share
+                    .iter()
+                    .map(|&i| {
+                        let t = &twigs[i];
+                        let half = t.1 * (0.5 * t.2);
+                        let across = t.1.cross(axis).normalize_or(any_perpendicular(t.1)) * t.3;
+                        [
+                            t.0 - half - across,
+                            t.0 - half + across,
+                            t.0 + half + across,
+                            t.0 + half - across,
+                        ]
+                    })
+                    .collect();
+                painted(&quads, low_box, high_box, axis, 1.0)
+            };
+            let area = f64::midpoint(seen(side_a), seen(side_b)).min(summed);
+            let radius = area / (2.0 * length);
+            let born = share
+                .iter()
+                .map(|&i| twigs[i].4)
+                .fold(f64::INFINITY, f64::min);
+            let shed = share
+                .iter()
+                .map(|&i| twigs[i].5)
+                .try_fold(f64::NEG_INFINITY, |s, shed| shed.map(|shed| s.max(shed)));
+            let start = centre + direction * low;
+            let normal = any_perpendicular(direction);
+            let binormal = direction.cross(normal);
+            #[allow(clippy::cast_sign_loss, clippy::cast_possible_truncation)]
+            let id = key.0.unsigned_abs()
+                ^ (key.1.unsigned_abs() << 21)
+                ^ (key.2.unsigned_abs() << 42)
+                ^ (g as u64);
+            let bark = Bark::new(appearance, None, None, radius, STICK_SIDES, id);
+            let base = u32::try_from(out.positions.len()).unwrap_or(0);
+            for along in [0.0, length] {
+                for side in 0..=STICK_SIDES {
+                    let angle = 2.0 * math::PI * f64::from(side) / f64::from(STICK_SIDES);
+                    let outward = normal * math::cos(angle) + binormal * math::sin(angle);
+                    let centre = start + direction * along;
+                    #[allow(clippy::cast_possible_truncation)]
+                    let uv = [
+                        (f64::from(side) / f64::from(STICK_SIDES)) as f32,
+                        along as f32,
+                    ];
+                    out.push(Vertex {
+                        position: centre + outward * (radius * widen),
+                        normal: outward,
+                        uv,
+                        color: bark_alpha(
+                            shaded(
+                                bark.colour(radius, outward, centre.y, along, angle, 0.0),
+                                light_at(sky, centre),
+                            ),
+                            radius,
+                        ),
+                        born,
+                        shed,
+                        level: 2,
+                    });
+                }
+            }
+            for side in 0..STICK_SIDES {
+                let (a, b) = (base + side, base + STICK_SIDES + 1 + side);
+                out.indices
+                    .extend_from_slice(&[a, a + 1, b, a + 1, b + 1, b]);
+            }
+        }
+    }
 }
 
 /// Tangent, normal and binormal at each ring of an axis, with the distance
@@ -690,7 +1047,13 @@ fn axis_frames(rings: &[Ring]) -> Vec<(Vec3, Vec3, Vec3, f64)> {
     frames
 }
 
-fn wood(graph: &PlantGraph, appearance: &Appearance, lod: &LodSpec, out: &mut Mesh) {
+fn wood(
+    graph: &PlantGraph,
+    appearance: &Appearance,
+    lod: &LodSpec,
+    sky: Option<&SkyLight>,
+    out: &mut Mesh,
+) {
     let continuations = graph.continuations();
     let end_radii = graph.end_radii();
     for (start, segment) in graph.segments.iter().enumerate() {
@@ -733,6 +1096,13 @@ fn wood(graph: &PlantGraph, appearance: &Appearance, lod: &LodSpec, out: &mut Me
         };
 
         let frames = axis_frames(&kept);
+        // A ring of `n` vertices on the radius draws a polygon whose mean
+        // width over every direction, its perimeter over pi, is
+        // `(n / pi) sin(pi / n)` of the circle's (0.83 at 3 sides, 0.97 at
+        // 8), so coarse levels drew thinner wood than fine ones. Vertices
+        // go out by the inverse, so every level's mean width is the
+        // stem's diameter.
+        let widen = math::PI / (f64::from(sides) * math::sin(math::PI / f64::from(sides)));
         // Surface radii per ring and side, for positions and for the slope
         // of the surface along the axis.
         let angle_of = |side: u32| 2.0 * math::PI * f64::from(side) / f64::from(sides);
@@ -749,6 +1119,7 @@ fn wood(graph: &PlantGraph, appearance: &Appearance, lod: &LodSpec, out: &mut Me
         let mut first_ring = None;
         for (ring, current) in kept.iter().enumerate() {
             let (tangent, normal, binormal, along) = frames[ring];
+            let light = light_at(sky, current.centre);
             let base = out.positions.len();
             let (before, after) = (ring.saturating_sub(1), (ring + 1).min(kept.len() - 1));
             let span = (frames[after].3 - frames[before].3).max(1e-9);
@@ -770,17 +1141,20 @@ fn wood(graph: &PlantGraph, appearance: &Appearance, lod: &LodSpec, out: &mut Me
                 #[allow(clippy::cast_possible_truncation)]
                 let uv = [(f64::from(side) / f64::from(sides)) as f32, along as f32];
                 out.push(Vertex {
-                    position: current.centre + direction * radius,
+                    position: current.centre + direction * (radius * widen),
                     normal: surface,
                     uv,
                     color: bark_alpha(
-                        bark.colour(
-                            current.radius,
-                            surface,
-                            current.centre.y,
-                            along,
-                            angle,
-                            furrow,
+                        shaded(
+                            bark.colour(
+                                current.radius,
+                                surface,
+                                current.centre.y,
+                                along,
+                                angle,
+                                furrow,
+                            ),
+                            light,
                         ),
                         current.radius,
                     ),
@@ -839,9 +1213,10 @@ impl Placed {
 }
 
 fn organ_color(look: &Look, variation: f32, light: f64, id: u64) -> [f32; 3] {
-    // Shaded organs are darker and bluer; each organ varies a little.
+    // Shaded organs are darker and bluer, along the scale leaves acclimate
+    // on (`looks::sunlit`); each organ varies a little.
     #[allow(clippy::cast_possible_truncation)]
-    let shade = (1.0 - light.clamp(0.0, 1.0)) as f32;
+    let shade = (1.0 - crate::looks::sunlit(light)) as f32;
     #[allow(clippy::cast_possible_truncation)]
     let jitter = 1.0 + variation * (unit(mix64(id)) as f32 - 0.5);
     std::array::from_fn(|channel| {
@@ -909,47 +1284,235 @@ fn cards(
 fn organ_cards(graph: &PlantGraph, looks: &[Look], solid: &[bool], variation: f32) -> Vec<Card> {
     let mut cards = Vec::new();
     for organ in &graph.organs {
-        let index = usize::from(organ.organ);
-        if solid.get(index).copied().unwrap_or(false) {
+        if solid
+            .get(usize::from(organ.organ))
+            .copied()
+            .unwrap_or(false)
+        {
             continue;
         }
-        let Some(look) = looks.get(index) else {
-            continue;
-        };
-        // A sun, shade or juvenile leaf is drawn with its family's look
-        // (plant roadmap P4), placed and coloured as its type's.
-        let (drawn, share) = look.forms.of(index, organ.light, organ.born);
-        let (Some(shown), Ok(template)) = (looks.get(drawn), u8::try_from(drawn)) else {
-            continue;
-        };
-        let (base, heading, left) = place(organ, look);
-        let card = Placed {
-            base,
-            heading,
-            left,
-            length: organ.size * share,
-            width: organ.size * share * shown.shape.aspect(),
-            color: organ_color(look, variation, organ.light, organ.id),
-            template,
-            born: organ.born,
-            shed: organ.shed,
-            bend: shown.bend,
-        };
-        if let Some(cross) = shown.shape.cross() {
-            // A second card across the first keeps organs that stand
-            // out all round their axis full when seen edge on.
-            cards.push(
-                Placed {
-                    left: heading.cross(left),
-                    width: card.width * cross,
-                    ..card
-                }
-                .finish(),
-            );
-        }
-        cards.push(card.finish());
+        organ_card(organ, looks, variation, 1.0, None, &mut cards);
     }
     cards
+}
+
+/// `organ`'s card as level 0 draws it, `widen` times as wide, and a second
+/// across it for organs that stand out all round their axis, or else, when
+/// `across` is given, one that share of the card's width (a thick leaf's
+/// edge).
+fn organ_card(
+    organ: &GraphOrgan,
+    looks: &[Look],
+    variation: f32,
+    widen: f64,
+    across: Option<f64>,
+    out: &mut Vec<Card>,
+) {
+    let index = usize::from(organ.organ);
+    let Some(look) = looks.get(index) else {
+        return;
+    };
+    // A sun, shade or juvenile leaf is drawn with its family's look
+    // (plant roadmap P4), placed and coloured as its type's.
+    let (drawn, share) = look.forms.of(index, organ.light, organ.born);
+    let (Some(shown), Ok(template)) = (looks.get(drawn), u8::try_from(drawn)) else {
+        return;
+    };
+    let (base, heading, left) = place(organ, look);
+    let card = Placed {
+        base,
+        heading,
+        left,
+        length: organ.size * share,
+        width: organ.size * share * shown.shape.aspect() * widen,
+        color: organ_color(look, variation, organ.light, organ.id),
+        template,
+        born: organ.born,
+        shed: organ.shed,
+        bend: shown.bend,
+    };
+    if let Some(cross) = shown.shape.cross().or(across) {
+        // A second card across the first keeps organs that stand
+        // out all round their axis full when seen edge on.
+        out.push(
+            Placed {
+                left: heading.cross(left),
+                width: card.width * cross,
+                ..card
+            }
+            .finish(),
+        );
+    }
+    out.push(card.finish());
+}
+
+/// The quads of `organ`'s card, `widen` times as wide, as the levels that
+/// keep it draw it: bent by its look, traced at its base, middle and tip
+/// (two quads), and the card across it for organs that stand out all
+/// round their axis.
+fn organ_quads(organ: &GraphOrgan, look: &Look, widen: f64) -> Vec<[Vec3; 4]> {
+    let (_, heading, left) = place(organ, look);
+    let half = 0.5 * look.shape.aspect() * organ.size * widen;
+    let at = |x: f64, v: f64| {
+        look.bend
+            .point(organ.position, heading, left, half, organ.size, x, v)
+            .0
+    };
+    let ring = [0.0, 0.5, 1.0].map(|v| [at(-1.0, v), at(1.0, v)]);
+    let mut quads = vec![
+        [ring[0][0], ring[0][1], ring[1][1], ring[1][0]],
+        [ring[1][0], ring[1][1], ring[2][1], ring[2][0]],
+    ];
+    if let Some(cross) = look.shape.cross() {
+        let across = heading.cross(left) * (half * cross.min(1.0));
+        quads.push([
+            organ.position - across,
+            organ.position + across,
+            organ.position + heading * organ.size + across,
+            organ.position + heading * organ.size - across,
+        ]);
+    }
+    quads
+}
+
+/// A look at most this wide for its length is a blade (yucca, sotol,
+/// agave, grasses): its organs can form a rosette.
+const STAR_ASPECT: f64 = 0.25;
+/// A cell's blades are a rosette when their bases lie within this share
+/// of their mean length of their mean base...
+const STAR_BASE_SHARE: f64 = 0.25;
+/// ...and their unit headings average to a vector at most this long, so
+/// they point every way rather than along one (blades spread evenly over
+/// the upper half of the sphere average to 0.5, a parallel bundle to 1).
+const STAR_SPREAD: f64 = 0.8;
+/// The blades a coarse level keeps of a rosette (render review S1).
+const STAR_BLADES: usize = 16;
+/// The most a kept blade is widened; past it more blades are kept.
+const STAR_WIDEN_MAX: f64 = 4.0;
+
+/// A rosette's coarse form (render review S1): cluster cards fit a cell's
+/// organs by the way they face, and a rosette's blades face every way from
+/// one point, so its cards became a flat cross through the head. Instead
+/// a coarse level keeps [`STAR_BLADES`] of its blades, spread over their
+/// directions (each next the one whose heading lies furthest from those
+/// kept), each drawn as level 0 draws it and widened alike so that the
+/// star covers what the whole rosette covers ([`Cluster::cover`], the
+/// mean over [`cover_directions`]). `None` when the cell's organs are not
+/// a rosette.
+fn star_cards(
+    cluster: &Cluster,
+    graph: &PlantGraph,
+    look: &Look,
+    looks: &[Look],
+    variation: f32,
+) -> Option<Vec<Card>> {
+    let organs: Vec<&GraphOrgan> = cluster.organs.iter().map(|&i| &graph.organs[i]).collect();
+    if look.shape.aspect() > STAR_ASPECT || organs.len() < 3 {
+        return None;
+    }
+    let count = to_f64(organs.len());
+    let base = organs
+        .iter()
+        .fold(Vec3::ZERO, |sum, organ| sum + organ.position)
+        / count;
+    let length = organs.iter().map(|organ| organ.size).sum::<f64>() / count;
+    // Where each blade reaches, its bend included: a rosette's blades
+    // often leave the head nearly together and arch out every way.
+    let headings: Vec<Vec3> = organs
+        .iter()
+        .map(|organ| {
+            let (_, heading, left) = place(organ, look);
+            let half = 0.5 * look.shape.aspect() * organ.size;
+            let tip = look
+                .bend
+                .point(organ.position, heading, left, half, organ.size, 0.0, 1.0)
+                .0;
+            (tip - organ.position).normalize_or(heading)
+        })
+        .collect();
+    let mean = headings.iter().fold(Vec3::ZERO, |sum, &h| sum + h) / count;
+    let reach = organs
+        .iter()
+        .map(|organ| (organ.position - base).length())
+        .fold(0.0, f64::max);
+    if reach > STAR_BASE_SHARE * length || mean.length() > STAR_SPREAD {
+        return None;
+    }
+    let directions = cover_directions();
+    let target = directions.iter().map(|&d| cluster.cover(d)).sum::<f64>();
+    // The kept blades' cover at `widen`, measured as the cluster's is.
+    let cover = |kept: &[usize], widen: f64| {
+        let quads: Vec<[Vec3; 4]> = kept
+            .iter()
+            .flat_map(|&i| organ_quads(organs[i], look, widen))
+            .collect();
+        let (mut low, mut high) = (cluster.low, cluster.high);
+        for corner in quads.iter().flatten() {
+            low = low.min(*corner);
+            high = high.max(*corner);
+        }
+        let area: f64 = kept
+            .iter()
+            .map(|&i| look.shape.aspect() * organs[i].size * organs[i].size * widen)
+            .sum();
+        directions
+            .iter()
+            .map(|&d| {
+                // Never more than the blades' own area.
+                let summed = area;
+                if cluster.fill <= 1e-6 {
+                    summed
+                } else {
+                    (painted(&quads, low, high, d, cluster.fill) / cluster.fill).min(summed)
+                }
+            })
+            .sum::<f64>()
+    };
+    let mut keep = STAR_BLADES.min(organs.len());
+    loop {
+        // Farthest-point picking over the headings, from the longest blade.
+        let first = (0..organs.len())
+            .max_by(|&a, &b| organs[a].size.total_cmp(&organs[b].size).then(b.cmp(&a)))
+            .unwrap_or(0);
+        let mut kept = vec![first];
+        let mut nearest: Vec<f64> = headings.iter().map(|h| h.dot(headings[first])).collect();
+        while kept.len() < keep {
+            let Some(next) = (0..organs.len())
+                .filter(|i| !kept.contains(i))
+                .min_by(|&a, &b| nearest[a].total_cmp(&nearest[b]).then(a.cmp(&b)))
+            else {
+                break;
+            };
+            kept.push(next);
+            for (i, h) in headings.iter().enumerate() {
+                nearest[i] = nearest[i].max(h.dot(headings[next]));
+            }
+        }
+        let mut widen = 1.0;
+        for _ in 0..3 {
+            let got = cover(&kept, widen);
+            if got <= 1e-12 {
+                break;
+            }
+            widen = (widen * target / got).max(1.0);
+        }
+        if widen <= STAR_WIDEN_MAX || keep >= organs.len() {
+            let widen = widen.min(STAR_WIDEN_MAX);
+            // A leaf level 0 draws solid shows its edge seen edge on: its
+            // thickness, or the depth of its channel or keel.
+            let across = look
+                .solid
+                .as_ref()
+                .map(|solid| solid.thickness.max(0.5 * solid.fold).min(1.0));
+            let mut cards = Vec::new();
+            kept.sort_unstable();
+            for &i in &kept {
+                organ_card(organs[i], looks, variation, widen, across, &mut cards);
+            }
+            return Some(cards);
+        }
+        keep = organs.len().min(keep * 2);
+    }
 }
 
 /// The organs of one template in one cell, summed.
@@ -966,15 +1529,253 @@ struct Cluster {
     id: u64,
     /// Every card of its organs: unit normal and area, metres squared.
     faces: Vec<(Vec3, f64)>,
+    /// The box its organs' cards lie in, corners in the plant's frame.
+    low: Vec3,
+    high: Vec3,
+    /// The share of its look's card drawn solid.
+    fill: f64,
+    /// Each organ's card's centre.
+    centres: Vec<Vec3>,
+    /// Each organ's card's corners (the crossing card's too).
+    quads: Vec<[Vec3; 4]>,
+    /// Its organs, indices into the graph's.
+    organs: Vec<usize>,
+}
+
+/// The most a cluster's card areas are scaled up for its cards hiding
+/// each other (see `cluster_cards`).
+const CLUSTER_OVERLAP_MAX: f64 = 2.0;
+
+/// Cells a side of the grid a cluster's cover is counted on
+/// ([`Cluster::cover`]). A card is sampled at most half a cell apart, so
+/// the cost of a count goes with the square of this: 24 keep the levels'
+/// widths as 48 did (revision 15) at about a quarter of the cost.
+const COVER_GRID: usize = 24;
+
+fn to_f64(n: usize) -> f64 {
+    f64::from(u32::try_from(n).unwrap_or(u32::MAX))
+}
+
+/// The area `quads` (cards, each drawn solid over the share `fill` of it)
+/// paint seen along the unit vector `axis`, overlaps counted once: the
+/// shadow of the box `low`..`high` cut into [`COVER_GRID`]² cells, each
+/// card's area spread over the cells it falls on (sampled at most half a
+/// cell apart, so a card thinner than a cell still counts its share), and
+/// a cell a card covers the share `o` of letting `1 - fill o` through
+/// (Beer and Lambert's law cell by cell): `sum_c A_c (1 - prod_i (1 -
+/// fill o_i))`.
+fn painted(quads: &[[Vec3; 4]], low: Vec3, high: Vec3, axis: Vec3, fill: f64) -> f64 {
+    let side = any_perpendicular(axis);
+    let rise = axis.cross(side);
+    let (mut lo, mut hi) = ([f64::INFINITY; 2], [f64::NEG_INFINITY; 2]);
+    for x in [low.x, high.x] {
+        for y in [low.y, high.y] {
+            for z in [low.z, high.z] {
+                let p = Vec3::new(x, y, z);
+                let q = [p.dot(side), p.dot(rise)];
+                for k in 0..2 {
+                    lo[k] = lo[k].min(q[k]);
+                    hi[k] = hi[k].max(q[k]);
+                }
+            }
+        }
+    }
+    let cell = [
+        (hi[0] - lo[0]).max(1e-9) / to_f64(COVER_GRID),
+        (hi[1] - lo[1]).max(1e-9) / to_f64(COVER_GRID),
+    ];
+    let cell_area = cell[0] * cell[1];
+    let inverse = [1.0 / cell[0], 1.0 / cell[1]];
+    PAINT_GRID.with_borrow_mut(|grid| {
+        grid.clear();
+        for quad in quads {
+            // The card seen along `axis`: a corner and its two edges.
+            let flat = quad.map(|c| [c.dot(side) - lo[0], c.dot(rise) - lo[1]]);
+            let edge = |a: usize, b: usize| [flat[b][0] - flat[a][0], flat[b][1] - flat[a][1]];
+            let (e1, e2) = (edge(0, 1), edge(0, 3));
+            let area = (e1[0] * e2[1] - e1[1] * e2[0]).abs();
+            if area <= 0.0 {
+                continue;
+            }
+            let steps = |e: [f64; 2]| {
+                let span = (e[0] / cell[0]).abs().max((e[1] / cell[1]).abs());
+                #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                let n = (2.0 * span).ceil().clamp(1.0, 4.0 * to_f64(COVER_GRID)) as u32;
+                n
+            };
+            let (n1, n2) = (steps(e1), steps(e2));
+            let weight = area / (f64::from(n1) * f64::from(n2)) / cell_area;
+            // The samples' offsets along the second edge are the same in
+            // every row.
+            grid.offsets.clear();
+            grid.offsets.extend((0..n2).map(|j| {
+                let across = (f64::from(j) + 0.5) / f64::from(n2);
+                [e2[0] * across, e2[1] * across]
+            }));
+            for i in 0..n1 {
+                let along = (f64::from(i) + 0.5) / f64::from(n1);
+                let start = [flat[0][0] + e1[0] * along, flat[0][1] + e1[1] * along];
+                for j in 0..grid.offsets.len() {
+                    let offset = grid.offsets[j];
+                    grid.sample(
+                        cell_index(start[1] + offset[1], cell[1], inverse[1]) * COVER_GRID
+                            + cell_index(start[0] + offset[0], cell[0], inverse[0]),
+                    );
+                }
+            }
+            grid.shade(weight, fill);
+        }
+        grid.stopped() * cell_area
+    })
+}
+
+/// [`painted`]'s grid, kept on each thread between calls so a call costs
+/// what its cards cover rather than the whole grid: the light each cell
+/// lets through, the current card's samples in each cell and the running
+/// sums of its weight, its samples' offsets along its second edge, the
+/// cells it touches, and the cells any card touched (listed and flagged).
+struct PaintGrid {
+    through: Vec<f64>,
+    count: Vec<u32>,
+    sums: Vec<f64>,
+    offsets: Vec<[f64; 2]>,
+    card: Vec<usize>,
+    touched: Vec<usize>,
+    lit: Vec<bool>,
+}
+
+thread_local! {
+    static PAINT_GRID: RefCell<PaintGrid> = RefCell::new(PaintGrid {
+        through: vec![1.0; COVER_GRID * COVER_GRID],
+        count: vec![0; COVER_GRID * COVER_GRID],
+        sums: Vec::new(),
+        offsets: Vec::new(),
+        card: Vec::new(),
+        touched: Vec::new(),
+        lit: vec![false; COVER_GRID * COVER_GRID],
+    });
+}
+
+impl PaintGrid {
+    /// Clears what is left. Each call leaves the grid clear; one cut short
+    /// by a panic would not.
+    fn clear(&mut self) {
+        for &index in &self.card {
+            self.count[index] = 0;
+        }
+        for &index in &self.touched {
+            self.through[index] = 1.0;
+            self.lit[index] = false;
+        }
+        self.card.clear();
+        self.touched.clear();
+    }
+
+    /// Counts one of the current card's samples in the cell `index`.
+    fn sample(&mut self, index: usize) {
+        if self.count[index] == 0 {
+            self.card.push(index);
+        }
+        self.count[index] += 1;
+    }
+
+    /// Lets through `1 - fill o` of each cell the current card's samples
+    /// fell in. Every sample adds the same `weight` to its cell's share
+    /// `o`, so a cell's share is `weight` added once per sample there,
+    /// summed here as the samples would add it.
+    fn shade(&mut self, weight: f64, fill: f64) {
+        let most = self.card.iter().map(|&index| self.count[index]).max();
+        self.sums.clear();
+        self.sums.push(0.0);
+        let mut sum = 0.0;
+        for _ in 0..most.unwrap_or(0) {
+            sum += weight;
+            self.sums.push(sum);
+        }
+        for &index in &self.card {
+            let covered = self.sums[std::mem::take(&mut self.count[index]) as usize];
+            self.through[index] *= 1.0 - fill * covered.min(1.0);
+            if !self.lit[index] {
+                self.lit[index] = true;
+                self.touched.push(index);
+            }
+        }
+        self.card.clear();
+    }
+
+    /// The light the cards stopped, in cells, leaving the grid clear. The
+    /// cells no card touched let all of it through and add nothing; the
+    /// others are summed in the grid's order, as the whole grid would be.
+    fn stopped(&mut self) -> f64 {
+        self.touched.sort_unstable();
+        let mut sum = 0.0;
+        for &index in &self.touched {
+            sum += 1.0 - self.through[index];
+            self.through[index] = 1.0;
+            self.lit[index] = false;
+        }
+        self.touched.clear();
+        sum
+    }
+}
+
+/// How near a cell's edge, in cells, a sample is placed by dividing rather
+/// than by multiplying ([`cell_index`]).
+const CELL_EDGE: f64 = 1e-6;
+
+/// The cell along one side of [`painted`]'s grid that `x` falls in, cells
+/// `cell` wide (`inverse` being `1 / cell`), as `floor(x / cell)` kept to
+/// the grid would place it: a float cast truncates toward zero and takes
+/// NaN and negatives to 0, which for an index is `floor().max(0.0)`
+/// without its call into libm. `x * inverse` differs from `x / cell` by a
+/// few units in the last place, so away from a cell's edge it gives the
+/// same cell, and near an edge the division decides.
+fn cell_index(x: f64, cell: f64, inverse: f64) -> usize {
+    let scaled = x * inverse;
+    // Inside the grid (which also turns NaN away).
+    if scaled >= 0.0 && scaled < to_f64(COVER_GRID) {
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let near = scaled as u32;
+        let within = scaled - f64::from(near);
+        if within > CELL_EDGE && within < 1.0 - CELL_EDGE {
+            return near as usize;
+        }
+    }
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let index = (x / cell) as usize;
+    index.min(COVER_GRID - 1)
 }
 
 impl Cluster {
-    /// The area its organs' cards cover seen along the unit vector `axis`.
+    /// The area of card its organs need seen along the unit vector `axis`,
+    /// where they overlap counted once. Their cards draw the share `f` of
+    /// their area solid ([`crate::templates::fill_share`]). Seen along
+    /// `axis`, the box's shadow is cut into [`COVER_GRID`]² cells, and a
+    /// cell an organ's card covers the share `o` of lets `1 - f o` of the
+    /// light through, so the organs paint `sum_c A_c (1 - prod_i (1 - f
+    /// o_i))` (Beer and Lambert's law cell by cell, so organs clumped on
+    /// their shoots overlap as they do), and a card of the same look
+    /// paints that with `1 / f` of it in card: the summed cover while they
+    /// are sparse. Summed alone, a rosette's hundred leaves from one point
+    /// made a card many times the rosette.
     fn cover(&self, axis: Vec3) -> f64 {
-        self.faces
+        let summed: f64 = self
+            .faces
             .iter()
             .map(|&(normal, area)| normal.dot(axis).abs() * area)
-            .sum()
+            .sum();
+        if self.fill <= 1e-6 || self.quads.is_empty() {
+            return summed;
+        }
+        let painted = painted(&self.quads, self.low, self.high, axis, self.fill);
+        // Never more card than the organs' own.
+        (painted / self.fill).min(summed)
+    }
+
+    /// The length of its box along the unit vector `axis`.
+    fn extent(&self, axis: Vec3) -> f64 {
+        let size = self.high - self.low;
+        size.x * axis.x.abs() + size.y * axis.y.abs() + size.z * axis.z.abs()
     }
 }
 
@@ -1008,7 +1809,7 @@ fn cover_directions() -> Vec<Vec3> {
 /// organs' cover along `d` ([`Cluster::cover`]). Every subset of the cards
 /// is solved by its normal equations and the best fit with no negative
 /// area is kept; a single card always gives one.
-fn card_areas(normals: &[Vec3], cluster: &Cluster) -> Vec<f64> {
+fn card_areas(normals: &[Vec3], cover: &[f64]) -> Vec<f64> {
     let directions = cover_directions();
     let weights: Vec<f64> = directions
         .iter()
@@ -1020,7 +1821,6 @@ fn card_areas(normals: &[Vec3], cluster: &Cluster) -> Vec<f64> {
             }
         })
         .collect();
-    let cover: Vec<f64> = directions.iter().map(|&d| cluster.cover(d)).collect();
     // Each direction's row scaled by the square root of its weight, so the
     // normal equations below fit the weighted sum.
     let root: Vec<f64> = weights.iter().map(|&w| math::sqrt(w)).collect();
@@ -1118,6 +1918,7 @@ fn solve(mut matrix: Vec<Vec<f64>>, mut rhs: Vec<f64>) -> Option<Vec<f64>> {
 
 /// Organs merged per template and cell of edge `lod.cluster`: a card
 /// facing as its organs do, and upright cards beside it.
+#[allow(clippy::too_many_lines)]
 fn cluster_cards(
     graph: &PlantGraph,
     looks: &[Look],
@@ -1127,7 +1928,7 @@ fn cluster_cards(
 ) -> Vec<Card> {
     // BTreeMap keeps the output order independent of hashing.
     let mut clusters: BTreeMap<(u8, i64, i64, i64), Cluster> = BTreeMap::new();
-    for organ in &graph.organs {
+    for (number, organ) in graph.organs.iter().enumerate() {
         let index = usize::from(organ.organ);
         if solid.get(index).copied().unwrap_or(false) {
             continue;
@@ -1147,14 +1948,50 @@ fn cluster_cards(
             born: f64::INFINITY,
             shed: f64::NEG_INFINITY,
             id: organ.id,
+            fill: crate::templates::fill_share(&look.shape),
+            low: Vec3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY),
+            high: Vec3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY),
             ..Cluster::default()
         });
         let area = look.shape.aspect() * organ.size * organ.size;
-        let normal = heading.cross(left);
-        entry.position += organ.position;
-        entry.normal += normal * area;
-        entry.heading += heading * area;
-        entry.faces.push((normal, area));
+        // The organ's card as the levels that keep it draw it: bent by its
+        // look (`crate::bend`: folded, cupped, drooping), traced at its
+        // base, middle and tip, so a cluster reaches as far as its leaves
+        // do and faces as they face. Flat looks bend nowhere.
+        let half = 0.5 * look.shape.aspect() * organ.size;
+        let at = |x: f64, v: f64| {
+            look.bend
+                .point(organ.position, heading, left, half, organ.size, x, v)
+        };
+        let ring = [0.0, 0.5, 1.0].map(|v| [at(-1.0, v).0, at(0.0, v).0, at(1.0, v).0]);
+        let centre = ring[1][1];
+        entry.centres.push(centre);
+        for k in 0..2 {
+            entry
+                .quads
+                .push([ring[k][0], ring[k][2], ring[k + 1][2], ring[k + 1][0]]);
+        }
+        if let Some(cross) = look.shape.cross() {
+            let across = heading.cross(left) * (half * cross.min(1.0));
+            entry.quads.push([
+                organ.position - across,
+                organ.position + across,
+                organ.position + heading * organ.size + across,
+                organ.position + heading * organ.size - across,
+            ]);
+        }
+        for corner in ring.iter().flatten() {
+            entry.low = entry.low.min(*corner);
+            entry.high = entry.high.max(*corner);
+        }
+        let chord = (ring[2][1] - ring[0][1]).normalize_or(heading);
+        entry.position += centre;
+        entry.heading += chord * area;
+        for v in [0.25, 0.75] {
+            let normal = at(0.0, v).1;
+            entry.normal += normal * (0.5 * area);
+            entry.faces.push((normal, 0.5 * area));
+        }
         if let Some(cross) = look.shape.cross() {
             // The card across faces along the organ's left (see
             // `organ_cards`).
@@ -1162,6 +1999,7 @@ fn cluster_cards(
         }
         entry.light += organ.light;
         entry.count += 1.0;
+        entry.organs.push(number);
         // A cluster shows from its first organ's birth until its last
         // organ is shed.
         entry.born = entry.born.min(organ.born);
@@ -1170,6 +2008,10 @@ fn cluster_cards(
     let mut cards = Vec::new();
     for ((template, ..), cluster) in clusters {
         let look = &looks[usize::from(template)];
+        if let Some(star) = star_cards(&cluster, graph, look, looks, variation) {
+            cards.extend(star);
+            continue;
+        }
         let position = cluster.position / cluster.count;
         let normal = cluster.normal.normalize_or(Vec3::Y);
         let heading = (cluster.heading - normal * normal.dot(cluster.heading))
@@ -1201,14 +2043,147 @@ fn cluster_cards(
         // Each card keeps the organs' proportions: length by width at the
         // look's aspect.
         let aspect = look.shape.aspect().max(MIN_CLUSTER_ASPECT);
-        for ((_, heading, left), area) in facings.into_iter().zip(card_areas(&normals, &cluster)) {
-            if area <= 0.0 {
-                continue;
+        // A card never reaches past its organs' box and keeps the look's
+        // aspect, so where one card of the area would, the area is shared
+        // by cards in a row, each as large as the box allows. The extra
+        // cards come from the organs left spare, so a cluster never has
+        // more cards than organs, shared among the facings by how many each
+        // wants.
+        // The organs' cover along each of the fit's directions, counted
+        // once for the fit and the overlap below.
+        let covers: Vec<f64> = cover_directions()
+            .iter()
+            .map(|&d| cluster.cover(d))
+            .collect();
+        let fitted: Vec<_> = facings
+            .into_iter()
+            .zip(card_areas(&normals, &covers))
+            .filter(|&(_, area)| area > 0.0)
+            .map(|((_, heading, left), area)| (heading, left, area))
+            .collect();
+        // The cards for the fitted areas times `scale`, as (centre,
+        // heading, left, length, width).
+        let plan = |scale: f64| {
+            let planned: Vec<_> = fitted
+                .iter()
+                .map(|&(heading, left, area)| {
+                    let area = area * scale;
+                    let (length, width) = (math::sqrt(area / aspect), math::sqrt(area * aspect));
+                    let (along, across) = (
+                        cluster.extent(heading) / length,
+                        cluster.extent(left) / width,
+                    );
+                    // The cards go in a row where the box has more room
+                    // for them: end to end when it is too narrow for one,
+                    // side by side when too short.
+                    let row = if across < along { heading } else { left };
+                    let fit = along.min(across).min(1.0);
+                    let largest = area * fit * fit;
+                    // Enough cards to hold the area, none too large.
+                    let wanted = if largest > 1e-12 {
+                        (area / largest - 1e-9).ceil().max(1.0)
+                    } else {
+                        0.0
+                    };
+                    (heading, left, area, largest, row, wanted)
+                })
+                // A facing its organs' box has no room for (an upright
+                // card on level leaves, whose box has no height) draws
+                // nothing.
+                .filter(|&(.., wanted)| wanted >= 1.0)
+                .collect();
+            // The organs not standing for a facing's first card.
+            #[allow(clippy::cast_precision_loss)]
+            let spare = (cluster.count - planned.len() as f64).max(0.0);
+            let extra: f64 = planned.iter().map(|&(.., wanted)| wanted - 1.0).sum();
+            let portion = if extra > 0.0 {
+                (spare / extra).min(1.0)
+            } else {
+                0.0
+            };
+            let mut placed = Vec::new();
+            for (heading, left, area, largest, row, wanted) in planned {
+                let count = 1.0 + ((wanted - 1.0) * portion).floor();
+                let each = (area / count).min(largest);
+                let (length, width) = (math::sqrt(each / aspect), math::sqrt(each * aspect));
+                // Each card stands at the middle of its share of the
+                // organs, taken in order along the row: a row of cards
+                // follows its organs, where cards spread evenly over the
+                // box would fill its empty corners (a rosette is a star,
+                // not a square).
+                let mut along: Vec<(f64, usize)> = cluster
+                    .centres
+                    .iter()
+                    .enumerate()
+                    .map(|(i, c)| (c.dot(row), i))
+                    .collect();
+                along.sort_by(|a, b| a.0.total_cmp(&b.0).then(a.1.cmp(&b.1)));
+                #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                let groups = count as usize;
+                for k in 0..groups {
+                    let (from, to) = (k * along.len() / groups, (k + 1) * along.len() / groups);
+                    let share = &along[from..to.max(from + 1).min(along.len())];
+                    let centre = if groups == 1 || share.is_empty() {
+                        position
+                    } else {
+                        let sum = share
+                            .iter()
+                            .fold(Vec3::ZERO, |sum, &(_, i)| sum + cluster.centres[i]);
+                        let mean = sum / to_f64(share.len());
+                        position + row * (mean - position).dot(row)
+                    };
+                    placed.push((centre, heading, left, length, width));
+                }
             }
-            let (length, width) = (math::sqrt(area / aspect), math::sqrt(area * aspect));
+            placed
+        };
+        // A cluster's cards stand among each other (its level card and its
+        // upright ones cross), so together they draw less than their fitted
+        // areas add up to: measured over the fit's directions and weights,
+        // their areas are scaled once so they draw what the organs do.
+        let drawn = |placed: &[(Vec3, Vec3, Vec3, f64, f64)], axis: Vec3| {
+            let quads: Vec<[Vec3; 4]> = placed
+                .iter()
+                .map(|&(centre, heading, left, length, width)| {
+                    let (h, l) = (heading * (0.5 * length), left * (0.5 * width));
+                    [
+                        centre - h - l,
+                        centre - h + l,
+                        centre + h + l,
+                        centre + h - l,
+                    ]
+                })
+                .collect();
+            let (mut low, mut high) = (cluster.low, cluster.high);
+            for corner in quads.iter().flatten() {
+                low = low.min(*corner);
+                high = high.max(*corner);
+            }
+            painted(&quads, low, high, axis, cluster.fill)
+        };
+        let first = plan(1.0);
+        let (mut wanted, mut got) = (0.0, 0.0);
+        if cluster.fill > 1e-6 && first.len() > 1 {
+            for (direction, &cover) in cover_directions().iter().zip(&covers) {
+                let direction = *direction;
+                let weight = if direction.y <= SIDE_VIEW_SINE {
+                    1.0
+                } else {
+                    HIGH_VIEW_WEIGHT
+                };
+                wanted += weight * cluster.fill * cover;
+                got += weight * drawn(&first, direction);
+            }
+        }
+        let placed = if got > 1e-12 {
+            plan((wanted / got).clamp(1.0, CLUSTER_OVERLAP_MAX))
+        } else {
+            first
+        };
+        for (centre, heading, left, length, width) in placed {
             cards.push(
                 Placed {
-                    base: position - heading * (length * 0.5),
+                    base: centre - heading * (length * 0.5),
                     heading,
                     left,
                     length,
@@ -1333,11 +2308,12 @@ mod tests {
         // Stem: 4 rings of 7 sides (8 vertices with the seam); the 2 mm
         // branch gets the 3-side minimum.
         assert_eq!(detailed.wood.vertex_count(), 4 * 8 + 2 * 4);
-        // The straight stem needs only its end rings; the thin branch is gone.
-        assert_eq!(coarse.wood.vertex_count(), 2 * 8);
+        // The straight stem needs only its end rings; the thin branch is
+        // gone, a three-sided stick of two rings in its place (L10).
+        assert_eq!(coarse.wood.vertex_count(), 2 * 8 + 2 * 4);
         // The stem stays even below a minimum radius thicker than itself.
         let coarsest = build_plain(&graph(), &looks(), &appearance(), &lod(0.1, 0.0, 10.0));
-        assert_eq!(coarsest.wood.vertex_count(), 2 * 8);
+        assert_eq!(coarsest.wood.vertex_count(), 2 * 8 + 2 * 4);
         assert_eq!(detailed.cards.len(), 20);
         // Simple leaves bend by default: each card a grid of 16 triangles.
         assert_eq!(detailed.bent_cards(), 20);
@@ -1369,19 +2345,52 @@ mod tests {
         let tree_scale = build_plain(&graph, &looks(), &appearance(), &coarse);
         let plant_scale = build_plain(&graph, &looks(), &appearance(), &scaled);
         // At a tree's scale the straight stem has two rings of 7 sides and
-        // the thin branch is gone. Scaled, the 1 cm ring edge gives the
-        // stem the 8-side maximum and the branch is back with 3 sides.
-        assert_eq!(tree_scale.wood.vertex_count(), 2 * 8);
+        // the thin branch is a stick (L10). Scaled, the 1 cm ring edge
+        // gives the stem the 8-side maximum and the branch is back with 3
+        // sides.
+        assert_eq!(tree_scale.wood.vertex_count(), 2 * 8 + 2 * 4);
         assert_eq!(plant_scale.wood.vertex_count(), 2 * 9 + 2 * 4);
-        assert!(plant_scale.cards.len() > tree_scale.cards.len());
+        // Scaled, the 0.2 m cells merge less: leaves scattered over a patch
+        // keep more cards.
+        let scattered = scattered_leaves();
+        assert!(
+            build_plain(&scattered, &looks(), &appearance(), &scaled)
+                .cards
+                .len()
+                > build_plain(&scattered, &looks(), &appearance(), &coarse)
+                    .cards
+                    .len()
+        );
     }
 
     #[test]
     fn clustering_merges_organs_and_keeps_birth_ages() {
+        // Leaves scattered over a patch merge: two cells of ten flat level
+        // leaves, each a level card, and no upright card, since level
+        // leaves cover nothing seen from the side.
+        let scattered = scattered_leaves();
+        let merged = build_plain(
+            &scattered,
+            &flat_looks(),
+            &appearance(),
+            &lod(0.0, 1.0, 0.0),
+        );
+        assert_eq!(merged.cards.len(), 2);
+        // Leaves in one row along a twig, a metre long and a leaf wide,
+        // stay a row: one card at their aspect would be far wider than
+        // they are (plant leftover L12), so each cell's cover is shared by
+        // cards end to end along the row, never more than its leaves (here,
+        // leaves touching end to end, one card each).
         let clustered = build_plain(&graph(), &looks(), &appearance(), &lod(0.0, 1.0, 0.0));
-        // Two cells of ten level leaves: each a level card, and no upright
-        // card, since level leaves cover nothing seen from the side.
-        assert_eq!(clustered.cards.len(), 2);
+        assert!(clustered.cards.len() > 2 && clustered.cards.len() <= 20);
+        let leaf_width = 0.1 * looks()[0].shape.aspect();
+        for card in &clustered.cards {
+            let across = f64::from(card.width);
+            assert!(
+                across <= leaf_width + 1e-6,
+                "a card {across} m wide on a row of leaves {leaf_width} m wide"
+            );
+        }
         assert!(
             clustered
                 .cards
@@ -1391,6 +2400,71 @@ mod tests {
         let mesh = clustered.card_mesh();
         assert!(mesh.births.iter().all(|birth| *birth == 0.0));
         assert!(mesh.sheds.iter().all(|shed| *shed == f32::INFINITY));
+    }
+
+    /// The area `meshes`' cards draw seen along `axis`, each solid over
+    /// the test look's share, overlaps counted once ([`painted`]) over one
+    /// box round all of them, so meshes compare as a renderer shows them.
+    fn drawn(meshes: &[&PlantMesh], axis: Vec3) -> Vec<f64> {
+        let vector = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
+        let quads: Vec<Vec<[Vec3; 4]>> = meshes
+            .iter()
+            .map(|mesh| {
+                mesh.cards
+                    .iter()
+                    .map(|card| {
+                        let (base, h, l) =
+                            (vector(card.base), vector(card.heading), vector(card.left));
+                        let half = l * (0.5 * f64::from(card.width));
+                        let tip = h * f64::from(card.length);
+                        [
+                            base - half,
+                            base + half,
+                            base + tip + half,
+                            base + tip - half,
+                        ]
+                    })
+                    .collect()
+            })
+            .collect();
+        let (mut low, mut high) = (
+            Vec3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY),
+            Vec3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY),
+        );
+        for corner in quads.iter().flatten().flatten() {
+            low = low.min(*corner);
+            high = high.max(*corner);
+        }
+        let fill = crate::templates::fill_share(&looks()[0].shape);
+        quads
+            .iter()
+            .map(|quads| painted(quads, low, high, axis, fill))
+            .collect()
+    }
+
+    /// The test look drawn flat, as level leaves with no bend.
+    fn flat_looks() -> Vec<Look> {
+        let mut looks = looks();
+        for look in &mut looks {
+            look.bend = crate::bend::Bend::FLAT;
+        }
+        looks
+    }
+
+    /// The test plant's twenty leaves spread over two patches, a cell of 1
+    /// m each, ten leaves a patch on a square grid, as a crown's leaves
+    /// lie rather than in one line.
+    fn scattered_leaves() -> PlantGraph {
+        let mut graph = graph();
+        for (i, organ) in (0_u32..).zip(&mut graph.organs) {
+            let (patch, k) = (f64::from(i / 10), i % 10);
+            organ.position = Vec3::new(
+                0.1 + 1.0 * patch + 0.2 * f64::from(k % 4),
+                2.5,
+                0.1 + 0.25 * f64::from(k / 4),
+            );
+        }
+        graph
     }
 
     /// The area of `mesh`'s cards seen along `axis`.
@@ -1403,6 +2477,102 @@ mod tests {
                 normal.dot(axis).abs() * f64::from(card.length) * f64::from(card.width)
             })
             .sum()
+    }
+
+    /// A rosette: 120 narrow blades from one point, spread over the upper
+    /// half of the sphere (a golden spiral), as a yucca's head.
+    fn rosette() -> (PlantGraph, Vec<Look>) {
+        let mut graph = graph();
+        graph.organs = (0_u32..120)
+            .map(|i| {
+                let up = 0.05 + 0.9 * (f64::from(i) + 0.5) / 120.0;
+                let ring = math::sqrt(1.0 - up * up);
+                let turn = 2.399_963_229_728_653 * f64::from(i);
+                let heading = Vec3::new(ring * math::cos(turn), up, ring * math::sin(turn));
+                GraphOrgan {
+                    id: u64::from(i),
+                    organ: 0,
+                    segment: Some(2),
+                    position: Vec3::new(0.0, 2.5, 0.0),
+                    heading,
+                    left: any_perpendicular(heading),
+                    size: 0.5,
+                    born: 0.0,
+                    shed: None,
+                    light: 0.5,
+                }
+            })
+            .collect();
+        let mut looks = flat_looks();
+        looks[0].shape = Shape::Blade(crate::looks::Blade {
+            taper: 1.0,
+            aspect: 0.04,
+        });
+        (graph, looks)
+    }
+
+    /// Render review S1: a coarse level draws a rosette as a star of its
+    /// own blades, fewer and wider, covering what the rosette covers from
+    /// every side and reaching no further, not as a cross of cluster cards.
+    #[test]
+    fn rosettes_become_stars_of_their_own_blades() {
+        let (graph, looks) = rosette();
+        let detailed = build_plain(&graph, &looks, &appearance(), &lod(0.0, 0.0, 0.0));
+        let coarse = build_plain(&graph, &looks, &appearance(), &lod(0.0, 1.0, 0.0));
+        assert_eq!(detailed.cards.len(), 120);
+        assert!(
+            (STAR_BLADES..=4 * STAR_BLADES).contains(&coarse.cards.len()),
+            "{} blades",
+            coarse.cards.len()
+        );
+        // Each kept blade is one of the rosette's own, widened.
+        let vector = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
+        for card in &coarse.cards {
+            let heading = vector(card.heading);
+            assert!(
+                graph
+                    .organs
+                    .iter()
+                    .any(|organ| (place(organ, &looks[0]).1 - heading).length() < 1e-5),
+                "a blade not the rosette's own"
+            );
+            assert!(f64::from(card.width) >= 0.04 * 0.5 * 0.999);
+        }
+        // It reaches no further than the rosette.
+        let reach = |mesh: &PlantMesh| {
+            mesh.cards
+                .iter()
+                .map(|card| {
+                    let tip = vector(card.heading) * f64::from(card.length);
+                    math::sqrt(tip.x * tip.x + tip.z * tip.z)
+                })
+                .fold(0.0, f64::max)
+        };
+        assert!(reach(&coarse) <= reach(&detailed) + 1e-6);
+        // It covers as the rosette does, from the side and above.
+        let mut ratios = Vec::new();
+        for elevation in [0.0_f64, 20.0, 45.0, 90.0] {
+            for k in 0..8 {
+                let (e, azimuth) = (elevation.to_radians(), f64::from(k) * 45.0_f64.to_radians());
+                let axis = Vec3::new(
+                    math::cos(e) * math::cos(azimuth),
+                    math::sin(e),
+                    math::cos(e) * math::sin(azimuth),
+                );
+                let seen = drawn(&[&coarse, &detailed], axis);
+                let ratio = seen[0] / seen[1];
+                assert!(
+                    (0.6..=1.4).contains(&ratio),
+                    "the star covers {ratio} times the rosette at {elevation} degrees, azimuth {k} x 45"
+                );
+                ratios.push(ratio);
+            }
+        }
+        let mean = ratios.iter().sum::<f64>() / to_f64(ratios.len());
+        assert!(
+            (mean - 1.0).abs() < 0.15,
+            "the star covers {mean} times the rosette"
+        );
     }
 
     /// Twenty leaves in one cell, tilted up to 50° from level toward
@@ -1429,10 +2599,14 @@ mod tests {
     /// clusters.
     #[test]
     fn clusters_cover_a_crown_as_its_leaves_do() {
+        // Flat leaves, so both sides of the comparison draw them as `drawn`
+        // reads them.
         let tilted = tilted_leaves();
-        let detailed = build_plain(&tilted, &looks(), &appearance(), &lod(0.0, 0.0, 0.0));
-        let clustered = build_plain(&tilted, &looks(), &appearance(), &lod(0.0, 1.0, 0.0));
-        assert_eq!(clustered.cards.len(), 3);
+        let detailed = build_plain(&tilted, &flat_looks(), &appearance(), &lod(0.0, 0.0, 0.0));
+        let clustered = build_plain(&tilted, &flat_looks(), &appearance(), &lod(0.0, 1.0, 0.0));
+        // A row of leaves 0.4 m long: cards end to end along it, fewer than
+        // its leaves (see `clustering_merges_organs_and_keeps_birth_ages`).
+        assert!(clustered.cards.len() < tilted.organs.len());
         let mut ratios = Vec::new();
         for elevation in [-45.0_f64, -20.0, 0.0, 20.0, 45.0] {
             for k in 0..8 {
@@ -1442,7 +2616,8 @@ mod tests {
                     math::sin(e),
                     math::cos(e) * math::sin(azimuth),
                 );
-                let ratio = cover(&clustered, axis) / cover(&detailed, axis);
+                let seen = drawn(&[&clustered, &detailed], axis);
+                let ratio = seen[0] / seen[1];
                 assert!(
                     (0.67..=1.33).contains(&ratio),
                     "clusters cover {ratio} times the leaves at {elevation} degrees, azimuth {k} x 45"
@@ -1456,17 +2631,17 @@ mod tests {
             (mean - 1.0).abs() < 0.1,
             "clusters cover {mean} times the leaves on average"
         );
-        let level = build_plain(&graph(), &looks(), &appearance(), &lod(0.0, 1.0, 0.0));
+        // Flat level leaves cover nothing from the side, and neither do
+        // their clusters; from above, a row of leaves end to end covers as
+        // its leaves do.
+        let level = build_plain(&graph(), &flat_looks(), &appearance(), &lod(0.0, 1.0, 0.0));
         assert!(cover(&level, Vec3::X) < 1e-9 && cover(&level, Vec3::Z) < 1e-9);
+        let leaves = build_plain(&graph(), &flat_looks(), &appearance(), &lod(0.0, 0.0, 0.0));
+        let above = drawn(&[&level, &leaves], Vec3::Y);
         assert!(
-            (cover(&level, Vec3::Y)
-                / cover(
-                    &build_plain(&graph(), &looks(), &appearance(), &lod(0.0, 0.0, 0.0)),
-                    Vec3::Y
-                )
-                - 1.0)
-                .abs()
-                < 1e-6
+            (above[0] / above[1] - 1.0).abs() < 0.1,
+            "level clusters draw {} of their leaves from above",
+            above[0] / above[1]
         );
         // One leaf alone stays one card, so a coarse level never has more
         // cards than the organs it merges.
@@ -1483,15 +2658,90 @@ mod tests {
     #[test]
     fn tube_rings_wrap_the_axis() {
         let mesh = build_plain(&graph(), &looks(), &appearance(), &lod(0.0, 0.0, 0.0));
+        // Seven sides, their vertices out from the 0.05 m radius so the
+        // ring's mean width is the stem's.
+        let widen = math::PI / (7.0 * math::sin(math::PI / 7.0));
         for (position, normal) in mesh.wood.positions.iter().zip(&mesh.wood.normals).take(8) {
             // First ring of the stem: radius 0.05 around the Y axis. The
             // stem narrows by 1 cm per metre, so its surface faces up by
             // that slope.
             let radial = (position[0] * position[0] + position[2] * position[2]).sqrt();
-            assert!((radial - 0.05).abs() < 1e-6);
+            assert!((f64::from(radial) - 0.05 * widen).abs() < 1e-6);
             let outward = (normal[0] * position[0] + normal[2] * position[2]) / radial;
             assert!((normal[1] / outward - 0.01).abs() < 1e-4);
         }
+    }
+
+    /// Every level draws wood as wide as it is, whatever its sides (plant
+    /// leftover L12): a ring's polygon, seen from every direction round
+    /// its axis, averages the stem's diameter.
+    #[test]
+    fn rings_average_the_stems_width_at_every_level() {
+        for max_sides in [3, 4, 5, 6, 8, 16] {
+            let lod = LodSpec {
+                min_radius: 0.0,
+                ring_edge: 10.0,
+                min_sides: max_sides,
+                max_sides,
+                bend: 0.0,
+                cluster: 0.0,
+            };
+            let mesh = build_plain(&graph(), &looks(), &appearance(), &lod);
+            let sides = max_sides as usize;
+            let ring: Vec<[f32; 3]> = mesh.wood.positions[..sides].to_vec();
+            let mut widths = 0.0;
+            let views = 360;
+            for k in 0..views {
+                let angle = 2.0 * math::PI * f64::from(k) / f64::from(views);
+                let (c, s) = (math::cos(angle), math::sin(angle));
+                let along = |p: &[f32; 3]| f64::from(p[0]) * c + f64::from(p[2]) * s;
+                let (low, high) = ring
+                    .iter()
+                    .fold((f64::INFINITY, f64::NEG_INFINITY), |(l, h), p| {
+                        (l.min(along(p)), h.max(along(p)))
+                    });
+                widths += high - low;
+            }
+            let mean = widths / f64::from(views);
+            assert!(
+                (mean / 0.1 - 1.0).abs() < 0.002,
+                "{max_sides} sides average {mean} m across a 0.1 m stem"
+            );
+        }
+    }
+
+    /// The thin wood a level drops comes back as sticks covering as much
+    /// as it did (plant leftover L10): the test plant's 2 mm branch, 1.1 m
+    /// long, becomes one three-sided stick of the same cover.
+    #[test]
+    fn dropped_twigs_become_sticks_that_cover_as_they_did() {
+        let coarse = build_plain(&graph(), &looks(), &appearance(), &lod(0.01, 0.0, 10.0));
+        // The stem's two rings of 8 vertices, then the stick's two of 4.
+        let stick = &coarse.wood.positions[16..24];
+        let point = |p: [f32; 3]| Vec3::new(f64::from(p[0]), f64::from(p[1]), f64::from(p[2]));
+        let a = point(stick[0]);
+        let centre =
+            |ring: &[[f32; 3]]| ring[..3].iter().fold(Vec3::ZERO, |sum, &p| sum + point(p)) / 3.0;
+        let (start, end) = (centre(&stick[..4]), centre(&stick[4..]));
+        let length = (end - start).length();
+        let radius = (a - start).length() / (math::PI / (3.0 * math::sin(math::PI / 3.0)));
+        let branch = (Vec3::new(1.0, 1.5, 0.0) - Vec3::new(0.0, 1.0, 0.0)).length();
+        assert!(
+            (length - branch).abs() < 1e-6,
+            "the stick is {length} m long"
+        );
+        // The branch is a tip: `wood` tapers it to six tenths of its 2 mm,
+        // so it covers (2 + 1.2) mm along its length, and so does the
+        // stick.
+        let covered = (0.002 + 0.0012) * branch;
+        assert!(
+            (2.0 * radius * length / covered - 1.0).abs() < 1e-6,
+            "the stick covers {} of the branch",
+            2.0 * radius * length / covered
+        );
+        // A level that drops nothing adds none.
+        let detailed = build_plain(&graph(), &looks(), &appearance(), &lod(0.0, 0.0, 0.0));
+        assert_eq!(detailed.wood.vertex_count(), 4 * 8 + 2 * 4);
     }
 
     /// A single straight stem, 0.3 m thick, 4 m tall.
@@ -1699,10 +2949,10 @@ mod tests {
             height: 1.0,
             segments: Vec::new(),
             organs: vec![
-                leaf(0.9, 8.0),
-                leaf(0.5, 8.0),
-                leaf(0.1, 8.0),
-                leaf(0.9, 2.0),
+                leaf(0.3, 8.0),
+                leaf(0.12, 8.0),
+                leaf(0.05, 8.0),
+                leaf(0.3, 2.0),
             ],
         };
         let cards = build_plain(&graph, &looks, &appearance, &lod(0.0, 0.0, 0.0)).cards;

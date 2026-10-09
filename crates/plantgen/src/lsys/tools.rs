@@ -8,15 +8,31 @@
 //!   al. 2009) and through the synthetic [`Neighbourhood`] it grows in.
 //! - `space@1`: space colonization (Runions et al. 2007): attraction points
 //!   in a crown envelope pull the apices that perceive them.
+//! - `space@2` (growth plan G1): the same, with points that return once
+//!   the plant parts that took them are shed (`renew`), an outline widest
+//!   at any share of the crown's depth and of any fullness (`widest`,
+//!   `fullness`), lobes round its edge (`lobes`, `lobe_depth`), and billows,
+//!   its edge moved in and out by smooth noise (`bumps`, `bump_size`).
 //! - `vigour@1`: the Borchert-Honda resource model: light collected by the
 //!   tips flows to the base and back out, split by apical control.
 //! - `pipe@1`: the pipe model of stem radii (Shinozaki et al. 1964).
 //! - `host@1`: the distance and direction from each module to the wood of
 //!   the host a climber, epiphyte or parasite grows on (plant forms F7).
+//! - `light@2` (G3): `light@1`'s sky, with the substrate (the conditions'
+//!   distance field, or level soil) shading the plant like solid foliage,
+//!   and light from below: each direction under the horizon sees the
+//!   first substrate it meets, reflecting its material's albedo of the
+//!   sky's light, through the plant's foliage on the way.
+//! - `space@3` (G3): contact. Living tips are solid spheres of `radius`;
+//!   each reads how many others it touches and the way out from among
+//!   them.
+//! - `substrate@1` (G3): the distance, normal and material of the
+//!   substrate at each module.
 //!
 //! Every tool is deterministic: the same scene gives the same values on every
 //! machine.
 
+use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 
 use serde::{Deserialize, Serialize};
@@ -29,6 +45,7 @@ use super::{GrowthError, Limits};
 use crate::conditions::Surroundings;
 use crate::math::{self, Vec3};
 use crate::rng::{hash_words, unit};
+use crate::substrate::{self, SubstrateField};
 
 /// The synthetic stand a plant variant grows in. The compiler grows each
 /// variant inside one of these, so a forest-grown tree really has a high,
@@ -99,7 +116,15 @@ impl Neighbourhood {
 }
 
 /// Values of one tool's settings at one step.
-fn settings(config: &ToolConfig, globals: &[f64], clock: Clock, stack: &mut Vec<f64>) -> Vec<f64> {
+/// A tool's settings this step. A draw in a setting is keyed on the plant's
+/// seed alone, so it is one value for the plant's whole life.
+fn settings(
+    config: &ToolConfig,
+    globals: &[f64],
+    clock: Clock,
+    seed: u64,
+    stack: &mut Vec<f64>,
+) -> Vec<f64> {
     let scope = Scope {
         globals,
         locals: &[],
@@ -108,7 +133,7 @@ fn settings(config: &ToolConfig, globals: &[f64], clock: Clock, stack: &mut Vec<
         dt: clock.dt,
         age: 0.0,
         step: f64::from(clock.step),
-        key: 0,
+        key: hash_words(&[seed, SALT_SETTINGS]),
     };
     config
         .settings
@@ -220,7 +245,7 @@ pub struct ToolOutput {
 /// # Errors
 ///
 /// Fails on invalid tool settings or when a grid or point limit is exceeded.
-#[allow(clippy::too_many_arguments)]
+#[allow(clippy::too_many_arguments, clippy::too_many_lines)]
 pub fn run(
     program: &Program,
     globals: &[f64],
@@ -243,8 +268,12 @@ pub fn run(
 
     let (query_light, organ_light) = match program.tool(ToolKind::Light) {
         Some(config) => {
-            let values = settings(config, globals, clock, &mut stack);
-            light(scene, &anchors, organ_area, &values, surroundings, limits)?
+            let values = settings(config, globals, clock, seed, &mut stack);
+            if config.version >= 2 {
+                light_below(scene, &anchors, organ_area, &values, surroundings, limits)?
+            } else {
+                light(scene, &anchors, organ_area, &values, surroundings, limits)?
+            }
         }
         None => (
             vec![1.0; scene.queries.len()],
@@ -263,16 +292,28 @@ pub fn run(
         )
         .collect();
     let space = match program.tool(ToolKind::Space) {
+        Some(config) if config.version >= 3 => {
+            let values = settings(config, globals, clock, seed, &mut stack);
+            contact(scene, &anchors, &space_queries, &values)?
+        }
         Some(config) => {
-            let values = settings(config, globals, clock, &mut stack);
-            colonize(scene, &space_queries, &values, state, limits, seed)?
+            let values = settings(config, globals, clock, seed, &mut stack);
+            colonize(
+                scene,
+                &space_queries,
+                &values,
+                config.version,
+                state,
+                limits,
+                seed,
+            )?
         }
         None => vec![(0, Vec3::ZERO); scene.queries.len()],
     };
 
     let flux = match program.tool(ToolKind::Vigour) {
         Some(config) => {
-            let values = settings(config, globals, clock, &mut stack);
+            let values = settings(config, globals, clock, seed, &mut stack);
             let lit = program.tool(ToolKind::Light).is_some();
             Some(vigour(
                 scene,
@@ -288,9 +329,13 @@ pub fn run(
 
     // The host: distance and direction to its surface from each module.
     let host_reach = program.tool(ToolKind::Host).map(|config| {
-        let values = settings(config, globals, clock, &mut stack);
+        let values = settings(config, globals, clock, seed, &mut stack);
         values[0].max(0.0)
     });
+
+    let ground = program
+        .tool(ToolKind::Substrate)
+        .map(|_| substrate_of(surroundings));
 
     let mut env = Vec::with_capacity(scene.queries.len());
     for (index, query) in scene.queries.iter().enumerate() {
@@ -325,6 +370,9 @@ pub fn run(
             values[EnvField::Gx as usize] = direction.x;
             values[EnvField::Gy as usize] = direction.y;
             values[EnvField::Gz as usize] = direction.z;
+        }
+        if let Some(field) = &ground {
+            read_substrate(&mut values, field, program, query);
         }
         env.push((query.module, values));
     }
@@ -551,6 +599,275 @@ fn light(
     Ok((light, organs))
 }
 
+/// What the plant grows on: the conditions' substrate, or level soil.
+fn substrate_of(surroundings: &dyn Surroundings) -> Cow<'_, SubstrateField> {
+    surroundings
+        .substrate()
+        .map_or_else(|| Cow::Owned(SubstrateField::flat()), Cow::Borrowed)
+}
+
+/// `substrate@1`'s readings at a module that asks for them: distance,
+/// normal and surface material.
+fn read_substrate(
+    values: &mut EnvValues,
+    field: &SubstrateField,
+    program: &Program,
+    query: &super::turtle::QueryPoint,
+) {
+    let SymbolKind::Module { queries } = program.symbols[usize::from(query.symbol)].kind else {
+        return;
+    };
+    if queries & Query::Substrate.bit() == 0 {
+        return;
+    }
+    let normal = field.normal(query.position);
+    values[EnvField::Sd as usize] = field.distance(query.position);
+    values[EnvField::Snx as usize] = normal.x;
+    values[EnvField::Sny as usize] = normal.y;
+    values[EnvField::Snz as usize] = normal.z;
+    values[EnvField::Smat as usize] = f64::from(field.surface_material(query.position));
+}
+
+/// `light@2`'s settings: `light@1`'s, and how far past the plant the
+/// substrate is looked at.
+fn light_below_settings(values: &[f64]) -> Result<(f64, f64, f64, f64), GrowthError> {
+    let (cell, extinction, bud) = light_settings(&values[..3])?;
+    let reach = values[3];
+    if !(reach >= 0.0 && reach.is_finite()) {
+        return Err(invalid(
+            "light",
+            format!("reach must be finite and not negative, found {reach}"),
+        ));
+    }
+    Ok((cell, extinction, bud, reach))
+}
+
+/// Light under `light@2` (G3): `light@1`'s overcast sky through the
+/// plant's foliage and its neighbours, with the substrate in the voxel
+/// grid. The grid reaches `reach` past the plant's receivers on every side
+/// (and below them); a voxel whose centre lies inside the substrate is
+/// solid. A sky direction that meets a solid voxel brings no light; each
+/// of the mirrored directions under the horizon brings the light the
+/// first solid voxel it meets reflects, through the foliage on the way:
+///
+/// ```text
+/// light = (Σ_up w_j · T_j · exp(−τ_j) + Σ_down w_j · T_j · R · a_hit · exp(−τ_j)) / Σ_up w_j
+/// ```
+///
+/// where `a_hit` is the albedo of the solid voxel's material and
+/// `R = 7/9` is the radiance of a level, matte surface under the overcast
+/// sky over the sky's zenith radiance, so a receiver can see more than the
+/// open sky alone (at most 2).
+#[allow(clippy::too_many_lines)]
+fn light_below(
+    scene: &Scene,
+    anchors: &[bool],
+    organ_area: &[f64],
+    values: &[f64],
+    surroundings: &dyn Surroundings,
+    limits: &Limits,
+) -> Result<(Vec<f64>, Vec<f64>), GrowthError> {
+    let (cell, extinction, bud, reach) = light_below_settings(values)?;
+    let receivers = light_receivers(scene, anchors, organ_area, bud);
+    let split = scene.queries.len();
+    if receivers.is_empty() {
+        return Ok((Vec::new(), Vec::new()));
+    }
+    let field = substrate_of(surroundings);
+    let directions = sky_directions();
+    let total_weight: f64 = directions.iter().map(|direction| direction.weight).sum();
+    // The radiance of a matte surface under the overcast sky.
+    let reflected = 7.0 / 9.0;
+
+    let index = |value: f64| -> i64 {
+        #[allow(clippy::cast_possible_truncation)]
+        let cell_index = (value / cell).floor() as i64;
+        cell_index
+    };
+    let mut low = [i64::MAX; 3];
+    let mut high = [i64::MIN; 3];
+    for (point, _) in &receivers {
+        for (axis, value) in [point.x, point.y, point.z].into_iter().enumerate() {
+            low[axis] = low[axis].min(index(value - reach));
+            high[axis] = high[axis].max(index(value + reach));
+        }
+    }
+    let size = [0, 1, 2].map(|axis| high[axis] - low[axis] + 1);
+    let voxels = size
+        .iter()
+        .map(|s| u128::try_from(*s).unwrap_or(u128::MAX))
+        .product::<u128>();
+    if voxels > limits.max_voxels as u128 {
+        return Err(GrowthError::Limit {
+            what: "light voxels",
+            limit: limits.max_voxels as u64,
+        });
+    }
+    let [nx, ny, nz] = size.map(|s| usize::try_from(s).unwrap_or(0));
+    let voxel_of = |point: Vec3| -> [usize; 3] {
+        let to = |value: f64, axis: usize| usize::try_from(index(value) - low[axis]).unwrap_or(0);
+        [to(point.x, 0), to(point.y, 1), to(point.z, 2)]
+    };
+    let flat_index = |[x, y, z]: [usize; 3]| (y * nz + z) * nx + x;
+    let step_to = |[x, y, z]: [usize; 3], (dx, dz): (i64, i64), up: bool| -> Option<[usize; 3]> {
+        let x = usize::try_from(i64::try_from(x).ok()? + dx).ok()?;
+        let z = usize::try_from(i64::try_from(z).ok()? + dz).ok()?;
+        let y = if up {
+            (y + 1 < ny).then_some(y + 1)?
+        } else {
+            y.checked_sub(1)?
+        };
+        (x < nx && z < nz).then_some([x, y, z])
+    };
+
+    let volume = cell * cell * cell;
+    let mut density = vec![0.0_f64; nx * ny * nz];
+    let cells: Vec<[usize; 3]> = receivers
+        .iter()
+        .map(|(point, _)| voxel_of(*point))
+        .collect();
+    for (voxel, (_, own)) in cells.iter().zip(&receivers) {
+        density[flat_index(*voxel)] += own / volume;
+    }
+    // The substrate's albedo in each solid voxel; negative in open air.
+    let mut solid = vec![-1.0_f64; nx * ny * nz];
+    for y in 0..ny {
+        for z in 0..nz {
+            for x in 0..nx {
+                #[allow(clippy::cast_precision_loss)]
+                let at = |axis: usize, i: usize| {
+                    (low[axis] + i64::try_from(i).unwrap_or(0)) as f64 + 0.5
+                };
+                let centre = Vec3::new(at(0, x), at(1, y), at(2, z)) * cell;
+                if field.solid(centre) {
+                    let material = field.material_at(centre);
+                    solid[flat_index([x, y, z])] = substrate::ALBEDO[usize::from(material)];
+                }
+            }
+        }
+    }
+
+    let mut light = vec![0.0_f64; receivers.len()];
+    let mut beyond = vec![0.0_f64; nx * ny * nz];
+    // The albedo of the first solid voxel past each voxel; negative where
+    // the direction leaves the grid in open air.
+    let mut meets = vec![-1.0_f64; nx * ny * nz];
+    for up in [true, false] {
+        for direction in &directions {
+            let layers: Vec<usize> = if up {
+                (0..ny).rev().collect()
+            } else {
+                (0..ny).collect()
+            };
+            for y in layers {
+                for z in 0..nz {
+                    for x in 0..nx {
+                        let here = flat_index([x, y, z]);
+                        if solid[here] >= 0.0 {
+                            beyond[here] = 0.0;
+                            meets[here] = solid[here];
+                            continue;
+                        }
+                        let (past, hit) =
+                            step_to([x, y, z], direction.step, up).map_or((0.0, -1.0), |voxel| {
+                                let v = flat_index(voxel);
+                                (beyond[v], meets[v])
+                            });
+                        beyond[here] = density[here] + past;
+                        meets[here] = hit;
+                    }
+                }
+            }
+            let length = extinction * cell * direction.cells_per_layer;
+            // Reflected light reaches the ground through the neighbours as
+            // the sky does along the mirrored direction.
+            let mirrored = direction.unit;
+            for (receiver, ((point, own), voxel)) in receivers.iter().zip(&cells).enumerate() {
+                let (past, hit) = step_to(*voxel, direction.step, up).map_or((0.0, -1.0), |v| {
+                    let v = flat_index(v);
+                    (beyond[v], meets[v])
+                });
+                let here = flat_index(*voxel);
+                let shared = (density[here] - own / volume).max(0.0);
+                let depth = length * (past + 0.5 * shared);
+                let open = surroundings.transmission(*point, scene.height, mirrored);
+                let gain = if up {
+                    // The sky, unless the substrate stands in the way.
+                    if hit >= 0.0 { 0.0 } else { 1.0 }
+                } else if hit >= 0.0 {
+                    reflected * hit
+                } else {
+                    0.0
+                };
+                light[receiver] += direction.weight * open * gain * math::exp(-depth);
+            }
+        }
+    }
+    for value in &mut light {
+        *value = (*value / total_weight).clamp(0.0, 2.0);
+    }
+    let organs = light.split_off(split);
+    Ok((light, organs))
+}
+
+/// Contact under `space@3` (G3): living tips (the queries that end a
+/// branch) are solid spheres `radius` metres round. Each querying module
+/// reads how many living tips other than itself lie within twice the
+/// radius (touching it) and the unit direction out from among them: the
+/// sum of the unit vectors from each to it, weighted by how far it
+/// overlaps, `(1 − d / 2r)`; zero when nothing touches it.
+fn contact(
+    scene: &Scene,
+    anchors: &[bool],
+    space_queries: &[bool],
+    values: &[f64],
+) -> Result<Vec<(u32, Vec3)>, GrowthError> {
+    let radius = values[0];
+    if !(radius > 0.0 && radius.is_finite()) {
+        return Err(invalid(
+            "space",
+            format!("radius must be above 0, found {radius}"),
+        ));
+    }
+    let reach = 2.0 * radius;
+    #[allow(clippy::cast_possible_truncation)]
+    let grid = PointGrid::new(
+        reach,
+        scene
+            .queries
+            .iter()
+            .enumerate()
+            .filter(|(index, _)| anchors[*index])
+            .map(|(index, query)| (index as u32, query.position)),
+    );
+    let mut out = vec![(0, Vec3::ZERO); scene.queries.len()];
+    for (index, query) in scene.queries.iter().enumerate() {
+        if !space_queries[index] {
+            continue;
+        }
+        let mut count = 0_u32;
+        let mut away = Vec3::ZERO;
+        let mut near: Vec<u32> = grid.near(query.position).collect();
+        near.sort_unstable();
+        for other in near {
+            if other as usize == index {
+                continue;
+            }
+            let offset = query.position - scene.queries[other as usize].position;
+            let distance = offset.length();
+            if distance >= reach {
+                continue;
+            }
+            count += 1;
+            if distance > 1.0e-12 {
+                away += offset * ((1.0 - distance / reach) / distance);
+            }
+        }
+        out[index] = (count, away.normalize_or(Vec3::ZERO));
+    }
+    Ok(out)
+}
+
 /// A uniform hash grid for neighbour searches.
 struct PointGrid {
     cell: f64,
@@ -617,23 +934,164 @@ fn envelope_radius(shape: f64, radius: f64, h: f64) -> f64 {
 }
 
 const SALT_POINT: u64 = 0x7370_6163;
+const SALT_LOBES: u64 = 0x6c6f_6265;
+const SALT_SETTINGS: u64 = 0x7365_7474;
+const SALT_BUMPS: u64 = 0x6275_6d70;
+
+/// The outline of a `space@2` envelope and whether its points renew.
+struct Outline {
+    renew: bool,
+    widest: f64,
+    fullness: f64,
+    lobes: f64,
+    lobe_depth: f64,
+    phases: [f64; 2],
+    bumps: f64,
+    bump_size: f64,
+    seed: u64,
+}
+
+impl Outline {
+    /// Radius of the envelope at relative height `h` toward `point`.
+    ///
+    /// Shape 1 is a superellipse in profile, widest at `widest` of the
+    /// crown's depth: with $`u`$ the distance from there as a share of the
+    /// part of the crown on that side and $`p`$ the `fullness`,
+    ///
+    /// ```math
+    /// r(h) = R \left(1 - |u|^p\right)^{1/p}
+    /// ```
+    ///
+    /// $`p = 2`$ at `widest` 0.5 is `space@1`'s ellipsoid; a larger $`p`$
+    /// fills toward a cylinder with rounded ends, a smaller one draws in to
+    /// points. Shapes 2 to 4 are `space@1`'s cone, paraboloid and cylinder.
+    /// Lobes then scale the radius round the stem by
+    /// $`1 + d\,n(\theta, h)`$, with $`n`$ two waves of `lobes` and
+    /// `lobes + 1` crests round the azimuth $`\theta`$, drifting with height
+    /// and phased by the seed, so each plant's crown bulges its own way.
+    fn radius(&self, shape: f64, radius: f64, h: f64, point: Vec3) -> f64 {
+        if !(0.0..=1.0).contains(&h) {
+            return -1.0;
+        }
+        #[allow(clippy::cast_possible_truncation)]
+        let profile = if (2..=4).contains(&(shape.round() as i64)) {
+            envelope_radius(shape, radius, h)
+        } else {
+            let side = if h < self.widest {
+                self.widest
+            } else {
+                1.0 - self.widest
+            };
+            let u = ((h - self.widest) / side).abs().min(1.0);
+            radius
+                * math::pow(
+                    (1.0 - math::pow(u, self.fullness)).max(0.0),
+                    1.0 / self.fullness,
+                )
+        };
+        let billows = if self.bumps > 0.0 {
+            1.0 + self.bumps * value_noise(self.seed, point * (1.0 / self.bump_size))
+        } else {
+            1.0
+        };
+        if self.lobes <= 0.0 || self.lobe_depth <= 0.0 {
+            return profile * billows;
+        }
+        let theta = math::atan2(point.z, point.x);
+        let wave = 0.6 * math::cos(self.lobes * theta + self.phases[0] + 3.0 * h)
+            + 0.4 * math::cos((self.lobes + 1.0) * theta + self.phases[1] - 5.0 * h);
+        profile * (1.0 + self.lobe_depth * wave) * billows
+    }
+}
+
+/// Smooth value noise in [-1, 1] at `p` (lattice units): a value hashed
+/// from `seed` and each corner of the unit cell round `p`, blended by
+/// smoothstep weights, so it is continuous and the same on every machine.
+fn value_noise(seed: u64, p: Vec3) -> f64 {
+    let cell = [p.x.floor(), p.y.floor(), p.z.floor()];
+    let fraction = [p.x - cell[0], p.y - cell[1], p.z - cell[2]];
+    let smooth = fraction.map(|f| f * f * (3.0 - 2.0 * f));
+    let mut total = 0.0;
+    for corner in 0..8_u32 {
+        let offset = [corner & 1, (corner >> 1) & 1, (corner >> 2) & 1];
+        let mut weight = 1.0;
+        let mut words = [seed, SALT_BUMPS, 0, 0, 0];
+        for axis in 0..3 {
+            let up = offset[axis] == 1;
+            weight *= if up { smooth[axis] } else { 1.0 - smooth[axis] };
+            // Lattice coordinates are small whole numbers; the cast keeps
+            // their bits.
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let coordinate = (cell[axis] as i64 + i64::from(up)) as u64;
+            words[2 + axis] = coordinate;
+        }
+        total += weight * (2.0 * unit(hash_words(&words)) - 1.0);
+    }
+    total
+}
+
+/// The two lobe waves' phases for a plant grown from `seed`.
+fn lobe_phases(seed: u64) -> [f64; 2] {
+    let hash = hash_words(&[seed, SALT_LOBES]);
+    [
+        std::f64::consts::TAU * unit(hash),
+        std::f64::consts::TAU * unit(crate::rng::mix64(hash)),
+    ]
+}
 
 /// Space colonization (Runions, Lane and Prusinkiewicz 2007). Attraction
 /// points sit one per cell of a jittered lattice inside the envelope. A point
 /// within `kill` of the plant is consumed for good; otherwise it attracts the
 /// nearest apex that declared `queries space` within `influence` and inside
 /// its perception cone. Each apex gets the count and the mean direction.
+#[allow(clippy::too_many_arguments, clippy::too_many_lines)]
 fn colonize(
     scene: &Scene,
     space_queries: &[bool],
     values: &[f64],
+    version: u32,
     state: &mut ToolState,
     limits: &Limits,
     seed: u64,
 ) -> Result<Vec<(u32, Vec3)>, GrowthError> {
-    let [shape, base, height, radius, density, influence, kill, angle] = values[..] else {
+    let (first, later) = values.split_at(values.len().min(8));
+    let [shape, base, height, radius, density, influence, kill, angle] = first[..] else {
         return Err(invalid("space", "wrong number of settings".into()));
     };
+    let outline = match (version, later) {
+        (1, []) => None,
+        (2, &[renew, widest, fullness, lobes, lobe_depth, bumps, bump_size]) => {
+            if !(widest > 0.0
+                && widest < 1.0
+                && fullness > 0.0
+                && (0.0..1.0).contains(&lobe_depth)
+                && (0.0..1.0).contains(&bumps)
+                && bump_size > 0.0)
+            {
+                return Err(invalid(
+                    "space",
+                    format!(
+                        "widest must lie between 0 and 1, fullness and bump_size be positive, \
+                         and lobe_depth and bumps lie in [0, 1); found {widest}, {fullness}, \
+                         {bump_size}, {lobe_depth} and {bumps}"
+                    ),
+                ));
+            }
+            Some(Outline {
+                renew: renew > 0.0,
+                widest,
+                fullness,
+                lobes: lobes.max(0.0).round(),
+                lobe_depth,
+                phases: lobe_phases(seed),
+                bumps,
+                bump_size,
+                seed,
+            })
+        }
+        _ => return Err(invalid("space", "wrong number of settings".into())),
+    };
+    let renew = outline.as_ref().is_some_and(|outline| outline.renew);
     if values.iter().any(|value| !value.is_finite()) {
         return Err(invalid("space", "every setting must be finite".into()));
     }
@@ -699,20 +1157,28 @@ fn colonize(
         for z in x0..=x1 {
             for x in x0..=x1 {
                 let key = (to_i32(x), to_i32(y), to_i32(z));
-                if state.killed.contains(&key) {
+                if !renew && state.killed.contains(&key) {
                     continue;
                 }
                 let point = attraction_point(seed, [x, y, z], spacing);
                 let relative = (point.y - base) / (height - base);
                 let radial = math::sqrt(point.x * point.x + point.z * point.z);
-                if radial > envelope_radius(shape, radius, relative) {
+                let edge = match &outline {
+                    None => envelope_radius(shape, radius, relative),
+                    Some(outline) => outline.radius(shape, radius, relative, point),
+                };
+                if radial > edge {
                     continue;
                 }
                 let consumed = plant.near(point).any(|index| {
                     (plant_points[index as usize] - point).length_squared() <= kill_sq
                 });
                 if consumed {
-                    state.killed.insert(key);
+                    // `space@1` keeps a point consumed for good; `space@2`
+                    // with `renew` frees it once the parts near it are shed.
+                    if !renew {
+                        state.killed.insert(key);
+                    }
                     continue;
                 }
                 if let Some((distance_sq, index)) =
@@ -1284,6 +1750,28 @@ mod tests {
     }
 
     #[test]
+    fn a_draw_in_a_tool_setting_is_one_value_for_the_plants_life() {
+        let program = Program::compile(
+            "lsystem p 1; module A; tool pipe@1 { tip = uniform(0.002, 0.02) }; axiom A;",
+        )
+        .unwrap();
+        let config = program.tool(ToolKind::Pipe).unwrap();
+        let mut stack = Vec::new();
+        let at = |step: u32, seed: u64, stack: &mut Vec<f64>| {
+            let clock = Clock {
+                step,
+                t: f64::from(step),
+                dt: 1.0,
+            };
+            settings(config, &[], clock, seed, stack)[1]
+        };
+        let first = at(0, 7, &mut stack);
+        assert!((0.002..0.02).contains(&first));
+        assert_eq!(first.to_bits(), at(40, 7, &mut stack).to_bits());
+        assert_ne!(first.to_bits(), at(0, 8, &mut stack).to_bits());
+    }
+
+    #[test]
     fn pipe_model_thickens_toward_the_base() {
         let setup = setup(
             "lsystem p 1; module A queries position; tool pipe@1 { exponent = 2, tip = 0.01 };
@@ -1293,5 +1781,122 @@ mod tests {
         // Three tips above the base: r = sqrt(3) * 0.01.
         assert!((pipes.radii[0] - 3.0_f64.sqrt() * 0.01).abs() < 1e-12);
         assert!((pipes.radii[1] - 0.01).abs() < 1e-12);
+    }
+
+    fn around(substrate: Option<&SubstrateField>) -> crate::conditions::Around<'_> {
+        crate::conditions::Around {
+            neighbourhood: &Neighbourhood::OPEN,
+            host: None,
+            substrate,
+        }
+    }
+
+    #[test]
+    fn light_2_adds_light_from_the_ground_and_the_rock_shades() {
+        // A bud 0.2 m over open soil sees the whole sky and the soil's
+        // reflection; one at the foot of a cleft's wall loses sky to it.
+        let scene = Scene {
+            queries: vec![
+                bud(Vec3::new(0.0, 0.2, 0.0)),
+                bud(Vec3::new(-0.2, 0.05, 0.0)),
+            ],
+            ..Scene::default()
+        };
+        let organ_area = vec![0.0; 18];
+        let settings = [0.1, 0.5, 0.0, 0.5];
+        let flat = light_below(
+            &scene,
+            &[true, true],
+            &organ_area,
+            &settings,
+            &around(None),
+            &Limits::default(),
+        )
+        .unwrap()
+        .0;
+        // At most the sky and all the soil's reflection; the lowest
+        // directions leave the grid (reach) before they meet the soil.
+        let reflected = 1.0 + crate::substrate::ALBEDO[1] * 7.0 / 9.0;
+        assert!(
+            flat[0] > 1.05 && flat[0] <= reflected + 1.0e-12,
+            "open soil gives {}",
+            flat[0]
+        );
+        let cleft = crate::substrate::Substrate::preset(crate::substrate::SubstratePreset::Cleft)
+            .field()
+            .unwrap();
+        let walled = light_below(
+            &scene,
+            &[true, true],
+            &organ_area,
+            &settings,
+            &around(Some(&cleft)),
+            &Limits::default(),
+        )
+        .unwrap()
+        .0;
+        assert!(
+            walled[1] < flat[1] - 0.2,
+            "the wall's foot gets {}",
+            walled[1]
+        );
+        // light@1 knows nothing of the substrate and never exceeds the sky.
+        let old = light(
+            &scene,
+            &[true, true],
+            &organ_area,
+            &settings[..3],
+            &around(Some(&cleft)),
+            &Limits::default(),
+        )
+        .unwrap()
+        .0;
+        assert_eq!(old, vec![1.0, 1.0]);
+    }
+
+    #[test]
+    fn space_3_counts_touching_tips_and_points_out_from_them() {
+        let setup = setup(
+            "lsystem p 1; module B queries space;
+             tool space@3 { radius = 0.01 };
+             axiom [ B ] [ f(0.015) B ] [ &(90) f(0.015) B ] [ f(1) B ];",
+        );
+        let output = tools(&setup, &Neighbourhood::OPEN);
+        let read = |i: usize, field: EnvField| output.env[i].1[field as usize];
+        // The first tip touches the two beside it; the far one touches none.
+        assert_eq!(read(0, EnvField::Space), 2.0);
+        assert_eq!(read(3, EnvField::Space), 0.0);
+        assert_eq!(read(3, EnvField::Sy), 0.0);
+        // The way out from the first tip leads away from both neighbours.
+        let out = Vec3::new(
+            read(0, EnvField::Sx),
+            read(0, EnvField::Sy),
+            read(0, EnvField::Sz),
+        );
+        let up = setup.scene.queries[1].position - setup.scene.queries[0].position;
+        let side = setup.scene.queries[2].position - setup.scene.queries[0].position;
+        assert!(out.dot(up) < 0.0 && out.dot(side) < 0.0);
+        assert!((out.length() - 1.0).abs() < 1.0e-9);
+    }
+
+    #[test]
+    fn substrate_1_reads_level_soil_without_a_substrate() {
+        let setup = setup(
+            "lsystem p 1; module B queries substrate;
+             tool substrate@1 {};
+             axiom f(0.03) B;",
+        );
+        let output = tools(&setup, &Neighbourhood::OPEN);
+        let read = |field: EnvField| output.env[0].1[field as usize];
+        assert!((read(EnvField::Sd) - 0.03).abs() < 1.0e-9);
+        assert!((read(EnvField::Sny) - 1.0).abs() < 1.0e-9);
+        assert_eq!(read(EnvField::Smat), f64::from(crate::substrate::SOIL));
+    }
+
+    #[test]
+    fn a_module_reading_the_substrate_needs_its_tool() {
+        let error =
+            Program::compile("lsystem p 1; module B queries substrate; axiom B;").unwrap_err();
+        assert!(error.message.contains("substrate@1"), "{}", error.message);
     }
 }

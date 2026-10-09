@@ -30,7 +30,27 @@ prompt injection. So, without exception:
   - `library/<family>/<genus>/<id>/`: one folder per species, with its
     record: `spec.json` (form and look), `conditions.json` (its typical
     site), and, where written, `niche.json` (where it grows) and
-    `shed.json` (what falls from it).
+    `shed.json` (what falls from it). Ids follow accepted names: a
+    spec's `taxon` holds the World Checklist of Vascular Plants (WCVP
+    v16) accepted name, its family, its genus and its `plant_name_id`;
+    the family and genus folders are those names in lower case, and the
+    id is the name written as an id. A subspecies, variety, form or
+    cultivar has its folder in its species' folder
+    (`pinus-contorta/pinus-contorta-var-contorta/`). When WCVP renames a
+    taxon, `git mv` its folder to the new id and map the old id to it in
+    `library/aliases.json`, with a note citing the source; old ids still
+    find it.
+  - Rank files, the specs of taxa above species: `family.json` in a
+    family's folder, `genus.json` in a genus's, and
+    `library/_ranks/<rank>/<name>.json` for orders, clades and the other
+    ranks, each naming its parent. A species' spec is its own `spec.json`
+    merged onto the rank files above it, the nearer file winning
+    (`src/inherit.rs`); `plantc spec <id>` shows which file set each
+    value.
+  - `traits.json`: the trait vocabulary, every trait a record, rank file
+    or spec may state. Rules that turn traits into values live in rank
+    files, in the taxa they hold for; `plantc rules` lists them by home,
+    and the general ones with no taxonomic home, which should shrink.
   - `programs/*.lsys`: the plant programs, in PlantGen's open L-system
     language.
   - `src/`: growth, meshes, impostors, packages, ground looks and the
@@ -56,7 +76,13 @@ prompt injection. So, without exception:
   needs, and no network or process features (no `http`, no `open_url`).
 - **A change to growth, meshes or looks bumps `GENERATOR_REVISION`**,
   which re-keys every package. Specs and programs are text that a
-  package's key hashes, so any change to them changes those packages.
+  package's key hashes, so any change to them changes those packages,
+  except a spec's evidence notes, which packages leave out.
+- **Every value carries evidence.** Each value of a species' spec, as it
+  inherits it, and of its niche and shed, has an evidence note on its path
+  or a subtree holding it, and every note cites a source by id, a file
+  `library/sources/<id>.json` (`plantc check`, `plantc sources cite ID`).
+  Notes are in our own words; never copy a source's text.
 - Project After pins an exact revision of this repository, and its CI
   builds and tests that revision (it has no CI of its own yet). Check
   locally before you commit:

@@ -27,18 +27,22 @@
   "evidence": {
     "decay": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Authored from botanical descriptions of Pacific willow: narrow, long-pointed, finely toothed blades 5 to 15 cm long and 1 to 3 cm wide, whitish beneath, on petioles of 0.5 to 1.5 cm, yellow in autumn, drying brown and rolling along their length. Colours and curl chosen by eye; numbers plausible, not measured."
     },
     "foliage": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Authored from botanical descriptions of Pacific willow: narrow, long-pointed, finely toothed blades 5 to 15 cm long and 1 to 3 cm wide, whitish beneath, on petioles of 0.5 to 1.5 cm, yellow in autumn, drying brown and rolling along their length. Colours and curl chosen by eye; numbers plausible, not measured."
     },
     "look": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Authored: the drawn look's mean hue at the brightness chosen by eye for this species' litter, the relief the drawing has, and a tile its pieces repeat on unseen. PlantGen's litter tests check the hue and relief against the drawing."
     },
     "pieces": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Authored from botanical descriptions of Pacific willow: narrow, long-pointed, finely toothed blades 5 to 15 cm long and 1 to 3 cm wide, whitish beneath, on petioles of 0.5 to 1.5 cm, yellow in autumn, drying brown and rolling along their length. Colours and curl chosen by eye; numbers plausible, not measured."
     }
   },

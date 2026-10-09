@@ -64,6 +64,57 @@ fn list_and_check_name_the_built_in_species() {
     assert!(help.contains("plantc build"));
 }
 
+/// `plantc rules` lists rules by their home and the general ones;
+/// `plantc spec` shows a species' traits and what each rule did.
+#[test]
+fn rules_and_traits_say_where_they_come_from() {
+    let built_in = stdout(&plantc(&["rules"]));
+    assert!(
+        built_in.starts_with("Rules, by their home (0):\n"),
+        "{built_in}"
+    );
+    assert!(
+        built_in.contains("General, with no taxonomic home: 0 rules at all plants;"),
+        "{built_in}"
+    );
+    // The maples' program is named for their family, so it is homed.
+    let general = built_in.lines().last().unwrap();
+    assert!(general.contains("broadleaf"), "{general}");
+    assert!(!general.contains("sapindaceae"), "{general}");
+
+    let dir = scratch("rules");
+    let family = dir.join("library/sapindaceae");
+    fs::create_dir_all(&family).unwrap();
+    fs::write(
+        family.join("family.json"),
+        r#"{"schema": 1, "rank": "family", "name": "Sapindaceae",
+            "evidence": {"traits.leaf_arrangement": {"evidence": "Authored",
+                    "source": "plantgen-authors", "note": "Maples' leaves are opposite."},
+                "rules.generator.params.alternate": {"evidence": "Authored",
+                    "source": "plantgen-authors", "note": "Opposite leaves come in pairs."}},
+            "traits": {"leaf_arrangement": "opposite"},
+            "rules": {"generator.params.alternate": {
+                "map": {"leaf_arrangement": {"alternate": 1, "opposite": 0}},
+                "why": "opposite leaves, one pair at each node"}}}"#,
+    )
+    .unwrap();
+    let library = dir.to_str().unwrap();
+    let rules = stdout(&plantc(&["--library", library, "rules"]));
+    assert!(
+        rules.contains("Rules, by their home (1):\n  generator.params.alternate  (family Sapindaceae: sapindaceae/family.json)\n"),
+        "{rules}"
+    );
+    let spec = stdout(&plantc(&["--library", library, "spec", "acer-circinatum"]));
+    assert!(
+        spec.contains("traits:\n  leaf_arrangement = \"opposite\"  (sapindaceae/family.json)\n"),
+        "{spec}"
+    );
+    assert!(
+        spec.contains("rules:\n  generator.params.alternate  (sapindaceae/family.json): "),
+        "{spec}"
+    );
+}
+
 #[test]
 fn a_library_folder_replaces_built_in_species() {
     let dir = scratch("library");
@@ -91,6 +142,50 @@ fn a_library_folder_replaces_built_in_species() {
     assert!(
         checked.starts_with("pseudotsuga-menziesii: valid"),
         "{checked}"
+    );
+    // A family file above it: the spec says where each value came from.
+    fs::write(
+        dir.join("library/pinaceae/family.json"),
+        r#"{"schema": 1, "rank": "family", "name": "Pinaceae",
+            "generator": {"params": {"nod_years": 2.0}},
+            "evidence": {"generator.params.nod_years": {"evidence": "Authored",
+                "source": "plantgen-authors", "note": "A test of a family's value."}}}"#,
+    )
+    .unwrap();
+    let checked = stdout(&plantc(&[
+        "--library",
+        library,
+        "check",
+        "pseudotsuga-menziesii",
+    ]));
+    assert!(
+        checked.ends_with("  stands on pinaceae/family.json\n"),
+        "{checked}"
+    );
+    let spec = stdout(&plantc(&[
+        "--library",
+        library,
+        "spec",
+        "pseudotsuga-menziesii",
+    ]));
+    let own = "pinaceae/pseudotsuga/pseudotsuga-menziesii/spec.json";
+    assert!(
+        spec.starts_with(&format!(
+            "pseudotsuga-menziesii: {own} on pinaceae/family.json\n"
+        )),
+        "{spec}"
+    );
+    assert!(
+        spec.contains("  generator.params.nod_years = 2.0  (pinaceae/family.json)\n"),
+        "{spec}"
+    );
+    assert!(
+        spec.contains(&format!("  generator.program = \"conifer\"  ({own})\n")),
+        "{spec}"
+    );
+    assert!(
+        spec.contains(&format!("evidence:\n  allometry  ({own})\n")),
+        "{spec}"
     );
     let missing = plantc(&["list", "--library", dir.join("nowhere").to_str().unwrap()]);
     assert!(!missing.status.success());
@@ -212,7 +307,7 @@ fn lineup_and_close_ups_write_pngs() {
     let image = dir.join("cacti.png");
     let printed = stdout(&plantc(&[
         "lineup",
-        "mammillaria-grahamii",
+        "cochemiea-grahamii",
         "opuntia-basilaris",
         "--seeds",
         "2",
@@ -225,7 +320,7 @@ fn lineup_and_close_ups_write_pngs() {
     ]));
     // A row of two seeds for each species.
     assert_eq!(
-        printed.matches("mammillaria-grahamii").count(),
+        printed.matches("cochemiea-grahamii").count(),
         3,
         "{printed}"
     );
@@ -233,6 +328,7 @@ fn lineup_and_close_ups_write_pngs() {
     let bytes = fs::read(&image).unwrap();
     assert_eq!(&bytes[..8], b"\x89PNG\r\n\x1a\n");
 
+    // An old id finds the species renamed from it.
     let close = dir.join("close.png");
     let printed = stdout(&plantc(&[
         "render",
@@ -251,7 +347,7 @@ fn lineup_and_close_ups_write_pngs() {
     assert!(printed.contains("areoles of solid spines"), "{printed}");
     let failed = plantc(&[
         "render",
-        "mammillaria-grahamii",
+        "cochemiea-grahamii",
         "--focus",
         "0,0.05",
         "--out",

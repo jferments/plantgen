@@ -5,6 +5,8 @@
 //! threads. It draws [`Mesh`]es with a depth buffer, alpha-tested organ
 //! cards, a sun with a shadow map, and a sky/ground ambient term.
 
+use std::cell::RefCell;
+
 use crate::math::{self, Vec3, any_perpendicular};
 use crate::mesh::Mesh;
 use crate::templates::Templates;
@@ -99,7 +101,13 @@ pub struct RenderOptions {
     /// The region the sun's shadow map covers; every mesh's bounds when
     /// `None`. A large ground plane would otherwise spread the map thin.
     pub shadow_bounds: Option<(Vec3, Vec3)>,
+    /// Texels along each side of the shadow map ([`SHADOW_TEXELS`] for a
+    /// whole plant).
+    pub shadow_texels: usize,
 }
+
+/// Texels along each side of a whole plant's shadow map.
+pub const SHADOW_TEXELS: usize = 2048;
 
 /// A rendered image. Colour is linear RGB with coverage in alpha; normals are
 /// in world space; depth is distance along the view direction (infinite
@@ -167,7 +175,7 @@ pub fn render(
                         half_height: radius,
                     },
                 };
-                let size = 2048;
+                let size = options.shadow_texels.max(1);
                 let mut target = Target::new(size, size);
                 for (mesh, material) in meshes {
                     draw(&mut target, mesh, *material, &camera, None, templates, None);
@@ -378,6 +386,11 @@ fn clip_near(view: [Vec3; 3], perspective: bool) -> ([(Vec3, [f64; 3]); 4], usiz
     (out, count)
 }
 
+/// How far (pixels) outside a triangle's box a pixel centre is still
+/// tested against it ([`rasterize`]): far more than the rounding of its
+/// edge tests, so no pixel the tests take in is passed over.
+const BOX_SLACK: f64 = 1e-3;
+
 /// Call `visit(pixel, weights, depth)` for every pixel centre inside a
 /// screen triangle, with perspective-correct weights on the original
 /// triangle and the view depth there.
@@ -397,16 +410,22 @@ fn rasterize(
     let (low_y, high_y) = (a.y.min(b.y).min(c.y), a.y.max(b.y).max(c.y));
     #[allow(clippy::cast_precision_loss)]
     let (right, bottom) = (width as f64, height as f64);
-    if high_x < 0.0 || high_y < 0.0 || low_x > right || low_y > bottom {
+    // Only pixels whose centres fall within the triangle's box, give or
+    // take [`BOX_SLACK`], can be inside it: most triangles of a far plant
+    // are a pixel or less across, and the whole pixels round their box
+    // held about ten times as many as they covered.
+    let first = |low: f64| (low - 0.5 - BOX_SLACK).ceil().max(0.0);
+    let (x_first, x_last) = (first(low_x), (high_x - 0.5 + BOX_SLACK).floor());
+    let (y_first, y_last) = (first(low_y), (high_y - 0.5 + BOX_SLACK).floor());
+    if x_first > x_last.min(right - 1.0) || y_first > y_last.min(bottom - 1.0) {
         return;
     }
-    // Clamped to the target first.
     #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
     let (x0, x1, y0, y1) = (
-        low_x.floor().clamp(0.0, right - 1.0) as usize,
-        high_x.ceil().clamp(0.0, right - 1.0) as usize,
-        low_y.floor().clamp(0.0, bottom - 1.0) as usize,
-        high_y.ceil().clamp(0.0, bottom - 1.0) as usize,
+        x_first as usize,
+        x_last.min(right - 1.0) as usize,
+        y_first as usize,
+        y_last.min(bottom - 1.0) as usize,
     );
     let inverse_area = 1.0 / area;
     for y in y0..=y1 {
@@ -601,11 +620,13 @@ fn draw(
         perspective: viewport.perspective,
         pixel: 2.0 * viewport.half_y / viewport.height,
     };
-    let views: Vec<Vec3> = mesh
-        .positions
-        .iter()
-        .map(|p| to_view(camera, basis, vec3(*p)))
-        .collect();
+    let mut views = VIEW_CORNERS.take();
+    views.clear();
+    views.extend(
+        mesh.positions
+            .iter()
+            .map(|p| to_view(camera, basis, vec3(*p))),
+    );
     let (width, height) = (target.width, target.height);
     for triangle in mesh.indices.as_chunks::<3>().0 {
         let corners = [
@@ -649,6 +670,15 @@ fn draw(
             );
         }
     }
+    VIEW_CORNERS.set(views);
+}
+
+thread_local! {
+    /// [`draw`]'s mesh corners in view space, kept on each thread between
+    /// calls: an impostor draws its plant from 64 directions, and a fresh
+    /// buffer for a large tree's million corners each time cost as much in
+    /// page faults as the transform did.
+    static VIEW_CORNERS: RefCell<Vec<Vec3>> = const { RefCell::new(Vec::new()) };
 }
 
 impl ShadowMap {
@@ -784,6 +814,7 @@ mod tests {
             supersample: 2,
             shadows: false,
             shadow_bounds: None,
+            shadow_texels: SHADOW_TEXELS,
         };
         let templates = Templates::default();
         let render_once = || {
@@ -813,6 +844,7 @@ mod tests {
             supersample: 1,
             shadows: true,
             shadow_bounds: None,
+            shadow_texels: SHADOW_TEXELS,
         };
         let mut flipped = quad(0.0);
         flipped.indices = vec![0, 1, 2, 0, 2, 3];
@@ -877,6 +909,7 @@ mod tests {
             supersample: 1,
             shadows: false,
             shadow_bounds: None,
+            shadow_texels: SHADOW_TEXELS,
         };
         let image = render(
             &[(&ground, Material::Opaque)],

@@ -8,7 +8,7 @@ use super::ProgramError;
 use super::ast::{BinaryOp, Expr, ModuleCall, ProgramAst, Rule, RuleKind, UnaryOp};
 use super::expr::{Code, EnvField, Func, NO_ENV, Op, Query, Scope, Var, eval};
 use super::lexer::Span;
-use super::parser::parse;
+use super::parser::parse_chain;
 
 /// Largest program text the compiler accepts.
 pub const MAX_PROGRAM_BYTES: usize = 256 * 1024;
@@ -197,6 +197,7 @@ pub enum ToolKind {
     Vigour = 2,
     Pipe = 3,
     Host = 4,
+    Substrate = 5,
 }
 
 pub struct ToolSpec {
@@ -208,12 +209,29 @@ pub struct ToolSpec {
 
 /// The tool registry. A new capability is a new entry or a new version of an
 /// entry; a version, once released, never changes behaviour.
-pub const TOOLS: [ToolSpec; 5] = [
+/// The first random call site of tool settings, far above any rule's.
+pub const TOOL_SITES: u32 = 1 << 24;
+
+pub const TOOLS: [ToolSpec; 9] = [
     ToolSpec {
         kind: ToolKind::Light,
         name: "light",
         version: 1,
         keys: &[("cell", 0.5), ("extinction", 0.5), ("bud", 0.01)],
+    },
+    // G3: the substrate shades the plant and reflects light up into it
+    // (each material's albedo); `reach` is how far past the plant the
+    // substrate is looked at (`super::tools`).
+    ToolSpec {
+        kind: ToolKind::Light,
+        name: "light",
+        version: 2,
+        keys: &[
+            ("cell", 0.5),
+            ("extinction", 0.5),
+            ("bud", 0.01),
+            ("reach", 0.5),
+        ],
     },
     ToolSpec {
         kind: ToolKind::Space,
@@ -229,6 +247,41 @@ pub const TOOLS: [ToolSpec; 5] = [
             ("kill", 0.4),
             ("angle", 90.0),
         ],
+    },
+    // Growth plan G1: space that returns where the plant is shed, an
+    // outline widest anywhere up the crown and as full as a box or as
+    // pointed as a cone, lobes round the edge, and billows: the edge moved
+    // in and out by smooth noise `bump_size` metres across
+    // (`super::tools`).
+    ToolSpec {
+        kind: ToolKind::Space,
+        name: "space",
+        version: 2,
+        keys: &[
+            ("shape", 1.0),
+            ("base", 0.0),
+            ("height", 4.0),
+            ("radius", 2.0),
+            ("density", 20.0),
+            ("influence", 1.5),
+            ("kill", 0.4),
+            ("angle", 90.0),
+            ("renew", 1.0),
+            ("widest", 0.5),
+            ("fullness", 2.0),
+            ("lobes", 0.0),
+            ("lobe_depth", 0.0),
+            ("bumps", 0.0),
+            ("bump_size", 3.0),
+        ],
+    },
+    // G3: contact. Living tips are solid, `radius` metres round: each
+    // reads how many others touch it and the way out from among them.
+    ToolSpec {
+        kind: ToolKind::Space,
+        name: "space",
+        version: 3,
+        keys: &[("radius", 0.01)],
     },
     ToolSpec {
         kind: ToolKind::Vigour,
@@ -252,6 +305,14 @@ pub const TOOLS: [ToolSpec; 5] = [
         name: "host",
         version: 1,
         keys: &[("reach", 2.0)],
+    },
+    // G3: what the plant grows on, from the conditions' substrate (level
+    // soil without one): distance, normal and material at each module.
+    ToolSpec {
+        kind: ToolKind::Substrate,
+        name: "substrate",
+        version: 1,
+        keys: &[],
     },
 ];
 
@@ -281,7 +342,7 @@ pub struct Program {
     pub productions: Vec<Vec<CompiledRule>>,
     pub decompositions: Vec<Vec<CompiledRule>>,
     pub interpretations: Vec<Vec<CompiledRule>>,
-    pub tools: [Option<ToolConfig>; 5],
+    pub tools: [Option<ToolConfig>; 6],
 }
 
 impl Program {
@@ -300,7 +361,7 @@ impl Program {
                 ),
             });
         }
-        let ast = parse(source)?;
+        let ast = super::chain::resolve(parse_chain(source)?)?;
         let mut program = Compiler::default().compile(&ast)?;
         program.source_sha256 = hex(&Sha256::digest(source.as_bytes()));
         Ok(program)
@@ -457,7 +518,7 @@ struct Compiler {
 }
 
 /// Every module that queries light, vigour or space needs that tool.
-fn check_queries(ast: &ProgramAst, tools: &[Option<ToolConfig>; 5]) -> Result<(), ProgramError> {
+fn check_queries(ast: &ProgramAst, tools: &[Option<ToolConfig>; 6]) -> Result<(), ProgramError> {
     for decl in &ast.modules {
         for (name, span) in &decl.queries {
             let tool = match Query::from_name(name) {
@@ -465,14 +526,19 @@ fn check_queries(ast: &ProgramAst, tools: &[Option<ToolConfig>; 5]) -> Result<()
                 Some(Query::Vigour) => ToolKind::Vigour,
                 Some(Query::Space) => ToolKind::Space,
                 Some(Query::Host) => ToolKind::Host,
+                Some(Query::Substrate) => ToolKind::Substrate,
                 _ => continue,
             };
             if tools[tool as usize].is_none() {
                 return err(
                     *span,
                     format!(
-                        "module `{}` queries {name}, but the program configures no `tool {}@1`",
-                        decl.name, TOOLS[tool as usize].name
+                        "module `{}` queries {name}, but the program configures no `tool {}`",
+                        decl.name,
+                        TOOLS.iter().find(|spec| spec.kind == tool).map_or_else(
+                            String::new,
+                            |spec| format!("{}@{}", spec.name, spec.version)
+                        )
                     ),
                 );
             }
@@ -516,7 +582,12 @@ impl Compiler {
         self.declare_modules(ast)?;
         self.declare_organs(ast)?;
         self.declare_bodies(ast)?;
+        // Draws in tool settings number their sites in a block of their
+        // own, so a program that adds one never moves the sites of the
+        // axiom or of the rules it inherits.
+        let sites = std::mem::replace(&mut self.random_sites, TOOL_SITES);
         let tools = self.configure_tools(ast)?;
+        self.random_sites = sites;
         check_queries(ast, &tools)?;
 
         let axiom_context = Context {
@@ -532,14 +603,38 @@ impl Compiler {
         let mut productions = vec![Vec::new(); symbol_count];
         let mut decompositions = vec![Vec::new(); symbol_count];
         let mut interpretations = vec![Vec::new(); symbol_count];
+        // Rules compile in the chain's order, the furthest ancestor's first
+        // (so their random call sites keep their numbers); a program's own
+        // rules for a module are then tried before those it inherits.
+        let mut depths = vec![vec![Vec::new(); symbol_count]; 3];
         for rule in &ast.rules {
             let (symbol, compiled) = self.rule(rule)?;
-            let list = match rule.kind {
-                RuleKind::Production => &mut productions,
-                RuleKind::Decomposition => &mut decompositions,
-                RuleKind::Interpretation => &mut interpretations,
+            let kind = match rule.kind {
+                RuleKind::Production => 0,
+                RuleKind::Decomposition => 1,
+                RuleKind::Interpretation => 2,
+            };
+            let list = match kind {
+                0 => &mut productions,
+                1 => &mut decompositions,
+                _ => &mut interpretations,
             };
             list[usize::from(symbol)].push(compiled);
+            depths[kind][usize::from(symbol)].push(rule.depth);
+        }
+        for (kind, list) in [&mut productions, &mut decompositions, &mut interpretations]
+            .into_iter()
+            .enumerate()
+        {
+            for (symbol, rules) in list.iter_mut().enumerate() {
+                let order = &depths[kind][symbol];
+                if order.windows(2).all(|pair| pair[0] <= pair[1]) {
+                    continue;
+                }
+                let mut keyed: Vec<_> = order.iter().copied().zip(rules.drain(..)).collect();
+                keyed.sort_by_key(|(depth, _)| *depth);
+                rules.extend(keyed.into_iter().map(|(_, rule)| rule));
+            }
         }
 
         Ok(Program {
@@ -660,22 +755,25 @@ impl Compiler {
         Ok(())
     }
 
-    /// Tool settings, defaults first; a setting may read parameters and
-    /// the time.
+    /// Tool settings, defaults first; a setting may read parameters, the
+    /// time and per-plant draws (`rand`, `gauss`, `uniform`: keyed on the
+    /// plant's seed alone, so the same every step; growth plan G1).
     fn configure_tools(
         &mut self,
         ast: &ProgramAst,
-    ) -> Result<[Option<ToolConfig>; 5], ProgramError> {
-        let mut tools: [Option<ToolConfig>; 5] = [None, None, None, None, None];
+    ) -> Result<[Option<ToolConfig>; 6], ProgramError> {
+        let mut tools: [Option<ToolConfig>; 6] = [None, None, None, None, None, None];
         let context = Context {
             what: "a tool setting",
             globals: self.params.len(),
             time: true,
+            random: true,
             ..PARAMS_ONLY
         };
         for decl in &ast.tools {
-            let Some(spec) = TOOLS.iter().find(|spec| spec.name == decl.name) else {
-                let known: Vec<&str> = TOOLS.iter().map(|spec| spec.name).collect();
+            if !TOOLS.iter().any(|spec| spec.name == decl.name) {
+                let mut known: Vec<&str> = TOOLS.iter().map(|spec| spec.name).collect();
+                known.dedup();
                 return err(
                     decl.span,
                     format!(
@@ -684,16 +782,26 @@ impl Compiler {
                         known.join(", ")
                     ),
                 );
-            };
-            if decl.version != spec.version {
+            }
+            let Some(spec) = TOOLS
+                .iter()
+                .find(|spec| spec.name == decl.name && spec.version == decl.version)
+            else {
+                let versions: Vec<String> = TOOLS
+                    .iter()
+                    .filter(|spec| spec.name == decl.name)
+                    .map(|spec| format!("`{}@{}`", spec.name, spec.version))
+                    .collect();
                 return err(
                     decl.span,
                     format!(
-                        "`{}@{}` does not exist; this build has `{}@{}`",
-                        decl.name, decl.version, spec.name, spec.version
+                        "`{}@{}` does not exist; this build has {}",
+                        decl.name,
+                        decl.version,
+                        versions.join(" and ")
                     ),
                 );
-            }
+            };
             if tools[spec.kind as usize].is_some() {
                 return err(
                     decl.span,
@@ -882,7 +990,14 @@ impl Compiler {
             for arg in &call.args {
                 args.push(self.expr(arg, context)?);
             }
-            if args.len() != usize::from(info.arity) {
+            // An organ may carry its own turn (growth plan G1): `leaf(s, roll,
+            // pitch)` or `leaf(s, roll, pitch, level)` places it as
+            // `[ /(roll) &(pitch) $ leaf(s) ]` would (`$` only with a level
+            // above 0), in one module instead of five
+            // (`super::turtle::organ_frame`).
+            let turned_organ =
+                matches!(info.kind, SymbolKind::Organ { .. }) && matches!(args.len(), 3 | 4);
+            if args.len() != usize::from(info.arity) && !turned_organ {
                 let default = match info.kind {
                     SymbolKind::Turtle(Turtle::Forward | Turtle::Move)
                     | SymbolKind::Organ { .. }
@@ -1043,6 +1158,7 @@ impl Compiler {
                             Query::Space => "space",
                             Query::Position => "position",
                             Query::Host => "host",
+                            Query::Substrate => "substrate",
                         };
                         err(
                             span,
@@ -1203,7 +1319,7 @@ mod tests {
                 "1 parameter",
             ),
             ("lsystem p 1; axiom F; rule [ -> F;", "cannot be rewritten"),
-            ("lsystem p 1; tool light@2 { }; axiom F;", "does not exist"),
+            ("lsystem p 1; tool light@9 { }; axiom F;", "does not exist"),
             (
                 "lsystem p 1; tool light@1 { colour = 1 }; axiom F;",
                 "no setting",

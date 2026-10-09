@@ -107,6 +107,8 @@ fn run() -> Result<(), Failure> {
     match command.as_str() {
         "list" => list(),
         "check" => check(&args),
+        "spec" => spec_command(&args),
+        "rules" => rules_command(&args),
         "grow" => grow_command(&args),
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
@@ -114,9 +116,11 @@ fn run() -> Result<(), Failure> {
         "year" => year_command(&args),
         "lineup" => lineup_command(&args),
         "atlas" => atlas_command(&args),
+        "measure" => measure_command(&args),
         "ground" => ground_command(&args),
         "build" => build_command(&args),
         "inspect" => inspect_command(&args),
+        "sources" => sources_command(&args),
         "help" | "--help" | "-h" => print_usage(),
         other => Err(format!("unknown command `{other}`; run `plantc help`").into()),
     }
@@ -130,7 +134,20 @@ Usage:
   plantc list
       List the species and plant programs, by family.
   plantc check <species|spec.json|program.lsys>
-      Check a spec or a program and report the first problem with its line.
+      Check a spec or a program and report the first problem with its line;
+      for a species, name the rank files its spec stands on. Every value of
+      a spec needs an evidence note citing a source in library/sources/.
+  plantc spec <species>
+      Print the species' spec value by value, each with the file that set
+      it: its own spec.json or a rank file above it (family.json,
+      genus.json, library/_ranks/), or a rule on its traits; then each
+      evidence note's file, its traits, and each rule it inherits with
+      what came of it.
+  plantc rules
+      List every rule that turns traits into spec values, by its home:
+      the rank file (or species) that holds it. Then the general ones,
+      with no taxonomic home: rules at all plants, and the parameter
+      defaults of programs not named for a taxon. The list should shrink.
   plantc grow <species|spec.json> [--env ENV] [--seed N] [--years N]
       Grow one variant and print its size at every keyframe.
   plantc render <species|spec.json> --out FILE.png [--env ENV] [--seed N]
@@ -161,6 +178,13 @@ Usage:
                 [--view side|three-quarter|top] [--size PIXELS]
       Render a row per species of its first N seeds (default 4) at one
       age (default its oldest keyframe), each row at one scale.
+  plantc measure [<species|spec.json>...] [--generator PROGRAM] [--env ENV]
+                 [--seed N] [--years N]
+      Grow each species (default every one in the library; --generator
+      keeps those run by one program) to its oldest keyframe, or N years,
+      and print its form: crown width over depth, where it is widest,
+      its departure from an ellipse (0 an orb), its lobing, crown width
+      over dbh and the median leaf card length.
   plantc atlas <species|spec.json> --out FILE.png
       Draw the species' organ card textures (leaves, needles, flowers) in
       their colours, one per organ, side by side.
@@ -175,12 +199,19 @@ Usage:
       key. A package that is already built is not built again.
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
+  plantc sources [list | cite ID]
+      List the sources evidence notes cite (library/sources/<id>.json),
+      or every value that cites the source ID: the file holding its note,
+      by its path in the library, and the note's path, one per line.
 
 A species is an id (see `plantc list`) or a path to a spec file.
 Every command accepts --library DIR: a folder holding a species tree,
 library/<family>/<genus>/<id>/spec.json, and programs, programs/<name>.lsys,
 which replace built-in species and programs of the same id or name and add
-to them.
+to them. Its rank files (library/<family>/family.json,
+library/<family>/<genus>/genus.json, library/_ranks/<rank>/<name>.json)
+replace built-in ones at the same path; each species' spec is its own
+spec.json merged onto those above it, the nearer file winning.
 grow, render, sheet, atlas and build accept --program FILE.lsys to try a
 changed program in place of the species' built-in one. render, sheet,
 parts, lineup and build accept --day N (1 to 365, default 196): the day
@@ -244,7 +275,9 @@ impl Options {
         self.flags
             .get("program")
             .map(|path| {
-                fs::read_to_string(path).map_err(|error| format!("cannot read {path}: {error}"))
+                fs::read_to_string(path)
+                    .map(|source| library().chain_of(&source).into_owned())
+                    .map_err(|error| format!("cannot read {path}: {error}"))
             })
             .transpose()
     }
@@ -291,6 +324,9 @@ fn load_spec(name: &str) -> Result<PlantSpec, String> {
     if Path::new(name).extension().is_some_and(|ext| ext == "json") {
         let text =
             fs::read_to_string(name).map_err(|error| format!("cannot read {name}: {error}"))?;
+        // Its own traits, turned into values by its own rules.
+        let text = plantgen::inherit::effective_text(name, &text, &[], library().program_params())?
+            .unwrap_or(text);
         PlantSpec::from_json_in(&text, library()).map_err(|error| error.to_string())
     } else {
         library().spec(name).map_err(|error| error.to_string())
@@ -334,6 +370,41 @@ fn list() -> Result<(), Failure> {
     Ok(())
 }
 
+fn sources_command(args: &[String]) -> Result<(), Failure> {
+    let library = library();
+    match args.first().map(String::as_str) {
+        None | Some("list") => {
+            for source in library.sources() {
+                out!(
+                    "{}  tier {}, {:?}: {}, {} ({})",
+                    source.id,
+                    source.tier,
+                    source.kind,
+                    source.title,
+                    source.authors,
+                    source.year
+                );
+            }
+            Ok(())
+        }
+        Some("cite") => {
+            let id = args.get(1).ok_or("`sources cite` needs a source id")?;
+            let found = library.citations(id)?;
+            for citation in &found {
+                out!("{} {}", citation.file, citation.path);
+            }
+            if library.source(id).is_none() {
+                eprintln!("plantc: the library holds no source `{id}`");
+            }
+            eprintln!("plantc: {} values cite `{id}`", found.len());
+            Ok(())
+        }
+        Some(other) => {
+            Err(format!("unknown `sources` command `{other}`; use `list` or `cite ID`").into())
+        }
+    }
+}
+
 fn check(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(args, &[])?;
     let target = options.one_positional("a species, spec file or program file")?;
@@ -343,7 +414,8 @@ fn check(args: &[String]) -> Result<(), Failure> {
     {
         let source =
             fs::read_to_string(target).map_err(|error| format!("cannot read {target}: {error}"))?;
-        let program = Program::compile(&source).map_err(|error| format!("{target}:{error}"))?;
+        let program = Program::compile(&library().chain_of(&source))
+            .map_err(|error| format!("{target}:{error}"))?;
         out!(
             "{target}: program `{}` revision {} is valid: {} parameters, {} symbols",
             program.name,
@@ -357,13 +429,164 @@ fn check(args: &[String]) -> Result<(), Failure> {
     let (program, _) = spec
         .program_in(library())
         .map_err(|error| error.to_string())?;
+    // Per-value evidence, on the spec as written: a file's own text, or a
+    // species' spec as it inherits it.
+    let text = if Path::new(target)
+        .extension()
+        .is_some_and(|ext| ext == "json")
+    {
+        fs::read_to_string(target).map_err(|error| format!("cannot read {target}: {error}"))?
+    } else {
+        library()
+            .entry(target)
+            .ok_or_else(|| format!("no species `{target}`"))?
+            .source()
+            .to_string()
+    };
+    let document: serde_json::Value =
+        serde_json::from_str(&text).map_err(|error| format!("{target}: {error}"))?;
+    PlantSpec::check_evidence(&document, library())
+        .map_err(|error| format!("species `{}`: {error}", spec.id))?;
     out!(
-        "{}: valid; program `{}` revision {}, {} variants, keyframes {:?}",
+        "{}: valid; program `{}` revision {}, {} variants, keyframes {:?}; every value has an evidence note citing a source",
         spec.id,
         program.name,
         program.revision,
         spec.variant_list().len(),
         spec.growth.keyframes
+    );
+    if Path::new(target)
+        .extension()
+        .is_none_or(|ext| ext != "json")
+    {
+        let inherited = library()
+            .inherited(target)
+            .map_err(|error| error.to_string())?;
+        if inherited.chain.len() > 1 {
+            out!("  stands on {}", inherited.chain[1..].join(", "));
+        }
+    }
+    Ok(())
+}
+
+fn spec_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &[])?;
+    let id = options.one_positional("a species")?;
+    let inherited = library().inherited(id).map_err(|error| error.to_string())?;
+    match inherited.chain.split_first() {
+        Some((own, above)) if !above.is_empty() => {
+            out!("{id}: {own} on {}", above.join(", "));
+        }
+        _ => out!("{id}: {}", inherited.chain.join(", ")),
+    }
+    let spec = inherited
+        .spec
+        .as_object()
+        .ok_or("a spec is a JSON object")?;
+    for (path, file) in &inherited.origins {
+        let value = plantgen::inherit::find(spec, path).map(ToString::to_string);
+        out!("  {path} = {}  ({file})", value.unwrap_or_default());
+    }
+    if !inherited.notes.is_empty() {
+        out!("evidence:");
+        for (path, file) in &inherited.notes {
+            out!("  {path}  ({file})");
+        }
+    }
+    if !inherited.traits.is_empty() {
+        out!("traits:");
+        for (key, (value, file)) in &inherited.traits {
+            out!("  {key} = {value}  ({file})");
+        }
+    }
+    if !inherited.rules.is_empty() {
+        out!("rules:");
+        for (path, (file, outcome)) in &inherited.rules {
+            match outcome {
+                None => out!("  {path}  ({file}): set"),
+                Some(reason) => out!("  {path}  ({file}): not set, {reason}"),
+            }
+        }
+    }
+    Ok(())
+}
+
+fn rules_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &[])?;
+    if !options.positional.is_empty() {
+        return Err("`plantc rules` takes no arguments".into());
+    }
+    let library = library();
+    let mut homed = Vec::new();
+    let mut at_all_plants = 0;
+    for rank in library.ranks() {
+        for (at, part) in rank.parts() {
+            for (path, rule) in &part.rules {
+                if rule.is_null() {
+                    continue;
+                }
+                let place = if at.is_empty() {
+                    String::new()
+                } else {
+                    format!(", {at}")
+                };
+                homed.push(format!(
+                    "  {path}  ({} {}: {}{place})",
+                    rank.rank, rank.name, rank.file
+                ));
+                if rank.rank == "kingdom" {
+                    at_all_plants += 1;
+                }
+            }
+        }
+    }
+    for entry in library.species() {
+        let own: serde_json::Value =
+            serde_json::from_str(entry.own_source()).map_err(|error| error.to_string())?;
+        if let Some(rules) = own.get("rules").and_then(serde_json::Value::as_object) {
+            for path in rules.keys() {
+                homed.push(format!(
+                    "  {path}  (species {}: {})",
+                    entry.id,
+                    entry.file()
+                ));
+            }
+        }
+    }
+    out!("Rules, by their home ({}):", homed.len());
+    for line in &homed {
+        out!("{line}");
+    }
+    // A program is homed when it is named for a taxon of the library.
+    let mut taxa: std::collections::BTreeSet<String> = library
+        .species()
+        .iter()
+        .flat_map(|entry| [entry.family.clone(), entry.genus.clone()])
+        .collect();
+    taxa.extend(
+        library
+            .ranks()
+            .map(|rank| plantgen::inherit::file_name(&rank.name)),
+    );
+    let general: Vec<(&String, usize)> = library
+        .program_params()
+        .iter()
+        .filter(|(name, _)| !taxa.contains(*name))
+        .map(|(name, params)| (name, params.len()))
+        .collect();
+    let defaults: usize = general.iter().map(|(_, count)| count).sum();
+    out!(
+        "General, with no taxonomic home: {} rules at all plants; {defaults} parameter defaults in {} programs named for no taxon",
+        at_all_plants,
+        general.len()
+    );
+    out!(
+        "  {}",
+        general
+            .iter()
+            .map(|(name, count)| format!("{name} {count}"))
+            .collect::<Vec<_>>()
+            .join(", ")
     );
     Ok(())
 }
@@ -432,6 +655,73 @@ fn describe(graph: &PlantGraph, types: &[OrganType]) -> String {
     )
 }
 
+fn measure_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &["generator", "env", "seed", "years"])?;
+    let ids: Vec<String> = if options.positional.is_empty() {
+        library()
+            .species()
+            .iter()
+            .map(|entry| entry.id.clone())
+            .collect()
+    } else {
+        options.positional.clone()
+    };
+    let wanted = options.flags.get("generator");
+    out!(
+        "{:<28} {:>5} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>5} {:>6} {:>6}",
+        "species",
+        "age",
+        "height",
+        "dbh",
+        "crown",
+        "w/d",
+        "widest",
+        "ellip",
+        "lobe",
+        "w/dbh",
+        "leaf"
+    );
+    for id in &ids {
+        let spec = load_spec(id)?;
+        if wanted.is_some_and(|program| *program != spec.generator.program) {
+            continue;
+        }
+        let environment = options.environment(&spec)?;
+        let seed = options.number("seed")?.unwrap_or(spec.variants.seeds[0]);
+        let years = options.number("years")?.unwrap_or(spec.growth.years);
+        let growth = grow_variant(&spec, None, environment, seed, vec![years], years)?;
+        let Some(graph) = growth.keyframes.last() else {
+            continue;
+        };
+        let cm = |value: Option<f64>| {
+            value.map_or_else(|| "-".to_string(), |v| format!("{:.1}", v * 100.0))
+        };
+        match plantgen::form::measure(graph, &growth.organ_types) {
+            Some(form) => out!(
+                "{:<28} {:>5.0} {:>6.1} {:>6} {:>6.1} {:>6.2} {:>6.2} {:>6.2} {:>5.2} {:>6} {:>6}",
+                spec.id,
+                graph.age,
+                form.height,
+                cm(form.dbh),
+                form.crown_radius * 2.0,
+                form.width_to_depth,
+                form.widest_at,
+                form.ellipse_departure,
+                form.lobing,
+                form.width_to_dbh
+                    .map_or_else(|| "-".to_string(), |r| format!("{r:.0}")),
+                cm(form.leaf_length)
+            ),
+            None => out!(
+                "{:<28} {:>5.0} too few living organs to measure",
+                spec.id,
+                graph.age
+            ),
+        }
+    }
+    Ok(())
+}
+
 fn grow_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(args, &["env", "seed", "years", "program"])?;
     let spec = load_spec(options.one_positional("a species")?)?;
@@ -483,6 +773,7 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
         seed,
         neighbourhood: neighbourhood(&spec, environment),
         class: None,
+        substrate: None,
     };
     for record in package::compare_allometry(&spec, &variant, &growth) {
         out!("  reference at {} years: {}", record.age, record.describe());

@@ -1,0 +1,10 @@
+{
+  "id": "plantgen-authors",
+  "title": "Values set by hand by PlantGen's (and before it Project After's) contributors, from general knowledge and photographs, not fitted to data",
+  "authors": "PlantGen contributors",
+  "year": 2026,
+  "url": "https://github.com/jferments/plantgen",
+  "licence": "MIT, as PlantGen",
+  "tier": 4,
+  "kind": "inferred"
+}

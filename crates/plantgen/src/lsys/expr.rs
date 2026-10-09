@@ -12,7 +12,7 @@ use crate::rng::{hash_words, normal, unit};
 /// Values the environment tools wrote for one module in the last step.
 pub type EnvValues = [f64; ENV_FIELDS];
 
-pub const ENV_FIELDS: usize = 21;
+pub const ENV_FIELDS: usize = 26;
 
 /// The environment fields a rule can read, grouped by the query that
 /// provides them.
@@ -52,6 +52,16 @@ pub enum EnvField {
     Gx,
     Gy,
     Gz,
+    /// `sd`: distance from the module to the substrate's surface, metres,
+    /// negative inside it (`substrate@1`; saturates a little way off).
+    Sd,
+    /// `snx`, `sny`, `snz`: the substrate's unit normal there, out of it.
+    Snx,
+    Sny,
+    Snz,
+    /// `smat`: the material of the substrate's surface there: 0 air (out
+    /// of reach), 1 soil, 2 rock, 3 bark, 4 wood, 5 built.
+    Smat,
 }
 
 impl EnvField {
@@ -77,6 +87,11 @@ impl EnvField {
         (Self::Gx, "gx"),
         (Self::Gy, "gy"),
         (Self::Gz, "gz"),
+        (Self::Sd, "sd"),
+        (Self::Snx, "snx"),
+        (Self::Sny, "sny"),
+        (Self::Snz, "snz"),
+        (Self::Smat, "smat"),
     ];
 
     #[must_use]
@@ -95,6 +110,7 @@ impl EnvField {
             Self::Vigour | Self::Qsum | Self::Nseg | Self::Ntip => Query::Vigour,
             Self::Space | Self::Sx | Self::Sy | Self::Sz => Query::Space,
             Self::Gd | Self::Gx | Self::Gy | Self::Gz => Query::Host,
+            Self::Sd | Self::Snx | Self::Sny | Self::Snz | Self::Smat => Query::Substrate,
             _ => Query::Position,
         }
     }
@@ -109,6 +125,8 @@ pub enum Query {
     Position,
     /// The host plant a climber, epiphyte or parasite grows on (`host@1`).
     Host,
+    /// What the plant grows on (`substrate@1`, G3).
+    Substrate,
 }
 
 impl Query {
@@ -120,6 +138,7 @@ impl Query {
             "space" => Self::Space,
             "position" => Self::Position,
             "host" => Self::Host,
+            "substrate" => Self::Substrate,
             _ => return None,
         })
     }
@@ -132,6 +151,7 @@ impl Query {
             Self::Space => 4,
             Self::Position => 8,
             Self::Host => 16,
+            Self::Substrate => 32,
         }
     }
 }

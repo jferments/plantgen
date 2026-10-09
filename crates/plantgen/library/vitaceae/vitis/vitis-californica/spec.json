@@ -4,7 +4,10 @@
   "taxon": {
     "scientific_name": "Vitis californica",
     "common_name": "California wild grape",
-    "usda_symbol": "VICA5"
+    "usda_symbol": "VICA5",
+    "family": "Vitaceae",
+    "genus": "Vitis",
+    "plant_name_id": 2456489
   },
   "growth_form": "vine",
   "generator": {
@@ -92,15 +95,58 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: a deciduous woody vine of streams and woodland in California and southern Oregon that climbs by tendrils into the crowns of oaks and willows and drapes over them in curtains of broad, heart-shaped, shallowly lobed leaves, turning red in autumn, with small purple grapes. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Rough heights from general knowledge of the species: about 9 m up its host at 8 years and 14 m at 15. Wide tolerances."
     },
     "appearance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Colours chosen by eye from photographs: mid-green leaves, purple grapes."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "host": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The host the spec's authors chose for this guest, grown at the age, environment and seed given."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     }
   },
   "provenance": {

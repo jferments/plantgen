@@ -4,7 +4,10 @@
   "taxon": {
     "scientific_name": "Stenocereus thurberi",
     "common_name": "organ pipe cactus",
-    "usda_symbol": "STTH6"
+    "usda_symbol": "STTH6",
+    "family": "Cactaceae",
+    "genus": "Stenocereus",
+    "plant_name_id": 2486740
   },
   "growth_form": "stem_succulent",
   "generator": {
@@ -148,15 +151,53 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: a clump of a dozen or more ribbed columns, 15 to 20 cm thick, that rise from a short base, spread out and curve up into a vase 3 to 7 m tall; new stems come from the base over decades. Pale flowers open near the stem tips, followed by red, spiny fruit. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Rough stem heights from general knowledge: a few metres by 70 years, about 5 m by 120. Wide tolerances."
     },
     "appearance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Colours chosen by eye from photographs: dark green stems with 12 to 19 ribs, areoles 2 cm apart with dark felt, short dark radial spines and one to three longer centrals that grey with age; creamy white to lavender flowers."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     }
   },
   "provenance": {

@@ -147,7 +147,7 @@ impl Shed {
             return Err("provenance needs at least one source".to_string());
         }
         for (path, note) in &self.evidence {
-            note.check(&self.provenance)
+            note.check()
                 .map_err(|message| format!("the evidence note on `{path}`: {message}"))?;
         }
         let document = serde_json::to_value(self).map_err(|error| error.to_string())?;

@@ -3,7 +3,10 @@
   "id": "frangula-purshiana",
   "taxon": {
     "scientific_name": "Frangula purshiana",
-    "common_name": "cascara"
+    "common_name": "cascara",
+    "family": "Rhamnaceae",
+    "genus": "Frangula",
+    "plant_name_id": 2814099
   },
   "growth_form": "decurrent_tree",
   "generator": {
@@ -126,15 +129,53 @@
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: a small understory tree, often with two or three stems, and alternate, oval leaves with deep, parallel veins. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Rough sizes from general knowledge of the species: 8 m tall and 15 cm across at breast height at 30 years in a closed stand. Replace with measured data before calling this species calibrated."
     },
     "appearance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Colours chosen by eye: glossy green leaves; smooth grey bark. Fruit (plant roadmap P4), as in mid-July: small umbels of berries ripening from red to black. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: greenish-yellow umbels in May and June; berries red, then purple-black from July into September. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth thin grey-brown bark mottled with lichens, with lenticels; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): a shade-tolerant understory tree: broad thin shade leaves, smaller narrower sun leaves; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     }
   },
   "provenance": {
