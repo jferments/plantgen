@@ -8,5 +8,9 @@ publish.workspace = true
 plantgen = { path = "../../crates/plantgen" }
 serde_json = "=1.0.145"
 
+[features]
+# Narrow space colonization's bud search on a GPU (same results).
+gpu = ["plantgen/gpu"]
+
 [lints]
 workspace = true

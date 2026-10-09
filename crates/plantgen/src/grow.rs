@@ -68,6 +68,34 @@ pub struct Growth {
 }
 
 impl Growth {
+    /// A SHA-256 over everything the growth holds (its keyframes, shed log
+    /// and stats, as Rust's `Debug` writes them): the same plant grown on
+    /// any machine, with or without a GPU, gives the same digest.
+    #[must_use]
+    pub fn digest(&self) -> String {
+        use sha2::{Digest, Sha256};
+        use std::fmt::Write;
+        struct Hashing(Sha256);
+        impl Write for Hashing {
+            fn write_str(&mut self, text: &str) -> std::fmt::Result {
+                self.0.update(text.as_bytes());
+                Ok(())
+            }
+        }
+        let mut hashing = Hashing(Sha256::new());
+        // Writing into a hash cannot fail.
+        let _ = write!(
+            hashing,
+            "{:?}|{:?}|{:?}",
+            self.keyframes, self.shed, self.stats
+        );
+        let mut hex = String::with_capacity(64);
+        for byte in hashing.0.finalize() {
+            let _ = write!(hex, "{byte:02x}");
+        }
+        hex
+    }
+
     /// What the plant shed while it grew: every self-pruned branch as last
     /// seen, and its fallen leaves, cones and fruit counted by type and
     /// year, what a floor under it would hold. No package stores it.

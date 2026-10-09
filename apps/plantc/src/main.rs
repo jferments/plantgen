@@ -724,7 +724,14 @@ fn measure_command(args: &[String]) -> Result<(), Failure> {
 }
 
 fn grow_command(args: &[String]) -> Result<(), Failure> {
-    let options = Options::parse(args, &["env", "seed", "years", "program"])?;
+    // `--digest` takes no value.
+    let digest = args.iter().any(|arg| arg == "--digest");
+    let args: Vec<String> = args
+        .iter()
+        .filter(|arg| *arg != "--digest")
+        .cloned()
+        .collect();
+    let options = Options::parse(&args, &["env", "seed", "years", "program"])?;
     let spec = load_spec(options.one_positional("a species")?)?;
     let program = options.program()?;
     let environment = options.environment(&spec)?;
@@ -778,6 +785,9 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
     };
     for record in package::compare_allometry(&spec, &variant, &growth) {
         out!("  reference at {} years: {}", record.age, record.describe());
+    }
+    if digest {
+        out!("  digest {}", growth.digest());
     }
     Ok(())
 }

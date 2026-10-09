@@ -29,6 +29,31 @@ fn grow_variant(spec: &PlantSpec, variant: &Variant, years: f64, keyframes: Vec<
     .unwrap()
 }
 
+/// Space colonization narrowed in 32-bit, as a GPU narrows it (here in
+/// Rust, on every step), grows the same plants as the full search, bit for
+/// bit: maples, oak, Douglas-fir and umbrella thorn, in the open and inside
+/// a stand.
+#[test]
+fn narrowed_bud_searches_grow_the_same_plants() {
+    for id in [
+        "acer-circinatum",
+        "acer-macrophyllum",
+        "quercus-garryana",
+        "pseudotsuga-menziesii",
+        "vachellia-tortilis",
+    ] {
+        let spec = PlantSpec::builtin(id).unwrap();
+        for variant in spec.variant_list().iter().take(2) {
+            let years = spec.growth.years.min(20.0);
+            let full = grow_variant(&spec, variant, years, vec![years / 2.0, years]);
+            let narrowed = plantgen::lsys::narrow::emulated(|| {
+                grow_variant(&spec, variant, years, vec![years / 2.0, years])
+            });
+            assert_eq!(full.digest(), narrowed.digest(), "{id} {variant:?}");
+        }
+    }
+}
+
 /// Every built-in species, grown in each environment it has reference
 /// sizes for, matches them within the spec's tolerance. This is the
 /// acceptance check for a species' parameters: a change to the engine or a

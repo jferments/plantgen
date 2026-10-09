@@ -16,7 +16,10 @@ pub mod ast;
 pub mod chain;
 pub mod derive;
 pub mod expr;
+#[cfg(feature = "gpu")]
+pub mod gpu;
 pub mod lexer;
+pub mod narrow;
 pub mod parser;
 pub mod program;
 pub mod tools;
