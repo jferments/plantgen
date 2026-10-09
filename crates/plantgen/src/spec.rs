@@ -17,6 +17,7 @@ use crate::library::{Entry, Library};
 use crate::looks::{self, Flare, Look, Moss, OrganLook, Ridges};
 use crate::lsys::program::SymbolKind;
 use crate::lsys::{Neighbourhood, OrganKind, Program, ProgramError, tools};
+use crate::substrate::{Substrate, SubstratePreset};
 
 pub const SPEC_SCHEMA: u32 = 1;
 
@@ -282,13 +283,23 @@ pub struct Variant {
     /// `None` for an environment's.
     #[serde(skip)]
     pub class: Option<ClassKey>,
+    /// The substrate preset (and its seed) of a variant grown in a
+    /// conditions document that names one (G3); `None` grows on level soil.
+    #[serde(skip)]
+    pub substrate: Option<(SubstratePreset, u64)>,
 }
 
 impl Variant {
     /// The conditions it grows in: its environment, with its neighbourhood.
     #[must_use]
     pub fn conditions(&self) -> Conditions {
-        Conditions::in_neighbourhood(self.environment, self.neighbourhood)
+        Conditions {
+            substrate: self.substrate.map(|(preset, seed)| Substrate {
+                seed: Some(seed),
+                ..Substrate::preset(preset)
+            }),
+            ..Conditions::in_neighbourhood(self.environment, self.neighbourhood)
+        }
     }
 }
 
@@ -788,6 +799,15 @@ impl PlantSpec {
                     "{at}: interactions.host must be the spec's own host"
                 ));
             }
+            // A spec's variants grow on named substrates; a grid comes from
+            // a host growing a plant in its own world.
+            if conditions
+                .substrate
+                .as_ref()
+                .is_some_and(|substrate| substrate.preset.is_none())
+            {
+                return fail(format!("{at}: a spec's substrate must name a preset"));
+            }
         }
         if let Err(message) = self.appearance.validate() {
             return fail(message);
@@ -929,6 +949,7 @@ impl PlantSpec {
                         .copied()
                         .unwrap_or_else(|| environment.neighbourhood()),
                     class: None,
+                    substrate: None,
                 });
             }
         }
@@ -942,6 +963,11 @@ impl PlantSpec {
                     seed: *seed,
                     neighbourhood: conditions.neighbourhood(),
                     class: Some(conditions.class()),
+                    substrate: conditions.substrate.as_ref().and_then(|substrate| {
+                        substrate
+                            .preset
+                            .map(|preset| (preset, substrate.seed.unwrap_or(1)))
+                    }),
                 });
             }
         }

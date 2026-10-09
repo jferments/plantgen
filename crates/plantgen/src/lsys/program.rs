@@ -197,6 +197,7 @@ pub enum ToolKind {
     Vigour = 2,
     Pipe = 3,
     Host = 4,
+    Substrate = 5,
 }
 
 pub struct ToolSpec {
@@ -211,12 +212,26 @@ pub struct ToolSpec {
 /// The first random call site of tool settings, far above any rule's.
 pub const TOOL_SITES: u32 = 1 << 24;
 
-pub const TOOLS: [ToolSpec; 6] = [
+pub const TOOLS: [ToolSpec; 9] = [
     ToolSpec {
         kind: ToolKind::Light,
         name: "light",
         version: 1,
         keys: &[("cell", 0.5), ("extinction", 0.5), ("bud", 0.01)],
+    },
+    // G3: the substrate shades the plant and reflects light up into it
+    // (each material's albedo); `reach` is how far past the plant the
+    // substrate is looked at (`super::tools`).
+    ToolSpec {
+        kind: ToolKind::Light,
+        name: "light",
+        version: 2,
+        keys: &[
+            ("cell", 0.5),
+            ("extinction", 0.5),
+            ("bud", 0.01),
+            ("reach", 0.5),
+        ],
     },
     ToolSpec {
         kind: ToolKind::Space,
@@ -260,6 +275,14 @@ pub const TOOLS: [ToolSpec; 6] = [
             ("bump_size", 3.0),
         ],
     },
+    // G3: contact. Living tips are solid, `radius` metres round: each
+    // reads how many others touch it and the way out from among them.
+    ToolSpec {
+        kind: ToolKind::Space,
+        name: "space",
+        version: 3,
+        keys: &[("radius", 0.01)],
+    },
     ToolSpec {
         kind: ToolKind::Vigour,
         name: "vigour",
@@ -282,6 +305,14 @@ pub const TOOLS: [ToolSpec; 6] = [
         name: "host",
         version: 1,
         keys: &[("reach", 2.0)],
+    },
+    // G3: what the plant grows on, from the conditions' substrate (level
+    // soil without one): distance, normal and material at each module.
+    ToolSpec {
+        kind: ToolKind::Substrate,
+        name: "substrate",
+        version: 1,
+        keys: &[],
     },
 ];
 
@@ -311,7 +342,7 @@ pub struct Program {
     pub productions: Vec<Vec<CompiledRule>>,
     pub decompositions: Vec<Vec<CompiledRule>>,
     pub interpretations: Vec<Vec<CompiledRule>>,
-    pub tools: [Option<ToolConfig>; 5],
+    pub tools: [Option<ToolConfig>; 6],
 }
 
 impl Program {
@@ -487,7 +518,7 @@ struct Compiler {
 }
 
 /// Every module that queries light, vigour or space needs that tool.
-fn check_queries(ast: &ProgramAst, tools: &[Option<ToolConfig>; 5]) -> Result<(), ProgramError> {
+fn check_queries(ast: &ProgramAst, tools: &[Option<ToolConfig>; 6]) -> Result<(), ProgramError> {
     for decl in &ast.modules {
         for (name, span) in &decl.queries {
             let tool = match Query::from_name(name) {
@@ -495,6 +526,7 @@ fn check_queries(ast: &ProgramAst, tools: &[Option<ToolConfig>; 5]) -> Result<()
                 Some(Query::Vigour) => ToolKind::Vigour,
                 Some(Query::Space) => ToolKind::Space,
                 Some(Query::Host) => ToolKind::Host,
+                Some(Query::Substrate) => ToolKind::Substrate,
                 _ => continue,
             };
             if tools[tool as usize].is_none() {
@@ -729,8 +761,8 @@ impl Compiler {
     fn configure_tools(
         &mut self,
         ast: &ProgramAst,
-    ) -> Result<[Option<ToolConfig>; 5], ProgramError> {
-        let mut tools: [Option<ToolConfig>; 5] = [None, None, None, None, None];
+    ) -> Result<[Option<ToolConfig>; 6], ProgramError> {
+        let mut tools: [Option<ToolConfig>; 6] = [None, None, None, None, None, None];
         let context = Context {
             what: "a tool setting",
             globals: self.params.len(),
@@ -1126,6 +1158,7 @@ impl Compiler {
                             Query::Space => "space",
                             Query::Position => "position",
                             Query::Host => "host",
+                            Query::Substrate => "substrate",
                         };
                         err(
                             span,
@@ -1286,7 +1319,7 @@ mod tests {
                 "1 parameter",
             ),
             ("lsystem p 1; axiom F; rule [ -> F;", "cannot be rewritten"),
-            ("lsystem p 1; tool light@2 { }; axiom F;", "does not exist"),
+            ("lsystem p 1; tool light@9 { }; axiom F;", "does not exist"),
             (
                 "lsystem p 1; tool light@1 { colour = 1 }; axiom F;",
                 "no setting",
