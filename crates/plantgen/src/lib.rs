@@ -32,6 +32,7 @@ pub mod conditions;
 pub mod drawing;
 pub mod evidence;
 pub mod form;
+pub mod formula;
 pub mod fruit;
 pub mod graph;
 pub mod ground;
@@ -61,6 +62,7 @@ pub mod spec;
 pub mod spines;
 pub mod templates;
 pub mod texture;
+pub mod traits;
 pub mod venation;
 
 /// Revision of the generator as a whole: the L-system engine, its tools and

@@ -19,54 +19,67 @@
   "evidence": {
     "layers": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "A herb of moist open woods, forest edges, clearings and stream banks."
     },
     "moisture": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Moist ground."
     },
     "heat_load": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Grows on any aspect."
     },
     "elevation_m": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Sea level to about 2,000 m in western Washington; the upper limits are loose."
     },
     "max_slope_deg": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Grows on slopes and flats."
     },
     "shade_tolerance": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Grows in sun or part shade."
     },
     "coldest_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Maritime and inland winters both: coldest-month means from about −10 °C (gone by −16 °C), as from the coast to the interior mountains."
     },
     "hard_freeze_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Cold-hardy: lows to about −34 °C borne, gone where the year's coldest night falls below about −42 °C."
     },
     "warmest_c": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range, warmest-month means from about 9 to 24 °C; gone below 6 °C, where summers are too short, and above 28 °C."
     },
     "degree_days_0": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "About 1,800 or more degree-days above 0 °C, none below 1,100."
     },
     "degree_days_5": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Across its range, about 400 or more degree-days above 5 °C, none below 150."
     },
     "moisture_index": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "Moist to moderately dry climates: a moisture index from about 0.45, gone by 0.3."
     },
     "summer_rain": {
       "evidence": "Authored",
+      "source": "plantgen-authors",
       "note": "No lower limit; its range takes in summer-dry coasts and interior mountains with some summer rain, to about 0.45 of the year's precipitation."
     }
   },
