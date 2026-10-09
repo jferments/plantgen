@@ -30,7 +30,7 @@ const USAGE: &str = "\
 plantlab: grow PlantGen's plants and render them
 
 usage:
-  plantlab open [SPECIES] [--capture FILE]
+  plantlab open [SPECIES] [--live STEPS] [--capture FILE]
       The window: one plant you can turn around, and a panel to choose
       the species, age, day of the year, level of detail, quality, look
       and view. --capture saves a picture of the window once the plant
@@ -364,9 +364,16 @@ fn solari(_args: &[String]) -> Result<(), String> {
 fn open(args: &[String]) -> Result<(), String> {
     let mut species = None;
     let mut capture = None;
+    let mut live = 10;
     let mut rest = args.iter();
     while let Some(arg) = rest.next() {
         match arg.as_str() {
+            "--live" => {
+                live = rest
+                    .next()
+                    .and_then(|value| value.parse().ok())
+                    .ok_or("`--live` needs a whole number of steps (0 for none)")?;
+            }
             "--capture" => {
                 capture = Some(PathBuf::from(
                     rest.next().ok_or("`--capture` needs a file")?,
@@ -376,7 +383,7 @@ fn open(args: &[String]) -> Result<(), String> {
             id => species = Some(id.to_string()),
         }
     }
-    window::run(species.as_deref(), capture)
+    window::run(species.as_deref(), capture, live)
 }
 
 /// Read a batch file: one job a line.

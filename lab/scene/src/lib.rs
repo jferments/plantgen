@@ -24,6 +24,8 @@
 use std::fmt::Write as _;
 
 use plantgen::drawing::{self, Drawing, Request};
+pub use plantgen::grow::Progress;
+use plantgen::grow::Watch;
 use plantgen::library::Library;
 use plantgen::math::Vec3;
 use plantgen::mesh::{Mesh, PlantMesh};
@@ -447,7 +449,67 @@ pub fn load_spec(species: &str, library: &Library) -> Result<PlantSpec, String> 
 /// When the species does not load or grow.
 pub fn build(shot: &Shot, library: &Library) -> Result<Scene, String> {
     let spec = load_spec(&shot.species, library)?;
-    let mut request = Request::typical(&spec, library, &shot.quality);
+    let request = request(shot, &spec, library);
+    let drawing = drawing::draw(&request)?;
+    Ok(from_drawing(&drawing, &request, shot))
+}
+
+/// Watches [`build_watched`] grow a plant.
+pub trait Viewer {
+    /// Whether to draw the plant as it stands after `step`.
+    fn wants_frame(&mut self, step: u32) -> bool;
+
+    /// Called after each growth step, with the plant drawn when
+    /// [`Viewer::wants_frame`] asked for it (alone, without its host).
+    /// Returning false stops the growth. May block, to pause it.
+    fn step(&mut self, progress: Progress<'_>, frame: Option<Scene>) -> bool;
+}
+
+/// [`build`], telling `viewer` after each growth step.
+///
+/// # Errors
+///
+/// As [`build`], and "growth stopped" when the viewer stops it.
+pub fn build_watched(
+    shot: &Shot,
+    library: &Library,
+    viewer: &mut dyn Viewer,
+) -> Result<Scene, String> {
+    struct Frames<'a> {
+        request: Request<'a>,
+        shot: &'a Shot,
+        viewer: &'a mut dyn Viewer,
+    }
+    impl Watch for Frames<'_> {
+        fn wants_frame(&mut self, step: u32) -> bool {
+            self.viewer.wants_frame(step)
+        }
+        fn step(&mut self, progress: Progress<'_>) -> bool {
+            let frame = progress.frame.and_then(|growth| {
+                let alone = Request {
+                    alone: true,
+                    ..self.request
+                };
+                drawing::dress(&alone, growth.clone())
+                    .ok()
+                    .map(|drawing| from_drawing(&drawing, &alone, self.shot))
+            });
+            self.viewer.step(progress, frame)
+        }
+    }
+    let spec = load_spec(&shot.species, library)?;
+    let request = request(shot, &spec, library);
+    let mut frames = Frames {
+        request,
+        shot,
+        viewer,
+    };
+    let drawing = drawing::draw_watched(&request, Some(&mut frames))?;
+    Ok(from_drawing(&drawing, &request, shot))
+}
+
+fn request<'a>(shot: &'a Shot, spec: &'a PlantSpec, library: &'a Library) -> Request<'a> {
+    let mut request = Request::typical(spec, library, &shot.quality);
     if let Some(environment) = shot.environment {
         request.environment = environment;
     }
@@ -459,8 +521,7 @@ pub fn build(shot: &Shot, library: &Library) -> Result<Scene, String> {
     }
     request.day = shot.day;
     request.level = shot.level;
-    let drawing = drawing::draw(&request)?;
-    Ok(from_drawing(&drawing, &request, shot))
+    request
 }
 
 /// Frame a plant already drawn.

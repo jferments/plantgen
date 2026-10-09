@@ -261,6 +261,32 @@ fn substrate_field(
         })
 }
 
+/// What a [`Watch`] sees after a growth step.
+#[derive(Debug, Clone, Copy)]
+pub struct Progress<'a> {
+    /// The step just taken, from 0, and the last step.
+    pub step: u32,
+    pub steps: u32,
+    /// The plant's age at this step, years.
+    pub age: f64,
+    /// The plant as it stands at this step, as one keyframe, when the
+    /// watch asked for it ([`Watch::wants_frame`]). Nothing in it is shed.
+    pub frame: Option<&'a Growth>,
+}
+
+/// Watches a growth step by step: a viewer showing it grow, a progress
+/// bar, a stop button. Watching never changes what grows.
+pub trait Watch {
+    /// Whether to pass the plant as it stands at `step` to [`Watch::step`].
+    fn wants_frame(&mut self, _step: u32) -> bool {
+        false
+    }
+
+    /// Called after each step. Returning false stops the growth with
+    /// [`GrowthError::Stopped`]. May block, to pause it.
+    fn step(&mut self, progress: Progress<'_>) -> bool;
+}
+
 /// Grow a plant from its axiom.
 ///
 /// # Errors
@@ -270,6 +296,20 @@ pub fn grow(
     program: &Program,
     params: &[f64],
     settings: &GrowthSettings,
+) -> Result<Growth, GrowthError> {
+    grow_watched(program, params, settings, None)
+}
+
+/// [`grow`], telling `watch` after each step.
+///
+/// # Errors
+///
+/// As [`grow`], and [`GrowthError::Stopped`] when the watch stops it.
+pub fn grow_watched(
+    program: &Program,
+    params: &[f64],
+    settings: &GrowthSettings,
+    mut watch: Option<&mut dyn Watch>,
 ) -> Result<Growth, GrowthError> {
     let (steps, keyframe_steps) = schedule(settings)?;
     let organ_area = tools::organ_areas(program, params)?;
@@ -371,6 +411,30 @@ pub fn grow(
                 clock.t,
             ));
             next_keyframe += 1;
+        }
+        if let Some(watch) = watch.as_deref_mut() {
+            let frame = watch.wants_frame(step).then(|| Growth {
+                organ_types: organ_types.clone(),
+                body_types: program.bodies().map(str::to_string).collect(),
+                keyframes: vec![snapshot(
+                    &scene,
+                    &radii,
+                    &output.organ_light,
+                    &organ_index,
+                    clock.t,
+                )],
+                stats,
+                shed: ShedLog::default(),
+            });
+            let progress = Progress {
+                step,
+                steps,
+                age: clock.t,
+                frame: frame.as_ref(),
+            };
+            if !watch.step(progress) {
+                return Err(GrowthError::Stopped);
+            }
         }
         if step == steps {
             break;

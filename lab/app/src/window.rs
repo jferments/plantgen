@@ -3,12 +3,16 @@
 //! the day of the year, the level of detail, the quality and the look.
 //!
 //! The panel changes only [`Lab`]; a change regrows the plant on a worker
-//! thread ([`plantlab_scene::build`], PlantGen's own growth), and the old
-//! plant stays on screen until the new one is ready. Nothing about the
-//! plant is computed here.
+//! thread ([`plantlab_scene::build_watched`], PlantGen's own growth). The
+//! panel can start, pause and stop a growth, shows its progress, and can
+//! show the plant growing: every N steps the worker draws the plant as it
+//! stands and the window puts it on screen. Otherwise the old plant stays
+//! until the new one is ready. Nothing about the plant is computed here.
 
 use std::fmt::Write as _;
-use std::time::Instant;
+use std::sync::atomic::{AtomicBool, AtomicU32, AtomicU64, Ordering};
+use std::sync::{Arc, Mutex};
+use std::time::{Duration, Instant};
 
 use bevy::asset::embedded_asset;
 use bevy::camera::Exposure;
@@ -20,7 +24,7 @@ use bevy::tasks::{AsyncComputeTaskPool, Task, block_on, poll_once};
 use bevy_egui::{EguiContexts, EguiPlugin, EguiPrimaryContextPass, egui};
 use plantgen::library::Library;
 use plantgen::quality;
-use plantlab_scene::{Look, Scene, Shot, View};
+use plantlab_scene::{Look, Progress, Scene, Shot, View, Viewer};
 
 use bevy::render::view::screenshot::{Screenshot, ScreenshotCaptured};
 
@@ -29,6 +33,7 @@ use crate::theme;
 
 /// What the panel chose, and what is on screen.
 #[derive(Resource)]
+#[allow(clippy::struct_excessive_bools, reason = "the panel's switches")]
 struct Lab {
     species: Vec<String>,
     /// Index into `species`.
@@ -44,7 +49,18 @@ struct Lab {
     view: View,
     /// The settings changed since the last growth started.
     dirty: bool,
+    /// Grow again whenever the settings change; otherwise only on "Grow".
+    auto: bool,
+    /// "Grow" was pressed.
+    go: bool,
+    /// Show the plant growing, drawn every `every` steps.
+    live: bool,
+    every: u32,
+    /// Move the camera with the plant as it grows.
+    follow: bool,
     growing: Option<Task<Grown>>,
+    /// Shared with the growing worker.
+    control: Arc<Control>,
     started: Instant,
     shown: Option<Shown>,
     message: String,
@@ -57,12 +73,54 @@ struct Grown {
     shot: Shot,
 }
 
+/// What the window and a growing worker share: the buttons one way, the
+/// progress and the latest live frame the other.
+#[derive(Default)]
+struct Control {
+    stop: AtomicBool,
+    pause: AtomicBool,
+    /// Draw a live frame every this many steps; 0 for none.
+    every: AtomicU32,
+    step: AtomicU32,
+    steps: AtomicU32,
+    /// The age at `step`, years, as `f64` bits.
+    age: AtomicU64,
+    frame: Mutex<Option<Scene>>,
+}
+
+/// The worker's side of [`Control`].
+struct Watcher(Arc<Control>);
+
+impl Viewer for Watcher {
+    fn wants_frame(&mut self, step: u32) -> bool {
+        let every = self.0.every.load(Ordering::Relaxed);
+        every > 0 && step.is_multiple_of(every) && !self.0.stop.load(Ordering::Relaxed)
+    }
+
+    fn step(&mut self, progress: Progress<'_>, frame: Option<Scene>) -> bool {
+        self.0.step.store(progress.step, Ordering::Relaxed);
+        self.0.steps.store(progress.steps, Ordering::Relaxed);
+        self.0.age.store(progress.age.to_bits(), Ordering::Relaxed);
+        if let Some(frame) = frame
+            && let Ok(mut slot) = self.0.frame.lock()
+        {
+            *slot = Some(frame);
+        }
+        while self.0.pause.load(Ordering::Relaxed) && !self.0.stop.load(Ordering::Relaxed) {
+            std::thread::sleep(Duration::from_millis(30));
+        }
+        !self.0.stop.load(Ordering::Relaxed)
+    }
+}
+
 /// The plant on screen.
 struct Shown {
     scene: Scene,
     shot: Shot,
     entities: Vec<Entity>,
     seconds: f64,
+    /// A live frame of a plant still growing.
+    live: bool,
 }
 
 /// The orbiting camera: around `target`, at `distance`, turned by `yaw`
@@ -101,12 +159,17 @@ struct Capture {
 #[derive(Component)]
 struct Sun;
 
-/// Open the window, on `species` if given.
+/// Open the window, on `species` if given, showing the plant grow every
+/// `live` steps (none for 0).
 ///
 /// # Errors
 ///
 /// When `species` is not in the library.
-pub fn run(species: Option<&str>, picture: Option<std::path::PathBuf>) -> Result<(), String> {
+pub fn run(
+    species: Option<&str>,
+    picture: Option<std::path::PathBuf>,
+    live: u32,
+) -> Result<(), String> {
     let library = Library::builtin();
     let ids: Vec<String> = library
         .species()
@@ -159,7 +222,13 @@ pub fn run(species: Option<&str>, picture: Option<std::path::PathBuf>) -> Result
         look: Look::Review,
         view: View::ThreeQuarter,
         dirty: true,
+        auto: true,
+        go: false,
+        live: live > 0,
+        every: live.max(1),
+        follow: true,
         growing: None,
+        control: Arc::default(),
         started: Instant::now(),
         shown: None,
         message: String::new(),
@@ -167,7 +236,7 @@ pub fn run(species: Option<&str>, picture: Option<std::path::PathBuf>) -> Result
     })
     .add_systems(Startup, setup)
     .add_systems(EguiPrimaryContextPass, panel)
-    .add_systems(Update, (grow, show, orbit).chain());
+    .add_systems(Update, (grow, live_frame, show, orbit).chain());
     if let Some(path) = picture {
         app.insert_resource(Capture {
             path,
@@ -181,7 +250,8 @@ pub fn run(species: Option<&str>, picture: Option<std::path::PathBuf>) -> Result
 }
 
 fn capture(mut commands: Commands, lab: Res<Lab>, mut capture: ResMut<Capture>) {
-    if capture.asked || lab.shown.is_none() {
+    // The grown plant, not a live frame of it.
+    if capture.asked || lab.shown.is_none() || lab.growing.is_some() {
         return;
     }
     capture.frames += 1;
@@ -404,15 +474,7 @@ fn panel(mut contexts: EguiContexts, mut lab: ResMut<Lab>, mut themed: Local<boo
             });
             ui.separator();
 
-            if lab.growing.is_some() {
-                ui.horizontal(|ui| {
-                    ui.spinner();
-                    ui.label(format!(
-                        "growing… {:.1} s",
-                        lab.started.elapsed().as_secs_f64()
-                    ));
-                });
-            }
+            growth_controls(ui, lab);
             if !lab.message.is_empty() {
                 ui.colored_label(theme::ERROR, &lab.message);
             }
@@ -436,7 +498,11 @@ fn panel(mut contexts: EguiContexts, mut lab: ResMut<Lab>, mut themed: Local<boo
                         "generator",
                         format!("revision {}", facts.generator_revision),
                     );
-                    row("grown in", format!("{:.1} s", shown.seconds));
+                    if shown.live {
+                        row("drawn", format!("{:.1} s into growing", shown.seconds));
+                    } else {
+                        row("grown in", format!("{:.1} s", shown.seconds));
+                    }
                 });
                 ui.separator();
                 ui.label(egui::RichText::new("Render it without the window:").color(theme::MUTED));
@@ -455,12 +521,22 @@ fn panel(mut contexts: EguiContexts, mut lab: ResMut<Lab>, mut themed: Local<boo
         });
 }
 
-/// Start growing when the settings changed and nothing is growing.
+/// Start growing on "Grow", or when the settings changed and growing
+/// follows them. A change while growing stops the growth under way first.
 fn grow(mut lab: ResMut<Lab>) {
-    if !lab.dirty || lab.growing.is_some() {
+    let wanted = lab.go || (lab.auto && lab.dirty);
+    if !wanted {
+        return;
+    }
+    if lab.growing.is_some() {
+        if lab.dirty && lab.auto {
+            lab.control.stop.store(true, Ordering::Relaxed);
+        }
+        lab.go = false;
         return;
     }
     lab.dirty = false;
+    lab.go = false;
     if lab.age.is_none() {
         let ages = keyframes(&lab.species[lab.chosen]);
         lab.oldest = ages.last().copied().unwrap_or(1.0);
@@ -468,12 +544,133 @@ fn grow(mut lab: ResMut<Lab>) {
     }
     let shot = shot(&lab);
     lab.started = Instant::now();
+    lab.message.clear();
+    let control = Arc::new(Control::default());
+    control
+        .every
+        .store(if lab.live { lab.every } else { 0 }, Ordering::Relaxed);
+    lab.control = Arc::clone(&control);
     lab.growing = Some(AsyncComputeTaskPool::get().spawn(async move {
+        let mut viewer = Watcher(control);
         Grown {
-            result: plantlab_scene::build(&shot, Library::builtin()),
+            result: plantlab_scene::build_watched(&shot, Library::builtin(), &mut viewer),
             shot,
         }
     }));
+}
+
+/// Grow, stop, pause and resume; live frames; the growth's progress.
+fn growth_controls(ui: &mut egui::Ui, lab: &mut Lab) {
+    let growing = lab.growing.is_some();
+    let paused = lab.control.pause.load(Ordering::Relaxed);
+    ui.horizontal(|ui| {
+        if ui
+            .add_enabled(!growing, egui::Button::new("Grow"))
+            .on_hover_text("Grow the plant with these settings")
+            .clicked()
+        {
+            lab.go = true;
+        }
+        if ui
+            .add_enabled(growing, egui::Button::new("Stop"))
+            .on_hover_text("Stop growing; the last frame shown stays")
+            .clicked()
+        {
+            lab.control.stop.store(true, Ordering::Relaxed);
+            lab.dirty = false;
+        }
+        let pause = if paused { "Resume" } else { "Pause" };
+        if ui.add_enabled(growing, egui::Button::new(pause)).clicked() {
+            lab.control.pause.store(!paused, Ordering::Relaxed);
+        }
+    });
+    ui.checkbox(&mut lab.auto, "Grow when the settings change");
+    if !lab.auto && lab.dirty && !growing {
+        ui.label(egui::RichText::new("Settings changed: press Grow").color(theme::MUTED));
+    }
+    ui.horizontal(|ui| {
+        if ui
+            .checkbox(&mut lab.live, "Show it growing, every")
+            .changed()
+            && growing
+        {
+            let every = if lab.live { lab.every } else { 0 };
+            lab.control.every.store(every, Ordering::Relaxed);
+        }
+        if ui
+            .add_enabled(
+                lab.live,
+                egui::Slider::new(&mut lab.every, 1..=100)
+                    .logarithmic(true)
+                    .suffix(" steps"),
+            )
+            .changed()
+            && growing
+        {
+            lab.control.every.store(lab.every, Ordering::Relaxed);
+        }
+    });
+    ui.checkbox(&mut lab.follow, "Move the camera with the plant");
+    if growing {
+        let step = lab.control.step.load(Ordering::Relaxed);
+        let steps = lab.control.steps.load(Ordering::Relaxed);
+        let age = f64::from_bits(lab.control.age.load(Ordering::Relaxed));
+        let seconds = lab.started.elapsed().as_secs_f64();
+        let (share, text) = if steps == 0 {
+            (0.0, format!("starting, {seconds:.1} s"))
+        } else if step >= steps {
+            (1.0, format!("grown, meshing, {seconds:.1} s"))
+        } else {
+            (
+                f64::from(step) / f64::from(steps),
+                format!("step {step} of {steps}, {age:.1} years, {seconds:.1} s"),
+            )
+        };
+        #[allow(clippy::cast_possible_truncation)]
+        let bar = egui::ProgressBar::new(share as f32).text(if paused {
+            format!("paused at {text}")
+        } else {
+            text
+        });
+        ui.add(bar);
+    }
+}
+
+/// Put the latest live frame on screen.
+#[allow(clippy::too_many_arguments)]
+fn live_frame(
+    mut commands: Commands,
+    mut lab: ResMut<Lab>,
+    mut images: ResMut<Assets<Image>>,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut standard: ResMut<Assets<StandardMaterial>>,
+    mut cards: ResMut<Assets<CardMaterial>>,
+    mut camera: Query<(Entity, &mut Orbit)>,
+    suns: Query<Entity, With<Sun>>,
+) {
+    if lab.growing.is_none() {
+        return;
+    }
+    let frame = lab
+        .control
+        .frame
+        .lock()
+        .ok()
+        .and_then(|mut slot| slot.take());
+    let Some(scene) = frame else {
+        return;
+    };
+    let shot = shot(&lab);
+    put_on_screen(
+        &mut commands,
+        &mut lab,
+        (&mut images, &mut meshes, &mut standard, &mut cards),
+        &mut camera,
+        &suns,
+        scene,
+        shot,
+        true,
+    );
 }
 
 /// Put a newly grown plant on screen in place of the old one.
@@ -495,29 +692,69 @@ fn show(
         return;
     };
     lab.growing = None;
-    let seconds = lab.started.elapsed().as_secs_f64();
     let scene = match grown.result {
         Ok(scene) => scene,
         Err(error) => {
-            lab.message = error;
+            if lab.control.stop.load(Ordering::Relaxed) {
+                // Stopped: by the button, or for new settings.
+                if !lab.dirty {
+                    let step = lab.control.step.load(Ordering::Relaxed);
+                    let steps = lab.control.steps.load(Ordering::Relaxed);
+                    let age = f64::from_bits(lab.control.age.load(Ordering::Relaxed));
+                    lab.message = format!("Stopped at step {step} of {steps}, {age:.1} years.");
+                }
+            } else {
+                lab.message = error;
+            }
             return;
         }
     };
     lab.message.clear();
+    put_on_screen(
+        &mut commands,
+        &mut lab,
+        (&mut images, &mut meshes, &mut standard, &mut cards),
+        &mut camera,
+        &suns,
+        scene,
+        grown.shot,
+        false,
+    );
+}
+
+/// Replace the plant on screen with `scene`: a grown plant, or a `live`
+/// frame of one still growing.
+#[allow(clippy::too_many_arguments)]
+fn put_on_screen(
+    commands: &mut Commands,
+    lab: &mut Lab,
+    assets: (
+        &mut Assets<Image>,
+        &mut Assets<Mesh>,
+        &mut Assets<StandardMaterial>,
+        &mut Assets<CardMaterial>,
+    ),
+    camera: &mut Query<(Entity, &mut Orbit)>,
+    suns: &Query<Entity, With<Sun>>,
+    scene: Scene,
+    shot: Shot,
+    live: bool,
+) {
+    let (images, meshes, standard, cards) = assets;
     if let Some(old) = lab.shown.take() {
         for entity in old.entities {
             commands.entity(entity).despawn();
         }
     }
-    for sun in &suns {
+    for sun in suns {
         commands.entity(sun).despawn();
     }
-    let sun = spawn_sun(&mut commands, std::slice::from_ref(&scene));
+    let sun = spawn_sun(commands, std::slice::from_ref(&scene));
     commands.entity(sun).insert(Sun);
     let entities = spawn_plant(
-        &mut commands,
+        commands,
         &scene,
-        (&mut images, &mut meshes, &mut standard, &mut cards),
+        (images, meshes, standard, cards),
         Vec3::ZERO,
         &RenderLayers::layer(1),
     );
@@ -526,25 +763,30 @@ fn show(
             &mut commands.entity(entity),
             scene.look,
             &scene.light,
-            &mut images,
+            images,
         );
+        let framing = scene.framing;
+        let eye = Vec3::from_array(framing.eye);
+        let target = Vec3::from_array(framing.target);
+        let offset = eye - target;
         if lab.reframe {
-            let framing = scene.framing;
-            let eye = Vec3::from_array(framing.eye);
-            let target = Vec3::from_array(framing.target);
-            let offset = eye - target;
             orbit.target = target;
             orbit.distance = offset.length().max(0.5);
             orbit.yaw = offset.x.atan2(offset.z);
             orbit.pitch = (offset.y / orbit.distance).clamp(-1.0, 1.0).asin();
             lab.reframe = false;
+        } else if lab.follow {
+            // Keep the way the camera turns; frame the plant's new size.
+            orbit.target = target;
+            orbit.distance = offset.length().max(0.5);
         }
     }
     lab.shown = Some(Shown {
         scene,
-        shot: grown.shot,
+        shot,
         entities,
-        seconds,
+        seconds: lab.started.elapsed().as_secs_f64(),
+        live,
     });
 }
 
@@ -601,5 +843,26 @@ mod tests {
         let forward = transform.forward();
         let toward = (orbit.target - transform.translation).normalize();
         assert!(forward.dot(toward) > 0.9999);
+    }
+
+    #[test]
+    fn the_watcher_draws_every_n_steps_and_stops_on_the_button() {
+        let control = Arc::new(Control::default());
+        let mut watcher = Watcher(Arc::clone(&control));
+        assert!(!watcher.wants_frame(0), "no live frames unless asked");
+        control.every.store(5, Ordering::Relaxed);
+        assert!(watcher.wants_frame(10) && !watcher.wants_frame(11));
+        let progress = Progress {
+            step: 10,
+            steps: 40,
+            age: 2.5,
+            frame: None,
+        };
+        assert!(watcher.step(progress, None));
+        assert_eq!(control.step.load(Ordering::Relaxed), 10);
+        assert_eq!(f64::from_bits(control.age.load(Ordering::Relaxed)), 2.5);
+        control.stop.store(true, Ordering::Relaxed);
+        assert!(!watcher.wants_frame(10), "no frames once stopped");
+        assert!(!watcher.step(progress, None));
     }
 }
