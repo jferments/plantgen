@@ -17,7 +17,6 @@
       "crown_radius": 4,
       "crown_base": 0.5,
       "crown_rate": 0.04,
-      "space_density": 14,
       "internode": 0.18,
       "max_shoot": 3,
       "branch_angle": 45,
@@ -25,9 +24,9 @@
       "apical": 0.5,
       "apical_years": 15,
       "alternate": 1,
-      "bud_years": 12,
+      "bud_years": 40,
       "leaf_size": 0.14,
-      "spur_leaf": 0.12,
+      "spur_leaf": 0.26,
       "spur_pairs": 3,
       "leaf_angle": 50,
       "leaf_years": 2,
@@ -125,6 +124,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Hand-set from general knowledge of the species: a slow evergreen tree 5 to 10 m tall with a broad crown, smooth grey bark that shreds with age, short paired thorns, grey-green pinnate leaves and lavender pea flowers in late spring. Not fitted to measurements."
+    },
+    "generator.params.bud_years": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Short shoots leaf out for up to 40 years while they have light, as the other desert legume trees' are fitted to the Urban Tree Database (Olneya is not in it)."
+    },
+    "generator.params.spur_leaf": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A short shoot's leaf card draws a cluster of its small leaves, a branchlet's worth, 0.26 m long, so that the crown keeps within the module limit; the seed plants' rules space the shoots from the card's area."
     },
     "allometry": {
       "evidence": "Authored",

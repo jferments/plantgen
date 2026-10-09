@@ -34,14 +34,18 @@
 //!
 //! A rank file or a species' spec may also state `traits`, facts from the
 //! vocabulary in `traits.json` ([`crate::traits`]), and `rules` that turn
-//! traits into spec values: a spec path with a formula over traits
-//! ([`crate::formula`]) or a map from an enum trait's values. Every rule
-//! lives in the taxon it holds for, its home (growth plan G2, Joshi's
-//! rule that rules belong to taxa). Traits and rules merge down the chain
-//! like values; then each rule sets its path, unless a file at least as
-//! near as the rule and the traits it reads set the path by hand, or the
-//! species' program has no such parameter. The effective spec carries the
-//! values, not the traits or rules.
+//! traits into spec values: a spec path with a formula ([`crate::formula`])
+//! or a map from an enum trait's values. A formula reads traits and the
+//! species' program parameters by name, a parameter as the files set it
+//! (or a rule before it), else as the program's default; so a rule can
+//! say what a leaf card of the species' own size means for its shoots.
+//! Every rule lives in the taxon it holds for, its home (growth plan G2,
+//! Joshi's rule that rules belong to taxa). Traits and rules merge down
+//! the chain like values; then each rule sets its path, after the rules
+//! that set the parameters it reads, unless a file at least as near as
+//! the rule and what it reads set the path by hand, or the species'
+//! program has no such parameter. The effective spec carries the values,
+//! not the traits or rules.
 //!
 //! Every file notes what it sets (per-value evidence): a note stays in the
 //! effective spec until a nearer file replaces or deletes what it
@@ -579,20 +583,25 @@ pub fn chain<'a>(
     Ok(found)
 }
 
+/// A program's parameters, by name, each with its default where the
+/// program writes it as a number.
+pub type Params = BTreeMap<String, Option<f64>>;
+
 /// The parameters of each program, by name: its own and those of the
 /// programs it extends.
-pub type Programs = BTreeMap<String, BTreeSet<String>>;
+pub type Programs = BTreeMap<String, Params>;
 
 /// The parameters each program declares, with those of the programs it
 /// extends, read from the programs' text (`name`, `source`): a `param`
-/// statement at the start of a line names one, and the header `lsystem
-/// <name> <revision> extends <parent>;` names the parent. The library's
-/// tests hold this to the compiled programs.
+/// statement at the start of a line names one and its default, and the
+/// header `lsystem <name> <revision> extends <parent>;` names the parent,
+/// whose defaults the program's own replace. The library's tests hold this
+/// to the compiled programs.
 #[must_use]
 pub fn program_params<'a>(sources: impl IntoIterator<Item = (&'a str, &'a str)>) -> Programs {
-    let mut own: BTreeMap<&str, (BTreeSet<String>, Option<String>)> = BTreeMap::new();
+    let mut own: BTreeMap<&str, (Params, Option<String>)> = BTreeMap::new();
     for (name, source) in sources {
-        let mut params = BTreeSet::new();
+        let mut params = Params::new();
         let mut parent = None;
         let mut header = true;
         for line in source.lines() {
@@ -613,21 +622,27 @@ pub fn program_params<'a>(sources: impl IntoIterator<Item = (&'a str, &'a str)>)
             if words[0] == "param"
                 && let Some(param) = words.get(1)
             {
-                params.insert((*param).to_string());
+                let default = match words[2..] {
+                    [value] => value.parse().ok(),
+                    _ => None,
+                };
+                params.insert((*param).to_string(), default);
             }
         }
         own.insert(name, (params, parent));
     }
     own.keys()
         .map(|name| {
-            let mut params = BTreeSet::new();
+            let mut params = Params::new();
             let mut next = Some(*name);
             // As deep as `extends` chains may go, so a loop ends.
             for _ in 0..8 {
                 let Some((own_params, parent)) = next.and_then(|at| own.get(at)) else {
                     break;
                 };
-                params.extend(own_params.iter().cloned());
+                for (param, default) in own_params {
+                    params.entry(param.clone()).or_insert(*default);
+                }
                 next = parent.as_deref();
             }
             ((*name).to_string(), params)
@@ -647,7 +662,9 @@ pub struct Inherited {
     /// Each value's path, such as `generator.params.whorl` (an array is
     /// one value), and the file that set it: its path in the tree, then
     /// `, forms.<growth form>` for a value from a form's part. A value a
-    /// rule set reads `<rule's file>: rule on <trait> from <file>, …`.
+    /// rule set reads `<rule's file>: rule on <name> from <where>, …`, each
+    /// trait or parameter it read with the file (or rule, or program) it
+    /// came from; `<rule's file>: rule` when it read nothing.
     pub origins: BTreeMap<String, String>,
     /// Each evidence note's path and the file it came from, written as in
     /// `origins`, the notes on traits (`traits.<key>`) and rules
@@ -671,9 +688,11 @@ type Origin = (String, usize);
 /// The growth form whose parts apply is the nearest one set: the
 /// species', else the nearest rank file's. Values, traits and rules merge
 /// down the chain, the nearer winning; then each rule sets its path from
-/// the traits it reads, unless a file at least as near as the rule and
-/// those traits set the path by hand, or the path is a parameter the
-/// species' program lacks.
+/// the traits and parameters it reads, after any rule that sets one of
+/// those parameters, unless a file at least as near as the rule and what
+/// it reads set the path by hand, or the path is a parameter the species'
+/// program lacks. Rules that read each other's paths in a loop set
+/// nothing.
 ///
 /// # Errors
 ///
@@ -694,7 +713,7 @@ pub fn inherit(
     let mut origins: BTreeMap<String, Origin> = BTreeMap::new();
     let mut notes: BTreeMap<String, (Origin, Value)> = BTreeMap::new();
     let mut traits: BTreeMap<String, (Value, usize)> = BTreeMap::new();
-    let mut rules: BTreeMap<String, (Map<String, Value>, usize)> = BTreeMap::new();
+    let mut rules: Rules = BTreeMap::new();
     for (index, (label, part)) in layers.iter().enumerate() {
         let origin = (label.clone(), index);
         let mut touched = Vec::new();
@@ -733,31 +752,15 @@ pub fn inherit(
             notes.insert(path.clone(), (origin.clone(), note.clone()));
         }
     }
-    let program = spec
-        .get("generator")
-        .and_then(|generator| generator.get("program"))
-        .and_then(Value::as_str)
-        .map(str::to_string);
-    let mut outcomes = BTreeMap::new();
-    for (path, (rule, index)) in &rules {
-        let one = Ruled {
-            path,
-            rule,
-            index: *index,
-            layers: &layers,
-            traits: &traits,
-        };
-        let outcome = one
-            .apply(
-                program.as_deref(),
-                programs,
-                &mut spec,
-                &mut origins,
-                &mut notes,
-            )
-            .err();
-        outcomes.insert(path.clone(), (layers[*index].0.clone(), outcome));
-    }
+    let outcomes = Ruled::run(
+        &rules,
+        &layers,
+        &traits,
+        programs,
+        &mut spec,
+        &mut origins,
+        &mut notes,
+    );
     let carried: Map<String, Value> = notes
         .iter()
         .filter(|(path, _)| !within(path, "traits") && !within(path, "rules"))
@@ -822,8 +825,52 @@ struct Ruled<'a> {
     traits: &'a BTreeMap<String, (Value, usize)>,
 }
 
+/// A species' rules, by the path each sets: the rule and its layer.
+type Rules = BTreeMap<String, (Map<String, Value>, usize)>;
+
 impl Ruled<'_> {
-    /// Set the rule's path from the traits it reads, or say why not.
+    /// Run a species' rules in [`order`] on its merged `spec`, and return
+    /// each one's file and, if it set nothing, why.
+    fn run(
+        rules: &Rules,
+        layers: &[(String, &Part)],
+        traits: &BTreeMap<String, (Value, usize)>,
+        programs: &Programs,
+        spec: &mut Map<String, Value>,
+        origins: &mut BTreeMap<String, Origin>,
+        notes: &mut BTreeMap<String, (Origin, Value)>,
+    ) -> BTreeMap<String, (String, Option<String>)> {
+        let program = spec
+            .get("generator")
+            .and_then(|generator| generator.get("program"))
+            .and_then(Value::as_str)
+            .map(str::to_string);
+        let mut outcomes = BTreeMap::new();
+        for (path, waits) in order(rules) {
+            let (rule, index) = &rules[path];
+            let outcome = if waits.is_empty() {
+                let one = Ruled {
+                    path,
+                    rule,
+                    index: *index,
+                    layers,
+                    traits,
+                };
+                one.apply(program.as_deref(), programs, spec, origins, notes)
+                    .err()
+            } else {
+                Some(format!(
+                    "it waits on rules that read each other: {}",
+                    waits.join(", ")
+                ))
+            };
+            outcomes.insert(path.to_string(), (layers[*index].0.clone(), outcome));
+        }
+        outcomes
+    }
+
+    /// Set the rule's path from the traits and parameters it reads, or say
+    /// why not.
     fn apply(
         &self,
         program: Option<&str>,
@@ -832,38 +879,55 @@ impl Ruled<'_> {
         origins: &mut BTreeMap<String, Origin>,
         notes: &mut BTreeMap<String, (Origin, Value)>,
     ) -> Result<(), String> {
-        let reads = reads(self.rule);
-        let mut depth = self.index;
-        let mut from = Vec::new();
-        for key in &reads {
-            let (_, at) = self
-                .traits
-                .get(key)
-                .ok_or_else(|| format!("no `{key}` to read"))?;
-            depth = depth.max(*at);
-            from.push(format!("{key} from {}", self.layers[*at].0));
-        }
+        let params = program.and_then(|program| programs.get(program));
         if let Some(param) = self.path.strip_prefix("generator.params.") {
             let program = program.ok_or("the species names no program")?;
-            if !programs
-                .get(program)
-                .is_some_and(|params| params.contains(param))
-            {
+            if !params.is_some_and(|params| params.contains_key(param)) {
                 return Err(format!("program `{program}` has no parameter `{param}`"));
             }
+        }
+        let mut depth = self.index;
+        let mut from = Vec::new();
+        let mut inputs = BTreeMap::new();
+        for key in reads(self.rule) {
+            let path = format!("generator.params.{key}");
+            let value = if let Some((value, at)) = self.traits.get(&key) {
+                depth = depth.max(*at);
+                from.push(format!("{key} from {}", self.layers[*at].0));
+                value.clone()
+            } else if let Some(value) = find(spec, &path) {
+                // A parameter as the files, or a rule that ran before this
+                // one, set it.
+                if let Some((label, at)) = origins.get(&path) {
+                    depth = depth.max(*at);
+                    from.push(format!("{key} from {label}"));
+                }
+                value.clone()
+            } else if let (Some(program), Some(Some(default))) =
+                (program, params.and_then(|params| params.get(&key)))
+            {
+                from.push(format!("{key} from program `{program}`"));
+                Value::from(*default)
+            } else {
+                return Err(format!("no `{key}` to read"));
+            };
+            inputs.insert(key, value);
         }
         if let Some((label, by)) = origins.get(self.path)
             && *by >= depth
         {
             return Err(format!("set by hand in {label}"));
         }
-        let value = evaluate(self.rule, self.traits)?;
+        let value = evaluate(self.rule, &inputs)?;
         set(spec, self.path, value);
         forget(origins, self.path);
-        let origin = (
-            format!("{}: rule on {}", self.layers[self.index].0, from.join(", ")),
-            depth,
-        );
+        let file = &self.layers[self.index].0;
+        let label = if from.is_empty() {
+            format!("{file}: rule")
+        } else {
+            format!("{file}: rule on {}", from.join(", "))
+        };
+        let origin = (label, depth);
         origins.insert(self.path.to_string(), origin.clone());
         notes.retain(|path, _| !within(path, self.path));
         if let Some((_, note)) = notes.get(&format!("rules.{}", self.path)).cloned() {
@@ -873,7 +937,48 @@ impl Ruled<'_> {
     }
 }
 
-/// The traits a rule reads: its formula's names, or its map's trait.
+/// The order rules run in, by path: a rule that reads a parameter another
+/// rule sets runs after it. Rules caught in a loop of such reads come
+/// last, each with the paths it waits on.
+fn order(rules: &Rules) -> Vec<(&str, Vec<String>)> {
+    let waits = |rule: &Map<String, Value>| -> Vec<String> {
+        reads(rule)
+            .into_iter()
+            .map(|name| format!("generator.params.{name}"))
+            .filter(|path| rules.contains_key(path))
+            .collect()
+    };
+    let mut done: BTreeSet<&str> = BTreeSet::new();
+    let mut order = Vec::new();
+    loop {
+        let ready: Vec<&str> = rules
+            .iter()
+            .filter(|(path, (rule, _))| {
+                !done.contains(path.as_str())
+                    && waits(rule).iter().all(|wait| done.contains(wait.as_str()))
+            })
+            .map(|(path, _)| path.as_str())
+            .collect();
+        if ready.is_empty() {
+            break;
+        }
+        done.extend(ready.iter().copied());
+        order.extend(ready.into_iter().map(|path| (path, Vec::new())));
+    }
+    for (path, (rule, _)) in rules {
+        if !done.contains(path.as_str()) {
+            let waiting = waits(rule)
+                .into_iter()
+                .filter(|wait| !done.contains(wait.as_str()))
+                .collect();
+            order.push((path.as_str(), waiting));
+        }
+    }
+    order
+}
+
+/// The names a rule reads: its formula's (traits or parameters), or its
+/// map's trait.
 fn reads(rule: &Map<String, Value>) -> Vec<String> {
     match (rule.get("rule"), rule.get("map")) {
         (Some(Value::String(formula)), _) => Formula::parse(formula)
@@ -884,31 +989,28 @@ fn reads(rule: &Map<String, Value>) -> Vec<String> {
     }
 }
 
-/// A rule's value from the traits: its formula's number (a bool trait
-/// reads as 1 or 0), or its map's value for the trait's.
-fn evaluate(
-    rule: &Map<String, Value>,
-    traits: &BTreeMap<String, (Value, usize)>,
-) -> Result<Value, String> {
+/// A rule's value from what it reads, by name: its formula's number (a
+/// bool trait reads as 1 or 0), or its map's value for the trait's.
+fn evaluate(rule: &Map<String, Value>, inputs: &BTreeMap<String, Value>) -> Result<Value, String> {
     if let Some(Value::String(formula)) = rule.get("rule") {
         let number = |key: &str| {
-            traits
+            inputs
                 .get(key)
-                .and_then(|(value, _)| value.as_f64().or_else(|| value.as_bool().map(f64::from)))
+                .and_then(|value| value.as_f64().or_else(|| value.as_bool().map(f64::from)))
         };
         return Formula::parse(formula)?
             .eval(&number)
+            .map(plain)
             .and_then(serde_json::Number::from_f64)
             .map(Value::Number)
-            .ok_or_else(|| "its traits give it no number".to_string());
+            .ok_or_else(|| "what it reads gives it no number".to_string());
     }
     if let Some(Value::Object(map)) = rule.get("map")
         && let Some((key, Value::Object(table))) = map.iter().next()
     {
-        let value = &traits
+        let value = inputs
             .get(key)
-            .ok_or_else(|| format!("no `{key}` to read"))?
-            .0;
+            .ok_or_else(|| format!("no `{key}` to read"))?;
         let name = match value {
             Value::String(name) => name.clone(),
             other => other.to_string(),
@@ -919,6 +1021,12 @@ fn evaluate(
             .ok_or_else(|| format!("its map holds nothing for `{key}` {name}"));
     }
     Err("it is no rule".into())
+}
+
+/// A rule's number kept to 6 significant digits: as plain as a value set
+/// by hand, and it reads back as written once merged.
+fn plain(value: f64) -> f64 {
+    format!("{value:.5e}").parse().unwrap_or(value)
 }
 
 /// Set the value at `path` (keys joined by dots), making the objects on
@@ -1109,7 +1217,7 @@ mod tests {
             ),
             (
                 "sapindaceae",
-                "lsystem sapindaceae 1 extends broadleaf;\nparam fork = 1;",
+                "lsystem sapindaceae 1 extends broadleaf;\nparam fork = 1;\nparam d = 3;\nparam e = d * 2;",
             ),
             (
                 "shrub",
@@ -1674,8 +1782,8 @@ mod tests {
             "manual",
             &json!({"id": "manual-two", "traits": {"leaf_length_m": 0.05}}),
         );
-        let expected = (8.0 * libm::pow(3.0, 0.75)).clamp(5.0, 60.0);
-        assert_eq!(small.spec["generator"]["params"]["space_density"], expected);
+        // 8 × 3^0.75, to 6 significant digits.
+        assert_eq!(small.spec["generator"]["params"]["space_density"], 18.2361);
     }
 
     /// A deleted rule, a program without the parameter or a chain without
@@ -1725,13 +1833,103 @@ mod tests {
     }
 
     /// A program's parameters are its own and those of the programs it
-    /// extends.
+    /// extends, with its own defaults where it gives them again; a default
+    /// that is not a number is none.
     #[test]
     fn programs_inherit_their_parents_parameters() {
         let programs = programs();
-        assert_eq!(programs["shrub"].iter().collect::<Vec<_>>(), ["a", "b"]);
-        assert!(programs["sapindaceae"].contains("fork"));
-        assert!(programs["sapindaceae"].contains("space_density"));
-        assert!(!programs["broadleaf"].contains("fork"));
+        assert_eq!(programs["shrub"].keys().collect::<Vec<_>>(), ["a", "b"]);
+        assert_eq!(programs["sapindaceae"]["fork"], Some(1.0));
+        assert_eq!(programs["sapindaceae"]["space_density"], Some(5.0));
+        assert_eq!(programs["sapindaceae"]["d"], Some(3.0));
+        assert_eq!(programs["broadleaf"]["d"], Some(1.0));
+        assert_eq!(programs["sapindaceae"]["e"], None);
+        assert!(!programs["broadleaf"].contains_key("fork"));
+    }
+
+    /// A rule may read the species' program parameters: as a file set
+    /// them, as a rule before it set them, or as the program's default.
+    /// It is as near as the nearest file it reads; rules that read each
+    /// other in a loop set nothing.
+    #[test]
+    fn rules_read_parameters() {
+        let note = |text: &str| json!({"evidence": "Authored", "note": text});
+        let clade = "_ranks/clade/spermatophyta.json";
+        let files = ranks(&[
+            (
+                clade,
+                json!({"schema": 1, "rank": "clade", "name": "Spermatophyta",
+                    "rules": {
+                        "generator.params.space_density": {"rule": "1 / pow(b, 3)"},
+                        "generator.params.b": {"rule": "2 * a"},
+                        "generator.params.c": {"rule": "d + 1"},
+                        "generator.params.alternate": {"rule": "d"}},
+                    "evidence": {"rules": note("Rules.")}}),
+            ),
+            (
+                "testaceae/family.json",
+                json!({"schema": 1, "rank": "family", "name": "Testaceae",
+                    "parent": "clade/spermatophyta",
+                    "generator": {"program": "broadleaf", "params": {"a": 0.25, "alternate": 1}}}),
+            ),
+        ]);
+        let chain = above(&files, "testaceae", "plain").unwrap();
+        let species = "testaceae/plain/plain-one/spec.json";
+        let grown = |own: &Value| inherit(species, own, &chain, &programs()).unwrap();
+
+        let plain = grown(&json!({"id": "plain-one"}));
+        let params = &plain.spec["generator"]["params"];
+        // `b` from the family's `a`, then the density from `b`.
+        assert_eq!(params["b"], 0.5);
+        assert_eq!(params["space_density"], 8.0);
+        assert_eq!(
+            plain.origins["generator.params.space_density"],
+            format!("{clade}: rule on b from {clade}: rule on a from testaceae/family.json")
+        );
+        // `c` from the program's default `d`.
+        assert_eq!(params["c"], 2.0);
+        assert_eq!(
+            plain.origins["generator.params.c"],
+            format!("{clade}: rule on d from program `broadleaf`")
+        );
+        // The family's `alternate` is as near as the rule, which reads only
+        // the program, so the hand-set value stands.
+        assert_eq!(params["alternate"], 1);
+
+        // A species' own `a` is nearer than anything above it.
+        let own = grown(&json!({"id": "plain-two",
+            "generator": {"params": {"a": 1, "space_density": 3}}}));
+        assert_eq!(own.spec["generator"]["params"]["b"], 2.0);
+        assert_eq!(
+            own.rules["generator.params.space_density"].1.as_deref(),
+            Some(format!("set by hand in {species}").as_str())
+        );
+        // A program's own default.
+        let sapindaceae = grown(&json!({"id": "plain-three",
+            "generator": {"program": "sapindaceae"}}));
+        assert_eq!(sapindaceae.spec["generator"]["params"]["c"], 4.0);
+
+        // Rules that read each other in a loop set nothing.
+        let looped = grown(&json!({"id": "plain-four", "rules": {
+            "generator.params.a": {"rule": "space_density"}}}));
+        assert_eq!(
+            looped.rules["generator.params.a"].1.as_deref(),
+            Some("it waits on rules that read each other: generator.params.space_density")
+        );
+        assert_eq!(
+            looped.rules["generator.params.b"].1.as_deref(),
+            Some("it waits on rules that read each other: generator.params.a")
+        );
+        assert_eq!(looped.spec["generator"]["params"]["a"], 0.25);
+        assert!(looped.spec["generator"]["params"].get("b").is_none());
+        // A parameter no file sets and the program gives no number for.
+        let unread = grown(
+            &json!({"id": "plain-five", "generator": {"program": "sapindaceae"},
+            "rules": {"generator.params.fork": {"rule": "e"}}}),
+        );
+        assert_eq!(
+            unread.rules["generator.params.fork"].1.as_deref(),
+            Some("no `e` to read")
+        );
     }
 }

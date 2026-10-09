@@ -192,7 +192,12 @@ impl Vec3 {
     /// Rotate around a unit `axis` by `angle` radians (Rodrigues' formula).
     #[must_use]
     pub fn rotate_about(self, axis: Self, angle: f64) -> Self {
-        let (s, c) = (sin(angle), cos(angle));
+        self.turned(axis, sin(angle), cos(angle))
+    }
+
+    /// [`Vec3::rotate_about`] given the angle's sine `s` and cosine `c`.
+    #[must_use]
+    fn turned(self, axis: Self, s: f64, c: f64) -> Self {
         self * c + axis.cross(self) * s + axis * (axis.dot(self) * (1.0 - c))
     }
 
@@ -272,10 +277,11 @@ impl Frame {
     /// Rotate the whole frame about a unit axis.
     #[must_use]
     pub fn rotated(self, axis: Vec3, angle: f64) -> Self {
+        let (s, c) = (sin(angle), cos(angle));
         Self {
-            h: self.h.rotate_about(axis, angle),
-            l: self.l.rotate_about(axis, angle),
-            u: self.u.rotate_about(axis, angle),
+            h: self.h.turned(axis, s, c),
+            l: self.l.turned(axis, s, c),
+            u: self.u.turned(axis, s, c),
         }
         .orthonormalized()
     }
