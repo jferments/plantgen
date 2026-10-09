@@ -1,0 +1,168 @@
+{
+  "schema": 1,
+  "id": "pinus-contorta-var-contorta",
+  "taxon": {
+    "scientific_name": "Pinus contorta var. contorta",
+    "common_name": "shore pine",
+    "usda_symbol": "PICO",
+    "family": "Pinaceae",
+    "genus": "Pinus",
+    "plant_name_id": 469597
+  },
+  "growth_form": "excurrent_tree",
+  "generator": {
+    "program": "conifer",
+    "params": {
+      "cone_age": 8,
+      "cone_chance": 0.12,
+      "cone_length": 0.045,
+      "cone_pitch": 60,
+      "cone_years": 10,
+      "cone_area": 0.785,
+      "height_max": 16,
+      "height_rate": 0.045,
+      "height_shape": 1.2,
+      "leader_shade": 0.25,
+      "whorl": 4,
+      "interwhorl": 1,
+      "branch_angle": 55,
+      "branch_sag": 0.6,
+      "max_sag": 20,
+      "upturn": 0.025,
+      "branch_growth": 0.22,
+      "branch_ageing": 0.975,
+      "side_chance": 0.6,
+      "needle_years": 4,
+      "spray_base": 0.15,
+      "spray_length": 0.9,
+      "shade_death": 0.15,
+      "shade_years": 2,
+      "pipe_organ": 0.012,
+      "pipe_rings": 2.2e-05,
+      "spray_area": 0.273
+    }
+  },
+  "growth": {
+    "years": 40,
+    "step": 1,
+    "keyframes": [4, 10, 20, 40]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.12, 0.09, 0.07],
+    "bark_pattern": {
+      "kind": "plated",
+      "scale": 0.04,
+      "elongation": 1.6,
+      "fissure": 0.15,
+      "depth": 0.35,
+      "contrast": 0.5,
+      "variation": 0.2,
+      "smooth_below": 0.04,
+      "roughness": 0.35
+    },
+    "foliage": [0.07, 0.12, 0.035],
+    "foliage_shade": [0.025, 0.045, 0.015],
+    "variation": 0.2,
+    "organs": {
+      "cone": {
+        "shape": {"template": "fruit", "aspect": 0.6, "cone": 1},
+        "colour": [0.5, 0.38, 0.22]
+      },
+      "spray": {
+        "shape": {
+          "template": "needles",
+          "ranks": 0,
+          "twigs": 2,
+          "aspect": 0.5,
+          "needle": 0.14,
+          "twig_angle": 35,
+          "width": 0.03,
+          "bundle": 2
+        },
+        "accent": [0.3, 0.2, 0.1]
+      }
+    },
+    "ridges": {
+      "spacing": 0.05,
+      "depth": 0.04,
+      "twist": 0,
+      "contrast": 0.5
+    }
+  },
+  "allometry": [
+    {
+      "age": 40,
+      "environment": "open",
+      "height": 11,
+      "dbh": 0.3,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hand-set from general knowledge of the species: a small, irregular pine with a rounded to flat-topped crown, stout upturned branches and tufts of short, paired needles at the twig ends. Not fitted to measurements. Cones (plant forms F3): 3 to 6 cm, often closed and kept on the tree for years; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from general knowledge of the species: 11 m tall and 30 cm across at breast height at 40 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Colours chosen by eye: yellow-green needles; dark, thick, furrowed bark. Needle shoots (plant roadmap P4): needles in pairs, 3 to 7 cm long and 1 to 2 mm wide, so a needle 0.03 as wide as it is long (`width`), 2 to a fascicle (`bundle`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): dark brown bark broken into small blocky plates; set from general knowledge of the species, not measured."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted variety the name resolves to (the accepted name)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "schema": 1,
+  "id": "blechnum-spicant",
+  "taxon": {
+    "scientific_name": "Blechnum spicant",
+    "common_name": "deer fern",
+    "usda_symbol": "BLSP",
+    "family": "Aspleniaceae",
+    "genus": "Blechnum",
+    "plant_name_id": 3175779
+  },
+  "growth_form": "fern",
+  "generator": {
+    "program": "fern",
+    "params": {
+      "fronds_per_year": 10,
+      "frond_life": 2.5,
+      "frond_length": 0.45,
+      "frond_seed": 0.2,
+      "size_years": 3,
+      "young_angle": 30,
+      "old_angle": 58,
+      "open_years": 0.6,
+      "angle_spread": 8,
+      "frond_radius": 0.0015,
+      "pieces": 16,
+      "stipe": 0.08,
+      "pinna_length": 0.11,
+      "pinna_peak": 0.5,
+      "pinna_base": 0.2,
+      "pinna_tip": 0.3,
+      "pinna_angle": 82,
+      "pinna_lift": 5,
+      "pinna_area": 0.197,
+      "droop": 0.03,
+      "droop_years": 2,
+      "crowns": 1,
+      "crown_age": 4,
+      "crown_rate": 0.15,
+      "rhizome": 0.08,
+      "season": 0.5,
+      "emerge_spread": 0.3,
+      "unroll": 0.3,
+      "curl": 45
+    }
+  },
+  "growth": {
+    "years": 8,
+    "step": 1,
+    "keyframes": [2, 4, 8]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.15, 0.1, 0.05],
+    "foliage": [0.035, 0.1, 0.03],
+    "foliage_shade": [0.01, 0.032, 0.01],
+    "variation": 0.2,
+    "organs": {
+      "pinna": {
+        "shape": {
+          "template": "simple",
+          "width": 0.28,
+          "widest": 0.4,
+          "tip": 0.2,
+          "base": 0.9,
+          "teeth": 0,
+          "petiole": 0.0
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 8,
+      "environment": "open",
+      "height": 0.35,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hand-set from general knowledge of the species: a small evergreen fern: a flat rosette of narrow, ladder-like, once-divided fronds with rounded pinnae. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough sizes from general knowledge of the species: 0.35 m tall at 8 years in the open. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Colours chosen by eye: dark glossy green fronds."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Common name (and USDA symbol, where given) as the spec's authors wrote them."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "taxon.scientific_name": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's accepted name for the plant the spec's authors wrote as Struthiopteris spicant, which WCVP treats as a synonym."
+    },
+    "taxon.genus": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "The genus WCVP v16's accepted name is written in."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  }
+}

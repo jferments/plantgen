@@ -572,7 +572,7 @@ const HELD: [&str; 13] = [
     "dasylirion-wheeleri",
     "juniperus-scopulorum",
     "parkinsonia-microphylla",
-    "prosopis-velutina",
+    "neltuma-velutina",
     "larrea-tridentata",
     "typha-latifolia",
     "heracleum-maximum",

@@ -1,0 +1,229 @@
+{
+  "schema": 1,
+  "id": "ferocactus-acanthodes-subsp-acanthodes",
+  "taxon": {
+    "scientific_name": "Ferocactus acanthodes subsp. acanthodes",
+    "common_name": "California barrel cactus",
+    "usda_symbol": "FECY",
+    "family": "Cactaceae",
+    "genus": "Ferocactus",
+    "plant_name_id": 3264441
+  },
+  "growth_form": "stem_succulent",
+  "generator": {
+    "program": "succulent",
+    "params": {
+      "vigour_spread": 0.12,
+      "lean": 3,
+      "seedling": 0.02,
+      "height_max": 2.5,
+      "height_rate": 0.016,
+      "height_shape": 1.8,
+      "radius_min": 0.012,
+      "radius_max": 0.2,
+      "radius_height": 0.5,
+      "fill": 0.95,
+      "fill_years": 20,
+      "pinch": 0.02,
+      "pinch_depth": 0.06,
+      "wiggle": 0.4,
+      "sun_tilt": 12,
+      "bend": 0.3,
+      "dome": 0.6,
+      "bloom_age": 25,
+      "flowers": 12,
+      "ring_angle": 25,
+      "flower_angle": 25,
+      "flower_size": 0.05,
+      "bud_share": 0.2,
+      "fruit_share": 0.35,
+      "bud_size": 0.025,
+      "fruit_size": 0.035,
+      "flower_area": 0.372,
+      "bud_area": 0.636,
+      "fruit_area": 0.89
+    }
+  },
+  "growth": {
+    "years": 110,
+    "step": 1,
+    "keyframes": [10, 30, 60, 110]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1, 2, 3, 4]
+  },
+  "appearance": {
+    "bark": [0.2, 0.17, 0.13],
+    "foliage": [0.1, 0.17, 0.06],
+    "foliage_shade": [0.045, 0.077, 0.027],
+    "variation": 0.1,
+    "organs": {
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petals": 12,
+          "petal_width": 0.6,
+          "point": 0.0,
+          "notch": 0.0,
+          "centre": 0.3
+        },
+        "colour": [0.85, 0.7, 0.1],
+        "accent": [0.6, 0.3, 0.05]
+      },
+      "bud": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.5
+        },
+        "colour": [0.55, 0.3, 0.06]
+      },
+      "fruit": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.7
+        },
+        "colour": [0.7, 0.6, 0.15]
+      }
+    },
+    "bodies": {
+      "stem": {
+        "colour": [0.08, 0.15, 0.06],
+        "valley": [0.04, 0.075, 0.03],
+        "dome": 0.6,
+        "ribs": {
+          "count": [18, 30],
+          "spacing": 0.045,
+          "depth": 0.14,
+          "sharpness": 0.7
+        },
+        "tubercles": {
+          "height": 0.03,
+          "width": 0.5,
+          "point": 1.0
+        },
+        "areoles": {
+          "spacing": 0.025,
+          "felt_radius": 0.005,
+          "felt": [0.35, 0.3, 0.22]
+        },
+        "spines": [
+          {
+            "count": [10, 15],
+            "angle": 25,
+            "length": 0.035,
+            "width": 0.0008,
+            "colour": [0.55, 0.15, 0.08],
+            "angle_spread": 12,
+            "length_spread": 0.3,
+            "flat": 0.7,
+            "tip": [0.6, 0.5, 0.25]
+          },
+          {
+            "count": [4, 4],
+            "angle": 40,
+            "length": 0.06,
+            "width": 0.0016,
+            "colour": [0.6, 0.18, 0.08],
+            "angle_spread": 15,
+            "length_spread": 0.3,
+            "curve": 35,
+            "flat": 0.5,
+            "tip": [0.7, 0.6, 0.3]
+          }
+        ],
+        "greying": {
+          "colour": [0.4, 0.38, 0.34],
+          "years": 20
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 60,
+      "environment": "open",
+      "height": 0.9,
+      "tolerance": 0.45
+    },
+    {
+      "age": 110,
+      "environment": "open",
+      "height": 1.7,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hand-set from general knowledge of the species: a single cylindrical barrel up to 2 to 2.5 m tall and 25 to 40 cm across, leaning a little south, so densely spined that the green body hardly shows. Yellow flowers in a crown ring in spring and dry yellow fruit. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Rough heights from general knowledge: about a metre by 60 years, 1.5 to 2 m by 110. Wide tolerances."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Colours chosen by eye from photographs: 18 to 30 ribs, areoles close together, red to yellow-tipped radials and four long, curved but never hooked centrals that cover the body, greying with age."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Common name (and USDA symbol, where given) as the spec's authors wrote them."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted subspecies the name resolves to (the accepted name)."
+    },
+    "taxon.scientific_name": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's accepted name for the plant the spec's authors wrote as Ferocactus cylindraceus, which WCVP treats as a synonym."
+    },
+    "taxon.genus": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "The genus WCVP v16's accepted name is written in."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["Project After"],
+    "notes": "Procedural proxy (milestone F1). Calibration against measurements and photographs comes later."
+  }
+}
