@@ -44,6 +44,7 @@ use super::program::{Program, SymbolKind, ToolConfig, ToolKind};
 use super::turtle::{NodeKind, Scene};
 use super::{GrowthError, Limits};
 use crate::conditions::Surroundings;
+use crate::cores::{self, Lease};
 use crate::math::{self, Vec3};
 use crate::rng::{hash_words, unit};
 use crate::substrate::{self, SubstrateField};
@@ -684,50 +685,23 @@ fn light(
             *factor = math::exp(-depth);
         }
     };
-    let sweepers = if nx * ny * nz + receivers.len() > 20_000 {
-        threads()
-    } else {
-        1
-    };
+    let large = nx * ny * nz + receivers.len() > 20_000;
     in_rows(
         &directions,
         &mut factors,
         groups.len(),
         nx * ny * nz,
-        sweepers,
+        large,
         &sweep,
     );
-    // Each receiver adds its directions' light in their order. Where
-    // nothing but the plant shades the sky, a group's receivers add the
-    // same terms, so each group's sum is taken once.
-    let mut light = vec![0.0_f64; receivers.len()];
-    if surroundings.clear_sky() {
-        let mut sums = vec![0.0_f64; groups.len()];
-        for (direction, row) in directions.iter().zip(factors.chunks(groups.len())) {
-            for (sum, factor) in sums.iter_mut().zip(row) {
-                *sum += direction.weight * factor;
-            }
-        }
-        for (value, group) in light.iter_mut().zip(&group_of) {
-            *value = sums[*group as usize];
-        }
-    } else {
-        let width = groups.len();
-        let shine = |light: &mut [f64], receivers: &[(Vec3, f64)], group_of: &[u32]| {
-            for ((value, (point, _)), group) in light.iter_mut().zip(receivers).zip(group_of) {
-                for (j, direction) in directions.iter().enumerate() {
-                    let factor = factors[j * width + *group as usize];
-                    *value += direction.weight * neighbours(*point, direction) * factor;
-                }
-            }
-        };
-        let threads = if receivers.len() > 20_000 {
-            threads()
-        } else {
-            1
-        };
-        in_chunks(&mut light, &receivers, &group_of, threads, &shine);
-    }
+    let mut light = directions_light(
+        &directions,
+        &factors,
+        &receivers,
+        &group_of,
+        &|point, direction| neighbours(point, direction),
+        surroundings.clear_sky(),
+    );
     for value in &mut light {
         *value = (*value / total_weight).clamp(0.0, 1.0);
     }
@@ -1758,12 +1732,16 @@ fn colonize(
         .collect();
     // Many points share the work out; the pulls add up in the order the
     // points lie, layer by layer, however many threads drew them.
-    let threads = if span((x0, x1)) * span((x0, x1)) * span((y0, y1)) > 100_000 {
-        threads()
-    } else {
-        1
-    };
-    for pulls in in_layers(layers, threads, &layer_pulls) {
+    let lease = Lease::take(
+        if span((x0, x1)) * span((x0, x1)) * span((y0, y1)) > 100_000 {
+            cores::per_task()
+        } else {
+            1
+        },
+    );
+    let pulled = in_layers(layers, lease.threads(), &layer_pulls);
+    drop(lease);
+    for pulls in pulled {
         for (index, pull) in pulls {
             sums[index as usize] += pull;
             result[index as usize].0 += 1;
@@ -1773,6 +1751,53 @@ fn colonize(
         entry.1 = sum.normalize_or(Vec3::ZERO);
     }
     Ok(result)
+}
+
+/// Each receiver's light, adding its directions' terms in their order:
+/// weight times the neighbours' transmission times the group's factor (a
+/// row of `factors` per direction). Where nothing but the plant shades the
+/// sky (`clear`), a group's receivers add the same terms, so each group's
+/// sum is taken once.
+fn directions_light(
+    directions: &[SkyDirection],
+    factors: &[f64],
+    receivers: &[(Vec3, f64)],
+    group_of: &[u32],
+    neighbours: &(dyn Fn(Vec3, &SkyDirection) -> f64 + Sync),
+    clear: bool,
+) -> Vec<f64> {
+    let mut light = vec![0.0_f64; receivers.len()];
+    let width = factors.len() / directions.len().max(1);
+    if width == 0 {
+        return light;
+    }
+    if clear {
+        let mut sums = vec![0.0_f64; width];
+        for (direction, row) in directions.iter().zip(factors.chunks(width)) {
+            for (sum, factor) in sums.iter_mut().zip(row) {
+                *sum += direction.weight * factor;
+            }
+        }
+        for (value, group) in light.iter_mut().zip(group_of) {
+            *value = sums[*group as usize];
+        }
+        return light;
+    }
+    let shine = |light: &mut [f64], receivers: &[(Vec3, f64)], group_of: &[u32]| {
+        for ((value, (point, _)), group) in light.iter_mut().zip(receivers).zip(group_of) {
+            for (j, direction) in directions.iter().enumerate() {
+                let factor = factors[j * width + *group as usize];
+                *value += direction.weight * neighbours(*point, direction) * factor;
+            }
+        }
+    };
+    let lease = Lease::take(if receivers.len() > 20_000 {
+        cores::per_task()
+    } else {
+        1
+    });
+    in_chunks(&mut light, receivers, group_of, lease.threads(), &shine);
+    light
 }
 
 /// Groups of light receivers that share a voxel and their own leaf area
@@ -1831,20 +1856,22 @@ fn light_groups(
 type Sweep<'a> = dyn Fn(&SkyDirection, &mut [f64], &mut [f64]) + Sync + 'a;
 
 /// Run `work` for every direction on its row of `rows` (`width` values a
-/// row), the directions spread over up to `threads` threads, each with a
-/// scratch grid of `scratch` values. Each row is worked on its own, so the
-/// result does not depend on the threads.
+/// row), the directions spread over the idle cores when the work is
+/// `large`, each with a scratch grid of `scratch` values. Each row is
+/// worked on its own, so the result does not depend on the threads.
 fn in_rows(
     directions: &[SkyDirection],
     rows: &mut [f64],
     width: usize,
     scratch: usize,
-    threads: usize,
+    large: bool,
     work: &Sweep<'_>,
 ) {
     if width == 0 {
         return;
     }
+    let lease = Lease::take(if large { cores::per_task() } else { 1 });
+    let threads = lease.threads();
     let tasks = directions.iter().zip(rows.chunks_mut(width));
     if threads <= 1 {
         let mut grid = vec![0.0_f64; scratch];
@@ -1868,12 +1895,6 @@ fn in_rows(
             });
         }
     });
-}
-
-/// Threads the space and light tools spread large work over: every core
-/// the process may use, up to eight.
-fn threads() -> usize {
-    std::thread::available_parallelism().map_or(1, |cores| cores.get().min(8))
 }
 
 /// The light tool's work on a run of receivers: their light, the

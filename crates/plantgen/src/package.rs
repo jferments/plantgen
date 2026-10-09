@@ -89,19 +89,19 @@
 //! positions f32×3P, normals f32×3P, colours f32×3P, indices u32×Q
 //! ```
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, VecDeque};
 use std::fmt;
 use std::fs;
 use std::num::NonZeroUsize;
 use std::path::{Path, PathBuf};
-use std::sync::Mutex;
-use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::{Condvar, Mutex, OnceLock, PoisonError};
 use std::time::Instant;
 
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
 use crate::body::BodyLook;
+use crate::cores;
 use crate::graph::{GraphOrgan, GraphSegment, OrganType, PlantGraph};
 use crate::grow::{Growth, GrowthSettings, GrowthStats, grow};
 use crate::impostor;
@@ -802,38 +802,88 @@ impl Store {
     }
 }
 
-/// Run `work` for every index below `count` on up to `threads` threads and
-/// return the results in index order, so the output never depends on
-/// scheduling.
-fn parallel<T: Send>(count: usize, threads: usize, work: &(dyn Fn(usize) -> T + Sync)) -> Vec<T> {
-    let threads = threads.min(count).max(1);
-    if threads == 1 {
-        return (0..count).map(work).collect();
+/// A build's work: grow a variant, or bake one of a grown variant's
+/// keyframes.
+#[derive(Debug, Clone, Copy)]
+enum Task {
+    Grow(usize),
+    Bake(usize, usize),
+}
+
+/// Tasks waiting and how many are being worked on.
+struct Queue {
+    tasks: VecDeque<Task>,
+    running: usize,
+}
+
+/// Marks a task finished, even if it panicked, so the other workers stop
+/// waiting for it.
+struct Running<'a> {
+    queue: &'a Mutex<Queue>,
+    ready: &'a Condvar,
+}
+
+impl Drop for Running<'_> {
+    fn drop(&mut self) {
+        let mut queue = self.queue.lock().unwrap_or_else(PoisonError::into_inner);
+        queue.running -= 1;
+        self.ready.notify_all();
     }
-    let next = AtomicUsize::new(0);
-    let results: Mutex<Vec<Option<T>>> = Mutex::new((0..count).map(|_| None).collect());
+}
+
+/// Run `first` and every task they lead to on up to `threads` workers:
+/// `run` returns the tasks a finished one makes ready (a variant's
+/// keyframes once it has grown), and they join the queue, so baking starts
+/// while slower variants still grow. A worker holds a core while it works
+/// ([`cores::Seat`]); the growth tools borrow the cores no worker holds.
+fn pipeline(first: Vec<Task>, threads: usize, run: &(dyn Fn(Task) -> Vec<Task> + Sync)) {
+    let queue = Mutex::new(Queue {
+        tasks: first.into(),
+        running: 0,
+    });
+    let ready = Condvar::new();
+    let work = || {
+        loop {
+            let task = {
+                let mut waiting = queue.lock().unwrap_or_else(PoisonError::into_inner);
+                loop {
+                    if let Some(task) = waiting.tasks.pop_front() {
+                        waiting.running += 1;
+                        break Some(task);
+                    }
+                    if waiting.running == 0 {
+                        break None;
+                    }
+                    waiting = ready.wait(waiting).unwrap_or_else(PoisonError::into_inner);
+                }
+            };
+            let Some(task) = task else {
+                return;
+            };
+            let running = Running {
+                queue: &queue,
+                ready: &ready,
+            };
+            let seat = cores::Seat::take();
+            let more = run(task);
+            drop(seat);
+            queue
+                .lock()
+                .unwrap_or_else(PoisonError::into_inner)
+                .tasks
+                .extend(more);
+            drop(running);
+        }
+    };
+    if threads <= 1 {
+        work();
+        return;
+    }
     std::thread::scope(|scope| {
         for _ in 0..threads {
-            scope.spawn(|| {
-                loop {
-                    let index = next.fetch_add(1, Ordering::Relaxed);
-                    if index >= count {
-                        break;
-                    }
-                    let result = work(index);
-                    results
-                        .lock()
-                        .unwrap_or_else(std::sync::PoisonError::into_inner)[index] = Some(result);
-                }
-            });
+            scope.spawn(work);
         }
     });
-    results
-        .into_inner()
-        .unwrap_or_else(std::sync::PoisonError::into_inner)
-        .into_iter()
-        .flatten()
-        .collect()
 }
 
 /// Threads a build uses: every core the process may use.
@@ -848,18 +898,13 @@ fn same_age(a: f64, b: f64, dt: f64) -> bool {
 
 /// `(variant, keyframe)` for every keyframe the package keeps, leaving out
 /// those grown only to compare with reference sizes.
-fn bake_jobs(grown: &[Growth], ages: &[f64], dt: f64) -> Vec<(usize, usize)> {
-    grown
+fn bake_jobs(growth: &Growth, ages: &[f64], dt: f64) -> Vec<usize> {
+    growth
+        .keyframes
         .iter()
         .enumerate()
-        .flat_map(|(variant, growth)| {
-            growth
-                .keyframes
-                .iter()
-                .enumerate()
-                .filter(|(_, graph)| ages.iter().any(|age| same_age(graph.age, *age, dt)))
-                .map(move |(keyframe, _)| (variant, keyframe))
-        })
+        .filter(|(_, graph)| ages.iter().any(|age| same_age(graph.age, *age, dt)))
+        .map(|(keyframe, _)| keyframe)
         .collect()
 }
 
@@ -1048,40 +1093,35 @@ pub fn build(
     ages.sort_by(f64::total_cmp);
     ages.dedup();
     let variants = spec.variant_list();
-    let label = |index: usize| {
-        format!(
-            "{} seed {}",
-            variants[index].environment.name(),
-            variants[index].seed
-        )
+    let work = Work {
+        inputs,
+        program: &program,
+        params: &params,
+        host: host.as_ref(),
+        variants: &variants,
+        ages: &ages,
+        say: &say,
+        grown: variants.iter().map(|_| OnceLock::new()).collect(),
+        baked: Mutex::new(Vec::new()),
     };
-
-    let grown = parallel(variants.len(), threads, &|index| {
-        let started = Instant::now();
-        let growth = grow_variant(
-            spec,
-            &program,
-            &params,
-            host.as_ref(),
-            &variants[index],
-            &ages,
-        )
-        .map_err(|error| PackageError::Growth {
-            variant: format!("{} {}", spec.id, label(index)),
-            message: error.to_string(),
-        })?;
-        say(&format!(
-            "grew {}: {} years, peak {} modules, {} segments, {} organs ({:.1} s)",
-            label(index),
-            spec.growth.years,
-            growth.stats.peak_modules,
-            growth.stats.peak_segments,
-            growth.stats.peak_organs,
-            started.elapsed().as_secs_f64()
-        ));
-        Ok::<_, PackageError>(growth)
-    });
-    let grown = grown.into_iter().collect::<Result<Vec<_>, _>>()?;
+    pipeline(
+        (0..variants.len()).map(Task::Grow).collect(),
+        threads,
+        &|task| work.run(task),
+    );
+    let Work { grown, baked, .. } = work;
+    let grown = grown
+        .into_iter()
+        .enumerate()
+        .map(|(index, growth)| {
+            growth.into_inner().unwrap_or_else(|| {
+                Err(PackageError::Growth {
+                    variant: format!("{} {}", spec.id, label(&variants[index])),
+                    message: "it was not grown".into(),
+                })
+            })
+        })
+        .collect::<Result<Vec<_>, _>>()?;
 
     let validation = variants
         .iter()
@@ -1089,27 +1129,109 @@ pub fn build(
         .flat_map(|(variant, growth)| compare_allometry(spec, variant, growth))
         .collect();
 
-    let jobs = bake_jobs(&grown, &ages, spec.growth.step);
-    let baked = parallel(jobs.len(), threads, &|job| {
-        let (variant, keyframe) = jobs[job];
-        let growth = &grown[variant];
+    // In the order of the variants and their keyframes, however the work
+    // was scheduled.
+    let mut baked = baked.into_inner().unwrap_or_else(PoisonError::into_inner);
+    baked.sort_by_key(|(job, _)| *job);
+    let baked = baked
+        .into_iter()
+        .map(|(job, result)| result.map(|baked| (job, baked)))
+        .collect::<Result<Vec<_>, _>>()?;
+    assemble(inputs, &program, &variants, &grown, baked, validation)
+}
+
+/// Baked keyframes by variant and keyframe index, as they finish.
+type Baked = Vec<((usize, usize), Result<BakedKeyframe, PackageError>)>;
+
+/// A variant's name in progress lines and errors.
+fn label(variant: &Variant) -> String {
+    format!("{} seed {}", variant.environment.name(), variant.seed)
+}
+
+/// A build's inputs and results while its tasks run.
+struct Work<'a> {
+    inputs: &'a Inputs,
+    program: &'a Program,
+    params: &'a [f64],
+    host: Option<&'a std::sync::Arc<crate::lsys::tools::Host>>,
+    variants: &'a [Variant],
+    ages: &'a [f64],
+    say: &'a (dyn Fn(&str) + Sync),
+    grown: Vec<OnceLock<Result<Growth, PackageError>>>,
+    baked: Mutex<Baked>,
+}
+
+impl Work<'_> {
+    fn run(&self, task: Task) -> Vec<Task> {
+        match task {
+            Task::Grow(index) => self.grow(index),
+            Task::Bake(variant, keyframe) => self.bake(variant, keyframe),
+        }
+    }
+
+    /// Grow variant `index`; its keyframes to bake are the tasks it leaves.
+    fn grow(&self, index: usize) -> Vec<Task> {
+        let spec = &self.inputs.spec;
+        let started = Instant::now();
+        let growth = grow_variant(
+            spec,
+            self.program,
+            self.params,
+            self.host,
+            &self.variants[index],
+            self.ages,
+        )
+        .map_err(|error| PackageError::Growth {
+            variant: format!("{} {}", spec.id, label(&self.variants[index])),
+            message: error.to_string(),
+        });
+        let next = match &growth {
+            Ok(growth) => {
+                (self.say)(&format!(
+                    "grew {}: {} years, peak {} modules, {} segments, {} organs ({:.1} s)",
+                    label(&self.variants[index]),
+                    spec.growth.years,
+                    growth.stats.peak_modules,
+                    growth.stats.peak_segments,
+                    growth.stats.peak_organs,
+                    started.elapsed().as_secs_f64()
+                ));
+                bake_jobs(growth, self.ages, spec.growth.step)
+                    .into_iter()
+                    .map(|keyframe| Task::Bake(index, keyframe))
+                    .collect()
+            }
+            Err(_) => Vec::new(),
+        };
+        let _ = self.grown[index].set(growth);
+        next
+    }
+
+    /// Bake keyframe `keyframe` of variant `variant`, once it has grown.
+    fn bake(&self, variant: usize, keyframe: usize) -> Vec<Task> {
+        let Some(Ok(growth)) = self.grown[variant].get() else {
+            return Vec::new();
+        };
         let graph = &growth.keyframes[keyframe];
         let started = Instant::now();
-        let baked = bake_keyframe(graph, inputs)?;
-        say(&format!(
-            "baked {} at {} years: LOD0 {} triangles, LOD3 {}, impostor {}² ({:.1} s)",
-            label(variant),
-            graph.age,
-            baked.lods[0].1.triangles(),
-            baked.lods[3].1.triangles(),
-            baked.impostor.atlas_size(),
-            started.elapsed().as_secs_f64()
-        ));
-        Ok::<_, PackageError>(baked)
-    });
-    let baked = baked.into_iter().collect::<Result<Vec<_>, _>>()?;
-    let baked: Vec<_> = jobs.iter().copied().zip(baked).collect();
-    assemble(inputs, &program, &variants, &grown, baked, validation)
+        let result = bake_keyframe(graph, self.inputs);
+        if let Ok(baked) = &result {
+            (self.say)(&format!(
+                "baked {} at {} years: LOD0 {} triangles, LOD3 {}, impostor {}² ({:.1} s)",
+                label(&self.variants[variant]),
+                graph.age,
+                baked.lods[0].1.triangles(),
+                baked.lods[3].1.triangles(),
+                baked.impostor.atlas_size(),
+                started.elapsed().as_secs_f64()
+            ));
+        }
+        self.baked
+            .lock()
+            .unwrap_or_else(PoisonError::into_inner)
+            .push(((variant, keyframe), result));
+        Vec::new()
+    }
 }
 
 /// The package from its grown variants and baked keyframes, each keyframe
