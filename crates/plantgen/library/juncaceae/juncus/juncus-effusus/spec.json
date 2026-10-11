@@ -34,7 +34,7 @@
       "blade_area": 0.023,
       "tip_area": 0.012,
       "thatch_area": 0.023,
-      "panicle_area": 0.119
+      "panicle_area": 0.158
     }
   },
   "growth": {
@@ -65,15 +65,23 @@
       },
       "panicle": {
         "shape": {
-          "template": "panicle",
-          "whorls": 3,
-          "branches": 4,
-          "spread": 40,
-          "spikelets": 4,
-          "aspect": 0.8,
-          "stalk": 0.02
+          "template": "flower",
+          "petals": 6,
+          "petal_width": 0.45,
+          "point": 0.8,
+          "notch": 0,
+          "centre": 0.25
         },
-        "colour": [0.4, 0.3, 0.15]
+        "inflorescence": {
+          "flowers": 40,
+          "per_node": 2,
+          "spread": 35,
+          "size": 0.12,
+          "taper": 0.1,
+          "stalk": [0.4, 0.42, 0.22]
+        },
+        "colour": [0.55, 0.47, 0.3],
+        "accent": [0.38, 0.42, 0.22]
       }
     }
   },
@@ -86,7 +94,18 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {"inflorescence": "cyme"},
   "evidence": {
+    "appearance.organs.panicle": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The inflorescence, the model's choice after FNA (volume 22), as search results quote it (the page was not read): a many-flowered compound cyme of small flowers, each of 6 lanceolate tepals, tan with a greenish midstripe. Drawn as a cyme of 40 flowers forking in pairs, each flower 6 narrow, pointed tepals round a green centre. No flora read gives the number of flowers. The bract that seems to continue the culm past the cluster is left out."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA's account of the species (volume 22), as search results quote it (the page itself was not read): inflorescences lateral, compound dichasia (cymes), many-flowered, the primary bract erect and round in section, reaching well beyond them; tepals tan or darker, usually with a greenish midstripe, lanceolate, 1.9 to 3.5 mm."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

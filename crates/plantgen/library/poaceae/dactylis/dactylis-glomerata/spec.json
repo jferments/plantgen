@@ -31,7 +31,7 @@
       "blade_area": 0.118,
       "tip_area": 0.064,
       "thatch_area": 0.118,
-      "panicle_area": 0.097
+      "panicle_area": 0.134
     }
   },
   "growth": {
@@ -61,16 +61,25 @@
         "shade": [0.12, 0.1, 0.05]
       },
       "panicle": {
-        "shape": {
-          "template": "panicle",
-          "whorls": 4,
-          "branches": 3,
-          "spread": 40,
-          "spikelets": 10,
-          "aspect": 0.5,
-          "stalk": 0.05
+        "shape": {"template": "spikelet"},
+        "inflorescence": {
+          "branches": 8,
+          "size": 0.4,
+          "spread": 45,
+          "taper": 0.7,
+          "peduncle": 0.05,
+          "stalk": [0.3, 0.36, 0.2],
+          "branch": {
+            "kind": "spike",
+            "flowers": 24,
+            "per_node": 3,
+            "peduncle": 0.45,
+            "size": 0.13,
+            "spread": 30
+          }
         },
-        "colour": [0.35, 0.4, 0.25]
+        "colour": [0.35, 0.4, 0.25],
+        "accent": [0.4, 0.32, 0.36]
       }
     }
   },
@@ -94,9 +103,32 @@
     "spikelet_length_m": {"min": 0.005, "max": 0.009},
     "glumes": 2,
     "awns": true,
-    "awn_length_m": {"min": 0.0005, "max": 0.0015}
+    "awn_length_m": {"min": 0.0005, "max": 0.0015},
+    "upper_glume_length_m": {"min": 0.003, "max": 0.005},
+    "lemma_length_m": {"min": 0.004, "max": 0.008},
+    "awn_insertion": "apical"
   },
   "evidence": {
+    "appearance.organs.panicle": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The panicle's layout, the model's choice after FNA's accounts of the genus and species (volume 24), as search results quote them (the pages were not read): a panicle 4 to 20 cm, typically pyramidal, the lower branches spreading and the upper appressed; its primary branches one-sided and naked below, with dense clusters of nearly sessile spikelets toward their tips. Drawn as 8 branches, each a dense spike of about 24 spikelets on its upper half, the upper branches shorter with fewer. The spikelet's florets, glumes, lemmas and awns come from the traits by the Poales rules; colours by eye, green with purplish glumes."
+    },
+    "traits.upper_glume_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA's account of the species (Allred, volume 24), as search results quote it (the page itself was not read): glumes 3 to 5 mm, shorter than the florets; lemmas 4 to 8 mm."
+    },
+    "traits.lemma_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA's account of the species (Allred, volume 24), as search results quote it (the page itself was not read): lemmas 4 to 8 mm, scabridulous; the spikelets 5 to 8 mm, nearly sessile."
+    },
+    "traits.awn_insertion": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA's account of the genus (volume 24), as search results quote it (the page itself was not read): the lemmas taper to a short awn, so it leaves the lemma's tip."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

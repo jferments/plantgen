@@ -733,6 +733,58 @@
       "when": {"awns": ["true"]},
       "why": "the awn on a floret's lemma"
     },
+    "awn_insertion": {
+      "group": "flowers",
+      "organ": "spikelet",
+      "type": "enum",
+      "values": ["apical", "subapical", "dorsal", "basal"],
+      "when": {"awns": ["true"]},
+      "optional": true,
+      "why": "where a lemma's awn leaves it: at its tip, just below the tip (often between two teeth), from the middle of its back, or near its base"
+    },
+    "awn_form": {
+      "group": "flowers",
+      "organ": "spikelet",
+      "type": "enum",
+      "values": ["straight", "flexuous", "geniculate", "hooked", "contorted"],
+      "when": {"awns": ["true"]},
+      "optional": true,
+      "why": "an awn's shape: straight, wavy, bent at a knee (geniculate), curved into a hook, or twisted and curled"
+    },
+    "upper_glume_length_m": {
+      "group": "flowers",
+      "organ": "spikelet",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.1],
+      "optional": true,
+      "why": "a spikelet's upper (second) glume, from its base to its tip, awn left out; the only glume where there is one"
+    },
+    "lower_glume_length_m": {
+      "group": "flowers",
+      "organ": "spikelet",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.1],
+      "optional": true,
+      "why": "a spikelet's lower (first) glume, awn left out"
+    },
+    "lemma_length_m": {
+      "group": "flowers",
+      "organ": "spikelet",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.06],
+      "optional": true,
+      "why": "the lemma of a fertile floret, the bract that holds it, awn left out; in a sedge, the scale under a flower"
+    },
+    "scale_arrangement": {
+      "group": "flowers",
+      "organ": "spikelet",
+      "type": "enum",
+      "values": ["distichous", "spiral"],
+      "why": "how a spikelet's glumes and lemmas (a sedge's scales) stand on its axis: in two ranks, each on the other side from the one below, or in a spiral"
+    },
     "sexual_system": {
       "group": "flowers",
       "organ": "plant",

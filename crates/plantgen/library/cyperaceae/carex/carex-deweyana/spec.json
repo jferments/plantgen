@@ -33,7 +33,7 @@
       "blade_area": 0.046,
       "tip_area": 0.025,
       "thatch_area": 0.046,
-      "panicle_area": 0.058
+      "panicle_area": 0.051
     }
   },
   "growth": {
@@ -63,8 +63,25 @@
         "shade": [0.12, 0.1, 0.05]
       },
       "panicle": {
-        "shape": { "template": "spike", "florets": 6, "aspect": 0.2, "plume": 0.0, "stalk": 0.1 },
-        "colour": [0.32, 0.36, 0.2]
+        "shape": {
+          "template": "spikelet",
+          "florets": 10,
+          "glumes": 0,
+          "ranks": 0,
+          "lemma": 0.55,
+          "aspect": 0.6,
+          "gape": 12
+        },
+        "inflorescence": {
+          "kind": "spike",
+          "flowers": 4,
+          "size": 0.12,
+          "spread": 12,
+          "peduncle": 0.05,
+          "stalk": [0.35, 0.38, 0.22]
+        },
+        "colour": [0.42, 0.44, 0.27],
+        "accent": [0.5, 0.46, 0.32]
       }
     }
   },
@@ -78,6 +95,11 @@
   ],
   "tier": "procedural_proxy",
   "evidence": {
+    "appearance.organs.panicle": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The inflorescence, the model's choice after FNA's account of the species (volume 23), as search results quote it (the page was not read): (2)3 to 5 spikes, usually with male flowers at their foot; the lower spikes about 5 to 11 by 4 to 7 mm, each with (5)7 to 12 perigynia, erect to ascending, narrowly ovate, 4 to 5 mm (search results disagree on the top of the range). Drawn as 4 sessile spikes up the axis, each drawn with the spikelet card (a sedge spike is a spike of one-flowered spikelets, which looks like one spikelet of many): 10 perigynia and their scales in a spiral, no glumes. Colours by eye: pale green."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

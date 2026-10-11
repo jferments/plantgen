@@ -76,7 +76,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let seed_plants = "(clade Spermatophyta: _ranks/clade/spermatophyta.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (28):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (37):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
@@ -112,20 +112,16 @@ fn rules_and_traits_say_where_they_come_from() {
         ),
         "{built_in}"
     );
-    // Heights: herbs' stems and trees' tops at the vascular plants,
-    // culms at the Poales.
-    assert!(
-        built_in.contains(
-            "\n  generator.params.stem_height  (phylum Tracheophyta: _ranks/phylum/tracheophyta.json)\n"
-        ),
-        "{built_in}"
-    );
-    assert!(
-        built_in.contains(
-            "\n  generator.params.culm_height  (order Poales: _ranks/order/poales.json)\n"
-        ),
-        "{built_in}"
-    );
+    // Heights: herbs' stems and trees' tops at the vascular plants;
+    // culms and spikelets, from their characters, at the Poales.
+    let poales = "(order Poales: _ranks/order/poales.json)";
+    for line in [
+        "\n  generator.params.stem_height  (phylum Tracheophyta: _ranks/phylum/tracheophyta.json)\n".to_string(),
+        format!("\n  appearance.organs.*.shape.awn on `spikelet` cards  {poales}\n"),
+        format!("\n  appearance.organs.*.shape.ranks on `spikelet` cards  {poales}\n  generator.params.culm_height  {poales}\n"),
+    ] {
+        assert!(built_in.contains(&line), "{line} in {built_in}");
+    }
     // Leaf outlines from shape words, at the kingdom, on two cards.
     assert!(
         built_in.contains(
@@ -160,7 +156,7 @@ fn rules_and_traits_say_where_they_come_from() {
     .unwrap();
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
-    assert!(rules.starts_with("Rules, by their home (29):\n"), "{rules}");
+    assert!(rules.starts_with("Rules, by their home (38):\n"), "{rules}");
     assert!(
         rules.contains(
             "\n  generator.params.leaves_per_node  (family Sapindaceae: sapindaceae/family.json)\n"
