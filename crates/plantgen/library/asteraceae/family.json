@@ -2,5 +2,27 @@
   "schema": 1,
   "rank": "family",
   "name": "Asteraceae",
-  "parent": "order/asterales"
+  "parent": "order/asterales",
+  "traits": {
+    "inflorescence_unit": "capitulum",
+    "leaf_arrangement": {"alternate": "often", "opposite": "often", "whorled": "rarely"},
+    "fruit_type": {"cypsela": "usually"}
+  },
+  "evidence": {
+    "traits.inflorescence_unit": {
+      "evidence": "SourceInferred",
+      "source": "vicflora",
+      "note": "VicFlora's family description: the flowers sit packed on a shared receptacle in heads (capitula), each almost always ringed by an involucre of bracts."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "vicflora",
+      "note": "VicFlora's family description: leaves one or two to a node, rarely more; it names neither as the usual state."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "vicflora",
+      "note": "VicFlora's family description: the fruit is usually a cypsela (a one-seeded fruit from an inferior ovary), often topped by a pappus."
+    }
+  }
 }

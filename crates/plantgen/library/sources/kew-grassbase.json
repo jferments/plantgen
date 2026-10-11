@@ -1,0 +1,10 @@
+{
+  "id": "kew-grassbase",
+  "title": "GrassBase: The Online World Grass Flora",
+  "authors": "Clayton, W. D., Vorontsova, M. S., Harman, K. T. and Williamson, H. (Royal Botanic Gardens, Kew)",
+  "year": 2006,
+  "url": "https://www.kew.org/data/grasses-db/",
+  "licence": "copyrighted text; facts only",
+  "tier": 1,
+  "kind": "text"
+}

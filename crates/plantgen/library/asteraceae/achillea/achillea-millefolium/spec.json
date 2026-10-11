@@ -96,6 +96,20 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "leaf_division": "simple",
+    "leaf_incision": "lobed",
+    "division_pattern": "pinnate",
+    "division_order": {"min": 1, "max": 2},
+    "leaf_shape": {"oblong": "often", "lanceolate": "often"},
+    "inflorescence": "corymb",
+    "units_per_inflorescence": {"min": 10, "max": 100},
+    "phyllaries": {"min": 20, "max": 30},
+    "phyllary_series": 3,
+    "ray_florets": {"min": 5, "max": 8, "low": 3},
+    "disc_florets": {"min": 10, "max": 20},
+    "fruit_size_m": {"min": 0.001, "max": 0.002}
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -146,6 +160,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-19",
+      "note": "FNA's account of the species: blades oblong or lanceolate, once or twice pinnately lobed; 10 to over 100 heads in flat-topped, corymb-like arrays; 20 to 30 phyllaries in about three rows; rays 5 to 8 (as few as 3); 10 to 20 disc florets; fruits 1 to 2 mm."
     }
   },
   "provenance": {

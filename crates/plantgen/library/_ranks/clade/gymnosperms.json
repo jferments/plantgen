@@ -2,5 +2,15 @@
   "schema": 1,
   "rank": "clade",
   "name": "gymnosperms",
-  "parent": "clade/spermatophyta"
+  "parent": "clade/spermatophyta",
+  "traits": {
+    "reproduction": {"cones": "usually", "solitary_seeds": "rarely"}
+  },
+  "evidence": {
+    "traits.reproduction": {
+      "evidence": "SourceInferred",
+      "source": "openstax-biology-2e",
+      "note": "A gymnosperm's seeds lie bare on the scales of a cone or on modified leaves (Biology 2e, 26.2). Most bear seed cones; a few, such as ginkgo and the yews, bear their seeds singly, the rare state here."
+    }
+  }
 }

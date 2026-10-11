@@ -85,6 +85,17 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "leaf_length_m": {"min": 0.1, "max": 0.45},
+    "leaf_width_m": {"min": 0.002, "max": 0.014},
+    "inflorescence": "panicle",
+    "inflorescence_length_m": {"min": 0.02, "max": 0.3},
+    "florets_per_spikelet": {"min": 2, "max": 5},
+    "spikelet_length_m": {"min": 0.005, "max": 0.009},
+    "glumes": 2,
+    "awn_length_m": {"min": 0.0005, "max": 0.0015}
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -135,6 +146,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "kew-grassbase",
+      "note": "GrassBase's account of the species: a tufted perennial; blades 10 to 45 cm by 2 to 14 mm; a dense, one-sided panicle 2 to 30 cm long; spikelets 5 to 9 mm, of 2 to 5 fertile florets above two unlike glumes; the lemma's awn 0.5 to 1.5 mm."
     }
   },
   "provenance": {

@@ -765,23 +765,46 @@ impl Library {
     /// Check every species' own spec as [`Library::check_ranks`] does a
     /// rank file's part: its traits and rules against the vocabulary and
     /// the programs, and a note of its own, citing a source, on each value,
-    /// trait and rule it sets.
+    /// trait and rule it sets. Then the traits it inherits with its own:
+    /// none of them a character that another of them rules out, such as
+    /// bark on a herbaceous stem.
     ///
     /// # Errors
     ///
     /// Names the first species that fails, and why.
     pub fn check_traits(&self) -> Result<(), String> {
+        let vocabulary = Vocabulary::builtin();
         for entry in &self.species {
             let own: Value = serde_json::from_str(&entry.own)
                 .map_err(|error| format!("{}: {error}", entry.file()))?;
             let part = Part::of_spec(&own).map_err(|error| format!("{}: {error}", entry.file()))?;
-            Vocabulary::builtin()
+            vocabulary
                 .check_part(&part, &self.params)
                 .map_err(|error| format!("{}: {error}", entry.file()))?;
             own_notes(&part.values, &part.traits, &part.rules, &part.notes)
                 .map_err(|error| format!("{}: {error}", entry.file()))?;
         }
+        for entry in &self.species {
+            let traits = self.traits_of(&entry.id).map_err(|error| error.0)?;
+            if let Some(key) = vocabulary.coverage(&traits).ruled_out.first() {
+                let why = vocabulary.ruled_out_by(key, &traits).unwrap_or_default();
+                return Err(format!(
+                    "{}: it states `{key}` with what it inherits, but {why}",
+                    entry.file()
+                ));
+            }
+        }
         Ok(())
+    }
+
+    /// The traits the species `id` states, its own and those it inherits,
+    /// each with its value as stated.
+    ///
+    /// # Errors
+    ///
+    /// As [`Library::inherited`].
+    pub fn traits_of(&self, id: &str) -> Result<serde_json::Map<String, Value>, SpecError> {
+        Ok(self.inherited(id)?.trait_values())
     }
 
     /// Each program's parameters, its inherited ones included.
@@ -1464,7 +1487,8 @@ mod tests {
     use std::path::{Path, PathBuf};
 
     use super::{
-        ALIASES, Citation, LIBRARY, Library, RANKS, SOURCES, niche_source, source, species,
+        ALIASES, Citation, LIBRARY, Library, RANKS, RankFile, SOURCES, Vocabulary, niche_source,
+        source, species,
     };
     use crate::spec::{PROGRAMS, PlantSpec};
 
@@ -1705,12 +1729,13 @@ mod tests {
     }
 
     /// The paths of a JSON value's leaves (an array is one) and their
-    /// values, leaving out its `evidence`.
+    /// values, leaving out its `evidence`, `traits` and `rules`, which stay
+    /// out of the spec.
     fn leaves(value: &serde_json::Value, at: &str, found: &mut Vec<(String, serde_json::Value)>) {
         match value {
             serde_json::Value::Object(map) => {
                 for (key, inside) in map {
-                    if at.is_empty() && key == "evidence" {
+                    if at.is_empty() && ["evidence", "traits", "rules"].contains(&key.as_str()) {
                         continue;
                     }
                     let path = if at.is_empty() {
@@ -1726,8 +1751,9 @@ mod tests {
     }
 
     /// A species' spec keeps every value and note of its own file, the
-    /// nearest in its chain, and is what the library merges at run time;
-    /// `source` gives it, as `Entry::source` does.
+    /// nearest in its chain, but for its traits and rules and their notes,
+    /// and is what the library merges at run time; `source` gives it, as
+    /// `Entry::source` does.
     #[test]
     fn every_species_keeps_its_own_values() {
         let library = Library::builtin();
@@ -1747,6 +1773,11 @@ mod tests {
             }
             if let Some(notes) = own.get("evidence").and_then(|notes| notes.as_object()) {
                 for (path, note) in notes {
+                    let (head, _) = path.split_once('.').unwrap_or((path, ""));
+                    if head == "traits" || head == "rules" {
+                        assert!(merged["evidence"].get(path).is_none(), "{}", entry.id);
+                        continue;
+                    }
                     assert_eq!(
                         merged["evidence"].get(path),
                         Some(note),
@@ -2647,8 +2678,12 @@ mod tests {
             "`leaf_arrangement` is one of alternate",
         );
         refused(
-            &family(r#""rules": {"generator.params.alternate": {"rule": "leaf_type * 2"}}"#),
-            "it reads `leaf_type`, which is neither a number, count or bool trait",
+            &family(r#""rules": {"generator.params.alternate": {"rule": "leaf_form * 2"}}"#),
+            "it reads `leaf_form`, which is neither a number, count or bool trait",
+        );
+        refused(
+            &family(r#""traits": {"ray_florets": {"min": 8, "max": 5}}"#),
+            "`ray_florets`: its `max` 5 is below its `min` 8",
         );
         refused(
             &family(r#""rules": {"generator.params.alternate": {"rule": "leaf_sise * 2"}}"#),
@@ -2675,6 +2710,86 @@ mod tests {
             message.contains("acer-circinatum/spec.json: `clonal` is a bool"),
             "{message}"
         );
+        // And what it states with what it inherits: bark needs wood.
+        let folder = Folder::new("refused-ruled-out");
+        folder.write(
+            "library/sapindaceae/family.json",
+            &family(
+                r#""traits": {"woodiness": "herbaceous"}, "evidence": {"traits": {"evidence": "Authored", "source": "plantgen-authors", "note": "Test."}}"#,
+            ),
+        );
+        let mut own: serde_json::Value = serde_json::from_str(source("acer-circinatum")).unwrap();
+        own["traits"] = serde_json::json!({"bark_texture": "smooth"});
+        own["evidence"]["traits"] = serde_json::json!({"evidence": "Authored",
+            "source": "plantgen-authors", "note": "Test."});
+        folder.write(
+            "library/sapindaceae/acer/acer-circinatum/spec.json",
+            &own.to_string(),
+        );
+        let message = Library::from_dir(&folder.0).unwrap_err().0;
+        assert!(
+            message.contains(
+                "acer-circinatum/spec.json: it states `bark_texture` with what it inherits, but `bark_texture` is a character of the bark, which exists only where `woodiness` is woody or semi; here `woodiness` is herbaceous"
+            ),
+            "{message}"
+        );
+    }
+
+    /// No trait is named as a parameter of a built-in program, so a
+    /// formula's names say what they read.
+    #[test]
+    fn no_trait_is_named_as_a_parameter() {
+        let vocabulary = Vocabulary::builtin();
+        for (program, params) in Library::builtin().program_params() {
+            for param in params.keys() {
+                assert!(
+                    !vocabulary.traits.contains_key(param),
+                    "`{param}` is a trait and a parameter of `{program}`"
+                );
+            }
+        }
+    }
+
+    /// Stating characters changes no species' spec, and so no package,
+    /// while no rule reads them: every built-in spec is what it would be
+    /// with no trait stated anywhere.
+    #[test]
+    fn characters_change_no_spec_until_a_rule_reads_them() {
+        let library = Library::builtin();
+        let mut stated = 0;
+        let stripped: BTreeMap<String, RankFile> = library
+            .ranks
+            .iter()
+            .map(|(file, rank)| {
+                let mut rank = rank.clone();
+                stated += rank.shared.traits.len();
+                rank.shared.traits.clear();
+                for part in rank.forms.values_mut() {
+                    stated += part.traits.len();
+                    part.traits.clear();
+                }
+                (file.clone(), rank)
+            })
+            .collect();
+        for entry in library.species() {
+            let mut own: serde_json::Value = serde_json::from_str(entry.own_source()).unwrap();
+            if let Some(traits) = own.as_object_mut().unwrap().remove("traits") {
+                stated += traits.as_object().unwrap().len();
+            }
+            let above = crate::inherit::above(&stripped, &entry.family, &entry.genus).unwrap();
+            let bare =
+                crate::inherit::inherit(&entry.file(), &own, &above, library.program_params())
+                    .unwrap();
+            // The notes on traits left in `own` stay out of the spec too.
+            assert_eq!(
+                bare.spec,
+                library.inherited(&entry.id).unwrap().spec,
+                "{}",
+                entry.id
+            );
+        }
+        // The library states characters, so the test tests something.
+        assert!(stated > 20, "{stated}");
     }
 
     fn source_of_program(name: &str) -> &'static str {

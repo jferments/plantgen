@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Achillea",
+  "traits": {
+    "capitulum_kind": "radiate",
+    "receptacle": "paleate",
+    "pappus": "absent"
+  },
+  "evidence": {
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "fna-19",
+      "note": "FNA's account of the genus: each head has a ring of pistillate ray florets round its bisexual disc florets."
+    },
+    "traits.receptacle": {
+      "evidence": "SourceInferred",
+      "source": "fna-19",
+      "note": "FNA's account of the genus: the receptacle, flat to slightly convex (rarely conic), bears thin, often folded chaffy scales (paleae) among the florets."
+    },
+    "traits.pappus": {
+      "evidence": "SourceInferred",
+      "source": "oregonflora",
+      "note": "OregonFlora's key to the genus: the flattened, somewhat winged fruits bear no pappus."
+    }
+  }
+}

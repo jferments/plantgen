@@ -122,6 +122,60 @@ fn rules_and_traits_say_where_they_come_from() {
     );
 }
 
+/// `plantc traits` prints the vocabulary as a tree of organs, and a
+/// species' characters with the file and source of each; `plantc audit`
+/// counts what each species states of the characters that apply to it.
+#[test]
+fn traits_and_audit_show_what_is_stated() {
+    let vocabulary = stdout(&plantc(&["traits"]));
+    assert!(
+        vocabulary.contains("\nplant: the whole plant"),
+        "{vocabulary}"
+    );
+    assert!(
+        vocabulary.contains("\n      capitulum, where inflorescence_unit is capitulum: "),
+        "{vocabulary}"
+    );
+    assert!(
+        vocabulary.contains("\n          - ray_florets: a count from 1 to 200\n"),
+        "{vocabulary}"
+    );
+
+    let yarrow = stdout(&plantc(&["traits", "achillea-millefolium"]));
+    assert!(
+        yarrow.starts_with("achillea-millefolium (Achillea millefolium): states "),
+        "{yarrow}"
+    );
+    let own = "asteraceae/achillea/achillea-millefolium/spec.json";
+    for line in [
+        format!("\n  ray_florets = 5 to 8 (low 3)  ({own}; fna-19)\n"),
+        "\n  inflorescence_unit = capitulum  (asteraceae/family.json; vicflora)\n".to_string(),
+        "\n  receptacle = paleate  (asteraceae/achillea/genus.json; fna-19)\n".to_string(),
+        "\n  reproduction = flowers  (_ranks/clade/angiosperms.json; openstax-biology-2e)\n"
+            .to_string(),
+    ] {
+        assert!(yarrow.contains(&line), "{line} in {yarrow}");
+    }
+    // Single flowers, spikelets and cones are not a daisy's.
+    let absent = yarrow
+        .lines()
+        .find_map(|line| line.strip_prefix("organs that do not apply: "))
+        .unwrap();
+    for organ in ["flower", "spikelet", "cone"] {
+        assert!(absent.split(", ").any(|name| name == organ), "{absent}");
+    }
+
+    let audit = stdout(&plantc(&["audit"]));
+    assert!(audit.contains(" species state "), "{audit}");
+    assert!(audit.contains("\n  asteraceae "), "{audit}");
+    let grasses = stdout(&plantc(&["audit", "Poaceae"]));
+    assert!(grasses.starts_with("poaceae: "), "{grasses}");
+    assert!(grasses.contains("\n  dactylis-glomerata "), "{grasses}");
+    assert!(grasses.contains("\nMost often missing: "), "{grasses}");
+    assert!(!plantc(&["audit", "no-such-taxon"]).status.success());
+    assert!(!plantc(&["traits", "no-such-species"]).status.success());
+}
+
 #[test]
 fn a_library_folder_replaces_built_in_species() {
     let dir = scratch("library");
