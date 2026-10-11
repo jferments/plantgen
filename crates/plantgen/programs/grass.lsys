@@ -18,9 +18,13 @@
 # which the rules at the vascular plants set from a taxon's
 # phyllotaxis_pattern.
 #
+# Revision 3 (spec rework M7): each blade is drawn within a `leaf`
+# structure, and its pieces, tip and thatch are pieces of it, so a grown
+# grass knows which pieces make one leaf.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem grass 2;
+lsystem grass 3;
 
 param tillers = 80;           # living tillers in a mature tussock
 param tiller_rate = 0.5;      # cohort size: tillers * (1 - exp(-tiller_rate * age))
@@ -64,10 +68,12 @@ module Fl;                    # where a tiller may raise a culm
 module Cm;                    # the base of a culm
 module Cu(s, j);              # a culm: j leaves still to place, s between nodes
 
-organ blade leaf area blade_area;
-organ blade_tip leaf area tip_area;
-organ thatch leaf area thatch_area;
+organ blade leaf as piece area blade_area;
+organ blade_tip leaf as piece area tip_area;
+organ thatch leaf as piece area thatch_area;
 organ panicle flower area panicle_area;
+
+structure leaf leaf;          # one leaf: its blade's pieces, later its thatch
 
 tool light@1 { cell = light_cell, extinction = 0.5 };
 
@@ -98,7 +104,7 @@ decompose Lv(j) -> ;
 
 # The pieces' lengths fall by 0.88 each, so the first is
 # len * 0.12 / (1 - 0.88^pieces).
-decompose Bl(len, a) -> Pc(0, len * 0.12 / (1 - pow(0.88, pieces)), a);
+decompose Bl(len, a) -> leaf Pc(0, len * 0.12 / (1 - pow(0.88, pieces)), a);
 decompose Pc(k, s, a) : k < pieces - 1 -> blade(s) f(s) Bd(a) Pc(k + 1, s * 0.88, a);
 decompose Pc(k, s, a) -> blade_tip(s);
 interpret Bd(a) -> /(gauss() * twist) &(a + thatch_droop * min(age, 1));

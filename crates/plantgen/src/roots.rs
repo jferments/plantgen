@@ -385,6 +385,7 @@ mod tests {
             born: 0.0,
             shed: None,
             body: 0,
+            within: None,
         };
         PlantGraph {
             age: 30.0,
@@ -399,6 +400,7 @@ mod tests {
                 })
                 .collect(),
             organs: Vec::new(),
+            structures: Vec::new(),
         }
     }
 

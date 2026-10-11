@@ -234,6 +234,7 @@ pub fn triangles(form: &FruitForm, fruit: &Fruit) -> usize {
         born: 0.0,
         shed: None,
         light: 1.0,
+        within: None,
     };
     let mut mesh = Mesh::default();
     let part = Part {
@@ -689,6 +690,7 @@ mod tests {
             born: 1.0,
             shed: Some(2.0),
             light: 1.0,
+            within: None,
         };
         let part = Part {
             born: 1.0,

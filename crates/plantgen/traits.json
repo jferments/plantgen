@@ -78,6 +78,12 @@
       "po": {"id": "PO:0025359", "name": "sorus"},
       "why": "a cluster of sporangia on a fern's leaf, on its underside or along its edge"
     },
+    "spine": {
+      "part_of": "stem",
+      "category": "organ",
+      "when": {"spines": ["areoles", "thorns", "prickles", "leaf_spines"]},
+      "why": "a hard, sharp point that arms a plant, whichever organ it is made from (the spines character says which): a thorn, a shoot (PO:0025172); a prickle, from the bark's skin (PO:0025169); a leaf, stipule or leaf stalk turned spine (PO:0025173, PO:0025174, PO:0025613); or a cactus's spines from an areole. The Plant Ontology has no one term for them all"
+    },
     "inflorescence": {
       "part_of": "stem",
       "category": "group",

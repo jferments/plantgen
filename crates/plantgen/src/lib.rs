@@ -52,6 +52,7 @@ pub mod math;
 pub mod mesh;
 pub mod niche;
 pub mod occlusion;
+pub mod organs;
 pub mod package;
 pub mod parts;
 pub mod preview;
@@ -115,5 +116,8 @@ pub mod venation;
 /// spikelets; a tapered branch bears fewer units, each as long as on a
 /// branch of full length, instead of as many smaller ones; and a
 /// cluster's card holds units that reach past its organ's tip, which it
-/// cut off.
-pub const GENERATOR_REVISION: u32 = 18;
+/// cut off. 19: every organ type has a term, what it is, and a program
+/// may declare structures that what it draws is within (`crate::organs`,
+/// spec rework M7); the grass, herb, fern and palm programs draw their
+/// leaves and fronds in them, and a graph with structures is `APGRAPH2`.
+pub const GENERATOR_REVISION: u32 = 19;

@@ -877,6 +877,7 @@ mod tests {
             born: 2.0,
             shed: Some(3.0),
             light: 1.0,
+            within: None,
         }
     }
 
@@ -973,6 +974,7 @@ mod tests {
             height: 1.0,
             segments: Vec::new(),
             organs: vec![organ(0.03)],
+            structures: Vec::new(),
         };
         graph.organs[0].born = 0.0;
         graph.organs[0].shed = None;

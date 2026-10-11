@@ -36,9 +36,13 @@
 # out. A leaning trunk (lean, upturn) turns back toward the sky; a creeping
 # palm (lean near 90) runs along the ground with its crown raised.
 #
+# Revision 2 (spec rework M7): each frond is drawn within a `frond`
+# structure: a feather frond's leaflets are leaflets of it, and a fan's
+# rays, the dead frond hanging and the boot are pieces of it.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem palm 1;
+lsystem palm 2;
 
 # The plant.
 param vigour_spread = 0.1;    # a palm grows exp(gauss() * vigour_spread) times as fast
@@ -118,11 +122,13 @@ module Cc(z);                 # the crown's cone, z long
 module Sb(n);                 # the plant's foot: suckers sent out so far
 module Sk(n);                 # a sucker on its runner, the n-th
 
-organ leaflet leaf area leaflet_area;
-organ ray leaf area ray_area;
-organ dead leaf area dead_area;
-organ boot leaf area boot_area;
+organ leaflet leaf as leaflet area leaflet_area;
+organ ray leaf as piece area ray_area;
+organ dead leaf as piece area dead_area;
+organ boot leaf as piece area boot_area;
 organ cone cone area cone_area;
+
+structure frond leaf;         # one frond: its petiole, rachis, leaflets or rays, then its dead frond and boot
 
 axiom [ Sb(0) ] /(uniform(0, 360)) &(uniform(0, lean)) Y(exp(gauss() * vigour_spread), 0);
 
@@ -155,13 +161,16 @@ rule Pc(k, m, s, e) : age >= frond_life -> ;
 rule Dh(s) : age >= dead_life && boots > 0 -> Bt;
 rule Dh(s) : age >= dead_life -> ;
 rule Bt : age >= boot_life -> ;
+# The frond holds its dead frond and boot until they go: a generous bound,
+# since what is gone leaves nothing within it.
+rule frond : age >= frond_life + dead_life + boot_life + 4 * dt -> ;
 interpret Dh(s) -> &(dead_angle) dead(s);
 interpret Bt -> &(60) boot(boot_length);
 
 # A frond: its petiole, then its rachis piece by piece, and a fan frond's
 # rays at the end. The rays share the frond's birth, so they die with it.
-decompose Fr(s, a, e) : fan > 0 -> Pc(0, max(1, round(pieces)), s, e) Ry(0, max(1, round(rays)), s, e);
-decompose Fr(s, a, e) -> Pc(0, max(1, round(pieces)), s, e);
+decompose Fr(s, a, e) : fan > 0 -> frond Pc(0, max(1, round(pieces)), s, e) Ry(0, max(1, round(rays)), s, e);
+decompose Fr(s, a, e) -> frond Pc(0, max(1, round(pieces)), s, e);
 decompose Ry(j, m, s, e) : m > 1 ->
     Ry(j, floor(m / 2), s, e) Ry(j + floor(m / 2), m - floor(m / 2), s, e);
 rule Ry(j, m, s, e) : age >= frond_life -> ;

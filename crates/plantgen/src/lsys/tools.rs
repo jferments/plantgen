@@ -2515,6 +2515,7 @@ mod tests {
             born: 0.0,
             segment: None,
             node: None,
+            within: None,
         }
     }
 

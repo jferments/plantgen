@@ -1505,7 +1505,9 @@ fn parts_command(args: &[String]) -> Result<(), Failure> {
                 born: 0.0,
                 shed: None,
                 light: 1.0,
+                within: None,
             }],
+            structures: Vec::new(),
         };
         for level in [0, 1] {
             let lod = quality
@@ -1691,10 +1693,12 @@ fn year_command(args: &[String]) -> Result<(), Failure> {
                         born: 0.0,
                         shed: None,
                         light: 1.0,
+                        within: None,
                     }]
                 } else {
                     Vec::new()
                 },
+                structures: Vec::new(),
             };
             let plant = mesh::build(
                 &alone,
