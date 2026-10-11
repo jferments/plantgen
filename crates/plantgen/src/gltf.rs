@@ -79,6 +79,21 @@ pub struct Document {
     nodes: Vec<Value>,
     extensions_used: Vec<String>,
     extensions_required: Vec<String>,
+    /// How each buffer view may be compressed, and whether it is.
+    codecs: Vec<Codec>,
+    meshopt: bool,
+}
+
+/// What a buffer view holds, which says how `EXT_meshopt_compression`
+/// may compress it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Codec {
+    /// Bytes stored as they are, such as images.
+    None,
+    /// Elements of this many bytes: vertex or instance arrays.
+    Attributes(usize),
+    /// Triangle indices of this many bytes.
+    Triangles(usize),
 }
 
 /// An index into one of a document's arrays.
@@ -90,13 +105,20 @@ impl Document {
         Self::default()
     }
 
-    /// Append `bytes` as a buffer view, four-byte aligned.
-    fn view(&mut self, bytes: &[u8], target: Option<u32>) -> Index {
-        self.strided_view(bytes, target, None)
+    /// Append `bytes`, which hold `codec`'s kind of data, as a buffer view,
+    /// four-byte aligned.
+    fn view(&mut self, bytes: &[u8], target: Option<u32>, codec: Codec) -> Index {
+        self.strided_view(bytes, target, None, codec)
     }
 
     /// [`Self::view`] whose elements are `stride` bytes apart.
-    fn strided_view(&mut self, bytes: &[u8], target: Option<u32>, stride: Option<usize>) -> Index {
+    fn strided_view(
+        &mut self,
+        bytes: &[u8],
+        target: Option<u32>,
+        stride: Option<usize>,
+        codec: Codec,
+    ) -> Index {
         while !self.buffer.len().is_multiple_of(4) {
             self.buffer.push(0);
         }
@@ -112,6 +134,7 @@ impl Document {
         }
         self.buffer.extend_from_slice(bytes);
         self.buffer_views.push(Value::Object(view));
+        self.codecs.push(codec);
         self.buffer_views.len() - 1
     }
 
@@ -132,7 +155,7 @@ impl Document {
             .iter()
             .flat_map(|value| value.to_le_bytes())
             .collect();
-        let view = self.view(&bytes, Some(ARRAY_BUFFER));
+        let view = self.view(&bytes, Some(ARRAY_BUFFER), Codec::Attributes(4 * width));
         let mut accessor = Map::new();
         accessor.insert("bufferView".into(), json!(view));
         accessor.insert("componentType".into(), json!(FLOAT));
@@ -200,6 +223,7 @@ impl Document {
             &bytes,
             Some(ARRAY_BUFFER),
             (stride != width * size).then_some(stride),
+            Codec::Attributes(stride),
         );
         let mut accessor = Map::new();
         accessor.insert("bufferView".into(), json!(view));
@@ -244,7 +268,7 @@ impl Document {
             .iter()
             .flat_map(|value| value.to_le_bytes())
             .collect();
-        let view = self.view(&bytes, None);
+        let view = self.view(&bytes, None, Codec::Attributes(4 * width));
         let kind = ["SCALAR", "VEC2", "VEC3", "VEC4"][width - 1];
         self.accessors.push(json!({
             "bufferView": view,
@@ -266,6 +290,16 @@ impl Document {
         }
     }
 
+    /// Compress the vertex, index and instance arrays with
+    /// `EXT_meshopt_compression` ([`crate::meshopt`]), which the file then
+    /// requires: their buffer views hold no bytes of their own, in a
+    /// fallback buffer with none, and each names its compressed stream in
+    /// the binary chunk. Images stay as they are.
+    pub fn meshopt(&mut self) {
+        self.meshopt = true;
+        self.extension("EXT_meshopt_compression", true);
+    }
+
     /// Triangle indices, as unsigned shorts when every one fits.
     pub fn indices(&mut self, indices: &[u32]) -> Index {
         let short = indices.iter().all(|&index| index < u32::from(u16::MAX));
@@ -280,7 +314,8 @@ impl Document {
                 .flat_map(|index| index.to_le_bytes())
                 .collect()
         };
-        let view = self.view(&bytes, Some(ELEMENT_ARRAY_BUFFER));
+        let size = if short { 2 } else { 4 };
+        let view = self.view(&bytes, Some(ELEMENT_ARRAY_BUFFER), Codec::Triangles(size));
         self.accessors.push(json!({
             "bufferView": view,
             "componentType": if short { UNSIGNED_SHORT } else { UNSIGNED_INT },
@@ -292,7 +327,7 @@ impl Document {
 
     /// A PNG image held in the binary chunk.
     pub fn png(&mut self, name: &str, png: &[u8]) -> Index {
-        let view = self.view(png, None);
+        let view = self.view(png, None, Codec::None);
         self.images.push(json!({
             "name": name,
             "bufferView": view,
@@ -357,18 +392,35 @@ impl Document {
             ("samplers", self.samplers),
             ("images", self.images),
             ("accessors", self.accessors),
-            ("bufferViews", self.buffer_views),
         ];
         for (name, array) in arrays {
             if !array.is_empty() {
                 root.insert(name.into(), Value::Array(array));
             }
         }
-        let mut binary = self.buffer;
+        let (views, mut binary, fallback) = if self.meshopt {
+            compress(self.buffer_views, &self.codecs, &self.buffer)
+        } else {
+            (self.buffer_views, self.buffer, 0)
+        };
+        if !views.is_empty() {
+            root.insert("bufferViews".into(), Value::Array(views));
+        }
         while !binary.len().is_multiple_of(4) {
             binary.push(0);
         }
-        if !binary.is_empty() {
+        if fallback > 0 {
+            root.insert(
+                "buffers".into(),
+                json!([
+                    { "byteLength": binary.len() },
+                    {
+                        "byteLength": fallback,
+                        "extensions": { "EXT_meshopt_compression": { "fallback": true } },
+                    },
+                ]),
+            );
+        } else if !binary.is_empty() {
             root.insert("buffers".into(), json!([{ "byteLength": binary.len() }]));
         }
         let mut text = serde_json::to_vec(&Value::Object(root)).unwrap_or_default();
@@ -400,6 +452,70 @@ impl Document {
     }
 }
 
+/// Buffer views of `buffer` compressed as `codecs` say: the views, the
+/// binary chunk holding each compressed stream and every view stored as it
+/// is, and the length of the fallback buffer the compressed views lay out
+/// their decompressed bytes in.
+fn compress(views: Vec<Value>, codecs: &[Codec], buffer: &[u8]) -> (Vec<Value>, Vec<u8>, usize) {
+    let mut binary = Vec::new();
+    let mut fallback = 0;
+    let views = views
+        .into_iter()
+        .zip(codecs)
+        .map(|(mut view, &codec)| {
+            let offset = field(&view, "byteOffset").unwrap_or(0);
+            let length = field(&view, "byteLength").unwrap_or(0);
+            let bytes = &buffer[offset..offset + length];
+            while !binary.len().is_multiple_of(4) {
+                binary.push(0);
+            }
+            let (stream, mode, stride) = match codec {
+                Codec::None => {
+                    view["byteOffset"] = json!(binary.len());
+                    binary.extend_from_slice(bytes);
+                    return view;
+                }
+                Codec::Attributes(stride) => (
+                    crate::meshopt::encode_attributes(bytes, stride),
+                    "ATTRIBUTES",
+                    stride,
+                ),
+                Codec::Triangles(size) => {
+                    let indices: Vec<u32> = bytes
+                        .chunks_exact(size)
+                        .map(|index| match *index {
+                            [a, b] => u32::from(u16::from_le_bytes([a, b])),
+                            [a, b, c, d] => u32::from_le_bytes([a, b, c, d]),
+                            _ => 0,
+                        })
+                        .collect();
+                    (
+                        crate::meshopt::encode_triangles(&indices),
+                        "TRIANGLES",
+                        size,
+                    )
+                }
+            };
+            view["buffer"] = json!(1);
+            view["byteOffset"] = json!(fallback);
+            view["extensions"] = json!({
+                "EXT_meshopt_compression": {
+                    "buffer": 0,
+                    "byteOffset": binary.len(),
+                    "byteLength": stream.len(),
+                    "byteStride": stride,
+                    "mode": mode,
+                    "count": length / stride,
+                },
+            });
+            binary.extend_from_slice(&stream);
+            fallback += length.div_ceil(4) * 4;
+            view
+        })
+        .collect();
+    (views, binary, fallback)
+}
+
 /// What a checked file holds.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct Summary {
@@ -422,6 +538,9 @@ pub struct Glb<'a> {
     pub json: Value,
     /// The binary chunk, empty when the file has none.
     pub binary: &'a [u8],
+    /// Each buffer past the binary chunk, a fallback holding the views
+    /// `EXT_meshopt_compression` decompresses into it.
+    fallbacks: Vec<Vec<u8>>,
 }
 
 impl<'a> Glb<'a> {
@@ -462,7 +581,21 @@ impl<'a> Glb<'a> {
         } else {
             &[]
         };
-        Ok(Self { json, binary })
+        let fallbacks = decompress(&json, binary)?;
+        Ok(Self {
+            json,
+            binary,
+            fallbacks,
+        })
+    }
+
+    /// Buffer `index`'s bytes: the binary chunk's, or a fallback buffer's as
+    /// decompressed.
+    fn buffer(&self, index: usize) -> Option<&[u8]> {
+        match index {
+            0 => Some(self.binary),
+            _ => self.fallbacks.get(index - 1).map(Vec::as_slice),
+        }
     }
 
     /// Accessor `index`'s components as doubles, normalized integers read
@@ -521,8 +654,8 @@ impl<'a> Glb<'a> {
             return Err(format!("accessor {index} runs past its buffer view"));
         }
         let bytes = self
-            .binary
-            .get(start..end)
+            .buffer(field(view, "buffer").unwrap_or(0))
+            .and_then(|buffer| buffer.get(start..end))
             .ok_or(format!("accessor {index} is outside the buffer"))?;
         let mut values = Vec::with_capacity(count * width);
         for item in 0..count {
@@ -542,6 +675,80 @@ impl<'a> Glb<'a> {
         }
         Ok((values, width))
     }
+}
+
+/// The buffers after the binary chunk, which hold no bytes of their own,
+/// with every buffer view that `EXT_meshopt_compression` stores in the
+/// binary chunk decompressed into its place in them.
+fn decompress(json: &Value, binary: &[u8]) -> Result<Vec<Vec<u8>>, String> {
+    let empty = Vec::new();
+    let buffers = json
+        .get("buffers")
+        .and_then(Value::as_array)
+        .unwrap_or(&empty);
+    // A compressed stream holds at most 64 bytes for each of its own (16
+    // zeros per two bits of group widths), which bounds what a fallback
+    // buffer can need.
+    let most = binary.len().saturating_mul(64).saturating_add(256);
+    let mut fallbacks: Vec<Vec<u8>> = buffers
+        .iter()
+        .skip(1)
+        .map(|buffer| {
+            let length = field(buffer, "byteLength").unwrap_or(0);
+            if buffer.get("uri").is_some() || length > most {
+                return Err("a buffer outside the file".to_string());
+            }
+            Ok(vec![0; length])
+        })
+        .collect::<Result<_, _>>()?;
+    let views = json
+        .get("bufferViews")
+        .and_then(Value::as_array)
+        .unwrap_or(&empty);
+    for (index, view) in views.iter().enumerate() {
+        let Some(compressed) = view.pointer("/extensions/EXT_meshopt_compression") else {
+            continue;
+        };
+        let error = |what: &str| format!("buffer view {index}'s compression {what}");
+        if field(compressed, "buffer") != Some(0) {
+            return Err(error("is not in the binary chunk"));
+        }
+        let at = field(compressed, "byteOffset").unwrap_or(0);
+        let stream = field(compressed, "byteLength")
+            .and_then(|length| binary.get(at..at + length))
+            .ok_or_else(|| error("runs past the binary chunk"))?;
+        let (count, stride) = (
+            field(compressed, "count").ok_or_else(|| error("has no count"))?,
+            field(compressed, "byteStride").ok_or_else(|| error("has no stride"))?,
+        );
+        if !matches!(
+            compressed.get("filter").and_then(Value::as_str),
+            None | Some("NONE")
+        ) {
+            return Err(error("uses a filter this reader lacks"));
+        }
+        let bytes = match compressed.get("mode").and_then(Value::as_str) {
+            Some("ATTRIBUTES") => crate::meshopt::decode_attributes(stream, count, stride)?,
+            Some("TRIANGLES") if stride == 2 || stride == 4 => {
+                crate::meshopt::decode_triangles(stream, count)?
+                    .into_iter()
+                    .flat_map(|index| index.to_le_bytes().into_iter().take(stride))
+                    .collect()
+            }
+            _ => return Err(error("has a mode this reader lacks")),
+        };
+        let offset = field(view, "byteOffset").unwrap_or(0);
+        let target = field(view, "buffer")
+            .and_then(|buffer| buffer.checked_sub(1))
+            .and_then(|buffer| fallbacks.get_mut(buffer))
+            .and_then(|buffer| buffer.get_mut(offset..offset + bytes.len()))
+            .ok_or_else(|| error("does not fit its fallback buffer"))?;
+        if field(view, "byteLength") != Some(bytes.len()) {
+            return Err(error("decompresses to another length"));
+        }
+        target.copy_from_slice(&bytes);
+    }
+    Ok(fallbacks)
 }
 
 /// A component's value as glTF reads it: a normalized integer as a share
@@ -588,7 +795,10 @@ pub fn check(glb: &[u8]) -> Result<Summary, String> {
     for (index, view) in array("bufferViews").iter().enumerate() {
         let offset = field(view, "byteOffset").unwrap_or(0);
         let length = field(view, "byteLength").ok_or("a buffer view has no length")?;
-        if offset + length > glb.binary.len() || !offset.is_multiple_of(4) {
+        let size = glb
+            .buffer(field(view, "buffer").unwrap_or(0))
+            .map_or(0, <[u8]>::len);
+        if offset + length > size || !offset.is_multiple_of(4) {
             return Err(format!("buffer view {index} is outside the buffer"));
         }
     }
@@ -900,6 +1110,56 @@ mod tests {
             read.accessor(2).unwrap(),
             (vec![0.0, 0.0, 1.0, 0.0, 0.0, 1.0], 2)
         );
+    }
+
+    #[test]
+    #[allow(clippy::float_cmp)]
+    fn compressed_arrays_are_read_back() {
+        let mut document = Document::new();
+        document.meshopt();
+        let positions: Vec<f32> = (0u16..300).map(|at| f32::from(at % 17) * 0.25).collect();
+        let positions = document.attribute(&positions, 3, true);
+        let indices: Vec<u32> = (0..96).map(|at| (at * 7) % 100).collect();
+        let indices = document.indices(&indices);
+        let image = document.png("image", &[1, 2, 3, 4, 5]);
+        let mesh = document.mesh(
+            "points",
+            vec![json!({ "attributes": { "POSITION": positions }, "indices": indices })],
+        );
+        let node = document.node(json!({ "mesh": mesh }));
+        let glb = document.glb(
+            json!({ "version": "2.0" }),
+            &[node],
+            json!({ "image": image }),
+        );
+        assert_eq!(check(&glb).expect("a valid file").triangles, 32);
+        let read = Glb::read(&glb).unwrap();
+        assert_eq!(
+            read.json["extensionsRequired"],
+            json!(["EXT_meshopt_compression"])
+        );
+        let views = read.json["bufferViews"].as_array().unwrap();
+        assert_eq!(
+            views[0]["extensions"]["EXT_meshopt_compression"]["mode"],
+            "ATTRIBUTES"
+        );
+        assert_eq!(
+            views[1]["extensions"]["EXT_meshopt_compression"]["mode"],
+            "TRIANGLES"
+        );
+        // The image is stored as it is, in the binary chunk.
+        assert_eq!(views[2]["buffer"], 0);
+        assert!(views[2].get("extensions").is_none());
+        let (values, width) = read.accessor(positions).unwrap();
+        assert_eq!(width, 3);
+        assert_eq!(values.len(), 300);
+        assert!(
+            values
+                .iter()
+                .enumerate()
+                .all(|(at, &value)| value == f64::from(u16::try_from(at).unwrap() % 17) * 0.25)
+        );
+        assert_eq!(read.accessor(indices).unwrap().0.len(), 96);
     }
 
     #[test]

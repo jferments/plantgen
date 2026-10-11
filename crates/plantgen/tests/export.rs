@@ -403,3 +403,63 @@ fn growth_and_wind_attributes_can_be_left_out() {
         }
     }
 }
+
+#[test]
+fn meshopt_files_hold_the_quantized_arrays_compressed() {
+    let inputs = Inputs::new(&small_spec(), &TINY).unwrap();
+    let plant = export::grow(&inputs, 0, 8.0).unwrap();
+    let export = |compression| {
+        let settings = Settings {
+            compression,
+            ..Settings::default()
+        };
+        export::export(&inputs, &plant, &settings, None).unwrap()
+    };
+    let (quantized, compressed) = (export(Compression::Quantize), export(Compression::Meshopt));
+    for (quantized, compressed) in quantized.levels.iter().zip(&compressed.levels) {
+        assert_eq!(quantized.summary, compressed.summary);
+        assert_eq!(quantized.position_step, compressed.position_step);
+        assert!(compressed.glb.len() * 3 < quantized.glb.len() * 2);
+        let (a, b) = (
+            Glb::read(&quantized.glb).unwrap(),
+            Glb::read(&compressed.glb).unwrap(),
+        );
+        let required = b.json["extensionsRequired"].as_array().unwrap();
+        assert!(required.contains(&Value::from("EXT_meshopt_compression")));
+        assert_eq!(
+            b.json
+                .pointer("/buffers/1/extensions/EXT_meshopt_compression/fallback"),
+            Some(&Value::Bool(true))
+        );
+        // Every array reads back as the quantized file holds it; triangles
+        // at most turned.
+        let indices: Vec<usize> = a.json["meshes"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .flat_map(|mesh| mesh["primitives"].as_array().unwrap().clone())
+            .map(|primitive| usize::try_from(primitive["indices"].as_u64().unwrap()).unwrap())
+            .collect();
+        for accessor in 0..a.json["accessors"].as_array().unwrap().len() {
+            let (want, got) = (
+                a.accessor(accessor).unwrap().0,
+                b.accessor(accessor).unwrap().0,
+            );
+            if !indices.contains(&accessor) {
+                assert_eq!(want, got, "accessor {accessor}");
+                continue;
+            }
+            assert_eq!(want.len(), got.len());
+            for (want, got) in want.as_chunks::<3>().0.iter().zip(got.as_chunks::<3>().0) {
+                let turns = [
+                    [want[0], want[1], want[2]],
+                    [want[1], want[2], want[0]],
+                    [want[2], want[0], want[1]],
+                ];
+                assert!(turns.contains(&[got[0], got[1], got[2]]));
+            }
+        }
+    }
+    let index: Value = serde_json::from_slice(&compressed.index).unwrap();
+    assert_eq!(index["compression"], "meshopt");
+}

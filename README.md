@@ -67,9 +67,9 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   it goes into a content-addressed package whose key hashes the spec, the
   program and the generator's revision. `plantc export` writes a plant as
   glTF binary files (`.glb`), one per level of detail, that game engines
-  and Blender open as they are; `--compress quantize` makes them several
-  times smaller for viewers that read glTF's quantization and instancing
-  extensions.
+  and Blender open as they are; `--compress quantize` or `meshopt` makes
+  them several times smaller for viewers that read glTF's quantization,
+  instancing and meshopt extensions.
 - **Ground.** Tiling textures of what plants lay on the ground: needles,
   leaves, thatch, twigs, mosses and grasses, and each canopy species' own
   litter.

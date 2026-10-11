@@ -222,7 +222,8 @@ Usage:
   plantc export <species|spec.json|package.afterplant> [--out DIR]
                 [--format glb] [--env ENV] [--seed N] [--age N]
                 [--shade attribute|baked] [--quality draft|standard]
-                [--compress none|quantize] [--attributes all|wind|none]
+                [--compress none|quantize|meshopt]
+                [--attributes all|wind|none]
       Write one variant at one age as glTF 2.0 binary files that need no
       PlantGen code, one per level of detail (STEM-lod0.glb to
       STEM-lod3.glb), and an index, STEM.json, in DIR (default `exports`);
@@ -236,7 +237,10 @@ Usage:
       normals and colours as small integers and parts as instances, a
       quarter to a half smaller; such files need KHR_mesh_quantization and
       EXT_mesh_gpu_instancing, which three.js, Unity's glTFast and current
-      Blender read and Godot does not. --attributes wind leaves out the
+      Blender read and Godot does not. --compress meshopt also compresses
+      every array (EXT_meshopt_compression, which three.js reads with its
+      meshopt decoder), 3 to 4 times smaller again: the 30-year bigleaf
+      maple's nearest level is 7 MiB. --attributes wind leaves out the
       growth attributes (_PLANTGEN_BIRTH, _PLANTGEN_SHED), none also the
       wind ones (_PLANTGEN_WIND, _PLANTGEN_RADIUS).
   plantc sources [list | cite ID]
@@ -2009,8 +2013,11 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
     let compression = match options.flags.get("compress").map(String::as_str) {
         None | Some("none") => export::Compression::None,
         Some("quantize") => export::Compression::Quantize,
+        Some("meshopt") => export::Compression::Meshopt,
         Some(other) => {
-            return Err(format!("unknown compression `{other}`; use none or quantize").into());
+            return Err(
+                format!("unknown compression `{other}`; use none, quantize or meshopt").into(),
+            );
         }
     };
     let attributes = match options.flags.get("attributes").map(String::as_str) {

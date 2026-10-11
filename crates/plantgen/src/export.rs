@@ -42,8 +42,11 @@
 //! instances of one node (`EXT_mesh_gpu_instancing`). Files then require
 //! both extensions, which three.js, Babylon.js, Unity's glTFast and
 //! Blender's current importer read and Godot's does not; the default
-//! files need none. [`Attributes`] leaves out the growth or wind
-//! attributes below for a model that never grows or sways.
+//! files need none. [`Compression::Meshopt`] also compresses every
+//! vertex, index and instance array (`EXT_meshopt_compression`,
+//! [`crate::meshopt`]), which three.js (with its decoder), Unity's glTFast
+//! and Blender's current importer read. [`Attributes`] leaves out the
+//! growth or wind attributes below for a model that never grows or sways.
 //!
 //! Positions are metres from the plant's foot with +Y up, as glTF's are.
 //! Besides glTF's own attributes, solid meshes carry `PlantGen`'s, which
@@ -61,7 +64,7 @@
 //! the variant, the age and the species' provenance in `extras`. The same
 //! inputs give the same bytes on every machine.
 //!
-//! Not yet: meshopt compression, levels drawn to a budget, the bark's
+//! Not yet: levels drawn to a budget, the bark's
 //! pattern (a tile per species or a bake per tree, waiting on the owner's
 //! call), normal and roughness maps, tangents, impostors,
 //! coverage-preserving mipmaps (PNG holds no mipmaps), wind and growth
@@ -125,6 +128,9 @@ pub enum Compression {
     /// (`KHR_mesh_quantization`) and parts as instances
     /// (`EXT_mesh_gpu_instancing`), both required by the files.
     Quantize,
+    /// As [`Self::Quantize`], with every array compressed
+    /// (`EXT_meshopt_compression`), required too.
+    Meshopt,
 }
 
 impl Compression {
@@ -133,6 +139,7 @@ impl Compression {
         match self {
             Self::None => "none",
             Self::Quantize => "quantize",
+            Self::Meshopt => "meshopt",
         }
     }
 }
@@ -791,10 +798,13 @@ fn level_glb(
     extras: &dyn Fn(Option<f32>) -> Value,
 ) -> (Vec<u8>, Option<f32>) {
     let templates = &inputs.templates;
-    let quantize = settings.compression == Compression::Quantize;
+    let quantize = settings.compression != Compression::None;
     let mut document = Document::new();
     if quantize {
         document.extension("KHR_mesh_quantization", true);
+    }
+    if settings.compression == Compression::Meshopt {
+        document.meshopt();
     }
     let mut children = Vec::new();
     let mut steps = Vec::new();
