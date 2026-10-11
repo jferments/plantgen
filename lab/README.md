@@ -152,6 +152,7 @@ builds its graphics stack.
   through `plantgen::drawing`, turns it into meshes, card templates and a
   camera framing, and writes the sidecar. No Bevy, no GPU; tested on the
   CPU.
+- `ui` (`plantlab-ui`): the window's look and controls (below).
 - `app` (`plantlab`): draws scenes with Bevy 0.19 (the version Project
   After uses), without a window. `src/shaders/card.wgsl` cuts each organ
   card out by its template and blends its colour exactly as
@@ -177,5 +178,10 @@ A cold build of this workspace took 10.5 minutes on a 4-core cloud
 session (2026-10-08, before the window; 388 crates in its lock then, 479
 with the window, egui and the captions).
 
-`src/theme.rs` is a copy of Project After's `lab-ui` theme, owned here and
-never synced (no shared UI crate, by the owner's choice).
+`ui` (`plantlab-ui`) is the interface kit: the theme and its fonts (Inter
+4.1, JetBrains Mono 2.304 and Phosphor's icons; `ui/fonts/README.md` gives
+each file's source and SHA-256), the controls, boards of cards, and the
+figures cards draw. It depends on egui and `egui-phosphor` only, so its
+tests run without Bevy. It is a copy of WorldLab's redesigned interface
+from Project After's `lab-ui`, owned here and never synced: PlantGen never
+depends on After (no shared UI crate, by the owner's choice).

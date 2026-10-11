@@ -9,6 +9,8 @@ license = "MIT"
 [dependencies]
 plantgen.workspace = true
 plantlab-scene.workspace = true
+# The interface kit: theme, fonts, widgets, boards.
+plantlab-ui.workspace = true
 bevy.workspace = true
 bevy_egui.workspace = true
 # The version Bevy uses, for choosing the GPU by index (`src/gpu.rs`).

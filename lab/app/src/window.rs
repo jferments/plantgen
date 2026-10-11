@@ -40,7 +40,7 @@ use crate::record::{self, PLANT_LAYER, Recorder, Recording, Take, WINDOW_LAYER};
 use crate::render::{
     PlantAssets, add_materials, camera_look, exposure, spawn_plant, spawn_sun, to_rgba8,
 };
-use crate::theme;
+use plantlab_ui::theme;
 
 /// How `plantlab open` starts the window.
 #[allow(clippy::struct_excessive_bools, reason = "the command's switches")]
@@ -516,7 +516,7 @@ fn panel(
                 ui.heading("PlantLab");
                 ui.label(
                     egui::RichText::new("Grown by PlantGen, as plantc grows it")
-                        .color(theme::MUTED),
+                        .color(theme::TEXT_2),
                 );
                 ui.separator();
 
@@ -622,7 +622,7 @@ fn panel(
                         .num_columns(2)
                         .show(ui, |ui| {
                             let mut row = |name: &str, value: String| {
-                                ui.label(egui::RichText::new(name).color(theme::MUTED));
+                                ui.label(egui::RichText::new(name).color(theme::TEXT_2));
                                 ui.label(value);
                                 ui.end_row();
                             };
@@ -659,7 +659,7 @@ fn panel(
                         );
                     ui.separator();
                     ui.label(
-                        egui::RichText::new("Render it without the window:").color(theme::MUTED),
+                        egui::RichText::new("Render it without the window:").color(theme::TEXT_2),
                     );
                     let mut text = command(&shown.shot);
                     ui.add(
@@ -678,7 +678,7 @@ fn panel(
                         "Drag to turn the plant, middle-drag or Shift-drag to move it, \
                      scroll to come closer.",
                     )
-                    .color(theme::MUTED),
+                    .color(theme::TEXT_2),
                 );
             });
         });
@@ -752,7 +752,7 @@ fn growth_controls(ui: &mut egui::Ui, lab: &mut Lab) {
     });
     ui.checkbox(&mut lab.auto, "Grow when the settings change");
     if !lab.auto && lab.dirty && !growing {
-        ui.label(egui::RichText::new("Settings changed: press Grow").color(theme::MUTED));
+        ui.label(egui::RichText::new("Settings changed: press Grow").color(theme::TEXT_2));
     }
     ui.horizontal(|ui| {
         if ui
@@ -1126,7 +1126,7 @@ fn measure_controls(ui: &mut egui::Ui, lab: &mut Lab) {
                 measure::length(step, step),
                 measure::length(step * 5.0, step * 5.0)
             ))
-            .color(theme::MUTED),
+            .color(theme::TEXT_2),
         );
     }
 }
@@ -1222,10 +1222,11 @@ fn picture_controls(ui: &mut egui::Ui, lab: &Lab, recording: &mut Recording) {
         ui.checkbox(&mut recording.pngs, "and PNGs");
     });
     ui.label(
-        egui::RichText::new(format!("Saved in {}", recording.folder.display())).color(theme::MUTED),
+        egui::RichText::new(format!("Saved in {}", recording.folder.display()))
+            .color(theme::TEXT_2),
     );
     if !recording.message.is_empty() {
-        ui.label(egui::RichText::new(&recording.message).color(theme::MUTED));
+        ui.label(egui::RichText::new(&recording.message).color(theme::TEXT_2));
     }
 }
 

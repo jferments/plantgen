@@ -3,7 +3,7 @@
 # dependencies and never builds Bevy.
 [workspace]
 resolver = "3"
-members = ["scene", "app"]
+members = ["scene", "ui", "app"]
 
 [workspace.package]
 version = "0.0.0"
@@ -13,6 +13,7 @@ publish = false
 [workspace.dependencies]
 plantgen = { path = "../crates/plantgen" }
 plantlab-scene = { path = "scene" }
+plantlab-ui = { path = "ui" }
 bevy = { version = "=0.19.1", default-features = false, features = [
     "std",
     "async_executor",
@@ -42,6 +43,10 @@ bevy_egui = { version = "=0.42.0", default-features = false, features = [
     "render",
     "default_fonts",
 ] }
+# The egui bevy_egui draws with, for the interface kit (`ui`), and
+# Phosphor's icons as its font.
+egui = { version = "=0.36.2", default-features = false, features = ["default_fonts"] }
+egui-phosphor = { version = "=0.14.0", default-features = false, features = ["regular"] }
 
 [workspace.lints.rust]
 unsafe_code = "forbid"

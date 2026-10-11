@@ -16,7 +16,6 @@ mod record;
 mod render;
 #[cfg(feature = "solari")]
 mod solari;
-mod theme;
 mod window;
 
 use std::fmt::Write as _;
