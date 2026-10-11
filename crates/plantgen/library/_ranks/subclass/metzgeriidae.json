@@ -2,5 +2,15 @@
   "schema": 1,
   "rank": "subclass",
   "name": "Metzgeriidae",
-  "parent": "class/jungermanniopsida"
+  "parent": "class/jungermanniopsida",
+  "traits": {
+    "body_plan": "thalloid"
+  },
+  "evidence": {
+    "traits.body_plan": {
+      "evidence": "SourceInferred",
+      "source": "wikstrom-2009-liverworts",
+      "note": "Metzgeriidae, with Pelliidae, are the simple thalloid liverworts, set beside the leafy ones in Jungermanniopsida (Wikström, He-Nygrén and Shaw 2009)."
+    }
+  }
 }

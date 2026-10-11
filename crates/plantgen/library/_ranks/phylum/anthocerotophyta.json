@@ -2,5 +2,18 @@
   "schema": 1,
   "rank": "phylum",
   "name": "Anthocerotophyta",
-  "parent": "kingdom/plantae"
+  "parent": "kingdom/plantae",
+  "traits": {
+    "body_plan": "thalloid",
+    "anchorage": "rhizoids",
+    "reproduction": "spores",
+    "sporangia": "capsule"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "anbg-bryophytes",
+      "note": "A hornwort is a thallus held to its ground by smooth rhizoids from its underside; it spreads by spores, which form in its sporophyte, a long horn that grows from the thallus and splits as they ripen (Australian Bryophytes, 'What is a hornwort?')."
+    }
+  }
 }

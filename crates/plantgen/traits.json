@@ -1,76 +1,166 @@
 {
-  "schema": 2,
-  "about": "Every character a record, a rank file or a species' spec may state (growth plan G2.2, and the characters of the spec rework): its group, the organ it describes, its type and its unit, values or range. Vocabulary only: the rules that turn characters into spec values live in the taxa they hold for. Types: number (a quantity in its unit), count (a whole number), bool, enum (one of its values), enums (a list of its values), months (a list of months, 1 to 12), colour (sRGB, three numbers 0 to 255), text (a line in PlantGen's own words), ids (species ids). A number or count may instead be a range, {\"min\": 5, \"max\": 8}, with the rare extremes beyond it as `low` and `high` and the most usual value as `typical`: a flora's (3-)5-8 is {\"min\": 5, \"max\": 8, \"low\": 3}. A range says how the plant varies, not how sure a source is. An enum or bool may instead be qualified, each state with how often it occurs (usually, often, sometimes, rarely): usually opposite, rarely alternate is {\"opposite\": \"usually\", \"alternate\": \"rarely\"}. Organs are the parts characters describe, the whole plant, a tissue such as bark and a group such as an inflorescence among them, so far those of vascular plants; each but the plant is part of another. An organ with a `when` exists only where one of those characters takes one of the values listed (a qualified value counts with each of its states), and its characters apply only there; a character's own `when` narrows it further, as leaves_per_whorl applies only to whorled leaves. A character marked `optional` is one many plants have nothing to state for, and the audit never counts it missing.",
+  "schema": 3,
+  "about": "Every character a record, a rank file or a species' spec may state (growth plan G2.2, and the characters of the spec rework): its group, the organ it describes, its type and its unit, values or range. Vocabulary only: the rules that turn characters into spec values live in the taxa they hold for. Types: number (a quantity in its unit), count (a whole number), bool, enum (one of its values), enums (a list of its values), months (a list of months, 1 to 12), colour (sRGB, three numbers 0 to 255), text (a line in PlantGen's own words), ids (species ids). A number or count may instead be a range, {\"min\": 5, \"max\": 8}, with the rare extremes beyond it as `low` and `high` and the most usual value as `typical`: a flora's (3-)5-8 is {\"min\": 5, \"max\": 8, \"low\": 3}. A range says how the plant varies, not how sure a source is. An enum or bool may instead be qualified, each state with how often it occurs (usually, often, sometimes, rarely): usually opposite, rarely alternate is {\"opposite\": \"usually\", \"alternate\": \"rarely\"}. Organs are the parts characters describe, from the thallus of a seaweed to the bark of a tree; each but the whole plant is part of another, and each has a category from `categories`: the whole plant, an axis, an organ, a group or a tissue. An organ may be one of a kind from `kinds` (`is_a`), as each kind of floret is a floret, and a character of the kind applies wherever an organ of that kind exists. Where the Plant Ontology has a term for the same structure, `po` names it, from the release `po_release`. An organ with a `when` exists only where one of those characters takes one of the values listed (a qualified value counts with each of its states, and a character that cannot apply takes none of them), and its characters apply only there; a character's own `when` narrows it further, as leaves_per_whorl applies only to whorled leaves. A character with `at_most` is never above the one it names, as a typical height is never above the greatest. A character marked `optional` is one many plants have nothing to state for, and the audit never counts it missing.",
   "groups": ["form", "size", "stem_and_bark", "leaves", "flowers", "fruit_and_cones", "seasons", "ecology", "interactions", "shedding", "architecture"],
+  "categories": {
+    "whole": "the whole plant, which every other organ is part of",
+    "axis": "a body that grows at its tips and may branch, bearing other parts along it: roots, a stem, a thallus, rhizoids",
+    "organ": "a part of limited growth, borne whole: a leaf, a flower or floret, a fruit, a seed, a spore capsule, a holdfast",
+    "group": "parts packed together on a shared axis or base and seen as one: an inflorescence, a head, a spikelet, a cone, a sorus",
+    "tissue": "a layer of another part, such as bark"
+  },
+  "po_release": "releases/2026-01-09",
   "organs": {
     "plant": {
+      "category": "whole",
+      "po": {"id": "PO:0000003", "name": "whole plant"},
       "why": "the whole plant: its form, size, life and where it grows"
     },
     "root": {
       "part_of": "plant",
-      "why": "what grows underground to anchor the plant and take up water"
+      "category": "axis",
+      "when": {"anchorage": ["roots"]},
+      "po": {"id": "PO:0025025", "name": "root system"},
+      "why": "the roots, which grow underground to anchor the plant and take up water"
+    },
+    "rhizoid": {
+      "part_of": "plant",
+      "category": "axis",
+      "when": {"anchorage": ["rhizoids"]},
+      "po": {"id": "PO:0030078", "name": "rhizoid"},
+      "why": "a thread of one cell or a row of cells that holds a plant without roots to its ground, as in mosses, liverworts, hornworts and stoneworts"
+    },
+    "holdfast": {
+      "part_of": "plant",
+      "category": "organ",
+      "when": {"anchorage": ["holdfast"]},
+      "why": "the disc, cushion or tangle of threads that holds a seaweed to rock or shell"
     },
     "stem": {
       "part_of": "plant",
-      "why": "the shoots that bear leaves, flowers and cones, and the wood they lay down"
+      "category": "axis",
+      "when": {"body_plan": ["vascular", "leafy"]},
+      "po": {"id": "PO:0025029", "name": "shoot axis"},
+      "why": "the shoots that bear leaves, flowers and cones, and the wood they lay down; a moss's or leafy liverwort's stem among them"
+    },
+    "thallus": {
+      "part_of": "plant",
+      "category": "axis",
+      "when": {"body_plan": ["thalloid"]},
+      "po": {"id": "PO:0030027", "name": "thallus"},
+      "why": "a body not divided into stem and leaves: the forking ribbon of a thalloid liverwort or hornwort, or the blades, branches, threads or crusts of an alga"
     },
     "bark": {
       "part_of": "stem",
+      "category": "tissue",
       "when": {"woodiness": ["woody", "semi"]},
+      "po": {"id": "PO:0004518", "name": "bark"},
       "why": "the outer layer of a woody stem"
     },
     "leaf": {
       "part_of": "stem",
-      "why": "a leaf from its stalk to its tip; a fern's frond and a grass's blade are leaves"
+      "category": "organ",
+      "when": {"leaf_bearing": ["true"]},
+      "po": {"id": "PO:0025034", "name": "leaf"},
+      "why": "a leaf from its stalk to its tip; a fern's frond, a grass's blade and a moss's leaf are leaves"
     },
     "leaflet": {
       "part_of": "leaf",
+      "category": "organ",
       "when": {"leaf_division": ["compound"]},
+      "po": {"id": "PO:0020049", "name": "leaflet"},
       "why": "one of the separate blades of a compound leaf"
+    },
+    "sorus": {
+      "part_of": "leaf",
+      "category": "group",
+      "when": {"sporangia": ["sori"]},
+      "po": {"id": "PO:0025359", "name": "sorus"},
+      "why": "a cluster of sporangia on a fern's leaf, on its underside or along its edge"
     },
     "inflorescence": {
       "part_of": "stem",
+      "category": "group",
       "when": {"reproduction": ["flowers"]},
+      "po": {"id": "PO:0009049", "name": "inflorescence"},
       "why": "a flowering shoot: how flowers, heads or spikelets are grouped"
     },
     "flower": {
       "part_of": "inflorescence",
+      "category": "organ",
       "when": {"inflorescence_unit": ["flower"]},
+      "po": {"id": "PO:0009046", "name": "flower"},
       "why": "a single flower, where single flowers make up the inflorescence"
     },
     "capitulum": {
       "part_of": "inflorescence",
+      "category": "group",
       "when": {"inflorescence_unit": ["capitulum"]},
+      "po": {"id": "PO:0030121", "name": "capitulum inflorescence"},
       "why": "a head: florets packed on a shared receptacle inside a ring of bracts (phyllaries), as in the daisy family"
     },
     "ray_floret": {
       "part_of": "capitulum",
+      "is_a": "floret",
+      "category": "organ",
       "when": {"capitulum_kind": ["radiate"]},
+      "po": {"id": "PO:0025331", "name": "ray flower"},
       "why": "a floret at the rim of a radiate head, its corolla drawn out into a strap (lamina)"
     },
     "disc_floret": {
       "part_of": "capitulum",
+      "is_a": "floret",
+      "category": "organ",
       "when": {"capitulum_kind": ["radiate", "discoid", "disciform"]},
+      "po": {"id": "PO:0025332", "name": "disk flower"},
       "why": "a floret in the middle of a head, its corolla a small tube"
     },
     "ligulate_floret": {
       "part_of": "capitulum",
+      "is_a": "floret",
+      "category": "organ",
       "when": {"capitulum_kind": ["liguliflorous"]},
       "why": "a floret of a head made only of strap-shaped florets, as in dandelions"
     },
     "spikelet": {
       "part_of": "inflorescence",
+      "category": "group",
       "when": {"inflorescence_unit": ["spikelet"]},
+      "po": {"id": "PO:0009051", "name": "spikelet"},
       "why": "the unit of grasses and sedges: florets on a small axis, in grasses above a pair of glumes"
     },
     "fruit": {
       "part_of": "inflorescence",
+      "category": "organ",
+      "po": {"id": "PO:0009001", "name": "fruit"},
       "why": "a ripe fruit, from a flower or floret"
     },
     "cone": {
       "part_of": "stem",
-      "when": {"reproduction": ["cones"]},
-      "why": "a seed cone"
+      "category": "group",
+      "when": {"reproduction": ["cones"], "sporangia": ["cones"]},
+      "po": {"id": "PO:0025083", "name": "strobilus"},
+      "why": "a cone (strobilus): scales packed on a short axis at a shoot's tip, bearing seeds (a conifer's seed cone) or spores (the cone of a horsetail or clubmoss)"
+    },
+    "seed": {
+      "part_of": "stem",
+      "category": "organ",
+      "when": {"reproduction": ["solitary_seeds"]},
+      "po": {"id": "PO:0009010", "name": "seed"},
+      "why": "a seed borne alone on a shoot, outside any fruit or cone, often in a fleshy cup or coat: the yew's aril, the ginkgo's outer coat"
+    },
+    "capsule": {
+      "part_of": "plant",
+      "category": "organ",
+      "when": {"sporangia": ["capsule"]},
+      "po": {"id": "PO:0025094", "name": "sporangium"},
+      "why": "the spore capsule of a moss, liverwort or hornwort, which grows from the plant and sheds its spores; a hornwort's is a long green horn"
+    }
+  },
+  "kinds": {
+    "floret": {
+      "category": "organ",
+      "why": "a small flower packed with others in a head; each kind of floret is a floret, and a character of the floret applies wherever one of them does"
     }
   },
   "traits": {
@@ -95,6 +185,34 @@
       "values": ["flowers", "cones", "solitary_seeds", "spores"],
       "why": "how it bears seeds or spores: seeds in fruit from flowers, seeds open on the scales of cones, seeds borne singly or in pairs outside any cone (yews, ginkgo), or spores and no seeds"
     },
+    "body_plan": {
+      "group": "form",
+      "organ": "plant",
+      "type": "enum",
+      "values": ["vascular", "leafy", "thalloid", "unicellular"],
+      "why": "what the plant's body is built of: stems and leaves with veins (ferns, horsetails, clubmosses and seed plants), a small leafy shoot without veins (mosses and leafy liverworts), a thallus not divided into stem and leaves (thalloid liverworts, hornworts and most seaweeds), or single cells, alone or in colonies"
+    },
+    "anchorage": {
+      "group": "form",
+      "organ": "plant",
+      "type": "enum",
+      "values": ["roots", "rhizoids", "holdfast", "none"],
+      "why": "what holds the plant to its ground: roots; rhizoids, threads of one cell or a row of cells (mosses, liverworts, hornworts, stoneworts); a holdfast at a seaweed's foot; or nothing, where it floats or hangs free"
+    },
+    "leaf_bearing": {
+      "group": "form",
+      "organ": "plant",
+      "type": "bool",
+      "why": "whether a plant with stems bears leaves: false where it has none, as in most cacti, whose spines stand in for them"
+    },
+    "sporangia": {
+      "group": "fruit_and_cones",
+      "organ": "plant",
+      "type": "enum",
+      "values": ["sori", "cones", "capsule"],
+      "when": {"reproduction": ["spores"]},
+      "why": "where a plant that spreads by spores bears its sporangia: in sori on its leaves (most ferns), in cones at the tips of its shoots (horsetails, most clubmosses), or in a capsule that grows from the plant (mosses, liverworts, hornworts)"
+    },
     "woodiness": {
       "group": "form",
       "organ": "stem",
@@ -106,7 +224,7 @@
       "group": "form",
       "organ": "leaf",
       "type": "enum",
-      "values": ["evergreen", "deciduous", "semi", "drought_deciduous", "leafless"],
+      "values": ["evergreen", "deciduous", "semi", "drought_deciduous"],
       "why": "how long leaves stay on through the year"
     },
     "life_span": {
@@ -143,6 +261,7 @@
       "type": "number",
       "unit": "m",
       "range": [0.001, 130],
+      "at_most": "height_max_m",
       "why": "a grown plant's usual height"
     },
     "crown_width_max_m": {
@@ -176,6 +295,21 @@
       "unit": "m",
       "range": [0.001, 100],
       "why": "the deepest roots reach"
+    },
+    "thallus_form": {
+      "group": "form",
+      "organ": "thallus",
+      "type": "enum",
+      "values": ["ribbon", "blade", "branched", "filaments", "crust"],
+      "why": "the shape a thallus grows in: a flat ribbon forking as it grows (thalloid liverworts, hornworts), a thin blade or sheet (sea lettuce, nori), a bush of branches (stoneworts, most red seaweeds), threads (filamentous algae), or a crust on rock or shell (coralline algae)"
+    },
+    "thallus_length_m": {
+      "group": "size",
+      "organ": "thallus",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 10],
+      "why": "a grown thallus, from its base or oldest part to its farthest tip"
     },
     "branching": {
       "group": "stem_and_bark",
@@ -535,13 +669,20 @@
       "range": [0, 2],
       "why": "the empty bracts at a spikelet's base"
     },
+    "awns": {
+      "group": "flowers",
+      "organ": "spikelet",
+      "type": "bool",
+      "why": "whether its florets' lemmas end in an awn, a stiff bristle"
+    },
     "awn_length_m": {
       "group": "flowers",
       "organ": "spikelet",
       "type": "number",
       "unit": "m",
-      "range": [0, 0.5],
-      "why": "the bristle on a floret's lemma, 0 where it has none"
+      "range": [0.0001, 0.5],
+      "when": {"awns": ["true"]},
+      "why": "the awn on a floret's lemma"
     },
     "sexual_system": {
       "group": "flowers",
@@ -590,7 +731,58 @@
       "type": "number",
       "unit": "m",
       "range": [0.002, 0.7],
-      "why": "a ripe seed cone"
+      "why": "a ripe cone"
+    },
+    "seed_length_m": {
+      "group": "fruit_and_cones",
+      "organ": "seed",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 0.1],
+      "why": "a ripe seed with its aril or fleshy coat"
+    },
+    "seed_colour_ripe": {
+      "group": "fruit_and_cones",
+      "organ": "seed",
+      "type": "colour",
+      "why": "a ripe seed as it is seen: its aril or fleshy coat where it has one"
+    },
+    "sorus_shape": {
+      "group": "fruit_and_cones",
+      "organ": "sorus",
+      "type": "enum",
+      "values": ["round", "oblong", "linear", "marginal"],
+      "why": "a sorus's outline: a round dot, a short oblong or hook, a line along a vein or the midrib, or a band along the leaf's edge"
+    },
+    "indusium": {
+      "group": "fruit_and_cones",
+      "organ": "sorus",
+      "type": "enum",
+      "values": ["none", "kidney", "shield", "flap", "margin"],
+      "why": "what covers a young sorus: nothing, a kidney-shaped flap, a round shield on a central stalk, a flap along one side, or the leaf's own edge rolled over it"
+    },
+    "capsule_length_m": {
+      "group": "fruit_and_cones",
+      "organ": "capsule",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0002, 0.15],
+      "why": "a ripe capsule, or a hornwort's horn, from base to tip"
+    },
+    "seta": {
+      "group": "fruit_and_cones",
+      "organ": "capsule",
+      "type": "bool",
+      "why": "whether a stalk, the seta, lifts the capsule above the plant, as in most mosses and liverworts; a hornwort's horn grows straight from the thallus"
+    },
+    "seta_length_m": {
+      "group": "fruit_and_cones",
+      "organ": "capsule",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.2],
+      "when": {"seta": ["true"]},
+      "why": "the seta, from the plant to the capsule"
     },
     "leaf_out_months": {
       "group": "seasons",
@@ -611,6 +803,7 @@
       "type": "number",
       "unit": "m",
       "range": [-450, 6800],
+      "at_most": "elevation_max_m",
       "why": "the lowest it grows"
     },
     "elevation_max_m": {

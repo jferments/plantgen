@@ -919,6 +919,10 @@ pub struct Inherited {
     /// Each trait as it stands at the species: its value, the file that
     /// set it and that file's note on it.
     pub traits: BTreeMap<String, Stated>,
+    /// Each trait the species has, as each file down the chain stated it,
+    /// farthest first: every statement since the nearest that deleted it,
+    /// the last one the value in `traits`.
+    pub statements: BTreeMap<String, Vec<Stated>>,
     /// Each rule, by the path it sets: the file it is in, and `None` if it
     /// set the path, else why it did not.
     pub rules: BTreeMap<String, (String, Option<String>)>,
@@ -985,6 +989,7 @@ pub fn inherit(
     let mut notes: BTreeMap<String, (Origin, Value)> = BTreeMap::new();
     let mut traits: BTreeMap<String, (Value, usize)> = BTreeMap::new();
     let mut trait_notes: BTreeMap<String, Option<Value>> = BTreeMap::new();
+    let mut statements: BTreeMap<String, Vec<Stated>> = BTreeMap::new();
     let mut rules: Rules = BTreeMap::new();
     for (index, (label, part)) in layers.iter().enumerate() {
         let origin = (label.clone(), index);
@@ -1002,6 +1007,7 @@ pub fn inherit(
             if value.is_null() {
                 traits.remove(key);
                 trait_notes.remove(key);
+                statements.remove(key);
             } else {
                 traits.insert(key.clone(), (value.clone(), index));
                 let note = part
@@ -1009,6 +1015,11 @@ pub fn inherit(
                     .get(&format!("traits.{key}"))
                     .or_else(|| part.notes.get("traits"));
                 trait_notes.insert(key.clone(), note.cloned());
+                statements.entry(key.clone()).or_default().push(Stated {
+                    value: value.clone(),
+                    file: label.clone(),
+                    note: note.cloned(),
+                });
             }
         }
         for (path, rule) in &part.rules {
@@ -1068,6 +1079,7 @@ pub fn inherit(
                 (key, Stated { value, file, note })
             })
             .collect(),
+        statements,
         rules: outcomes,
     })
 }

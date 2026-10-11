@@ -2,5 +2,15 @@
   "schema": 1,
   "rank": "phylum",
   "name": "Chlorophyta",
-  "parent": "kingdom/plantae"
+  "parent": "kingdom/plantae",
+  "traits": {
+    "body_plan": {"unicellular": "often", "thalloid": "often"}
+  },
+  "evidence": {
+    "traits.body_plan": {
+      "evidence": "SourceInferred",
+      "source": "openstax-biology-2e",
+      "note": "Green algae range from single cells, such as Chlamydomonas, and colonies of cells, such as Volvox, to many-celled thalli, such as the sea lettuce Ulva (Biology 2e, 23.3 and 25.2)."
+    }
+  }
 }
