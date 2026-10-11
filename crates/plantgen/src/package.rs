@@ -129,7 +129,7 @@ use crate::math::Vec3;
 use crate::mesh::{self, Card, LodSpec, Mesh, PlantMesh};
 use crate::quality::Quality;
 use crate::raster;
-use crate::spec::{Environment, PlantSpec, SpecError, Variant};
+use crate::spec::{Appearance, Environment, PlantSpec, SpecError, Variant};
 use crate::spines::Tuft;
 use crate::templates::Templates;
 
@@ -1146,7 +1146,7 @@ pub fn build(
 
     // What each organ and structure is within must be something it is part
     // of (spec rework M7).
-    let organ_types = organ_types(&program, &inputs.looks, &grown);
+    let organ_types = organ_types(&program, &spec.appearance, &grown);
     for (variant, growth) in variants.iter().zip(&grown) {
         let organs: Vec<(&str, &str)> = organ_types
             .iter()
@@ -1195,10 +1195,8 @@ pub fn build(
 
 /// The organ types as a package gives them: a growth's, each with its
 /// term from the program, its look or its kind (`crate::organs`).
-fn organ_types(program: &Program, looks: &[Look], grown: &[Growth]) -> Vec<OrganType> {
-    let kinds: Vec<_> = program.organs().map(|(_, kind)| kind).collect();
-    let explicit: Vec<_> = program.organ_terms().collect();
-    let terms = crate::organs::terms(&kinds, &explicit, looks);
+fn organ_types(program: &Program, appearance: &Appearance, grown: &[Growth]) -> Vec<OrganType> {
+    let terms = crate::organs::of_program(program, appearance);
     grown
         .first()
         .map(|growth| growth.organ_types.clone())

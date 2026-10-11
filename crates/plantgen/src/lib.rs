@@ -128,4 +128,7 @@ pub mod venation;
 /// id and birth (organ phases, spec rework M7), so a grass's thatch is
 /// the blade it was and falls only once; and a head with a season opens
 /// from its rim by the day, its bud the head itself, closed.
-pub const GENERATOR_REVISION: u32 = 20;
+/// 21: an organ type's term no longer hangs on the day a package shows
+/// (spec rework M7B): a cluster a stage draws whole, as an alder's
+/// catkins in flower, is an inflorescence on every day.
+pub const GENERATOR_REVISION: u32 = 21;

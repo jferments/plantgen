@@ -334,6 +334,58 @@ fn grow_says_when_a_plant_has_died() {
     assert!(!grown.contains("-0"), "{grown}");
 }
 
+/// `plantc organs` counts a plant by what its parts are, down to what
+/// its organs' layouts draw (spec rework M7B).
+#[test]
+fn organs_counts_a_plant_by_what_its_parts_are() {
+    // A grass: its leaves drawn as pieces, its panicles of spikelets,
+    // each of two glumes and five awned florets.
+    let fescue = stdout(&plantc(&["organs", "festuca-roemeri", "--age", "2"]));
+    for line in [
+        "Roemer's fescue (festuca-roemeri), open environment, seed 1: 2 years, day 196\n",
+        "\n  leaf ",
+        "\n    piece ",
+        " per leaf ",
+        "`blade` ",
+        "\n  inflorescence ",
+        "\n    spikelet ",
+        "\n      glume ",
+        " 2.0 per spikelet\n",
+        "\n      spikelet floret ",
+        "\n        awn ",
+    ] {
+        assert!(fescue.contains(line), "{line:?} in {fescue}");
+    }
+    // Yarrow's corymbs of heads, each of phyllaries, rays and disc florets,
+    // the florets open from the rim.
+    let yarrow = stdout(&plantc(&["organs", "achillea-millefolium", "--age", "2"]));
+    for line in [
+        "\n    capitulum ",
+        " per inflorescence\n",
+        "\n      phyllary ",
+        "\n      ray floret ",
+        " per capitulum  ",
+        "\n      disc floret ",
+        " bud, ",
+        " open\n",
+    ] {
+        assert!(yarrow.contains(line), "{line:?} in {yarrow}");
+    }
+    // Fireweed in August: the lowest of each raceme's flowers in fruit,
+    // the top ones open or in bud.
+    let fireweed = stdout(&plantc(&[
+        "organs",
+        "epilobium-angustifolium",
+        "--age",
+        "2",
+        "--day",
+        "230",
+    ]));
+    assert!(fireweed.contains("\n    fruit "), "{fireweed}");
+    assert!(fireweed.contains("\n    flower "), "{fireweed}");
+    assert!(fireweed.contains(" bud, "), "{fireweed}");
+}
+
 #[test]
 fn mistakes_fail_with_a_message_and_no_output() {
     for args in [

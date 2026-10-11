@@ -99,11 +99,12 @@ cargo build --release
 
 `plantc help` lists every command: growing a plant and printing its size
 at every age, rendering it at one age or every age, its organs through the
-year, its card textures and the ground's looks, building packages,
-exporting a plant as glTF, listing the sources a species' values cite
-(`plantc sources cite ID` finds every value that names one), and a
-species' characters and what each family has stated so far
-(`plantc traits`, `plantc audit`).
+year, counting its organs by what they are, down to each head's florets
+and each spikelet's glumes (`plantc organs`), its card textures and the
+ground's looks, building packages, exporting a plant as glTF, listing the
+sources a species' values cite (`plantc sources cite ID` finds every value
+that names one), and a species' characters and what each family has
+stated so far (`plantc traits`, `plantc audit`).
 `--library DIR` reads species and programs from a folder on top of the
 built-in ones, so you can write your own.
 
