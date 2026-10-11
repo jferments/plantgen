@@ -84,8 +84,30 @@ impl PartMesh {
 /// solid that fits [`TRIANGLES`], in the types' order.
 #[must_use]
 pub fn part_meshes(looks: &[Look]) -> Vec<PartMesh> {
+    part_meshes_within(looks, 1.0)
+}
+
+/// [`part_meshes`] with each type's cap ([`cap`]) times `share`, at most
+/// 1: an export drawn to a budget (`crate::export`) draws its parts
+/// coarser, and a type whose coarsest part mesh no longer fits keeps its
+/// cards.
+#[must_use]
+pub fn part_meshes_within(looks: &[Look], share: f64) -> Vec<PartMesh> {
     (0..looks.len())
-        .filter_map(|index| part_mesh(looks, index))
+        .filter_map(|index| {
+            let cap = cap(&looks[index]);
+            #[allow(
+                clippy::cast_possible_truncation,
+                clippy::cast_sign_loss,
+                clippy::cast_precision_loss
+            )]
+            let cap = if share >= 1.0 {
+                cap
+            } else {
+                (cap as f64 * share.max(0.0)) as usize
+            };
+            part_mesh(looks, index, cap)
+        })
         .collect()
 }
 
@@ -130,7 +152,7 @@ pub fn types(looks: &[Look], parts: &[PartMesh]) -> Vec<bool> {
     types
 }
 
-fn part_mesh(looks: &[Look], index: usize) -> Option<PartMesh> {
+fn part_mesh(looks: &[Look], index: usize, cap: usize) -> Option<PartMesh> {
     if !drawn_as_part(looks, index) {
         return None;
     }
@@ -186,9 +208,7 @@ fn part_mesh(looks: &[Look], index: usize) -> Option<PartMesh> {
             })
             .collect();
         if variants.iter().all(|mesh| mesh.triangle_count() > 0)
-            && variants
-                .iter()
-                .all(|mesh| mesh.triangle_count() <= cap(&looks[index]))
+            && variants.iter().all(|mesh| mesh.triangle_count() <= cap)
         {
             return Some(PartMesh {
                 template: index,

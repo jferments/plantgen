@@ -222,6 +222,9 @@ Usage:
   plantc export <species|spec.json|package.afterplant> [--out DIR]
                 [--format glb] [--env ENV] [--seed N] [--age N]
                 [--shade attribute|baked] [--quality draft|standard]
+                [--compress none|quantize|meshopt]
+                [--attributes all|wind|none]
+                [--triangles N[,N,N,N]] [--max-mib N]
       Write one variant at one age as glTF 2.0 binary files that need no
       PlantGen code, one per level of detail (STEM-lod0.glb to
       STEM-lod3.glb), and an index, STEM.json, in DIR (default `exports`);
@@ -231,7 +234,28 @@ Usage:
       grows it; given a package, every level is checked against it.
       Bark keeps its own colour, with the darkening of the plant's own
       shade as the attribute _PLANTGEN_SHADE, or with --shade baked
-      darkened as packages hold it.
+      darkened as packages hold it. --compress quantize stores positions,
+      normals and colours as small integers and parts as instances, a
+      quarter to a half smaller; such files need KHR_mesh_quantization and
+      EXT_mesh_gpu_instancing, which three.js, Unity's glTFast and current
+      Blender read and Godot does not. --compress meshopt also compresses
+      every array (EXT_meshopt_compression, which three.js reads with its
+      meshopt decoder), 3 to 4 times smaller again: the 30-year bigleaf
+      maple's nearest level is 7 MiB. --attributes wind leaves out the
+      growth attributes (_PLANTGEN_BIRTH, _PLANTGEN_SHED), none also the
+      wind ones (_PLANTGEN_WIND, _PLANTGEN_RADIUS).
+      --triangles and --max-mib draw the levels to a budget instead:
+      --triangles 500k gives the nearest level at most 500 000 triangles
+      (each part mesh instance counted) and each farther level a quarter
+      of the one before, or 500k,100k,20k,5k one count per level;
+      --max-mib 20 keeps all the level files together within 20 MiB.
+      Each level draws the most detail that fits along a dial through
+      the quality's levels and past the farthest: between two levels,
+      thin twigs go, tubes take fewer sides and rings, part meshes get
+      coarser and leaves gather into bigger cards; at each level, part
+      meshes and solid organs become cards; past the farthest, down to
+      the stems and a few cards. The index records each level's drawing
+      and budget. A budgeted export is not checked against a package.
   plantc sources [list | cite ID]
       List the sources evidence notes cite (library/sources/<id>.json),
       or every value that cites the source ID: the file holding its note,
@@ -1973,7 +1997,19 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
         args,
         &[
-            "out", "format", "quality", "program", "day", "env", "seed", "age", "shade",
+            "out",
+            "format",
+            "quality",
+            "program",
+            "day",
+            "env",
+            "seed",
+            "age",
+            "shade",
+            "compress",
+            "attributes",
+            "triangles",
+            "max-mib",
         ],
     )?;
     match options.flags.get("format").map(String::as_str) {
@@ -1988,6 +2024,53 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
         Some(other) => {
             return Err(format!("unknown shade `{other}`; use attribute or baked").into());
         }
+    };
+    let compression = match options.flags.get("compress").map(String::as_str) {
+        None | Some("none") => export::Compression::None,
+        Some("quantize") => export::Compression::Quantize,
+        Some("meshopt") => export::Compression::Meshopt,
+        Some(other) => {
+            return Err(
+                format!("unknown compression `{other}`; use none, quantize or meshopt").into(),
+            );
+        }
+    };
+    let attributes = match options.flags.get("attributes").map(String::as_str) {
+        None | Some("all") => export::Attributes::All,
+        Some("wind") => export::Attributes::Wind,
+        Some("none") => export::Attributes::None,
+        Some(other) => {
+            return Err(format!("unknown attributes `{other}`; use all, wind or none").into());
+        }
+    };
+    let budget = export::Budget {
+        triangles: options
+            .flags
+            .get("triangles")
+            .map(|given| triangle_budget(given))
+            .transpose()?,
+        bytes: options
+            .flags
+            .get("max-mib")
+            .map(|given| {
+                given
+                    .parse::<f64>()
+                    .ok()
+                    .filter(|mebibytes| mebibytes.is_finite() && *mebibytes > 0.0)
+                    .map(|mebibytes| {
+                        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                        let bytes = (mebibytes * 1_048_576.0) as usize;
+                        bytes
+                    })
+                    .ok_or_else(|| format!("--max-mib takes a size above 0, found `{given}`"))
+            })
+            .transpose()?,
+    };
+    let settings = export::Settings {
+        shade,
+        compression,
+        attributes,
+        budget,
     };
     let target = options.one_positional("a species or a package")?;
     let package_dir = Path::new(target);
@@ -2067,7 +2150,8 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
         manifest,
         object: &read,
     });
-    let exported = export::export(&inputs, &plant, shade, built.as_ref())
+    let built = built.filter(|_| !budget.is_some());
+    let exported = export::export(&inputs, &plant, &settings, built.as_ref())
         .map_err(|error| error.to_string())?;
     let out = PathBuf::from(options.flags.get("out").map_or("exports", String::as_str));
     let written = export::write(&exported, &out).map_err(|error| error.to_string())?;
@@ -2085,16 +2169,73 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
         #[allow(clippy::cast_precision_loss)]
         let mebibytes = level.glb.len() as f64 / 1_048_576.0;
         out!(
-            "  {}  {mebibytes:.1} MiB, {} triangles, {} nodes",
+            "  {}  {mebibytes:.1} MiB, {} triangles in {} meshes drawn{}",
             path.display(),
             level.summary.triangles,
-            level.summary.nodes
+            level.summary.instances,
+            level.budget.map_or(String::new(), |given| format!(
+                ", dial {:.2}{}",
+                level.detail.dial,
+                if given.fits { "" } else { ", over its budget" }
+            ))
         );
     }
     if let Some(index) = written.last() {
         out!("  {}", index.display());
     }
+    if let Some(bytes) = budget.bytes {
+        let whole: usize = exported.levels.iter().map(|level| level.glb.len()).sum();
+        #[allow(clippy::cast_precision_loss)]
+        let (whole, bytes) = (whole as f64 / 1_048_576.0, bytes as f64 / 1_048_576.0);
+        if whole <= bytes {
+            out!("  {whole:.1} MiB in all, within {bytes:.1} MiB");
+        } else {
+            out!(
+                "  {whole:.1} MiB in all, over {bytes:.1} MiB: less than the coarsest drawings take"
+            );
+        }
+    }
     Ok(())
+}
+
+/// A triangle budget: one count for the nearest level, each farther
+/// level a quarter of the one before, or a count per level separated by
+/// commas; a count may end in k (thousands) or m (millions).
+fn triangle_budget(given: &str) -> Result<[usize; export::LEVELS], String> {
+    let count = |text: &str| {
+        let text = text.trim();
+        let (number, unit) = match text.char_indices().last() {
+            Some((at, 'k' | 'K')) => (&text[..at], 1e3),
+            Some((at, 'm' | 'M')) => (&text[..at], 1e6),
+            _ => (text, 1.0),
+        };
+        number
+            .parse::<f64>()
+            .ok()
+            .map(|number| number * unit)
+            .filter(|count| count.is_finite() && *count >= 1.0)
+            .map(|count| {
+                #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                let count = count.round() as usize;
+                count
+            })
+            .ok_or_else(|| {
+                format!(
+                    "--triangles takes a count such as 500k, or {} separated by commas; found `{given}`",
+                    export::LEVELS
+                )
+            })
+    };
+    let counts = given.split(',').map(count).collect::<Result<Vec<_>, _>>()?;
+    match counts.as_slice() {
+        [nearest] => Ok(export::Budget::quartering(*nearest)),
+        _ => counts.try_into().map_err(|_| {
+            format!(
+                "--triangles takes one count or {} separated by commas; found `{given}`",
+                export::LEVELS
+            )
+        }),
+    }
 }
 
 fn inspect_command(args: &[String]) -> Result<(), Failure> {

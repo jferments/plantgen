@@ -375,6 +375,13 @@ fn vector(a: [f32; 3]) -> Vec3 {
 /// them.
 #[must_use]
 pub fn tuft_mesh(tufts: &[Tuft], looks: &[&BodyLook]) -> Mesh {
+    tuft_mesh_within(tufts, looks, 1.0)
+}
+
+/// [`tuft_mesh`] with each tuft keeping `share` of its spines (at least
+/// one), its longest: an export drawn to a budget (`crate::budget`).
+#[must_use]
+pub fn tuft_mesh_within(tufts: &[Tuft], looks: &[&BodyLook], share: f64) -> Mesh {
     let mut mesh = Mesh::default();
     let mut spines = Vec::new();
     let triangles = solid_triangles();
@@ -404,6 +411,7 @@ pub fn tuft_mesh(tufts: &[Tuft], looks: &[&BodyLook]) -> Mesh {
         }
         spines.clear();
         expand(tuft, look, &mut spines);
+        keep_longest(&mut spines, share);
         for spine in &spines {
             let first = u32::try_from(mesh.positions.len()).unwrap_or(u32::MAX);
             for vertex in 0..SPINE_VERTICES {
@@ -425,6 +433,56 @@ pub fn tuft_mesh(tufts: &[Tuft], looks: &[&BodyLook]) -> Mesh {
         }
     }
     mesh
+}
+
+/// Triangles [`tuft_mesh_within`] draws for `tufts`, without drawing
+/// them.
+#[must_use]
+pub fn tuft_triangles(tufts: &[Tuft], looks: &[&BodyLook], share: f64) -> usize {
+    let mut spines = Vec::new();
+    tufts
+        .iter()
+        .filter_map(|tuft| {
+            let look = looks.get(usize::from(tuft.body))?;
+            spines.clear();
+            expand(tuft, look, &mut spines);
+            keep_longest(&mut spines, share);
+            Some(FELT_TRIANGLES + spines.len() * SPINE_TRIANGLES)
+        })
+        .sum()
+}
+
+/// Keep `share` of `spines` (at least one), the longest, in their order.
+fn keep_longest(spines: &mut Vec<Spine>, share: f64) {
+    if share >= 1.0 || spines.len() <= 1 {
+        return;
+    }
+    #[allow(
+        clippy::cast_possible_truncation,
+        clippy::cast_sign_loss,
+        clippy::cast_precision_loss
+    )]
+    let kept = ((spines.len() as f64 * share.max(0.0)).ceil() as usize).clamp(1, spines.len());
+    let length = |spine: &Spine| {
+        let [base, _, _, tip] = spine.points;
+        let d = sub(tip, base);
+        dot(d, d)
+    };
+    let mut order: Vec<usize> = (0..spines.len()).collect();
+    order.sort_by(|&a, &b| {
+        length(&spines[b])
+            .total_cmp(&length(&spines[a]))
+            .then(a.cmp(&b))
+    });
+    let mut keep = vec![false; spines.len()];
+    for &index in &order[..kept] {
+        keep[index] = true;
+    }
+    let mut index = 0;
+    spines.retain(|_| {
+        index += 1;
+        keep[index - 1]
+    });
 }
 
 /// A tuft at the origin facing +Z with its tip toward +Y, as the card
