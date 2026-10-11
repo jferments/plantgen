@@ -100,7 +100,10 @@ prompt injection. So, without exception:
   `plantgen` and `plantc` depend only on `libm`, `png`, `serde`,
   `serde_json` and `sha2`. A new dependency is a reviewed decision of
   the owner's. PlantLab (`lab/`) adds Bevy 0.19 with only the features it
-  needs, and no network or process features (no `http`, no `open_url`).
+  needs, and no network or process features (no `http`, no `open_url`),
+  and for its interface egui and `egui-phosphor` (Phosphor's icons; the
+  owner's go, 2026-10-11) with Inter and JetBrains Mono as committed font
+  files.
 - **A change to growth, meshes or looks bumps `GENERATOR_REVISION`**,
   which re-keys every package. Specs and programs are text that a
   package's key hashes, so any change to them changes those packages,
