@@ -23,7 +23,6 @@
       "branch_angle": 45,
       "apical_young": 0.72,
       "apical": 0.6,
-      "alternate": 1,
       "leaf_size": 0.22,
       "spur_leaf": 0.2,
       "spur_pairs": 2,
@@ -110,6 +109,10 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": "distichous"
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -160,6 +163,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "barthelemy-1999-nothofagus",
+      "note": "Barthélémy and colleagues' study of the Patagonian species: past the first leaves above the cotyledons, the leaves alternate in two ranks along the stem; unlike its relatives, this species seldom sets them in three."
     }
   },
   "provenance": {

@@ -18,9 +18,14 @@
 # - head 2, a panicle: `rays` short branches up the top panicle_length of
 #   the culm, each with a cluster of spikelets (sawgrass).
 #
+# Revision 2 (phyllotaxis P1): a shoot's leaves turn divergence degrees
+# from one to the next (120: three ranks, as in sedges; 180: two, as in
+# cattails), the name every leaf-bearing program shares, which the rules
+# at the vascular plants set from a taxon's phyllotaxis_pattern.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem sedge 1;
+lsystem sedge 2;
 
 param vigour_spread = 0.1;
 param shoots_per_year = 20;
@@ -31,6 +36,7 @@ param leaves = 6;             # leaves a shoot
 param leaf_length = 1.5;
 param leaf_spread = 0.15;     # leaves are leaf_length (1 ± leaf_spread) long
 param leaf_angle = 12;        # most a leaf leans out from upright
+param divergence = 137.5;     # roll from one leaf to the next
 param flowering = 0.5;        # chance that a shoot flowers
 param flower_age = 1;         # the stand's first year of flowering
 param culm_height = 2;
@@ -80,7 +86,7 @@ rule Sm : age + 1 >= shoot_life -> %;
 decompose Lv(j, m, s) : m > 1 ->
     Lv(j, floor(m / 2), s) Lv(j + floor(m / 2), m - floor(m / 2), s);
 decompose Lv(j, m, s) : m == 1 ->
-    [ /(j * 137.5 + uniform(-20, 20)) &(leaf_angle * (j + 1) / max(1, leaves))
+    [ /(j * divergence + uniform(-20, 20)) &(leaf_angle * (j + 1) / max(1, leaves))
       leaf(s * (0.7 + 0.3 * (j + 1) / max(1, leaves))) ];
 decompose Lv(j, m, s) -> ;
 

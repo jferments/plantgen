@@ -9,7 +9,10 @@ use std::ops::Range;
 
 use super::expr::{Code, EnvValues, NO_ENV, Scope, eval, truthy};
 use super::lexer::Span;
-use super::program::{CUT, CompiledRule, FIRST_USER_SYMBOL, Item, MOVE, POP, PUSH, Program};
+use super::program::{
+    CUT, CompiledRule, FIRST_USER_SYMBOL, Item, MAX_RING, MOVE, POP, PUSH, Program, RING_SHIFT,
+    ROLL, Ring, TURTLE_ORDINAL,
+};
 use super::{GrowthError, Limits};
 use crate::cores::{self, Lease};
 use crate::rng::{Lineage, combine, hash_words, unit};
@@ -64,6 +67,11 @@ const DECOMPOSED: u32 = 1 << 30;
 const SALT_CHOICE: u64 = 0x6368_6f69;
 const SALT_AXIOM: u64 = 0x6178_696f;
 const SALT_DECOMPOSE: u64 = 0x6465_636f;
+const SALT_RING: u64 = 0x7269_6e67;
+
+/// The ordinal of the turn a ring writes after copy k's `[` (with k <<
+/// `RING_SHIFT` added): a turtle ordinal no compiled item has.
+const RING_TURN: u32 = TURTLE_ORDINAL | ((1 << RING_SHIFT) - 1);
 
 /// Where rewriting puts modules: the new string ([`Writer`]), or a chunk's
 /// record when chunks of the string are rewritten side by side ([`Raw`]).
@@ -252,22 +260,30 @@ impl<'a> Deriver<'a> {
         let program = self.program;
         let mut args = Vec::new();
         let mut stack = std::mem::take(&mut self.stack);
-        for item in &*program.axiom {
-            self.eval_args(item, &scope, &mut args, Span::default(), &mut stack)?;
-            let lineage = Lineage::root(seed, item.ordinal);
-            self.emit(
-                &mut writer,
-                item.symbol,
-                &args,
-                lineage,
-                0.0,
-                clock,
-                0.0,
-                0,
-                &mut stack,
-            )?;
-        }
+        let result = self.write(
+            &program.axiom,
+            &program.axiom_rings,
+            &scope,
+            Span::default(),
+            &mut args,
+            &mut stack,
+            |symbol, args, ordinal, _, stack| {
+                let lineage = Lineage::root(seed, ordinal);
+                self.emit(
+                    &mut writer,
+                    symbol,
+                    args,
+                    lineage,
+                    0.0,
+                    clock,
+                    0.0,
+                    0,
+                    stack,
+                )
+            },
+        );
         self.stack = stack;
+        result?;
         Ok(writer.out)
     }
 
@@ -404,25 +420,22 @@ impl<'a> Deriver<'a> {
                 )?;
                 continue;
             };
-            for (position, item) in rule.successor.iter().enumerate() {
-                self.eval_args(item, &scope, &mut args, rule.span, stack)?;
-                let (lineage, born) = if rule.continuation == Some(position) {
-                    (module.lineage, module.born)
-                } else {
-                    (module.lineage.child(clock.step, item.ordinal), next_t)
-                };
-                self.emit(
-                    sink,
-                    item.symbol,
-                    &args,
-                    lineage,
-                    born,
-                    clock,
-                    next_t,
-                    0,
-                    stack,
-                )?;
-            }
+            self.write(
+                &rule.successor,
+                &rule.rings,
+                &scope,
+                rule.span,
+                &mut args,
+                stack,
+                |symbol, args, ordinal, position, stack| {
+                    let (lineage, born) = if position.is_some() && rule.continuation == position {
+                        (module.lineage, module.born)
+                    } else {
+                        (module.lineage.child(clock.step, ordinal), next_t)
+                    };
+                    self.emit(sink, symbol, args, lineage, born, clock, next_t, 0, stack)
+                },
+            )?;
         }
         Ok(())
     }
@@ -469,20 +482,86 @@ impl<'a> Deriver<'a> {
             });
         }
         let mut args = Vec::new();
-        for item in &*rule.successor {
-            self.eval_args(item, &scope, &mut args, rule.span, stack)?;
-            let child = lineage.child(clock.step, item.ordinal | DECOMPOSED);
-            self.emit(
-                writer,
-                item.symbol,
-                &args,
-                child,
-                born,
-                clock,
-                now,
-                depth + 1,
-                stack,
-            )?;
+        self.write(
+            &rule.successor,
+            &rule.rings,
+            &scope,
+            rule.span,
+            &mut args,
+            stack,
+            |symbol, args, ordinal, _, stack| {
+                let child = lineage.child(clock.step, ordinal | DECOMPOSED);
+                self.emit(
+                    writer,
+                    symbol,
+                    args,
+                    child,
+                    born,
+                    clock,
+                    now,
+                    depth + 1,
+                    stack,
+                )
+            },
+        )
+    }
+
+    /// Write a successor (or the axiom): each item with its arguments
+    /// evaluated in `scope`, handed to `module` with its ordinal and, for
+    /// an item written as itself, its position in `items`. A ring writes
+    /// its copies in turn: copy 0 its items as they stand, copy k the
+    /// same items drawing with `scope`'s key mixed with k, their ordinals
+    /// with k << `RING_SHIFT` added, turned k * 360 / n round the heading,
+    /// by a `/` after its `[` or on an organ's own roll; they have no
+    /// position. `args` holds each item's arguments in turn.
+    #[allow(clippy::too_many_arguments)]
+    fn write<F>(
+        &self,
+        items: &[Item],
+        rings: &[Ring],
+        scope: &Scope<'_>,
+        span: Span,
+        args: &mut Vec<f64>,
+        stack: &mut Vec<f64>,
+        mut module: F,
+    ) -> Result<(), GrowthError>
+    where
+        F: FnMut(u16, &[f64], u32, Option<usize>, &mut Vec<f64>) -> Result<(), GrowthError>,
+    {
+        let mut rings = rings.iter().peekable();
+        let mut position = 0;
+        while position < items.len() {
+            let Some(ring) = rings.next_if(|ring| ring.at == position) else {
+                let item = &items[position];
+                self.eval_args(item, scope, args, span, stack)?;
+                module(item.symbol, args, item.ordinal, Some(position), stack)?;
+                position += 1;
+                continue;
+            };
+            let held = &items[ring.at..ring.at + ring.len];
+            let copies = ring_copies(ring, scope, span, stack)?;
+            for copy in 0..copies {
+                let (scope, offset) = if copy == 0 {
+                    (*scope, 0)
+                } else {
+                    let key = hash_words(&[scope.key, SALT_RING, u64::from(copy)]);
+                    (Scope { key, ..*scope }, copy << RING_SHIFT)
+                };
+                let turn = f64::from(copy) * 360.0 / f64::from(copies);
+                for (at, item) in (ring.at..).zip(held) {
+                    self.eval_args(item, &scope, args, span, stack)?;
+                    if copy > 0 && ring.len == 1 {
+                        // An organ with its own turn: [size, roll, pitch, ...].
+                        args[1] += turn;
+                    }
+                    let own = (copy == 0).then_some(at);
+                    module(item.symbol, args, item.ordinal + offset, own, stack)?;
+                    if copy > 0 && item.symbol == PUSH && at == ring.at {
+                        module(ROLL, &[turn], RING_TURN + offset, None, stack)?;
+                    }
+                }
+            }
+            position = ring.at + ring.len;
         }
         Ok(())
     }
@@ -524,6 +603,37 @@ impl<'a> Deriver<'a> {
     ) -> Result<Option<&'r CompiledRule>, GrowthError> {
         choose(rules, scope, &mut self.stack)
     }
+}
+
+/// How many copies `ring` writes in `scope`: its count rounded half away
+/// from zero, none below 1.
+///
+/// # Errors
+///
+/// Fails if the count is not finite, or above [`MAX_RING`].
+fn ring_copies(
+    ring: &Ring,
+    scope: &Scope<'_>,
+    span: Span,
+    stack: &mut Vec<f64>,
+) -> Result<u32, GrowthError> {
+    let count = eval(&ring.count, scope, stack);
+    if !count.is_finite() {
+        return Err(GrowthError::Rule {
+            span,
+            message: format!("the count of a ring evaluated to {count}"),
+        });
+    }
+    let count = count.round();
+    if count > f64::from(MAX_RING) {
+        return Err(GrowthError::Limit {
+            what: "copies in a ring",
+            limit: u64::from(MAX_RING),
+        });
+    }
+    // Checked above: a whole number no larger than MAX_RING.
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    Ok(count.max(0.0) as u32)
 }
 
 fn condition(rule: &CompiledRule, scope: &Scope<'_>, stack: &mut Vec<f64>) -> bool {
@@ -735,6 +845,87 @@ mod tests {
             0,
         );
         assert_eq!(text(&program, &string), "[B][B][B][B]");
+    }
+
+    /// A ring of one grows what its bracket alone grows. A ring of n
+    /// writes n copies, copy k turned k * 360 / n round the heading, each
+    /// drawing its own numbers, with lineages of its own.
+    #[test]
+    fn a_ring_writes_its_copies_round_the_heading() {
+        let ringed = |count: &str| {
+            format!(
+                "lsystem p 1; module A(n); organ leaf leaf; axiom A({count});
+                 rule A(n) -> F ring(n) [ &(30) leaf(uniform(0.5, 1)) ] A(n);"
+            )
+        };
+        let bracket = "lsystem p 1; module A(n); organ leaf leaf; axiom A(1);
+             rule A(n) -> F [ &(30) leaf(uniform(0.5, 1)) ] A(n);";
+        assert_eq!(run(bracket, 3).1, run(&ringed("1"), 3).1);
+
+        let (program, string) = run(&ringed("3"), 1);
+        assert_eq!(text(&program, &string), "F[&leaf][/&leaf][/&leaf]A");
+        let of = |symbol: u16| -> Vec<&Module> {
+            string
+                .modules
+                .iter()
+                .filter(|m| m.symbol == symbol)
+                .collect()
+        };
+        let turns: Vec<f64> = of(ROLL).iter().map(|m| string.params(m)[0]).collect();
+        assert_eq!(turns, [120.0, 240.0]);
+        let leaves = of(program.symbol_id("leaf").unwrap());
+        let (_, alone) = run(bracket, 1);
+        let first = alone
+            .modules
+            .iter()
+            .find(|m| m.symbol == leaves[0].symbol)
+            .unwrap();
+        assert_eq!(
+            (leaves[0].lineage, string.params(leaves[0])),
+            (first.lineage, alone.params(first))
+        );
+        let sizes: Vec<f64> = leaves.iter().map(|m| string.params(m)[0]).collect();
+        assert!(sizes[0] != sizes[1] && sizes[1] != sizes[2] && sizes[0] != sizes[2]);
+        let mut lineages: Vec<u64> = leaves.iter().map(|m| m.lineage.0).collect();
+        lineages.dedup();
+        assert_eq!(lineages.len(), 3);
+    }
+
+    /// A ring writes its count rounded half away from zero, none below 1,
+    /// and stops growth above 64; an organ that carries its own turn is
+    /// turned on its roll.
+    #[test]
+    fn a_ring_counts_whole_copies_up_to_its_limit() {
+        let rolls = |count: &str| {
+            let source =
+                format!("lsystem p 1; organ leaf leaf; axiom F ring({count}) leaf(1, 10, 30);");
+            let (program, string) = run(&source, 0);
+            let leaf = program.symbol_id("leaf").unwrap();
+            string
+                .modules
+                .iter()
+                .filter(|m| m.symbol == leaf)
+                .map(|m| string.params(m)[1])
+                .collect::<Vec<f64>>()
+        };
+        assert_eq!(rolls("4"), [10.0, 100.0, 190.0, 280.0]);
+        assert_eq!(rolls("2.5"), [10.0, 130.0, 250.0]);
+        assert!(rolls("0.4").is_empty());
+        assert!(rolls("-3").is_empty());
+        let program =
+            Program::compile("lsystem p 1; organ leaf leaf; axiom ring(65) leaf(1, 0, 30);")
+                .unwrap();
+        let limits = Limits::default();
+        let error = Deriver::new(&program, &[], &limits)
+            .axiom(1, 1.0)
+            .unwrap_err();
+        assert_eq!(
+            error,
+            GrowthError::Limit {
+                what: "copies in a ring",
+                limit: 64
+            }
+        );
     }
 
     #[test]

@@ -23,7 +23,7 @@
       "branch_angle": 50,
       "apical_young": 0.6,
       "apical": 0.5,
-      "alternate": 1,
+      "leaves_per_node": 1,
       "leaf_size": 0.24,
       "spur_leaf": 0.2,
       "spur_pairs": 2,

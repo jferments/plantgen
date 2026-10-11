@@ -67,7 +67,7 @@
 //! The module reads nothing but JSON, so the build script compiles it too
 //! and merges every built-in species' chain while compiling.
 
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::{BTreeMap, BTreeSet, btree_map::Entry};
 
 use serde_json::{Map, Value};
 
@@ -129,9 +129,10 @@ pub struct Part {
     /// vocabulary; `null` deletes an inherited one.
     pub traits: Map<String, Value>,
     /// Its `rules`: each spec path a rule sets from traits, and the rule
-    /// (`{"rule": formula}` or `{"map": {trait: {value: spec value}}}`,
-    /// with a `why`, and inside a look's `shape` the card `template` it is
-    /// for); `null` deletes an inherited one.
+    /// (`{"rule": formula}` or `{"map": {trait: {value: spec value}}}`, a
+    /// map's value a spec value or a formula `{"rule": formula}`, with a
+    /// `why`, and inside a look's `shape` the card `template` it is for);
+    /// `null` deletes an inherited one.
     pub rules: Map<String, Value>,
 }
 
@@ -409,7 +410,10 @@ fn check_rule(path: &str, rule: &Value) -> Result<(), String> {
     match (rule.get("rule"), rule.get("map")) {
         (Some(Value::String(formula)), None) => Formula::parse(formula).map(|_| ()),
         (None, Some(Value::Object(map))) => match map.iter().next() {
-            Some((_, Value::Object(_))) if map.len() == 1 => Ok(()),
+            Some((_, Value::Object(table))) if map.len() == 1 => table
+                .values()
+                .filter_map(map_formula)
+                .try_for_each(|formula| Formula::parse(formula).map(|_| ())),
             _ => Err("a `map` names one trait, then its values' spec values".into()),
         },
         _ => Err("a rule has a `rule` (a formula) or a `map`, not both".into()),
@@ -1174,13 +1178,13 @@ impl Ruled<'_> {
         };
         let mut depth = self.index;
         let mut from = Vec::new();
-        let mut inputs = BTreeMap::new();
-        for key in reads(self.rule) {
+        let mut inputs: BTreeMap<String, Value> = BTreeMap::new();
+        let mut read = |key: &str| -> Result<Value, String> {
             let path = format!("generator.params.{key}");
-            let value = if let Some((value, at)) = self.traits.get(&key) {
+            let value = if let Some((value, at)) = self.traits.get(key) {
                 depth = depth.max(*at);
                 from.push(format!("{key} from {}", self.layers[*at].0));
-                reading(&key, value)?
+                reading(key, value)?
             } else if let Some(value) = find(spec, &path) {
                 // A parameter as the files, or a rule that ran before this
                 // one, set it.
@@ -1190,14 +1194,33 @@ impl Ruled<'_> {
                 }
                 value.clone()
             } else if let (Some(program), Some(Some(default))) =
-                (program, params.and_then(|params| params.get(&key)))
+                (program, params.and_then(|params| params.get(key)))
             {
                 from.push(format!("{key} from program `{program}`"));
                 Value::from(*default)
             } else {
                 return Err(format!("no `{key}` to read"));
             };
-            inputs.insert(key, value);
+            Ok(value)
+        };
+        // A map reads its trait, then only what the value it picks reads.
+        if let Some((key, table)) = map_of(self.rule) {
+            let value = read(key)?;
+            let picked = table.get(&state(&value)).and_then(map_formula);
+            inputs.insert(key.clone(), value);
+            if let Some(formula) = picked {
+                for name in Formula::parse(formula)?.names() {
+                    if let Entry::Vacant(entry) = inputs.entry(name) {
+                        let value = read(entry.key())?;
+                        entry.insert(value);
+                    }
+                }
+            }
+        } else {
+            for key in reads(self.rule) {
+                let value = read(&key)?;
+                inputs.insert(key, value);
+            }
         }
         if let Some((label, by)) = origins.get(self.path)
             && *by >= depth
@@ -1283,15 +1306,51 @@ fn order(rules: &Rules) -> Vec<(&str, Vec<String>)> {
     order
 }
 
-/// The names a rule reads: its formula's (traits or parameters), or its
-/// map's trait.
+/// The names a rule may read: its formula's (traits or parameters), or its
+/// map's trait and what its values' formulas read.
 fn reads(rule: &Map<String, Value>) -> Vec<String> {
-    match (rule.get("rule"), rule.get("map")) {
-        (Some(Value::String(formula)), _) => Formula::parse(formula)
-            .map(|formula| formula.names().into_iter().collect())
-            .unwrap_or_default(),
-        (_, Some(Value::Object(map))) => map.keys().cloned().collect(),
-        _ => Vec::new(),
+    let names = |formula: &str| {
+        Formula::parse(formula)
+            .map(|formula| formula.names())
+            .unwrap_or_default()
+    };
+    if let Some(Value::String(formula)) = rule.get("rule") {
+        return names(formula).into_iter().collect();
+    }
+    let Some((key, table)) = map_of(rule) else {
+        return Vec::new();
+    };
+    let mut read = vec![key.clone()];
+    let more: BTreeSet<String> = table
+        .values()
+        .filter_map(map_formula)
+        .flat_map(names)
+        .collect();
+    read.extend(more.into_iter().filter(|name| name != key));
+    read
+}
+
+/// A `map` rule's trait and its table of values.
+fn map_of(rule: &Map<String, Value>) -> Option<(&String, &Map<String, Value>)> {
+    let (key, table) = rule.get("map")?.as_object()?.iter().next()?;
+    Some((key, table.as_object()?))
+}
+
+/// A map's value that is a formula, `{"rule": formula}`, worked out only
+/// when the map picks it.
+fn map_formula(value: &Value) -> Option<&str> {
+    match value {
+        Value::Object(entry) if entry.len() == 1 => entry.get("rule")?.as_str(),
+        _ => None,
+    }
+}
+
+/// The state a map looks up for a trait's value: a word as itself, any
+/// other value as JSON writes it.
+fn state(value: &Value) -> String {
+    match value {
+        Value::String(name) => name.clone(),
+        other => other.to_string(),
     }
 }
 
@@ -1343,34 +1402,36 @@ fn reading(key: &str, value: &Value) -> Result<Value, String> {
 }
 
 /// A rule's value from what it reads, by name: its formula's number (a
-/// bool trait reads as 1 or 0), or its map's value for the trait's.
+/// bool trait reads as 1 or 0), or its map's value for the trait's, worked
+/// out if that value is a formula.
 fn evaluate(rule: &Map<String, Value>, inputs: &BTreeMap<String, Value>) -> Result<Value, String> {
-    if let Some(Value::String(formula)) = rule.get("rule") {
+    let calculate = |formula: &str| {
         let number = |key: &str| {
             inputs
                 .get(key)
                 .and_then(|value| value.as_f64().or_else(|| value.as_bool().map(f64::from)))
         };
-        return Formula::parse(formula)?
+        Formula::parse(formula)?
             .eval(&number)
             .map(plain)
             .and_then(written)
-            .ok_or_else(|| "what it reads gives it no number".to_string());
+            .ok_or_else(|| "what it reads gives it no number".to_string())
+    };
+    if let Some(Value::String(formula)) = rule.get("rule") {
+        return calculate(formula);
     }
-    if let Some(Value::Object(map)) = rule.get("map")
-        && let Some((key, Value::Object(table))) = map.iter().next()
-    {
+    if let Some((key, table)) = map_of(rule) {
         let value = inputs
             .get(key)
             .ok_or_else(|| format!("no `{key}` to read"))?;
-        let name = match value {
-            Value::String(name) => name.clone(),
-            other => other.to_string(),
-        };
-        return table
+        let name = state(value);
+        let picked = table
             .get(&name)
-            .cloned()
-            .ok_or_else(|| format!("its map holds nothing for `{key}` {name}"));
+            .ok_or_else(|| format!("its map holds nothing for `{key}` {name}"))?;
+        return match map_formula(picked) {
+            Some(formula) => calculate(formula),
+            None => Ok(picked.clone()),
+        };
     }
     Err("it is no rule".into())
 }
@@ -1587,6 +1648,10 @@ mod tests {
             (
                 "shrub",
                 "lsystem shrub 1;\nparam a = 1;  # the first\nparam b = 1;",
+            ),
+            (
+                "herb",
+                "lsystem herb 1;\nparam leaves_per_node = 1;\nparam divergence = 137.5;",
             ),
         ])
     }
@@ -1933,6 +1998,12 @@ mod tests {
             "testaceae/family.json",
             &family(json!({"rules": {"generator.params.a": {"map": {"x": 1}}}})),
             "a `map` names one trait",
+        );
+        refused(
+            "testaceae/family.json",
+            &family(json!({"rules": {"generator.params.a": {
+                "map": {"x": {"y": {"rule": "uniform(0, 1)"}}}}}})),
+            "`uniform` is not a function",
         );
         refused(
             "testaceae/family.json",
@@ -2482,6 +2553,83 @@ mod tests {
         assert_eq!(
             unread.rules["generator.params.fork"].1.as_deref(),
             Some("no `e` to read")
+        );
+    }
+
+    /// A map's value may be a formula, worked out only when the map picks
+    /// it: whorled leaves take the taxon's count of them, and a species
+    /// with alternate leaves needs no count. A rule whose formula reads a
+    /// parameter another rule sets runs after it.
+    #[test]
+    fn a_map_value_may_be_a_formula_read_only_when_picked() {
+        let phylum = "_ranks/phylum/tracheophyta.json";
+        let files = ranks(&[
+            (
+                phylum,
+                json!({"schema": 1, "rank": "phylum", "name": "Tracheophyta",
+                    "rules": {
+                        "generator.params.leaves_per_node": {"map": {"leaf_arrangement": {
+                            "alternate": 1, "opposite": 2,
+                            "whorled": {"rule": "leaves_per_whorl"}}}},
+                        "generator.params.divergence": {"map": {"phyllotaxis_pattern": {
+                            "spiral": 137.5, "distichous": 180,
+                            "decussate": {"rule": "180 / leaves_per_node"}}}}}}),
+            ),
+            (
+                "testaceae/family.json",
+                json!({"schema": 1, "rank": "family", "name": "Testaceae",
+                    "parent": "phylum/tracheophyta", "generator": {"program": "herb"}}),
+            ),
+        ]);
+        let chain = above(&files, "testaceae", "plain").unwrap();
+        let species = "testaceae/plain/plain-one/spec.json";
+        let grown = |traits: Value| {
+            inherit(
+                species,
+                &json!({"id": "plain-one", "traits": traits}),
+                &chain,
+                &programs(),
+            )
+            .unwrap()
+        };
+        let arrangement = |grown: &super::Inherited| {
+            let params = &grown.spec["generator"]["params"];
+            (
+                params["leaves_per_node"].clone(),
+                params["divergence"].clone(),
+            )
+        };
+
+        // Whorls of six cross the whorl below.
+        let whorled = grown(json!({"leaf_arrangement": "whorled", "leaves_per_whorl": 6,
+            "phyllotaxis_pattern": "decussate"}));
+        assert_eq!(arrangement(&whorled), (json!(6), json!(30)));
+        assert_eq!(
+            whorled.origins["generator.params.leaves_per_node"],
+            format!(
+                "{phylum}: rule on leaf_arrangement from {species}, leaves_per_whorl from {species}"
+            )
+        );
+        // Pairs cross at a right angle; single leaves need no count.
+        let opposite = grown(json!({"leaf_arrangement": "opposite",
+            "phyllotaxis_pattern": "decussate"}));
+        assert_eq!(arrangement(&opposite), (json!(2), json!(90)));
+        let alternate = grown(json!({"leaf_arrangement": "alternate",
+            "phyllotaxis_pattern": "distichous"}));
+        assert_eq!(arrangement(&alternate), (json!(1), json!(180)));
+        assert_eq!(alternate.rules["generator.params.leaves_per_node"].1, None);
+
+        // Whorled leaves with no count to read set nothing.
+        let uncounted = grown(json!({"leaf_arrangement": "whorled"}));
+        assert_eq!(
+            uncounted.rules["generator.params.leaves_per_node"]
+                .1
+                .as_deref(),
+            Some("no `leaves_per_whorl` to read")
+        );
+        assert_eq!(
+            uncounted.rules["generator.params.divergence"].1.as_deref(),
+            Some("no `phyllotaxis_pattern` to read")
         );
     }
 }

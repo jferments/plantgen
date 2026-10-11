@@ -53,11 +53,16 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   families have their characters; most have none yet (`plantc audit`).
   Rules in a taxon turn its characters into the plant: in the daisy and
   grass families, a head's rays and disc, the heads in an array and a
-  grass's blades and panicle come from a flora's numbers.
+  grass's blades and panicle come from a flora's numbers; at the vascular
+  plants, the leaves at a node and how far each node turns from the last
+  come from how a taxon's leaves are arranged, so irises grow flat fans
+  and sedges three ranks of leaves.
 - **Plant programs.** 15 programs in PlantGen's open L-system language
   (`crates/plantgen/programs/*.lsys`), from conifers and broadleaf trees to
   grasses, ferns, cacti and climbers. Versioned environment tools let a
-  growing tip ask about light, space, vigour and its host.
+  growing tip ask about light, space, vigour and its host, and a ring,
+  `ring(n) [ … ]`, sets n leaves round a node, one rule for single
+  leaves, pairs and whorls.
 - **Growth.** Plants are grown, not modelled. Light and crowding shape the
   crown, branches thicken by the pipe model, organs come and go with the
   seasons, and wood is shed as the tree ages.

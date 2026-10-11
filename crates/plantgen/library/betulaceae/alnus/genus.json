@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Alnus",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": {"tristichous": "usually", "distichous": "sometimes"}
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "fna-3-alnus",
+      "note": "FNA's account of the genus: the leaves are three-ranked to nearly two-ranked, so one stands at each node."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "fna-3-alnus",
+      "note": "FNA's account of the genus: the leaves, on long or short shoots, are three-ranked to nearly two-ranked."
+    }
+  }
+}

@@ -2,5 +2,21 @@
   "schema": 1,
   "rank": "family",
   "name": "Vitaceae",
-  "parent": "order/vitales"
+  "parent": "order/vitales",
+  "traits": {
+    "leaf_arrangement": {"alternate": "usually", "opposite": "sometimes"},
+    "phyllotaxis_pattern": {"distichous": "usually", "spiral": "sometimes"}
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz's description of the family: the leaves are alternate, the lower ones sometimes opposite."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz's description of the family: the leaves are usually distichous, in two ranks, otherwise spiral."
+    }
+  }
 }
