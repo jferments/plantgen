@@ -200,6 +200,85 @@ fn part_mesh(looks: &[Look], index: usize) -> Option<PartMesh> {
     None
 }
 
+/// One site of a nearest level drawn as its type's part mesh: which part
+/// and variant, the frame it is put back in (`p = base + length (x left +
+/// y heading + z out)`, see the module) and the cards it replaces.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Placement {
+    /// The organ's card in the level's cards, and the crossing card of a
+    /// crossed pair; a renderer drawing the part leaves both out.
+    pub card: usize,
+    pub cross: Option<usize>,
+    /// The part mesh, as an index into the `parts` placed, and its variant.
+    pub part: usize,
+    pub variant: usize,
+    pub base: Vec3,
+    /// Unit vectors: the card's heading, its left made square to it, and
+    /// `left × heading`.
+    pub heading: Vec3,
+    pub left: Vec3,
+    pub out: Vec3,
+    pub length: f64,
+    /// What the part's colours are multiplied by: as much darker as its
+    /// card's colour is than its look's, 0 to 2.
+    pub darkening: f32,
+}
+
+/// Where each site of `plant`, a nearest level built for part meshes
+/// (`crate::mesh::build_with`), is drawn as one of its type's `parts`, in
+/// the order of its sites; sites whose type has no part mesh are left out.
+/// Site `n` draws the variant `mix64(n)` picks.
+#[must_use]
+pub fn placements(plant: &PlantMesh, looks: &[Look], parts: &[PartMesh]) -> Vec<Placement> {
+    let to_vec = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
+    let luminance = |c: [f32; 3]| 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+    let mut out = Vec::with_capacity(plant.sites.len());
+    for (n, &site) in plant.sites.iter().enumerate() {
+        let index = site as usize;
+        let Some(&card) = plant.cards.get(index) else {
+            continue;
+        };
+        let template = usize::from(card.template);
+        let (Some(part), Some(look)) = (
+            parts.iter().position(|part| part.template == template),
+            looks.get(template),
+        ) else {
+            continue;
+        };
+        let variant = usize::try_from(mix64(n as u64) % VARIANTS as u64).unwrap_or(0);
+        if variant >= parts[part].variants.len() {
+            continue;
+        }
+        let heading = to_vec(card.heading).normalize_or(Vec3::Y);
+        let along = to_vec(card.left);
+        let left = (along - heading * along.dot(heading))
+            .normalize_or(crate::math::any_perpendicular(heading));
+        // The crossing card, pushed just before the organ's own with a copy
+        // of its base and heading.
+        #[allow(clippy::float_cmp)]
+        let cross = index.checked_sub(1).filter(|&cross| {
+            plant.cards.get(cross).is_some_and(|other| {
+                other.template == card.template
+                    && other.base == card.base
+                    && other.heading == card.heading
+            })
+        });
+        out.push(Placement {
+            card: index,
+            cross,
+            part,
+            variant,
+            base: to_vec(card.base),
+            heading,
+            left,
+            out: left.cross(heading),
+            length: f64::from(card.length),
+            darkening: (luminance(card.color) / luminance(look.colour).max(1.0e-6)).clamp(0.0, 2.0),
+        });
+    }
+    out
+}
+
 /// Draw each site of `plant`, a nearest level built for part meshes
 /// (`crate::mesh::build_with`), as one of its type's `parts`, into its wood
 /// mesh, and leave out the site's cards (both of a crossed pair): what a
@@ -208,35 +287,12 @@ fn part_mesh(looks: &[Look], index: usize) -> Option<PartMesh> {
 /// colours darkened with its card as the renderer darkens them.
 pub fn place(plant: &mut PlantMesh, looks: &[Look], parts: &[PartMesh]) {
     let to_vec = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
-    let luminance = |c: [f32; 3]| 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
     let mut dropped = vec![false; plant.cards.len()];
-    for (n, &site) in plant.sites.iter().enumerate() {
-        let index = site as usize;
-        let Some(&card) = plant.cards.get(index) else {
-            continue;
-        };
-        let template = usize::from(card.template);
-        let (Some(part), Some(look)) = (
-            parts.iter().find(|part| part.template == template),
-            looks.get(template),
-        ) else {
-            continue;
-        };
-        let Some(mesh) = part
-            .variants
-            .get(usize::try_from(mix64(n as u64) % VARIANTS as u64).unwrap_or(0))
-        else {
-            continue;
-        };
-        let heading = to_vec(card.heading).normalize_or(Vec3::Y);
-        let along = to_vec(card.left);
-        let left = (along - heading * along.dot(heading))
-            .normalize_or(crate::math::any_perpendicular(heading));
-        let out = left.cross(heading);
-        let base = to_vec(card.base);
-        let length = f64::from(card.length);
-        let darkening =
-            (luminance(card.color) / luminance(look.colour).max(1.0e-6)).clamp(0.0, 2.0);
+    for placed in placements(plant, looks, parts) {
+        let mesh = &parts[placed.part].variants[placed.variant];
+        let card = plant.cards[placed.card];
+        let (base, left, heading, out) = (placed.base, placed.left, placed.heading, placed.out);
+        let darkening = placed.darkening;
         let first = u32::try_from(plant.wood.positions.len()).unwrap_or(u32::MAX);
         for ((position, normal), colour) in
             mesh.positions.iter().zip(&mesh.normals).zip(&mesh.colors)
@@ -246,7 +302,7 @@ pub fn place(plant: &mut PlantMesh, looks: &[Look], parts: &[PartMesh]) {
             plant
                 .wood
                 .positions
-                .push((base + (left * p.x + heading * p.y + out * p.z) * length).to_f32());
+                .push((base + (left * p.x + heading * p.y + out * p.z) * placed.length).to_f32());
             plant
                 .wood
                 .normals
@@ -266,16 +322,8 @@ pub fn place(plant: &mut PlantMesh, looks: &[Look], parts: &[PartMesh]) {
             .wood
             .indices
             .extend(mesh.indices.iter().map(|&i| first + i));
-        dropped[index] = true;
-        // The crossing card, pushed just before the organ's own with a copy
-        // of its base and heading.
-        #[allow(clippy::float_cmp)]
-        if let Some(cross) = index.checked_sub(1)
-            && let Some(other) = plant.cards.get(cross)
-            && other.template == card.template
-            && other.base == card.base
-            && other.heading == card.heading
-        {
+        dropped[placed.card] = true;
+        if let Some(cross) = placed.cross {
             dropped[cross] = true;
         }
     }

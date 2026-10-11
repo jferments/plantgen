@@ -16,6 +16,7 @@ use std::{env, fmt, fs};
 
 use plantgen::body::BodyLook;
 use plantgen::conditions::Conditions;
+use plantgen::export;
 use plantgen::graph::{GraphOrgan, OrganType, PlantGraph};
 use plantgen::ground::{self, GROUND_LOOK_SIZE};
 use plantgen::grow::{Growth, GrowthSettings, grow};
@@ -122,6 +123,7 @@ fn run() -> Result<(), Failure> {
         "measure" => measure_command(&args),
         "ground" => ground_command(&args),
         "build" => build_command(&args),
+        "export" => export_command(&args),
         "inspect" => inspect_command(&args),
         "sources" => sources_command(&args),
         "help" | "--help" | "-h" => print_usage(),
@@ -217,6 +219,19 @@ Usage:
       key. A package that is already built is not built again.
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
+  plantc export <species|spec.json|package.afterplant> [--out DIR]
+                [--format glb] [--env ENV] [--seed N] [--age N]
+                [--shade attribute|baked] [--quality draft|standard]
+      Write one variant at one age as glTF 2.0 binary files that need no
+      PlantGen code, one per level of detail (STEM-lod0.glb to
+      STEM-lod3.glb), and an index, STEM.json, in DIR (default `exports`);
+      STEM is <species>-<env>-<seed>-<age>y. Without --env and --seed, the
+      species' typical site and first seed; without --age, the oldest
+      keyframe. The plant is grown over all its years, as its package
+      grows it; given a package, every level is checked against it.
+      Bark keeps its own colour, with the darkening of the plant's own
+      shade as the attribute _PLANTGEN_SHADE, or with --shade baked
+      darkened as packages hold it.
   plantc sources [list | cite ID]
       List the sources evidence notes cite (library/sources/<id>.json),
       or every value that cites the source ID: the file holding its note,
@@ -232,10 +247,10 @@ to them. Its rank files (library/<family>/family.json,
 library/<family>/<genus>/genus.json, library/_ranks/<rank>/<name>.json)
 replace built-in ones at the same path; each species' spec is its own
 spec.json merged onto those above it, the nearer file winning.
-grow, render, sheet, atlas and build accept --program FILE.lsys to try a
-changed program in place of the species' built-in one. render, sheet,
-parts, lineup and build accept --day N (1 to 365, default 196): the day
-of the year organs with a season show.
+grow, render, sheet, atlas, build and export accept --program FILE.lsys
+to try a changed program in place of the species' built-in one. render,
+sheet, parts, lineup, build and export accept --day N (1 to 365, default
+196): the day of the year organs with a season show.
 ENV is open, edge, interior or suppressed; without --env, the species'
 typical site (its conditions.json) chooses."
     );
@@ -1891,28 +1906,36 @@ fn templates_of(
 
 fn build_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(args, &["out", "quality", "threads", "program", "day"])?;
-    let program = options.program()?;
     let spec = load_spec(options.one_positional("a species")?)?;
+    let out = PathBuf::from(options.flags.get("out").map_or("plants", String::as_str));
+    build_package(&spec, &options, &out)?;
+    Ok(())
+}
+
+/// Build the package of `spec` in `out` with the options `--quality`,
+/// `--day`, `--program` and `--threads`, unless it is already there,
+/// saying what happens; its path.
+fn build_package(spec: &PlantSpec, options: &Options, out: &Path) -> Result<PathBuf, Failure> {
+    let program = options.program()?;
     let quality = options.quality()?;
     let day = options.day()?;
     let threads = options
         .number("threads")?
         .unwrap_or_else(package::default_threads)
         .max(1);
-    let out = PathBuf::from(options.flags.get("out").map_or("plants", String::as_str));
     let inputs = match &program {
-        Some(source) => Inputs::with_program_in(&spec, library(), source, &quality, day),
-        None => Inputs::on_day_in(&spec, library(), &quality, day),
+        Some(source) => Inputs::with_program_in(spec, library(), source, &quality, day),
+        None => Inputs::on_day_in(spec, library(), &quality, day),
     }
     .map_err(|error| error.to_string())?;
-    if let Some(path) = package::existing(&out, &spec.id, &inputs.key) {
+    if let Some(path) = package::existing(out, &spec.id, &inputs.key) {
         out!(
             "{} is already built:\n  key {}\n  {}",
             spec.id,
             inputs.key,
             path.display()
         );
-        return Ok(());
+        return Ok(path);
     }
     let started = Instant::now();
     // Progress is best effort: a closed output shows up at the summary.
@@ -1920,7 +1943,7 @@ fn build_command(args: &[String]) -> Result<(), Failure> {
         let _ = writeln!(io::stdout(), "  {line}");
     })
     .map_err(|error| error.to_string())?;
-    let path = package::write(&built, &out).map_err(|error| error.to_string())?;
+    let path = package::write(&built, out).map_err(|error| error.to_string())?;
     #[allow(clippy::cast_precision_loss)]
     let megabytes = built.size() as f64 / 1_048_576.0;
     out!(
@@ -1941,6 +1964,135 @@ fn build_command(args: &[String]) -> Result<(), Failure> {
         out!(
             "  {outside} reference sizes are outside tolerance; run `plantc inspect` on the package for details"
         );
+    }
+    Ok(path)
+}
+
+#[allow(clippy::too_many_lines)]
+fn export_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(
+        args,
+        &[
+            "out", "format", "quality", "program", "day", "env", "seed", "age", "shade",
+        ],
+    )?;
+    match options.flags.get("format").map(String::as_str) {
+        None | Some("glb") => {}
+        Some(other) => {
+            return Err(format!("unknown format `{other}`; plantc exports glb").into());
+        }
+    }
+    let shade = match options.flags.get("shade").map(String::as_str) {
+        None | Some("attribute") => export::Shade::Attribute,
+        Some("baked") => export::Shade::Baked,
+        Some(other) => {
+            return Err(format!("unknown shade `{other}`; use attribute or baked").into());
+        }
+    };
+    let target = options.one_positional("a species or a package")?;
+    let package_dir = Path::new(target);
+    let started = Instant::now();
+    // A package's own inputs, checked against its key; or a spec's.
+    let (inputs, manifest) = if package_dir.join(package::MANIFEST).is_file() {
+        for flag in ["quality", "program", "day"] {
+            if options.flags.contains_key(flag) {
+                return Err(format!("`--{flag}` is the package's own; {target} is built").into());
+            }
+        }
+        let manifest = package::read_manifest(package_dir).map_err(|error| error.to_string())?;
+        let quality = export::quality_of(&manifest).map_err(|error| error.to_string())?;
+        let program = package::read_object(package_dir, &manifest.program.object)
+            .map_err(|error| error.to_string())?;
+        let inputs = export::inputs_of(&manifest, &program, &quality, library())
+            .map_err(|error| error.to_string())?;
+        (inputs, Some(manifest))
+    } else {
+        let spec = load_spec(target)?;
+        let quality = options.quality()?;
+        let day = options.day()?;
+        let inputs = match options.program()? {
+            Some(source) => Inputs::with_program_in(&spec, library(), &source, &quality, day),
+            None => Inputs::on_day_in(&spec, library(), &quality, day),
+        }
+        .map_err(|error| error.to_string())?;
+        (inputs, None)
+    };
+    let spec = &inputs.spec;
+    let variants = spec.variant_list();
+    let mut variant = export::typical_variant(spec, library());
+    let environment = options
+        .flags
+        .get("env")
+        .map(|name| {
+            Environment::from_name(name).ok_or_else(|| {
+                format!("unknown environment `{name}`; use open, edge, interior or suppressed")
+            })
+        })
+        .transpose()?;
+    let seed: Option<u64> = options.number("seed")?;
+    if environment.is_some() || seed.is_some() {
+        let (environment, seed) = (
+            environment.unwrap_or(variants[variant].environment),
+            seed.unwrap_or(variants[variant].seed),
+        );
+        variant = variants
+            .iter()
+            .position(|grown| grown.environment == environment && grown.seed == seed)
+            .ok_or_else(|| {
+                let grown: Vec<String> = variants
+                    .iter()
+                    .map(|grown| format!("{} {}", grown.environment.name(), grown.seed))
+                    .collect();
+                format!(
+                    "{} has no variant {} {seed}; it has {}",
+                    spec.id,
+                    environment.name(),
+                    grown.join(", ")
+                )
+            })?;
+    }
+    let age = options
+        .number::<f64>("age")?
+        .unwrap_or_else(|| export::oldest_age(spec));
+    out!(
+        "growing {} {} seed {} over {} years, kept at {age}",
+        spec.id,
+        variants[variant].environment.name(),
+        variants[variant].seed,
+        spec.growth.years
+    );
+    let plant = export::grow(&inputs, variant, age).map_err(|error| error.to_string())?;
+    let read = |sha: &str| package::read_object(package_dir, sha);
+    let built = manifest.as_ref().map(|manifest| export::Built {
+        manifest,
+        object: &read,
+    });
+    let exported = export::export(&inputs, &plant, shade, built.as_ref())
+        .map_err(|error| error.to_string())?;
+    let out = PathBuf::from(options.flags.get("out").map_or("exports", String::as_str));
+    let written = export::write(&exported, &out).map_err(|error| error.to_string())?;
+    out!(
+        "exported {} in {:.1} s{}:",
+        exported.stem,
+        started.elapsed().as_secs_f64(),
+        if built.is_some() {
+            ", every level as the package holds it"
+        } else {
+            ""
+        }
+    );
+    for (level, path) in exported.levels.iter().zip(&written) {
+        #[allow(clippy::cast_precision_loss)]
+        let mebibytes = level.glb.len() as f64 / 1_048_576.0;
+        out!(
+            "  {}  {mebibytes:.1} MiB, {} triangles, {} nodes",
+            path.display(),
+            level.summary.triangles,
+            level.summary.nodes
+        );
+    }
+    if let Some(index) = written.last() {
+        out!("  {}", index.display());
     }
     Ok(())
 }
