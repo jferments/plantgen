@@ -1,11 +1,13 @@
-//! PlantLab's window (V3): one plant on its ground patch, a camera that
-//! orbits it, and a panel that chooses what grows: the species, its age,
-//! the day of the year, the level of detail, the quality and the look.
+//! PlantLab's window: one plant on its ground patch, a camera that orbits
+//! it, and around it the Studio ([`shell`]): a top bar, a rail of panels
+//! that dock beside the view, a status bar, the command palette and the
+//! settings, or the Overlay, where the plant fills the window.
 //!
-//! The panel changes only [`Lab`]; a change regrows the plant on a worker
-//! thread ([`plantlab_scene::build_watched`], PlantGen's own growth). The
-//! panel can start, pause and stop a growth, shows its progress, and can
-//! show the plant growing: every N steps the worker draws the plant as it
+//! The interface only queues commands ([`command`]); a change of what
+//! grows regrows the plant on a worker thread
+//! ([`plantlab_scene::build_watched`], PlantGen's own growth). A growth
+//! can be started, paused and stopped, shows its progress, and can show
+//! the plant growing: every N steps the worker draws the plant as it
 //! stands and the window puts it on screen. Otherwise the old plant stays
 //! until the new one is ready. Nothing about the plant is computed here.
 //!
@@ -18,6 +20,7 @@ use std::sync::atomic::{AtomicBool, AtomicU32, AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
+use bevy::camera::CameraUpdateSystems;
 use bevy::camera::Exposure;
 use bevy::camera::visibility::RenderLayers;
 use bevy::ecs::system::SystemParam;
@@ -27,7 +30,8 @@ use bevy::light::{DirectionalLightShadowMap, GlobalAmbientLight};
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use bevy_egui::{
-    EguiContexts, EguiGlobalSettings, EguiPlugin, EguiPrimaryContextPass, PrimaryEguiContext, egui,
+    EguiContexts, EguiGlobalSettings, EguiPlugin, EguiPostUpdateSet, EguiPrimaryContextPass,
+    PrimaryEguiContext,
 };
 use plantgen::library::Library;
 use plantgen::quality;
@@ -40,7 +44,15 @@ use crate::record::{self, PLANT_LAYER, Recorder, Recording, Take, WINDOW_LAYER};
 use crate::render::{
     PlantAssets, add_materials, camera_look, exposure, spawn_plant, spawn_sun, to_rgba8,
 };
-use crate::theme;
+use plantlab_ui::theme;
+
+mod command;
+mod panels;
+mod readings;
+mod shell;
+
+use crate::settings::{Key, Settings};
+use command::{Command, Panel, Shell};
 
 /// How `plantlab open` starts the window.
 #[allow(clippy::struct_excessive_bools, reason = "the command's switches")]
@@ -49,15 +61,24 @@ pub struct Options {
     /// Grow the first plant to this age, years, instead of its oldest
     /// keyframe.
     pub age: Option<f64>,
-    /// Show the plant growing every this many steps; 0 for none.
-    pub live: u32,
-    pub grid: bool,
-    pub ruler: bool,
+    /// Show the plant growing every this many steps; 0 for none. `None`
+    /// and the other `Option`s here: as the settings file says.
+    pub live: Option<u32>,
+    pub grid: Option<bool>,
+    pub ruler: Option<bool>,
     /// Where snapshots and animations go.
     pub out: std::path::PathBuf,
     /// Start recording growth, and of the plant alone.
     pub record: bool,
-    pub plant_only: bool,
+    pub plant_only: Option<bool>,
+    /// The window's size, logical pixels.
+    pub size: (u32, u32),
+    /// The panels open at the start, left to right.
+    pub panels: Vec<String>,
+    /// Start in the Overlay.
+    pub overlay: bool,
+    /// The settings file; `None` for the default place.
+    pub settings: Option<std::path::PathBuf>,
     /// Save a picture of the window and close it: once the plant has
     /// grown, or after this many seconds.
     pub capture: Option<(std::path::PathBuf, Option<f64>)>,
@@ -67,10 +88,12 @@ pub struct Options {
 #[derive(Resource)]
 #[allow(clippy::struct_excessive_bools, reason = "the panel's switches")]
 struct Lab {
+    /// The 3D view's width over its height, so framing fits the plant
+    /// into the view the docks leave.
+    aspect: f64,
     species: Vec<String>,
     /// Index into `species`.
     chosen: usize,
-    filter: String,
     /// Plant age, years; `None` until the species' keyframes are known.
     age: Option<f64>,
     /// The age `--age` asked for, used once.
@@ -98,6 +121,11 @@ struct Lab {
     /// Shared with the growing worker.
     control: Arc<Control>,
     started: Instant,
+    /// Growths started, and plants (or live frames) put on screen: the
+    /// readings start a growth's figures and a plant's levels afresh
+    /// when these change.
+    growths: u64,
+    shows: u64,
     shown: Option<Shown>,
     message: String,
     /// The camera should frame the next plant shown.
@@ -107,8 +135,6 @@ struct Lab {
     /// The measures on the ground and beside the plant.
     grid: bool,
     ruler: bool,
-    /// Where the panel ends, logical pixels from the window's left.
-    panel_right: f32,
 }
 
 struct Grown {
@@ -129,10 +155,14 @@ struct Control {
     /// The age at `step`, years, as `f64` bits.
     age: AtomicU64,
     frame: Mutex<Option<Scene>>,
+    /// Time each step while the Readings panel shows.
+    gather: AtomicBool,
+    /// Each step's time since the last, gathered while asked.
+    step_times: Mutex<Vec<readings::StepTime>>,
 }
 
-/// The worker's side of [`Control`].
-struct Watcher(Arc<Control>);
+/// The worker's side of [`Control`], and when its last step ended.
+struct Watcher(Arc<Control>, Instant);
 
 impl Viewer for Watcher {
     fn wants_frame(&mut self, step: u32) -> bool {
@@ -144,6 +174,15 @@ impl Viewer for Watcher {
         self.0.step.store(progress.step, Ordering::Relaxed);
         self.0.steps.store(progress.steps, Ordering::Relaxed);
         self.0.age.store(progress.age.to_bits(), Ordering::Relaxed);
+        if self.0.gather.load(Ordering::Relaxed)
+            && let Ok(mut times) = self.0.step_times.lock()
+        {
+            #[allow(clippy::cast_possible_truncation)]
+            times.push(readings::StepTime {
+                ms: (self.1.elapsed().as_secs_f64() * 1_000.0) as f32,
+                framed: frame.is_some(),
+            });
+        }
         if let Some(frame) = frame
             && let Ok(mut slot) = self.0.frame.lock()
         {
@@ -152,6 +191,8 @@ impl Viewer for Watcher {
         while self.0.pause.load(Ordering::Relaxed) && !self.0.stop.load(Ordering::Relaxed) {
             std::thread::sleep(Duration::from_millis(30));
         }
+        // A pause is not the next step's time.
+        self.1 = Instant::now();
         !self.0.stop.load(Ordering::Relaxed)
     }
 }
@@ -245,6 +286,10 @@ pub fn run(options: Options) -> Result<(), String> {
         record,
         plant_only,
         capture: picture,
+        size,
+        panels,
+        overlay,
+        settings,
     } = options;
     let library = Library::builtin();
     let ids: Vec<String> = library
@@ -262,13 +307,98 @@ pub fn run(options: Options) -> Result<(), String> {
             .position(|id| id == "acer-macrophyllum")
             .unwrap_or(0),
     };
+    let mut open = Vec::new();
+    for name in &panels {
+        let panel = Panel::ALL
+            .into_iter()
+            .find(|panel| panel.short().eq_ignore_ascii_case(name))
+            .ok_or_else(|| {
+                let names: Vec<&str> = Panel::ALL.iter().map(|panel| panel.short()).collect();
+                format!("no panel `{name}`; the panels are {}", names.join(", "))
+            })?;
+        open.push(panel);
+    }
+    let settings = Settings::load(settings.or_else(Settings::default_path));
+    if !settings.message.is_empty() {
+        eprintln!("{}", settings.message);
+    }
+    // The flags, else the settings file, else the defaults.
+    let live = live.unwrap_or_else(|| {
+        if settings.bool(Key::ShowGrowing).unwrap_or(true) {
+            settings.u32(Key::Every).unwrap_or(10)
+        } else {
+            0
+        }
+    });
+    let every = if live > 0 {
+        live
+    } else {
+        settings.u32(Key::Every).unwrap_or(10)
+    };
+    let mut recording = Recording::new(out);
+    recording.record = record;
+    recording.plant_only = plant_only
+        .or(settings.bool(Key::PlantOnly))
+        .unwrap_or(false);
+    if let Some(width) = settings.u32(Key::PictureWidth) {
+        recording.width = width;
+    }
+    if let Some(ms) = settings.u32(Key::FrameMs) {
+        recording.delay = u16::try_from(ms / 10).unwrap_or(u16::MAX).max(2);
+    }
+    if let Some(seconds) = settings.f64(Key::HoldS) {
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let hundredths = (seconds * 100.0).round() as u16;
+        recording.hold = hundredths;
+    }
+    if let Some(pngs) = settings.bool(Key::Pngs) {
+        recording.pngs = pngs;
+    }
+    let lab = Lab {
+        aspect: 1.0,
+        growths: 0,
+        shows: 0,
+        species: ids,
+        chosen,
+        age: None,
+        asked_age: age,
+        oldest: 1.0,
+        day: plantgen::package::DEFAULT_DAY,
+        level: 0,
+        draft: true,
+        look: Look::Review,
+        view: View::ThreeQuarter,
+        dirty: true,
+        auto: settings.bool(Key::GrowOnChange).unwrap_or(true),
+        go: false,
+        live: live > 0,
+        every: every.clamp(1, 100),
+        follow: settings.bool(Key::Follow).unwrap_or(true),
+        growing: None,
+        control: Arc::default(),
+        started: Instant::now(),
+        shown: None,
+        message: String::new(),
+        reframe: true,
+        reset_camera: false,
+        grid: grid.or(settings.bool(Key::Grid)).unwrap_or(true),
+        ruler: ruler.or(settings.bool(Key::Ruler)).unwrap_or(true),
+    };
+    let mut shell = Shell::new(settings);
+    if !open.is_empty() {
+        shell.open = open;
+    }
+    if overlay {
+        shell.overlay = true;
+        shell.card = shell.open.first().copied();
+    }
     let mut app = App::new();
     app.add_plugins(
         DefaultPlugins
             .set(WindowPlugin {
                 primary_window: Some(Window {
                     title: "PlantLab".into(),
-                    resolution: (1400, 900).into(),
+                    resolution: size.into(),
                     ..default()
                 }),
                 ..default()
@@ -280,53 +410,28 @@ pub fn run(options: Options) -> Result<(), String> {
             }),
     );
     add_materials(&mut app);
-    let [r, g, b] = plantlab_scene::BACKGROUND;
     app.add_plugins(EguiPlugin::default())
         .init_gizmo_group::<MeasureGizmos>()
-        .insert_resource({
-            let mut recording = Recording::new(out);
-            recording.record = record;
-            recording.plant_only = plant_only;
-            recording
-        })
-        .insert_resource(record::Background(Color::linear_rgb(r, g, b)))
+        .insert_resource(recording)
+        .insert_resource(record::Background(backdrop()))
         .insert_resource(DirectionalLightShadowMap { size: 4096 })
         .insert_resource(GlobalAmbientLight::NONE)
-        .insert_resource(Lab {
-            species: ids,
-            chosen,
-            filter: String::new(),
-            age: None,
-            asked_age: age,
-            oldest: 1.0,
-            day: plantgen::package::DEFAULT_DAY,
-            level: 0,
-            draft: true,
-            look: Look::Review,
-            view: View::ThreeQuarter,
-            dirty: true,
-            auto: true,
-            go: false,
-            live: live > 0,
-            every: live.max(1),
-            follow: true,
-            growing: None,
-            control: Arc::default(),
-            started: Instant::now(),
-            shown: None,
-            message: String::new(),
-            reframe: true,
-            reset_camera: false,
-            grid,
-            ruler,
-            panel_right: 300.0,
-        })
+        .insert_resource(lab)
+        .insert_resource(shell)
+        .init_resource::<readings::Readings>()
         .add_systems(Startup, setup)
-        .add_systems(EguiPrimaryContextPass, panel)
+        .add_systems(EguiPrimaryContextPass, shell::draw)
+        .add_systems(
+            PostUpdate,
+            shell::fit_view
+                .after(EguiPostUpdateSet::EndPass)
+                .before(CameraUpdateSystems),
+        )
         .add_systems(
             Update,
             (
                 keys,
+                command::apply,
                 grow,
                 live_frame,
                 show,
@@ -335,6 +440,7 @@ pub fn run(options: Options) -> Result<(), String> {
                 record::follow,
                 record::take,
                 record::keep,
+                readings::gather,
             )
                 .chain(),
         );
@@ -350,6 +456,14 @@ pub fn run(options: Options) -> Result<(), String> {
     }
     app.run();
     Ok(())
+}
+
+/// The window's backdrop behind the ground: the deepest surface of the
+/// interface. Headless pictures keep the review grey
+/// ([`plantlab_scene::BACKGROUND`]), so species compare fairly.
+fn backdrop() -> Color {
+    let [r, g, b, _] = theme::SURFACE_0.to_array();
+    Color::srgb_u8(r, g, b)
 }
 
 fn capture(mut commands: Commands, lab: Res<Lab>, mut capture: ResMut<Capture>) {
@@ -392,18 +506,31 @@ fn capture(mut commands: Commands, lab: Res<Lab>, mut capture: ResMut<Capture>) 
     );
 }
 
+/// The interface camera's layer: nothing in the scene is on it.
+const INTERFACE_LAYER: usize = 3;
+
 fn setup(
     mut commands: Commands,
     mut images: ResMut<Assets<Image>>,
     mut gizmos: ResMut<GizmoConfigStore>,
     mut egui: ResMut<EguiGlobalSettings>,
 ) {
-    // The window's camera carries the panel; egui must not give the
-    // recorder a second primary context.
+    // The interface has its own camera over the whole window, drawn after
+    // the plant's, whose viewport is the view the docks leave; egui must not
+    // give the recorder a second primary context.
     egui.auto_create_primary_context = false;
+    commands.spawn((
+        Camera2d,
+        Camera {
+            order: 1,
+            clear_color: ClearColorConfig::None,
+            ..default()
+        },
+        RenderLayers::layer(INTERFACE_LAYER),
+        PrimaryEguiContext,
+    ));
     measure::configure(&mut gizmos, WINDOW_LAYER);
     let light = plantlab_scene::review_light();
-    let [r, g, b] = plantlab_scene::BACKGROUND;
     #[allow(clippy::cast_possible_truncation)]
     let fov = plantlab_scene::FOV_Y_DEG.to_radians() as f32;
     let orbit = Orbit {
@@ -416,7 +543,7 @@ fn setup(
     let mut camera = commands.spawn((
         Camera3d::default(),
         Camera {
-            clear_color: ClearColorConfig::Custom(Color::linear_rgb(r, g, b)),
+            clear_color: ClearColorConfig::Custom(backdrop()),
             ..default()
         },
         Projection::Perspective(PerspectiveProjection { fov, ..default() }),
@@ -426,8 +553,6 @@ fn setup(
         RenderLayers::layer(WINDOW_LAYER),
         orbit.transform(),
         orbit,
-        // The panel draws on this camera, not on the recorder.
-        PrimaryEguiContext,
     ));
     camera_look(&mut camera, Look::Review, &light, &mut images);
     let recorder = record::spawn(&mut commands, &mut images, fov);
@@ -463,11 +588,12 @@ fn shot(lab: &Lab) -> Shot {
     };
     shot.look = lab.look;
     shot.view = lab.view;
+    shot.aspect = lab.aspect;
     shot
 }
 
 /// The command that renders the shot on screen without the window.
-fn command(shot: &Shot) -> String {
+fn thumbs_command(shot: &Shot) -> String {
     let mut text = format!("plantlab thumbs {} --out pictures", shot.species);
     if let Some(age) = shot.age {
         let _ = write!(text, " --age {age}");
@@ -481,208 +607,6 @@ fn command(shot: &Shot) -> String {
         shot.look.name()
     );
     text
-}
-
-#[allow(clippy::too_many_lines)]
-fn panel(
-    mut contexts: EguiContexts,
-    mut lab: ResMut<Lab>,
-    mut recording: ResMut<Recording>,
-    mut themed: Local<bool>,
-) {
-    let Ok(ctx) = contexts.ctx_mut() else {
-        return;
-    };
-    if !*themed {
-        theme::apply(ctx);
-        *themed = true;
-    }
-    let lab = &mut *lab;
-    let recording = &mut *recording;
-    let ctx = ctx.clone();
-    // As WorldLab does with egui 0.36: panels lie in a root Ui over the
-    // whole window.
-    let mut root = egui::Ui::new(
-        ctx.clone(),
-        egui::Id::new("plantlab"),
-        egui::UiBuilder::new()
-            .layer_id(egui::LayerId::background())
-            .max_rect(ctx.viewport_rect()),
-    );
-    let shown = egui::Panel::left("plant")
-        .default_size(300.0)
-        .show(&mut root, |ui| {
-            egui::ScrollArea::vertical().show(ui, |ui| {
-                ui.heading("PlantLab");
-                ui.label(
-                    egui::RichText::new("Grown by PlantGen, as plantc grows it")
-                        .color(theme::MUTED),
-                );
-                ui.separator();
-
-                ui.label("Species");
-                ui.text_edit_singleline(&mut lab.filter);
-                let filter = lab.filter.to_lowercase();
-                egui::ScrollArea::vertical()
-                    .id_salt("species")
-                    .max_height(220.0)
-                    .show(ui, |ui| {
-                        for index in 0..lab.species.len() {
-                            let id = &lab.species[index];
-                            if !filter.is_empty() && !id.contains(&filter) {
-                                continue;
-                            }
-                            if ui
-                                .selectable_label(index == lab.chosen, id.as_str())
-                                .clicked()
-                                && index != lab.chosen
-                            {
-                                lab.chosen = index;
-                                lab.age = None;
-                                lab.dirty = true;
-                                lab.reframe = true;
-                            }
-                        }
-                    });
-                ui.separator();
-
-                if let Some(mut age) = lab.age {
-                    ui.label("Age, years");
-                    let oldest = lab.oldest;
-                    let youngest = age.min(1.0);
-                    let step = if youngest < 1.0 { 0.0 } else { 1.0 };
-                    if ui
-                        .add(egui::Slider::new(&mut age, youngest..=oldest).step_by(step))
-                        .changed()
-                    {
-                        lab.age = Some(age);
-                        lab.dirty = true;
-                    }
-                }
-                ui.label("Day of the year");
-                if ui
-                    .add(egui::Slider::new(&mut lab.day, 1.0..=365.0).step_by(1.0))
-                    .changed()
-                {
-                    lab.dirty = true;
-                }
-                ui.horizontal(|ui| {
-                    ui.label("Level of detail");
-                    for level in 0..4 {
-                        if ui
-                            .selectable_label(lab.level == level, level.to_string())
-                            .clicked()
-                        {
-                            lab.level = level;
-                            lab.dirty = true;
-                        }
-                    }
-                });
-                ui.horizontal(|ui| {
-                    ui.label("Quality");
-                    if ui.selectable_label(lab.draft, "draft").clicked() && !lab.draft {
-                        lab.draft = true;
-                        lab.dirty = true;
-                    }
-                    if ui.selectable_label(!lab.draft, "standard").clicked() && lab.draft {
-                        lab.draft = false;
-                        lab.dirty = true;
-                    }
-                });
-                ui.horizontal(|ui| {
-                    ui.label("Look");
-                    for look in [Look::Review, Look::Photo] {
-                        if ui.selectable_label(lab.look == look, look.name()).clicked()
-                            && lab.look != look
-                        {
-                            lab.look = look;
-                            lab.dirty = true;
-                        }
-                    }
-                });
-                ui.horizontal(|ui| {
-                    ui.label("View");
-                    for view in [View::Side, View::ThreeQuarter, View::Top] {
-                        if ui.selectable_label(lab.view == view, view.name()).clicked() {
-                            lab.view = view;
-                            lab.reframe = true;
-                            lab.dirty = true;
-                        }
-                    }
-                });
-                ui.separator();
-
-                growth_controls(ui, lab);
-                if !lab.message.is_empty() {
-                    ui.colored_label(theme::ERROR, &lab.message);
-                }
-                if let Some(shown) = &lab.shown {
-                    let facts = &shown.scene.facts;
-                    egui::Grid::new("facts")
-                        .num_columns(2)
-                        .show(ui, |ui| {
-                            let mut row = |name: &str, value: String| {
-                                ui.label(egui::RichText::new(name).color(theme::MUTED));
-                                ui.label(value);
-                                ui.end_row();
-                            };
-                            row("species", facts.species.clone());
-                            row("age", format!("{} years", facts.age));
-                            row("height", format!("{:.2} m", facts.height_m));
-                            row("crown width", format!("{:.2} m", facts.crown_width_m));
-                            row("triangles", facts.triangles.to_string());
-                            row("cards", facts.cards.to_string());
-                            row("conditions", facts.environment.clone());
-                            row("seed", facts.seed.to_string());
-                            row(
-                                "generator",
-                                format!("revision {}", facts.generator_revision),
-                            );
-                            if shown.live {
-                                row("drawn", format!("{:.1} s into growing", shown.seconds));
-                            } else {
-                                row("grown in", format!("{:.1} s", shown.seconds));
-                            }
-                            let export = facts.export;
-                            row("packaged", bytes(export.package_mesh));
-                            row("as .glb", format!("about {}", bytes(export.glb)));
-                            row("as .obj", format!("about {}", bytes(export.obj)));
-                        })
-                        .response
-                        .on_hover_text(
-                            "File sizes of the plant on screen, this level only. \
-                     \"packaged\" is exact: this level's mesh as a PlantGen package stores it. \
-                     A whole package holds four levels for every keyframe and variant, \
-                     plus impostors and textures: `plantc build` gives its size. \
-                     The glTF and OBJ sizes are estimates for the drawn triangles \
-                     with the card textures as one PNG.",
-                        );
-                    ui.separator();
-                    ui.label(
-                        egui::RichText::new("Render it without the window:").color(theme::MUTED),
-                    );
-                    let mut text = command(&shown.shot);
-                    ui.add(
-                        egui::TextEdit::multiline(&mut text)
-                            .font(egui::TextStyle::Monospace)
-                            .desired_rows(3),
-                    );
-                }
-                ui.separator();
-                measure_controls(ui, lab);
-                ui.separator();
-                picture_controls(ui, lab, recording);
-                ui.separator();
-                ui.label(
-                    egui::RichText::new(
-                        "Drag to turn the plant, middle-drag or Shift-drag to move it, \
-                     scroll to come closer.",
-                    )
-                    .color(theme::MUTED),
-                );
-            });
-        });
-    lab.panel_right = shown.response.rect.right();
 }
 
 /// Start growing on "Grow", or when the settings changed and growing
@@ -710,6 +634,7 @@ fn grow(mut lab: ResMut<Lab>) {
     }
     let shot = shot(&lab);
     lab.started = Instant::now();
+    lab.growths += 1;
     lab.message.clear();
     let control = Arc::new(Control::default());
     control
@@ -717,89 +642,12 @@ fn grow(mut lab: ResMut<Lab>) {
         .store(if lab.live { lab.every } else { 0 }, Ordering::Relaxed);
     lab.control = Arc::clone(&control);
     lab.growing = Some(std::thread::spawn(move || {
-        let mut viewer = Watcher(control);
+        let mut viewer = Watcher(control, Instant::now());
         Grown {
             result: plantlab_scene::build_watched(&shot, Library::builtin(), &mut viewer),
             shot,
         }
     }));
-}
-
-/// Grow, stop, pause and resume; live frames; the growth's progress.
-fn growth_controls(ui: &mut egui::Ui, lab: &mut Lab) {
-    let growing = lab.growing.is_some();
-    let paused = lab.control.pause.load(Ordering::Relaxed);
-    ui.horizontal(|ui| {
-        if ui
-            .add_enabled(!growing, egui::Button::new("Grow"))
-            .on_hover_text("Grow the plant with these settings")
-            .clicked()
-        {
-            lab.go = true;
-        }
-        if ui
-            .add_enabled(growing, egui::Button::new("Stop"))
-            .on_hover_text("Stop growing; the last frame shown stays")
-            .clicked()
-        {
-            lab.control.stop.store(true, Ordering::Relaxed);
-            lab.dirty = false;
-        }
-        let pause = if paused { "Resume" } else { "Pause" };
-        if ui.add_enabled(growing, egui::Button::new(pause)).clicked() {
-            lab.control.pause.store(!paused, Ordering::Relaxed);
-        }
-    });
-    ui.checkbox(&mut lab.auto, "Grow when the settings change");
-    if !lab.auto && lab.dirty && !growing {
-        ui.label(egui::RichText::new("Settings changed: press Grow").color(theme::MUTED));
-    }
-    ui.horizontal(|ui| {
-        if ui
-            .checkbox(&mut lab.live, "Show it growing, every")
-            .changed()
-            && growing
-        {
-            let every = if lab.live { lab.every } else { 0 };
-            lab.control.every.store(every, Ordering::Relaxed);
-        }
-        if ui
-            .add_enabled(
-                lab.live,
-                egui::Slider::new(&mut lab.every, 1..=100)
-                    .logarithmic(true)
-                    .suffix(" steps"),
-            )
-            .changed()
-            && growing
-        {
-            lab.control.every.store(lab.every, Ordering::Relaxed);
-        }
-    });
-    ui.checkbox(&mut lab.follow, "Move the camera with the plant");
-    if growing {
-        let step = lab.control.step.load(Ordering::Relaxed);
-        let steps = lab.control.steps.load(Ordering::Relaxed);
-        let age = f64::from_bits(lab.control.age.load(Ordering::Relaxed));
-        let seconds = lab.started.elapsed().as_secs_f64();
-        let (share, text) = if steps == 0 {
-            (0.0, format!("starting, {seconds:.1} s"))
-        } else if step >= steps {
-            (1.0, format!("grown, meshing, {seconds:.1} s"))
-        } else {
-            (
-                f64::from(step) / f64::from(steps),
-                format!("step {step} of {steps}, {age:.1} years, {seconds:.1} s"),
-            )
-        };
-        #[allow(clippy::cast_possible_truncation)]
-        let bar = egui::ProgressBar::new(share as f32).text(if paused {
-            format!("paused at {text}")
-        } else {
-            text
-        });
-        ui.add(bar);
-    }
 }
 
 /// What putting a plant on screen touches.
@@ -924,6 +772,7 @@ fn put_on_screen(stage: &mut Stage, lab: &mut Lab, scene: Scene, shot: Shot, liv
         let name = picture_name(&scene);
         stage.recording.ask(Take::Frame, name);
     }
+    lab.shows += 1;
     lab.shown = Some(Shown {
         scene,
         shot,
@@ -958,14 +807,15 @@ fn orbit(
     motion: Res<AccumulatedMouseMotion>,
     scroll: Res<AccumulatedMouseScroll>,
     windows: Query<&Window, With<PrimaryWindow>>,
-    mut camera: Query<(&mut Orbit, &mut Transform), Without<Recorder>>,
+    mut camera: Query<(&mut Orbit, &mut Transform, &Camera), Without<Recorder>>,
 ) {
     let over_panel = contexts
         .ctx_mut()
         .is_ok_and(|ctx| ctx.egui_wants_pointer_input() || ctx.is_pointer_over_egui());
-    let Ok((mut orbit, mut transform)) = camera.single_mut() else {
+    let Ok((mut orbit, mut transform, view)) = camera.single_mut() else {
         return;
     };
+    let view_height = view.logical_viewport_size().map(|size| size.y);
     if lab.reset_camera {
         lab.reset_camera = false;
         if let Some(shown) = &lab.shown {
@@ -975,7 +825,8 @@ fn orbit(
     if !over_panel {
         let shift = keys.pressed(KeyCode::ShiftLeft) || keys.pressed(KeyCode::ShiftRight);
         if buttons.pressed(MouseButton::Middle) || (shift && buttons.pressed(MouseButton::Left)) {
-            let pixels = windows.iter().next().map_or(900.0, Window::height);
+            let pixels =
+                view_height.unwrap_or_else(|| windows.iter().next().map_or(900.0, Window::height));
             orbit.drag(motion.delta, pixels, fov());
         } else if buttons.pressed(MouseButton::Left) || buttons.pressed(MouseButton::Right) {
             orbit.yaw -= motion.delta.x * 0.006;
@@ -995,13 +846,17 @@ fn fov() -> f32 {
     fov
 }
 
-/// Keys, unless a text field has them: G the grid, R the ruler, F frames
-/// the plant again, P takes a snapshot, S saves the GIF.
+/// Keys, unless a text field has them, each as a command: Enter grows,
+/// Space pauses or resumes, Esc stops (or leaves the Overlay), F frames
+/// the plant again, G the grid, R the ruler, O the Overlay, P a snapshot,
+/// S saves the GIF, 1 to 7 the panels (Shift beside the others), F1 the
+/// keys, Ctrl+P the palette, Ctrl+, the settings.
 fn keys(
     mut contexts: EguiContexts,
     keys: Res<ButtonInput<KeyCode>>,
-    mut lab: ResMut<Lab>,
-    mut recording: ResMut<Recording>,
+    lab: Res<Lab>,
+    recording: Res<Recording>,
+    mut shell: ResMut<Shell>,
 ) {
     if contexts
         .ctx_mut()
@@ -1009,24 +864,70 @@ fn keys(
     {
         return;
     }
-    if keys.just_pressed(KeyCode::KeyG) {
-        lab.grid = !lab.grid;
+    let control = keys.any_pressed([KeyCode::ControlLeft, KeyCode::ControlRight]);
+    let shift = keys.any_pressed([KeyCode::ShiftLeft, KeyCode::ShiftRight]);
+    let growing = lab.growing.is_some();
+    let (overlay, settings_open) = (shell.overlay, shell.settings_open);
+    let mut send = |command| shell.queue.push(command);
+    if control {
+        if keys.just_pressed(KeyCode::KeyP) {
+            send(Command::Palette(String::new()));
+        }
+        if keys.just_pressed(KeyCode::Comma) {
+            send(Command::Settings(true));
+        }
+        return;
     }
-    if keys.just_pressed(KeyCode::KeyR) {
-        lab.ruler = !lab.ruler;
+    let pressed = |key| keys.just_pressed(key);
+    if pressed(KeyCode::Enter) || pressed(KeyCode::NumpadEnter) {
+        send(Command::Grow);
     }
-    if keys.just_pressed(KeyCode::KeyF) {
-        lab.reset_camera = true;
+    if pressed(KeyCode::Space) && growing {
+        send(Command::Pause(!lab.control.pause.load(Ordering::Relaxed)));
     }
-    if keys.just_pressed(KeyCode::KeyP)
-        && let Some(shown) = &lab.shown
-    {
-        recording.ask(Take::Snapshot, record::stamped(&picture_name(&shown.scene)));
+    if pressed(KeyCode::Escape) {
+        if growing {
+            send(Command::Stop);
+        } else if overlay {
+            send(Command::Overlay(false));
+        } else if settings_open {
+            send(Command::Settings(false));
+        }
     }
-    if keys.just_pressed(KeyCode::KeyS)
-        && let Some(shown) = &lab.shown
-    {
-        save_gif(&mut recording, &shown.scene);
+    if pressed(KeyCode::KeyF) {
+        send(Command::ResetCamera);
+    }
+    if pressed(KeyCode::KeyG) {
+        send(Command::Grid(!lab.grid));
+    }
+    if pressed(KeyCode::KeyR) {
+        send(Command::Ruler(!lab.ruler));
+    }
+    if pressed(KeyCode::KeyO) {
+        send(Command::Overlay(!overlay));
+    }
+    if pressed(KeyCode::KeyP) {
+        send(Command::Snapshot);
+    }
+    if pressed(KeyCode::KeyS) && !recording.frames.is_empty() {
+        send(Command::SaveGif);
+    }
+    if pressed(KeyCode::F1) {
+        send(Command::Panel(Panel::Keys, shift));
+    }
+    let digits = [
+        KeyCode::Digit1,
+        KeyCode::Digit2,
+        KeyCode::Digit3,
+        KeyCode::Digit4,
+        KeyCode::Digit5,
+        KeyCode::Digit6,
+        KeyCode::Digit7,
+    ];
+    for (key, panel) in digits.into_iter().zip(Panel::RAIL) {
+        if pressed(key) {
+            send(Command::Panel(panel, shift));
+        }
     }
 }
 
@@ -1047,12 +948,15 @@ fn measures(
     let Ok((transform, camera, global)) = camera.single() else {
         return;
     };
-    let screen = windows
-        .iter()
-        .next()
-        .map_or(Vec2::new(1400.0, 900.0), |window| {
-            Vec2::new(window.width(), window.height())
-        });
+    // The view the interface leaves: the camera's viewport.
+    let screen = camera.logical_viewport_size().unwrap_or_else(|| {
+        windows
+            .iter()
+            .next()
+            .map_or(Vec2::new(1400.0, 900.0), |window| {
+                Vec2::new(window.width(), window.height())
+            })
+    });
     let view = measure::View {
         eye: transform.translation,
         rotation: transform.rotation,
@@ -1074,7 +978,7 @@ fn measures(
         let on_screen = |at: f32| {
             [side * at, side * at + Vec3::Y * top].iter().all(|point| {
                 camera.world_to_viewport(global, *point).is_ok_and(|seen| {
-                    seen.x > lab.panel_right + 30.0
+                    seen.x > 30.0
                         && seen.x < screen.x - 80.0
                         && seen.y > 10.0
                         && seen.y < screen.y - 10.0
@@ -1107,138 +1011,54 @@ fn bytes(count: usize) -> String {
     }
 }
 
-/// The measures and the camera.
-fn measure_controls(ui: &mut egui::Ui, lab: &mut Lab) {
-    ui.horizontal(|ui| {
-        ui.checkbox(&mut lab.grid, "Grid (G)");
-        ui.checkbox(&mut lab.ruler, "Height ruler (R)");
-        if ui.button("Reset camera (F)").clicked() {
-            lab.reset_camera = true;
-        }
-    });
-    if let Some(shown) = &lab.shown
-        && lab.grid
-    {
-        let step = measure::grid_step(shown.scene.ground_radius);
-        ui.label(
-            egui::RichText::new(format!(
-                "Grid squares {}, bold lines every {}",
-                measure::length(step, step),
-                measure::length(step * 5.0, step * 5.0)
-            ))
-            .color(theme::MUTED),
-        );
-    }
-}
-
-/// Snapshots and animations.
-fn picture_controls(ui: &mut egui::Ui, lab: &Lab, recording: &mut Recording) {
-    ui.horizontal(|ui| {
-        ui.label("Pictures of");
-        if ui
-            .selectable_label(!recording.plant_only, "the scene")
-            .on_hover_text("As the window shows it: ground, scale and measures")
-            .clicked()
-        {
-            recording.plant_only = false;
-        }
-        if ui
-            .selectable_label(recording.plant_only, "the plant alone")
-            .on_hover_text("On a clear background: transparent PNGs and GIFs")
-            .clicked()
-        {
-            recording.plant_only = true;
-        }
-    });
-    ui.horizontal(|ui| {
-        ui.label("Width");
-        ui.add(egui::Slider::new(&mut recording.width, 128..=1920).suffix(" px"));
-    });
-    ui.horizontal(|ui| {
-        if ui
-            .add_enabled(lab.shown.is_some(), egui::Button::new("Snapshot (P)"))
-            .on_hover_text("Save a PNG of the plant on screen")
-            .clicked()
-            && let Some(shown) = &lab.shown
-        {
-            recording.ask(Take::Snapshot, record::stamped(&picture_name(&shown.scene)));
-        }
-        if ui
-            .checkbox(&mut recording.record, "Record growth")
-            .on_hover_text(
-                "Take a frame each time a plant or a frame of its growth is shown. \
-                 Turn off \"Move the camera with the plant\" to keep the camera still.",
-            )
-            .changed()
-            && recording.record
-            && let Some(shown) = &lab.shown
-        {
-            recording.ask(Take::Frame, picture_name(&shown.scene));
-        }
-    });
-    ui.horizontal(|ui| {
-        let mut milliseconds = u32::from(recording.delay) * 10;
-        ui.label("Frame");
-        if ui
-            .add(
-                egui::Slider::new(&mut milliseconds, 20..=2000)
-                    .logarithmic(true)
-                    .suffix(" ms"),
-            )
-            .changed()
-        {
-            recording.delay = u16::try_from(milliseconds / 10).unwrap_or(u16::MAX).max(2);
-        }
-    });
-    ui.horizontal(|ui| {
-        let mut seconds = f32::from(recording.hold) / 100.0;
-        ui.label("Hold the last");
-        if ui
-            .add(egui::Slider::new(&mut seconds, 0.0..=10.0).suffix(" s"))
-            .changed()
-        {
-            // At most 1000 hundredths.
-            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-            let hundredths = (seconds * 100.0).round() as u16;
-            recording.hold = hundredths;
-        }
-    });
-    ui.horizontal(|ui| {
-        let frames = recording.frames.len();
-        ui.label(format!("{frames} frames"));
-        if ui
-            .add_enabled(frames > 0, egui::Button::new("Save GIF (S)"))
-            .clicked()
-            && let Some(shown) = &lab.shown
-        {
-            save_gif(recording, &shown.scene);
-        }
-        if ui
-            .add_enabled(frames > 0, egui::Button::new("Clear"))
-            .clicked()
-        {
-            recording.frames.clear();
-        }
-        ui.checkbox(&mut recording.pngs, "and PNGs");
-    });
-    ui.label(
-        egui::RichText::new(format!("Saved in {}", recording.folder.display())).color(theme::MUTED),
-    );
-    if !recording.message.is_empty() {
-        ui.label(egui::RichText::new(&recording.message).color(theme::MUTED));
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A lab as the window starts it, with the library's species.
+    pub(super) fn lab() -> Lab {
+        Lab {
+            aspect: 1.0,
+            growths: 0,
+            shows: 0,
+            species: Library::builtin()
+                .species()
+                .iter()
+                .map(|entry| entry.id.clone())
+                .collect(),
+            chosen: 0,
+            age: Some(5.0),
+            asked_age: None,
+            oldest: 10.0,
+            day: 196.0,
+            level: 0,
+            draft: true,
+            look: Look::Review,
+            view: View::ThreeQuarter,
+            dirty: true,
+            auto: true,
+            go: false,
+            live: true,
+            every: 10,
+            follow: true,
+            growing: None,
+            control: Arc::default(),
+            started: Instant::now(),
+            shown: None,
+            message: String::new(),
+            reframe: false,
+            reset_camera: false,
+            grid: true,
+            ruler: true,
+        }
+    }
 
     #[test]
     fn the_command_renders_what_the_window_shows() {
         let mut shot = Shot::thumbnail("acer-macrophyllum");
         shot.age = Some(30.0);
         shot.view = View::Side;
-        let text = command(&shot);
+        let text = thumbs_command(&shot);
         assert!(text.starts_with("plantlab thumbs acer-macrophyllum"));
         assert!(text.contains("--age 30") && text.contains("--view side"));
     }
@@ -1262,7 +1082,7 @@ mod tests {
     #[test]
     fn the_watcher_draws_every_n_steps_and_stops_on_the_button() {
         let control = Arc::new(Control::default());
-        let mut watcher = Watcher(Arc::clone(&control));
+        let mut watcher = Watcher(Arc::clone(&control), Instant::now());
         assert!(!watcher.wants_frame(0), "no live frames unless asked");
         control.every.store(5, Ordering::Relaxed);
         assert!(watcher.wants_frame(10) && !watcher.wants_frame(11));
