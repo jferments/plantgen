@@ -11,12 +11,38 @@ what it shows.
 cargo run --release -p plantlab -- open acer-macrophyllum
 ```
 
-One plant on its ground patch, with the scale figure or rod. The panel on
-the left chooses the species (type to filter the list), its age, the day
-of the year, the level of detail, the quality (draft or standard), the
-look (review or photo) and the view. Under the plant's height, crown
-width, triangles and cards, it gives the `plantlab thumbs` command that
-renders what you see without the window.
+One plant on its ground patch, with the scale figure or rod, laid out
+as Project After's WorldLab is: a top bar, a rail of panels at the left,
+the open panels docked beside the 3D view (never over it) and a status
+bar.
+
+- **Top bar.** The menus (every command), the species (click to find
+  another), Grow, Pause and Stop, the age and day, Side, ¾ and Top, then
+  frame, grid, ruler, snapshot, record and Overlay; at the right the
+  search field and Settings.
+- **Rail.** Plant (1), Grow (2), View (3), Readings (4), Pictures (5),
+  Spec (6), Bark (7) and Keys (F1). A click opens a panel alone,
+  Shift+click opens it beside the others, a click on an open one closes
+  it. Readings docks wide; the view keeps at least as much as it. The
+  panels' widths come from the window's width alone.
+- **Overlay** (O) hides the bars: the view fills the window, with one
+  panel as a floating card and a small bar of the rail's buttons.
+- **Search or run** (Ctrl+P) finds any command or species as you type;
+  Enter runs the best match.
+- **Settings** (Ctrl+,) are kept in `~/.config/plantlab/settings.json`
+  (`$XDG_CONFIG_HOME` when set; `--settings FILE` for another). Each
+  control saves only its own setting, keeps every other key in the file,
+  and writes nothing when the file on disk does not load. Flags win over
+  the file.
+
+`--window WxH` sets the window's size, `--panels plant,readings` the
+panels it opens with and `--overlay` starts in Overlay. The Plant panel
+chooses the species (type to filter the list), its age and the day of the
+year; View the level of detail, the quality (draft or standard), the
+look (review or photo) and the view; Readings the plant's height, crown
+width, triangles and cards; Pictures the `plantlab thumbs` command that
+renders what you see without the window; Spec the species' merged spec;
+Bark its bark pattern and numbers.
 
 **Growing.** A change grows the plant again ("Grow when the settings
 change"; turn it off to grow only on **Grow**). **Stop** ends a growth and
@@ -27,10 +53,10 @@ the camera with the plant" keeps it framed as it grows. `--age YEARS`
 grows the first plant to that age instead of its oldest keyframe.
 
 **The camera.** Drag to turn around the plant, middle-drag (or Shift and
-drag) to move it, scroll to come closer; **Reset camera** or F frames it
+drag) to move it, scroll to come closer; "Frame the plant again" or F frames it
 again.
 
-**Measures.** A grid on the ground (G; its squares' size is in the panel,
+**Measures.** A grid on the ground (G; its squares' size is in the View panel,
 every fifth line bold, the bold lines' distances on the rim) and a ruler
 beside the plant (R), at the ground's edge or nearer where the edge is
 off screen, labelled in metres or centimetres, with the plant's height
@@ -45,9 +71,9 @@ and impostors; `plantc build` gives its size.
 **Pictures and animations.** **Snapshot** (P) saves a PNG; **Record
 growth** (`--record`) takes a frame each time a plant or a frame of its
 growth is shown, and **Save GIF** (S) writes them as a looping GIF, the
-last frame held (both times are in the panel), with "and PNGs" every
+last frame held (both times are in the Pictures panel), with "and PNGs" every
 frame too. Pictures are of the scene as the window shows it (ground,
-scale and measures, without the panel) or of the plant alone on a clear
+scale and measures, without the interface) or of the plant alone on a clear
 background (`--plant-only`): transparent PNGs and GIFs. They go to
 `plantlab-pictures` (`--out DIR`). For an animation that shows the plant
 grow rather than staying the same size, turn off "Move the camera with
