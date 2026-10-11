@@ -97,13 +97,10 @@
         "shape": {
           "template": "fruit",
           "kind": "drupelets",
-          "count": 3,
-          "cluster": "umbel",
-          "size": 0.4,
-          "spread": 40,
           "aspect": 1.25,
           "unripe": 0.4
         },
+        "inflorescence": { "kind": "umbel", "flowers": 3, "size": 0.4, "spread": 40 },
         "colour": [0.62, 0.05, 0.06],
         "accent": [0.55, 0.6, 0.38],
         "season": {

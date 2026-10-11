@@ -199,7 +199,7 @@ pub(crate) fn draw(
     if length <= 0.0 {
         return;
     }
-    let (base, heading, left) = crate::mesh::place(organ, look);
+    let (base, heading, left, _) = crate::mesh::place(organ, look);
     let heading = heading.normalize_or(Vec3::Y);
     let left = (left - heading * left.dot(heading)).normalize_or(math::any_perpendicular(heading));
     let out = left.cross(heading);
@@ -311,6 +311,7 @@ mod tests {
             face_up: 0.0,
             solid: None,
             forms: crate::looks::Forms::default(),
+            inflorescence: None,
         }
     }
 

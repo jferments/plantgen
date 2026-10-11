@@ -120,10 +120,13 @@ impl SkyLight {
         let drawn: Vec<f64> = looks
             .iter()
             .map(|look| {
-                let shape = &look.shape;
-                crate::templates::fill_share(shape)
-                    * shape.aspect()
-                    * (1.0 + shape.cross().unwrap_or(0.0))
+                // A cluster's card is its length times its organ's.
+                let (_, length) = look.span();
+                crate::templates::fill_share(look)
+                    * look.aspect()
+                    * (1.0 + look.cross().unwrap_or(0.0))
+                    * length
+                    * length
             })
             .collect();
         let living = |shed: Option<f64>| shed.is_none_or(|shed| shed > graph.age);
@@ -322,6 +325,7 @@ mod tests {
                 form: None,
                 season: None,
                 families: None,
+                inflorescence: None,
             },
         )]);
         crate::looks::resolve(

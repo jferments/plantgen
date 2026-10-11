@@ -93,12 +93,10 @@
         "shape": {
           "template": "fruit",
           "kind": "crowned",
-          "count": 6,
-          "size": 0.25,
-          "spread": 45,
           "aspect": 1.0,
           "unripe": 0.35
         },
+        "inflorescence": { "kind": "raceme", "flowers": 6, "size": 0.25, "spread": 45, "pedicel": 0.225 },
         "colour": [0.22, 0.07, 0.2],
         "accent": [0.55, 0.15, 0.15],
         "season": {
