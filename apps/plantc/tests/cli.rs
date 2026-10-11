@@ -68,13 +68,25 @@ fn list_and_check_name_the_built_in_species() {
 /// `plantc spec` shows a species' traits and what each rule did.
 #[test]
 fn rules_and_traits_say_where_they_come_from() {
-    // Corner's rules, homed at the seed plants.
+    // Corner's rules, homed at the seed plants, then the families'; a
+    // rule on a look's card names the card.
     let built_in = stdout(&plantc(&["rules"]));
     let seed_plants = "(clade Spermatophyta: _ranks/clade/spermatophyta.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (2):\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n"
+            "Rules, by their home (11):\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n"
         )),
+        "{built_in}"
+    );
+    assert!(
+        built_in.contains(
+            "\n  appearance.organs.flower.shape.rays on `head` cards  (family Asteraceae: asteraceae/family.json)\n"
+        ),
+        "{built_in}"
+    );
+    assert!(
+        built_in
+            .contains("\n  generator.params.leaf_length  (family Poaceae: poaceae/family.json)\n"),
         "{built_in}"
     );
     assert!(
@@ -104,7 +116,7 @@ fn rules_and_traits_say_where_they_come_from() {
     .unwrap();
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
-    assert!(rules.starts_with("Rules, by their home (3):\n"), "{rules}");
+    assert!(rules.starts_with("Rules, by their home (12):\n"), "{rules}");
     assert!(
         rules.contains(
             "\n  generator.params.alternate  (family Sapindaceae: sapindaceae/family.json)\n"

@@ -42,19 +42,27 @@
 //! A trait stated as a range reads as its `typical` value, else the middle
 //! of its `min` and `max`; one stated as qualified states reads as its most
 //! usual state ([`FREQUENCIES`]), and a rule reading states that tie sets
-//! nothing.
+//! nothing. A formula's whole number is written as one, so a rule can set
+//! a count (`round(ray_florets)`).
 //! Every rule lives in the taxon it holds for, its home (growth plan G2,
 //! Joshi's rule that rules belong to taxa). Traits and rules merge down
 //! the chain like values; then each rule sets its path, after the rules
 //! that set the parameters it reads, unless a file at least as near as
-//! the rule and what it reads set the path by hand, or the species'
-//! program has no such parameter. The effective spec carries the values,
-//! not the traits or rules.
+//! the rule and what it reads set the path by hand, the species' program
+//! has no such parameter, or the path is in the look of an organ
+//! (`appearance.organs.<organ>`) the species does not draw. A rule inside
+//! a look's `shape` names the card `template` it is for, one of whose
+//! fields it sets ([`TEMPLATES`]; a count takes only a whole number), and
+//! sets it only where the species draws the organ with that card: a
+//! family's rule for a head card's rays sets them where a species draws
+//! its heads with one, and nothing where it draws them another way. The
+//! effective spec carries the values, not the traits or rules.
 //!
 //! Every file notes what it sets (per-value evidence): a note stays in the
 //! effective spec until a nearer file replaces or deletes what it
 //! describes, and a note on a subtree stays beside the nearer files' notes
-//! on values inside it.
+//! on values inside it. A value a rule sets carries the rule's note: its
+//! file's note on `rules.<path>`, else on all of its `rules`.
 //!
 //! The module reads nothing but JSON, so the build script compiles it too
 //! and merges every built-in species' chain while compiling.
@@ -122,7 +130,8 @@ pub struct Part {
     pub traits: Map<String, Value>,
     /// Its `rules`: each spec path a rule sets from traits, and the rule
     /// (`{"rule": formula}` or `{"map": {trait: {value: spec value}}}`,
-    /// with a `why`); `null` deletes an inherited one.
+    /// with a `why`, and inside a look's `shape` the card `template` it is
+    /// for); `null` deletes an inherited one.
     pub rules: Map<String, Value>,
 }
 
@@ -374,14 +383,28 @@ fn check_rule(path: &str, rule: &Value) -> Result<(), String> {
     };
     if let Some(key) = rule
         .keys()
-        .find(|key| !["rule", "map", "why"].contains(&key.as_str()))
+        .find(|key| !["rule", "map", "why", "template"].contains(&key.as_str()))
     {
         return Err(format!(
-            "`{key}` is not a rule's: `rule` or `map`, and `why`"
+            "`{key}` is not a rule's: `rule` or `map`, `why`, and in a look's `shape` its `template`"
         ));
     }
     if !rule.get("why").is_none_or(Value::is_string) {
         return Err("`why` is a line of text".into());
+    }
+    match (shape_field(path), rule.get("template")) {
+        (Some(field), Some(Value::String(template))) => {
+            template_field(template, field)?;
+        }
+        (Some(_), _) => {
+            return Err(
+                "a rule inside a look's `shape` names the card `template` it is for".into(),
+            );
+        }
+        (None, Some(_)) => {
+            return Err("only a rule inside a look's `shape` names a card `template`".into());
+        }
+        (None, None) => {}
     }
     match (rule.get("rule"), rule.get("map")) {
         (Some(Value::String(formula)), None) => Formula::parse(formula).map(|_| ()),
@@ -390,6 +413,212 @@ fn check_rule(path: &str, rule: &Value) -> Result<(), String> {
             _ => Err("a `map` names one trait, then its values' spec values".into()),
         },
         _ => Err("a rule has a `rule` (a formula) or a `map`, not both".into()),
+    }
+}
+
+/// What a field of a card template takes.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Field {
+    /// A number.
+    Number,
+    /// A whole number, 0 or more: rays, leaflets, clusters.
+    Count,
+    /// One of the template's words: a fruit's kind, how fruit cluster.
+    Word,
+}
+
+/// The fields of each card template a look's `shape` may name
+/// (`crate::looks::Shape`), by the template's name: what a rule that names
+/// the template may set inside a look's `shape`. The looks module's tests
+/// hold this to the templates.
+pub const TEMPLATES: [(&str, &[(&str, Field)]); 15] = {
+    use Field::{Count, Number, Word};
+    [
+        (
+            "needles",
+            &[
+                ("twigs", Count),
+                ("needle", Number),
+                ("twig_angle", Number),
+                ("ranks", Count),
+                ("aspect", Number),
+                ("width", Number),
+                ("bundle", Count),
+            ],
+        ),
+        (
+            "scales",
+            &[
+                ("branchlets", Count),
+                ("angle", Number),
+                ("cord", Number),
+                ("aspect", Number),
+            ],
+        ),
+        (
+            "palmate",
+            &[
+                ("lobes", Count),
+                ("depth", Number),
+                ("lobe_width", Number),
+                ("teeth", Count),
+                ("spread", Number),
+                ("petiole", Number),
+            ],
+        ),
+        (
+            "simple",
+            &[
+                ("width", Number),
+                ("widest", Number),
+                ("tip", Number),
+                ("base", Number),
+                ("teeth", Count),
+                ("tooth_depth", Number),
+                ("petiole", Number),
+            ],
+        ),
+        (
+            "lobed",
+            &[
+                ("width", Number),
+                ("lobes", Count),
+                ("depth", Number),
+                ("round", Number),
+                ("petiole", Number),
+            ],
+        ),
+        (
+            "compound",
+            &[
+                ("leaflets", Count),
+                ("leaflet_width", Number),
+                ("teeth", Count),
+                ("petiole", Number),
+            ],
+        ),
+        (
+            "sprig",
+            &[
+                ("leaves", Count),
+                ("angle", Number),
+                ("stalk", Number),
+                ("width", Number),
+                ("widest", Number),
+                ("tip", Number),
+                ("base", Number),
+                ("teeth", Count),
+                ("tooth_depth", Number),
+                ("round", Number),
+                ("petiole", Number),
+            ],
+        ),
+        ("blade", &[("taper", Number), ("aspect", Number)]),
+        (
+            "frond",
+            &[
+                ("pinnae", Count),
+                ("width", Number),
+                ("divided", Number),
+                ("stipe", Number),
+            ],
+        ),
+        (
+            "flower",
+            &[
+                ("petals", Count),
+                ("petal_width", Number),
+                ("point", Number),
+                ("notch", Number),
+                ("centre", Number),
+            ],
+        ),
+        (
+            "head",
+            &[("rays", Count), ("ray_width", Number), ("disc", Number)],
+        ),
+        ("umbel", &[("clusters", Count), ("florets", Count)]),
+        (
+            "spike",
+            &[
+                ("florets", Count),
+                ("aspect", Number),
+                ("plume", Number),
+                ("stalk", Number),
+            ],
+        ),
+        (
+            "panicle",
+            &[
+                ("whorls", Count),
+                ("branches", Count),
+                ("spread", Number),
+                ("spikelets", Count),
+                ("aspect", Number),
+                ("stalk", Number),
+            ],
+        ),
+        (
+            "fruit",
+            &[
+                ("aspect", Number),
+                ("cone", Number),
+                ("kind", Word),
+                ("count", Count),
+                ("cluster", Word),
+                ("size", Number),
+                ("spread", Number),
+                ("unripe", Number),
+            ],
+        ),
+    ]
+};
+
+/// The field a rule's `path` sets inside a look's `shape`
+/// (`appearance.organs.<organ>.shape.<field>`), if it sets one.
+fn shape_field(path: &str) -> Option<&str> {
+    let (_, look) = path.strip_prefix("appearance.organs.")?.split_once('.')?;
+    look.strip_prefix("shape.")
+}
+
+/// What `field` of the card `template` takes.
+fn template_field(template: &str, field: &str) -> Result<Field, String> {
+    let fields = TEMPLATES
+        .iter()
+        .find(|(name, _)| *name == template)
+        .map(|(_, fields)| *fields)
+        .ok_or_else(|| format!("`{template}` is no card template"))?;
+    fields
+        .iter()
+        .find(|(name, _)| *name == field)
+        .map(|(_, takes)| *takes)
+        .ok_or_else(|| format!("`{template}` cards have no `{field}`"))
+}
+
+/// What a rule for the card `template` may set at `path` inside
+/// `appearance.organs`: something in the look of an organ the species
+/// draws, and inside its `shape` a field of the card, where the species
+/// draws the organ with that card (`Some` of what the field takes).
+fn look_field(
+    spec: &Map<String, Value>,
+    path: &str,
+    template: Option<&str>,
+) -> Result<Option<Field>, String> {
+    let (organ, look) = path.split_once('.').unwrap_or((path, ""));
+    let drawn = find(spec, &format!("appearance.organs.{organ}"))
+        .ok_or_else(|| format!("it draws no `{organ}` look"))?
+        .get("shape")
+        .and_then(|shape| shape.get("template"))
+        .and_then(Value::as_str);
+    let (Some(field), Some(template)) = (look.strip_prefix("shape."), template) else {
+        return Ok(None);
+    };
+    match drawn {
+        Some(drawn) if drawn == template => template_field(template, field).map(Some),
+        Some(drawn) => Err(format!(
+            "the rule is for `{template}` cards and its `{organ}` look is drawn with `{drawn}`"
+        )),
+        None => Err(format!("its `{organ}` look names no card template")),
     }
 }
 
@@ -727,9 +956,10 @@ type Origin = (String, usize);
 /// down the chain, the nearer winning; then each rule sets its path from
 /// the traits and parameters it reads, after any rule that sets one of
 /// those parameters, unless a file at least as near as the rule and what
-/// it reads set the path by hand, or the path is a parameter the species'
-/// program lacks. Rules that read each other's paths in a loop set
-/// nothing.
+/// it reads set the path by hand, the path is a parameter the species'
+/// program lacks, or it is in a look the species does not draw or draws
+/// with another card than the rule's. Rules that read each other's paths
+/// in a loop set nothing.
 ///
 /// # Errors
 ///
@@ -934,6 +1164,14 @@ impl Ruled<'_> {
                 return Err(format!("program `{program}` has no parameter `{param}`"));
             }
         }
+        let field = match self.path.strip_prefix("appearance.organs.") {
+            Some(look) => look_field(
+                spec,
+                look,
+                self.rule.get("template").and_then(Value::as_str),
+            )?,
+            None => None,
+        };
         let mut depth = self.index;
         let mut from = Vec::new();
         let mut inputs = BTreeMap::new();
@@ -967,6 +1205,20 @@ impl Ruled<'_> {
             return Err(format!("set by hand in {label}"));
         }
         let value = evaluate(self.rule, &inputs)?;
+        let fits = match field {
+            Some(Field::Count) => value.is_u64(),
+            Some(Field::Number) => value.is_number(),
+            Some(Field::Word) => value.is_string(),
+            None => true,
+        };
+        if !fits {
+            let takes = match field {
+                Some(Field::Count) => "a whole number, 0 or more",
+                Some(Field::Word) => "a word",
+                _ => "a number",
+            };
+            return Err(format!("it gives {value}, and the look takes {takes}"));
+        }
         set(spec, self.path, value);
         forget(origins, self.path);
         let file = &self.layers[self.index].0;
@@ -978,8 +1230,14 @@ impl Ruled<'_> {
         let origin = (label, depth);
         origins.insert(self.path.to_string(), origin.clone());
         notes.retain(|path, _| !within(path, self.path));
-        if let Some((_, note)) = notes.get(&format!("rules.{}", self.path)).cloned() {
-            notes.insert(self.path.to_string(), (origin, note));
+        // The rule's note: on its path, else on all of its file's rules.
+        let part = self.layers[self.index].1;
+        if let Some(note) = part
+            .notes
+            .get(&format!("rules.{}", self.path))
+            .or_else(|| part.notes.get("rules"))
+        {
+            notes.insert(self.path.to_string(), (origin, note.clone()));
         }
         Ok(())
     }
@@ -1096,8 +1354,7 @@ fn evaluate(rule: &Map<String, Value>, inputs: &BTreeMap<String, Value>) -> Resu
         return Formula::parse(formula)?
             .eval(&number)
             .map(plain)
-            .and_then(serde_json::Number::from_f64)
-            .map(Value::Number)
+            .and_then(written)
             .ok_or_else(|| "what it reads gives it no number".to_string());
     }
     if let Some(Value::Object(map)) = rule.get("map")
@@ -1122,6 +1379,18 @@ fn evaluate(rule: &Map<String, Value>, inputs: &BTreeMap<String, Value>) -> Resu
 /// by hand, and it reads back as written once merged.
 fn plain(value: f64) -> f64 {
     format!("{value:.5e}").parse().unwrap_or(value)
+}
+
+/// A rule's number as JSON writes it: a whole number as one, so a rule can
+/// set a count (`round(ray_florets)`), else as a decimal; nothing for a
+/// number that is not finite.
+fn written(value: f64) -> Option<Value> {
+    if value.fract() == 0.0
+        && let Ok(whole) = format!("{value:.0}").parse::<i64>()
+    {
+        return Some(Value::from(whole));
+    }
+    serde_json::Number::from_f64(value).map(Value::Number)
 }
 
 /// Set the value at `path` (keys joined by dots), making the objects on
@@ -1676,6 +1945,29 @@ mod tests {
                 "evidence": {"traits.leaf_length_m": {"evidence": "Authored", "note": "None."}}})),
             "the evidence note on `traits.leaf_length_m` in the file is on a value it does not set",
         );
+        // A rule inside a look's shape names a card that has its field.
+        let shape =
+            |rule: Value| family(json!({"rules": {"appearance.organs.flower.shape.rays": rule}}));
+        refused(
+            "testaceae/family.json",
+            &shape(json!({"rule": "5"})),
+            "a rule inside a look's `shape` names the card `template` it is for",
+        );
+        refused(
+            "testaceae/family.json",
+            &shape(json!({"rule": "5", "template": "umbel"})),
+            "`umbel` cards have no `rays`",
+        );
+        refused(
+            "testaceae/family.json",
+            &shape(json!({"rule": "5", "template": "daisy"})),
+            "`daisy` is no card template",
+        );
+        refused(
+            "testaceae/family.json",
+            &family(json!({"rules": {"generator.params.a": {"rule": "1", "template": "head"}}})),
+            "only a rule inside a look's `shape` names a card `template`",
+        );
     }
 
     #[test]
@@ -1904,11 +2196,11 @@ mod tests {
         let middle = density(&json!({"id": "plain-one", "traits": {
             "leaf_length_m": {"min": 0.1, "max": 0.2, "high": 0.5},
             "leaf_arrangement": {"opposite": "usually", "alternate": "rarely"}}}));
-        assert_eq!(middle, (json!(8.0), json!(0), None));
+        assert_eq!(middle, (json!(8), json!(0), None));
         let typical = density(&json!({"id": "plain-two", "traits": {
             "leaf_length_m": {"min": 0.1, "max": 0.4, "typical": 0.15},
             "leaf_arrangement": {"alternate": "often", "opposite": "sometimes"}}}));
-        assert_eq!(typical, (json!(8.0), json!(1), None));
+        assert_eq!(typical, (json!(8), json!(1), None));
         let tied = density(&json!({"id": "plain-three", "traits": {
             "leaf_arrangement": {"alternate": "often", "opposite": "often"}}}));
         assert_eq!(tied.1, Value::Null);
@@ -1969,6 +2261,119 @@ mod tests {
             serde_json::from_str::<Value>(&alone).unwrap()["generator"]["params"]["a"],
             10.0
         );
+    }
+
+    /// A family's rules for its heads set a card's fields where the species
+    /// draws the organ with that card: a head card's rays, an umbel card's
+    /// clusters. A count takes a whole number, which a formula writes as
+    /// one.
+    #[test]
+    fn rules_set_looks_their_templates_have() {
+        let family = "testaceae/family.json";
+        let files = ranks(&[(
+            family,
+            json!({"schema": 1, "rank": "family", "name": "Testaceae",
+                "generator": {"program": "broadleaf"},
+                "rules": {
+                    "appearance.organs.flower.shape.rays": {
+                        "template": "head", "rule": "round(ray_florets)"},
+                    "appearance.organs.flower.shape.disc": {"template": "head",
+                        "rule": "involucre_diameter_m / (involucre_diameter_m + 2 * ray_length_m)"},
+                    "appearance.organs.flower.shape.clusters": {
+                        "template": "umbel", "rule": "round(units_per_inflorescence)"},
+                    "appearance.organs.flower.colour": {
+                        "map": {"capitulum_kind": {"radiate": [1, 1, 1]}}}}}),
+        )]);
+        let chain = above(&files, "testaceae", "plain").unwrap();
+        let species = "testaceae/plain/plain-one/spec.json";
+        let grown = |template: &str, traits: &Value| {
+            let own = json!({"id": "plain-one", "traits": traits,
+                "appearance": {"organs": {"flower": {"shape": {"template": template}}}}});
+            inherit(species, &own, &chain, &programs()).unwrap()
+        };
+        let traits = json!({"ray_florets": {"min": 13, "max": 34},
+            "involucre_diameter_m": 0.016, "ray_length_m": 0.016,
+            "units_per_inflorescence": {"min": 10, "max": 100},
+            "capitulum_kind": "radiate"});
+        let outcome = |grown: &super::Inherited, field: &str| {
+            grown.rules[&format!("appearance.organs.flower.shape.{field}")]
+                .1
+                .clone()
+        };
+
+        // A head card takes the rays, 13 to 34 read as 23.5 and rounded,
+        // and its disc's share of the head; it has no clusters.
+        let head = grown("head", &traits);
+        let shape = &head.spec["appearance"]["organs"]["flower"]["shape"];
+        assert_eq!(shape["rays"], json!(24));
+        assert_eq!(shape["disc"], json!(0.333_333));
+        assert!(shape.get("clusters").is_none());
+        assert_eq!(
+            outcome(&head, "clusters").as_deref(),
+            Some("the rule is for `umbel` cards and its `flower` look is drawn with `head`")
+        );
+        assert_eq!(
+            head.spec["appearance"]["organs"]["flower"]["colour"],
+            json!([1, 1, 1])
+        );
+        // An umbel card takes the clusters and no rays.
+        let umbel = grown("umbel", &traits);
+        let shape = &umbel.spec["appearance"]["organs"]["flower"]["shape"];
+        assert_eq!(shape["clusters"], json!(55));
+        assert!(shape.get("rays").is_none());
+        assert_eq!(
+            outcome(&umbel, "rays").as_deref(),
+            Some("the rule is for `head` cards and its `flower` look is drawn with `umbel`")
+        );
+
+        // A species that draws no flower sets none of it.
+        let bare = inherit(
+            species,
+            &json!({"id": "plain-two", "traits": traits}),
+            &chain,
+            &programs(),
+        )
+        .unwrap();
+        assert!(bare.spec.get("appearance").is_none());
+        assert_eq!(
+            outcome(&bare, "rays").as_deref(),
+            Some("it draws no `flower` look")
+        );
+        assert_eq!(
+            bare.rules["appearance.organs.flower.colour"].1.as_deref(),
+            Some("it draws no `flower` look")
+        );
+
+        // A count takes no fraction, and a look set by hand stands.
+        let halved = inherit(
+            species,
+            &json!({"id": "plain-three", "traits": traits,
+                "appearance": {"organs": {"flower": {"shape": {"template": "head", "disc": 0.3}}}},
+                "rules": {"appearance.organs.flower.shape.rays": {
+                    "template": "head", "rule": "ray_florets / 2"}}}),
+            &chain,
+            &programs(),
+        )
+        .unwrap();
+        assert_eq!(
+            outcome(&halved, "rays").as_deref(),
+            Some("it gives 11.75, and the look takes a whole number, 0 or more")
+        );
+        assert_eq!(
+            outcome(&halved, "disc").as_deref(),
+            Some(format!("set by hand in {species}").as_str())
+        );
+        assert_eq!(
+            halved.spec["appearance"]["organs"]["flower"]["shape"]["disc"],
+            json!(0.3)
+        );
+
+        // Whole numbers are written as whole numbers, the rest as decimals.
+        assert_eq!(super::written(24.0), Some(json!(24)));
+        assert_eq!(super::written(-0.0), Some(json!(0)));
+        assert_eq!(super::written(0.5), Some(json!(0.5)));
+        assert_eq!(super::written(1e20), Some(json!(1e20)));
+        assert_eq!(super::written(f64::INFINITY), None);
     }
 
     /// A program's parameters are its own and those of the programs it
@@ -2034,6 +2439,14 @@ mod tests {
         // The family's `alternate` is as near as the rule, which reads only
         // the program, so the hand-set value stands.
         assert_eq!(params["alternate"], 1);
+        // The clade notes all of its rules at once, and each value they
+        // set carries that note.
+        assert_eq!(
+            plain.spec["evidence"],
+            json!({"generator.params.b": note("Rules."),
+                "generator.params.c": note("Rules."),
+                "generator.params.space_density": note("Rules.")})
+        );
 
         // A species' own `a` is nearer than anything above it.
         let own = grown(&json!({"id": "plain-two",

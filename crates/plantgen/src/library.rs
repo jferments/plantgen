@@ -2750,13 +2750,31 @@ mod tests {
         }
     }
 
-    /// Stating characters changes no species' spec, and so no package,
-    /// while no rule reads them: every built-in spec is what it would be
-    /// with no trait stated anywhere.
+    /// Stating characters changes a species' spec, and so its package,
+    /// only where a rule reads them: every built-in spec is what it would
+    /// be with no trait stated anywhere, but for the values rules set from
+    /// its characters and their notes.
     #[test]
     fn characters_change_no_spec_until_a_rule_reads_them() {
         let library = Library::builtin();
         let mut stated = 0;
+        let mut ruled = 0;
+        let remove = |spec: &mut serde_json::Value, path: &str| {
+            let (outer, key) = path.rsplit_once('.').unwrap();
+            if let Some(parent) = outer
+                .split('.')
+                .try_fold(&mut *spec, |at, key| at.get_mut(key))
+                .and_then(serde_json::Value::as_object_mut)
+            {
+                parent.remove(key);
+            }
+            if let Some(notes) = spec
+                .get_mut("evidence")
+                .and_then(serde_json::Value::as_object_mut)
+            {
+                notes.remove(path);
+            }
+        };
         let stripped: BTreeMap<String, RankFile> = library
             .ranks
             .iter()
@@ -2780,16 +2798,24 @@ mod tests {
             let bare =
                 crate::inherit::inherit(&entry.file(), &own, &above, library.program_params())
                     .unwrap();
+            let full = library.inherited(&entry.id).unwrap();
+            // The paths rules set with the characters and not without them.
+            let mut with = full.spec.clone();
+            let mut without = bare.spec;
+            for (path, (_, outcome)) in &full.rules {
+                if outcome.is_none() && bare.rules[path].1.is_some() {
+                    ruled += 1;
+                    remove(&mut with, path);
+                    remove(&mut without, path);
+                }
+            }
             // The notes on traits left in `own` stay out of the spec too.
-            assert_eq!(
-                bare.spec,
-                library.inherited(&entry.id).unwrap().spec,
-                "{}",
-                entry.id
-            );
+            assert_eq!(without, with, "{}", entry.id);
         }
-        // The library states characters, so the test tests something.
+        // The library states characters, and rules read some of them, so
+        // the test tests something.
         assert!(stated > 20, "{stated}");
+        assert!(ruled > 0, "{ruled}");
     }
 
     fn source_of_program(name: &str) -> &'static str {

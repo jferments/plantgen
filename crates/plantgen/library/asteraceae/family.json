@@ -8,6 +8,28 @@
     "leaf_arrangement": {"alternate": "often", "opposite": "often", "whorled": "rarely"},
     "fruit_type": {"cypsela": "usually"}
   },
+  "rules": {
+    "appearance.organs.flower.shape.rays": {
+      "template": "head",
+      "rule": "round(ray_florets)",
+      "why": "A head card draws each ray floret of a radiate head as a ray."
+    },
+    "appearance.organs.flower.shape.disc": {
+      "template": "head",
+      "rule": "involucre_diameter_m / (involucre_diameter_m + 2 * ray_length_m)",
+      "why": "A head card draws the disc about as wide as the involucre, with a ray's length beyond it on either side: the disc's share of the head's width."
+    },
+    "appearance.organs.flower.shape.clusters": {
+      "template": "umbel",
+      "rule": "clamp(round(sqrt(units_per_inflorescence)), 1, 30)",
+      "why": "An umbel card draws an array's heads as its small flowers, in clusters: as many clusters as heads in each, up to the 30 clusters the card can show."
+    },
+    "appearance.organs.flower.shape.florets": {
+      "template": "umbel",
+      "rule": "clamp(round(units_per_inflorescence / clamp(round(sqrt(units_per_inflorescence)), 1, 30)), 1, 60)",
+      "why": "Each of the card's clusters holds an equal share of the array's heads, up to the 60 a cluster can show."
+    }
+  },
   "evidence": {
     "traits.inflorescence_unit": {
       "evidence": "SourceInferred",
@@ -23,6 +45,11 @@
       "evidence": "SourceInferred",
       "source": "vicflora",
       "note": "VicFlora's family description: the fruit is usually a cypsela (a one-seeded fruit from an inferior ovary), often topped by a pappus."
+    },
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen's cards draw the daisy family's heads, a choice of the model's until heads are built from their florets (spec rework M6): a head card draws one head face on, its rays the ray florets' straps round a disc of florets; an umbel card draws a flat-topped array of small heads, each one of its flowers, the flowers in clusters. A head's width is its involucre's, as floras measure it, plus a ray on either side."
     }
   }
 }

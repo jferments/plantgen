@@ -51,6 +51,9 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   what its genus and family state, and `plantc traits <species>` shows
   where each character came from and which are still missing. The first
   families have their characters; most have none yet (`plantc audit`).
+  Rules in a taxon turn its characters into the plant: in the daisy and
+  grass families, a head's rays and disc, the heads in an array and a
+  grass's blades and panicle come from a flora's numbers.
 - **Plant programs.** 15 programs in PlantGen's open L-system language
   (`crates/plantgen/programs/*.lsys`), from conifers and broadleaf trees to
   grasses, ferns, cacti and climbers. Versioned environment tools let a

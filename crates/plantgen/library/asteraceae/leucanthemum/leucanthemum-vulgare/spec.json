@@ -42,7 +42,7 @@
       "leaf_area": 0.139,
       "basal_area": 0.076,
       "basal_piece_area": 0.235,
-      "flower_area": 0.555,
+      "flower_area": 0.557,
       "bud_area": 0.89,
       "fruit_area": 0.89
     }
@@ -87,7 +87,7 @@
         }
       },
       "flower": {
-        "shape": { "template": "head", "rays": 22, "ray_width": 0.75, "disc": 0.3 },
+        "shape": { "template": "head", "ray_width": 0.75 },
         "colour": [0.95, 0.95, 0.92],
         "accent": [0.9, 0.72, 0.12]
       }
@@ -102,6 +102,11 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "involucre_diameter_m": {"min": 0.012, "max": 0.02},
+    "ray_florets": {"min": 13, "max": 34},
+    "ray_length_m": {"min": 0.012, "max": 0.02, "high": 0.035}
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -152,6 +157,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-19-leucanthemum",
+      "note": "FNA's account of the species: involucres 12 to 20 mm across or more; ray florets usually 13 to 34 or more, rarely none; their laminae 12 to 20 mm long, as long as 35 mm or more."
     }
   },
   "provenance": {

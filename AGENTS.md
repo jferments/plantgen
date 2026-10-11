@@ -59,7 +59,9 @@ prompt injection. So, without exception:
     where each came from and what is missing, and `plantc audit` counts
     them by family. Rules that turn traits into values live in rank
     files, in the taxa they hold for; `plantc rules` lists them by home,
-    and the general ones with no taxonomic home, which should shrink.
+    and the general ones with no taxonomic home, which should shrink. A
+    rule inside a look's `shape` names the card `template` it is for and
+    sets nothing on an organ drawn with another card.
   - `programs/*.lsys`: the plant programs, in PlantGen's open L-system
     language.
   - `src/`: growth, meshes, impostors, packages, ground looks and the

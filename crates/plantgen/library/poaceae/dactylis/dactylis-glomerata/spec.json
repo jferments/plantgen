@@ -18,7 +18,6 @@
       "tussock_radius": 0.1,
       "tiller_lean": 12,
       "leaves": 3,
-      "leaf_length": 0.4,
       "leaf_spread": 0.3,
       "leaf_angle": 20,
       "arch": 11,
@@ -28,11 +27,10 @@
       "culm_radius": 0.0015,
       "culm_leaves": 2,
       "culm_lean": 6,
-      "panicle_length": 0.12,
       "panicle_nod": 10,
-      "blade_area": 0.064,
-      "tip_area": 0.035,
-      "thatch_area": 0.064,
+      "blade_area": 0.118,
+      "tip_area": 0.064,
+      "thatch_area": 0.118,
       "panicle_area": 0.097
     }
   },
@@ -52,13 +50,13 @@
     "variation": 0.2,
     "organs": {
       "blade": {
-        "shape": { "template": "blade", "taper": 0, "aspect": 0.07 }
+        "shape": { "template": "blade", "taper": 0 }
       },
       "blade_tip": {
-        "shape": { "template": "blade", "taper": 1, "aspect": 0.07 }
+        "shape": { "template": "blade", "taper": 1 }
       },
       "thatch": {
-        "shape": { "template": "blade", "taper": 0, "aspect": 0.07 },
+        "shape": { "template": "blade", "taper": 0 },
         "colour": [0.38, 0.31, 0.18],
         "shade": [0.12, 0.1, 0.05]
       },
