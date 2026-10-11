@@ -103,11 +103,23 @@
           "fall": 270,
           "flower_look": {
             "shape": {
-              "template": "umbel",
-              "clusters": 1,
-              "florets": 12
+              "template": "flower",
+              "petals": 5,
+              "petal_width": 0.8,
+              "point": 0.3,
+              "notch": 0.0,
+              "centre": 0.3
             },
-            "colour": [0.72, 0.76, 0.38]
+            "colour": [0.72, 0.76, 0.38],
+            "accent": [0.6, 0.65, 0.3],
+            "size": 0.5,
+            "form": {
+              "flower": {
+                "cup": 30,
+                "stamens": 5,
+                "stamen_length": 0.4
+              }
+            }
           }
         }
       }
@@ -173,6 +185,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "appearance.organs.bloom.season.flower_look": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its flowers drawn one by one (spec rework L1b): small greenish-yellow flowers 3 to 5 mm across in umbel-like clusters that open together. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
     }
   },
   "provenance": {

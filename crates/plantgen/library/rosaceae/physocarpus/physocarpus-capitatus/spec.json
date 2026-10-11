@@ -109,15 +109,35 @@
           "ripe": 180,
           "ripening": 30,
           "fall": 380,
+          "opening": 14,
+          "bud_look": {
+            "shape": {
+              "template": "fruit",
+              "aspect": 0.9
+            },
+            "colour": [0.88, 0.55, 0.58],
+            "accent": [0.75, 0.4, 0.45],
+            "size": 0.3
+          },
           "flower_look": {
             "shape": {
-              "template": "umbel",
-              "clusters": 1,
-              "florets": 30
+              "template": "flower",
+              "petals": 5,
+              "petal_width": 1.0,
+              "point": 0.0,
+              "notch": 0.0,
+              "centre": 0.3
             },
-            "colour": [0.95, 0.93, 0.88],
-            "accent": [0.8, 0.6, 0.6],
-            "size": 1.2
+            "colour": [0.96, 0.94, 0.9],
+            "accent": [0.8, 0.35, 0.35],
+            "size": 0.9,
+            "form": {
+              "flower": {
+                "cup": 20,
+                "stamens": 30,
+                "stamen_length": 0.4
+              }
+            }
           }
         }
       }
@@ -182,6 +202,21 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "appearance.organs.bloom.season.flower_look": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its flowers drawn one by one (spec rework L1b): white flowers about 1 cm across with about 30 red-tipped stamens, from pink buds, in dense rounded clusters that open from the outside in over about two weeks (as in the related P. opulifolius). From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
+    },
+    "appearance.organs.bloom.season.opening": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Days from the first flower of a cluster opening to its last: about two weeks, as described for P. opulifolius."
+    },
+    "appearance.organs.bloom.season.bud_look": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Pink buds, a third of the flower's width, as described for the species."
     }
   },
   "provenance": {

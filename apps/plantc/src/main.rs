@@ -1710,13 +1710,19 @@ fn year_command(args: &[String]) -> Result<(), Failure> {
                     )),
                 },
             ));
-            stages.push(match season.stage(day) {
-                Stage::Gone => format!("{day}: gone"),
-                Stage::Bud => format!("{day}: bud"),
-                Stage::Flower => format!("{day}: flower"),
-                Stage::Fruit { unripe } => {
-                    format!("{day}: fruit, {:.0}% unripe", unripe * 100.0)
-                }
+            let name = |stage: Stage| match stage {
+                Stage::Gone => "gone".to_string(),
+                Stage::Bud => "bud".to_string(),
+                Stage::Flower => "flower".to_string(),
+                Stage::Fruit { unripe } => format!("fruit, {:.0}% unripe", unripe * 100.0),
+            };
+            // A cluster opening one unit after another: its first unit's
+            // stage to its last's.
+            let (first, last) = (name(season.stage(day)), name(season.unit_stage(day, 1.0)));
+            stages.push(if first == last || season.opening <= 0.0 {
+                format!("{day}: {first}")
+            } else {
+                format!("{day}: {first} to {last}")
             });
         }
         rows.push(format!("{}: {}", organ.name, stages.join("; ")));

@@ -1892,10 +1892,17 @@ fn one_of_a_kind(s: &Fruit, x: f64, y: f64, fine: f64) -> Paint {
 /// frontmost unit or stalk drawn at each point. Stalks and unripe fruit
 /// take the accent colour, as a flower's centre and a head's disc do.
 /// Each card point looks only at the units and stalks near it, through a
-/// grid laid over the card.
+/// grid laid over the card. Units in stages of their own (L1b) are drawn
+/// in their stage's look, their colours matched by the card's two
+/// (`crate::clusters::Opening::slots`).
 pub(crate) struct ClusterCard {
     units: Vec<CardUnit>,
     stalks: Vec<CardStalk>,
+    /// The looks of units in stages of their own: each its shape and how
+    /// its colour and its accent are made of the card's two colours.
+    looks: Vec<Option<(Shape, [f64; 4])>>,
+    /// Each unit's pedicel's paint.
+    pedicels: Vec<Paint>,
     /// Lowest corner of the grid, its cells' size and how many a side.
     low: (f64, f64),
     cell: (f64, f64),
@@ -1906,16 +1913,20 @@ pub(crate) struct ClusterCard {
 }
 
 /// A unit on a cluster's card, in card units, with its depth toward the
-/// viewer (larger in front).
+/// viewer (larger in front), and its stage's look (`ClusterCard::looks`)
+/// where it is in a stage of its own.
 enum CardUnit {
-    /// A fruit: its base, its direction (not unit-length once projected)
-    /// and length, its pedicel from `attach`, and whether it is unripe.
+    /// A fruit or a bud: its base, its direction (not unit-length once
+    /// projected), length and width over length, its pedicel from
+    /// `attach`, and whether it is unripe.
     Fruit {
         base: crate::math::Vec3,
         direction: crate::math::Vec3,
         length: f64,
+        width: f64,
         attach: crate::math::Vec3,
         unripe: bool,
+        look: Option<usize>,
     },
     /// A flower or head: its centre, its two radii as seen, and the way
     /// back from the card to them; its pedicel from `attach`.
@@ -1925,15 +1936,22 @@ enum CardUnit {
         b: crate::math::Vec3,
         inverse: [f64; 4],
         attach: crate::math::Vec3,
+        look: Option<usize>,
+    },
+    /// A unit that shows nothing that day: its bare pedicel.
+    Bare {
+        base: crate::math::Vec3,
+        attach: crate::math::Vec3,
     },
 }
 
-/// A stalk on a cluster's card: from, to, and whether it is the
-/// cluster's own axis (drawn wider, behind everything).
+/// A stalk on a cluster's card: from, to, whether it is the cluster's
+/// own axis (drawn wider, behind everything), and its paint.
 struct CardStalk {
     from: crate::math::Vec3,
     to: crate::math::Vec3,
     axis: bool,
+    paint: Paint,
 }
 
 #[derive(Clone, Copy)]
@@ -1945,7 +1963,7 @@ enum CardItem {
 impl CardUnit {
     fn attach_and_base(&self) -> (crate::math::Vec3, crate::math::Vec3) {
         match self {
-            Self::Fruit { attach, base, .. } => (*attach, *base),
+            Self::Fruit { attach, base, .. } | Self::Bare { attach, base } => (*attach, *base),
             Self::Disc { attach, centre, .. } => (*attach, *centre),
         }
     }
@@ -1975,6 +1993,19 @@ impl ClusterCard {
             }
         };
         let turn = |d: Vec3| if facing { Vec3::new(-d.x, d.z, d.y) } else { d };
+        let opening = cluster.opening.as_deref();
+        let slots = opening.map(|opening| opening.slots(&laid));
+        // A stalk in the card's accent, or, where the units are in stages
+        // of their own and the card's two colours are theirs, in its own
+        // colour made of those two.
+        let stalk_paint = |colour: [f32; 3]| match slots {
+            None => Paint::solid(0.8, 1.0),
+            Some(slots) => {
+                let (a, b) = crate::clusters::blend(colour, slots);
+                let sum = a + b;
+                Paint::solid(0.8 * sum, if sum > 1e-9 { b / sum } else { 0.0 })
+            }
+        };
         let stalks: Vec<CardStalk> = laid
             .stalks
             .iter()
@@ -1982,26 +2013,62 @@ impl ClusterCard {
                 from: project(stalk.from),
                 to: project(stalk.to),
                 axis: stalk.axis,
+                paint: stalk_paint(stalk.colour),
             })
             .collect();
+        let pedicels: Vec<Paint> = laid.units.iter().map(|p| stalk_paint(p.stalk)).collect();
+        // Each stage's colour and accent made of the card's two.
+        let looks = opening
+            .zip(slots)
+            .map_or_else(Vec::new, |(opening, slots)| {
+                opening
+                    .looks
+                    .iter()
+                    .map(|look| {
+                        look.as_ref().map(|look| {
+                            let (a, b) = crate::clusters::blend(look.colour, slots);
+                            let (c, d) = crate::clusters::blend(look.accent, slots);
+                            (look.shape.clone(), [a, b, c, d])
+                        })
+                    })
+                    .collect()
+            });
         let units: Vec<CardUnit> = laid
             .units
             .iter()
             .map(|p| {
                 let attach = project(p.attach);
                 let base = project(p.base);
-                if !cluster.unit.faces() {
+                // What the unit shows: the look's own unit, or its stage's.
+                let (unit, size, unripe, look) = match opening {
+                    None => (cluster.unit, 1.0, p.unripe, None),
+                    Some(opening) => {
+                        let Some((index, unripe)) = opening.shown(p) else {
+                            return CardUnit::Bare { base, attach };
+                        };
+                        let Some(stage) = &opening.looks[index] else {
+                            return CardUnit::Bare { base, attach };
+                        };
+                        let Some(unit) = crate::clusters::Unit::of(&stage.shape) else {
+                            return CardUnit::Bare { base, attach };
+                        };
+                        (unit, stage.size, unripe, Some(index))
+                    }
+                };
+                if !unit.faces() {
                     return CardUnit::Fruit {
                         base,
                         direction: turn(p.direction),
-                        length: p.length / length,
+                        length: p.length * size / length,
+                        width: unit.width(),
                         attach,
-                        unripe: p.unripe,
+                        unripe,
+                        look,
                     };
                 }
                 // The disc square to the unit's direction, its radii as
                 // the card sees them.
-                let radius = 0.5 * p.length / length;
+                let radius = 0.5 * p.length * size / length;
                 let across = crate::math::any_perpendicular(p.direction);
                 let other = p.direction.cross(across);
                 let (mut a, mut b) = (turn(across) * radius, turn(other) * radius);
@@ -2028,6 +2095,7 @@ impl ClusterCard {
                     b,
                     inverse: [b.y / det, -b.x / det, -a.y / det, a.x / det],
                     attach,
+                    look,
                 }
             })
             .collect();
@@ -2046,14 +2114,14 @@ impl ClusterCard {
                 ),
             )
         };
-        let width = cluster.unit.width();
         let unit_box = |unit: &CardUnit| {
-            let (attach, _) = unit.attach_and_base();
+            let (attach, base) = unit.attach_and_base();
             let (low, high) = match unit {
                 CardUnit::Fruit {
                     base,
                     direction,
                     length,
+                    width,
                     ..
                 } => {
                     let tip = *base + *direction * *length;
@@ -2070,6 +2138,7 @@ impl ClusterCard {
                         (centre.x + reach, centre.y + reach),
                     )
                 }
+                CardUnit::Bare { .. } => ((base.x, base.y), (base.x, base.y)),
             };
             let pad = fine * 1.5;
             (
@@ -2117,6 +2186,8 @@ impl ClusterCard {
         Self {
             units,
             stalks,
+            looks,
+            pedicels,
             low,
             cell,
             side,
@@ -2125,7 +2196,35 @@ impl ClusterCard {
         }
     }
 
+    /// The shape unit `look` is drawn with, `own` for the look's own, and
+    /// `paint` of it in the card's two colours.
+    #[allow(clippy::float_cmp)]
+    fn in_look<'a>(
+        &'a self,
+        look: Option<usize>,
+        own: &'a Shape,
+    ) -> (&'a Shape, impl Fn(Paint) -> Paint) {
+        let stage = look.and_then(|index| self.looks.get(index)?.as_ref());
+        let fit = stage.map(|(_, fit)| *fit);
+        let refit = move |paint: Paint| match fit {
+            Some(fit) if fit != [1.0, 0.0, 0.0, 1.0] => {
+                let g = paint.accent;
+                let colour = (1.0 - g) * fit[0] + g * fit[2];
+                let accent = (1.0 - g) * fit[1] + g * fit[3];
+                let sum = colour + accent;
+                Paint {
+                    cover: paint.cover,
+                    bright: paint.bright * sum,
+                    accent: if sum > 1e-9 { accent / sum } else { 0.0 },
+                }
+            }
+            _ => paint,
+        };
+        (stage.map_or(own, |(shape, _)| shape), refit)
+    }
+
     /// The point `x`, `y` of the card, its units drawn with `shape`.
+    #[allow(clippy::too_many_lines)]
     fn paint(&self, shape: &Shape, x: f64, y: f64) -> Paint {
         let (column, row) = (
             (x - self.low.0) / self.cell.0,
@@ -2156,10 +2255,10 @@ impl ClusterCard {
                     );
                     if stalk.axis {
                         if distance < fine * 1.4 {
-                            consider(-2.0, Paint::solid(0.8, 1.0));
+                            consider(-2.0, stalk.paint);
                         }
                     } else if distance < fine * 1.1 {
-                        consider(stalk.from.z.min(stalk.to.z) - 1.0, Paint::solid(0.8, 1.0));
+                        consider(stalk.from.z.min(stalk.to.z) - 1.0, stalk.paint);
                     }
                 }
                 CardItem::Unit(number) => {
@@ -2168,20 +2267,22 @@ impl ClusterCard {
                     if (base - attach).length() > 1e-9 {
                         let (distance, _) = segment((x, y), (attach.x, attach.y), (base.x, base.y));
                         if distance < fine * 1.1 {
-                            consider(attach.z.min(base.z) - 1.0, Paint::solid(0.8, 1.0));
+                            consider(attach.z.min(base.z) - 1.0, self.pedicels[number]);
                         }
                     }
-                    match (unit, shape) {
-                        (
-                            CardUnit::Fruit {
-                                base,
-                                direction,
-                                length,
-                                unripe,
-                                ..
-                            },
-                            Shape::Fruit(s),
-                        ) => {
+                    match unit {
+                        CardUnit::Fruit {
+                            base,
+                            direction,
+                            length,
+                            unripe,
+                            look,
+                            ..
+                        } => {
+                            let (shape, refit) = self.in_look(*look, shape);
+                            let Shape::Fruit(s) = shape else {
+                                continue;
+                            };
                             let mut paint = one_fruit(
                                 s,
                                 (base.x, base.y),
@@ -2194,18 +2295,17 @@ impl ClusterCard {
                             if *unripe {
                                 paint.accent = 1.0;
                             }
-                            consider(base.z + direction.z * length * 0.5, paint);
+                            consider(base.z + direction.z * length * 0.5, refit(paint));
                         }
-                        (
-                            CardUnit::Disc {
-                                centre,
-                                a,
-                                b,
-                                inverse,
-                                ..
-                            },
-                            Shape::Flower(_) | Shape::Head(_),
-                        ) => {
+                        CardUnit::Disc {
+                            centre,
+                            a,
+                            b,
+                            inverse,
+                            look,
+                            ..
+                        } => {
+                            let (shape, refit) = self.in_look(*look, shape);
                             let (dx, dy) = (x - centre.x, y - centre.y);
                             let (u, v) = (
                                 inverse[0] * dx + inverse[1] * dy,
@@ -2217,11 +2317,11 @@ impl ClusterCard {
                             let paint = match shape {
                                 Shape::Flower(s) => flower(s, u * BLOOM, v * BLOOM),
                                 Shape::Head(s) => head(s, u * BLOOM, v * BLOOM),
-                                _ => Paint::EMPTY,
+                                _ => continue,
                             };
-                            consider(centre.z + a.z * u + b.z * v, paint);
+                            consider(centre.z + a.z * u + b.z * v, refit(paint));
                         }
-                        _ => {}
+                        CardUnit::Bare { .. } => {}
                     }
                 }
             }

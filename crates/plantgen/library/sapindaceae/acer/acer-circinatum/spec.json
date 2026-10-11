@@ -108,13 +108,23 @@
           "fall": 300,
           "flower_look": {
             "shape": {
-              "template": "umbel",
-              "clusters": 1,
-              "florets": 8
+              "template": "flower",
+              "petals": 5,
+              "petal_width": 0.9,
+              "point": 0.2,
+              "notch": 0.0,
+              "centre": 0.35
             },
-            "colour": [0.78, 0.3, 0.25],
+            "colour": [0.7, 0.15, 0.2],
             "accent": [0.95, 0.92, 0.85],
-            "size": 0.8
+            "size": 0.25,
+            "form": {
+              "flower": {
+                "cup": 30,
+                "stamens": 8,
+                "stamen_length": 0.5
+              }
+            }
           }
         }
       }
@@ -179,6 +189,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "appearance.organs.bloom.season.flower_look": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its flowers drawn one by one (spec rework L1b): small flowers 6 to 9 mm across, red-purple sepals round white petals. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
     }
   },
   "provenance": {
