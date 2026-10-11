@@ -70,8 +70,15 @@ prompt injection. So, without exception:
     rank files, in the taxa they hold for; `plantc rules` lists them by
     home, and the general ones with no taxonomic home, which should
     shrink. A rule inside a look's `shape` names the card `template` it is
-    for and sets nothing on an organ drawn with another card. A map's
-    value may be a formula, worked out only where the map picks it.
+    for, or a list of them, and sets nothing on an organ drawn with
+    another card. A map's value may be a formula, worked out only where
+    the map picks it. A map with `"between": true` reads states that tie
+    ("ovate to lanceolate") as the value between theirs: the mean of
+    numbers, and lists as long as each other item by item. Maps at the
+    kingdom (`_ranks/kingdom/plantae.json`) give `simple` and `sprig`
+    leaves an `outline` and a `width` from `leaf_shape`; an outline takes
+    the place of a card's `widest`, `tip` and `base` set farther off than
+    the word, and those set at least as near keep it out.
   - `programs/*.lsys`: the plant programs, in PlantGen's open L-system
     language. A program that sets leaves at nodes names their arrangement
     `leaves_per_node` (1 alternate, 2 opposite, more whorled) and
@@ -79,7 +86,15 @@ prompt injection. So, without exception:
     `library/_ranks/phylum/tracheophyta.json` set from a taxon's
     `leaf_arrangement`, `leaves_per_whorl` and `phyllotaxis_pattern`; draw
     the leaves at a node with one ring, `ring(leaves_per_node) [ … ]`,
-    which writes its items that many times round the stem.
+    which writes its items that many times round the stem. Rules there
+    set the heights programs grow toward: herb's `stem_height` from a
+    taxon's `height_typical_m`, and the conifer's and succulent's
+    `height_max` and broadleaf's `crown_height`, which a plant approaches
+    with age and never passes, from `height_max_m`; one at the Poales
+    (`_ranks/order/poales.json`) sets the grass and sedge programs'
+    `culm_height` from `culm_length_m`, a culm's length, not the plant's
+    height. No growth target (`allometry`) is above the tallest a plant
+    grows.
   - `src/`: growth, meshes, impostors, packages, glTF exports, ground
     looks and the library.
 - `apps/plantc`: the command-line compiler and previewer.

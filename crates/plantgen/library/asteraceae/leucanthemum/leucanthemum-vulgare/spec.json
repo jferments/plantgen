@@ -103,6 +103,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_typical_m": {"min": 0.1, "max": 0.3, "high": 1.0},
     "involucre_diameter_m": {"min": 0.012, "max": 0.02},
     "ray_florets": {"min": 13, "max": 34},
     "ray_length_m": {"min": 0.012, "max": 0.02, "high": 0.035}
@@ -161,7 +162,7 @@
     "traits": {
       "evidence": "SourceInferred",
       "source": "fna-19-leucanthemum",
-      "note": "FNA's account of the species: involucres 12 to 20 mm across or more; ray florets usually 13 to 34 or more, rarely none; their laminae 12 to 20 mm long, as long as 35 mm or more."
+      "note": "FNA's account of the species: plants 10 to 30 cm tall, as tall as 100 cm or more; involucres 12 to 20 mm across or more; ray florets usually 13 to 34 or more, rarely none; their laminae 12 to 20 mm long, as long as 35 mm or more."
     }
   },
   "provenance": {

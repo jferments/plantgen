@@ -610,10 +610,31 @@ fn grown(veins: Option<&Venation>, a: f64, t: f64, unit: f64, side: impl FnOnce(
         .fold(0.0, f64::max)
 }
 
+/// A blade's half-width at `t` from base to tip, 1 where it is widest:
+/// through its `outline`'s points if it has one, scaled so the widest is
+/// 1, else from where it is `widest`, its `base` and its `tip`
+/// ([`blade_profile`]).
+fn outline_profile(outline: Option<&[[f64; 2]]>, t: f64, widest: f64, base: f64, tip: f64) -> f64 {
+    let Some(points) = outline else {
+        return blade_profile(t, widest, base, tip);
+    };
+    if !(0.0..=1.0).contains(&t) {
+        return 0.0;
+    }
+    // The curve never passes its points, so its widest is theirs.
+    let most = points.iter().fold(0.0, |most: f64, [_, w]| most.max(*w));
+    if most > 0.0 {
+        math::monotone_cubic(points, t) / most
+    } else {
+        0.0
+    }
+}
+
 /// A simple leaf's half-width at `t` along its blade of `length` card
 /// units, with its teeth.
 fn simple_width(s: &Simple, length: f64, t: f64) -> f64 {
-    let mut width = s.width * length * 0.5 * blade_profile(t, s.widest, s.base, s.tip);
+    let profile = outline_profile(s.outline.as_deref(), t, s.widest, s.base, s.tip);
+    let mut width = s.width * length * 0.5 * profile;
     if s.teeth > 0 {
         let fade = math::smoothstep(0.04, 0.18, t) * (1.0 - math::smoothstep(0.88, 1.0, t));
         let phase = frac(t * f64::from(s.teeth));
@@ -653,7 +674,8 @@ fn leaflet_width(s: &Compound, length: f64, t: f64) -> f64 {
 
 /// A sprig leaf's half-width at `t` along its blade of `blade` card units.
 fn sprig_width(s: &Sprig, blade: f64, t: f64) -> f64 {
-    let mut width = s.width * blade * 0.5 * blade_profile(t, s.widest, s.base, s.tip);
+    let profile = outline_profile(s.outline.as_deref(), t, s.widest, s.base, s.tip);
+    let mut width = s.width * blade * 0.5 * profile;
     if s.teeth > 0 {
         let fade = math::smoothstep(0.04, 0.18, t) * (1.0 - math::smoothstep(0.88, 1.0, t));
         let phase = frac(t * f64::from(s.teeth));
@@ -704,9 +726,12 @@ fn tooth_tips(
     tips
 }
 
-/// The seed a look's veins grow from: a hash of its shape.
+/// The seed a look's veins grow from: a hash of its shape, without an
+/// unset `outline`, which cards had none of before, so a card without one
+/// keeps the veins it grew.
 fn shape_seed(shape: &Shape) -> u64 {
     format!("{shape:?}")
+        .replace("outline: None, ", "")
         .bytes()
         .fold(0xcbf2_9ce4_8422_2325_u64, |hash, byte| {
             (hash ^ u64::from(byte)).wrapping_mul(0x0100_0000_01b3)
@@ -2686,6 +2711,55 @@ mod tests {
                 .fold(f64::INFINITY, f64::min);
             assert!(reach < 0.07, "{tip:?}: {reach}");
         }
+    }
+
+    /// A blade with an outline is as wide as its points say, its widest
+    /// at the card's width, and its sides parallel where theirs are;
+    /// without one, it is drawn as before.
+    #[test]
+    fn outlines_draw_the_blade_through_their_points() {
+        let oblong = vec![
+            [0.0, 0.0],
+            [0.1, 0.9],
+            [0.2, 1.0],
+            [0.8, 1.0],
+            [0.9, 0.9],
+            [1.0, 0.0],
+        ];
+        let s = Simple {
+            width: 0.4,
+            outline: Some(oblong.clone()),
+            ..Simple::default()
+        };
+        for [u, w] in &oblong {
+            assert!((simple_width(&s, 2.0, *u) - 0.4 * w).abs() < 1e-12, "{u}");
+        }
+        for k in 20..=80 {
+            let t = f64::from(k) / 100.0;
+            assert!((simple_width(&s, 2.0, t) - 0.4).abs() < 1e-12, "{t}");
+        }
+        // Points that never reach 1 are drawn to the card's width.
+        let half = Sprig {
+            width: 0.4,
+            outline: Some(oblong.iter().map(|&[u, w]| [u, w / 2.0]).collect()),
+            ..Sprig::default()
+        };
+        assert!((sprig_width(&half, 2.0, 0.5) - 0.4).abs() < 1e-12);
+        let plain = Simple::default();
+        for k in 0..=10 {
+            let t = f64::from(k) / 10.0;
+            let drawn = plain.width * 0.5 * blade_profile(t, plain.widest, plain.base, plain.tip);
+            assert_eq!(simple_width(&plain, 1.0, t), drawn, "{t}");
+        }
+        // A card without an outline grows the veins it grew before cards
+        // had one.
+        let before = "Simple(Simple { width: 0.5, widest: 0.4, tip: 0.4, base: 0.5, teeth: 0, tooth_depth: 0.03, petiole: 0.15 })";
+        let hash = before
+            .bytes()
+            .fold(0xcbf2_9ce4_8422_2325_u64, |hash, byte| {
+                (hash ^ u64::from(byte)).wrapping_mul(0x0100_0000_01b3)
+            });
+        assert_eq!(shape_seed(&Shape::Simple(plain)), hash);
     }
 
     #[test]

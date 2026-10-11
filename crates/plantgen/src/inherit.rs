@@ -42,8 +42,11 @@
 //! A trait stated as a range reads as its `typical` value, else the middle
 //! of its `min` and `max`; one stated as qualified states reads as its most
 //! usual state ([`FREQUENCIES`]), and a rule reading states that tie sets
-//! nothing. A formula's whole number is written as one, so a rule can set
-//! a count (`round(ray_florets)`).
+//! nothing, unless it is a map that draws `between` them: a flora's "ovate
+//! to lanceolate" means the forms between, so the map gives the mean of
+//! its numbers for the states, and of lists as long as each other item by
+//! item. A formula's whole number is written as one, so a rule can set a
+//! count (`round(ray_florets)`).
 //! Every rule lives in the taxon it holds for, its home (growth plan G2,
 //! Joshi's rule that rules belong to taxa). Traits and rules merge down
 //! the chain like values; then each rule sets its path, after the rules
@@ -51,11 +54,14 @@
 //! the rule and what it reads set the path by hand, the species' program
 //! has no such parameter, or the path is in the look of an organ
 //! (`appearance.organs.<organ>`) the species does not draw. A rule inside
-//! a look's `shape` names the card `template` it is for, one of whose
-//! fields it sets ([`TEMPLATES`]; a count takes only a whole number), and
-//! sets it only where the species draws the organ with that card: a
-//! family's rule for a head card's rays sets them where a species draws
-//! its heads with one, and nothing where it draws them another way. The
+//! a look's `shape` names the card `template` it is for, or a list of
+//! them, one of whose fields it sets ([`TEMPLATES`]; a count takes only a
+//! whole number), and sets it only where the species draws the organ with
+//! such a card: a family's rule for a head card's rays sets them where a
+//! species draws its heads with one, and nothing where it draws them
+//! another way. A field that replaces others ([`REPLACES`]: a leaf's
+//! outline replaces where it is widest, its tip and its base) sets nothing
+//! where those are set at least as near, and else removes them. The
 //! effective spec carries the values, not the traits or rules.
 //!
 //! Every file notes what it sets (per-value evidence): a note stays in the
@@ -384,20 +390,30 @@ fn check_rule(path: &str, rule: &Value) -> Result<(), String> {
     };
     if let Some(key) = rule
         .keys()
-        .find(|key| !["rule", "map", "why", "template"].contains(&key.as_str()))
+        .find(|key| !["rule", "map", "between", "why", "template"].contains(&key.as_str()))
     {
         return Err(format!(
-            "`{key}` is not a rule's: `rule` or `map`, `why`, and in a look's `shape` its `template`"
+            "`{key}` is not a rule's: `rule` or `map` (and `between`), `why`, and in a look's `shape` its `template`"
         ));
     }
     if !rule.get("why").is_none_or(Value::is_string) {
         return Err("`why` is a line of text".into());
     }
-    match (shape_field(path), rule.get("template")) {
-        (Some(field), Some(Value::String(template))) => {
-            template_field(template, field)?;
+    match rule.get("between") {
+        None => {}
+        Some(Value::Bool(true)) if rule.contains_key("map") => {}
+        Some(Value::Bool(true)) => {
+            return Err("only a `map` draws `between` the values of states that tie".into());
         }
-        (Some(_), _) => {
+        Some(_) => return Err("`between` is `true`, or left out".into()),
+    }
+    match (shape_field(path), rule.get("template")) {
+        (Some(field), Some(template)) => {
+            for template in templates(template)? {
+                template_field(template, field)?;
+            }
+        }
+        (Some(_), None) => {
             return Err(
                 "a rule inside a look's `shape` names the card `template` it is for".into(),
             );
@@ -429,6 +445,30 @@ pub enum Field {
     Count,
     /// One of the template's words: a fruit's kind.
     Word,
+    /// Points along a blade, `[u, w]` pairs: a leaf's outline.
+    Outline,
+}
+
+/// The fields of a card that replace others where set, and those they
+/// replace: an outline draws the blade that `widest`, `tip` and `base`
+/// otherwise do (`crate::looks::Simple`).
+pub const REPLACES: [(&str, &[&str]); 1] = [("outline", &["widest", "tip", "base"])];
+
+/// The fields of a card that cannot stand beside `field`: those it
+/// replaces, or the one that replaces it ([`REPLACES`]).
+fn rivals(field: &str) -> Vec<&'static str> {
+    REPLACES
+        .iter()
+        .flat_map(|(replacing, replaced)| {
+            if *replacing == field {
+                replaced.to_vec()
+            } else if replaced.contains(&field) {
+                vec![*replacing]
+            } else {
+                Vec::new()
+            }
+        })
+        .collect()
 }
 
 /// The fields of each card template a look's `shape` may name
@@ -436,7 +476,7 @@ pub enum Field {
 /// the template may set inside a look's `shape`. The looks module's tests
 /// hold this to the templates.
 pub const TEMPLATES: [(&str, &[(&str, Field)]); 15] = {
-    use Field::{Count, Number, Word};
+    use Field::{Count, Number, Outline, Word};
     [
         (
             "needles",
@@ -474,6 +514,7 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 15] = {
             "simple",
             &[
                 ("width", Number),
+                ("outline", Outline),
                 ("widest", Number),
                 ("tip", Number),
                 ("base", Number),
@@ -508,6 +549,7 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 15] = {
                 ("angle", Number),
                 ("stalk", Number),
                 ("width", Number),
+                ("outline", Outline),
                 ("widest", Number),
                 ("tip", Number),
                 ("base", Number),
@@ -581,6 +623,33 @@ fn shape_field(path: &str) -> Option<&str> {
     look.strip_prefix("shape.")
 }
 
+/// The card templates a rule's `template` names: one, or a list of them.
+fn templates(template: &Value) -> Result<Vec<&str>, String> {
+    let names = match template {
+        Value::String(name) => vec![name.as_str()],
+        Value::Array(names) if !names.is_empty() => names
+            .iter()
+            .map(Value::as_str)
+            .collect::<Option<Vec<&str>>>()
+            .unwrap_or_default(),
+        _ => Vec::new(),
+    };
+    if names.is_empty() {
+        return Err("a rule's `template` is a card template, or a list of them".into());
+    }
+    Ok(names)
+}
+
+/// The cards `templates` name, for a message: "`simple` or `sprig`".
+#[must_use]
+pub fn cards(templates: &[&str]) -> String {
+    templates
+        .iter()
+        .map(|template| format!("`{template}`"))
+        .collect::<Vec<_>>()
+        .join(" or ")
+}
+
 /// What `field` of the card `template` takes.
 fn template_field(template: &str, field: &str) -> Result<Field, String> {
     let fields = TEMPLATES
@@ -595,14 +664,14 @@ fn template_field(template: &str, field: &str) -> Result<Field, String> {
         .ok_or_else(|| format!("`{template}` cards have no `{field}`"))
 }
 
-/// What a rule for the card `template` may set at `path` inside
-/// `appearance.organs`: something in the look of an organ the species
-/// draws, and inside its `shape` a field of the card, where the species
-/// draws the organ with that card (`Some` of what the field takes).
+/// What a rule for the card `template` (one or a list) may set at `path`
+/// inside `appearance.organs`: something in the look of an organ the
+/// species draws, and inside its `shape` a field of the card, where the
+/// species draws the organ with that card (`Some` of what the field takes).
 fn look_field(
     spec: &Map<String, Value>,
     path: &str,
-    template: Option<&str>,
+    template: Option<&Value>,
 ) -> Result<Option<Field>, String> {
     let (organ, look) = path.split_once('.').unwrap_or((path, ""));
     let drawn = find(spec, &format!("appearance.organs.{organ}"))
@@ -613,10 +682,12 @@ fn look_field(
     let (Some(field), Some(template)) = (look.strip_prefix("shape."), template) else {
         return Ok(None);
     };
+    let templates = templates(template)?;
     match drawn {
-        Some(drawn) if drawn == template => template_field(template, field).map(Some),
+        Some(drawn) if templates.contains(&drawn) => template_field(drawn, field).map(Some),
         Some(drawn) => Err(format!(
-            "the rule is for `{template}` cards and its `{organ}` look is drawn with `{drawn}`"
+            "the rule is for {} cards and its `{organ}` look is drawn with `{drawn}`",
+            cards(&templates)
         )),
         None => Err(format!("its `{organ}` look names no card template")),
     }
@@ -1177,22 +1248,19 @@ impl Ruled<'_> {
             }
         }
         let field = match self.path.strip_prefix("appearance.organs.") {
-            Some(look) => look_field(
-                spec,
-                look,
-                self.rule.get("template").and_then(Value::as_str),
-            )?,
+            Some(look) => look_field(spec, look, self.rule.get("template"))?,
             None => None,
         };
         let mut depth = self.index;
         let mut from = Vec::new();
         let mut inputs: BTreeMap<String, Value> = BTreeMap::new();
+        // A trait as stated, or a parameter.
         let mut read = |key: &str| -> Result<Value, String> {
             let path = format!("generator.params.{key}");
             let value = if let Some((value, at)) = self.traits.get(key) {
                 depth = depth.max(*at);
                 from.push(format!("{key} from {}", self.layers[*at].0));
-                reading(key, value)?
+                value.clone()
             } else if let Some(value) = find(spec, &path) {
                 // A parameter as the files, or a rule that ran before this
                 // one, set it.
@@ -1211,22 +1279,32 @@ impl Ruled<'_> {
             };
             Ok(value)
         };
-        // A map reads its trait, then only what the value it picks reads.
+        // A map reads its trait, then only what the values it picks read;
+        // one drawing `between` reads every state that ties.
+        let mut picks = Vec::new();
         if let Some((key, table)) = map_of(self.rule) {
-            let value = read(key)?;
-            let picked = table.get(&state(&value)).and_then(map_formula);
-            inputs.insert(key.clone(), value);
-            if let Some(formula) = picked {
+            let stated = read(key)?;
+            picks = if self.rule.contains_key("between") {
+                readings(key, &stated)?.0
+            } else {
+                vec![reading(key, &stated)?]
+            };
+            for pick in &picks {
+                let Some(formula) = table.get(&state(pick)).and_then(map_formula) else {
+                    continue;
+                };
                 for name in Formula::parse(formula)?.names() {
-                    if let Entry::Vacant(entry) = inputs.entry(name) {
-                        let value = read(entry.key())?;
+                    if &name != key
+                        && let Entry::Vacant(entry) = inputs.entry(name)
+                    {
+                        let value = reading(entry.key(), &read(entry.key())?)?;
                         entry.insert(value);
                     }
                 }
             }
         } else {
             for key in reads(self.rule) {
-                let value = read(&key)?;
+                let value = reading(&key, &read(&key)?)?;
                 inputs.insert(key, value);
             }
         }
@@ -1235,20 +1313,13 @@ impl Ruled<'_> {
         {
             return Err(format!("set by hand in {label}"));
         }
-        let value = evaluate(self.rule, &inputs)?;
-        let fits = match field {
-            Some(Field::Count) => value.is_u64(),
-            Some(Field::Number) => value.is_number(),
-            Some(Field::Word) => value.is_string(),
-            None => true,
-        };
-        if !fits {
-            let takes = match field {
-                Some(Field::Count) => "a whole number, 0 or more",
-                Some(Field::Word) => "a word",
-                _ => "a number",
-            };
-            return Err(format!("it gives {value}, and the look takes {takes}"));
+        let rivals = self.rivals(field, spec, origins, depth)?;
+        let value = picked(self.rule, &picks, &mut inputs)?;
+        fits(field, &value)?;
+        for rival in &rivals {
+            remove(spec, rival);
+            forget(origins, rival);
+            notes.retain(|path, _| !within(path, rival));
         }
         set(spec, self.path, value);
         forget(origins, self.path);
@@ -1271,6 +1342,89 @@ impl Ruled<'_> {
             notes.insert(self.path.to_string(), (origin, note.clone()));
         }
         Ok(())
+    }
+
+    /// The fields of the rule's card in `spec` that cannot stand beside the
+    /// one it sets ([`REPLACES`]), for it to replace; or why it sets
+    /// nothing, where one was set at least as near as what it reads
+    /// (`depth`).
+    fn rivals(
+        &self,
+        field: Option<Field>,
+        spec: &Map<String, Value>,
+        origins: &BTreeMap<String, Origin>,
+        depth: usize,
+    ) -> Result<Vec<String>, String> {
+        let (Some(_), Some((shape, name))) = (field, self.path.rsplit_once('.')) else {
+            return Ok(Vec::new());
+        };
+        let mut found = Vec::new();
+        for rival in rivals(name) {
+            let path = format!("{shape}.{rival}");
+            if find(spec, &path).is_none() {
+                continue;
+            }
+            if let Some((label, by)) = origins.get(&path)
+                && *by >= depth
+            {
+                return Err(format!("its card's `{rival}` is set by hand in {label}"));
+            }
+            found.push(path);
+        }
+        Ok(found)
+    }
+}
+
+/// A rule's value from what it reads (`inputs`) and, for a map, the
+/// states of its trait it `picks`: its value for the one state, or the
+/// value between its values for states that tie ([`between`]).
+fn picked(
+    rule: &Map<String, Value>,
+    picks: &[Value],
+    inputs: &mut BTreeMap<String, Value>,
+) -> Result<Value, String> {
+    let Some((key, _)) = map_of(rule) else {
+        return evaluate(rule, inputs);
+    };
+    let mut values = Vec::new();
+    for pick in picks {
+        inputs.insert(key.clone(), pick.clone());
+        values.push(evaluate(rule, inputs)?);
+    }
+    match values.as_slice() {
+        [one] => Ok(one.clone()),
+        _ => between(&values).ok_or_else(|| {
+            format!(
+                "its values for `{key}` {} have nothing between them",
+                picks.iter().map(state).collect::<Vec<_>>().join(" and ")
+            )
+        }),
+    }
+}
+
+/// Whether a rule's `value` fits the card's `field` it sets, if it sets
+/// one, or what the field takes.
+fn fits(field: Option<Field>, value: &Value) -> Result<(), String> {
+    let (fits, takes) = match field {
+        None => (true, ""),
+        Some(Field::Count) => (value.is_u64(), "a whole number, 0 or more"),
+        Some(Field::Number) => (value.is_number(), "a number"),
+        Some(Field::Word) => (value.is_string(), "a word"),
+        Some(Field::Outline) => (
+            value.as_array().is_some_and(|points| {
+                points.iter().all(|point| {
+                    point
+                        .as_array()
+                        .is_some_and(|pair| pair.len() == 2 && pair.iter().all(Value::is_number))
+                })
+            }),
+            "`[u, w]` points",
+        ),
+    };
+    if fits {
+        Ok(())
+    } else {
+        Err(format!("it gives {value}, and the look takes {takes}"))
     }
 }
 
@@ -1366,15 +1520,29 @@ fn state(value: &Value) -> String {
 /// `typical`, else the middle of its `min` and `max`; of qualified states,
 /// the most usual (a bool's as a bool); else the value itself.
 fn reading(key: &str, value: &Value) -> Result<Value, String> {
+    match readings(key, value)? {
+        (mut one, _) if one.len() == 1 => Ok(one.remove(0)),
+        (tied, frequency) => Err(format!(
+            "`{key}` has no one most usual state: {} are each {}",
+            tied.iter().map(state).collect::<Vec<_>>().join(" and "),
+            frequency.unwrap_or_default()
+        )),
+    }
+}
+
+/// The values a rule may read from a trait as stated, as [`reading`], but
+/// of qualified states every one that ties for the most usual, with how
+/// often they occur.
+fn readings(key: &str, value: &Value) -> Result<(Vec<Value>, Option<&'static str>), String> {
     let Value::Object(stated) = value else {
-        return Ok(value.clone());
+        return Ok((vec![value.clone()], None));
     };
     if stated.values().all(Value::is_number) {
         let bound = |name: &str| stated.get(name).and_then(Value::as_f64);
         return bound("typical")
             .or_else(|| Some(f64::midpoint(bound("min")?, bound("max")?)))
             .and_then(serde_json::Number::from_f64)
-            .map(Value::Number)
+            .map(|number| (vec![Value::Number(number)], None))
             .ok_or_else(|| format!("`{key}` is a range without a `min` and a `max`"));
     }
     let rank = |frequency: &Value| {
@@ -1387,26 +1555,50 @@ fn reading(key: &str, value: &Value) -> Result<Value, String> {
         .filter_map(rank)
         .min()
         .ok_or_else(|| format!("`{key}` names no state with how often it occurs"))?;
-    let most: Vec<&String> = stated
+    let most = stated
         .iter()
         .filter(|(_, frequency)| rank(frequency) == Some(best))
-        .map(|(state, _)| state)
-        .collect();
-    match most.as_slice() {
-        [state] => Ok(match state.as_str() {
+        .map(|(state, _)| match state.as_str() {
             "true" => Value::Bool(true),
             "false" => Value::Bool(false),
-            _ => Value::String((*state).clone()),
-        }),
-        _ => Err(format!(
-            "`{key}` has no one most usual state: {} are each {}",
-            most.iter()
-                .map(|state| state.as_str())
-                .collect::<Vec<_>>()
-                .join(" and "),
-            FREQUENCIES[best]
-        )),
+            _ => Value::String(state.clone()),
+        })
+        .collect();
+    Ok((most, Some(FREQUENCIES[best])))
+}
+
+/// The value between `values`, the values of states that tie: of numbers,
+/// their mean; of lists as long as each other, each item's value between
+/// theirs (outlines on the same `u` give the outline between them).
+/// Nothing for words, or for lists of different lengths.
+fn between(values: &[Value]) -> Option<Value> {
+    let count = f64::from(u32::try_from(values.len()).ok()?);
+    if let Some(numbers) = values
+        .iter()
+        .map(Value::as_f64)
+        .collect::<Option<Vec<f64>>>()
+    {
+        return written(plain(numbers.iter().sum::<f64>() / count));
     }
+    let lists = values
+        .iter()
+        .map(Value::as_array)
+        .collect::<Option<Vec<&Vec<Value>>>>()?;
+    let length = lists.first()?.len();
+    if lists.iter().any(|list| list.len() != length) {
+        return None;
+    }
+    (0..length)
+        .map(|item| {
+            between(
+                &lists
+                    .iter()
+                    .map(|list| list[item].clone())
+                    .collect::<Vec<_>>(),
+            )
+        })
+        .collect::<Option<Vec<Value>>>()
+        .map(Value::Array)
 }
 
 /// A rule's value from what it reads, by name: its formula's number (a
@@ -1460,6 +1652,20 @@ fn written(value: f64) -> Option<Value> {
         return Some(Value::from(whole));
     }
     serde_json::Number::from_f64(value).map(Value::Number)
+}
+
+/// Remove the value at `path` (keys joined by dots), if there is one.
+fn remove(target: &mut Map<String, Value>, path: &str) {
+    match path.split_once('.') {
+        None => {
+            target.remove(path);
+        }
+        Some((key, rest)) => {
+            if let Some(Value::Object(inside)) = target.get_mut(key) {
+                remove(inside, rest);
+            }
+        }
+    }
 }
 
 /// Set the value at `path` (keys joined by dots), making the objects on
@@ -2047,6 +2253,29 @@ mod tests {
             &family(json!({"rules": {"generator.params.a": {"rule": "1", "template": "head"}}})),
             "only a rule inside a look's `shape` names a card `template`",
         );
+        // A list of cards names cards that each have the field.
+        refused(
+            "testaceae/family.json",
+            &shape(json!({"rule": "5", "template": ["head", "umbel"]})),
+            "`umbel` cards have no `rays`",
+        );
+        refused(
+            "testaceae/family.json",
+            &shape(json!({"rule": "5", "template": []})),
+            "a rule's `template` is a card template, or a list of them",
+        );
+        // Only a map draws between the values of tied states.
+        refused(
+            "testaceae/family.json",
+            &family(json!({"rules": {"generator.params.a": {"rule": "1", "between": true}}})),
+            "only a `map` draws `between` the values of states that tie",
+        );
+        refused(
+            "testaceae/family.json",
+            &family(json!({"rules": {"generator.params.a": {
+                "map": {"x": {"y": 1}}, "between": false}}})),
+            "`between` is `true`, or left out",
+        );
     }
 
     #[test]
@@ -2453,6 +2682,154 @@ mod tests {
         assert_eq!(super::written(0.5), Some(json!(0.5)));
         assert_eq!(super::written(1e20), Some(json!(1e20)));
         assert_eq!(super::written(f64::INFINITY), None);
+    }
+
+    fn narrow() -> Value {
+        json!([[0, 0], [0.5, 1], [1, 0]])
+    }
+
+    fn broad() -> Value {
+        json!([[0, 1], [0.5, 1], [1, 0]])
+    }
+
+    /// The species `<genus>-one` of a family whose rules give a simple or
+    /// sprig leaf an outline and a width from its `leaf_shape`, drawing
+    /// between them where states tie, with its leaf drawn with `card` and
+    /// its `leaf_shape` `shape`; the genus Handed sets the leaf's `widest`
+    /// and `tip` by hand.
+    fn shaped(genus: &str, card: &Value, shape: &Value) -> super::Inherited {
+        let note = |text: &str| json!({"evidence": "Authored", "note": text});
+        let files = ranks(&[
+            (
+                "testaceae/family.json",
+                json!({"schema": 1, "rank": "family", "name": "Testaceae",
+                    "generator": {"program": "broadleaf"},
+                    "rules": {
+                        "appearance.organs.leaf.shape.outline": {
+                            "template": ["simple", "sprig"], "between": true,
+                            "map": {"leaf_shape": {"narrow": narrow(), "broad": broad(), "odd": "x"}}},
+                        "appearance.organs.leaf.shape.width": {
+                            "template": ["simple", "sprig"], "between": true,
+                            "map": {"leaf_shape": {"narrow": 0.2, "broad": 0.5}}}},
+                    "evidence": {"rules": note("Shapes.")}}),
+            ),
+            (
+                "testaceae/handed/genus.json",
+                json!({"schema": 1, "rank": "genus", "name": "Handed",
+                    "appearance": {"organs": {"leaf": {"shape": {
+                        "template": "simple", "widest": 0.3, "tip": 0.2}}}},
+                    "evidence": {"appearance.organs.leaf.shape.widest": note("Widest."),
+                        "appearance.organs.leaf.shape.tip": note("Tip.")}}),
+            ),
+        ]);
+        let chain = above(&files, "testaceae", genus).unwrap();
+        let own = json!({"id": format!("{genus}-one"), "traits": {"leaf_shape": shape},
+            "appearance": {"organs": {"leaf": {"shape": card}}}});
+        inherit(
+            &format!("testaceae/{genus}/{genus}-one/spec.json"),
+            &own,
+            &chain,
+            &programs(),
+        )
+        .unwrap()
+    }
+
+    /// What the rule on the leaf's `field` did: `None` where it set it.
+    fn leaf_outcome(grown: &super::Inherited, field: &str) -> Option<String> {
+        grown.rules[&format!("appearance.organs.leaf.shape.{field}")]
+            .1
+            .clone()
+    }
+
+    /// A rule for several cards sets an outline on any of them; where the
+    /// states it reads tie, it draws between their values.
+    #[test]
+    fn rules_draw_outlines_and_between_tied_words() {
+        let simple = json!({"template": "simple"});
+        let leaf = |grown: &super::Inherited| grown.spec["appearance"]["organs"]["leaf"].clone();
+
+        // One word: its outline and width, on a simple card or a sprig.
+        let narrowed = shaped("plain", &simple, &json!("narrow"));
+        assert_eq!(leaf(&narrowed)["shape"]["outline"], narrow());
+        assert_eq!(leaf(&narrowed)["shape"]["width"], json!(0.2));
+        let sprig = shaped("plain", &json!({"template": "sprig"}), &json!("broad"));
+        assert_eq!(leaf(&sprig)["shape"]["outline"], broad());
+        let compound = shaped("plain", &json!({"template": "compound"}), &json!("broad"));
+        assert_eq!(
+            leaf_outcome(&compound, "outline").as_deref(),
+            Some(
+                "the rule is for `simple` or `sprig` cards and its `leaf` look is drawn with `compound`"
+            )
+        );
+
+        // Two words that tie: between their outlines and their widths.
+        let tied = json!({"narrow": "often", "broad": "often"});
+        let between = shaped("plain", &simple, &tied);
+        assert_eq!(
+            leaf(&between)["shape"]["outline"],
+            json!([[0, 0.5], [0.5, 1], [1, 0]])
+        );
+        assert_eq!(leaf(&between)["shape"]["width"], json!(0.35));
+        // A word the map does not hold, or values with nothing between
+        // them, set nothing.
+        let unknown = shaped(
+            "plain",
+            &simple,
+            &json!({"narrow": "often", "round": "often"}),
+        );
+        assert_eq!(
+            leaf_outcome(&unknown, "outline").as_deref(),
+            Some("its map holds nothing for `leaf_shape` round")
+        );
+        let odd = shaped(
+            "plain",
+            &simple,
+            &json!({"narrow": "often", "odd": "often"}),
+        );
+        assert_eq!(
+            leaf_outcome(&odd, "outline").as_deref(),
+            Some("its values for `leaf_shape` narrow and odd have nothing between them")
+        );
+        assert_eq!(super::between(&[json!([1, 2]), json!([1])]), None);
+        assert_eq!(super::between(&[json!("a"), json!("b")]), None);
+    }
+
+    /// An outline takes the place of the `widest`, `tip` and `base` set
+    /// farther off than the word it reads, while those set at least as
+    /// near keep it out.
+    #[test]
+    fn outlines_replace_the_blade_s_shape_set_farther_off() {
+        let note = |text: &str| json!({"evidence": "Authored", "note": text});
+        let leaf = |grown: &super::Inherited| grown.spec["appearance"]["organs"]["leaf"].clone();
+        // A genus's `widest` and `tip` give way to the species' word: the
+        // outline replaces them, and their notes go with them.
+        let replaced = shaped("handed", &json!({}), &json!("narrow"));
+        let shape = &leaf(&replaced)["shape"];
+        assert_eq!(shape["outline"], narrow());
+        assert!(shape.get("widest").is_none() && shape.get("tip").is_none());
+        assert!(
+            !replaced
+                .origins
+                .contains_key("appearance.organs.leaf.shape.widest")
+        );
+        assert_eq!(
+            replaced.spec["evidence"],
+            json!({"appearance.organs.leaf.shape.outline": note("Shapes."),
+                "appearance.organs.leaf.shape.width": note("Shapes.")})
+        );
+        // The species' own `widest` stands, and keeps the outline out.
+        let kept = shaped(
+            "plain",
+            &json!({"template": "simple", "widest": 0.6}),
+            &json!("narrow"),
+        );
+        assert!(leaf(&kept)["shape"].get("outline").is_none());
+        assert_eq!(leaf(&kept)["shape"]["widest"], json!(0.6));
+        assert_eq!(
+            leaf_outcome(&kept, "outline").as_deref(),
+            Some("its card's `widest` is set by hand in testaceae/plain/plain-one/spec.json")
+        );
+        assert_eq!(leaf(&kept)["shape"]["width"], json!(0.2));
     }
 
     /// A program's parameters are its own and those of the programs it

@@ -2,5 +2,18 @@
   "schema": 1,
   "rank": "order",
   "name": "Poales",
-  "parent": "clade/commelinids"
+  "parent": "clade/commelinids",
+  "rules": {
+    "generator.params.culm_height": {
+      "rule": "culm_length_m",
+      "why": "A grass's or sedge's flowering culms are as long as floras measure them."
+    }
+  },
+  "evidence": {
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen's grass and sedge programs draw a culm from a flora's length, a choice of the model's: each year's culms grow to culm_height at maturity, the panicle or spike included, leaning off their tiller, so culm_height is a culm's length, not the plant's height. A flora's culm length is read as the range's middle unless it names a typical length, and taken to include the inflorescence; where a flora measures only to the inflorescence's base, the culms come out short by about its length. Culms are the flowering stems of the grasses, sedges and rushes, all in this order."
+    }
+  }
 }
