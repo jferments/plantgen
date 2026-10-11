@@ -482,13 +482,17 @@ fn draw_look(
             let (across, along) = drawn_share(&look.shape);
             card.paint(&look.shape, x / across, y / along)
         }
-        None => draw(&look.shape, x, y, veins),
+        None => draw(&look.shape, (look.colour, look.accent), x, y, veins),
     }
 }
 
-/// The point `x`, `y` of a card drawn with `shape`, its leaves lit along
-/// their grown `veins` (see [`grown_veins`]) where it has them.
-fn draw(shape: &Shape, x: f64, y: f64, veins: Option<&Venation>) -> Paint {
+/// A card's two colours: its colour and its accent.
+type Colours = ([f32; 3], [f32; 3]);
+
+/// The point `x`, `y` of a card drawn with `shape` in `colours`, its
+/// colour and its accent, its leaves lit along their grown `veins` (see
+/// [`grown_veins`]) where it has them.
+fn draw(shape: &Shape, colours: Colours, x: f64, y: f64, veins: Option<&Venation>) -> Paint {
     // Shapes are drawn into the card less its border: stretch the point
     // instead.
     let (across, along) = drawn_share(shape);
@@ -505,7 +509,7 @@ fn draw(shape: &Shape, x: f64, y: f64, veins: Option<&Venation>) -> Paint {
         Shape::Blade(s) => blade(s, x, y),
         Shape::Frond(s) => frond(s, x, y, fine),
         Shape::Flower(s) => flower(s, x, y - 0.5),
-        Shape::Head(s) => head(s, x, y - 0.5),
+        Shape::Head(s) => head(s, colours, x, y - 0.5),
         Shape::Umbel(s) => umbel(s, x, y - 0.5),
         Shape::Spike(s) => spike(s, x, y, fine),
         Shape::Panicle(s) => panicle(s, x, y, fine),
@@ -1539,44 +1543,16 @@ fn flower(s: &Flower, x: f64, y: f64) -> Paint {
     Paint::solid(0.88 + 0.16 * u + vein, (1.0 - u / 0.35).max(0.0) * 0.5)
 }
 
-/// A head of ray and disc flowers seen face on: a disc in the accent colour
-/// ringed by strap-shaped rays.
-fn head(s: &Head, x: f64, y: f64) -> Paint {
-    let r = hypot(x, y);
-    let disc = s.disc * BLOOM;
-    if r < disc {
-        // Disc florets packed in a sunflower spiral.
-        let dot = spiral_dots(x, y, disc, 60);
-        return Paint::solid(
-            if dot < 0.4 { 1.1 } else { 0.78 } * (0.85 + 0.15 * r / disc),
-            1.0,
-        );
+/// A flower head seen face on, `BLOOM` its radius (`crate::capitula`): its
+/// florets on the disc, rays or straps round it and the rim of its
+/// involucre, in `colours`, its look's colour and accent.
+fn head(s: &Head, colours: Colours, x: f64, y: f64) -> Paint {
+    let painted = crate::capitula::paint(s, colours, x / BLOOM, y / BLOOM);
+    Paint {
+        cover: painted.cover,
+        bright: painted.bright,
+        accent: painted.accent,
     }
-    if s.rays == 0 {
-        return Paint::EMPTY;
-    }
-    let (along, across) = petal_frame(x, y, s.rays);
-    let start = disc * 0.85;
-    let u = (along - start) / (BLOOM - start);
-    if !(0.0..=1.0).contains(&u) {
-        return Paint::EMPTY;
-    }
-    let mut width = BLOOM * math::sin(PI / f64::from(s.rays)) * s.ray_width * (1.0 - 0.2 * u);
-    if u > 0.85 {
-        width *= math::sqrt((1.0 - ((u - 0.85) / 0.15).powi(2)).max(0.0));
-    }
-    if across.abs() >= width {
-        return Paint::EMPTY;
-    }
-    let groove = if across.abs() < width * 0.12 {
-        -0.06
-    } else {
-        0.0
-    };
-    Paint::solid(
-        0.94 + 0.1 * (1.0 - across.abs() / width.max(1e-6)) + groove,
-        0.0,
-    )
 }
 
 /// A flat-topped cluster of small flowers seen from above: florets packed
@@ -1930,9 +1906,12 @@ fn one_of_a_kind(s: &Fruit, x: f64, y: f64, fine: f64) -> Paint {
 pub(crate) struct ClusterCard {
     units: Vec<CardUnit>,
     stalks: Vec<CardStalk>,
-    /// The looks of units in stages of their own: each its shape and how
-    /// its colour and its accent are made of the card's two colours.
-    looks: Vec<Option<(Shape, [f64; 4])>>,
+    /// The looks of units in stages of their own: each its shape, how its
+    /// colour and its accent are made of the card's two colours, and those
+    /// two colours themselves.
+    looks: Vec<Option<StageCard>>,
+    /// The look's own colour and accent.
+    colours: Colours,
     /// Each unit's pedicel's paint.
     pedicels: Vec<Paint>,
     /// Lowest corner of the grid, its cells' size and how many a side.
@@ -1942,6 +1921,13 @@ pub(crate) struct ClusterCard {
     /// Per cell: the stalks, then the units, it may show, in order.
     cells: Vec<Vec<CardItem>>,
     fine: f64,
+}
+
+/// A stage's look on a cluster's card (`ClusterCard::looks`).
+struct StageCard {
+    shape: Shape,
+    fit: [f64; 4],
+    colours: Colours,
 }
 
 /// A unit on a cluster's card, in card units, with its depth toward the
@@ -2008,10 +1994,7 @@ impl ClusterCard {
     /// The card of `cluster`, drawn in a look's `colours`, its colour and
     /// its accent.
     #[allow(clippy::too_many_lines)]
-    pub(crate) fn new(
-        cluster: &crate::clusters::ClusterLook,
-        colours: ([f32; 3], [f32; 3]),
-    ) -> Self {
+    pub(crate) fn new(cluster: &crate::clusters::ClusterLook, colours: Colours) -> Self {
         use crate::math::Vec3;
         let frame = cluster.card;
         let laid = cluster.layout(0.0, 0);
@@ -2067,7 +2050,11 @@ impl ClusterCard {
                         look.as_ref().map(|look| {
                             let (a, b) = crate::clusters::blend(look.colour, slots);
                             let (c, d) = crate::clusters::blend(look.accent, slots);
-                            (look.shape.clone(), [a, b, c, d])
+                            StageCard {
+                                shape: look.shape.clone(),
+                                fit: [a, b, c, d],
+                                colours: (look.colour, look.accent),
+                            }
                         })
                     })
                     .collect()
@@ -2226,6 +2213,7 @@ impl ClusterCard {
             units,
             stalks,
             looks,
+            colours,
             pedicels,
             low,
             cell,
@@ -2242,9 +2230,9 @@ impl ClusterCard {
         &'a self,
         look: Option<usize>,
         own: &'a Shape,
-    ) -> (&'a Shape, impl Fn(Paint) -> Paint) {
+    ) -> (&'a Shape, Colours, impl Fn(Paint) -> Paint) {
         let stage = look.and_then(|index| self.looks.get(index)?.as_ref());
-        let fit = stage.map(|(_, fit)| *fit);
+        let fit = stage.map(|stage| stage.fit);
         let refit = move |paint: Paint| match fit {
             Some(fit) if fit != [1.0, 0.0, 0.0, 1.0] => {
                 let g = paint.accent;
@@ -2259,7 +2247,11 @@ impl ClusterCard {
             }
             _ => paint,
         };
-        (stage.map_or(own, |(shape, _)| shape), refit)
+        (
+            stage.map_or(own, |stage| &stage.shape),
+            stage.map_or(self.colours, |stage| stage.colours),
+            refit,
+        )
     }
 
     /// The point `x`, `y` of the card, its units drawn with `shape`.
@@ -2318,7 +2310,7 @@ impl ClusterCard {
                             look,
                             ..
                         } => {
-                            let (shape, refit) = self.in_look(*look, shape);
+                            let (shape, _, refit) = self.in_look(*look, shape);
                             let Shape::Fruit(s) = shape else {
                                 continue;
                             };
@@ -2344,7 +2336,7 @@ impl ClusterCard {
                             look,
                             ..
                         } => {
-                            let (shape, refit) = self.in_look(*look, shape);
+                            let (shape, colours, refit) = self.in_look(*look, shape);
                             let (dx, dy) = (x - centre.x, y - centre.y);
                             let (u, v) = (
                                 inverse[0] * dx + inverse[1] * dy,
@@ -2355,7 +2347,7 @@ impl ClusterCard {
                             }
                             let paint = match shape {
                                 Shape::Flower(s) => flower(s, u * BLOOM, v * BLOOM),
-                                Shape::Head(s) => head(s, u * BLOOM, v * BLOOM),
+                                Shape::Head(s) => head(s, colours, u * BLOOM, v * BLOOM),
                                 _ => continue,
                             };
                             consider(centre.z + a.z * u + b.z * v, refit(paint));

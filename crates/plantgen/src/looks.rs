@@ -347,6 +347,23 @@ impl Season {
             .collect()
     }
 
+    /// The season with its stages' heads' unset bracts in `foliage` (see
+    /// [`Shape::with_bracts`]).
+    #[must_use]
+    pub fn with_bracts(&self, foliage: [f32; 3]) -> Self {
+        let stage = |look: &Option<StageLook>| {
+            look.as_ref().map(|look| StageLook {
+                shape: look.shape.with_bracts(foliage),
+                ..look.clone()
+            })
+        };
+        Self {
+            bud_look: stage(&self.bud_look),
+            flower_look: stage(&self.flower_look),
+            ..self.clone()
+        }
+    }
+
     /// The stage on day `day` of the year (1 to 365).
     #[must_use]
     pub fn stage(&self, day: f64) -> Stage {
@@ -451,7 +468,8 @@ pub enum Shape {
     Frond(Frond),
     /// A single flower, seen face on.
     Flower(Flower),
-    /// A daisy-like head of ray and disc flowers, seen face on.
+    /// A flower head, a capitulum (`crate::capitula`): florets on a shared
+    /// receptacle inside an involucre of bracts, seen face on.
     Head(Head),
     /// A flat-topped cluster of tiny flowers, seen from above.
     Umbel(Umbel),
@@ -777,15 +795,59 @@ impl Default for Flower {
     }
 }
 
+/// A flower head, a capitulum (spec rework P2, `crate::capitula`): florets
+/// packed on a shared receptacle inside an involucre of bracts
+/// (phyllaries), as in the daisy family. Lengths are shares of the head's
+/// radius, half the organ's size, unless they say otherwise.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct Head {
-    /// Ray flowers; 0 for a head of disc flowers only.
+    /// Ray florets round the rim of a radiate head; 0 for a head of disc
+    /// florets only.
     pub rays: u32,
     /// Ray width over the width of its share of the circle.
     pub ray_width: f64,
-    /// Radius of the disc, in the accent colour, over the head's.
+    /// Radius of the disc, the receptacle, over the head's.
     pub disc: f64,
+    /// What its florets are: rays round a disc of small tubes (`radiate`,
+    /// the rays possibly 0), disc florets only (`discoid`) or straps only
+    /// (`ligulate`, as in dandelions and cat's-ears).
+    #[serde(skip_serializing_if = "HeadKind::is_radiate")]
+    pub kind: HeadKind,
+    /// Disc florets, or every strap of a ligulate head, packed on the
+    /// receptacle in a sunflower spiral.
+    pub florets: u32,
+    /// Bracts of the involucre round the head's foot.
+    pub phyllaries: u32,
+    /// Rows they stand in, the outer shorter.
+    pub series: u32,
+    /// The involucre's height over the disc's width: about 0.3 for a flat
+    /// daisy, more than 1 for yarrow's cylinder.
+    pub involucre: f64,
+    /// The receptacle's dome, its height over the disc's radius: 0 flat,
+    /// 1 a hemisphere, more a cone.
+    pub receptacle: f64,
+    /// Degrees the phyllaries' upper halves turn outward from the
+    /// involucre's wall: 0 pressed to the head; an everlasting's dry
+    /// bracts open round its disc like petals.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub spread: f64,
+    /// How far the disc florets stand above the receptacle when open,
+    /// over the disc's radius: 0 for about their spacing, a daisy's short
+    /// tubes; a thistle's stand out of its involucre as a brush.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub floret_length: f64,
+    /// How far the head has opened from its rim inward: 0 a bud, 1 every
+    /// floret open, 2 every floret gone to seed; between, the outer share
+    /// of its florets a stage on.
+    pub open: f64,
+    /// Length of the pappus each fruit carries, over the disc's radius: 0
+    /// for none, as in daisies; drawn on florets gone to seed.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub pappus: f64,
+    /// Colour of the phyllaries; the plant's foliage colour if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub bracts: Option<[f32; 3]>,
 }
 
 impl Default for Head {
@@ -794,7 +856,39 @@ impl Default for Head {
             rays: 21,
             ray_width: 0.7,
             disc: 0.32,
+            kind: HeadKind::Radiate,
+            florets: 60,
+            phyllaries: 16,
+            series: 2,
+            involucre: 0.4,
+            receptacle: 0.25,
+            spread: 0.0,
+            floret_length: 0.0,
+            open: 0.6,
+            pappus: 0.0,
+            bracts: None,
         }
+    }
+}
+
+/// What a head's florets are (spec rework P2): the states of the
+/// `capitulum_kind` character, a disciform head drawn as a discoid one.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum HeadKind {
+    /// Ray florets round a disc of tubular ones (daisies, asters).
+    #[default]
+    Radiate,
+    /// Tubular disc florets only (thistles, pearly everlasting).
+    Discoid,
+    /// Strap-shaped florets only (dandelions, cat's-ears).
+    Ligulate,
+}
+
+impl HeadKind {
+    #[allow(clippy::trivially_copy_pass_by_ref)]
+    fn is_radiate(&self) -> bool {
+        *self == Self::Radiate
     }
 }
 
@@ -1142,6 +1236,19 @@ impl Shape {
         }
     }
 
+    /// The shape, a head's unset bracts (its phyllaries' colour) in
+    /// `foliage`, the plant's leaves' colour.
+    #[must_use]
+    pub fn with_bracts(&self, foliage: [f32; 3]) -> Self {
+        match self {
+            Self::Head(head) if head.bracts.is_none() => Self::Head(Head {
+                bracts: Some(foliage),
+                ..head.clone()
+            }),
+            _ => self.clone(),
+        }
+    }
+
     #[must_use]
     pub fn name(&self) -> &'static str {
         match self {
@@ -1408,7 +1515,31 @@ impl Shape {
             Self::Head(s) => {
                 count("rays", s.rays, 0, 60)?;
                 check("ray_width", s.ray_width, 0.1, 1.2)?;
-                check("disc", s.disc, 0.1, 1.0)
+                check("disc", s.disc, 0.1, 1.0)?;
+                if s.kind != HeadKind::Radiate && s.rays > 0 {
+                    return Err(format!(
+                        "rays are the rim florets of a radiate head; a {} head has none, found {}",
+                        if s.kind == HeadKind::Discoid {
+                            "discoid"
+                        } else {
+                            "ligulate"
+                        },
+                        s.rays
+                    ));
+                }
+                count("florets", s.florets, 1, 1000)?;
+                count("phyllaries", s.phyllaries, 0, 200)?;
+                count("series", s.series, 1, 12)?;
+                check("involucre", s.involucre, 0.05, 3.0)?;
+                check("receptacle", s.receptacle, 0.0, 3.0)?;
+                check("spread", s.spread, 0.0, 150.0)?;
+                check("floret_length", s.floret_length, 0.0, 3.0)?;
+                check("open", s.open, 0.0, 2.0)?;
+                check("pappus", s.pappus, 0.0, 3.0)?;
+                for channel in s.bracts.into_iter().flatten() {
+                    check("bracts", f64::from(channel), 0.0, 1.0)?;
+                }
+                Ok(())
             }
             Self::Umbel(s) => {
                 count("clusters", s.clusters, 1, 30)?;
@@ -1661,6 +1792,7 @@ pub fn resolve<'a>(
         .map(|(name, kind)| match looks.get(name) {
             Some(look) => {
                 let colour = look.colour.unwrap_or(foliage);
+                let drawn = look.shape.with_bracts(foliage);
                 let shade = look.shade.unwrap_or(if look.colour.is_some() {
                     [colour[0] * 0.35, colour[1] * 0.42, colour[2] * 0.55]
                 } else {
@@ -1668,7 +1800,6 @@ pub fn resolve<'a>(
                 });
                 Look {
                     organ: name.to_string(),
-                    shape: look.shape.clone(),
                     colour,
                     shade,
                     accent: look.accent.unwrap_or(colour),
@@ -1685,7 +1816,7 @@ pub fn resolve<'a>(
                     inflorescence: look.inflorescence.as_ref().and_then(|inflorescence| {
                         crate::clusters::ClusterLook::new(
                             crate::clusters::Cluster::of(inflorescence),
-                            &look.shape,
+                            &drawn,
                             &look
                                 .season
                                 .as_ref()
@@ -1693,6 +1824,7 @@ pub fn resolve<'a>(
                                 .unwrap_or_default(),
                         )
                     }),
+                    shape: drawn,
                 }
             }
             None => Look {
@@ -1793,7 +1925,9 @@ pub fn resolve_on<'a>(
         .map(|look| {
             let season = looks.get(&look.organ).and_then(|own| own.season.as_ref());
             match (season, day) {
-                (Some(season), Some(day)) => in_season(look, season, day, foliage),
+                (Some(season), Some(day)) => {
+                    in_season(look, &season.with_bracts(foliage), day, foliage)
+                }
                 _ => (look, 1.0),
             }
         })

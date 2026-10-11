@@ -76,7 +76,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let seed_plants = "(clade Spermatophyta: _ranks/clade/spermatophyta.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (21):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (28):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
@@ -86,9 +86,17 @@ fn rules_and_traits_say_where_they_come_from() {
         )),
         "{built_in}"
     );
+    // A flower head laid out from its characters, in every look that
+    // draws one.
     assert!(
         built_in.contains(
-            "\n  appearance.organs.flower.shape.rays on `head` cards  (family Asteraceae: asteraceae/family.json)\n"
+            "\n  appearance.organs.*.shape.disc on `head` cards  (family Asteraceae: asteraceae/family.json)\n  appearance.organs.*.shape.florets on `head` cards  (family Asteraceae: asteraceae/family.json)\n"
+        ),
+        "{built_in}"
+    );
+    assert!(
+        built_in.contains(
+            "\n  appearance.organs.*.shape.rays on `head` cards  (family Asteraceae: asteraceae/family.json)\n"
         ),
         "{built_in}"
     );
@@ -152,7 +160,7 @@ fn rules_and_traits_say_where_they_come_from() {
     .unwrap();
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
-    assert!(rules.starts_with("Rules, by their home (22):\n"), "{rules}");
+    assert!(rules.starts_with("Rules, by their home (29):\n"), "{rules}");
     assert!(
         rules.contains(
             "\n  generator.params.leaves_per_node  (family Sapindaceae: sapindaceae/family.json)\n"

@@ -96,7 +96,11 @@
           "template": "head",
           "rays": 0,
           "ray_width": 0.5,
-          "disc": 0.9
+          "disc": 0.9,
+          "florets": 12,
+          "phyllaries": 6,
+          "series": 1,
+          "involucre": 0.3
         },
         "colour": [0.95, 0.85, 0.3],
         "accent": [0.9, 0.8, 0.25]
@@ -133,6 +137,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Colours chosen by eye from photographs: yellow-green foliage, straw-coloured spines."
+    },
+    "appearance.organs.bloom": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its small simple umbels drawn as heads, by eye: about 12 yellow flowers in a shallow ring of 6 bracts (spec rework P2 draws a head's florets one by one, so their count shows). No flora's count for the species was read."
     },
     "taxon": {
       "evidence": "Authored",

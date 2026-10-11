@@ -28,6 +28,7 @@ pub mod bark;
 pub mod bend;
 pub mod blooms;
 pub mod body;
+pub mod capitula;
 pub mod clusters;
 pub mod conditions;
 pub mod cores;
@@ -102,5 +103,10 @@ pub mod venation;
 /// cluster's part mesh may take `parts::CLUSTER_TRIANGLES`, as a needle
 /// shoot's does, drawing each flower or head as one flat hexagon a step
 /// coarser, and a cluster whose axis bears no branches is never merged
-/// into one solid to fit (spec rework L1c).
-pub const GENERATOR_REVISION: u32 = 16;
+/// into one solid to fit (spec rework L1c). 17: a flower head is laid out
+/// from its florets (`crate::capitula`, spec rework P2): its phyllaries in
+/// rows, its receptacle, its disc florets opening from the rim inward,
+/// rays or straps, and its fruit with their pappus; its solid, the head a
+/// cluster draws and its card all come from that layout, and a head's
+/// part mesh may take `parts::CLUSTER_TRIANGLES`.
+pub const GENERATOR_REVISION: u32 = 17;
