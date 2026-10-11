@@ -1012,6 +1012,13 @@ pub fn states_of(value: &Value) -> Vec<String> {
 }
 
 /// A number, or the first of `bounds` a range has.
+/// The greatest a number stated as itself or as a range may be: its
+/// `high`, else its `max`.
+#[must_use]
+pub fn greatest(value: &Value) -> Option<f64> {
+    bound(value, &["high", "max"])
+}
+
 fn bound(value: &Value, bounds: &[&str]) -> Option<f64> {
     match value {
         Value::Object(range) => bounds

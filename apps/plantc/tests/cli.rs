@@ -74,7 +74,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let seed_plants = "(clade Spermatophyta: _ranks/clade/spermatophyta.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (13):\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n"
+            "Rules, by their home (17):\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n"
         )),
         "{built_in}"
     );
@@ -93,6 +93,20 @@ fn rules_and_traits_say_where_they_come_from() {
     assert!(
         built_in.contains(
             "\n  generator.params.leaves_per_node  (phylum Tracheophyta: _ranks/phylum/tracheophyta.json)\n"
+        ),
+        "{built_in}"
+    );
+    // Heights: herbs' stems and trees' tops at the vascular plants,
+    // culms at the Poales.
+    assert!(
+        built_in.contains(
+            "\n  generator.params.stem_height  (phylum Tracheophyta: _ranks/phylum/tracheophyta.json)\n"
+        ),
+        "{built_in}"
+    );
+    assert!(
+        built_in.contains(
+            "\n  generator.params.culm_height  (order Poales: _ranks/order/poales.json)\n"
         ),
         "{built_in}"
     );
@@ -123,7 +137,7 @@ fn rules_and_traits_say_where_they_come_from() {
     .unwrap();
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
-    assert!(rules.starts_with("Rules, by their home (14):\n"), "{rules}");
+    assert!(rules.starts_with("Rules, by their home (18):\n"), "{rules}");
     assert!(
         rules.contains(
             "\n  generator.params.leaves_per_node  (family Sapindaceae: sapindaceae/family.json)\n"

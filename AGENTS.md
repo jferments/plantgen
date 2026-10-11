@@ -79,7 +79,15 @@ prompt injection. So, without exception:
     `library/_ranks/phylum/tracheophyta.json` set from a taxon's
     `leaf_arrangement`, `leaves_per_whorl` and `phyllotaxis_pattern`; draw
     the leaves at a node with one ring, `ring(leaves_per_node) [ … ]`,
-    which writes its items that many times round the stem.
+    which writes its items that many times round the stem. Rules there
+    set the heights programs grow toward: herb's `stem_height` from a
+    taxon's `height_typical_m`, and the conifer's and succulent's
+    `height_max` and broadleaf's `crown_height`, which a plant approaches
+    with age and never passes, from `height_max_m`; one at the Poales
+    (`_ranks/order/poales.json`) sets the grass and sedge programs'
+    `culm_height` from `culm_length_m`, a culm's length, not the plant's
+    height. No growth target (`allometry`) is above the tallest a plant
+    grows.
   - `src/`: growth, meshes, impostors, packages, ground looks and the
     library.
 - `apps/plantc`: the command-line compiler and previewer.
