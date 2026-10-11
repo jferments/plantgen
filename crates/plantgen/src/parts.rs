@@ -408,7 +408,7 @@ mod tests {
             flowers: Some(flowers),
             ..Inflorescence::default()
         };
-        look.inflorescence = ClusterLook::new(Cluster::of(&spec), &look.shape);
+        look.inflorescence = ClusterLook::new(Cluster::of(&spec), &look.shape, &[]);
         assert!(look.inflorescence.is_some());
         look
     }

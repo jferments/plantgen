@@ -120,16 +120,16 @@
           "ripe": 270,
           "ripening": 40,
           "fall": 400,
+          "opening": 14,
           "flower_look": {
             "shape": {
-              "template": "spike",
-              "florets": 20,
-              "aspect": 0.45,
-              "plume": 0,
-              "stalk": 0.1
+              "template": "fruit",
+              "kind": "crowned",
+              "aspect": 0.75
             },
-            "colour": [0.85, 0.83, 0.75],
-            "size": 1.09
+            "colour": [0.93, 0.91, 0.85],
+            "accent": [0.8, 0.78, 0.7],
+            "size": 0.7
           }
         }
       }
@@ -195,6 +195,16 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "appearance.organs.bloom.season.flower_look": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its flowers drawn one by one (spec rework L1b): white urn-shaped flowers 5 to 8 mm long, drawn as closed urns, opening from the base of each raceme up. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
+    },
+    "appearance.organs.bloom.season.opening": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit, a convention (no source gives a raceme's opening time)."
     }
   },
   "provenance": {

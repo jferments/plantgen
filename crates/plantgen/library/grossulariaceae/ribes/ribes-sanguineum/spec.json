@@ -96,17 +96,28 @@
           "ripe": 170,
           "ripening": 30,
           "fall": 250,
+          "opening": 21,
           "flower_look": {
             "shape": {
-              "template": "spike",
-              "florets": 12,
-              "aspect": 0.35,
-              "plume": 0.0,
-              "stalk": 0.15
+              "template": "flower",
+              "petals": 5,
+              "petal_width": 0.9,
+              "point": 0.3,
+              "notch": 0.0,
+              "centre": 0.3
             },
-            "colour": [0.85, 0.25, 0.35],
-            "accent": [0.95, 0.75, 0.8],
-            "size": 1.6
+            "colour": [0.85, 0.25, 0.4],
+            "accent": [0.97, 0.85, 0.88],
+            "size": 1.25,
+            "form": {
+              "flower": {
+                "cup": 45,
+                "curl": 10,
+                "tube": 0.6,
+                "stamens": 5,
+                "stamen_length": 0.4
+              }
+            }
           }
         }
       }
@@ -171,6 +182,16 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "appearance.organs.bloom.season.flower_look": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its flowers drawn one by one (spec rework L1b): deep pink to red sepals 4 to 6.5 mm long spreading from a tubular hypanthium, round small white petals at the centre; each raceme flowers gradually over about three weeks, from its base up. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
+    },
+    "appearance.organs.bloom.season.opening": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Days from the first flower of a cluster opening to its last: about three weeks for a raceme, as described."
     }
   },
   "provenance": {

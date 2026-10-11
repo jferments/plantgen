@@ -482,7 +482,8 @@ fn needled_species_grow_solid_shoots() {
 
 /// Every built-in cluster (spec rework L1) draws near the camera as a part
 /// mesh within [`parts::TRIANGLES`], coarsened in at most
-/// `plantgen::fruit::COARSER` steps, so none falls back to its card.
+/// `plantgen::fruit::COARSER` steps, so none falls back to its card: in its
+/// own look and through its year, its units in bud, flower and fruit.
 #[test]
 fn builtin_clusters_draw_as_part_meshes_within_budget() {
     use plantgen::parts;
@@ -490,22 +491,34 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
     for (id, _) in spec::all_species() {
         let spec = PlantSpec::builtin(id).unwrap();
         let (program, _) = spec.program().unwrap();
-        let looks = spec.appearance.looks(program.organs());
-        let meshes = parts::part_meshes(&looks);
-        for (index, look) in looks.iter().enumerate() {
-            if look.inflorescence.is_none() {
-                continue;
+        // On their own look, and on every fifth day of the year, units
+        // in their stages (spec rework L1b).
+        let mut days = vec![None];
+        if spec.appearance.has_seasons() {
+            days.extend((1..=73).map(|day| Some(f64::from(day * 5))));
+        }
+        for day in days {
+            let (looks, _) = spec.appearance.looks_on(program.organs(), day);
+            let meshes = parts::part_meshes(&looks);
+            for (index, look) in looks.iter().enumerate() {
+                if look.inflorescence.is_none() {
+                    continue;
+                }
+                if day.is_none() {
+                    checked += 1;
+                }
+                let part = meshes
+                    .iter()
+                    .find(|part| part.template == index)
+                    .unwrap_or_else(|| {
+                        panic!("{id} `{}` on day {day:?}: kept as cards", look.organ)
+                    });
+                assert!(
+                    part.triangles() <= parts::TRIANGLES,
+                    "{id} on day {day:?}: {}",
+                    part.triangles()
+                );
             }
-            checked += 1;
-            let part = meshes
-                .iter()
-                .find(|part| part.template == index)
-                .unwrap_or_else(|| panic!("{id} `{}`: kept as cards", look.organ));
-            assert!(
-                part.triangles() <= parts::TRIANGLES,
-                "{id}: {}",
-                part.triangles()
-            );
         }
     }
     assert_eq!(checked, 25, "the fruit clusters moved in with L1a");
