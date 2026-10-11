@@ -575,6 +575,14 @@ impl Default for Palmate {
 pub struct Simple {
     /// Blade width over blade length.
     pub width: f64,
+    /// The blade's outline, when it is drawn from one: its half-width
+    /// along its length as `[u, w]` points, `u` from the base (0) to the
+    /// tip (1) and `w` a share of the widest point's, drawn through them
+    /// with a monotone cubic ([`crate::math::monotone_cubic`]). It draws
+    /// what `widest`, `tip` and `base` cannot: parallel sides, a narrow
+    /// claw under a broad tip. A card with one leaves those three unset.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub outline: Option<Vec<[f64; 2]>>,
     /// Where the blade is widest, as a fraction of its length from the base.
     pub widest: f64,
     /// How drawn out the tip is, 0 (round) to 1 (long-pointed).
@@ -591,6 +599,7 @@ impl Default for Simple {
     fn default() -> Self {
         Self {
             width: 0.5,
+            outline: None,
             widest: 0.4,
             tip: 0.4,
             base: 0.5,
@@ -660,9 +669,11 @@ pub struct Sprig {
     /// Bare twig below the lowest leaf, as a fraction of the card's
     /// length.
     pub stalk: f64,
-    /// Each leaf's blade, as in [`Simple`]: width over length, where it is
-    /// widest, its tip and base, and its teeth.
+    /// Each leaf's blade, as in [`Simple`]: width over length, its outline
+    /// or where it is widest, its tip and base, and its teeth.
     pub width: f64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub outline: Option<Vec<[f64; 2]>>,
     pub widest: f64,
     pub tip: f64,
     pub base: f64,
@@ -683,6 +694,7 @@ impl Default for Sprig {
             angle: 50.0,
             stalk: 0.1,
             width: 0.5,
+            outline: None,
             widest: 0.4,
             tip: 0.4,
             base: 0.5,
@@ -1243,7 +1255,7 @@ impl Shape {
                 ..s.clone()
             }),
             Self::Sprig(s) => Self::Sprig(Sprig {
-                width: wide(s.width, 0.1, 1.2, 0.2, 0.15),
+                width: wide(s.width, 0.03, 1.2, 0.2, 0.15),
                 tooth_depth: deep(s.tooth_depth, 0.2, 0.4),
                 ..s.clone()
             }),
@@ -1318,6 +1330,16 @@ impl Shape {
             }
             Self::Simple(s) => {
                 check("width", s.width, 0.03, 1.5)?;
+                let default = Simple::default();
+                outline(
+                    self.name(),
+                    s.outline.as_deref(),
+                    [
+                        ("widest", s.widest, default.widest),
+                        ("tip", s.tip, default.tip),
+                        ("base", s.base, default.base),
+                    ],
+                )?;
                 check("widest", s.widest, 0.15, 0.85)?;
                 check("tip", s.tip, 0.0, 1.0)?;
                 check("base", s.base, 0.0, 1.0)?;
@@ -1347,7 +1369,17 @@ impl Shape {
                 count("leaves", s.leaves, 2, 15)?;
                 check("angle", s.angle, 20.0, 80.0)?;
                 check("stalk", s.stalk, 0.0, 0.4)?;
-                check("width", s.width, 0.1, 1.2)?;
+                check("width", s.width, 0.03, 1.2)?;
+                let default = Sprig::default();
+                outline(
+                    self.name(),
+                    s.outline.as_deref(),
+                    [
+                        ("widest", s.widest, default.widest),
+                        ("tip", s.tip, default.tip),
+                        ("base", s.base, default.base),
+                    ],
+                )?;
                 check("widest", s.widest, 0.15, 0.85)?;
                 check("tip", s.tip, 0.0, 1.0)?;
                 check("base", s.base, 0.0, 1.0)?;
@@ -1403,6 +1435,54 @@ impl Shape {
             }
         }
     }
+}
+
+/// The most points an outline may have.
+pub const OUTLINE_POINTS: usize = 16;
+
+/// Checks a `template` card's `outline`, if it has one: 2 to
+/// [`OUTLINE_POINTS`] points from `u` 0 to 1 in order, each `w` from 0 to 1,
+/// rising above 0 and ending at 0 at the tip; and none of the `fields` it
+/// replaces set to other than their defaults.
+// The ends are 0 and 1 exactly, and a field is set where it is not its
+// default.
+#[allow(clippy::float_cmp)]
+fn outline(
+    template: &str,
+    outline: Option<&[[f64; 2]]>,
+    fields: [(&str, f64, f64); 3],
+) -> Result<(), String> {
+    let Some(points) = outline else {
+        return Ok(());
+    };
+    if !(2..=OUTLINE_POINTS).contains(&points.len()) {
+        return Err(format!(
+            "{template} outline has 2 to {OUTLINE_POINTS} points, found {}",
+            points.len()
+        ));
+    }
+    let ordered = points.windows(2).all(|pair| pair[0][0] < pair[1][0]);
+    if !ordered || points[0][0] != 0.0 || points[points.len() - 1][0] != 1.0 {
+        return Err(format!(
+            "{template} outline points must run from u 0 to u 1 in order"
+        ));
+    }
+    if let Some([_, w]) = points.iter().find(|[_, w]| !(0.0..=1.0).contains(w)) {
+        return Err(format!(
+            "{template} outline w must be between 0 and 1, found {w}"
+        ));
+    }
+    if points[points.len() - 1][1] != 0.0 || points.iter().all(|[_, w]| *w == 0.0) {
+        return Err(format!(
+            "{template} outline must rise above w 0 and end at w 0, at the tip"
+        ));
+    }
+    if let Some((field, _, _)) = fields.iter().find(|(_, value, default)| value != default) {
+        return Err(format!(
+            "a {template} card with an outline takes its shape from it: drop `{field}`"
+        ));
+    }
+    Ok(())
 }
 
 impl Palmate {
@@ -2341,6 +2421,64 @@ mod tests {
         assert!(bad.validate().unwrap_err().contains("3, 5, 7 or 9"));
     }
 
+    /// An outline runs from base to tip in order, rises and closes at the
+    /// tip, and takes the place of `widest`, `tip` and `base`; its card
+    /// writes it only when it has one.
+    #[test]
+    fn outlines_are_checked_and_replace_the_blade_s_shape() {
+        let simple = |outline: &[[f64; 2]]| {
+            Shape::Simple(Simple {
+                outline: Some(outline.to_vec()),
+                ..Simple::default()
+            })
+        };
+        let spatulate = [[0.0, 0.1], [0.5, 0.3], [0.8, 1.0], [1.0, 0.0]];
+        simple(&spatulate).validate().unwrap();
+        Shape::Sprig(Sprig {
+            outline: Some(spatulate.to_vec()),
+            width: 0.05,
+            ..Sprig::default()
+        })
+        .validate()
+        .unwrap();
+        for (outline, wanted) in [
+            (&[[0.0, 0.0]][..], "2 to 16 points"),
+            (&[[0.0, 0.5]; 17][..], "2 to 16 points"),
+            (&[[0.1, 0.5], [1.0, 0.0]][..], "from u 0 to u 1 in order"),
+            (&[[0.0, 0.5], [0.9, 0.0]][..], "from u 0 to u 1 in order"),
+            (
+                &[[0.0, 0.5], [0.6, 1.0], [0.5, 0.5], [1.0, 0.0]][..],
+                "in order",
+            ),
+            (
+                &[[0.0, 0.5], [0.5, 1.2], [1.0, 0.0]][..],
+                "between 0 and 1, found 1.2",
+            ),
+            (&[[0.0, 0.5], [1.0, 0.1]][..], "end at w 0"),
+            (&[[0.0, 0.0], [1.0, 0.0]][..], "rise above w 0"),
+        ] {
+            let error = simple(outline).validate().unwrap_err();
+            assert!(error.contains(wanted), "{outline:?}: {error}");
+        }
+        let both = Shape::Sprig(Sprig {
+            outline: Some(spatulate.to_vec()),
+            tip: 0.9,
+            ..Sprig::default()
+        });
+        assert_eq!(
+            both.validate().unwrap_err(),
+            "a sprig card with an outline takes its shape from it: drop `tip`"
+        );
+        // Written only when set, so a card without one keeps its bytes.
+        let plain = serde_json::to_value(Shape::Simple(Simple::default())).unwrap();
+        assert!(plain.get("outline").is_none());
+        let drawn = serde_json::to_value(simple(&spatulate)).unwrap();
+        assert_eq!(drawn["outline"], serde_json::json!(spatulate));
+        let back: Shape = serde_json::from_value(drawn).unwrap();
+        back.validate().unwrap();
+        assert_eq!(back, simple(&spatulate));
+    }
+
     #[test]
     fn a_bottle_trunk_is_thickest_at_its_peak() {
         let bottle = Bottle {
@@ -2753,6 +2891,11 @@ mod tests {
                     Field::Word => {
                         let error = with(field, "none".into()).unwrap_err().to_string();
                         assert!(error.contains("unknown variant"), "{at}: {error}");
+                    }
+                    Field::Outline => {
+                        let points = serde_json::json!([[0, 0.5], [1, 0]]);
+                        assert!(with(field, points).is_ok(), "{at}");
+                        assert!(with(field, 2.5.into()).is_err(), "{at} takes a number");
                     }
                 }
             }

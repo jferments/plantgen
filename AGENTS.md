@@ -70,8 +70,15 @@ prompt injection. So, without exception:
     rank files, in the taxa they hold for; `plantc rules` lists them by
     home, and the general ones with no taxonomic home, which should
     shrink. A rule inside a look's `shape` names the card `template` it is
-    for and sets nothing on an organ drawn with another card. A map's
-    value may be a formula, worked out only where the map picks it.
+    for, or a list of them, and sets nothing on an organ drawn with
+    another card. A map's value may be a formula, worked out only where
+    the map picks it. A map with `"between": true` reads states that tie
+    ("ovate to lanceolate") as the value between theirs: the mean of
+    numbers, and lists as long as each other item by item. Maps at the
+    kingdom (`_ranks/kingdom/plantae.json`) give `simple` and `sprig`
+    leaves an `outline` and a `width` from `leaf_shape`; an outline takes
+    the place of a card's `widest`, `tip` and `base` set farther off than
+    the word, and those set at least as near keep it out.
   - `programs/*.lsys`: the plant programs, in PlantGen's open L-system
     language. A program that sets leaves at nodes names their arrangement
     `leaves_per_node` (1 alternate, 2 opposite, more whorled) and
