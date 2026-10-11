@@ -56,7 +56,11 @@ pub struct GraphOrgan {
     pub heading: Vec3,
     pub left: Vec3,
     pub size: f64,
+    /// Plant age it was born at: an organ a rule turned into another
+    /// keeps the birth (and the id) it had (organ phases, spec rework M7).
     pub born: f64,
+    /// Plant age at which it is shed, or becomes another organ type (a
+    /// blade turned to thatch), if before the end of growth.
     pub shed: Option<f64>,
     /// Light exposure from 0 (deep shade) to 1 (open sky).
     pub light: f64,

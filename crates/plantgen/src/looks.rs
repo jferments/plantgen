@@ -306,12 +306,14 @@ pub enum Stage {
 }
 
 impl Season {
-    /// Its look in bud: its `bud_look`, or a closed bud of its flower's
-    /// colours (`colour`, the organ's own, where it sets none), half
-    /// turned to `foliage`'s (its sepals), a third its flower's size, and
+    /// Its look in bud: its `bud_look`; or for a head (`shape`, the
+    /// organ's own), the head itself with its florets all in bud (organ
+    /// phases, spec rework M7); or a closed bud of its flower's colours
+    /// (`colour`, the organ's own, where it sets none), half turned to
+    /// `foliage`'s (its sepals). Either is a third its flower's size, and
     /// whole where its flower look is.
     #[must_use]
-    pub fn bud(&self, colour: [f32; 3], foliage: [f32; 3]) -> StageLook {
+    pub fn bud(&self, shape: &Shape, colour: [f32; 3], foliage: [f32; 3]) -> StageLook {
         self.bud_look.clone().unwrap_or_else(|| {
             let (colour, size, whole) = self
                 .flower_look
@@ -319,6 +321,19 @@ impl Season {
                 .map_or((colour, 1.0, false), |flower| {
                     (flower.colour.unwrap_or(colour), flower.size, flower.whole)
                 });
+            if let Shape::Head(head) = shape {
+                return StageLook {
+                    shape: Shape::Head(Head {
+                        open: 0.0,
+                        ..head.clone()
+                    }),
+                    colour: None,
+                    accent: None,
+                    size: size / 3.0,
+                    form: None,
+                    whole,
+                };
+            }
             let closed: [f32; 3] =
                 std::array::from_fn(|channel| f32::midpoint(colour[channel], foliage[channel]));
             StageLook {
@@ -337,15 +352,23 @@ impl Season {
 
     /// A cluster's units in bud and in flower where they are drawn one by
     /// one, not `whole`: each a unit and its size as a share of the own
-    /// unit's (see [`Self::bud`] for `colour` and `foliage`).
+    /// unit's (see [`Self::bud`] for `shape`, `colour` and `foliage`).
     #[must_use]
-    pub fn units(&self, colour: [f32; 3], foliage: [f32; 3]) -> Vec<(crate::clusters::Unit, f64)> {
-        [Some(self.bud(colour, foliage)), self.flower_look.clone()]
-            .into_iter()
-            .flatten()
-            .filter(|look| !look.whole)
-            .filter_map(|look| crate::clusters::Unit::of(&look.shape).map(|unit| (unit, look.size)))
-            .collect()
+    pub fn units(
+        &self,
+        shape: &Shape,
+        colour: [f32; 3],
+        foliage: [f32; 3],
+    ) -> Vec<(crate::clusters::Unit, f64)> {
+        [
+            Some(self.bud(shape, colour, foliage)),
+            self.flower_look.clone(),
+        ]
+        .into_iter()
+        .flatten()
+        .filter(|look| !look.whole)
+        .filter_map(|look| crate::clusters::Unit::of(&look.shape).map(|unit| (unit, look.size)))
+        .collect()
     }
 
     /// The season with its stages' heads' unset bracts in `foliage` (see
@@ -375,11 +398,7 @@ impl Season {
     /// the first to open to 1 for the last (see the type).
     #[must_use]
     pub fn unit_stage(&self, day: f64, rank: f64) -> Stage {
-        let d = if day < self.bud && day + 365.0 < self.fall {
-            day + 365.0
-        } else {
-            day
-        };
+        let d = self.on(day);
         if d < self.bud || d >= self.fall {
             return Stage::Gone;
         }
@@ -396,6 +415,50 @@ impl Season {
             Stage::Fruit {
                 unripe: if d < self.ripe { 1.0 } else { 0.0 },
             }
+        }
+    }
+
+    /// How far a lone head with this season has opened on day `day` (its
+    /// `open`; organ phases, spec rework M7). Its florets are ranked as a
+    /// cluster's units are, 0 at the rim to 1 at the centre: the floret of
+    /// rank `r` opens on day `flower + r opening` and goes to seed on day
+    /// `fruit + r opening`, so the head is `(day - flower) / opening` open
+    /// in flower, up to 1, and `1 + (day - fruit) / opening` in fruit, up
+    /// to 2, every floret open before any goes to seed. With no `opening`
+    /// every floret opens at once: 0 in bud, 1 in flower, 2 in fruit.
+    #[must_use]
+    pub fn open(&self, day: f64) -> f64 {
+        let d = self.on(day);
+        let past = |from: f64| {
+            if self.opening > 0.0 {
+                ((d - from) / self.opening).clamp(0.0, 1.0)
+            } else if d >= from {
+                1.0
+            } else {
+                0.0
+            }
+        };
+        match self.stage(day) {
+            Stage::Gone | Stage::Bud => 0.0,
+            Stage::Flower => past(self.flower),
+            Stage::Fruit { .. } => 1.0 + past(self.fruit),
+        }
+    }
+
+    /// Whether day `day` of the year is past its fall, not before its bud
+    /// (both show nothing).
+    #[must_use]
+    pub fn fallen(&self, day: f64) -> bool {
+        self.on(day) >= self.fall
+    }
+
+    /// Day `day` of the year as a day of the season: a day before its bud
+    /// is in the next year where its fall comes then.
+    fn on(&self, day: f64) -> f64 {
+        if day < self.bud && day + 365.0 < self.fall {
+            day + 365.0
+        } else {
+            day
         }
     }
 
@@ -1904,7 +1967,7 @@ pub fn resolve<'a>(
                             &look
                                 .season
                                 .as_ref()
-                                .map(|season| season.units(colour, foliage))
+                                .map(|season| season.units(&drawn, colour, foliage))
                                 .unwrap_or_default(),
                         )
                     }),
@@ -2047,7 +2110,7 @@ pub fn staged(graph: &crate::graph::PlantGraph, sizes: &[f64]) -> Option<crate::
 fn in_season(look: Look, season: &Season, day: f64, foliage: [f32; 3]) -> (Look, f64) {
     let stage = season.stage(day);
     let whole = match stage {
-        Stage::Bud => season.bud(look.colour, foliage).whole,
+        Stage::Bud => season.bud(&look.shape, look.colour, foliage).whole,
         Stage::Flower => season
             .flower_look
             .as_ref()
@@ -2058,28 +2121,43 @@ fn in_season(look: Look, season: &Season, day: f64, foliage: [f32; 3]) -> (Look,
         return in_units(look, season, day, stage, foliage);
     }
     let is_fruit = matches!(look.shape, Shape::Fruit(_));
+    // A head opens by the day, whichever stage look draws it.
+    let open = season.open(day);
     match stage {
         Stage::Gone => (look, 0.0),
         Stage::Bud => {
-            let bud = season.bud(look.colour, foliage);
-            (in_stage(&look, &bud), bud.size)
+            let bud = season.bud(&look.shape, look.colour, foliage);
+            if season.bud_look.is_none() && matches!(look.shape, Shape::Head(_)) {
+                // The head itself, in its own colours and form.
+                return (opened(look, open), bud.size);
+            }
+            (opened(in_stage(&look, &bud), open), bud.size)
         }
         Stage::Flower => match &season.flower_look {
-            Some(flower) => (in_stage(&look, flower), flower.size),
+            Some(flower) => (opened(in_stage(&look, flower), open), flower.size),
             None if is_fruit => (look, 0.0),
-            None => (look, 1.0),
+            None => (opened(look, open), 1.0),
         },
         Stage::Fruit { unripe } => {
             if matches!(look.shape, Shape::Flower(_)) {
                 return (look, 0.0);
             }
-            let mut look = look;
+            let mut look = opened(look, open);
             if let Shape::Fruit(fruit) = &mut look.shape {
                 fruit.unripe = unripe;
             }
             (look, 1.0)
         }
     }
+}
+
+/// `look` with its head, if it draws one, opened to `open` (see
+/// [`Head::open`]).
+fn opened(mut look: Look, open: f64) -> Look {
+    if let Shape::Head(head) = &mut look.shape {
+        head.open = open;
+    }
+    look
 }
 
 /// A cluster's `look` on `day` of `season`, `stage` its first unit's,
@@ -2109,33 +2187,42 @@ fn in_units(
                 }
                 return (look, 1.0);
             }
-            Stage::Flower if !own_fruit && season.flower_look.is_none() => return (look, 1.0),
+            Stage::Flower if !own_fruit && season.flower_look.is_none() => {
+                return (opened(look, 1.0), 1.0);
+            }
             _ => {}
         }
     }
-    let unit = |stage: &StageLook| {
+    // A head is a unit too: its florets in bud, open, or gone to seed in
+    // fruit (organ phases, spec rework M7), each head in its own stage.
+    let head = matches!(look.shape, Shape::Head(_));
+    let unit = |stage: &StageLook, open: f64| {
         let colour = stage.colour.unwrap_or(look.colour);
+        let mut shape = stage.shape.clone();
+        if let Shape::Head(head) = &mut shape {
+            head.open = open;
+        }
         (!stage.whole).then(|| crate::clusters::StageUnit {
             form: stage
                 .form
                 .clone()
                 .unwrap_or_else(|| crate::blooms::Form::default_for(&stage.shape)),
-            shape: stage.shape.clone(),
+            shape,
             colour,
             accent: stage.accent.unwrap_or(colour),
             size: stage.size,
         })
     };
-    let own = crate::clusters::StageUnit {
-        shape: look.shape.clone(),
+    let own = |open: f64| crate::clusters::StageUnit {
+        shape: opened(look.clone(), open).shape,
         form: look.form.clone(),
         colour: look.colour,
         accent: look.accent,
         size: 1.0,
     };
     let flower = match &season.flower_look {
-        Some(flower) => unit(flower),
-        None => (!own_fruit).then(|| own.clone()),
+        Some(flower) => unit(flower, 1.0),
+        None => (!own_fruit).then(|| own(1.0)),
     };
     let opening = crate::clusters::Opening {
         season: Season {
@@ -2145,9 +2232,9 @@ fn in_units(
         },
         day,
         looks: [
-            unit(&season.bud(look.colour, foliage)),
+            unit(&season.bud(&look.shape, look.colour, foliage), 0.0),
             flower,
-            own_fruit.then_some(own),
+            (own_fruit || head).then(|| own(2.0)),
         ],
     };
     let Some(cluster) = &mut look.inflorescence else {
@@ -2371,17 +2458,20 @@ impl Moss {
 }
 
 impl OrganLook {
-    /// Check that `season`'s cluster keys suit the look: `opening` and
-    /// `whole` are for a cluster, and a cluster's stage looks that are not
-    /// `whole` draw one unit each.
+    /// Check that `season`'s cluster keys suit the look: `opening` is for
+    /// a cluster or a head (whose florets open over it), `whole` for a
+    /// cluster, and a cluster's stage looks that are not `whole` draw one
+    /// unit each.
     fn check_stages(&self, season: &Season) -> Result<(), String> {
         let looks = [
             ("bud_look", &season.bud_look),
             ("flower_look", &season.flower_look),
         ];
         if self.inflorescence.is_none() {
-            if season.opening > 0.0 {
-                return Err("season opening is for a look with an inflorescence".to_string());
+            if season.opening > 0.0 && !matches!(self.shape, Shape::Head(_)) {
+                return Err(
+                    "season opening is for a look with an inflorescence or a head".to_string(),
+                );
             }
             if let Some((key, _)) = looks
                 .iter()
@@ -2866,6 +2956,136 @@ mod tests {
         assert_eq!(on(&organs, 150.0).1[1], 0.0);
     }
 
+    /// A daisy's head: in bud from day 120, its florets opening over 10
+    /// days from 150, going to seed over 10 days from 170.
+    fn daisy() -> Season {
+        Season {
+            bud: 120.0,
+            flower: 150.0,
+            fruit: 170.0,
+            ripe: 185.0,
+            ripening: 10.0,
+            fall: 200.0,
+            opening: 10.0,
+            bud_look: None,
+            flower_look: None,
+        }
+    }
+
+    /// Looks with a `bloom` that is a head with `season`, alone or in
+    /// `inflorescence`.
+    fn headed(season: Season, inflorescence: Option<Inflorescence>) -> BTreeMap<String, OrganLook> {
+        let mut organs = BTreeMap::new();
+        organs.insert(
+            "bloom".to_string(),
+            OrganLook {
+                shape: Shape::Head(Head::default()),
+                colour: Some([0.95, 0.95, 0.9]),
+                shade: None,
+                accent: Some([0.9, 0.7, 0.1]),
+                face_up: 0.0,
+                solid: None,
+                bend: None,
+                form: None,
+                season: Some(season),
+                families: None,
+                inflorescence,
+            },
+        );
+        organs
+    }
+
+    #[test]
+    fn a_head_opens_from_its_rim_by_the_day() {
+        let daisy = daisy();
+        assert_eq!(daisy.open(130.0), 0.0);
+        assert_eq!(daisy.open(150.0), 0.0);
+        assert_eq!(daisy.open(155.0), 0.5);
+        assert_eq!(daisy.open(165.0), 1.0);
+        assert_eq!(daisy.open(172.0), 1.2);
+        assert_eq!(daisy.open(190.0), 2.0);
+        let all_at_once = Season {
+            opening: 0.0,
+            ..daisy.clone()
+        };
+        assert_eq!(all_at_once.open(150.0), 1.0);
+        assert_eq!(all_at_once.open(170.0), 2.0);
+
+        let types = [("bloom", OrganKind::Flower)];
+        let open = |look: &Look| match &look.shape {
+            Shape::Head(head) => head.open,
+            other => panic!("not a head: {other:?}"),
+        };
+        let organs = headed(daisy, None);
+        // Its florets may open over days, as a cluster's units may; a lone
+        // flower's may not.
+        assert!(organs["bloom"].validate().is_ok());
+        let flower = OrganLook {
+            shape: Shape::Flower(Flower::default()),
+            ..organs["bloom"].clone()
+        };
+        assert!(flower.validate().unwrap_err().contains("opening"));
+        let on = |day| {
+            resolve_on(
+                types,
+                &organs,
+                [0.1, 0.3, 0.05],
+                [0.03, 0.1, 0.03],
+                Some(day),
+            )
+        };
+        // In bud it is itself, closed, a third its size, in its own colours.
+        let (looks, sizes) = on(130.0);
+        assert_eq!(open(&looks[0]), 0.0);
+        assert!((sizes[0] - 1.0 / 3.0).abs() < 1e-12);
+        assert_eq!(looks[0].colour, [0.95, 0.95, 0.9]);
+        // Then open from its rim inward, and to seed, at its full size.
+        for (day, opened) in [(155.0, 0.5), (165.0, 1.0), (175.0, 1.5), (190.0, 2.0)] {
+            let (looks, sizes) = on(day);
+            assert!((open(&looks[0]) - opened).abs() < 1e-12, "day {day}");
+            assert_eq!(sizes[0], 1.0);
+        }
+        assert_eq!(on(200.0).1[0], 0.0);
+        // Without a day it keeps the `open` its look sets.
+        let (looks, _) = resolve_on(types, &organs, [0.0; 3], [0.0; 3], None);
+        assert_eq!(open(&looks[0]), Head::default().open);
+    }
+
+    #[test]
+    fn a_clusters_heads_each_open_in_their_own_stage() {
+        // A corymb of heads opening over 40 days: each head a unit in its
+        // own stage, its florets all in bud, all open, or all in seed.
+        let corymb = Some(Inflorescence {
+            kind: Some(ClusterKind::Corymb),
+            flowers: Some(12),
+            ..Inflorescence::default()
+        });
+        let organs = headed(
+            Season {
+                opening: 40.0,
+                ..daisy()
+            },
+            corymb,
+        );
+        let types = [("bloom", OrganKind::Flower)];
+        let (looks, _) = resolve_on(types, &organs, [0.0; 3], [0.0; 3], Some(172.0));
+        let cluster = looks[0].inflorescence.as_ref().expect("a cluster");
+        let opening = cluster.opening.as_ref().expect("units in stages");
+        let shown: Vec<f64> = cluster
+            .layout(0.0, 0)
+            .units
+            .iter()
+            .filter_map(|p| opening.showing(p))
+            .map(|(unit, _)| match &unit.shape {
+                Shape::Head(head) => head.open,
+                other => panic!("not a head: {other:?}"),
+            })
+            .collect();
+        for stage in [0.0, 1.0, 2.0] {
+            assert!(shown.contains(&stage), "{shown:?}");
+        }
+    }
+
     /// A cherry's umbel of six (or `kind` of `flowers`), with `season`.
     fn clustered(kind: ClusterKind, flowers: u32, season: Season) -> OrganLook {
         OrganLook {
@@ -2965,7 +3185,11 @@ mod tests {
                 [[0.95, 0.95, 0.9], [0.6, 0.05, 0.06], [0.45, 0.5, 0.15]].contains(&slot)
                     || slot
                         == slow
-                            .bud([0.6, 0.05, 0.06], [0.1, 0.3, 0.05])
+                            .bud(
+                                &Shape::default_for(OrganKind::Fruit),
+                                [0.6, 0.05, 0.06],
+                                [0.1, 0.3, 0.05]
+                            )
                             .colour
                             .unwrap(),
                 "{slot:?}"

@@ -233,7 +233,9 @@ pub struct CompiledRule {
     pub weight: Option<Code>,
     pub successor: Box<[Item]>,
     /// Index of the successor module that continues the predecessor: the
-    /// first module outside any branch with the predecessor's symbol. It keeps
+    /// first module outside any branch with the predecessor's symbol, or,
+    /// for an organ without one, the first organ outside any branch (a
+    /// flower that becomes a fruit; organ phases, spec rework M7). It keeps
     /// the predecessor's lineage and birth time.
     pub continuation: Option<usize>,
     /// The successor's rings, in order. Interpretation rules have none.
@@ -1145,7 +1147,7 @@ impl Compiler {
         // its bracket's `]` returns to (none for an organ, done at once).
         let mut open: Option<(Code, usize, Option<i32>)> = None;
         let mut depth = 0_i32;
-        let mut continuation = None;
+        let (mut continuation, mut first_organ) = (None, None);
         let (mut identity, mut turtle, mut structures) = (0_u32, 0_u32, 0_u32);
         for (index, call) in calls.iter().enumerate() {
             if call.symbol == "ring" {
@@ -1201,8 +1203,13 @@ impl Compiler {
                 turtle += 1;
                 TURTLE_ORDINAL | (turtle - 1)
             };
-            if continuation.is_none() && depth == 0 && Some(symbol) == predecessor {
-                continuation = Some(items.len());
+            if depth == 0 {
+                if continuation.is_none() && Some(symbol) == predecessor {
+                    continuation = Some(items.len());
+                }
+                if first_organ.is_none() && matches!(info.kind, SymbolKind::Organ { .. }) {
+                    first_organ = Some(items.len());
+                }
             }
             items.push(Item {
                 symbol,
@@ -1224,6 +1231,14 @@ impl Compiler {
             return err(span, "a `[` is never closed");
         }
         debug_assert!(open.is_none(), "a ring's items always close it");
+        // An organ rewritten into another lives on in it.
+        let organ = predecessor.is_some_and(|symbol| {
+            matches!(
+                self.symbols[usize::from(symbol)].kind,
+                SymbolKind::Organ { .. }
+            )
+        });
+        let continuation = continuation.or(first_organ.filter(|_| organ));
         Ok(Successor {
             items: items.into_boxed_slice(),
             rings: rings.into_boxed_slice(),

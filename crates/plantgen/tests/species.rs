@@ -162,7 +162,7 @@ fn builtin_species_shade_with_the_area_they_draw() {
 /// Grasses and herbs renew their shoots every year: at every keyframe
 /// each stem, culm, leaf and flower grew that year, so nothing lives on
 /// from the year before but a grass's thatch, the dead blades of last
-/// year's tillers.
+/// year's tillers, each born with its blade.
 #[test]
 fn grasses_and_herbs_renew_their_shoots_every_year() {
     let mut checked = 0;
@@ -194,9 +194,14 @@ fn grasses_and_herbs_renew_their_shoots_every_year() {
                 assert_eq!(segment.shed, (graph.age < 4.0).then_some(graph.age + 1.0));
             }
             for organ in &graph.organs {
+                let born = if Some(usize::from(organ.organ)) == thatch {
+                    graph.age - 1.0
+                } else {
+                    graph.age
+                };
                 assert_eq!(
                     organ.born.to_bits(),
-                    graph.age.to_bits(),
+                    born.to_bits(),
                     "{id}: an organ outlived its year"
                 );
             }
