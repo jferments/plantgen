@@ -46,8 +46,16 @@ jobs:
               rm -rf "$CARGO_TARGET_DIR"
             fi
           fi
+      # The runner's service has no ~/.cargo/bin on its PATH (After's
+      # rust_environment.py adds it the same way).
       - name: Toolchain (rust-toolchain.toml)
-        run: rustup toolchain install 2>/dev/null || rustup show
+        run: |
+          set -eu
+          cargo_bin="${CARGO_HOME:-$HOME/.cargo}/bin"
+          echo "$cargo_bin" >> "$GITHUB_PATH"
+          export PATH="$cargo_bin:$PATH"
+          rustup toolchain install 2>/dev/null || rustup show
+          rustc --version
       - name: Format
         run: cargo fmt --all --check
       - name: Clippy
