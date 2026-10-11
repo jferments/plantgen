@@ -768,7 +768,8 @@ impl Library {
     /// trait and rule it sets. Then the traits it inherits with its own:
     /// none of them a character that another of them rules out, such as
     /// bark on a herbaceous stem, nor above a character it is at most,
-    /// such as a typical height above the greatest.
+    /// such as a typical height above the greatest, nor grown to a target
+    /// (`allometry`) above the tallest it grows (`height_max_m`).
     ///
     /// # Errors
     ///
@@ -800,8 +801,35 @@ impl Library {
                     entry.file()
                 ));
             }
+            if let Some(problem) = self.above_tallest(&entry.id, &traits)? {
+                return Err(format!("{}: {problem}", entry.file()));
+            }
         }
         Ok(())
+    }
+
+    /// A growth target (`allometry`) of the species `id` taller than the
+    /// tallest it grows, `height_max_m` (its `high`, else its `max`) as
+    /// `traits` states it, in words.
+    fn above_tallest(
+        &self,
+        id: &str,
+        traits: &serde_json::Map<String, Value>,
+    ) -> Result<Option<String>, String> {
+        let Some(tallest) = traits.get("height_max_m").and_then(crate::traits::greatest) else {
+            return Ok(None);
+        };
+        let inherited = self.inherited(id).map_err(|error| error.0)?;
+        let points = inherited.spec.get("allometry").and_then(Value::as_array);
+        Ok(points.into_iter().flatten().find_map(|point| {
+            let height = point.get("height").and_then(Value::as_f64)?;
+            (height > tallest).then(|| {
+                format!(
+                    "its growth target at age {} is {height} m tall, above `height_max_m` {tallest} m",
+                    point.get("age").unwrap_or(&Value::Null)
+                )
+            })
+        }))
     }
 
     /// The traits the species `id` states, its own and those it inherits,
@@ -2788,6 +2816,26 @@ mod tests {
             message.contains(
                 "acer-circinatum/spec.json: it states `bark_texture` with what it inherits, but `bark_texture` is a character of the bark, which exists only where `woodiness` is woody or semi; here `woodiness` is herbaceous"
             ),
+            "{message}"
+        );
+        // Nor grown to a target above the tallest it grows.
+        let folder = Folder::new("refused-above-tallest");
+        let mut own: serde_json::Value = serde_json::from_str(source("acer-circinatum")).unwrap();
+        let target = own["allometry"][0]["height"].as_f64().unwrap();
+        own["traits"] = serde_json::json!({"height_max_m": {"min": 1, "max": target / 2.0}});
+        own["evidence"]["traits"] = serde_json::json!({"evidence": "Authored",
+            "source": "plantgen-authors", "note": "Test."});
+        folder.write(
+            "library/sapindaceae/acer/acer-circinatum/spec.json",
+            &own.to_string(),
+        );
+        let message = Library::from_dir(&folder.0).unwrap_err().0;
+        assert!(
+            message.contains(&format!(
+                "acer-circinatum/spec.json: its growth target at age {} is {target} m tall, above `height_max_m` {} m",
+                own["allometry"][0]["age"],
+                target / 2.0
+            )),
             "{message}"
         );
     }

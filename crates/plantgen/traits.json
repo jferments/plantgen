@@ -272,6 +272,14 @@
       "range": [0.001, 200],
       "why": "the widest a crown or clump grows"
     },
+    "culm_length_m": {
+      "group": "size",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m",
+      "range": [0.01, 40],
+      "why": "a grass's, sedge's or rush's flowering culm, its length as floras give it, which may be more than its height where it leans or bends at a node"
+    },
     "stem_diameter_max_m": {
       "group": "size",
       "organ": "stem",
