@@ -219,6 +219,13 @@ impl Forms {
 /// `fall` past 365 keeps the fruit into the next year (rose hips,
 /// snowberries): on a day before `bud`, `d + 365` counts while it is before
 /// `fall`.
+///
+/// An organ that is a cluster (an `inflorescence`) opens its units one
+/// after another over `opening` days (spec rework L1b): its unit of rank
+/// `r`, from 0 for the first to open to 1 for the last, is on day `d` in
+/// the stage of day `max(d - r opening, bud)`, while the cluster shows
+/// from `bud` and falls whole at `fall`. Each unit is drawn in its stage's
+/// look, unless that look is `whole`.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Season {
@@ -229,8 +236,13 @@ pub struct Season {
     #[serde(default = "default_ripening")]
     pub ripening: f64,
     pub fall: f64,
+    /// Days a cluster takes to open from its first unit to its last; 0,
+    /// all at once, by default.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub opening: f64,
     /// Its look in bud; without one, a closed bud a third the size of its
-    /// flower, in the flower's colour half turned to the foliage's.
+    /// flower, in the flower's colour half turned to the foliage's, whole
+    /// where its flower look is.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bud_look: Option<StageLook>,
     /// Its look in flower; without one it shows its own look then, or
@@ -253,9 +265,19 @@ pub struct StageLook {
     pub colour: Option<[f32; 3]>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub accent: Option<[f32; 3]>,
-    /// The organ's size in this stage as a share of its size in fruit.
+    /// The organ's size in this stage as a share of its size in fruit;
+    /// a cluster's unit's, as a share of its unit's in fruit.
     #[serde(default = "full_size", skip_serializing_if = "is_full_size")]
     pub size: f64,
+    /// How it is drawn as a solid, as in [`OrganLook`]; the shape's
+    /// default if absent.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub form: Option<crate::blooms::Form>,
+    /// For a cluster: whether this look draws the whole organ in this
+    /// stage (a dogwood's head of tiny flowers in its four white bracts,
+    /// an alder's catkins), not each of its units.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub whole: bool,
 }
 
 fn full_size() -> f64 {
@@ -283,17 +305,68 @@ pub enum Stage {
 }
 
 impl Season {
+    /// Its look in bud: its `bud_look`, or a closed bud of its flower's
+    /// colours (`colour`, the organ's own, where it sets none), half
+    /// turned to `foliage`'s (its sepals), a third its flower's size, and
+    /// whole where its flower look is.
+    #[must_use]
+    pub fn bud(&self, colour: [f32; 3], foliage: [f32; 3]) -> StageLook {
+        self.bud_look.clone().unwrap_or_else(|| {
+            let (colour, size, whole) = self
+                .flower_look
+                .as_ref()
+                .map_or((colour, 1.0, false), |flower| {
+                    (flower.colour.unwrap_or(colour), flower.size, flower.whole)
+                });
+            let closed: [f32; 3] =
+                std::array::from_fn(|channel| f32::midpoint(colour[channel], foliage[channel]));
+            StageLook {
+                shape: Shape::Fruit(Fruit {
+                    aspect: 0.7,
+                    ..Fruit::default()
+                }),
+                colour: Some(closed),
+                accent: Some(closed),
+                size: size / 3.0,
+                form: None,
+                whole,
+            }
+        })
+    }
+
+    /// A cluster's units in bud and in flower where they are drawn one by
+    /// one, not `whole`: each a unit and its size as a share of the own
+    /// unit's (see [`Self::bud`] for `colour` and `foliage`).
+    #[must_use]
+    pub fn units(&self, colour: [f32; 3], foliage: [f32; 3]) -> Vec<(crate::clusters::Unit, f64)> {
+        [Some(self.bud(colour, foliage)), self.flower_look.clone()]
+            .into_iter()
+            .flatten()
+            .filter(|look| !look.whole)
+            .filter_map(|look| crate::clusters::Unit::of(&look.shape).map(|unit| (unit, look.size)))
+            .collect()
+    }
+
     /// The stage on day `day` of the year (1 to 365).
     #[must_use]
     pub fn stage(&self, day: f64) -> Stage {
+        self.unit_stage(day, 0.0)
+    }
+
+    /// The stage on day `day` of a cluster's unit of `rank`, from 0 for
+    /// the first to open to 1 for the last (see the type).
+    #[must_use]
+    pub fn unit_stage(&self, day: f64, rank: f64) -> Stage {
         let d = if day < self.bud && day + 365.0 < self.fall {
             day + 365.0
         } else {
             day
         };
         if d < self.bud || d >= self.fall {
-            Stage::Gone
-        } else if d < self.flower {
+            return Stage::Gone;
+        }
+        let d = (d - rank * self.opening).max(self.bud);
+        if d < self.flower {
             Stage::Bud
         } else if d < self.fruit {
             Stage::Flower
@@ -328,6 +401,7 @@ impl Season {
             ));
         }
         within("season ripening", self.ripening, 0.0, 200.0)?;
+        within("season opening", self.opening, 0.0, 180.0)?;
         for look in [&self.bud_look, &self.flower_look].into_iter().flatten() {
             look.shape.validate()?;
             for colour in [look.colour, look.accent].into_iter().flatten() {
@@ -336,6 +410,9 @@ impl Season {
                 }
             }
             within("stage size", look.size, 0.05, 4.0)?;
+            if let Some(form) = &look.form {
+                form.validate(&look.shape)?;
+            }
         }
         Ok(())
     }
@@ -1609,6 +1686,11 @@ pub fn resolve<'a>(
                         crate::clusters::ClusterLook::new(
                             crate::clusters::Cluster::of(inflorescence),
                             &look.shape,
+                            &look
+                                .season
+                                .as_ref()
+                                .map(|season| season.units(colour, foliage))
+                                .unwrap_or_default(),
                         )
                     }),
                 }
@@ -1693,8 +1775,11 @@ impl WithFamilies for Vec<Look> {
 /// that day. An organ with a [`Season`] shows its stage's look: in bud its
 /// bud look; in flower its flower look, or its own if that is not fruit;
 /// in fruit its own look, its fruit that share unripe, or nothing if its
-/// own look is a flower. Organs without one, and every organ when `day` is
-/// `None`, keep their own look at full size.
+/// own look is a flower. A cluster stays at its full size, each of its
+/// units in its own stage's look (spec rework L1b), its card in the two
+/// colours most of them show, unless the stage's look is `whole`. Organs
+/// without a season, and every organ when `day` is `None`, keep their own
+/// look at full size.
 #[must_use]
 pub fn resolve_on<'a>(
     organs: impl IntoIterator<Item = (&'a str, OrganKind)>,
@@ -1708,7 +1793,7 @@ pub fn resolve_on<'a>(
         .map(|look| {
             let season = looks.get(&look.organ).and_then(|own| own.season.as_ref());
             match (season, day) {
-                (Some(season), Some(day)) => in_season(look, season, season.stage(day), foliage),
+                (Some(season), Some(day)) => in_season(look, season, day, foliage),
                 _ => (look, 1.0),
             }
         })
@@ -1740,33 +1825,25 @@ pub fn staged(graph: &crate::graph::PlantGraph, sizes: &[f64]) -> Option<crate::
     })
 }
 
-/// `look` as it is in `stage` of `season`, and its size as a share.
-fn in_season(look: Look, season: &Season, stage: Stage, foliage: [f32; 3]) -> (Look, f64) {
+/// `look` as it is on `day` of `season`, and its size as a share.
+fn in_season(look: Look, season: &Season, day: f64, foliage: [f32; 3]) -> (Look, f64) {
+    let stage = season.stage(day);
+    let whole = match stage {
+        Stage::Bud => season.bud(look.colour, foliage).whole,
+        Stage::Flower => season
+            .flower_look
+            .as_ref()
+            .is_some_and(|flower| flower.whole),
+        Stage::Gone | Stage::Fruit { .. } => false,
+    };
+    if look.inflorescence.is_some() && !whole && stage != Stage::Gone {
+        return in_units(look, season, day, stage, foliage);
+    }
     let is_fruit = matches!(look.shape, Shape::Fruit(_));
     match stage {
         Stage::Gone => (look, 0.0),
         Stage::Bud => {
-            let bud = season.bud_look.clone().unwrap_or_else(|| {
-                // A closed bud of the flower's colours, half turned to the
-                // foliage's (its sepals).
-                let (colour, size) = season
-                    .flower_look
-                    .as_ref()
-                    .map_or((look.colour, 1.0), |flower| {
-                        (flower.colour.unwrap_or(look.colour), flower.size)
-                    });
-                let closed: [f32; 3] =
-                    std::array::from_fn(|channel| f32::midpoint(colour[channel], foliage[channel]));
-                StageLook {
-                    shape: Shape::Fruit(Fruit {
-                        aspect: 0.7,
-                        ..Fruit::default()
-                    }),
-                    colour: Some(closed),
-                    accent: Some(closed),
-                    size: size / 3.0,
-                }
-            });
+            let bud = season.bud(look.colour, foliage);
             (in_stage(&look, &bud), bud.size)
         }
         Stage::Flower => match &season.flower_look {
@@ -1782,15 +1859,95 @@ fn in_season(look: Look, season: &Season, stage: Stage, foliage: [f32; 3]) -> (L
             if let Shape::Fruit(fruit) = &mut look.shape {
                 fruit.unripe = unripe;
             }
-            // A cluster's fruit ripen with it.
-            if let Some(cluster) = &mut look.inflorescence
-                && let Some(unit) = crate::clusters::Unit::of(&look.shape)
-            {
-                cluster.unit = unit;
-            }
             (look, 1.0)
         }
     }
+}
+
+/// A cluster's `look` on `day` of `season`, `stage` its first unit's,
+/// which is not `whole`: each unit in a stage of its own (see [`Season`]),
+/// the cluster at its full size, or gone while none of its units shows.
+#[allow(clippy::float_cmp)]
+fn in_units(
+    mut look: Look,
+    season: &Season,
+    day: f64,
+    stage: Stage,
+    foliage: [f32; 3],
+) -> (Look, f64) {
+    let own_fruit = matches!(look.shape, Shape::Fruit(_));
+    if season.opening == 0.0 {
+        // Every unit in the look's own stage: drawn as the look is, its
+        // fruit as unripe as the cluster.
+        match stage {
+            Stage::Fruit { unripe } if own_fruit => {
+                if let Shape::Fruit(fruit) = &mut look.shape {
+                    fruit.unripe = unripe;
+                }
+                if let Some(cluster) = &mut look.inflorescence
+                    && let Some(unit) = crate::clusters::Unit::of(&look.shape)
+                {
+                    cluster.unit = unit;
+                }
+                return (look, 1.0);
+            }
+            Stage::Flower if !own_fruit && season.flower_look.is_none() => return (look, 1.0),
+            _ => {}
+        }
+    }
+    let unit = |stage: &StageLook| {
+        let colour = stage.colour.unwrap_or(look.colour);
+        (!stage.whole).then(|| crate::clusters::StageUnit {
+            form: stage
+                .form
+                .clone()
+                .unwrap_or_else(|| crate::blooms::Form::default_for(&stage.shape)),
+            shape: stage.shape.clone(),
+            colour,
+            accent: stage.accent.unwrap_or(colour),
+            size: stage.size,
+        })
+    };
+    let own = crate::clusters::StageUnit {
+        shape: look.shape.clone(),
+        form: look.form.clone(),
+        colour: look.colour,
+        accent: look.accent,
+        size: 1.0,
+    };
+    let flower = match &season.flower_look {
+        Some(flower) => unit(flower),
+        None => (!own_fruit).then(|| own.clone()),
+    };
+    let opening = crate::clusters::Opening {
+        season: Season {
+            bud_look: None,
+            flower_look: None,
+            ..season.clone()
+        },
+        day,
+        looks: [
+            unit(&season.bud(look.colour, foliage)),
+            flower,
+            own_fruit.then_some(own),
+        ],
+    };
+    let Some(cluster) = &mut look.inflorescence else {
+        return (look, 1.0);
+    };
+    let laid = cluster.layout(0.0, 0);
+    if !laid.units.iter().any(|p| opening.showing(p).is_some()) {
+        return (look, 0.0);
+    }
+    // The card's two colours.
+    let (colour, accent) = opening.slots(&laid);
+    cluster.opening = Some(Box::new(opening));
+    if colour != look.colour {
+        look.shade = [colour[0] * 0.35, colour[1] * 0.42, colour[2] * 0.55];
+    }
+    look.colour = colour;
+    look.accent = accent;
+    (look, 1.0)
 }
 
 /// `look` with a stage's shape and colours.
@@ -1996,6 +2153,44 @@ impl Moss {
 }
 
 impl OrganLook {
+    /// Check that `season`'s cluster keys suit the look: `opening` and
+    /// `whole` are for a cluster, and a cluster's stage looks that are not
+    /// `whole` draw one unit each.
+    fn check_stages(&self, season: &Season) -> Result<(), String> {
+        let looks = [
+            ("bud_look", &season.bud_look),
+            ("flower_look", &season.flower_look),
+        ];
+        if self.inflorescence.is_none() {
+            if season.opening > 0.0 {
+                return Err("season opening is for a look with an inflorescence".to_string());
+            }
+            if let Some((key, _)) = looks
+                .iter()
+                .find(|(_, look)| look.as_ref().is_some_and(|look| look.whole))
+            {
+                return Err(format!(
+                    "season {key} `whole` is for a look with an inflorescence; any other's \
+                     stage looks draw its whole organ"
+                ));
+            }
+            return Ok(());
+        }
+        for (key, look) in looks {
+            if let Some(look) = look
+                && !look.whole
+                && crate::clusters::Unit::of(&look.shape).is_none()
+            {
+                return Err(format!(
+                    "season {key} of an inflorescence draws each of its units, a flower, a \
+                     head or a fruit, found {}; set `whole` to draw the whole organ",
+                    look.shape.name()
+                ));
+            }
+        }
+        Ok(())
+    }
+
     /// Check the shape and colours.
     ///
     /// # Errors
@@ -2027,6 +2222,7 @@ impl OrganLook {
         }
         if let Some(season) = &self.season {
             season.validate()?;
+            self.check_stages(season)?;
         }
         if let Some(families) = &self.families {
             if self.season.is_some() {
@@ -2337,12 +2533,15 @@ mod tests {
             ripe: 175.0,
             ripening: 20.0,
             fall: 245.0,
+            opening: 0.0,
             bud_look: None,
             flower_look: Some(StageLook {
                 shape: Shape::Flower(Flower::default()),
                 colour: Some([0.95, 0.95, 0.9]),
                 accent: None,
                 size: 0.5,
+                form: None,
+                whole: false,
             }),
         }
     }
@@ -2399,11 +2598,7 @@ mod tests {
             form: None,
             season,
             families: None,
-            inflorescence: Some(Inflorescence {
-                kind: Some(ClusterKind::Umbel),
-                flowers: Some(6),
-                ..Inflorescence::default()
-            }),
+            inflorescence: None,
         };
         let mut organs = BTreeMap::new();
         organs.insert("bloom".to_string(), fruit(Some(cherry())));
@@ -2420,10 +2615,9 @@ mod tests {
         }
         // Gone before its bud shows.
         assert_eq!(on(&organs, 50.0).1[1], 0.0);
-        // A closed bud a third of its flower's size, drawn whole.
+        // A closed bud a third of its flower's size.
         let (looks, sizes) = on(&organs, 100.0);
         assert!(matches!(looks[1].shape, Shape::Fruit(_)));
-        assert!(looks[1].inflorescence.is_none());
         assert!((sizes[1] - 0.5 / 3.0).abs() < 1e-12);
         // Its flower look in flower.
         let (looks, sizes) = on(&organs, 120.0);
@@ -2436,13 +2630,6 @@ mod tests {
             panic!("not fruit: {:?}", looks[1].shape);
         };
         assert_eq!(drawn.unripe, 0.5);
-        // Its cluster's fruit ripen with it.
-        let cluster = looks[1].inflorescence.as_ref().expect("its cluster");
-        assert_eq!(cluster.cluster.flowers, 6);
-        assert!(matches!(
-            cluster.unit,
-            crate::clusters::Unit::Fruit { unripe, .. } if (unripe - 0.5).abs() < 1e-12
-        ));
         assert_eq!(sizes[1], 1.0);
         // Without a day it keeps its own look; without a season too.
         let (looks, sizes) = resolve_on(types, &organs, green, dark, None);
@@ -2461,6 +2648,181 @@ mod tests {
         );
         assert_eq!(on(&organs, 120.0).1[1], 1.0);
         assert_eq!(on(&organs, 150.0).1[1], 0.0);
+    }
+
+    /// A cherry's umbel of six (or `kind` of `flowers`), with `season`.
+    fn clustered(kind: ClusterKind, flowers: u32, season: Season) -> OrganLook {
+        OrganLook {
+            shape: Shape::Fruit(Fruit::default()),
+            colour: Some([0.6, 0.05, 0.06]),
+            shade: None,
+            accent: Some([0.45, 0.5, 0.15]),
+            face_up: 0.0,
+            solid: None,
+            bend: None,
+            form: None,
+            season: Some(season),
+            families: None,
+            inflorescence: Some(Inflorescence {
+                kind: Some(kind),
+                flowers: Some(flowers),
+                ..Inflorescence::default()
+            }),
+        }
+    }
+
+    /// The stage each unit of `look`'s cluster shows (0 bud, 1 flower, 2
+    /// fruit), and its height up the organ, lowest first.
+    fn stages_of(look: &Look) -> Vec<(f64, Option<usize>)> {
+        let cluster = look.inflorescence.as_ref().expect("a cluster");
+        let opening = cluster.opening.as_ref().expect("units in stages");
+        let mut units: Vec<(f64, Option<usize>)> = cluster
+            .layout(0.0, 0)
+            .units
+            .iter()
+            .map(|p| (p.base.y, opening.shown(p).map(|(stage, _)| stage)))
+            .collect();
+        units.sort_by(|a, b| a.0.total_cmp(&b.0));
+        units
+    }
+
+    #[test]
+    fn a_clusters_units_open_one_after_another() {
+        let types = [("bloom", OrganKind::Flower)];
+        let on = |look: OrganLook, day: f64| {
+            let mut organs = BTreeMap::new();
+            organs.insert("bloom".to_string(), look);
+            let (mut looks, sizes) = resolve_on(
+                types,
+                &organs,
+                [0.1, 0.3, 0.05],
+                [0.03, 0.1, 0.03],
+                Some(day),
+            );
+            (looks.remove(0), sizes[0])
+        };
+        // All at once: buds, then flowers, each unit its own, the cluster
+        // at its full size.
+        let (look, size) = on(clustered(ClusterKind::Umbel, 6, cherry()), 100.0);
+        assert_eq!(size, 1.0);
+        assert!(stages_of(&look).iter().all(|&(_, stage)| stage == Some(0)));
+        let (look, size) = on(clustered(ClusterKind::Umbel, 6, cherry()), 120.0);
+        assert_eq!(size, 1.0);
+        assert!(stages_of(&look).iter().all(|&(_, stage)| stage == Some(1)));
+        // The card's colours are the flower's.
+        assert_eq!(look.colour, [0.95, 0.95, 0.9]);
+        assert_eq!(look.accent, [0.95, 0.95, 0.9]);
+        // In fruit every unit is its own look, as before units had stages.
+        let (look, size) = on(clustered(ClusterKind::Umbel, 6, cherry()), 185.0);
+        assert_eq!(size, 1.0);
+        let cluster = look.inflorescence.as_ref().expect("its cluster");
+        assert!(cluster.opening.is_none());
+        assert_eq!(cluster.cluster.flowers, 6);
+        assert!(matches!(
+            cluster.unit,
+            crate::clusters::Unit::Fruit { unripe, .. } if (unripe - 0.5).abs() < 1e-12
+        ));
+        // Opening over 40 days, a raceme is fruit at its foot, flowers in
+        // its middle and buds at its top.
+        let slow = Season {
+            opening: 40.0,
+            ..cherry()
+        };
+        let (look, size) = on(clustered(ClusterKind::Raceme, 12, slow.clone()), 140.0);
+        assert_eq!(size, 1.0);
+        let stages: Vec<usize> = stages_of(&look)
+            .iter()
+            .map(|&(_, stage)| stage.expect("every unit shows"))
+            .collect();
+        assert!(
+            stages.windows(2).all(|pair| pair[0] >= pair[1]),
+            "{stages:?}"
+        );
+        for stage in 0..3 {
+            assert!(stages.contains(&stage), "{stages:?}");
+        }
+        // Its card takes the colours most of it shows.
+        let (colour, accent) = (look.colour, look.accent);
+        assert_ne!(colour, accent);
+        for slot in [colour, accent] {
+            assert!(
+                [[0.95, 0.95, 0.9], [0.6, 0.05, 0.06], [0.45, 0.5, 0.15]].contains(&slot)
+                    || slot
+                        == slow
+                            .bud([0.6, 0.05, 0.06], [0.1, 0.3, 0.05])
+                            .colour
+                            .unwrap(),
+                "{slot:?}"
+            );
+        }
+        // Once the last has set fruit, units ripen by their rank.
+        let (look, _) = on(clustered(ClusterKind::Raceme, 12, slow.clone()), 200.0);
+        let opening = look.inflorescence.as_ref().and_then(|c| c.opening.as_ref());
+        assert!(opening.is_some());
+        assert!(stages_of(&look).iter().all(|&(_, stage)| stage == Some(2)));
+        // A whole flower look draws the whole organ in flower, as other
+        // organs' stage looks do.
+        let mut whole = cherry();
+        if let Some(flower) = &mut whole.flower_look {
+            flower.whole = true;
+        }
+        let (look, size) = on(clustered(ClusterKind::Umbel, 6, whole.clone()), 120.0);
+        assert!(look.inflorescence.is_none());
+        assert!(matches!(look.shape, Shape::Flower(_)));
+        assert_eq!(size, 0.5);
+        // So is its closed bud, unless a bud look of its own says not.
+        let (look, size) = on(clustered(ClusterKind::Umbel, 6, whole), 100.0);
+        assert!(look.inflorescence.is_none());
+        assert!(matches!(look.shape, Shape::Fruit(_)));
+        assert!((size - 0.5 / 3.0).abs() < 1e-12, "{size}");
+        // Fruit with no flower look shows nothing in flower: gone.
+        let bare = Season {
+            flower_look: None,
+            ..cherry()
+        };
+        assert_eq!(on(clustered(ClusterKind::Umbel, 6, bare), 120.0).1, 0.0);
+    }
+
+    #[test]
+    fn a_clusters_stage_looks_draw_units_unless_whole() {
+        let mut look = clustered(ClusterKind::Raceme, 8, cherry());
+        assert!(look.validate().is_ok());
+        let spike = StageLook {
+            shape: Shape::Spike(Spike::default()),
+            colour: None,
+            accent: None,
+            size: 1.0,
+            form: None,
+            whole: false,
+        };
+        if let Some(season) = &mut look.season {
+            season.flower_look = Some(spike.clone());
+        }
+        let error = look.validate().unwrap_err();
+        assert!(
+            error.contains("flower_look") && error.contains("`whole`"),
+            "{error}"
+        );
+        if let Some(season) = &mut look.season {
+            season.flower_look = Some(StageLook {
+                whole: true,
+                ..spike
+            });
+        }
+        assert!(look.validate().is_ok());
+        // Opening and whole are a cluster's.
+        look.inflorescence = None;
+        let error = look.validate().unwrap_err();
+        assert!(
+            error.contains("whole") && error.contains("inflorescence"),
+            "{error}"
+        );
+        if let Some(season) = &mut look.season {
+            season.flower_look = None;
+            season.opening = 10.0;
+        }
+        let error = look.validate().unwrap_err();
+        assert!(error.contains("opening"), "{error}");
     }
 
     #[test]

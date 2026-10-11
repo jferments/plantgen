@@ -59,6 +59,19 @@
 //! before L1, laid out by the same formulas; a `pair` of then is a raceme
 //! with `per_node` 2 and `divergence` 90.
 //!
+//! Each unit has a rank, when it opens among the cluster's units, from 0
+//! (the first) to 1 (the last): on its own axis, $`k/(K - 1)`$ of its
+//! node $`k`$ for a raceme, spike, catkin, panicle or corymb (from the
+//! bottom, a node's units together), $`1 - i/(n - 1)`$ for an umbel or a
+//! compound umbel (from the rim), $`i/(n - 1)`$ for a head (from its
+//! foot) and a scorpioid (along the coil), and its order over the last
+//! order for a cyme (each axis's unit before its forks'); on a branch,
+//! the mean of its ranks on every axis it is on. With a season that
+//! opens over days (`crate::looks::Season`), a unit of rank $`r`$ is on
+//! day $`d`$ in the stage of day $`d - r \cdot`$ `opening` and is drawn in
+//! that stage's look ([`Opening`]): a bud, a flower, or the look's own
+//! fruit, as unripe as its stage, or nothing but its pedicel.
+//!
 //! On the nearest levels each unit is a solid of its shape (a fruit as
 //! `crate::fruit` draws one; a flower or a head reduced to its petals or
 //! rays at two facets round a centre, with stamens only when it is a
@@ -71,7 +84,7 @@
 use crate::blooms::{FlowerForm, Form, Part};
 use crate::fruit::{self, Detail, GOLDEN_DEGREES};
 use crate::graph::GraphOrgan;
-use crate::looks::{ClusterKind, Inflorescence, Look, Mount, Shape, within};
+use crate::looks::{ClusterKind, Inflorescence, Look, Mount, Season, Shape, Stage, within};
 use crate::math::{self, Vec3, any_perpendicular};
 use crate::mesh::Mesh;
 use crate::rng::{self, mix64};
@@ -340,25 +353,32 @@ impl Unit {
     }
 }
 
-/// A look's cluster: its layout's keys, its unit and its card.
+/// A look's cluster: its layout's keys, its unit and its card, and on a
+/// day its units are in stages of their own, how each is drawn.
 #[derive(Debug, Clone, PartialEq)]
 pub struct ClusterLook {
     pub cluster: Cluster,
     pub unit: Unit,
     pub card: CardFrame,
+    /// Its units in their own stages (spec rework L1b); `None` when every
+    /// unit is drawn with the look's own shape and colours.
+    pub opening: Option<Box<Opening>>,
 }
 
 impl ClusterLook {
-    /// `cluster` of units drawn with `shape`; `None` unless the shape is a
-    /// flower, a head or a fruit.
+    /// `cluster` of units drawn with `shape`, its card holding them and
+    /// the units of `stages`, each a unit and its length as a share of the
+    /// own unit's (a bud's, a flower's), that it shows on other days;
+    /// `None` unless the shape is a flower, a head or a fruit.
     #[must_use]
-    pub fn new(cluster: Cluster, shape: &Shape) -> Option<Self> {
+    pub fn new(cluster: Cluster, shape: &Shape, stages: &[(Unit, f64)]) -> Option<Self> {
         let unit = Unit::of(shape)?;
-        let card = CardFrame::of(&cluster, unit);
+        let card = CardFrame::of(&cluster, unit, stages);
         Some(Self {
             cluster,
             unit,
             card,
+            opening: None,
         })
     }
 
@@ -367,6 +387,137 @@ impl ClusterLook {
     #[must_use]
     pub fn layout(&self, turn: f64, seed: u64) -> Layout {
         layout(&self.cluster, self.unit, turn, seed)
+    }
+}
+
+/// A unit's look in one stage of its season (spec rework L1b): a bud's,
+/// a flower's, or the look's own in fruit.
+#[derive(Debug, Clone, PartialEq)]
+pub struct StageUnit {
+    pub shape: Shape,
+    pub form: Form,
+    pub colour: [f32; 3],
+    pub accent: [f32; 3],
+    /// Its length as a share of the look's own unit's.
+    pub size: f64,
+}
+
+/// A cluster's units each in a stage of its own on one day (spec rework
+/// L1b): a unit of rank `r` is in the stage its season gives on the day
+/// less `r` times the season's `opening` ([`Season::unit_stage`]), and is
+/// drawn in that stage's look.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Opening {
+    /// The organ's season, without its stage looks.
+    pub season: Season,
+    /// The day of the year.
+    pub day: f64,
+    /// A unit's look in bud, in flower and in fruit; `None` in a stage it
+    /// shows nothing in, where its pedicel stays bare.
+    pub looks: [Option<StageUnit>; 3],
+}
+
+impl Opening {
+    /// The look unit `p` shows, and whether it is unripe fruit; `None` if
+    /// it shows nothing.
+    #[must_use]
+    pub fn showing(&self, p: &Placed) -> Option<(&StageUnit, bool)> {
+        let (look, unripe) = self.shown(p)?;
+        self.looks[look].as_ref().map(|look| (look, unripe))
+    }
+
+    /// Which of [`Self::looks`] unit `p` shows, and whether it is unripe
+    /// fruit; `None` if it shows nothing.
+    #[must_use]
+    pub fn shown(&self, p: &Placed) -> Option<(usize, bool)> {
+        let (look, unripe) = match self.season.unit_stage(self.day, p.rank) {
+            Stage::Gone => return None,
+            Stage::Bud => (0, false),
+            Stage::Flower => (1, false),
+            Stage::Fruit { unripe } => (2, p.chance < unripe),
+        };
+        self.looks[look].is_some().then_some((look, unripe))
+    }
+
+    /// The two colours a card of `laid`'s units is painted in, a card
+    /// carrying one colour and one accent: where every unit that shows is
+    /// in one stage, that stage's colour and accent; else the colour most
+    /// of their area shows, unripe fruit their accent, and the next. Each
+    /// unit's colours are then matched as nearly as these two make them
+    /// ([`blend`]).
+    #[must_use]
+    // Colours are told apart exactly: one stage's, or another's.
+    #[allow(clippy::float_cmp)]
+    pub fn slots(&self, laid: &Layout) -> ([f32; 3], [f32; 3]) {
+        let mut stages = [false; 3];
+        let mut areas: Vec<([f32; 3], f64)> = Vec::new();
+        for p in &laid.units {
+            let Some((stage, unripe)) = self.shown(p) else {
+                continue;
+            };
+            stages[stage] = true;
+            let Some(look) = &self.looks[stage] else {
+                continue;
+            };
+            let colour = if unripe { look.accent } else { look.colour };
+            let area = (p.length * look.size).powi(2);
+            match areas.iter_mut().find(|(shown, _)| *shown == colour) {
+                Some((_, sum)) => *sum += area,
+                None => areas.push((colour, area)),
+            }
+        }
+        let only = stages.iter().filter(|&&shown| shown).count() <= 1;
+        let first = stages.iter().position(|&shown| shown).unwrap_or(2);
+        if only && let Some(look) = &self.looks[first] {
+            return (look.colour, look.accent);
+        }
+        // The largest first; the earliest of equals.
+        let mut order: Vec<usize> = (0..areas.len()).collect();
+        order.sort_by(|&a, &b| areas[b].1.total_cmp(&areas[a].1).then(a.cmp(&b)));
+        match order.as_slice() {
+            [] => ([0.5; 3], [0.5; 3]),
+            [one] => (areas[*one].0, areas[*one].0),
+            [one, two, ..] => (areas[*one].0, areas[*two].0),
+        }
+    }
+}
+
+/// How nearly `colour` is `a` times the first of `slots` plus `b` times
+/// the second, `a` and `b` at least 0, in least squares: `(a, b)`.
+#[must_use]
+#[allow(clippy::float_cmp, clippy::many_single_char_names)]
+pub fn blend(colour: [f32; 3], slots: ([f32; 3], [f32; 3])) -> (f64, f64) {
+    if colour == slots.0 {
+        return (1.0, 0.0);
+    }
+    if colour == slots.1 {
+        return (0.0, 1.0);
+    }
+    let v = |c: [f32; 3]| Vec3::new(f64::from(c[0]), f64::from(c[1]), f64::from(c[2]));
+    let (x, c, a) = (v(colour), v(slots.0), v(slots.1));
+    let one = |basis: Vec3| {
+        let norm = basis.dot(basis);
+        if norm > 1e-12 {
+            (x.dot(basis) / norm).max(0.0)
+        } else {
+            0.0
+        }
+    };
+    let error = |p: f64, q: f64| (x - c * p - a * q).length();
+    let (cc, aa, ca) = (c.dot(c), a.dot(a), c.dot(a));
+    let det = cc * aa - ca * ca;
+    if det > 1e-9 * cc.max(aa).max(1e-12) {
+        let p = (x.dot(c) * aa - x.dot(a) * ca) / det;
+        let q = (x.dot(a) * cc - x.dot(c) * ca) / det;
+        if p >= 0.0 && q >= 0.0 {
+            return (p, q);
+        }
+    }
+    let (p, q) = (one(c), one(a));
+    if error(p, 0.0) <= error(0.0, q) {
+        (p, 0.0)
+    } else {
+        (0.0, q)
     }
 }
 
@@ -392,9 +543,10 @@ pub struct CardFrame {
 }
 
 impl CardFrame {
-    /// The card of `cluster`, laid out unturned.
+    /// The card of `cluster`, laid out unturned, holding its units drawn
+    /// as `unit` and as each of `stages` (see [`ClusterLook::new`]).
     #[must_use]
-    pub fn of(cluster: &Cluster, unit: Unit) -> Self {
+    pub fn of(cluster: &Cluster, unit: Unit, stages: &[(Unit, f64)]) -> Self {
         let laid = layout(cluster, unit, 0.0, 0);
         let flat_topped = matches!(
             cluster.kind,
@@ -409,10 +561,13 @@ impl CardFrame {
                 .iter()
                 .map(|p| p.base.y)
                 .fold(f64::NEG_INFINITY, f64::max);
+            let largest = stages.iter().map(|&(_, size)| size).fold(1.0, f64::max);
             let reach = laid
                 .units
                 .iter()
-                .map(|p| math::sqrt(p.base.x * p.base.x + p.base.z * p.base.z) + 0.5 * p.length)
+                .map(|p| {
+                    math::sqrt(p.base.x * p.base.x + p.base.z * p.base.z) + 0.5 * p.length * largest
+                })
                 .fold(0.0, f64::max);
             return Self {
                 mount: Mount::Facing,
@@ -429,6 +584,19 @@ impl CardFrame {
             let half = p.length * width * 0.5;
             reach = reach.max(p.base.x.abs().max(tip.x.abs()) + half);
             low = low.min(p.base.y.min(tip.y) - half);
+            // As it shows on other days: a flower or a head round its
+            // centre, a bud or fruit from its base.
+            for &(other, size) in stages {
+                let length = p.length * size;
+                let tip = if other.faces() {
+                    p.base
+                } else {
+                    p.base + p.direction * length
+                };
+                let half = length * other.width() * 0.5;
+                reach = reach.max(p.base.x.abs().max(tip.x.abs()) + half);
+                low = low.min(p.base.y.min(tip.y) - half);
+            }
         }
         for stalk in &laid.stalks {
             reach = reach.max(stalk.from.x.abs().max(stalk.to.x.abs()));
@@ -459,6 +627,12 @@ pub struct Placed {
     pub length: f64,
     /// Whether it is still unripe.
     pub unripe: bool,
+    /// When it opens among the cluster's units, from 0 (the first) to 1:
+    /// the mean of its ranks on each axis it is on (see the module).
+    pub rank: f64,
+    /// Its draw from 0 to 1: it is unripe while the share unripe is above
+    /// it.
+    pub chance: f64,
     /// The smallest branch it is on: 0 for the cluster's own axis.
     pub group: u32,
     /// The branch of the cluster's own axis it is on: 0 for that axis.
@@ -534,6 +708,8 @@ struct Slot {
     length: f64,
     /// Outward from the axis, square to it, the way it is turned.
     radial: Vec3,
+    /// When it opens among the axis's slots, from 0 (first) to 1.
+    rank: f64,
 }
 
 /// The slots of one axis, the stalks between them that are not pedicels
@@ -614,6 +790,16 @@ fn to_usize(n: u32) -> usize {
     usize::try_from(n).unwrap_or(usize::MAX)
 }
 
+/// The `k`th of `n` in order as a share from 0 to 1; 0 if it is the only
+/// one.
+fn share(k: u32, n: u32) -> f64 {
+    if n > 1 {
+        f64::from(k) / f64::from(n - 1)
+    } else {
+        0.0
+    }
+}
+
 /// What [`layout`] has laid so far.
 struct Laid {
     layout: Layout,
@@ -639,7 +825,7 @@ pub fn layout(cluster: &Cluster, unit: Unit, turn: f64, seed: u64) -> Layout {
         turn,
         Frame::ORGAN,
         Vec3::Y,
-        (0, 0),
+        (0, 0, 0.0),
         1,
         &mut laid,
     );
@@ -675,7 +861,8 @@ pub fn layout(cluster: &Cluster, unit: Unit, turn: f64, seed: u64) -> Layout {
 
 /// Lay out `cluster` in `frame`, its axis heading along `heading` in the
 /// organ's frame where it starts, its units in `group` of top branch
-/// `top`, at nesting `level`.
+/// `top`, at nesting `level`, `above` the sum of its branch's ranks on the
+/// axes that bear it.
 #[allow(clippy::too_many_arguments, clippy::too_many_lines)]
 fn lay(
     cluster: &Cluster,
@@ -683,7 +870,7 @@ fn lay(
     turn: f64,
     frame: Frame,
     heading: Vec3,
-    (group, top): (u32, u32),
+    (group, top, above): (u32, u32, f64),
     level: usize,
     laid: &mut Laid,
 ) {
@@ -738,15 +925,17 @@ fn lay(
     let Some(branch) = &cluster.branch else {
         for slot in &axis.slots {
             let index = u64::try_from(laid.layout.units.len()).unwrap_or(u64::MAX);
-            let unripe = rng::unit(mix64(
+            let chance = rng::unit(mix64(
                 laid.seed ^ (index + 1).wrapping_mul(0x9E37_79B9_7F4A_7C15),
-            )) < laid.unripe;
+            ));
             laid.layout.units.push(Placed {
                 attach: frame.point(slot.attach),
                 base: frame.point(slot.base),
                 direction: frame.direction(slot.direction),
                 length: slot.length * frame.scale,
-                unripe,
+                unripe: chance < laid.unripe,
+                rank: (above + slot.rank) / to_f64(level),
+                chance,
                 group,
                 top,
                 stalk: cluster.stalk,
@@ -793,7 +982,7 @@ fn lay(
                 own: false,
             },
             y,
-            (group, top),
+            (group, top, above + slot.rank),
             level + 1,
             laid,
         );
@@ -863,6 +1052,7 @@ fn axis(cluster: &Cluster, unit: Unit, turn: f64) -> Axis {
                     direction,
                     length: s * t,
                     radial: radial(around),
+                    rank: share(i / m, nodes),
                 });
             }
         }
@@ -884,6 +1074,7 @@ fn axis(cluster: &Cluster, unit: Unit, turn: f64) -> Axis {
                     direction,
                     length: s * t,
                     radial: radial(around),
+                    rank: share(i / m, nodes),
                 });
             }
         }
@@ -909,6 +1100,8 @@ fn axis(cluster: &Cluster, unit: Unit, turn: f64) -> Axis {
                     direction,
                     length,
                     radial: radial(around),
+                    // The outermost first.
+                    rank: 1.0 - share(i, n),
                 });
             }
         }
@@ -931,6 +1124,8 @@ fn axis(cluster: &Cluster, unit: Unit, turn: f64) -> Axis {
                     direction,
                     length: s * (1.0 - tau * q),
                     radial: radial(around),
+                    // From the foot of the head, its rim, to its top.
+                    rank: share(i, n),
                 });
             }
             return Axis {
@@ -975,6 +1170,7 @@ struct Node {
     around: f64,
     parent: usize,
     scale: f64,
+    order: u32,
 }
 
 /// A cyme (see the module): its units at the ends of its branches, which
@@ -994,11 +1190,13 @@ fn cyme(cluster: &Cluster, turn: f64) -> Axis {
         around: turn,
         parent: 0,
         scale: 1.0,
+        order: 0,
     }];
     let (mut first, mut count) = (0_usize, 1_usize);
-    let mut scale = 1.0;
+    let (mut scale, mut order) = (1.0, 0);
     let (n, m) = (to_usize(n), to_usize(m));
     while nodes.len() < n {
+        order += 1;
         let possible = count * m;
         let placed = possible.min(n - nodes.len());
         scale *= keep;
@@ -1021,6 +1219,7 @@ fn cyme(cluster: &Cluster, turn: f64) -> Axis {
                 around,
                 parent,
                 scale,
+                order,
             });
         }
         first = start;
@@ -1033,6 +1232,8 @@ fn cyme(cluster: &Cluster, turn: f64) -> Axis {
     let f = fit(&units, y0);
     let place = |at: Vec3| Vec3::Y * y0 + at * f;
     let anchor = y0 + f;
+    // Each axis's own unit before its forks': order by order.
+    let orders = nodes.last().map_or(0, |node| node.order) + 1;
     let slots = nodes
         .iter()
         .map(|node| {
@@ -1044,6 +1245,7 @@ fn cyme(cluster: &Cluster, turn: f64) -> Axis {
                 direction: node.direction,
                 length: s * node.scale,
                 radial: radial(node.around),
+                rank: share(node.order, orders),
             }
         })
         .collect();
@@ -1085,9 +1287,11 @@ fn scorpioid(cluster: &Cluster, turn: f64) -> Axis {
     let f = fit(&raw, y0);
     let place = |at: Vec3| Vec3::Y * y0 + at * f;
     let anchor = place(raw[0].0).y;
+    // Along the coil, from its foot.
     let slots = raw
         .iter()
-        .map(|&(at, direction, length)| {
+        .zip(0..n)
+        .map(|(&(at, direction, length), k)| {
             let at = place(at);
             Slot {
                 anchor,
@@ -1096,6 +1300,7 @@ fn scorpioid(cluster: &Cluster, turn: f64) -> Axis {
                 direction,
                 length,
                 radial: out,
+                rank: share(k, n),
             }
         })
         .collect();
@@ -1144,8 +1349,27 @@ pub(crate) fn draw(
     crate::leaves::smooth_normals(mesh, first, first_index);
 }
 
+/// One unit as it is drawn: its look's shape and form, its colours as
+/// painted on the organ, its length as a share of the unit's own, and
+/// whether it is unripe fruit.
+struct Shown<'a> {
+    shape: &'a Shape,
+    form: &'a Form,
+    colour: [f32; 3],
+    accent: [f32; 3],
+    size: f64,
+    unripe: bool,
+}
+
+impl Shown<'_> {
+    /// Its width over its length, and whether it is seen face on.
+    fn extent(&self) -> (f64, bool) {
+        Unit::of(self.shape).map_or((1.0, false), |unit| (unit.width(), unit.faces()))
+    }
+}
+
 /// Draw `laid`, a layout of `cluster`, on `organ` (see [`draw`]).
-#[allow(clippy::too_many_arguments, clippy::too_many_lines)]
+#[allow(clippy::too_many_arguments, clippy::too_many_lines, clippy::float_cmp)]
 fn draw_laid(
     organ: &GraphOrgan,
     (axis, side): (Vec3, Vec3),
@@ -1162,6 +1386,36 @@ fn draw_laid(
         organ.position + side * (p.x * length) + axis * (p.y * length) + other * (p.z * length)
     };
     let to_direction = |d: Vec3| (side * d.x + axis * d.y + other * d.z).normalize_or(axis);
+    // A stage's colours darkened with the organ as the look's colour is.
+    let painted = |stage: [f32; 3]| {
+        if stage == look.colour {
+            colour
+        } else {
+            crate::blooms::with_shading(stage, look.colour, colour)
+        }
+    };
+    let shown: Vec<Option<Shown>> = laid
+        .units
+        .iter()
+        .map(|p| match &cluster.opening {
+            None => Some(Shown {
+                shape: &look.shape,
+                form: &look.form,
+                colour,
+                accent,
+                size: 1.0,
+                unripe: p.unripe,
+            }),
+            Some(opening) => opening.showing(p).map(|(stage, unripe)| Shown {
+                shape: &stage.shape,
+                form: &stage.form,
+                colour: painted(stage.colour),
+                accent: painted(stage.accent),
+                size: stage.size,
+                unripe,
+            }),
+        })
+        .collect();
     for stalk in &laid.stalks {
         let reach = (stalk.to - stalk.from).length() * length;
         if reach > 1e-9 {
@@ -1179,17 +1433,7 @@ fn draw_laid(
         }
     }
     if part.coarse >= MERGED {
-        merged(
-            laid,
-            cluster.unit,
-            part,
-            &to_world,
-            axis,
-            side,
-            colour,
-            accent,
-            mesh,
-        );
+        merged(laid, &shown, part, &to_world, (axis, side), colour, mesh);
         return;
     }
     let width = cluster.unit.width();
@@ -1197,7 +1441,7 @@ fn draw_laid(
         u32::try_from(laid.units.len()).unwrap_or(u32::MAX),
         part.coarse,
     );
-    for p in &laid.units {
+    for (p, shown) in laid.units.iter().zip(&shown) {
         let base = to_world(p.base);
         let direction = to_direction(p.direction);
         let unit_length = p.length * length;
@@ -1215,20 +1459,24 @@ fn draw_laid(
                 mesh,
             );
         }
+        let Some(shown) = shown else {
+            continue;
+        };
+        let unit_length = unit_length * shown.size;
         // Each unit turned its own way about its direction.
         let spin = rng::unit(mix64(
             organ.id ^ p.base.x.to_bits() ^ p.base.z.to_bits().rotate_left(17),
         )) * std::f64::consts::TAU;
-        match (&look.shape, &look.form) {
+        match (shown.shape, shown.form) {
             (Shape::Fruit(shape), Form::Fruit(form)) => fruit::draw_unit(
                 organ,
                 shape,
                 form,
                 (base, direction, unit_length),
-                p.unripe,
+                shown.unripe,
                 detail,
-                colour,
-                accent,
+                shown.colour,
+                shown.accent,
                 part,
                 mesh,
             ),
@@ -1241,8 +1489,8 @@ fn draw_laid(
                 },
                 form,
                 (base, direction, unit_length, spin),
-                colour,
-                accent,
+                shown.colour,
+                shown.accent,
                 part,
                 mesh,
             ),
@@ -1255,8 +1503,8 @@ fn draw_laid(
                 },
                 form,
                 (base, direction, unit_length, spin),
-                colour,
-                accent,
+                shown.colour,
+                shown.accent,
                 part,
                 mesh,
             ),
@@ -1372,51 +1620,71 @@ fn floret(
 
 /// The coarsest steps: each smallest branch's units (at [`MERGED`]) or
 /// each branch of the cluster's own axis (beyond it) merged into one
-/// ellipsoid round them, in the colour most of them are.
-#[allow(clippy::too_many_arguments)]
+/// ellipsoid round the units that show, in the colour most of them are,
+/// the organ's `colour` where as many are in another.
+#[allow(clippy::float_cmp)]
 fn merged(
     laid: &Layout,
-    unit: Unit,
+    shown: &[Option<Shown>],
     part: Part,
     to_world: &dyn Fn(Vec3) -> Vec3,
-    axis: Vec3,
-    side: Vec3,
+    (axis, side): (Vec3, Vec3),
     colour: [f32; 3],
-    accent: [f32; 3],
     mesh: &mut Mesh,
 ) {
-    let width = unit.width();
-    let mut groups: Vec<(u32, Vec3, Vec3, usize, usize)> = Vec::new();
-    for p in &laid.units {
+    type Group = (u32, Vec3, Vec3, Vec<([f32; 3], usize)>);
+    let mut groups: Vec<Group> = Vec::new();
+    for (p, shown) in laid.units.iter().zip(shown) {
+        let Some(shown) = shown else {
+            continue;
+        };
         let key = if part.coarse > MERGED { p.top } else { p.group };
-        let tip = if unit.faces() {
+        let (width, faces) = shown.extent();
+        let length = p.length * shown.size;
+        let tip = if faces {
             p.base
         } else {
-            p.base + p.direction * p.length
+            p.base + p.direction * length
         };
-        let half = p.length * width * 0.5;
+        let half = length * width * 0.5;
         let reach = Vec3::new(half, half, half);
         let (low, high) = (p.base.min(tip) - reach, p.base.max(tip) + reach);
-        match groups.iter_mut().find(|group| group.0 == key) {
-            Some(group) => {
-                group.1 = group.1.min(low);
-                group.2 = group.2.max(high);
-                group.3 += 1;
-                group.4 += usize::from(p.unripe);
-            }
-            None => groups.push((key, low, high, 1, usize::from(p.unripe))),
+        let painted = if shown.unripe {
+            shown.accent
+        } else {
+            shown.colour
+        };
+        let at = groups
+            .iter()
+            .position(|group| group.0 == key)
+            .unwrap_or_else(|| {
+                groups.push((key, low, high, vec![(colour, 0)]));
+                groups.len() - 1
+            });
+        let group = &mut groups[at];
+        group.1 = group.1.min(low);
+        group.2 = group.2.max(high);
+        if let Some((_, count)) = group.3.iter_mut().find(|(seen, _)| *seen == painted) {
+            *count += 1;
+        } else {
+            group.3.push((painted, 1));
         }
     }
     let length = (to_world(Vec3::Y) - to_world(Vec3::ZERO)).length();
-    for (_, low, high, count, unripe) in groups {
+    for (_, low, high, colours) in groups {
         let half = (high - low) * 0.5;
+        // The most; the organ's colour, listed first, of equals.
+        let most = colours.iter().fold(
+            colours[0],
+            |most, &next| if next.1 > most.1 { next } else { most },
+        );
         fruit::spheroid(
             to_world((low + high) * 0.5),
             (half.y * length, half.x * length, half.z * length),
             Detail::merged(),
             axis,
             side,
-            if 2 * unripe > count { accent } else { colour },
+            most.0,
             part,
             mesh,
         );
@@ -1540,6 +1808,8 @@ mod tests {
                     direction,
                     length: s,
                     unripe: false,
+                    rank: 0.0,
+                    chance: 0.0,
                     group: 0,
                     top: 0,
                     stalk: STALK,
@@ -1852,6 +2122,82 @@ mod tests {
     }
 
     #[test]
+    fn units_open_in_their_kinds_order() {
+        let laid = |kind: ClusterKind, flowers: u32, unit: Unit| {
+            layout(&Cluster::of(&spec(kind, flowers)), unit, 0.3, 0)
+        };
+        let ranks = |layout: &Layout| layout.units.iter().map(|p| p.rank).collect::<Vec<_>>();
+        // From the bottom: a raceme's lowest first, its top last.
+        let raceme = laid(ClusterKind::Raceme, 9, berries());
+        for pair in raceme.units.windows(2) {
+            assert!(pair[1].attach.y > pair[0].attach.y && pair[1].rank > pair[0].rank);
+        }
+        assert_eq!(ranks(&raceme).first(), Some(&0.0));
+        assert_eq!(ranks(&raceme).last(), Some(&1.0));
+        // Units at one node open together.
+        let pairs = layout(
+            &Cluster::of(&Inflorescence {
+                per_node: Some(2),
+                ..spec(ClusterKind::Raceme, 6)
+            }),
+            berries(),
+            0.0,
+            0,
+        );
+        for pair in pairs.units.chunks(2) {
+            assert_eq!(pair[0].rank, pair[1].rank);
+        }
+        // From the rim: an umbel's outermost first, a head's from its foot.
+        let umbel = laid(ClusterKind::Umbel, 8, Unit::Flower);
+        let out = |p: &Placed| p.direction.y;
+        for pair in umbel.units.windows(2) {
+            assert!(out(&pair[1]) < out(&pair[0]) && pair[1].rank < pair[0].rank);
+        }
+        let head = laid(ClusterKind::Head, 20, Unit::Flower);
+        for pair in head.units.windows(2) {
+            assert!(pair[1].direction.y > pair[0].direction.y && pair[1].rank > pair[0].rank);
+        }
+        // From the centre: a cyme's own unit before its forks', order by
+        // order; along the coil, a scorpioid's.
+        let cyme = laid(ClusterKind::Cyme, 7, Unit::Flower);
+        assert_eq!(ranks(&cyme), vec![0.0, 0.5, 0.5, 1.0, 1.0, 1.0, 1.0]);
+        let coil = laid(ClusterKind::Scorpioid, 5, Unit::Flower);
+        assert_eq!(ranks(&coil), vec![0.0, 0.25, 0.5, 0.75, 1.0]);
+        // Nested: the mean of its ranks on each axis, so a panicle's lowest
+        // branch's foot opens first and its top branch's tip last.
+        let panicle = layout(
+            &Cluster::of(&Inflorescence {
+                branches: Some(4),
+                ..spec(ClusterKind::Panicle, 5)
+            }),
+            berries(),
+            0.0,
+            0,
+        );
+        let ranks = ranks(&panicle);
+        assert_eq!(ranks.len(), 20);
+        assert_eq!(ranks[0], 0.0);
+        assert_eq!(ranks[19], 1.0);
+        assert!((ranks[4] - 0.5).abs() < 1e-12 && (ranks[15] - 0.5).abs() < 1e-12);
+    }
+
+    #[test]
+    fn two_colours_match_a_stage_as_nearly_as_they_can() {
+        let (white, purple) = ([0.9, 0.9, 0.85], [0.2, 0.05, 0.25]);
+        assert_eq!(blend(white, (white, purple)), (1.0, 0.0));
+        assert_eq!(blend(purple, (white, purple)), (0.0, 1.0));
+        // A mix of the two is found again.
+        let mix: [f32; 3] = std::array::from_fn(|c| 0.3 * white[c] + 0.5 * purple[c]);
+        let (a, b) = blend(mix, (white, purple));
+        assert!((a - 0.3).abs() < 1e-5 && (b - 0.5).abs() < 1e-5, "{a} {b}");
+        // One outside them takes the nearer, never less than none of
+        // either.
+        let (a, b) = blend([0.1, 0.6, 0.1], (white, purple));
+        assert!(a >= 0.0 && b >= 0.0);
+        assert_eq!(blend([0.5; 3], ([0.0; 3], [0.0; 3])), (0.0, 0.0));
+    }
+
+    #[test]
     fn droop_bends_the_axis_over() {
         let upright = Cluster::of(&spec(ClusterKind::Catkin, 20));
         let hanging = Cluster::of(&Inflorescence {
@@ -1865,24 +2211,24 @@ mod tests {
         assert!(top(&upright).y > 0.8);
         let hung = top(&hanging);
         assert!(hung.y < top(&upright).y - 0.3 && hung.x > 0.2, "{hung:?}");
-        let card = CardFrame::of(&hanging, berries());
+        let card = CardFrame::of(&hanging, berries(), &[]);
         assert_eq!(card.mount, Mount::Along);
-        assert!(card.aspect > CardFrame::of(&upright, berries()).aspect);
+        assert!(card.aspect > CardFrame::of(&upright, berries(), &[]).aspect);
     }
 
     #[test]
     fn flat_topped_clusters_of_flowers_face_along_their_organ() {
         let flower = Shape::Flower(Flower::default());
-        let umbel = ClusterLook::new(Cluster::of(&spec(ClusterKind::Umbel, 20)), &flower)
+        let umbel = ClusterLook::new(Cluster::of(&spec(ClusterKind::Umbel, 20)), &flower, &[])
             .expect("a flower is a unit");
         assert_eq!(umbel.card.mount, Mount::Facing);
         assert!(umbel.card.foot > 0.5 && umbel.card.cross.is_none());
-        let raceme = ClusterLook::new(Cluster::of(&spec(ClusterKind::Raceme, 20)), &flower)
+        let raceme = ClusterLook::new(Cluster::of(&spec(ClusterKind::Raceme, 20)), &flower, &[])
             .expect("a flower is a unit");
         assert_eq!(raceme.card.mount, Mount::Along);
         assert_eq!(raceme.card.cross, Some(1.0));
         let fruit = Shape::Fruit(Fruit::default());
-        let berries = ClusterLook::new(Cluster::of(&spec(ClusterKind::Umbel, 20)), &fruit)
+        let berries = ClusterLook::new(Cluster::of(&spec(ClusterKind::Umbel, 20)), &fruit, &[])
             .expect("a fruit is a unit");
         assert_eq!(
             berries.card.mount,
@@ -1892,13 +2238,15 @@ mod tests {
         assert!(
             ClusterLook::new(
                 Cluster::of(&Inflorescence::default()),
-                &Shape::default_for(crate::lsys::OrganKind::Leaf)
+                &Shape::default_for(crate::lsys::OrganKind::Leaf),
+                &[]
             )
             .is_none()
         );
         let heads = ClusterLook::new(
             Cluster::of(&spec(ClusterKind::Corymb, 30)),
             &Shape::Head(Head::default()),
+            &[],
         )
         .expect("a head is a unit");
         assert_eq!(heads.card.mount, Mount::Facing);
@@ -1914,7 +2262,7 @@ mod tests {
             ClusterKind::Cyme,
         ] {
             let cluster = Cluster::of(&spec(kind, 9));
-            let card = CardFrame::of(&cluster, berries());
+            let card = CardFrame::of(&cluster, berries(), &[]);
             let half = card.aspect * card.length * 0.5;
             for p in layout(&cluster, berries(), 0.0, 0).units {
                 let tip = p.base + p.direction * p.length;
@@ -2019,8 +2367,14 @@ mod tests {
     }
 
     /// The look of `shape` in `cluster`, as a species resolves it.
-    fn clustered(shape: Shape, cluster: Inflorescence) -> Look {
-        crate::looks::resolve(
+    /// A cluster of `shape` on `day` of `season`, if given.
+    fn clustered_on(
+        shape: Shape,
+        cluster: Inflorescence,
+        season: Option<(crate::looks::Season, f64)>,
+    ) -> Look {
+        let day = season.as_ref().map(|&(_, day)| day);
+        crate::looks::resolve_on(
             [("bloom", crate::lsys::OrganKind::Flower)],
             &std::collections::BTreeMap::from([(
                 "bloom".to_string(),
@@ -2034,14 +2388,39 @@ mod tests {
                     solid: None,
                     bend: None,
                     form: None,
-                    season: None,
+                    season: season.map(|(season, _)| season),
                     families: None,
                 },
             )]),
             [0.3; 3],
             [0.1; 3],
+            day,
         )
+        .0
         .remove(0)
+    }
+
+    /// A season whose units open over 40 days, in flower with a white
+    /// flower `size` of their fruit.
+    fn opening(size: f64) -> crate::looks::Season {
+        crate::looks::Season {
+            bud: 95.0,
+            flower: 110.0,
+            fruit: 135.0,
+            ripe: 175.0,
+            ripening: 20.0,
+            fall: 245.0,
+            opening: 40.0,
+            bud_look: None,
+            flower_look: Some(crate::looks::StageLook {
+                shape: Shape::Flower(Flower::default()),
+                colour: Some([0.95, 0.95, 0.9]),
+                accent: Some([0.9, 0.8, 0.2]),
+                size,
+                form: None,
+                whole: false,
+            }),
+        }
     }
 
     #[test]
@@ -2050,18 +2429,36 @@ mod tests {
         let fruit = Shape::Fruit(Fruit::default());
         let flower = Shape::Flower(Flower::default());
         let cases = [
-            (fruit.clone(), spec(ClusterKind::Raceme, 12)),
-            (fruit.clone(), spec(ClusterKind::Umbel, 8)),
-            (fruit.clone(), spec(ClusterKind::Head, 20)),
-            (fruit, spec(ClusterKind::Panicle, 5)),
-            (flower.clone(), spec(ClusterKind::Raceme, 9)),
-            (flower.clone(), spec(ClusterKind::Umbel, 14)),
-            (flower, spec(ClusterKind::Corymb, 10)),
-            (Shape::Head(Head::default()), spec(ClusterKind::Corymb, 7)),
+            (fruit.clone(), spec(ClusterKind::Raceme, 12), None),
+            (fruit.clone(), spec(ClusterKind::Umbel, 8), None),
+            (fruit.clone(), spec(ClusterKind::Head, 20), None),
+            (fruit.clone(), spec(ClusterKind::Panicle, 5), None),
+            (flower.clone(), spec(ClusterKind::Raceme, 9), None),
+            (flower.clone(), spec(ClusterKind::Umbel, 14), None),
+            (flower, spec(ClusterKind::Corymb, 10), None),
+            (
+                Shape::Head(Head::default()),
+                spec(ClusterKind::Corymb, 7),
+                None,
+            ),
+            // Fruit, flowers and buds on one raceme; an umbel's flowers,
+            // larger than its fruit, and its first fruit.
+            (
+                fruit.clone(),
+                spec(ClusterKind::Raceme, 12),
+                Some((opening(1.0), 140.0)),
+            ),
+            (
+                fruit,
+                spec(ClusterKind::Umbel, 8),
+                Some((opening(1.4), 150.0)),
+            ),
         ];
-        for (shape, inflorescence) in cases {
-            let look = clustered(shape, inflorescence);
+        for (shape, inflorescence, season) in cases {
+            let staged = season.is_some();
+            let look = clustered_on(shape, inflorescence, season);
             let cluster = look.inflorescence.as_ref().expect("a cluster");
+            assert_eq!(cluster.opening.is_some(), staged);
             let card = cluster.card;
             // The solid at the card's turn, its organ 1 long from the
             // origin, heading y with its left x.

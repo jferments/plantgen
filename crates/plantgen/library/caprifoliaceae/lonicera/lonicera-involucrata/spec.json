@@ -96,15 +96,13 @@
           "fall": 260,
           "flower_look": {
             "shape": {
-              "template": "spike",
-              "florets": 2,
-              "aspect": 0.6,
-              "plume": 0.0,
-              "stalk": 0.3
+              "template": "fruit",
+              "kind": "crowned",
+              "aspect": 0.35
             },
             "colour": [0.9, 0.75, 0.15],
-            "accent": [0.6, 0.15, 0.1],
-            "size": 1.4
+            "accent": [0.8, 0.55, 0.1],
+            "size": 1.6
           }
         }
       }
@@ -169,6 +167,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "appearance.organs.bloom.season.flower_look": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its flowers drawn one by one (spec rework L1b): yellow tubular flowers 12 to 18 mm long, in pairs that open together, drawn as closed tubes with their lobes at the tip. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
     }
   },
   "provenance": {

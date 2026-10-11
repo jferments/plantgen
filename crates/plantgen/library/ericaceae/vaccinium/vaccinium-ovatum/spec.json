@@ -101,17 +101,16 @@
           "ripe": 225,
           "ripening": 40,
           "fall": 345,
+          "opening": 18,
           "flower_look": {
             "shape": {
-              "template": "spike",
-              "florets": 7,
-              "aspect": 0.3,
-              "plume": 0.0,
-              "stalk": 0.15
+              "template": "fruit",
+              "kind": "crowned",
+              "aspect": 0.8
             },
-            "colour": [0.9, 0.7, 0.75],
-            "accent": [0.75, 0.4, 0.5],
-            "size": 2.3
+            "colour": [0.92, 0.72, 0.76],
+            "accent": [0.8, 0.45, 0.5],
+            "size": 0.6
           }
         }
       }
@@ -176,6 +175,16 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "appearance.organs.bloom.season.flower_look": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its flowers drawn one by one (spec rework L1b): pink bell-shaped flowers 3 to 5 mm long, drawn as closed bells, opening from the base of each short raceme up. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
+    },
+    "appearance.organs.bloom.season.opening": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit, a convention (no source gives a raceme's opening time)."
     }
   },
   "provenance": {

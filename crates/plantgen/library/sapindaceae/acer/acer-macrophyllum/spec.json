@@ -109,14 +109,23 @@
           "fall": 330,
           "flower_look": {
             "shape": {
-              "template": "spike",
-              "florets": 25,
-              "aspect": 0.35,
-              "plume": 0.0,
-              "stalk": 0.15
+              "template": "flower",
+              "petals": 5,
+              "petal_width": 0.8,
+              "point": 0.0,
+              "notch": 0.0,
+              "centre": 0.35
             },
-            "colour": [0.72, 0.74, 0.28],
-            "size": 0.8
+            "colour": [0.78, 0.8, 0.3],
+            "accent": [0.7, 0.65, 0.25],
+            "size": 0.13,
+            "form": {
+              "flower": {
+                "cup": 35,
+                "stamens": 8,
+                "stamen_length": 0.6
+              }
+            }
           }
         }
       }
@@ -220,6 +229,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "appearance.organs.bloom.season.flower_look": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its flowers drawn one by one (spec rework L1b): small fragrant yellow-green flowers about 6 mm across in long hanging racemes. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
     }
   },
   "provenance": {

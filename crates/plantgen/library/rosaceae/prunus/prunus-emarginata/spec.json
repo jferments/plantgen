@@ -103,11 +103,20 @@
               "template": "flower",
               "petals": 5,
               "petal_width": 1.0,
+              "point": 0.0,
+              "notch": 0.2,
               "centre": 0.2
             },
-            "colour": [0.92, 0.9, 0.85],
-            "accent": [0.8, 0.75, 0.4],
-            "size": 0.9
+            "colour": [0.95, 0.94, 0.9],
+            "accent": [0.85, 0.8, 0.45],
+            "size": 1.2,
+            "form": {
+              "flower": {
+                "cup": 20,
+                "stamens": 20,
+                "stamen_length": 0.35
+              }
+            }
           }
         }
       }
@@ -179,6 +188,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "appearance.organs.bloom.season.flower_look": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its flowers drawn one by one (spec rework L1b): white flowers 10 to 15 mm across with notched petals and about 20 stamens, in small flat clusters that open together. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
     }
   },
   "provenance": {
