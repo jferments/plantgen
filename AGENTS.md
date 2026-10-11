@@ -94,7 +94,9 @@ prompt injection. So, without exception:
   `library/sources/<id>.json` (`plantc check`, `plantc sources cite ID`).
   Notes are in our own words; never copy a source's text.
 - Project After pins an exact revision of this repository, and its CI
-  builds and tests that revision (it has no CI of its own yet). Check
-  locally before you commit:
+  builds and tests that revision. PlantGen's own CI
+  (`.github/workflows/ci.yml`) runs the same checks on Joshi's runner when
+  a PR is marked ready and on `main`, never on drafts. Check locally
+  before you commit:
   `cargo fmt --all --check`, `cargo build --workspace --all-targets --locked`
   and `cargo test --workspace --all-targets --locked`.
