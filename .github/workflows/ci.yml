@@ -1,0 +1,58 @@
+# PlantGen's CI. It runs on its own runner registration, `plantgen-ci`, inside
+# Project After's CI machine (jferments/ci-infrastructure,
+# docs/plantgen-runner.md), with less CPU weight than After's lanes and its own
+# Cargo target, so it never queues behind, slows or invalidates After's jobs.
+# Drafts run nothing: CI starts when a PR is marked ready.
+name: CI
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Never cancel a run in progress: a build cancelled mid-compile can corrupt a
+# shared Cargo target (After's light target, 2026-10-08).
+concurrency:
+  group: plantgen-ci-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    if: >-
+      github.event_name != 'pull_request' ||
+      (!github.event.pull_request.draft &&
+       github.event.pull_request.head.repo.full_name == github.repository)
+    runs-on: [self-hosted, linux, x64, plantgen-ci]
+    timeout-minutes: 60
+    env:
+      CARGO_TARGET_DIR: /home/after-runner/.cache/plantgen/cargo-target
+      CARGO_TARGET_BUDGET_GIB: "20"
+      CARGO_INCREMENTAL: "0"
+      CARGO_TERM_COLOR: never
+    steps:
+      - uses: actions/checkout@v7
+      - name: Start over when the Cargo target outgrows its budget
+        run: |
+          set -eu
+          if [ -d "$CARGO_TARGET_DIR" ]; then
+            used=$(du -s --block-size=1G "$CARGO_TARGET_DIR" | cut -f1)
+            echo "Cargo target: ${used} GiB of ${CARGO_TARGET_BUDGET_GIB}"
+            if [ "$used" -gt "$CARGO_TARGET_BUDGET_GIB" ]; then
+              rm -rf "$CARGO_TARGET_DIR"
+            fi
+          fi
+      - name: Toolchain (rust-toolchain.toml)
+        run: rustup toolchain install 2>/dev/null || rustup show
+      - name: Format
+        run: cargo fmt --all --check
+      - name: Clippy
+        run: cargo clippy --workspace --all-targets --locked
+      - name: Build
+        run: cargo build --workspace --all-targets --locked
+      - name: Test
+        run: cargo test --workspace --all-targets --locked
