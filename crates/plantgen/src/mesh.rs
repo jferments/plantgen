@@ -376,6 +376,54 @@ pub fn build_capped(
     parts: Option<&[bool]>,
     sticks: Option<usize>,
 ) -> PlantMesh {
+    let (mesh, _) = build_shaded(
+        graph, looks, bodies, appearance, lod, level, 0.0, parts, sticks, false,
+    );
+    mesh
+}
+
+/// [`build_capped`] with the sky's darkening of the bark kept out of its
+/// colour: the same mesh, each bark vertex in its bark's own colour, and
+/// beside it each wood vertex's shade, the share of its colour the sky it
+/// sees through the plant's leaves leaves it (1 where nothing shades it,
+/// down to [`WOOD_SHADE`] deep in a crown). Multiplying the two gives the
+/// colours [`build_capped`] draws, bit for bit. An exported model carries
+/// the shade as an attribute of its own (`crate::export`), so an engine
+/// that darkens wood by its own occlusion does not darken it twice.
+#[must_use]
+#[allow(clippy::too_many_arguments)]
+pub fn build_unshaded(
+    graph: &PlantGraph,
+    looks: &[Look],
+    bodies: &[BodyLook],
+    appearance: &Appearance,
+    lod: &LodSpec,
+    level: usize,
+    parts: Option<&[bool]>,
+    sticks: Option<usize>,
+) -> (PlantMesh, Vec<f32>) {
+    build_shaded(
+        graph, looks, bodies, appearance, lod, level, 0.0, parts, sticks, true,
+    )
+}
+
+/// [`build_capped`], with the bark's shade in its colour, or kept `apart`
+/// with one shade per wood vertex (see [`build_unshaded`]); empty unless
+/// apart. Fleshy bodies are drawn `along` of the way to the next level's
+/// detail (`crate::body::build_between`).
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn build_shaded(
+    graph: &PlantGraph,
+    looks: &[Look],
+    bodies: &[BodyLook],
+    appearance: &Appearance,
+    lod: &LodSpec,
+    level: usize,
+    along: f64,
+    parts: Option<&[bool]>,
+    sticks: Option<usize>,
+    apart: bool,
+) -> (PlantMesh, Vec<f32>) {
     let parts = parts.filter(|_| level == 0);
     let is_part =
         |index: usize| parts.is_some_and(|parts| parts.get(index).copied().unwrap_or(false));
@@ -383,8 +431,12 @@ pub fn build_capped(
     // The sky each piece of wood sees through the plant's leaves darkens
     // its bark, as renderers light wood as if in the open.
     let sky = SkyLight::of(graph, looks);
-    wood(graph, appearance, lod, sky.as_ref(), &mut mesh.wood);
-    twigs(graph, appearance, lod, sticks, sky.as_ref(), &mut mesh.wood);
+    let mut shade = Shade {
+        sky: sky.as_ref(),
+        apart: apart.then(Vec::new),
+    };
+    wood(graph, appearance, lod, &mut shade, &mut mesh.wood);
+    twigs(graph, appearance, lod, sticks, &mut shade, &mut mesh.wood);
     // Organs drawn as solid leaves, flowers or fruit at this level leave
     // the cards.
     let mut solid = leaves::solid_types(looks, level);
@@ -415,11 +467,16 @@ pub fn build_capped(
     if parts.is_some() {
         mesh.sites = sites(&mesh.cards, looks, &is_part);
     }
-    body::build(graph, bodies, looks.len(), level, &mut mesh);
+    body::build_between(graph, bodies, looks.len(), level, along, &mut mesh);
     if let Some(roots) = &appearance.roots {
         crate::roots::build(graph, roots, appearance.bark, level <= 1, &mut mesh.wood);
     }
-    mesh
+    // Only tubes and sticks, the first wood drawn, are shaded.
+    let mut shades = shade.apart.unwrap_or_default();
+    if apart {
+        shades.resize(mesh.wood.positions.len(), 1.0);
+    }
+    (mesh, shades)
 }
 
 /// The organs of part types among `cards`: each organ's card, or the
@@ -681,18 +738,46 @@ impl<'a> Bark<'a> {
 /// the sky it sees instead ([`crate::occlusion`]), as a share of the light
 /// a crown's surface gets ([`crate::looks::FULL_SUN`]): wood seeing that
 /// much or more keeps its colour.
-const WOOD_SHADE: f32 = 0.2;
+pub const WOOD_SHADE: f32 = 0.2;
 
-/// The sky light at `point` through the plant's leaves; open sky for a
-/// plant with none.
-fn light_at(sky: Option<&SkyLight>, point: Vec3) -> f64 {
-    sky.map_or(1.0, |sky| sky.at(point))
+/// The sky light each piece of wood sees through the plant's leaves, and
+/// what [`wood`] and [`twigs`] do with it: darken the bark's colour, or
+/// keep each vertex's shade apart (see [`build_unshaded`]).
+struct Shade<'a> {
+    /// `None` for a plant without leaves: open sky everywhere.
+    sky: Option<&'a SkyLight>,
+    /// One shade per vertex drawn, in order, when kept apart.
+    apart: Option<Vec<f32>>,
+}
+
+impl Shade<'_> {
+    /// The sky light at `point` through the plant's leaves.
+    fn light(&self, point: Vec3) -> f64 {
+        self.sky.map_or(1.0, |sky| sky.at(point))
+    }
+
+    /// The colour of a vertex of bark `colour` that sees `light`: darkened
+    /// by it, or as it is with its shade kept apart.
+    fn colour(&mut self, colour: [f32; 4], light: f64) -> [f32; 4] {
+        match &mut self.apart {
+            None => shaded(colour, light),
+            Some(shades) => {
+                shades.push(shade(light));
+                colour
+            }
+        }
+    }
+}
+
+/// The share of its colour wood keeps under the sky `light` it sees.
+fn shade(light: f64) -> f32 {
+    #[allow(clippy::cast_possible_truncation)]
+    ((light / crate::looks::FULL_SUN) as f32).clamp(WOOD_SHADE, 1.0)
 }
 
 /// Bark `colour` darkened for the sky `light` it sees.
 fn shaded(colour: [f32; 4], light: f64) -> [f32; 4] {
-    #[allow(clippy::cast_possible_truncation)]
-    let factor = ((light / crate::looks::FULL_SUN) as f32).clamp(WOOD_SHADE, 1.0);
+    let factor = shade(light);
     [
         colour[0] * factor,
         colour[1] * factor,
@@ -777,7 +862,7 @@ fn twigs(
     appearance: &Appearance,
     lod: &LodSpec,
     cap: Option<usize>,
-    sky: Option<&SkyLight>,
+    sky: &mut Shade<'_>,
     out: &mut Mesh,
 ) {
     if lod.min_radius <= 0.0 {
@@ -994,9 +1079,9 @@ fn twigs(
                         normal: outward,
                         uv,
                         color: bark_alpha(
-                            shaded(
+                            sky.colour(
                                 bark.colour(radius, outward, centre.y, along, angle, 0.0),
-                                light_at(sky, centre),
+                                sky.light(centre),
                             ),
                             radius,
                         ),
@@ -1051,7 +1136,7 @@ fn wood(
     graph: &PlantGraph,
     appearance: &Appearance,
     lod: &LodSpec,
-    sky: Option<&SkyLight>,
+    sky: &mut Shade<'_>,
     out: &mut Mesh,
 ) {
     let continuations = graph.continuations();
@@ -1119,7 +1204,7 @@ fn wood(
         let mut first_ring = None;
         for (ring, current) in kept.iter().enumerate() {
             let (tangent, normal, binormal, along) = frames[ring];
-            let light = light_at(sky, current.centre);
+            let light = sky.light(current.centre);
             let base = out.positions.len();
             let (before, after) = (ring.saturating_sub(1), (ring + 1).min(kept.len() - 1));
             let span = (frames[after].3 - frames[before].3).max(1e-9);
@@ -1145,7 +1230,7 @@ fn wood(
                     normal: surface,
                     uv,
                     color: bark_alpha(
-                        shaded(
+                        sky.colour(
                             bark.colour(
                                 current.radius,
                                 surface,

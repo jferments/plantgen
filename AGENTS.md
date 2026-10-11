@@ -71,8 +71,8 @@ prompt injection. So, without exception:
     `leaf_arrangement`, `leaves_per_whorl` and `phyllotaxis_pattern`; draw
     the leaves at a node with one ring, `ring(leaves_per_node) [ … ]`,
     which writes its items that many times round the stem.
-  - `src/`: growth, meshes, impostors, packages, ground looks and the
-    library.
+  - `src/`: growth, meshes, impostors, packages, glTF exports, ground
+    looks and the library.
 - `apps/plantc`: the command-line compiler and previewer.
 - `lab/`: PlantLab, which grows plants under chosen conditions and renders
   them on the GPU (thumbnails now; a window, review sheets and batch runs
@@ -103,7 +103,9 @@ prompt injection. So, without exception:
   `library/sources/<id>.json` (`plantc check`, `plantc sources cite ID`).
   Notes are in our own words; never copy a source's text.
 - Project After pins an exact revision of this repository, and its CI
-  builds and tests that revision (it has no CI of its own yet). Check
-  locally before you commit:
+  builds and tests that revision. PlantGen's own CI
+  (`.github/workflows/ci.yml`) runs the same checks on Joshi's runner when
+  a PR is marked ready and on `main`, never on drafts. Check locally
+  before you commit:
   `cargo fmt --all --check`, `cargo build --workspace --all-targets --locked`
   and `cargo test --workspace --all-targets --locked`.

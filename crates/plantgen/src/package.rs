@@ -265,7 +265,7 @@ pub struct Measurements {
 }
 
 impl Measurements {
-    fn of(graph: &PlantGraph, organ_types: &[OrganType]) -> Self {
+    pub(crate) fn of(graph: &PlantGraph, organ_types: &[OrganType]) -> Self {
         Self {
             height: graph.height,
             dbh: graph.diameter_at_breast_height(),
@@ -513,16 +513,16 @@ pub struct Inputs {
     pub looks: Vec<Look>,
     /// Each organ type's size on `day` as a share of its size in fruit; 0
     /// for organs gone that day, which are not drawn.
-    sizes: Vec<f64>,
+    pub(crate) sizes: Vec<f64>,
     /// One look per body type of the program.
     pub bodies: Vec<BodyLook>,
     /// A guest's host: its spec and its program's source, as the key
     /// hashes them and the build grows the host from.
     host: Option<(PlantSpec, String)>,
-    templates: Templates,
+    pub(crate) templates: Templates,
     atlas: (usize, usize, Vec<u8>),
     /// The organ types' part meshes, and each type, whether it has one.
-    parts: Vec<crate::parts::PartMesh>,
+    pub(crate) parts: Vec<crate::parts::PartMesh>,
     part_types: Vec<bool>,
 }
 
@@ -864,6 +864,39 @@ fn grow_variant(
     )
 }
 
+/// Grow `variant` of the inputs' spec as a package grows it, over all its
+/// years (so its keyframes know when each part will be shed) and on its
+/// host's wood for a guest, keeping keyframes at `ages` only.
+pub(crate) fn grow_one(
+    inputs: &Inputs,
+    variant: &Variant,
+    ages: &[f64],
+) -> Result<Growth, PackageError> {
+    let spec = &inputs.spec;
+    let (program, params) = spec.program_from(&inputs.program_source)?;
+    let host = match &inputs.host {
+        Some((host_spec, host_source)) => Some(spec.host_wood(host_spec, host_source)?),
+        None => None,
+    };
+    grow(
+        &program,
+        &params,
+        &GrowthSettings {
+            seed: variant.seed,
+            dt: spec.growth.step,
+            years: spec.growth.years,
+            keyframes: ages.to_vec(),
+            conditions: variant.conditions(),
+            limits: Limits::default(),
+            host,
+        },
+    )
+    .map_err(|error| PackageError::Growth {
+        variant: format!("{} {}", spec.id, label(variant)),
+        message: error.to_string(),
+    })
+}
+
 /// Compare a grown variant with every reference size the spec gives for
 /// its environment, at the keyframes grown for those ages. A reference age
 /// without a keyframe is skipped.
@@ -918,41 +951,78 @@ struct BakedKeyframe {
     impostor: impostor::Impostor,
 }
 
-fn bake_keyframe(graph: &PlantGraph, inputs: &Inputs) -> Result<BakedKeyframe, PackageError> {
+/// Every level of detail of keyframe `graph`, as a package holds them;
+/// with `unshaded`, each with its bark's shade kept out of its colour and
+/// one shade per wood vertex beside it (`mesh::build_unshaded`), else
+/// with no shades.
+pub(crate) fn level_meshes(
+    graph: &PlantGraph,
+    inputs: &Inputs,
+    unshaded: bool,
+) -> Vec<(PlantMesh, Vec<f32>)> {
     // The package's graph object keeps every organ; the meshes draw them as
     // they are on the inputs' day.
     let staged = crate::looks::staged(graph, &inputs.sizes);
     let drawn = staged.as_ref().unwrap_or(graph);
-    // A coarser level never draws more wood than the one before it: where
-    // the sticks standing in for the thin wood it drops (`mesh::twigs`)
-    // would make it, it is built again with fewer, thicker sticks covering
-    // as much.
-    let mut meshes: Vec<PlantMesh> = Vec::with_capacity(inputs.quality.lods.len());
+    let mut meshes: Vec<(PlantMesh, Vec<f32>)> = Vec::with_capacity(inputs.quality.lods.len());
     for (level, lod) in inputs.quality.lods.iter().enumerate() {
-        let lod = lod.for_height(graph.height);
-        let build = |sticks: Option<usize>| {
-            mesh::build_capped(
-                drawn,
-                &inputs.looks,
-                &inputs.bodies,
-                &inputs.spec.appearance,
-                &lod,
-                level,
-                Some(&inputs.part_types),
-                sticks,
-            )
-        };
-        let mut level_mesh = build(None);
-        if let Some(finer) = meshes
-            .last()
-            .map(|finer: &PlantMesh| finer.wood.triangle_count())
-            && level_mesh.wood.triangle_count() > finer
-        {
-            let tubes = build(Some(0)).wood.triangle_count();
-            level_mesh = build(Some(finer.saturating_sub(tubes) / mesh::STICK_TRIANGLES));
-        }
-        meshes.push(level_mesh);
+        let finer = meshes.last().map(|(finer, _)| finer.wood.triangle_count());
+        meshes.push(level_mesh(
+            drawn,
+            inputs,
+            &lod.for_height(graph.height),
+            (level, 0.0),
+            finer,
+            unshaded,
+        ));
     }
+    meshes
+}
+
+/// Level `level` of `drawn`, a keyframe as drawn on the inputs' day
+/// (`crate::looks::staged`), at `lod`, its fleshy bodies `along` of the
+/// way to the next level's detail, with its shades as [`level_meshes`]
+/// gives them. A coarser level never draws more wood than
+/// the one before it, which drew `finer` triangles of wood: where the
+/// sticks standing in for the thin wood it drops (`mesh::twigs`) would
+/// make it, it is built again with fewer, thicker sticks covering as much.
+pub(crate) fn level_mesh(
+    drawn: &PlantGraph,
+    inputs: &Inputs,
+    lod: &LodSpec,
+    (level, along): (usize, f64),
+    finer: Option<usize>,
+    unshaded: bool,
+) -> (PlantMesh, Vec<f32>) {
+    let build = |sticks: Option<usize>| {
+        mesh::build_shaded(
+            drawn,
+            &inputs.looks,
+            &inputs.bodies,
+            &inputs.spec.appearance,
+            lod,
+            level,
+            along,
+            Some(&inputs.part_types),
+            sticks,
+            unshaded,
+        )
+    };
+    let mut level_mesh = build(None);
+    if let Some(finer) = finer
+        && level_mesh.0.wood.triangle_count() > finer
+    {
+        let tubes = build(Some(0)).0.wood.triangle_count();
+        level_mesh = build(Some(finer.saturating_sub(tubes) / mesh::STICK_TRIANGLES));
+    }
+    level_mesh
+}
+
+fn bake_keyframe(graph: &PlantGraph, inputs: &Inputs) -> Result<BakedKeyframe, PackageError> {
+    let meshes: Vec<PlantMesh> = level_meshes(graph, inputs, false)
+        .into_iter()
+        .map(|(mesh, _)| mesh)
+        .collect();
     let impostor = impostor::bake(
         &meshes[IMPOSTOR_LOD],
         &inputs.templates,
