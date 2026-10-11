@@ -28,6 +28,7 @@ pub mod bark;
 pub mod bend;
 pub mod blooms;
 pub mod body;
+pub mod budget;
 pub mod conditions;
 pub mod cores;
 pub mod drawing;

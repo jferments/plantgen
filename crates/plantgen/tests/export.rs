@@ -2,7 +2,8 @@
 //! holds it, the same bytes every time, and the bark's shade kept apart or
 //! multiplied in.
 
-use plantgen::export::{self, Attributes, Built, Compression, Settings, Shade};
+use plantgen::budget::DIAL_MAX;
+use plantgen::export::{self, Attributes, Budget, Built, Compression, Settings, Shade};
 use plantgen::gltf::{self, Glb};
 use plantgen::package::{self, Inputs, PackageError};
 use plantgen::quality::{self, Quality};
@@ -462,4 +463,110 @@ fn meshopt_files_hold_the_quantized_arrays_compressed() {
     }
     let index: Value = serde_json::from_slice(&compressed.index).unwrap();
     assert_eq!(index["compression"], "meshopt");
+}
+
+/// The dial each level of an export was drawn at, from its index.
+fn dials(exported: &export::Export) -> Vec<f64> {
+    let index: Value = serde_json::from_slice(&exported.index).unwrap();
+    index["files"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|file| file["detail"]["dial"].as_f64().unwrap())
+        .collect()
+}
+
+#[test]
+fn levels_drawn_to_a_triangle_budget_fit_it() {
+    let inputs = Inputs::new(&small_spec(), &TINY).unwrap();
+    let plant = export::grow(&inputs, 0, 8.0).unwrap();
+    let plain = export::export(&inputs, &plant, &Settings::default(), None).unwrap();
+    // Unbudgeted levels are the quality's own.
+    assert_eq!(dials(&plain), [0.0, 1.0, 2.0, 3.0]);
+    assert!(plain.levels.iter().all(|level| level.budget.is_none()));
+
+    // A third of the nearest level's triangles: its needle shoots must
+    // draw coarser or as cards.
+    let nearest = plain.levels[0].summary.triangles / 3;
+    let budget = Budget {
+        triangles: Some(Budget::quartering(nearest)),
+        bytes: None,
+    };
+    let settings = Settings {
+        compression: Compression::Quantize,
+        budget,
+        ..Settings::default()
+    };
+    let exported = export::export(&inputs, &plant, &settings, None).unwrap();
+    let dials = dials(&exported);
+    assert!(dials[0] > 0.0, "{dials:?}");
+    assert!(dials.is_sorted(), "{dials:?}");
+    for (level, file) in exported.levels.iter().enumerate() {
+        let most = nearest >> (2 * level);
+        assert!(file.summary.triangles <= most, "level {level}");
+        assert_eq!(gltf::check(&file.glb), Ok(file.summary));
+        let given = file.budget.unwrap();
+        assert_eq!(given.triangles, Some(most));
+        assert!(given.fits, "level {level}");
+        let glb = Glb::read(&file.glb).unwrap();
+        let extras = glb.json.pointer("/scenes/0/extras/plantgen").unwrap();
+        assert_eq!(extras["level"], level);
+        let dial = extras["level_detail"]["dial"].as_f64().unwrap();
+        assert!((dial - dials[level]).abs() < 1e-12);
+    }
+    // The nearest level keeps more than the plain export's next level,
+    // which its budget allows.
+    assert!(exported.levels[0].summary.triangles > plain.levels[1].summary.triangles);
+    let index: Value = serde_json::from_slice(&exported.index).unwrap();
+    assert_eq!(index["budget"]["triangles"][0], nearest);
+    assert_eq!(index["files"][0]["budget"]["fits"], true);
+    // The same bytes every time.
+    assert_eq!(
+        exported,
+        export::export(&inputs, &plant, &settings, None).unwrap()
+    );
+}
+
+#[test]
+fn levels_drawn_to_a_byte_budget_fit_it_together() {
+    let inputs = Inputs::new(&small_spec(), &TINY).unwrap();
+    let plant = export::grow(&inputs, 0, 8.0).unwrap();
+    let settings = |bytes| Settings {
+        compression: Compression::Meshopt,
+        budget: Budget {
+            triangles: None,
+            bytes,
+        },
+        ..Settings::default()
+    };
+    let whole = |exported: &export::Export| -> usize {
+        exported.levels.iter().map(|level| level.glb.len()).sum()
+    };
+    let plain = export::export(&inputs, &plant, &settings(None), None).unwrap();
+    let most = whole(&plain) / 2;
+    let exported = export::export(&inputs, &plant, &settings(Some(most)), None).unwrap();
+    assert!(whole(&exported) <= most);
+    let drawn = dials(&exported);
+    assert!(drawn.is_sorted(), "{drawn:?}");
+    for (level, file) in exported.levels.iter().enumerate() {
+        // No level draws more than the quality's level of its number.
+        #[allow(clippy::cast_precision_loss)]
+        let own = level as f64;
+        assert!(drawn[level] >= own, "{drawn:?}");
+        let given = file.budget.unwrap();
+        assert!(given.fits && file.glb.len() <= given.bytes.unwrap());
+    }
+
+    // Below what the coarsest drawings take, each level is drawn past the
+    // farthest and the nearest says it does not fit.
+    let exported = export::export(&inputs, &plant, &settings(Some(1000)), None).unwrap();
+    let drawn = dials(&exported);
+    assert!(
+        drawn.iter().all(|&dial| dial > 3.0 && dial <= DIAL_MAX),
+        "{drawn:?}"
+    );
+    assert!(whole(&exported) > 1000);
+    assert!(!exported.levels[0].budget.unwrap().fits);
+    let index: Value = serde_json::from_slice(&exported.index).unwrap();
+    assert_eq!(index["budget"]["fits"], false);
 }

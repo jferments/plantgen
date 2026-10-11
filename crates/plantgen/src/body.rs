@@ -498,6 +498,55 @@ const MAX_RING_STRETCH: f64 = 2.0;
 const MIN_CAP_RINGS: u32 = 3;
 const MIN_SMOOTH_SIDES: u32 = 12;
 
+/// `along` of the way from `a` to `b`, geometrically.
+fn between(a: f64, b: f64, along: f64) -> f64 {
+    if a > 0.0 && b > 0.0 {
+        a * math::pow(b / a, along)
+    } else {
+        a
+    }
+}
+
+/// The most triangles the skin may take `along` of the way from level
+/// `level` to the next: geometrically between their budgets while the
+/// next has one.
+fn skin_triangles(level: usize, along: f64) -> usize {
+    match SKIN_TRIANGLES.get(level..=level + 1) {
+        #[allow(
+            clippy::cast_possible_truncation,
+            clippy::cast_sign_loss,
+            clippy::cast_precision_loss
+        )]
+        Some(&[a, b]) if along > 0.0 && b < usize::MAX => {
+            between(a as f64, b as f64, along) as usize
+        }
+        _ => SKIN_TRIANGLES[level],
+    }
+}
+
+/// Level `level`'s detail `along` of the way to the next level's (see
+/// [`build_between`]): a count or length the next level drops (0) stays as
+/// the level's own.
+fn detail_between(level: usize, along: f64) -> Detail {
+    let from = DETAIL[level];
+    let Some(to) = DETAIL.get(level + 1).filter(|_| along > 0.0) else {
+        return from;
+    };
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let count = |a: u32, b: u32| between(f64::from(a), f64::from(b), along).round() as u32;
+    Detail {
+        per_rib: count(from.per_rib, to.per_rib),
+        max_sides: count(from.max_sides, to.max_sides),
+        smooth_sides: count(from.smooth_sides, to.smooth_sides),
+        ring_step: between(from.ring_step, to.ring_step, along),
+        max_turn: between(from.max_turn, to.max_turn, along),
+        max_change: between(from.max_change, to.max_change, along),
+        cap_rings: count(from.cap_rings, to.cap_rings),
+        per_tubercle: between(from.per_tubercle, to.per_tubercle, along),
+        spines: from.spines,
+    }
+}
+
 /// What each level of detail draws, LOD0 first.
 const DETAIL: [Detail; 4] = [
     Detail {
@@ -1387,10 +1436,27 @@ pub fn build(
     level: usize,
     out: &mut PlantMesh,
 ) {
+    build_between(graph, looks, first_template, level, 0.0, out);
+}
+
+/// [`build`] with level `level`'s counts and lengths `along` of the way
+/// (0 to 1) to the next level's, geometrically, and its skin's budget
+/// too while the next level has one; its ribs, tubercles and spines are
+/// drawn as the level draws them. An export drawn to a budget
+/// (`crate::budget`) draws bodies between levels.
+pub fn build_between(
+    graph: &PlantGraph,
+    looks: &[BodyLook],
+    first_template: usize,
+    level: usize,
+    along: f64,
+    out: &mut PlantMesh,
+) {
     if looks.is_empty() || !graph.segments.iter().any(|segment| segment.body > 0) {
         return;
     }
-    let mut detail = DETAIL[level.min(DETAIL.len() - 1)];
+    let level = level.min(DETAIL.len() - 1);
+    let mut detail = detail_between(level, along);
     let axes = axes(graph);
     let lines: Vec<Option<(&BodyLook, f64, Centreline)>> = axes
         .iter()
@@ -1433,7 +1499,7 @@ pub fn build(
     // budget its tubercles get fewer vertices, its domes and feet fewer
     // rings, its rings lie farther apart and bend more between them, and
     // its smooth rings and then its ribs get fewer vertices round.
-    let budget = SKIN_TRIANGLES[level.min(SKIN_TRIANGLES.len() - 1)];
+    let budget = skin_triangles(level, along);
     let tubercled = axes.iter().any(|axis| {
         looks
             .get(axis.body)

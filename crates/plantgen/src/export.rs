@@ -64,26 +64,38 @@
 //! the variant, the age and the species' provenance in `extras`. The same
 //! inputs give the same bytes on every machine.
 //!
-//! Not yet: levels drawn to a budget, the bark's
+//! A [`Budget`] draws the levels to at most a number of triangles each,
+//! or bytes for all the files together, instead of as the package draws
+//! them: each level draws the most detail along a dial through the
+//! quality's levels and past the farthest ([`crate::budget`]) that fits,
+//! and never more than the level before it. The files and the index
+//! record where on the dial each level is drawn, the thinnest wood it
+//! keeps and the size of its leaf clusters, which an engine can set its
+//! switch distances by.
+//!
+//! Not yet: the bark's
 //! pattern (a tile per species or a bake per tree, waiting on the owner's
 //! call), normal and roughness maps, tangents, impostors,
 //! coverage-preserving mipmaps (PNG holds no mipmaps), wind and growth
 //! animation, and other formats.
 
+use std::borrow::Cow;
 use std::collections::{BTreeMap, HashMap};
 use std::path::{Path, PathBuf};
 
 use serde_json::{Value, json};
 
+use crate::budget::Detail;
 use crate::gltf::{self, Document, Index, number, numbers};
 use crate::graph::PlantGraph;
 use crate::library::Library;
 use crate::math::{self, Vec3};
 use crate::mesh::{Card, Mesh, PlantMesh};
 use crate::package::{self, Inputs, Manifest, Measurements, PackageError};
-use crate::parts::Placement;
+use crate::parts::{PartMesh, Placement};
 use crate::quality::{self, Quality};
 use crate::spec::{Environment, PlantSpec};
+use crate::spines::Tuft;
 use crate::templates::Template;
 
 /// Version of the export's layout: its files, attributes and index.
@@ -166,12 +178,52 @@ impl Attributes {
     }
 }
 
+/// The most an export's levels may hold; with neither, each level is
+/// drawn as the package draws it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub struct Budget {
+    /// Most triangles each level draws, nearest first, counted as a
+    /// renderer draws them (each instance of a part mesh too). Levels
+    /// may then draw more detail than the quality's level of the same
+    /// number, as far as their triangles allow.
+    pub triangles: Option<[usize; LEVELS]>,
+    /// Most bytes the levels' files hold together. Each level may take
+    /// what the coarsest drawing takes (its textures and stems) and a
+    /// part of the rest: the nearest level [`NEAREST_SHARE`] of it, each
+    /// farther level a quarter of the one before; then the nearest takes
+    /// whatever the farther ones leave.
+    pub bytes: Option<usize>,
+}
+
+impl Budget {
+    /// Whether it limits anything.
+    #[must_use]
+    pub fn is_some(&self) -> bool {
+        self.triangles.is_some() || self.bytes.is_some()
+    }
+
+    /// `nearest` triangles for the nearest level and a quarter of the
+    /// level before for each farther one.
+    #[must_use]
+    pub fn quartering(nearest: usize) -> [usize; LEVELS] {
+        std::array::from_fn(|level| nearest >> (2 * level))
+    }
+}
+
+/// Levels of an export, as of every quality profile.
+pub const LEVELS: usize = 4;
+
+/// Share of a budget's bytes past the coarsest drawings' the nearest
+/// level may take at first: 1 over 1 + 1/4 + 1/16 + 1/64.
+pub const NEAREST_SHARE: f64 = 64.0 / 85.0;
+
 /// How an export is written.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Settings {
     pub shade: Shade,
     pub compression: Compression,
     pub attributes: Attributes,
+    pub budget: Budget,
 }
 
 impl Default for Settings {
@@ -180,6 +232,7 @@ impl Default for Settings {
             shade: Shade::Attribute,
             compression: Compression::None,
             attributes: Attributes::All,
+            budget: Budget::default(),
         }
     }
 }
@@ -208,6 +261,23 @@ pub struct Level {
     /// Quantized files: the largest step between stored positions,
     /// metres; a position is within half of it of the plant's.
     pub position_step: Option<f32>,
+    /// How it is drawn: one of the quality's levels, or a point of the
+    /// dial between and past them ([`crate::budget`]).
+    pub detail: Detail,
+    /// Drawn to a budget: its share of it.
+    pub budget: Option<LevelBudget>,
+}
+
+/// A level's share of a [`Budget`]: its triangles, and the bytes it was
+/// drawn to (the nearest level's are what the others leave).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct LevelBudget {
+    pub triangles: Option<usize>,
+    pub bytes: Option<usize>,
+    /// Whether the level fits them; no drawing fits fewer than the
+    /// coarsest ([`crate::budget::DIAL_MAX`]) takes, so a budget below
+    /// that leaves the coarsest drawing over it.
+    pub fits: bool,
 }
 
 /// An exported plant: its files' common name, a GLB file per level and the
@@ -336,7 +406,7 @@ pub fn grow(inputs: &Inputs, variant: usize, age: f64) -> Result<Plant, PackageE
 
 /// Export `plant` of `inputs` as `settings` say; with `built`, the package
 /// of the same inputs, check that every level is drawn as the package
-/// holds it.
+/// holds it, unless the settings set a budget.
 ///
 /// # Errors
 ///
@@ -348,32 +418,310 @@ pub fn export(
     settings: &Settings,
     built: Option<&Built<'_>>,
 ) -> Result<Export, PackageError> {
-    let levels = package::level_meshes(&plant.graph, inputs, true);
-    if let Some(built) = built {
-        check_built(inputs, plant, &levels, built)?;
-    }
     let stem = stem(inputs, plant);
-    let mut files = Vec::with_capacity(levels.len());
-    for (level, (mesh, shades)) in levels.into_iter().enumerate() {
-        let file = format!("{stem}-lod{level}.glb");
-        let (glb, position_step) = level_glb(&mesh, &shades, inputs, *settings, &|step| {
-            metadata(inputs, plant, Some((level, step)), *settings)
-        });
-        let summary =
-            gltf::check(&glb).map_err(|error| format_error(format!("{file}: {error}")))?;
-        files.push(Level {
-            file,
-            glb,
-            summary,
-            position_step,
-        });
-    }
+    let file = |level: usize| format!("{stem}-lod{level}.glb");
+    let files = if settings.budget.is_some() {
+        budgeted(inputs, plant, *settings, &file)?
+    } else {
+        let levels = package::level_meshes(&plant.graph, inputs, true);
+        if let Some(built) = built {
+            check_built(inputs, plant, &levels, built)?;
+        }
+        let mut files = Vec::with_capacity(levels.len());
+        for (level, (mesh, shades)) in levels.into_iter().enumerate() {
+            let drawn = Drawn {
+                mesh,
+                shades,
+                detail: Detail::level(&inputs.quality, plant.graph.height, level),
+                parts: Cow::Borrowed(&inputs.parts),
+            };
+            files.push(drawn.file(inputs, plant, *settings, level, file(level))?);
+        }
+        files
+    };
     let index = index(inputs, plant, &files, *settings)?;
     Ok(Export {
         stem,
         levels: files,
         index,
     })
+}
+
+/// One level drawn: its mesh with its bark's shades apart, how it was
+/// drawn and the part meshes it places.
+struct Drawn<'a> {
+    mesh: PlantMesh,
+    shades: Vec<f32>,
+    detail: Detail,
+    parts: Cow<'a, [PartMesh]>,
+}
+
+impl Drawn<'_> {
+    /// Level `detail` of `drawn`, a keyframe as drawn on the inputs' day,
+    /// never with more wood than `finer` triangles where given (see
+    /// [`package::level_mesh`]).
+    fn at<'a>(
+        drawn: &PlantGraph,
+        inputs: &'a Inputs,
+        detail: Detail,
+        finer: Option<usize>,
+    ) -> Drawn<'a> {
+        let (mut mesh, shades) = package::level_mesh(
+            drawn,
+            inputs,
+            &detail.lod,
+            (detail.level, detail.along),
+            finer,
+            true,
+        );
+        if detail.flat > 0.0 && detail.lod.cluster <= 0.0 {
+            flatten(&mut mesh.cards, detail.flat);
+        }
+        #[allow(clippy::float_cmp)]
+        let parts = if detail.solid_detail == 1.0 {
+            Cow::Borrowed(inputs.parts.as_slice())
+        } else if detail.solid_detail > 0.0 {
+            Cow::Owned(crate::parts::part_meshes_within(
+                &inputs.looks,
+                detail.solid_detail,
+            ))
+        } else {
+            Cow::Owned(Vec::new())
+        };
+        Drawn {
+            mesh,
+            shades,
+            detail,
+            parts,
+        }
+    }
+
+    /// Triangles its file draws, as [`gltf::Summary::triangles`] counts
+    /// them.
+    fn triangles(&self, inputs: &Inputs) -> usize {
+        Pieces::count(&self.mesh, inputs, &self.parts, &self.detail)
+    }
+
+    /// Its file as level `level`, named `file`.
+    fn file(
+        &self,
+        inputs: &Inputs,
+        plant: &Plant,
+        settings: Settings,
+        level: usize,
+        file: String,
+    ) -> Result<Level, PackageError> {
+        let pieces = Pieces::of(&self.mesh, inputs, &self.parts, &self.detail);
+        let (glb, position_step) = level_glb(
+            &self.mesh,
+            &self.shades,
+            &pieces,
+            &self.parts,
+            inputs,
+            settings,
+            &|step| metadata(inputs, plant, Some((level, &self.detail, step)), settings),
+        );
+        let summary =
+            gltf::check(&glb).map_err(|error| format_error(format!("{file}: {error}")))?;
+        Ok(Level {
+            file,
+            glb,
+            summary,
+            position_step,
+            detail: self.detail,
+            budget: None,
+        })
+    }
+}
+
+/// Draw `share` of `cards`' bent cards flat, the smallest first.
+fn flatten(cards: &mut [Card], share: f64) {
+    let mut bent: Vec<usize> = (0..cards.len())
+        .filter(|&card| !cards[card].bend.is_flat())
+        .collect();
+    let area = |card: usize| f64::from(cards[card].length) * f64::from(cards[card].width);
+    bent.sort_by(|&a, &b| area(a).total_cmp(&area(b)).then(a.cmp(&b)));
+    #[allow(
+        clippy::cast_possible_truncation,
+        clippy::cast_sign_loss,
+        clippy::cast_precision_loss
+    )]
+    let flat = ((bent.len() as f64 * share.clamp(0.0, 1.0)).round() as usize).min(bent.len());
+    for &card in &bent[..flat] {
+        cards[card].bend = crate::bend::Bend::FLAT;
+    }
+}
+
+/// Drawings of a level tried along the dial, uncapped (see [`Drawn::at`]):
+/// the same for every level but for the cap on their sticks, which only
+/// takes wood away.
+struct Trials<'a> {
+    inputs: &'a Inputs,
+    plant: &'a Plant,
+    settings: Settings,
+    /// The keyframe as drawn on the inputs' day.
+    drawn: &'a PlantGraph,
+    /// By the dial's bits: its triangles, and its file's bytes once
+    /// written.
+    tried: HashMap<u64, (usize, Option<usize>)>,
+}
+
+impl<'a> Trials<'a> {
+    fn detail(&self, dial: f64) -> Detail {
+        Detail::at(&self.inputs.quality, self.plant.graph.height, dial)
+    }
+
+    fn draw(&self, dial: f64) -> Drawn<'a> {
+        Drawn::at(self.drawn, self.inputs, self.detail(dial), None)
+    }
+
+    /// The drawing at `dial`'s triangles, and the drawing if it was drawn
+    /// for them.
+    fn triangles(&mut self, dial: f64) -> (usize, Option<Drawn<'a>>) {
+        if let Some(&(triangles, _)) = self.tried.get(&dial.to_bits()) {
+            return (triangles, None);
+        }
+        let drawing = self.draw(dial);
+        let triangles = drawing.triangles(self.inputs);
+        self.tried.insert(dial.to_bits(), (triangles, None));
+        (triangles, Some(drawing))
+    }
+
+    /// The bytes of the drawing at `dial`'s file, given the drawing if it
+    /// was just drawn.
+    fn bytes(&mut self, dial: f64, drawing: Option<Drawn<'a>>) -> Result<usize, PackageError> {
+        let (triangles, drawn) = match drawing {
+            Some(drawing) => (drawing.triangles(self.inputs), Some(drawing)),
+            None => self.triangles(dial),
+        };
+        if let Some(&(_, Some(bytes))) = self.tried.get(&dial.to_bits()) {
+            return Ok(bytes);
+        }
+        let drawing = drawn.unwrap_or_else(|| self.draw(dial));
+        let bytes = drawing
+            .file(self.inputs, self.plant, self.settings, 0, String::new())?
+            .glb
+            .len();
+        self.tried.insert(dial.to_bits(), (triangles, Some(bytes)));
+        Ok(bytes)
+    }
+
+    /// How much of `triangles` and `bytes` the drawing at `dial` takes,
+    /// the larger share; 0 with neither.
+    #[allow(clippy::cast_precision_loss)]
+    fn taken(
+        &mut self,
+        dial: f64,
+        triangles: Option<usize>,
+        bytes: Option<usize>,
+    ) -> Result<f64, PackageError> {
+        let share = |taken: usize, most: usize| taken as f64 / most.max(1) as f64;
+        let mut drawing = None;
+        let mut taken = 0.0;
+        if let Some(most) = triangles {
+            let (drawn, fresh) = self.triangles(dial);
+            taken = share(drawn, most);
+            drawing = fresh;
+            if taken > 1.0 {
+                return Ok(taken);
+            }
+        }
+        if let Some(most) = bytes {
+            taken = f64::max(taken, share(self.bytes(dial, drawing)?, most));
+        }
+        Ok(taken)
+    }
+}
+
+/// The levels drawn to `settings`' budget, finest first: each the most
+/// detail along the dial ([`crate::budget`]) that fits its share, and
+/// never more than the level before it. Without a triangle budget, no
+/// level draws more than the quality's level of its number.
+fn budgeted(
+    inputs: &Inputs,
+    plant: &Plant,
+    settings: Settings,
+    file: &dyn Fn(usize) -> String,
+) -> Result<Vec<Level>, PackageError> {
+    let budget = settings.budget;
+    let staged = crate::looks::staged(&plant.graph, &inputs.sizes);
+    let mut trials = Trials {
+        inputs,
+        plant,
+        settings,
+        drawn: staged.as_ref().unwrap_or(&plant.graph),
+        tried: HashMap::new(),
+    };
+    let triangles = |level: usize| budget.triangles.map(|triangles| triangles[level]);
+    #[allow(clippy::cast_precision_loss)]
+    let low = |level: usize| {
+        if budget.triangles.is_some() {
+            0.0
+        } else {
+            level as f64
+        }
+    };
+    // Each level's share of the bytes, before the nearest takes what the
+    // others leave: the coarsest drawing's, which no drawing goes below
+    // (its textures, its stems), and of the rest a part for each level a
+    // quarter of the level before's.
+    let mut given: Vec<Option<usize>> = vec![None; LEVELS];
+    if let Some(bytes) = budget.bytes {
+        let floor = trials.bytes(crate::budget::DIAL_MAX, None)?;
+        let rest = bytes.saturating_sub(floor * LEVELS);
+        for (level, given) in given.iter_mut().enumerate() {
+            #[allow(
+                clippy::cast_possible_truncation,
+                clippy::cast_sign_loss,
+                clippy::cast_precision_loss
+            )]
+            let part = (rest as f64 * NEAREST_SHARE / f64::from(1_u32 << (2 * level))) as usize;
+            *given = Some(floor + part);
+        }
+    }
+    let mut dials: Vec<f64> = Vec::with_capacity(LEVELS);
+    for (level, &bytes) in given.iter().enumerate() {
+        let finest = low(level).max(dials.last().copied().unwrap_or(0.0));
+        let (dial, _) =
+            crate::budget::most_detail(finest, |dial| trials.taken(dial, triangles(level), bytes))?;
+        dials.push(dial);
+    }
+    // The nearest level takes the bytes the others leave.
+    if let Some(bytes) = budget.bytes {
+        let mut others = 0;
+        for &dial in &dials[1..] {
+            others += trials.bytes(dial, None)?;
+        }
+        let left = bytes.saturating_sub(others);
+        let more = given[0].is_some_and(|share| left > share);
+        given[0] = Some(left);
+        if more && dials[0] > low(0) {
+            let (dial, fits) = crate::budget::most_detail(low(0), |dial| {
+                trials.taken(dial, triangles(0), Some(left))
+            })?;
+            if fits && dial < dials[0] {
+                dials[0] = dial;
+            }
+        }
+    }
+    let mut files: Vec<Level> = Vec::with_capacity(LEVELS);
+    let mut finer = None;
+    for (level, dial) in dials.into_iter().enumerate() {
+        let drawing = Drawn::at(trials.drawn, inputs, trials.detail(dial), finer);
+        finer = Some(drawing.mesh.wood.triangle_count());
+        let mut written = drawing.file(inputs, plant, settings, level, file(level))?;
+        let (drawn, bytes) = (written.summary.triangles, written.glb.len());
+        // The search counts a drawing's triangles as its file draws them.
+        debug_assert_eq!(drawing.triangles(inputs), drawn);
+        written.budget = Some(LevelBudget {
+            triangles: triangles(level),
+            bytes: given[level],
+            fits: triangles(level).is_none_or(|most| drawn <= most)
+                && given[level].is_none_or(|most| bytes <= most),
+        });
+        files.push(written);
+    }
+    Ok(files)
 }
 
 /// Check `levels`, drawn with their shades apart, against the package's.
@@ -787,12 +1135,162 @@ fn mesh_node(
     (document.node(node), grid.map(|grid| grid.step))
 }
 
+/// What a level's file holds besides its wood: the organs drawn as part
+/// meshes, the spines drawn as solids and each organ type's cards left.
+struct Pieces {
+    placements: Vec<Placement>,
+    spines: Option<Mesh>,
+    /// Each organ type's cards as one mesh, a bent card's grid sharing
+    /// its corners, by the type's template.
+    cards: Vec<(usize, Mesh)>,
+}
+
+/// Hash salts picking which organs and areoles a level drawn between two
+/// levels draws as solids ([`Detail::solid_share`]), and which areoles
+/// keep their cards ([`Detail::spine_cards`]).
+const PART_SALT: u64 = 0x5011_D9A7;
+const AREOLE_SALT: u64 = 0x5011_DA2E;
+
+/// Whether item `number` of a level is among the `share` of them kept,
+/// picked by its number's hash; at share 1, every one.
+fn solid(number: usize, salt: u64, share: f64) -> bool {
+    share >= 1.0 || crate::rng::unit(crate::rng::mix64(number as u64 ^ salt)) < share
+}
+
+impl Pieces {
+    /// Where `plant`, a level placing `parts`, draws its organs as part
+    /// meshes; which of its cards they and solid spines leave out; and the
+    /// tufts it draws as solid spines. With `detail`, a level between two
+    /// ([`Detail::solid_share`]), only that share of its organs and
+    /// areoles; the others keep their cards.
+    fn left_out(
+        plant: &PlantMesh,
+        inputs: &Inputs,
+        parts: &[PartMesh],
+        detail: &Detail,
+    ) -> (Vec<Placement>, Vec<bool>, Vec<Tuft>) {
+        let templates = &inputs.templates;
+        let share = detail.solid_share;
+        // Parts on the nearest level; their cards are left out.
+        let mut placements = crate::parts::placements(plant, &inputs.looks, parts);
+        let mut number = 0;
+        placements.retain(|_| {
+            number += 1;
+            solid(number - 1, PART_SALT, share)
+        });
+        let mut dropped = vec![false; plant.cards.len()];
+        for placement in &placements {
+            dropped[placement.card] = true;
+            if let Some(cross) = placement.cross {
+                dropped[cross] = true;
+            }
+        }
+        // Spines as solids where the level has areoles, in place of their
+        // cards, as previews draw them. Each tuft's star and fan are the
+        // spine cards in its order (`crate::body`).
+        let mut tufts = Vec::new();
+        if !plant.tufts.is_empty() && !templates.bodies.is_empty() {
+            let first = templates.first_spine_template();
+            let spine_cards: Vec<usize> = (0..plant.cards.len())
+                .filter(|&card| usize::from(plant.cards[card].template) >= first)
+                .collect();
+            let paired = spine_cards.len() == 2 * plant.tufts.len();
+            for (number, tuft) in plant.tufts.iter().enumerate() {
+                if !paired || solid(number, AREOLE_SALT, share) {
+                    tufts.push(*tuft);
+                    if paired {
+                        dropped[spine_cards[2 * number]] = true;
+                        dropped[spine_cards[2 * number + 1]] = true;
+                    }
+                }
+            }
+            if !paired {
+                for &card in &spine_cards {
+                    dropped[card] = true;
+                }
+            }
+        } else if detail.spine_cards < 1.0 && !templates.bodies.is_empty() {
+            // Areoles as their star and fan, in order: only a share.
+            let first = templates.first_spine_template();
+            let spine_cards: Vec<usize> = (0..plant.cards.len())
+                .filter(|&card| usize::from(plant.cards[card].template) >= first)
+                .collect();
+            let (pairs, rest) = spine_cards.as_chunks::<2>();
+            if rest.is_empty() {
+                for (number, [star, fan]) in pairs.iter().enumerate() {
+                    if !solid(number, AREOLE_SALT, detail.spine_cards) {
+                        dropped[*star] = true;
+                        dropped[*fan] = true;
+                    }
+                }
+            }
+        }
+        (placements, dropped, tufts)
+    }
+
+    /// The pieces of `plant`, a level placing `parts`, drawn with `detail`'s
+    /// solids.
+    fn of(plant: &PlantMesh, inputs: &Inputs, parts: &[PartMesh], detail: &Detail) -> Self {
+        let templates = &inputs.templates;
+        let (placements, dropped, tufts) = Self::left_out(plant, inputs, parts, detail);
+        let spines = (!tufts.is_empty()).then(|| {
+            let looks: Vec<&crate::body::BodyLook> = templates.bodies.iter().collect();
+            crate::spines::tuft_mesh_within(&tufts, &looks, detail.solid_detail)
+        });
+        let cards = (0..templates.templates.len())
+            .filter_map(|index| {
+                let cards: Vec<Card> = plant
+                    .cards
+                    .iter()
+                    .zip(&dropped)
+                    .filter(|(card, drop)| !**drop && usize::from(card.template) == index)
+                    .map(|(card, _)| *card)
+                    .collect();
+                let mesh = PlantMesh {
+                    cards,
+                    ..PlantMesh::default()
+                }
+                .card_mesh();
+                (!mesh.indices.is_empty()).then(|| (index, welded(&mesh)))
+            })
+            .collect();
+        Self {
+            placements,
+            spines,
+            cards,
+        }
+    }
+
+    /// Triangles the file of [`Self::of`] draws, each placement counted,
+    /// without drawing its pieces.
+    fn count(plant: &PlantMesh, inputs: &Inputs, parts: &[PartMesh], detail: &Detail) -> usize {
+        let (placements, dropped, tufts) = Self::left_out(plant, inputs, parts, detail);
+        let looks: Vec<&crate::body::BodyLook> = inputs.templates.bodies.iter().collect();
+        let spines = crate::spines::tuft_triangles(&tufts, &looks, detail.solid_detail);
+        let bent = 2 * (crate::bend::ACROSS * crate::bend::ALONG) as usize;
+        let cards: usize = plant
+            .cards
+            .iter()
+            .zip(&dropped)
+            .filter(|(_, drop)| !**drop)
+            .map(|(card, _)| if card.bend.is_flat() { 2 } else { bent })
+            .sum();
+        let placed: usize = placements
+            .iter()
+            .map(|placed| parts[placed.part].variants[placed.variant].triangle_count())
+            .sum();
+        plant.wood.triangle_count() + spines + cards + placed
+    }
+}
+
 /// One level as a GLB file, with `extras` given the level's largest
 /// position step when quantized; and that step.
 #[allow(clippy::too_many_lines)]
 fn level_glb(
     plant: &PlantMesh,
     shades: &[f32],
+    pieces: &Pieces,
+    parts: &[PartMesh],
     inputs: &Inputs,
     settings: Settings,
     extras: &dyn Fn(Option<f32>) -> Value,
@@ -838,61 +1336,29 @@ fn level_glb(
         steps.extend(step);
     }
 
-    // Parts on the nearest level; their cards are left out.
-    let placements = crate::parts::placements(plant, &inputs.looks, &inputs.parts);
-    let mut dropped = vec![false; plant.cards.len()];
-    for placement in &placements {
-        dropped[placement.card] = true;
-        if let Some(cross) = placement.cross {
-            dropped[cross] = true;
-        }
-    }
-
-    // Spines as solids where the level has areoles, in place of their
-    // cards, as previews draw them.
-    let solid_spines = !plant.tufts.is_empty() && !templates.bodies.is_empty();
-    if solid_spines {
-        let first = templates.first_spine_template();
-        for (card, drop) in plant.cards.iter().zip(dropped.iter_mut()) {
-            *drop |= usize::from(card.template) >= first;
-        }
-        let looks: Vec<&crate::body::BodyLook> = templates.bodies.iter().collect();
-        let spines = crate::spines::tuft_mesh(&plant.tufts, &looks);
-        if !spines.indices.is_empty() {
-            let mut arrays = Arrays::of(&spines, false, &|vertex| {
-                let [r, g, b, _] = spines.colors[vertex];
-                [r, g, b]
-            });
-            arrays.keep(settings.attributes);
-            let material = document.material(plain_material("spines", 0.6, 1.0));
-            let (node, step) = mesh_node(&mut document, "spines", &[(arrays, material)], quantize);
-            children.push(node);
-            steps.extend(step);
-        }
+    // Spines as solids where the level has areoles.
+    if let Some(spines) = pieces
+        .spines
+        .as_ref()
+        .filter(|mesh| !mesh.indices.is_empty())
+    {
+        let mut arrays = Arrays::of(spines, false, &|vertex| {
+            let [r, g, b, _] = spines.colors[vertex];
+            [r, g, b]
+        });
+        arrays.keep(settings.attributes);
+        let material = document.material(plain_material("spines", 0.6, 1.0));
+        let (node, step) = mesh_node(&mut document, "spines", &[(arrays, material)], quantize);
+        children.push(node);
+        steps.extend(step);
     }
 
     // Cards: a primitive per organ type, each with its own texture, all
     // sampled alike.
     let mut sampler = None;
     let mut primitives = Vec::new();
-    for (index, template) in templates.templates.iter().enumerate() {
-        let cards: Vec<Card> = plant
-            .cards
-            .iter()
-            .zip(&dropped)
-            .filter(|(card, drop)| !**drop && usize::from(card.template) == index)
-            .map(|(card, _)| *card)
-            .collect();
-        if cards.is_empty() {
-            continue;
-        }
-        let quads = welded(
-            &PlantMesh {
-                cards,
-                ..PlantMesh::default()
-            }
-            .card_mesh(),
-        );
+    for (index, quads) in &pieces.cards {
+        let template = &templates.templates[*index];
         // Each card's colour over the look's, and the texture's scale: as
         // natural as the colours' range allows (see `texture_scale`).
         let look = template.colour.map(f64::from);
@@ -928,7 +1394,7 @@ fn level_glb(
             "doubleSided": true,
         }));
         #[allow(clippy::cast_possible_truncation)]
-        let mut arrays = Arrays::of(&quads, true, &|vertex| {
+        let mut arrays = Arrays::of(quads, true, &|vertex| {
             ratios[vertex].map(|ratio| (ratio * scale) as f32)
         });
         arrays.keep(settings.attributes);
@@ -940,8 +1406,8 @@ fn level_glb(
         steps.extend(step);
     }
 
-    if !placements.is_empty() {
-        let parts = part_nodes(&mut document, &placements, inputs, settings);
+    if !pieces.placements.is_empty() {
+        let parts = part_nodes(&mut document, &pieces.placements, parts, inputs, settings);
         children.push(document.node(json!({ "name": "parts", "children": parts })));
     }
 
@@ -1076,10 +1542,10 @@ fn side_of(texels: usize) -> usize {
 fn part_nodes(
     document: &mut Document,
     placements: &[Placement],
+    parts: &[PartMesh],
     inputs: &Inputs,
     settings: Settings,
 ) -> Vec<Index> {
-    let parts = &inputs.parts;
     // Each part's colours are multiplied by its lightest organ's shade, as
     // far as they stay within 1, so its materials' factors, the shades over
     // that, stay at most 1 (a lighter organ's is clipped there).
@@ -1237,7 +1703,7 @@ fn quaternion(x: Vec3, y: Vec3, z: Vec3) -> [f32; 4] {
 fn metadata(
     inputs: &Inputs,
     plant: &Plant,
-    level: Option<(usize, Option<f32>)>,
+    level: Option<(usize, &Detail, Option<f32>)>,
     settings: Settings,
 ) -> Value {
     let spec = &inputs.spec;
@@ -1264,25 +1730,43 @@ fn metadata(
         "attributes": settings.attributes.name(),
         "provenance": spec.provenance,
     });
-    if let (Some((level, step)), Value::Object(fields)) = (level, &mut value) {
-        let lod = inputs.quality.lods[level].for_height(plant.graph.height);
+    if let (Some((level, detail, step)), Value::Object(fields)) = (level, &mut value) {
         fields.insert("level".into(), json!(level));
         if let Some(step) = step {
             fields.insert("position_step".into(), number(step));
         }
-        fields.insert(
-            "level_detail".into(),
-            json!({
-                "thinnest_wood_radius": lod.min_radius,
-                "ring_edge": lod.ring_edge,
-                "cluster": lod.cluster,
-            }),
-        );
+        fields.insert("level_detail".into(), level_detail(detail));
     }
     value
 }
 
-/// The index of an export: the plant, and each level's file and size.
+/// How a level is drawn, as the files and the index record it: the
+/// quality's level whose features it draws, the dial
+/// ([`crate::budget`]), the thinnest wood it keeps (stems are always
+/// kept), its tubes' ring spacing and most sides, the size of its leaf
+/// clusters (0 for a card per organ), the share of their caps its part
+/// meshes hold and of their spines its solid areoles keep, the share of
+/// its organs and areoles drawn as solids, the share of its areoles drawn
+/// as cards that keep them and the share of its bent cards drawn flat.
+fn level_detail(detail: &Detail) -> Value {
+    let lod = &detail.lod;
+    json!({
+        "dial": detail.dial,
+        "features_of_level": detail.level,
+        "thinnest_wood_radius": lod.min_radius,
+        "ring_edge": lod.ring_edge,
+        "max_sides": lod.max_sides,
+        "bend": lod.bend,
+        "cluster": lod.cluster,
+        "solid_detail": detail.solid_detail,
+        "solid_share": detail.solid_share,
+        "spine_card_share": detail.spine_cards,
+        "flat_share": detail.flat,
+    })
+}
+
+/// The index of an export: the plant, its budget, and each level's file,
+/// size and drawing.
 fn index(
     inputs: &Inputs,
     plant: &Plant,
@@ -1291,6 +1775,16 @@ fn index(
 ) -> Result<Vec<u8>, PackageError> {
     let mut value = metadata(inputs, plant, None, settings);
     if let Value::Object(fields) = &mut value {
+        let budget = settings.budget;
+        if budget.is_some() {
+            let fits = levels
+                .iter()
+                .all(|level| level.budget.is_some_and(|given| given.fits));
+            fields.insert(
+                "budget".into(),
+                json!({ "triangles": budget.triangles, "bytes": budget.bytes, "fits": fits }),
+            );
+        }
         fields.insert(
             "files".into(),
             Value::Array(
@@ -1298,8 +1792,7 @@ fn index(
                     .iter()
                     .enumerate()
                     .map(|(level, file)| {
-                        let lod = inputs.quality.lods[level].for_height(plant.graph.height);
-                        json!({
+                        let mut entry = json!({
                             "level": level,
                             "file": file.file,
                             "bytes": file.glb.len(),
@@ -1307,9 +1800,18 @@ fn index(
                             "nodes": file.summary.nodes,
                             "instances": file.summary.instances,
                             "position_step": file.position_step.map(number),
-                            "thinnest_wood_radius": lod.min_radius,
-                            "cluster": lod.cluster,
-                        })
+                            "thinnest_wood_radius": file.detail.lod.min_radius,
+                            "cluster": file.detail.lod.cluster,
+                            "detail": level_detail(&file.detail),
+                        });
+                        if let Some(given) = file.budget {
+                            entry["budget"] = json!({
+                                "triangles": given.triangles,
+                                "bytes": given.bytes,
+                                "fits": given.fits,
+                            });
+                        }
+                        entry
                     })
                     .collect(),
             ),

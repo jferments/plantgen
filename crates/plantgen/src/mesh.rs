@@ -377,7 +377,7 @@ pub fn build_capped(
     sticks: Option<usize>,
 ) -> PlantMesh {
     let (mesh, _) = build_shaded(
-        graph, looks, bodies, appearance, lod, level, parts, sticks, false,
+        graph, looks, bodies, appearance, lod, level, 0.0, parts, sticks, false,
     );
     mesh
 }
@@ -403,13 +403,14 @@ pub fn build_unshaded(
     sticks: Option<usize>,
 ) -> (PlantMesh, Vec<f32>) {
     build_shaded(
-        graph, looks, bodies, appearance, lod, level, parts, sticks, true,
+        graph, looks, bodies, appearance, lod, level, 0.0, parts, sticks, true,
     )
 }
 
 /// [`build_capped`], with the bark's shade in its colour, or kept `apart`
 /// with one shade per wood vertex (see [`build_unshaded`]); empty unless
-/// apart.
+/// apart. Fleshy bodies are drawn `along` of the way to the next level's
+/// detail (`crate::body::build_between`).
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn build_shaded(
     graph: &PlantGraph,
@@ -418,6 +419,7 @@ pub(crate) fn build_shaded(
     appearance: &Appearance,
     lod: &LodSpec,
     level: usize,
+    along: f64,
     parts: Option<&[bool]>,
     sticks: Option<usize>,
     apart: bool,
@@ -465,7 +467,7 @@ pub(crate) fn build_shaded(
     if parts.is_some() {
         mesh.sites = sites(&mesh.cards, looks, &is_part);
     }
-    body::build(graph, bodies, looks.len(), level, &mut mesh);
+    body::build_between(graph, bodies, looks.len(), level, along, &mut mesh);
     if let Some(roots) = &appearance.roots {
         crate::roots::build(graph, roots, appearance.bark, level <= 1, &mut mesh.wood);
     }

@@ -69,7 +69,9 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   glTF binary files (`.glb`), one per level of detail, that game engines
   and Blender open as they are; `--compress quantize` or `meshopt` makes
   them several times smaller for viewers that read glTF's quantization,
-  instancing and meshopt extensions.
+  instancing and meshopt extensions, and `--triangles` or `--max-mib`
+  redraws the levels with as much detail as a triangle or size budget
+  allows.
 - **Ground.** Tiling textures of what plants lay on the ground: needles,
   leaves, thatch, twigs, mosses and grasses, and each canopy species' own
   litter.
