@@ -96,12 +96,10 @@
         "shape": {
           "template": "fruit",
           "kind": "capsule",
-          "count": 15,
-          "cluster": "head",
-          "size": 0.35,
           "aspect": 0.5,
           "unripe": 0.5
         },
+        "inflorescence": { "kind": "head", "flowers": 15, "size": 0.35 },
         "colour": [0.55, 0.2, 0.12],
         "accent": [0.4, 0.48, 0.2],
         "season": {

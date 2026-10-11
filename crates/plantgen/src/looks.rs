@@ -35,6 +35,11 @@ use crate::lsys::OrganKind;
 pub struct OrganLook {
     /// The template and its shape parameters.
     pub shape: Shape,
+    /// The organ is one cluster of units, each drawn with `shape`: a
+    /// flower, a head or one fruit (spec rework L1, `crate::clusters`).
+    /// Without it the organ is one unit.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub inflorescence: Option<Inflorescence>,
     /// Colour in full light; the appearance's foliage colour if absent.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub colour: Option<[f32; 3]>,
@@ -778,8 +783,10 @@ impl Default for Panicle {
     }
 }
 
+/// One fruit or cone. Several on one organ are a cluster, set by the look's
+/// `inflorescence` (spec rework L1).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(default, deny_unknown_fields)]
+#[serde(try_from = "FruitCard")]
 pub struct Fruit {
     /// Width over length of one fruit.
     pub aspect: f64,
@@ -789,18 +796,6 @@ pub struct Fruit {
     /// bud unless set.
     #[serde(skip_serializing_if = "FruitKind::is_berry")]
     pub kind: FruitKind,
-    /// Fruit in the organ: 1, or a cluster of up to 60 (`crate::fruit`).
-    #[serde(skip_serializing_if = "is_one")]
-    pub count: u32,
-    /// How a cluster's fruit sit on it.
-    #[serde(skip_serializing_if = "Cluster::is_raceme")]
-    pub cluster: Cluster,
-    /// In a cluster, one fruit's length as a share of the organ's.
-    #[serde(skip_serializing_if = "is_default_size")]
-    pub size: f64,
-    /// In a cluster, degrees a fruit's stalk leans out from its axis.
-    #[serde(skip_serializing_if = "is_default_spread")]
-    pub spread: f64,
     /// Share of the fruit still unripe, drawn in the look's accent colour
     /// (which also draws stalks, and the cup or husk of a nut).
     #[serde(skip_serializing_if = "is_zero")]
@@ -813,40 +808,64 @@ impl Default for Fruit {
             aspect: 0.7,
             cone: 0.0,
             kind: FruitKind::Berry,
-            count: 1,
-            cluster: Cluster::Raceme,
-            size: DEFAULT_FRUIT_SIZE,
-            spread: DEFAULT_FRUIT_SPREAD,
             unripe: 0.0,
         }
     }
 }
 
-const DEFAULT_FRUIT_SIZE: f64 = 0.3;
-const DEFAULT_FRUIT_SPREAD: f64 = 35.0;
-
-// Serde's `skip_serializing_if` passes a reference.
-#[allow(clippy::trivially_copy_pass_by_ref)]
-fn is_one(value: &u32) -> bool {
-    *value == 1
+/// A fruit card as a spec writes it: a [`Fruit`], and the keys that set a
+/// cluster before L1, read only to say where they went.
+#[derive(Deserialize)]
+#[serde(default, deny_unknown_fields)]
+struct FruitCard {
+    aspect: f64,
+    cone: f64,
+    kind: FruitKind,
+    unripe: f64,
+    count: Option<serde::de::IgnoredAny>,
+    cluster: Option<serde::de::IgnoredAny>,
+    size: Option<serde::de::IgnoredAny>,
+    spread: Option<serde::de::IgnoredAny>,
 }
 
-#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
-fn is_default_size(value: &f64) -> bool {
-    *value == DEFAULT_FRUIT_SIZE
+impl Default for FruitCard {
+    fn default() -> Self {
+        let fruit = Fruit::default();
+        Self {
+            aspect: fruit.aspect,
+            cone: fruit.cone,
+            kind: fruit.kind,
+            unripe: fruit.unripe,
+            count: None,
+            cluster: None,
+            size: None,
+            spread: None,
+        }
+    }
 }
 
-#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
-fn is_default_spread(value: &f64) -> bool {
-    *value == DEFAULT_FRUIT_SPREAD
-}
+impl TryFrom<FruitCard> for Fruit {
+    type Error = String;
 
-impl Fruit {
-    /// Card width over card length: one fruit's aspect, or for a cluster
-    /// the width its fruit spread over (`crate::fruit::card_aspect`).
-    #[must_use]
-    pub fn card_aspect(&self) -> f64 {
-        crate::fruit::card_aspect(self)
+    fn try_from(card: FruitCard) -> Result<Self, String> {
+        let moved = [
+            ("count", card.count.is_some(), "flowers"),
+            ("cluster", card.cluster.is_some(), "kind"),
+            ("size", card.size.is_some(), "size"),
+            ("spread", card.spread.is_some(), "spread"),
+        ];
+        if let Some((key, _, now)) = moved.iter().find(|(_, set, _)| *set) {
+            return Err(format!(
+                "fruit `{key}` is now the look's `inflorescence` `{now}`: a cluster of fruit is \
+                 an inflorescence whose units are fruit"
+            ));
+        }
+        Ok(Self {
+            aspect: card.aspect,
+            cone: card.cone,
+            kind: card.kind,
+            unripe: card.unripe,
+        })
     }
 }
 
@@ -887,30 +906,134 @@ impl FruitKind {
     }
 }
 
-/// How a cluster's fruit sit on it.
+/// How a cluster's units are arranged (spec rework L1): each kind its
+/// botanical definition, laid out by `crate::clusters`. The states of the
+/// `inflorescence` character, less a solitary flower and a spadix.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
-#[serde(rename_all = "kebab-case")]
-pub enum Cluster {
-    /// On stalks spiralling up an axis (cherries in a raceme, elderberry
-    /// panicles, alder cones).
+#[serde(rename_all = "snake_case")]
+pub enum ClusterKind {
+    /// Units on pedicels up an axis, the top one reaching its tip (salal,
+    /// serviceberry, lupine).
     #[default]
     Raceme,
-    /// On stalks from one point, spread like an umbrella (cascara,
-    /// dogwood, snowberry).
+    /// A raceme of sessile units (vanilla leaf, velvet mesquite).
+    Spike,
+    /// A dense spike of small units, often drooping (alders, birches).
+    Catkin,
+    /// A raceme whose lower pedicels are longer, so every unit's top is
+    /// level (yarrow's heads).
+    Corymb,
+    /// Pedicels from one point, each reaching the top (onion, milkweed).
     Umbel,
-    /// In pairs from one point, each pair turned square to the last up a
-    /// short axis (maple samaras, twinberries, hazelnuts).
-    Pair,
-    /// Packed into a round head at the end of one stalk (dogwood drupes,
-    /// ninebark follicles).
+    /// An umbel whose rays end in umbellets (cow parsnip).
+    CompoundUmbel,
+    /// A raceme whose nodes bear branches (oceanspray, grape).
+    Panicle,
+    /// The axis ends in a unit, with branches below it that end in units
+    /// and fork again (elderberry's cymules).
+    Cyme,
+    /// A cyme forking once at each node, always to one side, so its units
+    /// lie on a coil (phacelias, forget-me-nots).
+    Scorpioid,
+    /// Units packed on a sphere at the top of the peduncle (Pacific
+    /// dogwood, ninebark).
     Head,
 }
 
-impl Cluster {
-    #[allow(clippy::trivially_copy_pass_by_ref)]
-    fn is_raceme(&self) -> bool {
-        *self == Self::Raceme
+impl ClusterKind {
+    /// Every kind, in the order the `inflorescence` character lists them.
+    pub const ALL: [Self; 10] = [
+        Self::Raceme,
+        Self::Spike,
+        Self::Catkin,
+        Self::Corymb,
+        Self::Umbel,
+        Self::CompoundUmbel,
+        Self::Panicle,
+        Self::Cyme,
+        Self::Scorpioid,
+        Self::Head,
+    ];
+
+    /// The kind's name in a spec.
+    #[must_use]
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::Raceme => "raceme",
+            Self::Spike => "spike",
+            Self::Catkin => "catkin",
+            Self::Corymb => "corymb",
+            Self::Umbel => "umbel",
+            Self::CompoundUmbel => "compound_umbel",
+            Self::Panicle => "panicle",
+            Self::Cyme => "cyme",
+            Self::Scorpioid => "scorpioid",
+            Self::Head => "head",
+        }
     }
+}
+
+/// An organ drawn as one cluster of units (spec rework L1), as a spec gives
+/// it: every key may be left out for its default, which may depend on the
+/// kind (`crate::clusters::Cluster::of`), so `{}` is a raceme of 12.
+/// Lengths are shares of the axis that bears them: the organ's, or a
+/// branch's.
+#[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct Inflorescence {
+    /// How the units are arranged; a raceme unless set, or for a branch
+    /// its cluster's branches' kind.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub kind: Option<ClusterKind>,
+    /// Units on each axis that bears them: the main axis, or each branch
+    /// of a compound cluster; a cyme's units in all. 1 to 200; 12 unless
+    /// set, or for a branch its cluster's.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub flowers: Option<u32>,
+    /// Branches the axis bears in place of units, making a compound
+    /// cluster: 0 to 60; 8 in a panicle, 12 in a compound umbel, else 0.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub branches: Option<u32>,
+    /// How each branch is laid out: a raceme in a panicle, an umbel in a
+    /// compound umbel, else the cluster's own kind, with its `flowers`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub branch: Option<Box<Inflorescence>>,
+    /// Units or branches at one node, spread evenly round the axis: 1 to
+    /// 8; 2 in a cyme, else 1. Two are pairs.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub per_node: Option<u32>,
+    /// Degrees from one node to the next, 0 to 180: the golden angle
+    /// unless set; 90 with pairs crosses them.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub divergence: Option<f64>,
+    /// Degrees a pedicel or branch leans from its axis, 0 to 90; 35.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub spread: Option<f64>,
+    /// A unit's stalk, 0 to 1: 0.15, or 0 where the axis bears branches.
+    /// Spikes, catkins and heads are sessile; umbels and corymbs reach the
+    /// top whatever it is.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pedicel: Option<f64>,
+    /// Bare stalk below the lowest node, 0 to 1: 0.3 in an umbel or a
+    /// compound umbel, else 0.1.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub peduncle: Option<f64>,
+    /// One unit's length (a flower's or head's width), or a branch's,
+    /// 0.005 to 1: 0.15, or 0.4 where the axis bears branches.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub size: Option<f64>,
+    /// How much smaller the upper units and branches are, 0 to 1: the top
+    /// one 1 - taper of the lowest; 0.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub taper: Option<f64>,
+    /// Degrees the axis bends over by its tip, 0 to 180: 90 nodding, 180
+    /// hanging; 0.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub droop: Option<f64>,
+    /// Colour of the axes and pedicels, on the solid and the card; green
+    /// unless set, or for a branch its cluster's.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stalk: Option<[f32; 3]>,
 }
 
 impl Shape {
@@ -991,7 +1114,7 @@ impl Shape {
             Self::Flower(_) | Self::Head(_) | Self::Umbel(_) => 1.0,
             Self::Spike(spike) => spike.aspect,
             Self::Panicle(panicle) => panicle.aspect,
-            Self::Fruit(fruit) => fruit.card_aspect(),
+            Self::Fruit(fruit) => fruit.aspect,
         }
     }
 
@@ -1199,9 +1322,6 @@ impl Shape {
             Self::Fruit(s) => {
                 check("aspect", s.aspect, 0.1, 2.0)?;
                 check("cone", s.cone, 0.0, 1.0)?;
-                count("count", s.count, 1, 60)?;
-                check("size", s.size, 0.05, 1.0)?;
-                check("spread", s.spread, 0.0, 90.0)?;
                 check("unripe", s.unripe, 0.0, 1.0)
             }
         }
@@ -1322,12 +1442,49 @@ pub struct Look {
     pub form: crate::blooms::Form,
     /// Its leaves' families' looks; the default for none.
     pub forms: Forms,
+    /// The cluster the organ is, each of its units drawn with `shape`
+    /// (spec rework L1); `None` for an organ that is one unit.
+    pub inflorescence: Option<crate::clusters::ClusterLook>,
 }
 
 impl Look {
+    /// How the organ's card sits on it: as its shape's, or as its
+    /// cluster's (`crate::clusters::CardFrame`).
     #[must_use]
     pub fn mount(&self) -> Mount {
-        self.shape.mount()
+        match &self.inflorescence {
+            Some(cluster) => cluster.card.mount,
+            None => self.shape.mount(),
+        }
+    }
+
+    /// Card width over card length.
+    #[must_use]
+    pub fn aspect(&self) -> f64 {
+        match &self.inflorescence {
+            Some(cluster) => cluster.card.aspect,
+            None => self.shape.aspect(),
+        }
+    }
+
+    /// Width of the card across the first, relative to it, if it has one
+    /// (see [`Shape::cross`]).
+    #[must_use]
+    pub fn cross(&self) -> Option<f64> {
+        match &self.inflorescence {
+            Some(cluster) => cluster.card.cross,
+            None => self.shape.cross(),
+        }
+    }
+
+    /// Where the card is, in lengths of its organ: `(foot, length)`, its
+    /// base that far along the organ (a facing card's centre) and its
+    /// length. `(0, 1)` for every look but a cluster's.
+    #[must_use]
+    pub fn span(&self) -> (f64, f64) {
+        self.inflorescence.as_ref().map_or((0.0, 1.0), |cluster| {
+            (cluster.card.foot, cluster.card.length)
+        })
     }
 }
 
@@ -1368,6 +1525,12 @@ pub fn resolve<'a>(
                         .clone()
                         .unwrap_or_else(|| crate::blooms::Form::default_for(&look.shape)),
                     forms: Forms::default(),
+                    inflorescence: look.inflorescence.as_ref().and_then(|inflorescence| {
+                        crate::clusters::ClusterLook::new(
+                            crate::clusters::Cluster::of(inflorescence),
+                            &look.shape,
+                        )
+                    }),
                 }
             }
             None => Look {
@@ -1381,6 +1544,7 @@ pub fn resolve<'a>(
                 face_up: 0.0,
                 solid: None,
                 forms: Forms::default(),
+                inflorescence: None,
             },
         })
         .collect::<Vec<_>>()
@@ -1413,6 +1577,7 @@ impl WithFamilies for Vec<Look> {
                 shape,
                 solid: None,
                 forms: Forms::default(),
+                inflorescence: None,
                 ..own.clone()
             };
             if families.plasticity > 0.0
@@ -1537,6 +1702,12 @@ fn in_season(look: Look, season: &Season, stage: Stage, foliage: [f32; 3]) -> (L
             if let Shape::Fruit(fruit) = &mut look.shape {
                 fruit.unripe = unripe;
             }
+            // A cluster's fruit ripen with it.
+            if let Some(cluster) = &mut look.inflorescence
+                && let Some(unit) = crate::clusters::Unit::of(&look.shape)
+            {
+                cluster.unit = unit;
+            }
             (look, 1.0)
         }
     }
@@ -1556,6 +1727,8 @@ fn in_stage(look: &Look, stage: &StageLook) -> Look {
         bend: crate::bend::Bend::default_for(&stage.shape),
         form: crate::blooms::Form::default_for(&stage.shape),
         forms: Forms::default(),
+        // A stage look draws the whole organ.
+        inflorescence: None,
     }
 }
 
@@ -1750,6 +1923,23 @@ impl OrganLook {
     /// Describes the first value outside its range.
     pub fn validate(&self) -> Result<(), String> {
         self.shape.validate()?;
+        if let Some(inflorescence) = &self.inflorescence {
+            crate::clusters::Cluster::check(inflorescence)?;
+            if !matches!(
+                self.shape,
+                Shape::Flower(_) | Shape::Head(_) | Shape::Fruit(_)
+            ) {
+                return Err(format!(
+                    "an inflorescence's units are flowers, heads or fruit, found {}",
+                    self.shape.name()
+                ));
+            }
+            if self.solid.is_some() || self.families.is_some() {
+                return Err(
+                    "solid leaves and families are for leaves, not an inflorescence".to_string(),
+                );
+            }
+        }
         for colour in [self.colour, self.shade, self.accent].into_iter().flatten() {
             for channel in colour {
                 within("colours", f64::from(channel), 0.0, 1.0)?;
@@ -1861,6 +2051,7 @@ mod tests {
                         shape: Shape::Simple(Simple::default()),
                     }),
                 }),
+                inflorescence: None,
             },
         )]);
         organs["leaf"].validate().unwrap();
@@ -1984,6 +2175,7 @@ mod tests {
                 form: None,
                 season: None,
                 families: None,
+                inflorescence: None,
             },
         );
         let green = [0.1, 0.3, 0.05];
@@ -2059,11 +2251,7 @@ mod tests {
     fn an_organ_looks_as_it_is_on_the_day() {
         let types = [("leaf", OrganKind::Leaf), ("bloom", OrganKind::Flower)];
         let fruit = |season: Option<Season>| OrganLook {
-            shape: Shape::Fruit(Fruit {
-                count: 6,
-                cluster: Cluster::Umbel,
-                ..Fruit::default()
-            }),
+            shape: Shape::Fruit(Fruit::default()),
             colour: Some([0.6, 0.05, 0.06]),
             shade: None,
             accent: Some([0.45, 0.5, 0.15]),
@@ -2073,6 +2261,11 @@ mod tests {
             form: None,
             season,
             families: None,
+            inflorescence: Some(Inflorescence {
+                kind: Some(ClusterKind::Umbel),
+                flowers: Some(6),
+                ..Inflorescence::default()
+            }),
         };
         let mut organs = BTreeMap::new();
         organs.insert("bloom".to_string(), fruit(Some(cherry())));
@@ -2089,12 +2282,10 @@ mod tests {
         }
         // Gone before its bud shows.
         assert_eq!(on(&organs, 50.0).1[1], 0.0);
-        // A closed bud a third of its flower's size.
+        // A closed bud a third of its flower's size, drawn whole.
         let (looks, sizes) = on(&organs, 100.0);
-        assert!(matches!(
-            looks[1].shape,
-            Shape::Fruit(Fruit { count: 1, .. })
-        ));
+        assert!(matches!(looks[1].shape, Shape::Fruit(_)));
+        assert!(looks[1].inflorescence.is_none());
         assert!((sizes[1] - 0.5 / 3.0).abs() < 1e-12);
         // Its flower look in flower.
         let (looks, sizes) = on(&organs, 120.0);
@@ -2107,7 +2298,13 @@ mod tests {
             panic!("not fruit: {:?}", looks[1].shape);
         };
         assert_eq!(drawn.unripe, 0.5);
-        assert_eq!(drawn.count, 6);
+        // Its cluster's fruit ripen with it.
+        let cluster = looks[1].inflorescence.as_ref().expect("its cluster");
+        assert_eq!(cluster.cluster.flowers, 6);
+        assert!(matches!(
+            cluster.unit,
+            crate::clusters::Unit::Fruit { unripe, .. } if (unripe - 0.5).abs() < 1e-12
+        ));
         assert_eq!(sizes[1], 1.0);
         // Without a day it keeps its own look; without a season too.
         let (looks, sizes) = resolve_on(types, &organs, green, dark, None);

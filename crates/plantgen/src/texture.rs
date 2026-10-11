@@ -633,6 +633,7 @@ pub fn organ_templates(shapes: &[Shape]) -> Templates {
             bend: crate::bend::Bend::FLAT,
             form: crate::blooms::Form::Card,
             forms: crate::looks::Forms::default(),
+            inflorescence: None,
         })
         .collect();
     Templates::for_looks(&looks)

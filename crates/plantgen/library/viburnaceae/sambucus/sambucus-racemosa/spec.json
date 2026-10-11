@@ -86,12 +86,10 @@
       "bloom": {
         "shape": {
           "template": "fruit",
-          "count": 40,
-          "cluster": "head",
-          "size": 0.16,
           "aspect": 1.0,
           "unripe": 0.15
         },
+        "inflorescence": { "kind": "head", "flowers": 40, "size": 0.16 },
         "colour": [0.8, 0.08, 0.06],
         "accent": [0.4, 0.5, 0.15],
         "season": {

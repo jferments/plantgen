@@ -82,12 +82,10 @@
         "shape": {
           "template": "fruit",
           "kind": "drupelets",
-          "count": 8,
-          "size": 0.25,
-          "spread": 40,
           "aspect": 0.85,
           "unripe": 0.8
         },
+        "inflorescence": { "kind": "raceme", "flowers": 8, "size": 0.25, "spread": 40, "pedicel": 0.225 },
         "colour": [0.06, 0.04, 0.06],
         "accent": [0.6, 0.08, 0.08],
         "season": {

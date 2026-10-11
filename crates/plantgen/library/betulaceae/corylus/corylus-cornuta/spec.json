@@ -96,12 +96,9 @@
         "shape": {
           "template": "fruit",
           "kind": "husked",
-          "count": 2,
-          "cluster": "pair",
-          "size": 0.7,
-          "spread": 25,
           "aspect": 0.45
         },
+        "inflorescence": { "kind": "raceme", "flowers": 2, "per_node": 2, "divergence": 90, "pedicel": 0.175, "peduncle": 1, "size": 0.7, "spread": 25 },
         "colour": [0.38, 0.55, 0.18],
         "accent": [0.42, 0.56, 0.2],
         "season": {

@@ -172,7 +172,7 @@ fn part_mesh(looks: &[Look], index: usize, cap: usize) -> Option<PartMesh> {
         shed: None,
         light: 1.0,
     };
-    let (base, heading, left) = crate::mesh::place(&unit, &looks[index]);
+    let (base, heading, left, length) = crate::mesh::place(&unit, &looks[index]);
     let out = left.cross(heading);
     for coarse in 0..=crate::fruit::COARSER {
         let variants: Vec<Mesh> = (0..VARIANTS as u64)
@@ -203,7 +203,7 @@ fn part_mesh(looks: &[Look], index: usize, cap: usize) -> Option<PartMesh> {
                     coarse,
                     &mut mesh,
                 );
-                into_frame(&mut mesh, base, heading, left, out);
+                into_frame(&mut mesh, (base, heading, left, out), length);
                 mesh
             })
             .collect();
@@ -356,9 +356,9 @@ pub fn place(plant: &mut PlantMesh, looks: &[Look], parts: &[PartMesh]) {
 
 /// Express `mesh`, drawn in the organ's frame, in the frame of its card:
 /// base `base`, heading `heading`, left `left` and `out` = left × heading,
-/// one unit long.
+/// `length` long (1, or a cluster's card length).
 #[allow(clippy::cast_possible_truncation)] // meshes hold f32
-fn into_frame(mesh: &mut Mesh, base: Vec3, heading: Vec3, left: Vec3, out: Vec3) {
+fn into_frame(mesh: &mut Mesh, (base, heading, left, out): (Vec3, Vec3, Vec3, Vec3), length: f64) {
     let to_card = |p: Vec3| [p.dot(left), p.dot(heading), p.dot(out)];
     for position in &mut mesh.positions {
         let p = Vec3::new(
@@ -366,7 +366,7 @@ fn into_frame(mesh: &mut Mesh, base: Vec3, heading: Vec3, left: Vec3, out: Vec3)
             f64::from(position[1]),
             f64::from(position[2]),
         ) - base;
-        *position = to_card(p).map(|value| value as f32);
+        *position = to_card(p).map(|value| (value / length) as f32);
     }
     for normal in &mut mesh.normals {
         let n = Vec3::new(
@@ -381,7 +381,8 @@ fn into_frame(mesh: &mut Mesh, base: Vec3, heading: Vec3, left: Vec3, out: Vec3)
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::looks::{Cluster, Flower, Fruit, FruitKind, Needles, Simple};
+    use crate::clusters::{Cluster, ClusterLook};
+    use crate::looks::{ClusterKind, Flower, Fruit, FruitKind, Inflorescence, Needles, Simple};
 
     fn look(shape: Shape) -> Look {
         Look {
@@ -395,7 +396,21 @@ mod tests {
             face_up: 0.0,
             solid: None,
             forms: crate::looks::Forms::default(),
+            inflorescence: None,
         }
+    }
+
+    /// `shape`'s units in a cluster of `flowers` of `kind`.
+    fn clustered(shape: Shape, kind: ClusterKind, flowers: u32) -> Look {
+        let mut look = look(shape);
+        let spec = Inflorescence {
+            kind: Some(kind),
+            flowers: Some(flowers),
+            ..Inflorescence::default()
+        };
+        look.inflorescence = ClusterLook::new(Cluster::of(&spec), &look.shape);
+        assert!(look.inflorescence.is_some());
+        look
     }
 
     #[test]
@@ -403,18 +418,21 @@ mod tests {
         let looks = vec![
             look(Shape::Simple(Simple::default())),
             look(Shape::Flower(Flower::default())),
-            look(Shape::Fruit(Fruit {
-                kind: FruitKind::Drupelets,
-                count: 8,
-                cluster: Cluster::Raceme,
-                unripe: 0.5,
-                ..Fruit::default()
-            })),
+            clustered(
+                Shape::Fruit(Fruit {
+                    kind: FruitKind::Drupelets,
+                    unripe: 0.5,
+                    ..Fruit::default()
+                }),
+                ClusterKind::Raceme,
+                8,
+            ),
+            clustered(Shape::Flower(Flower::default()), ClusterKind::Umbel, 12),
         ];
         let parts = part_meshes(&looks);
         assert_eq!(
             parts.iter().map(|p| p.template).collect::<Vec<_>>(),
-            vec![1, 2]
+            vec![1, 2, 3]
         );
         for part in &parts {
             assert_eq!(part.variants.len(), VARIANTS);
@@ -436,19 +454,28 @@ mod tests {
     #[test]
     fn a_part_put_back_by_its_card_lands_where_the_organ_is() {
         // A flower's card is centred on it and faces along its heading
-        // (Mount::Facing); a fruit's stands on it (Mount::Along). Placed
-        // back by a card of a turned and moved organ, the part
-        // mesh is the organ drawn there.
-        for shape in [
-            Shape::Flower(Flower::default()),
-            Shape::Fruit(Fruit::default()),
-            Shape::Needles(Needles::default()),
-            Shape::Needles(Needles {
+        // (Mount::Facing); a fruit's stands on it (Mount::Along); a
+        // cluster's card is its card frame's. Placed back by a card of a
+        // turned and moved organ, the part mesh is the organ drawn there.
+        for shown in [
+            look(Shape::Flower(Flower::default())),
+            look(Shape::Fruit(Fruit::default())),
+            look(Shape::Needles(Needles::default())),
+            look(Shape::Needles(Needles {
                 ranks: 0,
                 ..Needles::default()
-            }),
+            })),
+            clustered(Shape::Fruit(Fruit::default()), ClusterKind::Raceme, 3),
+            clustered(Shape::Flower(Flower::default()), ClusterKind::Umbel, 4),
+            clustered(Shape::Flower(Flower::default()), ClusterKind::Cyme, 3),
         ] {
-            let looks = vec![look(shape)];
+            // Drawn whole: a part mesh at its finest.
+            assert!(
+                shown.inflorescence.is_none() || crate::clusters::triangles(&shown) <= TRIANGLES,
+                "{}",
+                crate::clusters::triangles(&shown)
+            );
+            let looks = vec![shown];
             let parts = part_meshes(&looks);
             let organ = GraphOrgan {
                 id: crate::rng::mix64(1),
@@ -464,9 +491,8 @@ mod tests {
                 shed: None,
                 light: 1.0,
             };
-            let (base, heading, left) = crate::mesh::place(&organ, &looks[0]);
+            let (base, heading, left, length) = crate::mesh::place(&organ, &looks[0]);
             let out = left.cross(heading);
-            let size = organ.size;
             let graph = PlantGraph {
                 age: 1.0,
                 height: 1.0,
@@ -482,7 +508,7 @@ mod tests {
                     base + (left * f64::from(p[0])
                         + heading * f64::from(p[1])
                         + out * f64::from(p[2]))
-                        * size
+                        * length
                 })
                 .collect();
             assert_eq!(back.len(), drawn.positions.len());
@@ -497,14 +523,14 @@ mod tests {
     fn a_large_cluster_is_drawn_coarser_to_fit() {
         let fruit = Fruit {
             kind: FruitKind::Drupelets,
-            count: 8,
             ..Fruit::default()
         };
+        let cluster = clustered(Shape::Fruit(fruit), ClusterKind::Raceme, 8);
         assert!(
-            crate::fruit::triangles(&blooms::FruitForm::default(), &fruit) > TRIANGLES,
+            crate::clusters::triangles(&cluster) > TRIANGLES,
             "this cluster needs coarsening"
         );
-        let parts = part_meshes(&[look(Shape::Fruit(fruit))]);
+        let parts = part_meshes(&[cluster]);
         assert_eq!(parts.len(), 1);
         assert!(parts[0].triangles() <= TRIANGLES);
     }
@@ -597,12 +623,14 @@ mod tests {
 
     #[test]
     fn part_meshes_are_the_same_every_time() {
-        let looks = vec![look(Shape::Fruit(Fruit {
-            count: 12,
-            cluster: Cluster::Umbel,
-            unripe: 0.3,
-            ..Fruit::default()
-        }))];
+        let looks = vec![clustered(
+            Shape::Fruit(Fruit {
+                unripe: 0.3,
+                ..Fruit::default()
+            }),
+            ClusterKind::Umbel,
+            12,
+        )];
         assert_eq!(part_meshes(&looks), part_meshes(&looks));
     }
 }

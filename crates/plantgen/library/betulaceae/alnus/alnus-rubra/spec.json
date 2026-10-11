@@ -89,11 +89,9 @@
         "shape": {
           "template": "fruit",
           "cone": 1,
-          "count": 5,
-          "size": 0.3,
-          "spread": 30,
           "aspect": 0.55
         },
+        "inflorescence": { "kind": "raceme", "flowers": 5, "size": 0.3, "spread": 30, "pedicel": 0.27 },
         "colour": [0.33, 0.22, 0.12],
         "accent": [0.24, 0.33, 0.12],
         "season": {
