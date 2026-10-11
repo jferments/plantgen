@@ -89,7 +89,20 @@ pub struct ModuleDecl {
 pub struct OrganDecl {
     pub name: String,
     pub kind: (String, Span),
+    /// `as term`: what the organ is (spec rework M7), one of the
+    /// vocabulary's organs or `piece`.
+    pub term: Option<(String, Span)>,
     pub area: Option<Expr>,
+    pub span: Span,
+}
+
+/// `structure name term;`: a structure the turtle opens where its name is
+/// drawn and closes at the end of the branch, such as a fern's frond; the
+/// segments and organs drawn in it are within it (spec rework M7).
+#[derive(Debug, Clone, PartialEq)]
+pub struct StructureDecl {
+    pub name: String,
+    pub term: (String, Span),
     pub span: Span,
 }
 
@@ -119,6 +132,7 @@ pub struct ProgramAst {
     pub modules: Vec<ModuleDecl>,
     pub organs: Vec<OrganDecl>,
     pub bodies: Vec<BodyDecl>,
+    pub structures: Vec<StructureDecl>,
     pub tools: Vec<ToolDecl>,
     pub axiom: Vec<ModuleCall>,
     pub axiom_span: Span,

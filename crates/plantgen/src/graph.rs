@@ -40,6 +40,9 @@ pub struct GraphSegment {
     /// direction of a flattened body such as a pad. Zero for wood.
     #[serde(default)]
     pub left: Vec3,
+    /// The structure it was drawn in ([`PlantGraph::structures`]), if any.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub within: Option<u32>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -57,6 +60,24 @@ pub struct GraphOrgan {
     pub shed: Option<f64>,
     /// Light exposure from 0 (deep shade) to 1 (open sky).
     pub light: f64,
+    /// The structure it was placed in ([`PlantGraph::structures`]), if
+    /// any.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub within: Option<u32>,
+}
+
+/// A structure of the grown plant (spec rework M7): a fern's frond, a
+/// grass leaf. What is drawn in it, segments, organs and structures, is
+/// within it; it is within another, or stands on the axis that bears it.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct GraphStructure {
+    /// Stable identity: the same structure keeps it at every age.
+    pub id: u64,
+    /// Index into [`StructureType`]s of the growth this graph belongs to.
+    pub structure: u16,
+    pub within: Option<u32>,
+    /// Plant age at which it appeared, in years.
+    pub born: f64,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -65,6 +86,19 @@ pub struct OrganType {
     pub kind: OrganKind,
     /// Shading area of a size-1 organ, m².
     pub area: f64,
+    /// What the organ is: one of the vocabulary's organs, or `piece`
+    /// (`crate::organs`). A grown plant knows its program's term only; a
+    /// package gives every type's, its looks' included.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub term: Option<String>,
+}
+
+/// A structure type a program declares: its name and what it is, one of
+/// the vocabulary's organs.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct StructureType {
+    pub name: String,
+    pub term: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -74,6 +108,10 @@ pub struct PlantGraph {
     pub height: f64,
     pub segments: Vec<GraphSegment>,
     pub organs: Vec<GraphOrgan>,
+    /// Its structures, each before the structures within it; none for a
+    /// program that declares none.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub structures: Vec<GraphStructure>,
 }
 
 impl PlantGraph {
@@ -242,6 +280,7 @@ mod tests {
             height: 0.0,
             segments: Vec::new(),
             organs: Vec::new(),
+            structures: Vec::new(),
         };
         assert_eq!(graph.leaf_area(&[]).to_bits(), 0.0_f64.to_bits());
         assert_eq!(graph.crown_radius().to_bits(), 0.0_f64.to_bits());
@@ -266,6 +305,7 @@ mod tests {
             shed: None,
             body: 0,
             left: Vec3::ZERO,
+            within: None,
         };
         let leaf = GraphOrgan {
             id: 2,
@@ -278,12 +318,14 @@ mod tests {
             born: 1.0,
             shed: None,
             light: 1.0,
+            within: None,
         };
         let mut graph = PlantGraph {
             age: 1.0,
             height: 0.5,
             segments: vec![shoot],
             organs: vec![leaf],
+            structures: Vec::new(),
         };
         assert_eq!(graph.crown_base(), None);
         // The same shoot drawn outside brackets is a stem.

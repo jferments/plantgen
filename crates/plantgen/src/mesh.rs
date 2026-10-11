@@ -2390,6 +2390,7 @@ mod tests {
             shed: None,
             body: 0,
             left: Vec3::ZERO,
+            within: None,
         }
     }
 
@@ -2416,8 +2417,10 @@ mod tests {
                     born: 0.0,
                     shed: None,
                     light: 0.5,
+                    within: None,
                 })
                 .collect(),
+            structures: Vec::new(),
         }
     }
 
@@ -2620,6 +2623,7 @@ mod tests {
                     born: 0.0,
                     shed: None,
                     light: 0.5,
+                    within: None,
                 }
             })
             .collect();
@@ -2875,6 +2879,7 @@ mod tests {
                 segment(Some(0), false, up(2.0), up(4.0), 0.25),
             ],
             organs: Vec::new(),
+            structures: Vec::new(),
         }
     }
 
@@ -2978,6 +2983,7 @@ mod tests {
                 0.2,
             )],
             organs: Vec::new(),
+            structures: Vec::new(),
         };
         let mesh = build_plain(&limb, &looks(), &look, &lod(0.0, 0.0, 0.0)).wood;
         let green = |above: bool| -> f32 {
@@ -3004,6 +3010,7 @@ mod tests {
             born: 0.0,
             shed: None,
             light: 1.0,
+            within: None,
         }
     }
 
@@ -3016,6 +3023,7 @@ mod tests {
             height: 1.0,
             segments: Vec::new(),
             organs: vec![organ(heading, left)],
+            structures: Vec::new(),
         };
         build_plain(&graph, &looks, &appearance, &lod(0.0, 0.0, 0.0)).cards
     }
@@ -3075,6 +3083,7 @@ mod tests {
                 leaf(0.05, 8.0),
                 leaf(0.3, 2.0),
             ],
+            structures: Vec::new(),
         };
         let cards = build_plain(&graph, &looks, &appearance, &lod(0.0, 0.0, 0.0)).cards;
         let template = |at: usize| usize::from(cards[at].template);

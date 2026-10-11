@@ -466,6 +466,83 @@ fn part_meshes_and_sites_read_back() {
 }
 
 #[test]
+fn a_grass_knows_which_pieces_make_each_leaf() {
+    // Spec rework M7: a grass draws each blade within a `leaf` structure;
+    // its graph is APGRAPH2 and reads back whole, and the manifest says
+    // what each organ type is.
+    let mut spec = PlantSpec::builtin("festuca-roemeri").unwrap();
+    spec.growth.years = 3.0;
+    spec.growth.keyframes = vec![3.0];
+    spec.variants.environments = vec![Environment::Open];
+    spec.variants.seeds = vec![1];
+    spec.allometry = Vec::new();
+    let built = package::build(&Inputs::new(&spec, &TINY).unwrap(), 2, &mut |_| {}).unwrap();
+    let manifest = &built.manifest;
+    assert_eq!(
+        manifest
+            .structure_types
+            .iter()
+            .map(|kind| (kind.name.as_str(), kind.term.as_str()))
+            .collect::<Vec<_>>(),
+        [("leaf", "leaf")]
+    );
+    assert_eq!(
+        manifest
+            .organ_types
+            .iter()
+            .map(|kind| (kind.name.as_str(), kind.term.as_deref().unwrap()))
+            .collect::<Vec<_>>(),
+        [
+            ("blade", "piece"),
+            ("blade_tip", "piece"),
+            ("thatch", "piece"),
+            ("panicle", "inflorescence")
+        ]
+    );
+    let bytes = &built.objects[&manifest.variants[0].keyframes[0].graph];
+    assert_eq!(&bytes[..8], b"APGRAPH2");
+    let graph = package::decode_graph(bytes).unwrap();
+    assert_eq!(&package::encode_graph(&graph), bytes);
+    assert!(!graph.structures.is_empty());
+    let mut pieces = vec![0; graph.structures.len()];
+    for organ in &graph.organs {
+        match manifest.organ_types[usize::from(organ.organ)].name.as_str() {
+            "panicle" => assert_eq!(organ.within, None),
+            _ => pieces[organ.within.expect("a piece of a leaf") as usize] += 1,
+        }
+    }
+    // Every leaf is its pieces and tip, or its thatch without the tip.
+    assert!(
+        pieces.iter().all(|&count| (5..=6).contains(&count)),
+        "{pieces:?}"
+    );
+
+    // Damage: a part within a structure past the last, and one byte short.
+    let mut past = bytes.clone();
+    let last = past.len() - 4;
+    past[last..].copy_from_slice(&u32::try_from(graph.structures.len()).unwrap().to_le_bytes());
+    let error = package::decode_graph(&past).unwrap_err();
+    assert!(error.to_string().contains("within structure"), "{error}");
+    assert!(package::decode_graph(&bytes[..bytes.len() - 1]).is_err());
+    // A plant without structures keeps writing APGRAPH1.
+    let plain = plantgen::graph::PlantGraph {
+        structures: Vec::new(),
+        organs: graph
+            .organs
+            .iter()
+            .map(|organ| plantgen::graph::GraphOrgan {
+                within: None,
+                ..organ.clone()
+            })
+            .collect(),
+        ..graph.clone()
+    };
+    let encoded = package::encode_graph(&plain);
+    assert_eq!(&encoded[..8], b"APGRAPH1");
+    assert_eq!(package::decode_graph(&encoded).unwrap(), plain);
+}
+
+#[test]
 fn decoders_reject_damaged_objects() {
     let spec = small_spec();
     let inputs = Inputs::new(&spec, &TINY).unwrap();

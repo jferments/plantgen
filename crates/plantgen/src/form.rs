@@ -219,6 +219,7 @@ mod tests {
                     born: 0.0,
                     shed: None,
                     light: 1.0,
+                    within: None,
                 });
             }
         }
@@ -227,6 +228,7 @@ mod tests {
             height: 12.0,
             segments: Vec::new(),
             organs,
+            structures: Vec::new(),
         }
     }
 
@@ -236,6 +238,7 @@ mod tests {
             name: "leaf".into(),
             kind: OrganKind::Leaf,
             area: 0.3,
+            term: None,
         }];
         let orb = measure(
             &crown(|h| 5.0 * math::sqrt(1.0 - (2.0 * h - 1.0).powi(2))),

@@ -28,9 +28,12 @@
 # a year, a new crown appears rhizome metres away, at most `crowns` of them
 # (bracken runs far; a tufted fern makes a clump a few crowns wide).
 #
+# Revision 2 (spec rework M7): each frond is drawn within a `frond`
+# structure, and its pinnae are leaflets of it.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem fern 1;
+lsystem fern 2;
 
 param vigour_spread = 0.12;   # a fern grows exp(gauss() * vigour_spread) times as fast
 # Fronds.
@@ -77,7 +80,9 @@ module Pn(k, s, e, h);        # a pair of pinnae h of a piece along piece k
 module Pq(z);                 # a pair of pinnae z long
 module Cn(n);                 # a new crown on its rhizome, the n-th
 
-organ pinna leaf area pinna_area;
+organ pinna leaf as leaflet area pinna_area;
+
+structure frond leaf;         # one frond: its rachis and its pinnae
 
 axiom /(uniform(0, 360)) Y(exp(gauss() * vigour_spread), 0);
 
@@ -97,11 +102,12 @@ decompose Fc(i, m, c) -> ;
 
 # A frond dies after frond_life years; its rachis pieces with it.
 rule Pc(k, m, s, e) : age >= frond_life -> ;
+rule frond : age >= frond_life -> ;
 
 # A frond: it opens from the vertical with age and sags as it ages, then its
 # rachis, piece by piece.
 decompose Fr(s, a, e) ->
-    !(frond_radius) Pc(0, max(1, round(pieces)), s, e);
+    frond !(frond_radius) Pc(0, max(1, round(pieces)), s, e);
 decompose Pc(k, m, s, e) : m > 1 ->
     Pc(k, floor(m / 2), s, e) Pc(k + floor(m / 2), m - floor(m / 2), s, e);
 

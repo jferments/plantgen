@@ -1962,6 +1962,7 @@ mod tests {
             shed: None,
             body: 1,
             left: Vec3::X,
+            within: None,
         }
     }
 
@@ -1986,6 +1987,7 @@ mod tests {
             height,
             segments,
             organs: Vec::new(),
+            structures: Vec::new(),
         }
     }
 

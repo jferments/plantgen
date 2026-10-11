@@ -3054,12 +3054,14 @@ mod tests {
             born: 0.0,
             shed: None,
             light: 1.0,
+            within: None,
         };
         let graph = crate::graph::PlantGraph {
             age: 5.0,
             height: 2.0,
             segments: Vec::new(),
             organs: vec![organ(0, 0.1), organ(1, 0.04), organ(2, 0.2)],
+            structures: Vec::new(),
         };
         assert!(staged(&graph, &[1.0, 1.0, 1.0]).is_none());
         let drawn = staged(&graph, &[1.0, 0.0, 0.5]).unwrap();

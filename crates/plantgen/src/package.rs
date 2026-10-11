@@ -29,7 +29,7 @@
 //! | kind | format |
 //! |------|--------|
 //! | `program` | the plant program's UTF-8 source |
-//! | `graph` | one keyframe's [`PlantGraph`], `APGRAPH1` (below) |
+//! | `graph` | one keyframe's [`PlantGraph`], `APGRAPH1`, or `APGRAPH2` for a plant with structures (below) |
 //! | `mesh` | one level of detail, `APMESH1` (below) |
 //! | `impostor-albedo` | PNG, sRGB colour with coverage in alpha |
 //! | `impostor-normal-depth` | PNG, world normal · 0.5 + 0.5, depth in alpha |
@@ -51,6 +51,19 @@
 //! bodies:  u32 count B, then B × (u32 segment, f32×3 left), in segment
 //!          order; absent when no segment is a body, so a plant without
 //!          bodies has the bytes it had before bodies existed
+//! ```
+//!
+//! A graph that holds structures (spec rework M7: a fern's fronds, a
+//! grass's leaves) is `APGRAPH2`: the same, with the bodies' count always
+//! present (0 for none), then its structures, each after any it is
+//! within, and the structure each segment and each organ is within. A
+//! plant without structures is written `APGRAPH1`, with the bytes it had
+//! before structures existed.
+//!
+//! ```text
+//! structures: u32 count S, then S × (u64 id, u16 structure type, u16 0,
+//!             u32 within (0xFFFFFFFF: none), f32 born)
+//! within:     u32 per segment, then u32 per organ (0xFFFFFFFF: none)
 //! ```
 //!
 //! A mesh is the magic, then the wood and then the organ cards, each as one
@@ -102,7 +115,9 @@ use sha2::{Digest, Sha256};
 
 use crate::body::BodyLook;
 use crate::cores;
-use crate::graph::{GraphOrgan, GraphSegment, OrganType, PlantGraph};
+use crate::graph::{
+    GraphOrgan, GraphSegment, GraphStructure, OrganType, PlantGraph, StructureType,
+};
 use crate::grow::{Growth, GrowthSettings, GrowthStats, grow};
 use crate::impostor;
 use crate::json;
@@ -130,6 +145,8 @@ pub const EXTENSION: &str = "afterplant";
 pub const MANIFEST: &str = "manifest.json";
 pub const OBJECTS: &str = "objects";
 pub const GRAPH_MAGIC: [u8; 8] = *b"APGRAPH1";
+/// The magic of a graph that holds structures (spec rework M7).
+pub const GRAPH_MAGIC_STRUCTURES: [u8; 8] = *b"APGRAPH2";
 pub const MESH_MAGIC: [u8; 8] = *b"APMESH1\0";
 pub const PARTS_MAGIC: [u8; 8] = *b"APPARTS2";
 /// The level of detail impostors are rendered from.
@@ -141,6 +158,7 @@ const GRAPH_HEADER: usize = 24;
 const SEGMENT_BYTES: usize = 52;
 const ORGAN_BYTES: usize = 68;
 const BODY_LEFT_BYTES: usize = 16;
+const STRUCTURE_BYTES: usize = 20;
 const NONE: u32 = u32::MAX;
 
 /// A package that could not be built, written or read.
@@ -460,6 +478,10 @@ pub struct Manifest {
     /// has two templates after the organs' in the atlas.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub body_types: Vec<String>,
+    /// The program's structure types, in declaration order (spec rework
+    /// M7); none for a program that declares none.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub structure_types: Vec<StructureType>,
     pub organ_atlas: AtlasRecord,
     /// Part meshes, when any organ type has one.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -1122,6 +1144,30 @@ pub fn build(
         })
         .collect::<Result<Vec<_>, _>>()?;
 
+    // What each organ and structure is within must be something it is part
+    // of (spec rework M7).
+    let organ_types = organ_types(&program, &inputs.looks, &grown);
+    for (variant, growth) in variants.iter().zip(&grown) {
+        let organs: Vec<(&str, &str)> = organ_types
+            .iter()
+            .map(|kind| (kind.name.as_str(), kind.term.as_deref().unwrap_or_default()))
+            .collect();
+        let structures: Vec<(&str, &str)> = growth
+            .structure_types
+            .iter()
+            .map(|kind| (kind.name.as_str(), kind.term.as_str()))
+            .collect();
+        for graph in &growth.keyframes {
+            let found = crate::organs::disagreements(graph, &organs, &structures);
+            if !found.is_empty() {
+                return Err(PackageError::Growth {
+                    variant: format!("{} {}", spec.id, label(variant)),
+                    message: format!("at {} years, {}", graph.age, found.join("; ")),
+                });
+            }
+        }
+    }
+
     let validation = variants
         .iter()
         .zip(&grown)
@@ -1136,7 +1182,34 @@ pub fn build(
         .into_iter()
         .map(|(job, result)| result.map(|baked| (job, baked)))
         .collect::<Result<Vec<_>, _>>()?;
-    assemble(inputs, &program, &variants, &grown, baked, validation)
+    assemble(
+        inputs,
+        &program,
+        &variants,
+        &grown,
+        organ_types,
+        baked,
+        validation,
+    )
+}
+
+/// The organ types as a package gives them: a growth's, each with its
+/// term from the program, its look or its kind (`crate::organs`).
+fn organ_types(program: &Program, looks: &[Look], grown: &[Growth]) -> Vec<OrganType> {
+    let kinds: Vec<_> = program.organs().map(|(_, kind)| kind).collect();
+    let explicit: Vec<_> = program.organ_terms().collect();
+    let terms = crate::organs::terms(&kinds, &explicit, looks);
+    grown
+        .first()
+        .map(|growth| growth.organ_types.clone())
+        .unwrap_or_default()
+        .into_iter()
+        .zip(terms)
+        .map(|(kind, term)| OrganType {
+            term: Some(term.to_string()),
+            ..kind
+        })
+        .collect()
 }
 
 /// Baked keyframes by variant and keyframe index, as they finish.
@@ -1235,11 +1308,13 @@ impl Work<'_> {
 
 /// The package from its grown variants and baked keyframes, each keyframe
 /// with its variant's and keyframe's index.
+#[allow(clippy::too_many_arguments)]
 fn assemble(
     inputs: &Inputs,
     program: &Program,
     variants: &[Variant],
     grown: &[Growth],
+    organ_types: Vec<OrganType>,
     baked: Vec<((usize, usize), BakedKeyframe)>,
     validation: Vec<ValidationRecord>,
 ) -> Result<Package, PackageError> {
@@ -1292,11 +1367,12 @@ fn assemble(
             revision: program.revision,
             object: program_object,
         },
-        organ_types: grown
-            .first()
-            .map(|growth| growth.organ_types.clone())
-            .unwrap_or_default(),
+        organ_types,
         body_types: program.bodies().map(str::to_string).collect(),
+        structure_types: grown
+            .first()
+            .map(|growth| growth.structure_types.clone())
+            .unwrap_or_default(),
         organ_atlas: AtlasRecord {
             object: atlas_object,
             width: *atlas_width,
@@ -1728,13 +1804,19 @@ impl<'a> Reader<'a> {
     }
 }
 
-/// Encode a keyframe graph as `APGRAPH1`.
+/// Encode a keyframe graph: `APGRAPH1`, or `APGRAPH2` when it holds
+/// structures.
 #[must_use]
 pub fn encode_graph(graph: &PlantGraph) -> Vec<u8> {
+    let structures = !graph.structures.is_empty();
     let mut out = Writer(Vec::with_capacity(
         GRAPH_HEADER + graph.segments.len() * SEGMENT_BYTES + graph.organs.len() * ORGAN_BYTES,
     ));
-    out.bytes(&GRAPH_MAGIC);
+    out.bytes(if structures {
+        &GRAPH_MAGIC_STRUCTURES
+    } else {
+        &GRAPH_MAGIC
+    });
     out.real(graph.age);
     out.real(graph.height);
     out.count(graph.segments.len());
@@ -1770,23 +1852,43 @@ pub fn encode_graph(graph: &PlantGraph) -> Vec<u8> {
         .enumerate()
         .filter(|(_, segment)| segment.body != 0)
         .collect();
-    if !bodies.is_empty() {
+    if !bodies.is_empty() || structures {
         out.count(bodies.len());
         for (index, segment) in bodies {
             out.count(index);
             out.vec3(segment.left);
         }
     }
+    if structures {
+        out.count(graph.structures.len());
+        for structure in &graph.structures {
+            out.u64(structure.id);
+            out.u16(structure.structure);
+            out.u16(0);
+            out.u32(structure.within.unwrap_or(NONE));
+            out.real(structure.born);
+        }
+        for within in graph
+            .segments
+            .iter()
+            .map(|segment| segment.within)
+            .chain(graph.organs.iter().map(|organ| organ.within))
+        {
+            out.u32(within.unwrap_or(NONE));
+        }
+    }
     out.0
 }
 
-/// Decode an `APGRAPH1` graph. Values come back at 32-bit precision.
+/// Decode an `APGRAPH1` or `APGRAPH2` graph. Values come back at 32-bit
+/// precision.
 ///
 /// # Errors
 ///
 /// Fails on a wrong magic, a wrong length, a parent that does not come
-/// before its child, a segment index out of range, or a body section that
-/// does not list exactly the body segments in order.
+/// before its child, a segment index out of range, a body section that
+/// does not list exactly the body segments in order, or a structure that
+/// does not exist or is within one that does not come before it.
 #[allow(clippy::too_many_lines)]
 pub fn decode_graph(bytes: &[u8]) -> Result<PlantGraph, PackageError> {
     let mut input = Reader {
@@ -1794,8 +1896,10 @@ pub fn decode_graph(bytes: &[u8]) -> Result<PlantGraph, PackageError> {
         at: 0,
         what: "graph",
     };
-    if input.array::<8>()? != GRAPH_MAGIC {
-        return Err(format_error("not an APGRAPH1 graph"));
+    let magic = input.array::<8>()?;
+    let structures = magic == GRAPH_MAGIC_STRUCTURES;
+    if magic != GRAPH_MAGIC && !structures {
+        return Err(format_error("not an APGRAPH1 or APGRAPH2 graph"));
     }
     let age = input.real()?;
     let height = input.real()?;
@@ -1807,10 +1911,12 @@ pub fn decode_graph(bytes: &[u8]) -> Result<PlantGraph, PackageError> {
         .and_then(|(a, b)| a.checked_add(b))
         .and_then(|body| body.checked_add(GRAPH_HEADER));
     // A plant with bodies adds a count and a left vector per body segment;
-    // the count itself is checked when the section is read.
+    // the count itself is checked when the section is read. One with
+    // structures is checked as its sections are read.
     let fits = expected.is_some_and(|base| {
         bytes.len() == base
-            || (bytes.len() >= base + 4 && (bytes.len() - base - 4).is_multiple_of(BODY_LEFT_BYTES))
+            || (bytes.len() >= base + 4
+                && (structures || (bytes.len() - base - 4).is_multiple_of(BODY_LEFT_BYTES)))
     });
     if !fits {
         return Err(format_error(format!(
@@ -1823,6 +1929,7 @@ pub fn decode_graph(bytes: &[u8]) -> Result<PlantGraph, PackageError> {
         height,
         segments: Vec::with_capacity(segments),
         organs: Vec::with_capacity(organs),
+        structures: Vec::new(),
     };
     for index in 0..segments {
         let id = input.u64()?;
@@ -1847,6 +1954,7 @@ pub fn decode_graph(bytes: &[u8]) -> Result<PlantGraph, PackageError> {
             shed: input.shed()?,
             body,
             left: Vec3::ZERO,
+            within: None,
         });
     }
     for index in 0..organs {
@@ -1870,6 +1978,7 @@ pub fn decode_graph(bytes: &[u8]) -> Result<PlantGraph, PackageError> {
             born: input.real()?,
             shed: input.shed()?,
             light: input.real()?,
+            within: None,
         });
     }
     let body_segments: Vec<usize> = graph
@@ -1879,7 +1988,7 @@ pub fn decode_graph(bytes: &[u8]) -> Result<PlantGraph, PackageError> {
         .filter(|(_, segment)| segment.body != 0)
         .map(|(index, _)| index)
         .collect();
-    if input.at < bytes.len() || !body_segments.is_empty() {
+    if input.at < bytes.len() || !body_segments.is_empty() || structures {
         let count = input.u32()? as usize;
         if count != body_segments.len() {
             return Err(format_error(format!(
@@ -1897,8 +2006,63 @@ pub fn decode_graph(bytes: &[u8]) -> Result<PlantGraph, PackageError> {
             graph.segments[index].left = input.vec3()?;
         }
     }
+    if structures {
+        read_structures(&mut input, &mut graph)?;
+    }
     input.finish()?;
     Ok(graph)
+}
+
+/// An `APGRAPH2` graph's structures, and what each segment and organ is
+/// within.
+fn read_structures(input: &mut Reader<'_>, graph: &mut PlantGraph) -> Result<(), PackageError> {
+    let count = input.u32()? as usize;
+    let left = input.bytes.len() - input.at;
+    let parts = graph.segments.len() + graph.organs.len();
+    if count
+        .checked_mul(STRUCTURE_BYTES)
+        .and_then(|size| size.checked_add(parts * 4))
+        != Some(left)
+    {
+        return Err(format_error(format!(
+            "a graph's {count} structures and {parts} segments and organs cannot take {left} bytes"
+        )));
+    }
+    graph.structures.reserve(count);
+    for index in 0..count {
+        let id = input.u64()?;
+        let structure = input.u16()?;
+        input.u16()?;
+        let within = input.index()?;
+        if within.is_some_and(|within| within as usize >= index) {
+            return Err(format_error(format!(
+                "structure {index} is within one that does not come before it"
+            )));
+        }
+        graph.structures.push(GraphStructure {
+            id,
+            structure,
+            within,
+            born: input.real()?,
+        });
+    }
+    let mut within = || -> Result<Option<u32>, PackageError> {
+        let within = input.index()?;
+        if within.is_some_and(|within| within as usize >= count) {
+            return Err(format_error(format!(
+                "a part is within structure {} of {count}",
+                within.unwrap_or_default()
+            )));
+        }
+        Ok(within)
+    };
+    for segment in &mut graph.segments {
+        segment.within = within()?;
+    }
+    for organ in &mut graph.organs {
+        organ.within = within()?;
+    }
+    Ok(())
 }
 
 impl Writer {

@@ -24,9 +24,11 @@
 # thornless (thorns 0), always in leaf (leafy 1), with their leaves only
 # above the share leaf_from of a full cane's length.
 #
+# Revision 2 (spec rework M7): a thorn is a spine, not a leaf.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem cane 1;
+lsystem cane 2;
 
 param vigour_spread = 0.12;
 param canes = 30;             # canes in a mature clump
@@ -64,7 +66,7 @@ module Lf(u);                 # the leaves at a node at the share u of a full ca
 module Cb;                    # a cane's foot: it dies after cane_life years
 module Pn(i, m);              # flowers i to i + m - 1 of a cane's panicle
 
-organ thorn leaf area thorn_area;
+organ thorn leaf as spine area thorn_area;
 organ leaf leaf area leaf_area;
 organ flower flower area flower_area;
 
