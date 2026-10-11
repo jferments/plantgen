@@ -13,6 +13,7 @@
 //!            | ( "rule" | "decompose" | "interpret" ) name [ "(" names ")" ]
 //!                  [ ":" expr ] [ "weight" expr ] "->" { item } ";"
 //! item       = ( name | turtle ) [ "(" [ expr { "," expr } ] ")" ]
+//!            | "ring" "(" expr ")" ( "[" { item } "]" | name "(" expr { "," expr } ")" )
 //! turtle     = "[" | "]" | "+" | "-" | "&" | "^" | "/" | "\" | "|" | "$" | "!" | "%"
 //! expr       = or [ "?" expr ":" expr ]
 //! or         = and { "||" and }
@@ -27,6 +28,10 @@
 //!
 //! Inside an expression `^` is a power and `/` a division; between modules
 //! they are the pitch-up and roll commands.
+//!
+//! A ring, `ring(n)` before a bracket or before an organ that carries its
+//! own turn, is read as the items it is written as; the compiler gathers
+//! them (`super::program::Ring`).
 
 use super::ProgramError;
 use super::ast::{

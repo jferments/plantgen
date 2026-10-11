@@ -23,7 +23,7 @@
       "stem_radius": 0.0015,
       "wiggle": 2,
       "nodes": 1,
-      "opposite": 1,
+      "leaves_per_node": 2,
       "bare": 0.7,
       "leaf_length": 0.1,
       "leaf_peak": 0.5,

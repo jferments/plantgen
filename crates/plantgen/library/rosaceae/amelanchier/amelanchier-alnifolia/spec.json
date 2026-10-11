@@ -40,7 +40,7 @@
       "pipe_rings": 3e-06,
       "space_reach": 1.19,
       "space_kill": 0.294,
-      "alternate": 1,
+      "leaves_per_node": 1,
       "leaf_size": 0.1,
       "spur_leaf": 0.09,
       "spur_pairs": 1,

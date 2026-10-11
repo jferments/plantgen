@@ -2,5 +2,21 @@
   "schema": 1,
   "rank": "family",
   "name": "Typhaceae",
-  "parent": "order/poales"
+  "parent": "order/poales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": "distichous"
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz's description of the family: the leaves are alternate."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz's description of the family: the leaves are distichous, in two ranks."
+    }
+  }
 }

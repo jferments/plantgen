@@ -12,9 +12,15 @@
 # a step, and the blade tapers to its tip. A blade bends down at every
 # joint and twists a little.
 #
+# Revision 2 (phyllotaxis P1): a tiller's blades and a culm's leaves turn
+# divergence degrees from one to the next (180: two ranks, as in grasses;
+# 120: three, as in sedges), the name every leaf-bearing program shares,
+# which the rules at the vascular plants set from a taxon's
+# phyllotaxis_pattern.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem grass 1;
+lsystem grass 2;
 
 param tillers = 80;           # living tillers in a mature tussock
 param tiller_rate = 0.5;      # cohort size: tillers * (1 - exp(-tiller_rate * age))
@@ -24,6 +30,7 @@ param leaves = 3;             # blades on a tiller, give or take one
 param leaf_length = 0.35;     # mean blade length at maturity
 param leaf_spread = 0.3;      # blades are leaf_length * (1 ± leaf_spread)
 param leaf_angle = 18;        # mean angle of a blade to its tiller at the base
+param divergence = 180;       # roll from one blade or culm leaf to the next
 param arch = 10;              # mean degrees a blade bends down at each joint
 param twist = 6;              # spread of the random roll at each joint
 param pieces = 6;             # pieces in a blade, its tip included
@@ -83,7 +90,7 @@ decompose Ts(k, m, n) : m == 1 ->
 decompose Ts(k, m, n) -> ;
 
 decompose Lv(j) : j > 0 ->
-    [ /(j * 180 + uniform(-40, 40)) &(leaf_angle * uniform(0.4, 1.6)) $
+    [ /(j * divergence + uniform(-40, 40)) &(leaf_angle * uniform(0.4, 1.6)) $
       Bl(leaf_length * (1 - exp(-t / maturity)) * uniform(1 - leaf_spread, 1 + leaf_spread),
          arch * uniform(0.5, 1.5)) ]
     Lv(j - 1);
@@ -104,7 +111,7 @@ decompose Fl : t >= flower_age && rand() < flowering ->
          culm_leaves) ];
 decompose Fl -> ;
 decompose Cu(s, j) : j > 0 ->
-    F(s) [ /(j * 180 + uniform(-30, 30)) &(leaf_angle * 1.5) $
+    F(s) [ /(j * divergence + uniform(-30, 30)) &(leaf_angle * 1.5) $
            Bl(leaf_length * (1 - exp(-t / maturity)) * uniform(0.35, 0.6), arch) ]
     Cu(s, j - 1);
 decompose Cu(s, j) -> F(s) &(panicle_nod * uniform(0.5, 1.5))

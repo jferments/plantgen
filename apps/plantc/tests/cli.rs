@@ -74,7 +74,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let seed_plants = "(clade Spermatophyta: _ranks/clade/spermatophyta.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (11):\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n"
+            "Rules, by their home (13):\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n"
         )),
         "{built_in}"
     );
@@ -87,6 +87,13 @@ fn rules_and_traits_say_where_they_come_from() {
     assert!(
         built_in
             .contains("\n  generator.params.leaf_length  (family Poaceae: poaceae/family.json)\n"),
+        "{built_in}"
+    );
+    // Leaf arrangement, homed at the vascular plants.
+    assert!(
+        built_in.contains(
+            "\n  generator.params.leaves_per_node  (phylum Tracheophyta: _ranks/phylum/tracheophyta.json)\n"
+        ),
         "{built_in}"
     );
     assert!(
@@ -106,20 +113,20 @@ fn rules_and_traits_say_where_they_come_from() {
         r#"{"schema": 1, "rank": "family", "name": "Sapindaceae",
             "evidence": {"traits.leaf_arrangement": {"evidence": "Authored",
                     "source": "plantgen-authors", "note": "Maples' leaves are opposite."},
-                "rules.generator.params.alternate": {"evidence": "Authored",
+                "rules.generator.params.leaves_per_node": {"evidence": "Authored",
                     "source": "plantgen-authors", "note": "Opposite leaves come in pairs."}},
             "traits": {"leaf_arrangement": "opposite"},
-            "rules": {"generator.params.alternate": {
-                "map": {"leaf_arrangement": {"alternate": 1, "opposite": 0}},
+            "rules": {"generator.params.leaves_per_node": {
+                "map": {"leaf_arrangement": {"alternate": 1, "opposite": 2}},
                 "why": "opposite leaves, one pair at each node"}}}"#,
     )
     .unwrap();
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
-    assert!(rules.starts_with("Rules, by their home (12):\n"), "{rules}");
+    assert!(rules.starts_with("Rules, by their home (14):\n"), "{rules}");
     assert!(
         rules.contains(
-            "\n  generator.params.alternate  (family Sapindaceae: sapindaceae/family.json)\n"
+            "\n  generator.params.leaves_per_node  (family Sapindaceae: sapindaceae/family.json)\n"
         ),
         "{rules}"
     );
@@ -129,7 +136,7 @@ fn rules_and_traits_say_where_they_come_from() {
         "{spec}"
     );
     assert!(
-        spec.contains("rules:\n  generator.params.alternate  (sapindaceae/family.json): "),
+        spec.contains("rules:\n  generator.params.leaves_per_node  (sapindaceae/family.json): "),
         "{spec}"
     );
 }

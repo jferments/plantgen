@@ -23,7 +23,7 @@
       "wiggle": 1,
       "bare": 0.15,
       "nodes": 18,
-      "whorl": 16,
+      "leaves_per_node": 16,
       "leaf_length": 0.14,
       "leaf_peak": 0.35,
       "leaf_top": 0.3,

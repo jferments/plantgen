@@ -16,9 +16,12 @@
 #   making shoots and starves.
 # - Short shoots live for decades (spur years) while they have light.
 #
+# Revision 2 (phyllotaxis P1): its pairs turn by broadleaf's divergence
+# and stand for leaves_per_node 2 or more, as broadleaf's do.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem sapindaceae 1 extends broadleaf;
+lsystem sapindaceae 2 extends broadleaf;
 
 param bud_years = 30;
 param crown_widest = 0.45;      # share of the crown's depth where it is widest
@@ -72,7 +75,7 @@ tool space@2 {
 rule A(split) : blooms > 0 && t >= bloom_age && split <= 0 && vigour >= 1 && space > 0
                 && light >= spur_light && (life <= 0 || t < life) && rand() < terminal_bloom ->
     steer(sx, sy, sz, steer_weight) M(min(floor(vigour), max_shoot))
-    Bo(blooms) /(90) [ &(twin_angle) S A(0) ] [ /(180) &(twin_angle) S A(0) ];
+    Bo(blooms) /(divergence) [ &(twin_angle) S A(0) ] [ /(180) &(twin_angle) S A(0) ];
 
 # A shoot tip with no free space before it aborts with the chance
 # apex_death a year. Without it a tip in good light that cannot grow lives
@@ -87,7 +90,7 @@ axiom !(0.004) T(wind, rise > 0 ? 1 : -1, 0, rise > 0 ? rise : droop + wind_bend
       /(uniform(0, 360)) &(uniform(0, lean)) A(fork_height * uniform(0.7, 1.3));
 
 # A short shoot's yearly leaves, turned by its age rather than by a roll
-# left behind each year (broadleaf's `P` leaves one `/(90)` a year, which
+# left behind each year (broadleaf's `P` leaves one `/(divergence)` a year, which
 # piles up over centuries). Leaves and blooms carry their own turn
 # (`leaf(size, roll, pitch, level)`), one module each where
 # `[ /(roll) &(pitch) $ leaf(size) ]` takes five: an old maple holds about
@@ -103,7 +106,7 @@ rule B : light >= spur_light && blooms > 0 && t >= bloom_age -> Q(spur_pairs, ag
 rule B : light >= spur_light -> Q(spur_pairs, age) B;
 
 decompose Q(n, a) : n > 0 ->
-    leaf(spur_leaf, 90 * a, leaf_angle, 1) leaf(spur_leaf, 90 * a + 180, leaf_angle, 1)
+    leaf(spur_leaf, divergence * a, leaf_angle, 1) leaf(spur_leaf, divergence * a + 180, leaf_angle, 1)
     Q(n - 1, a + 1);
 decompose Q(n, a) -> ;
 
@@ -132,12 +135,12 @@ param sprout_light = 0.25;
 param dormant_angle = 60;
 module D queries light, space;
 
-decompose M(n) : n > 0 && alternate <= 0 && thorns <= 0 ->
+decompose M(n) : n > 0 && leaves_per_node >= 2 && thorns <= 0 ->
     ^(gauss() * wiggle) +(gauss() * wiggle) F(internode)
     [ &(branch_angle) S B ] [ /(180) &(branch_angle) S B ]
     leaf(leaf_size, 0, leaf_angle, 1) leaf(leaf_size, 180, leaf_angle, 1)
     [ /(90) &(dormant_angle) D ]
-    /(90) M(n - 1);
+    /(divergence) M(n - 1);
 
 rule D : age >= dormant_years -> ;
 rule D : light >= sprout_light && space > 0 -> S A(0);

@@ -1710,7 +1710,8 @@ mod tests {
 
     /// The parameters rules are checked against and read, from the
     /// programs' text, are those the compiled programs have, with their
-    /// defaults.
+    /// defaults where the text writes them as numbers; a default worked
+    /// out from other parameters reads as none.
     #[test]
     fn program_parameters_are_the_compiled_programs() {
         let library = Library::builtin();
@@ -1718,14 +1719,25 @@ mod tests {
         for (name, params) in library.program_params() {
             let program = crate::lsys::Program::compile(library.program(name).unwrap()).unwrap();
             let defaults = program.resolve_params(&BTreeMap::new()).unwrap();
-            let compiled: BTreeMap<String, Option<f64>> = program
+            let compiled: BTreeMap<&String, f64> = program
                 .params
                 .iter()
+                .map(|param| &param.name)
                 .zip(defaults)
-                .map(|(param, default)| (param.name.clone(), Some(default)))
                 .collect();
-            assert_eq!(params, &compiled, "{name}");
+            assert!(params.keys().eq(compiled.keys().copied()), "{name}");
+            for (param, default) in params {
+                if let Some(default) = default {
+                    assert!((default - compiled[param]).abs() < 1e-12, "{name}: {param}");
+                }
+            }
         }
+        // herb's `divergence` follows `leaves_per_node`.
+        assert_eq!(library.program_params()["herb"]["divergence"], None);
+        assert_eq!(
+            library.program_params()["herb"]["leaves_per_node"],
+            Some(1.0)
+        );
     }
 
     /// The paths of a JSON value's leaves (an array is one) and their
@@ -2619,8 +2631,8 @@ mod tests {
                     "generator.params.space_density": {
                         "rule": "clamp(8 * pow(0.15 / leaf_length_m, 0.75), 5, 60)",
                         "why": "Corner's rules"},
-                    "generator.params.alternate": {
-                        "map": {"leaf_arrangement": {"alternate": 1, "opposite": 0}}}}}"#,
+                    "generator.params.leaves_per_node": {
+                        "map": {"leaf_arrangement": {"alternate": 1, "opposite": 2}}}}}"#,
         );
         // A maple of the folder's own that leaves both to the family.
         let mut own: serde_json::Value = serde_json::from_str(source("acer-circinatum")).unwrap();
@@ -2628,7 +2640,7 @@ mod tests {
         own["taxon"]["scientific_name"] = "Acer test".into();
         let params = own["generator"]["params"].as_object_mut().unwrap();
         params.remove("space_density");
-        params.remove("alternate");
+        params.remove("leaves_per_node");
         folder.write(
             "library/sapindaceae/acer/acer-test/spec.json",
             &serde_json::to_string_pretty(&own).unwrap(),
@@ -2639,7 +2651,7 @@ mod tests {
         let expected = (8.0 * crate::math::pow(0.75, 0.75)).clamp(5.0, 60.0);
         let expected: f64 = format!("{expected:.5e}").parse().unwrap();
         assert!((spec.generator.params["space_density"] - expected).abs() < 1e-12);
-        assert!(spec.generator.params["alternate"].abs() < 1e-12);
+        assert!((spec.generator.params["leaves_per_node"] - 2.0).abs() < 1e-12);
         let inherited = library.inherited("acer-test").unwrap();
         assert_eq!(
             inherited.rules["generator.params.space_density"],
@@ -2656,6 +2668,42 @@ mod tests {
             library.entry("thuja-plicata").unwrap().source(),
             source("thuja-plicata")
         );
+    }
+
+    /// The rules at the vascular plants set the leaves at a node and the
+    /// turn between nodes from how a taxon's leaves are arranged, where
+    /// it says, and nothing where it does not.
+    #[test]
+    fn leaf_arrangement_sets_the_leaves_at_a_node_and_their_turn() {
+        let library = Library::builtin();
+        let arrangement = |id: &str| {
+            let params = library.spec(id).unwrap().generator.params;
+            (
+                params.get("leaves_per_node").copied(),
+                params.get("divergence").copied(),
+            )
+        };
+        // Irises' fans and the cattail: two ranks.
+        assert_eq!(arrangement("iris-tenax"), (Some(1.0), Some(180.0)));
+        assert_eq!(arrangement("typha-latifolia"), (None, Some(180.0)));
+        // Sedges and alders: three ranks.
+        assert_eq!(arrangement("carex-obnupta"), (None, Some(120.0)));
+        assert_eq!(arrangement("alnus-rubra"), (Some(1.0), Some(120.0)));
+        // Creosote bush: pairs, which broadleaf crosses at 90 degrees.
+        assert_eq!(arrangement("larrea-tridentata"), (Some(2.0), None));
+        // A daisy family's tie sets nothing.
+        let yarrow = library.inherited("achillea-millefolium").unwrap();
+        assert_eq!(
+            yarrow.rules["generator.params.leaves_per_node"]
+                .1
+                .as_deref(),
+            Some(
+                "`leaf_arrangement` has no one most usual state: alternate and opposite are each often"
+            )
+        );
+        // Nor does a family that states no arrangement yet: a maple keeps
+        // its program's pairs.
+        assert_eq!(arrangement("acer-macrophyllum"), (None, None));
     }
 
     #[test]
@@ -2678,7 +2726,7 @@ mod tests {
             "`leaf_arrangement` is one of alternate",
         );
         refused(
-            &family(r#""rules": {"generator.params.alternate": {"rule": "leaf_form * 2"}}"#),
+            &family(r#""rules": {"generator.params.leaves_per_node": {"rule": "leaf_form * 2"}}"#),
             "it reads `leaf_form`, which is neither a number, count or bool trait",
         );
         refused(
@@ -2686,11 +2734,13 @@ mod tests {
             "`ray_florets`: its `max` 5 is below its `min` 8",
         );
         refused(
-            &family(r#""rules": {"generator.params.alternate": {"rule": "leaf_sise * 2"}}"#),
+            &family(r#""rules": {"generator.params.leaves_per_node": {"rule": "leaf_sise * 2"}}"#),
             "it reads `leaf_sise`, which is neither",
         );
         refused(
-            &family(r#""rules": {"generator.params.alternate": {"map": {"leaflets": {"1": 1}}}}"#),
+            &family(
+                r#""rules": {"generator.params.leaves_per_node": {"map": {"leaflets": {"1": 1}}}}"#,
+            ),
             "a map reads an enum or bool trait; `leaflets` is a count",
         );
         refused(

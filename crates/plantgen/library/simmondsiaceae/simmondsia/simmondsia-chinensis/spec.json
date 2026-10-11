@@ -15,7 +15,7 @@
     "params": {
       "crown_base": 0,
       "fork_height": 0.03,
-      "alternate": 0,
+      "leaves_per_node": 2,
       "max_shoot": 4,
       "bud_break": 1.2,
       "apical_young": 0.56,

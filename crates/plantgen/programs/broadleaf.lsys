@@ -13,10 +13,11 @@
 # ground makes a many-stemmed shrub.
 #
 # Buds and leaves are opposite and decussate, as in maples, or alternate on
-# a spiral (alternate), as in alders, oaks and cherries. Leaves fall every
-# year or, on evergreens, stay leaf_years. Once old enough, short shoots in
-# the light carry flowers or fruit at their tips (blooms): blossoms, berry
-# clusters or hanging catkins, whichever look the species gives them.
+# a spiral, as in oaks and cherries (leaves_per_node, divergence). Leaves
+# fall every year or, on evergreens, stay leaf_years. Once old enough,
+# short shoots in the light carry flowers or fruit at their tips (blooms):
+# blossoms, berry clusters or hanging catkins, whichever look the species
+# gives them.
 #
 # Revision 4 (plant forms F5): a thorny species (thorns 1) carries a thorn
 # beside each bud, thorn_length long at thorn_angle to its shoot. A tree
@@ -28,10 +29,19 @@
 # toward +X) shoots bend downwind under a tropism toward (wind, -1, 0)
 # of elasticity droop + wind_bend * wind, and a shoot tip heading upwind
 # (its heading's X below -wind_kill) dies, so the crown grows as a flag
-# on its lee side. One step is one year. Angles are degrees; lengths are
-# metres.
+# on its lee side.
+#
+# Revision 6 (phyllotaxis P1): leaves_per_node buds and leaves stand at a
+# node (2, a pair, or 1), each node turned divergence degrees from the one
+# below: the names every leaf-bearing program shares, which the rules at
+# the vascular plants set from a taxon's leaf_arrangement and
+# phyllotaxis_pattern. They replace alternate (0 is leaves_per_node 2, 1 is
+# 1), with the same defaults: a pair crossing the pair below, or a single
+# bud on the golden-angle spiral. More than two at a node draw as a pair.
+#
+# One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 5;
+lsystem broadleaf 6;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height = 22;
@@ -56,7 +66,8 @@ param spur_leaf = 0.28;       # leaves on short shoots are smaller
 param spur_pairs = 1;         # pairs of leaves a short shoot unfolds each year
 param leaf_area = 0.35;       # leaf area of a leaf card 1 m long, m²
 param leaf_angle = 55;
-param alternate = 0;          # 1: one bud and leaf at each node on a 137.5° spiral
+param leaves_per_node = 2;    # buds and leaves at a node: 2 opposite, 1 alternate
+param divergence = leaves_per_node == 2 ? 90 : 137.5;   # roll from one node to the next
 param leaf_years = 1;         # years a leaf stays on: more than 1 for evergreens
 param blooms = 0;             # blooms at the tip of a short shoot in the light
 param bloom_age = 4;          # the first year the plant blooms
@@ -151,13 +162,14 @@ rule B : light >= spur_light && blooms > 0 && t >= bloom_age -> P(spur_pairs) Bo
 rule B : light >= spur_light -> P(spur_pairs) B;
 
 # One internode, turned a little at random, with a pair of buds and a pair
-# of leaves; the next pair is turned a quarter turn (decussate). Alternate
-# species grow theirs by the last rules of the program.
-decompose M(n) : n > 0 && alternate <= 0 && thorns <= 0 ->
+# of leaves; the next pair is turned by divergence (a quarter turn:
+# decussate). Alternate species grow theirs by the last rules of the
+# program.
+decompose M(n) : n > 0 && leaves_per_node >= 2 && thorns <= 0 ->
     ^(gauss() * wiggle) +(gauss() * wiggle) F(internode)
     [ &(branch_angle) S B ] [ /(180) &(branch_angle) S B ]
     [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
-    /(90) M(n - 1);
+    /(divergence) M(n - 1);
 decompose M(n) : n <= 0 -> ;
 
 # The new stems of a fork, spread evenly round the old one; each is a branch
@@ -167,14 +179,14 @@ decompose Fk(n) : n > 0 ->
     Fk(n - 1);
 decompose Fk(n) -> ;
 
-# A short shoot's leaves crowded at its tip: two on a spiral, or a
-# decussate pair, for each of spur_pairs.
-decompose P(n) : n > 0 && alternate > 0 ->
-    [ &(leaf_angle) $ leaf(spur_leaf) ] /(137.5) [ &(leaf_angle) $ leaf(spur_leaf) ]
-    /(137.5) P(n - 1);
+# A short shoot's leaves crowded at its tip: two single ones, or a pair,
+# for each of spur_pairs, each turned by divergence.
+decompose P(n) : n > 0 && leaves_per_node < 2 ->
+    [ &(leaf_angle) $ leaf(spur_leaf) ] /(divergence) [ &(leaf_angle) $ leaf(spur_leaf) ]
+    /(divergence) P(n - 1);
 decompose P(n) : n > 0 ->
     [ &(leaf_angle) $ leaf(spur_leaf) ] [ /(180) &(leaf_angle) $ leaf(spur_leaf) ]
-    /(90) P(n - 1);
+    /(divergence) P(n - 1);
 decompose P(n) -> ;
 
 
@@ -191,11 +203,11 @@ rule S : age > 1 && ntip == 0 && (life <= 0 || t < life) -> %;
 # before.
 
 # An alternate species' internode: one bud and one leaf, the next turned
-# 137.5° on the spiral.
-decompose M(n) : n > 0 && alternate > 0 && thorns <= 0 ->
+# by divergence (137.5° on the spiral).
+decompose M(n) : n > 0 && leaves_per_node < 2 && thorns <= 0 ->
     ^(gauss() * wiggle) +(gauss() * wiggle) F(internode)
     [ &(branch_angle) S B ] [ &(leaf_angle) $ leaf(leaf_size) ]
-    /(137.5) M(n - 1);
+    /(divergence) M(n - 1);
 
 # Blooms spread round a short shoot's tip.
 decompose Bo(n) : n > 0 ->
@@ -206,19 +218,19 @@ decompose Bo(n) -> ;
 
 # Revision 4 (plant forms F5). A thorny species' internodes: as above, with
 # a thorn beside each bud.
-decompose M(n) : n > 0 && alternate <= 0 ->
+decompose M(n) : n > 0 && leaves_per_node >= 2 ->
     ^(gauss() * wiggle) +(gauss() * wiggle) F(internode)
     [ &(branch_angle) S B ] [ /(180) &(branch_angle) S B ]
     [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
     [ /(90) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
     [ /(270) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
-    /(90) M(n - 1);
-decompose M(n) : n > 0 && alternate > 0 ->
+    /(divergence) M(n - 1);
+decompose M(n) : n > 0 && leaves_per_node < 2 ->
     ^(gauss() * wiggle) +(gauss() * wiggle) F(internode)
     [ &(branch_angle) S B ] [ &(leaf_angle) $ leaf(leaf_size) ]
     [ /(70) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
     [ /(-70) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
-    /(137.5) M(n - 1);
+    /(divergence) M(n - 1);
 
 # A dead plant's branches fall one by one.
 rule S : age > 1 && ntip == 0 && rand() < snag_fall -> %;

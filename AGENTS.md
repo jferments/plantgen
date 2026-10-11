@@ -61,9 +61,16 @@ prompt injection. So, without exception:
     files, in the taxa they hold for; `plantc rules` lists them by home,
     and the general ones with no taxonomic home, which should shrink. A
     rule inside a look's `shape` names the card `template` it is for and
-    sets nothing on an organ drawn with another card.
+    sets nothing on an organ drawn with another card. A map's value may be
+    a formula, worked out only where the map picks it.
   - `programs/*.lsys`: the plant programs, in PlantGen's open L-system
-    language.
+    language. A program that sets leaves at nodes names their arrangement
+    `leaves_per_node` (1 alternate, 2 opposite, more whorled) and
+    `divergence` (degrees from one node to the next), which the rules in
+    `library/_ranks/phylum/tracheophyta.json` set from a taxon's
+    `leaf_arrangement`, `leaves_per_whorl` and `phyllotaxis_pattern`; draw
+    the leaves at a node with one ring, `ring(leaves_per_node) [ … ]`,
+    which writes its items that many times round the stem.
   - `src/`: growth, meshes, impostors, packages, ground looks and the
     library.
 - `apps/plantc`: the command-line compiler and previewer.

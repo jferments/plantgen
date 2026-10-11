@@ -23,7 +23,7 @@
       "apical_young": 0.62,
       "apical": 0.52,
       "apical_years": 8,
-      "alternate": 1,
+      "leaves_per_node": 1,
       "bud_years": 40,
       "leaf_size": 0.16,
       "spur_leaf": 0.2,

@@ -96,6 +96,8 @@ pub const POP: u16 = 1;
 pub const CUT: u16 = 2;
 pub const FORWARD: u16 = 3;
 pub const MOVE: u16 = 4;
+/// `/`: a ring turns each copy with it.
+pub const ROLL: u16 = 10;
 pub const FIRST_USER_SYMBOL: u16 = 16;
 
 /// What an organ is, which decides how it is drawn and shaded.
@@ -177,6 +179,35 @@ pub struct Item {
 /// Turtle-command ordinals live in their own half of the ordinal space.
 pub const TURTLE_ORDINAL: u32 = 1 << 31;
 
+/// The most copies a ring writes; past it growth stops with a limit error.
+pub const MAX_RING: u32 = 64;
+
+/// A ring's copy k takes its items' ordinals with k << `RING_SHIFT` added,
+/// below the bit that marks decomposed modules, so no two copies share a
+/// lineage and copy 0 keeps the items' own.
+pub const RING_SHIFT: u32 = 24;
+
+/// `ring(n) [ items ]`, or `ring(n) organ(size, roll, pitch[, level])`
+/// with an organ that carries its own turn, in a successor or the axiom
+/// (phyllotaxis P1): the items, as they would compile without the ring,
+/// written n times round the turtle's heading. Copy k of a bracket is
+/// `[ /(k * 360 / n) items ]`, and copy k of an organ has k * 360 / n added
+/// to its roll; copy 0 is the items themselves, with their draws and
+/// identity, so a ring of one is what it holds. Copy k draws with the
+/// scope's key mixed with k and adds k << [`RING_SHIFT`] to its items'
+/// ordinals. A ring holds no value of its own: its items say how each
+/// copy leans and varies.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Ring {
+    /// How many copies: rounded half away from zero where the successor is
+    /// written; below 1 the ring writes nothing.
+    pub count: Code,
+    /// Its first item in the successor.
+    pub at: usize,
+    /// How many items it holds: its bracket's, `[` to `]`, or one organ.
+    pub len: usize,
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct CompiledRule {
     pub condition: Option<Code>,
@@ -186,6 +217,8 @@ pub struct CompiledRule {
     /// first module outside any branch with the predecessor's symbol. It keeps
     /// the predecessor's lineage and birth time.
     pub continuation: Option<usize>,
+    /// The successor's rings, in order. Interpretation rules have none.
+    pub rings: Box<[Ring]>,
     pub span: Span,
 }
 
@@ -339,6 +372,8 @@ pub struct Program {
     pub params: Vec<ParamInfo>,
     pub symbols: Vec<Symbol>,
     pub axiom: Box<[Item]>,
+    /// The axiom's rings, in order.
+    pub axiom_rings: Box<[Ring]>,
     pub productions: Vec<Vec<CompiledRule>>,
     pub decompositions: Vec<Vec<CompiledRule>>,
     pub interpretations: Vec<Vec<CompiledRule>>,
@@ -461,7 +496,7 @@ pub(crate) fn hex(bytes: &[u8]) -> String {
         })
 }
 
-const KEYWORDS: [&str; 13] = [
+const KEYWORDS: [&str; 14] = [
     "lsystem",
     "param",
     "module",
@@ -475,6 +510,7 @@ const KEYWORDS: [&str; 13] = [
     "queries",
     "area",
     "weight",
+    "ring",
 ];
 
 const BUILTIN_NAMES: [&str; 13] = [
@@ -505,6 +541,13 @@ struct Context<'a> {
     time: bool,
     age: bool,
     random: bool,
+}
+
+/// A compiled successor or axiom.
+struct Successor {
+    items: Box<[Item]>,
+    rings: Box<[Ring]>,
+    continuation: Option<usize>,
 }
 
 #[derive(Default)]
@@ -577,6 +620,10 @@ impl Compiler {
             });
         }
         debug_assert_eq!(self.symbols.len(), usize::from(FIRST_USER_SYMBOL));
+        debug_assert_eq!(
+            self.symbols[usize::from(ROLL)].kind,
+            SymbolKind::Turtle(Turtle::RollRight)
+        );
 
         self.declare_params(ast)?;
         self.declare_modules(ast)?;
@@ -597,7 +644,7 @@ impl Compiler {
             random: true,
             ..PARAMS_ONLY
         };
-        let (axiom, _) = self.successor(&ast.axiom, &axiom_context, ast.axiom_span, None)?;
+        let axiom = self.successor(&ast.axiom, &axiom_context, ast.axiom_span, None, true)?;
 
         let symbol_count = self.symbols.len();
         let mut productions = vec![Vec::new(); symbol_count];
@@ -643,7 +690,8 @@ impl Compiler {
             source_sha256: String::new(),
             params: self.params,
             symbols: self.symbols,
-            axiom,
+            axiom: axiom.items,
+            axiom_rings: axiom.rings,
             productions,
             decompositions,
             interpretations,
@@ -950,32 +998,60 @@ impl Compiler {
             .map(|expr| self.expr(expr, &context))
             .transpose()?;
         let predecessor = (rule.kind == RuleKind::Production).then_some(symbol);
-        let (successor, continuation) =
-            self.successor(&rule.successor, &context, rule.span, predecessor)?;
+        let successor = self.successor(
+            &rule.successor,
+            &context,
+            rule.span,
+            predecessor,
+            rule.kind != RuleKind::Interpretation,
+        )?;
         Ok((
             symbol,
             CompiledRule {
                 condition,
                 weight,
-                successor,
-                continuation,
+                successor: successor.items,
+                continuation: successor.continuation,
+                rings: successor.rings,
                 span: rule.span,
             },
         ))
     }
 
+    /// A successor or the axiom: its items, its rings and, in a
+    /// production, the item that continues the predecessor. Rings may
+    /// stand in it unless it is an interpretation's.
     fn successor(
         &mut self,
         calls: &[ModuleCall],
         context: &Context<'_>,
         span: Span,
         predecessor: Option<u16>,
-    ) -> Result<(Box<[Item]>, Option<usize>), ProgramError> {
+        rings_allowed: bool,
+    ) -> Result<Successor, ProgramError> {
         let mut items = Vec::with_capacity(calls.len());
+        let mut rings = Vec::new();
+        // The ring being compiled: its count, its first item, and the depth
+        // its bracket's `]` returns to (none for an organ, done at once).
+        let mut open: Option<(Code, usize, Option<i32>)> = None;
         let mut depth = 0_i32;
         let mut continuation = None;
         let (mut identity, mut turtle) = (0_u32, 0_u32);
-        for call in calls {
+        for (index, call) in calls.iter().enumerate() {
+            if call.symbol == "ring" {
+                if !rings_allowed {
+                    return err(
+                        call.span,
+                        format!("a ring cannot stand in {}", context.what),
+                    );
+                }
+                if open.is_some() {
+                    return err(call.span, "a ring may not hold a ring");
+                }
+                let (count, closes) = self.ring(calls, index, context, depth)?;
+                open = Some((count, items.len(), closes));
+                continue;
+            }
             let Some(&symbol) = self.symbol_index.get(&call.symbol) else {
                 return err(
                     call.span,
@@ -986,51 +1062,7 @@ impl Compiler {
                 );
             };
             let info = self.symbols[usize::from(symbol)].clone();
-            let mut args = Vec::with_capacity(usize::from(info.arity));
-            for arg in &call.args {
-                args.push(self.expr(arg, context)?);
-            }
-            // An organ may carry its own turn (growth plan G1): `leaf(s, roll,
-            // pitch)` or `leaf(s, roll, pitch, level)` places it as
-            // `[ /(roll) &(pitch) $ leaf(s) ]` would (`$` only with a level
-            // above 0), in one module instead of five
-            // (`super::turtle::organ_frame`).
-            let turned_organ =
-                matches!(info.kind, SymbolKind::Organ { .. }) && matches!(args.len(), 3 | 4);
-            if args.len() != usize::from(info.arity) && !turned_organ {
-                let default = match info.kind {
-                    SymbolKind::Turtle(Turtle::Forward | Turtle::Move)
-                    | SymbolKind::Organ { .. }
-                    | SymbolKind::Body { .. } => Some(Code::constant(1.0)),
-                    SymbolKind::Turtle(kind) if kind.is_turn() => match self.angle {
-                        Some(index) => Some(Code(Box::new([Op::Global(index)]))),
-                        None => {
-                            return err(
-                                call.span,
-                                format!(
-                                    "`{}` without an angle needs `param angle = <degrees>;`",
-                                    info.name
-                                ),
-                            );
-                        }
-                    },
-                    _ => None,
-                };
-                match default {
-                    Some(code) if args.is_empty() => args.push(code),
-                    _ => {
-                        return err(
-                            call.span,
-                            format!(
-                                "`{}` takes {} argument(s), found {}",
-                                info.name,
-                                info.arity,
-                                call.args.len()
-                            ),
-                        );
-                    }
-                }
-            }
+            let args = self.arguments(call, &info, context)?;
             match info.kind {
                 SymbolKind::Turtle(Turtle::Push) => depth += 1,
                 SymbolKind::Turtle(Turtle::Pop) => {
@@ -1063,11 +1095,119 @@ impl Compiler {
                 args: args.into_boxed_slice(),
                 ordinal,
             });
+            if let Some((_, _, closes)) = &open
+                && closes.is_none_or(|level| symbol == POP && depth == level)
+                && let Some((count, at, _)) = open.take()
+            {
+                rings.push(Ring {
+                    count,
+                    at,
+                    len: items.len() - at,
+                });
+            }
         }
         if depth != 0 {
             return err(span, "a `[` is never closed");
         }
-        Ok((items.into_boxed_slice(), continuation))
+        debug_assert!(open.is_none(), "a ring's items always close it");
+        Ok(Successor {
+            items: items.into_boxed_slice(),
+            rings: rings.into_boxed_slice(),
+            continuation,
+        })
+    }
+
+    /// A call's arguments, with the one an omitted argument defaults to: a
+    /// step or a size of 1, a turn of `angle`.
+    fn arguments(
+        &mut self,
+        call: &ModuleCall,
+        info: &Symbol,
+        context: &Context<'_>,
+    ) -> Result<Vec<Code>, ProgramError> {
+        let mut args = Vec::with_capacity(usize::from(info.arity));
+        for arg in &call.args {
+            args.push(self.expr(arg, context)?);
+        }
+        // An organ may carry its own turn (growth plan G1): `leaf(s, roll,
+        // pitch)` or `leaf(s, roll, pitch, level)` places it as
+        // `[ /(roll) &(pitch) $ leaf(s) ]` would (`$` only with a level
+        // above 0), in one module instead of five
+        // (`super::turtle::organ_frame`).
+        let turned_organ =
+            matches!(info.kind, SymbolKind::Organ { .. }) && matches!(args.len(), 3 | 4);
+        if args.len() != usize::from(info.arity) && !turned_organ {
+            let default = match info.kind {
+                SymbolKind::Turtle(Turtle::Forward | Turtle::Move)
+                | SymbolKind::Organ { .. }
+                | SymbolKind::Body { .. } => Some(Code::constant(1.0)),
+                SymbolKind::Turtle(kind) if kind.is_turn() => match self.angle {
+                    Some(index) => Some(Code(Box::new([Op::Global(index)]))),
+                    None => {
+                        return err(
+                            call.span,
+                            format!(
+                                "`{}` without an angle needs `param angle = <degrees>;`",
+                                info.name
+                            ),
+                        );
+                    }
+                },
+                _ => None,
+            };
+            match default {
+                Some(code) if args.is_empty() => args.push(code),
+                _ => {
+                    return err(
+                        call.span,
+                        format!(
+                            "`{}` takes {} argument(s), found {}",
+                            info.name,
+                            info.arity,
+                            call.args.len()
+                        ),
+                    );
+                }
+            }
+        }
+        Ok(args)
+    }
+
+    /// `ring(n)` at `calls[index]`, `depth` branches deep: its count, and
+    /// the depth the bracket after it closes at (none when an organ with
+    /// its own turn follows it).
+    fn ring(
+        &mut self,
+        calls: &[ModuleCall],
+        index: usize,
+        context: &Context<'_>,
+        depth: i32,
+    ) -> Result<(Code, Option<i32>), ProgramError> {
+        let call = &calls[index];
+        let [count] = call.args.as_slice() else {
+            return err(call.span, "`ring` takes one argument: how many copies");
+        };
+        let turned_organ = |next: &ModuleCall| {
+            matches!(next.args.len(), 3 | 4)
+                && self.symbol_index.get(&next.symbol).is_some_and(|&symbol| {
+                    matches!(
+                        self.symbols[usize::from(symbol)].kind,
+                        SymbolKind::Organ { .. }
+                    )
+                })
+        };
+        let closes = match calls.get(index + 1) {
+            Some(next) if next.symbol == "[" => Some(depth),
+            Some(next) if turned_organ(next) => None,
+            _ => {
+                return err(
+                    call.span,
+                    "`ring(n)` is followed by a bracket, `[ … ]`, or by an organ that \
+                     carries its own turn, `leaf(size, roll, pitch)`",
+                );
+            }
+        };
+        Ok((self.expr(count, context)?, closes))
     }
 
     fn expr(&mut self, expr: &Expr, context: &Context<'_>) -> Result<Code, ProgramError> {
@@ -1283,6 +1423,66 @@ mod tests {
                 3
             ]
         );
+    }
+
+    /// A ring holds the items they would compile to without it: the same
+    /// draws, ordinals and continuation, and where they stand.
+    #[test]
+    fn a_ring_holds_the_items_it_would_without_it() {
+        let ringed = compile(
+            "lsystem p 1; module A(n); organ leaf leaf; axiom A(2);
+             rule A(n) -> F ring(n) [ &(30) leaf(uniform(0.5, 1)) ] ring(n + 1) leaf(1, 0, 40) A(n);",
+        )
+        .unwrap();
+        let plain = compile(
+            "lsystem p 1; module A(n); organ leaf leaf; axiom A(2);
+             rule A(n) -> F [ &(30) leaf(uniform(0.5, 1)) ] leaf(1, 0, 40) A(n);",
+        )
+        .unwrap();
+        let a = usize::from(ringed.symbol_id("A").unwrap());
+        let (ringed, plain) = (&ringed.productions[a][0], &plain.productions[a][0]);
+        assert_eq!(ringed.successor, plain.successor);
+        assert_eq!(ringed.continuation, plain.continuation);
+        let held: Vec<(usize, usize)> = ringed
+            .rings
+            .iter()
+            .map(|ring| (ring.at, ring.len))
+            .collect();
+        assert_eq!(held, [(1, 4), (5, 1)]);
+        assert!(plain.rings.is_empty());
+    }
+
+    #[test]
+    fn rings_stand_only_where_they_can_hold_their_items() {
+        let cases = [
+            ("lsystem p 1; axiom ring(2) F;", "followed by a bracket"),
+            (
+                "lsystem p 1; organ leaf leaf; axiom ring(2) leaf(1);",
+                "followed by a bracket",
+            ),
+            ("lsystem p 1; axiom ring(2);", "followed by a bracket"),
+            ("lsystem p 1; axiom ring(2, 3) [ F ];", "takes one argument"),
+            ("lsystem p 1; axiom ring [ F ];", "takes one argument"),
+            (
+                "lsystem p 1; axiom ring(2) [ F ring(2) [ F ] ];",
+                "may not hold a ring",
+            ),
+            (
+                "lsystem p 1; module A; axiom A; interpret A -> ring(2) [ F ];",
+                "cannot stand in an interpretation rule",
+            ),
+            ("lsystem p 1; axiom ring(2) [ F;", "never closed"),
+            ("lsystem p 1; param ring = 2; axiom F;", "keyword"),
+            ("lsystem p 1; module ring; axiom F;", "keyword"),
+        ];
+        for (source, expected) in cases {
+            let error = compile(source).expect_err(source);
+            assert!(
+                error.message.contains(expected),
+                "{source}: expected `{expected}` in `{}`",
+                error.message
+            );
+        }
     }
 
     #[test]

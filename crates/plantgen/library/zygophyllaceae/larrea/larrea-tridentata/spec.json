@@ -15,7 +15,6 @@
     "params": {
       "crown_base": 0,
       "fork_height": 0.03,
-      "alternate": 1,
       "max_shoot": 4,
       "bud_break": 1.2,
       "apical_young": 0.56,
@@ -112,6 +111,9 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "leaf_arrangement": "opposite"
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -162,6 +164,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "sdsu-plants-of-san-diego",
+      "note": "Plants of San Diego County's page on the species: the leaves are opposite, each two leaflets joined at the base."
     }
   },
   "provenance": {
