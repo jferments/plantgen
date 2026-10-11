@@ -14,6 +14,7 @@ mod gpu;
 mod measure;
 mod record;
 mod render;
+mod settings;
 #[cfg(feature = "solari")]
 mod solari;
 mod window;
@@ -33,20 +34,27 @@ plantlab: grow PlantGen's plants and render them
 
 usage:
   plantlab open [SPECIES] [--age YEARS] [--live STEPS] [--no-grid] [--no-ruler]
-                [--out DIR] [--record] [--plant-only]
+                [--out DIR] [--record] [--plant-only] [--window WxH]
+                [--panels NAMES] [--overlay] [--settings FILE]
                 [--capture FILE [--capture-after SECONDS]]
-      The window: one plant you can turn around, and a panel to choose
-      the species, age, day of the year, level of detail, quality, look
-      and view, with Grow, Stop and Pause, a progress bar, and the plant
-      shown growing every STEPS steps (default 10, 0 for none; also a
-      slider). --age grows the first plant YEARS old (--years too). A grid
-      under the plant and a ruler beside it measure it (G and R toggle
-      them). Snapshots (P), recorded growth (--record) and GIFs (S), of
-      the scene or of the plant alone on a clear background
-      (--plant-only), go to DIR (default plantlab-pictures). Drag to turn, middle-drag or Shift-drag to pan,
-      scroll to zoom, F to frame the plant again. --capture saves a
-      picture of the window once the plant stands, or after SECONDS with
-      --capture-after, then closes it.
+      The window, in WorldLab's Studio layout: a top bar (the menus, the
+      species, Grow, Pause and Stop, the age and day, the view and the
+      tools, then search and settings), a rail of panels docked beside
+      the plant (Plant, Grow, View, Readings, Pictures, Spec, Bark and
+      Keys; --panels plant,readings opens some), a status bar, and the
+      command palette (Ctrl+P). O, or --overlay, shows the plant alone
+      with one panel floating over it. The plant is shown growing every
+      STEPS steps (default 10, 0 for none). --age grows the first plant
+      YEARS old (--years too). A grid under the plant and a ruler beside
+      it measure it (G and R). Snapshots (P), recorded growth (--record)
+      and GIFs (S), of the scene or of the plant alone on a clear
+      background (--plant-only), go to DIR (default plantlab-pictures).
+      Drag to turn, middle-drag or Shift-drag to pan, scroll to zoom, F to
+      frame the plant again. Settings are kept in
+      ~/.config/plantlab/settings.json (--settings FILE for another);
+      flags win over them. --window sets the window's size (default
+      1400x900). --capture saves a picture of the window once the plant
+      stands, or after SECONDS with --capture-after, then closes it.
   plantlab thumbs SPECIES... --out DIR [--size PX] [OPTIONS]
       A thumbnail of each species (a library id, or `all`): DIR/ID.png and
       DIR/ID.json, what the picture shows.
@@ -377,13 +385,17 @@ fn open(args: &[String]) -> Result<(), String> {
     let mut options = window::Options {
         species: None,
         age: None,
-        live: 10,
-        grid: true,
-        ruler: true,
+        live: None,
+        grid: None,
+        ruler: None,
         out: PathBuf::from("plantlab-pictures"),
         record: false,
-        plant_only: false,
+        plant_only: None,
         capture: None,
+        size: (1400, 900),
+        panels: Vec::new(),
+        overlay: false,
+        settings: None,
     };
     let mut capture = None;
     let mut after = None;
@@ -400,18 +412,39 @@ fn open(args: &[String]) -> Result<(), String> {
                 }
                 options.age = Some(age);
             }
-            "--no-grid" => options.grid = false,
+            "--no-grid" => options.grid = Some(false),
             "--record" => options.record = true,
-            "--plant-only" => options.plant_only = true,
-            "--no-ruler" => options.ruler = false,
+            "--plant-only" => options.plant_only = Some(true),
+            "--no-ruler" => options.ruler = Some(false),
+            "--window" => {
+                let text = rest.next().ok_or("`--window` needs WIDTHxHEIGHT")?;
+                options.size = text
+                    .split_once('x')
+                    .and_then(|(w, h)| Some((w.parse().ok()?, h.parse().ok()?)))
+                    .filter(|&(w, h): &(u32, u32)| {
+                        (320..=8192).contains(&w) && (240..=8192).contains(&h)
+                    })
+                    .ok_or("`--window` needs WIDTHxHEIGHT, such as 1500x900")?;
+            }
+            "--panels" => {
+                let text = rest.next().ok_or("`--panels` needs panel names")?;
+                options.panels = text.split(',').map(str::to_owned).collect();
+            }
+            "--overlay" => options.overlay = true,
+            "--settings" => {
+                options.settings = Some(PathBuf::from(
+                    rest.next().ok_or("`--settings` needs a file")?,
+                ));
+            }
             "--out" => {
                 options.out = PathBuf::from(rest.next().ok_or("`--out` needs a folder")?);
             }
             "--live" => {
-                options.live = rest
-                    .next()
-                    .and_then(|value| value.parse().ok())
-                    .ok_or("`--live` needs a whole number of steps (0 for none)")?;
+                options.live = Some(
+                    rest.next()
+                        .and_then(|value| value.parse().ok())
+                        .ok_or("`--live` needs a whole number of steps (0 for none)")?,
+                );
             }
             "--capture-after" => {
                 after = Some(
