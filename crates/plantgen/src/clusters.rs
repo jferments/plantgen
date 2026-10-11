@@ -498,6 +498,14 @@ impl ClusterLook {
     pub fn layout(&self, turn: f64, seed: u64) -> Layout {
         layout(&self.cluster, self.unit, turn, seed)
     }
+
+    /// The cluster laid out as it is drawn on `organ`: turned, and its
+    /// unripe fruit chosen, by the organ's id.
+    #[must_use]
+    pub fn laid_on(&self, organ: &GraphOrgan) -> Layout {
+        let turn = rng::unit(mix64(organ.id ^ 0x00F2_0175)) * std::f64::consts::TAU;
+        self.layout(turn, organ.id)
+    }
 }
 
 /// A unit's look in one stage of its season (spec rework L1b): a bud's,
@@ -1452,13 +1460,12 @@ pub(crate) fn draw(
     }
     let (first, first_index) = (mesh.positions.len(), mesh.indices.len());
     let accent = crate::blooms::with_shading(look.accent, look.colour, colour);
-    let turn = rng::unit(mix64(organ.id ^ 0x00F2_0175)) * std::f64::consts::TAU;
     draw_laid(
         organ,
         (axis, side),
         look,
         cluster,
-        &cluster.layout(turn, organ.id),
+        &cluster.laid_on(organ),
         (colour, accent),
         part,
         mesh,

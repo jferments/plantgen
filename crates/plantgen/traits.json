@@ -128,12 +128,37 @@
       "when": {"capitulum_kind": ["liguliflorous"]},
       "why": "a floret of a head made only of strap-shaped florets, as in dandelions"
     },
+    "phyllary": {
+      "part_of": "capitulum",
+      "category": "organ",
+      "po": {"id": "PO:0009045", "name": "involucral bract"},
+      "why": "one of the bracts in rows round a head's foot, its involucre"
+    },
     "spikelet": {
       "part_of": "inflorescence",
       "category": "group",
       "when": {"inflorescence_unit": ["spikelet"]},
       "po": {"id": "PO:0009051", "name": "spikelet"},
       "why": "the unit of grasses and sedges: florets on a small axis, in grasses above a pair of glumes"
+    },
+    "glume": {
+      "part_of": "spikelet",
+      "category": "organ",
+      "po": {"id": "PO:0009039", "name": "glume"},
+      "why": "one of the empty bracts at a spikelet's foot, below its florets"
+    },
+    "spikelet_floret": {
+      "part_of": "spikelet",
+      "category": "organ",
+      "po": {"id": "PO:0009082", "name": "spikelet floret"},
+      "why": "a small flower of a spikelet, held by its lemma (a sedge's by its scale)"
+    },
+    "awn": {
+      "part_of": "spikelet_floret",
+      "category": "organ",
+      "when": {"awns": ["true"]},
+      "po": {"id": "PO:0006032", "name": "lemma awn"},
+      "why": "the stiff bristle a spikelet floret's lemma ends in or bears on its back"
     },
     "fruit": {
       "part_of": "inflorescence",
