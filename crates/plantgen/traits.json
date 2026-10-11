@@ -1,50 +1,137 @@
 {
-  "schema": 1,
-  "about": "Every trait a record, a rank file or a species' spec may state (growth plan G2.2): its group, its type and its unit, values or range. Vocabulary only: the rules that turn traits into spec values live in the taxa they hold for. Types: number (a quantity in its unit), count (a whole number), bool, enum (one of its values), enums (a list of its values), months (a list of months, 1 to 12), colour (sRGB, three numbers 0 to 255), text (a line in PlantGen's own words), ids (species ids).",
+  "schema": 2,
+  "about": "Every character a record, a rank file or a species' spec may state (growth plan G2.2, and the characters of the spec rework): its group, the organ it describes, its type and its unit, values or range. Vocabulary only: the rules that turn characters into spec values live in the taxa they hold for. Types: number (a quantity in its unit), count (a whole number), bool, enum (one of its values), enums (a list of its values), months (a list of months, 1 to 12), colour (sRGB, three numbers 0 to 255), text (a line in PlantGen's own words), ids (species ids). A number or count may instead be a range, {\"min\": 5, \"max\": 8}, with the rare extremes beyond it as `low` and `high` and the most usual value as `typical`: a flora's (3-)5-8 is {\"min\": 5, \"max\": 8, \"low\": 3}. An enum or bool may instead be qualified, each state with how often it occurs (usually, often, sometimes, rarely): usually opposite, rarely alternate is {\"opposite\": \"usually\", \"alternate\": \"rarely\"}. Each organ is part of another. An organ with a `when` exists only where one of those characters takes one of the values listed (a qualified value counts with each of its states), and its characters apply only there; a character's own `when` narrows it further, as leaves_per_whorl applies only to whorled leaves. A character marked `optional` is one many plants have nothing to state for, and the audit never counts it missing.",
   "groups": ["form", "size", "stem_and_bark", "leaves", "flowers", "fruit_and_cones", "seasons", "ecology", "interactions", "shedding", "architecture"],
+  "organs": {
+    "plant": {
+      "why": "the whole plant: its form, size, life and where it grows"
+    },
+    "root": {
+      "part_of": "plant",
+      "why": "what grows underground to anchor the plant and take up water"
+    },
+    "stem": {
+      "part_of": "plant",
+      "why": "the shoots that bear leaves, flowers and cones, and the wood they lay down"
+    },
+    "bark": {
+      "part_of": "stem",
+      "when": {"woodiness": ["woody", "semi"]},
+      "why": "the outer layer of a woody stem"
+    },
+    "leaf": {
+      "part_of": "stem",
+      "why": "a leaf from its stalk to its tip; a fern's frond and a grass's blade are leaves"
+    },
+    "leaflet": {
+      "part_of": "leaf",
+      "when": {"leaf_division": ["compound"]},
+      "why": "one of the separate blades of a compound leaf"
+    },
+    "inflorescence": {
+      "part_of": "stem",
+      "when": {"reproduction": ["flowers"]},
+      "why": "a flowering shoot: how flowers, heads or spikelets are grouped"
+    },
+    "flower": {
+      "part_of": "inflorescence",
+      "when": {"inflorescence_unit": ["flower"]},
+      "why": "a single flower, where single flowers make up the inflorescence"
+    },
+    "capitulum": {
+      "part_of": "inflorescence",
+      "when": {"inflorescence_unit": ["capitulum"]},
+      "why": "a head: florets packed on a shared receptacle inside a ring of bracts (phyllaries), as in the daisy family"
+    },
+    "ray_floret": {
+      "part_of": "capitulum",
+      "when": {"capitulum_kind": ["radiate"]},
+      "why": "a floret at the rim of a radiate head, its corolla drawn out into a strap (lamina)"
+    },
+    "disc_floret": {
+      "part_of": "capitulum",
+      "when": {"capitulum_kind": ["radiate", "discoid", "disciform"]},
+      "why": "a floret in the middle of a head, its corolla a small tube"
+    },
+    "ligulate_floret": {
+      "part_of": "capitulum",
+      "when": {"capitulum_kind": ["liguliflorous"]},
+      "why": "a floret of a head made only of strap-shaped florets, as in dandelions"
+    },
+    "spikelet": {
+      "part_of": "inflorescence",
+      "when": {"inflorescence_unit": ["spikelet"]},
+      "why": "the unit of grasses and sedges: florets on a small axis, in grasses above a pair of glumes"
+    },
+    "fruit": {
+      "part_of": "inflorescence",
+      "why": "a ripe fruit, from a flower or floret"
+    },
+    "cone": {
+      "part_of": "stem",
+      "when": {"reproduction": ["cones"]},
+      "why": "a seed cone"
+    }
+  },
   "traits": {
     "library_form": {
       "group": "form",
+      "organ": "plant",
       "type": "enum",
       "values": ["tree", "shrub", "graminoid", "forb", "fern", "climber_epiphyte", "succulent", "aquatic", "dwarf_shrub"],
       "why": "Library 1.0's nine classes, for search and its quotas per class"
     },
     "growth_form": {
       "group": "form",
+      "organ": "plant",
       "type": "enum",
       "values": ["excurrent_tree", "decurrent_tree", "scale_leaved_tree", "shrub", "graminoid", "forb", "fern", "vine", "stem_succulent", "rosette_succulent", "palm", "epiphyte", "cushion"],
       "why": "the spec's growth forms, which pick a rank file's part for its form"
     },
+    "reproduction": {
+      "group": "form",
+      "organ": "plant",
+      "type": "enum",
+      "values": ["flowers", "cones", "solitary_seeds", "spores"],
+      "why": "how it bears seeds or spores: seeds in fruit from flowers, seeds open on the scales of cones, seeds borne singly or in pairs outside any cone (yews, ginkgo), or spores and no seeds"
+    },
     "woodiness": {
       "group": "form",
+      "organ": "stem",
       "type": "enum",
       "values": ["woody", "herbaceous", "semi"],
       "why": "whether stems lay down wood"
     },
     "leaf_habit": {
       "group": "form",
+      "organ": "leaf",
       "type": "enum",
       "values": ["evergreen", "deciduous", "semi", "drought_deciduous", "leafless"],
       "why": "how long leaves stay on through the year"
     },
     "life_span": {
       "group": "form",
+      "organ": "plant",
       "type": "enum",
       "values": ["annual", "biennial", "perennial"],
       "why": "how many years a plant lives and sets seed in"
     },
     "clonal": {
       "group": "form",
+      "organ": "plant",
       "type": "bool",
       "why": "whether it spreads by its own shoots, runners or roots"
     },
     "habit_notes": {
       "group": "form",
+      "organ": "plant",
       "type": "text",
+      "optional": true,
       "why": "what the other form traits leave unsaid"
     },
     "height_max_m": {
       "group": "size",
+      "organ": "plant",
       "type": "number",
       "unit": "m",
       "range": [0.001, 130],
@@ -52,6 +139,7 @@
     },
     "height_typical_m": {
       "group": "size",
+      "organ": "plant",
       "type": "number",
       "unit": "m",
       "range": [0.001, 130],
@@ -59,6 +147,7 @@
     },
     "crown_width_max_m": {
       "group": "size",
+      "organ": "plant",
       "type": "number",
       "unit": "m",
       "range": [0.001, 200],
@@ -66,6 +155,7 @@
     },
     "stem_diameter_max_m": {
       "group": "size",
+      "organ": "stem",
       "type": "number",
       "unit": "m",
       "range": [0.0001, 15],
@@ -73,6 +163,7 @@
     },
     "age_max_years": {
       "group": "size",
+      "organ": "plant",
       "type": "number",
       "unit": "years",
       "range": [0.05, 10000],
@@ -80,6 +171,7 @@
     },
     "root_depth_max_m": {
       "group": "size",
+      "organ": "root",
       "type": "number",
       "unit": "m",
       "range": [0.001, 100],
@@ -87,41 +179,123 @@
     },
     "branching": {
       "group": "stem_and_bark",
+      "organ": "stem",
       "type": "enum",
       "values": ["excurrent", "decurrent", "columnar", "cane", "unbranched"],
       "why": "the crown's habit: a leading stem, a spreading one, a column, canes or none"
     },
     "bark_texture": {
       "group": "stem_and_bark",
+      "organ": "bark",
       "type": "enum",
       "values": ["smooth", "furrowed", "plated", "scaly", "peeling", "fibrous"],
       "why": "the bark of a grown stem"
     },
     "bark_colour": {
       "group": "stem_and_bark",
+      "organ": "bark",
       "type": "colour",
       "why": "the bark of a grown stem"
     },
     "spines": {
       "group": "stem_and_bark",
+      "organ": "plant",
       "type": "enum",
       "values": ["none", "areoles", "thorns", "prickles", "leaf_spines"],
       "why": "what a plant is armed with: spines from areoles, thorns from shoots, prickles from bark, or spines on its leaves"
     },
-    "leaf_type": {
+    "leaf_form": {
       "group": "leaves",
+      "organ": "leaf",
       "type": "enum",
-      "values": ["simple", "pinnate", "bipinnate", "palmate", "needle", "scale", "frond", "blade"],
-      "why": "what a leaf is"
+      "values": ["blade", "needle", "scale"],
+      "why": "what a leaf is made as: a flat blade (a fern's frond and a grass's leaf among them), a needle or a scale"
+    },
+    "leaf_division": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["simple", "compound"],
+      "why": "whether the blade is one piece, however deeply cut, or made of separate leaflets"
+    },
+    "leaf_incision": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["none", "lobed", "cleft", "parted", "dissected"],
+      "why": "how deeply a simple blade is cut: not at all, into lobes, to about halfway, most of the way, or into fine segments"
+    },
+    "division_pattern": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["pinnate", "palmate"],
+      "when": {"leaf_division": ["compound"], "leaf_incision": ["lobed", "cleft", "parted", "dissected"]},
+      "why": "how a compound leaf's leaflets or a cut blade's lobes are set: along a midrib, or from one point"
+    },
+    "division_order": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "count",
+      "range": [1, 5],
+      "when": {"leaf_division": ["compound"], "leaf_incision": ["lobed", "cleft", "parted", "dissected"]},
+      "why": "how many times the leaflets or lobes divide: 1 once (pinnate), 2 twice (bipinnate)"
+    },
+    "leaf_shape": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["linear", "lanceolate", "oblanceolate", "elliptic", "oblong", "ovate", "obovate", "orbicular", "deltate", "spatulate", "reniform", "cordate"],
+      "why": "a blade's outline, or a compound leaf's leaflets'"
+    },
+    "leaf_venation": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["pinnate", "palmate", "parallel", "dichotomous", "single"],
+      "why": "how the main veins run: from a midrib, from the base, side by side, forking in pairs, or one vein alone"
     },
     "leaf_arrangement": {
       "group": "leaves",
+      "organ": "leaf",
       "type": "enum",
-      "values": ["alternate", "opposite", "whorled", "rosette", "fascicled"],
-      "why": "how leaves sit along a shoot"
+      "values": ["alternate", "opposite", "whorled"],
+      "why": "leaves at each node: one (alternate), a pair (opposite) or three or more (whorled)"
+    },
+    "leaves_per_whorl": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "count",
+      "range": [3, 40],
+      "when": {"leaf_arrangement": ["whorled"]},
+      "why": "leaves at each node of a whorled shoot"
+    },
+    "phyllotaxis_pattern": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["spiral", "distichous", "tristichous", "decussate"],
+      "why": "how each leaf node turns from the last: by about the golden angle (spiral), half a turn (distichous, two ranks), a third of a turn (tristichous, three ranks), or half the gap between its own leaves (decussate: pairs crossing, whorls alternating)"
+    },
+    "divergence_deg": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "number",
+      "unit": "degrees",
+      "range": [0, 180],
+      "optional": true,
+      "why": "the angle between successive leaf nodes, where a source measures it"
+    },
+    "rosette": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["none", "basal", "terminal"],
+      "why": "leaves crowded on short internodes: not at all, at the base, or at the tips of stems"
     },
     "leaf_length_m": {
       "group": "leaves",
+      "organ": "leaf",
       "type": "number",
       "unit": "m",
       "range": [0.0005, 25],
@@ -129,6 +303,7 @@
     },
     "leaf_width_m": {
       "group": "leaves",
+      "organ": "leaf",
       "type": "number",
       "unit": "m",
       "range": [0.0001, 5],
@@ -136,6 +311,7 @@
     },
     "petiole_length_m": {
       "group": "leaves",
+      "organ": "leaf",
       "type": "number",
       "unit": "m",
       "range": [0, 5],
@@ -143,92 +319,254 @@
     },
     "leaf_margin": {
       "group": "leaves",
+      "organ": "leaf",
       "type": "enum",
-      "values": ["entire", "serrate", "dentate", "crenate", "lobed", "spiny"],
-      "why": "a leaf's edge"
+      "values": ["entire", "serrate", "dentate", "crenate", "spiny"],
+      "why": "a blade's edge: smooth, or toothed (teeth pointing forward, outward, rounded, or ending in spines)"
     },
     "leaf_lobes": {
       "group": "leaves",
+      "organ": "leaf",
       "type": "count",
       "range": [0, 50],
+      "when": {"leaf_incision": ["lobed", "cleft", "parted"]},
       "why": "lobes on a lobed leaf"
     },
     "leaflets": {
       "group": "leaves",
+      "organ": "leaflet",
       "type": "count",
-      "range": [0, 2000],
+      "range": [2, 2000],
       "why": "leaflets on a compound leaf"
     },
     "needles_per_fascicle": {
       "group": "leaves",
+      "organ": "leaf",
       "type": "count",
       "range": [1, 8],
+      "when": {"leaf_form": ["needle"]},
       "why": "needles in a pine's bundle"
     },
     "stipules": {
       "group": "leaves",
+      "organ": "leaf",
       "type": "bool",
       "why": "whether leaves bear stipules at their base"
     },
     "leaf_colour": {
       "group": "leaves",
+      "organ": "leaf",
       "type": "colour",
       "why": "a grown leaf's upper side in summer"
     },
     "leaf_colour_autumn": {
       "group": "leaves",
+      "organ": "leaf",
       "type": "colour",
+      "when": {"leaf_habit": ["deciduous", "semi", "drought_deciduous"]},
       "why": "a leaf before it falls"
+    },
+    "inflorescence": {
+      "group": "flowers",
+      "organ": "inflorescence",
+      "type": "enum",
+      "values": ["solitary", "raceme", "spike", "catkin", "corymb", "umbel", "compound_umbel", "panicle", "cyme", "scorpioid", "head", "spadix"],
+      "why": "how the units of a flowering shoot are grouped: L1's cluster kinds, a single unit, or a spadix"
+    },
+    "inflorescence_unit": {
+      "group": "flowers",
+      "organ": "inflorescence",
+      "type": "enum",
+      "values": ["flower", "capitulum", "spikelet"],
+      "why": "what an inflorescence is made of: single flowers, heads of florets (the daisy family) or spikelets (grasses and sedges)"
+    },
+    "units_per_inflorescence": {
+      "group": "flowers",
+      "organ": "inflorescence",
+      "type": "count",
+      "range": [1, 100000],
+      "why": "the flowers, heads or spikelets in one inflorescence"
+    },
+    "inflorescence_length_m": {
+      "group": "flowers",
+      "organ": "inflorescence",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 10],
+      "why": "an inflorescence from its lowest unit or branch to its tip"
     },
     "flower_colour": {
       "group": "flowers",
+      "organ": "flower",
       "type": "colour",
       "why": "an open flower's showiest part"
     },
     "flower_size_m": {
       "group": "flowers",
+      "organ": "flower",
       "type": "number",
       "unit": "m",
       "range": [0.0005, 1.5],
       "why": "an open flower across"
     },
-    "inflorescence": {
-      "group": "flowers",
-      "type": "enum",
-      "values": ["solitary", "raceme", "spike", "catkin", "corymb", "umbel", "compound_umbel", "panicle", "cyme", "scorpioid", "head", "spadix"],
-      "why": "how flowers are grouped: L1's cluster kinds, a single flower, or a spadix"
-    },
     "flower_merosity": {
       "group": "flowers",
+      "organ": "flower",
       "type": "count",
       "range": [2, 12],
       "why": "petals (or tepals) in one whorl of a flower"
     },
     "flower_symmetry": {
       "group": "flowers",
+      "organ": "flower",
       "type": "enum",
       "values": ["actinomorphic", "zygomorphic", "asymmetric"],
       "why": "a flower's symmetry: radial, one plane, or none"
     },
+    "capitulum_kind": {
+      "group": "flowers",
+      "organ": "capitulum",
+      "type": "enum",
+      "values": ["radiate", "discoid", "disciform", "liguliflorous"],
+      "why": "the florets a head holds: rays round a disc, a disc alone, a disc ringed by threadlike florets, or strap-shaped florets alone"
+    },
+    "involucre_diameter_m": {
+      "group": "flowers",
+      "organ": "capitulum",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.5],
+      "why": "the ring of phyllaries across, which floras give as a head's size"
+    },
+    "phyllaries": {
+      "group": "flowers",
+      "organ": "capitulum",
+      "type": "count",
+      "range": [1, 300],
+      "why": "the bracts round a head"
+    },
+    "phyllary_series": {
+      "group": "flowers",
+      "organ": "capitulum",
+      "type": "count",
+      "range": [1, 12],
+      "why": "the rows the phyllaries stand in"
+    },
+    "receptacle": {
+      "group": "flowers",
+      "organ": "capitulum",
+      "type": "enum",
+      "values": ["paleate", "epaleate"],
+      "why": "whether chaffy scales (paleae) stand among a head's florets"
+    },
+    "pappus": {
+      "group": "flowers",
+      "organ": "capitulum",
+      "type": "enum",
+      "values": ["absent", "bristles", "scales", "awns", "crown"],
+      "why": "what tops the fruit of a head's florets: nothing, bristles, scales, awns or a small crown"
+    },
+    "ray_florets": {
+      "group": "flowers",
+      "organ": "ray_floret",
+      "type": "count",
+      "range": [1, 200],
+      "why": "the ray florets of one head"
+    },
+    "ray_length_m": {
+      "group": "flowers",
+      "organ": "ray_floret",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.2],
+      "why": "a ray's strap (lamina), its length"
+    },
+    "ray_colour": {
+      "group": "flowers",
+      "organ": "ray_floret",
+      "type": "colour",
+      "why": "a ray's strap"
+    },
+    "disc_florets": {
+      "group": "flowers",
+      "organ": "disc_floret",
+      "type": "count",
+      "range": [1, 3000],
+      "why": "the disc florets of one head"
+    },
+    "disc_colour": {
+      "group": "flowers",
+      "organ": "disc_floret",
+      "type": "colour",
+      "why": "a disc floret's corolla"
+    },
+    "ligulate_florets": {
+      "group": "flowers",
+      "organ": "ligulate_floret",
+      "type": "count",
+      "range": [1, 500],
+      "why": "the strap-shaped florets of one head"
+    },
+    "ligulate_colour": {
+      "group": "flowers",
+      "organ": "ligulate_floret",
+      "type": "colour",
+      "why": "a strap-shaped floret's corolla"
+    },
+    "florets_per_spikelet": {
+      "group": "flowers",
+      "organ": "spikelet",
+      "type": "count",
+      "range": [1, 60],
+      "why": "the fertile florets of one spikelet"
+    },
+    "spikelet_length_m": {
+      "group": "flowers",
+      "organ": "spikelet",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.2],
+      "why": "a spikelet from its base to the tip of its last floret, awns left out"
+    },
+    "glumes": {
+      "group": "flowers",
+      "organ": "spikelet",
+      "type": "count",
+      "range": [0, 2],
+      "why": "the empty bracts at a spikelet's base"
+    },
+    "awn_length_m": {
+      "group": "flowers",
+      "organ": "spikelet",
+      "type": "number",
+      "unit": "m",
+      "range": [0, 0.5],
+      "why": "the bristle on a floret's lemma, 0 where it has none"
+    },
     "sexual_system": {
       "group": "flowers",
+      "organ": "plant",
       "type": "enum",
       "values": ["hermaphrodite", "monoecious", "dioecious", "polygamous"],
-      "why": "where the sexes sit: in a dioecious species only half the plants bear fruit"
+      "when": {"reproduction": ["flowers", "cones", "solitary_seeds"]},
+      "why": "where the sexes sit: in a dioecious species only half the plants bear fruit or seed cones"
     },
     "flowering_months": {
       "group": "flowers",
+      "organ": "inflorescence",
       "type": "months",
       "why": "the months it flowers in"
     },
     "fruit_type": {
       "group": "fruit_and_cones",
+      "organ": "fruit",
       "type": "enum",
-      "values": ["berry", "drupe", "pome", "capsule", "pod", "legume", "nut", "samara", "achene", "caryopsis", "follicle", "schizocarp", "aggregate", "multiple", "cone"],
-      "why": "what a fruit is (pod for dry pods that split other than a legume)"
+      "values": ["berry", "drupe", "pome", "capsule", "pod", "legume", "nut", "samara", "achene", "cypsela", "caryopsis", "follicle", "schizocarp", "aggregate", "multiple"],
+      "why": "what a fruit is (pod for dry pods that split other than a legume; cypsela for the achene of the daisy family)"
     },
     "fruit_size_m": {
       "group": "fruit_and_cones",
+      "organ": "fruit",
       "type": "number",
       "unit": "m",
       "range": [0.0005, 1],
@@ -236,16 +574,19 @@
     },
     "fruit_colour_ripe": {
       "group": "fruit_and_cones",
+      "organ": "fruit",
       "type": "colour",
       "why": "a ripe fruit"
     },
     "fruiting_months": {
       "group": "fruit_and_cones",
+      "organ": "fruit",
       "type": "months",
       "why": "the months its fruit is ripe in"
     },
     "cone_length_m": {
       "group": "fruit_and_cones",
+      "organ": "cone",
       "type": "number",
       "unit": "m",
       "range": [0.002, 0.7],
@@ -253,16 +594,20 @@
     },
     "leaf_out_months": {
       "group": "seasons",
+      "organ": "leaf",
       "type": "months",
       "why": "the months new leaves unfold in"
     },
     "leaf_fall_months": {
       "group": "seasons",
+      "organ": "leaf",
       "type": "months",
+      "when": {"leaf_habit": ["deciduous", "semi", "drought_deciduous"]},
       "why": "the months leaves fall in"
     },
     "elevation_min_m": {
       "group": "ecology",
+      "organ": "plant",
       "type": "number",
       "unit": "m",
       "range": [-450, 6800],
@@ -270,6 +615,7 @@
     },
     "elevation_max_m": {
       "group": "ecology",
+      "organ": "plant",
       "type": "number",
       "unit": "m",
       "range": [-450, 6800],
@@ -277,86 +623,106 @@
     },
     "light": {
       "group": "ecology",
+      "organ": "plant",
       "type": "enums",
       "values": ["shade", "part", "sun"],
       "why": "the light it grows in, every class it spans"
     },
     "moisture": {
       "group": "ecology",
+      "organ": "plant",
       "type": "enums",
       "values": ["aquatic", "wet", "mesic", "dry", "xeric"],
       "why": "the water its ground holds, every class it spans"
     },
     "soil_texture": {
       "group": "ecology",
+      "organ": "plant",
       "type": "enums",
       "values": ["sand", "loam", "clay", "rock"],
       "why": "the ground it roots in, every class it spans"
     },
     "habitat_notes": {
       "group": "ecology",
+      "organ": "plant",
       "type": "text",
+      "optional": true,
       "why": "what the other ecology traits leave unsaid"
     },
     "hosts": {
       "group": "interactions",
+      "organ": "plant",
       "type": "ids",
+      "optional": true,
       "why": "the species a climber, epiphyte or parasite grows on"
     },
     "nurse_forms": {
       "group": "interactions",
+      "organ": "plant",
       "type": "enums",
       "values": ["tree", "shrub", "graminoid", "forb", "fern", "climber_epiphyte", "succulent", "aquatic", "dwarf_shrub"],
+      "optional": true,
       "why": "the forms its seedlings need to shelter under"
     },
     "nurse_species": {
       "group": "interactions",
+      "organ": "plant",
       "type": "ids",
+      "optional": true,
       "why": "the species its seedlings need to shelter under"
     },
     "clone_radius_m": {
       "group": "interactions",
+      "organ": "plant",
       "type": "number",
       "unit": "m",
       "range": [0, 1000],
+      "when": {"clonal": ["true"]},
       "why": "how far one clone spreads"
     },
     "litter_kind": {
       "group": "shedding",
+      "organ": "plant",
       "type": "enum",
       "values": ["needles", "leaves", "thatch", "twigs", "moss", "sphagnum", "grass", "tussock", "cushion"],
       "why": "the ground look its litter makes"
     },
     "self_pruning": {
       "group": "shedding",
+      "organ": "stem",
       "type": "bool",
       "why": "whether it sheds its own shaded limbs"
     },
     "architectural_model": {
       "group": "architecture",
+      "organ": "plant",
       "type": "enum",
       "values": ["holttum", "corner", "tomlinson", "chamberlain", "leeuwenberg", "schoute", "kwan_koriba", "prevost", "fagerlind", "petit", "nozeran", "aubreville", "scarrone", "stone", "rauh", "attims", "massart", "roux", "cook", "champagnat", "mangenot", "troll", "mcclure"],
       "why": "the Halle-Oldeman model its growth follows: a label for search, set by each lineage, never a program"
     },
     "axis_growth": {
       "group": "architecture",
+      "organ": "stem",
       "type": "enum",
       "values": ["monopodial", "sympodial"],
       "why": "whether an axis grows on from its own tip or is carried on by a lateral"
     },
     "flowering_position": {
       "group": "architecture",
+      "organ": "inflorescence",
       "type": "enum",
       "values": ["terminal", "lateral", "both"],
       "why": "whether flowers end a shoot or sit beside its leaves"
     },
     "short_shoots": {
       "group": "architecture",
+      "organ": "stem",
       "type": "bool",
       "why": "whether it grows long shoots and short ones (spurs)"
     },
     "ramification_order": {
       "group": "architecture",
+      "organ": "stem",
       "type": "count",
       "range": [0, 12],
       "why": "branch orders a grown crown carries"

@@ -39,6 +39,10 @@
 //! species' program parameters by name, a parameter as the files set it
 //! (or a rule before it), else as the program's default; so a rule can
 //! say what a leaf card of the species' own size means for its shoots.
+//! A trait stated as a range reads as its `typical` value, else the middle
+//! of its `min` and `max`; one stated as qualified states reads as its most
+//! usual state ([`FREQUENCIES`]), and a rule reading states that tie sets
+//! nothing.
 //! Every rule lives in the taxon it holds for, its home (growth plan G2,
 //! Joshi's rule that rules belong to taxa). Traits and rules merge down
 //! the chain like values; then each rule sets its path, after the rules
@@ -91,6 +95,15 @@ pub const LEVELS: [&str; 13] = [
 
 const FAMILY: usize = 8;
 const GENUS: usize = 12;
+
+/// How often a state of a trait stated as qualified states occurs, from
+/// the most often: `{"opposite": "usually", "alternate": "rarely"}`.
+pub const FREQUENCIES: [&str; 4] = ["usually", "often", "sometimes", "rarely"];
+
+/// The bounds of a trait stated as a range: `min` and `max`, and where
+/// known the rare extremes, `low` and `high`, and the usual value,
+/// `typical`. A flora's "(3-)5-8" is `{"min": 5, "max": 8, "low": 3}`.
+pub const RANGE: [&str; 5] = ["min", "max", "low", "high", "typical"];
 
 fn level(rank: &str) -> Option<usize> {
     LEVELS.iter().position(|level| *level == rank)
@@ -670,11 +683,35 @@ pub struct Inherited {
     /// `origins`, the notes on traits (`traits.<key>`) and rules
     /// (`rules.<path>`) among them.
     pub notes: BTreeMap<String, String>,
-    /// Each trait's value and the file that set it.
-    pub traits: BTreeMap<String, (Value, String)>,
+    /// Each trait as it stands at the species: its value, the file that
+    /// set it and that file's note on it.
+    pub traits: BTreeMap<String, Stated>,
     /// Each rule, by the path it sets: the file it is in, and `None` if it
     /// set the path, else why it did not.
     pub rules: BTreeMap<String, (String, Option<String>)>,
+}
+
+impl Inherited {
+    /// Each trait's value as stated, by key.
+    #[must_use]
+    pub fn trait_values(&self) -> Map<String, Value> {
+        self.traits
+            .iter()
+            .map(|(key, stated)| (key.clone(), stated.value.clone()))
+            .collect()
+    }
+}
+
+/// A trait as a species inherits it.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Stated {
+    /// Its value as stated: a value, a range or qualified states.
+    pub value: Value,
+    /// The file that set it, written as in [`Inherited::origins`].
+    pub file: String,
+    /// That file's evidence note on it: on `traits.<key>`, else on all of
+    /// its `traits`.
+    pub note: Option<Value>,
 }
 
 /// Where a value or note came from: the file's label and its layer's
@@ -713,6 +750,7 @@ pub fn inherit(
     let mut origins: BTreeMap<String, Origin> = BTreeMap::new();
     let mut notes: BTreeMap<String, (Origin, Value)> = BTreeMap::new();
     let mut traits: BTreeMap<String, (Value, usize)> = BTreeMap::new();
+    let mut trait_notes: BTreeMap<String, Option<Value>> = BTreeMap::new();
     let mut rules: Rules = BTreeMap::new();
     for (index, (label, part)) in layers.iter().enumerate() {
         let origin = (label.clone(), index);
@@ -729,8 +767,14 @@ pub fn inherit(
             touched.push(format!("traits.{key}"));
             if value.is_null() {
                 traits.remove(key);
+                trait_notes.remove(key);
             } else {
                 traits.insert(key.clone(), (value.clone(), index));
+                let note = part
+                    .notes
+                    .get(&format!("traits.{key}"))
+                    .or_else(|| part.notes.get("traits"));
+                trait_notes.insert(key.clone(), note.cloned());
             }
         }
         for (path, rule) in &part.rules {
@@ -784,7 +828,11 @@ pub fn inherit(
             .collect(),
         traits: traits
             .into_iter()
-            .map(|(key, (value, index))| (key, (value, layers[index].0.clone())))
+            .map(|(key, (value, index))| {
+                let note = trait_notes.remove(&key).flatten();
+                let file = layers[index].0.clone();
+                (key, Stated { value, file, note })
+            })
             .collect(),
         rules: outcomes,
     })
@@ -894,7 +942,7 @@ impl Ruled<'_> {
             let value = if let Some((value, at)) = self.traits.get(&key) {
                 depth = depth.max(*at);
                 from.push(format!("{key} from {}", self.layers[*at].0));
-                value.clone()
+                reading(&key, value)?
             } else if let Some(value) = find(spec, &path) {
                 // A parameter as the files, or a rule that ran before this
                 // one, set it.
@@ -986,6 +1034,53 @@ fn reads(rule: &Map<String, Value>) -> Vec<String> {
             .unwrap_or_default(),
         (_, Some(Value::Object(map))) => map.keys().cloned().collect(),
         _ => Vec::new(),
+    }
+}
+
+/// The one value a rule reads from a trait as stated: of a range, its
+/// `typical`, else the middle of its `min` and `max`; of qualified states,
+/// the most usual (a bool's as a bool); else the value itself.
+fn reading(key: &str, value: &Value) -> Result<Value, String> {
+    let Value::Object(stated) = value else {
+        return Ok(value.clone());
+    };
+    if stated.values().all(Value::is_number) {
+        let bound = |name: &str| stated.get(name).and_then(Value::as_f64);
+        return bound("typical")
+            .or_else(|| Some(f64::midpoint(bound("min")?, bound("max")?)))
+            .and_then(serde_json::Number::from_f64)
+            .map(Value::Number)
+            .ok_or_else(|| format!("`{key}` is a range without a `min` and a `max`"));
+    }
+    let rank = |frequency: &Value| {
+        FREQUENCIES
+            .iter()
+            .position(|known| frequency.as_str() == Some(known))
+    };
+    let best = stated
+        .values()
+        .filter_map(rank)
+        .min()
+        .ok_or_else(|| format!("`{key}` names no state with how often it occurs"))?;
+    let most: Vec<&String> = stated
+        .iter()
+        .filter(|(_, frequency)| rank(frequency) == Some(best))
+        .map(|(state, _)| state)
+        .collect();
+    match most.as_slice() {
+        [state] => Ok(match state.as_str() {
+            "true" => Value::Bool(true),
+            "false" => Value::Bool(false),
+            _ => Value::String((*state).clone()),
+        }),
+        _ => Err(format!(
+            "`{key}` has no one most usual state: {} are each {}",
+            most.iter()
+                .map(|state| state.as_str())
+                .collect::<Vec<_>>()
+                .join(" and "),
+            FREQUENCIES[best]
+        )),
     }
 }
 
@@ -1204,7 +1299,8 @@ mod tests {
     use serde_json::{Value, json};
 
     use super::{
-        Programs, RankFile, above, chain, effective_text, file_name, inherit, program_params,
+        Programs, RankFile, Stated, above, chain, effective_text, file_name, inherit,
+        program_params,
     };
 
     /// Three programs: one with every parameter the tests set, one that
@@ -1767,8 +1863,13 @@ mod tests {
         assert_eq!(plain.notes["traits.leaf_length_m"], family);
         assert_eq!(
             plain.traits["leaf_arrangement"],
-            (json!("opposite"), family.to_string())
+            Stated {
+                value: json!("opposite"),
+                file: family.to_string(),
+                note: None
+            }
         );
+        assert_eq!(plain.traits["leaf_length_m"].note, Some(note("Family.")));
 
         // A genus that sets the value by hand is nearer than the trait.
         let manual = grow("manual", &json!({"id": "manual-one"}));
@@ -1784,6 +1885,44 @@ mod tests {
         );
         // 8 × 3^0.75, to 6 significant digits.
         assert_eq!(small.spec["generator"]["params"]["space_density"], 18.2361);
+    }
+
+    /// A rule reads a range as its typical value, else its middle, and
+    /// qualified states as the most usual one; states that tie give it
+    /// nothing to read.
+    #[test]
+    fn rules_read_ranges_and_qualified_states() {
+        let density = |own: &Value| {
+            let grown = grow("plain", own);
+            (
+                grown.spec["generator"]["params"]["space_density"].clone(),
+                grown.spec["generator"]["params"]["alternate"].clone(),
+                grown.rules["generator.params.alternate"].1.clone(),
+            )
+        };
+        // 0.1 to 0.2 m reads as 0.15 m, so the density is 8.
+        let middle = density(&json!({"id": "plain-one", "traits": {
+            "leaf_length_m": {"min": 0.1, "max": 0.2, "high": 0.5},
+            "leaf_arrangement": {"opposite": "usually", "alternate": "rarely"}}}));
+        assert_eq!(middle, (json!(8.0), json!(0), None));
+        let typical = density(&json!({"id": "plain-two", "traits": {
+            "leaf_length_m": {"min": 0.1, "max": 0.4, "typical": 0.15},
+            "leaf_arrangement": {"alternate": "often", "opposite": "sometimes"}}}));
+        assert_eq!(typical, (json!(8.0), json!(1), None));
+        let tied = density(&json!({"id": "plain-three", "traits": {
+            "leaf_arrangement": {"alternate": "often", "opposite": "often"}}}));
+        assert_eq!(tied.1, Value::Null);
+        assert_eq!(
+            tied.2.as_deref(),
+            Some(
+                "`leaf_arrangement` has no one most usual state: alternate and opposite are each often"
+            )
+        );
+        // A bool's states read as the bool.
+        assert_eq!(
+            super::reading("clonal", &json!({"true": "usually", "false": "rarely"})),
+            Ok(json!(true))
+        );
     }
 
     /// A deleted rule, a program without the parameter or a chain without

@@ -42,7 +42,16 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   `spec.json` for its form and looks and a `conditions.json` for the site
   it typically grows on. Where it has been written, a `niche.json` says
   where it grows and a `shed.json` what falls from it.
-- **Plant programs.** 14 programs in PlantGen's open L-system language
+- **What a plant is.** A species, and any taxon above it (a genus, a
+  family, an order or a clade), can state its characters by organ: how
+  its leaves are set and cut, whether its flowers come singly, in heads
+  or in spikelets, its ray and disc florets, glumes and awns. Sizes are
+  ranges and states can be qualified ("usually opposite, rarely
+  alternate"), each with the source it comes from. A species inherits
+  what its genus and family state, and `plantc traits <species>` shows
+  where each character came from and which are still missing. The first
+  families have their characters; most have none yet (`plantc audit`).
+- **Plant programs.** 15 programs in PlantGen's open L-system language
   (`crates/plantgen/programs/*.lsys`), from conifers and broadleaf trees to
   grasses, ferns, cacti and climbers. Versioned environment tools let a
   growing tip ask about light, space, vigour and its host.
@@ -77,7 +86,8 @@ cargo build --release
 at every age, rendering it at one age or every age, its organs through the
 year, its card textures and the ground's looks, building packages, and
 listing the sources a species' values cite (`plantc sources cite ID` finds
-every value that names one).
+every value that names one), and a species' characters and what each
+family has stated so far (`plantc traits`, `plantc audit`).
 `--library DIR` reads species and programs from a folder on top of the
 built-in ones, so you can write your own.
 

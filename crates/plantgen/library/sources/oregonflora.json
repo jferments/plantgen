@@ -1,0 +1,10 @@
+{
+  "id": "oregonflora",
+  "title": "OregonFlora: Flora of Oregon, online keys and taxon pages",
+  "authors": "OregonFlora, Oregon State University",
+  "year": 2026,
+  "url": "https://oregonflora.org/",
+  "licence": "copyrighted text; facts only",
+  "tier": 1,
+  "kind": "text"
+}

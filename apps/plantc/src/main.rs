@@ -31,6 +31,7 @@ use plantgen::quality::{self, Quality};
 use plantgen::raster;
 use plantgen::spec::{self, Environment, PlantSpec, Variant};
 use plantgen::templates::{self, Templates};
+use plantgen::traits::{Applies, Vocabulary};
 
 /// Why a command stopped early.
 enum Failure {
@@ -109,6 +110,8 @@ fn run() -> Result<(), Failure> {
         "check" => check(&args),
         "spec" => spec_command(&args),
         "rules" => rules_command(&args),
+        "traits" => traits_command(&args),
+        "audit" => audit_command(&args),
         "grow" => grow_command(&args),
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
@@ -126,6 +129,7 @@ fn run() -> Result<(), Failure> {
     }
 }
 
+#[allow(clippy::too_many_lines)]
 fn print_usage() -> Result<(), Failure> {
     out!(
         "plantc: grow, preview and package procedural plants
@@ -148,6 +152,19 @@ Usage:
       the rank file (or species) that holds it. Then the general ones,
       with no taxonomic home: rules at all plants, and the parameter
       defaults of programs not named for a taxon. The list should shrink.
+  plantc traits [<species>]
+      Without a species, print the characters a spec may state
+      (traits.json) as a tree of organs: each organ, where it exists, and
+      its characters with their types. With one, print the characters it
+      states, its own and those it inherits, each with the file that set
+      it and the source its note cites; then by organ what is missing,
+      and which organs do not apply to it.
+  plantc audit [<taxon>]
+      How many of the characters that apply to each species it states,
+      its own or inherited (optional characters left out). Without a
+      taxon, by family, with what each family's own file states; with a
+      family, genus or higher rank, by species, then the characters its
+      species most often lack.
   plantc grow <species|spec.json> [--env ENV] [--seed N] [--years N]
       Grow one variant and print its size at every keyframe.
   plantc render <species|spec.json> --out FILE.png [--env ENV] [--seed N]
@@ -496,8 +513,8 @@ fn spec_command(args: &[String]) -> Result<(), Failure> {
     }
     if !inherited.traits.is_empty() {
         out!("traits:");
-        for (key, (value, file)) in &inherited.traits {
-            out!("  {key} = {value}  ({file})");
+        for (key, stated) in &inherited.traits {
+            out!("  {key} = {}  ({})", stated.value, stated.file);
         }
     }
     if !inherited.rules.is_empty() {
@@ -589,6 +606,288 @@ fn rules_command(args: &[String]) -> Result<(), Failure> {
             .collect::<Vec<_>>()
             .join(", ")
     );
+    Ok(())
+}
+
+fn traits_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &[])?;
+    let vocabulary = Vocabulary::builtin();
+    match options.positional.as_slice() {
+        [] => {
+            out!(
+                "{} characters on {} organs (traits.json schema {}): each organ, where it exists, and its characters",
+                vocabulary.traits.len(),
+                vocabulary.organs.len(),
+                vocabulary.schema
+            );
+            for (depth, name) in vocabulary.organ_tree() {
+                let organ = &vocabulary.organs[name];
+                let indent = "  ".repeat(depth);
+                out!("{indent}{name}{}: {}", condition(&organ.when), organ.why);
+                for (key, item) in &vocabulary.traits {
+                    if item.organ == name {
+                        out!(
+                            "{indent}  - {key}: {}{}{}",
+                            item.what(),
+                            condition(&item.when),
+                            if item.optional { " (optional)" } else { "" }
+                        );
+                    }
+                }
+            }
+            Ok(())
+        }
+        [id] => species_traits(vocabulary, id),
+        _ => Err("`plantc traits` takes at most one species".into()),
+    }
+}
+
+/// `, where a is x, y or z, or b is w`, or nothing for an empty `when`.
+fn condition(when: &plantgen::traits::When) -> String {
+    if when.is_empty() {
+        return String::new();
+    }
+    let parts: Vec<String> = when
+        .iter()
+        .map(|(key, values)| match values.split_last() {
+            Some((last, rest)) if !rest.is_empty() => {
+                format!("{key} is {} or {last}", rest.join(", "))
+            }
+            Some((only, _)) => format!("{key} is {only}"),
+            None => format!("{key} is stated"),
+        })
+        .collect();
+    format!(", where {}", parts.join(", or "))
+}
+
+/// A species' characters by organ: each stated one with its file and
+/// source, then what is missing, then the organs that do not apply.
+fn species_traits(vocabulary: &Vocabulary, id: &str) -> Result<(), Failure> {
+    let library = library();
+    let inherited = library.inherited(id).map_err(|error| error.to_string())?;
+    let spec = library.spec(id).map_err(|error| error.to_string())?;
+    let traits = inherited.trait_values();
+    let coverage = vocabulary.coverage(&traits);
+    let own = inherited
+        .traits
+        .values()
+        .filter(|stated| stated.file == inherited.chain[0])
+        .count();
+    out!(
+        "{} ({}): states {} of the {} characters that apply ({:.0}%), {own} in its own spec.json; {} more may apply once what they depend on is stated",
+        spec.id,
+        spec.taxon.scientific_name,
+        coverage.stated.len(),
+        coverage.stated.len() + coverage.missing.len(),
+        coverage.share() * 100.0,
+        coverage.undecided.len()
+    );
+    let mut absent = Vec::new();
+    for (_, name) in vocabulary.organ_tree() {
+        let applies = vocabulary.organ_applies(name, &traits);
+        if applies == Applies::No {
+            absent.push(name);
+            continue;
+        }
+        let of_organ = |list: &[String]| -> Vec<String> {
+            list.iter()
+                .filter(|key| vocabulary.traits[key.as_str()].organ == name)
+                .cloned()
+                .collect()
+        };
+        let missing = of_organ(&coverage.missing);
+        let undecided = of_organ(&coverage.undecided);
+        let stated: Vec<(&String, &plantgen::inherit::Stated)> = inherited
+            .traits
+            .iter()
+            .filter(|(key, _)| vocabulary.traits[key.as_str()].organ == name)
+            .collect();
+        if applies == Applies::Undecided && stated.is_empty() {
+            continue;
+        }
+        out!(
+            "{name}{}",
+            if applies == Applies::Undecided {
+                " (may apply)"
+            } else {
+                ""
+            }
+        );
+        for (key, stated) in stated {
+            let source = stated
+                .note
+                .as_ref()
+                .and_then(|note| note.get("source"))
+                .and_then(serde_json::Value::as_str)
+                .unwrap_or("no note");
+            out!(
+                "  {key} = {}  ({}; {source})",
+                vocabulary.show(key, &stated.value),
+                stated.file
+            );
+        }
+        if !missing.is_empty() {
+            out!("  missing: {}", missing.join(", "));
+        }
+        if !undecided.is_empty() && applies == Applies::Yes {
+            out!("  may apply: {}", undecided.join(", "));
+        }
+    }
+    let waiting: Vec<&str> = vocabulary
+        .organ_tree()
+        .into_iter()
+        .map(|(_, name)| name)
+        .filter(|name| vocabulary.organ_applies(name, &traits) == Applies::Undecided)
+        .collect();
+    if !waiting.is_empty() {
+        out!(
+            "organs that may apply once what they depend on is stated: {}",
+            waiting.join(", ")
+        );
+    }
+    if !absent.is_empty() {
+        out!("organs that do not apply: {}", absent.join(", "));
+    }
+    Ok(())
+}
+
+#[allow(clippy::too_many_lines)]
+fn audit_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &[])?;
+    let library = library();
+    let vocabulary = Vocabulary::builtin();
+    let taxon = match options.positional.as_slice() {
+        [] => None,
+        [taxon] => Some(plantgen::inherit::file_name(taxon)),
+        _ => return Err("`plantc audit` takes at most one taxon".into()),
+    };
+    // Each species with its coverage and the files it stands on.
+    let mut audited = Vec::new();
+    for entry in library.species() {
+        let inherited = library
+            .inherited(&entry.id)
+            .map_err(|error| error.to_string())?;
+        let within = taxon.as_deref().is_none_or(|taxon| {
+            entry.family == taxon
+                || entry.genus == taxon
+                || inherited.chain[1..].iter().any(|file| {
+                    library
+                        .rank(file)
+                        .is_some_and(|rank| plantgen::inherit::file_name(&rank.name) == taxon)
+                })
+        });
+        if !within {
+            continue;
+        }
+        let traits = inherited.trait_values();
+        let own = inherited
+            .traits
+            .values()
+            .filter(|stated| stated.file == inherited.chain[0])
+            .count();
+        audited.push((entry, vocabulary.coverage(&traits), own));
+    }
+    if audited.is_empty() {
+        return Err(format!(
+            "no species of the library is in `{}`; name a family, genus or higher rank, as its rank file is named",
+            taxon.unwrap_or_default()
+        )
+        .into());
+    }
+    let total = |rows: &[&(&plantgen::library::Entry, plantgen::traits::Coverage, usize)]| {
+        let stated: usize = rows
+            .iter()
+            .map(|(_, coverage, _)| coverage.stated.len())
+            .sum();
+        let missing: usize = rows
+            .iter()
+            .map(|(_, coverage, _)| coverage.missing.len())
+            .sum();
+        (stated, stated + missing)
+    };
+    let percent = |(stated, applying): (usize, usize)| {
+        if applying == 0 {
+            100.0
+        } else {
+            #[allow(clippy::cast_precision_loss)]
+            let share = stated as f64 / applying as f64;
+            share * 100.0
+        }
+    };
+    let all: Vec<_> = audited.iter().collect();
+    let (stated, applying) = total(&all);
+    let stating_files = library
+        .ranks()
+        .filter(|rank| rank.parts().any(|(_, part)| !part.traits.is_empty()))
+        .count();
+    match &taxon {
+        None => {
+            out!(
+                "{} species state {stated} of the {applying} characters that apply to them ({:.0}%), own or inherited; {stating_files} rank files state characters",
+                audited.len(),
+                percent((stated, applying))
+            );
+            out!(
+                "By family: species, characters stated of those that apply, and how many its family.json states:"
+            );
+            let mut families: BTreeMap<&str, Vec<_>> = BTreeMap::new();
+            for row in &audited {
+                families.entry(row.0.family.as_str()).or_default().push(row);
+            }
+            let width = families
+                .keys()
+                .map(|family| family.len())
+                .max()
+                .unwrap_or(0);
+            for (family, rows) in &families {
+                let (stated, applying) = total(rows);
+                let own = library
+                    .rank(&format!("{family}/family.json"))
+                    .map_or(0, |rank| rank.shared.traits.len());
+                out!(
+                    "  {family:<width$}  {:>3} species  {stated:>5} of {applying:>5}  {:>3.0}%  family.json {own}",
+                    rows.len(),
+                    percent((stated, applying))
+                );
+            }
+        }
+        Some(taxon) => {
+            out!(
+                "{taxon}: {} species state {stated} of the {applying} characters that apply to them ({:.0}%), own or inherited",
+                audited.len(),
+                percent((stated, applying))
+            );
+            let width = audited
+                .iter()
+                .map(|(entry, _, _)| entry.id.len())
+                .max()
+                .unwrap_or(0);
+            let mut lacking: BTreeMap<&str, usize> = BTreeMap::new();
+            for (entry, coverage, own) in &audited {
+                out!(
+                    "  {:<width$}  {:>3} of {:>3}  {:>3.0}%  {own} in its spec.json",
+                    entry.id,
+                    coverage.stated.len(),
+                    coverage.stated.len() + coverage.missing.len(),
+                    coverage.share() * 100.0
+                );
+                for key in &coverage.missing {
+                    *lacking.entry(key.as_str()).or_default() += 1;
+                }
+            }
+            let mut lacking: Vec<(&str, usize)> = lacking.into_iter().collect();
+            lacking.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(b.0)));
+            out!(
+                "Most often missing: {}",
+                lacking
+                    .iter()
+                    .take(12)
+                    .map(|(key, count)| format!("{key} ({count})"))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            );
+        }
+    }
     Ok(())
 }
 

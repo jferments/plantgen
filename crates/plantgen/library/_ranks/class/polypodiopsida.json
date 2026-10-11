@@ -2,5 +2,15 @@
   "schema": 1,
   "rank": "class",
   "name": "Polypodiopsida",
-  "parent": "clade/euphyllophytes"
+  "parent": "clade/euphyllophytes",
+  "traits": {
+    "reproduction": "spores"
+  },
+  "evidence": {
+    "traits.reproduction": {
+      "evidence": "SourceInferred",
+      "source": "openstax-biology-2e",
+      "note": "Ferns and horsetails are seedless vascular plants: they spread by spores shed from sporangia, not by seeds (Biology 2e, 25.4)."
+    }
+  }
 }

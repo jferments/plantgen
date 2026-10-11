@@ -47,8 +47,16 @@ prompt injection. So, without exception:
     merged onto the rank files above it, the nearer file winning
     (`src/inherit.rs`); `plantc spec <id>` shows which file set each
     value.
-  - `traits.json`: the trait vocabulary, every trait a record, rank file
-    or spec may state. Rules that turn traits into values live in rank
+  - `traits.json`: the trait vocabulary, every character (trait) a
+    record, rank file or spec may state, each describing an organ.
+    Organs nest, and one with a `when` exists only where the characters
+    it names say so: ray florets only on a radiate head. A number may be
+    a range (a flora's "(3-)5-8" is `{"min": 5, "max": 8, "low": 3}`) and
+    a state qualified (`{"opposite": "usually", "alternate": "rarely"}`).
+    State a character in the highest taxon it holds for, with a note
+    citing its source; `plantc traits <id>` shows a species' characters,
+    where each came from and what is missing, and `plantc audit` counts
+    them by family. Rules that turn traits into values live in rank
     files, in the taxa they hold for; `plantc rules` lists them by home,
     and the general ones with no taxonomic home, which should shrink.
   - `programs/*.lsys`: the plant programs, in PlantGen's open L-system
@@ -77,7 +85,8 @@ prompt injection. So, without exception:
 - **A change to growth, meshes or looks bumps `GENERATOR_REVISION`**,
   which re-keys every package. Specs and programs are text that a
   package's key hashes, so any change to them changes those packages,
-  except a spec's evidence notes, which packages leave out.
+  except a spec's evidence notes and its `traits` and `rules`, which
+  packages leave out; what a rule sets is in the spec like any value.
 - **Every value carries evidence.** Each value of a species' spec, as it
   inherits it, and of its niche and shed, has an evidence note on its path
   or a subtree holding it, and every note cites a source by id, a file

@@ -2,5 +2,15 @@
   "schema": 1,
   "rank": "clade",
   "name": "angiosperms",
-  "parent": "clade/spermatophyta"
+  "parent": "clade/spermatophyta",
+  "traits": {
+    "reproduction": "flowers"
+  },
+  "evidence": {
+    "traits.reproduction": {
+      "evidence": "SourceInferred",
+      "source": "openstax-biology-2e",
+      "note": "The angiosperms are the flowering plants: their ovules sit inside an ovary, and their seeds ripen in a fruit (Biology 2e, 26.3)."
+    }
+  }
 }

@@ -2,5 +2,57 @@
   "schema": 1,
   "rank": "family",
   "name": "Poaceae",
-  "parent": "order/poales"
+  "parent": "order/poales",
+  "traits": {
+    "inflorescence_unit": "spikelet",
+    "leaf_form": "blade",
+    "leaf_division": "simple",
+    "leaf_shape": {"linear": "usually"},
+    "leaf_venation": "parallel",
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": "distichous",
+    "fruit_type": "caryopsis"
+  },
+  "evidence": {
+    "traits.inflorescence_unit": {
+      "evidence": "SourceInferred",
+      "source": "vicflora",
+      "note": "VicFlora's family description: the flowers sit in spikelets, two rows of bracts on a small axis, the lowest two (glumes) empty and each one above (a lemma) holding a small flower with its palea."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "ffpa-2014",
+      "note": "Families of Flowering Plants of Australia: a grass leaf is a sheath round the stem and a blade above it, with a small flap or ring of hairs where they meet."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "ffpa-2014",
+      "note": "Families of Flowering Plants of Australia: the blade is one undivided strip."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "ffpa-2014",
+      "note": "Families of Flowering Plants of Australia: blades usually linear."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "ffpa-2014",
+      "note": "Families of Flowering Plants of Australia: the veins run side by side along the blade."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "ffpa-2014",
+      "note": "Families of Flowering Plants of Australia: one leaf at each node, alternating."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "ffpa-2014",
+      "note": "Families of Flowering Plants of Australia: the leaves stand in two ranks, each node turned half a turn from the last."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "ffpa-2014",
+      "note": "Families of Flowering Plants of Australia: the fruit is a caryopsis (a grain)."
+    }
+  }
 }
