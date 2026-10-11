@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Hypochaeris",
+  "traits": {
+    "capitulum_kind": "liguliflorous",
+    "ligulate_florets": {"min": 20, "max": 100},
+    "receptacle": "paleate",
+    "receptacle_shape": "flat"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "oregonflora",
+      "note": "OregonFlora's page for the genus, which gives FNA's account (Bogler, volume 19), as quoted in search results (the page itself was not read): florets 20 to 100 or more, each strap-shaped, as in all of the chicory tribe; receptacles flat, slightly pitted, bearing linear to awl-shaped papery scales (paleae)."
+    }
+  }
+}

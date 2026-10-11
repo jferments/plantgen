@@ -5,6 +5,10 @@
   "traits": {
     "capitulum_kind": {"radiate": "usually", "discoid": "rarely"},
     "disc_florets": {"min": 120, "max": 200},
+    "phyllaries": {"min": 35, "max": 60},
+    "phyllary_series": {"min": 3, "max": 4},
+    "receptacle": "epaleate",
+    "receptacle_shape": "convex",
     "pappus": "absent"
   },
   "evidence": {
@@ -17,6 +21,26 @@
       "evidence": "SourceInferred",
       "source": "fna-19-leucanthemum",
       "note": "FNA's account of the genus: 120 to 200 or more yellow disc florets in a head."
+    },
+    "traits.phyllaries": {
+      "evidence": "SourceInferred",
+      "source": "fna-19-leucanthemum",
+      "note": "FNA's account of the genus, as search results quote copies of its text (the pages themselves were not read): involucres hemispheric or broader, 12 to 35 mm across or more; phyllaries persistent, 35 to 60 or more in 3 to 4 or more rows."
+    },
+    "traits.phyllary_series": {
+      "evidence": "SourceInferred",
+      "source": "fna-19-leucanthemum",
+      "note": "FNA's account of the genus, as search results quote copies of its text (the pages themselves were not read): phyllaries in 3 to 4 or more rows."
+    },
+    "traits.receptacle": {
+      "evidence": "SourceInferred",
+      "source": "fna-19-leucanthemum",
+      "note": "FNA's account of the genus, as search results quote copies of its text (the pages themselves were not read): receptacles convex, without scales (epaleate)."
+    },
+    "traits.receptacle_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-19-leucanthemum",
+      "note": "FNA's account of the genus, as search results quote copies of its text (the pages themselves were not read): receptacles convex."
     },
     "traits.pappus": {
       "evidence": "SourceInferred",
