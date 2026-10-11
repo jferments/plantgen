@@ -222,6 +222,7 @@ Usage:
   plantc export <species|spec.json|package.afterplant> [--out DIR]
                 [--format glb] [--env ENV] [--seed N] [--age N]
                 [--shade attribute|baked] [--quality draft|standard]
+                [--compress none|quantize] [--attributes all|wind|none]
       Write one variant at one age as glTF 2.0 binary files that need no
       PlantGen code, one per level of detail (STEM-lod0.glb to
       STEM-lod3.glb), and an index, STEM.json, in DIR (default `exports`);
@@ -231,7 +232,13 @@ Usage:
       grows it; given a package, every level is checked against it.
       Bark keeps its own colour, with the darkening of the plant's own
       shade as the attribute _PLANTGEN_SHADE, or with --shade baked
-      darkened as packages hold it.
+      darkened as packages hold it. --compress quantize stores positions,
+      normals and colours as small integers and parts as instances, a
+      quarter to a half smaller; such files need KHR_mesh_quantization and
+      EXT_mesh_gpu_instancing, which three.js, Unity's glTFast and current
+      Blender read and Godot does not. --attributes wind leaves out the
+      growth attributes (_PLANTGEN_BIRTH, _PLANTGEN_SHED), none also the
+      wind ones (_PLANTGEN_WIND, _PLANTGEN_RADIUS).
   plantc sources [list | cite ID]
       List the sources evidence notes cite (library/sources/<id>.json),
       or every value that cites the source ID: the file holding its note,
@@ -1973,7 +1980,17 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
         args,
         &[
-            "out", "format", "quality", "program", "day", "env", "seed", "age", "shade",
+            "out",
+            "format",
+            "quality",
+            "program",
+            "day",
+            "env",
+            "seed",
+            "age",
+            "shade",
+            "compress",
+            "attributes",
         ],
     )?;
     match options.flags.get("format").map(String::as_str) {
@@ -1988,6 +2005,26 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
         Some(other) => {
             return Err(format!("unknown shade `{other}`; use attribute or baked").into());
         }
+    };
+    let compression = match options.flags.get("compress").map(String::as_str) {
+        None | Some("none") => export::Compression::None,
+        Some("quantize") => export::Compression::Quantize,
+        Some(other) => {
+            return Err(format!("unknown compression `{other}`; use none or quantize").into());
+        }
+    };
+    let attributes = match options.flags.get("attributes").map(String::as_str) {
+        None | Some("all") => export::Attributes::All,
+        Some("wind") => export::Attributes::Wind,
+        Some("none") => export::Attributes::None,
+        Some(other) => {
+            return Err(format!("unknown attributes `{other}`; use all, wind or none").into());
+        }
+    };
+    let settings = export::Settings {
+        shade,
+        compression,
+        attributes,
     };
     let target = options.one_positional("a species or a package")?;
     let package_dir = Path::new(target);
@@ -2067,7 +2104,7 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
         manifest,
         object: &read,
     });
-    let exported = export::export(&inputs, &plant, shade, built.as_ref())
+    let exported = export::export(&inputs, &plant, &settings, built.as_ref())
         .map_err(|error| error.to_string())?;
     let out = PathBuf::from(options.flags.get("out").map_or("exports", String::as_str));
     let written = export::write(&exported, &out).map_err(|error| error.to_string())?;
@@ -2085,10 +2122,10 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
         #[allow(clippy::cast_precision_loss)]
         let mebibytes = level.glb.len() as f64 / 1_048_576.0;
         out!(
-            "  {}  {mebibytes:.1} MiB, {} triangles, {} nodes",
+            "  {}  {mebibytes:.1} MiB, {} triangles in {} meshes drawn",
             path.display(),
             level.summary.triangles,
-            level.summary.nodes
+            level.summary.instances
         );
     }
     if let Some(index) = written.last() {

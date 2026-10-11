@@ -17,8 +17,9 @@
 //!   sees through the plant's own leaves (`crate::occlusion`) is an
 //!   attribute of its own, `_PLANTGEN_SHADE`, unless [`Shade::Baked`] puts
 //!   it in the colour as packages hold it.
-//! - **Cards**: each organ card as a quad, a bent card as its grid, with
-//!   one primitive and material per organ type. Its texture is the type's
+//! - **Cards**: each organ card as a quad, a bent card as its grid (its
+//!   shared corners stored once), with one primitive and material per
+//!   organ type. Its texture is the type's
 //!   template in the look's colours (sRGB) with coverage in alpha, cut out
 //!   at one half and drawn from both sides; texels the template leaves
 //!   uncovered take the colour of the nearest covered one, so a renderer's
@@ -32,6 +33,17 @@
 //!   shoots as their type's part meshes (`crate::parts`), each variant
 //!   stored once and placed by one node per organ. An organ's shade is its
 //!   material's colour factor, in sixteenths.
+//!
+//! [`Compression::Quantize`] stores the wood's, cards' and spines'
+//! positions as unsigned shorts on a grid their node's translation and
+//! uniform scale give back (within half a step, which the files record),
+//! normals as bytes and texture coordinates and colours as shorts
+//! (`KHR_mesh_quantization`), and draws each part mesh's organs as
+//! instances of one node (`EXT_mesh_gpu_instancing`). Files then require
+//! both extensions, which three.js, Babylon.js, Unity's glTFast and
+//! Blender's current importer read and Godot's does not; the default
+//! files need none. [`Attributes`] leaves out the growth or wind
+//! attributes below for a model that never grows or sways.
 //!
 //! Positions are metres from the plant's foot with +Y up, as glTF's are.
 //! Besides glTF's own attributes, solid meshes carry `PlantGen`'s, which
@@ -49,12 +61,13 @@
 //! the variant, the age and the species' provenance in `extras`. The same
 //! inputs give the same bytes on every machine.
 //!
-//! Not yet: the bark's pattern (a tile per species or a bake per tree,
-//! waiting on the owner's call), normal and roughness maps, tangents,
-//! impostors, coverage-preserving mipmaps (PNG holds no mipmaps), wind and
-//! growth animation, and other formats.
+//! Not yet: meshopt compression, levels drawn to a budget, the bark's
+//! pattern (a tile per species or a bake per tree, waiting on the owner's
+//! call), normal and roughness maps, tangents, impostors,
+//! coverage-preserving mipmaps (PNG holds no mipmaps), wind and growth
+//! animation, and other formats.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, HashMap};
 use std::path::{Path, PathBuf};
 
 use serde_json::{Value, json};
@@ -103,6 +116,67 @@ impl Shade {
     }
 }
 
+/// How the files are encoded (see the module).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Compression {
+    /// Single-precision floats everywhere: every glTF viewer reads them.
+    None,
+    /// Positions, normals, texture coordinates and colours as integers
+    /// (`KHR_mesh_quantization`) and parts as instances
+    /// (`EXT_mesh_gpu_instancing`), both required by the files.
+    Quantize,
+}
+
+impl Compression {
+    #[must_use]
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::None => "none",
+            Self::Quantize => "quantize",
+        }
+    }
+}
+
+/// Which of `PlantGen`'s own attributes the files carry.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Attributes {
+    /// Birth, shed, wind and radius.
+    All,
+    /// Wind and radius, for a model that sways but never grows.
+    Wind,
+    /// None of them.
+    None,
+}
+
+impl Attributes {
+    #[must_use]
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::All => "all",
+            Self::Wind => "wind",
+            Self::None => "none",
+        }
+    }
+}
+
+/// How an export is written.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Settings {
+    pub shade: Shade,
+    pub compression: Compression,
+    pub attributes: Attributes,
+}
+
+impl Default for Settings {
+    fn default() -> Self {
+        Self {
+            shade: Shade::Attribute,
+            compression: Compression::None,
+            attributes: Attributes::All,
+        }
+    }
+}
+
 /// One variant of a spec grown to one age, as its package grows it.
 #[derive(Debug, Clone)]
 pub struct Plant {
@@ -119,16 +193,19 @@ pub struct Plant {
 }
 
 /// One level of detail as a file.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Level {
     pub file: String,
     pub glb: Vec<u8>,
     pub summary: gltf::Summary,
+    /// Quantized files: the largest step between stored positions,
+    /// metres; a position is within half of it of the plant's.
+    pub position_step: Option<f32>,
 }
 
 /// An exported plant: its files' common name, a GLB file per level and the
 /// index (JSON) naming them.
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Export {
     pub stem: String,
     pub levels: Vec<Level>,
@@ -250,9 +327,9 @@ pub fn grow(inputs: &Inputs, variant: usize, age: f64) -> Result<Plant, PackageE
     })
 }
 
-/// Export `plant` of `inputs`, writing the bark's shade as `shade`; with
-/// `built`, the package of the same inputs, check that every level is
-/// drawn as the package holds it.
+/// Export `plant` of `inputs` as `settings` say; with `built`, the package
+/// of the same inputs, check that every level is drawn as the package
+/// holds it.
 ///
 /// # Errors
 ///
@@ -261,7 +338,7 @@ pub fn grow(inputs: &Inputs, variant: usize, age: f64) -> Result<Plant, PackageE
 pub fn export(
     inputs: &Inputs,
     plant: &Plant,
-    shade: Shade,
+    settings: &Settings,
     built: Option<&Built<'_>>,
 ) -> Result<Export, PackageError> {
     let levels = package::level_meshes(&plant.graph, inputs, true);
@@ -272,13 +349,19 @@ pub fn export(
     let mut files = Vec::with_capacity(levels.len());
     for (level, (mesh, shades)) in levels.into_iter().enumerate() {
         let file = format!("{stem}-lod{level}.glb");
-        let extras = metadata(inputs, plant, Some(level), shade);
-        let glb = level_glb(&mesh, &shades, inputs, shade, extras);
+        let (glb, position_step) = level_glb(&mesh, &shades, inputs, *settings, &|step| {
+            metadata(inputs, plant, Some((level, step)), *settings)
+        });
         let summary =
             gltf::check(&glb).map_err(|error| format_error(format!("{file}: {error}")))?;
-        files.push(Level { file, glb, summary });
+        files.push(Level {
+            file,
+            glb,
+            summary,
+            position_step,
+        });
     }
-    let index = index(inputs, plant, &files, shade)?;
+    let index = index(inputs, plant, &files, *settings)?;
     Ok(Export {
         stem,
         levels: files,
@@ -460,27 +543,70 @@ impl Arrays {
         out
     }
 
-    /// Write them into `document` as a primitive drawn with `material`.
-    fn primitive(&self, document: &mut Document, material: Index) -> Value {
-        let mut attributes = serde_json::Map::new();
-        attributes.insert(
-            "POSITION".into(),
-            json!(document.attribute(&self.positions, 3, true)),
-        );
-        attributes.insert(
-            "NORMAL".into(),
-            json!(document.attribute(&self.normals, 3, false)),
-        );
-        if !self.uvs.is_empty() {
-            attributes.insert(
-                "TEXCOORD_0".into(),
-                json!(document.attribute(&self.uvs, 2, false)),
-            );
+    /// Leave out the attributes `attributes` does not keep.
+    fn keep(&mut self, attributes: Attributes) {
+        if attributes != Attributes::All {
+            self.births.clear();
+            self.sheds.clear();
         }
-        attributes.insert(
-            "COLOR_0".into(),
-            json!(document.attribute(&self.colours, 3, false)),
-        );
+        if attributes == Attributes::None {
+            self.winds.clear();
+            self.radii.clear();
+        }
+    }
+
+    /// Write them into `document` as a primitive drawn with `material`;
+    /// with a `grid`, positions, normals, texture coordinates and colours
+    /// as integers (`KHR_mesh_quantization`).
+    fn primitive(&self, document: &mut Document, material: Index, grid: Option<&Grid>) -> Value {
+        let mut attributes = serde_json::Map::new();
+        let mut insert = |name: &str, accessor: Index| {
+            attributes.insert(name.into(), json!(accessor));
+        };
+        if let Some(grid) = grid {
+            let positions: Vec<i32> = self
+                .positions
+                .as_chunks::<3>()
+                .0
+                .iter()
+                .flat_map(|position| grid.stored(*position))
+                .collect();
+            insert(
+                "POSITION",
+                document.integer_attribute(&positions, 3, gltf::UNSIGNED_SHORT, false, true),
+            );
+            insert(
+                "NORMAL",
+                document.integer_attribute(
+                    &signed_bytes(&self.normals),
+                    3,
+                    gltf::BYTE,
+                    true,
+                    false,
+                ),
+            );
+            if !self.uvs.is_empty() {
+                let uvs = if self.uvs.iter().all(|uv| (0.0..=1.0).contains(uv)) {
+                    let shorts = unsigned_shorts(&self.uvs);
+                    document.integer_attribute(&shorts, 2, gltf::UNSIGNED_SHORT, true, false)
+                } else {
+                    document.attribute(&self.uvs, 2, false)
+                };
+                insert("TEXCOORD_0", uvs);
+            }
+            let colours = unsigned_shorts(&self.colours);
+            insert(
+                "COLOR_0",
+                document.integer_attribute(&colours, 3, gltf::UNSIGNED_SHORT, true, false),
+            );
+        } else {
+            insert("POSITION", document.attribute(&self.positions, 3, true));
+            insert("NORMAL", document.attribute(&self.normals, 3, false));
+            if !self.uvs.is_empty() {
+                insert("TEXCOORD_0", document.attribute(&self.uvs, 2, false));
+            }
+            insert("COLOR_0", document.attribute(&self.colours, 3, false));
+        }
         for (name, values) in [
             ("_PLANTGEN_BIRTH", &self.births),
             ("_PLANTGEN_SHED", &self.sheds),
@@ -489,7 +615,7 @@ impl Arrays {
             ("_PLANTGEN_SHADE", &self.shades),
         ] {
             if !values.is_empty() {
-                attributes.insert(name.into(), json!(document.attribute(values, 1, false)));
+                insert(name, document.attribute(values, 1, false));
             }
         }
         json!({
@@ -498,6 +624,126 @@ impl Arrays {
             "material": material,
         })
     }
+}
+
+/// Values within -1 to 1 as normalized signed bytes.
+fn signed_bytes(values: &[f32]) -> Vec<i32> {
+    #[allow(clippy::cast_possible_truncation)]
+    values
+        .iter()
+        .map(|&value| (value.clamp(-1.0, 1.0) * 127.0).round() as i32)
+        .collect()
+}
+
+/// Values within 0 to 1 as normalized unsigned shorts.
+fn unsigned_shorts(values: &[f32]) -> Vec<i32> {
+    #[allow(clippy::cast_possible_truncation)]
+    values
+        .iter()
+        .map(|&value| (f64::from(value.clamp(0.0, 1.0)) * 65535.0).round() as i32)
+        .collect()
+}
+
+/// The grid a quantized mesh's positions are stored on: each is `origin`
+/// plus `step` times its three unsigned shorts, which its node's
+/// translation and uniform scale give back. A uniform scale keeps the
+/// normals as they are.
+#[derive(Debug, Clone, Copy)]
+struct Grid {
+    origin: [f32; 3],
+    step: f32,
+}
+
+impl Grid {
+    /// The finest grid of unsigned shorts that holds every position of
+    /// `arrays`.
+    fn around<'a>(arrays: impl Iterator<Item = &'a Arrays>) -> Self {
+        let mut low = [f32::INFINITY; 3];
+        let mut high = [f32::NEG_INFINITY; 3];
+        for arrays in arrays {
+            for position in arrays.positions.as_chunks::<3>().0 {
+                for axis in 0..3 {
+                    low[axis] = low[axis].min(position[axis]);
+                    high[axis] = high[axis].max(position[axis]);
+                }
+            }
+        }
+        if !low[0].is_finite() {
+            return Self {
+                origin: [0.0; 3],
+                step: 1.0,
+            };
+        }
+        let extent = (0..3)
+            .map(|axis| f64::from(high[axis]) - f64::from(low[axis]))
+            .fold(0.0, f64::max);
+        // A hair over the extent's share, so the farthest position fits.
+        #[allow(clippy::cast_possible_truncation)]
+        let step = ((extent / f64::from(u16::MAX)) * (1.0 + 1.0e-6)).max(1.0e-9) as f32;
+        Self { origin: low, step }
+    }
+
+    /// `position`'s integers on the grid.
+    fn stored(&self, position: [f32; 3]) -> [i32; 3] {
+        #[allow(clippy::cast_possible_truncation)]
+        std::array::from_fn(|axis| {
+            ((f64::from(position[axis]) - f64::from(self.origin[axis])) / f64::from(self.step))
+                .round()
+                .clamp(0.0, f64::from(u16::MAX)) as i32
+        })
+    }
+}
+
+/// `mesh` with each run of identical vertices stored once, in the order
+/// they first appear, and its triangles unchanged: a bent card's grid
+/// shares its inner corners.
+fn welded(mesh: &Mesh) -> Mesh {
+    let mut out = Mesh::default();
+    let mut seen: HashMap<[u32; 15], u32> = HashMap::with_capacity(mesh.positions.len());
+    let mut index_of = Vec::with_capacity(mesh.positions.len());
+    for vertex in 0..mesh.positions.len() {
+        let (p, n, uv, c) = (
+            mesh.positions[vertex],
+            mesh.normals[vertex],
+            mesh.uvs[vertex],
+            mesh.colors[vertex],
+        );
+        let key = [
+            p[0].to_bits(),
+            p[1].to_bits(),
+            p[2].to_bits(),
+            n[0].to_bits(),
+            n[1].to_bits(),
+            n[2].to_bits(),
+            uv[0].to_bits(),
+            uv[1].to_bits(),
+            c[0].to_bits(),
+            c[1].to_bits(),
+            c[2].to_bits(),
+            c[3].to_bits(),
+            mesh.births[vertex].to_bits(),
+            mesh.sheds[vertex].to_bits(),
+            u32::from(mesh.levels[vertex]),
+        ];
+        let next = u32::try_from(out.positions.len()).unwrap_or(u32::MAX);
+        let index = *seen.entry(key).or_insert_with(|| {
+            out.positions.push(p);
+            out.normals.push(n);
+            out.uvs.push(uv);
+            out.colors.push(c);
+            out.births.push(mesh.births[vertex]);
+            out.sheds.push(mesh.sheds[vertex]);
+            out.levels.push(mesh.levels[vertex]);
+            next
+        });
+        index_of.push(index);
+    }
+    out.indices = mesh
+        .indices
+        .iter()
+        .map(|&index| index_of[index as usize])
+        .collect();
+    out
 }
 
 /// A plain material: vertex colours times white, not metallic.
@@ -512,25 +758,53 @@ fn plain_material(name: &str, roughness: f32, factor: f32) -> Value {
     })
 }
 
-/// One level as a GLB file.
+/// `primitives` as one mesh named `name` and a node drawing it; quantized,
+/// on one grid whose step it returns.
+fn mesh_node(
+    document: &mut Document,
+    name: &str,
+    primitives: &[(Arrays, Index)],
+    quantize: bool,
+) -> (Index, Option<f32>) {
+    let grid = quantize.then(|| Grid::around(primitives.iter().map(|(arrays, _)| arrays)));
+    let written = primitives
+        .iter()
+        .map(|(arrays, material)| arrays.primitive(document, *material, grid.as_ref()))
+        .collect();
+    let mesh = document.mesh(name, written);
+    let mut node = json!({ "name": name, "mesh": mesh });
+    if let Some(grid) = &grid {
+        node["translation"] = numbers(&grid.origin);
+        node["scale"] = numbers(&[grid.step; 3]);
+    }
+    (document.node(node), grid.map(|grid| grid.step))
+}
+
+/// One level as a GLB file, with `extras` given the level's largest
+/// position step when quantized; and that step.
 #[allow(clippy::too_many_lines)]
 fn level_glb(
     plant: &PlantMesh,
     shades: &[f32],
     inputs: &Inputs,
-    shade: Shade,
-    extras: Value,
-) -> Vec<u8> {
+    settings: Settings,
+    extras: &dyn Fn(Option<f32>) -> Value,
+) -> (Vec<u8>, Option<f32>) {
     let templates = &inputs.templates;
+    let quantize = settings.compression == Compression::Quantize;
     let mut document = Document::new();
+    if quantize {
+        document.extension("KHR_mesh_quantization", true);
+    }
     let mut children = Vec::new();
+    let mut steps = Vec::new();
 
     // Wood: plain colours, the bark's shade apart or multiplied in.
     if !plant.wood.indices.is_empty() {
         let wood = &plant.wood;
         let mut arrays = Arrays::of(wood, true, &|vertex| {
             let [r, g, b, _] = wood.colors[vertex];
-            match shade {
+            match settings.shade {
                 Shade::Attribute => [r, g, b],
                 Shade::Baked => {
                     let s = shades.get(vertex).copied().unwrap_or(1.0);
@@ -544,13 +818,14 @@ fn level_glb(
             .iter()
             .map(|colour| if colour[3] < 0.0 { -colour[3] } else { 0.0 })
             .collect();
-        if shade == Shade::Attribute {
+        if settings.shade == Shade::Attribute {
             arrays.shades = shades.to_vec();
         }
+        arrays.keep(settings.attributes);
         let material = document.material(plain_material("wood", 0.9, 1.0));
-        let primitive = arrays.primitive(&mut document, material);
-        let mesh = document.mesh("wood", vec![primitive]);
-        children.push(document.node(json!({ "name": "wood", "mesh": mesh })));
+        let (node, step) = mesh_node(&mut document, "wood", &[(arrays, material)], quantize);
+        children.push(node);
+        steps.extend(step);
     }
 
     // Parts on the nearest level; their cards are left out.
@@ -574,24 +849,21 @@ fn level_glb(
         let looks: Vec<&crate::body::BodyLook> = templates.bodies.iter().collect();
         let spines = crate::spines::tuft_mesh(&plant.tufts, &looks);
         if !spines.indices.is_empty() {
-            let arrays = Arrays::of(&spines, false, &|vertex| {
+            let mut arrays = Arrays::of(&spines, false, &|vertex| {
                 let [r, g, b, _] = spines.colors[vertex];
                 [r, g, b]
             });
+            arrays.keep(settings.attributes);
             let material = document.material(plain_material("spines", 0.6, 1.0));
-            let primitive = arrays.primitive(&mut document, material);
-            let mesh = document.mesh("spines", vec![primitive]);
-            children.push(document.node(json!({ "name": "spines", "mesh": mesh })));
+            let (node, step) = mesh_node(&mut document, "spines", &[(arrays, material)], quantize);
+            children.push(node);
+            steps.extend(step);
         }
     }
 
-    // Cards: a primitive per organ type, each with its own texture.
-    let sampler = document.sampler(json!({
-        "magFilter": gltf::LINEAR,
-        "minFilter": gltf::LINEAR_MIPMAP_LINEAR,
-        "wrapS": gltf::CLAMP_TO_EDGE,
-        "wrapT": gltf::CLAMP_TO_EDGE,
-    }));
+    // Cards: a primitive per organ type, each with its own texture, all
+    // sampled alike.
+    let mut sampler = None;
     let mut primitives = Vec::new();
     for (index, template) in templates.templates.iter().enumerate() {
         let cards: Vec<Card> = plant
@@ -604,11 +876,13 @@ fn level_glb(
         if cards.is_empty() {
             continue;
         }
-        let quads = PlantMesh {
-            cards,
-            ..PlantMesh::default()
-        }
-        .card_mesh();
+        let quads = welded(
+            &PlantMesh {
+                cards,
+                ..PlantMesh::default()
+            }
+            .card_mesh(),
+        );
         // Each card's colour over the look's, and the texture's scale: as
         // natural as the colours' range allows (see `texture_scale`).
         let look = template.colour.map(f64::from);
@@ -623,6 +897,14 @@ fn level_glb(
         let png = texture(template, &albedo, scale);
         let name = format!("{} {}", template.organ, template.shape);
         let image = document.png(&name, &png);
+        let sampler = *sampler.get_or_insert_with(|| {
+            document.sampler(json!({
+                "magFilter": gltf::LINEAR,
+                "minFilter": gltf::LINEAR_MIPMAP_LINEAR,
+                "wrapS": gltf::CLAMP_TO_EDGE,
+                "wrapT": gltf::CLAMP_TO_EDGE,
+            }))
+        });
         let texture = document.texture(image, sampler);
         let material = document.material(json!({
             "name": name,
@@ -636,18 +918,20 @@ fn level_glb(
             "doubleSided": true,
         }));
         #[allow(clippy::cast_possible_truncation)]
-        let arrays = Arrays::of(&quads, true, &|vertex| {
+        let mut arrays = Arrays::of(&quads, true, &|vertex| {
             ratios[vertex].map(|ratio| (ratio * scale) as f32)
         });
-        primitives.push(arrays.primitive(&mut document, material));
+        arrays.keep(settings.attributes);
+        primitives.push((arrays, material));
     }
     if !primitives.is_empty() {
-        let mesh = document.mesh("cards", primitives);
-        children.push(document.node(json!({ "name": "cards", "mesh": mesh })));
+        let (node, step) = mesh_node(&mut document, "cards", &primitives, quantize);
+        children.push(node);
+        steps.extend(step);
     }
 
     if !placements.is_empty() {
-        let parts = part_nodes(&mut document, &placements, inputs);
+        let parts = part_nodes(&mut document, &placements, inputs, settings);
         children.push(document.node(json!({ "name": "parts", "children": parts })));
     }
 
@@ -655,14 +939,16 @@ fn level_glb(
         "name": inputs.spec.id,
         "children": children,
     }));
-    document.glb(
+    let step = steps.into_iter().reduce(f32::max);
+    let glb = document.glb(
         json!({
             "version": "2.0",
             "generator": format!("PlantGen plantc, generator revision {}", crate::GENERATOR_REVISION),
         }),
         &[root],
-        Value::Object(std::iter::once(("plantgen".to_owned(), extras)).collect()),
-    )
+        Value::Object(std::iter::once(("plantgen".to_owned(), extras(step))).collect()),
+    );
+    (glb, step)
 }
 
 /// A card's colour over its look's colour, channel by channel: what the
@@ -774,8 +1060,15 @@ fn side_of(texels: usize) -> usize {
     side
 }
 
-/// The part meshes of `placements` and a node placing each; the nodes.
-fn part_nodes(document: &mut Document, placements: &[Placement], inputs: &Inputs) -> Vec<Index> {
+/// The part meshes of `placements` and the nodes placing them: a node per
+/// organ, or, quantized, a node per mesh drawing each of its organs as an
+/// instance (`EXT_mesh_gpu_instancing`).
+fn part_nodes(
+    document: &mut Document,
+    placements: &[Placement],
+    inputs: &Inputs,
+    settings: Settings,
+) -> Vec<Index> {
     let parts = &inputs.parts;
     // Each part's colours are multiplied by its lightest organ's shade, as
     // far as they stay within 1, so its materials' factors, the shades over
@@ -803,7 +1096,8 @@ fn part_nodes(document: &mut Document, placements: &[Placement], inputs: &Inputs
     let mut accessors: BTreeMap<(usize, usize), Value> = BTreeMap::new();
     let mut meshes: BTreeMap<(usize, usize, u32), Index> = BTreeMap::new();
     let mut materials: BTreeMap<(usize, u32), Index> = BTreeMap::new();
-    let mut nodes = Vec::with_capacity(placements.len());
+    // Each placement's mesh, translation, rotation and scale.
+    let mut placed = Vec::with_capacity(placements.len());
     for placement in placements {
         let (part, variant) = (placement.part, placement.variant);
         let scale = if scales[part] > 0.0 {
@@ -827,11 +1121,12 @@ fn part_nodes(document: &mut Document, placements: &[Placement], inputs: &Inputs
             .entry((part, variant))
             .or_insert_with(|| {
                 let mesh = &parts[part].variants[variant];
-                let arrays = Arrays::of(mesh, false, &|vertex| {
+                let mut arrays = Arrays::of(mesh, false, &|vertex| {
                     let [r, g, b, _] = mesh.colors[vertex];
                     [r * scale, g * scale, b * scale]
                 });
-                arrays.primitive(document, 0)
+                arrays.keep(settings.attributes);
+                arrays.primitive(document, 0, None)
             })
             .clone();
         let mesh = *meshes.entry((part, variant, step)).or_insert_with(|| {
@@ -842,14 +1137,44 @@ fn part_nodes(document: &mut Document, placements: &[Placement], inputs: &Inputs
         let rotation = quaternion(placement.left, placement.heading, placement.out);
         #[allow(clippy::cast_possible_truncation)]
         let (translation, length) = (placement.base.to_f32(), placement.length as f32);
-        nodes.push(document.node(json!({
-            "mesh": mesh,
-            "translation": numbers(&translation),
-            "rotation": numbers(&rotation),
-            "scale": numbers(&[length, length, length]),
-        })));
+        placed.push((mesh, translation, rotation, length));
     }
-    nodes
+    if settings.compression == Compression::None {
+        return placed
+            .into_iter()
+            .map(|(mesh, translation, rotation, length)| {
+                document.node(json!({
+                    "mesh": mesh,
+                    "translation": numbers(&translation),
+                    "rotation": numbers(&rotation),
+                    "scale": numbers(&[length, length, length]),
+                }))
+            })
+            .collect();
+    }
+    // Instances by mesh, each in the order its organs were placed.
+    document.extension("EXT_mesh_gpu_instancing", true);
+    let mut by_mesh: BTreeMap<Index, [Vec<f32>; 3]> = BTreeMap::new();
+    for (mesh, translation, rotation, length) in placed {
+        let [translations, rotations, scales] = by_mesh.entry(mesh).or_default();
+        translations.extend_from_slice(&translation);
+        rotations.extend_from_slice(&rotation);
+        scales.extend_from_slice(&[length; 3]);
+    }
+    by_mesh
+        .into_iter()
+        .map(|(mesh, [translations, rotations, scales])| {
+            let attributes = json!({
+                "TRANSLATION": document.instance_attribute(&translations, 3),
+                "ROTATION": document.instance_attribute(&rotations, 4),
+                "SCALE": document.instance_attribute(&scales, 3),
+            });
+            document.node(json!({
+                "mesh": mesh,
+                "extensions": { "EXT_mesh_gpu_instancing": { "attributes": attributes } },
+            }))
+        })
+        .collect()
 }
 
 /// The rotation, as a unit quaternion `[x, y, z, w]`, that turns the axes
@@ -899,7 +1224,12 @@ fn quaternion(x: Vec3, y: Vec3, z: Vec3) -> [f32; 4] {
 
 /// What every file says about the plant, in `extras.plantgen`; with a
 /// level, that level's.
-fn metadata(inputs: &Inputs, plant: &Plant, level: Option<usize>, shade: Shade) -> Value {
+fn metadata(
+    inputs: &Inputs,
+    plant: &Plant,
+    level: Option<(usize, Option<f32>)>,
+    settings: Settings,
+) -> Value {
     let spec = &inputs.spec;
     let mut value = json!({
         "format": "plantgen-export",
@@ -919,12 +1249,17 @@ fn metadata(inputs: &Inputs, plant: &Plant, level: Option<usize>, shade: Shade) 
         "day": inputs.day,
         "size": plant.size,
         "units": "metres from the plant's foot, +Y up; ages in years",
-        "shade": shade.name(),
+        "shade": settings.shade.name(),
+        "compression": settings.compression.name(),
+        "attributes": settings.attributes.name(),
         "provenance": spec.provenance,
     });
-    if let (Some(level), Value::Object(fields)) = (level, &mut value) {
+    if let (Some((level, step)), Value::Object(fields)) = (level, &mut value) {
         let lod = inputs.quality.lods[level].for_height(plant.graph.height);
         fields.insert("level".into(), json!(level));
+        if let Some(step) = step {
+            fields.insert("position_step".into(), number(step));
+        }
         fields.insert(
             "level_detail".into(),
             json!({
@@ -942,9 +1277,9 @@ fn index(
     inputs: &Inputs,
     plant: &Plant,
     levels: &[Level],
-    shade: Shade,
+    settings: Settings,
 ) -> Result<Vec<u8>, PackageError> {
-    let mut value = metadata(inputs, plant, None, shade);
+    let mut value = metadata(inputs, plant, None, settings);
     if let Value::Object(fields) = &mut value {
         fields.insert(
             "files".into(),
@@ -960,6 +1295,8 @@ fn index(
                             "bytes": file.glb.len(),
                             "triangles": file.summary.triangles,
                             "nodes": file.summary.nodes,
+                            "instances": file.summary.instances,
+                            "position_step": file.position_step.map(number),
                             "thinnest_wood_radius": lod.min_radius,
                             "cluster": lod.cluster,
                         })
@@ -986,8 +1323,79 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::float_cmp)]
+    fn a_bent_cards_grid_shares_its_corners() {
+        use crate::bend::{self, Bend};
+        let card = Card {
+            base: [0.0, 1.0, 0.0],
+            heading: [0.0, 1.0, 0.0],
+            left: [1.0, 0.0, 0.0],
+            length: 0.1,
+            width: 0.04,
+            color: [0.2, 0.5, 0.1],
+            template: 0,
+            born: 2.0,
+            shed: f32::INFINITY,
+            bend: Bend {
+                fold: 20.0,
+                droop: 30.0,
+                ..Bend::FLAT
+            },
+        };
+        let flat = Card {
+            bend: Bend::FLAT,
+            ..card
+        };
+        let mesh = PlantMesh {
+            cards: vec![card, flat],
+            ..PlantMesh::default()
+        }
+        .card_mesh();
+        let shared = welded(&mesh);
+        // The bent card's grid of cells keeps one vertex per corner, the
+        // flat card's quad its four.
+        let corners = (bend::ACROSS + 1) * (bend::ALONG + 1) + 4;
+        assert_eq!(shared.positions.len(), corners as usize);
+        assert!(mesh.positions.len() > shared.positions.len());
+        assert_eq!(shared.indices.len(), mesh.indices.len());
+        for (&old, &new) in mesh.indices.iter().zip(&shared.indices) {
+            let (old, new) = (old as usize, new as usize);
+            assert_eq!(mesh.positions[old], shared.positions[new]);
+            assert_eq!(mesh.normals[old], shared.normals[new]);
+            assert_eq!(mesh.uvs[old], shared.uvs[new]);
+            assert_eq!(mesh.colors[old], shared.colors[new]);
+            assert_eq!(mesh.births[old].to_bits(), shared.births[new].to_bits());
+            assert_eq!(mesh.sheds[old].to_bits(), shared.sheds[new].to_bits());
+            assert_eq!(mesh.levels[old], shared.levels[new]);
+        }
+    }
+
+    #[test]
+    #[allow(clippy::float_cmp)]
+    fn positions_sit_within_half_a_step_of_the_grid() {
+        let arrays = Arrays {
+            positions: vec![-0.5, 0.0, 0.25, 3.0, 12.5, -0.75, 0.1, 0.2, 0.3],
+            ..Arrays::default()
+        };
+        let grid = Grid::around(std::iter::once(&arrays));
+        assert_eq!(grid.origin, [-0.5, 0.0, -0.75]);
+        // The tallest axis, 12.5 m, over 65,535 steps.
+        assert!((f64::from(grid.step) - 12.5 / 65535.0).abs() < 1.0e-9);
+        for position in arrays.positions.as_chunks::<3>().0 {
+            let stored = grid.stored(*position);
+            for axis in 0..3 {
+                assert!((0..=i32::from(u16::MAX)).contains(&stored[axis]));
+                let back =
+                    f64::from(grid.origin[axis]) + f64::from(grid.step) * f64::from(stored[axis]);
+                assert!((back - f64::from(position[axis])).abs() <= f64::from(grid.step) * 0.5);
+            }
+        }
+        assert_eq!(grid.stored([-0.5, 12.5, -0.75])[1], i32::from(u16::MAX));
+    }
+
+    #[test]
     fn quaternions_turn_the_axes_onto_the_frame() {
-        let axes = [
+        let turns = [
             Vec3::X,
             Vec3::Y,
             Vec3::Z,
@@ -995,9 +1403,9 @@ mod tests {
             Vec3::new(-0.3, 0.1, 0.9),
         ];
         // Turns near a half turn reach every branch of the conversion.
-        for axis in axes {
+        for axis in turns {
             let axis = axis.normalize_or(Vec3::Y);
-            for angle in [0.0, 0.4, 1.7, 3.0, 3.14, -2.2] {
+            for angle in [0.0, 0.4, 1.7, 3.0, std::f64::consts::PI - 0.002, -2.2] {
                 let frame = [Vec3::X, Vec3::Y, Vec3::Z].map(|v| v.rotate_about(axis, angle));
                 let q = quaternion(frame[0], frame[1], frame[2]);
                 for (from, to) in [Vec3::X, Vec3::Y, Vec3::Z].into_iter().zip(frame) {

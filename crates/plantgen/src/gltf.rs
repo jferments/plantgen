@@ -20,9 +20,23 @@ const JSON_CHUNK: u32 = 0x4E4F_534A;
 const BIN_CHUNK: u32 = 0x004E_4942;
 
 /// Component types (glTF 2.0, 3.6.2.2).
-pub const FLOAT: u32 = 5126;
+pub const BYTE: u32 = 5120;
+pub const UNSIGNED_BYTE: u32 = 5121;
+pub const SHORT: u32 = 5122;
 pub const UNSIGNED_SHORT: u32 = 5123;
 pub const UNSIGNED_INT: u32 = 5125;
+pub const FLOAT: u32 = 5126;
+
+/// Bytes in one component of `kind`, if it is a component type.
+#[must_use]
+pub fn component_size(kind: u32) -> Option<usize> {
+    match kind {
+        BYTE | UNSIGNED_BYTE => Some(1),
+        SHORT | UNSIGNED_SHORT => Some(2),
+        UNSIGNED_INT | FLOAT => Some(4),
+        _ => None,
+    }
+}
 
 /// Buffer view targets.
 const ARRAY_BUFFER: u32 = 34962;
@@ -63,6 +77,8 @@ pub struct Document {
     materials: Vec<Value>,
     meshes: Vec<Value>,
     nodes: Vec<Value>,
+    extensions_used: Vec<String>,
+    extensions_required: Vec<String>,
 }
 
 /// An index into one of a document's arrays.
@@ -76,6 +92,11 @@ impl Document {
 
     /// Append `bytes` as a buffer view, four-byte aligned.
     fn view(&mut self, bytes: &[u8], target: Option<u32>) -> Index {
+        self.strided_view(bytes, target, None)
+    }
+
+    /// [`Self::view`] whose elements are `stride` bytes apart.
+    fn strided_view(&mut self, bytes: &[u8], target: Option<u32>, stride: Option<usize>) -> Index {
         while !self.buffer.len().is_multiple_of(4) {
             self.buffer.push(0);
         }
@@ -83,6 +104,9 @@ impl Document {
         view.insert("buffer".into(), json!(0));
         view.insert("byteOffset".into(), json!(self.buffer.len()));
         view.insert("byteLength".into(), json!(bytes.len()));
+        if let Some(stride) = stride {
+            view.insert("byteStride".into(), json!(stride));
+        }
         if let Some(target) = target {
             view.insert("target".into(), json!(target));
         }
@@ -131,6 +155,115 @@ impl Document {
         }
         self.accessors.push(Value::Object(accessor));
         self.accessors.len() - 1
+    }
+
+    /// A vertex attribute of `width` integers per vertex, each stored as
+    /// `component` (one of [`BYTE`] to [`UNSIGNED_SHORT`]), `normalized`
+    /// or not (glTF 2.0, 3.11; `KHR_mesh_quantization`), with each vertex
+    /// padded to four bytes as glTF requires; with `bounds`, its minimum
+    /// and maximum.
+    ///
+    /// # Panics
+    ///
+    /// When `width` is not 1 to 4, `values` is not a whole number of
+    /// vertices or `component` is not a byte or short type.
+    pub fn integer_attribute(
+        &mut self,
+        values: &[i32],
+        width: usize,
+        component: u32,
+        normalized: bool,
+        bounds: bool,
+    ) -> Index {
+        assert!(
+            (1..=4).contains(&width) && values.len().is_multiple_of(width),
+            "an attribute is 1 to 4 components per vertex"
+        );
+        let size = match component {
+            BYTE | UNSIGNED_BYTE => 1,
+            SHORT | UNSIGNED_SHORT => 2,
+            _ => panic!("an integer attribute is bytes or shorts"),
+        };
+        let stride = (width * size).div_ceil(4) * 4;
+        let mut bytes = Vec::with_capacity(values.len() / width * stride);
+        for vertex in values.chunks_exact(width) {
+            for &value in vertex {
+                #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                match size {
+                    1 => bytes.push(value as u8),
+                    _ => bytes.extend_from_slice(&(value as u16).to_le_bytes()),
+                }
+            }
+            bytes.resize(bytes.len() + stride - width * size, 0);
+        }
+        let view = self.strided_view(
+            &bytes,
+            Some(ARRAY_BUFFER),
+            (stride != width * size).then_some(stride),
+        );
+        let mut accessor = Map::new();
+        accessor.insert("bufferView".into(), json!(view));
+        accessor.insert("componentType".into(), json!(component));
+        if normalized {
+            accessor.insert("normalized".into(), json!(true));
+        }
+        accessor.insert("count".into(), json!(values.len() / width));
+        accessor.insert(
+            "type".into(),
+            json!(["SCALAR", "VEC2", "VEC3", "VEC4"][width - 1]),
+        );
+        if bounds && !values.is_empty() {
+            let mut low = vec![i32::MAX; width];
+            let mut high = vec![i32::MIN; width];
+            for vertex in values.chunks_exact(width) {
+                for (axis, &value) in vertex.iter().enumerate() {
+                    low[axis] = low[axis].min(value);
+                    high[axis] = high[axis].max(value);
+                }
+            }
+            accessor.insert("min".into(), json!(low));
+            accessor.insert("max".into(), json!(high));
+        }
+        self.accessors.push(Value::Object(accessor));
+        self.accessors.len() - 1
+    }
+
+    /// Per-instance floats for `EXT_mesh_gpu_instancing`: `width` per
+    /// instance, in a buffer view with no vertex target.
+    ///
+    /// # Panics
+    ///
+    /// When `width` is not 1 to 4 or `values` is not a whole number of
+    /// instances.
+    pub fn instance_attribute(&mut self, values: &[f32], width: usize) -> Index {
+        assert!(
+            (1..=4).contains(&width) && values.len().is_multiple_of(width),
+            "an instance attribute is 1 to 4 floats per instance"
+        );
+        let bytes: Vec<u8> = values
+            .iter()
+            .flat_map(|value| value.to_le_bytes())
+            .collect();
+        let view = self.view(&bytes, None);
+        let kind = ["SCALAR", "VEC2", "VEC3", "VEC4"][width - 1];
+        self.accessors.push(json!({
+            "bufferView": view,
+            "componentType": FLOAT,
+            "count": values.len() / width,
+            "type": kind,
+        }));
+        self.accessors.len() - 1
+    }
+
+    /// Declare an extension the document uses; `required` when a viewer
+    /// without it cannot draw the document right.
+    pub fn extension(&mut self, name: &str, required: bool) {
+        if !self.extensions_used.iter().any(|used| used == name) {
+            self.extensions_used.push(name.to_string());
+        }
+        if required && !self.extensions_required.iter().any(|used| used == name) {
+            self.extensions_required.push(name.to_string());
+        }
     }
 
     /// Triangle indices, as unsigned shorts when every one fits.
@@ -210,6 +343,12 @@ impl Document {
         scene.insert("nodes".into(), json!(roots));
         scene.insert("extras".into(), extras);
         root.insert("scenes".into(), json!([scene]));
+        if !self.extensions_used.is_empty() {
+            root.insert("extensionsUsed".into(), json!(self.extensions_used));
+        }
+        if !self.extensions_required.is_empty() {
+            root.insert("extensionsRequired".into(), json!(self.extensions_required));
+        }
         let arrays = [
             ("nodes", self.nodes),
             ("meshes", self.meshes),
@@ -268,8 +407,11 @@ pub struct Summary {
     pub meshes: usize,
     pub materials: usize,
     pub images: usize,
-    /// Triangles over every primitive of every node that draws a mesh, as a
-    /// renderer draws them.
+    /// Meshes drawn: a node's mesh once, or once per instance of a node
+    /// with `EXT_mesh_gpu_instancing`.
+    pub instances: usize,
+    /// Triangles over every primitive of every mesh drawn, as a renderer
+    /// draws them.
     pub triangles: usize,
 }
 
@@ -323,8 +465,9 @@ impl<'a> Glb<'a> {
         Ok(Self { json, binary })
     }
 
-    /// Accessor `index`'s components as doubles, and how many make one
-    /// element (1 for `SCALAR` to 4 for `VEC4`).
+    /// Accessor `index`'s components as doubles, normalized integers read
+    /// as glTF reads them, and how many make one element (1 for `SCALAR` to
+    /// 4 for `VEC4`).
     ///
     /// # Errors
     ///
@@ -349,17 +492,31 @@ impl<'a> Glb<'a> {
             Some("VEC4") => 4,
             _ => return Err(format!("accessor {index} has an unknown type")),
         };
-        let kind = field(accessor, "componentType").unwrap_or(0);
-        let size = match u32::try_from(kind) {
-            Ok(FLOAT | UNSIGNED_INT) => 4,
-            Ok(UNSIGNED_SHORT) => 2,
-            _ => return Err(format!("accessor {index} has an unknown component type")),
-        };
+        let kind = field(accessor, "componentType")
+            .and_then(|kind| u32::try_from(kind).ok())
+            .unwrap_or(0);
+        let size = component_size(kind)
+            .ok_or_else(|| format!("accessor {index} has an unknown component type"))?;
+        let normalized = accessor
+            .get("normalized")
+            .and_then(Value::as_bool)
+            .unwrap_or(false);
         let count = field(accessor, "count").ok_or("an accessor has no count")?;
+        let element = width * size;
+        let stride = field(view, "byteStride").unwrap_or(element);
+        if stride < element {
+            return Err(format!(
+                "accessor {index}'s stride is shorter than an element"
+            ));
+        }
         let view_start = field(view, "byteOffset").unwrap_or(0);
         let view_end = view_start + field(view, "byteLength").unwrap_or(0);
         let start = view_start + field(accessor, "byteOffset").unwrap_or(0);
-        let end = start + count * width * size;
+        let end = if count == 0 {
+            start
+        } else {
+            start + (count - 1) * stride + element
+        };
         if end > view_end {
             return Err(format!("accessor {index} runs past its buffer view"));
         }
@@ -367,16 +524,35 @@ impl<'a> Glb<'a> {
             .binary
             .get(start..end)
             .ok_or(format!("accessor {index} is outside the buffer"))?;
-        let values = bytes
-            .chunks_exact(size)
-            .map(|bytes| match (kind, bytes) {
-                (5126, &[a, b, c, d]) => f64::from(f32::from_le_bytes([a, b, c, d])),
-                (_, &[a, b, c, d]) => f64::from(u32::from_le_bytes([a, b, c, d])),
-                (_, &[a, b]) => f64::from(u16::from_le_bytes([a, b])),
-                _ => f64::NAN,
-            })
-            .collect();
+        let mut values = Vec::with_capacity(count * width);
+        for item in 0..count {
+            let at = item * stride;
+            for component in bytes[at..at + element].chunks_exact(size) {
+                let value = match (kind, component) {
+                    (FLOAT, &[a, b, c, d]) => f64::from(f32::from_le_bytes([a, b, c, d])),
+                    (UNSIGNED_INT, &[a, b, c, d]) => f64::from(u32::from_le_bytes([a, b, c, d])),
+                    (SHORT, &[a, b]) => f64::from(i16::from_le_bytes([a, b])),
+                    (UNSIGNED_SHORT, &[a, b]) => f64::from(u16::from_le_bytes([a, b])),
+                    (BYTE, &[a]) => f64::from(a.cast_signed()),
+                    (UNSIGNED_BYTE, &[a]) => f64::from(a),
+                    _ => f64::NAN,
+                };
+                values.push(normalize(value, kind, normalized));
+            }
+        }
         Ok((values, width))
+    }
+}
+
+/// A component's value as glTF reads it: a normalized integer as a share
+/// of its type's range (glTF 2.0, 3.11), anything else as it is.
+fn normalize(value: f64, kind: u32, normalized: bool) -> f64 {
+    match (normalized, kind) {
+        (true, BYTE) => (value / 127.0).max(-1.0),
+        (true, UNSIGNED_BYTE) => value / 255.0,
+        (true, SHORT) => (value / 32767.0).max(-1.0),
+        (true, UNSIGNED_SHORT) => value / 65535.0,
+        _ => value,
     }
 }
 
@@ -424,28 +600,7 @@ pub fn check(glb: &[u8]) -> Result<Summary, String> {
         if values.iter().any(|value| !value.is_finite()) {
             return Err(format!("accessor {index} holds a value that is not finite"));
         }
-        for (bound, keep) in [("min", f64::min as fn(f64, f64) -> f64), ("max", f64::max)] {
-            let Some(declared) = accessor.get(bound).and_then(Value::as_array) else {
-                continue;
-            };
-            for (axis, declared) in declared.iter().enumerate() {
-                let actual = values
-                    .iter()
-                    .skip(axis)
-                    .step_by(width)
-                    .copied()
-                    .reduce(keep)
-                    .unwrap_or(0.0);
-                let declared = declared.as_f64().unwrap_or(f64::NAN);
-                // Declared bounds are single precision, as the data.
-                #[allow(clippy::cast_possible_truncation, clippy::float_cmp)]
-                if f64::from(declared as f32) != actual {
-                    return Err(format!(
-                        "accessor {index}'s {bound} does not match its data"
-                    ));
-                }
-            }
-        }
+        check_bounds(index, accessor, &values, width)?;
         data.push((values, width));
     }
     let mut summary = Summary {
@@ -453,6 +608,7 @@ pub fn check(glb: &[u8]) -> Result<Summary, String> {
         meshes: array("meshes").len(),
         materials: array("materials").len(),
         images: array("images").len(),
+        instances: 0,
         triangles: 0,
     };
     let meshes = array("meshes");
@@ -463,73 +619,201 @@ pub fn check(glb: &[u8]) -> Result<Summary, String> {
             .and_then(Value::as_array)
             .ok_or(format!("mesh {index} has no primitives"))?
         {
-            let attribute = |name: &str| {
-                primitive
-                    .pointer(&format!("/attributes/{name}"))
-                    .and_then(Value::as_u64)
-                    .and_then(|value| usize::try_from(value).ok())
-                    .and_then(|at| data.get(at))
-            };
-            let (positions, 3) =
-                attribute("POSITION").ok_or(format!("mesh {index} has no positions"))?
-            else {
-                return Err(format!("mesh {index}'s positions are not VEC3"));
-            };
-            if accessors
-                .get(
-                    field(
-                        primitive.get("attributes").unwrap_or(&Value::Null),
-                        "POSITION",
-                    )
-                    .unwrap_or(0),
-                )
-                .and_then(|accessor| accessor.get("min"))
-                .is_none()
-            {
-                return Err(format!("mesh {index}'s positions have no bounds"));
-            }
-            let vertices = positions.len() / 3;
-            for name in primitive
-                .get("attributes")
-                .and_then(Value::as_object)
-                .map(|attributes| attributes.keys().cloned().collect::<Vec<_>>())
-                .unwrap_or_default()
-            {
-                let (values, width) =
-                    attribute(&name).ok_or(format!("mesh {index}'s {name} is missing"))?;
-                if values.len() / width != vertices {
-                    return Err(format!("mesh {index}'s {name} has the wrong count"));
-                }
-                if name == "NORMAL" {
-                    for normal in values.as_chunks::<3>().0 {
-                        let length =
-                            (normal[0] * normal[0] + normal[1] * normal[1] + normal[2] * normal[2])
-                                .sqrt();
-                        if (length - 1.0).abs() > 5.0e-4 {
-                            return Err(format!("mesh {index} has a normal {length} long"));
-                        }
-                    }
-                }
-            }
-            let (indices, _) = field(primitive, "indices")
-                .and_then(|at| data.get(at))
-                .ok_or(format!("mesh {index} has no indices"))?;
-            if indices.len() % 3 != 0 {
-                return Err(format!("mesh {index}'s index count is not a multiple of 3"));
-            }
-            #[allow(clippy::cast_precision_loss)]
-            if indices.iter().any(|&at| at >= vertices as f64) {
-                return Err(format!("mesh {index} has an index past its vertices"));
-            }
-            mesh_triangles[index] += indices.len() / 3;
+            mesh_triangles[index] += primitive_triangles(index, primitive, &accessors, &data)?;
         }
     }
-    for node in array("nodes") {
-        if let Some(mesh) = field(&node, "mesh") {
-            summary.triangles += mesh_triangles.get(mesh).ok_or("a node names no mesh")?;
-        }
+    for (index, node) in array("nodes").iter().enumerate() {
+        let Some(mesh) = field(node, "mesh") else {
+            continue;
+        };
+        let triangles = *mesh_triangles.get(mesh).ok_or("a node names no mesh")?;
+        // A node with `EXT_mesh_gpu_instancing` draws its mesh once for each
+        // instance, each placed by its own translation, rotation and scale.
+        let Some(attributes) = node
+            .pointer("/extensions/EXT_mesh_gpu_instancing/attributes")
+            .and_then(Value::as_object)
+        else {
+            summary.instances += 1;
+            summary.triangles += triangles;
+            continue;
+        };
+        let count = instance_count(index, attributes, &data)?;
+        summary.instances += count;
+        summary.triangles += triangles * count;
     }
     Ok(summary)
+}
+
+/// Check one primitive of mesh `index`: positions with bounds, every
+/// attribute one a vertex, normals of unit length, and indices in threes
+/// inside its vertices; its triangles.
+fn primitive_triangles(
+    index: usize,
+    primitive: &Value,
+    accessors: &[Value],
+    data: &[(Vec<f64>, usize)],
+) -> Result<usize, String> {
+    let attribute = |name: &str| {
+        primitive
+            .pointer(&format!("/attributes/{name}"))
+            .and_then(Value::as_u64)
+            .and_then(|value| usize::try_from(value).ok())
+            .and_then(|at| data.get(at))
+    };
+    let (positions, 3) = attribute("POSITION").ok_or(format!("mesh {index} has no positions"))?
+    else {
+        return Err(format!("mesh {index}'s positions are not VEC3"));
+    };
+    if accessors
+        .get(
+            field(
+                primitive.get("attributes").unwrap_or(&Value::Null),
+                "POSITION",
+            )
+            .unwrap_or(0),
+        )
+        .and_then(|accessor| accessor.get("min"))
+        .is_none()
+    {
+        return Err(format!("mesh {index}'s positions have no bounds"));
+    }
+    let vertices = positions.len() / 3;
+    for name in primitive
+        .get("attributes")
+        .and_then(Value::as_object)
+        .map(|attributes| attributes.keys().cloned().collect::<Vec<_>>())
+        .unwrap_or_default()
+    {
+        let (values, width) =
+            attribute(&name).ok_or(format!("mesh {index}'s {name} is missing"))?;
+        if values.len() / width != vertices {
+            return Err(format!("mesh {index}'s {name} has the wrong count"));
+        }
+        if name == "NORMAL" {
+            let kind = primitive
+                .pointer("/attributes/NORMAL")
+                .and_then(Value::as_u64)
+                .and_then(|at| accessors.get(usize::try_from(at).ok()?))
+                .and_then(|accessor| field(accessor, "componentType"))
+                .and_then(|kind| u32::try_from(kind).ok());
+            check_normals(index, kind, values)?;
+        }
+    }
+    let (indices, _) = field(primitive, "indices")
+        .and_then(|at| data.get(at))
+        .ok_or(format!("mesh {index} has no indices"))?;
+    if indices.len() % 3 != 0 {
+        return Err(format!("mesh {index}'s index count is not a multiple of 3"));
+    }
+    #[allow(clippy::cast_precision_loss)]
+    if indices.iter().any(|&at| at >= vertices as f64) {
+        return Err(format!("mesh {index} has an index past its vertices"));
+    }
+    Ok(indices.len() / 3)
+}
+
+/// Check accessor `index`'s declared bounds, if any, against its `values`.
+fn check_bounds(
+    index: usize,
+    accessor: &Value,
+    values: &[f64],
+    width: usize,
+) -> Result<(), String> {
+    let kind = field(accessor, "componentType")
+        .and_then(|kind| u32::try_from(kind).ok())
+        .unwrap_or(FLOAT);
+    let normalized = accessor
+        .get("normalized")
+        .and_then(Value::as_bool)
+        .unwrap_or(false);
+    for (bound, keep) in [("min", f64::min as fn(f64, f64) -> f64), ("max", f64::max)] {
+        let Some(declared) = accessor.get(bound).and_then(Value::as_array) else {
+            continue;
+        };
+        for (axis, declared) in declared.iter().enumerate() {
+            let actual = values
+                .iter()
+                .skip(axis)
+                .step_by(width)
+                .copied()
+                .reduce(keep)
+                .unwrap_or(0.0);
+            let declared = declared.as_f64().unwrap_or(f64::NAN);
+            // Declared bounds are in the data's own type: single precision,
+            // or integers before normalizing.
+            #[allow(clippy::cast_possible_truncation)]
+            let declared = if kind == FLOAT {
+                f64::from(declared as f32)
+            } else {
+                normalize(declared, kind, normalized)
+            };
+            #[allow(clippy::float_cmp)]
+            if declared != actual {
+                return Err(format!(
+                    "accessor {index}'s {bound} does not match its data"
+                ));
+            }
+        }
+    }
+    Ok(())
+}
+
+/// Check that mesh `index`'s normals, stored as `kind`, are unit length to
+/// within what the type can hold.
+fn check_normals(index: usize, kind: Option<u32>, values: &[f64]) -> Result<(), String> {
+    let tolerance = match kind {
+        Some(BYTE) => 0.01,
+        Some(SHORT) => 1.0e-3,
+        _ => 5.0e-4,
+    };
+    for normal in values.as_chunks::<3>().0 {
+        let length = (normal[0] * normal[0] + normal[1] * normal[1] + normal[2] * normal[2]).sqrt();
+        if (length - 1.0).abs() > tolerance {
+            return Err(format!("mesh {index} has a normal {length} long"));
+        }
+    }
+    Ok(())
+}
+
+/// The instances node `index` draws with `EXT_mesh_gpu_instancing`'s
+/// `attributes`: one translation, rotation (a unit quaternion) and scale
+/// each, as far as it has them.
+fn instance_count(
+    index: usize,
+    attributes: &Map<String, Value>,
+    data: &[(Vec<f64>, usize)],
+) -> Result<usize, String> {
+    let mut count = None;
+    for (name, width) in [("TRANSLATION", 3), ("ROTATION", 4), ("SCALE", 3)] {
+        let Some(at) = attributes.get(name) else {
+            continue;
+        };
+        let (values, found) = at
+            .as_u64()
+            .and_then(|at| data.get(usize::try_from(at).ok()?))
+            .ok_or(format!("node {index}'s {name} names no accessor"))?;
+        if *found != width || count.is_some_and(|count| count != values.len() / width) {
+            return Err(format!(
+                "node {index}'s {name} is not one {width}-vector an instance"
+            ));
+        }
+        count = Some(values.len() / width);
+        if name == "ROTATION" {
+            for rotation in values.as_chunks::<4>().0 {
+                let length = rotation
+                    .iter()
+                    .map(|value| value * value)
+                    .sum::<f64>()
+                    .sqrt();
+                if (length - 1.0).abs() > 1.0e-3 {
+                    return Err(format!(
+                        "node {index} has an instance rotation {length} long"
+                    ));
+                }
+            }
+        }
+    }
+    count.ok_or(format!("node {index}'s instancing names no attribute"))
 }
 
 #[cfg(test)]
@@ -555,6 +839,67 @@ mod tests {
         let summary = check(&glb).expect("a valid file");
         assert_eq!(summary.triangles, 1);
         assert_eq!(summary.nodes, 1);
+    }
+
+    #[test]
+    fn integers_and_instances_are_read_back() {
+        let mut document = Document::new();
+        document.extension("KHR_mesh_quantization", true);
+        document.extension("EXT_mesh_gpu_instancing", true);
+        let positions = document.integer_attribute(
+            &[0, 0, 0, 65535, 0, 0, 0, 65535, 7],
+            3,
+            UNSIGNED_SHORT,
+            false,
+            true,
+        );
+        let normals =
+            document.integer_attribute(&[0, 0, 127, 0, 0, 127, 0, -127, 0], 3, BYTE, true, false);
+        let uvs =
+            document.integer_attribute(&[0, 0, 65535, 0, 0, 65535], 2, UNSIGNED_SHORT, true, false);
+        let indices = document.indices(&[0, 1, 2]);
+        let mesh = document.mesh(
+            "triangle",
+            vec![json!({
+                "attributes": { "POSITION": positions, "NORMAL": normals, "TEXCOORD_0": uvs },
+                "indices": indices,
+            })],
+        );
+        let translations = document.instance_attribute(&[0.0, 0.0, 0.0, 1.0, 2.0, 3.0], 3);
+        let rotations = document.instance_attribute(&[0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0], 4);
+        let node = document.node(json!({
+            "mesh": mesh,
+            "extensions": { "EXT_mesh_gpu_instancing": { "attributes": {
+                "TRANSLATION": translations,
+                "ROTATION": rotations,
+            } } },
+        }));
+        let glb = document.glb(json!({ "version": "2.0" }), &[node], json!({}));
+        let summary = check(&glb).expect("a valid file");
+        assert_eq!(summary.instances, 2);
+        assert_eq!(summary.triangles, 2);
+        let read = Glb::read(&glb).unwrap();
+        assert_eq!(
+            read.json["extensionsRequired"],
+            json!(["KHR_mesh_quantization", "EXT_mesh_gpu_instancing"])
+        );
+        // Three shorts and three bytes a vertex are padded to eight and four.
+        assert_eq!(read.json["bufferViews"][0]["byteStride"], 8);
+        assert_eq!(read.json["bufferViews"][1]["byteStride"], 4);
+        assert!(read.json["bufferViews"][2].get("byteStride").is_none());
+        assert_eq!(read.json["accessors"][0]["max"], json!([65535, 65535, 7]));
+        assert_eq!(
+            read.accessor(0).unwrap(),
+            (vec![0.0, 0.0, 0.0, 65535.0, 0.0, 0.0, 0.0, 65535.0, 7.0], 3)
+        );
+        assert_eq!(
+            read.accessor(1).unwrap(),
+            (vec![0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, -1.0, 0.0], 3)
+        );
+        assert_eq!(
+            read.accessor(2).unwrap(),
+            (vec![0.0, 0.0, 1.0, 0.0, 0.0, 1.0], 2)
+        );
     }
 
     #[test]
