@@ -13,6 +13,7 @@ use plantlab_scene::{Look, View};
 use plantlab_ui::icons;
 use serde_json::json;
 
+use super::readings::{self, Readings};
 use super::{Lab, picture_name, save_gif};
 use crate::record::{self, Recording, Take};
 use crate::settings::Key;
@@ -174,6 +175,10 @@ pub enum Command {
     Settings(bool),
     /// Print this to the console (standard output).
     Print(String),
+    /// Hold the Readings still, or follow them again.
+    Freeze(bool),
+    /// Print the Readings' numbers to the console.
+    DumpReadings,
 }
 
 /// The interface's own state and the commands it queued.
@@ -198,6 +203,8 @@ pub struct Shell {
     pub pixels_per_point: f32,
     /// The bark swatch drawn for a species.
     pub bark: Option<(String, bevy_egui::egui::TextureHandle)>,
+    /// The Readings board's width class, kept for its hysteresis.
+    pub readings_width: plantlab_ui::board::Width,
     pub queue: Vec<Command>,
 }
 
@@ -217,6 +224,7 @@ impl Shell {
             view: None,
             pixels_per_point: 1.0,
             bark: None,
+            readings_width: plantlab_ui::board::Width::default(),
             queue: Vec::new(),
         }
     }
@@ -244,10 +252,19 @@ impl Shell {
 }
 
 /// Carry out the queued commands, in order.
-pub fn apply(mut shell: ResMut<Shell>, mut lab: ResMut<Lab>, mut recording: ResMut<Recording>) {
+pub fn apply(
+    mut shell: ResMut<Shell>,
+    mut lab: ResMut<Lab>,
+    mut recording: ResMut<Recording>,
+    mut readings: ResMut<Readings>,
+) {
     let queue = std::mem::take(&mut shell.queue);
     for command in queue {
-        run(&mut shell, &mut lab, &mut recording, command);
+        match command {
+            Command::Freeze(frozen) => readings.freeze(frozen),
+            Command::DumpReadings => print!("{}", readings::dump(&readings)),
+            command => run(&mut shell, &mut lab, &mut recording, command),
+        }
     }
 }
 
@@ -405,6 +422,8 @@ fn run(shell: &mut Shell, lab: &mut Lab, recording: &mut Recording, command: Com
         Command::ClosePalette => shell.palette_open = false,
         Command::Settings(open) => shell.settings_open = open,
         Command::Print(text) => println!("{text}"),
+        // Carried out by `apply`, which holds the readings.
+        Command::Freeze(_) | Command::DumpReadings => {}
     }
 }
 

@@ -13,17 +13,24 @@ use plantlab_ui::{icons, theme};
 
 use super::command::{Command, Panel, Shell};
 use super::shell::years;
-use super::{Lab, bytes, keyframes, thumbs_command};
+use super::{Lab, keyframes, thumbs_command};
 use crate::measure;
 use crate::record::Recording;
 
 /// Draws `panel`'s contents.
-pub fn show(ui: &mut Ui, panel: Panel, lab: &Lab, recording: &Recording, shell: &mut Shell) {
+pub fn show(
+    ui: &mut Ui,
+    panel: Panel,
+    lab: &Lab,
+    recording: &Recording,
+    readings: &super::readings::Readings,
+    shell: &mut Shell,
+) {
     match panel {
         Panel::Plant => plant(ui, lab, shell),
         Panel::Grow => grow(ui, lab, shell),
         Panel::View => view(ui, lab, shell),
-        Panel::Readings => readings(ui, lab, shell),
+        Panel::Readings => super::readings::panel(ui, lab, readings, shell),
         Panel::Pictures => pictures(ui, lab, recording, shell),
         Panel::Spec => spec(ui, lab, shell),
         Panel::Bark => bark(ui, lab, shell),
@@ -313,52 +320,6 @@ fn view(ui: &mut Ui, lab: &Lab, shell: &mut Shell) {
     if widgets::switch(ui, "Height ruler (R)", lab.ruler) {
         shell.send(Command::Ruler(!lab.ruler));
     }
-}
-
-/// The plant's measures and file sizes.
-fn readings(ui: &mut Ui, lab: &Lab, _shell: &mut Shell) {
-    let Some(shown) = &lab.shown else {
-        ui.label(RichText::new("Nothing grown yet").color(theme::TEXT_3));
-        return;
-    };
-    let facts = &shown.scene.facts;
-    widgets::section(ui, "The plant");
-    egui::Grid::new("readings-stats")
-        .num_columns(2)
-        .spacing([24.0, 10.0])
-        .show(ui, |ui| {
-            widgets::stat(ui, "Height", &format!("{:.2}", facts.height_m), "m");
-            widgets::stat(
-                ui,
-                "Crown width",
-                &format!("{:.2}", facts.crown_width_m),
-                "m",
-            );
-            ui.end_row();
-            widgets::stat(ui, "Age", &format!("{}", facts.age), "years");
-            widgets::stat(ui, "Level", &facts.level.to_string(), "");
-            ui.end_row();
-            widgets::stat(ui, "Triangles", &facts.triangles.to_string(), "");
-            widgets::stat(ui, "Cards", &facts.cards.to_string(), "");
-            ui.end_row();
-        });
-    widgets::section(ui, "As files");
-    let export = facts.export;
-    widgets::reading_row(ui, "packaged", &bytes(export.package_mesh));
-    widgets::reading_row(ui, "as .glb", &format!("about {}", bytes(export.glb)));
-    widgets::reading_row(ui, "as .obj", &format!("about {}", bytes(export.obj)));
-    widgets::section(ui, "Grown");
-    let grown = if shown.live {
-        format!("{:.1} s into growing", shown.seconds)
-    } else {
-        format!("in {:.1} s", shown.seconds)
-    };
-    widgets::reading_row(ui, "grown", &grown);
-    widgets::reading_row(
-        ui,
-        "generator",
-        &format!("revision {}", facts.generator_revision),
-    );
 }
 
 /// Snapshots, recorded growth and GIFs, and the command for the same

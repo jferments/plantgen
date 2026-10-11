@@ -40,9 +40,20 @@ panels it opens with and `--overlay` starts in Overlay. The Plant panel
 chooses the species (type to filter the list), its age and the day of the
 year; View the level of detail, the quality (draft or standard), the
 look (review or photo) and the view; Readings the plant's height, crown
-width, triangles and cards; Pictures the `plantlab thumbs` command that
+width, triangles and cards as a board of cards (below); Pictures the `plantlab thumbs` command that
 renders what you see without the window; Spec the species' merged spec;
 Bark its bark pattern and numbers.
+
+**Readings** is a board of cards placed from the panel's width alone:
+the plant's measures; its triangles and cards by part (wood, leaves,
+flowers, fruit, other); its sizes as files on a log scale; each level of
+detail's triangles, cards and packaged size (the plant's growth dressed
+at every level on a worker, without growing it again); its height and
+crown at each frame shown as it grew; each growth step's time; and the
+window's frame times over the last ten seconds, with their median and
+99th percentile. It gathers only while it shows. **Freeze** holds the
+page still and stops gathering; **Dump to the console** prints its
+numbers.
 
 **Growing.** A change grows the plant again ("Grow when the settings
 change"; turn it off to grow only on **Grow**). **Stop** ends a growth and

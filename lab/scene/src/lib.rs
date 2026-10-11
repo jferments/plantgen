@@ -22,11 +22,13 @@
 //!   two-sided.
 
 use std::fmt::Write as _;
+use std::sync::Arc;
 
 use plantgen::drawing::{self, Drawing, Request};
 pub use plantgen::grow::Progress;
-use plantgen::grow::Watch;
+use plantgen::grow::{Growth, Watch};
 use plantgen::library::Library;
+use plantgen::lsys::program::OrganKind;
 use plantgen::math::Vec3;
 use plantgen::mesh::{Mesh, PlantMesh};
 use plantgen::quality::{self, Quality};
@@ -423,6 +425,63 @@ pub struct Scene {
     pub shadow_bounds: ([f32; 3], [f32; 3]),
     /// What was drawn, for the picture's sidecar.
     pub facts: Facts,
+    /// The triangles and cards of each part of the plant, in
+    /// [`PartKind::ALL`]'s order.
+    pub parts: Vec<PartCount>,
+    /// The plant's growth, kept by [`build_watched`] so its other levels
+    /// can be drawn without growing it again ([`levels`]); `None` for
+    /// scenes that do not keep it.
+    pub growth: Option<Arc<Growth>>,
+}
+
+/// A part of the plant, as the readings count it.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PartKind {
+    Wood,
+    Leaves,
+    Flowers,
+    /// Fruit and cones.
+    Fruit,
+    /// Spines and cards of organs the plant's program does not name (a
+    /// host's).
+    Other,
+}
+
+impl PartKind {
+    pub const ALL: [Self; 5] = [
+        Self::Wood,
+        Self::Leaves,
+        Self::Flowers,
+        Self::Fruit,
+        Self::Other,
+    ];
+
+    #[must_use]
+    pub const fn name(self) -> &'static str {
+        match self {
+            Self::Wood => "wood",
+            Self::Leaves => "leaves",
+            Self::Flowers => "flowers",
+            Self::Fruit => "fruit",
+            Self::Other => "other",
+        }
+    }
+
+    fn of(kind: OrganKind) -> Self {
+        match kind {
+            OrganKind::Foliage | OrganKind::Leaf => Self::Leaves,
+            OrganKind::Flower => Self::Flowers,
+            OrganKind::Fruit | OrganKind::Cone => Self::Fruit,
+        }
+    }
+}
+
+/// One part's triangles and cards.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct PartCount {
+    pub kind: PartKind,
+    pub triangles: usize,
+    pub cards: usize,
 }
 
 /// What a scene shows, for the record beside its picture.
@@ -568,7 +627,79 @@ pub fn build_watched(
         viewer,
     };
     let drawing = drawing::draw_watched(&request, Some(&mut frames))?;
-    Ok(from_drawing(&drawing, &request, shot))
+    let mut scene = from_drawing(&drawing, &request, shot);
+    scene.growth = Some(Arc::new(drawing.growth));
+    Ok(scene)
+}
+
+/// The facts of `shot`'s plant at each level of detail, nearest first:
+/// `growth` (the plant [`build_watched`] grew for it) dressed at every
+/// level of the shot's quality, as a package holds them.
+///
+/// # Errors
+///
+/// When the species does not load or a level does not draw.
+pub fn levels(shot: &Shot, library: &Library, growth: &Growth) -> Result<Vec<Facts>, String> {
+    let spec = load_spec(&shot.species, library)?;
+    let shot = Shot {
+        cut_cards: 0,
+        ..shot.clone()
+    };
+    (0..shot.quality.lods.len())
+        .map(|level| {
+            let request = Request {
+                level,
+                ..request(&shot, &spec, library)
+            };
+            let drawing = drawing::dress(&request, growth.clone())?;
+            Ok(from_drawing(&drawing, &request, &shot).facts)
+        })
+        .collect()
+}
+
+/// Each part's triangles and cards in `plant`: the wood, the cards of
+/// each organ kind by their template's organ, and the `solids` (spines)
+/// drawn in place of the cards from `first_solid` on.
+fn parts(
+    plant: &PlantMesh,
+    templates: &Templates,
+    growth: &Growth,
+    solids: usize,
+    first_solid: usize,
+) -> Vec<PartCount> {
+    let mut counts: Vec<PartCount> = PartKind::ALL
+        .iter()
+        .map(|&kind| PartCount {
+            kind,
+            triangles: 0,
+            cards: 0,
+        })
+        .collect();
+    let kinds: Vec<PartKind> = templates
+        .templates
+        .iter()
+        .map(|template| {
+            growth
+                .organ_types
+                .iter()
+                .find(|organ| organ.name == template.organ)
+                .map_or(PartKind::Other, |organ| PartKind::of(organ.kind))
+        })
+        .collect();
+    let index = |kind: PartKind| PartKind::ALL.iter().position(|k| *k == kind).unwrap_or(0);
+    counts[index(PartKind::Wood)].triangles = plant.wood.triangle_count();
+    counts[index(PartKind::Other)].triangles += solids;
+    let bent = plantgen::bend::VERTICES as usize / 3;
+    for card in &plant.cards {
+        let template = usize::from(card.template);
+        let kind = kinds.get(template).copied().unwrap_or(PartKind::Other);
+        let count = &mut counts[index(kind)];
+        count.cards += 1;
+        if template < first_solid {
+            count.triangles += if card.bend.is_flat() { 2 } else { bent };
+        }
+    }
+    counts
 }
 
 fn request<'a>(shot: &'a Shot, spec: &'a PlantSpec, library: &'a Library) -> Request<'a> {
@@ -589,6 +720,7 @@ fn request<'a>(shot: &'a Shot, spec: &'a PlantSpec, library: &'a Library) -> Req
 
 /// Frame a plant already drawn.
 #[must_use]
+#[allow(clippy::too_many_lines)]
 pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Scene {
     let templates = &drawing.templates;
     let plant = &drawing.plant;
@@ -666,6 +798,18 @@ pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Sc
         on_host: drawing.on_host,
         export,
     };
+    let first_solid = if solid_spines {
+        templates.first_spine_template()
+    } else {
+        usize::MAX
+    };
+    let parts = parts(
+        plant,
+        templates,
+        &drawing.growth,
+        solids.triangle_count(),
+        first_solid,
+    );
     #[allow(clippy::cast_possible_truncation)]
     Scene {
         wood,
@@ -682,6 +826,8 @@ pub fn from_drawing(drawing: &Drawing, request: &Request<'_>, shot: &Shot) -> Sc
         look: shot.look,
         shadow_bounds: (shadow_low.to_f32(), shadow_high.to_f32()),
         facts,
+        parts,
+        growth: None,
     }
 }
 
@@ -1349,6 +1495,36 @@ mod tests {
         shot.age = Some(6.0);
         shot.quality = quality::DRAFT;
         build(&shot, Library::builtin()).expect("the maple grows")
+    }
+
+    struct Grower;
+    impl Viewer for Grower {
+        fn wants_frame(&mut self, _: u32) -> bool {
+            false
+        }
+        fn step(&mut self, _: Progress<'_>, _: Option<Scene>) -> bool {
+            true
+        }
+    }
+
+    #[test]
+    fn the_parts_add_up_and_every_level_draws_from_the_kept_growth() {
+        let mut shot = Shot::thumbnail("acer-macrophyllum");
+        shot.age = Some(6.0);
+        shot.quality = quality::DRAFT;
+        let scene = build_watched(&shot, Library::builtin(), &mut Grower).unwrap();
+        let triangles: usize = scene.parts.iter().map(|part| part.triangles).sum();
+        assert_eq!(triangles, scene.facts.triangles);
+        let cards: usize = scene.parts.iter().map(|part| part.cards).sum();
+        assert_eq!(cards, scene.facts.cards);
+        let leaves = scene.parts[1];
+        assert_eq!(leaves.kind, PartKind::Leaves);
+        assert!(leaves.cards > 0);
+        let levels = levels(&shot, Library::builtin(), scene.growth.as_ref().unwrap()).unwrap();
+        assert_eq!(levels.len(), 4);
+        // Level 0 is the plant drawn, without growing it again.
+        assert_eq!(levels[0].triangles, scene.facts.triangles);
+        assert!(levels[3].triangles < levels[0].triangles);
     }
 
     #[test]

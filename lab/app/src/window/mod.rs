@@ -48,6 +48,7 @@ use plantlab_ui::theme;
 
 mod command;
 mod panels;
+mod readings;
 mod shell;
 
 use crate::settings::{Key, Settings};
@@ -120,6 +121,11 @@ struct Lab {
     /// Shared with the growing worker.
     control: Arc<Control>,
     started: Instant,
+    /// Growths started, and plants (or live frames) put on screen: the
+    /// readings start a growth's figures and a plant's levels afresh
+    /// when these change.
+    growths: u64,
+    shows: u64,
     shown: Option<Shown>,
     message: String,
     /// The camera should frame the next plant shown.
@@ -149,10 +155,14 @@ struct Control {
     /// The age at `step`, years, as `f64` bits.
     age: AtomicU64,
     frame: Mutex<Option<Scene>>,
+    /// Time each step while the Readings panel shows.
+    gather: AtomicBool,
+    /// Each step's time since the last, gathered while asked.
+    step_times: Mutex<Vec<readings::StepTime>>,
 }
 
-/// The worker's side of [`Control`].
-struct Watcher(Arc<Control>);
+/// The worker's side of [`Control`], and when its last step ended.
+struct Watcher(Arc<Control>, Instant);
 
 impl Viewer for Watcher {
     fn wants_frame(&mut self, step: u32) -> bool {
@@ -164,6 +174,15 @@ impl Viewer for Watcher {
         self.0.step.store(progress.step, Ordering::Relaxed);
         self.0.steps.store(progress.steps, Ordering::Relaxed);
         self.0.age.store(progress.age.to_bits(), Ordering::Relaxed);
+        if self.0.gather.load(Ordering::Relaxed)
+            && let Ok(mut times) = self.0.step_times.lock()
+        {
+            #[allow(clippy::cast_possible_truncation)]
+            times.push(readings::StepTime {
+                ms: (self.1.elapsed().as_secs_f64() * 1_000.0) as f32,
+                framed: frame.is_some(),
+            });
+        }
         if let Some(frame) = frame
             && let Ok(mut slot) = self.0.frame.lock()
         {
@@ -172,6 +191,8 @@ impl Viewer for Watcher {
         while self.0.pause.load(Ordering::Relaxed) && !self.0.stop.load(Ordering::Relaxed) {
             std::thread::sleep(Duration::from_millis(30));
         }
+        // A pause is not the next step's time.
+        self.1 = Instant::now();
         !self.0.stop.load(Ordering::Relaxed)
     }
 }
@@ -335,6 +356,8 @@ pub fn run(options: Options) -> Result<(), String> {
     }
     let lab = Lab {
         aspect: 1.0,
+        growths: 0,
+        shows: 0,
         species: ids,
         chosen,
         age: None,
@@ -395,6 +418,7 @@ pub fn run(options: Options) -> Result<(), String> {
         .insert_resource(GlobalAmbientLight::NONE)
         .insert_resource(lab)
         .insert_resource(shell)
+        .init_resource::<readings::Readings>()
         .add_systems(Startup, setup)
         .add_systems(EguiPrimaryContextPass, shell::draw)
         .add_systems(
@@ -416,6 +440,7 @@ pub fn run(options: Options) -> Result<(), String> {
                 record::follow,
                 record::take,
                 record::keep,
+                readings::gather,
             )
                 .chain(),
         );
@@ -609,6 +634,7 @@ fn grow(mut lab: ResMut<Lab>) {
     }
     let shot = shot(&lab);
     lab.started = Instant::now();
+    lab.growths += 1;
     lab.message.clear();
     let control = Arc::new(Control::default());
     control
@@ -616,7 +642,7 @@ fn grow(mut lab: ResMut<Lab>) {
         .store(if lab.live { lab.every } else { 0 }, Ordering::Relaxed);
     lab.control = Arc::clone(&control);
     lab.growing = Some(std::thread::spawn(move || {
-        let mut viewer = Watcher(control);
+        let mut viewer = Watcher(control, Instant::now());
         Grown {
             result: plantlab_scene::build_watched(&shot, Library::builtin(), &mut viewer),
             shot,
@@ -746,6 +772,7 @@ fn put_on_screen(stage: &mut Stage, lab: &mut Lab, scene: Scene, shot: Shot, liv
         let name = picture_name(&scene);
         stage.recording.ask(Take::Frame, name);
     }
+    lab.shows += 1;
     lab.shown = Some(Shown {
         scene,
         shot,
@@ -992,6 +1019,8 @@ mod tests {
     pub(super) fn lab() -> Lab {
         Lab {
             aspect: 1.0,
+            growths: 0,
+            shows: 0,
             species: Library::builtin()
                 .species()
                 .iter()
@@ -1053,7 +1082,7 @@ mod tests {
     #[test]
     fn the_watcher_draws_every_n_steps_and_stops_on_the_button() {
         let control = Arc::new(Control::default());
-        let mut watcher = Watcher(Arc::clone(&control));
+        let mut watcher = Watcher(Arc::clone(&control), Instant::now());
         assert!(!watcher.wants_frame(0), "no live frames unless asked");
         control.every.store(5, Ordering::Relaxed);
         assert!(watcher.wants_frame(10) && !watcher.wants_frame(11));

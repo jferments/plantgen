@@ -100,6 +100,7 @@ pub fn draw(
     mut contexts: EguiContexts,
     lab: Res<Lab>,
     recording: Res<Recording>,
+    readings: Res<super::readings::Readings>,
     mut shell: ResMut<Shell>,
     mut themed: Local<bool>,
 ) {
@@ -126,7 +127,7 @@ pub fn draw(
     let window = ctx.viewport_rect();
     if shell.overlay {
         shell.view = Some(window);
-        overlay(&ctx, &lab, &recording, shell, window);
+        overlay(&ctx, &lab, &recording, &readings, shell, window);
     } else {
         top_bar(&mut root, &lab, &recording, shell, window.width());
         status_bar(&mut root, &lab, shell);
@@ -148,7 +149,7 @@ pub fn draw(
                         .id_salt(("dock", panel.short()))
                         .auto_shrink([false, false])
                         .show(ui, |ui| {
-                            panels::show(ui, panel, &lab, &recording, shell);
+                            panels::show(ui, panel, &lab, &recording, &readings, shell);
                         });
                 });
         }
@@ -472,6 +473,7 @@ fn overlay(
     ctx: &egui::Context,
     lab: &Lab,
     recording: &Recording,
+    readings: &super::readings::Readings,
     shell: &mut Shell,
     window: egui::Rect,
 ) {
@@ -536,7 +538,7 @@ fn overlay(
                             .id_salt(("card", panel.short()))
                             .max_height(height)
                             .show(ui, |ui| {
-                                panels::show(ui, panel, lab, recording, shell);
+                                panels::show(ui, panel, lab, recording, readings, shell);
                             });
                     });
             });
