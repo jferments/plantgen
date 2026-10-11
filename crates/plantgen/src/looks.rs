@@ -2156,4 +2156,55 @@ mod tests {
         assert_eq!(drawn.organs[1].size, 0.1);
         assert_eq!(drawn.height, graph.height);
     }
+
+    /// The fields `crate::inherit::TEMPLATES` lets rules set are the card
+    /// templates' own: every template, each field with what it takes, and
+    /// every field a template writes.
+    #[test]
+    fn rules_know_every_template_and_field() {
+        use crate::inherit::{Field, TEMPLATES};
+        let parse = |value: serde_json::Value| serde_json::from_value::<Shape>(value);
+        // An unknown template's error lists the templates serde knows.
+        let error = parse(serde_json::json!({"template": "none"}))
+            .unwrap_err()
+            .to_string();
+        let known: Vec<&str> = error
+            .split("expected one of ")
+            .nth(1)
+            .unwrap_or_default()
+            .split(", ")
+            .map(|name| name.trim_matches('`'))
+            .collect();
+        let listed: Vec<&str> = TEMPLATES.iter().map(|(name, _)| *name).collect();
+        assert_eq!(listed, known, "{error}");
+        for (template, fields) in TEMPLATES {
+            let with = |field: &str, value: serde_json::Value| {
+                parse(serde_json::json!({"template": template, field: value}))
+            };
+            let shape = parse(serde_json::json!({"template": template})).unwrap();
+            assert_eq!(shape.name(), template);
+            for (field, takes) in fields {
+                let at = format!("{template}.{field}");
+                match takes {
+                    Field::Count => {
+                        assert!(with(field, 2.into()).is_ok(), "{at}");
+                        assert!(with(field, 2.5.into()).is_err(), "{at} takes a fraction");
+                    }
+                    Field::Number => assert!(with(field, 2.5.into()).is_ok(), "{at}"),
+                    Field::Word => {
+                        let error = with(field, "none".into()).unwrap_err().to_string();
+                        assert!(error.contains("unknown variant"), "{at}: {error}");
+                    }
+                }
+            }
+            // Every field the template writes is listed.
+            let written = serde_json::to_value(&shape).unwrap();
+            for field in written.as_object().unwrap().keys() {
+                assert!(
+                    field == "template" || fields.iter().any(|(name, _)| name == field),
+                    "{template}.{field} is not in TEMPLATES"
+                );
+            }
+        }
+    }
 }

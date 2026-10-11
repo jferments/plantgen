@@ -149,7 +149,8 @@ Usage:
       what came of it.
   plantc rules
       List every rule that turns traits into spec values, by its home:
-      the rank file (or species) that holds it. Then the general ones,
+      the rank file (or species) that holds it, and for a rule on a
+      look's card, the card it is for. Then the general ones,
       with no taxonomic home: rules at all plants, and the parameter
       defaults of programs not named for a taxon. The list should shrink.
   plantc traits [<species>]
@@ -549,8 +550,11 @@ fn rules_command(args: &[String]) -> Result<(), Failure> {
                     format!(", {at}")
                 };
                 homed.push(format!(
-                    "  {path}  ({} {}: {}{place})",
-                    rank.rank, rank.name, rank.file
+                    "  {path}{}  ({} {}: {}{place})",
+                    card(rule),
+                    rank.rank,
+                    rank.name,
+                    rank.file
                 ));
                 if rank.rank == "kingdom" {
                     at_all_plants += 1;
@@ -562,9 +566,10 @@ fn rules_command(args: &[String]) -> Result<(), Failure> {
         let own: serde_json::Value =
             serde_json::from_str(entry.own_source()).map_err(|error| error.to_string())?;
         if let Some(rules) = own.get("rules").and_then(serde_json::Value::as_object) {
-            for path in rules.keys() {
+            for (path, rule) in rules {
                 homed.push(format!(
-                    "  {path}  (species {}: {})",
+                    "  {path}{}  (species {}: {})",
+                    card(rule),
                     entry.id,
                     entry.file()
                 ));
@@ -607,6 +612,13 @@ fn rules_command(args: &[String]) -> Result<(), Failure> {
             .join(", ")
     );
     Ok(())
+}
+
+/// The card a rule on a look's card is for, as `plantc rules` names it.
+fn card(rule: &serde_json::Value) -> String {
+    rule.get("template")
+        .and_then(serde_json::Value::as_str)
+        .map_or_else(String::new, |template| format!(" on `{template}` cards"))
 }
 
 fn traits_command(args: &[String]) -> Result<(), Failure> {

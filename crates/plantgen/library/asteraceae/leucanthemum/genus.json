@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Leucanthemum",
+  "traits": {
+    "capitulum_kind": {"radiate": "usually", "discoid": "rarely"},
+    "disc_florets": {"min": 120, "max": 200},
+    "pappus": "absent"
+  },
+  "evidence": {
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "fna-19-leucanthemum",
+      "note": "FNA's account of the genus: each head usually has white ray florets round its disc, rarely none."
+    },
+    "traits.disc_florets": {
+      "evidence": "SourceInferred",
+      "source": "fna-19-leucanthemum",
+      "note": "FNA's account of the genus: 120 to 200 or more yellow disc florets in a head."
+    },
+    "traits.pappus": {
+      "evidence": "SourceInferred",
+      "source": "fna-19-leucanthemum",
+      "note": "FNA's account of the genus: the ribbed fruits bear no pappus."
+    }
+  }
+}

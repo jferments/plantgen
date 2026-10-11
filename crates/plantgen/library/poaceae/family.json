@@ -13,6 +13,31 @@
     "phyllotaxis_pattern": "distichous",
     "fruit_type": "caryopsis"
   },
+  "rules": {
+    "generator.params.leaf_length": {
+      "rule": "leaf_length_m",
+      "why": "A grass's blades are as long on average as floras measure them."
+    },
+    "generator.params.panicle_length": {
+      "rule": "inflorescence_length_m",
+      "why": "A grass's panicle is as long as floras measure its inflorescence."
+    },
+    "appearance.organs.blade.shape.aspect": {
+      "template": "blade",
+      "rule": "leaf_width_m / (leaf_length * 0.12 / (1 - pow(0.88, pieces)))",
+      "why": "A blade card is a piece of a blade, the first piece as wide as the blade at its widest: its width over the first piece's length."
+    },
+    "appearance.organs.blade_tip.shape.aspect": {
+      "template": "blade",
+      "rule": "leaf_width_m / (leaf_length * 0.12 / (1 - pow(0.88, pieces)))",
+      "why": "The tip of a blade narrows as the pieces below it do, so its card has their width over length."
+    },
+    "appearance.organs.thatch.shape.aspect": {
+      "template": "blade",
+      "rule": "leaf_width_m / (leaf_length * 0.12 / (1 - pow(0.88, pieces)))",
+      "why": "Thatch is last year's blades, as wide as they were."
+    }
+  },
   "evidence": {
     "traits.inflorescence_unit": {
       "evidence": "SourceInferred",
@@ -53,6 +78,11 @@
       "evidence": "SourceInferred",
       "source": "ffpa-2014",
       "note": "Families of Flowering Plants of Australia: the fruit is a caryopsis (a grain)."
+    },
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen's grass program draws a grass from a flora's sizes, a choice of the model's until grasses are built from their spikelets (spec rework M6): its mean blade length is the blade length a flora gives, read as the range's middle unless it names a typical length, and its panicle the inflorescence's length. The program builds a blade from `pieces` pieces, each 12% shorter than the one before, so the first is 0.12 / (1 - 0.88^pieces) of the blade; the blade card narrows 12% along a piece, so one width over length serves every piece and the tip."
     }
   }
 }
