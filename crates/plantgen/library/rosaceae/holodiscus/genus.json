@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Holodiscus",
+  "traits": {
+    "inflorescence": "panicle"
+  },
+  "evidence": {
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America's account of the genus, as quoted in search results (the page itself was not read): inflorescences terminal on long shoots, erect or pendulous, 10 to 100 or more flowered panicles."
+    }
+  }
+}

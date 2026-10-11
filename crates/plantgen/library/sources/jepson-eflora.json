@@ -1,0 +1,10 @@
+{
+  "id": "jepson-eflora",
+  "title": "Jepson eFlora: the online flora of California",
+  "authors": "Jepson Flora Project (eds.), University and Jepson Herbaria, University of California, Berkeley",
+  "year": 2026,
+  "url": "https://ucjeps.berkeley.edu/eflora/",
+  "licence": "copyrighted text; facts only",
+  "tier": 1,
+  "kind": "text"
+}

@@ -18,7 +18,8 @@
       "clump_radius": 0.1,
       "stem_lean": 8,
       "maturity": 1.2,
-      "stem_height": 0.6,
+      "stem_height": 0.32,
+      "young_height": 0.66,
       "stem_radius": 0.002,
       "wiggle": 2,
       "nodes": 3,
@@ -31,22 +32,18 @@
       "basal_leaves": 7,
       "basal_length": 0.25,
       "basal_angle": 60,
-      "raceme": 0.55,
-      "flowers": 25,
-      "flower_size": 0.012,
-      "pedicel": 0.005,
-      "flower_angle": 50,
-      "fruit_below": 0.2,
-      "buds_above": 0.85,
-      "nod": 10,
-      "bud_size": 0.006,
-      "fruit_length": 0.01,
+      "raceme": 0.05,
+      "flowers": 1,
+      "flower_size": 0.3,
+      "pedicel": 0.0,
+      "flower_angle": 0,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0,
       "leaf_area": 0.273,
       "basal_area": 0.138,
       "basal_piece_area": 0.235,
-      "flower_area": 0.099,
-      "bud_area": 0.763,
-      "fruit_area": 0.51
+      "flower_area": 0.051
     }
   },
   "growth": {
@@ -89,16 +86,38 @@
         }
       },
       "flower": {
-        "shape": { "template": "spike", "florets": 3, "aspect": 0.4, "plume": 0.0, "stalk": 0.2 },
-        "colour": [0.45, 0.25, 0.3]
-      },
-      "bud": {
-        "shape": { "template": "fruit", "aspect": 0.6 },
-        "colour": [0.4, 0.3, 0.25]
-      },
-      "fruit": {
         "shape": { "template": "fruit", "aspect": 0.4 },
-        "colour": [0.35, 0.3, 0.2]
+        "inflorescence": { "flowers": 30, "size": 0.035, "spread": 50, "pedicel": 0.02, "peduncle": 0.15, "taper": 0.2 },
+        "colour": [0.35, 0.3, 0.2],
+        "season": {
+          "bud": 100,
+          "flower": 115,
+          "fruit": 127,
+          "ripe": 160,
+          "fall": 215,
+          "opening": 30,
+          "bud_look": {
+            "shape": { "template": "fruit", "aspect": 0.6 },
+            "colour": [0.4, 0.3, 0.25],
+            "size": 0.6
+          },
+          "flower_look": {
+            "shape": {
+              "template": "flower",
+              "petals": 4,
+              "petal_width": 0.25,
+              "point": 0.5,
+              "notch": 0.0,
+              "centre": 0.35
+            },
+            "colour": [0.42, 0.24, 0.2],
+            "accent": [0.4, 0.42, 0.25],
+            "size": 1.4,
+            "form": {
+              "flower": { "cup": 30, "curl": 40, "tube": 0.6, "stamens": 3, "stamen_length": 0.3 }
+            }
+          }
+        }
       }
     }
   },
@@ -111,6 +130,9 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "inflorescence": "raceme"
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -161,6 +183,21 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America's account of the genus, as quoted in search results (the page itself was not read): inflorescences racemes from axillary buds in the rosette, 10 to 150 flowered, bracteate."
+    },
+    "appearance.organs.flower": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its raceme drawn as one cluster that opens by the day (spec rework L1c), its kind from its characters, by the rule at the flowering plants: about 30 flowers, by eye (the Flora of North America's genus gives 10 to 150), on a raceme 2 to 3 dm long (the Burke Herbarium: 1 to 3 dm), each a greenish-purple calyx tube with four thread-like chocolate-brown petals 6 to 10 mm long curling back, and a small capsule after. From floras and extension pages as quoted in search results; the pages themselves were not read. The plant stands as tall as before: its stems end where the raceme begins."
+    },
+    "appearance.organs.flower.season": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its days by eye from the months floras give for flowering (April to August; the Burke Herbarium: May to August), for lowland plants: buds in April, each flower open about 12 days, the raceme opening from its foot over about a month (floras give no time)."
     }
   },
   "provenance": {

@@ -102,5 +102,9 @@ pub mod venation;
 /// star of its own blades at coarse levels, fewer and wider, with thick
 /// leaves' edges (render review S1), instead of a cross of cluster cards.
 /// 15: a cluster's cover is counted from 16 directions on a 24-cell grid,
-/// not 32 on 48, so coarse levels bake several times faster.
-pub const GENERATOR_REVISION: u32 = 15;
+/// not 32 on 48, so coarse levels bake several times faster. 16: a
+/// cluster's part mesh may take `parts::CLUSTER_TRIANGLES`, as a needle
+/// shoot's does, drawing each flower or head as one flat hexagon a step
+/// coarser, and a cluster whose axis bears no branches is never merged
+/// into one solid to fit (spec rework L1c).
+pub const GENERATOR_REVISION: u32 = 16;

@@ -529,6 +529,24 @@
       "range": [1, 100000],
       "why": "the flowers, heads or spikelets in one inflorescence"
     },
+    "inflorescence_branches": {
+      "group": "flowers",
+      "organ": "inflorescence",
+      "type": "count",
+      "range": [0, 1000],
+      "when": {"inflorescence": ["compound_umbel", "panicle"]},
+      "optional": true,
+      "why": "the primary branches of a compound inflorescence, each bearing units or branches of its own: a compound umbel's rays, a panicle's branches"
+    },
+    "inflorescence_posture": {
+      "group": "flowers",
+      "organ": "inflorescence",
+      "type": "enum",
+      "values": ["erect", "nodding", "pendent"],
+      "when": {"inflorescence": ["raceme", "spike", "catkin", "corymb", "umbel", "compound_umbel", "panicle", "cyme", "scorpioid", "head", "spadix"]},
+      "optional": true,
+      "why": "how an inflorescence holds itself: upright, bent over near its tip, or hanging"
+    },
     "inflorescence_length_m": {
       "group": "flowers",
       "organ": "inflorescence",

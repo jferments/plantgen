@@ -33,7 +33,7 @@
       "basal_angle": 45,
       "raceme": 0.08,
       "flowers": 1,
-      "flower_size": 0.25,
+      "flower_size": 0.11,
       "pedicel": 0.0,
       "flower_angle": 0,
       "fruit_below": 0,
@@ -42,7 +42,7 @@
       "leaf_area": 0.291,
       "basal_area": 0.212,
       "basal_piece_area": 0.235,
-      "flower_area": 0.413,
+      "flower_area": 1.128,
       "bud_area": 0.89,
       "fruit_area": 0.89
     }
@@ -85,7 +85,14 @@
         }
       },
       "flower": {
-        "shape": { "template": "umbel", "clusters": 20, "florets": 15 },
+        "shape": { "template": "flower", "petals": 5, "petal_width": 0.9, "point": 0.0, "notch": 0.35, "centre": 0.2 },
+        "inflorescence": {
+          "flowers": 20,
+          "size": 0.35,
+          "spread": 50,
+          "peduncle": 0.05,
+          "branch": { "size": 0.14, "spread": 50, "peduncle": 0.5 }
+        },
         "colour": [0.95, 0.95, 0.9],
         "accent": [0.85, 0.85, 0.75]
       }
@@ -100,6 +107,9 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "inflorescence_branches": {"min": 15, "max": 30}
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -150,6 +160,16 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.inflorescence_branches": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "Jepson eFlora's account of the species, as quoted in search results (the page itself was not read): rays 15 to 30, 5 to 10 cm, unequal. The Flora of North America gives 15 to 35 (40), its umbels 15 to 30 cm wide."
+    },
+    "appearance.organs.flower": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its compound umbel drawn flower by flower (spec rework L1c): its kind from the carrot family's inflorescence and its rays from its own, by the rules at the flowering plants; about 20 flowers in each umbellet (Illinois Wildflowers gives 8 to 30; no flora gives a count), each about 6 mm across with five white notched petals, on pedicels 1 to 2 cm long (Jepson: 8 to 20 mm), the umbel about 25 cm across (the Flora of North America: 15 to 30 cm). From floras and extension pages as quoted in search results; the pages themselves were not read. The enlarged outer flowers are not drawn."
     }
   },
   "provenance": {

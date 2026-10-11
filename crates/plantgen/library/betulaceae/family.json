@@ -2,5 +2,15 @@
   "schema": 1,
   "rank": "family",
   "name": "Betulaceae",
-  "parent": "order/fagales"
+  "parent": "order/fagales",
+  "traits": {
+    "inflorescence": {"catkin": "usually"}
+  },
+  "evidence": {
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America's account of the family, as quoted in search results (the page itself was not read): inflorescences unisexual, the staminate catkins pendulous, elongate, cylindric and conspicuously bracteate; the pistillate erect to pendulous bracteate catkins, or compact clusters of two or three flowers under leafy involucres (the hazels)."
+    }
+  }
 }
