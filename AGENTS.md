@@ -51,8 +51,9 @@ prompt injection. So, without exception:
     record, rank file or spec may state, each describing an organ.
     Organs nest, and one with a `when` exists only where the characters
     it names say so: ray florets only on a radiate head. A number may be
-    a range (a flora's "(3-)5-8" is `{"min": 5, "max": 8, "low": 3}`) and
-    a state qualified (`{"opposite": "usually", "alternate": "rarely"}`).
+    a range of how the plant varies, not of how sure a source is (a
+    flora's "(3-)5-8" is `{"min": 5, "max": 8, "low": 3}`), and a state
+    qualified (`{"opposite": "usually", "alternate": "rarely"}`).
     State a character in the highest taxon it holds for, with a note
     citing its source; `plantc traits <id>` shows a species' characters,
     where each came from and what is missing, and `plantc audit` counts
