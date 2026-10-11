@@ -2864,7 +2864,7 @@ mod tests {
         let library = Library::builtin();
         let mut stated = 0;
         let mut ruled = 0;
-        let remove = |spec: &mut serde_json::Value, path: &str| {
+        let remove_one = |spec: &mut serde_json::Value, path: &str| {
             let (outer, key) = path.rsplit_once('.').unwrap();
             if let Some(parent) = outer
                 .split('.')
@@ -2878,6 +2878,20 @@ mod tests {
                 .and_then(serde_json::Value::as_object_mut)
             {
                 notes.remove(path);
+            }
+        };
+        // A rule whose path names `*` sets it in every look.
+        let remove = |spec: &mut serde_json::Value, path: &str| {
+            let Some(rest) = path.strip_prefix("appearance.organs.*.") else {
+                return remove_one(spec, path);
+            };
+            let organs: Vec<String> = spec
+                .pointer("/appearance/organs")
+                .and_then(serde_json::Value::as_object)
+                .map(|organs| organs.keys().cloned().collect())
+                .unwrap_or_default();
+            for organ in organs {
+                remove_one(spec, &format!("appearance.organs.{organ}.{rest}"));
             }
         };
         let stripped: BTreeMap<String, RankFile> = library

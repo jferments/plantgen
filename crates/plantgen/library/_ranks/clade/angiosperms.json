@@ -6,11 +6,34 @@
   "traits": {
     "reproduction": "flowers"
   },
+  "rules": {
+    "appearance.organs.*.inflorescence.kind": {
+      "map": {"inflorescence": {"raceme": "raceme", "spike": "spike", "catkin": "catkin", "corymb": "corymb", "umbel": "umbel", "compound_umbel": "compound_umbel", "panicle": "panicle", "cyme": "cyme", "scorpioid": "scorpioid", "head": "head", "spadix": "spike"}},
+      "why": "Each kind of inflorescence is laid out as the cluster of its name, and a spadix as a spike; a solitary flower is no cluster."
+    },
+    "appearance.organs.*.inflorescence.flowers": {
+      "map": {"inflorescence": {"raceme": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "spike": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "catkin": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "corymb": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "umbel": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "compound_umbel": {"rule": "clamp(round(units_per_inflorescence / max(inflorescence_branches, 1)), 1, 200)"}, "panicle": {"rule": "clamp(round(units_per_inflorescence / max(inflorescence_branches, 1)), 1, 200)"}, "cyme": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "scorpioid": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "head": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}, "spadix": {"rule": "clamp(round(units_per_inflorescence), 1, 200)"}}},
+      "why": "A cluster bears the inflorescence's units, up to the 200 an axis can hold; a compound one shares them among its primary branches, so it needs their count."
+    },
+    "appearance.organs.*.inflorescence.branches": {
+      "rule": "clamp(round(inflorescence_branches), 0, 60)",
+      "why": "A compound cluster bears the inflorescence's primary branches, up to 60."
+    },
+    "appearance.organs.*.inflorescence.droop": {
+      "map": {"inflorescence_posture": {"erect": 0, "nodding": 90, "pendent": 180}},
+      "why": "An erect inflorescence's axis stays straight; a nodding one bends over by a quarter turn toward its tip, a pendent one by half a turn, so it hangs."
+    }
+  },
   "evidence": {
     "traits.reproduction": {
       "evidence": "SourceInferred",
       "source": "openstax-biology-2e",
       "note": "The angiosperms are the flowering plants: their ovules sit inside an ovary, and their seeds ripen in a fruit (Biology 2e, 26.3)."
+    },
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen lays out an inflorescence, a choice of the model's (spec rework L1): the inflorescence characters set the cluster of any look a taxon draws as one (`\"inflorescence\": {}`), its kind, how many units it bears on each axis, its primary branches and how it holds itself. Sizes, stalks and spacing stay set by hand until programs size their organs from characters."
     }
   }
 }

@@ -25,9 +25,10 @@
 //! own, and the renderer shades them as the card's colour is shaded.
 //!
 //! A part mesh holds at most [`TRIANGLES`] triangles ([`SHOOT_TRIANGLES`]
-//! for a needle shoot, `crate::shoots`): a cluster or a shoot that would
-//! take more is drawn up to `crate::fruit::COARSER` steps coarser, and a
-//! type that still does not fit keeps its cards.
+//! for a needle shoot, `crate::shoots`, and [`CLUSTER_TRIANGLES`] for a
+//! cluster, `crate::clusters`): a cluster or a shoot that would take more
+//! is drawn up to [`coarsest`] steps coarser, and a type that still does
+//! not fit keeps its cards.
 //!
 //! Each type has a span ([`PartMesh::span`]): the share of its card's
 //! length whose projection must cover the renderer's least pixels for the
@@ -51,6 +52,10 @@ pub const TRIANGLES: usize = 1024;
 /// Most triangles a needle shoot's part mesh holds: a shoot has hundreds
 /// of needles.
 pub const SHOOT_TRIANGLES: usize = 8192;
+
+/// Most triangles a cluster's part mesh holds: a cluster has dozens to
+/// hundreds of units.
+pub const CLUSTER_TRIANGLES: usize = 8192;
 
 /// A needle shoot's span over its needles' width (see the module).
 pub const SHOOT_SPAN: f64 = 4.0;
@@ -81,7 +86,7 @@ impl PartMesh {
 }
 
 /// The part meshes of `looks`: one for each organ type whose look draws a
-/// solid that fits [`TRIANGLES`], in the types' order.
+/// solid that fits its [`cap`], in the types' order.
 #[must_use]
 pub fn part_meshes(looks: &[Look]) -> Vec<PartMesh> {
     (0..looks.len())
@@ -94,8 +99,21 @@ pub fn part_meshes(looks: &[Look]) -> Vec<PartMesh> {
 pub fn cap(look: &Look) -> usize {
     match look.form {
         Form::Shoot => SHOOT_TRIANGLES,
+        _ if look.inflorescence.is_some() => CLUSTER_TRIANGLES,
         _ => TRIANGLES,
     }
+}
+
+/// The most steps coarser a part mesh of `look` is drawn to fit its
+/// [`cap`]: `crate::fruit::COARSER`, or fewer for a cluster whose coarsest
+/// steps would draw it worse than its card (`crate::clusters::coarsest`).
+#[must_use]
+pub fn coarsest(look: &Look) -> usize {
+    look.inflorescence
+        .as_ref()
+        .map_or(crate::fruit::COARSER, |cluster| {
+            crate::clusters::coarsest(&cluster.cluster)
+        })
 }
 
 /// The span of a part mesh of `look` (see the module).
@@ -152,7 +170,7 @@ fn part_mesh(looks: &[Look], index: usize) -> Option<PartMesh> {
     };
     let (base, heading, left, length) = crate::mesh::place(&unit, &looks[index]);
     let out = left.cross(heading);
-    for coarse in 0..=crate::fruit::COARSER {
+    for coarse in 0..=coarsest(&looks[index]) {
         let variants: Vec<Mesh> = (0..VARIANTS as u64)
             .map(|variant| {
                 let graph = PlantGraph {
@@ -368,7 +386,11 @@ mod tests {
         );
         for part in &parts {
             assert_eq!(part.variants.len(), VARIANTS);
-            assert!(part.triangles() <= TRIANGLES, "{}", part.triangles());
+            assert!(
+                part.triangles() <= cap(&looks[part.template]),
+                "{}",
+                part.triangles()
+            );
             for mesh in &part.variants {
                 for p in &mesh.positions {
                     let length = (p[0] * p[0] + p[1] * p[1] + p[2] * p[2]).sqrt();
@@ -403,7 +425,7 @@ mod tests {
         ] {
             // Drawn whole: a part mesh at its finest.
             assert!(
-                shown.inflorescence.is_none() || crate::clusters::triangles(&shown) <= TRIANGLES,
+                shown.inflorescence.is_none() || crate::clusters::triangles(&shown) <= cap(&shown),
                 "{}",
                 crate::clusters::triangles(&shown)
             );
@@ -453,18 +475,56 @@ mod tests {
 
     #[test]
     fn a_large_cluster_is_drawn_coarser_to_fit() {
+        // A cluster takes more than a single fruit may.
         let fruit = Fruit {
             kind: FruitKind::Drupelets,
             ..Fruit::default()
         };
-        let cluster = clustered(Shape::Fruit(fruit), ClusterKind::Raceme, 8);
-        assert!(
-            crate::clusters::triangles(&cluster) > TRIANGLES,
-            "this cluster needs coarsening"
-        );
-        let parts = part_meshes(&[cluster]);
+        let small = clustered(Shape::Fruit(fruit.clone()), ClusterKind::Raceme, 8);
+        assert!(crate::clusters::triangles(&small) > TRIANGLES);
+        let parts = part_meshes(&[small]);
         assert_eq!(parts.len(), 1);
-        assert!(parts[0].triangles() <= TRIANGLES);
+        assert!(parts[0].triangles() > TRIANGLES);
+        // One that takes more than a cluster may is drawn coarser, each of
+        // its flowers still drawn.
+        let flower = Flower {
+            petals: 10,
+            ..Flower::default()
+        };
+        let large = clustered(Shape::Flower(flower), ClusterKind::Raceme, 200);
+        assert!(
+            crate::clusters::triangles(&large) > CLUSTER_TRIANGLES,
+            "this cluster needs coarsening: {}",
+            crate::clusters::triangles(&large)
+        );
+        let parts = part_meshes(&[large]);
+        assert_eq!(parts.len(), 1);
+        assert!(parts[0].triangles() <= CLUSTER_TRIANGLES);
+        assert!(parts[0].triangles() >= 200 * 8, "{}", parts[0].triangles());
+    }
+
+    #[test]
+    fn only_a_compound_cluster_is_merged_to_fit() {
+        // Too many drupelets to draw one by one: as a raceme the cluster
+        // keeps its cards rather than become one solid; as a panicle each
+        // of its racemes is merged into one.
+        let fruit = Shape::Fruit(Fruit {
+            kind: FruitKind::Drupelets,
+            ..Fruit::default()
+        });
+        let raceme = clustered(fruit.clone(), ClusterKind::Raceme, 200);
+        assert!(part_meshes(&[raceme]).is_empty());
+        let mut panicle = look(fruit);
+        let spec = Inflorescence {
+            kind: Some(ClusterKind::Panicle),
+            branches: Some(8),
+            flowers: Some(25),
+            ..Inflorescence::default()
+        };
+        panicle.inflorescence = ClusterLook::new(Cluster::of(&spec), &panicle.shape, &[]);
+        let parts = part_meshes(&[panicle]);
+        assert_eq!(parts.len(), 1);
+        assert!(parts[0].triangles() <= CLUSTER_TRIANGLES);
     }
 
     #[test]

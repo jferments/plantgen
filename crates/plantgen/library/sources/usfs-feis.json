@@ -1,0 +1,10 @@
+{
+  "id": "usfs-feis",
+  "title": "Fire Effects Information System (FEIS): species reviews",
+  "authors": "USDA Forest Service, Rocky Mountain Research Station, Missoula Fire Sciences Laboratory",
+  "year": 2026,
+  "url": "https://www.fs.usda.gov/database/feis/",
+  "licence": "public domain (US Government work)",
+  "tier": 2,
+  "kind": "text"
+}

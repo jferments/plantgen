@@ -514,14 +514,17 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
                         panic!("{id} `{}` on day {day:?}: kept as cards", look.organ)
                     });
                 assert!(
-                    part.triangles() <= parts::TRIANGLES,
+                    part.triangles() <= parts::cap(look),
                     "{id} on day {day:?}: {}",
                     part.triangles()
                 );
             }
         }
     }
-    assert_eq!(checked, 25, "the fruit clusters moved in with L1a");
+    assert_eq!(
+        checked, 40,
+        "the 25 fruit clusters that moved in with L1a and the 15 clusters of flowers and heads of L1c"
+    );
 }
 
 /// Fronds open and sag as they age (plant forms F4): on a fern, palms and

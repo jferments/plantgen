@@ -36,7 +36,7 @@
       "pipe_organ": 0.004,
       "pipe_rings": 6e-06,
       "leaf_area": 0.624,
-      "fruit_area": 0.423
+      "fruit_area": 0.23
     }
   },
   "growth": {
@@ -66,14 +66,17 @@
         }
       },
       "fruit": {
-        "shape": {
-          "template": "spike",
-          "florets": 20,
-          "aspect": 0.45,
-          "plume": 0,
-          "stalk": 0.15
+        "shape": { "template": "fruit", "aspect": 1.0 },
+        "inflorescence": {
+          "branches": 6,
+          "flowers": 5,
+          "size": 0.35,
+          "spread": 40,
+          "taper": 0.4,
+          "branch": { "size": 0.24, "spread": 50, "pedicel": 0.1 }
         },
-        "colour": [0.3, 0.15, 0.35]
+        "colour": [0.3, 0.15, 0.35],
+        "accent": [0.45, 0.4, 0.55]
       }
     }
   },
@@ -92,6 +95,9 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "inflorescence": "panicle"
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -147,6 +153,16 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "Jepson eFlora's account of the species, as quoted in search results (the page itself was not read): inflorescence a panicle, generally opposite a leaf, peduncled; its fruit spheric, purple and glaucous, generally more than 8 mm wide."
+    },
+    "appearance.organs.fruit": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its bunch drawn berry by berry (spec rework L1c), its kind from its characters, by the rule at the flowering plants: 6 branches of 5 berries, by eye (no source gives a count), each berry about 8.5 mm across (Trees and Shrubs Online: 1/3 in), hanging from its node as before. From floras and extension pages as quoted in search results; the pages themselves were not read."
     }
   },
   "provenance": {

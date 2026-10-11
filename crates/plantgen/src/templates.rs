@@ -109,7 +109,10 @@ pub fn fill_share(look: &Look) -> f64 {
     }
     let aspect = look.aspect();
     let veins = grown_veins(shape);
-    let card = look.inflorescence.as_ref().map(ClusterCard::new);
+    let card = look
+        .inflorescence
+        .as_ref()
+        .map(|cluster| ClusterCard::new(cluster, (look.colour, look.accent)));
     let mut kept = 0_usize;
     for y in 0..FILL_SAMPLES {
         for x in 0..FILL_SAMPLES {
@@ -210,7 +213,10 @@ impl Templates {
                 let mut accent = Vec::with_capacity(texels);
                 let aspect = look.aspect();
                 let veins = grown_veins(&look.shape);
-                let card = look.inflorescence.as_ref().map(ClusterCard::new);
+                let card = look
+                    .inflorescence
+                    .as_ref()
+                    .map(|cluster| ClusterCard::new(cluster, (look.colour, look.accent)));
                 for y in 0..TEMPLATE_SIZE {
                     for x in 0..TEMPLATE_SIZE {
                         // Four samples per texel give soft edges.
@@ -1919,7 +1925,8 @@ fn one_of_a_kind(s: &Fruit, x: f64, y: f64, fine: f64) -> Paint {
 /// Each card point looks only at the units and stalks near it, through a
 /// grid laid over the card. Units in stages of their own (L1b) are drawn
 /// in their stage's look, their colours matched by the card's two
-/// (`crate::clusters::Opening::slots`).
+/// (`crate::clusters::Opening::slots`); stalks among flowers or heads take
+/// their own colour as nearly as the card's two make it.
 pub(crate) struct ClusterCard {
     units: Vec<CardUnit>,
     stalks: Vec<CardStalk>,
@@ -1998,8 +2005,13 @@ impl ClusterCard {
     /// Cells a side of the grid.
     const SIDE: usize = 48;
 
+    /// The card of `cluster`, drawn in a look's `colours`, its colour and
+    /// its accent.
     #[allow(clippy::too_many_lines)]
-    pub(crate) fn new(cluster: &crate::clusters::ClusterLook) -> Self {
+    pub(crate) fn new(
+        cluster: &crate::clusters::ClusterLook,
+        colours: ([f32; 3], [f32; 3]),
+    ) -> Self {
         use crate::math::Vec3;
         let frame = cluster.card;
         let laid = cluster.layout(0.0, 0);
@@ -2020,10 +2032,12 @@ impl ClusterCard {
         let turn = |d: Vec3| if facing { Vec3::new(-d.x, d.z, d.y) } else { d };
         let opening = cluster.opening.as_deref();
         let slots = opening.map(|opening| opening.slots(&laid));
-        // A stalk in the card's accent, or, where the units are in stages
-        // of their own and the card's two colours are theirs, in its own
-        // colour made of those two.
-        let stalk_paint = |colour: [f32; 3]| match slots {
+        // A stalk in the card's accent among fruit, which takes the
+        // stalks' colour; or, among flowers or heads, or where the units
+        // are in stages of their own and the card's two colours are
+        // theirs, in its own colour made of those two.
+        let stalk_slots = slots.or_else(|| cluster.unit.faces().then_some(colours));
+        let stalk_paint = |colour: [f32; 3]| match stalk_slots {
             None => Paint::solid(0.8, 1.0),
             Some(slots) => {
                 let (a, b) = crate::clusters::blend(colour, slots);

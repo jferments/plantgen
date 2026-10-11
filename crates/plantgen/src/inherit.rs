@@ -59,7 +59,14 @@
 //! whole number), and sets it only where the species draws the organ with
 //! such a card: a family's rule for a head card's rays sets them where a
 //! species draws its heads with one, and nothing where it draws them
-//! another way. A field that replaces others ([`REPLACES`]: a leaf's
+//! another way. A rule inside a look's `inflorescence` sets one of its
+//! keys ([`INFLORESCENCE`]) only where the species draws the organ as a
+//! cluster, its look holding the key: a taxon says which organ is a
+//! cluster with `"inflorescence": {}`, and the rules fill it in. A rule's
+//! path may name `*` for the organ, as in
+//! `appearance.organs.*.inflorescence.kind`, and then sets its path in
+//! every look it may, whatever the species' program calls the organ. A
+//! field that replaces others ([`REPLACES`]: a leaf's
 //! outline replaces where it is widest, its tip and its base) sets nothing
 //! where those are set at least as near, and else removes them. The
 //! effective spec carries the values, not the traits or rules.
@@ -377,6 +384,14 @@ fn check_rule(path: &str, rule: &Value) -> Result<(), String> {
     if path.split('.').any(str::is_empty) {
         return Err("its path is keys joined by dots".into());
     }
+    if path.contains('*') && (!path.starts_with(EVERY) || path[EVERY.len()..].contains('*')) {
+        return Err(format!(
+            "`*` stands only for the organ, as in `{EVERY}inflorescence.kind`"
+        ));
+    }
+    if let Some(field) = inflorescence_field(path) {
+        inflorescence_takes(field)?;
+    }
     if UNRULED
         .iter()
         .any(|unruled| path == *unruled || path.starts_with(&format!("{unruled}.")))
@@ -469,6 +484,118 @@ fn rivals(field: &str) -> Vec<&'static str> {
             }
         })
         .collect()
+}
+
+/// What a rule may set inside a look's `inflorescence`
+/// (`crate::looks::Inflorescence`): every key but its `branch` and its
+/// `stalk` colour. The looks module's tests hold this to the key.
+pub const INFLORESCENCE: [(&str, Field); 11] = {
+    use Field::{Count, Number, Word};
+    [
+        ("kind", Word),
+        ("flowers", Count),
+        ("branches", Count),
+        ("per_node", Count),
+        ("divergence", Number),
+        ("spread", Number),
+        ("pedicel", Number),
+        ("peduncle", Number),
+        ("size", Number),
+        ("taper", Number),
+        ("droop", Number),
+    ]
+};
+
+/// The start of a rule's path that sets something in every look it may:
+/// `*` stands for the organ.
+const EVERY: &str = "appearance.organs.*.";
+
+/// The organ of a path inside `appearance.organs`.
+fn organ_of(path: &str) -> &str {
+    path.strip_prefix("appearance.organs.")
+        .and_then(|look| look.split_once('.'))
+        .map_or("", |(organ, _)| organ)
+}
+
+/// The key a rule's `path` sets inside a look's `inflorescence`
+/// (`appearance.organs.<organ>.inflorescence.<key>`), if it sets one.
+fn inflorescence_field(path: &str) -> Option<&str> {
+    let (_, look) = path.strip_prefix("appearance.organs.")?.split_once('.')?;
+    look.strip_prefix("inflorescence.")
+}
+
+/// What the inflorescence's `key` takes.
+fn inflorescence_takes(key: &str) -> Result<Field, String> {
+    INFLORESCENCE
+        .iter()
+        .find(|(name, _)| *name == key)
+        .map(|(_, takes)| *takes)
+        .ok_or_else(|| {
+            format!(
+                "a rule sets no `{key}` in an inflorescence: it sets {}",
+                INFLORESCENCE
+                    .iter()
+                    .map(|(name, _)| format!("`{name}`"))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            )
+        })
+}
+
+/// The paths a rule at `path` sets in `spec`: its own, or where it names
+/// every look (`*`), each look's that it may set, in the organs' order;
+/// or why there are none.
+fn every_look(
+    spec: &Map<String, Value>,
+    path: &str,
+    rule: &Map<String, Value>,
+) -> Result<Vec<String>, String> {
+    let Some(rest) = path.strip_prefix(EVERY) else {
+        return Ok(vec![path.to_string()]);
+    };
+    let looks = find(spec, "appearance.organs")
+        .and_then(Value::as_object)
+        .cloned()
+        .unwrap_or_default();
+    let mut paths = Vec::new();
+    for (organ, look) in &looks {
+        let at = format!("appearance.organs.{organ}.{rest}");
+        if inflorescence_field(&at).is_some()
+            && !look.get("inflorescence").is_some_and(Value::is_object)
+        {
+            continue;
+        }
+        if shape_field(&at).is_some() {
+            let drawn = look
+                .get("shape")
+                .and_then(|shape| shape.get("template"))
+                .and_then(Value::as_str);
+            let names = rule
+                .get("template")
+                .map(templates)
+                .transpose()?
+                .unwrap_or_default();
+            if !drawn.is_some_and(|drawn| names.contains(&drawn)) {
+                continue;
+            }
+        }
+        paths.push(at);
+    }
+    if paths.is_empty() {
+        return Err(if inflorescence_field(path).is_some() {
+            "it draws no look as a cluster (with an `inflorescence`)".to_string()
+        } else if shape_field(path).is_some() {
+            let names = rule
+                .get("template")
+                .map(templates)
+                .transpose()?
+                .unwrap_or_default();
+            format!("it draws no look with {} cards", cards(&names))
+        } else {
+            "it draws no looks".to_string()
+        });
+    }
+    Ok(paths)
 }
 
 /// The fields of each card template a look's `shape` may name
@@ -666,16 +793,30 @@ fn template_field(template: &str, field: &str) -> Result<Field, String> {
 
 /// What a rule for the card `template` (one or a list) may set at `path`
 /// inside `appearance.organs`: something in the look of an organ the
-/// species draws, and inside its `shape` a field of the card, where the
-/// species draws the organ with that card (`Some` of what the field takes).
+/// species draws; inside its `shape` a field of the card, where the
+/// species draws the organ with that card; and inside its `inflorescence`
+/// a key of it, where the species draws the organ as a cluster (`Some` of
+/// what the field or key takes).
 fn look_field(
     spec: &Map<String, Value>,
     path: &str,
     template: Option<&Value>,
 ) -> Result<Option<Field>, String> {
     let (organ, look) = path.split_once('.').unwrap_or((path, ""));
-    let drawn = find(spec, &format!("appearance.organs.{organ}"))
-        .ok_or_else(|| format!("it draws no `{organ}` look"))?
+    let drawn_look = find(spec, &format!("appearance.organs.{organ}"))
+        .ok_or_else(|| format!("it draws no `{organ}` look"))?;
+    if let Some(key) = look.strip_prefix("inflorescence.") {
+        if !drawn_look
+            .get("inflorescence")
+            .is_some_and(Value::is_object)
+        {
+            return Err(format!(
+                "its `{organ}` look is no cluster: it has no `inflorescence`"
+            ));
+        }
+        return inflorescence_takes(key).map(Some);
+    }
+    let drawn = drawn_look
         .get("shape")
         .and_then(|shape| shape.get("template"))
         .and_then(Value::as_str);
@@ -1178,7 +1319,11 @@ fn layers<'a>(file: &str, own: &'a Part, above: &[&'a RankFile]) -> Vec<(String,
 
 /// One rule of a species' chain, with what it reads from.
 struct Ruled<'a> {
+    /// The rule's path, as its file writes it.
     path: &'a str,
+    /// The path it sets: its own, or for each look its `*` names, that
+    /// look's.
+    at: &'a str,
     rule: &'a Map<String, Value>,
     /// The rule's layer in the chain.
     index: usize,
@@ -1210,15 +1355,34 @@ impl Ruled<'_> {
         for (path, waits) in order(rules) {
             let (rule, index) = &rules[path];
             let outcome = if waits.is_empty() {
-                let one = Ruled {
-                    path,
-                    rule,
-                    index: *index,
-                    layers,
-                    traits,
-                };
-                one.apply(program.as_deref(), programs, spec, origins, notes)
-                    .err()
+                let mut set = 0;
+                let mut why = None;
+                let looks = every_look(spec, path, rule);
+                for at in looks.clone().unwrap_or_default() {
+                    let one = Ruled {
+                        path,
+                        at: &at,
+                        rule,
+                        index: *index,
+                        layers,
+                        traits,
+                    };
+                    match one.apply(program.as_deref(), programs, spec, origins, notes) {
+                        Ok(()) => set += 1,
+                        Err(error) => {
+                            why.get_or_insert(if path.starts_with(EVERY) {
+                                format!("in its `{}` look, {error}", organ_of(&at))
+                            } else {
+                                error
+                            });
+                        }
+                    }
+                }
+                match looks {
+                    Err(error) => Some(error),
+                    Ok(_) if set > 0 => None,
+                    Ok(_) => why,
+                }
             } else {
                 Some(format!(
                     "it waits on rules that read each other: {}",
@@ -1241,13 +1405,13 @@ impl Ruled<'_> {
         notes: &mut BTreeMap<String, (Origin, Value)>,
     ) -> Result<(), String> {
         let params = program.and_then(|program| programs.get(program));
-        if let Some(param) = self.path.strip_prefix("generator.params.") {
+        if let Some(param) = self.at.strip_prefix("generator.params.") {
             let program = program.ok_or("the species names no program")?;
             if !params.is_some_and(|params| params.contains_key(param)) {
                 return Err(format!("program `{program}` has no parameter `{param}`"));
             }
         }
-        let field = match self.path.strip_prefix("appearance.organs.") {
+        let field = match self.at.strip_prefix("appearance.organs.") {
             Some(look) => look_field(spec, look, self.rule.get("template"))?,
             None => None,
         };
@@ -1308,7 +1472,7 @@ impl Ruled<'_> {
                 inputs.insert(key, value);
             }
         }
-        if let Some((label, by)) = origins.get(self.path)
+        if let Some((label, by)) = origins.get(self.at)
             && *by >= depth
         {
             return Err(format!("set by hand in {label}"));
@@ -1321,8 +1485,8 @@ impl Ruled<'_> {
             forget(origins, rival);
             notes.retain(|path, _| !within(path, rival));
         }
-        set(spec, self.path, value);
-        forget(origins, self.path);
+        set(spec, self.at, value);
+        forget(origins, self.at);
         let file = &self.layers[self.index].0;
         let label = if from.is_empty() {
             format!("{file}: rule")
@@ -1330,8 +1494,8 @@ impl Ruled<'_> {
             format!("{file}: rule on {}", from.join(", "))
         };
         let origin = (label, depth);
-        origins.insert(self.path.to_string(), origin.clone());
-        notes.retain(|path, _| !within(path, self.path));
+        origins.insert(self.at.to_string(), origin.clone());
+        notes.retain(|path, _| !within(path, self.at));
         // The rule's note: on its path, else on all of its file's rules.
         let part = self.layers[self.index].1;
         if let Some(note) = part
@@ -1339,7 +1503,7 @@ impl Ruled<'_> {
             .get(&format!("rules.{}", self.path))
             .or_else(|| part.notes.get("rules"))
         {
-            notes.insert(self.path.to_string(), (origin, note.clone()));
+            notes.insert(self.at.to_string(), (origin, note.clone()));
         }
         Ok(())
     }
@@ -1355,7 +1519,7 @@ impl Ruled<'_> {
         origins: &BTreeMap<String, Origin>,
         depth: usize,
     ) -> Result<Vec<String>, String> {
-        let (Some(_), Some((shape, name))) = (field, self.path.rsplit_once('.')) else {
+        let (Some(_), Some((shape, name))) = (field, self.at.rsplit_once('.')) else {
             return Ok(Vec::new());
         };
         let mut found = Vec::new();
@@ -2682,6 +2846,148 @@ mod tests {
         assert_eq!(super::written(0.5), Some(json!(0.5)));
         assert_eq!(super::written(1e20), Some(json!(1e20)));
         assert_eq!(super::written(f64::INFINITY), None);
+    }
+
+    /// A rule whose path names `*` for the organ sets its path in every
+    /// look it may; one inside a look's `inflorescence` sets it only where
+    /// the look is a cluster.
+    #[test]
+    fn rules_fill_in_clusters_in_every_look() {
+        let file = "testaceae/family.json";
+        let files = ranks(&[(
+            file,
+            json!({"schema": 1, "rank": "family", "name": "Testaceae",
+                "generator": {"program": "broadleaf"},
+                "rules": {
+                    "appearance.organs.*.inflorescence.kind": {
+                        "map": {"inflorescence": {"raceme": "raceme", "spadix": "spike"}}},
+                    "appearance.organs.*.inflorescence.flowers": {
+                        "rule": "clamp(round(units_per_inflorescence), 1, 200)"},
+                    "appearance.organs.*.shape.rays": {
+                        "template": "head", "rule": "round(ray_florets)"}}}),
+        )]);
+        let chain = above(&files, "testaceae", "plain").unwrap();
+        let species = "testaceae/plain/plain-one/spec.json";
+        let grown = |looks: Value, traits: Value| {
+            let own = json!({"id": "plain-one", "traits": traits,
+                "appearance": {"organs": looks}});
+            inherit(species, &own, &chain, &programs()).unwrap()
+        };
+        let outcome = |grown: &super::Inherited, path: &str| grown.rules[path].1.clone();
+        let traits = json!({"inflorescence": "spadix",
+            "units_per_inflorescence": {"min": 20, "max": 40}, "ray_florets": 8});
+
+        // The bloom is a cluster and takes its kind and count; the flower,
+        // a head card, takes its rays; the leaf takes neither.
+        let both = grown(
+            json!({"bloom": {"shape": {"template": "fruit"}, "inflorescence": {}},
+                "flower": {"shape": {"template": "head"}},
+                "leaf": {"shape": {"template": "simple"}}}),
+            traits.clone(),
+        );
+        let looks = &both.spec["appearance"]["organs"];
+        assert_eq!(
+            looks["bloom"]["inflorescence"],
+            json!({"kind": "spike", "flowers": 30})
+        );
+        assert!(looks["flower"].get("inflorescence").is_none());
+        assert_eq!(looks["flower"]["shape"]["rays"], json!(8));
+        assert_eq!(looks["leaf"], json!({"shape": {"template": "simple"}}));
+        for path in [
+            "appearance.organs.*.inflorescence.kind",
+            "appearance.organs.*.inflorescence.flowers",
+            "appearance.organs.*.shape.rays",
+        ] {
+            assert_eq!(outcome(&both, path), None, "{path}");
+        }
+        assert_eq!(
+            both.origins["appearance.organs.bloom.inflorescence.kind"],
+            format!("{file}: rule on inflorescence from {species}")
+        );
+
+        // Without a cluster or a head card, they set nothing, and say why.
+        let neither = grown(
+            json!({"leaf": {"shape": {"template": "simple"}}}),
+            traits.clone(),
+        );
+        assert_eq!(
+            outcome(&neither, "appearance.organs.*.inflorescence.kind").as_deref(),
+            Some("it draws no look as a cluster (with an `inflorescence`)")
+        );
+        assert_eq!(
+            outcome(&neither, "appearance.organs.*.shape.rays").as_deref(),
+            Some("it draws no look with `head` cards")
+        );
+
+        // A kind set by hand stands; a state the map leaves out sets none.
+        let by_hand = grown(
+            json!({"bloom": {"shape": {"template": "fruit"},
+                "inflorescence": {"kind": "umbel"}}}),
+            traits.clone(),
+        );
+        assert_eq!(
+            by_hand.spec["appearance"]["organs"]["bloom"]["inflorescence"],
+            json!({"kind": "umbel", "flowers": 30})
+        );
+        assert_eq!(
+            outcome(&by_hand, "appearance.organs.*.inflorescence.kind").as_deref(),
+            Some(format!("in its `bloom` look, set by hand in {species}").as_str())
+        );
+        let solitary = grown(
+            json!({"bloom": {"shape": {"template": "fruit"}, "inflorescence": {}}}),
+            json!({"inflorescence": "solitary", "units_per_inflorescence": 1}),
+        );
+        assert_eq!(
+            outcome(&solitary, "appearance.organs.*.inflorescence.kind").as_deref(),
+            Some("in its `bloom` look, its map holds nothing for `inflorescence` solitary")
+        );
+    }
+
+    /// A rule inside one look's `inflorescence` waits for that look to be
+    /// a cluster; `*` names only the organ, and a rule sets only an
+    /// inflorescence's own keys.
+    #[test]
+    fn a_rule_sets_an_inflorescence_only_in_a_cluster() {
+        let file = "testaceae/family.json";
+        let species = "testaceae/plain/plain-one/spec.json";
+        let traits = json!({"inflorescence": "spadix",
+            "units_per_inflorescence": {"min": 20, "max": 40}, "ray_florets": 8});
+        let lone_files = ranks(&[(
+            file,
+            json!({"schema": 1, "rank": "family", "name": "Testaceae",
+                "generator": {"program": "broadleaf"},
+                "rules": {"appearance.organs.flower.inflorescence.flowers": {"rule": "5"}}}),
+        )]);
+        let lone = inherit(
+            species,
+            &json!({"id": "plain-one", "traits": traits,
+                "appearance": {"organs": {"flower": {"shape": {"template": "head"}}}}}),
+            &above(&lone_files, "testaceae", "plain").unwrap(),
+            &programs(),
+        )
+        .unwrap();
+        assert_eq!(
+            lone.rules["appearance.organs.flower.inflorescence.flowers"]
+                .1
+                .as_deref(),
+            Some("its `flower` look is no cluster: it has no `inflorescence`")
+        );
+
+        // `*` stands only for the organ; a rule sets an inflorescence's
+        // keys, not its branch or colour.
+        refused(
+            file,
+            &family(json!({"rules": {"appearance.*.flower.colour": {"rule": "1"}}})),
+            "`*` stands only for the organ",
+        );
+        refused(
+            file,
+            &family(
+                json!({"rules": {"appearance.organs.*.inflorescence.stalk": {
+                "rule": "1"}}}),
+            ),
+            "a rule sets no `stalk` in an inflorescence",
+        );
     }
 
     fn narrow() -> Value {

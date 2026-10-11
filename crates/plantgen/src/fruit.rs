@@ -516,7 +516,8 @@ impl One {
     }
 }
 
-/// A short stalk: an open four-sided tube `length` long from `start`.
+/// A short stalk: an open four-sided tube `length` long from `start`,
+/// three-sided from the `crate::clusters::FLAT` step.
 pub(crate) fn stalk_between(
     start: Vec3,
     along: Vec3,
@@ -526,21 +527,25 @@ pub(crate) fn stalk_between(
     part: Part,
     mesh: &mut Mesh,
 ) {
-    const SIDES: u32 = 4;
+    let sides: u32 = if part.coarse >= crate::clusters::FLAT {
+        3
+    } else {
+        4
+    };
     let across = any_perpendicular(along);
     let other = along.cross(across);
     let leaf = part.leaf(start, along, across, 0.0, 0.0, colour);
     let first = u32::try_from(mesh.positions.len()).unwrap_or(0);
     for end in [0.0, length] {
-        for k in 0..SIDES {
-            let theta = std::f64::consts::TAU * f64::from(k) / f64::from(SIDES);
+        for k in 0..sides {
+            let theta = std::f64::consts::TAU * f64::from(k) / f64::from(sides);
             let radial = across * math::cos(theta) + other * math::sin(theta);
             mesh.push(leaf.vertex(start + along * end + radial * radius, colour));
         }
     }
-    for k in 0..SIDES {
-        let (a0, a1) = (first + k, first + (k + 1) % SIDES);
-        let (b0, b1) = (a0 + SIDES, a1 + SIDES);
+    for k in 0..sides {
+        let (a0, a1) = (first + k, first + (k + 1) % sides);
+        let (b0, b1) = (a0 + sides, a1 + sides);
         mesh.indices.extend_from_slice(&[a0, a1, b0, a1, b1, b0]);
     }
 }
