@@ -2,5 +2,15 @@
   "schema": 1,
   "rank": "class",
   "name": "Charophyceae",
-  "parent": "phylum/charophyta"
+  "parent": "phylum/charophyta",
+  "traits": {
+    "body_plan": "thalloid"
+  },
+  "evidence": {
+    "traits.body_plan": {
+      "evidence": "SourceInferred",
+      "source": "openstax-biology-2e",
+      "note": "Stoneworts such as Chara are many-celled algae: large cells form their thallus, the main stem of the alga (Biology 2e, 25.2)."
+    }
+  }
 }

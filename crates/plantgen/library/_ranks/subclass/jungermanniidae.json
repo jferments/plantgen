@@ -2,5 +2,16 @@
   "schema": 1,
   "rank": "subclass",
   "name": "Jungermanniidae",
-  "parent": "class/jungermanniopsida"
+  "parent": "class/jungermanniopsida",
+  "traits": {
+    "body_plan": "leafy",
+    "leaf_bearing": true
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "wikstrom-2009-liverworts",
+      "note": "Jungermanniidae are the leafy liverworts, about 86% of the species (Wikström, He-Nygrén and Shaw 2009)."
+    }
+  }
 }

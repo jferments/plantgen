@@ -2,5 +2,15 @@
   "schema": 1,
   "rank": "subclass",
   "name": "Equisetidae",
-  "parent": "class/polypodiopsida"
+  "parent": "class/polypodiopsida",
+  "traits": {
+    "sporangia": "cones"
+  },
+  "evidence": {
+    "traits.sporangia": {
+      "evidence": "SourceInferred",
+      "source": "fna-2-equisetaceae",
+      "note": "Horsetails bear their sporangia in cone-like strobili at the tips of the stem or its branches (Flora of North America, Equisetaceae)."
+    }
+  }
 }

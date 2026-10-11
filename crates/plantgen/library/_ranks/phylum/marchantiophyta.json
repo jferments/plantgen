@@ -2,5 +2,39 @@
   "schema": 1,
   "rank": "phylum",
   "name": "Marchantiophyta",
-  "parent": "kingdom/plantae"
+  "parent": "kingdom/plantae",
+  "traits": {
+    "body_plan": {"leafy": "usually", "thalloid": "sometimes"},
+    "leaf_bearing": {"true": "usually", "false": "sometimes"},
+    "anchorage": "rhizoids",
+    "reproduction": "spores",
+    "sporangia": "capsule"
+  },
+  "evidence": {
+    "traits.body_plan": {
+      "evidence": "SourceInferred",
+      "source": "wikstrom-2009-liverworts",
+      "note": "About 86% of liverwort species are leafy; the complex thalloids (about 6%) and the simple thalloids (about 8%) make up the rest (Wikström, He-Nygrén and Shaw 2009)."
+    },
+    "traits.leaf_bearing": {
+      "evidence": "SourceInferred",
+      "source": "wikstrom-2009-liverworts",
+      "note": "The leafy liverworts, about 86% of the species, bear leaves; the thalloid ones, the rest, have a thallus instead (Wikström, He-Nygrén and Shaw 2009)."
+    },
+    "traits.anchorage": {
+      "evidence": "SourceInferred",
+      "source": "anbg-bryophytes",
+      "note": "Liverworts hold to their ground by rhizoids, single cells in all but a few species (Australian Bryophytes, 'What is a liverwort?')."
+    },
+    "traits.reproduction": {
+      "evidence": "SourceInferred",
+      "source": "anbg-bryophytes",
+      "note": "Liverworts spread by spores, shed from the capsule of the sporophyte that grows from the plant (Australian Bryophytes)."
+    },
+    "traits.sporangia": {
+      "evidence": "SourceInferred",
+      "source": "anbg-bryophytes",
+      "note": "A liverwort's spores form in a capsule, which a short-lived stalk, the seta, lifts from the plant before it splits (Australian Bryophytes)."
+    }
+  }
 }

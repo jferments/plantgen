@@ -3,6 +3,11 @@
   "rank": "phylum",
   "name": "Tracheophyta",
   "parent": "kingdom/plantae",
+  "traits": {
+    "body_plan": "vascular",
+    "anchorage": "roots",
+    "leaf_bearing": true
+  },
   "rules": {
     "generator.params.leaves_per_node": {
       "map": {"leaf_arrangement": {"alternate": 1, "opposite": 2, "whorled": {"rule": "leaves_per_whorl"}}},
@@ -14,6 +19,11 @@
     }
   },
   "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "openstax-biology-2e",
+      "note": "Vascular plants are built of stems and leaves with vascular tissue, and most hold to their ground by roots: ferns form large leaves and branching roots, and by the late Devonian plants had vascular tissue, well-defined leaves and root systems (Biology 2e, 25.4). The few without roots or leaves, such as the whisk ferns, which lack both, say so in their own files."
+    },
     "rules": {
       "evidence": "SourceInferred",
       "source": "okabe-2019-phyllotaxis",

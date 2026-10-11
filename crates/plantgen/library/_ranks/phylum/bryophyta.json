@@ -2,5 +2,19 @@
   "schema": 1,
   "rank": "phylum",
   "name": "Bryophyta",
-  "parent": "kingdom/plantae"
+  "parent": "kingdom/plantae",
+  "traits": {
+    "body_plan": "leafy",
+    "anchorage": "rhizoids",
+    "leaf_bearing": true,
+    "reproduction": "spores",
+    "sporangia": "capsule"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "openstax-biology-2e",
+      "note": "Mosses are small leafy shoots held to their ground by rhizoids of many cells, which take up little of their water (Biology 2e, 25.3). They spread by spores: the sporophyte that grows from the leafy plant is a slender stalk, the seta, ending in a capsule where the spores form."
+    }
+  }
 }
