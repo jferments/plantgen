@@ -32,7 +32,7 @@
       "blade_area": 0.046,
       "tip_area": 0.025,
       "thatch_area": 0.046,
-      "panicle_area": 0.061
+      "panicle_area": 0.14
     }
   },
   "growth": {
@@ -62,16 +62,16 @@
         "shade": [0.12, 0.1, 0.05]
       },
       "panicle": {
-        "shape": {
-          "template": "panicle",
-          "whorls": 3,
-          "branches": 2,
-          "spread": 30,
-          "spikelets": 3,
-          "aspect": 0.4,
-          "stalk": 0.1
+        "shape": {"template": "spikelet", "glume": 1.15},
+        "inflorescence": {
+          "size": 0.25,
+          "spread": 60,
+          "pedicel": 0.15,
+          "peduncle": 0.1,
+          "stalk": [0.42, 0.4, 0.27]
         },
-        "colour": [0.5, 0.45, 0.32]
+        "colour": [0.5, 0.45, 0.32],
+        "accent": [0.45, 0.42, 0.3]
       }
     }
   },
@@ -84,7 +84,40 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "inflorescence": "raceme",
+    "units_per_inflorescence": {"min": 3, "max": 6, "low": 2, "high": 10},
+    "florets_per_spikelet": {"min": 3, "max": 8},
+    "spikelet_length_m": {"min": 0.014, "max": 0.026, "low": 0.01, "high": 0.03},
+    "glumes": 2,
+    "upper_glume_length_m": {"min": 0.01, "max": 0.023},
+    "lemma_length_m": {"min": 0.005, "max": 0.01},
+    "awns": true,
+    "awn_length_m": {"min": 0.008, "max": 0.012, "low": 0.007},
+    "awn_insertion": "subapical",
+    "awn_form": "geniculate"
+  },
   "evidence": {
+    "appearance.organs.panicle": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The raceme's layout, the model's choice after FNA (volume 25), as search results quote it (the page was not read): a few large spikelets on flexible branches, widely spreading. Each spikelet's glumes drawn 1.15 times the height its florets reach, since FNA's genus account has them usually longer than the florets (a flora's spikelet length runs to the glumes' tips, so the rule from the traits would set them level). Colours by eye: straw."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA's account of the species (Darbyshire, volume 25), as search results quote it (the page itself was not read): inflorescences usually racemose, with (2)3 to 6(10) widely spreading spikelets; spikelets (10)14 to 26(30) mm; lemma bodies 5 to 10 mm, their two teeth (2)4 to 6(7) mm and bristle-tipped; awns (7)8 to 12 mm. The genus account: glumes usually longer than the florets; the awn rises between the lemma's teeth, bent at a knee (geniculate) and twisted below it."
+    },
+    "traits.florets_per_spikelet": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "The Jepson eFlora's account of the species, as search results quote it (the page itself was not read): generally 3 to 6 spikelets, generally 14 to 25 mm, their glumes 10 to 23 mm, florets 3 to 8."
+    },
+    "traits.upper_glume_length_m": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "The Jepson eFlora's account of the species, as search results quote it (the page itself was not read): glumes 10 to 23 mm."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

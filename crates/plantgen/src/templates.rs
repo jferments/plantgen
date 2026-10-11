@@ -513,6 +513,7 @@ fn draw(shape: &Shape, colours: Colours, x: f64, y: f64, veins: Option<&Venation
         Shape::Umbel(s) => umbel(s, x, y - 0.5),
         Shape::Spike(s) => spike(s, x, y, fine),
         Shape::Panicle(s) => panicle(s, x, y, fine),
+        Shape::Spikelet(s) => spikelet(s, x, y, fine),
         Shape::Fruit(s) => fruit(s, x, y, fine),
     }
 }
@@ -1555,6 +1556,17 @@ fn head(s: &Head, colours: Colours, x: f64, y: f64) -> Paint {
     }
 }
 
+/// A spikelet seen square to its bracts' plane (`crate::spikelets`), at
+/// `(x, y)` in shares of its length.
+fn spikelet(s: &crate::looks::Spikelet, x: f64, y: f64, fine: f64) -> Paint {
+    let painted = crate::spikelets::paint(s, x, y, fine);
+    Paint {
+        cover: painted.cover,
+        bright: painted.bright,
+        accent: painted.accent,
+    }
+}
+
 /// A flat-topped cluster of small flowers seen from above: florets packed
 /// in clusters, the clusters packed in the umbel, both in sunflower
 /// spirals.
@@ -1934,14 +1946,16 @@ struct StageCard {
 /// viewer (larger in front), and its stage's look (`ClusterCard::looks`)
 /// where it is in a stage of its own.
 enum CardUnit {
-    /// A fruit or a bud: its base, its direction (not unit-length once
-    /// projected), length and width over length, its pedicel from
-    /// `attach`, and whether it is unripe.
+    /// A fruit, a bud or a spikelet: its base, its direction (not
+    /// unit-length once projected), length, width over length and how far
+    /// it reaches along its direction in its lengths (a spikelet's awns),
+    /// its pedicel from `attach`, and whether it is unripe.
     Fruit {
         base: crate::math::Vec3,
         direction: crate::math::Vec3,
         length: f64,
         width: f64,
+        reach: f64,
         attach: crate::math::Vec3,
         unripe: bool,
         look: Option<usize>,
@@ -2086,7 +2100,8 @@ impl ClusterCard {
                         base,
                         direction: turn(p.direction),
                         length: p.length * size / length,
-                        width: unit.width(),
+                        width: unit.across(),
+                        reach: unit.reach(),
                         attach,
                         unripe,
                         look,
@@ -2148,9 +2163,10 @@ impl ClusterCard {
                     direction,
                     length,
                     width,
+                    reach,
                     ..
                 } => {
-                    let tip = *base + *direction * *length;
+                    let tip = *base + *direction * (*length * reach);
                     let pad = (*length * width * 0.5).max(fine) + *length * 0.05 + fine;
                     (
                         (base.x.min(tip.x) - pad, base.y.min(tip.y) - pad),
@@ -2311,18 +2327,26 @@ impl ClusterCard {
                             ..
                         } => {
                             let (shape, _, refit) = self.in_look(*look, shape);
-                            let Shape::Fruit(s) = shape else {
-                                continue;
+                            let mut paint = match shape {
+                                Shape::Fruit(s) => one_fruit(
+                                    s,
+                                    (base.x, base.y),
+                                    (direction.x, direction.y),
+                                    *length,
+                                    x,
+                                    y,
+                                    fine,
+                                ),
+                                Shape::Spikelet(s) => one_spikelet(
+                                    s,
+                                    (base.x, base.y),
+                                    (direction.x, direction.y),
+                                    *length,
+                                    (x, y),
+                                    fine,
+                                ),
+                                _ => continue,
                             };
-                            let mut paint = one_fruit(
-                                s,
-                                (base.x, base.y),
-                                (direction.x, direction.y),
-                                *length,
-                                x,
-                                y,
-                                fine,
-                            );
                             if *unripe {
                                 paint.accent = 1.0;
                             }
@@ -2359,6 +2383,32 @@ impl ClusterCard {
         }
         best.map_or(Paint::EMPTY, |(_, paint)| paint)
     }
+}
+
+/// One spikelet at card point `p`, its base, direction and length as the
+/// card sees them: seen square to its bracts' plane, its length along its
+/// projected axis, foreshortened as it leans toward or away from the card.
+fn one_spikelet(
+    s: &crate::looks::Spikelet,
+    base: (f64, f64),
+    direction: (f64, f64),
+    length: f64,
+    p: (f64, f64),
+    fine: f64,
+) -> Paint {
+    let projected = hypot(direction.0, direction.1).max(0.2);
+    let (along, across) = (
+        (direction.0 / projected, direction.1 / projected),
+        (-direction.1 / projected, direction.0 / projected),
+    );
+    let (dx, dy) = (p.0 - base.0, p.1 - base.1);
+    let scale = length.max(1e-9);
+    spikelet(
+        s,
+        (dx * across.0 + dy * across.1) / scale,
+        (dx * along.0 + dy * along.1) / (scale * projected),
+        fine / scale,
+    )
 }
 
 /// One fruit at card point `(x, y)`, its base, direction and length as the

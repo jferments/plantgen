@@ -33,7 +33,7 @@
       "blade_area": 0.027,
       "tip_area": 0.015,
       "thatch_area": 0.027,
-      "panicle_area": 0.319
+      "panicle_area": 0.101
     }
   },
   "growth": {
@@ -63,8 +63,25 @@
         "shade": [0.12, 0.1, 0.05]
       },
       "panicle": {
-        "shape": { "template": "fruit", "aspect": 0.25 },
-        "colour": [0.28, 0.2, 0.12]
+        "shape": {
+          "template": "spikelet",
+          "florets": 12,
+          "glumes": 0,
+          "ranks": 0,
+          "lemma": 0.4,
+          "aspect": 0.4,
+          "gape": 10
+        },
+        "inflorescence": {
+          "kind": "spike",
+          "flowers": 3,
+          "size": 0.3,
+          "spread": 10,
+          "peduncle": 0.05,
+          "stalk": [0.35, 0.35, 0.2]
+        },
+        "colour": [0.36, 0.28, 0.16],
+        "accent": [0.5, 0.45, 0.3]
       }
     }
   },
@@ -78,6 +95,11 @@
   ],
   "tier": "procedural_proxy",
   "evidence": {
+    "appearance.organs.panicle": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The inflorescence, the model's choice after FNA's accounts of the species and its section (volume 23), as search results quote them (the pages were not read): a male spike at the top, 8 to 30 mm long, and 1 to 3(4) female spikes below it, each with (2)5 to 15 obovoid perigynia 2.8 to 4.6 mm long. Drawn as 3 spikes close together, each with the spikelet card (a sedge spike is a spike of one-flowered spikelets): 12 perigynia and their scales in a spiral. The male spike is drawn as the female ones are, since a cluster's units share one shape. Colours by eye: olive-brown."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

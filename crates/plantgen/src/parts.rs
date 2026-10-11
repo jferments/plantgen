@@ -122,7 +122,9 @@ pub fn part_meshes_within(looks: &[Look], share: f64) -> Vec<PartMesh> {
 pub fn cap(look: &Look) -> usize {
     match look.form {
         Form::Shoot => SHOOT_TRIANGLES,
-        _ if look.inflorescence.is_some() || matches!(look.shape, Shape::Head(_)) => {
+        _ if look.inflorescence.is_some()
+            || matches!(look.shape, Shape::Head(_) | Shape::Spikelet(_)) =>
+        {
             CLUSTER_TRIANGLES
         }
         _ => TRIANGLES,

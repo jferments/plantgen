@@ -157,6 +157,7 @@ impl Families {
                     | Shape::Umbel(_)
                     | Shape::Spike(_)
                     | Shape::Panicle(_)
+                    | Shape::Spikelet(_)
                     | Shape::Fruit(_)
             ) {
                 return Err(format!(
@@ -480,6 +481,9 @@ pub enum Shape {
     /// and branchlets spreading from the axis, with spikelets clustered at
     /// their tips.
     Panicle(Panicle),
+    /// A grass or sedge spikelet (`crate::spikelets`): glumes and florets
+    /// on a short axis, seen from the side, as a cluster's unit.
+    Spikelet(Spikelet),
     /// A berry, fruit or cone.
     Fruit(Fruit),
 }
@@ -966,6 +970,65 @@ impl Default for Panicle {
     }
 }
 
+/// A grass or sedge spikelet (spec rework P3, `crate::spikelets`): empty
+/// glumes at the foot of a short axis, the rachilla, and above them its
+/// florets, each shown by its lemma, in two ranks or a spiral. Lengths are
+/// shares of the spikelet's length, from its foot to the highest tip of a
+/// glume or lemma, awns left out.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct Spikelet {
+    /// Florets on the rachilla.
+    pub florets: u32,
+    /// Empty glumes at its foot: 2, 1 (the upper alone) or 0.
+    pub glumes: u32,
+    /// The upper glume's length.
+    pub glume: f64,
+    /// The lower glume's length over the upper's.
+    pub lower: f64,
+    /// Each lemma's length.
+    pub lemma: f64,
+    /// The spikelet's width across its bracts' plane over its length.
+    pub aspect: f64,
+    /// Length of a lemma's awn; 0 for none.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub awn: f64,
+    /// Where an awn leaves its lemma's keel, a share of the lemma below its
+    /// tip: 0 from the tip, more from its back.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub awn_from: f64,
+    /// The share of the florets, from the top, that bear awns.
+    pub awned: f64,
+    /// Degrees an awn bends outward at its knee: 0 straight, as a
+    /// geniculate awn is bent.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub bent: f64,
+    /// 2 for bracts in two ranks (grasses), 0 for a spiral (many sedges).
+    pub ranks: u32,
+    /// Degrees each lemma leans out from the rachilla; the glumes half as
+    /// far.
+    pub gape: f64,
+}
+
+impl Default for Spikelet {
+    fn default() -> Self {
+        Self {
+            florets: 4,
+            glumes: 2,
+            glume: 0.45,
+            lower: 0.8,
+            lemma: 0.4,
+            aspect: 0.3,
+            awn: 0.0,
+            awn_from: 0.0,
+            awned: 1.0,
+            bent: 0.0,
+            ranks: 2,
+            gape: 15.0,
+        }
+    }
+}
+
 /// One fruit or cone. Several on one organ are a cluster, set by the look's
 /// `inflorescence` (spec rework L1).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -1266,6 +1329,7 @@ impl Shape {
             Self::Umbel(_) => "umbel",
             Self::Spike(_) => "spike",
             Self::Panicle(_) => "panicle",
+            Self::Spikelet(_) => "spikelet",
             Self::Fruit(_) => "fruit",
         }
     }
@@ -1289,7 +1353,7 @@ impl Shape {
             // two-ranked sprays keep a narrower one, so they still read
             // as foliage from the side.
             Self::Needles(needles) => Some(if needles.ranks == 0 { 1.0 } else { 0.6 }),
-            Self::Spike(_) | Self::Panicle(_) | Self::Fruit(_) => Some(1.0),
+            Self::Spike(_) | Self::Panicle(_) | Self::Spikelet(_) | Self::Fruit(_) => Some(1.0),
             _ => None,
         }
     }
@@ -1310,6 +1374,7 @@ impl Shape {
             Self::Flower(_) | Self::Head(_) | Self::Umbel(_) => 1.0,
             Self::Spike(spike) => spike.aspect,
             Self::Panicle(panicle) => panicle.aspect,
+            Self::Spikelet(spikelet) => spikelet.aspect,
             Self::Fruit(fruit) => fruit.aspect,
         }
     }
@@ -1544,6 +1609,25 @@ impl Shape {
             Self::Umbel(s) => {
                 count("clusters", s.clusters, 1, 30)?;
                 count("florets", s.florets, 1, 60)
+            }
+            Self::Spikelet(s) => {
+                count("florets", s.florets, 1, 40)?;
+                count("glumes", s.glumes, 0, 2)?;
+                check("glume", s.glume, 0.0, 1.5)?;
+                check("lower", s.lower, 0.1, 1.5)?;
+                check("lemma", s.lemma, 0.05, 1.0)?;
+                check("aspect", s.aspect, 0.02, 1.5)?;
+                check("awn", s.awn, 0.0, 6.0)?;
+                check("awn_from", s.awn_from, 0.0, 0.9)?;
+                check("awned", s.awned, 0.0, 1.0)?;
+                check("bent", s.bent, 0.0, 150.0)?;
+                if s.ranks != 0 && s.ranks != 2 {
+                    return Err(format!(
+                        "spikelet ranks must be 2 (two ranks) or 0 (a spiral), found {}",
+                        s.ranks
+                    ));
+                }
+                check("gape", s.gape, 0.0, 80.0)
             }
             Self::Spike(s) => {
                 count("florets", s.florets, 1, 80)?;
@@ -2317,7 +2401,7 @@ impl OrganLook {
             {
                 return Err(format!(
                     "season {key} of an inflorescence draws each of its units, a flower, a \
-                     head or a fruit, found {}; set `whole` to draw the whole organ",
+                     head, a spikelet or a fruit, found {}; set `whole` to draw the whole organ",
                     look.shape.name()
                 ));
             }
@@ -2334,12 +2418,9 @@ impl OrganLook {
         self.shape.validate()?;
         if let Some(inflorescence) = &self.inflorescence {
             crate::clusters::Cluster::check(inflorescence)?;
-            if !matches!(
-                self.shape,
-                Shape::Flower(_) | Shape::Head(_) | Shape::Fruit(_)
-            ) {
+            if crate::clusters::Unit::of(&self.shape).is_none() {
                 return Err(format!(
-                    "an inflorescence's units are flowers, heads or fruit, found {}",
+                    "an inflorescence's units are flowers, heads, spikelets or fruit, found {}",
                     self.shape.name()
                 ));
             }
@@ -2541,6 +2622,7 @@ mod tests {
             Shape::Umbel(Umbel::default()),
             Shape::Spike(Spike::default()),
             Shape::Panicle(Panicle::default()),
+            Shape::Spikelet(Spikelet::default()),
             Shape::Fruit(Fruit::default()),
         ];
         for shape in shapes {

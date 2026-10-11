@@ -5,6 +5,7 @@
   "parent": "order/poales",
   "traits": {
     "inflorescence_unit": "spikelet",
+    "scale_arrangement": "distichous",
     "leaf_form": "blade",
     "leaf_division": "simple",
     "leaf_shape": {"linear": "usually"},
@@ -43,6 +44,11 @@
       "evidence": "SourceInferred",
       "source": "vicflora",
       "note": "VicFlora's family description: the flowers sit in spikelets, two rows of bracts on a small axis, the lowest two (glumes) empty and each one above (a lemma) holding a small flower with its palea."
+    },
+    "traits.scale_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "vicflora",
+      "note": "VicFlora's family description: a spikelet's bracts stand in two rows on its small axis, the glumes at the foot and a lemma above each, so each bract is on the other side from the one below."
     },
     "traits.leaf_form": {
       "evidence": "SourceInferred",

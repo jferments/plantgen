@@ -603,7 +603,7 @@ fn every_look(
 /// (`crate::looks::Shape`), by the template's name: what a rule that names
 /// the template may set inside a look's `shape`. The looks module's tests
 /// hold this to the templates.
-pub const TEMPLATES: [(&str, &[(&str, Field)]); 15] = {
+pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
     use Field::{Count, Number, Outline, Word};
     [
         (
@@ -744,6 +744,23 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 15] = {
                 ("spikelets", Count),
                 ("aspect", Number),
                 ("stalk", Number),
+            ],
+        ),
+        (
+            "spikelet",
+            &[
+                ("florets", Count),
+                ("glumes", Count),
+                ("glume", Number),
+                ("lower", Number),
+                ("lemma", Number),
+                ("aspect", Number),
+                ("awn", Number),
+                ("awn_from", Number),
+                ("awned", Number),
+                ("bent", Number),
+                ("ranks", Count),
+                ("gape", Number),
             ],
         ),
         (

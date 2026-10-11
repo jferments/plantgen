@@ -66,6 +66,7 @@ pub mod roots;
 pub mod shed;
 pub mod shoots;
 pub mod spec;
+pub mod spikelets;
 pub mod spines;
 pub mod substrate;
 pub mod templates;
@@ -112,5 +113,11 @@ pub mod venation;
 /// rows, its receptacle, its disc florets opening from the rim inward,
 /// rays or straps, and its fruit with their pappus; its solid, the head a
 /// cluster draws and its card all come from that layout, and a head's
-/// part mesh may take `parts::CLUSTER_TRIANGLES`.
-pub const GENERATOR_REVISION: u32 = 17;
+/// part mesh may take `parts::CLUSTER_TRIANGLES`. 18: a grass's or a
+/// sedge's spikelet is laid out from its glumes and florets
+/// (`crate::spikelets`, spec rework P3), and a cluster's units may be
+/// spikelets; a tapered branch bears fewer units, each as long as on a
+/// branch of full length, instead of as many smaller ones; and a
+/// cluster's card holds units that reach past its organ's tip, which it
+/// cut off.
+pub const GENERATOR_REVISION: u32 = 18;

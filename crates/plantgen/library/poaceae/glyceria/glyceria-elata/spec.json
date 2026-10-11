@@ -33,7 +33,7 @@
       "blade_area": 0.073,
       "tip_area": 0.04,
       "thatch_area": 0.073,
-      "panicle_area": 0.185
+      "panicle_area": 0.159
     }
   },
   "growth": {
@@ -63,16 +63,26 @@
         "shade": [0.12, 0.1, 0.05]
       },
       "panicle": {
-        "shape": {
-          "template": "panicle",
-          "whorls": 8,
-          "branches": 4,
-          "spread": 45,
-          "spikelets": 5,
-          "aspect": 0.6,
-          "stalk": 0.05
+        "shape": {"template": "spikelet", "aspect": 0.45},
+        "inflorescence": {
+          "branches": 12,
+          "size": 0.6,
+          "spread": 55,
+          "taper": 0.6,
+          "peduncle": 0.05,
+          "stalk": [0.33, 0.38, 0.22],
+          "branch": {
+            "kind": "raceme",
+            "flowers": 30,
+            "pedicel": 0.03,
+            "peduncle": 0.3,
+            "size": 0.03,
+            "spread": 30,
+            "droop": 50
+          }
         },
-        "colour": [0.35, 0.4, 0.25]
+        "colour": [0.35, 0.4, 0.25],
+        "accent": [0.4, 0.42, 0.3]
       }
     }
   },
@@ -85,7 +95,27 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "inflorescence": "panicle",
+    "florets_per_spikelet": {"min": 3, "max": 4, "high": 6},
+    "spikelet_length_m": {"min": 0.003, "max": 0.006},
+    "glumes": 2,
+    "lower_glume_length_m": {"min": 0.0007, "max": 0.0015},
+    "upper_glume_length_m": {"min": 0.001, "max": 0.0015},
+    "lemma_length_m": {"min": 0.0017, "max": 0.0022},
+    "awns": false
+  },
   "evidence": {
+    "appearance.organs.panicle": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The panicle's layout, the model's choice after FNA (volume 24), as search results quote it (the page was not read): pyramidal and open, its branches 12 to 17 cm, divergent to drooping, lax, each with 30 to 50 or more spikelets oval in side view. Drawn as 12 long branches leaning out and drooping, each with about 30 spikelets on its outer part, the spikelets 0.45 as wide as long (FNA: 1.5 to 2.8 mm wide). Colours by eye."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA's account of the species (volume 24), as search results quote it (the page itself was not read): panicles 15 to 30 cm long and 12 to 30 cm wide, pyramidal, open, the branches 12 to 17 cm, divergent to drooping, lax, with 30 to 50 or more spikelets; spikelets 3 to 6 mm, oval in side view, with 3 to 4(6) florets; lower glumes 0.7 to 1.5 mm, upper 1 to 1.5 mm. The lemmas (1.7 to 2.2 mm) came only in the search results' own words; the genus has no awns."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

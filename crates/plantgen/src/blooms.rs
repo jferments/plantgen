@@ -48,6 +48,9 @@ pub enum Form {
     Flower(FlowerForm),
     /// A fruit, a bud or a cone.
     Fruit(FruitForm),
+    /// A grass or sedge spikelet (`crate::spikelets`), alone or as a
+    /// cluster's unit.
+    Spikelet(SpikeletForm),
     /// A thorn (plant forms F5): a slender cone along the organ, as wide at
     /// its foot as the card's aspect allows, on the nearest level.
     Thorn,
@@ -88,6 +91,20 @@ impl Default for FlowerForm {
             stamen_length: 0.35,
             levels: 1,
         }
+    }
+}
+
+/// How a spikelet is drawn beyond its template.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct SpikeletForm {
+    /// Levels, from the nearest, drawn solid: 1 or 2.
+    pub levels: u8,
+}
+
+impl Default for SpikeletForm {
+    fn default() -> Self {
+        Self { levels: 1 }
     }
 }
 
@@ -167,6 +184,7 @@ impl Form {
                 ..FlowerForm::default()
             }),
             Shape::Fruit(_) => Self::Fruit(FruitForm::default()),
+            Shape::Spikelet(_) => Self::Spikelet(SpikeletForm::default()),
             Shape::Needles(_) => Self::Shoot,
             _ => Self::Card,
         }
@@ -181,6 +199,7 @@ impl Form {
         match self {
             Self::Flower(_) => matches!(shape, Shape::Flower(_) | Shape::Head(_)),
             Self::Fruit(_) => matches!(shape, Shape::Fruit(_)),
+            Self::Spikelet(_) => matches!(shape, Shape::Spikelet(_)),
             Self::Shoot => matches!(shape, Shape::Needles(_)),
             Self::Thorn | Self::Card => true,
         }
@@ -197,6 +216,7 @@ impl Form {
             let (form, needs) = match self {
                 Self::Flower(_) => ("flower", "a flower or a head"),
                 Self::Fruit(_) => ("fruit", "a fruit"),
+                Self::Spikelet(_) => ("spikelet", "a spikelet"),
                 Self::Shoot | Self::Thorn | Self::Card => ("shoot", "needles"),
             };
             return Err(format!(
@@ -217,6 +237,9 @@ impl Form {
                 within("form fruit scales", f64::from(form.scales), 0.0, 200.0)?;
                 within("form fruit levels", f64::from(form.levels), 0.0, 2.0)
             }
+            Self::Spikelet(form) => {
+                within("form spikelet levels", f64::from(form.levels), 0.0, 2.0)
+            }
             Self::Thorn | Self::Shoot | Self::Card => Ok(()),
         }
     }
@@ -227,6 +250,7 @@ impl Form {
         let levels = match self {
             Self::Flower(form) => form.levels,
             Self::Fruit(form) => form.levels,
+            Self::Spikelet(form) => form.levels,
             Self::Thorn | Self::Shoot => 1,
             Self::Card => 0,
         };
@@ -251,6 +275,7 @@ fn triangles_per_organ(look: &Look) -> usize {
             ELLIPSOID_TRIANGLES + scales(form, fruit.aspect) as usize * WEDGE_TRIANGLES
         }
         (Form::Fruit(_), _) => ELLIPSOID_TRIANGLES,
+        (Form::Spikelet(_), Shape::Spikelet(spikelet)) => crate::spikelets::triangles(spikelet, 0),
         (Form::Thorn, _) => THORN_TRIANGLES,
         (Form::Shoot, Shape::Needles(needles)) => crate::shoots::triangles(needles, 0),
         _ => 0,
@@ -394,6 +419,23 @@ pub(crate) fn build_coarse(
                 // darkened with the organ as its colour is.
                 let accent = with_shading(look.accent, look.colour, painted);
                 crate::fruit::draw(organ, axis, side, form, fruit, painted, accent, part, mesh);
+            }
+            (Form::Spikelet(_), Shape::Spikelet(spikelet)) => {
+                crate::spikelets::draw(
+                    spikelet,
+                    crate::capitula::Frame {
+                        foot: organ.position,
+                        axis,
+                        side,
+                        radius: organ.size,
+                    },
+                    crate::spikelets::Colours::of(
+                        painted,
+                        with_shading(look.accent, look.colour, painted),
+                    ),
+                    part,
+                    mesh,
+                );
             }
             (Form::Shoot, Shape::Needles(needles)) => {
                 // The axes in the accent colour, shaded with the organ.
