@@ -30,12 +30,16 @@ jobs:
     runs-on: [self-hosted, linux, x64, plantgen-ci]
     timeout-minutes: 60
     env:
-      CARGO_TARGET_DIR: /home/after-runner/.cache/plantgen/cargo-target
       CARGO_TARGET_BUDGET_GIB: "20"
       CARGO_INCREMENTAL: "0"
       CARGO_TERM_COLOR: never
     steps:
       - uses: actions/checkout@v7
+      # The Cargo target lives beside the checkout in this runner's own work
+      # folder (_work/plantgen/cargo-target), which checkout never cleans and no
+      # After runner uses; the service cannot create folders under ~/.cache.
+      - name: Cargo target in this runner's work folder
+        run: echo "CARGO_TARGET_DIR=$RUNNER_WORKSPACE/cargo-target" >> "$GITHUB_ENV"
       - name: Start over when the Cargo target outgrows its budget
         run: |
           set -eu
