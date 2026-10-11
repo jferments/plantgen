@@ -50,19 +50,28 @@ prompt injection. So, without exception:
   - `traits.json`: the trait vocabulary, every character (trait) a
     record, rank file or spec may state, each describing an organ.
     Organs nest, and one with a `when` exists only where the characters
-    it names say so: ray florets only on a radiate head. A number may be
-    a range of how the plant varies, not of how sure a source is (a
-    flora's "(3-)5-8" is `{"min": 5, "max": 8, "low": 3}`), and a state
-    qualified (`{"opposite": "usually", "alternate": "rarely"}`).
+    it names say so: ray florets only on a radiate head, and roots, stems
+    and leaves only where the phylum files' `body_plan`, `anchorage` and
+    `leaf_bearing` give the plant them. Each organ has a category (the
+    whole plant, an axis, an organ, a group or a tissue), may be one of a
+    kind (`is_a`: each kind of floret is a floret), and names its Plant
+    Ontology term (`po`) where the ontology has one for the same
+    structure, from the release in `po_release`; never make an id up. A
+    number may be a range of how the plant varies, not of how sure a
+    source is (a flora's "(3-)5-8" is `{"min": 5, "max": 8, "low": 3}`),
+    and a state qualified (`{"opposite": "usually", "alternate":
+    "rarely"}`); a character with `at_most` is never above the one it
+    names, as a typical height is never above the greatest.
     State a character in the highest taxon it holds for, with a note
     citing its source; `plantc traits <id>` shows a species' characters,
     where each came from and what is missing, and `plantc audit` counts
-    them by family. Rules that turn traits into values live in rank
-    files, in the taxa they hold for; `plantc rules` lists them by home,
-    and the general ones with no taxonomic home, which should shrink. A
-    rule inside a look's `shape` names the card `template` it is for and
-    sets nothing on an organ drawn with another card. A map's value may be
-    a formula, worked out only where the map picks it.
+    them by family and lists each state a file names that the farther file
+    it replaces leaves out. Rules that turn traits into values live in
+    rank files, in the taxa they hold for; `plantc rules` lists them by
+    home, and the general ones with no taxonomic home, which should
+    shrink. A rule inside a look's `shape` names the card `template` it is
+    for and sets nothing on an organ drawn with another card. A map's
+    value may be a formula, worked out only where the map picks it.
   - `programs/*.lsys`: the plant programs, in PlantGen's open L-system
     language. A program that sets leaves at nodes names their arrangement
     `leaves_per_node` (1 alternate, 2 opposite, more whorled) and

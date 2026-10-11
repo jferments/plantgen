@@ -72,7 +72,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "anchorage": "none"
+  },
   "evidence": {
+    "traits.anchorage": {
+      "evidence": "SourceInferred",
+      "source": "gleason-cronquist-1991",
+      "note": "Gleason and Cronquist's Manual: the plants are rootless, hanging from trees, made of slender, wiry, branching stems up to 5 m."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

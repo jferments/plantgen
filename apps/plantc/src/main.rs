@@ -6,7 +6,7 @@
 //! `docs/user/PLANTS.md` and `docs/developer/PLANTS.md`.
 
 use std::borrow::Cow;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::io::{self, Write};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
@@ -155,17 +155,20 @@ Usage:
       defaults of programs not named for a taxon. The list should shrink.
   plantc traits [<species>]
       Without a species, print the characters a spec may state
-      (traits.json) as a tree of organs: each organ, where it exists, and
-      its characters with their types. With one, print the characters it
-      states, its own and those it inherits, each with the file that set
-      it and the source its note cites; then by organ what is missing,
-      and which organs do not apply to it.
+      (traits.json): the categories of organ, the kinds of organ, and a
+      tree of organs, each with its category, its Plant Ontology term,
+      where it exists, and its characters with their types. With one,
+      print the characters it states, its own and those it inherits,
+      each with the file that set it and the source its note cites; then
+      by organ what is missing, and which organs do not apply to it.
   plantc audit [<taxon>]
       How many of the characters that apply to each species it states,
       its own or inherited (optional characters left out). Without a
       taxon, by family, with what each family's own file states; with a
       family, genus or higher rank, by species, then the characters its
-      species most often lack.
+      species most often lack. Then each state a file names that the
+      farther file it replaces leaves out, such as a rootless species in
+      a phylum with roots: often right, but worth a look.
   plantc grow <species|spec.json> [--env ENV] [--seed N] [--years N]
       Grow one variant and print its size at every keyframe.
   plantc render <species|spec.json> --out FILE.png [--env ENV] [--seed N]
@@ -627,25 +630,61 @@ fn traits_command(args: &[String]) -> Result<(), Failure> {
     match options.positional.as_slice() {
         [] => {
             out!(
-                "{} characters on {} organs (traits.json schema {}): each organ, where it exists, and its characters",
+                "{} characters on {} organs (traits.json schema {}): each organ, its category and Plant Ontology term ({}), where it exists, and its characters",
                 vocabulary.traits.len(),
                 vocabulary.organs.len(),
-                vocabulary.schema
+                vocabulary.schema,
+                vocabulary.po_release
             );
-            for (depth, name) in vocabulary.organ_tree() {
-                let organ = &vocabulary.organs[name];
-                let indent = "  ".repeat(depth);
-                out!("{indent}{name}{}: {}", condition(&organ.when), organ.why);
+            out!("Categories:");
+            for (name, why) in &vocabulary.categories {
+                out!("  {name}: {why}");
+            }
+            let characters = |name: &str, indent: &str| -> Result<(), Failure> {
                 for (key, item) in &vocabulary.traits {
                     if item.organ == name {
                         out!(
-                            "{indent}  - {key}: {}{}{}",
+                            "{indent}  - {key}: {}{}{}{}",
                             item.what(),
                             condition(&item.when),
+                            item.at_most
+                                .as_ref()
+                                .map_or(String::new(), |above| format!(", at most {above}")),
                             if item.optional { " (optional)" } else { "" }
                         );
                     }
                 }
+                Ok(())
+            };
+            out!("Kinds:");
+            for (name, kind) in &vocabulary.kinds {
+                out!(
+                    "  {name} ({}; {}): {}",
+                    kind.category,
+                    vocabulary.members(name).join(", "),
+                    kind.why
+                );
+                characters(name, "  ")?;
+            }
+            out!("Organs:");
+            for (depth, name) in vocabulary.organ_tree() {
+                let organ = &vocabulary.organs[name];
+                let indent = "  ".repeat(depth + 1);
+                let kind = organ
+                    .is_a
+                    .as_ref()
+                    .map_or(String::new(), |kind| format!(", a {kind}"));
+                let term = organ
+                    .po
+                    .as_ref()
+                    .map_or(String::new(), |po| format!("; {} {}", po.id, po.name));
+                out!(
+                    "{indent}{name} ({}{kind}{term}){}: {}",
+                    organ.category,
+                    condition(&organ.when),
+                    organ.why
+                );
+                characters(name, &indent)?;
             }
             Ok(())
         }
@@ -773,8 +812,11 @@ fn audit_command(args: &[String]) -> Result<(), Failure> {
         [taxon] => Some(plantgen::inherit::file_name(taxon)),
         _ => return Err("`plantc audit` takes at most one taxon".into()),
     };
-    // Each species with its coverage and the files it stands on.
+    // Each species with its coverage and the files it stands on, and
+    // each state a file names that the farther file it replaces does not
+    // list: the nearer file, the trait, and the two statements in words.
     let mut audited = Vec::new();
+    let mut unlisted: BTreeSet<(String, String, String, String, String)> = BTreeSet::new();
     for entry in library.species() {
         let inherited = library
             .inherited(&entry.id)
@@ -797,6 +839,23 @@ fn audit_command(args: &[String]) -> Result<(), Failure> {
             .values()
             .filter(|stated| stated.file == inherited.chain[0])
             .count();
+        for (key, statements) in &inherited.statements {
+            for pair in statements.windows(2) {
+                let (farther, nearer) = (&pair[0], &pair[1]);
+                if !vocabulary
+                    .unlisted(key, &farther.value, &nearer.value)
+                    .is_empty()
+                {
+                    unlisted.insert((
+                        nearer.file.clone(),
+                        key.clone(),
+                        vocabulary.show(key, &nearer.value),
+                        farther.file.clone(),
+                        vocabulary.show(key, &farther.value),
+                    ));
+                }
+            }
+        }
         audited.push((entry, vocabulary.coverage(&traits), own));
     }
     if audited.is_empty() {
@@ -898,6 +957,17 @@ fn audit_command(args: &[String]) -> Result<(), Failure> {
                     .collect::<Vec<_>>()
                     .join(", ")
             );
+        }
+    }
+    if unlisted.is_empty() {
+        out!("No file names a state that the farther file it replaces leaves out");
+    } else {
+        out!(
+            "States a file names that the farther file it replaces leaves out ({}), which may be right but want a look:",
+            unlisted.len()
+        );
+        for (file, key, value, farther, listed) in &unlisted {
+            out!("  {file}: `{key}` is {value}; {farther} has {listed}");
         }
     }
     Ok(())

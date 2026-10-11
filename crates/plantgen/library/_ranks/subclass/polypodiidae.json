@@ -2,5 +2,15 @@
   "schema": 1,
   "rank": "subclass",
   "name": "Polypodiidae",
-  "parent": "class/polypodiopsida"
+  "parent": "class/polypodiopsida",
+  "traits": {
+    "sporangia": {"sori": "usually"}
+  },
+  "evidence": {
+    "traits.sporangia": {
+      "evidence": "SourceInferred",
+      "source": "openstax-biology-2e",
+      "note": "Ferns bear their sporangia in small clusters, sori, on the underside of their fronds (Biology 2e, 25.4). Usually rather than always, as a few ferns bear them otherwise."
+    }
+  }
 }

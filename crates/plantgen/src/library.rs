@@ -767,7 +767,8 @@ impl Library {
     /// the programs, and a note of its own, citing a source, on each value,
     /// trait and rule it sets. Then the traits it inherits with its own:
     /// none of them a character that another of them rules out, such as
-    /// bark on a herbaceous stem.
+    /// bark on a herbaceous stem, nor above a character it is at most,
+    /// such as a typical height above the greatest.
     ///
     /// # Errors
     ///
@@ -790,6 +791,12 @@ impl Library {
                 let why = vocabulary.ruled_out_by(key, &traits).unwrap_or_default();
                 return Err(format!(
                     "{}: it states `{key}` with what it inherits, but {why}",
+                    entry.file()
+                ));
+            }
+            if let Some(problem) = vocabulary.out_of_order(&traits).first() {
+                return Err(format!(
+                    "{}: with what it inherits, {problem}",
                     entry.file()
                 ));
             }

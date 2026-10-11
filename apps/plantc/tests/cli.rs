@@ -147,18 +147,16 @@ fn rules_and_traits_say_where_they_come_from() {
 #[test]
 fn traits_and_audit_show_what_is_stated() {
     let vocabulary = stdout(&plantc(&["traits"]));
-    assert!(
-        vocabulary.contains("\nplant: the whole plant"),
-        "{vocabulary}"
-    );
-    assert!(
-        vocabulary.contains("\n      capitulum, where inflorescence_unit is capitulum: "),
-        "{vocabulary}"
-    );
-    assert!(
-        vocabulary.contains("\n          - ray_florets: a count from 1 to 200\n"),
-        "{vocabulary}"
-    );
+    for line in [
+        "\nCategories:\n  axis: ",
+        "\nKinds:\n  floret (organ; disc_floret, ligulate_floret, ray_floret): ",
+        "\nOrgans:\n  plant (whole; PO:0000003 whole plant): the whole plant",
+        "\n        capitulum (group; PO:0030121 capitulum inflorescence), where inflorescence_unit is capitulum: ",
+        "\n          ray_floret (organ, a floret; PO:0025331 ray flower), where ",
+        "\n            - ray_florets: a count from 1 to 200\n",
+    ] {
+        assert!(vocabulary.contains(line), "{line} in {vocabulary}");
+    }
 
     let yarrow = stdout(&plantc(&["traits", "achillea-millefolium"]));
     assert!(
@@ -187,6 +185,15 @@ fn traits_and_audit_show_what_is_stated() {
     let audit = stdout(&plantc(&["audit"]));
     assert!(audit.contains(" species state "), "{audit}");
     assert!(audit.contains("\n  asteraceae "), "{audit}");
+    // Spanish moss has no roots, though the vascular plants it belongs to
+    // have them: right, but worth a look.
+    assert!(
+        audit.contains(
+            "\n  bromeliaceae/tillandsia/tillandsia-usneoides/spec.json: `anchorage` is none; \
+             _ranks/phylum/tracheophyta.json has roots\n"
+        ),
+        "{audit}"
+    );
     let grasses = stdout(&plantc(&["audit", "Poaceae"]));
     assert!(grasses.starts_with("poaceae: "), "{grasses}");
     assert!(grasses.contains("\n  dactylis-glomerata "), "{grasses}");

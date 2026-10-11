@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Taxus",
+  "traits": {
+    "reproduction": "solitary_seeds"
+  },
+  "evidence": {
+    "traits.reproduction": {
+      "evidence": "SourceInferred",
+      "source": "oregonflora",
+      "note": "OregonFlora's account of the genus, after the Flora of North America: a yew's seed sits alone in a soft, thick, scarlet to orange-scarlet aril, a cup open at its tip that leaves the hard seed coat showing."
+    }
+  }
+}

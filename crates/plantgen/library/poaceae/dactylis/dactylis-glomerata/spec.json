@@ -92,6 +92,7 @@
     "florets_per_spikelet": {"min": 2, "max": 5},
     "spikelet_length_m": {"min": 0.005, "max": 0.009},
     "glumes": 2,
+    "awns": true,
     "awn_length_m": {"min": 0.0005, "max": 0.0015}
   },
   "evidence": {

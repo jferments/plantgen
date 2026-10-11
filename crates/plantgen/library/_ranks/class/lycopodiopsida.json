@@ -2,5 +2,16 @@
   "schema": 1,
   "rank": "class",
   "name": "Lycopodiopsida",
-  "parent": "phylum/tracheophyta"
+  "parent": "phylum/tracheophyta",
+  "traits": {
+    "reproduction": "spores",
+    "sporangia": {"cones": "usually"}
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "openstax-biology-2e",
+      "note": "Club mosses are seedless vascular plants that spread by spores; their sporangia sit on sporophylls gathered into cones, strobili (Biology 2e, 25.4)."
+    }
+  }
 }

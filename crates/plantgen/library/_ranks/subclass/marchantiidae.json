@@ -2,5 +2,15 @@
   "schema": 1,
   "rank": "subclass",
   "name": "Marchantiidae",
-  "parent": "class/marchantiopsida"
+  "parent": "class/marchantiopsida",
+  "traits": {
+    "body_plan": "thalloid"
+  },
+  "evidence": {
+    "traits.body_plan": {
+      "evidence": "SourceInferred",
+      "source": "wikstrom-2009-liverworts",
+      "note": "Marchantiidae are the complex thalloid liverworts of Marchantiopsida, about 6% of the species (Wikström, He-Nygrén and Shaw 2009)."
+    }
+  }
 }

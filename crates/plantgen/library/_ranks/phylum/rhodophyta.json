@@ -2,5 +2,15 @@
   "schema": 1,
   "rank": "phylum",
   "name": "Rhodophyta",
-  "parent": "kingdom/plantae"
+  "parent": "kingdom/plantae",
+  "traits": {
+    "body_plan": {"thalloid": "usually", "unicellular": "rarely"}
+  },
+  "evidence": {
+    "traits.body_plan": {
+      "evidence": "SourceInferred",
+      "source": "openstax-biology-2e",
+      "note": "Red algae are mostly many-celled, up to the large seaweeds, though they range down to microscopic single cells (Biology 2e, 23.3)."
+    }
+  }
 }
