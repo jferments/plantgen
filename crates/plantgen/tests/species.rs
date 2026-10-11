@@ -480,6 +480,37 @@ fn needled_species_grow_solid_shoots() {
     );
 }
 
+/// Every built-in cluster (spec rework L1) draws near the camera as a part
+/// mesh within [`parts::TRIANGLES`], coarsened in at most
+/// `plantgen::fruit::COARSER` steps, so none falls back to its card.
+#[test]
+fn builtin_clusters_draw_as_part_meshes_within_budget() {
+    use plantgen::parts;
+    let mut checked = 0;
+    for (id, _) in spec::all_species() {
+        let spec = PlantSpec::builtin(id).unwrap();
+        let (program, _) = spec.program().unwrap();
+        let looks = spec.appearance.looks(program.organs());
+        let meshes = parts::part_meshes(&looks);
+        for (index, look) in looks.iter().enumerate() {
+            if look.inflorescence.is_none() {
+                continue;
+            }
+            checked += 1;
+            let part = meshes
+                .iter()
+                .find(|part| part.template == index)
+                .unwrap_or_else(|| panic!("{id} `{}`: kept as cards", look.organ));
+            assert!(
+                part.triangles() <= parts::TRIANGLES,
+                "{id}: {}",
+                part.triangles()
+            );
+        }
+    }
+    assert_eq!(checked, 25, "the fruit clusters moved in with L1a");
+}
+
 /// Fronds open and sag as they age (plant forms F4): on a fern, palms and
 /// a tree fern, the leaflets of each year's fronds hang lower, on average,
 /// than those of the fronds a year younger. (On a palm the younger fronds

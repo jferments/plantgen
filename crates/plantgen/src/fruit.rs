@@ -1,41 +1,13 @@
-//! Fruit of every kind, singly or in clusters (plant roadmap P4).
+//! Fruit of every kind (plant roadmap P4).
 //!
-//! A [`Fruit`] template's `kind` says what one fruit is, and its `count`,
-//! `cluster`, `size` and `spread` how several sit on one organ. The solid
-//! drawn on the nearest level ([`draw`]) and the card drawn for the farther
-//! ones (`crate::templates`) both come from one [`layout`], so the card is
-//! the solid seen face on.
-//!
-//! In the organ's frame, with lengths in units of the organ's length, `y`
-//! along the organ, `x` across its card and `z` out of it, a cluster of
-//! $`n`$ fruit $`s`$ long (`size`) whose stalks lean $`\sigma`$ (`spread`)
-//! from its axis, each turned the golden angle $`\psi \approx 137.5°`$ from
-//! the last, sets fruit $`i`$, with $`q_i = (i + \tfrac12)/n`$:
-//!
-//! - in a **raceme**, on the axis at $`y_i = (1 - r)(0.1 + 0.9\,q_i)`$, on a
-//!   stalk $`0.9\,s`$ long leaning $`\sigma`$, where
-//!   $`r = \min(1.9\,s\cos\sigma,\ 0.9)`$ keeps the top fruit within the
-//!   organ;
-//! - in an **umbel**, on a stalk from $`y_0 = 0.3\,(1 - s)`$ leaning
-//!   $`\alpha_i = \sigma\sqrt{q_i}`$ (a Vogel spiral in the cone of
-//!   half-angle $`\sigma`$),
-//!   $`\max\big((1 - y_0 - \tfrac{w}{2}\sin\alpha_i)/\cos\alpha_i - s,\ 0.3\,s\big)`$
-//!   long, so the fruit reach the organ's length and spread flat;
-//! - in a **pair**, two fruit from one point leaning $`\pm\sigma`$ in one
-//!   plane, on a stalk $`s/4`$ long, and further pairs below, each turned
-//!   90° from the last: pair $`p`$ of $`m`$ at
-//!   $`y = (1 - r)\,\tfrac{p + 1}{m}`$ with $`r = \min(1.25\,s\cos\sigma,\ 0.95)`$;
-//! - in a **head**, packed round a centre on a Fibonacci sphere, pointing
-//!   out, their bases on a sphere of radius
-//!   $`\max\big(\tfrac{w}{2}\sqrt{0.35\,n} - 0.3\,s,\ 0.02\big)`$ ($`w`$ one
-//!   fruit's width) whose top fruit reach 1, on one stalk from the foot.
-//!
-//! A cluster's own axis (its rachis, or the stalk under an umbel, a pair or
-//! a head) runs from the organ's foot to its highest stalk. A single fruit
-//! fills the organ, as before. A fruit is unripe, and drawn
-//! in the look's accent colour, when a hash of the organ and its index
-//! falls below `unripe`; stalks, and the cup or husk of a nut, take the
-//! accent colour too.
+//! A [`Fruit`] template's `kind` says what one fruit is. A look whose fruit
+//! is one plain berry or cone is drawn as before P4 (`crate::blooms`);
+//! any other single fruit is drawn here ([`draw`]), and a cluster of
+//! fruit is an inflorescence whose units are fruit (`crate::clusters`,
+//! spec rework L1), each drawn here too. A fruit is unripe, and drawn
+//! in the look's accent colour, when a hash of the organ (and in a
+//! cluster its index) falls below `unripe`; the cup or husk of a nut takes
+//! the accent colour too.
 //!
 //! One fruit of length $`\ell`$ and width $`w = a\ell`$ (the template's
 //! aspect) is, from its base along its direction:
@@ -53,14 +25,14 @@
 //! | pod | flat (a third as thick as wide), bulging over its seeds |
 //! | capsule | ribbed with three ribs |
 //!
-//! A cone (`cone` of a half or more) in a cluster is drawn as a single
-//! cone is (`crate::blooms`). Fruit in large clusters take fewer facets,
-//! so a cluster of 40 elderberries costs about what one cone does.
+//! A cone (`cone` of a half or more) is drawn as a single cone is
+//! (`crate::blooms`). Fruit in large clusters take fewer facets, so a
+//! cluster of 40 elderberries costs about what one cone does.
 
 use crate::blooms::{self, FruitForm, Part};
 use crate::graph::GraphOrgan;
 use crate::leaves::{self, Section, SolidLeaf};
-use crate::looks::{Cluster, Fruit, FruitKind};
+use crate::looks::{Fruit, FruitKind};
 use crate::math::{self, Vec3, any_perpendicular};
 use crate::mesh::Mesh;
 use crate::rng::{mix64, unit};
@@ -68,162 +40,16 @@ use crate::rng::{mix64, unit};
 /// The golden angle, degrees.
 pub const GOLDEN_DEGREES: f64 = 137.507_764;
 
-/// One fruit of an organ, in the organ's frame (see the module).
-#[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Placed {
-    /// Where its stalk leaves the cluster's axis.
-    pub attach: Vec3,
-    /// The fruit's base, at the end of its stalk.
-    pub base: Vec3,
-    /// Unit direction from its base toward its tip.
-    pub direction: Vec3,
-    /// Its length.
-    pub length: f64,
-    /// Whether it is still unripe.
-    pub unripe: bool,
-}
-
 /// Whether `fruit` is one plain berry or cone, drawn as it was before P4
 /// (`crate::blooms`).
 #[must_use]
 pub fn is_single(fruit: &Fruit) -> bool {
-    fruit.count <= 1 && fruit.kind == FruitKind::Berry && fruit.unripe <= 0.0
-}
-
-/// Where the fruit of `fruit` sit, the cluster turned `turn` radians round
-/// its axis, unripe ones chosen by `seed`. Its names follow the module's
-/// formulas.
-#[must_use]
-#[allow(clippy::many_single_char_names)]
-pub fn layout(fruit: &Fruit, turn: f64, seed: u64) -> Vec<Placed> {
-    let n = fruit.count.clamp(1, 60);
-    let unripe = |i: u32| {
-        unit(mix64(
-            seed ^ (u64::from(i) + 1).wrapping_mul(0x9E37_79B9_7F4A_7C15),
-        )) < fruit.unripe
-    };
-    if n == 1 {
-        return vec![Placed {
-            attach: Vec3::ZERO,
-            base: Vec3::ZERO,
-            direction: Vec3::Y,
-            length: 1.0,
-            unripe: unripe(0),
-        }];
-    }
-    let s = fruit.size.clamp(0.05, 1.0);
-    let sigma = math::radians(fruit.spread.clamp(0.0, 90.0));
-    let golden = math::radians(GOLDEN_DEGREES);
-    let lean = |angle: f64, around: f64| -> Vec3 {
-        let radial = Vec3::new(math::cos(around), 0.0, math::sin(around));
-        (Vec3::Y * math::cos(angle) + radial * math::sin(angle)).normalize_or(Vec3::Y)
-    };
-    (0..n)
-        .map(|i| {
-            let k = f64::from(i);
-            let q = (k + 0.5) / f64::from(n);
-            let (attach, direction, stalk) = match fruit.cluster {
-                Cluster::Raceme => {
-                    // The axis stops where the top fruit, on its stalk,
-                    // reaches the organ's length.
-                    let reach = (1.9 * s * math::cos(sigma)).min(0.9);
-                    (
-                        Vec3::Y * ((1.0 - reach) * (0.1 + 0.9 * q)),
-                        lean(sigma, turn + golden * k),
-                        s * 0.9,
-                    )
-                }
-                Cluster::Umbel => {
-                    let foot = 0.3 * (1.0 - s);
-                    let angle = sigma * math::sqrt(q);
-                    // Long enough that the fruit's far side reaches the
-                    // organ's length.
-                    let side = 0.5 * s * fruit.aspect.clamp(0.05, 2.0) * math::sin(angle);
-                    let stalk = ((1.0 - foot - side) / math::cos(angle).max(0.2) - s).max(0.3 * s);
-                    (Vec3::Y * foot, lean(angle, turn + golden * k), stalk)
-                }
-                Cluster::Head => {
-                    let (centre, inner) = head(fruit);
-                    // From just above the stalk (y = -0.6) round to the top.
-                    let y = -0.6 + 1.6 * q;
-                    let ring = math::sqrt((1.0 - y * y).max(0.0));
-                    let around = turn + golden * k;
-                    let direction =
-                        Vec3::new(ring * math::cos(around), y, ring * math::sin(around));
-                    let base = centre + direction * inner;
-                    (base, direction, 0.0)
-                }
-                Cluster::Pair => {
-                    let pairs = n.div_ceil(2);
-                    let pair = f64::from(i / 2);
-                    let other = if i % 2 == 0 { 0.0 } else { math::PI };
-                    // The top pair's fruit, on their stalks, reach the
-                    // organ's length; the others are spaced below it.
-                    let reach = (1.25 * s * math::cos(sigma)).min(0.95);
-                    (
-                        Vec3::Y * ((1.0 - reach) * (pair + 1.0) / f64::from(pairs)),
-                        lean(sigma, turn + std::f64::consts::FRAC_PI_2 * pair + other),
-                        s * 0.25,
-                    )
-                }
-            };
-            Placed {
-                attach,
-                base: attach + direction * stalk,
-                direction,
-                length: s,
-                unripe: unripe(i),
-            }
-        })
-        .collect()
-}
-
-/// How far up the organ a cluster's own axis runs (its rachis, or the
-/// stalk that carries its fruit): to its highest stalk, or a head's
-/// centre; 0 for a single fruit.
-#[must_use]
-pub fn axis_length(fruit: &Fruit, placed: &[Placed]) -> f64 {
-    if placed.len() <= 1 {
-        return 0.0;
-    }
-    if fruit.cluster == Cluster::Head {
-        return head(fruit).0.y;
-    }
-    placed.iter().map(|p| p.attach.y).fold(0.0, f64::max)
-}
-
-/// A head's centre and the radius its fruit's bases sit at.
-#[must_use]
-pub fn head(fruit: &Fruit) -> (Vec3, f64) {
-    let s = fruit.size.clamp(0.05, 1.0);
-    let width = s * fruit.aspect.clamp(0.05, 2.0);
-    let inner =
-        (width * 0.5 * math::sqrt(0.35 * f64::from(fruit.count.clamp(1, 60))) - 0.3 * s).max(0.02);
-    (Vec3::Y * (1.0 - inner - s).max(inner), inner)
-}
-
-/// Card width over card length: one fruit's aspect, or for a cluster twice
-/// the farthest any fruit reaches across the card (seen unturned), from
-/// 0.1 to 2.
-#[must_use]
-pub fn card_aspect(fruit: &Fruit) -> f64 {
-    if fruit.count <= 1 {
-        return fruit.aspect;
-    }
-    let half_width = |placed: &Placed| placed.length * fruit.aspect * 0.5;
-    let reach = layout(fruit, 0.0, 0)
-        .iter()
-        .map(|placed| {
-            let tip = placed.base + placed.direction * placed.length;
-            placed.base.x.abs().max(tip.x.abs()) + half_width(placed)
-        })
-        .fold(0.0, f64::max);
-    (2.0 * reach * 1.04).clamp(0.1, 2.0)
+    fruit.kind == FruitKind::Berry && fruit.unripe <= 0.0
 }
 
 /// How finely one fruit is drawn: facets round and rings along.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-struct Detail {
+pub(crate) struct Detail {
     around: u32,
     rings: u32,
 }
@@ -254,7 +80,7 @@ impl Detail {
     ];
 
     /// Fewer facets for larger clusters, and `coarse` steps fewer again.
-    fn for_count(count: u32, coarse: usize) -> Self {
+    pub(crate) fn for_count(count: u32, coarse: usize) -> Self {
         let step = match count {
             0..=1 => 0,
             2..=3 => 1,
@@ -263,14 +89,20 @@ impl Detail {
         };
         Self::STEPS[(step + coarse).min(Self::STEPS.len() - 1)]
     }
+
+    /// A cluster's units merged into one solid (`crate::clusters`).
+    pub(crate) fn merged() -> Self {
+        Self::STEPS[3]
+    }
 }
 
-/// Coarser steps [`draw`] can take, beyond its own.
+/// Coarser steps a part mesh can take (`crate::parts`), beyond a solid's
+/// own.
 pub const COARSER: usize = 4;
 
-/// Draw the fruit of `fruit` on `organ` into `mesh`: ripe ones in
-/// `colour`, unripe ones, stalks, cups and husks in `accent`; the part's
-/// `coarse` steps (up to [`COARSER`]) fewer facets than its count asks.
+/// Draw the single fruit of `fruit` on `organ` into `mesh`: ripe in
+/// `colour`, unripe and its cup or husk in `accent`; the part's `coarse`
+/// steps (up to [`COARSER`]) fewer facets.
 #[allow(clippy::too_many_arguments)]
 pub(crate) fn draw(
     organ: &GraphOrgan,
@@ -292,66 +124,99 @@ pub(crate) fn draw(
         organ.position + side * (p.x * length) + axis * (p.y * length) + other * (p.z * length)
     };
     let to_direction = |d: Vec3| (side * d.x + axis * d.y + other * d.z).normalize_or(axis);
-    let turn = unit(mix64(organ.id ^ 0x00F2_0175)) * std::f64::consts::TAU;
-    let detail = Detail::for_count(fruit.count, part.coarse);
-    let width_share = fruit.aspect.clamp(0.05, 2.0);
-    let stalk_colour = form.stalk.unwrap_or(STALK);
-    let placed = layout(fruit, turn, organ.id);
-    let reach = axis_length(fruit, &placed);
-    if reach > 0.0 {
-        stalk_between(
-            organ.position,
-            axis,
-            reach * length,
-            fruit.size * width_share * 0.1 * length,
-            stalk_colour,
+    let unripe = unit(mix64(organ.id ^ 0x9E37_79B9_7F4A_7C15)) < fruit.unripe;
+    draw_unit(
+        organ,
+        fruit,
+        form,
+        (to_world(Vec3::ZERO), to_direction(Vec3::Y), length),
+        unripe,
+        Detail::for_count(1, part.coarse),
+        colour,
+        accent,
+        part,
+        mesh,
+    );
+}
+
+/// Draw one fruit of `fruit` into `mesh` from its base along its
+/// direction, its length given: unripe ones, and cups and husks, in
+/// `accent`; a cone as `crate::blooms` draws one.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn draw_unit(
+    organ: &GraphOrgan,
+    fruit: &Fruit,
+    form: &FruitForm,
+    (base, direction, length): (Vec3, Vec3, f64),
+    unripe: bool,
+    detail: Detail,
+    colour: [f32; 3],
+    accent: [f32; 3],
+    part: Part,
+    mesh: &mut Mesh,
+) {
+    let width = length * fruit.aspect.clamp(0.05, 2.0);
+    let body = if unripe { accent } else { colour };
+    let one = One {
+        base,
+        direction,
+        across: any_perpendicular(direction),
+        length,
+        width,
+        detail,
+    };
+    if fruit.cone >= 0.5 {
+        let cone = GraphOrgan {
+            position: base,
+            heading: direction,
+            left: one.across,
+            size: length,
+            ..organ.clone()
+        };
+        blooms::draw_fruit(
+            &cone,
+            direction,
+            one.across,
+            form,
+            fruit.aspect,
+            fruit.cone,
+            body,
             part,
             mesh,
         );
+        return;
     }
-    for placed in placed {
-        let direction = to_direction(placed.direction);
-        let base = to_world(placed.base);
-        let fruit_length = placed.length * length;
-        let width = fruit_length * width_share;
-        let stalk = (placed.base - placed.attach).length() * length;
-        if stalk > 1e-6 {
-            let start = to_world(placed.attach);
-            let along = (base - start).normalize_or(direction);
-            stalk_between(start, along, stalk, width * 0.07, stalk_colour, part, mesh);
-        }
-        let body = if placed.unripe { accent } else { colour };
-        let one = One {
-            base,
-            direction,
-            across: any_perpendicular(direction),
-            length: fruit_length,
-            width,
-            detail,
-        };
-        if fruit.cone >= 0.5 {
-            let cone = GraphOrgan {
-                position: base,
-                heading: direction,
-                left: one.across,
-                size: fruit_length,
-                ..organ.clone()
-            };
-            blooms::draw_fruit(
-                &cone,
-                direction,
-                one.across,
-                form,
-                fruit.aspect,
-                fruit.cone,
-                body,
-                part,
-                mesh,
-            );
-            continue;
-        }
-        one.draw(fruit.kind, body, accent, part, mesh);
+    one.draw(fruit.kind, body, accent, part, mesh);
+}
+
+/// An ellipsoid at `centre`, half-lengths `(a, b, c)` along `axis`,
+/// `across` and square to both, at `detail`: a cluster's units merged.
+#[allow(clippy::too_many_arguments)]
+pub(crate) fn spheroid(
+    centre: Vec3,
+    (a, b, c): (f64, f64, f64),
+    detail: Detail,
+    axis: Vec3,
+    across: Vec3,
+    colour: [f32; 3],
+    part: Part,
+    mesh: &mut Mesh,
+) {
+    let first = mesh.positions.len();
+    let first_index = mesh.indices.len();
+    Spheroid {
+        centre,
+        a: a.max(1e-6),
+        b: b.max(1e-6),
+        c: c.max(1e-6),
+        ribs: 0,
+        rib_depth: 0.0,
+        waves: 0,
+        wave_depth: 0.0,
+        detail,
     }
+    .draw(axis, across, colour, part, mesh);
+    leaves::smooth_normals(mesh, first, first_index);
 }
 
 /// Triangles one organ of `fruit` takes drawn as a solid: counted by
@@ -389,9 +254,6 @@ pub fn triangles(form: &FruitForm, fruit: &Fruit) -> usize {
     );
     mesh.triangle_count()
 }
-
-/// A cluster's stalks unless its form sets a colour: green.
-const STALK: [f32; 3] = [0.3, 0.38, 0.14];
 
 /// One fruit, in the plant's frame.
 struct One {
@@ -655,7 +517,7 @@ impl One {
 }
 
 /// A short stalk: an open four-sided tube `length` long from `start`.
-fn stalk_between(
+pub(crate) fn stalk_between(
     start: Vec3,
     along: Vec3,
     length: f64,
@@ -779,80 +641,22 @@ impl Spheroid {
     }
 }
 
-#[allow(clippy::float_cmp, clippy::cast_precision_loss)]
+#[allow(clippy::float_cmp)]
 #[cfg(test)]
 mod tests {
     use super::*;
 
-    fn cluster(kind: FruitKind, count: u32, cluster: Cluster) -> Fruit {
-        Fruit {
-            kind,
-            count,
-            cluster,
-            aspect: 0.8,
-            size: 0.25,
-            spread: 40.0,
-            unripe: 0.4,
-            ..Fruit::default()
-        }
-    }
-
     #[test]
-    fn a_single_fruit_fills_its_organ_and_clusters_keep_their_count() {
-        let one = layout(&Fruit::default(), 0.0, 3);
-        assert_eq!(one.len(), 1);
-        assert_eq!(one[0].length, 1.0);
+    fn plain_berries_are_drawn_as_before_and_other_fruit_here() {
         assert!(is_single(&Fruit::default()));
-        for arrangement in [
-            Cluster::Raceme,
-            Cluster::Umbel,
-            Cluster::Pair,
-            Cluster::Head,
-        ] {
-            let fruit = cluster(FruitKind::Berry, 7, arrangement);
-            assert!(!is_single(&fruit));
-            let placed = layout(&fruit, 0.0, 3);
-            assert_eq!(placed.len(), 7);
-            for p in &placed {
-                let tip = p.base + p.direction * p.length;
-                assert!(p.attach.y >= 0.0 && tip.y <= 1.05, "{arrangement:?}: {p:?}");
-                assert!((p.direction.length() - 1.0).abs() < 1e-9);
-            }
-        }
-    }
-
-    #[test]
-    fn the_card_holds_every_fruit_seen_face_on() {
-        for arrangement in [
-            Cluster::Raceme,
-            Cluster::Umbel,
-            Cluster::Pair,
-            Cluster::Head,
-        ] {
-            let fruit = cluster(FruitKind::Berry, 9, arrangement);
-            let half = card_aspect(&fruit) * 0.5;
-            for p in layout(&fruit, 0.0, 0) {
-                let tip = p.base + p.direction * p.length;
-                let reach = p.base.x.abs().max(tip.x.abs()) + p.length * fruit.aspect * 0.5;
-                assert!(reach <= half + 1e-9, "{arrangement:?}");
-            }
-        }
-        assert_eq!(card_aspect(&Fruit::default()), Fruit::default().aspect);
-    }
-
-    #[test]
-    fn about_the_unripe_share_is_unripe() {
-        let fruit = Fruit {
-            count: 60,
+        assert!(!is_single(&Fruit {
             unripe: 0.3,
             ..Fruit::default()
-        };
-        let unripe = (0..20)
-            .flat_map(|seed| layout(&fruit, 0.0, seed))
-            .filter(|p| p.unripe)
-            .count();
-        let share = unripe as f64 / 1200.0;
-        assert!((share - 0.3).abs() < 0.05, "{share}");
+        }));
+        assert!(!is_single(&Fruit {
+            kind: FruitKind::Samara,
+            ..Fruit::default()
+        }));
     }
 
     #[test]
@@ -887,41 +691,38 @@ mod tests {
             coarse: 0,
         };
         for kind in kinds {
-            for count in [1, 5, 20] {
-                let fruit = cluster(kind, count, Cluster::Raceme);
-                let mut mesh = Mesh::default();
-                draw(
-                    &organ,
-                    Vec3::Y,
-                    Vec3::X,
-                    &FruitForm::default(),
-                    &fruit,
-                    [0.6, 0.1, 0.1],
-                    [0.2, 0.5, 0.1],
-                    part,
-                    &mut mesh,
-                );
-                assert!(mesh.triangle_count() > 0, "{kind:?}");
-                assert_eq!(
-                    mesh.triangle_count(),
-                    triangles(&FruitForm::default(), &fruit),
-                    "{kind:?} x {count}"
-                );
-                for position in &mesh.positions {
-                    let p = Vec3::new(
-                        f64::from(position[0]),
-                        f64::from(position[1]),
-                        f64::from(position[2]),
-                    ) - organ.position;
-                    assert!(p.length() <= 0.1 * 1.3, "{kind:?} x {count}: {p:?}");
-                }
+            let fruit = Fruit {
+                kind,
+                aspect: 0.8,
+                unripe: 0.4,
+                ..Fruit::default()
+            };
+            let mut mesh = Mesh::default();
+            draw(
+                &organ,
+                Vec3::Y,
+                Vec3::X,
+                &FruitForm::default(),
+                &fruit,
+                [0.6, 0.1, 0.1],
+                [0.2, 0.5, 0.1],
+                part,
+                &mut mesh,
+            );
+            assert!(mesh.triangle_count() > 0, "{kind:?}");
+            assert_eq!(
+                mesh.triangle_count(),
+                triangles(&FruitForm::default(), &fruit),
+                "{kind:?}"
+            );
+            for position in &mesh.positions {
+                let p = Vec3::new(
+                    f64::from(position[0]),
+                    f64::from(position[1]),
+                    f64::from(position[2]),
+                ) - organ.position;
+                assert!(p.length() <= 0.1 * 1.3, "{kind:?}: {p:?}");
             }
         }
-    }
-
-    #[test]
-    fn layouts_are_the_same_every_time() {
-        let fruit = cluster(FruitKind::Samara, 12, Cluster::Pair);
-        assert_eq!(layout(&fruit, 0.4, 9), layout(&fruit, 0.4, 9));
     }
 }

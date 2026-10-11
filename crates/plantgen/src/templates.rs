@@ -78,34 +78,45 @@ impl Template {
 
 /// Leaf area an organ 1 m long draws with `look` and its `template`, m²:
 /// the card's covered area, plus the crossing card's for looks that have
-/// one.
+/// one. A cluster's card is its own length (`crate::clusters::CardFrame`).
 #[must_use]
 pub fn drawn_area(look: &Look, template: &Template) -> f64 {
-    template.area() * (1.0 + look.shape.cross().unwrap_or(0.0))
+    let area = template.area() * (1.0 + look.cross().unwrap_or(0.0));
+    match &look.inflorescence {
+        Some(cluster) => area * cluster.card.length * cluster.card.length,
+        None => area,
+    }
 }
 
-/// The share of a card `shape` draws solid: its texels at least half
+/// The share of a card `look` draws solid: its texels at least half
 /// covered, which a renderer's cut-out keeps, sampled once per texel of a
 /// [`FILL_SAMPLES`]-wide grid. Cluster cards (`crate::mesh`) need it to
-/// count how much of a cell overlapping organs fill. Remembered per shape,
-/// since a plant asks for it at every level of every keyframe.
+/// count how much of a cell overlapping organs fill. Remembered per shape
+/// (and cluster), since a plant asks for it at every level of every
+/// keyframe.
 #[must_use]
-pub fn fill_share(shape: &Shape) -> f64 {
+pub fn fill_share(look: &Look) -> f64 {
     static SHARES: std::sync::OnceLock<std::sync::Mutex<std::collections::BTreeMap<String, f64>>> =
         std::sync::OnceLock::new();
-    let key = format!("{shape:?}");
+    let shape = &look.shape;
+    let key = match &look.inflorescence {
+        Some(cluster) => format!("{shape:?} {cluster:?}"),
+        None => format!("{shape:?}"),
+    };
     let shares = SHARES.get_or_init(Default::default);
     if let Some(&share) = shares.lock().ok().as_ref().and_then(|s| s.get(&key)) {
         return share;
     }
-    let aspect = shape.aspect();
+    let aspect = look.aspect();
     let veins = grown_veins(shape);
+    let card = look.inflorescence.as_ref().map(ClusterCard::new);
     let mut kept = 0_usize;
     for y in 0..FILL_SAMPLES {
         for x in 0..FILL_SAMPLES {
             let u = (to_f64(x) + 0.5) / to_f64(FILL_SAMPLES);
             let v = (to_f64(y) + 0.5) / to_f64(FILL_SAMPLES);
-            if draw(shape, (u - 0.5) * aspect, v, veins.as_ref()).cover >= 0.5 {
+            let paint = draw_look(look, card.as_ref(), (u - 0.5) * aspect, v, veins.as_ref());
+            if paint.cover >= 0.5 {
                 kept += 1;
             }
         }
@@ -197,8 +208,9 @@ impl Templates {
                 let mut coverage = Vec::with_capacity(texels);
                 let mut brightness = Vec::with_capacity(texels);
                 let mut accent = Vec::with_capacity(texels);
-                let aspect = look.shape.aspect();
+                let aspect = look.aspect();
                 let veins = grown_veins(&look.shape);
+                let card = look.inflorescence.as_ref().map(ClusterCard::new);
                 for y in 0..TEMPLATE_SIZE {
                     for x in 0..TEMPLATE_SIZE {
                         // Four samples per texel give soft edges.
@@ -206,7 +218,13 @@ impl Templates {
                         for (dx, dy) in [(0.25, 0.25), (0.75, 0.25), (0.25, 0.75), (0.75, 0.75)] {
                             let u = (to_f64(x) + dx) / to_f64(TEMPLATE_SIZE);
                             let v = (to_f64(y) + dy) / to_f64(TEMPLATE_SIZE);
-                            let paint = draw(&look.shape, (u - 0.5) * aspect, v, veins.as_ref());
+                            let paint = draw_look(
+                                look,
+                                card.as_ref(),
+                                (u - 0.5) * aspect,
+                                v,
+                                veins.as_ref(),
+                            );
                             sum.cover += paint.cover;
                             // Brightness and accent of the covered samples.
                             sum.bright += paint.bright * paint.cover;
@@ -442,6 +460,24 @@ pub(crate) fn drawn_share(shape: &Shape) -> (f64, f64) {
 /// two texels wide.
 pub(crate) fn fine(shape: &Shape) -> f64 {
     0.85 * shape.aspect().max(1.0) / to_f64(TEMPLATE_SIZE)
+}
+
+/// The point `x`, `y` of `look`'s card: its cluster's `card` where it is
+/// a cluster, else its shape's.
+fn draw_look(
+    look: &Look,
+    card: Option<&ClusterCard>,
+    x: f64,
+    y: f64,
+    veins: Option<&Venation>,
+) -> Paint {
+    match card {
+        Some(card) => {
+            let (across, along) = drawn_share(&look.shape);
+            card.paint(&look.shape, x / across, y / along)
+        }
+        None => draw(&look.shape, x, y, veins),
+    }
 }
 
 /// The point `x`, `y` of a card drawn with `shape`, its leaves lit along
@@ -1798,7 +1834,7 @@ fn panicle(s: &Panicle, x: f64, y: f64, fine: f64) -> Paint {
 /// accent colour.
 fn fruit(s: &Fruit, x: f64, y: f64, fine: f64) -> Paint {
     if !crate::fruit::is_single(s) {
-        return fruit_cluster(s, x, y, fine);
+        return one_of_a_kind(s, x, y, fine);
     }
     if y < 0.08 {
         return if x.abs() < fine * 1.2 {
@@ -1835,66 +1871,389 @@ fn fruit(s: &Fruit, x: f64, y: f64, fine: f64) -> Paint {
     Paint::solid(0.68 + 0.4 * math::sqrt(1.0 - d) + 0.5 * highlight, 0.0)
 }
 
-/// A cluster, or a fruit of a kind beyond the plain berry (plant roadmap
-/// P4): the layout the solid is drawn from (`crate::fruit`), seen face on
-/// and unturned, with the frontmost fruit or stalk drawn at each point.
-/// Stalks and unripe fruit take the accent colour; a single fruit is as
-/// unripe as the template's share, its mean colour.
-fn fruit_cluster(s: &Fruit, x: f64, y: f64, fine: f64) -> Paint {
-    let placed = crate::fruit::layout(s, 0.0, 0);
-    let mut best: Option<(f64, Paint)> = None;
-    let mut consider = |depth: f64, paint: Paint| {
-        if paint.cover > 0.0 && best.is_none_or(|(front, _)| depth > front) {
-            best = Some((depth, paint));
-        }
-    };
-    let single = placed.len() == 1;
-    let reach = crate::fruit::axis_length(s, &placed);
-    if reach > 0.0 {
-        // The cluster's own axis.
-        let (distance, _) = segment((x, y), (0.0, 0.0), (0.0, reach));
-        if distance < fine * 1.4 {
-            consider(-2.0, Paint::solid(0.8, 1.0));
-        }
+/// A fruit of a kind beyond the plain berry, or one partly unripe (plant
+/// roadmap P4), as `crate::fruit` draws it: filling the card from its
+/// foot, as unripe as the template's share, its mean colour, which it
+/// blushes from the shaded lower side up.
+fn one_of_a_kind(s: &Fruit, x: f64, y: f64, fine: f64) -> Paint {
+    let mut paint = one_fruit(s, (0.0, 0.0), (0.0, 1.0), 1.0, x, y, fine);
+    if paint.cover <= 0.0 {
+        return Paint::EMPTY;
     }
-    for p in &placed {
-        if (p.base - p.attach).length() > 1e-9 {
-            let (distance, _) = segment((x, y), (p.attach.x, p.attach.y), (p.base.x, p.base.y));
-            if distance < fine * 1.1 {
-                consider(p.attach.z.min(p.base.z) - 1.0, Paint::solid(0.8, 1.0));
-            }
-        }
-        let mut paint = one_fruit(s, p, x, y, fine);
-        if single {
-            // A ripening fruit blushes: its share still unripe in the
-            // accent colour, from the shaded lower side up.
-            let (along, across) = local((x, y), (p.base.x, p.base.y), (0.0, 1.0));
-            let side = 0.5 * (along + 0.5 * across / (s.aspect * 0.5).max(0.05) + 0.5);
-            let green = 1.0 - math::smoothstep(s.unripe - 0.15, s.unripe + 0.15, side);
-            paint.accent = paint.accent.max(if s.unripe > 0.0 { green } else { 0.0 });
-        } else if p.unripe {
-            paint.accent = 1.0;
-        }
-        consider(p.base.z + p.direction.z * p.length * 0.5, paint);
-    }
-    best.map_or(Paint::EMPTY, |(_, paint)| paint)
+    let (along, across) = local((x, y), (0.0, 0.0), (0.0, 1.0));
+    let side = 0.5 * (along + 0.5 * across / (s.aspect * 0.5).max(0.05) + 0.5);
+    let green = 1.0 - math::smoothstep(s.unripe - 0.15, s.unripe + 0.15, side);
+    paint.accent = paint.accent.max(if s.unripe > 0.0 { green } else { 0.0 });
+    paint
 }
 
-/// One fruit of a cluster at card point `(x, y)`: its kind's outline and
-/// shading along its projected axis.
+/// A cluster's card (spec rework L1): the layout its solid is drawn from
+/// (`crate::clusters`), unturned, seen as its card faces it, with the
+/// frontmost unit or stalk drawn at each point. Stalks and unripe fruit
+/// take the accent colour, as a flower's centre and a head's disc do.
+/// Each card point looks only at the units and stalks near it, through a
+/// grid laid over the card.
+pub(crate) struct ClusterCard {
+    units: Vec<CardUnit>,
+    stalks: Vec<CardStalk>,
+    /// Lowest corner of the grid, its cells' size and how many a side.
+    low: (f64, f64),
+    cell: (f64, f64),
+    side: usize,
+    /// Per cell: the stalks, then the units, it may show, in order.
+    cells: Vec<Vec<CardItem>>,
+    fine: f64,
+}
+
+/// A unit on a cluster's card, in card units, with its depth toward the
+/// viewer (larger in front).
+enum CardUnit {
+    /// A fruit: its base, its direction (not unit-length once projected)
+    /// and length, its pedicel from `attach`, and whether it is unripe.
+    Fruit {
+        base: crate::math::Vec3,
+        direction: crate::math::Vec3,
+        length: f64,
+        attach: crate::math::Vec3,
+        unripe: bool,
+    },
+    /// A flower or head: its centre, its two radii as seen, and the way
+    /// back from the card to them; its pedicel from `attach`.
+    Disc {
+        centre: crate::math::Vec3,
+        a: crate::math::Vec3,
+        b: crate::math::Vec3,
+        inverse: [f64; 4],
+        attach: crate::math::Vec3,
+    },
+}
+
+/// A stalk on a cluster's card: from, to, and whether it is the
+/// cluster's own axis (drawn wider, behind everything).
+struct CardStalk {
+    from: crate::math::Vec3,
+    to: crate::math::Vec3,
+    axis: bool,
+}
+
+#[derive(Clone, Copy)]
+enum CardItem {
+    Stalk(usize),
+    Unit(usize),
+}
+
+impl CardUnit {
+    fn attach_and_base(&self) -> (crate::math::Vec3, crate::math::Vec3) {
+        match self {
+            Self::Fruit { attach, base, .. } => (*attach, *base),
+            Self::Disc { attach, centre, .. } => (*attach, *centre),
+        }
+    }
+}
+
+impl ClusterCard {
+    /// Cells a side of the grid.
+    const SIDE: usize = 48;
+
+    #[allow(clippy::too_many_lines)]
+    pub(crate) fn new(cluster: &crate::clusters::ClusterLook) -> Self {
+        use crate::math::Vec3;
+        let frame = cluster.card;
+        let laid = cluster.layout(0.0, 0);
+        let length = frame.length;
+        let facing = frame.mount == crate::looks::Mount::Facing;
+        // Card units: across, along and toward the viewer.
+        let project = |p: Vec3| {
+            if facing {
+                Vec3::new(
+                    -p.x / length,
+                    0.5 + p.z / length,
+                    (p.y - frame.foot) / length,
+                )
+            } else {
+                Vec3::new(p.x / length, (p.y - frame.foot) / length, p.z / length)
+            }
+        };
+        let turn = |d: Vec3| if facing { Vec3::new(-d.x, d.z, d.y) } else { d };
+        let stalks: Vec<CardStalk> = laid
+            .stalks
+            .iter()
+            .map(|stalk| CardStalk {
+                from: project(stalk.from),
+                to: project(stalk.to),
+                axis: stalk.axis,
+            })
+            .collect();
+        let units: Vec<CardUnit> = laid
+            .units
+            .iter()
+            .map(|p| {
+                let attach = project(p.attach);
+                let base = project(p.base);
+                if !cluster.unit.faces() {
+                    return CardUnit::Fruit {
+                        base,
+                        direction: turn(p.direction),
+                        length: p.length / length,
+                        attach,
+                        unripe: p.unripe,
+                    };
+                }
+                // The disc square to the unit's direction, its radii as
+                // the card sees them.
+                let radius = 0.5 * p.length / length;
+                let across = crate::math::any_perpendicular(p.direction);
+                let other = p.direction.cross(across);
+                let (mut a, mut b) = (turn(across) * radius, turn(other) * radius);
+                let det = a.x * b.y - a.y * b.x;
+                let (la, lb) = (hypot(a.x, a.y), hypot(b.x, b.y));
+                if det.abs() < 0.2 * la * lb || det.abs() < 1e-12 {
+                    // Nearly edge on: a narrow ellipse along its longer
+                    // radius.
+                    let major = if la >= lb { a } else { b };
+                    let span = hypot(major.x, major.y).max(1e-9);
+                    let minor = 0.2 * span.max(radius);
+                    let unit = (major.x / span, major.y / span);
+                    a = Vec3::new(
+                        unit.0 * span.max(radius),
+                        unit.1 * span.max(radius),
+                        major.z,
+                    );
+                    b = Vec3::new(-unit.1 * minor, unit.0 * minor, 0.0);
+                }
+                let det = a.x * b.y - a.y * b.x;
+                CardUnit::Disc {
+                    centre: base,
+                    a,
+                    b,
+                    inverse: [b.y / det, -b.x / det, -a.y / det, a.x / det],
+                    attach,
+                }
+            })
+            .collect();
+        let fine = 0.85 * frame.aspect.max(1.0) / to_f64(TEMPLATE_SIZE);
+        // Each item's box on the card, widened by what it draws round it.
+        let stalk_box = |stalk: &CardStalk| {
+            let pad = fine * 1.5;
+            (
+                (
+                    stalk.from.x.min(stalk.to.x) - pad,
+                    stalk.from.y.min(stalk.to.y) - pad,
+                ),
+                (
+                    stalk.from.x.max(stalk.to.x) + pad,
+                    stalk.from.y.max(stalk.to.y) + pad,
+                ),
+            )
+        };
+        let width = cluster.unit.width();
+        let unit_box = |unit: &CardUnit| {
+            let (attach, _) = unit.attach_and_base();
+            let (low, high) = match unit {
+                CardUnit::Fruit {
+                    base,
+                    direction,
+                    length,
+                    ..
+                } => {
+                    let tip = *base + *direction * *length;
+                    let pad = (*length * width * 0.5).max(fine) + *length * 0.05 + fine;
+                    (
+                        (base.x.min(tip.x) - pad, base.y.min(tip.y) - pad),
+                        (base.x.max(tip.x) + pad, base.y.max(tip.y) + pad),
+                    )
+                }
+                CardUnit::Disc { centre, a, b, .. } => {
+                    let reach = (hypot(a.x, a.y) + hypot(b.x, b.y)) * 1.05 + fine;
+                    (
+                        (centre.x - reach, centre.y - reach),
+                        (centre.x + reach, centre.y + reach),
+                    )
+                }
+            };
+            let pad = fine * 1.5;
+            (
+                (low.0.min(attach.x - pad), low.1.min(attach.y - pad)),
+                (high.0.max(attach.x + pad), high.1.max(attach.y + pad)),
+            )
+        };
+        let boxes: Vec<((f64, f64), (f64, f64))> = stalks
+            .iter()
+            .map(stalk_box)
+            .chain(units.iter().map(unit_box))
+            .collect();
+        let (low, high) = boxes.iter().fold(
+            ((f64::MAX, f64::MAX), (f64::MIN, f64::MIN)),
+            |(low, high), &(a, b)| {
+                (
+                    (low.0.min(a.0), low.1.min(a.1)),
+                    (high.0.max(b.0), high.1.max(b.1)),
+                )
+            },
+        );
+        let side = Self::SIDE;
+        let cell = (
+            ((high.0 - low.0) / to_f64(side)).max(1e-9),
+            ((high.1 - low.1) / to_f64(side)).max(1e-9),
+        );
+        let mut cells = vec![Vec::new(); side * side];
+        let index = |value: f64, from: f64, size: f64| {
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let at = ((value - from) / size).floor().max(0.0) as usize;
+            at.min(side - 1)
+        };
+        for (number, &(a, b)) in boxes.iter().enumerate() {
+            let item = if number < stalks.len() {
+                CardItem::Stalk(number)
+            } else {
+                CardItem::Unit(number - stalks.len())
+            };
+            for row in index(a.1, low.1, cell.1)..=index(b.1, low.1, cell.1) {
+                for column in index(a.0, low.0, cell.0)..=index(b.0, low.0, cell.0) {
+                    cells[row * side + column].push(item);
+                }
+            }
+        }
+        Self {
+            units,
+            stalks,
+            low,
+            cell,
+            side,
+            cells,
+            fine,
+        }
+    }
+
+    /// The point `x`, `y` of the card, its units drawn with `shape`.
+    fn paint(&self, shape: &Shape, x: f64, y: f64) -> Paint {
+        let (column, row) = (
+            (x - self.low.0) / self.cell.0,
+            (y - self.low.1) / self.cell.1,
+        );
+        let side = to_f64(self.side);
+        if !(0.0..side).contains(&column) || !(0.0..side).contains(&row) {
+            return Paint::EMPTY;
+        }
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let at =
+            (row as usize).min(self.side - 1) * self.side + (column as usize).min(self.side - 1);
+        let fine = self.fine;
+        let mut best: Option<(f64, Paint)> = None;
+        let mut consider = |depth: f64, paint: Paint| {
+            if paint.cover > 0.0 && best.is_none_or(|(front, _)| depth > front) {
+                best = Some((depth, paint));
+            }
+        };
+        for &item in &self.cells[at] {
+            match item {
+                CardItem::Stalk(number) => {
+                    let stalk = &self.stalks[number];
+                    let (distance, _) = segment(
+                        (x, y),
+                        (stalk.from.x, stalk.from.y),
+                        (stalk.to.x, stalk.to.y),
+                    );
+                    if stalk.axis {
+                        if distance < fine * 1.4 {
+                            consider(-2.0, Paint::solid(0.8, 1.0));
+                        }
+                    } else if distance < fine * 1.1 {
+                        consider(stalk.from.z.min(stalk.to.z) - 1.0, Paint::solid(0.8, 1.0));
+                    }
+                }
+                CardItem::Unit(number) => {
+                    let unit = &self.units[number];
+                    let (attach, base) = unit.attach_and_base();
+                    if (base - attach).length() > 1e-9 {
+                        let (distance, _) = segment((x, y), (attach.x, attach.y), (base.x, base.y));
+                        if distance < fine * 1.1 {
+                            consider(attach.z.min(base.z) - 1.0, Paint::solid(0.8, 1.0));
+                        }
+                    }
+                    match (unit, shape) {
+                        (
+                            CardUnit::Fruit {
+                                base,
+                                direction,
+                                length,
+                                unripe,
+                                ..
+                            },
+                            Shape::Fruit(s),
+                        ) => {
+                            let mut paint = one_fruit(
+                                s,
+                                (base.x, base.y),
+                                (direction.x, direction.y),
+                                *length,
+                                x,
+                                y,
+                                fine,
+                            );
+                            if *unripe {
+                                paint.accent = 1.0;
+                            }
+                            consider(base.z + direction.z * length * 0.5, paint);
+                        }
+                        (
+                            CardUnit::Disc {
+                                centre,
+                                a,
+                                b,
+                                inverse,
+                                ..
+                            },
+                            Shape::Flower(_) | Shape::Head(_),
+                        ) => {
+                            let (dx, dy) = (x - centre.x, y - centre.y);
+                            let (u, v) = (
+                                inverse[0] * dx + inverse[1] * dy,
+                                inverse[2] * dx + inverse[3] * dy,
+                            );
+                            if u * u + v * v > 1.1 {
+                                continue;
+                            }
+                            let paint = match shape {
+                                Shape::Flower(s) => flower(s, u * BLOOM, v * BLOOM),
+                                Shape::Head(s) => head(s, u * BLOOM, v * BLOOM),
+                                _ => Paint::EMPTY,
+                            };
+                            consider(centre.z + a.z * u + b.z * v, paint);
+                        }
+                        _ => {}
+                    }
+                }
+            }
+        }
+        best.map_or(Paint::EMPTY, |(_, paint)| paint)
+    }
+}
+
+/// One fruit at card point `(x, y)`, its base, direction and length as the
+/// card sees them: its kind's outline and shading along its projected
+/// axis.
 #[allow(clippy::too_many_lines)]
-fn one_fruit(s: &Fruit, p: &crate::fruit::Placed, x: f64, y: f64, fine: f64) -> Paint {
+fn one_fruit(
+    s: &Fruit,
+    base: (f64, f64),
+    direction: (f64, f64),
+    length: f64,
+    x: f64,
+    y: f64,
+    fine: f64,
+) -> Paint {
     use crate::looks::FruitKind;
-    let half_width = (p.length * s.aspect * 0.5).max(fine);
-    let projected = hypot(p.direction.x, p.direction.y);
+    let half_width = (length * s.aspect * 0.5).max(fine);
+    let projected = hypot(direction.0, direction.1);
     let axis = if projected > 0.05 {
-        (p.direction.x / projected, p.direction.y / projected)
+        (direction.0 / projected, direction.1 / projected)
     } else {
         (0.0, 1.0)
     };
     // Seen from the side the fruit is its length; seen end on, round.
-    let length = (p.length * projected).max(2.0 * half_width);
-    let (along, across) = local((x, y), (p.base.x, p.base.y), axis);
+    let length = (length * projected).max(2.0 * half_width);
+    let (along, across) = local((x, y), base, axis);
     let t = along / length;
     let v = across / half_width;
     if !(-0.05..=1.05).contains(&t) {
@@ -2082,6 +2441,7 @@ mod tests {
                     form: None,
                     season: None,
                     families: None,
+                    inflorescence: None,
                 },
             );
         }

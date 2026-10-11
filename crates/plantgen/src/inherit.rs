@@ -427,7 +427,7 @@ pub enum Field {
     Number,
     /// A whole number, 0 or more: rays, leaflets, clusters.
     Count,
-    /// One of the template's words: a fruit's kind, how fruit cluster.
+    /// One of the template's words: a fruit's kind.
     Word,
 }
 
@@ -568,10 +568,6 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 15] = {
                 ("aspect", Number),
                 ("cone", Number),
                 ("kind", Word),
-                ("count", Count),
-                ("cluster", Word),
-                ("size", Number),
-                ("spread", Number),
                 ("unripe", Number),
             ],
         ),

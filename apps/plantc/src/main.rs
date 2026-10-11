@@ -1517,7 +1517,8 @@ fn parts_command(args: &[String]) -> Result<(), Failure> {
         // plane; the shape is the same at any size. Framed round its card's
         // length or width, whichever is more.
         let length = median.max(0.25);
-        let frame = 1.3 * look.shape.aspect().max(1.0);
+        let (middle, reach) = card_extent(look);
+        let frame = 1.3 * reach;
         let alone = PlantGraph {
             age,
             height: length,
@@ -1558,7 +1559,7 @@ fn parts_command(args: &[String]) -> Result<(), Failure> {
                     supersample: 3,
                     figure: false,
                     frame_height: None,
-                    focus: Some((Vec3::Y * (length * 0.5), length * frame)),
+                    focus: Some((Vec3::Y * (length * middle), length * frame)),
                 },
             ));
         }
@@ -1581,6 +1582,19 @@ fn parts_command(args: &[String]) -> Result<(), Failure> {
         rows.join("\n  ")
     );
     Ok(())
+}
+
+/// Where an organ's card is centred along it and how far it reaches, in
+/// lengths of the organ: half way and its length or width, whichever is
+/// more; a cluster's card (`Look::span`) where its card frame puts it.
+fn card_extent(look: &looks::Look) -> (f64, f64) {
+    let (foot, length) = look.span();
+    let middle = match (&look.inflorescence, look.mount()) {
+        (None, _) => 0.5,
+        (Some(_), looks::Mount::Facing) => foot,
+        (Some(_), looks::Mount::Along) => foot + 0.5 * length,
+    };
+    (middle, length * look.aspect().max(1.0))
 }
 
 /// The middle of a season's bud, flower, unripe, ripening and ripe stages,
@@ -1664,17 +1678,28 @@ fn year_command(args: &[String]) -> Result<(), Failure> {
             days.clone()
         };
         // The row is framed round its largest stage, by its card's length
-        // or width, whichever is more.
-        let largest = row_days
+        // or width, whichever is more; a cluster's round its card's middle.
+        let (largest, middle) = row_days
             .iter()
             .map(|&day| {
                 let (looks, shares) = looks_of(&spec, &growth, day);
-                shares.get(index).copied().unwrap_or(1.0)
-                    * looks
+                let share = shares.get(index).copied().unwrap_or(1.0);
+                let (middle, reach) = looks.get(index).map_or((0.5, 1.0), card_extent);
+                (
+                    share * reach,
+                    looks
                         .get(index)
-                        .map_or(1.0, |look| look.shape.aspect().max(1.0))
+                        .and_then(|look| look.inflorescence.as_ref())
+                        .map(|_| share * middle),
+                )
             })
-            .fold(1.0, f64::max);
+            .fold((1.0, None), |(most, at), (reach, middle)| {
+                if reach > most {
+                    (reach, middle)
+                } else {
+                    (most, at.or(middle))
+                }
+            });
         let mut stages = Vec::new();
         for &day in &row_days {
             let (looks, shares) = looks_of(&spec, &growth, day);
@@ -1718,7 +1743,10 @@ fn year_command(args: &[String]) -> Result<(), Failure> {
                     supersample: 3,
                     figure: false,
                     frame_height: None,
-                    focus: Some((Vec3::Y * (length * largest * 0.5), length * largest * 1.3)),
+                    focus: Some((
+                        Vec3::Y * middle.map_or(length * largest * 0.5, |middle| length * middle),
+                        length * largest * 1.3,
+                    )),
                 },
             ));
             stages.push(match season.stage(day) {

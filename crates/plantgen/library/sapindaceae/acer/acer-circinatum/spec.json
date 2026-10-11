@@ -93,13 +93,10 @@
         "shape": {
           "template": "fruit",
           "kind": "samara",
-          "count": 4,
-          "cluster": "pair",
-          "size": 0.45,
-          "spread": 85,
           "aspect": 0.35,
           "unripe": 0.4
         },
+        "inflorescence": { "kind": "raceme", "flowers": 4, "per_node": 2, "divergence": 90, "pedicel": 0.1125, "peduncle": 0.5, "size": 0.45, "spread": 85 },
         "colour": [0.6, 0.15, 0.1],
         "accent": [0.4, 0.5, 0.15],
         "season": {

@@ -88,13 +88,10 @@
       "bloom": {
         "shape": {
           "template": "fruit",
-          "count": 16,
-          "cluster": "umbel",
-          "size": 0.28,
-          "spread": 55,
           "aspect": 1.0,
           "unripe": 0.6
         },
+        "inflorescence": { "kind": "umbel", "flowers": 16, "size": 0.28, "spread": 55 },
         "colour": [0.92, 0.92, 0.9],
         "accent": [0.45, 0.55, 0.25],
         "season": {

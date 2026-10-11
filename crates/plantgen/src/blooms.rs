@@ -91,15 +91,12 @@ impl Default for FlowerForm {
 
 /// A fruit's shape beyond its template.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(default, deny_unknown_fields)]
+#[serde(try_from = "FruitFormCard")]
 pub struct FruitForm {
     /// Scales on a cone; 0 picks a count from the cone's size.
     pub scales: u32,
     /// Levels, from the nearest, drawn solid: 1 or 2.
     pub levels: u8,
-    /// Colour of a cluster's stalks (`crate::fruit`); green unless set.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub stalk: Option<[f32; 3]>,
 }
 
 impl Default for FruitForm {
@@ -107,8 +104,46 @@ impl Default for FruitForm {
         Self {
             scales: 0,
             levels: 1,
+        }
+    }
+}
+
+/// A fruit form as a spec writes it, and the stalk colour it held before
+/// L1, read only to say where it went.
+#[derive(Deserialize)]
+#[serde(default, deny_unknown_fields)]
+struct FruitFormCard {
+    scales: u32,
+    levels: u8,
+    stalk: Option<serde::de::IgnoredAny>,
+}
+
+impl Default for FruitFormCard {
+    fn default() -> Self {
+        let form = FruitForm::default();
+        Self {
+            scales: form.scales,
+            levels: form.levels,
             stalk: None,
         }
+    }
+}
+
+impl TryFrom<FruitFormCard> for FruitForm {
+    type Error = String;
+
+    fn try_from(card: FruitFormCard) -> Result<Self, String> {
+        if card.stalk.is_some() {
+            return Err(
+                "form fruit `stalk` is now the look's `inflorescence` `stalk`: a cluster of \
+                 fruit is an inflorescence whose units are fruit"
+                    .to_string(),
+            );
+        }
+        Ok(Self {
+            scales: card.scales,
+            levels: card.levels,
+        })
     }
 }
 
@@ -178,11 +213,7 @@ impl Form {
             }
             Self::Fruit(form) => {
                 within("form fruit scales", f64::from(form.scales), 0.0, 200.0)?;
-                within("form fruit levels", f64::from(form.levels), 0.0, 2.0)?;
-                for channel in form.stalk.into_iter().flatten() {
-                    within("form fruit stalk", f64::from(channel), 0.0, 1.0)?;
-                }
-                Ok(())
+                within("form fruit levels", f64::from(form.levels), 0.0, 2.0)
             }
             Self::Thorn | Self::Shoot | Self::Card => Ok(()),
         }
@@ -203,6 +234,9 @@ impl Form {
 
 /// About how many triangles one organ of `look` takes as a solid.
 fn triangles_per_organ(look: &Look) -> usize {
+    if look.inflorescence.is_some() {
+        return crate::clusters::triangles(look);
+    }
     match (&look.form, &look.shape) {
         (Form::Flower(form), Shape::Flower(flower)) => {
             flower.petals as usize * 24 + DOME_TRIANGLES + form.stamens as usize * 3
@@ -265,8 +299,9 @@ pub fn build(
     build_coarse(graph, looks, solid, colour, 0, mesh);
 }
 
-/// [`build`], with fruit clusters drawn `coarse` steps coarser
+/// [`build`], with clusters and fruit drawn `coarse` steps coarser
 /// (`crate::fruit::COARSER`), for part meshes that must fit a budget.
+#[allow(clippy::too_many_lines)]
 pub(crate) fn build_coarse(
     graph: &PlantGraph,
     looks: &[Look],
@@ -293,6 +328,10 @@ pub(crate) fn build_coarse(
             shed: organ.shed,
             coarse,
         };
+        if let Some(cluster) = &look.inflorescence {
+            crate::clusters::draw(organ, (axis, side), look, cluster, painted, part, mesh);
+            continue;
+        }
         match (&look.form, &look.shape) {
             (Form::Flower(form), Shape::Flower(flower)) => {
                 let petals = Petals {
@@ -769,7 +808,7 @@ pub(crate) fn shade(colour: [f32; 3], factor: f32) -> [f32; 3] {
 
 /// `accent` darkened or lightened as `painted` is from `colour`, by
 /// luminance: an organ's second colour shaded with the organ.
-fn with_shading(accent: [f32; 3], colour: [f32; 3], painted: [f32; 3]) -> [f32; 3] {
+pub(crate) fn with_shading(accent: [f32; 3], colour: [f32; 3], painted: [f32; 3]) -> [f32; 3] {
     let luminance = |c: [f32; 3]| 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
     shade(accent, luminance(painted) / luminance(colour).max(1e-4))
 }
@@ -908,6 +947,7 @@ mod tests {
                     form: Some(Form::Thorn),
                     season: None,
                     families: None,
+                    inflorescence: None,
                 },
             )]),
             [0.3; 3],

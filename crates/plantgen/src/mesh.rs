@@ -489,7 +489,7 @@ fn sites(cards: &[Card], looks: &[Look], is_part: &dyn Fn(usize) -> bool) -> Vec
         let template = usize::from(cards[index].template);
         let crossed = looks
             .get(template)
-            .is_some_and(|look| look.shape.cross().is_some());
+            .is_some_and(|look| look.cross().is_some());
         // The crossing card copies the organ's card's base and heading.
         #[allow(clippy::float_cmp)]
         let pair = crossed
@@ -1331,13 +1331,32 @@ fn face_up(heading: Vec3, left: Vec3, amount: f64) -> (Vec3, Vec3) {
     )
 }
 
-/// Where an organ's card goes: its base, heading and left.
-pub(crate) fn place(organ: &GraphOrgan, look: &Look) -> (Vec3, Vec3, Vec3) {
+/// Where an organ's card goes: its base, heading, left and length. A
+/// cluster's card (`crate::clusters::CardFrame`) starts its foot along the
+/// organ, or is centred there when it faces along it, and is its length
+/// times the organ's.
+pub(crate) fn place(organ: &GraphOrgan, look: &Look) -> (Vec3, Vec3, Vec3, f64) {
+    if let Some(cluster) = &look.inflorescence {
+        let foot = cluster.card.foot * organ.size;
+        let length = cluster.card.length * organ.size;
+        return match cluster.card.mount {
+            Mount::Along => {
+                let (heading, left) = face_up(organ.heading, organ.left, look.face_up);
+                (organ.position + heading * foot, heading, left, length)
+            }
+            Mount::Facing => {
+                let up = organ.heading.cross(organ.left);
+                let (heading, left) = face_up(up, -organ.left, look.face_up);
+                let centre = organ.position + organ.heading * foot;
+                (centre - heading * (length * 0.5), heading, left, length)
+            }
+        };
+    }
     match look.mount() {
         // Standing on the organ, reaching along it.
         Mount::Along => {
             let (heading, left) = face_up(organ.heading, organ.left, look.face_up);
-            (organ.position, heading, left)
+            (organ.position, heading, left, organ.size)
         }
         // Centred on the organ, its face toward the organ's heading: the
         // card's heading is the turtle's up and its left the turtle's right,
@@ -1345,8 +1364,25 @@ pub(crate) fn place(organ: &GraphOrgan, look: &Look) -> (Vec3, Vec3, Vec3) {
         Mount::Facing => {
             let up = organ.heading.cross(organ.left);
             let (heading, left) = face_up(up, -organ.left, look.face_up);
-            (organ.position - heading * (organ.size * 0.5), heading, left)
+            (
+                organ.position - heading * (organ.size * 0.5),
+                heading,
+                left,
+                organ.size,
+            )
         }
+    }
+}
+
+/// `organ`'s card as the coarse levels trace it: its foot, heading, left
+/// and length. A cluster's is where [`place`] puts it; every other is
+/// traced from its organ's position, at its organ's size.
+fn traced(organ: &GraphOrgan, look: &Look) -> (Vec3, Vec3, Vec3, f64) {
+    let (base, heading, left, length) = place(organ, look);
+    if look.inflorescence.is_some() {
+        (base, heading, left, length)
+    } else {
+        (organ.position, heading, left, organ.size)
     }
 }
 
@@ -1403,20 +1439,20 @@ fn organ_card(
     let (Some(shown), Ok(template)) = (looks.get(drawn), u8::try_from(drawn)) else {
         return;
     };
-    let (base, heading, left) = place(organ, look);
+    let (base, heading, left, length) = place(organ, look);
     let card = Placed {
         base,
         heading,
         left,
-        length: organ.size * share,
-        width: organ.size * share * shown.shape.aspect() * widen,
+        length: length * share,
+        width: length * share * shown.aspect() * widen,
         color: organ_color(look, variation, organ.light, organ.id),
         template,
         born: organ.born,
         shed: organ.shed,
         bend: shown.bend,
     };
-    if let Some(cross) = shown.shape.cross().or(across) {
+    if let Some(cross) = shown.cross().or(across) {
         // A second card across the first keeps organs that stand
         // out all round their axis full when seen edge on.
         out.push(
@@ -1436,28 +1472,30 @@ fn organ_card(
 /// (two quads), and the card across it for organs that stand out all
 /// round their axis.
 fn organ_quads(organ: &GraphOrgan, look: &Look, widen: f64) -> Vec<[Vec3; 4]> {
-    let (_, heading, left) = place(organ, look);
-    let half = 0.5 * look.shape.aspect() * organ.size * widen;
-    let at = |x: f64, v: f64| {
-        look.bend
-            .point(organ.position, heading, left, half, organ.size, x, v)
-            .0
-    };
+    let (base, heading, left, length) = traced(organ, look);
+    let half = 0.5 * look.aspect() * length * widen;
+    let at = |x: f64, v: f64| look.bend.point(base, heading, left, half, length, x, v).0;
     let ring = [0.0, 0.5, 1.0].map(|v| [at(-1.0, v), at(1.0, v)]);
     let mut quads = vec![
         [ring[0][0], ring[0][1], ring[1][1], ring[1][0]],
         [ring[1][0], ring[1][1], ring[2][1], ring[2][0]],
     ];
-    if let Some(cross) = look.shape.cross() {
+    if let Some(cross) = look.cross() {
         let across = heading.cross(left) * (half * cross.min(1.0));
         quads.push([
-            organ.position - across,
-            organ.position + across,
-            organ.position + heading * organ.size + across,
-            organ.position + heading * organ.size - across,
+            base - across,
+            base + across,
+            base + heading * length + across,
+            base + heading * length - across,
         ]);
     }
     quads
+}
+
+/// The area of `organ`'s card as the coarse levels trace it ([`traced`]).
+fn traced_area(organ: &GraphOrgan, look: &Look) -> f64 {
+    let (.., length) = traced(organ, look);
+    look.aspect() * length * length
 }
 
 /// A look at most this wide for its length is a blade (yucca, sotol,
@@ -1492,7 +1530,7 @@ fn star_cards(
     variation: f32,
 ) -> Option<Vec<Card>> {
     let organs: Vec<&GraphOrgan> = cluster.organs.iter().map(|&i| &graph.organs[i]).collect();
-    if look.shape.aspect() > STAR_ASPECT || organs.len() < 3 {
+    if look.aspect() > STAR_ASPECT || organs.len() < 3 {
         return None;
     }
     let count = to_f64(organs.len());
@@ -1506,13 +1544,13 @@ fn star_cards(
     let headings: Vec<Vec3> = organs
         .iter()
         .map(|organ| {
-            let (_, heading, left) = place(organ, look);
-            let half = 0.5 * look.shape.aspect() * organ.size;
+            let (base, heading, left, length) = traced(organ, look);
+            let half = 0.5 * look.aspect() * length;
             let tip = look
                 .bend
-                .point(organ.position, heading, left, half, organ.size, 0.0, 1.0)
+                .point(base, heading, left, half, length, 0.0, 1.0)
                 .0;
-            (tip - organ.position).normalize_or(heading)
+            (tip - base).normalize_or(heading)
         })
         .collect();
     let mean = headings.iter().fold(Vec3::ZERO, |sum, &h| sum + h) / count;
@@ -1538,7 +1576,7 @@ fn star_cards(
         }
         let area: f64 = kept
             .iter()
-            .map(|&i| look.shape.aspect() * organs[i].size * organs[i].size * widen)
+            .map(|&i| traced_area(organs[i], look) * widen)
             .sum();
         directions
             .iter()
@@ -2021,7 +2059,7 @@ fn cluster_cards(
         let (Some(look), Ok(template)) = (looks.get(index), u8::try_from(index)) else {
             continue;
         };
-        let (_, heading, left) = place(organ, look);
+        let (base, heading, left, length) = traced(organ, look);
         #[allow(clippy::cast_possible_truncation)]
         let key = (
             template,
@@ -2033,21 +2071,18 @@ fn cluster_cards(
             born: f64::INFINITY,
             shed: f64::NEG_INFINITY,
             id: organ.id,
-            fill: crate::templates::fill_share(&look.shape),
+            fill: crate::templates::fill_share(look),
             low: Vec3::new(f64::INFINITY, f64::INFINITY, f64::INFINITY),
             high: Vec3::new(f64::NEG_INFINITY, f64::NEG_INFINITY, f64::NEG_INFINITY),
             ..Cluster::default()
         });
-        let area = look.shape.aspect() * organ.size * organ.size;
+        let area = traced_area(organ, look);
         // The organ's card as the levels that keep it draw it: bent by its
         // look (`crate::bend`: folded, cupped, drooping), traced at its
         // base, middle and tip, so a cluster reaches as far as its leaves
         // do and faces as they face. Flat looks bend nowhere.
-        let half = 0.5 * look.shape.aspect() * organ.size;
-        let at = |x: f64, v: f64| {
-            look.bend
-                .point(organ.position, heading, left, half, organ.size, x, v)
-        };
+        let half = 0.5 * look.aspect() * length;
+        let at = |x: f64, v: f64| look.bend.point(base, heading, left, half, length, x, v);
         let ring = [0.0, 0.5, 1.0].map(|v| [at(-1.0, v).0, at(0.0, v).0, at(1.0, v).0]);
         let centre = ring[1][1];
         entry.centres.push(centre);
@@ -2056,13 +2091,13 @@ fn cluster_cards(
                 .quads
                 .push([ring[k][0], ring[k][2], ring[k + 1][2], ring[k + 1][0]]);
         }
-        if let Some(cross) = look.shape.cross() {
+        if let Some(cross) = look.cross() {
             let across = heading.cross(left) * (half * cross.min(1.0));
             entry.quads.push([
-                organ.position - across,
-                organ.position + across,
-                organ.position + heading * organ.size + across,
-                organ.position + heading * organ.size - across,
+                base - across,
+                base + across,
+                base + heading * length + across,
+                base + heading * length - across,
             ]);
         }
         for corner in ring.iter().flatten() {
@@ -2077,7 +2112,7 @@ fn cluster_cards(
             entry.normal += normal * (0.5 * area);
             entry.faces.push((normal, 0.5 * area));
         }
-        if let Some(cross) = look.shape.cross() {
+        if let Some(cross) = look.cross() {
             // The card across faces along the organ's left (see
             // `organ_cards`).
             entry.faces.push((left, area * cross));
@@ -2127,7 +2162,7 @@ fn cluster_cards(
         let normals: Vec<Vec3> = facings.iter().map(|&(facing, ..)| facing).collect();
         // Each card keeps the organs' proportions: length by width at the
         // look's aspect.
-        let aspect = look.shape.aspect().max(MIN_CLUSTER_ASPECT);
+        let aspect = look.aspect().max(MIN_CLUSTER_ASPECT);
         // A card never reaches past its organs' box and keeps the look's
         // aspect, so where one card of the area would, the area is shared
         // by cards in a row, each as large as the box allows. The extra
@@ -2520,7 +2555,7 @@ mod tests {
             low = low.min(*corner);
             high = high.max(*corner);
         }
-        let fill = crate::templates::fill_share(&looks()[0].shape);
+        let fill = crate::templates::fill_share(&looks()[0]);
         quads
             .iter()
             .map(|quads| painted(quads, low, high, axis, fill))
@@ -2997,6 +3032,7 @@ mod tests {
             form: None,
             season: None,
             families: None,
+            inflorescence: None,
         }
     }
 

@@ -81,13 +81,10 @@
       "bloom": {
         "shape": {
           "template": "fruit",
-          "count": 2,
-          "cluster": "pair",
-          "size": 0.55,
-          "spread": 25,
           "aspect": 1.0,
           "unripe": 0.3
         },
+        "inflorescence": { "kind": "raceme", "flowers": 2, "per_node": 2, "divergence": 90, "pedicel": 0.1375, "peduncle": 1, "size": 0.55, "spread": 25 },
         "colour": [0.04, 0.03, 0.05],
         "accent": [0.4, 0.48, 0.18],
         "season": {

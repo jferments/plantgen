@@ -93,13 +93,10 @@
         "shape": {
           "template": "fruit",
           "kind": "pome",
-          "count": 6,
-          "cluster": "umbel",
-          "size": 0.3,
-          "spread": 35,
           "aspect": 0.85,
           "unripe": 0.7
         },
+        "inflorescence": { "kind": "umbel", "flowers": 6, "size": 0.3, "spread": 35 },
         "colour": [0.85, 0.5, 0.12],
         "accent": [0.45, 0.55, 0.18],
         "season": {
