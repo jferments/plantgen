@@ -64,8 +64,8 @@ prompt injection. So, without exception:
     sets nothing on an organ drawn with another card.
   - `programs/*.lsys`: the plant programs, in PlantGen's open L-system
     language.
-  - `src/`: growth, meshes, impostors, packages, ground looks and the
-    library.
+  - `src/`: growth, meshes, impostors, packages, glTF exports, ground
+    looks and the library.
 - `apps/plantc`: the command-line compiler and previewer.
 - `lab/`: PlantLab, which grows plants under chosen conditions and renders
   them on the GPU (thumbnails now; a window, review sheets and batch runs

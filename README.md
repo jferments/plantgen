@@ -65,7 +65,9 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   distance. They come with organ card textures drawn from each species'
   looks, solid spines and part meshes for flowers, fruit and cones. All of
   it goes into a content-addressed package whose key hashes the spec, the
-  program and the generator's revision.
+  program and the generator's revision. `plantc export` writes a plant as
+  glTF binary files (`.glb`), one per level of detail, that game engines
+  and Blender open as they are.
 - **Ground.** Tiling textures of what plants lay on the ground: needles,
   leaves, thatch, twigs, mosses and grasses, and each canopy species' own
   litter.
@@ -83,14 +85,16 @@ cargo build --release
 ./target/release/plantc render carnegiea-gigantea --out saguaro.png --view three-quarter --parts on
 ./target/release/plantc lineup pseudotsuga-menziesii acer-macrophyllum --out lineup.png
 ./target/release/plantc build carnegiea-gigantea --out plants
+./target/release/plantc export pseudotsuga-menziesii --age 20 --out exports
 ```
 
 `plantc help` lists every command: growing a plant and printing its size
 at every age, rendering it at one age or every age, its organs through the
-year, its card textures and the ground's looks, building packages, and
-listing the sources a species' values cite (`plantc sources cite ID` finds
-every value that names one), and a species' characters and what each
-family has stated so far (`plantc traits`, `plantc audit`).
+year, its card textures and the ground's looks, building packages,
+exporting a plant as glTF, listing the sources a species' values cite
+(`plantc sources cite ID` finds every value that names one), and a
+species' characters and what each family has stated so far
+(`plantc traits`, `plantc audit`).
 `--library DIR` reads species and programs from a folder on top of the
 built-in ones, so you can write your own.
 
