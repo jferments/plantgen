@@ -284,6 +284,7 @@ pub fn own_leaf(species: &str) -> Option<Shape> {
     Some(match &look.shape {
         Shape::Sprig(sprig) => Shape::Simple(Simple {
             width: sprig.width,
+            outline: sprig.outline.clone(),
             widest: sprig.widest,
             tip: sprig.tip,
             base: sprig.base,

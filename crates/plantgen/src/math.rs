@@ -102,6 +102,57 @@ pub fn lerp(a: f64, b: f64, t: f64) -> f64 {
     a + (b - a) * t
 }
 
+/// The monotone cubic through `points` (`[x, y]`, `x` strictly
+/// increasing) at `x`: smooth, through every point, and never above or
+/// below its two neighbours between them (Fritsch and Carlson 1980, with
+/// Fritsch and Butland's weighted harmonic mean for the slopes, as PCHIP
+/// has it). The ends hold their points' values beyond them; no points
+/// give 0.
+#[must_use]
+pub fn monotone_cubic(points: &[[f64; 2]], x: f64) -> f64 {
+    let (Some(&[x0, y0]), Some(&[xn, yn])) = (points.first(), points.last()) else {
+        return 0.0;
+    };
+    if points.len() == 1 || x <= x0 {
+        return y0;
+    }
+    if x >= xn {
+        return yn;
+    }
+    let secant = |i: usize| {
+        let ([xa, ya], [xb, yb]) = (points[i], points[i + 1]);
+        (yb - ya) / (xb - xa)
+    };
+    let slope = |i: usize| -> f64 {
+        if i == 0 {
+            return secant(0);
+        }
+        if i == points.len() - 1 {
+            return secant(i - 1);
+        }
+        let (before, after) = (secant(i - 1), secant(i));
+        if before * after <= 0.0 {
+            return 0.0;
+        }
+        let h0 = points[i][0] - points[i - 1][0];
+        let h1 = points[i + 1][0] - points[i][0];
+        let (w0, w1) = (2.0 * h1 + h0, h1 + 2.0 * h0);
+        (w0 + w1) / (w0 / before + w1 / after)
+    };
+    let i = points
+        .windows(2)
+        .position(|pair| x < pair[1][0])
+        .unwrap_or(0);
+    let ([xa, ya], [xb, yb]) = (points[i], points[i + 1]);
+    let h = xb - xa;
+    let t = (x - xa) / h;
+    let (t2, t3) = (t * t, t * t * t);
+    (2.0 * t3 - 3.0 * t2 + 1.0) * ya
+        + (t3 - 2.0 * t2 + t) * h * slope(i)
+        + (3.0 * t2 - 2.0 * t3) * yb
+        + (t3 - t2) * h * slope(i + 1)
+}
+
 /// A double-precision vector in a plant's own frame: metres, +Y up.
 #[derive(Debug, Clone, Copy, PartialEq, Default, Serialize, Deserialize)]
 pub struct Vec3 {
@@ -327,6 +378,28 @@ mod tests {
         assert!((degrees(radians(33.0)) - 33.0).abs() < 1e-12);
         assert_eq!(smoothstep(0.0, 1.0, 2.0), 1.0);
         assert_eq!(smoothstep(0.0, 1.0, -1.0), 0.0);
+    }
+
+    #[test]
+    fn a_monotone_cubic_meets_its_points_and_never_overshoots() {
+        let points = [[0.0, 0.2], [0.1, 0.7], [0.3, 1.0], [0.55, 0.8], [1.0, 0.0]];
+        for &[x, y] in &points {
+            assert!((monotone_cubic(&points, x) - y).abs() < 1e-12, "{x}");
+        }
+        for pair in points.windows(2) {
+            let (low, high) = (pair[0][1].min(pair[1][1]), pair[0][1].max(pair[1][1]));
+            for k in 1..100 {
+                let x = lerp(pair[0][0], pair[1][0], f64::from(k) / 100.0);
+                let y = monotone_cubic(&points, x);
+                assert!((low - 1e-12..=high + 1e-12).contains(&y), "{x}: {y}");
+            }
+        }
+        // A flat run stays flat: parallel sides stay parallel.
+        let flat = [[0.0, 0.0], [0.2, 1.0], [0.8, 1.0], [1.0, 0.0]];
+        assert_eq!(monotone_cubic(&flat, 0.5), 1.0);
+        assert_eq!(monotone_cubic(&flat, -1.0), 0.0);
+        assert_eq!(monotone_cubic(&flat, 2.0), 0.0);
+        assert_eq!(monotone_cubic(&[], 0.5), 0.0);
     }
 
     #[test]
