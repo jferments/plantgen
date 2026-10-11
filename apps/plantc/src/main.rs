@@ -656,11 +656,21 @@ fn rules_command(args: &[String]) -> Result<(), Failure> {
     Ok(())
 }
 
-/// The card a rule on a look's card is for, as `plantc rules` names it.
+/// The cards a rule on a look's card is for, as `plantc rules` names them.
 fn card(rule: &serde_json::Value) -> String {
-    rule.get("template")
-        .and_then(serde_json::Value::as_str)
-        .map_or_else(String::new, |template| format!(" on `{template}` cards"))
+    let templates: Vec<&str> = match rule.get("template") {
+        Some(serde_json::Value::String(template)) => vec![template.as_str()],
+        Some(serde_json::Value::Array(templates)) => templates
+            .iter()
+            .filter_map(serde_json::Value::as_str)
+            .collect(),
+        _ => Vec::new(),
+    };
+    if templates.is_empty() {
+        String::new()
+    } else {
+        format!(" on {} cards", plantgen::inherit::cards(&templates))
+    }
 }
 
 fn traits_command(args: &[String]) -> Result<(), Failure> {

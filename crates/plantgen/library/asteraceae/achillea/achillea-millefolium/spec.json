@@ -97,6 +97,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_typical_m": {"min": 0.06, "max": 0.65},
     "leaf_division": "simple",
     "leaf_incision": "lobed",
     "division_pattern": "pinnate",
@@ -164,7 +165,7 @@
     "traits": {
       "evidence": "SourceInferred",
       "source": "fna-19",
-      "note": "FNA's account of the species: blades oblong or lanceolate, once or twice pinnately lobed; 10 to over 100 heads in flat-topped, corymb-like arrays; 20 to 30 phyllaries in about three rows; rays 5 to 8 (as few as 3); 10 to 20 disc florets; fruits 1 to 2 mm."
+      "note": "FNA's account of the species: plants 6 to 65 cm tall or more; blades oblong or lanceolate, once or twice pinnately lobed; 10 to over 100 heads in flat-topped, corymb-like arrays; 20 to 30 phyllaries in about three rows; rays 5 to 8 (as few as 3); 10 to 20 disc florets; fruits 1 to 2 mm."
     }
   },
   "provenance": {

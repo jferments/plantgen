@@ -85,6 +85,7 @@
   "tier": "procedural_proxy",
   "traits": {
     "life_span": "perennial",
+    "culm_length_m": {"min": 0.15, "max": 1.4},
     "leaf_length_m": {"min": 0.1, "max": 0.45},
     "leaf_width_m": {"min": 0.002, "max": 0.014},
     "inflorescence": "panicle",
@@ -149,7 +150,7 @@
     "traits": {
       "evidence": "SourceInferred",
       "source": "kew-grassbase",
-      "note": "GrassBase's account of the species: a tufted perennial; blades 10 to 45 cm by 2 to 14 mm; a dense, one-sided panicle 2 to 30 cm long; spikelets 5 to 9 mm, of 2 to 5 fertile florets above two unlike glumes; the lemma's awn 0.5 to 1.5 mm."
+      "note": "GrassBase's account of the species: a tufted perennial, its culms 15 to 140 cm long; blades 10 to 45 cm by 2 to 14 mm; a dense, one-sided panicle 2 to 30 cm long; spikelets 5 to 9 mm, of 2 to 5 fertile florets above two unlike glumes; the lemma's awn 0.5 to 1.5 mm."
     }
   },
   "provenance": {
