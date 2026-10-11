@@ -120,4 +120,8 @@ pub mod venation;
 /// may declare structures that what it draws is within (`crate::organs`,
 /// spec rework M7); the grass, herb, fern and palm programs draw their
 /// leaves and fronds in them, and a graph with structures is `APGRAPH2`.
-pub const GENERATOR_REVISION: u32 = 19;
+/// 20: an organ a rule rewrites into another lives on in it, with its
+/// id and birth (organ phases, spec rework M7), so a grass's thatch is
+/// the blade it was and falls only once; and a head with a season opens
+/// from its rim by the day, its bud the head itself, closed.
+pub const GENERATOR_REVISION: u32 = 20;

@@ -20,9 +20,16 @@
 //! drawn from there to the end of the branch is within it
 //! ([`crate::graph::GraphStructure`]). [`disagreements`] checks a grown
 //! graph against the vocabulary's `part_of`.
+//!
+//! An organ with a season ([`crate::looks::Season`]) goes through
+//! **phases**, from primordium to bud, open, fruit and shed ([`Phase`],
+//! [`phase`]). Its phase is never stored: the day and the season decide
+//! it, as they decide what its look draws. An organ continues through a
+//! rule that rewrites it into another, as a flower into its fruit, so it
+//! keeps one id all its life (`crate::lsys::CompiledRule::continuation`).
 
-use crate::graph::{GraphStructure, PlantGraph};
-use crate::looks::{Look, Shape};
+use crate::graph::{GraphOrgan, GraphStructure, PlantGraph};
+use crate::looks::{Look, Season, Shape, Stage};
 use crate::lsys::OrganKind;
 use crate::traits::Vocabulary;
 
@@ -196,6 +203,44 @@ pub fn disagreements(
     found
 }
 
+/// Where an organ with a season is in its life on a day (organ phases,
+/// spec rework M7). A head's florets each have one of their own, its
+/// `open` (`crate::looks::Head`).
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum Phase {
+    /// Grown but not yet showing: before its season's bud day.
+    Primordium,
+    Bud,
+    Open,
+    /// Fruit, `unripe` of it still unripe, as its look draws it.
+    Fruit {
+        unripe: f64,
+    },
+    /// Past its season's fall, or shed from the plant.
+    Shed,
+}
+
+/// Organ `organ`'s phase on day `day` of the plant's year `age` (years):
+/// shed if it was shed by `age`, else what its `season`'s stage is that
+/// day, telling the days before its bud from those after its fall; `None`
+/// for an organ without a season, which has no phases (a leaf, a cone).
+/// A season is one year's: a program that grows a step a year rewrites
+/// its flowers each year, so each stands for that year's.
+#[must_use]
+pub fn phase(organ: &GraphOrgan, season: Option<&Season>, day: f64, age: f64) -> Option<Phase> {
+    if organ.shed.is_some_and(|shed| shed <= age) {
+        return Some(Phase::Shed);
+    }
+    let season = season?;
+    Some(match season.stage(day) {
+        Stage::Gone if season.fallen(day) => Phase::Shed,
+        Stage::Gone => Phase::Primordium,
+        Stage::Bud => Phase::Bud,
+        Stage::Flower => Phase::Open,
+        Stage::Fruit { unripe } => Phase::Fruit { unripe },
+    })
+}
+
 /// A term with its article: "a leaf", "an inflorescence".
 fn article(term: &str) -> String {
     let an = term.starts_with(['a', 'e', 'i', 'o', 'u']);
@@ -291,6 +336,47 @@ mod tests {
                 "structure `frond` is a leaf, but is drawn within structure `frond`, a leaf",
             ]
         );
+    }
+
+    #[test]
+    fn an_organ_goes_from_bud_to_shed_by_the_day() {
+        use crate::graph::GraphOrgan;
+        use crate::math::Vec3;
+        let season = Season {
+            bud: 95.0,
+            flower: 110.0,
+            fruit: 135.0,
+            ripe: 175.0,
+            ripening: 20.0,
+            fall: 245.0,
+            opening: 0.0,
+            bud_look: None,
+            flower_look: None,
+        };
+        let mut organ = GraphOrgan {
+            id: 0,
+            organ: 0,
+            segment: None,
+            position: Vec3::ZERO,
+            heading: Vec3::Y,
+            left: Vec3::X,
+            size: 1.0,
+            born: 3.0,
+            shed: None,
+            light: 1.0,
+            within: None,
+        };
+        let on = |organ: &GraphOrgan, day| phase(organ, Some(&season), day, 3.0);
+        assert_eq!(on(&organ, 50.0), Some(Phase::Primordium));
+        assert_eq!(on(&organ, 100.0), Some(Phase::Bud));
+        assert_eq!(on(&organ, 120.0), Some(Phase::Open));
+        assert_eq!(on(&organ, 185.0), Some(Phase::Fruit { unripe: 0.5 }));
+        assert_eq!(on(&organ, 300.0), Some(Phase::Shed));
+        // A leaf has no phases; an organ shed by then is shed.
+        assert_eq!(phase(&organ, None, 120.0, 3.0), None);
+        organ.shed = Some(3.0);
+        assert_eq!(on(&organ, 120.0), Some(Phase::Shed));
+        assert_eq!(phase(&organ, None, 120.0, 3.0), Some(Phase::Shed));
     }
 
     #[test]
