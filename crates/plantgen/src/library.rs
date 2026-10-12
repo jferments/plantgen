@@ -692,6 +692,7 @@ impl Library {
         library.check_evidence().map_err(LibraryError)?;
         library.check_taxa().map_err(LibraryError)?;
         library.check_aliases().map_err(LibraryError)?;
+        library.check_programs().map_err(LibraryError)?;
         Ok(library.with_chains())
     }
 
@@ -1210,6 +1211,291 @@ impl Library {
     pub fn programs(&self) -> impl Iterator<Item = &str> {
         self.programs.keys().map(String::as_str)
     }
+
+    /// The taxa a program may be named for, by name as a file names them
+    /// (`pinidae`, `cactaceae`, `acer`), each with where the taxon sits:
+    /// its rank file, else its family's or genus's folder.
+    fn taxa(&self) -> BTreeMap<String, String> {
+        let mut taxa = BTreeMap::new();
+        for entry in &self.species {
+            taxa.entry(entry.family.clone())
+                .or_insert_with(|| format!("{}/", entry.family));
+            taxa.entry(entry.genus.clone())
+                .or_insert_with(|| format!("{}/{}/", entry.family, entry.genus));
+        }
+        for rank in self.ranks.values() {
+            taxa.insert(inherit::file_name(&rank.name), rank.file.clone());
+        }
+        taxa
+    }
+
+    /// The taxa a species stands within, by name: its genus, its family
+    /// and every rank above them.
+    fn within(&self, entry: &Entry) -> Result<Vec<String>, String> {
+        let mut names = vec![entry.genus.clone(), entry.family.clone()];
+        for rank in inherit::above(&self.ranks, &entry.family, &entry.genus)? {
+            names.push(inherit::file_name(&rank.name));
+        }
+        Ok(names)
+    }
+
+    /// The taxa a rank file stands within, by name: its own and every rank
+    /// above it.
+    fn rank_within(&self, file: &str) -> Result<Vec<String>, String> {
+        Ok(inherit::chain(&self.ranks, file)?
+            .iter()
+            .map(|rank| inherit::file_name(&rank.name))
+            .collect())
+    }
+
+    /// The programs a species' files name for it, from the top down: each
+    /// rank file's (its shared part's or its growth form's), then its own
+    /// spec's, each with the file (and part) that names it; a program
+    /// named again just below where it was named is listed once.
+    fn named_programs(&self, entry: &Entry) -> Result<Vec<(String, String)>, String> {
+        let spec: Value = serde_json::from_str(entry.source())
+            .map_err(|error| format!("{}: {error}", entry.file()))?;
+        let form = spec.get("growth_form").and_then(Value::as_str);
+        let program_of = |values: &serde_json::Map<String, Value>| {
+            values
+                .get("generator")
+                .and_then(|generator| generator.get("program"))
+                .and_then(Value::as_str)
+                .map(str::to_string)
+        };
+        let mut named: Vec<(String, String)> = Vec::new();
+        let mut push = |program: String, by: String| {
+            if named.last().is_none_or(|(last, _)| *last != program) {
+                named.push((program, by));
+            }
+        };
+        let above = inherit::above(&self.ranks, &entry.family, &entry.genus)?;
+        for rank in above.iter().rev() {
+            if let Some(program) = program_of(&rank.shared.values) {
+                push(program, rank.file.clone());
+            }
+            if let Some((form, part)) = form.and_then(|form| Some((form, rank.forms.get(form)?)))
+                && let Some(program) = program_of(&part.values)
+            {
+                push(program, format!("{}, forms.{form}", rank.file));
+            }
+        }
+        let own: Value = serde_json::from_str(&entry.own)
+            .map_err(|error| format!("{}: {error}", entry.file()))?;
+        if let Some(program) = own.as_object().and_then(program_of) {
+            push(program, entry.file());
+        }
+        Ok(named)
+    }
+
+    /// Every program's place in the taxonomy (growth plan G2.3a): the
+    /// taxon it is named for, if any, what it extends, the files that
+    /// name it and the species that grow on it, sorted by name.
+    ///
+    /// # Errors
+    ///
+    /// Fails on a species or rank file whose chain does not read.
+    pub fn program_homes(&self) -> Result<Vec<ProgramHome>, String> {
+        let taxa = self.taxa();
+        let mut homes: BTreeMap<&str, ProgramHome> = self
+            .programs
+            .iter()
+            .map(|(name, source)| {
+                (
+                    name.as_str(),
+                    ProgramHome {
+                        name: name.clone(),
+                        home: taxa.get(name).cloned(),
+                        extends: crate::lsys::parser::extends_of(source),
+                        named_by: Vec::new(),
+                        species: Vec::new(),
+                    },
+                )
+            })
+            .collect();
+        for rank in self.ranks.values() {
+            for (at, part) in rank.parts() {
+                if let Some(program) = part
+                    .values
+                    .get("generator")
+                    .and_then(|generator| generator.get("program"))
+                    .and_then(Value::as_str)
+                    && let Some(home) = homes.get_mut(program)
+                {
+                    home.named_by.push(if at.is_empty() {
+                        rank.file.clone()
+                    } else {
+                        format!("{}, {at}", rank.file)
+                    });
+                }
+            }
+        }
+        for entry in &self.species {
+            let spec: Value = serde_json::from_str(entry.source())
+                .map_err(|error| format!("{}: {error}", entry.file()))?;
+            let own: Value = serde_json::from_str(&entry.own)
+                .map_err(|error| format!("{}: {error}", entry.file()))?;
+            let named = |value: &Value| {
+                value
+                    .pointer("/generator/program")
+                    .and_then(Value::as_str)
+                    .map(str::to_string)
+            };
+            if let Some(program) = named(&own)
+                && let Some(home) = homes.get_mut(program.as_str())
+            {
+                home.named_by.push(entry.file());
+            }
+            if let Some(program) = named(&spec)
+                && let Some(home) = homes.get_mut(program.as_str())
+            {
+                home.species.push(entry.id.clone());
+            }
+        }
+        Ok(homes.into_values().collect())
+    }
+
+    /// Check that programs follow the taxonomy (growth plan G2.3a). A
+    /// program named for a taxon is named only by files within that taxon
+    /// and grows only species within it, and one it extends that is named
+    /// for a taxon is named for one above its own. Reading a species'
+    /// files from the top down, each program they name extends the one
+    /// named above it, or starts afresh on programs named for no taxon (a
+    /// base): a lineage that grows another way, as tree ferns grow on
+    /// `palm` below the ferns' own program.
+    ///
+    /// # Errors
+    ///
+    /// Names the first program, file or species that breaks a rule, and
+    /// why.
+    #[allow(clippy::too_many_lines)]
+    pub fn check_programs(&self) -> Result<(), String> {
+        let taxa = self.taxa();
+        let homes = self.program_homes()?;
+        let has_home = |program: &str| {
+            homes
+                .iter()
+                .any(|home| home.name == program && home.home.is_some())
+        };
+        // Where a taxon sits: the names of the taxa it stands within, its
+        // own first.
+        let taxon_within = |name: &str| -> Result<Vec<String>, String> {
+            let Some(place) = taxa.get(name) else {
+                return Ok(vec![name.to_string()]);
+            };
+            if self.ranks.contains_key(place) {
+                return self.rank_within(place);
+            }
+            let mut names = vec![name.to_string()];
+            let family = place.split('/').next().unwrap_or_default();
+            names.extend(self.rank_within(&format!("{family}/family.json"))?);
+            if names.len() == 1 {
+                names.push(family.to_string());
+            }
+            Ok(names)
+        };
+        for home in &homes {
+            let Some(place) = &home.home else { continue };
+            let program = &home.name;
+            for by in &home.named_by {
+                let file = by.split(", ").next().unwrap_or_default();
+                let within = if let Some(rank) = self.ranks.get(file) {
+                    self.rank_within(&rank.file)?
+                } else {
+                    let entry = self
+                        .species
+                        .iter()
+                        .find(|entry| entry.file() == file)
+                        .ok_or_else(|| format!("{file}: no such file"))?;
+                    self.within(entry)?
+                };
+                if !within.contains(program) {
+                    return Err(format!(
+                        "{by} names program `{program}`, which is named for the taxon at {place}: \
+                         only files within that taxon may name it"
+                    ));
+                }
+            }
+            if let Some(parent) = &home.extends
+                && has_home(parent)
+                && !taxon_within(program)?.contains(parent)
+            {
+                return Err(format!(
+                    "program `{program}` extends `{parent}`, but the taxon `{parent}` is named for \
+                     is not above `{program}`'s"
+                ));
+            }
+        }
+        for entry in &self.species {
+            let within = self.within(entry)?;
+            let named = self.named_programs(entry)?;
+            for (program, _) in &named {
+                if has_home(program) && !within.contains(program) {
+                    return Err(format!(
+                        "{}: grows on program `{program}`, named for a taxon it is not within",
+                        entry.id
+                    ));
+                }
+            }
+            for pair in named.windows(2) {
+                let ((above, above_by), (below, below_by)) = (&pair[0], &pair[1]);
+                let Some(home) = homes.iter().find(|home| home.name == *below) else {
+                    continue;
+                };
+                if home.extends.as_deref() == Some(above.as_str()) {
+                    continue;
+                }
+                // Or it starts afresh: it builds on nothing the program
+                // above builds on, as a lineage that grows another way.
+                let lineage = |program: &str| {
+                    let mut found = vec![program.to_string()];
+                    for _ in 0..crate::lsys::chain::MAX_DEPTH {
+                        let next = homes
+                            .iter()
+                            .find(|home| Some(&home.name) == found.last())
+                            .and_then(|home| home.extends.clone());
+                        match next {
+                            Some(next) if !found.contains(&next) => found.push(next),
+                            _ => break,
+                        }
+                    }
+                    found
+                };
+                let above_lineage = lineage(above);
+                if lineage(below)
+                    .iter()
+                    .any(|program| above_lineage.contains(program))
+                {
+                    return Err(format!(
+                        "{}: {below_by} names program `{below}`, which extends `{}`, but \
+                         {above_by} above names `{above}`: a program extends the one its taxa \
+                         name above it, or starts afresh, building on nothing that one builds on",
+                        entry.id,
+                        home.extends.as_deref().unwrap_or("nothing")
+                    ));
+                }
+            }
+        }
+        Ok(())
+    }
+}
+
+/// A program's place in the taxonomy (growth plan G2.3a), as
+/// [`Library::program_homes`] finds it.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ProgramHome {
+    /// The program's name.
+    pub name: String,
+    /// Where the taxon it is named for sits: its rank file, or its family's
+    /// or genus's folder; `None` for a base, a program named for no taxon.
+    pub home: Option<String>,
+    /// The program it extends.
+    pub extends: Option<String>,
+    /// The files that name it: rank files, with `, forms.<growth form>`
+    /// for a form's part, and species' own `spec.json`.
+    pub named_by: Vec<String>,
+    /// The species that grow on it, by id.
+    pub species: Vec<String>,
 }
 
 /// The rank files in the library tree `tree`, by their path in it:
@@ -1726,6 +2012,8 @@ mod tests {
         assert_eq!(library.ranks().count(), RANKS.len());
         library.check_ranks().unwrap();
         library.check_traits().unwrap();
+        // And every program follows the taxonomy (growth plan G2.3a).
+        library.check_programs().unwrap();
     }
 
     /// A spec file of a library species' id stands on that species' rank
@@ -2041,7 +2329,7 @@ mod tests {
         // And a rank file above it, in one form's part.
         folder.write(
             "library/pinaceae/family.json",
-            r#"{"schema": 1, "rank": "family", "name": "Pinaceae",
+            r#"{"schema": 1, "rank": "family", "name": "Pinaceae", "parent": "order/pinales",
                 "forms": {"excurrent_tree": {"generator": {"params": {"nod_years": 2.0}},
                     "evidence": {"generator.params.nod_years": {"evidence": "Authored",
                         "source": "flora-test", "note": "Leaders nod two years."}}}}}"#,
@@ -2242,6 +2530,91 @@ mod tests {
         assert_eq!(
             library.program("broadleaf"),
             library.program_text("broadleaf")
+        );
+    }
+
+    /// Programs follow the taxonomy (growth plan G2.3a): a program named
+    /// for a taxon grows only species within it, and the programs a
+    /// species' taxa name extend one another down its chain, or start
+    /// afresh on another base.
+    #[test]
+    fn programs_follow_the_taxonomy() {
+        let family = |name: &str, parent: &str, program: &str| {
+            format!(
+                r#"{{"schema": 1, "rank": "family", "name": "{name}", "parent": "{parent}",
+                    "generator": {{"program": "{program}"}},
+                    "evidence": {{"generator.program": {{"evidence": "Authored",
+                        "source": "plantgen-authors", "note": "A test."}}}}}}"#
+            )
+        };
+        let pinaceae = family("Pinaceae", "order/pinales", "pinaceae");
+        let folder = Folder::new("taxon-programs");
+        folder.write(
+            "programs/pinaceae.lsys",
+            "lsystem pinaceae 1 extends conifer;\nparam whorl = 4;\n",
+        );
+        folder.write("library/pinaceae/family.json", &pinaceae);
+        let library = Library::from_dir(&folder.0).unwrap();
+        let homes = library.program_homes().unwrap();
+        let home = homes.iter().find(|home| home.name == "pinaceae").unwrap();
+        assert_eq!(home.home.as_deref(), Some("pinaceae/family.json"));
+        assert_eq!(home.extends.as_deref(), Some("conifer"));
+        assert_eq!(home.named_by, ["pinaceae/family.json"]);
+        assert_eq!(home.species.len(), 7);
+        let conifer = homes.iter().find(|home| home.name == "conifer").unwrap();
+        assert_eq!(conifer.home, None);
+        assert_eq!(conifer.species.len(), 4);
+
+        let refused = |files: &[(&str, &str)], expected: &str| {
+            let folder = Folder::new("taxon-programs-refused");
+            folder.write(
+                "programs/pinaceae.lsys",
+                "lsystem pinaceae 1 extends conifer;\n",
+            );
+            for (relative, text) in files {
+                folder.write(relative, text);
+            }
+            let message = Library::from_dir(&folder.0).unwrap_err().0;
+            assert!(message.contains(expected), "{expected}: {message}");
+        };
+        // A family outside Pinaceae may not name its program.
+        refused(
+            &[(
+                "library/cupressaceae/family.json",
+                &family("Cupressaceae", "order/cupressales", "pinaceae"),
+            )],
+            "cupressaceae/family.json names program `pinaceae`, which is named for the taxon at \
+             pinaceae/family.json: only files within that taxon may name it",
+        );
+        // Below the conifers' own program, Pinaceae's extends it, not the
+        // base both build on.
+        refused(
+            &[
+                (
+                    "programs/pinidae.lsys",
+                    "lsystem pinidae 1 extends conifer;\n",
+                ),
+                (
+                    "library/_ranks/subclass/pinidae.json",
+                    r#"{"schema": 1, "rank": "subclass", "name": "Pinidae",
+                        "parent": "clade/gymnosperms", "generator": {"program": "pinidae"},
+                        "evidence": {"generator.program": {"evidence": "Authored",
+                            "source": "plantgen-authors", "note": "A test."}}}"#,
+                ),
+                ("library/pinaceae/family.json", &pinaceae),
+            ],
+            "pinaceae/family.json names program `pinaceae`, which extends `conifer`, but \
+             _ranks/subclass/pinidae.json above names `pinidae`",
+        );
+        // A program named for a taxon builds on one named for a taxon above
+        // it, never beside it.
+        refused(
+            &[(
+                "programs/cupressaceae.lsys",
+                "lsystem cupressaceae 1 extends pinaceae;\n",
+            )],
+            "program `cupressaceae` extends `pinaceae`, but the taxon `pinaceae` is named for \
+             is not above `cupressaceae`'s",
         );
     }
 
@@ -2486,7 +2859,8 @@ mod tests {
                 })
                 .collect()
         };
-        let mut family = json!({"schema": 1, "rank": "family", "name": "Pinaceae"});
+        let mut family = json!({"schema": 1, "rank": "family", "name": "Pinaceae",
+            "parent": "order/pinales"});
         family["appearance"] = own.remove("appearance").unwrap();
         family["evidence"] = Value::Object(notes_of("appearance"));
         let mut genus = json!({"schema": 1, "rank": "genus", "name": "Pseudotsuga"});
@@ -2518,12 +2892,17 @@ mod tests {
         assert_ne!(entry.own_source(), entry.source());
         let inherited = library.inherited(id).unwrap();
         assert_eq!(
-            inherited.chain,
+            inherited.chain[..4],
             [
                 file.as_str(),
                 "pinaceae/pseudotsuga/genus.json",
-                "pinaceae/family.json"
+                "pinaceae/family.json",
+                "_ranks/order/pinales.json"
             ]
+        );
+        assert_eq!(
+            inherited.chain.last().map(String::as_str),
+            Some("_ranks/kingdom/plantae.json")
         );
         assert_eq!(
             inherited.origins["growth.step"],
@@ -2545,7 +2924,7 @@ mod tests {
         let folder = Folder::new("ranks");
         folder.write(
             "library/_ranks/order/pinales.json",
-            r#"{"schema": 1, "rank": "order", "name": "Pinales",
+            r#"{"schema": 1, "rank": "order", "name": "Pinales", "parent": "subclass/pinidae",
                 "generator": {"params": {"order_test": 2.0}},
                 "evidence": {"generator.params.order_test":
                     {"evidence": "Authored", "source": "plantgen-authors", "note": "The order's."}}}"#,
@@ -2641,7 +3020,8 @@ mod tests {
         folder.write(
             at,
             &family(
-                r#", "appearance": {"foliage": [0.1, 0.3, 0.1]}, "allometry": null,
+                r#", "parent": "order/pinales",
+                "appearance": {"foliage": [0.1, 0.3, 0.1]}, "allometry": null,
                 "evidence": {
                     "appearance.foliage": {"evidence": "Authored", "source": "plantgen-authors", "note": "A test."}}"#,
             ),
@@ -2657,8 +3037,10 @@ mod tests {
         let folder = Folder::new("traits");
         folder.write(
             "library/sapindaceae/family.json",
-            r#"{"schema": 1, "rank": "family", "name": "Sapindaceae",
+            r#"{"schema": 1, "rank": "family", "name": "Sapindaceae", "parent": "order/sapindales",
+                "generator": {"program": "sapindaceae"},
                 "evidence": {
+                    "generator.program": {"evidence": "Authored", "source": "plantgen-authors", "note": "Its program."},
                     "traits": {"evidence": "Authored", "source": "plantgen-authors", "note": "Test traits."},
                     "rules": {"evidence": "Authored", "source": "plantgen-authors", "note": "Test rules."}},
                 "traits": {"leaf_length_m": 0.2, "leaf_arrangement": "opposite"},

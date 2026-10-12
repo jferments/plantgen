@@ -8,8 +8,26 @@
     "flower_symmetry": "actinomorphic",
     "perianth": "tepals",
     "ovary_position": "superior",
-    "stamens": {"min": 3, "max": 6, "typical": 6},
+    "stamens": {
+      "min": 3,
+      "max": 6,
+      "typical": 6
+    },
     "carpels": 3
+  },
+  "forms": {
+    "graminoid": {
+      "generator": {
+        "program": "grass"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's graminoid species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    }
   },
   "evidence": {
     "traits": {

@@ -10,7 +10,6 @@
   },
   "growth_form": "palm",
   "generator": {
-    "program": "palm",
     "params": {
       "lean": 5,
       "trunk_rate": 0.045,
@@ -124,11 +123,6 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The growth form the spec's authors chose from the plant's habit."
-    },
-    "generator.program": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "The program the spec's authors chose to grow this form."
     },
     "growth": {
       "evidence": "Authored",

@@ -11,7 +11,6 @@
   },
   "growth_form": "decurrent_tree",
   "generator": {
-    "program": "broadleaf",
     "params": {
       "crown_height": 8,
       "crown_radius": 4,
@@ -171,11 +170,6 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The growth form the spec's authors chose from the plant's habit."
-    },
-    "generator.program": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "The program the spec's authors chose to grow this form."
     },
     "growth": {
       "evidence": "Authored",

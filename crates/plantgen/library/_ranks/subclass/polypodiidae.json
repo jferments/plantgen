@@ -4,7 +4,23 @@
   "name": "Polypodiidae",
   "parent": "class/polypodiopsida",
   "traits": {
-    "sporangia": {"sori": "usually"}
+    "sporangia": {
+      "sori": "usually"
+    }
+  },
+  "forms": {
+    "fern": {
+      "generator": {
+        "program": "fern"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's fern species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    }
   },
   "evidence": {
     "traits.sporangia": {

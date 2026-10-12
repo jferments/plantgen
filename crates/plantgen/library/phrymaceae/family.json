@@ -14,6 +14,20 @@
     "stamens": 4,
     "carpels": 2
   },
+  "forms": {
+    "forb": {
+      "generator": {
+        "program": "herb"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's forb species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    }
+  },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",

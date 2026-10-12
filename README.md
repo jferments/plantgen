@@ -75,7 +75,11 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   leaves, pairs and whorls. A program says what each organ is (a leaf, a
   leaflet, a piece of a blade) and which organs make one leaf or one
   frond, so every organ of a grown plant knows its term and what it is
-  part of.
+  part of. A species grows on the program its taxa name: a family,
+  order or genus file names it for its species, or for each growth form
+  among them, and a program named for a taxon grows only species within
+  it and extends the program named above it (`plantc rules` lists each
+  program's home).
 - **Organs built from their parts.** Each of these is laid out by one
   function that draws its solid, its coarser meshes and its card alike,
   so a plant looks the same in the distance as up close:

@@ -67,6 +67,7 @@ fn list_and_check_name_the_built_in_species() {
 /// `plantc rules` lists rules by their home and the general ones;
 /// `plantc spec` shows a species' traits and what each rule did.
 #[test]
+#[allow(clippy::too_many_lines)]
 fn rules_and_traits_say_where_they_come_from() {
     // Clusters, divided leaves and flowers in every look, homed at the
     // flowering plants, then Corner's rules at the seed plants, then the
@@ -152,7 +153,11 @@ fn rules_and_traits_say_where_they_come_from() {
     fs::write(
         family.join("family.json"),
         r#"{"schema": 1, "rank": "family", "name": "Sapindaceae",
-            "evidence": {"traits.leaf_arrangement": {"evidence": "Authored",
+            "parent": "order/sapindales",
+            "generator": {"program": "sapindaceae"},
+            "evidence": {"generator.program": {"evidence": "Authored",
+                    "source": "plantgen-authors", "note": "Maples grow on their family's program."},
+                "traits.leaf_arrangement": {"evidence": "Authored",
                     "source": "plantgen-authors", "note": "Maples' leaves are opposite."},
                 "rules.generator.params.leaves_per_node": {"evidence": "Authored",
                     "source": "plantgen-authors", "note": "Opposite leaves come in pairs."}},
@@ -177,7 +182,7 @@ fn rules_and_traits_say_where_they_come_from() {
         "{spec}"
     );
     assert!(
-        spec.contains("rules:\n  generator.params.leaves_per_node  (sapindaceae/family.json): "),
+        spec.contains("\n  generator.params.leaves_per_node  (sapindaceae/family.json): "),
         "{spec}"
     );
 }
@@ -275,6 +280,7 @@ fn a_library_folder_replaces_built_in_species() {
     fs::write(
         dir.join("library/pinaceae/family.json"),
         r#"{"schema": 1, "rank": "family", "name": "Pinaceae",
+            "parent": "order/pinales",
             "generator": {"params": {"nod_years": 2.0}},
             "evidence": {"generator.params.nod_years": {"evidence": "Authored",
                 "source": "plantgen-authors", "note": "A test of a family's value."}}}"#,
@@ -287,7 +293,7 @@ fn a_library_folder_replaces_built_in_species() {
         "pseudotsuga-menziesii",
     ]));
     assert!(
-        checked.ends_with("  stands on pinaceae/family.json\n"),
+        checked.contains("\n  stands on pinaceae/family.json, _ranks/order/pinales.json, "),
         "{checked}"
     );
     let spec = stdout(&plantc(&[
@@ -299,7 +305,7 @@ fn a_library_folder_replaces_built_in_species() {
     let own = "pinaceae/pseudotsuga/pseudotsuga-menziesii/spec.json";
     assert!(
         spec.starts_with(&format!(
-            "pseudotsuga-menziesii: {own} on pinaceae/family.json\n"
+            "pseudotsuga-menziesii: {own} on pinaceae/family.json, _ranks/order/pinales.json, "
         )),
         "{spec}"
     );

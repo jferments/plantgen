@@ -156,7 +156,9 @@ Usage:
   plantc rules
       List every rule that turns traits into spec values, by its home:
       the rank file (or species) that holds it, and for a rule on a
-      look's card, the card it is for. Then the general ones,
+      look's card, the card it is for. Then every program with its
+      home (the taxon it is named for, or base), what it extends, the
+      files that name it and its species count. Then the general ones,
       with no taxonomic home: rules at all plants, and the parameter
       defaults of programs not named for a taxon. The list should shrink.
   plantc traits [<species>]
@@ -653,22 +655,41 @@ fn rules_command(args: &[String]) -> Result<(), Failure> {
     for line in &homed {
         out!("{line}");
     }
-    // A program is homed when it is named for a taxon of the library.
-    let mut taxa: std::collections::BTreeSet<String> = library
-        .species()
+    // A program is homed when it is named for a taxon of the library
+    // (growth plan G2.3a); one named for none is a base.
+    let by_home = library.program_homes()?;
+    let params = library.program_params();
+    out!("Programs, by their home ({}):", by_home.len());
+    for home in &by_home {
+        let own = params.get(&home.name).map_or(0, |all| {
+            let inherited = home
+                .extends
+                .as_ref()
+                .and_then(|parent| params.get(parent))
+                .map_or(0, std::collections::BTreeMap::len);
+            all.len() - inherited.min(all.len())
+        });
+        out!(
+            "  {}  ({}{}; {} species)",
+            home.name,
+            home.home.as_deref().map_or_else(
+                || "base".to_string(),
+                |place| format!("named for the taxon at {place}")
+            ),
+            home.extends.as_deref().map_or_else(
+                || format!("; {own} parameters"),
+                |parent| format!(", extends {parent}; {own} parameters besides {parent}'s")
+            ),
+            home.species.len()
+        );
+        if !home.named_by.is_empty() {
+            out!("      named by {}", home.named_by.join("; "));
+        }
+    }
+    let general: Vec<(&String, usize)> = by_home
         .iter()
-        .flat_map(|entry| [entry.family.clone(), entry.genus.clone()])
-        .collect();
-    taxa.extend(
-        library
-            .ranks()
-            .map(|rank| plantgen::inherit::file_name(&rank.name)),
-    );
-    let general: Vec<(&String, usize)> = library
-        .program_params()
-        .iter()
-        .filter(|(name, _)| !taxa.contains(*name))
-        .map(|(name, params)| (name, params.len()))
+        .filter(|home| home.home.is_none())
+        .filter_map(|home| Some((&home.name, params.get(&home.name)?.len())))
         .collect();
     let defaults: usize = general.iter().map(|(_, count)| count).sum();
     out!(

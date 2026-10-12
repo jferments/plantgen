@@ -4,12 +4,33 @@
   "name": "Plantaginaceae",
   "parent": "order/lamiales",
   "traits": {
-    "flower_symmetry": {"zygomorphic": "usually", "actinomorphic": "sometimes"},
+    "flower_symmetry": {
+      "zygomorphic": "usually",
+      "actinomorphic": "sometimes"
+    },
     "perianth": "sepals_and_petals",
     "zygomorphy": "bilabiate",
     "ovary_position": "superior",
-    "stamens": {"min": 2, "max": 4, "typical": 4},
+    "stamens": {
+      "min": 2,
+      "max": 4,
+      "typical": 4
+    },
     "carpels": 2
+  },
+  "forms": {
+    "forb": {
+      "generator": {
+        "program": "herb"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's forb species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    }
   },
   "evidence": {
     "traits": {

@@ -5,10 +5,27 @@
   "parent": "order/saxifragales",
   "traits": {
     "flower_merosity": 5,
-    "flower_symmetry": {"actinomorphic": "usually", "zygomorphic": "sometimes"},
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "sometimes"
+    },
     "perianth": "sepals_and_petals",
     "hypanthium": true,
     "carpels": 2
+  },
+  "forms": {
+    "forb": {
+      "generator": {
+        "program": "herb"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's forb species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    }
   },
   "evidence": {
     "traits": {

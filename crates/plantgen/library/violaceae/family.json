@@ -2,5 +2,19 @@
   "schema": 1,
   "rank": "family",
   "name": "Violaceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "forms": {
+    "forb": {
+      "generator": {
+        "program": "herb"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's forb species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    }
+  }
 }
