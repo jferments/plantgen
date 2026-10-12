@@ -1,9 +1,10 @@
-# Fern: crowns of fronds on a rhizome, after the sword, lady, wood and deer
-# ferns and bracken of wet forests. Each year a crown sends up
-# fronds_per_year fronds round it on a golden-angle spiral. A frond is a
-# rachis of `pieces` pieces, the first `stipe` share of its length bare,
-# the rest carrying a pair of pinnae at each half piece, longest at
-# pinna_peak along the blade and tapering to pinna_base and pinna_tip.
+# The leptosporangiate ferns (Polypodiidae): crowns of fronds on a
+# rhizome, after the sword, lady, wood and deer ferns and bracken of wet
+# forests. Each year a crown sends up fronds_per_year fronds round it on
+# a golden-angle spiral. A frond is a rachis of `pieces` pieces, the
+# first `stipe` share of its length bare, the rest carrying a pair of
+# pinnae at each half piece, longest at pinna_peak along the blade and
+# tapering to pinna_base and pinna_tip.
 #
 # A frond unrolls from a crozier: it emerges at a phase e of the year
 # (uniform in [0, emerge_spread)), and at the plant's keyframe, season of
@@ -31,9 +32,14 @@
 # Revision 2 (spec rework M7): each frond is drawn within a `frond`
 # structure, and its pinnae are leaflets of it.
 #
+# Revision 3 (growth plan G2.3a): the ferns' own program, renamed from
+# `fern` and homed at Polypodiidae, whose fronds uncoil from croziers;
+# its families and genera extend it where they grow otherwise. It grows
+# every plant as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem fern 2;
+lsystem polypodiidae 3;
 
 param vigour_spread = 0.12;   # a fern grows exp(gauss() * vigour_spread) times as fast
 # Fronds.
