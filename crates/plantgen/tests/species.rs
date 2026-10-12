@@ -537,9 +537,10 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
         }
     }
     assert_eq!(
-        checked, 58,
+        checked, 59,
         "the 25 fruit clusters that moved in with L1a, the 15 clusters of flowers and heads of \
-         L1c and the 18 inflorescences of grasses, sedges and rushes of P3"
+         L1c, the 18 inflorescences of grasses, sedges and rushes of P3 and the orchid's spike \
+         of P5"
     );
 }
 

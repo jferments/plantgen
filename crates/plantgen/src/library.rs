@@ -2880,7 +2880,8 @@ mod tests {
                 notes.remove(path);
             }
         };
-        // A rule whose path names `*` sets it in every look.
+        // A rule whose path names `*` sets it in every look, and a rule on
+        // a look's shape in its season's flower and bud looks too.
         let remove = |spec: &mut serde_json::Value, path: &str| {
             let Some(rest) = path.strip_prefix("appearance.organs.*.") else {
                 return remove_one(spec, path);
@@ -2892,6 +2893,14 @@ mod tests {
                 .unwrap_or_default();
             for organ in organs {
                 remove_one(spec, &format!("appearance.organs.{organ}.{rest}"));
+                if rest.starts_with("shape.") {
+                    for stage in ["flower_look", "bud_look"] {
+                        remove_one(
+                            spec,
+                            &format!("appearance.organs.{organ}.season.{stage}.{rest}"),
+                        );
+                    }
+                }
             }
         };
         let stripped: BTreeMap<String, RankFile> = library

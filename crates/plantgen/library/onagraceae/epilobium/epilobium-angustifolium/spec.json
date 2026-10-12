@@ -85,11 +85,13 @@
           "flower_look": {
             "shape": {
               "template": "flower",
-              "petals": 4,
               "petal_width": 1.15,
               "point": 0.0,
               "notch": 0.12,
-              "centre": 0.12
+              "centre": 0.12,
+              "sepal_length": 0.5,
+              "tube": 1.5,
+              "calyx": [0.45, 0.04, 0.24]
             },
             "colour": [0.62, 0.06, 0.33],
             "accent": [0.8, 0.65, 0.7],
@@ -193,6 +195,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Its days by eye from the months floras give for flowering (the Fire Effects Information System: June through September), for lowland plants: buds in mid-June, each flower open about 10 days, the raceme opening from its foot over about 50 days (floras and guides say it opens from the bottom up, and give no time), its capsules split and its seeds shed by mid-October."
+    },
+    "appearance.organs.flower.season.flower_look.shape": {
+      "evidence": "SourceInferred",
+      "source": "minnesota-wildflowers",
+      "note": "Its flower laid out whorl by whorl (spec rework P5): four petals, four sepals, eight stamens and a pistil of four carpels on an inferior ovary, from the characters of the Onagraceae by the rules at the flowering plants. By hand, from Minnesota Wildflowers and Minnesota Seasons (as search results quote them; the pages themselves were not read): the long, slender, purplish ovary behind the flower that looks like a short stalk, about one and a half times the flower's radius; the sepals about half as long as the petals, the same colour but darker."
     }
   },
   "provenance": {

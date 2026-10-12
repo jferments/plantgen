@@ -44,7 +44,7 @@
       "leaf_area": 0.58,
       "basal_area": 0.313,
       "basal_piece_area": 0.235,
-      "flower_area": 0.515,
+      "flower_area": 0.329,
       "bud_area": 0.636,
       "fruit_area": 0.51
     }
@@ -73,14 +73,18 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 5,
           "petal_width": 0.9,
           "point": 0.6,
           "notch": 0.0,
-          "centre": 0.35
+          "centre": 0.35,
+          "sepal_length": 1.5,
+          "calyx": [0.85, 0.15, 0.08],
+          "spur": 0.8,
+          "stamens": 40
         },
         "colour": [0.85, 0.15, 0.08],
-        "accent": [0.95, 0.8, 0.2]
+        "accent": [0.95, 0.8, 0.2],
+        "form": {"flower": {"cup": 60, "curl": 5}}
       },
       "bud": {
         "shape": { "template": "fruit", "aspect": 0.5 },
@@ -106,7 +110,11 @@
     "division_pattern": "palmate",
     "division_order": 2,
     "pinnae": 3,
-    "leaflets": 3
+    "leaflets": 3,
+    "flower_merosity": 5,
+    "perianth": "sepals_and_petals",
+    "spur_length_m": {"min": 0.013, "max": 0.021},
+    "carpels": 5
   },
   "evidence": {
     "generator.params": {
@@ -173,6 +181,36 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The stem leaves drawn once ternate, by eye: smaller and less divided than the basal ones, three leaflets from one point (spec rework P4)."
+    },
+    "traits.spur_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America's account of Aquilegia formosa, on the SEINet and NEON portals, as search results quote it (the page itself was not read): sepals red, 10 to 26 mm, held square to the flower's axis; petal blades yellow, 0 to 6 mm, each with a red spur 13 to 21 mm; stamens many, 12 to 17 mm; scalelike staminodes between the stamens and pistils; follicles 5 (the genus 5 to 10)."
+    },
+    "appearance.organs.flower.shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Its flower laid out whorl by whorl (spec rework P5): five petals, each spurred, inside five red sepals, from the characters by the rules at the flowering plants. By hand, as the Flora of North America has them (as search results quote them; the pages themselves were not read): the sepals red and longer than the petal blades; the spurs about the flower's radius (the floras give the spur but not the flower's width); 40 stamens for its many."
+    },
+    "appearance.organs.flower.form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The petal blades cupped round the stamens, the sepals spreading half as much, by eye from photographs."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America's account of Aquilegia formosa, on the SEINet and NEON portals, as search results quote it (the page itself was not read): sepals red, 10 to 26 mm, held square to the flower's axis; petal blades yellow, 0 to 6 mm, each with a red spur 13 to 21 mm; stamens many, 12 to 17 mm; scalelike staminodes between the stamens and pistils; follicles 5 (the genus 5 to 10)."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America's account of Aquilegia formosa, on the SEINet and NEON portals, as search results quote it (the page itself was not read): sepals red, 10 to 26 mm, held square to the flower's axis; petal blades yellow, 0 to 6 mm, each with a red spur 13 to 21 mm; stamens many, 12 to 17 mm; scalelike staminodes between the stamens and pistils; follicles 5 (the genus 5 to 10)."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America's account of Aquilegia formosa, on the SEINet and NEON portals, as search results quote it (the page itself was not read): sepals red, 10 to 26 mm, held square to the flower's axis; petal blades yellow, 0 to 6 mm, each with a red spur 13 to 21 mm; stamens many, 12 to 17 mm; scalelike staminodes between the stamens and pistils; follicles 5 (the genus 5 to 10)."
     }
   },
   "provenance": {

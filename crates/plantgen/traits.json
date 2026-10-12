@@ -98,6 +98,45 @@
       "po": {"id": "PO:0009046", "name": "flower"},
       "why": "a single flower, where single flowers make up the inflorescence"
     },
+    "sepal": {
+      "part_of": "flower",
+      "category": "organ",
+      "when": {"perianth": ["sepals_and_petals"]},
+      "po": {"id": "PO:0009031", "name": "sepal"},
+      "why": "one of the outer whorl of a flower whose perianth is sepals and petals, its calyx; usually green"
+    },
+    "petal": {
+      "part_of": "flower",
+      "category": "organ",
+      "when": {"perianth": ["sepals_and_petals"]},
+      "po": {"id": "PO:0009032", "name": "petal"},
+      "why": "one of the inner whorl of a flower whose perianth is sepals and petals, its corolla"
+    },
+    "tepal": {
+      "part_of": "flower",
+      "category": "organ",
+      "when": {"perianth": ["tepals", "spiral"]},
+      "po": {"id": "PO:0009033", "name": "tepal"},
+      "why": "a perianth part where sepals and petals are alike, in two whorls (lilies, irises) or on a spiral (water lilies, cacti)"
+    },
+    "stamen": {
+      "part_of": "flower",
+      "category": "organ",
+      "po": {"id": "PO:0009029", "name": "stamen"},
+      "why": "a filament and the anther it bears, where pollen forms"
+    },
+    "staminode": {
+      "part_of": "flower",
+      "category": "organ",
+      "po": {"id": "PO:0009077", "name": "staminode"},
+      "why": "a sterile stamen, with no anther or a barren one; a stamen that is absent is not one"
+    },
+    "carpel": {
+      "part_of": "flower",
+      "category": "organ",
+      "po": {"id": "PO:0009030", "name": "carpel"},
+      "why": "one unit of a flower's pistil, its ovary bearing ovules; free, or joined with others in one pistil"
+    },
     "capitulum": {
       "part_of": "inflorescence",
       "category": "group",
@@ -630,6 +669,87 @@
       "type": "enum",
       "values": ["actinomorphic", "zygomorphic", "asymmetric"],
       "why": "a flower's symmetry: radial, one plane, or none"
+    },
+    "perianth": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "enum",
+      "values": ["sepals_and_petals", "tepals", "spiral", "absent"],
+      "why": "what surrounds a flower's stamens: a calyx of sepals and a corolla of petals, two like whorls of tepals, tepals on a spiral, or nothing"
+    },
+    "perianth_parts": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "count",
+      "range": [2, 200],
+      "when": {"perianth": ["spiral"]},
+      "why": "the tepals in all of a flower whose perianth is a spiral"
+    },
+    "corolla_shape": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "enum",
+      "values": ["rotate", "cupped", "campanulate", "funnelform", "tubular", "salverform", "urceolate"],
+      "why": "how a corolla is formed: spreading flat, a cup, a bell, a funnel, a tube, a narrow tube with a flat limb, or an urn narrowed at its mouth"
+    },
+    "zygomorphy": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "enum",
+      "values": ["papilionaceous", "bilabiate", "labellate", "other"],
+      "when": {"flower_symmetry": ["zygomorphic"]},
+      "why": "how a zygomorphic flower's parts differ by place: a pea flower's banner, wings and keel; two lips; an orchid's lip and column; or otherwise"
+    },
+    "hypanthium": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "bool",
+      "why": "whether a floral cup, the bases of the sepals, petals and stamens grown together, bears them above the receptacle (roses, currants)"
+    },
+    "ovary_position": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "enum",
+      "values": ["superior", "half_inferior", "inferior"],
+      "why": "where the ovary sits: above where the other whorls leave the receptacle, half below it, or below it, the whorls standing on its top"
+    },
+    "resupinate": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "bool",
+      "optional": true,
+      "why": "whether the flower turns half round as it opens, so a lip formed on its upper side hangs below, as in most orchids"
+    },
+    "spur_length_m": {
+      "group": "flowers",
+      "organ": "petal",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.4],
+      "optional": true,
+      "why": "a hollow spur at a petal's or lip's base, where there is one"
+    },
+    "stamens": {
+      "group": "flowers",
+      "organ": "stamen",
+      "type": "count",
+      "range": [0, 2000],
+      "why": "the stamens in one flower"
+    },
+    "staminodes": {
+      "group": "flowers",
+      "organ": "staminode",
+      "type": "count",
+      "range": [0, 50],
+      "optional": true,
+      "why": "the sterile stamens in one flower, where it has any"
+    },
+    "carpels": {
+      "group": "flowers",
+      "organ": "carpel",
+      "type": "count",
+      "range": [1, 2000],
+      "why": "the carpels in one flower, free or joined"
     },
     "capitulum_kind": {
       "group": "flowers",

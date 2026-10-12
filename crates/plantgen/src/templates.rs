@@ -524,7 +524,7 @@ fn draw(shape: &Shape, colours: Colours, x: f64, y: f64, grew: Option<&GrownLeaf
         Shape::Sprig(s) => sprig(s, x, y, fine, veins, margins),
         Shape::Blade(s) => blade(s, x, y),
         Shape::Frond(s) => frond(s, x, y, fine),
-        Shape::Flower(s) => flower(s, x, y - 0.5),
+        Shape::Flower(s) => flower(s, colours, x, y - 0.5),
         Shape::Head(s) => head(s, colours, x, y - 0.5),
         Shape::Umbel(s) => umbel(s, x, y - 0.5),
         Shape::Spike(s) => spike(s, x, y, fine),
@@ -1769,8 +1769,17 @@ fn spiral_dots(x: f64, y: f64, radius: f64, count: u32) -> f64 {
 
 /// A single flower seen face on: rounded or pointed petals, separate at
 /// their bases, round a centre of stamens in the accent colour, each
-/// petal's base tinted toward it.
-fn flower(s: &Flower, x: f64, y: f64) -> Paint {
+/// petal's base tinted toward it; a flower that is not plain as its
+/// layout paints it (`crate::flowers::paint`) in `colours`.
+fn flower(s: &Flower, colours: Colours, x: f64, y: f64) -> Paint {
+    if !s.is_plain() {
+        let painted = crate::flowers::paint(s, colours, x / BLOOM, y / BLOOM);
+        return Paint {
+            cover: painted.cover,
+            bright: painted.bright,
+            accent: painted.accent,
+        };
+    }
     let r = hypot(x, y);
     let centre = s.centre * BLOOM;
     if r < centre {
@@ -2626,7 +2635,7 @@ impl ClusterCard {
                                 continue;
                             }
                             let paint = match shape {
-                                Shape::Flower(s) => flower(s, u * BLOOM, v * BLOOM),
+                                Shape::Flower(s) => flower(s, colours, u * BLOOM, v * BLOOM),
                                 Shape::Head(s) => head(s, colours, u * BLOOM, v * BLOOM),
                                 _ => continue,
                             };

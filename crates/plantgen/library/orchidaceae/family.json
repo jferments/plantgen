@@ -2,5 +2,22 @@
   "schema": 1,
   "rank": "family",
   "name": "Orchidaceae",
-  "parent": "order/asparagales"
+  "parent": "order/asparagales",
+  "traits": {
+    "flower_merosity": 3,
+    "flower_symmetry": "zygomorphic",
+    "perianth": "sepals_and_petals",
+    "zygomorphy": "labellate",
+    "resupinate": {"true": "usually", "false": "sometimes"},
+    "ovary_position": "inferior",
+    "stamens": {"min": 1, "max": 2, "typical": 1},
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "reed-plant-families",
+      "note": "Reed College's account of the family, with Michigan State's Botany Online and the Sydney eFlora, as search results quote them (the pages themselves were not read): flowers three-merous and zygomorphic; three sepals, one of them dorsal, and three petals, the median one the labellum or lip; in most orchid flowers the ovary twists 180 degrees, bringing the lip to the bottom; stamens, style and stigma joined in one column, usually with one fertile anther (two in the lady's slippers); ovary inferior, of three carpels."
+    }
+  }
 }

@@ -761,6 +761,9 @@ pub struct Placed {
     pub top: u32,
     /// Its pedicel's colour.
     pub stalk: [f32; 3],
+    /// The heading of the axis that bears it, where it leaves that axis:
+    /// a zygomorphic flower's adaxial side is toward it.
+    pub bearing: Vec3,
 }
 
 /// An axis, a ray or a cyme's branch: a thin prism from `from` to `to`.
@@ -1061,6 +1064,10 @@ fn lay(
                 group,
                 top,
                 stalk: cluster.stalk,
+                bearing: frame.direction(match &droop {
+                    Some(droop) => bend(Vec3::Y, droop.angle(slot.anchor)),
+                    None => Vec3::Y,
+                }),
             });
         }
         return;
@@ -1604,6 +1611,34 @@ fn draw_laid(
                 part,
                 mesh,
             ),
+            (Shape::Flower(flower), Form::Flower(form)) if !flower.is_plain() => {
+                // Laid out whorl by whorl (`crate::flowers`), facing the
+                // axis that bears it where it is zygomorphic.
+                let first = mesh.positions.len();
+                let first_index = mesh.indices.len();
+                crate::flowers::draw_reduced(
+                    &crate::flowers::layout(flower, form, unit_length * 0.5, spin),
+                    crate::flowers::Frame::new(
+                        base,
+                        direction,
+                        to_direction(p.bearing),
+                        any_perpendicular(direction),
+                        flower.is_zygomorphic(),
+                    ),
+                    crate::flowers::Colours {
+                        petal: shown.colour,
+                        calyx: crate::blooms::with_shading(
+                            flower.calyx.unwrap_or(crate::flowers::CALYX),
+                            look.colour,
+                            colour,
+                        ),
+                        accent: shown.accent,
+                    },
+                    part,
+                    mesh,
+                );
+                crate::leaves::smooth_normals(mesh, first, first_index);
+            }
             (Shape::Flower(flower), Form::Flower(form)) => floret(
                 &Petals {
                     count: flower.petals.max(1),
@@ -1683,11 +1718,12 @@ struct Petals {
     start: f64,
 }
 
-/// A flower or head reduced for a cluster: its petals as kites (one facet
-/// each from the first coarse step), seen from both sides, round a low
-/// pyramid of a centre in the accent colour, and stamens while it is a
-/// centimetre across or more and the part is drawn fine; from the
-/// [`FLAT`] step one flat hexagon, seen from both sides.
+/// A plain flower ([`crate::looks::Flower::is_plain`]) or a head reduced
+/// for a cluster: its petals as kites (one facet each from the first
+/// coarse step), seen from both sides, round a low pyramid of a centre in
+/// the accent colour; from the [`FLAT`] step one flat hexagon, seen from
+/// both sides. A flower with stamens is drawn by
+/// [`crate::flowers::draw_reduced`].
 #[allow(clippy::too_many_arguments)]
 fn floret(
     petals: &Petals,
@@ -1787,18 +1823,6 @@ fn floret(
         for k in 0..6 {
             mesh.indices
                 .extend_from_slice(&[apex, ring + k, ring + (k + 1) % 6]);
-        }
-    }
-    if part.coarse <= 1 && width >= 0.01 && form.stamens > 0 {
-        let stamens = form.stamens.min(12);
-        let reach = form.stamen_length * radius;
-        for k in 0..stamens {
-            let angle = spin + std::f64::consts::TAU * (f64::from(k) + 0.5) / f64::from(stamens);
-            let radial = across * math::cos(angle) + other * math::sin(angle);
-            let foot = base + radial * (centre * 0.5);
-            let tip = foot + (direction + radial * 0.35).normalize_or(direction) * reach;
-            let side = direction.cross(radial).normalize_or(across) * (reach * 0.06);
-            both(&[foot - side, foot + side, tip], accent, mesh);
         }
     }
     crate::leaves::smooth_normals(mesh, first, first_index);
@@ -2000,6 +2024,7 @@ mod tests {
                     group: 0,
                     top: 0,
                     stalk: STALK,
+                    bearing: Vec3::Y,
                 }
             })
             .collect()

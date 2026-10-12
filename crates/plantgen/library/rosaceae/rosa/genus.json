@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Rosa",
+  "traits": {
+    "flower_merosity": 5,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "hypanthium": true,
+    "ovary_position": "superior"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "kew-powo",
+      "note": "Plants of the World Online's account of the rose family, as search results quote it (the page itself was not read): flowers regular, sepals 5 and petals usually 5, free, the calyx joined at its base in a hypanthium that bears the sepals, petals and stamens; carpels indefinite in Rosa. B. Ertter's Native California Roses (University and Jepson Herbaria) on Rosa nutkana: hypanthium 5 to 7 mm wide in flower; GOERT's species page: ovaries superior but enclosed in the urn-shaped floral tube."
+    }
+  }
+}
