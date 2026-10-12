@@ -98,7 +98,9 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   sun.
 - **Output.** Meshes at four levels of detail and impostors for the
   distance. They come with organ card textures drawn from each species'
-  looks, solid spines and part meshes for flowers, fruit and cones. All of
+  looks, solid spines and part meshes for flowers, fruit and cones, with
+  coarser steps of a part mesh, where they look the same, for when it is
+  seen small. All of
   it goes into a content-addressed package whose key hashes the spec, the
   program and the generator's revision. `plantc export` writes a plant as
   glTF binary files (`.glb`), one per level of detail, that game engines

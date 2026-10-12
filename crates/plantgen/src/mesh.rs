@@ -1905,7 +1905,7 @@ impl Cluster {
 /// Directions a cluster's cover is matched along: a Fibonacci lattice of
 /// [`CLUSTER_DIRECTIONS`] points on the upper half of the unit sphere
 /// (cover is the same seen from opposite sides).
-fn cover_directions() -> Vec<Vec3> {
+pub(crate) fn cover_directions() -> Vec<Vec3> {
     // The golden angle, radians.
     const TURN: f64 = 2.399_963_229_728_653;
     (0..CLUSTER_DIRECTIONS)

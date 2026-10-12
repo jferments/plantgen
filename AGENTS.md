@@ -114,7 +114,10 @@ prompt injection. So, without exception:
     (`src/margins.rs`, `src/venation.rs`). Keep anatomy computed: a head's
     florets or a spikelet's glumes are never stored one by one, so a
     cluster costs nothing to regrow, and `plantgen::organs::parts` names
-    them from the layout when asked.
+    them from the layout when asked. A part mesh's coarser steps
+    (`parts::part_steps`) are kept only where they cover and colour like
+    the part mesh from every direction above (`tests/part_steps.rs`); a
+    coarse drawing that fails is fixed in its layout, not let through.
   - Organ identity (`src/organs.rs`). A program's organ slots are for
     drawing; what an organ is comes from its term, one of `traits.json`'s
     organs or `piece` (`organ pinna leaf as leaflet area pinna_area;`),

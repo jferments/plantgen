@@ -36,6 +36,18 @@
 //! part mesh to be drawn. An organ seen whole, as a fruit, has span 1; a
 //! needle shoot's is [`SHOOT_SPAN`] times its needles' width, so its
 //! needles stay a pixel or more wide where the least is four.
+//!
+//! **Steps** (spec rework SEMLOD). A part mesh seen small draws more
+//! triangles than its pixels show, so each type may also have coarser
+//! steps ([`part_steps`]): the same organ drawn by the same layout one or
+//! more [`coarsest`] steps coarser, each with at most half the triangles
+//! of the one before, kept only where it still looks like the part mesh
+//! from every direction above ([`step_difference`]: its cover within
+//! [`STEP_COVER`], its colour within [`STEP_COLOUR`]). Each step has a
+//! detail ([`detail`]), the side of a square of its triangles' mean area
+//! in card lengths, never finer than the step before; a renderer draws the
+//! finest step whose detail covers the least pixels, so no triangle is
+//! drawn smaller than that and none coarser than it needs.
 
 use crate::blooms::{self, Form};
 use crate::graph::{GraphOrgan, PlantGraph};
@@ -176,15 +188,36 @@ pub fn types(looks: &[Look], parts: &[PartMesh]) -> Vec<bool> {
 }
 
 fn part_mesh(looks: &[Look], index: usize, cap: usize) -> Option<PartMesh> {
+    let coarsest = coarsest(looks.get(index)?);
+    (0..=coarsest).find_map(|coarse| {
+        let variants = variants_at(looks, index, coarse)?;
+        fits(&variants, cap).then(|| PartMesh {
+            template: index,
+            variants,
+            span: span(&looks[index]),
+        })
+    })
+}
+
+/// Whether every variant draws something and holds at most `cap`
+/// triangles.
+fn fits(variants: &[Mesh], cap: usize) -> bool {
+    variants.iter().all(|mesh| mesh.triangle_count() > 0)
+        && variants.iter().all(|mesh| mesh.triangle_count() <= cap)
+}
+
+/// Organ type `index` of `looks` drawn `coarse` steps coarser, each of
+/// [`VARIANTS`] organs in its card's frame; none for a type that is not
+/// drawn as a part.
+fn variants_at(looks: &[Look], index: usize, coarse: usize) -> Option<Vec<Mesh>> {
     if !drawn_as_part(looks, index) {
         return None;
     }
     let organ = u16::try_from(index).ok()?;
     let mut solid = vec![false; looks.len()];
     solid[index] = true;
-    // The frame of a card of this type on the organ drawn.
-    let unit = GraphOrgan {
-        id: 0,
+    let at = |id: u64| GraphOrgan {
+        id,
         organ,
         segment: None,
         position: Vec3::ZERO,
@@ -196,28 +229,17 @@ fn part_mesh(looks: &[Look], index: usize, cap: usize) -> Option<PartMesh> {
         light: 1.0,
         within: None,
     };
-    let (base, heading, left, length) = crate::mesh::place(&unit, &looks[index]);
+    // The frame of a card of this type on the organ drawn.
+    let (base, heading, left, length) = crate::mesh::place(&at(0), &looks[index]);
     let out = left.cross(heading);
-    for coarse in 0..=coarsest(&looks[index]) {
-        let variants: Vec<Mesh> = (0..VARIANTS as u64)
+    Some(
+        (0..VARIANTS as u64)
             .map(|variant| {
                 let graph = PlantGraph {
                     age: 1.0,
                     height: 1.0,
                     segments: Vec::new(),
-                    organs: vec![GraphOrgan {
-                        id: mix64(variant + 1),
-                        organ,
-                        segment: None,
-                        position: Vec3::ZERO,
-                        heading: Vec3::Y,
-                        left: Vec3::X,
-                        size: 1.0,
-                        born: 0.0,
-                        shed: None,
-                        light: 1.0,
-                        within: None,
-                    }],
+                    organs: vec![at(mix64(variant + 1))],
                     structures: Vec::new(),
                 };
                 let mut mesh = Mesh::default();
@@ -232,18 +254,298 @@ fn part_mesh(looks: &[Look], index: usize, cap: usize) -> Option<PartMesh> {
                 into_frame(&mut mesh, (base, heading, left, out), length);
                 mesh
             })
-            .collect();
-        if variants.iter().all(|mesh| mesh.triangle_count() > 0)
-            && variants.iter().all(|mesh| mesh.triangle_count() <= cap)
-        {
-            return Some(PartMesh {
+            .collect(),
+    )
+}
+
+/// A coarser step of an organ type's part mesh (spec rework SEMLOD): the
+/// type drawn `coarse` steps coarser than its primitive's finest, as
+/// [`VARIANTS`] meshes in its card's frame like the part mesh's own.
+#[derive(Debug, Clone, PartialEq)]
+pub struct PartStep {
+    pub coarse: usize,
+    pub variants: Vec<Mesh>,
+    /// The size of its triangles ([`detail`]), a share of its card's
+    /// length, and at least the finer steps' (see [`PartSteps`]).
+    pub detail: f64,
+}
+
+/// An organ type's part mesh in steps (spec rework SEMLOD): the part mesh
+/// ([`PartMesh`]) is the finest, and each step after it is drawn coarser
+/// with at most half the triangles of the one before.
+///
+/// A renderer draws, of the part mesh and its steps, the finest whose
+/// `detail` times the card's projected length covers at least its least
+/// pixels, and the coarsest when none does; a part too small for the part
+/// mesh's [`PartMesh::span`] keeps its card as before.
+#[derive(Debug, Clone, PartialEq)]
+pub struct PartSteps {
+    /// The organ type, as [`PartMesh::template`].
+    pub template: usize,
+    /// The part mesh's own detail.
+    pub detail: f64,
+    /// The coarser steps, finest first; none where no coarser step halves
+    /// the triangles.
+    pub steps: Vec<PartStep>,
+}
+
+/// Each of `parts`' types in steps (see [`PartSteps`]), in their order.
+#[must_use]
+pub fn part_steps(looks: &[Look], parts: &[PartMesh]) -> Vec<PartSteps> {
+    parts
+        .iter()
+        .map(|part| {
+            let index = part.template;
+            let mut last = part.triangles();
+            let finest = (0..=looks.get(index).map_or(0, coarsest))
+                .find(|&coarse| {
+                    variants_at(looks, index, coarse)
+                        .is_some_and(|variants| variants == part.variants)
+                })
+                .unwrap_or(0);
+            let finest_detail = detail(&part.variants[0]);
+            let mut coarsest_detail = finest_detail;
+            let mut steps = Vec::new();
+            for coarse in finest + 1..=looks.get(index).map_or(0, coarsest) {
+                let Some(variants) = variants_at(looks, index, coarse) else {
+                    break;
+                };
+                let triangles = variants.iter().map(Mesh::triangle_count).max().unwrap_or(0);
+                if fits(&variants, last / 2) && looks_alike(&part.variants, &variants) {
+                    last = triangles;
+                    // Each step's detail at least the finer one's, so a
+                    // renderer moves to it no sooner.
+                    coarsest_detail = detail(&variants[0]).max(coarsest_detail);
+                    steps.push(PartStep {
+                        coarse,
+                        detail: coarsest_detail,
+                        variants,
+                    });
+                }
+            }
+            PartSteps {
                 template: index,
-                variants,
-                span: span(&looks[index]),
-            });
+                detail: finest_detail,
+                steps,
+            }
+        })
+        .collect()
+}
+
+/// Most a step may lose or gain of the part mesh's cover seen from any
+/// direction, as a share of the part mesh's mean cover over the
+/// directions.
+pub const STEP_COVER: f64 = 0.1;
+
+/// Most a step's mean colour seen from any direction may differ from the
+/// part mesh's in any linear channel, weighed by how much of the part mesh
+/// that direction shows against its mean: a petal's underside a shade
+/// lighter where the step draws it with fewer vertices passes, a cluster
+/// whose units turn a different colour does not.
+pub const STEP_COLOUR: f64 = 0.07;
+
+/// Cells across the square a step's cover is measured in.
+const VIEW_CELLS: usize = 48;
+
+/// Whether `step`, variant by variant, looks like the part mesh `finest`
+/// from every cover direction: within [`STEP_COVER`] and [`STEP_COLOUR`]
+/// (see [`step_difference`]).
+fn looks_alike(finest: &[Mesh], step: &[Mesh]) -> bool {
+    let (cover, colour) = step_difference(finest, step);
+    cover <= STEP_COVER && colour <= STEP_COLOUR
+}
+
+/// How far `step` is from the part mesh `finest`, variant by variant and
+/// seen along each of the cover directions (`crate::mesh`), the upper
+/// hemisphere: the most cover it loses or gains, as a share of the part
+/// mesh's mean cover over the directions, and the most its mean seen
+/// colour differs in any channel, weighed by that direction's cover over
+/// the mean. Each view is a square of [`VIEW_CELLS`] cells round the part
+/// mesh's outline, a cell covered when its centre falls in a triangle
+/// turned toward the viewer and coloured by the nearest one.
+#[must_use]
+pub fn step_difference(finest: &[Mesh], step: &[Mesh]) -> (f64, f64) {
+    let directions = crate::mesh::cover_directions();
+    let mut worst = (0.0_f64, 0.0_f64);
+    for (fine, coarse) in finest.iter().zip(step) {
+        let views: Vec<(View, View)> = directions
+            .iter()
+            .map(|&direction| {
+                let square = outline(fine, direction);
+                (
+                    view(fine, direction, square),
+                    view(coarse, direction, square),
+                )
+            })
+            .collect();
+        #[allow(clippy::cast_precision_loss)]
+        let mean = views
+            .iter()
+            .map(|(fine, _)| fine.covered as f64)
+            .sum::<f64>()
+            / views.len().max(1) as f64;
+        if mean <= 0.0 {
+            continue;
+        }
+        for (fine, coarse) in &views {
+            #[allow(clippy::cast_precision_loss)]
+            let cover = (coarse.covered as f64 - fine.covered as f64).abs() / mean;
+            #[allow(clippy::cast_precision_loss)]
+            let colour = (0..3)
+                .map(|k| (coarse.colour[k] - fine.colour[k]).abs() * fine.covered as f64 / mean)
+                .fold(0.0, f64::max);
+            worst = (worst.0.max(cover), worst.1.max(colour));
         }
     }
-    None
+    worst
+}
+
+/// A mesh seen along a direction: the cells it covers and their mean
+/// colour.
+struct View {
+    covered: usize,
+    colour: [f64; 3],
+}
+
+fn vertex(mesh: &Mesh, index: u32) -> Vec3 {
+    mesh.positions.get(index as usize).map_or(Vec3::ZERO, |p| {
+        Vec3::new(f64::from(p[0]), f64::from(p[1]), f64::from(p[2]))
+    })
+}
+
+/// Two axes across `direction`.
+fn across(direction: Vec3) -> (Vec3, Vec3) {
+    let up = if direction.y.abs() < 0.9 {
+        Vec3::Y
+    } else {
+        Vec3::X
+    };
+    let a = up.cross(direction).normalize_or(Vec3::X);
+    (a, direction.cross(a))
+}
+
+/// The square, as its corner and side, round `mesh` seen along
+/// `direction`, a tenth wider than its outline.
+fn outline(mesh: &Mesh, direction: Vec3) -> (f64, f64, f64) {
+    let (a, b) = across(direction);
+    let (mut low, mut high) = ([f64::MAX; 2], [f64::MIN; 2]);
+    for p in &mesh.positions {
+        let p = Vec3::new(f64::from(p[0]), f64::from(p[1]), f64::from(p[2]));
+        for (k, v) in [p.dot(a), p.dot(b)].into_iter().enumerate() {
+            low[k] = low[k].min(v);
+            high[k] = high[k].max(v);
+        }
+    }
+    let side = (high[0] - low[0]).max(high[1] - low[1]) * 1.1 + 1e-9;
+    (
+        (low[0] + high[0] - side) / 2.0,
+        (low[1] + high[1] - side) / 2.0,
+        side,
+    )
+}
+
+#[allow(
+    clippy::cast_precision_loss,
+    clippy::cast_possible_truncation,
+    clippy::cast_sign_loss,
+    clippy::many_single_char_names
+)]
+fn view(mesh: &Mesh, direction: Vec3, square: (f64, f64, f64)) -> View {
+    let (a, b) = across(direction);
+    let (x0, y0, side) = square;
+    let cell = side / VIEW_CELLS as f64;
+    let mut depth = vec![f64::MIN; VIEW_CELLS * VIEW_CELLS];
+    let mut colour = vec![[0.0; 3]; VIEW_CELLS * VIEW_CELLS];
+    let to_cell = |v: f64| (v.max(0.0) as usize).min(VIEW_CELLS);
+    for t in mesh.indices.as_chunks::<3>().0 {
+        let p: [(f64, f64, f64); 3] = std::array::from_fn(|k| {
+            let q = vertex(mesh, t[k]);
+            (
+                (q.dot(a) - x0) / cell,
+                (q.dot(b) - y0) / cell,
+                q.dot(direction),
+            )
+        });
+        let c: [f64; 3] = std::array::from_fn(|k| {
+            t.iter()
+                .map(|&i| mesh.colors.get(i as usize).map_or(0.0, |c| f64::from(c[k])))
+                .sum::<f64>()
+                / 3.0
+        });
+        let area = (p[1].0 - p[0].0) * (p[2].1 - p[0].1) - (p[2].0 - p[0].0) * (p[1].1 - p[0].1);
+        // Only the faces turned toward the viewer, their corners turning
+        // anticlockwise as seen.
+        if area < 1e-12 {
+            continue;
+        }
+        let xs = p.map(|q| q.0);
+        let ys = p.map(|q| q.1);
+        let (x_low, x_high) = (
+            to_cell(xs.iter().copied().fold(f64::MAX, f64::min).floor()),
+            to_cell(xs.iter().copied().fold(f64::MIN, f64::max).ceil()),
+        );
+        let (y_low, y_high) = (
+            to_cell(ys.iter().copied().fold(f64::MAX, f64::min).floor()),
+            to_cell(ys.iter().copied().fold(f64::MIN, f64::max).ceil()),
+        );
+        for y in y_low..y_high {
+            for x in x_low..x_high {
+                let (px, py) = (x as f64 + 0.5, y as f64 + 0.5);
+                let w0 = ((p[1].0 - px) * (p[2].1 - py) - (p[2].0 - px) * (p[1].1 - py)) / area;
+                let w1 = ((p[2].0 - px) * (p[0].1 - py) - (p[0].0 - px) * (p[2].1 - py)) / area;
+                let w2 = 1.0 - w0 - w1;
+                if w0 < 0.0 || w1 < 0.0 || w2 < 0.0 {
+                    continue;
+                }
+                let z = w0 * p[0].2 + w1 * p[1].2 + w2 * p[2].2;
+                let at = y * VIEW_CELLS + x;
+                if z > depth[at] {
+                    depth[at] = z;
+                    colour[at] = c;
+                }
+            }
+        }
+    }
+    let covered = depth.iter().filter(|z| **z > f64::MIN).count();
+    let mut mean = [0.0; 3];
+    for (_, c) in depth.iter().zip(&colour).filter(|(z, _)| **z > f64::MIN) {
+        for k in 0..3 {
+            mean[k] += c[k] / covered as f64;
+        }
+    }
+    View {
+        covered,
+        colour: mean,
+    }
+}
+
+/// The size of `mesh`'s triangles: the side of a square of their mean
+/// area.
+#[must_use]
+pub fn detail(mesh: &Mesh) -> f64 {
+    let point = |i: u32| {
+        mesh.positions.get(i as usize).map_or(Vec3::ZERO, |p| {
+            Vec3::new(f64::from(p[0]), f64::from(p[1]), f64::from(p[2]))
+        })
+    };
+    let triangles = mesh.triangle_count();
+    if triangles == 0 {
+        return 0.0;
+    }
+    let area: f64 = mesh
+        .indices
+        .as_chunks::<3>()
+        .0
+        .iter()
+        .map(|t| {
+            0.5 * (point(t[1]) - point(t[0]))
+                .cross(point(t[2]) - point(t[0]))
+                .length()
+        })
+        .sum();
+    #[allow(clippy::cast_precision_loss)]
+    let mean = area / triangles as f64;
+    crate::math::sqrt(mean)
 }
 
 /// One site of a nearest level drawn as its type's part mesh: which part

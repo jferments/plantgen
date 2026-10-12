@@ -56,8 +56,9 @@
 //! spreading lobes and a bud as a five-sided point, both in the accent
 //! colour, each strap of a ligulate head as a ray is, in the look's
 //! colour, cypselae in the accent darkened and the pappus off-white. A part mesh
-//! (`crate::parts`) one step coarser draws florets as points and rays as
-//! kites; two steps a cluster's reduced head. A cluster draws each of its
+//! (`crate::parts`) one step coarser draws florets as points and each ray
+//! as its outline in eight corners, its underside shaded as a ray's is;
+//! two steps a cluster's reduced head. A cluster draws each of its
 //! heads reduced ([`draw_reduced`]): the involucre a six-sided cup, the
 //! disc a low pyramid, the rays or the outer straps as kites. The card
 //! paints the same layout face on, each part in the look's colour and
@@ -423,8 +424,14 @@ impl Frame {
 /// A flat face seen from both sides, each side its own vertices so their
 /// normals are not averaged away.
 pub(crate) fn both(part: Part, corners: &[Vec3], colour: [f32; 3], mesh: &mut Mesh) {
-    let leaf = part.leaf(corners[0], Vec3::Y, Vec3::X, 0.0, 0.0, colour);
-    for flip in [false, true] {
+    faces(part, corners, [colour, colour], mesh);
+}
+
+/// [`both`] with the face whose corners turn clockwise in `colours[1]`:
+/// the underside of a ray, which a leaf draws shaded.
+fn faces(part: Part, corners: &[Vec3], colours: [[f32; 3]; 2], mesh: &mut Mesh) {
+    let leaf = part.leaf(corners[0], Vec3::Y, Vec3::X, 0.0, 0.0, colours[0]);
+    for (flip, colour) in [false, true].into_iter().zip(colours) {
         let at = u32::try_from(mesh.positions.len()).unwrap_or(u32::MAX);
         for &corner in corners {
             mesh.push(leaf.vertex(corner, colour));
@@ -445,7 +452,7 @@ const FINE_FLORETS: usize = 400;
 
 /// Draw `head`, laid out with `form`'s cup, in `frame`, turned `turn`
 /// (see the module): at `part.coarse` 0 every part, at 1 its florets as
-/// points and its rays as kites, from 2 as a cluster's reduced head.
+/// points and its rays as outlines, from 2 as a cluster's reduced head.
 #[allow(clippy::too_many_lines)]
 pub(crate) fn draw(
     head: &Head,
@@ -525,12 +532,23 @@ pub(crate) fn draw(
             let (stations, across) = crate::leaves::detail_of(0, length, width);
             leaf.draw(&ray, stations.min(6), across.min(2), mesh);
         } else {
-            let widest = foot + heading * (length * 0.55);
-            let half = left * (width * 0.5);
-            both(
+            // The ray's outline in eight corners, covering about as much
+            // as the ray, its underside shaded as the ray's is.
+            let at =
+                |along: f64, side: f64| foot + heading * (length * along) + left * (width * side);
+            faces(
                 part,
-                &[foot, widest + half, foot + heading * length, widest - half],
-                colour,
+                &[
+                    at(0.0, 0.0),
+                    at(0.0, 0.18),
+                    at(0.55, 0.5),
+                    at(0.9, 0.3),
+                    at(1.0, 0.0),
+                    at(0.9, -0.3),
+                    at(0.55, -0.5),
+                    at(0.0, -0.18),
+                ],
+                [colour.map(|c| c * 0.85), colour],
                 mesh,
             );
         }
