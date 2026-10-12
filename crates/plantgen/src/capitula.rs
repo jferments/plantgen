@@ -1056,6 +1056,54 @@ fn strap_width(u: f64) -> f64 {
     (0.45 + 0.55 * rising) * tip
 }
 
+/// A head's sizes as its characters measure them (spec rework M8B), each a
+/// share of the head's width (its organ's size, twice its radius $`R`$):
+/// the involucre's ring of phyllaries across and up to its inner tips, a
+/// ray's strap fully unfolded, the pappus and a cypsela, each 0 where the
+/// head has none.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Dimensions {
+    pub involucre_diameter: f64,
+    pub involucre_height: f64,
+    pub ray_length: f64,
+    pub pappus_length: f64,
+    /// A cypsela, the head's fruit.
+    pub cypsela: f64,
+}
+
+/// `head`'s [`Dimensions`], from its layout fully open.
+#[must_use]
+pub fn dimensions(head: &Head) -> Dimensions {
+    let open = Head {
+        open: 1.0,
+        ..head.clone()
+    };
+    let laid = layout(&open, 0.0, 0.0);
+    // The ring of phyllaries across its widest points and tips, and up to
+    // the tips of the innermost row; the disc's rim where it has none.
+    let across = laid
+        .phyllaries
+        .iter()
+        .flat_map(|p| [p.widest, p.tip])
+        .map(|point| math::sqrt(point.x * point.x + point.z * point.z))
+        .fold(laid.disc, f64::max);
+    let inner = laid.phyllaries.iter().map(|p| p.series).max();
+    let up = laid
+        .phyllaries
+        .iter()
+        .filter(|p| Some(p.series) == inner)
+        .map(|p| p.tip.y)
+        .fold(laid.rim, f64::max);
+    // The layout's lengths are in R, half the head's width.
+    Dimensions {
+        involucre_diameter: across,
+        involucre_height: 0.5 * up,
+        ray_length: 0.5 * laid.rays.first().map_or(0.0, |ray| ray.length),
+        pappus_length: 0.5 * laid.pappus,
+        cypsela: 0.5 * laid.cypsela(),
+    }
+}
+
 /// Triangles one head takes drawn solid `coarse` steps coarser.
 #[must_use]
 pub fn triangles(head: &Head, form: &FlowerForm, coarse: usize) -> usize {

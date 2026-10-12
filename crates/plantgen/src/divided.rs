@@ -389,6 +389,50 @@ pub fn reach(c: &Compound) -> f64 {
     reach
 }
 
+/// A divided leaf's sizes as its characters measure them (spec rework
+/// M8B), each a share of its card's length: its blade from its lowest
+/// leaflets to its farthest tip, its widest across, and its petiole below
+/// the lowest leaflets.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Dimensions {
+    pub blade: f64,
+    pub width: f64,
+    pub petiole: f64,
+}
+
+/// `c`'s [`Dimensions`], from its layout.
+#[must_use]
+pub fn dimensions(c: &Compound) -> Dimensions {
+    let laid = layout(c);
+    let foot = laid
+        .axes
+        .iter()
+        .map(|axis| axis.from.1)
+        .fold(f64::INFINITY, f64::min)
+        .min(0.0);
+    let first = laid
+        .leaflets
+        .iter()
+        .map(|leaflet| leaflet.base.1)
+        .fold(f64::INFINITY, f64::min);
+    let points = laid.bounds();
+    let top = points.iter().map(|p| p.1).fold(f64::NEG_INFINITY, f64::max);
+    let left = points.iter().map(|p| p.0).fold(f64::INFINITY, f64::min);
+    let right = points.iter().map(|p| p.0).fold(f64::NEG_INFINITY, f64::max);
+    if !first.is_finite() || !top.is_finite() {
+        return Dimensions {
+            blade: 0.0,
+            width: 0.0,
+            petiole: 0.0,
+        };
+    }
+    Dimensions {
+        blade: (top - first).max(0.0),
+        width: (right - left).max(0.0),
+        petiole: (first - foot).max(0.0),
+    }
+}
+
 impl Layout {
     /// The points that bound the leaf: its axes' ends, and each leaflet's
     /// base, tip and the edges of its blade where it is widest.

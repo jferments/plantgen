@@ -128,6 +128,16 @@ prompt injection. So, without exception:
     (`plantgen::organs::phase`: primordium, bud, open, fruit or shed) is
     computed, never stored. `plantc organs <id>` prints a plant's census
     by term and phase.
+  - Size checks (`src/checks.rs`). `plantc validate` grows a species
+    from several seeds and measures each size its characters state as
+    the character's `why` defines it: a head's involucre from its
+    layout's phyllaries, a spikelet's glumes and lemmas from its layout, a
+    divided leaf's blade and petiole from its leaflets, a grass blade from
+    its pieces, a cluster's length from its units. Each layout that a
+    character measures gives its sizes (`dimensions`) from the same
+    function that draws it. The species-suite test
+    (`tests/checks.rs`) holds every species within its ranges' extremes,
+    but the few it lists with why.
   - `src/`: growth, meshes, impostors, packages, glTF exports, ground
     looks and the library.
 - `apps/plantc`: the command-line compiler and previewer.

@@ -15,6 +15,7 @@ use std::time::Instant;
 use std::{env, fmt, fs};
 
 use plantgen::body::BodyLook;
+use plantgen::checks;
 use plantgen::conditions::Conditions;
 use plantgen::export;
 use plantgen::graph::{GraphOrgan, OrganType, PlantGraph};
@@ -123,6 +124,7 @@ fn run() -> Result<(), Failure> {
         "lineup" => lineup_command(&args),
         "atlas" => atlas_command(&args),
         "measure" => measure_command(&args),
+        "validate" => validate_command(&args),
         "ground" => ground_command(&args),
         "build" => build_command(&args),
         "export" => export_command(&args),
@@ -220,6 +222,16 @@ Usage:
       and print its form: crown width over depth, where it is widest,
       its departure from an ellipse (0 an orb), its lobing, crown width
       over dbh and the median leaf card length.
+  plantc validate [<species>...] [--seeds N]
+      Check each species (default every one that states a size) against
+      its characters (spec rework M8B): grow N plants (default 5) from its
+      own seeds and the next ones, in its typical environment, to its
+      oldest keyframe; measure every size its characters state as each
+      defines it (a leaf's blade without its petiole, a head's involucre,
+      a spikelet to its last floret); and judge all the plants' values
+      together: pass when their middle (10th to 90th percentile) lies in
+      the stated range, a warning when it leaves it, an error past the
+      range's extremes or a greatest size. Exits non-zero on any error.
   plantc atlas <species|spec.json> --out FILE.png
       Draw the species' organ card textures (leaves, needles, flowers) in
       their colours, one per organ, side by side.
@@ -1285,6 +1297,122 @@ fn measure_command(args: &[String]) -> Result<(), Failure> {
                 graph.age
             ),
         }
+    }
+    Ok(())
+}
+
+/// `plantc validate`: stated sizes against grown plants (spec rework
+/// M8B).
+#[allow(clippy::too_many_lines)]
+fn validate_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &["seeds"])?;
+    let count = options.number::<usize>("seeds")?.unwrap_or(5).max(1);
+    let library = library();
+    let ids: Vec<String> = if options.positional.is_empty() {
+        library
+            .species()
+            .iter()
+            .map(|entry| entry.id.clone())
+            .filter(|id| {
+                library
+                    .traits_of(id)
+                    .is_ok_and(|traits| checks::states_sizes(&traits))
+            })
+            .collect()
+    } else {
+        options.positional.clone()
+    };
+    let mut tally = [0_usize; 4];
+    for id in &ids {
+        let spec = load_spec(id)?;
+        let traits = library
+            .traits_of(&spec.id)
+            .map_err(|error| error.to_string())?;
+        let seeds = checks::seeds_of(&spec, count);
+        let report = checks::check(&spec, library, &traits, &seeds)?;
+        out!(
+            "{} ({}): {} plants, seeds {}, {} environment, {} years",
+            spec.taxon.common_name,
+            spec.id,
+            report.seeds.len(),
+            report
+                .seeds
+                .iter()
+                .map(u64::to_string)
+                .collect::<Vec<_>>()
+                .join(", "),
+            report.environment.name(),
+            report.age
+        );
+        if report.findings.is_empty() {
+            out!("  sizes: none stated that a check measures");
+        } else {
+            out!("  sizes");
+        }
+        let rows: Vec<[String; 5]> = report
+            .findings
+            .iter()
+            .map(|finding| {
+                let measured = finding.spread.map_or_else(String::new, |s| {
+                    let values = if finding.judged == checks::Judged::Organs {
+                        format!("{} in {} plants", s.count, s.plants)
+                    } else {
+                        format!("{} plants", s.plants)
+                    };
+                    format!(
+                        "{} {} {} ({values})",
+                        checks::length_text(s.q10),
+                        checks::length_text(s.median),
+                        checks::length_text(s.q90)
+                    )
+                });
+                [
+                    finding.character.to_string(),
+                    checks::range_text(&finding.stated),
+                    measured,
+                    finding.verdict.word().to_string(),
+                    finding.reason.clone(),
+                ]
+            })
+            .collect();
+        let width = |column: usize| {
+            rows.iter()
+                .map(|row| row[column].chars().count())
+                .max()
+                .unwrap_or(0)
+        };
+        let (a, b, c, d) = (width(0), width(1), width(2), width(3));
+        for [character, stated, measured, verdict, reason] in &rows {
+            let line = format!(
+                "    {character:<a$}  {stated:<b$}  {measured:<c$}  {verdict:<d$}  {reason}"
+            );
+            out!("{}", line.trim_end());
+        }
+        if !report.unmeasured.is_empty() {
+            out!("  not measured yet: {}", report.unmeasured.join(", "));
+        }
+        for finding in &report.findings {
+            let slot = match finding.verdict {
+                checks::Verdict::Pass => 0,
+                checks::Verdict::NotGrown => 1,
+                checks::Verdict::Warning => 2,
+                checks::Verdict::Error => 3,
+            };
+            tally[slot] += 1;
+        }
+    }
+    if ids.len() > 1 {
+        out!(
+            "{} species: pass {}, not grown {}, warnings {}, errors {}",
+            ids.len(),
+            tally[0],
+            tally[1],
+            tally[2],
+            tally[3]
+        );
+    }
+    if tally[3] > 0 {
+        return Err(format!("sizes past their ranges' extremes: {}", tally[3]).into());
     }
     Ok(())
 }
