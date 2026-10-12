@@ -3336,7 +3336,10 @@ mod tests {
         assert_eq!(until.of(0, &leaf(0.3, 1.0, Some(1.0), 7)), (0, 1.0));
         assert_eq!(until.of(0, &leaf(0.3, 1.0, None, 7)), (1, 1.0));
         // A type without juvenile leaves wears its own look.
-        assert_eq!(Forms::default().of(0, &leaf(0.3, 1.0, Some(0.0), 7)), (0, 1.0));
+        assert_eq!(
+            Forms::default().of(0, &leaf(0.3, 1.0, Some(0.0), 7)),
+            (0, 1.0)
+        );
     }
 
     #[test]

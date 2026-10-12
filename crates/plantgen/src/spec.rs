@@ -861,7 +861,9 @@ impl PlantSpec {
                 .as_ref()
                 .and_then(|families| families.juvenile.as_ref())
                 .is_some_and(|juvenile| juvenile.until.is_none())
-        }) && !self.program_in(library).is_ok_and(|(program, _)| program.draws_adult())
+        }) && !self
+            .program_in(library)
+            .is_ok_and(|(program, _)| program.draws_adult())
         {
             return fail(format!(
                 "families juvenile needs until: program {} records no adult shoots",
@@ -1108,9 +1110,11 @@ mod tests {
             .find_map(|look| look.families.as_mut()?.juvenile.as_mut())
             .unwrap();
         juvenile.until = None;
-        assert!(spec.validate().unwrap_err().0.ends_with(
-            ": families juvenile needs until: program conifer records no adult shoots"
-        ));
+        assert!(
+            spec.validate().unwrap_err().0.ends_with(
+                ": families juvenile needs until: program conifer records no adult shoots"
+            )
+        );
     }
 
     #[test]

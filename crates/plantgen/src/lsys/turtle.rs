@@ -1053,7 +1053,9 @@ mod tests {
         );
         let draws = |source: &str| Program::compile(source).unwrap().draws_adult();
         assert!(!draws("lsystem p 1; module A; axiom A; rule A -> F(1) A;"));
-        assert!(draws("lsystem p 1; module A; axiom A; rule A -> F(1) [ adult(1) ] A;"));
+        assert!(draws(
+            "lsystem p 1; module A; axiom A; rule A -> F(1) [ adult(1) ] A;"
+        ));
         assert!(draws("lsystem p 1; axiom adult(1) F(1);"));
     }
 

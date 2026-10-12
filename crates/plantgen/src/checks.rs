@@ -1262,10 +1262,7 @@ pub fn grow_and_measure(
     let (program, _) = spec
         .program_in(library)
         .map_err(|error| error.to_string())?;
-    let reproductive: Vec<bool> = program
-        .organs()
-        .map(|(_, kind)| bears_seed(kind))
-        .collect();
+    let reproductive: Vec<bool> = program.organs().map(|(_, kind)| bears_seed(kind)).collect();
     let mut first = FirstFlower {
         reproductive: &reproductive,
         until: first_flower_by.unwrap_or(-1.0),
@@ -1316,10 +1313,7 @@ pub fn grow_and_measure(
 /// Whether organs of `kind` are a plant's reproduction: flowers, fruit
 /// and cones.
 fn bears_seed(kind: OrganKind) -> bool {
-    matches!(
-        kind,
-        OrganKind::Flower | OrganKind::Fruit | OrganKind::Cone
-    )
+    matches!(kind, OrganKind::Flower | OrganKind::Fruit | OrganKind::Cone)
 }
 
 /// Watches a plant grow for the birth of its first flower, fruit or cone
@@ -1337,20 +1331,19 @@ impl crate::grow::Watch for FirstFlower<'_> {
     }
 
     fn step(&mut self, progress: crate::grow::Progress<'_>) -> bool {
-        if let Some(graph) = progress.frame.and_then(|frame| frame.keyframes.last()) {
-            self.born = graph
-                .organs
-                .iter()
-                .filter(|organ| {
-                    organ.size > 0.0
-                        && self
-                            .reproductive
-                            .get(usize::from(organ.organ))
-                            .copied()
-                            .unwrap_or(false)
-                })
-                .map(|organ| organ.born)
-                .min_by(f64::total_cmp);
+        // The age it is first seen at: an organ an interpretation draws
+        // (a cactus's ring of flowers) is as old as the module it draws.
+        if let Some(graph) = progress.frame.and_then(|frame| frame.keyframes.last())
+            && graph.organs.iter().any(|organ| {
+                organ.size > 0.0
+                    && self
+                        .reproductive
+                        .get(usize::from(organ.organ))
+                        .copied()
+                        .unwrap_or(false)
+            })
+        {
+            self.born = Some(graph.age);
         }
         if progress.age > self.until {
             self.until = -1.0;

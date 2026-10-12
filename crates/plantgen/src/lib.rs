@@ -156,4 +156,11 @@ pub mod venation;
 /// triangles. A head one step coarser draws each ray as its outline in
 /// eight corners with its underside shaded, not a kite, which changes the
 /// part meshes of heads too large for their finest step.
-pub const GENERATOR_REVISION: u32 = 25;
+/// 26: a shoot is juvenile or adult (spec rework P6): a program's
+/// `adult(a)` sets the adultness of the organs drawn after it in the
+/// branch, a leaf type's juvenile family follows it, and a graph whose
+/// organs record it is `APGRAPH3`. The climber program draws it (an ivy's
+/// adult shoots bear entire leaves, rise and fruit), and the programs that
+/// measure first flowering by the plant's age name it `adult_age`, set
+/// from a taxon's juvenile period.
+pub const GENERATOR_REVISION: u32 = 26;
