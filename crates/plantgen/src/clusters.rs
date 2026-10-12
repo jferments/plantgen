@@ -784,6 +784,43 @@ pub struct Layout {
     pub stalks: Vec<Stalk>,
 }
 
+impl Layout {
+    /// The cluster's length as `inflorescence_length_m` measures it (spec
+    /// rework M8B), a share of its organ: along the organ's axis from its
+    /// lowest unit or branch (where its pedicel or branch leaves an axis)
+    /// to its farthest tip, a flower's or head's half its width beyond its
+    /// centre, a fruit's or spikelet's its tip.
+    #[must_use]
+    pub fn length(&self, unit: Unit) -> f64 {
+        let low = self
+            .units
+            .iter()
+            .map(|p| p.attach.y)
+            .chain(
+                self.stalks
+                    .iter()
+                    .filter(|stalk| !stalk.axis)
+                    .map(|stalk| stalk.from.y),
+            )
+            .fold(f64::INFINITY, f64::min);
+        let high = self
+            .units
+            .iter()
+            .map(|p| match unit {
+                Unit::Flower | Unit::Head => p.base.y + 0.5 * p.length,
+                Unit::Fruit { .. } | Unit::Spikelet { .. } => {
+                    p.base.y.max((p.base + p.direction * p.length).y)
+                }
+            })
+            .fold(f64::NEG_INFINITY, f64::max);
+        if low.is_finite() && high.is_finite() {
+            (high - low).max(0.0)
+        } else {
+            0.0
+        }
+    }
+}
+
 /// Where a cluster's own frame sits in the organ's: a point `p` of it is
 /// `origin + (x p.x + y p.y + z p.z) scale`.
 #[derive(Debug, Clone, Copy)]

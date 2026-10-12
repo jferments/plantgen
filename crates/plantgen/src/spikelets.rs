@@ -425,6 +425,53 @@ pub(crate) fn draw(
     crate::leaves::smooth_normals(mesh, first, first_index);
 }
 
+/// A spikelet's sizes as its characters measure them (spec rework M8B),
+/// each a share of its drawn length (to its highest tip, awns left out):
+/// its length to the tip of its last floret, its upper and lower glumes,
+/// its lemma and its awn, each 0 where it has none.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Dimensions {
+    pub length: f64,
+    pub upper_glume: f64,
+    pub lower_glume: f64,
+    pub lemma: f64,
+    pub awn: f64,
+}
+
+/// `spikelet`'s [`Dimensions`], from its layout.
+#[must_use]
+pub fn dimensions(spikelet: &Spikelet) -> Dimensions {
+    let laid = layout(spikelet);
+    let long = |s: &Scale| (s.tip - s.foot).length();
+    let glumes: Vec<f64> = laid
+        .scales
+        .iter()
+        .filter(|s| s.bract == Bract::Glume)
+        .map(long)
+        .collect();
+    // A lone glume is the upper; of two, the lower comes first.
+    let (lower, upper) = match glumes.as_slice() {
+        [] => (0.0, 0.0),
+        [upper] => (0.0, *upper),
+        [lower, upper, ..] => (*lower, *upper),
+    };
+    let lemmas = laid.scales.iter().filter(|s| s.bract == Bract::Lemma);
+    Dimensions {
+        length: lemmas
+            .clone()
+            .map(|s| s.tip.y.max(s.keel.y))
+            .fold(0.0, f64::max),
+        upper_glume: upper,
+        lower_glume: lower,
+        lemma: lemmas.map(long).fold(0.0, f64::max),
+        awn: laid
+            .awns
+            .iter()
+            .map(|a| (a.knee - a.from).length() + (a.tip - a.knee).length())
+            .fold(0.0, f64::max),
+    }
+}
+
 /// Triangles [`draw`] takes for `spikelet` at `coarse`.
 #[must_use]
 pub fn triangles(spikelet: &Spikelet, coarse: usize) -> usize {
