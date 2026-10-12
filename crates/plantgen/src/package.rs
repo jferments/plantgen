@@ -35,7 +35,7 @@
 //! | `impostor-normal-depth` | PNG, world normal · 0.5 + 0.5, depth in alpha |
 //! | `organ-atlas` | PNG, one template per organ type, side by side in the program's order: brightness / 2 in red, accent weight in green, coverage in alpha |
 //! | `parts` | the part meshes, `APPARTS2` (below) |
-//! | `part-steps` | the part meshes' coarser steps, `APSTEPS1` (below) |
+//! | `part-steps` | the part meshes' coarser steps, `APSTEPS2` (below) |
 //!
 //! Binary objects are little-endian with 32-bit floats. A graph is a
 //! 24-byte header (magic, age, height, segment count, organ count), then
@@ -108,10 +108,17 @@
 //! that knows only `parts` reads the package as before:
 //!
 //! ```text
-//! APSTEPS1, u32 type count N, then per type: u32 template, f32 detail of
-//! its part mesh, u32 steps K, then per step: u32 coarse, f32 detail, u32
-//! variants V, then per variant a mesh as in APPARTS2
+//! APSTEPS2, u32 type count N, then per type: u32 template, f32 detail of
+//! its part mesh, u32 steps K, then per step: u32 coarse, f32 detail, f32
+//! cover, f32 mean cover, u32 variants V, then per variant a mesh as in
+//! APPARTS2
 //! ```
+//!
+//! A step's cover is the most it loses or gains of the part mesh's cover
+//! from any direction, and its mean cover that on average
+//! (`crate::parts::step_cover`): most steps keep both within a tenth, a
+//! grass panicle's thinned and outlined steps do not, so a renderer that
+//! wants parts faithful from every side stops before them.
 
 use std::collections::BTreeMap;
 use std::fmt;
@@ -162,7 +169,7 @@ pub const MESH_MAGIC: [u8; 8] = *b"APMESH1\0";
 pub const PARTS_MAGIC: [u8; 8] = *b"APPARTS2";
 
 /// Magic of the part meshes' coarser steps (see the module).
-pub const PART_STEPS_MAGIC: [u8; 8] = *b"APSTEPS1";
+pub const PART_STEPS_MAGIC: [u8; 8] = *b"APSTEPS2";
 /// The level of detail impostors are rendered from.
 pub const IMPOSTOR_LOD: usize = 1;
 /// Samples per impostor texel along each axis.
@@ -377,6 +384,10 @@ pub struct PartStepRecord {
     pub triangles: usize,
     /// The size of its triangles, at least the finer steps'.
     pub detail: f64,
+    /// The most cover it loses or gains against the part mesh from any
+    /// direction, and on average (`crate::parts::PartStep`).
+    pub cover: f64,
+    pub mean_cover: f64,
 }
 
 fn full_span() -> f64 {
@@ -1412,6 +1423,8 @@ fn assemble(
                                 .max()
                                 .unwrap_or(0),
                             detail: step.detail,
+                            cover: step.cover,
+                            mean_cover: step.mean_cover,
                         })
                         .collect(),
                 })
@@ -2305,7 +2318,7 @@ fn write_part_variants(out: &mut Writer, variants: &[Mesh]) {
     }
 }
 
-/// Encode the part meshes' coarser steps as `APSTEPS1` (see the module),
+/// Encode the part meshes' coarser steps as `APSTEPS2` (see the module),
 /// leaving out the types that have none.
 #[must_use]
 pub fn encode_part_steps(steps: &[crate::parts::PartSteps]) -> Vec<u8> {
@@ -2321,13 +2334,15 @@ pub fn encode_part_steps(steps: &[crate::parts::PartSteps]) -> Vec<u8> {
         for step in &part.steps {
             out.count(step.coarse);
             out.f32(step.detail as f32);
+            out.f32(step.cover as f32);
+            out.f32(step.mean_cover as f32);
             write_part_variants(&mut out, &step.variants);
         }
     }
     out.0
 }
 
-/// Decode `APSTEPS1` part-mesh steps.
+/// Decode `APSTEPS2` part-mesh steps.
 ///
 /// # Errors
 ///
@@ -2340,7 +2355,7 @@ pub fn decode_part_steps(bytes: &[u8]) -> Result<Vec<crate::parts::PartSteps>, P
         what: "part steps",
     };
     if input.array::<8>()? != PART_STEPS_MAGIC {
-        return Err(format_error("not APSTEPS1 part-mesh steps"));
+        return Err(format_error("not APSTEPS2 part-mesh steps"));
     }
     let detail = |input: &mut Reader| -> Result<f64, PackageError> {
         let detail = f64::from(input.f32()?);
@@ -2348,6 +2363,14 @@ pub fn decode_part_steps(bytes: &[u8]) -> Result<Vec<crate::parts::PartSteps>, P
             Ok(detail)
         } else {
             Err(format_error("a part step's detail is not positive"))
+        }
+    };
+    let measured = |input: &mut Reader| -> Result<f64, PackageError> {
+        let cover = f64::from(input.f32()?);
+        if cover >= 0.0 && cover.is_finite() {
+            Ok(cover)
+        } else {
+            Err(format_error("a part step's cover is negative"))
         }
     };
     let types = input.u32()? as usize;
@@ -2362,10 +2385,14 @@ pub fn decode_part_steps(bytes: &[u8]) -> Result<Vec<crate::parts::PartSteps>, P
         for _ in 0..count {
             let coarse = input.u32()? as usize;
             let detail = detail(&mut input)?;
+            let cover = measured(&mut input)?;
+            let mean_cover = measured(&mut input)?;
             steps.push(crate::parts::PartStep {
                 coarse,
                 variants: read_part_variants(&mut input)?,
                 detail,
+                cover,
+                mean_cover,
             });
         }
         out.push(crate::parts::PartSteps {

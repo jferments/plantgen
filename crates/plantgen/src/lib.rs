@@ -165,6 +165,8 @@ pub mod venation;
 /// cover what it does there, so clusters of fruit and berries keep their
 /// cover drawn coarser.
 /// 27: a cluster of spikelets drawn as coarse as its branches merge draws
-/// each branch as the outline of its spikelets, two crossed kites, not a
-/// solid round them, so dense grass panicles get a coarsest step.
+/// half its spikelets, each longer, then each smallest branch as the
+/// outline of its spikelets, two crossed kites, not solids round them, so
+/// dense grass panicles get coarser steps; each step records the cover it
+/// loses or gains (`part-steps` is APSTEPS2).
 pub const GENERATOR_REVISION: u32 = 27;

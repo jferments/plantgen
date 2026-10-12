@@ -85,7 +85,8 @@
 //! facet; flowers and heads as one flat hexagon each, three-sided stalks
 //! and fruit at fewer facets; each smallest branch's units merged into one
 //! solid round them; every branch merged. A cluster of spikelets draws
-//! each branch as the outline of its spikelets instead, two kites crossed
+//! half its spikelets instead, each longer ([`thinned`]), then each
+//! smallest branch as the outline of its spikelets, two kites crossed
 //! along it ([`outlined`]). A cluster whose axis bears no branches stops
 //! before its units merge ([`coarsest`]).
 
@@ -115,10 +116,31 @@ pub(crate) const FLAT: usize = 2;
 const MERGED: usize = 3;
 
 /// Whether a part mesh of `cluster` drawn `coarse` steps coarser draws
-/// its branches' outlines: a cluster of spikelets from [`MERGED`].
+/// half its units, each larger ([`THINNED_GROWTH`]): a cluster of
+/// spikelets at [`MERGED`].
+#[must_use]
+pub fn thinned(cluster: &ClusterLook, coarse: usize) -> bool {
+    matches!(cluster.unit, Unit::Spikelet { .. }) && coarse == MERGED
+}
+
+/// Whether a part mesh of `cluster` drawn `coarse` steps coarser draws
+/// its smallest branches' outlines ([`Outline`]): a cluster of spikelets
+/// beyond [`MERGED`].
 #[must_use]
 pub fn outlined(cluster: &ClusterLook, coarse: usize) -> bool {
-    matches!(cluster.unit, Unit::Spikelet { .. }) && coarse >= MERGED
+    matches!(cluster.unit, Unit::Spikelet { .. }) && coarse > MERGED
+}
+
+/// How much longer a thinned cluster's units are drawn: as much as makes
+/// up the area of those it leaves out.
+const THINNED_GROWTH: f64 = std::f64::consts::SQRT_2;
+
+/// Whether the unit at `index` of `organ`'s cluster is drawn when the
+/// cluster is thinned: half of them, picked by hash.
+fn kept(organ: &GraphOrgan, index: usize) -> bool {
+    rng::unit(mix64(
+        organ.id ^ (index as u64).wrapping_mul(0x9e37_79b9_7f4a_7c15),
+    )) < 0.5
 }
 
 /// The coarsest step (`crate::parts`) a part mesh of `cluster` takes:
@@ -1609,23 +1631,36 @@ fn draw_laid(
             );
         }
     }
-    if part.coarse >= MERGED {
-        if matches!(cluster.unit, Unit::Spikelet { .. }) {
-            outlines(laid, &shown, part, &to_world, colour, mesh);
-        } else {
-            merged(laid, &shown, part, &to_world, (axis, side), colour, mesh);
-        }
+    let thinned = thinned(cluster, part.coarse);
+    if outlined(cluster, part.coarse) {
+        outlines(laid, &shown, part, &to_world, colour, mesh);
         return;
     }
+    if part.coarse >= MERGED && !thinned {
+        merged(laid, &shown, part, &to_world, (axis, side), colour, mesh);
+        return;
+    }
+    // A thinned cluster draws the units it keeps as one step coarser
+    // draws them, each longer for those it leaves out; their stalks as
+    // its own step does.
+    let stalk_part = part;
+    let (part, growth) = if thinned {
+        (Part { coarse: 1, ..part }, THINNED_GROWTH)
+    } else {
+        (part, 1.0)
+    };
     let width = cluster.unit.width();
     let detail = Detail::for_count(
         u32::try_from(laid.units.len()).unwrap_or(u32::MAX),
         part.coarse,
     );
-    for (p, shown) in laid.units.iter().zip(&shown) {
+    for (index, (p, shown)) in laid.units.iter().zip(&shown).enumerate() {
+        if thinned && !kept(organ, index) {
+            continue;
+        }
         let base = to_world(p.base);
         let direction = to_direction(p.direction);
-        let unit_length = p.length * length;
+        let unit_length = p.length * length * growth;
         let stalk = (p.base - p.attach).length() * length;
         if stalk > 1e-6 {
             let start = to_world(p.attach);
@@ -1636,7 +1671,7 @@ fn draw_laid(
                 stalk,
                 unit_length * width * 0.07,
                 p.stalk,
-                part,
+                stalk_part,
                 mesh,
             );
         }
@@ -1956,8 +1991,7 @@ fn merged(
 const SPIKELET_FILL: f64 = 0.7;
 
 /// The coarsest steps of a cluster of spikelets: each smallest branch's
-/// spikelets (at [`MERGED`]) or each branch of the cluster's own axis
-/// (beyond it) drawn as its [`Outline`].
+/// spikelets drawn as their [`Outline`].
 #[allow(clippy::float_cmp)]
 fn outlines(
     laid: &Layout,
@@ -1972,7 +2006,7 @@ fn outlines(
         let Some(shown) = shown else {
             continue;
         };
-        let key = if part.coarse > MERGED { p.top } else { p.group };
+        let key = p.group;
         let (width, _) = shown.extent();
         let length = p.length * shown.size;
         let painted = if shown.unripe {

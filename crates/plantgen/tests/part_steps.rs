@@ -14,9 +14,10 @@ fn triangles(variants: &[Mesh]) -> usize {
     variants.iter().map(Mesh::triangle_count).max().unwrap_or(0)
 }
 
-/// Every built-in species' part-mesh steps cover within
-/// [`parts::cover_limit`] (a tenth, or [`parts::OUTLINE_COVER`]) of
-/// what the part mesh covers, in near its colours, from every direction;
+/// Every built-in species' part-mesh steps cover what the part mesh
+/// covers within their [`parts::cover_rule`] (a tenth from every
+/// direction, but for grass panicles' thinned and outlined steps), in
+/// near its colours, and record the cover they were measured at;
 /// each holds at most two thirds of the triangles and its detail never shrinks; and heads,
 /// clusters and flowers across the library have steps.
 #[test]
@@ -53,12 +54,22 @@ fn part_steps_keep_cover_and_colour() {
                         let organ = &looks[part.template].organ;
                         let (mut last, mut detail) = (part.triangles(), steps.detail);
                         for step in &steps.steps {
-                            let (cover, colour) =
-                                parts::step_difference(&part.variants, &step.variants);
+                            let measured = parts::step_cover(&part.variants, &step.variants);
                             let mut wrong = Vec::new();
-                            let limit = parts::cover_limit(&looks[part.template], step.coarse);
-                            if cover > limit || colour > STEP_COLOUR {
-                                wrong.push(format!("cover {cover:.3}, colour {colour:.3}"));
+                            if !parts::cover_rule(&looks[part.template], step.coarse)
+                                .holds(&measured)
+                                || measured.colour > STEP_COLOUR
+                            {
+                                wrong.push(format!(
+                                    "cover {:.3} (mean {:.3}), colour {:.3}",
+                                    measured.worst, measured.mean, measured.colour
+                                ));
+                            }
+                            if (step.cover, step.mean_cover) != (measured.worst, measured.mean) {
+                                wrong.push(format!(
+                                    "records cover {:.3} (mean {:.3})",
+                                    step.cover, step.mean_cover
+                                ));
                             }
                             if triangles(&step.variants) * 3 > last * 2 {
                                 wrong.push(format!(

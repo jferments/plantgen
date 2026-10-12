@@ -268,6 +268,12 @@ pub struct PartStep {
     /// The size of its triangles ([`detail`]), a share of its card's
     /// length, and at least the finer steps' (see [`PartSteps`]).
     pub detail: f64,
+    /// The most cover it loses or gains against the part mesh from any
+    /// direction, and on average over them ([`step_cover`]), as measured
+    /// when it was drawn: a renderer that wants its parts faithful from
+    /// every side stops before a step whose `cover` it finds too great.
+    pub cover: f64,
+    pub mean_cover: f64,
 }
 
 /// An organ type's part mesh in steps (spec rework SEMLOD): the part mesh
@@ -311,13 +317,11 @@ pub fn part_steps(looks: &[Look], parts: &[PartMesh]) -> Vec<PartSteps> {
                     break;
                 };
                 let triangles = variants.iter().map(Mesh::triangle_count).max().unwrap_or(0);
-                if fits(&variants, last * 2 / 3)
-                    && looks_alike(
-                        &part.variants,
-                        &variants,
-                        cover_limit(&looks[index], coarse),
-                    )
-                {
+                if !fits(&variants, last * 2 / 3) {
+                    continue;
+                }
+                let measured = step_cover(&part.variants, &variants);
+                if cover_rule(&looks[index], coarse).holds(&measured) {
                     last = triangles;
                     // Each step's detail at least the finer one's, so a
                     // renderer moves to it no sooner.
@@ -326,6 +330,8 @@ pub fn part_steps(looks: &[Look], parts: &[PartMesh]) -> Vec<PartSteps> {
                         coarse,
                         detail: coarsest_detail,
                         variants,
+                        cover: measured.worst,
+                        mean_cover: measured.mean,
                     });
                 }
             }
@@ -358,36 +364,64 @@ pub const STEP_COLOUR: f64 = 0.07;
 /// Cells across the square a step's cover is measured in.
 const VIEW_CELLS: usize = 48;
 
-/// Most a step of a cluster of spikelets drawn as its branches' outlines
-/// (`crate::clusters::outlined`) may lose or gain of the part mesh's
-/// cover seen from any direction, as [`STEP_COVER`] measures it. An airy
-/// panicle covers few cells of the grid it is measured on, so its
-/// outlines, drawn only where it is a few pixels across, cannot keep
-/// within a tenth from every side.
-pub const OUTLINE_COVER: f64 = 0.5;
+/// How far a step may stray from the part mesh in cover (see
+/// [`step_cover`]): from its worst direction, and on average over them.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct CoverRule {
+    pub worst: f64,
+    pub mean: f64,
+}
 
-/// Most cover a step `coarse` steps coarser of a part mesh of `look` may
-/// lose or gain: [`OUTLINE_COVER`] for a cluster's outlines, else
-/// [`STEP_COVER`].
-#[must_use]
-pub fn cover_limit(look: &Look, coarse: usize) -> f64 {
-    if look
-        .inflorescence
-        .as_ref()
-        .is_some_and(|cluster| crate::clusters::outlined(cluster, coarse))
-    {
-        OUTLINE_COVER
-    } else {
-        STEP_COVER
+impl CoverRule {
+    /// Whether `measured` keeps within the rule, and its colour within
+    /// [`STEP_COLOUR`].
+    #[must_use]
+    pub fn holds(&self, measured: &StepCover) -> bool {
+        measured.worst <= self.worst && measured.mean <= self.mean && measured.colour <= STEP_COLOUR
     }
 }
 
-/// Whether `step`, variant by variant, looks like the part mesh `finest`
-/// from every cover direction: within `cover` and [`STEP_COLOUR`] (see
-/// [`step_difference`]).
-fn looks_alike(finest: &[Mesh], step: &[Mesh], cover: f64) -> bool {
-    let (moved, colour) = step_difference(finest, step);
-    moved <= cover && colour <= STEP_COLOUR
+/// Most a thinned step of a cluster of spikelets
+/// (`crate::clusters::thinned`) may lose or gain of the part mesh's cover
+/// from its worst direction; on average it keeps within [`STEP_COVER`].
+/// An airy panicle covers few cells of the grid it is measured on, so
+/// even its part mesh and its finest drawing differ by more than a tenth
+/// from some side.
+pub const THINNED_COVER: f64 = 0.35;
+
+/// Most a cluster of spikelets drawn as its branches' outlines
+/// (`crate::clusters::outlined`) may lose or gain of the part mesh's
+/// cover from its worst direction, and on average: a step for a renderer
+/// that trades faithfulness for speed.
+pub const OUTLINE_COVER: f64 = 0.5;
+
+/// The [`CoverRule`] a step `coarse` steps coarser of a part mesh of
+/// `look` keeps: [`THINNED_COVER`] or [`OUTLINE_COVER`] for a cluster of
+/// spikelets thinned or outlined, else [`STEP_COVER`] from every
+/// direction.
+#[must_use]
+pub fn cover_rule(look: &Look, coarse: usize) -> CoverRule {
+    let cluster = look.inflorescence.as_ref();
+    let (worst, mean) = if cluster.is_some_and(|cluster| crate::clusters::outlined(cluster, coarse))
+    {
+        (OUTLINE_COVER, OUTLINE_COVER)
+    } else if cluster.is_some_and(|cluster| crate::clusters::thinned(cluster, coarse)) {
+        (THINNED_COVER, STEP_COVER)
+    } else {
+        (STEP_COVER, STEP_COVER)
+    };
+    CoverRule { worst, mean }
+}
+
+/// How far a step is from the part mesh ([`step_cover`]).
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct StepCover {
+    /// The most cover it loses or gains from any direction, and on
+    /// average over the directions and variants.
+    pub worst: f64,
+    pub mean: f64,
+    /// The most its colour differs.
+    pub colour: f64,
 }
 
 /// How far `step` is from the part mesh `finest`, variant by variant and
@@ -400,8 +434,17 @@ fn looks_alike(finest: &[Mesh], step: &[Mesh], cover: f64) -> bool {
 /// turned toward the viewer and coloured by the nearest one.
 #[must_use]
 pub fn step_difference(finest: &[Mesh], step: &[Mesh]) -> (f64, f64) {
+    let measured = step_cover(finest, step);
+    (measured.worst, measured.colour)
+}
+
+/// [`step_difference`], with the cover lost or gained on average over
+/// the directions and variants too.
+#[must_use]
+pub fn step_cover(finest: &[Mesh], step: &[Mesh]) -> StepCover {
     let directions = crate::mesh::cover_directions();
     let mut worst = (0.0_f64, 0.0_f64);
+    let (mut sum, mut seen) = (0.0, 0_u32);
     for (fine, coarse) in finest.iter().zip(step) {
         let views: Vec<(View, View)> = directions
             .iter()
@@ -434,9 +477,19 @@ pub fn step_difference(finest: &[Mesh], step: &[Mesh]) -> (f64, f64) {
                 })
                 .fold(0.0, f64::max);
             worst = (worst.0.max(cover), worst.1.max(colour));
+            sum += cover;
+            seen += 1;
         }
     }
-    worst
+    StepCover {
+        worst: worst.0,
+        mean: if seen == 0 {
+            0.0
+        } else {
+            sum / f64::from(seen)
+        },
+        colour: worst.1,
+    }
 }
 
 /// A mesh seen along a direction: the cells it covers and their mean
