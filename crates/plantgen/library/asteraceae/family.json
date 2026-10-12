@@ -5,31 +5,76 @@
   "parent": "order/asterales",
   "traits": {
     "inflorescence_unit": "capitulum",
-    "leaf_arrangement": {"alternate": "often", "opposite": "often", "whorled": "rarely"},
-    "fruit_type": {"cypsela": "usually"}
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often",
+      "whorled": "rarely"
+    },
+    "fruit_type": {
+      "cypsela": "usually"
+    }
   },
   "rules": {
     "appearance.organs.*.shape.kind": {
       "template": "head",
-      "map": {"capitulum_kind": {"radiate": "radiate", "discoid": "discoid", "disciform": "discoid", "liguliflorous": "ligulate"}},
+      "map": {
+        "capitulum_kind": {
+          "radiate": "radiate",
+          "discoid": "discoid",
+          "disciform": "discoid",
+          "liguliflorous": "ligulate"
+        }
+      },
       "between": true,
       "why": "A head is drawn as its kind: rays round a disc, a disc alone, or straps alone. A disciform head's threadlike outer florets barely show, so it is drawn as a discoid one."
     },
     "appearance.organs.*.shape.rays": {
       "template": "head",
-      "map": {"capitulum_kind": {"radiate": {"rule": "clamp(round(ray_florets), 0, 60)"}, "discoid": 0, "disciform": 0, "liguliflorous": 0}},
+      "map": {
+        "capitulum_kind": {
+          "radiate": {
+            "rule": "clamp(round(ray_florets), 0, 60)"
+          },
+          "discoid": 0,
+          "disciform": 0,
+          "liguliflorous": 0
+        }
+      },
       "between": true,
       "why": "A radiate head draws each of its ray florets as a ray; the other kinds have none."
     },
     "appearance.organs.*.shape.disc": {
       "template": "head",
-      "map": {"capitulum_kind": {"radiate": {"rule": "involucre_diameter_m / (involucre_diameter_m + 2 * ray_length_m)"}, "discoid": 0.85, "disciform": 0.85}},
+      "map": {
+        "capitulum_kind": {
+          "radiate": {
+            "rule": "involucre_diameter_m / (involucre_diameter_m + 2 * ray_length_m)"
+          },
+          "discoid": 0.85,
+          "disciform": 0.85
+        }
+      },
       "between": true,
       "why": "A radiate head's disc is about as wide as its involucre, with a ray's length beyond it on either side: the disc's share of the head's width. A head of disc florets alone is its disc, its florets spreading a little past the involucre's rim."
     },
     "appearance.organs.*.shape.florets": {
       "template": "head",
-      "map": {"capitulum_kind": {"radiate": {"rule": "clamp(round(disc_florets), 1, 1000)"}, "discoid": {"rule": "clamp(round(disc_florets), 1, 1000)"}, "disciform": {"rule": "clamp(round(disc_florets), 1, 1000)"}, "liguliflorous": {"rule": "clamp(round(ligulate_florets), 1, 1000)"}}},
+      "map": {
+        "capitulum_kind": {
+          "radiate": {
+            "rule": "clamp(round(disc_florets), 1, 1000)"
+          },
+          "discoid": {
+            "rule": "clamp(round(disc_florets), 1, 1000)"
+          },
+          "disciform": {
+            "rule": "clamp(round(disc_florets), 1, 1000)"
+          },
+          "liguliflorous": {
+            "rule": "clamp(round(ligulate_florets), 1, 1000)"
+          }
+        }
+      },
       "between": true,
       "why": "A head draws each of its disc florets, or of a head of straps each strap, on its receptacle, up to the 1,000 a head can hold."
     },
@@ -50,14 +95,57 @@
     },
     "appearance.organs.*.shape.receptacle": {
       "template": "head",
-      "map": {"receptacle_shape": {"flat": 0, "convex": 0.3, "hemispheric": 1, "conic": 2}},
+      "map": {
+        "receptacle_shape": {
+          "flat": 0,
+          "convex": 0.3,
+          "hemispheric": 1,
+          "conic": 2
+        }
+      },
       "between": true,
       "why": "The receptacle's dome is as tall for its radius as its shape word says: none for flat, a third for convex, the radius for a half sphere, twice it for a cone; between two words, between their heights."
     },
     "appearance.organs.*.shape.pappus": {
       "template": "head",
-      "map": {"pappus": {"absent": 0, "crown": 0.1, "scales": 0.25, "awns": 0.5, "bristles": {"rule": "clamp(pappus_length_m / (0.5 * involucre_diameter_m), 0, 3)"}}},
+      "map": {
+        "pappus": {
+          "absent": 0,
+          "crown": 0.1,
+          "scales": 0.25,
+          "awns": 0.5,
+          "bristles": {
+            "rule": "clamp(pappus_length_m / (0.5 * involucre_diameter_m), 0, 3)"
+          }
+        }
+      },
       "why": "A fruit in seed carries its pappus: bristles as long as the flora measures them for the disc's radius, which is about the involucre's; a crown, scales and awns, which floras seldom measure, a tenth, a quarter and a half of it."
+    }
+  },
+  "forms": {
+    "forb": {
+      "generator": {
+        "program": "herb"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's forb species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    },
+    "shrub": {
+      "generator": {
+        "program": "broadleaf"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's shrub species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
     }
   },
   "evidence": {

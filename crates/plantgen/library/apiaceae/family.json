@@ -4,14 +4,47 @@
   "name": "Apiaceae",
   "parent": "order/apiales",
   "traits": {
-    "inflorescence": {"compound_umbel": "usually", "umbel": "sometimes", "head": "rarely"},
+    "inflorescence": {
+      "compound_umbel": "usually",
+      "umbel": "sometimes",
+      "head": "rarely"
+    },
     "flower_merosity": 5,
-    "flower_symmetry": {"actinomorphic": "usually", "zygomorphic": "sometimes"},
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "sometimes"
+    },
     "perianth": "sepals_and_petals",
     "hypanthium": false,
     "ovary_position": "inferior",
     "stamens": 5,
     "carpels": 2
+  },
+  "forms": {
+    "forb": {
+      "generator": {
+        "program": "herb"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's forb species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    },
+    "shrub": {
+      "generator": {
+        "program": "broadleaf"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's shrub species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    }
   },
   "evidence": {
     "traits.inflorescence": {

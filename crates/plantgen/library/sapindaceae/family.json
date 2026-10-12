@@ -5,17 +5,28 @@
   "parent": "order/sapindales",
   "traits": {
     "flower_merosity": 5,
-    "flower_symmetry": {"actinomorphic": "usually", "zygomorphic": "sometimes"},
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "sometimes"
+    },
     "perianth": "sepals_and_petals",
     "hypanthium": false,
     "ovary_position": "superior",
     "carpels": 3
+  },
+  "generator": {
+    "program": "sapindaceae"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",
       "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full, as Aceraceae, with family summaries (Hamburg's Botany Online, G. Carr, FloraBase) as search results quote them (the pages themselves were not read): flowers actinomorphic or zygomorphic, 4- or 5-merous, with a nectar disk rather than a floral cup; ovary superior, usually of 3 carpels (2 in the maples)."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the authors chose to grow this taxon's species (named in each species' spec until G2.3a moved it here)."
     }
   }
 }

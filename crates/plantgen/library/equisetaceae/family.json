@@ -2,5 +2,19 @@
   "schema": 1,
   "rank": "family",
   "name": "Equisetaceae",
-  "parent": "order/equisetales"
+  "parent": "order/equisetales",
+  "forms": {
+    "fern": {
+      "generator": {
+        "program": "herb"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's fern species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    }
+  }
 }

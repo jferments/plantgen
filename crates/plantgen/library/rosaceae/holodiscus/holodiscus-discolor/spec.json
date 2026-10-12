@@ -11,7 +11,6 @@
   },
   "growth_form": "shrub",
   "generator": {
-    "program": "broadleaf",
     "params": {
       "crown_height": 3.5,
       "crown_radius": 2.0,
@@ -153,11 +152,6 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The growth form the spec's authors chose from the plant's habit."
-    },
-    "generator.program": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "The program the spec's authors chose to grow this form."
     },
     "growth": {
       "evidence": "Authored",

@@ -1,0 +1,34 @@
+# Cattails (Typha, Typhaceae), on the sedge base (growth plan G2.3a). The
+# values are the sedge program's defaults until G2.3a; each species
+# still sets its own where it differs.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem typha 1 extends sedge;
+
+param vigour_spread = 0.1;
+param shoots_per_year = 20;
+param shoot_life = 1;       # years a shoot lives
+param stand_radius = 2;     # radius the stand spreads to
+param spread_years = 8;     # how fast it spreads
+param leaves = 6;           # leaves a shoot
+param leaf_length = 1.5;
+param leaf_spread = 0.15;   # leaves are leaf_length (1 ± leaf_spread) long
+param leaf_angle = 12;      # most a leaf leans out from upright
+param divergence = 137.5;   # roll from one leaf to the next
+param flowering = 0.5;      # chance that a shoot flowers
+param flower_age = 1;       # the stand's first year of flowering
+param culm_height = 2;
+param height_spread = 0.12;
+param culm_radius = 0.006;
+param culm_lean = 3;
+param head = 0;             # 0 spike, 1 umbel, 2 panicle
+param spike_length = 0.2;
+param rays = 12;
+param ray_angle = 60;       # half the spread of an umbel's rays, or a panicle branch's angle
+param ray_length = 0.25;
+param tuft_length = 0.12;   # an umbel tuft's or a panicle cluster's length
+param panicle_length = 0.4;
+param leaf_area = 0.06;
+param spike_area = 0.14;
+param tuft_area = 0.2;

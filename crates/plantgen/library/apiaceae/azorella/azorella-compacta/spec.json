@@ -10,7 +10,6 @@
   },
   "growth_form": "cushion",
   "generator": {
-    "program": "cushion",
     "params": {
       "max_radius": 0.95,
       "size_years": 90,
@@ -108,11 +107,6 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The growth form the spec's authors chose from the plant's habit."
-    },
-    "generator.program": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "The program the spec's authors chose to grow this form."
     },
     "growth": {
       "evidence": "Authored",

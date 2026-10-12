@@ -7,11 +7,28 @@
     "leaf_arrangement": "alternate",
     "phyllotaxis_pattern": "distichous",
     "flower_merosity": 3,
-    "flower_symmetry": {"actinomorphic": "usually", "zygomorphic": "sometimes"},
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "sometimes"
+    },
     "perianth": "tepals",
     "ovary_position": "inferior",
     "stamens": 3,
     "carpels": 3
+  },
+  "forms": {
+    "forb": {
+      "generator": {
+        "program": "herb"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's forb species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    }
   },
   "evidence": {
     "traits.leaf_arrangement": {

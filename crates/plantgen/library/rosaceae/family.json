@@ -8,7 +8,36 @@
     "flower_symmetry": "actinomorphic",
     "perianth": "sepals_and_petals",
     "hypanthium": true,
-    "ovary_position": {"superior": "usually", "inferior": "sometimes"}
+    "ovary_position": {
+      "superior": "usually",
+      "inferior": "sometimes"
+    }
+  },
+  "forms": {
+    "decurrent_tree": {
+      "generator": {
+        "program": "broadleaf"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's decurrent tree species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    },
+    "shrub": {
+      "generator": {
+        "program": "broadleaf"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's shrub species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    }
   },
   "evidence": {
     "traits": {

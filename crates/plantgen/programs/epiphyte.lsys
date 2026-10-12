@@ -21,38 +21,43 @@
 # A colony is drawn afresh each year at its age, and last year's drawing
 # is cut, so its strands and stems lengthen as it ages.
 #
+# Revision 2 (growth plan G2.3a): a starting base with no values. Each
+# parameter is `param name;`, and the lineage programs that extend it
+# (`tillandsia`, `phoradendron`) give the values, as this program's
+# defaults were until then.
+#
 # A colony lives colony_life years. One step is one year. Angles are
 # degrees; lengths are metres.
 
-lsystem epiphyte 1;
+lsystem epiphyte 2;
 
-param colonies = 30;
-param seeds_per_year = 4;
-param crown_low = 2;
-param crown_high = 8;
-param crown_radius = 4;
-param reach = 2.5;
-param kind = 0;               # 0 festoons, 1 a clump
-param colony_life = 30;
-param size_years = 6;
+param colonies;
+param seeds_per_year;
+param crown_low;
+param crown_high;
+param crown_radius;
+param reach;
+param kind;                   # 0 festoons, 1 a clump
+param colony_life;
+param size_years;
 # Festoons.
-param strands = 6;
-param strand_length = 0.8;
-param pieces = 10;
-param kink = 25;
-param hang = 0.6;             # tropism of a strand toward the ground
-param strand_radius = 0.0012;
-param scale_size = 0.05;
+param strands;
+param strand_length;
+param pieces;
+param kink;
+param hang;                   # tropism of a strand toward the ground
+param strand_radius;
+param scale_size;
 # A clump.
-param stems = 8;
-param forks = 3;
-param clump_radius = 0.3;
-param stem_radius = 0.003;
-param fork_angle = 35;
-param fruit_age = 3;
-param fruit_size = 0.008;
-param scale_area = 0.1;
-param fruit_area = 0.89;
+param stems;
+param forks;
+param clump_radius;
+param stem_radius;
+param fork_angle;
+param fruit_age;
+param fruit_size;
+param scale_area;
+param fruit_area;
 
 module Y(n);                  # the seed rain: colonies so far
 module Sw(k, m);              # seeds k to k + m - 1 of this year's rain
