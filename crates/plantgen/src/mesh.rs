@@ -1435,7 +1435,7 @@ fn organ_card(
     };
     // A sun, shade or juvenile leaf is drawn with its family's look
     // (plant roadmap P4), placed and coloured as its type's.
-    let (drawn, share) = look.forms.of(index, organ.light, organ.born);
+    let (drawn, share) = look.forms.of(index, organ);
     let (Some(shown), Ok(template)) = (looks.get(drawn), u8::try_from(drawn)) else {
         return;
     };
@@ -2418,6 +2418,7 @@ mod tests {
                     shed: None,
                     light: 0.5,
                     within: None,
+                    adult: None,
                 })
                 .collect(),
             structures: Vec::new(),
@@ -2624,6 +2625,7 @@ mod tests {
                     shed: None,
                     light: 0.5,
                     within: None,
+                    adult: None,
                 }
             })
             .collect();
@@ -3011,6 +3013,7 @@ mod tests {
             shed: None,
             light: 1.0,
             within: None,
+            adult: None,
         }
     }
 
@@ -3059,7 +3062,7 @@ mod tests {
                 families: Some(crate::looks::Families {
                     plasticity: 0.6,
                     juvenile: Some(crate::looks::Juvenile {
-                        until: 4.0,
+                        until: Some(4.0),
                         shape: Shape::Simple(crate::looks::Simple::default()),
                     }),
                 }),

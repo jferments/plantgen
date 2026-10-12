@@ -30,7 +30,6 @@
       "lean": 5,
       "wiggle": 5,
       "blooms": 2,
-      "bloom_age": 6,
       "bloom_size": 0.04,
       "bloom_angle": 30,
       "shade_death": 0.04,
@@ -129,7 +128,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "juvenile_period_years": {"min": 6, "max": 10}
+  },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Gucker 2005, read): Pacific dogwood flowers first when about 6 years old; others report a minimum seed-bearing age of 10, as the Woody Plant Seed Manual's table 3 (Cornus, read) does. It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 6 years set by hand."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

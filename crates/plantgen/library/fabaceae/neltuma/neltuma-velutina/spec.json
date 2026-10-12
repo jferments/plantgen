@@ -43,7 +43,7 @@
       "thorn_length": 0.02,
       "thorn_angle": 60,
       "blooms": 2,
-      "bloom_age": 8,
+      "adult_age": 8,
       "bloom_size": 0.08,
       "bloom_angle": 60,
       "life": 100,

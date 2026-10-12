@@ -523,6 +523,10 @@ pub struct Tally {
     /// How many are in each phase: primordium, bud, open, fruit and shed
     /// ([`PHASES`]); those without phases are in none.
     pub phases: [u64; 5],
+    /// How many of the organs counted are on juvenile shoots (adultness
+    /// below 0.5) and how many on adult ones, of those whose program
+    /// records adultness (spec rework P6).
+    pub adult: [u64; 2],
     /// The program's organ and structure types counted, each with how
     /// many; none for parts its layouts give.
     pub types: Vec<(String, u64)>,
@@ -657,6 +661,9 @@ pub fn census(
         let here = tally_at(&mut tallies, &at);
         here.add(phase);
         here.add_type(name);
+        if let Some(adult) = organ.adult {
+            here.adult[usize::from(adult >= 0.5)] += 1;
+        }
         held.insert((organ.within, term));
         if !matches!(phase, Some(Phase::Primordium | Phase::Shed))
             && let Some(look) = looks.get(index)
@@ -728,6 +735,7 @@ mod tests {
             shed: None,
             light: 1.0,
             within,
+            adult: None,
         };
         let structure = |structure: u16, within: Option<u32>| GraphStructure {
             id: 0,
@@ -798,6 +806,7 @@ mod tests {
             shed: None,
             light: 1.0,
             within: None,
+            adult: None,
         };
         let on = |organ: &GraphOrgan, day| phase(organ, Some(&season), day, 3.0);
         assert_eq!(on(&organ, 50.0), Some(Phase::Primordium));
@@ -963,6 +972,7 @@ mod tests {
             shed,
             light: 1.0,
             within,
+            adult: None,
         };
         let frond = |within: Option<u32>| GraphStructure {
             id: 0,
@@ -989,9 +999,9 @@ mod tests {
             bud_look: None,
             flower_look: None,
         };
-        // Two fronds, of three pinnae and of two; a head open, and one
-        // shed, which holds nothing.
-        let graph = PlantGraph {
+        // Two fronds, of three pinnae and of two; a head open, on an adult
+        // shoot, and one shed, on a juvenile one, which holds nothing.
+        let mut graph = PlantGraph {
             age: 2.0,
             height: 1.0,
             segments: Vec::new(),
@@ -1006,6 +1016,8 @@ mod tests {
             ],
             structures: vec![frond(None), frond(None)],
         };
+        graph.organs[5].adult = Some(1.0);
+        graph.organs[6].adult = Some(0.2);
         let tallies = census(
             &graph,
             &organ_types,
@@ -1029,6 +1041,7 @@ mod tests {
         let head = &tallies[1];
         assert_eq!((head.term.as_str(), head.count), ("capitulum", 2));
         assert_eq!(head.phases, [0, 0, 1, 0, 1]);
+        assert_eq!((head.adult, leaflet.adult), ([1, 1], [0, 0]));
         let inside: Vec<_> = head
             .parts
             .iter()

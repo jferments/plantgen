@@ -63,12 +63,15 @@ pub enum Turtle {
     /// `steer(x, y, z, w)`: turn the heading a fraction `w` of the way toward
     /// the plant-frame direction `(x, y, z)`.
     Steer,
+    /// `adult(a)`: the adultness of the organs drawn after it in the
+    /// branch, 0 a juvenile shoot to 1 an adult one (spec rework P6).
+    Adult,
 }
 
 impl Turtle {
     /// Every built-in symbol in symbol-id order, with its text and argument
     /// count after defaults are filled in.
-    pub const ALL: [(Self, &'static str, u8); 16] = [
+    pub const ALL: [(Self, &'static str, u8); 17] = [
         (Self::Push, "[", 0),
         (Self::Pop, "]", 0),
         (Self::Cut, "%", 0),
@@ -85,6 +88,7 @@ impl Turtle {
         (Self::Width, "!", 1),
         (Self::Tropism, "T", 4),
         (Self::Steer, "steer", 4),
+        (Self::Adult, "adult", 1),
     ];
 
     fn is_turn(self) -> bool {
@@ -102,7 +106,9 @@ pub const FORWARD: u16 = 3;
 pub const MOVE: u16 = 4;
 /// `/`: a ring turns each copy with it.
 pub const ROLL: u16 = 10;
-pub const FIRST_USER_SYMBOL: u16 = 16;
+/// `adult`: a shoot's adultness (spec rework P6).
+pub const ADULT: u16 = 16;
+pub const FIRST_USER_SYMBOL: u16 = 17;
 
 /// What an organ is, which decides how it is drawn and shaded.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
@@ -463,6 +469,22 @@ impl Program {
         })
     }
 
+    /// Whether the program draws `adult` anywhere, so that the organs it
+    /// places may record a shoot's adultness (spec rework P6).
+    #[must_use]
+    pub fn draws_adult(&self) -> bool {
+        let rules = self
+            .productions
+            .iter()
+            .chain(&self.decompositions)
+            .chain(&self.interpretations)
+            .flatten();
+        self.axiom.iter().any(|item| item.symbol == ADULT)
+            || rules
+                .flat_map(|rule| rule.successor.iter())
+                .any(|item| item.symbol == ADULT)
+    }
+
     #[must_use]
     pub fn symbol_id(&self, name: &str) -> Option<u16> {
         self.symbols
@@ -563,7 +585,7 @@ const BUILTIN_NAMES: [&str; 13] = [
 fn reserved(name: &str) -> Option<&'static str> {
     if KEYWORDS.contains(&name) {
         Some("a keyword")
-    } else if BUILTIN_NAMES.contains(&name) || name == "steer" {
+    } else if BUILTIN_NAMES.contains(&name) || name == "steer" || name == "adult" {
         Some("a built-in name")
     } else if EnvField::from_name(name).is_some() {
         Some("an environment field")

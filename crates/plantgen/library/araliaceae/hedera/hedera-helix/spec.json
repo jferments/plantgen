@@ -20,6 +20,8 @@
       "climb": 0.35,
       "seek": 0.6,
       "drape": 0.03,
+      "adult_rise": 0.25,
+      "adult_light": 0.6,
       "free_years": 1.5,
       "branch_chance": 0.15,
       "branch_angle": 50,
@@ -27,7 +29,6 @@
       "leaf_size": 0.1,
       "leaf_angle": 70,
       "leaf_years": 3,
-      "fruit_age": 8,
       "fruiting": 0.15,
       "fruit_size": 0.07,
       "pipe_tip": 0.0015,
@@ -55,15 +56,28 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "palmate",
-          "lobes": 5,
-          "depth": 0.35,
-          "lobe_width": 0.45,
+          "template": "simple",
+          "width": 0.8,
+          "widest": 0.3,
+          "tip": 0.4,
+          "base": 0.8,
           "teeth": 0,
-          "spread": 0.8,
-          "petiole": 0.35
+          "petiole": 0.15
         },
-        "face_up": 0.6
+        "face_up": 0.6,
+        "families": {
+          "juvenile": {
+            "shape": {
+              "template": "palmate",
+              "lobes": 5,
+              "depth": 0.35,
+              "lobe_width": 0.45,
+              "teeth": 0,
+              "spread": 0.8,
+              "petiole": 0.35
+            }
+          }
+        }
       },
       "fruit": {
         "shape": {
@@ -89,7 +103,30 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "juvenile_period_years": 10
+  },
   "evidence": {
+    "generator.params.adult_light": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Waggy 2010, read): adult ivy flowers in bright light, sexual reproduction typically occurs in climbing plants that reach sufficient light, and plants in the adult phase occur in the sun. So under climber revision 3 (spec rework P6) a side shoot of a climbing stem whose tip has at least this share of the open sky turns adult once the vine is past its juvenile period, as do free shoots; the share, 0.6, is hand-set so that only the brightest shoots turn adult (the growth model takes 0.35 for full sun on a leaf)."
+    },
+    "generator.params.adult_rise": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Waggy 2010, read), after Stein and Fosket (1969): an adult shoot grows upright (orthotropic) and has no aerial roots, where a juvenile shoot creeps or climbs (plagiotropic) on them. So under climber revision 3 (spec rework P6) an adult shoot no longer clings or seeks its host and rises under a tropism of its own; its elasticity, 0.25, a little below a clinging shoot's climb, is hand-set."
+    },
+    "appearance.organs.leaf": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Waggy 2010, read): leaves 3 to 5 lobed in the juvenile phase and broadly lanceolate and unlobed in the adult phase, whose stems flower; other floras call the adult leaf ovate, rhombic or elliptic (search results only, the pages themselves were not read). So the leaf's own look is the adult's, an entire ovate blade, and its juvenile family the five-lobed palmate look, drawn on juvenile shoots (spec rework P6). The adult blade is drawn broadly ovate so that both draw about the leaf area the plant shades with: no source read gives the two phases' sizes apart."
+    },
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Waggy 2010, read): the juvenile period is long, often lasting 10 years or more (citing Reichard 2000). It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 8 years set by hand."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

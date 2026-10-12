@@ -174,7 +174,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "juvenile_period_years": {"min": 30, "max": 50, "typical": 40}
+  },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Helmy 2021, read): most saguaros begin producing fruit when about 2 to 2.5 m tall, about 30 to 50 years old. The Woody Plant Seed Manual (Carnegiea, read): reproductive maturity at about 2 m and an age of about 40 years (Steenbergh and Lowe 1983). The succulent program's own bloom_age, scaled by vigour, stays; the period is for the checks."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

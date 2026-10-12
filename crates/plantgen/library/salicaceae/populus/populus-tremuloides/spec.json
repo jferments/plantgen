@@ -89,7 +89,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "juvenile_period_years": {"min": 2, "max": 3}
+  },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Howard 1996, read): quaking aspen first flowers at 2 to 3 years; large seed crops from 10 to 20. It sets adult_age through the rule at the seed plants (spec rework P6), in place of broadleaf's default of 4 years."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

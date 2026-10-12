@@ -38,7 +38,6 @@
       "pipe_rings": 1.4e-05,
       "extinction": 0.45,
       "blooms": 3,
-      "bloom_age": 6,
       "bloom_size": 0.07,
       "bloom_angle": 100,
       "leaf_area": 0.302,
@@ -145,7 +144,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "juvenile_period_years": {"min": 3, "max": 10}
+  },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual (Alnus, table 3, read): minimum seed-bearing age 3 to 4 years. FEIS (Uchytil 1989, read): seed production begins at about 10 years, but sometimes sooner. It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 6 years set by hand."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

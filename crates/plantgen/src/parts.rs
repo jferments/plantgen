@@ -228,6 +228,7 @@ fn variants_at(looks: &[Look], index: usize, coarse: usize) -> Option<Vec<Mesh>>
         shed: None,
         light: 1.0,
         within: None,
+        adult: None,
     };
     // The frame of a card of this type on the organ drawn.
     let (base, heading, left, length) = crate::mesh::place(&at(0), &looks[index]);
@@ -823,6 +824,7 @@ mod tests {
                 shed: None,
                 light: 1.0,
                 within: None,
+                adult: None,
             };
             let (base, heading, left, length) = crate::mesh::place(&organ, &looks[0]);
             let out = left.cross(heading);

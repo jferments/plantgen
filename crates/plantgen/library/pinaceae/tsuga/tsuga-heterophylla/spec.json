@@ -13,7 +13,6 @@
   "generator": {
     "program": "conifer",
     "params": {
-      "cone_age": 20,
       "cone_chance": 0.15,
       "cone_length": 0.025,
       "cone_pitch": 120,
@@ -110,7 +109,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "juvenile_period_years": {"min": 20, "max": 30}
+  },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual (Tsuga, table 3, read): minimum seed-bearing age 20 to 30 years. FEIS (Tesky 1992, read): cones may form on open-grown trees less than 20 years old, good crops at 25 to 30. It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 20 years set by hand."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

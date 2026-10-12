@@ -13,7 +13,7 @@
   "generator": {
     "program": "conifer",
     "params": {
-      "cone_age": 15,
+      "adult_age": 15,
       "cone_chance": 0.1,
       "cone_length": 0.2,
       "cone_pitch": 120,

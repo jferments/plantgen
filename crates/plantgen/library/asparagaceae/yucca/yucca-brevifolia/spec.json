@@ -192,7 +192,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "juvenile_period_years": {"min": 50, "max": 70}
+  },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "nps-joshua-trees",
+      "note": "The National Park Service's Joshua Tree National Park page (read): Joshua trees typically flower for the first time at about 50 to 70 years of age, or around 2.5 m tall. The Woody Plant Seed Manual's 5 to 6 years (Yucca, read) is for the genus under favourable conditions. The rosette program's own flower_age, a crown's age, stays; the period is for the checks."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

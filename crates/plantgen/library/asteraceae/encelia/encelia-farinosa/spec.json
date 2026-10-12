@@ -46,7 +46,7 @@
       "space_reach": 0.425,
       "space_kill": 0.105,
       "blooms": 2,
-      "bloom_age": 2,
+      "adult_age": 2,
       "bloom_size": 0.045,
       "bloom_angle": 10,
       "bloom_area": 0.508,

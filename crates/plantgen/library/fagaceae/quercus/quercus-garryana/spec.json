@@ -42,7 +42,6 @@
       "leaf_area": 0.303,
       "bloom_area": 0.72,
       "blooms": 1,
-      "bloom_age": 20,
       "bloom_size": 0.045,
       "bloom_angle": 60
     }
@@ -145,7 +144,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "juvenile_period_years": 20
+  },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Gucker 2007, read): trees less than 20 years old did not produce acorns, but production increased with age until trees were nearly 80 years old (epicormic branches bore acorns 5 years after sprouting). It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 20 years set by hand."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

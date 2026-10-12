@@ -44,7 +44,7 @@
       "thorn_length": 0.015,
       "thorn_angle": 60,
       "blooms": 3,
-      "bloom_age": 10,
+      "adult_age": 10,
       "bloom_size": 0.025,
       "bloom_angle": 40,
       "leaf_area": 0.236,

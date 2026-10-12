@@ -29,7 +29,7 @@
 //! | kind | format |
 //! |------|--------|
 //! | `program` | the plant program's UTF-8 source |
-//! | `graph` | one keyframe's [`PlantGraph`], `APGRAPH1`, or `APGRAPH2` for a plant with structures (below) |
+//! | `graph` | one keyframe's [`PlantGraph`], `APGRAPH1`, `APGRAPH2` for a plant with structures, or `APGRAPH3` for one whose organs record adultness (below) |
 //! | `mesh` | one level of detail, `APMESH1` (below) |
 //! | `impostor-albedo` | PNG, sRGB colour with coverage in alpha |
 //! | `impostor-normal-depth` | PNG, world normal · 0.5 + 0.5, depth in alpha |
@@ -65,6 +65,17 @@
 //! structures: u32 count S, then S × (u64 id, u16 structure type, u16 0,
 //!             u32 within (0xFFFFFFFF: none), f32 born)
 //! within:     u32 per segment, then u32 per organ (0xFFFFFFFF: none)
+//! ```
+//!
+//! A graph whose organs record their shoot's adultness (spec rework P6:
+//! an ivy's juvenile and adult shoots) is `APGRAPH3`: `APGRAPH2`, its
+//! structures' count 0 where it has none, then a byte per organ, padded
+//! with zeros to a multiple of 4 bytes. A plant whose program never draws
+//! `adult` is written `APGRAPH1` or `APGRAPH2` as before.
+//!
+//! ```text
+//! adult: u8 per organ, round(254 a) for adultness a from 0 (juvenile) to
+//!        1 (adult), 255 where the organ records none
 //! ```
 //!
 //! A mesh is the magic, then the wood and then the organ cards, each as one
@@ -158,6 +169,10 @@ pub const OBJECTS: &str = "objects";
 pub const GRAPH_MAGIC: [u8; 8] = *b"APGRAPH1";
 /// The magic of a graph that holds structures (spec rework M7).
 pub const GRAPH_MAGIC_STRUCTURES: [u8; 8] = *b"APGRAPH2";
+/// The magic of a graph whose organs record adultness (spec rework P6).
+pub const GRAPH_MAGIC_ADULT: [u8; 8] = *b"APGRAPH3";
+/// The byte of an organ that records no adultness in an `APGRAPH3` graph.
+const NO_ADULTNESS: u8 = 255;
 pub const MESH_MAGIC: [u8; 8] = *b"APMESH1\0";
 pub const PARTS_MAGIC: [u8; 8] = *b"APPARTS2";
 
@@ -1917,15 +1932,18 @@ impl<'a> Reader<'a> {
     }
 }
 
-/// Encode a keyframe graph: `APGRAPH1`, or `APGRAPH2` when it holds
-/// structures.
+/// Encode a keyframe graph: `APGRAPH1`, `APGRAPH2` when it holds
+/// structures, or `APGRAPH3` when its organs record adultness.
 #[must_use]
 pub fn encode_graph(graph: &PlantGraph) -> Vec<u8> {
-    let structures = !graph.structures.is_empty();
+    let adult = graph.organs.iter().any(|organ| organ.adult.is_some());
+    let structures = adult || !graph.structures.is_empty();
     let mut out = Writer(Vec::with_capacity(
         GRAPH_HEADER + graph.segments.len() * SEGMENT_BYTES + graph.organs.len() * ORGAN_BYTES,
     ));
-    out.bytes(if structures {
+    out.bytes(if adult {
+        &GRAPH_MAGIC_ADULT
+    } else if structures {
         &GRAPH_MAGIC_STRUCTURES
     } else {
         &GRAPH_MAGIC
@@ -1990,11 +2008,20 @@ pub fn encode_graph(graph: &PlantGraph) -> Vec<u8> {
             out.u32(within.unwrap_or(NONE));
         }
     }
+    if adult {
+        for organ in &graph.organs {
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            out.u8(organ.adult.map_or(NO_ADULTNESS, |adult| {
+                (adult.clamp(0.0, 1.0) * 254.0).round() as u8
+            }));
+        }
+        out.pad();
+    }
     out.0
 }
 
-/// Decode an `APGRAPH1` or `APGRAPH2` graph. Values come back at 32-bit
-/// precision.
+/// Decode an `APGRAPH1`, `APGRAPH2` or `APGRAPH3` graph. Values come
+/// back at 32-bit precision, adultness to 1/254.
 ///
 /// # Errors
 ///
@@ -2010,9 +2037,10 @@ pub fn decode_graph(bytes: &[u8]) -> Result<PlantGraph, PackageError> {
         what: "graph",
     };
     let magic = input.array::<8>()?;
-    let structures = magic == GRAPH_MAGIC_STRUCTURES;
+    let adult = magic == GRAPH_MAGIC_ADULT;
+    let structures = adult || magic == GRAPH_MAGIC_STRUCTURES;
     if magic != GRAPH_MAGIC && !structures {
-        return Err(format_error("not an APGRAPH1 or APGRAPH2 graph"));
+        return Err(format_error("not an APGRAPH1, APGRAPH2 or APGRAPH3 graph"));
     }
     let age = input.real()?;
     let height = input.real()?;
@@ -2092,6 +2120,7 @@ pub fn decode_graph(bytes: &[u8]) -> Result<PlantGraph, PackageError> {
             shed: input.shed()?,
             light: input.real()?,
             within: None,
+            adult: None,
         });
     }
     let body_segments: Vec<usize> = graph
@@ -2119,18 +2148,40 @@ pub fn decode_graph(bytes: &[u8]) -> Result<PlantGraph, PackageError> {
             graph.segments[index].left = input.vec3()?;
         }
     }
+    // An APGRAPH3 graph ends with its organs' adultness.
+    let adultness = if adult {
+        graph.organs.len().next_multiple_of(4)
+    } else {
+        0
+    };
     if structures {
-        read_structures(&mut input, &mut graph)?;
+        read_structures(&mut input, &mut graph, adultness)?;
+    }
+    if adult {
+        for organ in &mut graph.organs {
+            let byte = input.u8()?;
+            organ.adult = match byte {
+                NO_ADULTNESS => None,
+                0..=254 => Some(f32::from(byte) / 254.0),
+            };
+        }
+        for _ in graph.organs.len()..adultness {
+            input.u8()?;
+        }
     }
     input.finish()?;
     Ok(graph)
 }
 
 /// An `APGRAPH2` graph's structures, and what each segment and organ is
-/// within.
-fn read_structures(input: &mut Reader<'_>, graph: &mut PlantGraph) -> Result<(), PackageError> {
+/// within, followed by `after` bytes of other sections.
+fn read_structures(
+    input: &mut Reader<'_>,
+    graph: &mut PlantGraph,
+    after: usize,
+) -> Result<(), PackageError> {
     let count = input.u32()? as usize;
-    let left = input.bytes.len() - input.at;
+    let left = (input.bytes.len() - input.at).saturating_sub(after);
     let parts = graph.segments.len() + graph.organs.len();
     if count
         .checked_mul(STRUCTURE_BYTES)

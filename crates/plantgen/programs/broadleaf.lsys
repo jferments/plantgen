@@ -41,9 +41,15 @@
 #
 # Revision 7 (spec rework M7): a thorn is a spine, not a leaf.
 #
+# Revision 8 (spec rework P6): the first year the plant is adult, from
+# which it flowers, is adult_age, the name the programs that measure it
+# by the plant's age share, which the rule at the seed plants sets from
+# a taxon's juvenile_period_years. It replaces bloom_age, with the same
+# default.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 7;
+lsystem broadleaf 8;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height = 22;
@@ -72,7 +78,7 @@ param leaves_per_node = 2;    # buds and leaves at a node: 2 opposite, 1 alterna
 param divergence = leaves_per_node == 2 ? 90 : 137.5;   # roll from one node to the next
 param leaf_years = 1;         # years a leaf stays on: more than 1 for evergreens
 param blooms = 0;             # blooms at the tip of a short shoot in the light
-param bloom_age = 4;          # the first year the plant blooms
+param adult_age = 4;          # the first year the plant is adult and flowers
 param bloom_size = 0.05;      # bloom card length
 param bloom_angle = 35;       # angle of a bloom to its shoot; past 90 it hangs
 param bloom_area = 0.639;     # leaf area of a bloom card 1 m long, m²
@@ -160,7 +166,7 @@ rule A(split) : vigour >= 1 && space > 0 ->
 # A lateral bud breaks into a long shoot when it has the vigour and free
 # space; otherwise, in enough light, it leafs out as a short shoot.
 rule B : vigour >= bud_break && space > 0 -> A(0);
-rule B : light >= spur_light && blooms > 0 && t >= bloom_age -> P(spur_pairs) Bo(blooms) B;
+rule B : light >= spur_light && blooms > 0 && t >= adult_age -> P(spur_pairs) Bo(blooms) B;
 rule B : light >= spur_light -> P(spur_pairs) B;
 
 # One internode, turned a little at random, with a pair of buds and a pair

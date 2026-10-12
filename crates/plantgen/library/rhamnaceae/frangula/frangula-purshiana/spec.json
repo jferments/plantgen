@@ -41,7 +41,6 @@
       "leaf_area": 0.234,
       "bloom_area": 0.765,
       "blooms": 1,
-      "bloom_age": 5,
       "bloom_size": 0.03,
       "bloom_angle": 70
     }
@@ -133,7 +132,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "juvenile_period_years": {"min": 5, "max": 7}
+  },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual (Frangula, read): cascara begins to produce fruit when it is 5 to 7 years old (Hubbard 1974). It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 5 years set by hand."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

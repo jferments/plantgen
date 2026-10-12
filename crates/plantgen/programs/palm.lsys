@@ -40,9 +40,15 @@
 # structure: a feather frond's leaflets are leaflets of it, and a fan's
 # rays, the dead frond hanging and the boot are pieces of it.
 #
+# Revision 3 (spec rework P6): the first year the plant is adult, from
+# which it bears a cone, is adult_age, the name the programs that measure it
+# by the plant's age share, which the rule at the seed plants sets from
+# a taxon's juvenile_period_years. It replaces cone_age, with the same
+# default.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem palm 2;
+lsystem palm 3;
 
 # The plant.
 param vigour_spread = 0.1;    # a palm grows exp(gauss() * vigour_spread) times as fast
@@ -101,7 +107,7 @@ param boot_length = 0.25;     # a boot, metres
 param boot_area = 0.2;
 # A cone and suckers.
 param crown_cone = 0;         # length of a cone at the crown's centre; 0 none
-param cone_age = 10;          # the first year it bears one
+param adult_age = 10;         # the first year the plant is adult and bears one
 param cone_area = 0.6;
 param suckers = 0;
 param sucker_age = 5;
@@ -137,7 +143,7 @@ rule Y(v, n) ->
     !(trunk_radius) T(0, 1, 0, upturn * trunk_rate * v)
     F(trunk_rate * v * smoothstep(0, stemless_years, age))
     Fc(0, max(1, round(fronds_per_year * v)), age * v)
-    [ Cc(age >= cone_age ? crown_cone : 0) ] Y(v, n);
+    [ Cc(age >= adult_age ? crown_cone : 0) ] Y(v, n);
 
 # The foot sends up suckers.
 rule Sb(n) : suckers > n && t >= sucker_age && rand() < sucker_rate -> [ Sk(n + 1) ] Sb(n + 1);

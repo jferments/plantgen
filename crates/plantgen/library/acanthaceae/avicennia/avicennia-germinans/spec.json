@@ -41,7 +41,7 @@
       "pipe_organ": 0.005,
       "pipe_rings": 1e-05,
       "blooms": 2,
-      "bloom_age": 6,
+      "adult_age": 6,
       "bloom_size": 0.015,
       "bloom_angle": 40,
       "leaf_area": 0.243

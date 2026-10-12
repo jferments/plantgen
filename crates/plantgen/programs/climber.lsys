@@ -16,7 +16,7 @@
 # stops. Each node bears a leaf (evergreen for leaf_years, or a year) and
 # keeps a bud that leafs again each year with the chance renew, so old
 # stems stay clothed as ivy's do; and,
-# once the vine is fruit_age old, on a free shoot a cluster of fruit with
+# once the vine is adult_age old, on a free shoot a cluster of fruit with
 # the chance fruiting.
 #
 # Revision 2 (phyllotaxis P1): each node turns divergence degrees from the
@@ -24,9 +24,25 @@
 # name every leaf-bearing program shares, which the rules at the vascular
 # plants set from a taxon's phyllotaxis_pattern.
 #
+# Revision 3 (spec rework P6): a shoot is juvenile or adult (adult(0) or
+# adult(1)), and only adult shoots fruit. Once the vine is adult_age old a
+# free shoot is adult, as it fruited before, and so is a side shoot within
+# reach of its host whose tip has at least adult_light of the open sky,
+# as an ivy's flowering shoots stand out from its climbing stems where
+# they reach the light; any other shoot is juvenile. adult_age, the first
+# year the plant is adult, is the name the programs that measure it by
+# the plant's age share, which the rule at the seed plants sets from a
+# taxon's juvenile_period_years; it replaces fruit_age, with the same
+# default. With adult_rise above 0 an adult shoot takes its own habit, as
+# an ivy's does: it stays adult, no longer seeks or clings to its host,
+# grows upward under a tropism of elasticity adult_rise in place of drape,
+# does not stop after free_years, and its side shoots are adult. With
+# adult_light above 1 and adult_rise 0, the defaults, a climber grows as
+# before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem climber 2;
+lsystem climber 3;
 
 param vigour_spread = 0.1;
 param shoots = 3;             # stems from the foot
@@ -39,6 +55,8 @@ param climb = 0.25;           # upward tropism of a clinging shoot
 param reach = 3;              # how far a shoot senses its host
 param seek = 0.5;             # how far a shoot within reach turns toward the host
 param drape = 0.08;           # downward tropism of a free shoot
+param adult_rise = 0;         # upward tropism of an adult shoot of its own habit; 0 none
+param adult_light = 2;        # least light at a tip in reach that makes it adult; over 1 never
 param free_years = 4;         # years a free shoot keeps growing
 param branch_chance = 0.12;   # chance of a side shoot at a node
 param branch_angle = 45;
@@ -48,7 +66,7 @@ param leaf_angle = 50;
 param divergence = 137.5;     # roll from one node to the next
 param leaf_years = 1;
 param renew = 0;              # chance a year that an old node leafs again
-param fruit_age = 5;
+param adult_age = 5;          # the first year the plant is adult and fruits
 param fruiting = 0.05;        # chance of a fruit cluster at a free node
 param fruit_size = 0.12;
 param leaf_area = 0.3;
@@ -57,9 +75,9 @@ param pipe_tip = 0.002;
 param pipe_organ = 0.003;
 param pipe_rings = 0.000004;
 
-module A(o, h) queries host, light;  # a shoot's tip: its order and h years hanging free
+module A(o, h, a) queries host, light;  # a shoot's tip: order, h years free, a 1 adult of its own habit
 module S queries vigour;      # the foot of a side shoot
-module M(n, o, w);            # n internodes still to lay this year; w 1 on a free shoot
+module M(n, o, w);            # n internodes still to lay this year; w 1 adult, 2 adult of its own habit
 module Sh(k, m);              # shoots k to k + m - 1 from the foot
 
 organ leaf leaf area leaf_area;
@@ -74,20 +92,28 @@ axiom Sh(0, max(1, round(shoots)));
 
 decompose Sh(k, m) : m > 1 -> Sh(k, floor(m / 2)) Sh(k + floor(m / 2), m - floor(m / 2));
 decompose Sh(k, m) : m == 1 ->
-    [ /(k * 360 / max(1, shoots) + uniform(-20, 20)) &(uniform(20, 50)) S A(0, 0) ];
+    [ /(k * 360 / max(1, shoots) + uniform(-20, 20)) &(uniform(20, 50)) S A(0, 0, 0) ];
 decompose Sh(k, m) -> ;
 
-# A shoot's tip: clinging, seeking or hanging free.
-rule A(o, h) : h >= free_years -> ;
-rule A(o, h) : gd < cling ->
-    steer(gx, gy, gz, hug) T(0, 1, 0, climb)
-    M(max(1, round(max_shoot * lerp(shade_shoot, 1, light))), o, 0) A(o, 0);
-rule A(o, h) : gd < reach ->
-    steer(gx, gy, gz, seek)
-    M(max(1, round(max_shoot * lerp(shade_shoot, 1, light) * 0.5)), o, 0) A(o, 0);
-rule A(o, h) ->
-    T(0, -1, 0, drape)
-    M(max(1, round(max_shoot * lerp(shade_shoot, 1, light) * 0.5)), o, 1) A(o, h + dt);
+# A shoot's tip: adult of its own habit, clinging, seeking or hanging
+# free.
+rule A(o, h, a) : h >= free_years -> ;
+rule A(o, h, a) : adult_rise > 0
+                  && (a > 0 || (t >= adult_age && (gd >= reach || (o > 0 && light >= adult_light)))) ->
+    adult(1) T(0, 1, 0, adult_rise)
+    M(max(1, round(max_shoot * lerp(shade_shoot, 1, light) * 0.5)), o, 2) A(o, 0, 1);
+rule A(o, h, a) : gd < cling ->
+    adult(o > 0 && t >= adult_age && light >= adult_light ? 1 : 0) steer(gx, gy, gz, hug) T(0, 1, 0, climb)
+    M(max(1, round(max_shoot * lerp(shade_shoot, 1, light))), o,
+      o > 0 && t >= adult_age && light >= adult_light ? 1 : 0) A(o, 0, 0);
+rule A(o, h, a) : gd < reach ->
+    adult(o > 0 && t >= adult_age && light >= adult_light ? 1 : 0) steer(gx, gy, gz, seek)
+    M(max(1, round(max_shoot * lerp(shade_shoot, 1, light) * 0.5)), o,
+      o > 0 && t >= adult_age && light >= adult_light ? 1 : 0) A(o, 0, 0);
+rule A(o, h, a) ->
+    adult(t >= adult_age ? 1 : 0) T(0, -1, 0, drape)
+    M(max(1, round(max_shoot * lerp(shade_shoot, 1, light) * 0.5)), o, t >= adult_age ? 1 : 0)
+    A(o, h + dt, 0);
 
 # One internode with its leaf, and perhaps a side shoot or fruit.
 decompose M(n, o, w) : n > 0 ->
@@ -100,8 +126,8 @@ decompose M(n, o, w) -> ;
 module Mb(o, w);              # what a node may carry besides its leaf
 module Lb;                    # a node's bud, which may leaf again
 decompose Mb(o, w) : o < max_order && rand() < branch_chance ->
-    [ /(uniform(0, 360)) &(branch_angle) S A(o + 1, 0) ];
-decompose Mb(o, w) : w > 0 && t >= fruit_age && rand() < fruiting ->
+    [ /(uniform(0, 360)) &(branch_angle) S A(o + 1, 0, w > 1 ? 1 : 0) ];
+decompose Mb(o, w) : w > 0 && rand() < fruiting ->
     [ &(150) fruit(fruit_size * uniform(0.8, 1.2)) ];
 decompose Mb(o, w) -> ;
 

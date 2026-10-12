@@ -1957,6 +1957,7 @@ pub fn triangles(look: &Look) -> usize {
         shed: None,
         light: 1.0,
         within: None,
+        adult: None,
     };
     let mut mesh = Mesh::default();
     draw(
@@ -2623,6 +2624,7 @@ mod tests {
             shed: Some(2.0),
             light: 1.0,
             within: None,
+            adult: None,
         };
         let mut counts = Vec::new();
         for coarse in 0..=fruit::COARSER {
@@ -2767,6 +2769,7 @@ mod tests {
                 shed: None,
                 light: 1.0,
                 within: None,
+                adult: None,
             };
             let mut mesh = Mesh::default();
             let part = Part {

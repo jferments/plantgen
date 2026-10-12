@@ -13,7 +13,6 @@
   "generator": {
     "program": "conifer",
     "params": {
-      "cone_age": 10,
       "cone_chance": 0.25,
       "cone_length": 0.007,
       "cone_pitch": 90,
@@ -108,7 +107,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "juvenile_period_years": {"min": 10, "max": 20}
+  },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Scher 2002, read): Rocky Mountain juniper may begin bearing seeds at 10 to 20 years of age. The Woody Plant Seed Manual (Juniperus, read) says the same of the genus. It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 10 years set by hand."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

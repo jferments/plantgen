@@ -101,7 +101,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "juvenile_period_years": {"min": 5, "max": 10}
+  },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Fryer 2015, Salix lucida including subsp. lasiandra, read): no age is known for shining willow itself, but Salix seedlings usually first produce seeds at 5 to 10 years, sprouts at 1 or 2. The Woody Plant Seed Manual (Salix, read) gives 5 to 10 years for seedlings. It sets adult_age through the rule at the seed plants (spec rework P6), in place of broadleaf's default of 4 years."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

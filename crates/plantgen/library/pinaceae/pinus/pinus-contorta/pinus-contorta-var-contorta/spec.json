@@ -13,7 +13,6 @@
   "generator": {
     "program": "conifer",
     "params": {
-      "cone_age": 8,
       "cone_chance": 0.12,
       "cone_length": 0.045,
       "cone_pitch": 60,
@@ -103,7 +102,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "juvenile_period_years": {"min": 4, "max": 8}
+  },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual (Pinus, table 2, read): seed bearing begins at 4 to 8 years in var. contorta. It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 8 years set by hand."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

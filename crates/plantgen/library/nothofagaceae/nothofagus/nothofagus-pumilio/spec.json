@@ -32,7 +32,7 @@
       "droop": 0.025,
       "extinction": 0.45,
       "blooms": 0,
-      "bloom_age": 10,
+      "adult_age": 10,
       "bloom_size": 0.05,
       "bloom_angle": 150,
       "leaf_area": 0.304,
