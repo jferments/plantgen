@@ -18,7 +18,7 @@
       "leaves_per_node": 2,
       "max_shoot": 4,
       "bud_break": 1.2,
-      "apical_young": 0.56,
+      "apical_young": 0.62,
       "apical": 0.5,
       "apical_years": 4,
       "flux": 4,
