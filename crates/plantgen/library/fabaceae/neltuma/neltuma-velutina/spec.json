@@ -49,7 +49,7 @@
       "life": 100,
       "snag_fall": 0.12,
       "leaf_area": 0.178,
-      "bloom_area": 0.141,
+      "bloom_area": 0.09,
       "thorn_area": 0.059
     }
   },
@@ -98,13 +98,8 @@
         "form": "thorn"
       },
       "bloom": {
-        "shape": {
-          "template": "spike",
-          "florets": 30,
-          "aspect": 0.18,
-          "plume": 0,
-          "stalk": 0.1
-        },
+        "shape": { "template": "flower", "petals": 5, "petal_width": 0.8, "point": 0.3, "notch": 0.0, "centre": 0.4 },
+        "inflorescence": { "kind": "spike", "flowers": 150, "size": 0.06, "spread": 70 },
         "colour": [0.92, 0.88, 0.45]
       }
     },
@@ -130,6 +125,9 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "inflorescence": "raceme"
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -200,6 +198,16 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "The genus WCVP v16's accepted name is written in."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "Jepson eFlora's account of the species, as quoted in search results (the page itself was not read): inflorescence a spike-like raceme 5 to 15 cm long; the Fire Effects Information System gives cylindrical, pedunculate, spikelike racemes 5 to 7.6 cm long of hundreds of flowers."
+    },
+    "appearance.organs.bloom": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its spike-like raceme drawn flower by flower (spec rework L1c), as a spike, its pedicels too short to draw: 150 tiny pale yellow flowers about 4.5 mm long, by eye (the Fire Effects Information System says hundreds), on a raceme 8 cm long. From floras and extension pages as quoted in search results; the pages themselves were not read."
     }
   },
   "provenance": {

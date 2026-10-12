@@ -2909,4 +2909,42 @@ mod tests {
             }
         }
     }
+
+    /// The keys `crate::inherit::INFLORESCENCE` lets rules set are the
+    /// inflorescence's own, each with what it takes; only its `branch` and
+    /// `stalk` are left to the files.
+    #[test]
+    fn rules_know_every_inflorescence_key() {
+        use crate::inherit::{Field, INFLORESCENCE};
+        let parse = |value: serde_json::Value| serde_json::from_value::<Inflorescence>(value);
+        let error = parse(serde_json::json!({"none": 1}))
+            .unwrap_err()
+            .to_string();
+        let mut known: Vec<&str> = error
+            .split("expected one of ")
+            .nth(1)
+            .unwrap_or_default()
+            .split(", ")
+            .map(|name| name.trim_matches('`'))
+            .collect();
+        known.retain(|key| !["branch", "stalk"].contains(key));
+        let listed: Vec<&str> = INFLORESCENCE.iter().map(|(key, _)| *key).collect();
+        assert_eq!(listed, known, "{error}");
+        for (key, takes) in INFLORESCENCE {
+            let with = |value: serde_json::Value| parse(serde_json::json!({key: value}));
+            match takes {
+                Field::Count => {
+                    assert!(with(2.into()).is_ok(), "{key}");
+                    assert!(with(2.5.into()).is_err(), "{key} takes a fraction");
+                }
+                Field::Number => assert!(with(0.5.into()).is_ok(), "{key}"),
+                Field::Word => {
+                    assert!(with("umbel".into()).is_ok(), "{key}");
+                    let error = with("none".into()).unwrap_err().to_string();
+                    assert!(error.contains("unknown variant"), "{key}: {error}");
+                }
+                Field::Outline => panic!("{key} takes no outline"),
+            }
+        }
+    }
 }

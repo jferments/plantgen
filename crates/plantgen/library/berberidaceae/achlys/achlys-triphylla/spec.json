@@ -40,7 +40,7 @@
       "leaf_area": 0.57,
       "basal_area": 0.235,
       "basal_piece_area": 0.235,
-      "flower_area": 0.2,
+      "flower_area": 0.08,
       "bud_area": 0.89,
       "fruit_area": 0.89
     }
@@ -74,7 +74,8 @@
         "face_up": 0.7
       },
       "flower": {
-        "shape": { "template": "spike", "florets": 24, "aspect": 0.25, "plume": 0.5, "stalk": 0.05 },
+        "shape": { "template": "flower", "petals": 9, "petal_width": 0.2, "point": 0.0, "notch": 0.0, "centre": 0.1 },
+        "inflorescence": { "flowers": 60, "size": 0.1, "spread": 60 },
         "colour": [0.95, 0.95, 0.9]
       }
     }
@@ -88,6 +89,9 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "inflorescence": "spike"
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -138,6 +142,16 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America's account of the species, as quoted in search results (the page itself was not read): inflorescences spikes 2.5 to 5 cm long without the peduncle, the flowers without sepals or petals, of 8 to 10 (to 13) stamens 3 to 4 mm long."
+    },
+    "appearance.organs.flower": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its spike drawn flower by flower (spec rework L1c): its kind from its characters, by the rule at the flowering plants; about 60 flowers, by eye (floras say only that they are numerous), each a tuft of nine white stamens about 5 mm across drawn as a flower of nine thread-like petals. From floras and extension pages as quoted in search results; the pages themselves were not read."
     }
   },
   "provenance": {

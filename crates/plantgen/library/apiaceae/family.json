@@ -2,5 +2,15 @@
   "schema": 1,
   "rank": "family",
   "name": "Apiaceae",
-  "parent": "order/apiales"
+  "parent": "order/apiales",
+  "traits": {
+    "inflorescence": {"compound_umbel": "usually", "umbel": "sometimes", "head": "rarely"}
+  },
+  "evidence": {
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz's account of the family, as quoted in search results (the page itself was not read): flowers in umbels nearly always, or in heads. General accounts add that the umbel is usually compound, its rays ending in umbellets, as the family's old name, Umbelliferae, says; a simple umbel is less usual."
+    }
+  }
 }

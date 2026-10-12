@@ -77,9 +77,11 @@
 //! rays at two facets round a centre, with stamens only when it is a
 //! centimetre across or more) and the pedicels and axes are thin prisms in
 //! the cluster's `stalk` colour. A part mesh (`crate::parts`) that must
-//! fit a budget takes [`crate::fruit::COARSER`] steps: petals at one
-//! facet; no stamens and fruit at fewer facets; each smallest branch's
-//! units merged into one solid round them; every branch merged.
+//! fit a budget takes up to [`crate::fruit::COARSER`] steps: petals at one
+//! facet; flowers and heads as one flat hexagon each, three-sided stalks
+//! and fruit at fewer facets; each smallest branch's units merged into one
+//! solid round them; every branch merged. A cluster whose axis bears no
+//! branches stops before its units merge ([`coarsest`]).
 
 use crate::blooms::{FlowerForm, Form, Part};
 use crate::fruit::{self, Detail, GOLDEN_DEGREES};
@@ -98,9 +100,26 @@ pub const MOST_UNITS: u64 = 5000;
 /// A cluster's stalks unless it sets a colour: green.
 pub const STALK: [f32; 3] = [0.3, 0.38, 0.14];
 
+/// The coarse step (`crate::parts`) from which a flower or head is one
+/// flat hexagon and stalks are three-sided.
+pub(crate) const FLAT: usize = 2;
+
 /// The coarse step (`crate::parts`) from which units are merged into one
 /// solid per smallest branch; the next merges every branch.
 const MERGED: usize = 3;
+
+/// The coarsest step (`crate::parts`) a part mesh of `cluster` takes:
+/// [`crate::fruit::COARSER`], or before [`MERGED`] for a cluster whose axis
+/// bears no branches, whose units would merge into one solid that draws
+/// it worse than its card.
+#[must_use]
+pub fn coarsest(cluster: &Cluster) -> usize {
+    if cluster.branch.is_some() {
+        fruit::COARSER
+    } else {
+        MERGED - 1
+    }
+}
 
 impl ClusterKind {
     /// Whether the kind may bear branches in place of units.
@@ -1527,7 +1546,8 @@ struct Petals {
 /// A flower or head reduced for a cluster: its petals as kites (one facet
 /// each from the first coarse step), seen from both sides, round a low
 /// pyramid of a centre in the accent colour, and stamens while it is a
-/// centimetre across or more and the part is drawn fine.
+/// centimetre across or more and the part is drawn fine; from the
+/// [`FLAT`] step one flat hexagon, seen from both sides.
 #[allow(clippy::too_many_arguments)]
 fn floret(
     petals: &Petals,
@@ -1571,6 +1591,32 @@ fn floret(
             }
         }
     };
+    if part.coarse >= FLAT {
+        // One hexagon round the tips of its petals, or round its centre
+        // where it has none.
+        let (ring, rise, paint) = if petals.count == 0 {
+            (centre, 0.0, accent)
+        } else {
+            let reach = length * 0.85;
+            (
+                start + reach * math::cos(cup),
+                reach * math::sin(cup),
+                colour,
+            )
+        };
+        let corners: Vec<Vec3> = (0..6)
+            .map(|k| {
+                let angle = spin + std::f64::consts::TAU * f64::from(k) / 6.0;
+                base + (across * math::cos(angle) + other * math::sin(angle)) * ring
+                    + direction * rise
+            })
+            .collect();
+        if ring > 0.0 {
+            both(&corners, paint, mesh);
+        }
+        crate::leaves::smooth_normals(mesh, first, first_index);
+        return;
+    }
     for k in 0..petals.count {
         let angle = spin + std::f64::consts::TAU * f64::from(k) / n;
         let radial = across * math::cos(angle) + other * math::sin(angle);

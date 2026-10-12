@@ -39,7 +39,7 @@
       "leaf_area": 0.092,
       "basal_area": 0.235,
       "basal_piece_area": 0.235,
-      "flower_area": 0.369,
+      "flower_area": 0.235,
       "bud_area": 0.89,
       "fruit_area": 0.89
     }
@@ -72,7 +72,8 @@
         }
       },
       "flower": {
-        "shape": { "template": "umbel", "clusters": 12, "florets": 8 },
+        "shape": { "template": "head", "rays": 14, "ray_width": 0.9, "disc": 0.45 },
+        "inflorescence": { "flowers": 40, "size": 0.11, "spread": 25, "peduncle": 0.2 },
         "colour": [0.95, 0.95, 0.9],
         "accent": [0.85, 0.75, 0.4]
       }
@@ -87,6 +88,9 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "inflorescence": "corymb"
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -137,6 +141,16 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "gleason-cronquist-1991",
+      "note": "Gleason and Cronquist's account of the species, as quoted in search results (the page itself was not read): heads 1 cm wide or less, numerous and crowded in a short, broad inflorescence; field guides call the array flat-topped to rounded. Read as a corymb, its heads reaching about one level."
+    },
+    "appearance.organs.flower": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its array drawn head by head (spec rework L1c): its kind from its characters, by the rule at the flowering plants; about 40 heads, by eye (floras say only that they are numerous), each about 9 mm across (involucres 6 to 8, to 10 mm wide, in the Flora of North America), its pearly white phyllaries drawn as a head's rays round a yellow disc of florets. From floras and extension pages as quoted in search results; the pages themselves were not read."
     }
   },
   "provenance": {

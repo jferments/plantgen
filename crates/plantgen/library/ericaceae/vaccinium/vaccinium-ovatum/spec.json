@@ -91,7 +91,7 @@
           "aspect": 1.0,
           "unripe": 0.9
         },
-        "inflorescence": { "kind": "raceme", "flowers": 4, "size": 0.3, "spread": 45, "pedicel": 0.27 },
+        "inflorescence": { "flowers": 4, "size": 0.3, "spread": 45, "pedicel": 0.27 },
         "colour": [0.06, 0.05, 0.09],
         "accent": [0.4, 0.5, 0.2],
         "season": {

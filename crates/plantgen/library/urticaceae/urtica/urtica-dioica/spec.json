@@ -33,16 +33,14 @@
       "flowers": 8,
       "flower_size": 0.06,
       "pedicel": 0.005,
-      "flower_angle": 120,
+      "flower_angle": 60,
       "fruit_below": 0,
-      "buds_above": 0.9,
-      "nod": 5,
-      "bud_size": 0.02,
+      "buds_above": 1,
+      "nod": 0,
       "leaf_area": 0.195,
       "basal_area": 0.235,
       "basal_piece_area": 0.235,
-      "flower_area": 0.073,
-      "bud_area": 0.51,
+      "flower_area": 0.173,
       "fruit_area": 0.89
     }
   },
@@ -74,11 +72,15 @@
         }
       },
       "flower": {
-        "shape": { "template": "spike", "florets": 16, "aspect": 0.15, "plume": 0.0, "stalk": 0.05 },
-        "colour": [0.3, 0.4, 0.2]
-      },
-      "bud": {
-        "shape": { "template": "fruit", "aspect": 0.4 },
+        "shape": { "template": "flower", "petals": 4, "petal_width": 0.8, "point": 0.3, "notch": 0.0, "centre": 0.3 },
+        "inflorescence": {
+          "branches": 6,
+          "flowers": 8,
+          "size": 0.4,
+          "spread": 40,
+          "peduncle": 0.15,
+          "branch": { "size": 0.08, "spread": 50 }
+        },
         "colour": [0.3, 0.4, 0.2]
       }
     }
@@ -92,6 +94,10 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "inflorescence": "panicle",
+    "inflorescence_posture": "nodding"
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -142,6 +148,21 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America's account of the species, as quoted in search results (the page itself was not read): inflorescences paniculate, pedunculate, elongate; Jepson eFlora: spike-, raceme- or panicle-like, 1 to 7 cm, generally longer than the petiole."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Drooping clusters from the leaf axils and at the stem tips, as Pacific Northwest field guides and Portland State University's notes describe them, quoted in search results (the pages themselves were not read): read as nodding."
+    },
+    "appearance.organs.flower": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Each of its axillary clusters drawn flower by flower (spec rework L1c), its kind and its droop from its characters, by the rules at the flowering plants: a panicle about 6 cm long of 6 branches of 8 tiny green flowers, by eye (floras give no count), leaving the stem at about 60 degrees and bending over. From floras and extension pages as quoted in search results; the pages themselves were not read."
     }
   },
   "provenance": {

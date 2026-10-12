@@ -42,7 +42,7 @@
       "leaf_area": 0.083,
       "basal_area": 0.059,
       "basal_piece_area": 0.235,
-      "flower_area": 0.334,
+      "flower_area": 0.18,
       "bud_area": 0.89,
       "fruit_area": 0.89
     }
@@ -81,7 +81,8 @@
         }
       },
       "flower": {
-        "shape": { "template": "umbel" },
+        "shape": { "template": "head", "ray_width": 1.1, "disc": 0.5 },
+        "inflorescence": { "size": 0.075, "spread": 40, "peduncle": 0.55 },
         "colour": [0.92, 0.9, 0.84],
         "accent": [0.85, 0.8, 0.6]
       }
@@ -126,6 +127,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Colours chosen by eye: soft grey-green leaves; white flower clusters."
+    },
+    "appearance.organs.flower": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its flat-topped array drawn head by head (spec rework L1c): its kind and how many heads it bears come from its characters, by the rules at the flowering plants, and each head's rays from its ray florets, by the daisy family's rule. Each head drawn about 6 mm across, broad rays round a disc half its width, on pedicels from the upper half of the stalk, by eye."
     },
     "taxon": {
       "evidence": "Authored",

@@ -142,6 +142,9 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "inflorescence": "panicle"
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -202,6 +205,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Pink buds, a third of the flower's width, as described for the species."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "Jepson eFlora's account of the species, as quoted in search results (the page itself was not read): inflorescence a terminal panicle of cymes, generally more or less dome-shaped, 4 to 12 cm across, its central axis generally dominant. Its cluster is drawn by hand as a dome-shaped head of its flowers and berries."
     }
   },
   "provenance": {

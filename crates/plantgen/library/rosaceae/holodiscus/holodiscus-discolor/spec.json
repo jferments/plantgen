@@ -50,7 +50,7 @@
       "bloom_size": 0.18,
       "bloom_angle": 120,
       "leaf_area": 0.34,
-      "bloom_area": 0.359
+      "bloom_area": 0.226
     }
   },
   "growth": {
@@ -95,7 +95,20 @@
         }
       },
       "bloom": {
-        "shape": { "template": "spike", "florets": 30, "aspect": 0.45, "plume": 1.0, "stalk": 0.1 },
+        "shape": { "template": "flower", "petals": 5, "petal_width": 1.0, "point": 0.0, "notch": 0.0, "centre": 0.3 },
+        "inflorescence": {
+          "branches": 14,
+          "flowers": 7,
+          "size": 0.4,
+          "spread": 50,
+          "taper": 0.5,
+          "branch": {
+            "branches": 5,
+            "size": 0.35,
+            "spread": 40,
+            "branch": { "size": 0.2, "spread": 40, "pedicel": 0.1 }
+          }
+        },
         "colour": [0.9, 0.87, 0.75]
       }
     }
@@ -159,6 +172,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "appearance.organs.bloom": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its plume drawn flower by flower (spec rework L1c), its kind from its genus's inflorescence, by the rule at the flowering plants: a panicle of 14 branches, each of 5 branches of 7 creamy flowers, by eye, so that it is as dense as the floras say (the Flora of North America gives the genus's panicles 10 to 100 or more flowers and the species' 4 to 20 cm long, multi-branched and dense), each flower about 5 mm across (the Burke Herbarium), hanging from its shoot as before. From floras and extension pages as quoted in search results; the pages themselves were not read."
     }
   },
   "provenance": {

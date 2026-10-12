@@ -2,5 +2,15 @@
   "schema": 1,
   "rank": "family",
   "name": "Ericaceae",
-  "parent": "order/ericales"
+  "parent": "order/ericales",
+  "traits": {
+    "inflorescence": {"raceme": "often", "panicle": "sometimes", "spike": "sometimes", "corymb": "sometimes", "head": "sometimes", "solitary": "sometimes"}
+  },
+  "evidence": {
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz's account of the family, as quoted in search results (the page itself was not read): flowers aggregated in inflorescences (usually), or solitary; in racemes, in spikes, in heads, in corymbs and in panicles, the ultimate inflorescence units racemose. Read here as racemes most often, the racemose unit being the commonest whole inflorescence too."
+    }
+  }
 }
