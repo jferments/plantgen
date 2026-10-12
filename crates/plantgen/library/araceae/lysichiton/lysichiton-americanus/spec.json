@@ -83,7 +83,28 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "leaf_length_m": {"min": 0.3, "max": 1.5},
+    "leaf_shape": {"oblong": "usually", "lanceolate": "often"},
+    "inflorescence_length_m": {"min": 0.06, "max": 0.15},
+    "units_per_inflorescence": {"min": 350, "max": 1350, "typical": 690}
+  },
   "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams's flora (vol. 1, 1923), under Lysichiton camtschatensis, the name the American plant then went by: leaves erect or rising, 3 to 15 dm, oblong-lanceolate, narrowed to a sessile base or a short petiole; spathe blade broad and pointed, 6 to 10 cm, yellowish; peduncle lengthening to 3 to 5 dm. The spadix is printed as 4 to 8 mm in the scan, which cannot be (the spadix carries hundreds of flowers), so its length is taken from Pellmyr and Patt."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "pellmyr-patt-1986",
+      "note": "Pellmyr and Patt (1986), plants near Seattle in April 1984: the spadix 6 to 15 cm long."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "pellmyr-patt-1986",
+      "note": "Pellmyr and Patt (1986): 350 to 1350 flowers on a spadix, 690 on average over 14 spadices; each flower bisexual, with four stamens."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

@@ -3,6 +3,17 @@
   "rank": "family",
   "name": "Araceae",
   "parent": "order/alismatales",
+  "traits": {
+    "inflorescence": "spadix",
+    "inflorescence_unit": "flower"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams's flora (vol. 1, 1923): the arum family's flowers are small and crowded on a spadix, which a spathe encloses or stands below; the perianth is of four to six scale-like parts or lacking."
+    }
+  },
   "forms": {
     "forb": {
       "generator": {

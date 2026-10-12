@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Lysichiton",
+  "traits": {
+    "perianth": "tepals",
+    "flower_merosity": 4,
+    "stamens": 4,
+    "inflorescence_posture": "erect"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams's flora (vol. 1, 1923): a stemless swamp herb from a thick, horizontal rootstock; the spathe sheathes at its foot and opens above into a broad coloured blade; the spadix, at first inside it, is later held well out on a stout peduncle; flowers bisexual, crowded over the cylindrical spadix, each with a four-lobed perianth and four stamens opposite the lobes."
+    }
+  }
+}
