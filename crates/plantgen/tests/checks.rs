@@ -20,16 +20,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
     ),
     (
-        "program:fern",
-        "leaf_length_m",
-        "a crown a fern sends out along its rhizome starts as a sporeling, so its first fronds are frond_seed of full size (9 cm blades on an eight-year sword fern) where a crown fed by an established rhizome grows near full-size fronds",
-    ),
-    (
-        "program:fern",
-        "leaf_width_m",
-        "a new crown's first fronds are sporeling-sized, as for leaf_length_m",
-    ),
-    (
         "program:grass",
         "phyllotaxis_pattern",
         "each blade's roll is jittered ±40° (a culm leaf's ±30°), so the turn from one to the next has a median of about 146°, nearer the golden angle than half a turn",

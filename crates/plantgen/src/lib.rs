@@ -167,5 +167,7 @@ pub mod venation;
 /// 29: a fern's frond is sized from its stated blade, stipe and blade
 /// width by rules of its class (spec rework E6a): the frond's length, its
 /// bare share and its longest pinna, so the sword, wood and deer ferns
-/// and bracken grow fronds of their flora's sizes.
+/// and bracken grow fronds of their flora's sizes; a crown a fern's
+/// rhizome sends out starts as old as the crown it came from
+/// (`polypodiidae` revision 4), so its first fronds are full-sized.
 pub const GENERATOR_REVISION: u32 = 29;
