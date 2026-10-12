@@ -51,21 +51,45 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   what its genus and family state, and `plantc traits <species>` shows
   where each character came from and which are still missing. The first
   families have their characters; most have none yet (`plantc audit`).
-  Rules in a taxon turn its characters into the plant: in the daisy and
-  grass families, a head's rays and disc, the heads in an array and a
-  grass's blades and panicle come from a flora's numbers; at the vascular
+  Rules in a taxon turn its characters into the plant: at the vascular
   plants, the leaves at a node and how far each node turns from the last
   come from how a taxon's leaves are arranged, so irises grow flat fans
-  and sedges three ranks of leaves.
+  and sedges three ranks of leaves, and the heights plants grow toward
+  come from the floras' heights; at the flowering plants, a cluster's
+  kind, flowers, branches and droop come from its inflorescence, and a
+  leaf's leaflets from how it is divided; in the daisy family a head's
+  phyllaries, florets, rays and pappus, and in the grasses a blade's and
+  a spikelet's glumes, florets and awns, come from a flora's numbers; and
+  a leaf's outline comes from the word for its shape.
 - **Plant programs.** 15 programs in PlantGen's open L-system language
   (`crates/plantgen/programs/*.lsys`), from conifers and broadleaf trees to
   grasses, ferns, cacti and climbers. Versioned environment tools let a
   growing tip ask about light, space, vigour and its host, and a ring,
   `ring(n) [ … ]`, sets n leaves round a node, one rule for single
-  leaves, pairs and whorls.
+  leaves, pairs and whorls. A program says what each organ is (a leaf, a
+  leaflet, a piece of a blade) and which organs make one leaf or one
+  frond, so every organ of a grown plant knows its term and what it is
+  part of.
+- **Organs built from their parts.** Each of these is laid out by one
+  function that draws its solid, its coarser meshes and its card alike,
+  so a plant looks the same in the distance as up close:
+  inflorescences of ten kinds (raceme, spike, catkin, corymb, umbel, head,
+  cyme, scorpioid cyme, panicle and compound umbel), nested up to three
+  deep, each flower, head or fruit drawn and opening in its turn, so a
+  lupine shows pods below, flowers in the middle and buds above; flower
+  heads, with their phyllaries in rows, a domed receptacle, florets in a
+  sunflower spiral opening from the rim, rays or straps, and seed with its
+  pappus; grass and sedge spikelets, with their glumes, florets and bent
+  awns; leaves divided into leaflets, pinnate or palmate, once or twice;
+  and leaf margins grown with the blade, each tooth fed by a vein.
+  `plantc organs` counts a plant's organs by what they are, down to each
+  head's florets, without storing them.
 - **Growth.** Plants are grown, not modelled. Light and crowding shape the
   crown, branches thicken by the pipe model, organs come and go with the
-  seasons, and wood is shed as the tree ages.
+  seasons, and wood is shed as the tree ages. An organ keeps one identity
+  from bud to fruit or from blade to thatch, and a leaf takes one of five
+  forms from deep shade to full sun, smaller and more deeply cut in the
+  sun.
 - **Output.** Meshes at four levels of detail and impostors for the
   distance. They come with organ card textures drawn from each species'
   looks, solid spines and part meshes for flowers, fruit and cones. All of
