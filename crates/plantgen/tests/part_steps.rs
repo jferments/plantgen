@@ -7,14 +7,15 @@ use std::sync::Mutex;
 
 use plantgen::library::Library;
 use plantgen::mesh::Mesh;
-use plantgen::parts::{self, STEP_COLOUR, STEP_COVER};
+use plantgen::parts::{self, STEP_COLOUR};
 use plantgen::spec::PlantSpec;
 
 fn triangles(variants: &[Mesh]) -> usize {
     variants.iter().map(Mesh::triangle_count).max().unwrap_or(0)
 }
 
-/// Every built-in species' part-mesh steps cover within [`STEP_COVER`] of
+/// Every built-in species' part-mesh steps cover within
+/// [`parts::cover_limit`] (a tenth, or [`parts::OUTLINE_COVER`]) of
 /// what the part mesh covers, in near its colours, from every direction;
 /// each holds at most two thirds of the triangles and its detail never shrinks; and heads,
 /// clusters and flowers across the library have steps.
@@ -55,7 +56,8 @@ fn part_steps_keep_cover_and_colour() {
                             let (cover, colour) =
                                 parts::step_difference(&part.variants, &step.variants);
                             let mut wrong = Vec::new();
-                            if cover > STEP_COVER || colour > STEP_COLOUR {
+                            let limit = parts::cover_limit(&looks[part.template], step.coarse);
+                            if cover > limit || colour > STEP_COLOUR {
                                 wrong.push(format!("cover {cover:.3}, colour {colour:.3}"));
                             }
                             if triangles(&step.variants) * 3 > last * 2 {
@@ -90,7 +92,7 @@ fn part_steps_keep_cover_and_colour() {
     assert!(failures.is_empty(), "steps wrong:\n{}", failures.join("\n"));
     let stepped = stepped.into_inner().unwrap();
     assert!(
-        stepped.len() >= 66,
+        stepped.len() >= 75,
         "only {} part meshes have steps: {stepped:?}",
         stepped.len()
     );

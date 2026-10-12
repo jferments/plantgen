@@ -84,8 +84,10 @@
 //! fit a budget takes up to [`crate::fruit::COARSER`] steps: petals at one
 //! facet; flowers and heads as one flat hexagon each, three-sided stalks
 //! and fruit at fewer facets; each smallest branch's units merged into one
-//! solid round them; every branch merged. A cluster whose axis bears no
-//! branches stops before its units merge ([`coarsest`]).
+//! solid round them; every branch merged. A cluster of spikelets draws
+//! each branch as the outline of its spikelets instead, two kites crossed
+//! along it ([`outlined`]). A cluster whose axis bears no branches stops
+//! before its units merge ([`coarsest`]).
 
 use crate::blooms::{FlowerForm, Form, Part};
 use crate::fruit::{self, Detail, GOLDEN_DEGREES};
@@ -111,6 +113,13 @@ pub(crate) const FLAT: usize = 2;
 /// The coarse step (`crate::parts`) from which units are merged into one
 /// solid per smallest branch; the next merges every branch.
 const MERGED: usize = 3;
+
+/// Whether a part mesh of `cluster` drawn `coarse` steps coarser draws
+/// its branches' outlines: a cluster of spikelets from [`MERGED`].
+#[must_use]
+pub fn outlined(cluster: &ClusterLook, coarse: usize) -> bool {
+    matches!(cluster.unit, Unit::Spikelet { .. }) && coarse >= MERGED
+}
 
 /// The coarsest step (`crate::parts`) a part mesh of `cluster` takes:
 /// [`crate::fruit::COARSER`], or before [`MERGED`] for a cluster whose axis
@@ -1601,7 +1610,11 @@ fn draw_laid(
         }
     }
     if part.coarse >= MERGED {
-        merged(laid, &shown, part, &to_world, (axis, side), colour, mesh);
+        if matches!(cluster.unit, Unit::Spikelet { .. }) {
+            outlines(laid, &shown, part, &to_world, colour, mesh);
+        } else {
+            merged(laid, &shown, part, &to_world, (axis, side), colour, mesh);
+        }
         return;
     }
     let width = cluster.unit.width();
@@ -1865,7 +1878,7 @@ fn floret(
     crate::leaves::smooth_normals(mesh, first, first_index);
 }
 
-/// The coarsest steps: each smallest branch's units (at [`MERGED`]) or
+/// The coarsest steps but a cluster of spikelets': each smallest branch's units (at [`MERGED`]) or
 /// each branch of the cluster's own axis (beyond it) merged into one
 /// ellipsoid round the units that show, in the colour most of them are,
 /// the organ's `colour` where as many are in another.
@@ -1935,6 +1948,144 @@ fn merged(
             part,
             mesh,
         );
+    }
+}
+
+/// Share of a spikelet's length times its width it covers: a lance,
+/// widest below the middle.
+const SPIKELET_FILL: f64 = 0.7;
+
+/// The coarsest steps of a cluster of spikelets: each smallest branch's
+/// spikelets (at [`MERGED`]) or each branch of the cluster's own axis
+/// (beyond it) drawn as its [`Outline`].
+#[allow(clippy::float_cmp)]
+fn outlines(
+    laid: &Layout,
+    shown: &[Option<Shown>],
+    part: Part,
+    to_world: &dyn Fn(Vec3) -> Vec3,
+    colour: [f32; 3],
+    mesh: &mut Mesh,
+) {
+    let mut outlines: Vec<Outline> = Vec::new();
+    for (p, shown) in laid.units.iter().zip(shown) {
+        let Some(shown) = shown else {
+            continue;
+        };
+        let key = if part.coarse > MERGED { p.top } else { p.group };
+        let (width, _) = shown.extent();
+        let length = p.length * shown.size;
+        let painted = if shown.unripe {
+            shown.accent
+        } else {
+            shown.colour
+        };
+        let at = outlines
+            .iter()
+            .position(|outline| outline.key == key)
+            .unwrap_or_else(|| {
+                outlines.push(Outline {
+                    key,
+                    ends: Vec::new(),
+                    along: Vec3::ZERO,
+                    area: 0.0,
+                    widest: 0.0,
+                    colours: vec![(colour, 0)],
+                });
+                outlines.len() - 1
+            });
+        let outline = &mut outlines[at];
+        outline.ends.push(p.base);
+        outline.ends.push(p.base + p.direction * length);
+        outline.along += p.direction * length;
+        outline.area += length * length * width * SPIKELET_FILL;
+        outline.widest = outline.widest.max(length * width);
+        if let Some((_, count)) = outline
+            .colours
+            .iter_mut()
+            .find(|(seen, _)| *seen == painted)
+        {
+            *count += 1;
+        } else {
+            outline.colours.push((painted, 1));
+        }
+    }
+    for outline in &outlines {
+        outline.draw(part, to_world, mesh);
+    }
+}
+
+/// The outline of a branch's spikelets: two kites crossed along the
+/// branch, one across the way they spread most and one across the way
+/// they spread least, each as wide as covers its share of the spikelets'
+/// own area and no wider than they spread, in the colour most of them are.
+struct Outline {
+    key: u32,
+    /// Each spikelet's base and tip.
+    ends: Vec<Vec3>,
+    /// The spikelets' lengths along their directions, summed.
+    along: Vec3,
+    /// The spikelets' area, and the widest.
+    area: f64,
+    widest: f64,
+    colours: Vec<([f32; 3], usize)>,
+}
+
+impl Outline {
+    fn draw(&self, part: Part, to_world: &dyn Fn(Vec3) -> Vec3, mesh: &mut Mesh) {
+        let along = self.along.normalize_or(Vec3::Y);
+        let count = crate::texture::to_f64(self.ends.len());
+        let centre = self.ends.iter().fold(Vec3::ZERO, |sum, &end| sum + end) * (1.0 / count);
+        // The spikelets' span along the branch, and the moments of their
+        // spread across it, in a plane square to it.
+        let first = any_perpendicular(along);
+        let second = along.cross(first);
+        let (mut low, mut high) = (0.0_f64, 0.0_f64);
+        let (mut firsts, mut seconds, mut both) = (0.0, 0.0, 0.0);
+        for &end in &self.ends {
+            let offset = end - centre;
+            let height = offset.dot(along);
+            low = low.min(height);
+            high = high.max(height);
+            let (out, over) = (offset.dot(first), offset.dot(second));
+            firsts += out * out;
+            seconds += over * over;
+            both += out * over;
+        }
+        let span = high - low;
+        if span <= 1e-9 {
+            return;
+        }
+        // The ways the spikelets spread most and least, and how far.
+        let turn = 0.5 * libm::atan2(2.0 * both, firsts - seconds);
+        let wide = first * libm::cos(turn) + second * libm::sin(turn);
+        let narrow = along.cross(wide);
+        let reach = |axis: Vec3| {
+            self.ends
+                .iter()
+                .map(|&end| (end - centre).dot(axis).abs())
+                .fold(0.0, f64::max)
+        };
+        let spreads = [reach(wide), reach(narrow)];
+        let total = spreads[0] + spreads[1] + self.widest;
+        let most =
+            self.colours.iter().fold(
+                self.colours[0],
+                |most, &next| {
+                    if next.1 > most.1 { next } else { most }
+                },
+            );
+        let foot = centre + along * low;
+        let tip = centre + along * high;
+        let middle = centre + along * f64::midpoint(low, high);
+        for (axis, spread) in [wide, narrow].into_iter().zip(spreads) {
+            // Each kite's share of the spikelets' area as they spread.
+            let share = (spread + 0.5 * self.widest) / total;
+            let width = (2.0 * self.area * share / span).min(2.0 * spread + self.widest);
+            let half = axis * (0.5 * width);
+            let corners = [foot, middle + half, tip, middle - half].map(to_world);
+            crate::capitula::both(part, &corners, most.0, mesh);
+        }
     }
 }
 

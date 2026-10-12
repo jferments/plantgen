@@ -164,4 +164,7 @@ pub mod venation;
 /// steps; a fruit drawn with fewer facets than its finest is widened to
 /// cover what it does there, so clusters of fruit and berries keep their
 /// cover drawn coarser.
-pub const GENERATOR_REVISION: u32 = 26;
+/// 27: a cluster of spikelets drawn as coarse as its branches merge draws
+/// each branch as the outline of its spikelets, two crossed kites, not a
+/// solid round them, so dense grass panicles get a coarsest step.
+pub const GENERATOR_REVISION: u32 = 27;

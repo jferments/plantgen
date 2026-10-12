@@ -311,7 +311,13 @@ pub fn part_steps(looks: &[Look], parts: &[PartMesh]) -> Vec<PartSteps> {
                     break;
                 };
                 let triangles = variants.iter().map(Mesh::triangle_count).max().unwrap_or(0);
-                if fits(&variants, last * 2 / 3) && looks_alike(&part.variants, &variants) {
+                if fits(&variants, last * 2 / 3)
+                    && looks_alike(
+                        &part.variants,
+                        &variants,
+                        cover_limit(&looks[index], coarse),
+                    )
+                {
                     last = triangles;
                     // Each step's detail at least the finer one's, so a
                     // renderer moves to it no sooner.
@@ -352,12 +358,36 @@ pub const STEP_COLOUR: f64 = 0.07;
 /// Cells across the square a step's cover is measured in.
 const VIEW_CELLS: usize = 48;
 
+/// Most a step of a cluster of spikelets drawn as its branches' outlines
+/// (`crate::clusters::outlined`) may lose or gain of the part mesh's
+/// cover seen from any direction, as [`STEP_COVER`] measures it. An airy
+/// panicle covers few cells of the grid it is measured on, so its
+/// outlines, drawn only where it is a few pixels across, cannot keep
+/// within a tenth from every side.
+pub const OUTLINE_COVER: f64 = 0.5;
+
+/// Most cover a step `coarse` steps coarser of a part mesh of `look` may
+/// lose or gain: [`OUTLINE_COVER`] for a cluster's outlines, else
+/// [`STEP_COVER`].
+#[must_use]
+pub fn cover_limit(look: &Look, coarse: usize) -> f64 {
+    if look
+        .inflorescence
+        .as_ref()
+        .is_some_and(|cluster| crate::clusters::outlined(cluster, coarse))
+    {
+        OUTLINE_COVER
+    } else {
+        STEP_COVER
+    }
+}
+
 /// Whether `step`, variant by variant, looks like the part mesh `finest`
-/// from every cover direction: within [`STEP_COVER`] and [`STEP_COLOUR`]
-/// (see [`step_difference`]).
-fn looks_alike(finest: &[Mesh], step: &[Mesh]) -> bool {
-    let (cover, colour) = step_difference(finest, step);
-    cover <= STEP_COVER && colour <= STEP_COLOUR
+/// from every cover direction: within `cover` and [`STEP_COLOUR`] (see
+/// [`step_difference`]).
+fn looks_alike(finest: &[Mesh], step: &[Mesh], cover: f64) -> bool {
+    let (moved, colour) = step_difference(finest, step);
+    moved <= cover && colour <= STEP_COLOUR
 }
 
 /// How far `step` is from the part mesh `finest`, variant by variant and
