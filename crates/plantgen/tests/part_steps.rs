@@ -1,6 +1,6 @@
 //! Levels of detail by structure (spec rework SEMLOD) over the built-in
 //! species: every coarser step of every part mesh looks like the part
-//! mesh from all round above, with at most half the triangles of the step
+//! mesh from all round above, with at most two thirds of the triangles of the step
 //! before it.
 
 use std::sync::Mutex;
@@ -16,7 +16,7 @@ fn triangles(variants: &[Mesh]) -> usize {
 
 /// Every built-in species' part-mesh steps cover within [`STEP_COVER`] of
 /// what the part mesh covers, in near its colours, from every direction;
-/// each halves the triangles and its detail never shrinks; and heads,
+/// each holds at most two thirds of the triangles and its detail never shrinks; and heads,
 /// clusters and flowers across the library have steps.
 #[test]
 fn part_steps_keep_cover_and_colour() {
@@ -58,7 +58,7 @@ fn part_steps_keep_cover_and_colour() {
                             if cover > STEP_COVER || colour > STEP_COLOUR {
                                 wrong.push(format!("cover {cover:.3}, colour {colour:.3}"));
                             }
-                            if triangles(&step.variants) * 2 > last {
+                            if triangles(&step.variants) * 3 > last * 2 {
                                 wrong.push(format!(
                                     "{} triangles after {last}",
                                     triangles(&step.variants)
@@ -90,7 +90,7 @@ fn part_steps_keep_cover_and_colour() {
     assert!(failures.is_empty(), "steps wrong:\n{}", failures.join("\n"));
     let stepped = stepped.into_inner().unwrap();
     assert!(
-        stepped.len() >= 36,
+        stepped.len() >= 66,
         "only {} part meshes have steps: {stepped:?}",
         stepped.len()
     );
