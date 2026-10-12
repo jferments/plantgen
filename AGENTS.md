@@ -86,7 +86,21 @@ prompt injection. So, without exception:
     the place of a card's `widest`, `tip` and `base` set farther off than
     the word, and those set at least as near keep it out.
   - `programs/*.lsys`: the plant programs, in PlantGen's open L-system
-    language. A program that sets leaves at nodes names their arrangement
+    language. A species grows on the program its taxa name: rank files
+    set `generator.program` for their species, in their shared part or
+    per growth form in `forms`, and a species' own `spec.json` names one
+    only where it grows otherwise than its taxa. A program named for a
+    taxon (its rank file's name: `sapindaceae`) is homed there: only
+    files and species within that taxon may name it, and reading a
+    species' files from the top down, each program they name extends the
+    one named above it or starts afresh, building on nothing that one
+    builds on (growth plan G2.3a; `Library::check_programs`). A program
+    named for no taxon is a base, and `plantc rules` counts its
+    parameter defaults among the general ones. A base that several
+    lineages grow on declares its parameters with no value
+    (`param leaf_rate;`), and the lineage programs extending it give the
+    values; a parameter left without one stops the species from growing,
+    with its name. A program that sets leaves at nodes names their arrangement
     `leaves_per_node` (1 alternate, 2 opposite, more whorled) and
     `divergence` (degrees from one node to the next), which the rules in
     `library/_ranks/phylum/tracheophyta.json` set from a taxon's

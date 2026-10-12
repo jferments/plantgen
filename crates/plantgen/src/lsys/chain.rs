@@ -9,7 +9,9 @@
 //!
 //! - **parameters**: replaces the value of a parameter its parent declares
 //!   (in the parent's place, so the new value may use only the parameters
-//!   declared before it there) and adds new ones after the parent's;
+//!   declared before it there), or gives one to a parameter its parent
+//!   declares without a value (`param name;`), and adds new ones after the
+//!   parent's; it may not take a value away;
 //! - **modules, organs, bodies and structures**: adds new ones after the
 //!   parent's; it may not declare one its parent declares;
 //! - **tools**: replaces single settings of a tool its parent configures
@@ -103,6 +105,15 @@ pub fn resolve(mut chain: Vec<ProgramAst>) -> Result<ProgramAst, ProgramError> {
 fn merge(mut parent: ProgramAst, child: ProgramAst, depth: u8) -> Result<ProgramAst, ProgramError> {
     for param in child.params {
         match parent.params.iter_mut().find(|p| p.name == param.name) {
+            Some(existing) if param.value.is_none() && existing.value.is_some() => {
+                return err(
+                    param.span,
+                    format!(
+                        "program `{}` gives `{}` a value; a program extending it may give another, not take it away",
+                        parent.name, param.name
+                    ),
+                );
+            }
             Some(existing) => *existing = param,
             None => parent.params.push(param),
         }
@@ -264,6 +275,30 @@ rule B -> ;
         let pipe = crate::lsys::program::ToolKind::Pipe;
         assert_ne!(child.tool(pipe), parent.tool(pipe));
         assert_eq!(child.axiom, parent.axiom);
+    }
+
+    /// A base reads a parameter it gives no value; the lineage program on
+    /// it gives the value, and may not take one away (growth plan G2.3a).
+    #[test]
+    fn a_child_gives_values_its_parent_leaves_out() {
+        let base = PARENT.replace("param size = 2;", "param size;");
+        let child = compile(&format!(
+            "lsystem leafy 1 extends base;\nparam size = 4;\n{base}"
+        ));
+        let values = child
+            .resolve_params(&std::collections::BTreeMap::default())
+            .unwrap();
+        assert_eq!(values, [4.0, 2.0]);
+        let error = Program::compile(&format!(
+            "lsystem leafy 1 extends base;\nparam half;\n{PARENT}"
+        ))
+        .unwrap_err();
+        assert!(
+            error
+                .message
+                .contains("program `base` gives `half` a value; a program extending it may give another, not take it away"),
+            "{error}"
+        );
     }
 
     #[test]

@@ -4,14 +4,66 @@
   "name": "Ericaceae",
   "parent": "order/ericales",
   "traits": {
-    "inflorescence": {"raceme": "often", "panicle": "sometimes", "spike": "sometimes", "corymb": "sometimes", "head": "sometimes", "solitary": "sometimes"},
-    "flower_merosity": {"min": 4, "max": 5, "typical": 5},
+    "inflorescence": {
+      "raceme": "often",
+      "panicle": "sometimes",
+      "spike": "sometimes",
+      "corymb": "sometimes",
+      "head": "sometimes",
+      "solitary": "sometimes"
+    },
+    "flower_merosity": {
+      "min": 4,
+      "max": 5,
+      "typical": 5
+    },
     "flower_symmetry": "actinomorphic",
     "perianth": "sepals_and_petals",
-    "corolla_shape": {"urceolate": "usually", "campanulate": "sometimes", "funnelform": "sometimes"},
-    "ovary_position": {"superior": "usually", "inferior": "sometimes"},
-    "stamens": {"min": 8, "max": 10, "typical": 10},
-    "carpels": {"min": 4, "max": 5, "typical": 5}
+    "corolla_shape": {
+      "urceolate": "usually",
+      "campanulate": "sometimes",
+      "funnelform": "sometimes"
+    },
+    "ovary_position": {
+      "superior": "usually",
+      "inferior": "sometimes"
+    },
+    "stamens": {
+      "min": 8,
+      "max": 10,
+      "typical": 10
+    },
+    "carpels": {
+      "min": 4,
+      "max": 5,
+      "typical": 5
+    }
+  },
+  "forms": {
+    "decurrent_tree": {
+      "generator": {
+        "program": "broadleaf"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's decurrent tree species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    },
+    "shrub": {
+      "generator": {
+        "program": "broadleaf"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's shrub species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    }
   },
   "evidence": {
     "traits.inflorescence": {

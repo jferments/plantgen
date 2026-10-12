@@ -10,7 +10,6 @@
   },
   "growth_form": "graminoid",
   "generator": {
-    "program": "grass",
     "params": {
       "tillers": 120,
       "tiller_rate": 0.45,
@@ -148,11 +147,6 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The growth form the spec's authors chose from the plant's habit."
-    },
-    "generator.program": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "The program the spec's authors chose to grow this form."
     },
     "growth": {
       "evidence": "Authored",

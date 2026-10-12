@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Typha",
+  "forms": {
+    "graminoid": {
+      "generator": {
+        "program": "typha"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The lineage's own program (growth plan G2.3a), on the sedge base: it gives the values the sedge program gave as defaults until then."
+        }
+      }
+    }
+  }
+}

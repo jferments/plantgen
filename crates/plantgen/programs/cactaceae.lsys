@@ -1,4 +1,4 @@
-# Succulent: the fleshy stems of cacti, after the Sonoran Desert's
+# The cacti (Cactaceae): their fleshy stems, after the Sonoran Desert's
 # saguaros, organ pipes, barrels, hedgehogs, pincushions, chollas and
 # prickly pears. A plant is a clump of one or more stems from the ground,
 # and each stem is either a column that grows at its tip or a chain of
@@ -48,10 +48,14 @@
 #
 # Revision 2 (spec rework M7): a bud is a flower, not a fruit.
 #
+# Revision 3 (growth plan G2.3a): the cacti's own program, renamed from
+# `succulent` and homed at Cactaceae; its genera extend it where they
+# grow otherwise. It grows every plant as before.
+#
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem succulent 2;
+lsystem cactaceae 3;
 
 # The plant.
 param vigour_spread = 0.12;   # an individual grows exp(gauss() * vigour_spread) times as fast

@@ -2,5 +2,19 @@
   "schema": 1,
   "rank": "family",
   "name": "Arecaceae",
-  "parent": "order/arecales"
+  "parent": "order/arecales",
+  "forms": {
+    "palm": {
+      "generator": {
+        "program": "palm"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's palm species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    }
+  }
 }

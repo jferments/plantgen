@@ -26,36 +26,41 @@
 #
 # Revision 2 (spec rework M7): a thorn is a spine, not a leaf.
 #
+# Revision 3 (growth plan G2.3a): a starting base with no values. Each
+# parameter is `param name;`, and the lineage programs that extend it
+# (`fouquieria`, `phyllostachys`) give the values, as this program's
+# defaults were until then.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem cane 2;
+lsystem cane 3;
 
-param vigour_spread = 0.12;
-param canes = 30;             # canes in a mature clump
-param cane_rate = 4;          # new canes a year
-param cane_lean = 30;         # how far the outermost canes lean out
-param cane_length = 5;
-param cane_growth = 0.12;     # rate of the Chapman-Richards curve, a year
-param cane_radius = 0.025;    # radius at the foot; a third of it at the tip
-param sag = 0.004;            # tropism toward the ground along a cane
-param node_rate = 20;         # nodes a metre
-param thorn_length = 0.025;
-param thorn_angle = 55;       # angle of a thorn to its cane
-param leafy = 0.5;            # chance a year that the plant is in leaf
-param leaf_size = 0.035;
-param leaf_angle = 50;
-param bloom_age = 4;          # the first year a cane may bloom
-param bloom = 0.6;            # chance a year that an old enough cane blooms
-param flowers = 14;           # flowers in a panicle
-param flower_size = 0.025;
-param flower_angle = 35;
-param thorn_area = 0.02;
-param leaf_area = 0.24;
-param flower_area = 0.64;
-param stand_radius = 0;       # radius the canes are scattered over; 0 one crown
-param cane_life = 0;          # years a cane lives; 0 for ever
-param thorns = 1;             # 0: no thorns
-param leaf_from = 0;          # share of a full cane's length below which it bears no leaves
+param vigour_spread;
+param canes;                  # canes in a mature clump
+param cane_rate;              # new canes a year
+param cane_lean;              # how far the outermost canes lean out
+param cane_length;
+param cane_growth;            # rate of the Chapman-Richards curve, a year
+param cane_radius;            # radius at the foot; a third of it at the tip
+param sag;                    # tropism toward the ground along a cane
+param node_rate;              # nodes a metre
+param thorn_length;
+param thorn_angle;            # angle of a thorn to its cane
+param leafy;                  # chance a year that the plant is in leaf
+param leaf_size;
+param leaf_angle;
+param bloom_age;              # the first year a cane may bloom
+param bloom;                  # chance a year that an old enough cane blooms
+param flowers;                # flowers in a panicle
+param flower_size;
+param flower_angle;
+param thorn_area;
+param leaf_area;
+param flower_area;
+param stand_radius;           # radius the canes are scattered over; 0 one crown
+param cane_life;              # years a cane lives; 0 for ever
+param thorns;                 # 0: no thorns
+param leaf_from;              # share of a full cane's length below which it bears no leaves
 
 module Y(n, v);               # the crown: canes so far, vigour
 module Cs(k, m, v);           # canes k to k + m - 1 of this year's cohort
