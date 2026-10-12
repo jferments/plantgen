@@ -27,7 +27,7 @@ pub const SPEC_SCHEMA: u32 = 1;
 pub const UNNOTED: &[&str] = &["schema", "id", "tier", "evidence", "provenance"];
 
 /// Built-in plant programs, by name.
-pub const PROGRAMS: [(&str, &str); 15] = [
+pub const PROGRAMS: [(&str, &str); 24] = [
     ("conifer", include_str!("../programs/conifer.lsys")),
     ("broadleaf", include_str!("../programs/broadleaf.lsys")),
     ("grass", include_str!("../programs/grass.lsys")),
@@ -41,11 +41,32 @@ pub const PROGRAMS: [(&str, &str); 15] = [
     ("palm", include_str!("../programs/palm.lsys")),
     ("cane", include_str!("../programs/cane.lsys")),
     ("sedge", include_str!("../programs/sedge.lsys")),
-    ("aquatic", include_str!("../programs/aquatic.lsys")),
+    (
+        "nymphaeaceae",
+        include_str!("../programs/nymphaeaceae.lsys"),
+    ),
     ("climber", include_str!("../programs/climber.lsys")),
     ("epiphyte", include_str!("../programs/epiphyte.lsys")),
-    ("cushion", include_str!("../programs/cushion.lsys")),
+    ("azorella", include_str!("../programs/azorella.lsys")),
     ("sapindaceae", include_str!("../programs/sapindaceae.lsys")),
+    (
+        "asparagaceae",
+        include_str!("../programs/asparagaceae.lsys"),
+    ),
+    ("aloe", include_str!("../programs/aloe.lsys")),
+    ("hechtia", include_str!("../programs/hechtia.lsys")),
+    ("cyperaceae", include_str!("../programs/cyperaceae.lsys")),
+    ("typha", include_str!("../programs/typha.lsys")),
+    ("fouquieria", include_str!("../programs/fouquieria.lsys")),
+    (
+        "phyllostachys",
+        include_str!("../programs/phyllostachys.lsys"),
+    ),
+    ("tillandsia", include_str!("../programs/tillandsia.lsys")),
+    (
+        "phoradendron",
+        include_str!("../programs/phoradendron.lsys"),
+    ),
 ];
 
 /// A built-in program's source, by name.

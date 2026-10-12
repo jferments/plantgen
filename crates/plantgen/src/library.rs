@@ -2034,14 +2034,25 @@ mod tests {
     /// The parameters rules are checked against and read, from the
     /// programs' text, are those the compiled programs have, with their
     /// defaults where the text writes them as numbers; a default worked
-    /// out from other parameters reads as none.
+    /// out from other parameters, or none given, reads as none.
     #[test]
     fn program_parameters_are_the_compiled_programs() {
         let library = Library::builtin();
         assert_eq!(library.program_params().len(), PROGRAMS.len());
         for (name, params) in library.program_params() {
             let program = crate::lsys::Program::compile(library.program(name).unwrap()).unwrap();
-            let defaults = program.resolve_params(&BTreeMap::new()).unwrap();
+            // A base gives some parameters no value (`param name;`); they
+            // read as none, and are set here only so the rest resolve.
+            let unset: BTreeMap<String, f64> = program
+                .params
+                .iter()
+                .filter(|param| param.default.is_none())
+                .map(|param| (param.name.clone(), 1.0))
+                .collect();
+            for param in unset.keys() {
+                assert_eq!(params[param], None, "{name}: {param}");
+            }
+            let defaults = program.resolve_params(&unset).unwrap();
             let compiled: BTreeMap<&String, f64> = program
                 .params
                 .iter()
@@ -2055,6 +2066,9 @@ mod tests {
                 }
             }
         }
+        // A base leaves its values to the lineages on it.
+        assert_eq!(library.program_params()["rosette"]["leaf_rate"], None);
+        assert_eq!(library.program_params()["aloe"]["leaf_rate"], Some(8.0));
         // herb's `divergence` follows `leaves_per_node`.
         assert_eq!(library.program_params()["herb"]["divergence"], None);
         assert_eq!(

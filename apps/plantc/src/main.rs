@@ -21,7 +21,7 @@ use plantgen::export;
 use plantgen::graph::{GraphOrgan, OrganType, PlantGraph};
 use plantgen::ground::{self, GROUND_LOOK_SIZE};
 use plantgen::grow::{Growth, GrowthSettings, grow};
-use plantgen::library::Library;
+use plantgen::library::{Library, ProgramHome};
 use plantgen::litter;
 use plantgen::looks::{self, Look, Stage};
 use plantgen::lsys::{Limits, Neighbourhood, Program};
@@ -655,41 +655,15 @@ fn rules_command(args: &[String]) -> Result<(), Failure> {
     for line in &homed {
         out!("{line}");
     }
-    // A program is homed when it is named for a taxon of the library
-    // (growth plan G2.3a); one named for none is a base.
     let by_home = library.program_homes()?;
-    let params = library.program_params();
-    out!("Programs, by their home ({}):", by_home.len());
-    for home in &by_home {
-        let own = params.get(&home.name).map_or(0, |all| {
-            let inherited = home
-                .extends
-                .as_ref()
-                .and_then(|parent| params.get(parent))
-                .map_or(0, std::collections::BTreeMap::len);
-            all.len() - inherited.min(all.len())
-        });
-        out!(
-            "  {}  ({}{}; {} species)",
-            home.name,
-            home.home.as_deref().map_or_else(
-                || "base".to_string(),
-                |place| format!("named for the taxon at {place}")
-            ),
-            home.extends.as_deref().map_or_else(
-                || format!("; {own} parameters"),
-                |parent| format!(", extends {parent}; {own} parameters besides {parent}'s")
-            ),
-            home.species.len()
-        );
-        if !home.named_by.is_empty() {
-            out!("      named by {}", home.named_by.join("; "));
-        }
-    }
+    print_programs(library, &by_home)?;
     let general: Vec<(&String, usize)> = by_home
         .iter()
         .filter(|home| home.home.is_none())
-        .filter_map(|home| Some((&home.name, params.get(&home.name)?.len())))
+        .map(|home| {
+            let own = own_params(library.program_text(&home.name).unwrap_or_default());
+            (&home.name, own.iter().filter(|(_, value)| *value).count())
+        })
         .collect();
     let defaults: usize = general.iter().map(|(_, count)| count).sum();
     out!(
@@ -706,6 +680,69 @@ fn rules_command(args: &[String]) -> Result<(), Failure> {
             .join(", ")
     );
     Ok(())
+}
+
+/// `plantc rules`' programs section: each program with its home, what it
+/// extends and the files that name it.
+fn print_programs(library: &Library, by_home: &[ProgramHome]) -> Result<(), Failure> {
+    // A program is homed when it is named for a taxon of the library
+    // (growth plan G2.3a); one named for none is a base.
+    let params = library.program_params();
+    out!("Programs, by their home ({}):", by_home.len());
+    for home in by_home {
+        let own = own_params(library.program_text(&home.name).unwrap_or_default());
+        let valued = own.iter().filter(|(_, value)| *value).count();
+        let what = match home.extends.as_deref() {
+            Some(parent) => {
+                let inherited = params.get(parent);
+                let set = own
+                    .iter()
+                    .filter(|(name, _)| inherited.is_some_and(|all| all.contains_key(*name)))
+                    .count();
+                let added = own.len() - set;
+                format!(
+                    ", extends {parent}; gives values to {set} of {parent}'s parameters{}",
+                    if added > 0 {
+                        format!(", adds {added}")
+                    } else {
+                        String::new()
+                    }
+                )
+            }
+            None if valued < own.len() => {
+                format!("; {} parameters, {valued} with a value", own.len())
+            }
+            None => format!("; {} parameters", own.len()),
+        };
+        out!(
+            "  {}  ({}{what}; {} species)",
+            home.name,
+            home.home.as_deref().map_or_else(
+                || "base".to_string(),
+                |place| format!("named for the taxon at {place}")
+            ),
+            home.species.len()
+        );
+        if !home.named_by.is_empty() {
+            out!("      named by {}", home.named_by.join("; "));
+        }
+    }
+    // A base's defaults are the parameters it gives a value; one it
+    // declares as `param name;` leaves the value to the lineages.
+    Ok(())
+}
+
+/// The parameters a program's own text declares (`param name = value;` or
+/// `param name;`), each with whether it gives a value.
+fn own_params(text: &str) -> Vec<(&str, bool)> {
+    text.lines()
+        .filter_map(|line| {
+            let line = line.split('#').next().unwrap_or_default().trim();
+            let rest = line.strip_prefix("param ")?;
+            let name = rest.split(['=', ';']).next()?.trim();
+            Some((name, rest.contains('=')))
+        })
+        .collect()
 }
 
 /// The cards a rule on a look's card is for, as `plantc rules` names them.

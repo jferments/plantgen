@@ -21,18 +21,6 @@
     "carpels": 2
   },
   "forms": {
-    "cushion": {
-      "generator": {
-        "program": "cushion"
-      },
-      "evidence": {
-        "generator.program": {
-          "evidence": "Authored",
-          "source": "plantgen-authors",
-          "note": "The program the authors chose to grow this taxon's cushion species (named in each species' spec until G2.3a moved it here)."
-        }
-      }
-    },
     "forb": {
       "generator": {
         "program": "herb"

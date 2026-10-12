@@ -3,28 +3,22 @@
   "rank": "family",
   "name": "Nymphaeaceae",
   "parent": "order/nymphaeales",
+  "generator": {
+    "program": "nymphaeaceae"
+  },
   "traits": {
     "perianth": "spiral"
-  },
-  "forms": {
-    "forb": {
-      "generator": {
-        "program": "aquatic"
-      },
-      "evidence": {
-        "generator.program": {
-          "evidence": "Authored",
-          "source": "plantgen-authors",
-          "note": "The program the authors chose to grow this taxon's forb species (named in each species' spec until G2.3a moved it here)."
-        }
-      }
-    }
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "ffpa-2014",
       "note": "The Families of Flowering Plants of Australia's account of the family, with SEINet's, as search results quote it (the page itself was not read): a few sepals, the petals many, spirally arranged and often grading into the stamens; drawn as a spiral of tepals, the outer ones turned toward the sepals' green."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The water lilies' own program (growth plan G2.3a), renamed from `aquatic` and homed here: leaves on long petioles floating on the water from a rhizome below it."
     }
   }
 }

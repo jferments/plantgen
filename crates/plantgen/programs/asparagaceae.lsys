@@ -1,0 +1,53 @@
+# Agaves, yuccas and sotols (Asparagaceae): their rosettes, on the
+# rosette base (growth plan G2.3a). The values are the rosette program's
+# defaults until G2.3a, which these species grew on; each species still
+# sets its own where it differs.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem asparagaceae 1 extends rosette;
+
+param vigour_spread = 0.15; # a rosette grows exp(gauss() * vigour_spread) times as fast
+param lean = 3;             # most degrees the stem leans at its foot
+param leaf_rate = 8;        # leaves a crown adds a year
+param leaf_life = 5;        # years a leaf lives
+param leaf_length = 0.4;    # a full-size leaf's length
+param leaf_seed = 0.15;     # a seedling's leaves, as a share of full size
+param size_years = 8;       # leaves reach full size over about this many years
+param leaf_spread = 0.1;    # leaves are l (1 ± leaf_spread) long
+param divergence = 137.5;   # roll from one leaf to the next; 180 for two ranks
+param young_angle = 8;      # angle of a new leaf to the stem's axis
+param old_angle = 65;       # the angle an old leaf opens to
+param open_years = 2;       # how fast a leaf opens, years
+param angle_spread = 6;     # spread of each leaf's angle
+param internode = 0.004;    # stem between one leaf and the next
+param skirt = 0;            # 1: dead leaves fold down and hang
+param dead_angle = 160;     # angle of a hanging dead leaf to the stem's axis
+param dead_life = 0;        # years a dead leaf hangs before it falls
+param leaf_area = 0.08;     # leaf area of a leaf 1 m long, m²
+param dead_area = 0.08;     # and of a dead leaf
+param trunk_rate = 0;       # metres a year the stem grows under the crown
+param trunk_radius = 0.04;  # the stem's radius under the crown
+param fork = 0;             # 1: flowering ends a crown, which forks below
+param forks_low = 2;        # crowns that wake below a flowered tip
+param forks_high = 3;
+param fork_angle = 35;      # angle a new crown leans out from the old axis
+param upturn = 0;           # how strongly a leaning crown's stem turns back up, radians a metre
+param flower_age = 8;       # the first year a crown may flower
+param once = 0;             # 1: a crown flowers once and dies
+param bloom = 0.7;          # chance a year an old enough crown flowers
+param stalk_height = 1.5;   # the stalk's height above the crown
+param stalk_radius = 0.015; # its radius at the foot, at most trunk_radius
+param stalk_head = 0.4;     # share of the stalk, from the top, that flowers
+param stalk_branches = 0;   # side branches of the flowering head; 0 a spike
+param branch_length = 0.3;  # a side branch's length at the foot of the head
+param branch_angle = 50;    # angle of a side branch to the stalk
+param flowers = 30;         # flowers on a spike, or on each branch
+param flower_size = 0.04;
+param flower_angle = 60;    # angle of a flower to its stalk
+param stalk_life = 2;       # years a dry stalk stands
+param flower_area = 0.64;
+param pups = 0;             # most pups a rosette sends out
+param pup_age = 6;          # the rosette's first year of pups
+param pup_rate = 0.3;       # chance a year of a new pup
+param pup_distance = 0.3;   # how far out a pup appears

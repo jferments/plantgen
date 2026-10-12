@@ -1,0 +1,34 @@
+# Mistletoes (Phoradendron, Santalaceae): clumps on a host's limbs, on
+# the epiphyte base (growth plan G2.3a). The values are the epiphyte
+# program's defaults until G2.3a; each species still sets its own where
+# it differs.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem phoradendron 1 extends epiphyte;
+
+param colonies = 30;
+param seeds_per_year = 4;
+param crown_low = 2;
+param crown_high = 8;
+param crown_radius = 4;
+param reach = 2.5;
+param kind = 0;               # 0 festoons, 1 a clump
+param colony_life = 30;
+param size_years = 6;
+param strands = 6;
+param strand_length = 0.8;
+param pieces = 10;
+param kink = 25;
+param hang = 0.6;             # tropism of a strand toward the ground
+param strand_radius = 0.0012;
+param scale_size = 0.05;
+param stems = 8;
+param forks = 3;
+param clump_radius = 0.3;
+param stem_radius = 0.003;
+param fork_angle = 35;
+param fruit_age = 3;
+param fruit_size = 0.008;
+param scale_area = 0.1;
+param fruit_area = 0.89;

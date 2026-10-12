@@ -380,7 +380,8 @@ pub struct ToolConfig {
 #[derive(Debug, Clone, PartialEq)]
 pub struct ParamInfo {
     pub name: String,
-    pub default: Code,
+    /// `None` for a parameter the program gives no value (`param name;`).
+    pub default: Option<Code>,
 }
 
 /// A checked, compiled plant program.
@@ -503,6 +504,15 @@ impl Program {
             let value = if let Some(value) = overrides.get(&param.name) {
                 *value
             } else {
+                let Some(default) = &param.default else {
+                    return Err(ProgramError {
+                        span: Span::default(),
+                        message: format!(
+                            "program `{}` gives `{}` no value; the species' taxa or the species must set it",
+                            self.name, param.name
+                        ),
+                    });
+                };
                 let scope = Scope {
                     globals: &values,
                     locals: &[],
@@ -513,7 +523,7 @@ impl Program {
                     step: 0.0,
                     key: 0,
                 };
-                eval(&param.default, &scope, &mut stack)
+                eval(default, &scope, &mut stack)
             };
             if !value.is_finite() {
                 return Err(ProgramError {
@@ -787,7 +797,10 @@ impl Compiler {
                 globals: self.params.len(),
                 ..PARAMS_ONLY
             };
-            let default = self.expr(&decl.value, &context)?;
+            let default = match &decl.value {
+                Some(value) => Some(self.expr(value, &context)?),
+                None => None,
+            };
             let index = u16::try_from(self.params.len()).map_err(|_| ProgramError {
                 span: decl.span,
                 message: "too many parameters".into(),
@@ -1705,6 +1718,22 @@ mod tests {
         assert_eq!(program.resolve_params(&overrides).unwrap(), [5.0, 15.0]);
         let unknown = BTreeMap::from([("c".to_string(), 1.0)]);
         assert!(program.resolve_params(&unknown).is_err());
+    }
+
+    /// A parameter with no value (growth plan G2.3a) takes the species'
+    /// value, and a species that sets none cannot grow on the program.
+    #[test]
+    fn a_parameter_with_no_value_must_be_set() {
+        let program = compile("lsystem p 1; param a; param b = a * 3; axiom F(b);").unwrap();
+        let error = program.resolve_params(&BTreeMap::new()).unwrap_err();
+        assert!(
+            error.message.contains(
+                "program `p` gives `a` no value; the species' taxa or the species must set it"
+            ),
+            "{error}"
+        );
+        let overrides = BTreeMap::from([("a".to_string(), 2.0)]);
+        assert_eq!(program.resolve_params(&overrides).unwrap(), [2.0, 6.0]);
     }
 
     #[test]

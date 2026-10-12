@@ -79,7 +79,8 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   order or genus file names it for its species, or for each growth form
   among them, and a program named for a taxon grows only species within
   it and extends the program named above it (`plantc rules` lists each
-  program's home).
+  program's home). A base that several lineages share gives its
+  parameters no values (`param leaf_rate;`); each lineage's program does.
 - **Organs built from their parts.** Each of these is laid out by one
   function that draws its solid, its coarser meshes and its card alike,
   so a plant looks the same in the distance as up close:
