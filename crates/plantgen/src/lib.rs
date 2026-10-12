@@ -164,6 +164,11 @@ pub mod venation;
 /// steps; a fruit drawn with fewer facets than its finest is widened to
 /// cover what it does there, so clusters of fruit and berries keep their
 /// cover drawn coarser.
+/// 27: a cluster of spikelets drawn as coarse as its branches merge draws
+/// half its spikelets, each longer, then each smallest branch as the
+/// outline of its spikelets, two crossed kites, not solids round them, so
+/// dense grass panicles get coarser steps; each step records the cover it
+/// loses or gains (`part-steps` is APSTEPS2).
 /// 29: a fern's frond is sized from its stated blade, stipe and blade
 /// width by rules of its class (spec rework E6a): the frond's length, its
 /// bare share and its longest pinna, so the sword, wood and deer ferns
