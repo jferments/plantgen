@@ -33,7 +33,7 @@
       "blade_area": 0.064,
       "tip_area": 0.035,
       "thatch_area": 0.064,
-      "panicle_area": 0.147
+      "panicle_area": 0.152
     }
   },
   "growth": {
@@ -63,14 +63,23 @@
         "shade": [0.12, 0.1, 0.05]
       },
       "panicle": {
-        "shape": {
-          "template": "panicle",
-          "whorls": 6,
-          "branches": 3,
+        "shape": {"template": "spikelet", "glume": 1.15, "awned": 0.5},
+        "inflorescence": {
+          "branches": 18,
+          "per_node": 2,
+          "size": 0.3,
           "spread": 20,
-          "spikelets": 8,
-          "aspect": 0.35,
-          "stalk": 0.05
+          "taper": 0.5,
+          "peduncle": 0.05,
+          "stalk": [0.5, 0.4, 0.42],
+          "branch": {
+            "kind": "raceme",
+            "flowers": 16,
+            "pedicel": 0.05,
+            "peduncle": 0.2,
+            "size": 0.14,
+            "spread": 30
+          }
         },
         "colour": [0.6, 0.45, 0.48],
         "accent": [0.55, 0.35, 0.45]
@@ -86,7 +95,28 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "inflorescence": "panicle",
+    "florets_per_spikelet": 2,
+    "spikelet_length_m": {"min": 0.004, "max": 0.006},
+    "glumes": 2,
+    "lemma_length_m": {"min": 0.002, "max": 0.0025},
+    "awns": true,
+    "awn_length_m": {"min": 0.001, "max": 0.0015},
+    "awn_insertion": "subapical",
+    "awn_form": "hooked"
+  },
   "evidence": {
+    "appearance.organs.panicle": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The panicle's layout, the model's choice after VicFlora and FNA (volume 24, Standley), as search results quote them (the pages were not read): moderately dense and narrowly ovate; the glumes longer than the florets and enclosing them (drawn 1.15 times the florets' height); only the upper floret awned (awned 0.5). Drawn as 18 branches in pairs, each with about 16 spikelets. Colours by eye: pink."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "vicflora",
+      "note": "VicFlora's account of the species, as search results quote it (the page itself was not read): a moderately dense, narrowly ovate panicle 3 to 20 cm long, pinkish when young; spikelets 2-flowered, 4 to 6 mm; glumes nearly equal, enclosing the florets; the lower floret's lemma 2 to 2.5 mm and awnless, the upper slightly shorter with a strongly hooked awn 1 to 1.5 mm long from just below its tip."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

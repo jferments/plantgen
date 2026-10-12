@@ -40,8 +40,8 @@
       "fruit_below": 0,
       "buds_above": 1,
       "nod": 0,
-      "leaf_area": 0.182,
-      "basal_area": 0.121,
+      "leaf_area": 0.195,
+      "basal_area": 0.16,
       "basal_piece_area": 0.235,
       "flower_area": 0.117
     }
@@ -62,27 +62,11 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": {
-          "template": "palmate",
-          "lobes": 9,
-          "depth": 0.9,
-          "lobe_width": 0.25,
-          "teeth": 0,
-          "spread": 1.2,
-          "petiole": 0.5
-        },
+        "shape": { "template": "compound", "leaflet_width": 0.16, "teeth": 0, "petiole": 0.5, "spread": 300, "lowest": 0.6, "widest": 0.6, "tip": 0.5, "base": 0 },
         "face_up": 0.5
       },
       "basal": {
-        "shape": {
-          "template": "palmate",
-          "lobes": 9,
-          "depth": 0.9,
-          "lobe_width": 0.25,
-          "teeth": 0,
-          "spread": 1.2,
-          "petiole": 0.6
-        },
+        "shape": { "template": "compound", "leaflet_width": 0.16, "teeth": 0, "petiole": 0.55, "spread": 300, "lowest": 0.6, "widest": 0.6, "tip": 0.5, "base": 0 },
         "face_up": 0.4
       },
       "flower": {
@@ -137,7 +121,11 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "inflorescence": "raceme"
+    "inflorescence": "raceme",
+    "leaf_division": "compound",
+    "division_pattern": "palmate",
+    "division_order": 1,
+    "leaflets": {"min": 9, "max": 17, "low": 5}
   },
   "evidence": {
     "generator.params": {
@@ -204,6 +192,36 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Its days by eye from the months floras and guides give for flowering (the Burke Herbarium: June to September; Minnesota Wildflowers: May to July), for lowland plants: buds in late May, each flower open about 12 days, the raceme opening from its foot (as the Wisconsin DNR describes) over about four weeks (no source gives a time), its pods shed by early September."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "Jepson eFlora's account of the species, as Calscape quotes it in search results (the page itself was not read): leaves palmately compound, leaflets (5) 9 to 17, 3 to 15 cm long."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "Jepson eFlora's account of the species, as Calscape quotes it in search results (the page itself was not read): leaves palmately compound, leaflets (5) 9 to 17, 3 to 15 cm long."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "Jepson eFlora's account of the species, as Calscape quotes it in search results (the page itself was not read): leaves palmately compound, leaflets (5) 9 to 17, 3 to 15 cm long."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "Jepson eFlora's account of the species, as Calscape quotes it in search results (the page itself was not read): leaves palmately compound, leaflets (5) 9 to 17, 3 to 15 cm long."
+    },
+    "appearance.organs.leaf.shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The leaf drawn as a palmately compound leaf (spec rework P4), its leaflets counted and set from its characters by the rules at the flowering plants; before, a palmately lobed blade stood in for it. By eye from photographs: the leaflets fanned nearly all the way round the petiole's tip (300 degrees), the outer ones 0.6 as long as the middle one, each oblanceolate, tapering to its foot, and about a sixth as wide as long."
+    },
+    "appearance.organs.basal.shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The leaf drawn as a palmately compound leaf (spec rework P4), its leaflets counted and set from its characters by the rules at the flowering plants; before, a palmately lobed blade stood in for it. By eye from photographs: the leaflets fanned nearly all the way round the petiole's tip (300 degrees), the outer ones 0.6 as long as the middle one, each oblanceolate, tapering to its foot, and about a sixth as wide as long."
     }
   },
   "provenance": {

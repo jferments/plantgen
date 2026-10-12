@@ -32,7 +32,7 @@
       "blade_area": 0.027,
       "tip_area": 0.015,
       "thatch_area": 0.027,
-      "panicle_area": 0.082
+      "panicle_area": 0.151
     }
   },
   "growth": {
@@ -62,16 +62,26 @@
         "shade": [0.12, 0.1, 0.05]
       },
       "panicle": {
-        "shape": {
-          "template": "panicle",
-          "whorls": 5,
-          "branches": 2,
+        "shape": {"template": "spikelet"},
+        "inflorescence": {
+          "branches": 7,
+          "per_node": 2,
+          "size": 0.35,
           "spread": 25,
-          "spikelets": 4,
-          "aspect": 0.35,
-          "stalk": 0.05
+          "taper": 0.5,
+          "peduncle": 0.05,
+          "stalk": [0.4, 0.3, 0.24],
+          "branch": {
+            "kind": "raceme",
+            "flowers": 4,
+            "pedicel": 0.08,
+            "peduncle": 0.3,
+            "size": 0.34,
+            "spread": 20
+          }
         },
-        "colour": [0.45, 0.28, 0.22]
+        "colour": [0.45, 0.28, 0.22],
+        "accent": [0.42, 0.36, 0.26]
       }
     }
   },
@@ -84,7 +94,28 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "inflorescence": "panicle",
+    "florets_per_spikelet": {"min": 3, "max": 10},
+    "spikelet_length_m": {"min": 0.007, "max": 0.017, "low": 0.006},
+    "glumes": 2,
+    "lower_glume_length_m": {"min": 0.002, "max": 0.006, "low": 0.0015, "high": 0.007},
+    "upper_glume_length_m": {"min": 0.0035, "max": 0.0085, "low": 0.003},
+    "lemma_length_m": {"min": 0.004, "max": 0.0095},
+    "awns": true,
+    "awn_length_m": {"min": 0.0004, "max": 0.0045, "low": 0.0001}
+  },
   "evidence": {
+    "appearance.organs.panicle": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The panicle's layout, the model's choice after FNA (volume 24), as search results quote it (the page was not read): usually open or loosely contracted, 1 to 3 branches a node. Drawn as 7 branches in pairs, each with about 4 spikelets. Colours by eye: reddish."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA's account of the species (Darbyshire and Pavlick, volume 24), as search results quote it (the page itself was not read): inflorescences (2)3.5 to 25(30) cm, usually open or loosely contracted panicles, with 1 to 3 branches a node; spikelets (6)7 to 17 mm, with 3 to 10 florets; glumes shorter than the upper florets, the lower (1.5)2 to 6(7) mm, the upper (3)3.5 to 8.5 mm; lemmas 4 to 9.5 mm, awned, the awns (0.1)0.4 to 4.5 mm."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

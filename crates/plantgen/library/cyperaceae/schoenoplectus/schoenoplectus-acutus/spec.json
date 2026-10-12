@@ -34,7 +34,7 @@
       "blade_area": 0.023,
       "tip_area": 0.012,
       "thatch_area": 0.023,
-      "panicle_area": 0.09
+      "panicle_area": 0.263
     }
   },
   "growth": {
@@ -65,15 +65,24 @@
       },
       "panicle": {
         "shape": {
-          "template": "panicle",
-          "whorls": 2,
-          "branches": 4,
-          "spread": 40,
-          "spikelets": 5,
-          "aspect": 0.8,
-          "stalk": 0.02
+          "template": "spikelet",
+          "florets": 20,
+          "glumes": 0,
+          "aspect": 0.3,
+          "gape": 10
         },
-        "colour": [0.38, 0.27, 0.15]
+        "inflorescence": {
+          "kind": "umbel",
+          "branches": 6,
+          "size": 0.55,
+          "spread": 35,
+          "taper": 0.3,
+          "peduncle": 0.1,
+          "stalk": [0.38, 0.36, 0.2],
+          "branch": {"kind": "head", "flowers": 3, "size": 0.35}
+        },
+        "colour": [0.45, 0.3, 0.16],
+        "accent": [0.5, 0.42, 0.26]
       }
     }
   },
@@ -86,7 +95,26 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "inflorescence_unit": "spikelet",
+    "scale_arrangement": "spiral",
+    "spikelet_length_m": {"min": 0.006, "max": 0.018, "high": 0.024},
+    "lemma_length_m": {"min": 0.003, "max": 0.004},
+    "awns": true,
+    "awn_length_m": {"min": 0.0005, "max": 0.002},
+    "awn_form": "contorted"
+  },
   "evidence": {
+    "appearance.organs.panicle": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The inflorescence, the model's choice after FNA (volume 23), as search results quote it (the page was not read): 2 or 3 times branched, its spikelets single or in clusters of 2 to 8. Drawn as 6 rays from the culm's top, each ending in a cluster of 3 spikelets of 20 scales; the bract that seems to continue the culm is left out. Colours by eye: orange-brown."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA's account of the species (volume 23), as search results quote it (the page itself was not read): inflorescences 2(3) times branched, open or compact, the branches to 6(18) cm, the lowest bract usually erect; spikelets 3 to 190, single or in clusters of 2 to 8, 6 to 18 mm long in variety acutus and 6 to 24 mm in variety occidentalis; the scales spirally arranged (the genus account), reddish to orange-brown or straw-coloured, about 3 to 4 mm (in the search results' own words), the awn on at least some of them usually strongly contorted, 0.5 to 2 mm."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

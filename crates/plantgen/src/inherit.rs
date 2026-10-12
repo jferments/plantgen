@@ -603,7 +603,7 @@ fn every_look(
 /// (`crate::looks::Shape`), by the template's name: what a rule that names
 /// the template may set inside a look's `shape`. The looks module's tests
 /// hold this to the templates.
-pub const TEMPLATES: [(&str, &[(&str, Field)]); 15] = {
+pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
     use Field::{Count, Number, Outline, Word};
     [
         (
@@ -668,6 +668,20 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 15] = {
                 ("leaflet_width", Number),
                 ("teeth", Count),
                 ("petiole", Number),
+                ("pattern", Word),
+                ("pinnules", Count),
+                ("confluent", Number),
+                ("angle", Number),
+                ("pinnule_angle", Number),
+                ("spread", Number),
+                ("largest", Number),
+                ("lowest", Number),
+                ("terminal_size", Number),
+                ("outline", Outline),
+                ("widest", Number),
+                ("tip", Number),
+                ("base", Number),
+                ("petiolule", Number),
             ],
         ),
         (
@@ -744,6 +758,23 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 15] = {
                 ("spikelets", Count),
                 ("aspect", Number),
                 ("stalk", Number),
+            ],
+        ),
+        (
+            "spikelet",
+            &[
+                ("florets", Count),
+                ("glumes", Count),
+                ("glume", Number),
+                ("lower", Number),
+                ("lemma", Number),
+                ("aspect", Number),
+                ("awn", Number),
+                ("awn_from", Number),
+                ("awned", Number),
+                ("bent", Number),
+                ("ranks", Count),
+                ("gape", Number),
             ],
         ),
         (
@@ -1459,32 +1490,31 @@ impl Ruled<'_> {
             Ok(value)
         };
         // A map reads its trait, then only what the values it picks read;
-        // one drawing `between` reads every state that ties.
+        // one drawing `between` reads every state that ties. A formula
+        // needs only the names on the way it takes (`a ? b : c` reads one
+        // of `b` and `c`), so a name it cannot read fails it only if the
+        // formula then has no number.
         let mut picks = Vec::new();
-        if let Some((key, table)) = map_of(self.rule) {
+        let mut unread = Vec::new();
+        let names = if let Some((key, table)) = map_of(self.rule) {
             let stated = read(key)?;
             picks = if self.rule.contains_key("between") {
                 readings(key, &stated)?.0
             } else {
                 vec![reading(key, &stated)?]
             };
-            for pick in &picks {
-                let Some(formula) = table.get(&state(pick)).and_then(map_formula) else {
-                    continue;
-                };
-                for name in Formula::parse(formula)?.names() {
-                    if &name != key
-                        && let Entry::Vacant(entry) = inputs.entry(name)
-                    {
-                        let value = reading(entry.key(), &read(entry.key())?)?;
+            picked_reads(key, table, &picks)?
+        } else {
+            reads(self.rule)
+        };
+        for name in names {
+            if let Entry::Vacant(entry) = inputs.entry(name) {
+                match read(entry.key()).and_then(|value| reading(entry.key(), &value)) {
+                    Ok(value) => {
                         entry.insert(value);
                     }
+                    Err(why) => unread.push(why),
                 }
-            }
-        } else {
-            for key in reads(self.rule) {
-                let value = reading(&key, &read(&key)?)?;
-                inputs.insert(key, value);
             }
         }
         if let Some((label, by)) = origins.get(self.at)
@@ -1493,7 +1523,13 @@ impl Ruled<'_> {
             return Err(format!("set by hand in {label}"));
         }
         let rivals = self.rivals(field, spec, origins, depth)?;
-        let value = picked(self.rule, &picks, &mut inputs)?;
+        let value = picked(self.rule, &picks, &mut inputs).map_err(|why| {
+            // Its number failed for want of a name it could not read.
+            match unread.first() {
+                Some(first) if why == NO_NUMBER => first.clone(),
+                _ => why,
+            }
+        })?;
         fits(field, &value)?;
         for rival in &rivals {
             remove(spec, rival);
@@ -1671,6 +1707,27 @@ fn reads(rule: &Map<String, Value>) -> Vec<String> {
     read
 }
 
+/// What the formulas a map's `picks` give read, besides its own trait.
+fn picked_reads(
+    key: &str,
+    table: &Map<String, Value>,
+    picks: &[Value],
+) -> Result<Vec<String>, String> {
+    let mut names = Vec::new();
+    for pick in picks {
+        let Some(formula) = table.get(&state(pick)).and_then(map_formula) else {
+            continue;
+        };
+        names.extend(
+            Formula::parse(formula)?
+                .names()
+                .into_iter()
+                .filter(|name| name != key),
+        );
+    }
+    Ok(names)
+}
+
 /// A `map` rule's trait and its table of values.
 fn map_of(rule: &Map<String, Value>) -> Option<(&String, &Map<String, Value>)> {
     let (key, table) = rule.get("map")?.as_object()?.iter().next()?;
@@ -1787,6 +1844,9 @@ fn between(values: &[Value]) -> Option<Value> {
         .map(Value::Array)
 }
 
+/// Why a formula has no number.
+const NO_NUMBER: &str = "what it reads gives it no number";
+
 /// A rule's value from what it reads, by name: its formula's number (a
 /// bool trait reads as 1 or 0), or its map's value for the trait's, worked
 /// out if that value is a formula.
@@ -1801,7 +1861,7 @@ fn evaluate(rule: &Map<String, Value>, inputs: &BTreeMap<String, Value>) -> Resu
             .eval(&number)
             .map(plain)
             .and_then(written)
-            .ok_or_else(|| "what it reads gives it no number".to_string())
+            .ok_or_else(|| NO_NUMBER.to_string())
     };
     if let Some(Value::String(formula)) = rule.get("rule") {
         return calculate(formula);

@@ -46,10 +46,12 @@
 # the top of joints in their second year. A chain-fruit cholla hangs chains of
 # fruit from its joints, one more fruit each year.
 #
+# Revision 2 (spec rework M7): a bud is a flower, not a fruit.
+#
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem succulent 1;
+lsystem succulent 2;
 
 # The plant.
 param vigour_spread = 0.12;   # an individual grows exp(gauss() * vigour_spread) times as fast
@@ -166,7 +168,7 @@ module Cf;                              # one fruit of a chain
 body stem;
 
 organ flower flower area flower_area;
-organ bud fruit area bud_area;
+organ bud fruit as flower area bud_area;
 organ fruit fruit area fruit_area;
 
 axiom Y(0, exp(gauss() * vigour_spread), exp(gauss() * arm_spread));

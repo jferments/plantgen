@@ -33,7 +33,7 @@
       "blade_area": 0.064,
       "tip_area": 0.035,
       "thatch_area": 0.064,
-      "panicle_area": 0.231
+      "panicle_area": 0.06
     }
   },
   "growth": {
@@ -63,9 +63,28 @@
         "shade": [0.12, 0.1, 0.05]
       },
       "panicle": {
-        "shape": { "template": "fruit", "aspect": 0.18 },
-        "colour": [0.18, 0.12, 0.07],
-        "shade": [0.06, 0.04, 0.02]
+        "shape": {
+          "template": "spikelet",
+          "florets": 40,
+          "glumes": 0,
+          "ranks": 0,
+          "lemma": 0.06,
+          "aspect": 0.1,
+          "gape": 10
+        },
+        "inflorescence": {
+          "kind": "raceme",
+          "flowers": 6,
+          "size": 0.3,
+          "spread": 15,
+          "pedicel": 0.1,
+          "droop": 30,
+          "peduncle": 0.05,
+          "stalk": [0.3, 0.32, 0.18]
+        },
+        "colour": [0.2, 0.14, 0.08],
+        "shade": [0.06, 0.04, 0.02],
+        "accent": [0.28, 0.2, 0.12]
       }
     }
   },
@@ -79,6 +98,11 @@
   ],
   "tier": "procedural_proxy",
   "evidence": {
+    "appearance.organs.panicle": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The inflorescence, the model's choice after FNA's account of the species (volume 23, Standley, Cayouette and Bruederle), as search results quote it (the page was not read): arching spikes, at least the lowest hanging, 2 or 3 male and 2 to 5 female, the lowest female spike 2.5 to 15 cm long and 5 to 10 mm wide; its scales red-brown, longer and wider than the perigynia, which are 2.2 to 3.8 mm. Drawn as 6 long spikes on short stalks spaced up the axis, which arches over 30 degrees by its tip, each spike with the spikelet card (a sedge spike is a spike of one-flowered spikelets): 40 scales in a spiral. Colours by eye: dark red-brown."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

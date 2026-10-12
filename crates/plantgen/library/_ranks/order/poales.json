@@ -7,6 +7,73 @@
     "generator.params.culm_height": {
       "rule": "culm_length_m",
       "why": "A grass's or sedge's flowering culms are as long as floras measure them."
+    },
+    "appearance.organs.*.shape.florets": {
+      "template": "spikelet",
+      "rule": "clamp(round(florets_per_spikelet), 1, 40)",
+      "why": "A spikelet card draws the spikelet's florets, up to 40."
+    },
+    "appearance.organs.*.shape.glumes": {
+      "template": "spikelet",
+      "rule": "glumes",
+      "why": "A spikelet card draws the empty glumes at its foot."
+    },
+    "appearance.organs.*.shape.glume": {
+      "template": "spikelet",
+      "rule": "clamp(upper_glume_length_m / spikelet_length_m, 0, 1.5)",
+      "why": "The upper glume is as long, against the florets, as floras measure it: a spikelet is measured to the tip of its last floret, so a glume above 1 stands past them."
+    },
+    "appearance.organs.*.shape.lower": {
+      "template": "spikelet",
+      "rule": "clamp(lower_glume_length_m / upper_glume_length_m, 0.1, 1.5)",
+      "why": "The lower glume is as long, against the upper, as floras measure it."
+    },
+    "appearance.organs.*.shape.lemma": {
+      "template": "spikelet",
+      "rule": "clamp(lemma_length_m / spikelet_length_m, 0.05, 1)",
+      "why": "Each floret's lemma (a sedge's scale) is as long, against the spikelet, as floras measure it."
+    },
+    "appearance.organs.*.shape.awn": {
+      "template": "spikelet",
+      "rule": "min(awn_length_m / spikelet_length_m, 6)",
+      "why": "An awn is as long, against the spikelet, as floras measure it."
+    },
+    "appearance.organs.*.shape.awn_from": {
+      "template": "spikelet",
+      "map": {
+        "awn_insertion": {
+          "apical": 0,
+          "subapical": 0.15,
+          "dorsal": 0.5,
+          "basal": 0.8
+        }
+      },
+      "between": true,
+      "why": "An awn leaves its lemma at the tip, just below it, from the middle of its back, or near its foot: that share of the lemma below its tip."
+    },
+    "appearance.organs.*.shape.bent": {
+      "template": "spikelet",
+      "map": {
+        "awn_form": {
+          "straight": 0,
+          "flexuous": 15,
+          "geniculate": 60,
+          "hooked": 110,
+          "contorted": 40
+        }
+      },
+      "between": true,
+      "why": "A geniculate awn bends at its knee, a hooked one curls over, a contorted one twists; a straight one does not bend."
+    },
+    "appearance.organs.*.shape.ranks": {
+      "template": "spikelet",
+      "map": {
+        "scale_arrangement": {
+          "distichous": 2,
+          "spiral": 0
+        }
+      },
+      "why": "A spikelet's bracts stand in two ranks or in a spiral, as floras describe them."
     }
   },
   "evidence": {
@@ -14,6 +81,51 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "How PlantGen's grass and sedge programs draw a culm from a flora's length, a choice of the model's: each year's culms grow to culm_height at maturity, the panicle or spike included, leaning off their tiller, so culm_height is a culm's length, not the plant's height. A flora's culm length is read as the range's middle unless it names a typical length, and taken to include the inflorescence; where a flora measures only to the inflorescence's base, the culms come out short by about its length. Culms are the flowering stems of the grasses, sedges and rushes, all in this order."
+    },
+    "rules.appearance.organs.*.shape.florets": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen's spikelet card (spec rework P3) draws a flora's spikelet, a choice of the model's: its fertile florets one lemma each up the rachilla, at most 40 so that a spikelet's solid stays small. A flora's count is read as the range's middle unless it names a typical one."
+    },
+    "rules.appearance.organs.*.shape.glumes": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The spikelet card draws as many glumes as floras count at a spikelet's foot, a lone glume as the upper one."
+    },
+    "rules.appearance.organs.*.shape.glume": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The spikelet card's lengths are shares of the height its florets reach, so a glume's share is its length over the spikelet's: traits.json measures a spikelet from its base to the tip of its last floret, awns left out. Where floras measure a spikelet to the tips of glumes longer than its florets, the share comes out near 1 and the glumes level with the florets; a species can set the glume by hand."
+    },
+    "rules.appearance.organs.*.shape.lower": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The spikelet card's lower glume is a share of its upper one, as floras measure the two."
+    },
+    "rules.appearance.organs.*.shape.lemma": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The spikelet card's lemmas, each a share of the height its florets reach, as floras measure a fertile floret's lemma and the spikelet (to the tip of its last floret); the florets are spaced so that the top one's tip reaches that height, so long lemmas overlap."
+    },
+    "rules.appearance.organs.*.shape.awn": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The spikelet card's awns, each a share of the spikelet's length as floras measure the awn and the spikelet; at most 6 spikelet lengths."
+    },
+    "rules.appearance.organs.*.shape.awn_from": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Where an awn leaves its lemma, as a share of the lemma's length below its tip, a choice of the model's for the words floras use: apical 0, subapical (as from between two teeth) 0.15, dorsal (from the middle of the back) 0.5, basal 0.8. Between two words, the share between."
+    },
+    "rules.appearance.organs.*.shape.bent": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How far an awn turns at its knee, 0.4 of its length along, in degrees, a choice of the model's for the words floras use: straight 0, flexuous 15, contorted 40 (a twisted awn drawn as one bend), geniculate 60, hooked 110. Between two words, the angle between."
+    },
+    "rules.appearance.organs.*.shape.ranks": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The spikelet card's bracts stand in two ranks (ranks 2) or turn a golden angle each (ranks 0), as floras describe a grass's two-ranked glumes and lemmas or a sedge's spiral scales."
     }
   }
 }

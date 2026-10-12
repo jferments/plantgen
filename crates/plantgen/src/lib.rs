@@ -33,6 +33,7 @@ pub mod capitula;
 pub mod clusters;
 pub mod conditions;
 pub mod cores;
+pub mod divided;
 pub mod drawing;
 pub mod evidence;
 pub mod export;
@@ -51,11 +52,13 @@ pub mod library;
 pub mod litter;
 pub mod looks;
 pub mod lsys;
+pub mod margins;
 pub mod math;
 pub mod mesh;
 pub mod meshopt;
 pub mod niche;
 pub mod occlusion;
+pub mod organs;
 pub mod package;
 pub mod parts;
 pub mod preview;
@@ -66,6 +69,7 @@ pub mod roots;
 pub mod shed;
 pub mod shoots;
 pub mod spec;
+pub mod spikelets;
 pub mod spines;
 pub mod substrate;
 pub mod templates;
@@ -112,5 +116,25 @@ pub mod venation;
 /// rows, its receptacle, its disc florets opening from the rim inward,
 /// rays or straps, and its fruit with their pappus; its solid, the head a
 /// cluster draws and its card all come from that layout, and a head's
-/// part mesh may take `parts::CLUSTER_TRIANGLES`.
-pub const GENERATOR_REVISION: u32 = 17;
+/// part mesh may take `parts::CLUSTER_TRIANGLES`. 18: a grass's or a
+/// sedge's spikelet is laid out from its glumes and florets
+/// (`crate::spikelets`, spec rework P3), and a cluster's units may be
+/// spikelets; a tapered branch bears fewer units, each as long as on a
+/// branch of full length, instead of as many smaller ones; and a
+/// cluster's card holds units that reach past its organ's tip, which it
+/// cut off. 19: every organ type has a term, what it is, and a program
+/// may declare structures that what it draws is within (`crate::organs`,
+/// spec rework M7); the grass, herb, fern and palm programs draw their
+/// leaves and fronds in them, and a graph with structures is `APGRAPH2`.
+/// 20: an organ a rule rewrites into another lives on in it, with its
+/// id and birth (organ phases, spec rework M7), so a grass's thatch is
+/// the blade it was and falls only once; and a head with a season opens
+/// from its rim by the day, its bud the head itself, closed.
+/// 21: an organ type's term no longer hangs on the day a package shows
+/// (spec rework M7B): a cluster a stage draws whole, as an alder's
+/// catkins in flower, is an inflorescence on every day.
+/// 22: a leaf's teeth and lobes are laid down as its blade grows, each
+/// fed by a vein and leaning its way, the middle ones largest (spec
+/// rework L3); and a leaf grows in five steps of form from deep shade to
+/// full sun, its size following its light smoothly.
+pub const GENERATOR_REVISION: u32 = 22;

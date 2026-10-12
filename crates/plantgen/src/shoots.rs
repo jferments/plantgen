@@ -295,6 +295,7 @@ mod tests {
             born: 0.0,
             shed: None,
             light: 1.0,
+            within: None,
         }
     }
 

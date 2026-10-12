@@ -1734,12 +1734,12 @@ mod tests {
     #[test]
     fn a_spec_file_stands_on_its_species_rank_files() {
         let library = Library::builtin();
-        let entry = library.entry("vachellia-tortilis").unwrap();
+        let entry = library.entry("cytisus-scoparius").unwrap();
         let copy = library.effective_text("copy.json", entry.own_source());
         assert_eq!(copy.unwrap().as_deref(), Some(entry.source()));
         let other = entry
             .own_source()
-            .replace("\"vachellia-tortilis\"", "\"vachellia-test\"");
+            .replace("\"cytisus-scoparius\"", "\"cytisus-test\"");
         assert_eq!(library.effective_text("other.json", &other), Ok(None));
     }
 

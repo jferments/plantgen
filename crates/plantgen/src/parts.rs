@@ -122,7 +122,9 @@ pub fn part_meshes_within(looks: &[Look], share: f64) -> Vec<PartMesh> {
 pub fn cap(look: &Look) -> usize {
     match look.form {
         Form::Shoot => SHOOT_TRIANGLES,
-        _ if look.inflorescence.is_some() || matches!(look.shape, Shape::Head(_)) => {
+        _ if look.inflorescence.is_some()
+            || matches!(look.shape, Shape::Head(_) | Shape::Spikelet(_)) =>
+        {
             CLUSTER_TRIANGLES
         }
         _ => TRIANGLES,
@@ -192,6 +194,7 @@ fn part_mesh(looks: &[Look], index: usize, cap: usize) -> Option<PartMesh> {
         born: 0.0,
         shed: None,
         light: 1.0,
+        within: None,
     };
     let (base, heading, left, length) = crate::mesh::place(&unit, &looks[index]);
     let out = left.cross(heading);
@@ -213,7 +216,9 @@ fn part_mesh(looks: &[Look], index: usize, cap: usize) -> Option<PartMesh> {
                         born: 0.0,
                         shed: None,
                         light: 1.0,
+                        within: None,
                     }],
+                    structures: Vec::new(),
                 };
                 let mut mesh = Mesh::default();
                 blooms::build_coarse(
@@ -515,6 +520,7 @@ mod tests {
                 born: 0.0,
                 shed: None,
                 light: 1.0,
+                within: None,
             };
             let (base, heading, left, length) = crate::mesh::place(&organ, &looks[0]);
             let out = left.cross(heading);
@@ -523,6 +529,7 @@ mod tests {
                 height: 1.0,
                 segments: Vec::new(),
                 organs: vec![organ],
+                structures: Vec::new(),
             };
             let mut drawn = Mesh::default();
             blooms::build(&graph, &looks, &[true], &|look, _| look.colour, &mut drawn);

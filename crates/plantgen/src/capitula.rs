@@ -409,12 +409,12 @@ pub(crate) struct Frame {
 }
 
 impl Frame {
-    fn point(&self, p: Vec3) -> Vec3 {
+    pub(crate) fn point(&self, p: Vec3) -> Vec3 {
         let other = self.axis.cross(self.side);
         self.foot + (self.side * p.x + self.axis * p.y + other * p.z) * self.radius
     }
 
-    fn direction(&self, d: Vec3) -> Vec3 {
+    pub(crate) fn direction(&self, d: Vec3) -> Vec3 {
         let other = self.axis.cross(self.side);
         (self.side * d.x + self.axis * d.y + other * d.z).normalize_or(self.axis)
     }
@@ -422,7 +422,7 @@ impl Frame {
 
 /// A flat face seen from both sides, each side its own vertices so their
 /// normals are not averaged away.
-fn both(part: Part, corners: &[Vec3], colour: [f32; 3], mesh: &mut Mesh) {
+pub(crate) fn both(part: Part, corners: &[Vec3], colour: [f32; 3], mesh: &mut Mesh) {
     let leaf = part.leaf(corners[0], Vec3::Y, Vec3::X, 0.0, 0.0, colour);
     for flip in [false, true] {
         let at = u32::try_from(mesh.positions.len()).unwrap_or(u32::MAX);
@@ -802,7 +802,7 @@ pub struct Painted {
 }
 
 impl Painted {
-    const EMPTY: Self = Self {
+    pub(crate) const EMPTY: Self = Self {
         cover: 0.0,
         bright: 0.0,
         accent: 0.0,

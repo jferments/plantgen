@@ -10,8 +10,8 @@
 //! - **parameters**: replaces the value of a parameter its parent declares
 //!   (in the parent's place, so the new value may use only the parameters
 //!   declared before it there) and adds new ones after the parent's;
-//! - **modules, organs and bodies**: adds new ones after the parent's; it
-//!   may not declare one its parent declares;
+//! - **modules, organs, bodies and structures**: adds new ones after the
+//!   parent's; it may not declare one its parent declares;
 //! - **tools**: replaces single settings of a tool its parent configures
 //!   and adds new tools; naming another version of the parent's tool
 //!   (`tool space@2 { ... }` over `space@1`) moves it to that version with
@@ -42,7 +42,7 @@ pub const MAX_DEPTH: usize = 8;
 ///
 /// Fails when a program extends another than the next in the chain, the
 /// last extends one that is not given, the chain is too deep, or a
-/// program redeclares a module, organ or body.
+/// program redeclares a module, organ, body or structure.
 pub fn resolve(mut chain: Vec<ProgramAst>) -> Result<ProgramAst, ProgramError> {
     if chain.len() > MAX_DEPTH {
         return err(
@@ -142,6 +142,18 @@ fn merge(mut parent: ProgramAst, child: ProgramAst, depth: u8) -> Result<Program
             );
         }
         parent.bodies.push(body);
+    }
+    for structure in child.structures {
+        if parent.structures.iter().any(|s| s.name == structure.name) {
+            return err(
+                structure.span,
+                format!(
+                    "structure `{}` is declared by program `{}`, which this one extends",
+                    structure.name, parent.name
+                ),
+            );
+        }
+        parent.structures.push(structure);
     }
     for tool in child.tools {
         match parent.tools.iter_mut().find(|t| t.name == tool.name) {

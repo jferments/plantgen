@@ -19,6 +19,7 @@ use crate::rng::{Lineage, combine};
 /// Element kinds hashed into segment and organ identities.
 pub const KIND_SEGMENT: u64 = 0x7365_676d;
 pub const KIND_ORGAN: u64 = 0x6f72_6761;
+pub const KIND_STRUCTURE: u64 = 0x7374_7275;
 
 /// Radius of segments drawn before any `!` command, in metres.
 pub const DEFAULT_WIDTH: f64 = 0.01;
@@ -40,6 +41,8 @@ pub struct Segment {
     /// The turtle's left vector while the segment was drawn, which orients
     /// a flattened body; zero for wood.
     pub left: Vec3,
+    /// The structure it was drawn in ([`Scene::structures`]), if any.
+    pub within: Option<u32>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -54,6 +57,21 @@ pub struct OrganInstance {
     pub segment: Option<u32>,
     /// The topology node the organ feeds in the pipe model.
     pub node: Option<u32>,
+    /// The structure it was placed in ([`Scene::structures`]), if any.
+    pub within: Option<u32>,
+}
+
+/// A structure the turtle opened (spec rework M7): what is drawn after it
+/// to the end of its branch is within it.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct StructureInstance {
+    /// Stable identity, from the lineage of the module that drew it.
+    pub id: u64,
+    /// Its index among the program's structure types.
+    pub structure: u8,
+    /// The structure it was opened in, if any.
+    pub within: Option<u32>,
+    pub born: f64,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -91,6 +109,8 @@ pub struct Scene {
     pub organs: Vec<OrganInstance>,
     pub nodes: Vec<Node>,
     pub queries: Vec<QueryPoint>,
+    /// The structures opened, each before what is within it.
+    pub structures: Vec<StructureInstance>,
     /// Highest point of any segment or organ, in metres above the plant's
     /// base. An organ reaches its size along its heading, as a card that
     /// stands on it does.
@@ -134,6 +154,8 @@ struct State {
     node: Option<u32>,
     segment: Option<u32>,
     lateral: bool,
+    /// The structure open here, if any.
+    structure: Option<u32>,
 }
 
 /// Identity of the string module being drawn and its element counters.
@@ -142,6 +164,7 @@ struct Owner {
     born: f64,
     segments: u32,
     organs: u32,
+    structures: u32,
     expansions: u64,
 }
 
@@ -154,7 +177,7 @@ pub struct Interpreter<'a> {
     /// modules.
     arguments: Vec<Vec<f64>>,
     /// The last scene's sizes, so the next one is laid out once.
-    sizes: [usize; 4],
+    sizes: [usize; KINDS],
     /// Saved states a piece of the string may not pop ([`Piece`]), and
     /// whether it popped one.
     floor: usize,
@@ -170,7 +193,7 @@ impl<'a> Interpreter<'a> {
             limits,
             stack: Vec::with_capacity(32),
             arguments: Vec::new(),
-            sizes: [0; 4],
+            sizes: [0; KINDS],
             floor: 0,
             breached: false,
         }
@@ -207,12 +230,7 @@ impl<'a> Interpreter<'a> {
             Some(scene) => scene,
             None => self.in_order(string, clock)?,
         };
-        self.sizes = [
-            scene.segments.len(),
-            scene.organs.len(),
-            scene.nodes.len(),
-            scene.queries.len(),
-        ];
+        self.sizes = count(&scene);
         Ok(scene)
     }
 
@@ -220,12 +238,13 @@ impl<'a> Interpreter<'a> {
     fn in_order(&mut self, string: &ModuleString, clock: Clock) -> Result<Scene, GrowthError> {
         // Room for a little more than the last step drew.
         let room = |size: usize| size + size / 8;
-        let [segments, organs, nodes, queries] = self.sizes;
+        let [segments, organs, nodes, queries, structures] = self.sizes;
         let mut scene = Scene {
             segments: Vec::with_capacity(room(segments)),
             organs: Vec::with_capacity(room(organs)),
             nodes: Vec::with_capacity(room(nodes)),
             queries: Vec::with_capacity(room(queries)),
+            structures: Vec::with_capacity(room(structures)),
             height: 0.0,
         };
         let mut state = START_STATE;
@@ -254,6 +273,7 @@ impl<'a> Interpreter<'a> {
             born: module.born,
             segments: 0,
             organs: 0,
+            structures: 0,
             expansions: 0,
         };
         let params = string.params(module);
@@ -361,17 +381,14 @@ impl<'a> Interpreter<'a> {
                     inner.lateral = true;
                     children.push(Child {
                         id,
-                        at: [
-                            index_u32(scene.segments.len()),
-                            index_u32(scene.organs.len()),
-                            index_u32(scene.nodes.len()),
-                            index_u32(scene.queries.len()),
-                        ],
+                        at: count(&scene).map(index_u32),
                         node: inner.node,
                         segment: inner.segment,
+                        structure: inner.structure,
                     });
                     inner.node = inner.node.map(|_| START);
                     inner.segment = inner.segment.map(|_| START);
+                    inner.structure = inner.structure.map(|_| START);
                     hand(PieceTask {
                         id,
                         from: index + 1,
@@ -479,6 +496,7 @@ impl<'a> Interpreter<'a> {
                 self.forward(params[0], index.saturating_add(1), owner, state, scene)
             }
             SymbolKind::Module { .. } => Ok(()),
+            SymbolKind::Structure { index, .. } => self.open(*index, owner, state, scene),
             SymbolKind::Organ { .. } => {
                 if scene.organs.len() >= self.limits.max_segments {
                     return Err(GrowthError::Limit {
@@ -500,6 +518,7 @@ impl<'a> Interpreter<'a> {
                     born: owner.born,
                     segment: state.segment,
                     node: state.node,
+                    within: state.structure,
                 });
                 Ok(())
             }
@@ -567,6 +586,34 @@ impl<'a> Interpreter<'a> {
 }
 
 impl Interpreter<'_> {
+    /// Open a structure of type `index` (spec rework M7): what is drawn
+    /// after it, to the end of the branch, is within it.
+    fn open(
+        &self,
+        index: u8,
+        owner: &mut Owner,
+        state: &mut State,
+        scene: &mut Scene,
+    ) -> Result<(), GrowthError> {
+        if scene.structures.len() >= self.limits.max_segments {
+            return Err(GrowthError::Limit {
+                what: "structures",
+                limit: self.limits.max_segments as u64,
+            });
+        }
+        let id = owner.lineage.element(KIND_STRUCTURE, owner.structures);
+        owner.structures += 1;
+        let opened = index_u32(scene.structures.len());
+        scene.structures.push(StructureInstance {
+            id,
+            structure: index,
+            within: state.structure,
+            born: owner.born,
+        });
+        state.structure = Some(opened);
+        Ok(())
+    }
+
     /// Draw a segment of length `length` along the heading, of wood (`body`
     /// 0) or of a declared body, then apply the tropism.
     fn forward(
@@ -598,6 +645,7 @@ impl Interpreter<'_> {
             order: state.depth,
             body,
             left: if body == 0 { Vec3::ZERO } else { frame.l },
+            within: state.structure,
         });
         owner.segments += 1;
         scene.height = scene.height.max(end.y);
@@ -629,6 +677,7 @@ const START_STATE: State = State {
     node: None,
     segment: None,
     lateral: false,
+    structure: None,
 };
 
 /// Strings shorter than this are drawn on one thread.
@@ -648,13 +697,15 @@ struct PieceTask {
 }
 
 /// A branch a piece handed on: its piece, how many parts of each kind
-/// (segments, organs, nodes, queries) the piece had drawn when it did, and
-/// the node and segment the turtle stood on, as the piece numbers them.
+/// (segments, organs, nodes, queries, structures) the piece had drawn when
+/// it did, and the node and segment the turtle stood on and the structure
+/// open there, as the piece numbers them.
 struct Child {
     id: usize,
-    at: [u32; 4],
+    at: [u32; KINDS],
     node: Option<u32>,
     segment: Option<u32>,
+    structure: Option<u32>,
 }
 
 /// A drawn piece: its scene, numbered from 0 with [`START`] for where it
@@ -688,26 +739,18 @@ fn stitch(pieces: &[Piece], limits: &Limits) -> Option<Scene> {
     if pieces.iter().any(|piece| !piece.valid) {
         return None;
     }
-    let count = |scene: &Scene| {
-        [
-            scene.segments.len(),
-            scene.organs.len(),
-            scene.nodes.len(),
-            scene.queries.len(),
-        ]
-    };
     // A child's id is always greater than its parent's: sizes from the
     // last piece up, offsets from the first down.
-    let mut sizes: Vec<[usize; 4]> = pieces.iter().map(|piece| count(&piece.scene)).collect();
+    let mut sizes: Vec<[usize; KINDS]> = pieces.iter().map(|piece| count(&piece.scene)).collect();
     for id in (0..pieces.len()).rev() {
         for child in &pieces[id].children {
             let size = sizes[child.id];
-            for kind in 0..4 {
+            for kind in 0..KINDS {
                 sizes[id][kind] += size[kind];
             }
         }
     }
-    let [segments, organs, nodes, queries] = sizes[0];
+    let [segments, organs, nodes, queries, structures] = sizes[0];
     if segments > limits.max_segments || organs > limits.max_segments {
         return None;
     }
@@ -717,11 +760,12 @@ fn stitch(pieces: &[Piece], limits: &Limits) -> Option<Scene> {
         organs: Vec::with_capacity(organs),
         nodes: Vec::with_capacity(nodes),
         queries: Vec::with_capacity(queries),
+        structures: Vec::with_capacity(structures),
         height: pieces
             .iter()
             .fold(0.0, |height, piece| height.max(piece.scene.height)),
     };
-    let mut order = vec![(0_usize, [0_usize; 4], 0_usize)];
+    let mut order = vec![(0_usize, [0_usize; KINDS], 0_usize)];
     // Depth first: a piece's parts up to each branch, the branch, then on.
     while let Some((id, mut at, mut child)) = order.pop() {
         let piece = &pieces[id];
@@ -734,6 +778,7 @@ fn stitch(pieces: &[Piece], limits: &Limits) -> Option<Scene> {
         for segment in &piece.scene.segments[at[SEGMENT]..until[SEGMENT]] {
             scene.segments.push(Segment {
                 node: number(NODE, segment.node),
+                within: segment.within.map(|index| number(STRUCTURE, index)),
                 ..*segment
             });
         }
@@ -741,7 +786,14 @@ fn stitch(pieces: &[Piece], limits: &Limits) -> Option<Scene> {
             scene.organs.push(OrganInstance {
                 segment: organ.segment.map(|index| number(SEGMENT, index)),
                 node: organ.node.map(|index| number(NODE, index)),
+                within: organ.within.map(|index| number(STRUCTURE, index)),
                 ..*organ
+            });
+        }
+        for structure in &piece.scene.structures[at[STRUCTURE]..until[STRUCTURE]] {
+            scene.structures.push(StructureInstance {
+                within: structure.within.map(|index| number(STRUCTURE, index)),
+                ..*structure
             });
         }
         for node in &piece.scene.nodes[at[NODE]..until[NODE]] {
@@ -764,66 +816,86 @@ fn stitch(pieces: &[Piece], limits: &Limits) -> Option<Scene> {
             at = next.at.map(|at| at as usize);
             child += 1;
             order.push((id, at, child));
-            order.push((next.id, [0; 4], 0));
+            order.push((next.id, [0; KINDS], 0));
         }
     }
     Some(scene)
 }
 
 /// Where each piece's parts begin in the stitched scene, by kind, and the
-/// node and segment its branch begins on, renumbered. A child's id is
-/// greater than its parent's, so parents come first.
-fn place(pieces: &[Piece], sizes: &[[usize; 4]]) -> (Vec<[usize; 4]>, Starts) {
-    let mut offsets = vec![[0_usize; 4]; pieces.len()];
-    // Where each piece's branch begins: its node and segment, renumbered.
-    let mut starts: Starts = vec![(None, None); pieces.len()];
+/// node and segment its branch begins on and the structure open there,
+/// renumbered. A child's id is greater than its parent's, so parents come
+/// first.
+fn place(pieces: &[Piece], sizes: &[[usize; KINDS]]) -> (Vec<[usize; KINDS]>, Starts) {
+    let mut offsets = vec![[0_usize; KINDS]; pieces.len()];
+    // Where each piece's branch begins, renumbered.
+    let mut starts: Starts = vec![[None; 3]; pieces.len()];
     for id in 0..pieces.len() {
-        let mut before = [0_usize; 4];
+        let mut before = [0_usize; KINDS];
         for child in &pieces[id].children {
-            for kind in 0..4 {
+            for kind in 0..KINDS {
                 offsets[child.id][kind] =
                     offsets[id][kind] + child.at[kind] as usize + before[kind];
             }
             let size = sizes[child.id];
-            for kind in 0..4 {
+            for kind in 0..KINDS {
                 before[kind] += size[kind];
             }
-            starts[child.id] = (
-                child
-                    .node
-                    .map(|node| renumber(pieces, sizes, &offsets, &starts, id, NODE, node)),
-                child.segment.map(|segment| {
-                    renumber(pieces, sizes, &offsets, &starts, id, SEGMENT, segment)
-                }),
-            );
+            let number = |kind: usize, index: Option<u32>| {
+                index.map(|index| renumber(pieces, sizes, &offsets, &starts, id, kind, index))
+            };
+            starts[child.id] = [
+                number(NODE, child.node),
+                number(SEGMENT, child.segment),
+                number(STRUCTURE, child.structure),
+            ];
         }
     }
     (offsets, starts)
 }
 
-/// Each piece's start: the node and segment its branch begins on.
-type Starts = Vec<(Option<u32>, Option<u32>)>;
+/// Each piece's start: the node and segment its branch begins on and the
+/// structure open there.
+type Starts = Vec<[Option<u32>; 3]>;
 
 const SEGMENT: usize = 0;
 const ORGAN: usize = 1;
 const NODE: usize = 2;
 const QUERY: usize = 3;
+const STRUCTURE: usize = 4;
+/// The kinds of part a scene holds.
+const KINDS: usize = 5;
+
+/// How many parts of each kind a scene holds.
+fn count(scene: &Scene) -> [usize; KINDS] {
+    [
+        scene.segments.len(),
+        scene.organs.len(),
+        scene.nodes.len(),
+        scene.queries.len(),
+        scene.structures.len(),
+    ]
+}
 
 /// The index in the stitched scene of part `index` of kind `kind` in piece
 /// `id`: its piece's offset, its own index, and every branch the piece
 /// handed on before drawing it; [`START`] is where the piece begins.
 fn renumber(
     pieces: &[Piece],
-    sizes: &[[usize; 4]],
-    offsets: &[[usize; 4]],
+    sizes: &[[usize; KINDS]],
+    offsets: &[[usize; KINDS]],
     starts: &Starts,
     id: usize,
     kind: usize,
     index: u32,
 ) -> u32 {
     if index == START {
-        let (node, segment) = starts[id];
-        let start = if kind == NODE { node } else { segment };
+        let [node, segment, structure] = starts[id];
+        let start = match kind {
+            NODE => node,
+            STRUCTURE => structure,
+            _ => segment,
+        };
         return start.unwrap_or(START);
     }
     let before: usize = pieces[id]
@@ -953,6 +1025,104 @@ mod tests {
         assert_eq!(s.organs[0].size, 0.5);
         assert_eq!(s.organs[0].segment, Some(0));
     }
+
+    #[test]
+    fn a_structure_holds_what_is_drawn_to_the_end_of_its_branch() {
+        // Spec rework M7.
+        type Within = Vec<Option<u32>>;
+        let s = scene(
+            "lsystem p 1; organ leaf leaf; organ bit leaf as piece;
+             structure frond leaf; structure lobe leaflet;
+             axiom F(1) [ frond F(1) bit(0.1) [ lobe bit(0.2) ] F(1) leaf(0.3) ] F(1) leaf(0.4);",
+        );
+        let within = |s: &Scene| -> (Within, Within, Within) {
+            (
+                s.segments.iter().map(|segment| segment.within).collect(),
+                s.organs.iter().map(|organ| organ.within).collect(),
+                s.structures
+                    .iter()
+                    .map(|structure| structure.within)
+                    .collect(),
+            )
+        };
+        assert_eq!(
+            within(&s),
+            (
+                vec![None, Some(0), Some(0), None],
+                vec![Some(0), Some(1), Some(0), None],
+                vec![None, Some(0)]
+            )
+        );
+        assert_eq!(
+            s.structures
+                .iter()
+                .map(|structure| structure.structure)
+                .collect::<Vec<_>>(),
+            [0, 1]
+        );
+        assert_ne!(s.structures[0].id, s.structures[1].id);
+    }
+
+    #[test]
+    fn opening_a_structure_moves_nothing_else() {
+        // The same plant with and without structures: every segment and
+        // organ has the same identity, place and size.
+        let grown = |source: &str| {
+            let program = Program::compile(source).unwrap();
+            let globals = program.resolve_params(&BTreeMap::new()).unwrap();
+            let limits = Limits::default();
+            let mut deriver = Deriver::new(&program, &globals, &limits);
+            let mut string = deriver.axiom(5, 1.0).unwrap();
+            for step in 0..4 {
+                let clock = Clock {
+                    step,
+                    t: f64::from(step),
+                    dt: 1.0,
+                };
+                string = deriver.derive(&string, &[], clock).unwrap();
+            }
+            let clock = Clock {
+                step: 4,
+                t: 4.0,
+                dt: 1.0,
+            };
+            let scene = Interpreter::new(&program, &globals, &limits)
+                .interpret(&string, clock)
+                .unwrap();
+            let segments: Vec<_> = scene
+                .segments
+                .iter()
+                .map(|segment| Segment {
+                    within: None,
+                    ..*segment
+                })
+                .collect();
+            let organs: Vec<_> = scene
+                .organs
+                .iter()
+                .map(|organ| OrganInstance {
+                    within: None,
+                    ..*organ
+                })
+                .collect();
+            (segments, organs, scene.structures.len())
+        };
+        let plain = grown(
+            "lsystem p 1; module A(n); organ leaf leaf;
+             axiom A(0);
+             rule A(n) : n < 4 -> F(uniform(0.5, 1)) [ +(30) A(n + 1) leaf(uniform(0.1, 0.3)) ]
+                 /(gauss() * 40) A(n + 1);",
+        );
+        let with = grown(
+            "lsystem p 1; module A(n); organ leaf leaf; structure shoot stem;
+             axiom A(0);
+             rule A(n) : n < 4 -> F(uniform(0.5, 1)) [ +(30) shoot A(n + 1) leaf(uniform(0.1, 0.3)) ]
+                 /(gauss() * 40) A(n + 1);",
+        );
+        assert_eq!((&plain.0, &plain.1), (&with.0, &with.1));
+        assert_eq!(plain.2, 0);
+        assert!(with.2 > 4);
+    }
 }
 
 /// `frame` turned so its left points level (`$`), or as it is when it heads
@@ -1040,11 +1210,13 @@ mod organ_turn_tests {
             module A(n) queries light;
             module I(n);
             organ leaf foliage area 0.02;
+            structure shoot stem;
+            structure tuft leaf;
             tool light@1 { cell = 0.3 };
             axiom A(0);
-            rule A(n) : n < 7 -> F(1) leaf(0.1) [ +(30) A(n + 1) leaf(0.2) ] /(90) I(n)
+            rule A(n) : n < 7 -> F(1) leaf(0.1) [ +(30) shoot A(n + 1) leaf(0.2) ] /(90) I(n)
                 [ -(20) &(10) A(n + 1) ] A(n + 1);
-            interpret I(n) -> F(0.5) [ leaf(0.5) ] [ &(20) F(0.2) ];
+            interpret I(n) -> F(0.5) [ tuft leaf(0.5) ] [ &(20) F(0.2) ];
         ";
         let program = Program::compile(source).unwrap();
         let globals = program.resolve_params(&BTreeMap::new()).unwrap();
@@ -1067,6 +1239,13 @@ mod organ_turn_tests {
         let mut interpreter = Interpreter::new(&program, &globals, &limits);
         let in_order = interpreter.in_order(&string, clock).unwrap();
         assert!(in_order.segments.len() > 500 && !in_order.queries.is_empty());
+        // Structures within structures, across the pieces' edges.
+        assert!(
+            in_order
+                .structures
+                .iter()
+                .any(|structure| structure.within.is_some())
+        );
         for (threads, least) in [(1, 0), (4, 8), (3, 40), (2, 300)] {
             let pieces = interpreter
                 .in_pieces(&string, clock, threads, least)

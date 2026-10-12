@@ -78,6 +78,12 @@
       "po": {"id": "PO:0025359", "name": "sorus"},
       "why": "a cluster of sporangia on a fern's leaf, on its underside or along its edge"
     },
+    "spine": {
+      "part_of": "stem",
+      "category": "organ",
+      "when": {"spines": ["areoles", "thorns", "prickles", "leaf_spines"]},
+      "why": "a hard, sharp point that arms a plant, whichever organ it is made from (the spines character says which): a thorn, a shoot (PO:0025172); a prickle, from the bark's skin (PO:0025169); a leaf, stipule or leaf stalk turned spine (PO:0025173, PO:0025174, PO:0025613); or a cactus's spines from an areole. The Plant Ontology has no one term for them all"
+    },
     "inflorescence": {
       "part_of": "stem",
       "category": "group",
@@ -122,12 +128,37 @@
       "when": {"capitulum_kind": ["liguliflorous"]},
       "why": "a floret of a head made only of strap-shaped florets, as in dandelions"
     },
+    "phyllary": {
+      "part_of": "capitulum",
+      "category": "organ",
+      "po": {"id": "PO:0009045", "name": "involucral bract"},
+      "why": "one of the bracts in rows round a head's foot, its involucre"
+    },
     "spikelet": {
       "part_of": "inflorescence",
       "category": "group",
       "when": {"inflorescence_unit": ["spikelet"]},
       "po": {"id": "PO:0009051", "name": "spikelet"},
       "why": "the unit of grasses and sedges: florets on a small axis, in grasses above a pair of glumes"
+    },
+    "glume": {
+      "part_of": "spikelet",
+      "category": "organ",
+      "po": {"id": "PO:0009039", "name": "glume"},
+      "why": "one of the empty bracts at a spikelet's foot, below its florets"
+    },
+    "spikelet_floret": {
+      "part_of": "spikelet",
+      "category": "organ",
+      "po": {"id": "PO:0009082", "name": "spikelet floret"},
+      "why": "a small flower of a spikelet, held by its lemma (a sedge's by its scale)"
+    },
+    "awn": {
+      "part_of": "spikelet_floret",
+      "category": "organ",
+      "when": {"awns": ["true"]},
+      "po": {"id": "PO:0006032", "name": "lemma awn"},
+      "why": "the stiff bristle a spikelet floret's lemma ends in or bears on its back"
     },
     "fruit": {
       "part_of": "inflorescence",
@@ -479,7 +510,24 @@
       "organ": "leaflet",
       "type": "count",
       "range": [2, 2000],
-      "why": "leaflets on a compound leaf"
+      "why": "leaflets on a compound leaf, or on each pinna of a twice-divided one, as floras count them (a flora's pairs of leaflets are twice as many)"
+    },
+    "pinnae": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "count",
+      "range": [2, 100],
+      "when": {"leaf_division": ["compound"]},
+      "optional": true,
+      "why": "the pinnae of a twice-divided leaf: its primary divisions, each bearing leaflets of its own (a mesquite's one or two pairs)"
+    },
+    "terminal_leaflet": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "bool",
+      "when": {"division_pattern": ["pinnate"]},
+      "optional": true,
+      "why": "whether a pinnate leaf, and each pinna of a twice-pinnate one, ends in a single leaflet (odd-pinnate) rather than a pair (even-pinnate)"
     },
     "needles_per_fascicle": {
       "group": "leaves",
@@ -732,6 +780,58 @@
       "range": [0.0001, 0.5],
       "when": {"awns": ["true"]},
       "why": "the awn on a floret's lemma"
+    },
+    "awn_insertion": {
+      "group": "flowers",
+      "organ": "spikelet",
+      "type": "enum",
+      "values": ["apical", "subapical", "dorsal", "basal"],
+      "when": {"awns": ["true"]},
+      "optional": true,
+      "why": "where a lemma's awn leaves it: at its tip, just below the tip (often between two teeth), from the middle of its back, or near its base"
+    },
+    "awn_form": {
+      "group": "flowers",
+      "organ": "spikelet",
+      "type": "enum",
+      "values": ["straight", "flexuous", "geniculate", "hooked", "contorted"],
+      "when": {"awns": ["true"]},
+      "optional": true,
+      "why": "an awn's shape: straight, wavy, bent at a knee (geniculate), curved into a hook, or twisted and curled"
+    },
+    "upper_glume_length_m": {
+      "group": "flowers",
+      "organ": "spikelet",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.1],
+      "optional": true,
+      "why": "a spikelet's upper (second) glume, from its base to its tip, awn left out; the only glume where there is one"
+    },
+    "lower_glume_length_m": {
+      "group": "flowers",
+      "organ": "spikelet",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.1],
+      "optional": true,
+      "why": "a spikelet's lower (first) glume, awn left out"
+    },
+    "lemma_length_m": {
+      "group": "flowers",
+      "organ": "spikelet",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.06],
+      "optional": true,
+      "why": "the lemma of a fertile floret, the bract that holds it, awn left out; in a sedge, the scale under a flower"
+    },
+    "scale_arrangement": {
+      "group": "flowers",
+      "organ": "spikelet",
+      "type": "enum",
+      "values": ["distichous", "spiral"],
+      "why": "how a spikelet's glumes and lemmas (a sedge's scales) stand on its axis: in two ranks, each on the other side from the one below, or in a spiral"
     },
     "sexual_system": {
       "group": "flowers",

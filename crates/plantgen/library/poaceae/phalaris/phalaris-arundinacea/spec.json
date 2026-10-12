@@ -33,7 +33,7 @@
       "blade_area": 0.109,
       "tip_area": 0.059,
       "thatch_area": 0.109,
-      "panicle_area": 0.15
+      "panicle_area": 0.108
     }
   },
   "growth": {
@@ -63,14 +63,23 @@
         "shade": [0.12, 0.1, 0.05]
       },
       "panicle": {
-        "shape": {
-          "template": "panicle",
-          "whorls": 8,
-          "branches": 3,
-          "spread": 15,
-          "spikelets": 8,
-          "aspect": 0.25,
-          "stalk": 0.05
+        "shape": {"template": "spikelet"},
+        "inflorescence": {
+          "branches": 30,
+          "per_node": 3,
+          "size": 0.18,
+          "spread": 30,
+          "taper": 0.4,
+          "peduncle": 0.05,
+          "stalk": [0.45, 0.38, 0.35],
+          "branch": {
+            "kind": "raceme",
+            "flowers": 16,
+            "pedicel": 0.03,
+            "peduncle": 0.1,
+            "size": 0.2,
+            "spread": 20
+          }
         },
         "colour": [0.5, 0.42, 0.38],
         "accent": [0.45, 0.3, 0.35]
@@ -86,7 +95,35 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "inflorescence": "panicle",
+    "florets_per_spikelet": 1,
+    "spikelet_length_m": {"min": 0.004, "max": 0.006},
+    "glumes": 2,
+    "upper_glume_length_m": {"min": 0.004, "max": 0.0081},
+    "lemma_length_m": {"min": 0.0025, "max": 0.004}
+  },
   "evidence": {
+    "appearance.organs.panicle": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The panicle's layout, the model's choice after FNA (volume 24), as search results quote it (the page was not read): elongate and dense, its branches to 5 cm, appressed but spreading at flowering. Drawn as 30 short branches in threes, spreading as in flower, each with about 16 spikelets; the two tiny sterile florets are left out. Colours by eye: pinkish straw."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA's account of the species (Barkworth, volume 24), as search results quote it (the page itself was not read): panicles 5 to 40 cm long and 1 to 4 cm wide, elongate, often dense, always branched at least near the base, the branches to 5 cm, normally appressed but spreading at flowering, the spikelets single; spikelets of 3 florets, only the top one fertile, the two below it sterile, 1.5 to 2 mm; glumes nearly equal, 4 to 8.1 mm."
+    },
+    "traits.spikelet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "vicflora",
+      "note": "VicFlora's account of the species, as search results quote it (the page itself was not read): spikelets crowded, 4 to 6 mm; glumes nearly equal, keeled; sterile lemmas 1 to 1.5 mm; fertile lemma broadly lanceolate, 2.5 to 4 mm."
+    },
+    "traits.lemma_length_m": {
+      "evidence": "SourceInferred",
+      "source": "vicflora",
+      "note": "VicFlora's account of the species, as search results quote it (the page itself was not read): the fertile lemma broadly lanceolate, 2.5 to 4 mm."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

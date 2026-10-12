@@ -35,7 +35,7 @@
       "panicle_length": 0.6,
       "leaf_area": 0.015,
       "spike_area": 0.89,
-      "tuft_area": 0.2
+      "tuft_area": 0.091
     }
   },
   "growth": {
@@ -68,13 +68,25 @@
       },
       "tuft": {
         "shape": {
-          "template": "spike",
-          "florets": 12,
-          "aspect": 0.3,
-          "plume": 0,
-          "stalk": 0.1
+          "template": "spikelet",
+          "florets": 5,
+          "glumes": 0,
+          "lemma": 0.55,
+          "aspect": 0.45,
+          "gape": 10
         },
-        "colour": [0.45, 0.32, 0.18]
+        "inflorescence": {
+          "kind": "panicle",
+          "branches": 10,
+          "size": 0.3,
+          "spread": 40,
+          "taper": 0.4,
+          "peduncle": 0.05,
+          "stalk": [0.4, 0.33, 0.2],
+          "branch": {"kind": "head", "flowers": 5, "size": 0.17}
+        },
+        "colour": [0.36, 0.22, 0.11],
+        "accent": [0.45, 0.3, 0.16]
       }
     }
   },
@@ -93,7 +105,18 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {"inflorescence_unit": "spikelet", "scale_arrangement": "spiral"},
   "evidence": {
+    "appearance.organs.tuft": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Each tuft at the end of a branch of the panicle, the model's choice after FNA (volume 23), as search results quote it (the page was not read): spikelets in groups of 2 or 3 (up to 6), each with 5 or 6 chestnut-brown scales. Drawn as a small panicle of 10 branches, each ending in a cluster of 5 spikelets of 5 scales. No flora read gives the spikelets' length; they are drawn about 4 mm."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA's accounts of the species and genus (volume 23), as search results quote it (the page itself was not read): inflorescences 30 to 50 cm, branched; spikelets in groups of 2 or 3 (up to 6), narrowly ellipsoid to lanceolate, with 5 or 6 floral scales, the lower chestnut brown, 2.5 to 3 by 2 mm, spirally arranged."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

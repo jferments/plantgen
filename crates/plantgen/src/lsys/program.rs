@@ -17,6 +17,10 @@ pub const MAX_PROGRAM_BYTES: usize = 256 * 1024;
 /// template in a package's organ atlas, and cards name it in one byte.
 pub const MAX_ORGAN_TYPES: usize = 64;
 
+/// Most structure types one program may declare (spec rework M7). A
+/// graph names a structure's type in two bytes.
+pub const MAX_STRUCTURE_TYPES: usize = 64;
+
 /// Most body types one program may declare. A segment names its body in
 /// one byte of a graph (see [`crate::graph::GraphSegment::body`]), and each
 /// body's spines add templates to the organ atlas after the organs'.
@@ -144,15 +148,25 @@ pub enum SymbolKind {
     Module {
         queries: u8,
     },
-    /// An organ declared with `organ`, with its shading area per unit size².
+    /// An organ declared with `organ`, with its shading area per unit size²
+    /// and what it is when its declaration says (`as term`, spec rework M7).
     Organ {
         kind: OrganKind,
         area: Code,
+        term: Option<&'static str>,
     },
     /// A body declared with `body`: drawn like `F`, its segments meshed as
     /// a fleshy body. `index` is its position among the program's bodies.
     Body {
         index: u8,
+    },
+    /// A structure declared with `structure` (spec rework M7): drawing it
+    /// opens the structure, which holds what is drawn after it to the end
+    /// of the branch. `index` is its position among the program's
+    /// structures, `term` what it is.
+    Structure {
+        index: u8,
+        term: &'static str,
     },
 }
 
@@ -178,6 +192,11 @@ pub struct Item {
 
 /// Turtle-command ordinals live in their own half of the ordinal space.
 pub const TURTLE_ORDINAL: u32 = 1 << 31;
+
+/// Structures count in a block of the turtle commands' half of their own
+/// (spec rework M7), so opening a structure in a successor moves no other
+/// module's lineage or random draws.
+pub const STRUCTURE_ORDINAL: u32 = TURTLE_ORDINAL | (1 << 23);
 
 /// The most copies a ring writes; past it growth stops with a limit error.
 pub const MAX_RING: u32 = 64;
@@ -214,7 +233,9 @@ pub struct CompiledRule {
     pub weight: Option<Code>,
     pub successor: Box<[Item]>,
     /// Index of the successor module that continues the predecessor: the
-    /// first module outside any branch with the predecessor's symbol. It keeps
+    /// first module outside any branch with the predecessor's symbol, or,
+    /// for an organ without one, the first organ outside any branch (a
+    /// flower that becomes a fruit; organ phases, spec rework M7). It keeps
     /// the predecessor's lineage and birth time.
     pub continuation: Option<usize>,
     /// The successor's rings, in order. Interpretation rules have none.
@@ -412,6 +433,26 @@ impl Program {
         })
     }
 
+    /// What each organ type is where its declaration says (`as term`),
+    /// in declaration order; `None` where it does not (see
+    /// [`crate::organs`]).
+    pub fn organ_terms(&self) -> impl Iterator<Item = Option<&'static str>> + '_ {
+        self.symbols.iter().filter_map(|symbol| match symbol.kind {
+            SymbolKind::Organ { term, .. } => Some(term),
+            _ => None,
+        })
+    }
+
+    /// The structure types the program declares, in declaration order:
+    /// their names and terms. The position of a structure type here is
+    /// its index in plant graphs.
+    pub fn structures(&self) -> impl Iterator<Item = (&str, &'static str)> {
+        self.symbols.iter().filter_map(|symbol| match symbol.kind {
+            SymbolKind::Structure { term, .. } => Some((symbol.name.as_str(), term)),
+            _ => None,
+        })
+    }
+
     /// The body types the program declares, in declaration order. The
     /// position of a body here, plus one, is what a graph segment drawn
     /// with it records (0 is wood).
@@ -496,12 +537,14 @@ pub(crate) fn hex(bytes: &[u8]) -> String {
         })
 }
 
-const KEYWORDS: [&str; 14] = [
+const KEYWORDS: [&str; 16] = [
     "lsystem",
     "param",
     "module",
     "organ",
     "body",
+    "structure",
+    "as",
     "tool",
     "axiom",
     "rule",
@@ -590,6 +633,41 @@ fn check_queries(ast: &ProgramAst, tools: &[Option<ToolConfig>; 6]) -> Result<()
     Ok(())
 }
 
+/// Whether `rule` may rewrite `symbol`: not a bracket, a cut, `|` or `$`,
+/// a structure by production only, and with the symbol's parameters.
+fn rewritable(symbol: &Symbol, rule: &Rule) -> Result<(), ProgramError> {
+    if let SymbolKind::Turtle(turtle) = symbol.kind
+        && matches!(
+            turtle,
+            Turtle::Push | Turtle::Pop | Turtle::Cut | Turtle::Around | Turtle::Level
+        )
+    {
+        return err(rule.span, format!("`{}` cannot be rewritten", symbol.name));
+    }
+    if matches!(symbol.kind, SymbolKind::Structure { .. }) && rule.kind != RuleKind::Production {
+        return err(
+            rule.span,
+            format!(
+                "structure `{}` cannot be decomposed or interpreted; a rule may only \
+                 rewrite it, to end it or keep it",
+                symbol.name
+            ),
+        );
+    }
+    if rule.params.len() != usize::from(symbol.arity) {
+        return err(
+            rule.span,
+            format!(
+                "`{}` has {} parameter(s), but the rule names {}",
+                symbol.name,
+                symbol.arity,
+                rule.params.len()
+            ),
+        );
+    }
+    Ok(())
+}
+
 fn err<T>(span: Span, message: impl Into<String>) -> Result<T, ProgramError> {
     Err(ProgramError {
         span,
@@ -629,6 +707,7 @@ impl Compiler {
         self.declare_modules(ast)?;
         self.declare_organs(ast)?;
         self.declare_bodies(ast)?;
+        self.declare_structures(ast)?;
         // Draws in tool settings number their sites in a block of their
         // own, so a program that adds one never moves the sites of the
         // axiom or of the rules it inherits.
@@ -781,7 +860,25 @@ impl Compiler {
                 Some(expr) => self.expr(expr, &context)?,
                 None => Code::constant(kind.default_area()),
             };
-            self.add_symbol(&decl.name, SymbolKind::Organ { kind, area }, 1, decl.span)?;
+            let term = match &decl.term {
+                Some((name, span)) => {
+                    Some(crate::organs::organ_term(name).ok_or_else(|| ProgramError {
+                        span: *span,
+                        message: format!(
+                            "unknown term `{name}`; an organ is piece or one of the \
+                             vocabulary's organs: {}",
+                            crate::organs::known_terms().join(", ")
+                        ),
+                    })?)
+                }
+                None => None,
+            };
+            self.add_symbol(
+                &decl.name,
+                SymbolKind::Organ { kind, area, term },
+                1,
+                decl.span,
+            )?;
         }
         Ok(())
     }
@@ -799,6 +896,38 @@ impl Compiler {
             self.check_new_name(&decl.name, decl.span)?;
             let index = u8::try_from(index).unwrap_or(u8::MAX);
             self.add_symbol(&decl.name, SymbolKind::Body { index }, 1, decl.span)?;
+        }
+        Ok(())
+    }
+
+    /// Structures after the bodies, so a program without structures keeps
+    /// its symbol numbers.
+    fn declare_structures(&mut self, ast: &ProgramAst) -> Result<(), ProgramError> {
+        if let Some(decl) = ast.structures.get(MAX_STRUCTURE_TYPES) {
+            return err(
+                decl.span,
+                format!("a program may declare at most {MAX_STRUCTURE_TYPES} structure types"),
+            );
+        }
+        for (index, decl) in ast.structures.iter().enumerate() {
+            self.check_new_name(&decl.name, decl.span)?;
+            let (name, span) = &decl.term;
+            let Some(term) = crate::organs::structure_term(name) else {
+                return err(
+                    *span,
+                    format!(
+                        "unknown term `{name}`; a structure is one of the vocabulary's organs: {}",
+                        crate::organs::known_terms().join(", ")
+                    ),
+                );
+            };
+            let index = u8::try_from(index).unwrap_or(u8::MAX);
+            self.add_symbol(
+                &decl.name,
+                SymbolKind::Structure { index, term },
+                0,
+                decl.span,
+            )?;
         }
         Ok(())
     }
@@ -923,31 +1052,14 @@ impl Compiler {
             return err(
                 rule.span,
                 format!(
-                    "`{}` is not declared; declare it with `module {}`, `organ {} <kind>` or `body {}`",
-                    rule.symbol, rule.symbol, rule.symbol, rule.symbol
+                    "`{}` is not declared; declare it with `module {}`, `organ {} <kind>`, \
+                     `body {}` or `structure {} <term>`",
+                    rule.symbol, rule.symbol, rule.symbol, rule.symbol, rule.symbol
                 ),
             );
         };
         let info = self.symbols[usize::from(symbol)].clone();
-        if let SymbolKind::Turtle(turtle) = info.kind
-            && matches!(
-                turtle,
-                Turtle::Push | Turtle::Pop | Turtle::Cut | Turtle::Around | Turtle::Level
-            )
-        {
-            return err(rule.span, format!("`{}` cannot be rewritten", info.name));
-        }
-        if rule.params.len() != usize::from(info.arity) {
-            return err(
-                rule.span,
-                format!(
-                    "`{}` has {} parameter(s), but the rule names {}",
-                    info.name,
-                    info.arity,
-                    rule.params.len()
-                ),
-            );
-        }
+        rewritable(&info, rule)?;
         let mut seen: Vec<&str> = Vec::new();
         for (name, span) in &rule.params {
             if let Some(what) = reserved(name) {
@@ -1035,8 +1147,8 @@ impl Compiler {
         // its bracket's `]` returns to (none for an organ, done at once).
         let mut open: Option<(Code, usize, Option<i32>)> = None;
         let mut depth = 0_i32;
-        let mut continuation = None;
-        let (mut identity, mut turtle) = (0_u32, 0_u32);
+        let (mut continuation, mut first_organ) = (None, None);
+        let (mut identity, mut turtle, mut structures) = (0_u32, 0_u32, 0_u32);
         for (index, call) in calls.iter().enumerate() {
             if call.symbol == "ring" {
                 if !rings_allowed {
@@ -1056,7 +1168,8 @@ impl Compiler {
                 return err(
                     call.span,
                     format!(
-                        "`{}` is not declared; declare it with `module`, `organ` or `body`",
+                        "`{}` is not declared; declare it with `module`, `organ`, `body` or \
+                         `structure`",
                         call.symbol
                     ),
                 );
@@ -1083,12 +1196,20 @@ impl Compiler {
             let ordinal = if carries_identity {
                 identity += 1;
                 identity - 1
+            } else if matches!(info.kind, SymbolKind::Structure { .. }) {
+                structures += 1;
+                STRUCTURE_ORDINAL | (structures - 1)
             } else {
                 turtle += 1;
                 TURTLE_ORDINAL | (turtle - 1)
             };
-            if continuation.is_none() && depth == 0 && Some(symbol) == predecessor {
-                continuation = Some(items.len());
+            if depth == 0 {
+                if continuation.is_none() && Some(symbol) == predecessor {
+                    continuation = Some(items.len());
+                }
+                if first_organ.is_none() && matches!(info.kind, SymbolKind::Organ { .. }) {
+                    first_organ = Some(items.len());
+                }
             }
             items.push(Item {
                 symbol,
@@ -1110,6 +1231,14 @@ impl Compiler {
             return err(span, "a `[` is never closed");
         }
         debug_assert!(open.is_none(), "a ring's items always close it");
+        // An organ rewritten into another lives on in it.
+        let organ = predecessor.is_some_and(|symbol| {
+            matches!(
+                self.symbols[usize::from(symbol)].kind,
+                SymbolKind::Organ { .. }
+            )
+        });
+        let continuation = continuation.or(first_organ.filter(|_| organ));
         Ok(Successor {
             items: items.into_boxed_slice(),
             rings: rings.into_boxed_slice(),
@@ -1423,6 +1552,86 @@ mod tests {
                 3
             ]
         );
+    }
+
+    #[test]
+    fn structures_and_terms_compile_and_count_apart() {
+        // Spec rework M7.
+        let program = compile(
+            "lsystem p 1;
+             module A;
+             organ pinna leaf as leaflet area 0.2;
+             organ scrap leaf as piece;
+             organ leaf leaf;
+             structure frond leaf;
+             axiom A;
+             rule A -> F [ frond F pinna ] leaf A;
+             rule frond : age > 2 -> ;",
+        )
+        .unwrap();
+        assert_eq!(
+            program.organ_terms().collect::<Vec<_>>(),
+            [Some("leaflet"), Some("piece"), None]
+        );
+        assert_eq!(
+            program.structures().collect::<Vec<_>>(),
+            [("frond", "leaf")]
+        );
+        // The structure is a symbol after the organs, of no arguments, and
+        // counts in a block of its own: the modules after it keep theirs.
+        let frond = program.symbol_id("frond").unwrap();
+        assert_eq!(program.symbols[usize::from(frond)].arity, 0);
+        let a = program.symbol_id("A").unwrap();
+        let ordinals: Vec<u32> = program.productions[usize::from(a)][0]
+            .successor
+            .iter()
+            .map(|item| item.ordinal)
+            .collect();
+        assert_eq!(
+            ordinals,
+            [
+                0,
+                TURTLE_ORDINAL,
+                STRUCTURE_ORDINAL,
+                1,
+                2,
+                TURTLE_ORDINAL | 1,
+                3,
+                4
+            ]
+        );
+        assert_eq!(program.productions[usize::from(frond)].len(), 1);
+    }
+
+    #[test]
+    fn terms_and_structures_are_checked() {
+        let error = |source: &str| compile(source).unwrap_err().message;
+        let message = error("lsystem p 1; organ leaf leaf as frond; axiom F;");
+        assert!(
+            message.starts_with(
+                "unknown term `frond`; an organ is piece or one of the vocabulary's organs: "
+            ) && message.contains("leaflet"),
+            "{message}"
+        );
+        let message = error("lsystem p 1; structure frond piece; axiom F;");
+        assert!(
+            message.starts_with("unknown term `piece`; a structure is"),
+            "{message}"
+        );
+        let message = error("lsystem p 1; structure whole plant; axiom F;");
+        assert!(message.starts_with("unknown term `plant`"), "{message}");
+        let message = error("lsystem p 1; structure frond leaf; axiom frond(1);");
+        assert!(message.contains("takes 0 argument(s)"), "{message}");
+        let message =
+            error("lsystem p 1; structure frond leaf; axiom frond; decompose frond -> F;");
+        assert!(
+            message.contains("cannot be decomposed or interpreted"),
+            "{message}"
+        );
+        let message = error("lsystem p 1; structure frond leaf; module frond; axiom F;");
+        assert!(message.contains("already defined"), "{message}");
+        let message = error("lsystem p 1; param as = 1; axiom F;");
+        assert!(message.contains("keyword"), "{message}");
     }
 
     /// A ring holds the items they would compile to without it: the same

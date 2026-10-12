@@ -30,7 +30,7 @@
       "blade_area": 0.041,
       "tip_area": 0.022,
       "thatch_area": 0.041,
-      "panicle_area": 0.182
+      "panicle_area": 0.181
     }
   },
   "growth": {
@@ -60,7 +60,25 @@
         "shade": [0.12, 0.09, 0.05]
       },
       "panicle": {
-        "shape": { "template": "panicle", "whorls": 8, "branches": 3, "spread": 35, "spikelets": 9, "aspect": 0.55, "stalk": 0.04 },
+        "shape": {"template": "spikelet"},
+        "inflorescence": {
+          "branches": 14,
+          "per_node": 2,
+          "size": 0.45,
+          "spread": 55,
+          "taper": 0.6,
+          "droop": 20,
+          "peduncle": 0.05,
+          "stalk": [0.42, 0.36, 0.28],
+          "branch": {
+            "kind": "raceme",
+            "flowers": 16,
+            "pedicel": 0.06,
+            "peduncle": 0.4,
+            "size": 0.05,
+            "spread": 25
+          }
+        },
         "colour": [0.5, 0.43, 0.3],
         "shade": [0.17, 0.14, 0.1],
         "accent": [0.3, 0.21, 0.25]
@@ -82,7 +100,30 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "inflorescence": "panicle",
+    "florets_per_spikelet": {"min": 2, "max": 2, "high": 3},
+    "spikelet_length_m": {"min": 0.0025, "max": 0.0076},
+    "glumes": 2,
+    "lower_glume_length_m": {"min": 0.0027, "max": 0.007},
+    "upper_glume_length_m": {"min": 0.002, "max": 0.0075},
+    "lemma_length_m": {"min": 0.002, "max": 0.005, "high": 0.007},
+    "awns": true,
+    "awn_length_m": {"min": 0.001, "max": 0.008, "low": 0.0005},
+    "awn_insertion": {"basal": "usually", "dorsal": "sometimes"},
+    "awn_form": {"straight": "often", "geniculate": "often"}
+  },
   "evidence": {
+    "appearance.organs.panicle": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The panicle's layout, the model's choice after FNA (volume 24), as search results quote it (the page was not read): open and pyramidal, its branches strongly divergent; its subspecies cespitosa nodding. Drawn as 14 branches in pairs leaning out 55 degrees, the panicle bending over 20 degrees by its tip, each branch with about 16 spikelets on its outer part. Colours by eye: straw, the glumes purplish."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA's account of the species (volume 24), as search results quote it (the page itself was not read): panicles 8 to 30(40) cm, 4 to 30 cm wide, usually open and pyramidal, the branches usually strongly divergent; spikelets 2.5 to 7.6 mm; lower glumes 2.7 to 7 mm; awns 1 to 8 mm, usually attached near the base, sometimes near the middle, straight or geniculate. The genus account gives 2(3) florets; the species account's upper glumes (2 to 7.5 mm) and lemmas (2 to 5(7) mm) came only in the search results' own words."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

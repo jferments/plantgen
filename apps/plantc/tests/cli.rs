@@ -68,21 +68,27 @@ fn list_and_check_name_the_built_in_species() {
 /// `plantc spec` shows a species' traits and what each rule did.
 #[test]
 fn rules_and_traits_say_where_they_come_from() {
-    // Clusters in every look, homed at the flowering plants, then
-    // Corner's rules at the seed plants, then the families'; a rule on a
-    // look's card names the card.
+    // Clusters and divided leaves in every look, homed at the flowering
+    // plants, then Corner's rules at the seed plants, then the families';
+    // a rule on a look's card names the card.
     let built_in = stdout(&plantc(&["rules"]));
     let flowering = "(clade angiosperms: _ranks/clade/angiosperms.json)";
     let seed_plants = "(clade Spermatophyta: _ranks/clade/spermatophyta.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (28):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (42):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
     assert!(
         built_in.contains(&format!(
-            "\n  appearance.organs.*.inflorescence.kind  {flowering}\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n"
+            "\n  appearance.organs.*.inflorescence.kind  {flowering}\n  appearance.organs.*.shape.confluent on `compound` cards  {flowering}\n"
+        )),
+        "{built_in}"
+    );
+    assert!(
+        built_in.contains(&format!(
+            "\n  appearance.organs.*.shape.pinnules on `compound` cards  {flowering}\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n"
         )),
         "{built_in}"
     );
@@ -112,29 +118,26 @@ fn rules_and_traits_say_where_they_come_from() {
         ),
         "{built_in}"
     );
-    // Heights: herbs' stems and trees' tops at the vascular plants,
-    // culms at the Poales.
+    // Heights: herbs' stems and trees' tops at the vascular plants;
+    // culms and spikelets, from their characters, at the Poales.
+    let poales = "(order Poales: _ranks/order/poales.json)";
+    for line in [
+        "\n  generator.params.stem_height  (phylum Tracheophyta: _ranks/phylum/tracheophyta.json)\n".to_string(),
+        format!("\n  appearance.organs.*.shape.awn on `spikelet` cards  {poales}\n"),
+        format!("\n  appearance.organs.*.shape.ranks on `spikelet` cards  {poales}\n  generator.params.culm_height  {poales}\n"),
+    ] {
+        assert!(built_in.contains(&line), "{line} in {built_in}");
+    }
+    // Leaf outlines from shape words, at the kingdom, on three cards; a
+    // compound leaf's word is its leaflets'.
     assert!(
         built_in.contains(
-            "\n  generator.params.stem_height  (phylum Tracheophyta: _ranks/phylum/tracheophyta.json)\n"
+            "\n  appearance.organs.leaf.shape.leaflet_width on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.outline on `simple` or `sprig` or `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n"
         ),
         "{built_in}"
     );
     assert!(
-        built_in.contains(
-            "\n  generator.params.culm_height  (order Poales: _ranks/order/poales.json)\n"
-        ),
-        "{built_in}"
-    );
-    // Leaf outlines from shape words, at the kingdom, on two cards.
-    assert!(
-        built_in.contains(
-            "\n  appearance.organs.leaf.shape.outline on `simple` or `sprig` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n"
-        ),
-        "{built_in}"
-    );
-    assert!(
-        built_in.contains("General, with no taxonomic home: 2 rules at all plants;"),
+        built_in.contains("General, with no taxonomic home: 3 rules at all plants;"),
         "{built_in}"
     );
     // The maples' program is named for their family, so it is homed.
@@ -160,7 +163,7 @@ fn rules_and_traits_say_where_they_come_from() {
     .unwrap();
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
-    assert!(rules.starts_with("Rules, by their home (29):\n"), "{rules}");
+    assert!(rules.starts_with("Rules, by their home (43):\n"), "{rules}");
     assert!(
         rules.contains(
             "\n  generator.params.leaves_per_node  (family Sapindaceae: sapindaceae/family.json)\n"
@@ -336,6 +339,58 @@ fn grow_says_when_a_plant_has_died() {
         "{grown}"
     );
     assert!(!grown.contains("-0"), "{grown}");
+}
+
+/// `plantc organs` counts a plant by what its parts are, down to what
+/// its organs' layouts draw (spec rework M7B).
+#[test]
+fn organs_counts_a_plant_by_what_its_parts_are() {
+    // A grass: its leaves drawn as pieces, its panicles of spikelets,
+    // each of two glumes and five awned florets.
+    let fescue = stdout(&plantc(&["organs", "festuca-roemeri", "--age", "2"]));
+    for line in [
+        "Roemer's fescue (festuca-roemeri), open environment, seed 1: 2 years, day 196\n",
+        "\n  leaf ",
+        "\n    piece ",
+        " per leaf ",
+        "`blade` ",
+        "\n  inflorescence ",
+        "\n    spikelet ",
+        "\n      glume ",
+        " 2.0 per spikelet\n",
+        "\n      spikelet floret ",
+        "\n        awn ",
+    ] {
+        assert!(fescue.contains(line), "{line:?} in {fescue}");
+    }
+    // Yarrow's corymbs of heads, each of phyllaries, rays and disc florets,
+    // the florets open from the rim.
+    let yarrow = stdout(&plantc(&["organs", "achillea-millefolium", "--age", "2"]));
+    for line in [
+        "\n    capitulum ",
+        " per inflorescence\n",
+        "\n      phyllary ",
+        "\n      ray floret ",
+        " per capitulum  ",
+        "\n      disc floret ",
+        " bud, ",
+        " open\n",
+    ] {
+        assert!(yarrow.contains(line), "{line:?} in {yarrow}");
+    }
+    // Fireweed in August: the lowest of each raceme's flowers in fruit,
+    // the top ones open or in bud.
+    let fireweed = stdout(&plantc(&[
+        "organs",
+        "epilobium-angustifolium",
+        "--age",
+        "2",
+        "--day",
+        "230",
+    ]));
+    assert!(fireweed.contains("\n    fruit "), "{fireweed}");
+    assert!(fireweed.contains("\n    flower "), "{fireweed}");
+    assert!(fireweed.contains(" bud, "), "{fireweed}");
 }
 
 #[test]

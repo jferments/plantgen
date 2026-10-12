@@ -26,6 +26,7 @@ use plantgen::looks::{self, Look, Stage};
 use plantgen::lsys::{Limits, Neighbourhood, Program};
 use plantgen::math::Vec3;
 use plantgen::mesh::{self, PlantMesh};
+use plantgen::organs;
 use plantgen::package::{self, Inputs};
 use plantgen::preview::{self, PreviewOptions, View};
 use plantgen::quality::{self, Quality};
@@ -117,6 +118,7 @@ fn run() -> Result<(), Failure> {
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
         "parts" => parts_command(&args),
+        "organs" => organs_command(&args),
         "year" => year_command(&args),
         "lineup" => lineup_command(&args),
         "atlas" => atlas_command(&args),
@@ -190,6 +192,16 @@ Usage:
       Render each organ type alone, its median size at the oldest age
       printed (drawn at least 25 cm long): a row per type, its solid
       (LOD0) left and its card (LOD1) right.
+  plantc organs <species|spec.json> [--env ENV] [--seed N] [--age N]
+      Count one variant's organs at an age (default its oldest keyframe)
+      on a day by what each is, its term: what the plant bears on its
+      axes, then what each holds, through its program's structures (a
+      grass's leaves, a fern's fronds) down to what its organs' layouts
+      draw: a cluster's flowers, heads or spikelets, a head's phyllaries
+      and florets, a spikelet's glumes, florets and awns. Each row gives
+      how many there are, how many each holder bears on average (of those
+      that bear any), how many are in each phase where they have phases,
+      and the program's organ and structure types counted.
   plantc year <species|spec.json> --out FILE.png [--env ENV] [--seed N]
               [--size PIXELS] [--days D,D,...|stages]
       Draw each organ type with a season through the year: a row per
@@ -274,10 +286,10 @@ to them. Its rank files (library/<family>/family.json,
 library/<family>/<genus>/genus.json, library/_ranks/<rank>/<name>.json)
 replace built-in ones at the same path; each species' spec is its own
 spec.json merged onto those above it, the nearer file winning.
-grow, render, sheet, atlas, build and export accept --program FILE.lsys
-to try a changed program in place of the species' built-in one. render,
-sheet, parts, lineup, build and export accept --day N (1 to 365, default
-196): the day of the year organs with a season show.
+grow, organs, render, sheet, atlas, build and export accept --program
+FILE.lsys to try a changed program in place of the species' built-in one.
+organs, render, sheet, parts, lineup, build and export accept --day N (1
+to 365, default 196): the day of the year organs with a season show.
 ENV is open, edge, interior or suppressed; without --env, the species'
 typical site (its conditions.json) chooses."
     );
@@ -1086,6 +1098,130 @@ fn describe(graph: &PlantGraph, types: &[OrganType]) -> String {
     )
 }
 
+/// `plantc organs`: a grown plant's census by term (spec rework M7B).
+fn organs_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &["env", "seed", "age", "day", "program"])?;
+    let spec = load_spec(options.one_positional("a species")?)?;
+    let source = options.program()?;
+    let environment = options.environment(&spec)?;
+    let seed = options.number("seed")?.unwrap_or(spec.variants.seeds[0]);
+    let age = options.number("age")?.unwrap_or(spec.growth.years);
+    let day = options.day()?;
+    let growth = grow_variant(&spec, source.as_deref(), environment, seed, vec![age], age)?;
+    let graph = growth.keyframes.last().ok_or("nothing grew")?;
+    let (program, _) = match &source {
+        Some(source) => spec.program_from(source),
+        None => spec.program_in(library()),
+    }
+    .map_err(|error| error.to_string())?;
+    let terms = organs::of_program(&program, &spec.appearance);
+    let organ_types: Vec<(&str, &str)> = growth
+        .organ_types
+        .iter()
+        .map(|kind| kind.name.as_str())
+        .zip(terms)
+        .collect();
+    let structure_types: Vec<(&str, &str)> = growth
+        .structure_types
+        .iter()
+        .map(|kind| (kind.name.as_str(), kind.term.as_str()))
+        .collect();
+    let (looks, _) = looks_of(&spec, &growth, day);
+    let seasons: Vec<Option<&looks::Season>> = growth
+        .organ_types
+        .iter()
+        .map(|kind| {
+            spec.appearance
+                .organs
+                .get(&kind.name)
+                .and_then(|look| look.season.as_ref())
+        })
+        .collect();
+    let tallies = organs::census(graph, &organ_types, &structure_types, &looks, &seasons, day);
+    out!(
+        "{} ({}), {} environment, seed {seed}: {} years, day {day}",
+        spec.taxon.common_name,
+        spec.id,
+        environment.name(),
+        graph.age
+    );
+    let mut rows = Vec::new();
+    census_rows(&tallies, 0, None, &mut rows);
+    if rows.is_empty() {
+        out!("  no organs");
+    }
+    let width = |column: usize| {
+        rows.iter()
+            .map(|row: &[String; 4]| row[column].chars().count())
+            .max()
+            .unwrap_or(0)
+    };
+    let (terms, counts, shares) = (width(0), width(1), width(2));
+    for [term, count, share, notes] in &rows {
+        let line = format!("  {term:<terms$}  {count:>counts$}  {share:<shares$}  {notes}");
+        out!("{}", line.trim_end());
+    }
+    Ok(())
+}
+
+/// The rows of `plantc organs` for `tallies` at `depth`, held by
+/// `holder`: each term indented, its count, its count per holder and its
+/// phases and types.
+fn census_rows(
+    tallies: &[organs::Tally],
+    depth: usize,
+    holder: Option<&str>,
+    rows: &mut Vec<[String; 4]>,
+) {
+    for tally in tallies {
+        let term = tally.term.replace('_', " ");
+        let share = match holder {
+            Some(holder) if tally.holders > 0 => {
+                #[allow(clippy::cast_precision_loss)]
+                let mean = tally.count as f64 / tally.holders as f64;
+                format!("{mean:.1} per {holder}")
+            }
+            _ => String::new(),
+        };
+        let phases: Vec<String> = organs::PHASES
+            .iter()
+            .zip(tally.phases)
+            .filter(|(_, count)| *count > 0)
+            .map(|(phase, count)| format!("{} {phase}", grouped(count)))
+            .collect();
+        let types: Vec<String> = tally
+            .types
+            .iter()
+            .map(|(name, count)| format!("`{name}` {}", grouped(*count)))
+            .collect();
+        let notes = [phases.join(", "), types.join(", ")]
+            .into_iter()
+            .filter(|note| !note.is_empty())
+            .collect::<Vec<_>>()
+            .join("; ");
+        rows.push([
+            format!("{}{term}", "  ".repeat(depth)),
+            grouped(tally.count),
+            share,
+            notes,
+        ]);
+        census_rows(&tally.parts, depth + 1, Some(&term), rows);
+    }
+}
+
+/// `n` with its thousands set apart by commas.
+fn grouped(n: u64) -> String {
+    let digits = n.to_string();
+    let mut out = String::new();
+    for (index, digit) in digits.chars().enumerate() {
+        if index > 0 && (digits.len() - index).is_multiple_of(3) {
+            out.push(',');
+        }
+        out.push(digit);
+    }
+    out
+}
+
 fn measure_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(args, &["generator", "env", "seed", "years"])?;
     let ids: Vec<String> = if options.positional.is_empty() {
@@ -1544,7 +1680,9 @@ fn parts_command(args: &[String]) -> Result<(), Failure> {
                 born: 0.0,
                 shed: None,
                 light: 1.0,
+                within: None,
             }],
+            structures: Vec::new(),
         };
         for level in [0, 1] {
             let lod = quality
@@ -1730,10 +1868,12 @@ fn year_command(args: &[String]) -> Result<(), Failure> {
                         born: 0.0,
                         shed: None,
                         light: 1.0,
+                        within: None,
                     }]
                 } else {
                     Vec::new()
                 },
+                structures: Vec::new(),
             };
             let plant = mesh::build(
                 &alone,

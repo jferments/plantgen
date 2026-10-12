@@ -39,9 +39,11 @@
 # 1), with the same defaults: a pair crossing the pair below, or a single
 # bud on the golden-angle spiral. More than two at a node draw as a pair.
 #
+# Revision 7 (spec rework M7): a thorn is a spine, not a leaf.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 6;
+lsystem broadleaf 7;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height = 22;
@@ -113,7 +115,7 @@ module Bo(n);                             # n blooms still to place at a short s
 
 organ leaf leaf area leaf_area;
 organ bloom flower area bloom_area;
-organ thorn leaf area thorn_area;
+organ thorn leaf as spine area thorn_area;
 
 tool light@1 { cell = light_cell, extinction = extinction, bud = 0.01 };
 tool space@1 {
