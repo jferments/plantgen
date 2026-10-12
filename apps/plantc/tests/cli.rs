@@ -68,21 +68,27 @@ fn list_and_check_name_the_built_in_species() {
 /// `plantc spec` shows a species' traits and what each rule did.
 #[test]
 fn rules_and_traits_say_where_they_come_from() {
-    // Clusters in every look, homed at the flowering plants, then
-    // Corner's rules at the seed plants, then the families'; a rule on a
-    // look's card names the card.
+    // Clusters and divided leaves in every look, homed at the flowering
+    // plants, then Corner's rules at the seed plants, then the families';
+    // a rule on a look's card names the card.
     let built_in = stdout(&plantc(&["rules"]));
     let flowering = "(clade angiosperms: _ranks/clade/angiosperms.json)";
     let seed_plants = "(clade Spermatophyta: _ranks/clade/spermatophyta.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (37):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (42):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
     assert!(
         built_in.contains(&format!(
-            "\n  appearance.organs.*.inflorescence.kind  {flowering}\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n"
+            "\n  appearance.organs.*.inflorescence.kind  {flowering}\n  appearance.organs.*.shape.confluent on `compound` cards  {flowering}\n"
+        )),
+        "{built_in}"
+    );
+    assert!(
+        built_in.contains(&format!(
+            "\n  appearance.organs.*.shape.pinnules on `compound` cards  {flowering}\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n"
         )),
         "{built_in}"
     );
@@ -122,15 +128,16 @@ fn rules_and_traits_say_where_they_come_from() {
     ] {
         assert!(built_in.contains(&line), "{line} in {built_in}");
     }
-    // Leaf outlines from shape words, at the kingdom, on two cards.
+    // Leaf outlines from shape words, at the kingdom, on three cards; a
+    // compound leaf's word is its leaflets'.
     assert!(
         built_in.contains(
-            "\n  appearance.organs.leaf.shape.outline on `simple` or `sprig` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n"
+            "\n  appearance.organs.leaf.shape.leaflet_width on `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n  appearance.organs.leaf.shape.outline on `simple` or `sprig` or `compound` cards  (kingdom Plantae: _ranks/kingdom/plantae.json)\n"
         ),
         "{built_in}"
     );
     assert!(
-        built_in.contains("General, with no taxonomic home: 2 rules at all plants;"),
+        built_in.contains("General, with no taxonomic home: 3 rules at all plants;"),
         "{built_in}"
     );
     // The maples' program is named for their family, so it is homed.
@@ -156,7 +163,7 @@ fn rules_and_traits_say_where_they_come_from() {
     .unwrap();
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
-    assert!(rules.starts_with("Rules, by their home (38):\n"), "{rules}");
+    assert!(rules.starts_with("Rules, by their home (43):\n"), "{rules}");
     assert!(
         rules.contains(
             "\n  generator.params.leaves_per_node  (family Sapindaceae: sapindaceae/family.json)\n"

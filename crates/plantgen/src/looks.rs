@@ -541,7 +541,9 @@ pub enum Shape {
     Simple(Simple),
     /// A pinnately lobed leaf (oaks).
     Lobed(Lobed),
-    /// A pinnately compound leaf (ashes, elders, rowans).
+    /// A compound leaf: pinnate (ashes, elders, roses) or palmate
+    /// (lupines), once or twice divided (mesquites, columbines), or a
+    /// blade dissected into segments (yarrow).
     Compound(Compound),
     /// A leafy shoot: simple leaves alternating along a twig and one at
     /// its tip, for small-leaved trees and shrubs (alders, birches,
@@ -743,16 +745,70 @@ impl Default for Lobed {
     }
 }
 
+/// A compound leaf (spec rework P4; laid out by [`crate::divided`]). The
+/// fields after `petiole` are unset by default, and an unset field takes
+/// the value [`crate::divided::Form::of`] gives it.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct Compound {
-    /// Leaflets, the terminal one included.
+    /// Leaflets, the terminal one included; in a twice-divided leaf, its
+    /// divisions (pinnae). A pinnate leaf with an odd count ends in a
+    /// leaflet (odd-pinnate), one with an even count in its top pair
+    /// (even-pinnate).
     pub leaflets: u32,
     /// Leaflet width over leaflet length.
     pub leaflet_width: f64,
     /// Teeth on each side of a leaflet; 0 for entire.
     pub teeth: u32,
     pub petiole: f64,
+    /// How the leaflets are set: along a rachis (pinnate, the default) or
+    /// from the petiole's tip (palmate).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pattern: Option<Pattern>,
+    /// Leaflets on each division of a twice-divided leaf (bipinnate,
+    /// biternate), their count's parity saying how a pinna ends; unset or
+    /// 0 for a leaf divided once.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pinnules: Option<u32>,
+    /// How far each division's base runs along its rachis as a wing: 0
+    /// separate leaflets, 1 a dissected blade's segments.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub confluent: Option<f64>,
+    /// Degrees between a pinnate leaf's lateral leaflets (or pinnae) and
+    /// its rachis.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub angle: Option<f64>,
+    /// Degrees between a pinna's leaflets and its rachis.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pinnule_angle: Option<f64>,
+    /// Degrees between a palmate leaf's outermost leaflets.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub spread: Option<f64>,
+    /// Where along the rachis the lateral leaflets are longest, 0 at its
+    /// foot to 1 at its top.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub largest: Option<f64>,
+    /// The shortest leaflets' length as a share of the longest's: a
+    /// pinnate leaf's lowest (and, with `largest` below 1, its topmost), a
+    /// palmate leaf's outermost.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub lowest: Option<f64>,
+    /// The terminal leaflet's length as a share of the longest lateral's.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub terminal_size: Option<f64>,
+    /// Each leaflet's blade, as in [`Simple`]: its outline, or where it is
+    /// widest, its tip and its base.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub outline: Option<Vec<[f64; 2]>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub widest: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tip: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub base: Option<f64>,
+    /// Each leaflet's stalk, as a share of its length.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub petiolule: Option<f64>,
 }
 
 impl Default for Compound {
@@ -762,8 +818,34 @@ impl Default for Compound {
             leaflet_width: 0.4,
             teeth: 0,
             petiole: 0.15,
+            pattern: None,
+            pinnules: None,
+            confluent: None,
+            angle: None,
+            pinnule_angle: None,
+            spread: None,
+            largest: None,
+            lowest: None,
+            terminal_size: None,
+            outline: None,
+            widest: None,
+            tip: None,
+            base: None,
+            petiolule: None,
         }
     }
+}
+
+/// How a compound leaf's leaflets are set (spec rework P4).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Pattern {
+    /// In pairs along a rachis: ashes, roses, a mesquite's pinnae.
+    #[default]
+    Pinnate,
+    /// From the tip of the petiole: lupines, a blackberry's five
+    /// leaflets, a wood sorrel's three.
+    Palmate,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -1531,7 +1613,7 @@ impl Shape {
                 ..s.clone()
             }),
             Self::Compound(s) => Self::Compound(Compound {
-                leaflet_width: wide(s.leaflet_width, 0.1, 1.0, 0.2, 0.15),
+                leaflet_width: wide(s.leaflet_width, 0.05, 1.0, 0.2, 0.15),
                 ..s.clone()
             }),
             Self::Sprig(s) => {
@@ -1637,17 +1719,7 @@ impl Shape {
                 check("round", s.round, 0.0, 1.0)?;
                 check("petiole", s.petiole, 0.0, 0.7)
             }
-            Self::Compound(s) => {
-                if !(3..=25).contains(&s.leaflets) || s.leaflets % 2 == 0 {
-                    return Err(format!(
-                        "compound leaflets must be odd, 3 to 25, found {}",
-                        s.leaflets
-                    ));
-                }
-                check("leaflet_width", s.leaflet_width, 0.1, 1.0)?;
-                count("teeth", s.teeth, 0, 30)?;
-                check("petiole", s.petiole, 0.0, 0.6)
-            }
+            Self::Compound(s) => s.validate(),
             Self::Sprig(s) => {
                 count("leaves", s.leaves, 2, 15)?;
                 check("angle", s.angle, 20.0, 80.0)?;
@@ -1875,18 +1947,103 @@ impl Palmate {
 }
 
 impl Compound {
-    /// Length of one lateral leaflet.
+    /// Length of the longest lateral leaflet of a pinnate leaf divided
+    /// once.
     #[must_use]
     pub fn leaflet_length(&self) -> f64 {
-        let pairs = f64::from(self.leaflets / 2);
-        ((1.0 - self.petiole) * 2.4 / (pairs + 1.5)).min(0.45)
+        crate::divided::longest(self.leaflets, self.petiole)
     }
 
     fn aspect(&self) -> f64 {
-        let length = self.leaflet_length();
-        2.0 * (length * crate::math::sin(crate::math::radians(62.0))
-            + length * self.leaflet_width * 0.5)
-            + 0.03
+        let form = crate::divided::Form::of(self);
+        if form.pattern == Pattern::Pinnate && form.pinnules == 0 {
+            let length = self.leaflet_length();
+            let terminal = if self.leaflets % 2 == 1 {
+                0.5 * length * form.terminal_size * self.leaflet_width
+            } else {
+                0.0
+            };
+            return 2.0
+                * (length * crate::math::sin(crate::math::radians(form.angle))
+                    + length * self.leaflet_width * 0.5)
+                    .max(terminal)
+                + 0.03;
+        }
+        crate::divided::reach(self) * 2.0 + 0.03
+    }
+
+    fn validate(&self) -> Result<(), String> {
+        let form = crate::divided::Form::of(self);
+        let check = |field: &str, value: f64, low: f64, high: f64| {
+            if (low..=high).contains(&value) {
+                Ok(())
+            } else {
+                Err(format!(
+                    "compound {field} must be between {low} and {high}, found {value}"
+                ))
+            }
+        };
+        let divisions = |field: &str, n: u32| -> Result<(), String> {
+            match form.pattern {
+                Pattern::Pinnate if !(2..=41).contains(&n) => Err(format!(
+                    "compound {field} of a pinnate leaf must be 2 to 41, found {n}"
+                )),
+                Pattern::Palmate if !(3..=17).contains(&n) => Err(format!(
+                    "compound {field} of a palmate leaf must be 3 to 17, found {n}"
+                )),
+                _ => Ok(()),
+            }
+        };
+        divisions("leaflets", self.leaflets)?;
+        if form.pinnules > 0 {
+            divisions("pinnules", form.pinnules)?;
+            if self.leaflets * form.pinnules > 1200 {
+                return Err(format!(
+                    "a compound leaf has at most 1200 leaflets, found {} pinnae of {}",
+                    self.leaflets, form.pinnules
+                ));
+            }
+        }
+        check("leaflet_width", self.leaflet_width, 0.05, 1.0)?;
+        if self.teeth > 30 {
+            return Err(format!(
+                "compound teeth must be between 0 and 30, found {}",
+                self.teeth
+            ));
+        }
+        check("petiole", self.petiole, 0.0, 0.7)?;
+        let set = |value: Option<f64>| value.unwrap_or(f64::NAN);
+        for (field, value, low, high) in [
+            ("confluent", self.confluent, 0.0, 1.0),
+            ("angle", self.angle, 20.0, 90.0),
+            ("pinnule_angle", self.pinnule_angle, 20.0, 90.0),
+            ("spread", self.spread, 30.0, 340.0),
+            ("largest", self.largest, 0.0, 1.0),
+            ("lowest", self.lowest, 0.2, 1.0),
+            ("terminal_size", self.terminal_size, 0.3, 2.0),
+            ("widest", self.widest, 0.15, 0.85),
+            ("tip", self.tip, 0.0, 1.0),
+            ("base", self.base, 0.0, 1.0),
+            ("petiolule", self.petiolule, 0.0, 0.5),
+        ] {
+            if value.is_some() {
+                check(field, set(value), low, high)?;
+            }
+        }
+        if let Some(field) = [
+            ("widest", self.widest),
+            ("tip", self.tip),
+            ("base", self.base),
+        ]
+        .iter()
+        .find_map(|(field, value)| value.is_some().then_some(field))
+            && self.outline.is_some()
+        {
+            return Err(format!(
+                "a compound card with an outline takes its leaflets' shape from it: drop `{field}`"
+            ));
+        }
+        outline("compound", self.outline.as_deref(), [("", 0.0, 0.0); 3])
     }
 }
 

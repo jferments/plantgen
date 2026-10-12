@@ -42,7 +42,7 @@
       "thorns": 1,
       "thorn_length": 0.05,
       "thorn_angle": 65,
-      "leaf_area": 0.159,
+      "leaf_area": 0.132,
       "thorn_area": 0.059
     }
   },
@@ -73,13 +73,7 @@
     "variation": 0.15,
     "organs": {
       "leaf": {
-        "shape": {
-          "template": "frond",
-          "pinnae": 8,
-          "width": 0.45,
-          "divided": 1,
-          "stipe": 0.1
-        }
+        "shape": { "template": "compound", "leaflet_width": 0.35, "teeth": 0, "petiole": 0.15, "angle": 70, "pinnule_angle": 70 }
       },
       "thorn": {
         "shape": {
@@ -107,6 +101,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 2,
+    "pinnae": {"min": 4, "max": 20, "high": 28},
+    "leaflets": {"min": 12, "max": 40},
+    "terminal_leaflet": false,
+    "leaf_shape": "oblong"
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -167,6 +170,16 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "brenan-1983-acacia",
+      "note": "Brenan's manual on Acacia taxonomy for FAO, as search results quote it (the page itself was not read): pinnae 2 to 10 pairs (to 14, after Ross 1979) on a rachis up to 2 (4) cm long; leaflets 6 to 20 pairs on each pinna, 0.5 to 2.5 (6) mm long and 0.2 to 1 (1.5) mm wide. Even-pinnate at both levels."
+    },
+    "appearance.organs.leaf": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The leaf drawn as a twice-divided compound leaf (spec rework P4), its pinnae and their leaflets counted from its characters by the rules at the flowering plants; before, a fern's frond stood in for it. By eye from photographs: the pinnae standing out nearly square from a short rachis and their tiny leaflets from them, each leaflet about a third as wide as long, as Brenan's sizes give."
     }
   },
   "provenance": {

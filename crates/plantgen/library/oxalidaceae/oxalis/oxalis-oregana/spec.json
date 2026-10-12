@@ -24,7 +24,7 @@
       "nodes": 1,
       "leaves_per_node": 3,
       "bare": 0.85,
-      "leaf_length": 0.045,
+      "leaf_length": 0.06,
       "leaf_peak": 0.5,
       "leaf_top": 1,
       "leaf_base": 1,
@@ -37,7 +37,7 @@
       "fruit_below": 0,
       "buds_above": 1,
       "nod": 0,
-      "leaf_area": 0.621,
+      "leaf_area": 0.387,
       "basal_area": 0.235,
       "basal_piece_area": 0.235,
       "flower_area": 0.689,
@@ -61,16 +61,7 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": {
-          "template": "simple",
-          "width": 1.0,
-          "widest": 0.8,
-          "tip": 0.0,
-          "base": 0.0,
-          "teeth": 0,
-          "tooth_depth": 0.03,
-          "petiole": 0
-        },
+        "shape": { "template": "compound", "leaflet_width": 1.0, "teeth": 0, "petiole": 0.4, "spread": 240, "lowest": 1.0, "outline": [[0, 0.05], [0.1, 0.22], [0.3, 0.5], [0.5, 0.74], [0.7, 0.92], [0.85, 1], [0.95, 0.9], [0.99, 0.6], [1, 0]] },
         "face_up": 0.6
       },
       "flower": {
@@ -96,6 +87,12 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "leaf_division": "compound",
+    "division_pattern": "palmate",
+    "division_order": 1,
+    "leaflets": 3
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -146,6 +143,16 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "General knowledge of the species, the guides the search returned agreeing: three obcordate leaflets, 1 to 4.5 cm long, on a stalk 5 to 20 cm long, folding down in full sun."
+    },
+    "appearance.organs.leaf.shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The leaf drawn as a palmately compound leaf of three leaflets (spec rework P4), set from its characters by the rules at the flowering plants; before, one broad blade stood in for it. By eye: the leaflets spread evenly round the stalk's tip, each widest near its broad, flat-topped tip (an obcordate leaflet's notch is not drawn) and about as wide as long. The card now holds a stub of the stalk, so the leaf is drawn 6 cm long where its blade was 4.5 cm: each leaflet about 3.5 cm."
     }
   },
   "provenance": {

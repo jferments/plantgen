@@ -24,7 +24,7 @@
       "nodes": 1,
       "leaves_per_node": 3,
       "bare": 0.8,
-      "leaf_length": 0.11,
+      "leaf_length": 0.15,
       "leaf_peak": 0.5,
       "leaf_top": 1,
       "leaf_base": 1,
@@ -37,7 +37,7 @@
       "fruit_below": 0,
       "buds_above": 1,
       "nod": 0,
-      "leaf_area": 0.57,
+      "leaf_area": 0.473,
       "basal_area": 0.235,
       "basal_piece_area": 0.235,
       "flower_area": 0.08,
@@ -61,16 +61,7 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": {
-          "template": "simple",
-          "width": 1.0,
-          "widest": 0.8,
-          "tip": 0.0,
-          "base": 0.0,
-          "teeth": 7,
-          "tooth_depth": 0.08,
-          "petiole": 0
-        },
+        "shape": { "template": "compound", "leaflet_width": 0.95, "teeth": 7, "petiole": 0.3, "spread": 190, "lowest": 0.95, "outline": [[0, 0.05], [0.2, 0.3], [0.4, 0.52], [0.6, 0.74], [0.8, 0.93], [0.9, 1], [0.97, 0.85], [0.995, 0.5], [1, 0]] },
         "face_up": 0.7
       },
       "flower": {
@@ -90,7 +81,11 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "inflorescence": "spike"
+    "inflorescence": "spike",
+    "leaf_division": "compound",
+    "division_pattern": "palmate",
+    "division_order": 1,
+    "leaflets": 3
   },
   "evidence": {
     "generator.params": {
@@ -152,6 +147,31 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Its spike drawn flower by flower (spec rework L1c): its kind from its characters, by the rule at the flowering plants; about 60 flowers, by eye (floras say only that they are numerous), each a tuft of nine white stamens about 5 mm across drawn as a flower of nine thread-like petals. From floras and extension pages as quoted in search results; the pages themselves were not read."
+    },
+    "traits.leaflets": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "General knowledge of the species, the guides the search returned agreeing: one leaf of three broad, fan-shaped leaflets with wavy, coarsely toothed outer edges (5 to 12 teeth), the blade 5 to 20 cm wide."
+    },
+    "traits.leaf_division": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "General knowledge of the species, the guides the search returned agreeing: one leaf of three broad, fan-shaped leaflets with wavy, coarsely toothed outer edges (5 to 12 teeth), the blade 5 to 20 cm wide."
+    },
+    "traits.division_pattern": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "General knowledge of the species, the guides the search returned agreeing: one leaf of three broad, fan-shaped leaflets with wavy, coarsely toothed outer edges (5 to 12 teeth), the blade 5 to 20 cm wide."
+    },
+    "traits.division_order": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "General knowledge of the species, the guides the search returned agreeing: one leaf of three broad, fan-shaped leaflets with wavy, coarsely toothed outer edges (5 to 12 teeth), the blade 5 to 20 cm wide."
+    },
+    "appearance.organs.leaf.shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The leaf drawn as a palmately compound leaf of three leaflets (spec rework P4), set from its characters by the rules at the flowering plants; before, one round blade stood in for it. By eye from photographs: the side leaflets held out level, 190 degrees apart, each leaflet a fan widening from a narrow foot to a broad, flat, toothed edge. The card now holds a stub of the stalk, so the leaf is drawn 15 cm long where its blade was 11 cm."
     }
   },
   "provenance": {

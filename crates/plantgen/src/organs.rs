@@ -335,14 +335,34 @@ fn unit_term(unit: Unit, phase: Option<Phase>) -> &'static str {
     }
 }
 
-/// The parts something drawn as `shape` in `phase` holds: a head's or a
-/// spikelet's.
+/// The parts something drawn as `shape` in `phase` holds: a head's, a
+/// spikelet's or a compound leaf's.
 fn held(shape: &Shape, phase: Option<Phase>) -> Vec<Part> {
     match shape {
         Shape::Head(head) => in_head(head),
         Shape::Spikelet(spikelet) => in_spikelet(spikelet, phase),
+        Shape::Compound(compound) => in_compound(compound, phase),
         _ => Vec::new(),
     }
+}
+
+/// A compound leaf's leaflets in the order its layout lays them out
+/// (`crate::divided`): the terminal one, then its pairs from the foot up;
+/// division by division in a twice-divided leaf. A dissected blade's
+/// segments are not leaflets: it holds none.
+fn in_compound(compound: &crate::looks::Compound, phase: Option<Phase>) -> Vec<Part> {
+    let laid = crate::divided::layout(compound);
+    if laid.form.confluent > 0.0 {
+        return Vec::new();
+    }
+    laid.leaflets
+        .iter()
+        .map(|_| Part {
+            term: "leaflet",
+            phase,
+            parts: Vec::new(),
+        })
+        .collect()
 }
 
 /// A head's parts: its florets each in the stage its `open` gives it,
