@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Fraxinus",
+  "traits": {"flowering_position": "both"},
+  "evidence": {
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual's Fraxinus chapter (read in full): ash flowers appear with or before the leaves in terminal or axillary panicles."
+    }
+  }
+}

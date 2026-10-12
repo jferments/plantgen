@@ -55,9 +55,10 @@ fn stated_characters_hold_on_grown_plants() {
         .iter()
         .map(|entry| entry.id.clone())
         .filter(|id| {
-            library
-                .traits_of(id)
-                .is_ok_and(|traits| checks::states_checked(&traits))
+            let (Ok(spec), Ok(traits)) = (library.spec(id), library.traits_of(id)) else {
+                return false;
+            };
+            checks::states_checked(&spec, &traits)
         })
         .collect();
     assert!(

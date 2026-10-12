@@ -131,7 +131,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "stamens": {"min": 75, "max": 100}
+    "stamens": {"min": 75, "max": 100},
+    "flowering_position": "lateral"
   },
   "evidence": {
     "generator.params": {
@@ -188,6 +189,11 @@
       "evidence": "SourceInferred",
       "source": "burke-herbarium",
       "note": "The Burke Herbarium's account of the species, as quoted in search results; the page itself was not read: stamens 75 to 100; pistils numerous; petals pink to purplish red."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's salmonberry review (page read): the flowers are borne on short, leafy lateral stalks."
     }
   },
   "provenance": {

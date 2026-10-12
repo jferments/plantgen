@@ -4,7 +4,9 @@
   "name": "angiosperms",
   "parent": "clade/spermatophyta",
   "traits": {
-    "reproduction": "flowers"
+    "reproduction": "flowers",
+    "bud_position": "acrotonic",
+    "shoot_leaves": {"min": 4, "max": 18, "high": 32, "typical": 12}
   },
   "rules": {
     "appearance.organs.*.inflorescence.kind": {
@@ -214,6 +216,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "How PlantGen lays out an inflorescence, a choice of the model's (spec rework L1): the inflorescence characters set the cluster of any look a taxon draws as one (`\"inflorescence\": {}`), its kind, how many units it bears on each axis, its primary branches and how it holds itself. Sizes, stalks and spacing stay set by hand until programs size their organs from characters."
+    },
+    "traits.bud_position": {
+      "evidence": "SourceInferred",
+      "source": "barthelemy-caraglio-2007",
+      "note": "Barthélémy and Caraglio (2007), read in excerpts (the full text was not reachable): branches grow mostly from the upper part of their parent's annual shoot (acrotony) on each year's shoot of trees and shrubs alike, while the basitony of shrubs is the whole plant renewing from its base. Stated here, at the flowering plants, until a lineage that branches otherwise along its shoots says so."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "SourceInferred",
+      "source": "critchfield-1971",
+      "note": "A typical count inferred from the few lineages counted in sources read here, until each lineage states its own. Critchfield (1971, read in full) counted 2 to 4 leaf pairs on most long shoots of striped maple and 5 to 9 on the rest, and 12 to 16 pairs on red maple's longest; aspen's first five to eight leaves are preformed in the bud and long shoots add more (from a search excerpt of an American Journal of Botany paper on aspen, not read); and the largest buds of Nothofagus pumilio hold 15 to 20 nodes (Souza and others 2000, abstract)."
     }
   }
 }

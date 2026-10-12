@@ -26,9 +26,15 @@
 # turn moved to broadleaf (revision 9), which it now inherits; a maple
 # grows as before.
 #
+# Revision 5 (crown form, step A): terminal flowering forks, aborting
+# tips, shedding, dormant buds and renewing space moved to broadleaf
+# (revision 10), which a maple turns on with its own values here; its
+# year's shoot is broadleaf's growth unit. A maple grows as before but
+# for the draws those rules take, which now stand at broadleaf's sites.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem sapindaceae 4 extends broadleaf;
+lsystem sapindaceae 5 extends broadleaf;
 
 param bud_years = 30;
 param crown_widest = 0.45;      # share of the crown's depth where it is widest
@@ -71,65 +77,27 @@ tool space@2 {
     lobe_depth = crown_lobe_depth,
     bumps = crown_bumps,
     bump_size = crown_bump_size,
-    renew = 1,
     angle = perception
 };
 
-# A long shoot in the light, old enough to flower, grows its year's
-# internodes, ends them in a flower cluster and forks into twin shoots from
-# the buds below it: the cluster ends the year's growth, as a maple's
-# terminal raceme does, so a fork always stands on wood.
-rule A(split) : blooms > 0 && t >= adult_age && split <= 0 && vigour >= 1 && space > 0
-                && light >= spur_light && (life <= 0 || t < life) && rand() < terminal_bloom ->
-    steer(sx, sy, sz, steer_weight) M(min(floor(vigour), max_shoot))
-    Bo(blooms) /(divergence) [ &(twin_angle) S A(0) ] [ /(180) &(twin_angle) S A(0) ];
-
-# A shoot tip with no free space before it aborts with the chance
-# apex_death a year. Without it a tip in good light that cannot grow lives
-# for ever and keeps its leafless limb, and the shedding below never takes
-# it because its tip is well lit: old crowns fill with bare twigs.
-param apex_death = 0.1;           # chance a year that a tip with no free space aborts
-rule A(split) : apex_death > 0 && space <= 0 && t > 10 && rand() < apex_death -> ;
+# Broadleaf's tips abort where they have no free space (apex_death), a
+# maple's at a tenth a year; and unless a maple's traits say otherwise
+# (the rules at the seed plants), it sheds limbs that no longer pay their
+# way, keeps dormant buds that sprout where light comes back, and grows
+# back into the space a shed limb frees. Broadleaf says what each does.
+param apex_death = 0.1;
+param shed_ratio = 0.05;
+param shed_age = 8;
+param dormant_buds = 1;
+param dormant_years = 6;
+param sprout_light = 0.25;
+param dormant_angle = 60;
+param space_renew = 1;
 
 # Shoots rise toward the light against their weight when rise > 0, the
 # same pull broadleaf's droop gives downward otherwise.
 axiom !(0.004) T(wind, rise > 0 ? 1 : -1, 0, rise > 0 ? rise : droop + wind_bend * wind)
       /(uniform(0, 360)) &(uniform(0, lean)) A(fork_height * uniform(0.7, 1.3));
-
-# A limb that no longer pays its way is shed, as in Pałubicki et al.
-# (2009): the light its tips collect, qsum, over the internodes it carries,
-# nseg, falls below shed_ratio. Only limbs older than shed_age, so young
-# shoots have time to leaf out. Without it a shaded limb that keeps one
-# dormant bud holds its wood, and the space round it, for ever, and an old
-# crown stops renewing.
-param shed_ratio = 0.05;         # 0: shed only bare limbs, as broadleaf does
-param shed_age = 8;
-rule S : shed_ratio > 0 && age > shed_age && qsum < shed_ratio * nseg -> %;
-
-# Dormant buds and reiteration. Most of an old crown's leafy shoots do not
-# come from the branching of its limbs' tips but from sprouts of buds that
-# wait on the limbs (Ishii and Ford 2001 counted under a quarter of the
-# foliated shoots on old Douglas-fir branches as sequential branching; the
-# rest were reiterations), and sprouts are what fill a crown's gaps and
-# its inside. Each internode of a long shoot keeps one dormant bud D, a
-# quarter turn round from its pair of laterals; it sprouts into a long
-# shoot when light reaches it (sprout_light) with free space before it, and
-# dies after dormant_years (about 5 to 6 years on average in Ishii and
-# Ford's Douglas-fir).
-param dormant_years = 6;
-param sprout_light = 0.25;
-param dormant_angle = 60;
-module D queries light, space;
-
-decompose M(n) : n > 0 && leaves_per_node >= 2 && thorns <= 0 ->
-    ^(gauss() * wiggle) +(gauss() * wiggle) F(internode)
-    [ &(branch_angle) S B ] [ /(180) &(branch_angle) S B ]
-    leaf(leaf_size, 0, leaf_angle, 1) leaf(leaf_size, 180, leaf_angle, 1)
-    [ /(90) &(dormant_angle) D ]
-    /(divergence) M(n - 1);
-
-rule D : age >= dormant_years -> ;
-rule D : light >= sprout_light && space > 0 -> S A(0);
 
 # Blooms spread round a short shoot's tip, as broadleaf's, each carrying
 # its own turn.

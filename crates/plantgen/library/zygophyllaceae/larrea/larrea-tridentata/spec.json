@@ -112,7 +112,8 @@
   "traits": {
     "juvenile_period_years": {"min": 4, "max": 13},
     "leaf_arrangement": "opposite",
-    "carpels": 5
+    "carpels": 5,
+    "flowering_position": "lateral"
   },
   "evidence": {
     "traits.juvenile_period_years": {
@@ -174,6 +175,11 @@
       "evidence": "SourceInferred",
       "source": "sdsu-plants-of-san-diego",
       "note": "Plants of San Diego County's page on the species: the leaves are opposite, each two leaflets joined at the base. The Flora of North America's account of the species, as quoted in search results; the page itself was not read: petals 5, yellow, twisted at the claw; stamens 10 with basal scales; ovary densely hairy, 5-lobed, 5-locular."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's creosotebush review (page read): the flowers are solitary and axillary."
     }
   },
   "provenance": {

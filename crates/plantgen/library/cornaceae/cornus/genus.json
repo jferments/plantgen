@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Cornus",
+  "traits": {"flowering_position": "terminal"},
+  "evidence": {
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual's Cornus chapter (read in full): the flowers are borne in terminal clusters, in the flowering and Pacific dogwoods inside showy bracts; FEIS's Cornus sericea review (page read): a terminal, flat-topped cyme."
+    }
+  }
+}
