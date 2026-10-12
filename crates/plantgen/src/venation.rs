@@ -22,8 +22,11 @@
 //!
 //! A node grows only inside the blade. A source dies once a node comes
 //! within its kill distance, so the veins are open: they branch but never
-//! join. Every tooth and lobe has a source at its tip, so a vein runs into
-//! each, as in craspedodromous leaves.
+//! join. A source pulls only a node it can see, along a line inside the
+//! blade, and a node the bias would take out of the blade grows straight
+//! toward its sources instead, so veins turn into narrow lobes. Every
+//! tooth and lobe has a source at its tip (`crate::margins` lays them
+//! down), so a vein runs into each, as in craspedodromous leaves.
 //!
 //! A vein is as wide as the veins it feeds, by Murray's law from its tips,
 //! $`w^3 = \sum_i w_i^3`$. [`Venation::near`] gives the grown veins near a
@@ -85,7 +88,7 @@ const TIP: f64 = 0.0011;
 /// The step of the secondary veins, and of the tertiary.
 const STEPS: (f64, f64) = (0.012, 0.007);
 /// Kill distance over spacing.
-const KILL: f64 = 0.4;
+pub const KILL: f64 = 0.4;
 /// Dart throws per source the blade could hold.
 const THROWS: usize = 24;
 /// At most this many growth steps a round.
@@ -94,6 +97,9 @@ const ROUNDS: usize = 260;
 const CELL: f64 = 0.02;
 /// How far from a vein [`Venation::near`] finds it, blade lengths.
 pub const REACH: f64 = 0.03;
+/// How often a source's line of sight to a node is sampled, blade
+/// lengths.
+const SIGHT: f64 = 0.01;
 
 /// A leaf's grown veins, ready to look up.
 #[derive(Debug, Clone, PartialEq)]
@@ -106,6 +112,8 @@ pub struct Venation {
     grid: Vec<Vec<u32>>,
     /// The widest grown vein's half-width.
     widest: f64,
+    /// The heading of the vein into each tip ([`Self::tip_headings`]).
+    tips: Vec<Option<Point>>,
 }
 
 /// The blade (lamina) a leaf's veins grow in: whether a point of its frame lies
@@ -180,6 +188,13 @@ impl Venation {
             }
         }
         let mut sources: Vec<(f64, f64)> = Vec::new();
+        let tips: Vec<(f64, f64)> = blade
+            .tips
+            .iter()
+            .copied()
+            .filter(|&tip| (blade.inside)(tip))
+            .collect();
+        let mut reached = Vec::new();
         for (round, (spacing, step, bias)) in [
             (growth.secondary, STEPS.0, growth.bias.0),
             (growth.tertiary, STEPS.1, growth.bias.1),
@@ -194,32 +209,58 @@ impl Venation {
                 &sources,
                 combine(seed, round as u64),
             );
-            if round == 0 {
+            let watched: &[(f64, f64)] = if round == 0 {
                 // The tips of teeth and lobes, each fed by a vein.
-                live.extend(
-                    blade
-                        .tips
-                        .iter()
-                        .copied()
-                        .filter(|&tip| (blade.inside)(tip)),
-                );
-            }
+                live.extend(tips.iter().copied());
+                &tips
+            } else {
+                &[]
+            };
             sources.extend(live.iter().copied());
-            colonize(
+            let by = colonize(
                 blade,
                 &mut nodes,
                 &mut live,
-                spacing * KILL,
-                step,
-                bias,
+                watched,
+                (spacing * KILL, step, bias),
                 growth.outward,
             );
+            if round == 0 {
+                reached = by;
+            }
         }
         murray(&mut nodes);
-        Self::indexed(nodes, blade.bounds)
+        // Each tip's vein's heading over its last steps.
+        let heading = |node: u32| {
+            let mut back = node as usize;
+            for _ in 0..8 {
+                match nodes[back].parent {
+                    Some(parent) => back = parent as usize,
+                    None => break,
+                }
+            }
+            let d = sub(nodes[node as usize].at, nodes[back].at);
+            (length(d) > 1e-9).then(|| unit_vector(d))
+        };
+        let mut fed = tips.iter().zip(&reached);
+        let tips = blade
+            .tips
+            .iter()
+            .map(|&tip| {
+                if !(blade.inside)(tip) {
+                    return None;
+                }
+                fed.next().and_then(|(_, by)| by.and_then(heading))
+            })
+            .collect();
+        Self::indexed(nodes, blade.bounds, tips)
     }
 
-    fn indexed(nodes: Vec<Node>, bounds: ((f64, f64), (f64, f64))) -> Self {
+    fn indexed(
+        nodes: Vec<Node>,
+        bounds: ((f64, f64), (f64, f64)),
+        tips: Vec<Option<Point>>,
+    ) -> Self {
         let margin = 0.01;
         let origin = (bounds.0.0 - margin, bounds.0.1 - margin);
         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
@@ -255,6 +296,7 @@ impl Venation {
             cells,
             grid,
             widest,
+            tips,
         }
     }
 
@@ -275,6 +317,16 @@ impl Venation {
                 let width = from.width + (node.width - from.width) * s;
                 (d < REACH).then_some((d, width / self.widest))
             })
+    }
+
+    /// The way each of the blade's tips is fed, in the order of its
+    /// `tips`: a unit vector along the vein that reached it, over its last
+    /// few steps; `None` for a tip outside the blade or that no vein
+    /// reached. A tooth's margin grows the way its vein runs into it
+    /// (`crate::margins`).
+    #[must_use]
+    pub fn tip_headings(&self) -> &[Option<Point>] {
+        &self.tips
     }
 
     /// The grown nodes: where each is and where it grew from; for tests
@@ -303,6 +355,15 @@ fn cell_of(origin: (f64, f64), cells: (usize, usize), p: (f64, f64)) -> (usize, 
 
 /// The nodes by grid cell, for the nearest node to a source and the
 /// nodes near a point while the veins grow.
+/// The sources pulling one node from one side of it: the sum of their
+/// directions, and the nearest one's distance and direction.
+struct Pull {
+    node: u32,
+    left: bool,
+    sum: Point,
+    closest: (f64, Point),
+}
+
 struct Nodes {
     origin: (f64, f64),
     cells: (usize, usize),
@@ -390,6 +451,58 @@ impl Nodes {
         }
         best.map(|(_, n)| n)
     }
+
+    /// The node nearest `p` of those `keep` keeps, searching rings outward
+    /// as [`Self::nearest`] does.
+    fn nearest_where(
+        &self,
+        nodes: &[Node],
+        p: (f64, f64),
+        keep: impl Fn(u32) -> bool,
+    ) -> Option<u32> {
+        let mut best: Option<(f64, u32)> = None;
+        let most = self.cells.0.max(self.cells.1);
+        for rings in 0..=most {
+            let (x, y) = cell_of(self.origin, self.cells, p);
+            let (x0, y0) = (x.saturating_sub(rings), y.saturating_sub(rings));
+            let (x1, y1) = (
+                (x + rings).min(self.cells.0 - 1),
+                (y + rings).min(self.cells.1 - 1),
+            );
+            for cy in y0..=y1 {
+                for cx in x0..=x1 {
+                    if rings > 0 && cy != y0 && cy != y1 && cx != x0 && cx != x1 {
+                        continue;
+                    }
+                    for &n in &self.grid[cy * self.cells.0 + cx] {
+                        let d = distance(p, nodes[n as usize].at);
+                        if best.is_none_or(|(b, _)| d < b) && keep(n) {
+                            best = Some((d, n));
+                        }
+                    }
+                }
+            }
+            #[allow(clippy::cast_precision_loss)]
+            if let Some((d, n)) = best
+                && d <= rings as f64 * CELL
+            {
+                return Some(n);
+            }
+        }
+        best.map(|(_, n)| n)
+    }
+}
+
+/// Whether the straight line from `a` to `b` stays inside the blade,
+/// sampled every [`SIGHT`].
+fn sees(blade: &Lamina, a: (f64, f64), b: (f64, f64)) -> bool {
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    let samples = ((distance(a, b) / SIGHT).ceil() as usize).clamp(1, 32);
+    (1..samples).all(|k| {
+        #[allow(clippy::cast_precision_loss)]
+        let s = k as f64 / samples as f64;
+        (blade.inside)((a.0 + (b.0 - a.0) * s, a.1 + (b.1 - a.1) * s))
+    })
 }
 
 /// Sources a `spacing` apart inside the blade, clear of the veins and of
@@ -425,55 +538,86 @@ fn scatter(
 }
 
 /// Grow `nodes` toward `sources` until every source is reached or no node
-/// can grow (see the module).
-#[allow(clippy::too_many_arguments)]
+/// can grow (see the module), with the kill distance, the step and the
+/// bias given; the node that reached each of the `watched` sources.
 fn colonize(
     blade: &Lamina,
     nodes: &mut Vec<Node>,
     sources: &mut Vec<(f64, f64)>,
-    kill: f64,
-    step: f64,
-    bias: f64,
+    watched: &[(f64, f64)],
+    (kill, step, bias): (f64, f64, f64),
     outward: bool,
-) {
+) -> Vec<Option<u32>> {
     let mut index = Nodes::new(blade.bounds, nodes);
+    let mut reached = vec![None; watched.len()];
     for _ in 0..ROUNDS {
         // Kill the sources a node has reached.
+        for (at, by) in watched.iter().zip(reached.iter_mut()) {
+            if by.is_none() && index.any_within(nodes, *at, kill) {
+                *by = index.nearest(nodes, *at);
+            }
+        }
         sources.retain(|&s| !index.any_within(nodes, s, kill));
         if sources.is_empty() {
-            return;
+            return reached;
         }
-        // Each source pulls its nearest node, from its left or its right.
-        let mut pulls: Vec<(u32, bool, (f64, f64))> = Vec::new();
+        // Each source pulls its nearest node it can see, from its left or
+        // its right.
+        let mut pulls: Vec<Pull> = Vec::new();
         for &s in sources.iter() {
-            let Some(nearest) = index.nearest(nodes, s) else {
-                return;
+            let Some(mut nearest) = index.nearest(nodes, s) else {
+                return reached;
             };
+            if !sees(blade, nodes[nearest as usize].at, s) {
+                nearest = index
+                    .nearest_where(nodes, s, |n| sees(blade, nodes[n as usize].at, s))
+                    .unwrap_or(nearest);
+            }
             let node = &nodes[nearest as usize];
             let heading = heading(nodes, node, outward);
             let to = unit_vector(sub(s, node.at));
+            let far = distance(s, node.at);
             let left = heading.0 * to.1 - heading.1 * to.0 > 0.0;
             match pulls
                 .iter_mut()
-                .find(|(n, side, _)| *n == nearest && *side == left)
+                .find(|pull| pull.node == nearest && pull.left == left)
             {
-                Some(pull) => pull.2 = (pull.2.0 + to.0, pull.2.1 + to.1),
-                None => pulls.push((nearest, left, to)),
+                Some(pull) => {
+                    pull.sum = (pull.sum.0 + to.0, pull.sum.1 + to.1);
+                    if far < pull.closest.0 {
+                        pull.closest = (far, to);
+                    }
+                }
+                None => pulls.push(Pull {
+                    node: nearest,
+                    left,
+                    sum: to,
+                    closest: (far, to),
+                }),
             }
         }
         let mut grew = false;
-        for (parent, _, sum) in pulls {
+        for Pull {
+            node: parent,
+            sum,
+            closest: (_, closest),
+            ..
+        } in pulls
+        {
             let node = nodes[parent as usize];
             let toward = bias_of(node.at, outward);
             let pull = unit_vector(sum);
             let direction = unit_vector((pull.0 + bias * toward.0, pull.1 + bias * toward.1));
-            let next = (
-                node.at.0 + step * direction.0,
-                node.at.1 + step * direction.1,
-            );
-            if !(blade.inside)(next) || index.any_within(nodes, next, 0.5 * step) {
+            // Where the bias would take it out of the blade, as into a
+            // narrow lobe, or onto another node, it grows straight toward
+            // its sources, or else toward the nearest of them.
+            let Some(next) = [direction, pull, closest]
+                .into_iter()
+                .map(|d| (node.at.0 + step * d.0, node.at.1 + step * d.1))
+                .find(|&next| (blade.inside)(next) && !index.any_within(nodes, next, 0.5 * step))
+            else {
                 continue;
-            }
+            };
             nodes.push(Node {
                 at: next,
                 parent: Some(parent),
@@ -484,9 +628,10 @@ fn colonize(
             grew = true;
         }
         if !grew {
-            return;
+            return reached;
         }
     }
+    reached
 }
 
 /// The way a node grows: from its parent, or for a root the bias.

@@ -48,6 +48,7 @@ pub mod library;
 pub mod litter;
 pub mod looks;
 pub mod lsys;
+pub mod margins;
 pub mod math;
 pub mod mesh;
 pub mod niche;
@@ -127,4 +128,8 @@ pub mod venation;
 /// 21: an organ type's term no longer hangs on the day a package shows
 /// (spec rework M7B): a cluster a stage draws whole, as an alder's
 /// catkins in flower, is an inflorescence on every day.
-pub const GENERATOR_REVISION: u32 = 21;
+/// 22: a leaf's teeth and lobes are laid down as its blade grows, each
+/// fed by a vein and leaning its way, the middle ones largest (spec
+/// rework L3); and a leaf grows in five steps of form from deep shade to
+/// full sun, its size following its light smoothly.
+pub const GENERATOR_REVISION: u32 = 22;
