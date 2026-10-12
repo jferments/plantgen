@@ -220,6 +220,7 @@ mod tests {
                     shed: None,
                     light: 1.0,
                     within: None,
+                    adult: None,
                 });
             }
         }

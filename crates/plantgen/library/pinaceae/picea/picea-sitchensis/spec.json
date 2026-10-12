@@ -12,7 +12,6 @@
   "growth_form": "excurrent_tree",
   "generator": {
     "params": {
-      "cone_age": 20,
       "cone_chance": 0.12,
       "cone_length": 0.08,
       "cone_pitch": 110,
@@ -101,7 +100,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "juvenile_period_years": {"min": 20, "max": 40}
+  },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Griffith 1992, read): sexual maturity varies from 20 to 40 years. The Woody Plant Seed Manual (Picea, table 2, read): minimum seed-bearing age 20. It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 20 years set by hand."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

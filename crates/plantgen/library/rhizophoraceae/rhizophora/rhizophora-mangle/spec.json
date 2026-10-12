@@ -40,7 +40,7 @@
       "pipe_organ": 0.005,
       "pipe_rings": 1e-05,
       "blooms": 1,
-      "bloom_age": 6,
+      "adult_age": 6,
       "bloom_size": 0.03,
       "bloom_angle": 80
     }

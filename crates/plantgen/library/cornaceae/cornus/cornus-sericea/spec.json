@@ -44,7 +44,7 @@
       "spur_pairs": 1,
       "leaf_angle": 50,
       "blooms": 1,
-      "bloom_age": 3,
+      "adult_age": 3,
       "bloom_size": 0.05,
       "bloom_angle": 10,
       "leaf_area": 0.276,

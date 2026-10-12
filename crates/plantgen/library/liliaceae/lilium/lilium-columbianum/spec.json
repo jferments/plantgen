@@ -17,7 +17,7 @@
       "clump_radius": 0.02,
       "stem_lean": 3,
       "maturity": 2,
-      "flower_age": 3,
+      "adult_age": 3,
       "stem_height": 1.0,
       "stem_radius": 0.004,
       "wiggle": 1.5,

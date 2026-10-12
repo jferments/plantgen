@@ -12,7 +12,6 @@
   "growth_form": "excurrent_tree",
   "generator": {
     "params": {
-      "cone_age": 15,
       "cone_chance": 0.1,
       "cone_length": 0.11,
       "cone_pitch": 90,
@@ -98,7 +97,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "juvenile_period_years": {"min": 7, "max": 20}
+  },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Fryer 2018, read): ponderosa pine first produces seeds at 10 to 20 years old, sometimes as early as 7. The Woody Plant Seed Manual (Pinus, table 2, read): seed bearing begins at 16 to 20 years in var. ponderosa, 6 to 20 in var. scopulorum. It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 15 years set by hand."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

@@ -671,6 +671,95 @@ fn guests_grow_on_their_hosts() {
     }
 }
 
+/// An ivy past its juvenile period (spec rework P6) bears juvenile,
+/// palmate leaves on its climbing shoots and adult, entire leaves and its
+/// fruit on adult ones, and nothing flowers or fruits on a juvenile shoot.
+#[test]
+fn an_old_ivy_fruits_only_on_adult_shoots() {
+    let spec = PlantSpec::builtin("hedera-helix").unwrap();
+    let variant = spec.variant_list()[0];
+    let oldest = *spec.growth.keyframes.last().unwrap();
+    let growth = grow_variant(&spec, &variant, oldest, vec![9.0, oldest]);
+    let (program, _) = spec.program().unwrap();
+    let looks = spec.appearance.looks(program.organs());
+    let kind = |organ: &plantgen::graph::GraphOrgan| {
+        growth.organ_types[usize::from(organ.organ)].name.as_str()
+    };
+    // Before its juvenile period ends every shoot is juvenile.
+    assert!(
+        growth.keyframes[0]
+            .organs
+            .iter()
+            .all(|organ| organ.adult == Some(0.0)),
+        "an adult shoot before 10 years"
+    );
+    let graph = &growth.keyframes[1];
+    let leaves = |adult: bool| {
+        graph
+            .organs
+            .iter()
+            .filter(|organ| {
+                kind(organ) == "leaf" && organ.adult.is_some_and(|a| (a >= 0.5) == adult)
+            })
+            .collect::<Vec<_>>()
+    };
+    let (juvenile, adult) = (leaves(false), leaves(true));
+    assert!(
+        !adult.is_empty() && juvenile.len() > adult.len(),
+        "{} juvenile and {} adult leaves",
+        juvenile.len(),
+        adult.len()
+    );
+    let leaf = growth
+        .organ_types
+        .iter()
+        .position(|organ| organ.name == "leaf")
+        .unwrap();
+    let forms = looks[leaf].forms;
+    let palmate = forms.juvenile.unwrap().0;
+    assert!(
+        juvenile
+            .iter()
+            .all(|organ| forms.of(leaf, organ).0 == palmate)
+    );
+    assert!(adult.iter().all(|organ| forms.of(leaf, organ).0 == leaf));
+    assert!(matches!(
+        looks[leaf].shape,
+        plantgen::looks::Shape::Simple(_)
+    ));
+    assert!(matches!(
+        looks[palmate].shape,
+        plantgen::looks::Shape::Palmate(_)
+    ));
+    let fruit: Vec<_> = graph
+        .organs
+        .iter()
+        .filter(|organ| kind(organ) == "fruit")
+        .collect();
+    assert!(!fruit.is_empty(), "no fruit at {oldest} years");
+    assert!(fruit.iter().all(|organ| organ.adult == Some(1.0)));
+}
+
+/// The juvenile period a species states sets the first year of flowers or
+/// cones where its program counts it by the plant's age (`adult_age`, spec
+/// rework P6), and nothing elsewhere; a value set by hand stays.
+#[test]
+fn the_juvenile_period_sets_adult_age() {
+    let adult_age = |id: &str| {
+        let spec = PlantSpec::builtin(id).unwrap();
+        spec.generator.params.get("adult_age").copied()
+    };
+    // Douglas-fir: 7 to 30 years, read as their middle.
+    assert_eq!(adult_age("pseudotsuga-menziesii"), Some(18.5));
+    assert_eq!(adult_age("hedera-helix"), Some(10.0));
+    // Pacific madrone states none and keeps its own.
+    assert_eq!(adult_age("arbutus-menziesii"), Some(8.0));
+    // Joshua tree's rosette program counts a crown's age, not the plant's.
+    let joshua = PlantSpec::builtin("yucca-brevifolia").unwrap();
+    assert_eq!(adult_age("yucca-brevifolia"), None);
+    assert_eq!(joshua.generator.params.get("flower_age"), Some(&25.0));
+}
+
 /// A tree grown in a steady wind leans its crown downwind (plant forms
 /// F7): the lenga's leaves lie mostly on the lee side (+X) of its stem.
 #[test]

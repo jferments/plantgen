@@ -65,6 +65,13 @@
 //! counts its stamens, staminodes and carpels and a spiral's tepals, and
 //! draws its perianth's kind, its ovary's place and its corolla's
 //! zygomorphy, as its layout has them (spec rework P5).
+//!
+//! **Juvenile and adult (spec rework P6).** A plant's juvenile period
+//! (`juvenile_period_years`) is the birth of its first flower, fruit or
+//! cone of any size, watched step by step as it grows up to the range's
+//! upper extreme, and judged by the plants' median as a typical size is.
+//! A flower or fruit on a shoot whose recorded adultness is below 0.5, a
+//! juvenile shoot, is an error whatever the species states.
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Write as _;
@@ -75,7 +82,7 @@ use crate::graph::{GraphOrgan, PlantGraph};
 use crate::grow::Growth;
 use crate::library::Library;
 use crate::looks::{Look, Season, Shape};
-use crate::lsys::Program;
+use crate::lsys::{OrganKind, Program};
 use crate::math::Vec3;
 use crate::organs::{self, Phase};
 use crate::spec::{Environment, PlantSpec};
@@ -92,7 +99,7 @@ pub enum Judged {
 }
 
 /// The size characters measured on grown plants, and how each is judged.
-pub const SIZES: [(&str, Judged); 22] = [
+pub const SIZES: [(&str, Judged); 23] = [
     ("height_typical_m", Judged::Typical),
     ("height_max_m", Judged::Greatest),
     ("crown_width_max_m", Judged::Greatest),
@@ -115,6 +122,7 @@ pub const SIZES: [(&str, Judged); 22] = [
     ("fruit_size_m", Judged::Organs),
     ("cone_length_m", Judged::Organs),
     ("divergence_deg", Judged::Typical),
+    ("juvenile_period_years", Judged::Typical),
 ];
 
 /// The count characters counted on grown plants (spec rework M8A), each
@@ -174,6 +182,8 @@ pub struct Plant {
     pub age: f64,
     pub measures: Measures,
     pub kinds: Kinds,
+    /// Its flowers and fruit on juvenile shoots (spec rework P6).
+    pub juvenile_flowers: usize,
 }
 
 /// A check's outcome.
@@ -957,7 +967,7 @@ fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tal
 fn leaf_look<'a>(organ: &GraphOrgan, looks: &'a [Look]) -> Option<(&'a Look, f64)> {
     let own = usize::from(organ.organ);
     let look = looks.get(own)?;
-    let (index, share) = look.forms.of(own, organ.light, organ.born);
+    let (index, share) = look.forms.of(own, organ);
     Some((looks.get(index).unwrap_or(look), organ.size * share))
 }
 
@@ -1246,13 +1256,28 @@ pub fn grow_and_measure(
     library: &Library,
     environment: Environment,
     seed: u64,
+    first_flower_by: Option<f64>,
 ) -> Result<Plant, String> {
     let years = spec.growth.years;
-    let growth =
-        crate::drawing::grow_variant(spec, library, None, environment, seed, vec![years], years)?;
     let (program, _) = spec
         .program_in(library)
         .map_err(|error| error.to_string())?;
+    let reproductive: Vec<bool> = program.organs().map(|(_, kind)| bears_seed(kind)).collect();
+    let mut first = FirstFlower {
+        reproductive: &reproductive,
+        until: first_flower_by.unwrap_or(-1.0),
+        born: None,
+    };
+    let growth = crate::drawing::grow_variant_watched(
+        spec,
+        library,
+        None,
+        environment,
+        seed,
+        vec![years],
+        years,
+        Some(&mut first),
+    )?;
     let graph = growth.keyframes.last().ok_or("nothing grew")?;
     let grown = Grown {
         spec,
@@ -1261,13 +1286,70 @@ pub fn grow_and_measure(
         terms: organs::of_program(&program, &spec.appearance),
         later: later_types(&program),
     };
-    let (measures, kinds) = measure(&grown);
+    let (mut measures, kinds) = measure(&grown);
+    if let Some(born) = first.born {
+        measures.insert("juvenile_period_years", vec![born]);
+    }
+    let juvenile_flowers = graph
+        .organs
+        .iter()
+        .filter(|organ| {
+            organ.adult.is_some_and(|adult| adult < 0.5)
+                && growth
+                    .organ_types
+                    .get(usize::from(organ.organ))
+                    .is_some_and(|kind| matches!(kind.kind, OrganKind::Flower | OrganKind::Fruit))
+        })
+        .count();
     Ok(Plant {
         seed,
         age: graph.age,
         measures,
         kinds,
+        juvenile_flowers,
     })
+}
+
+/// Whether organs of `kind` are a plant's reproduction: flowers, fruit
+/// and cones.
+fn bears_seed(kind: OrganKind) -> bool {
+    matches!(kind, OrganKind::Flower | OrganKind::Fruit | OrganKind::Cone)
+}
+
+/// Watches a plant grow for the birth of its first flower, fruit or cone
+/// (spec rework P6), step by step up to age `until`.
+struct FirstFlower<'a> {
+    /// Each organ type, whether it is reproductive.
+    reproductive: &'a [bool],
+    until: f64,
+    born: Option<f64>,
+}
+
+impl crate::grow::Watch for FirstFlower<'_> {
+    fn wants_frame(&mut self, _step: u32) -> bool {
+        self.born.is_none() && self.until >= 0.0
+    }
+
+    fn step(&mut self, progress: crate::grow::Progress<'_>) -> bool {
+        // The age it is first seen at: an organ an interpretation draws
+        // (a cactus's ring of flowers) is as old as the module it draws.
+        if let Some(graph) = progress.frame.and_then(|frame| frame.keyframes.last())
+            && graph.organs.iter().any(|organ| {
+                organ.size > 0.0
+                    && self
+                        .reproductive
+                        .get(usize::from(organ.organ))
+                        .copied()
+                        .unwrap_or(false)
+            })
+        {
+            self.born = Some(graph.age);
+        }
+        if progress.age > self.until {
+            self.until = -1.0;
+        }
+        true
+    }
 }
 
 /// A species' report: each stated size character judged against plants
@@ -1283,6 +1365,9 @@ pub struct Report {
     pub kinds: Vec<Agreement>,
     /// Size characters the species states that nothing here measures yet.
     pub unmeasured: Vec<String>,
+    /// Flowers and fruit on juvenile shoots, over all the plants: each an
+    /// error (spec rework P6).
+    pub juvenile_flowers: usize,
 }
 
 /// A kind character judged against what the plants draw: a pass when
@@ -1316,6 +1401,7 @@ impl Report {
             .iter()
             .map(|finding| finding.verdict)
             .chain(self.kinds.iter().map(|agreement| agreement.verdict))
+            .chain((self.juvenile_flowers > 0).then_some(Verdict::Error))
             .max()
             .unwrap_or(Verdict::Pass)
     }
@@ -1359,9 +1445,15 @@ pub fn check(
     seeds: &[u64],
 ) -> Result<Report, String> {
     let environment = crate::drawing::typical_environment(spec, library);
+    // A plant is watched for its first flowers up to the stated juvenile
+    // period's upper extreme: one later is an error however much later.
+    let first_flower_by = traits
+        .get("juvenile_period_years")
+        .and_then(Stated::of)
+        .map(|stated| stated.extremes().1);
     let plants = seeds
         .iter()
-        .map(|&seed| grow_and_measure(spec, library, environment, seed))
+        .map(|&seed| grow_and_measure(spec, library, environment, seed, first_flower_by))
         .collect::<Result<Vec<_>, _>>()?;
     Ok(judge_plants(spec, environment, traits, &plants))
 }
@@ -1440,6 +1532,7 @@ pub fn judge_plants(
         findings,
         kinds,
         unmeasured,
+        juvenile_flowers: plants.iter().map(|plant| plant.juvenile_flowers).sum(),
     }
 }
 
@@ -1464,6 +1557,8 @@ pub fn value_text(character: &str, value: f64) -> String {
         length_text(value)
     } else if character.ends_with("_deg") {
         format!("{value:.0}°")
+    } else if let Some(years) = character.strip_suffix("_years") {
+        format!("{} years", value_text(years, value))
     } else if value.fract() == 0.0 {
         format!("{value:.0}")
     } else {
@@ -1474,6 +1569,10 @@ pub fn value_text(character: &str, value: f64) -> String {
 /// A stated range of `character` for a report: "(low–)min–max(–high)".
 #[must_use]
 pub fn range_text(character: &str, stated: &Stated) -> String {
+    // Years are named once, after the range.
+    if let Some(bare) = character.strip_suffix("_years") {
+        return format!("{} years", range_text(bare, stated));
+    }
     let length_text = |value: f64| value_text(character, value);
     let mut text = String::new();
     if let Some(low) = stated.low {

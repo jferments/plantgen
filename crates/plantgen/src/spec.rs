@@ -878,6 +878,22 @@ impl PlantSpec {
                 known.join(", ")
             ));
         }
+        // A juvenile family without `until` draws its leaves only by the
+        // adultness the program records (spec rework P6).
+        if self.appearance.organs.values().any(|look| {
+            look.families
+                .as_ref()
+                .and_then(|families| families.juvenile.as_ref())
+                .is_some_and(|juvenile| juvenile.until.is_none())
+        }) && !self
+            .program_in(library)
+            .is_ok_and(|(program, _)| program.draws_adult())
+        {
+            return fail(format!(
+                "families juvenile needs until: program {} records no adult shoots",
+                self.generator.program
+            ));
+        }
         Ok(())
     }
 
@@ -1106,6 +1122,22 @@ mod tests {
                 .unwrap_err()
                 .0
                 .contains("the evidence note on `allometry` cites `no-such-source`")
+        );
+        // Juvenile leaves without `until` need a program that records adult
+        // shoots (spec rework P6).
+        let mut spec = PlantSpec::builtin("juniperus-scopulorum").unwrap();
+        spec.validate().unwrap();
+        let juvenile = spec
+            .appearance
+            .organs
+            .values_mut()
+            .find_map(|look| look.families.as_mut()?.juvenile.as_mut())
+            .unwrap();
+        juvenile.until = None;
+        assert!(
+            spec.validate().unwrap_err().0.ends_with(
+                ": families juvenile needs until: program conifer records no adult shoots"
+            )
         );
     }
 

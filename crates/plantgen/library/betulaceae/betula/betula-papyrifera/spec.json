@@ -33,7 +33,6 @@
       "droop": 0.025,
       "extinction": 0.45,
       "blooms": 2,
-      "bloom_age": 10,
       "bloom_size": 0.045,
       "bloom_angle": 130,
       "leaf_area": 0.304,
@@ -132,7 +131,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "juvenile_period_years": 15
+  },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual (Betula, table 3, read): minimum seed-bearing age 15 years. FEIS (Uchytil 1991, read): seed production begins at about age 15. It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 10 years set by hand."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

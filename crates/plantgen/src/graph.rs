@@ -68,6 +68,10 @@ pub struct GraphOrgan {
     /// any.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub within: Option<u32>,
+    /// The adultness of the shoot it was placed on, from 0 (juvenile) to
+    /// 1 (adult), if the program set one (spec rework P6).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub adult: Option<f32>,
 }
 
 /// A structure of the grown plant (spec rework M7): a fern's frond, a
@@ -323,6 +327,7 @@ mod tests {
             shed: None,
             light: 1.0,
             within: None,
+            adult: None,
         };
         let mut graph = PlantGraph {
             age: 1.0,
