@@ -31,7 +31,13 @@
       "why": "Only some of a growth unit's buds grow into long shoots, the rest into short shoots: the few nearest its tip on an acrotonic shoot or its foot on a basitonic one, more of them reaching down its middle on a mesotonic one."
     },
     "generator.params.short_share": {
-      "rule": "min(1, 1 / unit_nodes)",
+      "map": {
+        "bud_position": {
+          "acrotonic": {"rule": "min(1, 1 / unit_nodes)"},
+          "mesotonic": {"rule": "min(1, 1 / unit_nodes)"},
+          "basitonic": {"rule": "min(1, 1 / unit_nodes)"}
+        }
+      },
       "why": "Next to the buds that grow long shoots, as many grow short shoots; the growth unit's other buds stay latent, so a shoot keeps the short shoots it had before it was cut into a growth unit."
     },
     "generator.params.bud_base": {
