@@ -2,5 +2,20 @@
   "schema": 1,
   "rank": "family",
   "name": "Plantaginaceae",
-  "parent": "order/lamiales"
+  "parent": "order/lamiales",
+  "traits": {
+    "flower_symmetry": {"zygomorphic": "usually", "actinomorphic": "sometimes"},
+    "perianth": "sepals_and_petals",
+    "zygomorphy": "bilabiate",
+    "ovary_position": "superior",
+    "stamens": {"min": 2, "max": 4, "typical": 4},
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "ffpa-2014",
+      "note": "The Lucid key to the flowering plant families, with Reed College's family page, as search results quote them (the pages themselves were not read): corolla sympetalous, usually 4- or 5-lobed, often two-lipped (regular in Plantago); stamens 4 (didynamous) or 2, on the corolla tube; ovary superior, of 2 carpels, one style."
+    }
+  }
 }

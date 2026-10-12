@@ -2,5 +2,21 @@
   "schema": 1,
   "rank": "family",
   "name": "Berberidaceae",
-  "parent": "order/ranunculales"
+  "parent": "order/ranunculales",
+  "traits": {
+    "flower_merosity": 3,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "hypanthium": false,
+    "ovary_position": "superior",
+    "stamens": 6,
+    "carpels": 1
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: flowers perfect, regular, hypogynous; sepals 6, in 2 circles; petals 6, in 2 circles; stamens as many and opposite them, the anthers opening by uplifted valves; ovary one, superior, 1-celled. Achlys is anomalous, with no perianth and 9 to 13 stamens."
+    }
+  }
 }

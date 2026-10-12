@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Tolmiea",
+  "traits": {
+    "flower_symmetry": "zygomorphic",
+    "zygomorphy": "other",
+    "ovary_position": "superior",
+    "stamens": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: calyx tubular, cleft down one side into 5 unequal lobes; petals filiform, 5 or 4; stamens 2 or 3; ovary free from the calyx. The Flora of North America (as quoted in search results; the page itself was not read): flowers bilaterally symmetric; hypanthium tubular; petals 4; stamens 3; ovary superior."
+    }
+  }
+}

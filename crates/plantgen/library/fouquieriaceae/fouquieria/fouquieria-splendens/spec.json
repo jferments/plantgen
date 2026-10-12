@@ -31,7 +31,8 @@
       "flowers": 14,
       "flower_size": 0.03,
       "flower_angle": 35,
-      "thorn_area": 0.059
+      "thorn_area": 0.059,
+      "flower_area": 0.184
     }
   },
   "growth": {
@@ -71,9 +72,7 @@
       },
       "flower": {
         "shape": {
-          "template": "flower",
-          "petals": 5,
-          "tube": 1.2
+          "template": "flower"
         },
         "colour": [0.92, 0.2, 0.1],
         "form": {
@@ -114,7 +113,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: grey canes, bright green leaves after rain, scarlet flowers."
+      "note": "Colours chosen by eye from photographs: grey canes, bright green leaves after rain, scarlet flowers. Its flower laid out whorl by whorl (spec rework P5b): a scarlet tube of five joined petals, five sepals, thirteen stamens and a superior pistil of three carpels, from the characters of Fouquieriaceae by the rules at the flowering plants."
     },
     "taxon": {
       "evidence": "Authored",

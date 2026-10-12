@@ -2,5 +2,20 @@
   "schema": 1,
   "rank": "family",
   "name": "Rhizophoraceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "flower_merosity": {"min": 4, "max": 5, "typical": 4},
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "ovary_position": "half_inferior",
+    "stamens": {"min": 8, "max": 10},
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz's account of the family, with the Lucid key and FloraBase, as search results quote them (the pages themselves were not read): flowers regular, usually 4-merous or 5-merous; calyx fleshy or leathery, persistent; petals free, often shorter than the sepals; stamens usually twice the petals; ovary half-inferior (superior to inferior across the family), usually 2-locular. A free hypanthium is present in some and absent in others, so none is stated."
+    }
+  }
 }

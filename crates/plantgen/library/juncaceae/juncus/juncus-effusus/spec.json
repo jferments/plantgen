@@ -66,7 +66,6 @@
       "panicle": {
         "shape": {
           "template": "flower",
-          "petals": 6,
           "petal_width": 0.45,
           "point": 0.8,
           "notch": 0,
@@ -94,17 +93,20 @@
     }
   ],
   "tier": "procedural_proxy",
-  "traits": {"inflorescence": "cyme"},
+  "traits": {
+    "inflorescence": "cyme",
+    "stamens": 3
+  },
   "evidence": {
     "appearance.organs.panicle": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "The inflorescence, the model's choice after FNA (volume 22), as search results quote it (the page was not read): a many-flowered compound cyme of small flowers, each of 6 lanceolate tepals, tan with a greenish midstripe. Drawn as a cyme of 40 flowers forking in pairs, each flower 6 narrow, pointed tepals round a green centre. No flora read gives the number of flowers. The bract that seems to continue the culm past the cluster is left out."
+      "note": "The inflorescence, the model's choice after FNA (volume 22), as search results quote it (the page was not read): a many-flowered compound cyme of small flowers, each of 6 lanceolate tepals, tan with a greenish midstripe. Drawn as a cyme of 40 flowers forking in pairs, each flower 6 narrow, pointed tepals round a green centre. No flora read gives the number of flowers. The bract that seems to continue the culm past the cluster is left out. Its flower laid out whorl by whorl (spec rework P5b): six narrow tepals in two whorls, three stamens and a superior pistil of three carpels, from the characters of its own and Juncaceae's by the rules at the flowering plants."
     },
     "traits": {
       "evidence": "SourceInferred",
       "source": "fna-online",
-      "note": "FNA's account of the species (volume 22), as search results quote it (the page itself was not read): inflorescences lateral, compound dichasia (cymes), many-flowered, the primary bract erect and round in section, reaching well beyond them; tepals tan or darker, usually with a greenish midstripe, lanceolate, 1.9 to 3.5 mm."
+      "note": "FNA's account of the species (volume 22), as search results quote it (the page itself was not read): inflorescences lateral, compound dichasia (cymes), many-flowered, the primary bract erect and round in section, reaching well beyond them; tepals tan or darker, usually with a greenish midstripe, lanceolate, 1.9 to 3.5 mm. The Flora of North America's account of the species, on SEINet, as quoted in search results; the page itself was not read: stamens 3, filaments and anthers 0.5 to 0.8 mm; VicFlora agrees for subsp. effusus, while Minnesota Wildflowers says 6 (as quoted in search results; the pages themselves were not read)."
     },
     "generator.params": {
       "evidence": "Authored",

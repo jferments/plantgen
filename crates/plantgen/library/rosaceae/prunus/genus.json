@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Prunus",
+  "traits": {
+    "ovary_position": "superior",
+    "stamens": {"min": 15, "max": 30},
+    "carpels": 1
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: calyx 5-cleft; petals spreading; stamens 15 to 30; pistil 1, style terminal (tribe Drupeae, ovary superior)."
+    }
+  }
+}

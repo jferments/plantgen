@@ -68,7 +68,6 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 6,
           "petal_width": 1.1,
           "point": 0.3,
           "notch": 0.0,
@@ -102,7 +101,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: dark green leaves; lavender flowers."
+      "note": "Colours chosen by eye: dark green leaves; lavender flowers. Its flower laid out whorl by whorl (spec rework P5b): six tepals in two whorls (falls and standards) on an inferior ovary, three stamens and a pistil of three carpels; the petal-like style branches are not drawn, from the characters of Iridaceae by the rules at the flowering plants."
     },
     "taxon": {
       "evidence": "Authored",

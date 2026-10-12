@@ -40,7 +40,7 @@
       "leaf_area": 0.216,
       "basal_area": 0.235,
       "basal_piece_area": 0.235,
-      "flower_area": 0.654,
+      "flower_area": 0.176,
       "bud_area": 0.763,
       "fruit_area": 0.89
     }
@@ -66,7 +66,6 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 3,
           "petal_width": 0.8,
           "point": 0.8,
           "notch": 0.0,
@@ -104,7 +103,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: dull green leaves; scarlet bracts."
+      "note": "Colours chosen by eye: dull green leaves; scarlet bracts. Its flower laid out whorl by whorl (spec rework P5b): a two-lipped tube of five joined petals, five sepals, four stamens and a superior pistil of two carpels, in the scarlet of its bracts (the bracts themselves are not drawn), from the characters of Orobanchaceae by the rules at the flowering plants."
     },
     "taxon": {
       "evidence": "Authored",

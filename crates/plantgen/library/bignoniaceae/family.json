@@ -2,5 +2,23 @@
   "schema": 1,
   "rank": "family",
   "name": "Bignoniaceae",
-  "parent": "order/lamiales"
+  "parent": "order/lamiales",
+  "traits": {
+    "flower_merosity": 5,
+    "flower_symmetry": "zygomorphic",
+    "perianth": "sepals_and_petals",
+    "zygomorphy": "bilabiate",
+    "hypanthium": false,
+    "ovary_position": "superior",
+    "stamens": 4,
+    "staminodes": 1,
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris's Illustrated Flora of the Pacific States, volume 4 (1960), read in full: corolla campanulate, funnelform or tubular, 5-lobed and commonly two-lipped; anther-bearing stamens 2 or 4 on the corolla tube; ovary mostly 2-celled. Plants of the World Online (as quoted in search results; the page itself was not read): flowers hypogynous, ovary superior; the fifth stamen usually a staminode."
+    }
+  }
 }

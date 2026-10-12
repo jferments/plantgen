@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Oemleria",
+  "traits": {
+    "ovary_position": "superior",
+    "stamens": 15,
+    "carpels": 5
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full, as Osmaronia: dioecious; stamens 15 in 3 rows, 10 with the petals and 5 lower on the disk; pistils 5, distinct, in the superior-ovaried tribe Drupeae; in the pistillate flower the stamens are abortive. The Flora of North America's genus (as quoted in search results; the page itself was not read): stamens 15 in 3 series; carpels usually 5. Drawn as a staminate flower with its pistils."
+    }
+  }
+}

@@ -106,12 +106,10 @@
           "flower_look": {
             "shape": {
               "template": "flower",
-              "petals": 5,
               "petal_width": 0.9,
               "point": 0.0,
               "notch": 0.0,
               "centre": 0.25,
-              "stamens": 15,
               "stamen_length": 0.35
             },
             "colour": [0.94, 0.94, 0.88],
@@ -190,7 +188,7 @@
     "appearance.organs.bloom.season.flower_look": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its flowers drawn one by one (spec rework L1b): greenish-white bell-like flowers 1 to 1.5 cm across with 15 stamens, in hanging racemes that open from the base. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
+      "note": "Its flowers drawn one by one (spec rework L1b): greenish-white bell-like flowers 1 to 1.5 cm across with 15 stamens, in hanging racemes that open from the base. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life. Its flower laid out whorl by whorl (spec rework P5b): five greenish-white petals between five sepals on a floral cup, fifteen stamens and five free pistils, from the characters of Rosaceae and Oemleria by the rules at the flowering plants."
     },
     "appearance.organs.bloom.season.opening": {
       "evidence": "Authored",

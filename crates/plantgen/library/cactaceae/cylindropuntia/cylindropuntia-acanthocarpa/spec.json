@@ -38,7 +38,7 @@
       "bud_size": 0.02,
       "fruit_size": 0.03,
       "bud_rate": 0.5,
-      "flower_area": 0.483,
+      "flower_area": 0.270,
       "bud_area": 0.636,
       "fruit_area": 0.89
     }
@@ -62,6 +62,7 @@
         "shape": {
           "template": "flower",
           "petals": 10,
+          "stamens": 200,
           "petal_width": 0.8,
           "point": 0.0,
           "notch": 0.0,
@@ -157,7 +158,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: grey-green joints with long, raised tubercles, tan sheathed spines in spreading clusters, greying with age."
+      "note": "Colours chosen by eye from photographs: grey-green joints with long, raised tubercles, tan sheathed spines in spreading clusters, greying with age. Its flower laid out whorl by whorl (spec rework P5b): its tepals on a spiral (their count by hand: no flora counts them) on a floral cup above the inferior ovary, from the characters of Cactaceae by the rules at the flowering plants. Its 200 stamens by hand, the most a flower draws, for the numerous ones every flora gives."
     },
     "taxon": {
       "evidence": "Authored",

@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Parkinsonia",
+  "traits": {
+    "flower_symmetry": "zygomorphic",
+    "zygomorphy": "other"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "Jepson eFlora's account of Parkinsonia, as search results quote it (the page itself was not read): flower bilateral; sepals more or less free and alike, generally reflexed; petals more or less equal, the banner widely ovate, generally cream-white, unlike the others (not a pea flower's); stamens 10, free, exserted; ovary generally one-chambered."
+    }
+  }
+}

@@ -103,8 +103,8 @@
               "point": 0.0,
               "notch": 0.0,
               "centre": 0.22,
-              "stamens": 6,
-              "stamen_length": 0.4
+              "stamen_length": 0.4,
+              "sepals": 6
             },
             "colour": [0.93, 0.78, 0.1],
             "accent": [0.85, 0.6, 0.05],
@@ -193,7 +193,7 @@
     "appearance.organs.bloom.season.flower_look": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its flowers drawn one by one (spec rework L1b): bright yellow cup-shaped flowers about 8 to 12 mm across, six petals within nine petal-like sepals, in dense racemes that open from the base up. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
+      "note": "Its flowers drawn one by one (spec rework L1b): bright yellow cup-shaped flowers about 8 to 12 mm across, six petals within nine petal-like sepals, in dense racemes that open from the base up. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life. Its flower laid out whorl by whorl (spec rework P5b): six yellow petals and six sepals by hand (floras give both in two whorls of three, and three outer bracteoles), six stamens and one pistil, from the characters of Berberidaceae by the rules at the flowering plants."
     },
     "appearance.organs.bloom.season.opening": {
       "evidence": "Authored",

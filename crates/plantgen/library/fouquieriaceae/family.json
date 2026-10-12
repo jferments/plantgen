@@ -2,5 +2,22 @@
   "schema": 1,
   "rank": "family",
   "name": "Fouquieriaceae",
-  "parent": "order/ericales"
+  "parent": "order/ericales",
+  "traits": {
+    "flower_merosity": 5,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "corolla_shape": "tubular",
+    "hypanthium": false,
+    "ovary_position": "superior",
+    "stamens": {"min": 10, "max": 15},
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams's Illustrated Flora of the Pacific States, volume 3 (1951), read in full: sepals 5, imbricated, persistent; corolla sympetalous, tubular, 5-lobed; stamens 10 to 15 on the base of the corolla tube; ovary imperfectly 3-celled. SEINet's genus text (as quoted in search results; the page itself was not read): pistil 3-carpelled, ovary superior."
+    }
+  }
 }

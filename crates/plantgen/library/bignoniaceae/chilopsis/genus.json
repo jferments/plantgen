@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Chilopsis",
+  "traits": {
+    "corolla_shape": "funnelform"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris's Illustrated Flora of the Pacific States, volume 4 (1960), read in full: corolla funnelform, 5-lobed and obscurely two-lipped, 2.5 to 3.5 cm long; calyx inflated, deeply two-lipped; stamens 4, the fifth a rudimentary filament."
+    }
+  }
+}

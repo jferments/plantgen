@@ -4,13 +4,25 @@
   "name": "Ericaceae",
   "parent": "order/ericales",
   "traits": {
-    "inflorescence": {"raceme": "often", "panicle": "sometimes", "spike": "sometimes", "corymb": "sometimes", "head": "sometimes", "solitary": "sometimes"}
+    "inflorescence": {"raceme": "often", "panicle": "sometimes", "spike": "sometimes", "corymb": "sometimes", "head": "sometimes", "solitary": "sometimes"},
+    "flower_merosity": {"min": 4, "max": 5, "typical": 5},
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "corolla_shape": {"urceolate": "usually", "campanulate": "sometimes", "funnelform": "sometimes"},
+    "ovary_position": {"superior": "usually", "inferior": "sometimes"},
+    "stamens": {"min": 8, "max": 10, "typical": 10},
+    "carpels": {"min": 4, "max": 5, "typical": 5}
   },
   "evidence": {
     "traits.inflorescence": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz's account of the family, as quoted in search results (the page itself was not read): flowers aggregated in inflorescences (usually), or solitary; in racemes, in spikes, in heads, in corymbs and in panicles, the ultimate inflorescence units racemose. Read here as racemes most often, the racemose unit being the commonest whole inflorescence too."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams's Illustrated Flora of the Pacific States, volume 3 (1951), read in full: calyx 4- to 7-parted; flowers regular or slightly irregular, 4- or 5-merous; corolla sympetalous (but in two genera), urn-shaped in most, bell- or funnel-shaped in some; stamens usually twice as many as the corolla lobes; ovary superior, 2- to 4-lobed. Abrams keeps the blueberries apart (Vacciniaceae) for their inferior ovary. Watson and Dallwitz (as quoted in search results; the page itself was not read): ovary usually 4- or 5-locular."
     }
   }
 }

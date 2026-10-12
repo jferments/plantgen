@@ -63,7 +63,13 @@
         "shape": { "template": "compound", "teeth": 4, "petiole": 0.15, "angle": 55, "pinnule_angle": 55 }
       },
       "flower": {
-        "shape": { "template": "flower", "petals": 5, "petal_width": 0.9, "point": 0.0, "notch": 0.2, "centre": 0.25 },
+        "shape": {
+          "template": "flower",
+          "petal_width": 0.9,
+          "point": 0.0,
+          "notch": 0.2,
+          "centre": 0.25
+        },
         "inflorescence": {
           "flowers": 12,
           "size": 0.35,
@@ -154,7 +160,7 @@
     "appearance.organs.flower": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its compound umbel drawn flower by flower (spec rework L1c): its kind from the carrot family's inflorescence and its rays from its own, by the rules at the flowering plants; about 12 small white flowers about 2 mm across in each umbellet, by eye (no flora gives a count; the Flora of New Zealand gives the flower's size), the umbel 5 to 7 cm across. From floras and extension pages as quoted in search results; the pages themselves were not read."
+      "note": "Its compound umbel drawn flower by flower (spec rework L1c): its kind from the carrot family's inflorescence and its rays from its own, by the rules at the flowering plants; about 12 small white flowers about 2 mm across in each umbellet, by eye (no flora gives a count; the Flora of New Zealand gives the flower's size), the umbel 5 to 7 cm across. From floras and extension pages as quoted in search results; the pages themselves were not read. Its flower laid out whorl by whorl (spec rework P5b): five white petals between five sepals on the inferior ovary, five stamens and a pistil of two carpels, from the characters of Apiaceae by the rules at the flowering plants."
     },
     "traits.division_order": {
       "evidence": "Authored",

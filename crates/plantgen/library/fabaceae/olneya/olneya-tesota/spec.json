@@ -48,7 +48,8 @@
       "bloom_size": 0.025,
       "bloom_angle": 40,
       "leaf_area": 0.236,
-      "thorn_area": 0.059
+      "thorn_area": 0.059,
+      "bloom_area": 0.259
     }
   },
   "growth": {
@@ -91,8 +92,7 @@
       },
       "bloom": {
         "shape": {
-          "template": "flower",
-          "petals": 5
+          "template": "flower"
         },
         "colour": [0.7, 0.55, 0.8]
       }
@@ -145,7 +145,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: grey bark, grey-green leaves, lavender flowers. Bark pattern (plant roadmap P4, `bark_pattern`): grey bark, smooth when young and shredding in strips when old; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye from photographs: grey bark, grey-green leaves, lavender flowers. Bark pattern (plant roadmap P4, `bark_pattern`): grey bark, smooth when young and shredding in strips when old; set from general knowledge of the species, not measured. Its flower laid out whorl by whorl (spec rework P5b): a pea flower: banner, two wings and keel between five sepals, ten stamens hidden in the keel, and one pistil, from the characters of Fabaceae and Olneya by the rules at the flowering plants."
     },
     "taxon": {
       "evidence": "Authored",

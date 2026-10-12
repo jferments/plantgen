@@ -61,8 +61,10 @@
 //! (distichous 180°, spiral 137.5°, tristichous 120°, decussate half the
 //! gap between a node's leaves). A rosette's or tiller's leaves, which
 //! stand on no segment, are measured round the vertical where it stands
-//! about upright, one to a node in the order they were placed. Flower
-//! parts wait for their layout (spec rework P5).
+//! about upright, one to a node in the order they were placed. A flower
+//! counts its stamens, staminodes and carpels and a spiral's tepals, and
+//! draws its perianth's kind, its ovary's place and its corolla's
+//! zygomorphy, as its layout has them (spec rework P5).
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Write as _;
@@ -118,7 +120,7 @@ pub const SIZES: [(&str, Judged); 22] = [
 /// The count characters counted on grown plants (spec rework M8A), each
 /// on every organ that holds what it counts and judged as an organ's size
 /// is.
-pub const COUNTS: [&str; 12] = [
+pub const COUNTS: [&str; 16] = [
     "ray_florets",
     "disc_florets",
     "ligulate_florets",
@@ -131,11 +133,15 @@ pub const COUNTS: [&str; 12] = [
     "leaflets",
     "pinnae",
     "leaves_per_whorl",
+    "stamens",
+    "staminodes",
+    "carpels",
+    "perianth_parts",
 ];
 
 /// The kinds a grown plant's drawing must agree with (spec rework M8A):
 /// each an enum or bool character, compared with what the plant draws.
-pub const KINDS: [&str; 8] = [
+pub const KINDS: [&str; 11] = [
     "inflorescence",
     "capitulum_kind",
     "awns",
@@ -144,6 +150,9 @@ pub const KINDS: [&str; 8] = [
     "terminal_leaflet",
     "leaf_arrangement",
     "phyllotaxis_pattern",
+    "perianth",
+    "ovary_position",
+    "zygomorphy",
 ];
 
 /// The share of a range's span beyond which a value is an error when the
@@ -534,6 +543,16 @@ impl Grown<'_> {
             .organs
             .get(&kind.name)
             .and_then(|look| look.season.as_ref())
+    }
+
+    /// Whether the organ is drawn as a cluster on some days, so a look
+    /// without one draws the whole cluster (a dogwood's head in its bracts).
+    fn clustered(&self, organ: &GraphOrgan) -> bool {
+        self.growth
+            .organ_types
+            .get(usize::from(organ.organ))
+            .and_then(|kind| self.spec.appearance.organs.get(&kind.name))
+            .is_some_and(|look| look.inflorescence.is_some())
     }
 
     fn term(&self, organ: &GraphOrgan) -> &'static str {
@@ -1037,6 +1056,19 @@ fn reproductive(
         }
         for (index, unit) in layout.units.iter().enumerate() {
             let part = u32::try_from(index + 1).unwrap_or(u32::MAX);
+            // A unit in flower: the look's own shape, or its flower look
+            // where its units open by the day.
+            let shown = match &cluster.opening {
+                Some(opening) => opening
+                    .shown(unit)
+                    .filter(|(look, _)| *look == 1)
+                    .and_then(|(look, _)| opening.looks[look].as_ref())
+                    .map(|stage| &stage.shape),
+                None => in_stage(phase, Stage::Open).then_some(&look.shape),
+            };
+            if let Some(Shape::Flower(flower)) = shown {
+                flower_parts(flower, (organ.id, part), tally);
+            }
             unit_sizes(
                 &look.shape,
                 organ.size * unit.length,
@@ -1049,6 +1081,12 @@ fn reproductive(
         return;
     }
     unit_sizes(&look.shape, organ.size, term, phase, (organ.id, 0), tally);
+    if let Shape::Flower(flower) = &look.shape
+        && in_stage(phase, Stage::Open)
+        && !grown.clustered(organ)
+    {
+        flower_parts(flower, (organ.id, 0), tally);
+    }
 }
 
 /// One flower, head, spikelet, fruit or cone drawn with `shape`, `length`
@@ -1125,6 +1163,43 @@ fn unit_sizes(
         }
         _ => {}
     }
+}
+
+/// A flower's parts, as its layout draws them (spec rework P5): its
+/// stamens, staminodes and carpels, a spiral's tepals, and the kind of
+/// its perianth, its ovary's place and how its petals differ by place.
+fn flower_parts(flower: &crate::looks::Flower, (organ, part): (u64, u32), tally: &mut Tally) {
+    use crate::looks::{Corolla, Ovary, Perianth};
+    tally.count("stamens", organ, part, flower.stamens);
+    tally.count("staminodes", organ, part, flower.staminodes);
+    tally.count("carpels", organ, part, flower.carpels);
+    let perianth = match flower.perianth {
+        Perianth::Corolla => "sepals_and_petals",
+        Perianth::Tepals => "tepals",
+        Perianth::Spiral => {
+            tally.count("perianth_parts", organ, part, flower.petals);
+            "spiral"
+        }
+        Perianth::Absent => "absent",
+    };
+    tally.kind("perianth", perianth);
+    tally.kind(
+        "ovary_position",
+        match flower.ovary {
+            Ovary::Superior => "superior",
+            Ovary::Half => "half_inferior",
+            Ovary::Inferior => "inferior",
+        },
+    );
+    tally.kind(
+        "zygomorphy",
+        match flower.corolla {
+            Corolla::Regular => "other",
+            Corolla::Papilionaceous => "papilionaceous",
+            Corolla::Bilabiate => "bilabiate",
+            Corolla::Labellate => "labellate",
+        },
+    );
 }
 
 /// A head's florets and phyllaries, as its layout draws them, and its
@@ -1427,6 +1502,36 @@ mod tests {
 
     fn stated(value: &Value) -> Stated {
         Stated::of(value).unwrap()
+    }
+
+    #[test]
+    fn a_flower_counts_its_parts_and_draws_its_kinds() {
+        use crate::looks::{Corolla, Flower, Ovary, Perianth};
+        let mut tally = Tally::default();
+        let cactus = Flower {
+            perianth: Perianth::Spiral,
+            petals: 24,
+            stamens: 200,
+            carpels: 12,
+            ovary: Ovary::Inferior,
+            ..Flower::default()
+        };
+        flower_parts(&cactus, (1, 0), &mut tally);
+        let pea = Flower {
+            corolla: Corolla::Papilionaceous,
+            stamens: 10,
+            carpels: 1,
+            ..Flower::default()
+        };
+        flower_parts(&pea, (2, 0), &mut tally);
+        let (measures, kinds) = tally.measures();
+        assert_eq!(measures["stamens"], [200.0, 10.0]);
+        assert_eq!(measures["carpels"], [12.0, 1.0]);
+        assert_eq!(measures["perianth_parts"], [24.0]);
+        let states = |key: &str| kinds[key].iter().cloned().collect::<Vec<_>>();
+        assert_eq!(states("perianth"), ["sepals_and_petals", "spiral"]);
+        assert_eq!(states("ovary_position"), ["inferior", "superior"]);
+        assert_eq!(states("zygomorphy"), ["other", "papilionaceous"]);
     }
 
     #[test]

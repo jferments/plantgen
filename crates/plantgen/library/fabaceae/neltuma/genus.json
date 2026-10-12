@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Neltuma",
+  "traits": {
+    "flower_symmetry": "actinomorphic"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "Jepson eFlora's account of velvet mesquite, as search results quote it (the page itself was not read): flower radial, small; calyx shallowly bell-shaped; petals free, generally inconspicuous; stamens 10, exserted, free."
+    }
+  }
+}

@@ -41,7 +41,7 @@
       "bud_size": 0.015,
       "fruit_size": 0.03,
       "bud_rate": 0.7,
-      "flower_area": 0.491,
+      "flower_area": 0.274,
       "bud_area": 0.636,
       "fruit_area": 0.89
     }
@@ -65,6 +65,7 @@
         "shape": {
           "template": "flower",
           "petals": 8,
+          "stamens": 200,
           "petal_width": 0.8,
           "point": 0.0,
           "notch": 0.0,
@@ -160,7 +161,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: joints hidden under dense, barbed, straw-yellow spines in papery sheaths that shine silver in back light, darkening to near black on the old trunk."
+      "note": "Colours chosen by eye from photographs: joints hidden under dense, barbed, straw-yellow spines in papery sheaths that shine silver in back light, darkening to near black on the old trunk. Its flower laid out whorl by whorl (spec rework P5b): its tepals on a spiral (their count by hand: no flora counts them) on a floral cup above the inferior ovary, from the characters of Cactaceae by the rules at the flowering plants. Its 200 stamens by hand, the most a flower draws, for the numerous ones every flora gives."
     },
     "taxon": {
       "evidence": "Authored",
