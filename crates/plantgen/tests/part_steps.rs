@@ -90,7 +90,7 @@ fn part_steps_keep_cover_and_colour() {
     assert!(failures.is_empty(), "steps wrong:\n{}", failures.join("\n"));
     let stepped = stepped.into_inner().unwrap();
     assert!(
-        stepped.len() >= 56,
+        stepped.len() >= 66,
         "only {} part meshes have steps: {stepped:?}",
         stepped.len()
     );

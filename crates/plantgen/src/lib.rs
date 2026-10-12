@@ -161,5 +161,7 @@ pub mod venation;
 /// needle shoot drawn coarser widens its needles for those it leaves out,
 /// and a spikelet one step coarser folds each bract's kite along its
 /// midrib, so conifer sprays and grass panicles keep their cover and get
-/// steps.
+/// steps; a fruit drawn with fewer facets than its finest is widened to
+/// cover what it does there, so clusters of fruit and berries keep their
+/// cover drawn coarser.
 pub const GENERATOR_REVISION: u32 = 26;
