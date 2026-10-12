@@ -10,8 +10,25 @@
     "corolla_shape": "tubular",
     "hypanthium": false,
     "ovary_position": "superior",
-    "stamens": {"min": 10, "max": 15},
+    "stamens": {
+      "min": 10,
+      "max": 15
+    },
     "carpels": 3
+  },
+  "forms": {
+    "shrub": {
+      "generator": {
+        "program": "cane"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's shrub species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    }
   },
   "evidence": {
     "traits": {

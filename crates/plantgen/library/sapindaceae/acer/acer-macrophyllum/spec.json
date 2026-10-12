@@ -11,7 +11,6 @@
   },
   "growth_form": "decurrent_tree",
   "generator": {
-    "program": "sapindaceae",
     "params": {
       "crown_height": 26,
       "crown_radius": 9.5,
@@ -209,11 +208,6 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The growth form the spec's authors chose from the plant's habit."
-    },
-    "generator.program": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "The program the spec's authors chose to grow this form."
     },
     "growth": {
       "evidence": "Authored",

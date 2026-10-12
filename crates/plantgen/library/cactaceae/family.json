@@ -3,8 +3,14 @@
   "rank": "family",
   "name": "Cactaceae",
   "parent": "order/caryophyllales",
+  "generator": {
+    "program": "cactaceae"
+  },
   "traits": {
-    "flower_symmetry": {"actinomorphic": "usually", "zygomorphic": "sometimes"},
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "sometimes"
+    },
     "perianth": "spiral",
     "hypanthium": true,
     "ovary_position": "inferior"
@@ -14,6 +20,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1951",
       "note": "Abrams's Illustrated Flora of the Pacific States, volume 3 (1951), read in full (Cactaceae by I. L. Wiggins): perianth segments numerous, grading from sepals to petals, imbricated, their bases coalescent in a cup or tube borne on the apex of the ovary; stamens numerous, on the throat of the tube; ovary inferior, 1-celled; style 1, stigma lobes 1 to numerous. Jepson eFlora (as quoted in search results; the page itself was not read): flowers radial, rarely bilateral. No flora counts the tepals."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The cacti's own program (growth plan G2.3a): columns, barrels and chains of joints, their ribs, areoles and spines from each species' look."
     }
   }
 }

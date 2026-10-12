@@ -4,12 +4,33 @@
   "name": "Rhizophoraceae",
   "parent": "order/malpighiales",
   "traits": {
-    "flower_merosity": {"min": 4, "max": 5, "typical": 4},
+    "flower_merosity": {
+      "min": 4,
+      "max": 5,
+      "typical": 4
+    },
     "flower_symmetry": "actinomorphic",
     "perianth": "sepals_and_petals",
     "ovary_position": "half_inferior",
-    "stamens": {"min": 8, "max": 10},
+    "stamens": {
+      "min": 8,
+      "max": 10
+    },
     "carpels": 2
+  },
+  "forms": {
+    "decurrent_tree": {
+      "generator": {
+        "program": "broadleaf"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's decurrent tree species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    }
   },
   "evidence": {
     "traits": {

@@ -8,7 +8,9 @@
     "scale_arrangement": "distichous",
     "leaf_form": "blade",
     "leaf_division": "simple",
-    "leaf_shape": {"linear": "usually"},
+    "leaf_shape": {
+      "linear": "usually"
+    },
     "leaf_venation": "parallel",
     "leaf_arrangement": "alternate",
     "phyllotaxis_pattern": "distichous",
@@ -37,6 +39,32 @@
       "template": "blade",
       "rule": "leaf_width_m / (leaf_length * 0.12 / (1 - pow(0.88, pieces)))",
       "why": "Thatch is last year's blades, as wide as they were."
+    }
+  },
+  "forms": {
+    "graminoid": {
+      "generator": {
+        "program": "grass"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's graminoid species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    },
+    "shrub": {
+      "generator": {
+        "program": "cane"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's shrub species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
     }
   },
   "evidence": {

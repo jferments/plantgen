@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Cladium",
+  "forms": {
+    "graminoid": {
+      "generator": {
+        "program": "cyperaceae"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The tall sedges' program (growth plan G2.3a), named for their family and given by the genera that grow on it, on the sedge base: it gives the values the sedge program gave as defaults until then. Carex and Schoenoplectus grow on the grass base."
+        }
+      }
+    }
+  }
+}

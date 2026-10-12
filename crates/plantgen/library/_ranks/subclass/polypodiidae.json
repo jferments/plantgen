@@ -3,14 +3,24 @@
   "rank": "subclass",
   "name": "Polypodiidae",
   "parent": "class/polypodiopsida",
+  "generator": {
+    "program": "polypodiidae"
+  },
   "traits": {
-    "sporangia": {"sori": "usually"}
+    "sporangia": {
+      "sori": "usually"
+    }
   },
   "evidence": {
     "traits.sporangia": {
       "evidence": "SourceInferred",
       "source": "openstax-biology-2e",
       "note": "Ferns bear their sporangia in small clusters, sori, on the underside of their fronds (Biology 2e, 25.4). Usually rather than always, as a few ferns bear them otherwise."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The leptosporangiate ferns' own program (growth plan G2.3a): fronds that uncoil from croziers in crowns on a rhizome. Tree ferns (Cyatheaceae) grow on palm instead."
     }
   }
 }

@@ -4,9 +4,9 @@
 //! the leaf as a leaf and its leaflets only as what the leaf holds.
 
 use plantgen::divided;
-use plantgen::grow::{GrowthSettings, grow};
+use plantgen::grow::{Growth, GrowthSettings, grow};
 use plantgen::looks::{Season, Shape};
-use plantgen::lsys::Limits;
+use plantgen::lsys::{Limits, Program};
 use plantgen::organs::{self, Tally};
 use plantgen::spec::{self, PlantSpec};
 use plantgen::templates::{self, Templates};
@@ -42,6 +42,57 @@ fn find<'a>(tallies: &'a [Tally], term: &str, top: bool, found: &mut Vec<(&'a Ta
     }
 }
 
+/// `spec` grown from its first variant for [`YEARS`] at most.
+fn grown(spec: &PlantSpec, program: &Program, params: &[f64]) -> Growth {
+    let variant = &spec.variant_list()[0];
+    let years = spec.growth.years.min(YEARS);
+    grow(
+        program,
+        params,
+        &GrowthSettings {
+            seed: variant.seed,
+            dt: spec.growth.step,
+            years,
+            keyframes: vec![years],
+            conditions: variant.conditions(),
+            limits: Limits::default(),
+            host: spec.host_geometry().unwrap(),
+        },
+    )
+    .unwrap()
+}
+
+/// How many times `growth`'s compound leaves (organ types `compound`)
+/// fell, each time pushing to `failures` unless what fell weighs one
+/// leaf's area each: between all of them the size of the largest and all
+/// the size of the mean.
+fn litter(
+    id: &str,
+    growth: &Growth,
+    names: &[&str],
+    compound: &[usize],
+    failures: &mut Vec<String>,
+) -> usize {
+    let mut fell = 0;
+    for shed in &growth.shed().organs {
+        let index = usize::from(shed.organ);
+        if !compound.contains(&index) || shed.count == 0 {
+            continue;
+        }
+        fell += 1;
+        let area = growth.organ_types[index].area;
+        let most = area * shed.size * shed.size;
+        let least = most / f64::from(shed.count);
+        if !(least * (1.0 - 1e-9) <= shed.area && shed.area <= most * (1.0 + 1e-9)) {
+            failures.push(format!(
+                "{id} `{}`: {} fell with {:.4} m², not between {least:.4} and {most:.4}",
+                names[index], shed.count, shed.area
+            ));
+        }
+    }
+    fell
+}
+
 #[test]
 fn a_compound_leaf_is_counted_once() {
     let mut species = 0;
@@ -73,41 +124,10 @@ fn a_compound_leaf_is_counted_once() {
             }
         }
 
-        let variant = &spec.variant_list()[0];
-        let years = spec.growth.years.min(YEARS);
-        let growth = grow(
-            &program,
-            &params,
-            &GrowthSettings {
-                seed: variant.seed,
-                dt: spec.growth.step,
-                years,
-                keyframes: vec![years],
-                conditions: variant.conditions(),
-                limits: Limits::default(),
-                host: spec.host_geometry().unwrap(),
-            },
-        )
-        .unwrap();
+        let growth = grown(&spec, &program, &params);
 
-        // Litter: what fell weighs one leaf's area each, between all of
-        // them the size of the largest and all the size of the mean.
-        for shed in &growth.shed().organs {
-            let index = usize::from(shed.organ);
-            if !compound.contains(&index) || shed.count == 0 {
-                continue;
-            }
-            fell += 1;
-            let area = growth.organ_types[index].area;
-            let most = area * shed.size * shed.size;
-            let least = most / f64::from(shed.count);
-            if !(least * (1.0 - 1e-9) <= shed.area && shed.area <= most * (1.0 + 1e-9)) {
-                failures.push(format!(
-                    "{id} `{}`: {} fell with {:.4} m², not between {least:.4} and {most:.4}",
-                    names[index], shed.count, shed.area
-                ));
-            }
-        }
+        // Litter: each fell as one leaf.
+        fell += litter(id, &growth, &names, &compound, &mut failures);
 
         // Census: each compound leaf is one leaf; its leaflets are only
         // what it holds.

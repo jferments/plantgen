@@ -4,8 +4,28 @@
   "name": "Vitaceae",
   "parent": "order/vitales",
   "traits": {
-    "leaf_arrangement": {"alternate": "usually", "opposite": "sometimes"},
-    "phyllotaxis_pattern": {"distichous": "usually", "spiral": "sometimes"}
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes"
+    },
+    "phyllotaxis_pattern": {
+      "distichous": "usually",
+      "spiral": "sometimes"
+    }
+  },
+  "forms": {
+    "vine": {
+      "generator": {
+        "program": "climber"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's vine species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    }
   },
   "evidence": {
     "traits.leaf_arrangement": {

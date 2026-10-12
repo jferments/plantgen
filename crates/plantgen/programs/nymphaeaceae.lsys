@@ -1,12 +1,12 @@
-# Aquatic: a plant rooted under water whose leaves float on its surface,
-# after the water lilies. The plant's origin is the water's surface: its
+# Water lilies (Nymphaeaceae): plants rooted under water whose leaves
+# float on its surface. The plant's origin is the water's surface: its
 # rhizome lies water_depth below it and runs out by rhizome_rate a year,
 # and each year it sends up leaves_per_year leaves on long, slack petioles
 # that reach the surface leaning out by up to leaf_lean, where each pad
 # lies flat (its look's face_up), and flowers_per_year flowers on stalks
-# that hold them just above the water. Leaves and flowers last a year.
-# On dry ground (a garden) the pads lie on the ground as on still water,
-# and the petioles run below it unseen.
+# that hold them just above the water. Leaves and flowers last a year. On
+# dry ground (a garden) the pads lie on the ground as on still water, and
+# the petioles run below it unseen.
 #
 # A petiole reaching the surface at an angle a off the vertical is
 # water_depth / cos(a) long, times slack, and bends over at the top; a
@@ -14,9 +14,13 @@
 #
 #   s(a) = pad_size (pad_seed + (1 - pad_seed) (1 - exp(-a / size_years)))
 #
+# Revision 2 (growth plan G2.3a): the water lilies' own program, renamed
+# from `aquatic` and homed at Nymphaeaceae. It grows every plant as
+# before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem aquatic 1;
+lsystem nymphaeaceae 2;
 
 param water_depth = 1;
 param rhizome_rate = 0.15;    # metres a year the rhizome runs

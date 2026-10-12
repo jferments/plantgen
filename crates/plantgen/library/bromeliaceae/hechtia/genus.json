@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Hechtia",
+  "forms": {
+    "rosette_succulent": {
+      "generator": {
+        "program": "hechtia"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The lineage's own program (growth plan G2.3a), on the rosette base: it gives the values the rosette program gave as defaults until then."
+        }
+      }
+    }
+  }
+}

@@ -73,7 +73,10 @@ pub struct Rule {
 #[derive(Debug, Clone, PartialEq)]
 pub struct ParamDecl {
     pub name: String,
-    pub value: Expr,
+    /// `None` for `param name;`: a parameter the program reads but gives
+    /// no value (growth plan G2.3a); a program extending it, a rank file
+    /// or the species sets it.
+    pub value: Option<Expr>,
     pub span: Span,
 }
 

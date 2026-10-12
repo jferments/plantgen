@@ -1,8 +1,8 @@
-# Cushion: a hard, domed cushion of tightly packed rosettes, after the
-# llareta of the high Andes. The cushion is a fleshy dome (the body
-# `mound`, as long as the dome is tall, its look's dome large enough that
-# the whole body rounds over: a half ellipsoid dome * R tall) that widens
-# as
+# Llaretas (Azorella): a hard, domed cushion of tightly packed rosettes,
+# after the llareta of the high Andes. The cushion is a fleshy dome (the
+# body `mound`, as long as the dome is tall, its look's dome large enough
+# that the whole body rounds over: a half ellipsoid dome * R tall) that
+# widens as
 #
 #   R(a) = max_radius (1 - exp(-a / size_years))
 #
@@ -12,9 +12,14 @@
 # A cushion may grow into several merging lobes: `lobes` domes,
 # lobe_spread apart, each a little smaller than the first.
 #
+# Revision 2 (growth plan G2.3a): the cushion azorellas' own program,
+# renamed from `cushion` and homed at Azorella, where it grows the cushion
+# form (A. compacta); A. prolifera, a shrub, grows on the broadleaf base.
+# It grows every plant as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem cushion 1;
+lsystem azorella 2;
 
 param max_radius = 1;
 param size_years = 80;

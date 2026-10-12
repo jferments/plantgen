@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Phyllostachys",
+  "forms": {
+    "shrub": {
+      "generator": {
+        "program": "phyllostachys"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The lineage's own program (growth plan G2.3a), on the cane base: it gives the values the cane program gave as defaults until then. Homed at the genus, as the library has no rank for the bamboos' subfamily yet."
+        }
+      }
+    }
+  }
+}
