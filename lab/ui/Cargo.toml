@@ -1,0 +1,17 @@
+[package]
+name = "plantlab-ui"
+description = "PlantLab's interface kit: theme, fonts, widgets, boards of cards and the figures on them."
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+license = "MIT"
+
+[dependencies]
+# Drawing only: no Bevy, so it builds and tests in seconds. The version
+# bevy_egui 0.42 draws with.
+egui.workspace = true
+# Phosphor's regular icons as an egui font (MIT or Apache 2.0).
+egui-phosphor.workspace = true
+
+[lints]
+workspace = true
