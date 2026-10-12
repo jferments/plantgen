@@ -17,15 +17,15 @@
       "why": "A plant flowers, or bears cones, from the end of its juvenile period."
     },
     "generator.params.unit_nodes": {
-      "rule": "max(1, round(shoot_leaves / (leaves_per_node * max_shoot)))",
-      "why": "A year's shoot is a growth unit of many short internodes, not a few long ones: a vigorous shoot, as long as the program's most internodes a bud grows in a year, bears the taxon's leaves per vigorous long shoot, so each of its internodes is divided into as many nodes as that takes."
+      "rule": "max(1, min(round(shoot_leaves / (leaves_per_node * max_shoot)), floor(4 * internode / leaf_size)))",
+      "why": "A year's shoot is a growth unit of many short internodes, not a few long ones: a vigorous shoot, as long as the program's most internodes a bud grows in a year, bears the taxon's leaves per vigorous long shoot, so each of its internodes is divided into as many nodes as that takes, but never into nodes nearer than a quarter of a leaf's length, so a large-leaved plant's shoots carry fewer."
     },
     "generator.params.long_buds": {
       "map": {
         "bud_position": {
-          "acrotonic": {"rule": "max(1, round(unit_nodes / 2))"},
-          "mesotonic": {"rule": "max(1, round(unit_nodes * 1.5))"},
-          "basitonic": {"rule": "max(1, round(unit_nodes / 2))"}
+          "acrotonic": {"rule": "floor(unit_nodes / 2)"},
+          "mesotonic": {"rule": "max(0, 2 * unit_nodes - 2)"},
+          "basitonic": {"rule": "floor(unit_nodes / 2)"}
         }
       },
       "why": "Only some of a growth unit's buds grow into long shoots, the rest into short shoots: the few nearest its tip on an acrotonic shoot or its foot on a basitonic one, more of them reaching down its middle on a mesotonic one."
@@ -86,12 +86,12 @@
     "rules.generator.params.unit_nodes": {
       "evidence": "SourceInferred",
       "source": "critchfield-1971",
-      "note": "Critchfield (1971, read in full) found a maple's long shoot about as long as its leaf pairs are many, each pair a few centimetres up the stem; so a shoot of the program's longest year's growth carries the taxon's shoot_leaves, and each of the program's internodes is cut into as many nodes as that takes. The internode the program grows by is a step of vigour, not a node."
+      "note": "Critchfield (1971, read in full) found a maple's long shoot about as long as its leaf pairs are many, each pair a few centimetres up the stem; so a shoot of the program's longest year's growth carries the taxon's shoot_leaves, and each of the program's internodes is cut into as many nodes as that takes. The internode the program grows by is a step of vigour, not a node. Corner's rules (Corner 1949) tie a twig's leaves to its spacing: the larger the leaves, the fewer and farther apart, so nodes are kept at least a quarter of the leaf card's length apart."
     },
     "rules.generator.params.long_buds": {
       "evidence": "SourceInferred",
       "source": "barthelemy-caraglio-2007",
-      "note": "Barthélémy and Caraglio (2007, read in excerpts): the buds that grow are concentrated toward one end of the annual shoot (acrotony, basitony) or in its middle (mesotony). How many is the model's choice: half a step of vigour's nodes, or one and a half in the middle, the rest growing short shoots."
+      "note": "Barthélémy and Caraglio (2007, read in excerpts): the buds that grow are concentrated toward one end of the annual shoot (acrotony, basitony) or in its middle (mesotony). How many is the model's choice: half of a step of vigour's nodes at the tip or the foot, or about twice as many reaching into the middle, the rest growing short shoots; a shoot of one node a step keeps every bud able to grow."
     },
     "rules.generator.params.bud_base": {
       "evidence": "SourceInferred",

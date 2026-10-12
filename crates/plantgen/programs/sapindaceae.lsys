@@ -95,8 +95,9 @@ param dormant_angle = 60;
 param space_renew = 1;
 
 # Shoots rise toward the light against their weight when rise > 0, the
-# same pull broadleaf's droop gives downward otherwise.
-axiom !(0.004) T(wind, rise > 0 ? 1 : -1, 0, rise > 0 ? rise : droop + wind_bend * wind)
+# same pull broadleaf's droop gives downward otherwise, shared by a growth
+# unit's nodes.
+axiom !(0.004) T(wind, rise > 0 ? 1 : -1, 0, (rise > 0 ? rise : droop + wind_bend * wind) / unit_nodes)
       /(uniform(0, 360)) &(uniform(0, lean)) A(fork_height * uniform(0.7, 1.3));
 
 # Blooms spread round a short shoot's tip, as broadleaf's, each carrying

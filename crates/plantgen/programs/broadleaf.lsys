@@ -192,11 +192,13 @@ tool vigour@1 {
     lambda = apical + (apical_young - apical) * max(0, 1 - t / apical_years),
     alpha = flux
 };
-tool pipe@1 { exponent = 2.3, tip = pipe_tip, organ = pipe_organ, rings = pipe_rings };
+# Each living bud's twig adds to the pipes below it, a growth unit's
+# nodes sharing one bud's.
+tool pipe@1 { exponent = 2.3, tip = pipe_tip / pow(unit_nodes, 1 / 2.3), organ = pipe_organ, rings = pipe_rings };
 
 # The stem leans a little in a random direction; each tree forks at its own
-# height.
-axiom !(0.004) T(wind, -1, 0, droop + wind_bend * wind) /(uniform(0, 360)) &(uniform(0, lean))
+# height. The droop bends each segment, so a growth unit's nodes share it.
+axiom !(0.004) T(wind, -1, 0, (droop + wind_bend * wind) / unit_nodes) /(uniform(0, 360)) &(uniform(0, lean))
       A(fork_height * uniform(0.7, 1.3));
 
 # In a steady wind, a tip heading upwind dies.
