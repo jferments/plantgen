@@ -40,7 +40,7 @@
       "leaf_area": 0.235,
       "basal_area": 0.171,
       "basal_piece_area": 0.235,
-      "flower_area": 0.758,
+      "flower_area": 0.533,
       "bud_area": 0.763,
       "fruit_area": 0.383
     }
@@ -108,7 +108,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: blue-green leaves; pink flowers."
+      "note": "Colours chosen by eye: blue-green leaves; pink flowers. Its flower laid out whorl by whorl (spec rework P5b): four pink petals by hand (in two pairs; the drawing has no joined heart-shaped corolla) above two sepals, six stamens and a pistil of two carpels, from the characters of Papaveraceae and Dicentra by the rules at the flowering plants."
     },
     "taxon": {
       "evidence": "Authored",

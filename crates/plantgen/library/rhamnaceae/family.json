@@ -2,5 +2,21 @@
   "schema": 1,
   "rank": "family",
   "name": "Rhamnaceae",
-  "parent": "order/rosales"
+  "parent": "order/rosales",
+  "traits": {
+    "flower_merosity": 5,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "hypanthium": true,
+    "ovary_position": {"superior": "usually", "inferior": "sometimes"},
+    "stamens": 5,
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: flowers small, regular; calyx-lobes, petals and stamens 5 (or 4); petals hooded, sometimes wanting; calyx-tube lined with a disk on whose edge the petals and stamens are inserted; ovary free from or adnate by the disk to the base of the calyx, 3 (or 2)-celled. For cascara, Jepson eFlora calls the ovary more or less inferior while the Burke Herbarium and Jepson (1925) call it superior, free of the disk (as quoted in search results; the pages themselves were not read); the superior reading is kept."
+    }
+  }
 }

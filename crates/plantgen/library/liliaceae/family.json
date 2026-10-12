@@ -2,5 +2,20 @@
   "schema": 1,
   "rank": "family",
   "name": "Liliaceae",
-  "parent": "order/liliales"
+  "parent": "order/liliales",
+  "traits": {
+    "flower_merosity": 3,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "ovary_position": "superior",
+    "stamens": 6,
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "kew-powo",
+      "note": "Accounts of the family by Michigan State's Botany Online and the University of Hawaii (G. Carr), as search results quote them (the pages themselves were not read): tepals 6, alike, in two whorls of 3; stamens usually 6 (rarely 3, 4 or up to 12); ovary superior, of 3 fused carpels, one style with a 3-lobed stigma."
+    }
+  }
 }

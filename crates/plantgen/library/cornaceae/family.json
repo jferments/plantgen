@@ -2,5 +2,21 @@
   "schema": 1,
   "rank": "family",
   "name": "Cornaceae",
-  "parent": "order/cornales"
+  "parent": "order/cornales",
+  "traits": {
+    "flower_merosity": 4,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "hypanthium": false,
+    "ovary_position": "inferior",
+    "stamens": 4,
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: flowers perfect, regular, in cymes or heads; calyx-tube coherent with the ovary, its limb 4 small teeth or none; petals 4, epigynous; stamens 4, alternate with the petals; ovary 2-celled. The calyx tube is wholly joined to the ovary, so no floral cup stands above it."
+    }
+  }
 }

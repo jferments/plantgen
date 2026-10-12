@@ -84,8 +84,7 @@
       },
       "bloom": {
         "shape": {
-          "template": "flower",
-          "petals": 4
+          "template": "flower"
         },
         "colour": [0.92, 0.9, 0.7]
       }
@@ -113,6 +112,9 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "stamens": 8
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -127,7 +129,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: dark glossy green leaves, grey-brown bark and roots. Bark pattern (plant roadmap P4, `bark_pattern`): smooth grey-brown bark with lenticels; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye from photographs: dark glossy green leaves, grey-brown bark and roots. Bark pattern (plant roadmap P4, `bark_pattern`): smooth grey-brown bark with lenticels; set from general knowledge of the species, not measured. Its flower laid out whorl by whorl (spec rework P5b): four whitish petals between four sepals, eight stamens and a half-inferior pistil of two carpels, from the characters of its own and Rhizophoraceae's by the rules at the flowering plants."
     },
     "taxon": {
       "evidence": "Authored",
@@ -163,6 +165,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "little-skolmen-1989",
+      "note": "Little and Skolmen's Common Forest Trees of Hawaii, as quoted in search results; the page itself was not read: sepals 4, narrow, pale yellow, almost 13 mm long, leathery and persistent; petals 4, narrow, about 10 mm, whitish, woolly inside; a two-celled ovary mostly inferior but conical at its apex. The New York Botanical Garden's account (as quoted in search results; the page itself was not read) gives 8 stamens round the style."
     }
   },
   "provenance": {

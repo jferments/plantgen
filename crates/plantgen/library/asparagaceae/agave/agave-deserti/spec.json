@@ -45,7 +45,7 @@
       "pup_rate": 0.3,
       "pup_distance": 0.4,
       "leaf_area": 0.1,
-      "flower_area": 0.335,
+      "flower_area": 0.230,
       "dead_area": 0.1
     }
   },
@@ -153,7 +153,6 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 6,
           "petal_width": 0.5,
           "point": 0.3,
           "notch": 0.0,
@@ -201,7 +200,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: glaucous blue-grey leaves with paler margins and reddish-brown teeth and spines; yellow flowers."
+      "note": "Colours chosen by eye from photographs: glaucous blue-grey leaves with paler margins and reddish-brown teeth and spines; yellow flowers. Its flower laid out whorl by whorl (spec rework P5b): six yellow tepals in two whorls on an inferior ovary, six stamens and a pistil of three carpels, from the characters of Asparagaceae and Agave by the rules at the flowering plants."
     },
     "taxon": {
       "evidence": "Authored",

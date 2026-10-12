@@ -42,7 +42,7 @@
       "fruit_share": 0.2,
       "bud_size": 0.02,
       "fruit_size": 0.03,
-      "flower_area": 0.419,
+      "flower_area": 0.215,
       "bud_area": 0.636,
       "fruit_area": 1.016
     }
@@ -66,6 +66,7 @@
         "shape": {
           "template": "flower",
           "petals": 12,
+          "stamens": 200,
           "petal_width": 0.7,
           "point": 0.0,
           "notch": 0.0,
@@ -161,6 +162,9 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "carpels": {"min": 10, "max": 13}
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -175,7 +179,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: 10 to 13 ribs hidden under dense spines, pale radials, two to six coloured centrals and a flattened lower central pointing down, all greying with age."
+      "note": "Colours chosen by eye from photographs: 10 to 13 ribs hidden under dense spines, pale radials, two to six coloured centrals and a flattened lower central pointing down, all greying with age. Its flower laid out whorl by whorl (spec rework P5b): its tepals on a spiral (their count by hand: no flora counts them) on a floral cup above the inferior ovary, and a style with a dozen stigma lobes, from the characters of its own and Cactaceae's by the rules at the flowering plants. Its 200 stamens by hand, the most a flower draws, for the numerous ones every flora gives."
     },
     "taxon": {
       "evidence": "Authored",
@@ -211,6 +215,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Herbarium records on SEINet and iDigBio, as quoted in search results; the pages themselves were not read: stigma lobes 10 to 13, dark green (the Flora of North America's genus: 5 to 22); the carpels are as many as the stigma lobes (Hamburg's Botany Online on the family, as quoted in search results; the page itself was not read)."
     }
   },
   "provenance": {

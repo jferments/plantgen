@@ -2,5 +2,20 @@
   "schema": 1,
   "rank": "family",
   "name": "Asparagaceae",
-  "parent": "order/asparagales"
+  "parent": "order/asparagales",
+  "traits": {
+    "flower_merosity": 3,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "ovary_position": {"superior": "usually", "inferior": "sometimes"},
+    "stamens": 6,
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "kew-powo",
+      "note": "Plants of the World Online's account of the family, as search results quote it (the page itself was not read): flowers often actinomorphic; tepals 6, free or fused; stamens usually 6; ovary superior or inferior, 3-locular. The Royal Botanic Gardens Victoria's Hortflora adds tepals and stamens 3 + 3 and carpels 3, fused, and says the family is defined by its molecular phylogeny, with no diagnostic morphological feature. Ovary superior in Yucca, Camassia, Dasylirion and Maianthemum, inferior in Agave (the Flora of North America, as quoted in search results; the pages themselves were not read)."
+    }
+  }
 }

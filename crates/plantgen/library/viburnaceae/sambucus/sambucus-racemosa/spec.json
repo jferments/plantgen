@@ -111,12 +111,10 @@
           "flower_look": {
             "shape": {
               "template": "flower",
-              "petals": 5,
               "petal_width": 0.9,
               "point": 0.2,
               "notch": 0.0,
               "centre": 0.25,
-              "stamens": 5,
               "stamen_length": 0.4
             },
             "colour": [0.94, 0.92, 0.78],
@@ -199,7 +197,7 @@
     "appearance.organs.bloom.season.flower_look": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its flowers drawn one by one (spec rework L1b): cream flowers 3 to 6 mm across with five recurved lobes, from pink buds. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
+      "note": "Its flowers drawn one by one (spec rework L1b): cream flowers 3 to 6 mm across with five recurved lobes, from pink buds. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life. Its flower laid out whorl by whorl (spec rework P5b): five creamy petals spread flat between five small sepals on the inferior ovary, five stamens and a pistil of four carpels, from the characters of Viburnaceae by the rules at the flowering plants."
     },
     "appearance.organs.bloom.season.bud_look": {
       "evidence": "Authored",

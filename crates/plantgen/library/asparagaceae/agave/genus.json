@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Agave",
+  "traits": {
+    "ovary_position": "inferior"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America's account of Agave (volume 26), on the SEINet portal, as search results quote it (the page itself was not read): tepals connate basally into a tube atop a typically constricted neck; ovary inferior, greenish at anthesis, 3-locular."
+    }
+  }
+}

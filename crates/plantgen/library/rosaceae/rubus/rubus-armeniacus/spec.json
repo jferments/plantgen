@@ -92,12 +92,10 @@
           "flower_look": {
             "shape": {
               "template": "flower",
-              "petals": 5,
               "petal_width": 1.1,
               "point": 0.0,
               "notch": 0.0,
               "centre": 0.3,
-              "stamens": 30,
               "stamen_length": 0.3
             },
             "colour": [0.95, 0.88, 0.9],
@@ -128,7 +126,9 @@
     "division_pattern": "palmate",
     "division_order": 1,
     "leaflets": {"min": 3, "max": 5, "typical": 5},
-    "leaf_shape": {"obovate": "often", "elliptic": "often"}
+    "leaf_shape": {"obovate": "often", "elliptic": "often"},
+    "stamens": 100,
+    "carpels": 30
   },
   "evidence": {
     "generator.params": {
@@ -184,12 +184,12 @@
     "appearance.organs.bloom.season.flower_look": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its flowers drawn one by one (spec rework L1b): white to pale pink flowers 2 to 2.5 cm across with many stamens, drawn opening together. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
+      "note": "Its flowers drawn one by one (spec rework L1b): white to pale pink flowers 2 to 2.5 cm across with many stamens, drawn opening together. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life. Its flower laid out whorl by whorl (spec rework P5b): five white or pale pink petals between five sepals on a floral cup, a hundred stamens and thirty free pistils, from the characters of its own, Rosaceae's and Rubus's by the rules at the flowering plants."
     },
     "traits": {
       "evidence": "SourceInferred",
       "source": "osu-landscape-plants",
-      "note": "Oregon State University's Landscape Plants page on the species, as search results quote it (the page itself was not read): leaves alternate, palmately compound, with 3 to 5 obovate to elliptic leaflets, each 4 to 8 cm long, their margins irregularly serrate, grey-green and softly hairy beneath. Five on the first-year canes the model draws."
+      "note": "Oregon State University's Landscape Plants page on the species, as search results quote it (the page itself was not read): leaves alternate, palmately compound, with 3 to 5 obovate to elliptic leaflets, each 4 to 8 cm long, their margins irregularly serrate, grey-green and softly hairy beneath. Five on the first-year canes the model draws. Bugwood and americansouthwest.net, as quoted in search results; the pages themselves were not read: a hundred or more brown-tipped stamens and over 30 pistils; the Flora of North America's genus key gives the floral cup 3 to 10 mm across (as quoted in search results; the page itself was not read). Thirty pistils is the most a flower draws."
     },
     "appearance.organs.leaf.shape": {
       "evidence": "Authored",

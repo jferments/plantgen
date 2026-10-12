@@ -92,7 +92,13 @@
         "form": "thorn"
       },
       "bloom": {
-        "shape": { "template": "flower", "petals": 5, "petal_width": 0.8, "point": 0.3, "notch": 0.0, "centre": 0.4 },
+        "shape": {
+          "template": "flower",
+          "petal_width": 0.8,
+          "point": 0.3,
+          "notch": 0.0,
+          "centre": 0.4
+        },
         "inflorescence": { "kind": "spike", "flowers": 150, "size": 0.06, "spread": 70 },
         "colour": [0.92, 0.88, 0.45]
       }
@@ -208,7 +214,7 @@
     "appearance.organs.bloom": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its spike-like raceme drawn flower by flower (spec rework L1c), as a spike, its pedicels too short to draw: 150 tiny pale yellow flowers about 4.5 mm long, by eye (the Fire Effects Information System says hundreds), on a raceme 8 cm long. From floras and extension pages as quoted in search results; the pages themselves were not read."
+      "note": "Its spike-like raceme drawn flower by flower (spec rework L1c), as a spike, its pedicels too short to draw: 150 tiny pale yellow flowers about 4.5 mm long, by eye (the Fire Effects Information System says hundreds), on a raceme 8 cm long. From floras and extension pages as quoted in search results; the pages themselves were not read. Its flower laid out whorl by whorl (spec rework P5b): five small petals between five sepals, ten free stamens and one pistil, from the characters of Fabaceae and Neltuma by the rules at the flowering plants."
     },
     "traits.division_order": {
       "evidence": "SourceInferred",

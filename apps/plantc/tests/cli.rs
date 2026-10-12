@@ -173,7 +173,7 @@ fn rules_and_traits_say_where_they_come_from() {
     );
     let spec = stdout(&plantc(&["--library", library, "spec", "acer-circinatum"]));
     assert!(
-        spec.contains("traits:\n  leaf_arrangement = \"opposite\"  (sapindaceae/family.json)\n"),
+        spec.contains("\n  leaf_arrangement = \"opposite\"  (sapindaceae/family.json)\n"),
         "{spec}"
     );
     assert!(

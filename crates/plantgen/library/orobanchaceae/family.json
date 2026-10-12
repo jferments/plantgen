@@ -2,5 +2,23 @@
   "schema": 1,
   "rank": "family",
   "name": "Orobanchaceae",
-  "parent": "order/lamiales"
+  "parent": "order/lamiales",
+  "traits": {
+    "flower_merosity": 5,
+    "flower_symmetry": "zygomorphic",
+    "perianth": "sepals_and_petals",
+    "zygomorphy": "bilabiate",
+    "corolla_shape": "tubular",
+    "hypanthium": false,
+    "ovary_position": "superior",
+    "stamens": 4,
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "Jepson eFlora's account of the family (Wetherwax), as search results quote it (the page itself was not read): flowers strongly bilateral; corolla of 5 united petals, two-lipped, the upper lip 2-lobed (a beak, the galea, in paintbrushes), the lower 3-lobed; stamens 4, didynamous, on the corolla tube; ovary superior, of 2 carpels."
+    }
+  }
 }

@@ -2,5 +2,20 @@
   "schema": 1,
   "rank": "family",
   "name": "Asphodelaceae",
-  "parent": "order/asparagales"
+  "parent": "order/asparagales",
+  "traits": {
+    "flower_merosity": 3,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "ovary_position": "superior",
+    "stamens": 6,
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "vicflora",
+      "note": "VicFlora's account of the family, as search results quote it (the page itself was not read): flowers actinomorphic or rarely slightly zygomorphic; tepals 6, free or fused, in 2 whorls of 3; stamens 6 in 2 whorls of 3, mostly hypogynous; ovary superior, carpels as many as the perianth whorl (Watson and Dallwitz) and fused (Hortflora)."
+    }
+  }
 }

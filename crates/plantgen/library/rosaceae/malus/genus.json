@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Malus",
+  "traits": {
+    "ovary_position": "inferior",
+    "stamens": 20,
+    "carpels": {"min": 2, "max": 5}
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full, as Pyrus: calyx-tube urn-shaped; ovary inferior, 2- to 5-celled; stamens about 20; petals white or pink, clawed. For Pacific crab apple (Pyrus rivularis) carpels commonly 3; the Burke Herbarium (as quoted in search results; the page itself was not read) gives 3 (or 4) styles and about 20 stamens."
+    }
+  }
+}

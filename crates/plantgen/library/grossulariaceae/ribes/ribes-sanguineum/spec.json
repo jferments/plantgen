@@ -100,13 +100,11 @@
           "flower_look": {
             "shape": {
               "template": "flower",
-              "petals": 5,
               "petal_width": 0.9,
               "point": 0.3,
               "notch": 0.0,
               "centre": 0.3,
               "tube": 0.6,
-              "stamens": 5,
               "stamen_length": 0.4
             },
             "colour": [0.85, 0.25, 0.4],
@@ -186,7 +184,7 @@
     "appearance.organs.bloom.season.flower_look": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its flowers drawn one by one (spec rework L1b): deep pink to red sepals 4 to 6.5 mm long spreading from a tubular hypanthium, round small white petals at the centre; each raceme flowers gradually over about three weeks, from its base up. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
+      "note": "Its flowers drawn one by one (spec rework L1b): deep pink to red sepals 4 to 6.5 mm long spreading from a tubular hypanthium, round small white petals at the centre; each raceme flowers gradually over about three weeks, from its base up. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life. Its flower laid out whorl by whorl (spec rework P5b): five small petals between five red sepals on a long floral cup (its length by hand) above the inferior ovary, five stamens and a pistil of two carpels, from the characters of Grossulariaceae by the rules at the flowering plants."
     },
     "appearance.organs.bloom.season.opening": {
       "evidence": "Authored",

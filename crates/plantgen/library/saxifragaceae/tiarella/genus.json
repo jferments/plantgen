@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Tiarella",
+  "traits": {
+    "ovary_position": "superior",
+    "stamens": 10
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: petals linear-subulate, inconspicuous; stamens 10, long and slender; calyx adherent only to the very base of the ovary. The Flora of North America's genus (as quoted in search results; the page itself was not read): hypanthium barely adnate to the ovary; carpels 2, unequal, connate."
+    }
+  }
+}

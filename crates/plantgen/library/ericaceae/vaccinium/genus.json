@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Vaccinium",
+  "traits": {
+    "ovary_position": "inferior"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams's Illustrated Flora of the Pacific States, volume 3 (1951), read in full: the blueberries and huckleberries, kept by Abrams as Vacciniaceae, with the ovary inferior and the fruit a berry crowned by the calyx (Jepson eFlora's key: ovary inferior, as quoted in search results; the page itself was not read)."
+    }
+  }
+}

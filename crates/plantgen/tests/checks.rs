@@ -29,6 +29,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "phyllotaxis_pattern",
         "each basal leaf's roll is jittered ±30°, so a fan of two ranks (irises, blue-eyed grass) turns about 140° to 150° from one leaf to the next",
     ),
+    (
+        "viola-glabella",
+        "zygomorphy",
+        "a violet's two upper, two side and one spurred lower petal are no named kind (`other`), and it is drawn two-lipped by hand, the nearest corolla that spurs one lower petal",
+    ),
 ];
 
 fn known(spec: &PlantSpec, character: &str) -> bool {

@@ -145,4 +145,7 @@ pub mod venation;
 /// cluster's units, its card and its named parts; stamens and a flower's
 /// tube moved from its form to its card, and a lone flower's bud is the
 /// flower closed.
-pub const GENERATOR_REVISION: u32 = 23;
+/// 24: every flowering family states its flowers, so every species' flower
+/// is laid out whorl by whorl (spec rework P5b); an inferior ovary of
+/// many carpels is one pistil with as many stigma lobes.
+pub const GENERATOR_REVISION: u32 = 24;

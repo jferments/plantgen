@@ -2,5 +2,20 @@
   "schema": 1,
   "rank": "family",
   "name": "Zygophyllaceae",
-  "parent": "order/zygophyllales"
+  "parent": "order/zygophyllales",
+  "traits": {
+    "flower_merosity": 5,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "ovary_position": "superior",
+    "stamens": 10,
+    "carpels": {"min": 3, "max": 5}
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "ffpa-2014",
+      "note": "The Lucid key to the flowering plant families, with the Flora of Tasmania, as search results quote them (the pages themselves were not read): sepals (4-)5; petals 4 or 5, free, clawed, on a disc; flowers usually actinomorphic; stamens (4-6) 8 or 10, usually twice the petals; ovary superior, often angled or winged, of 3 to 5 fused carpels."
+    }
+  }
 }

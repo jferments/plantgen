@@ -101,12 +101,10 @@
           "flower_look": {
             "shape": {
               "template": "flower",
-              "petals": 5,
               "petal_width": 1.0,
               "point": 0.0,
               "notch": 0.2,
               "centre": 0.2,
-              "stamens": 20,
               "stamen_length": 0.35
             },
             "colour": [0.95, 0.94, 0.9],
@@ -192,7 +190,7 @@
     "appearance.organs.bloom.season.flower_look": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its flowers drawn one by one (spec rework L1b): white flowers 10 to 15 mm across with notched petals and about 20 stamens, in small flat clusters that open together. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
+      "note": "Its flowers drawn one by one (spec rework L1b): white flowers 10 to 15 mm across with notched petals and about 20 stamens, in small flat clusters that open together. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life. Its flower laid out whorl by whorl (spec rework P5b): five white petals between five sepals on a floral cup, about twenty stamens and one pistil, from the characters of Rosaceae and Prunus by the rules at the flowering plants."
     }
   },
   "provenance": {

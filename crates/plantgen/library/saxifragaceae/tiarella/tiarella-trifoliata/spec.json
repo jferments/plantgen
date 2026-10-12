@@ -73,7 +73,6 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 5,
           "petal_width": 0.4,
           "point": 0.8,
           "notch": 0.0,
@@ -121,7 +120,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: mid-green leaves; white flowers."
+      "note": "Colours chosen by eye: mid-green leaves; white flowers. Its flower laid out whorl by whorl (spec rework P5b): five thread-like petals between five sepals on a floral cup, ten stamens and a pistil of two carpels, from the characters of Saxifragaceae and Tiarella by the rules at the flowering plants."
     },
     "taxon": {
       "evidence": "Authored",

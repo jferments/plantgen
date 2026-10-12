@@ -67,7 +67,6 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 5,
           "petal_width": 1.2,
           "point": 0.0,
           "notch": 0.0,
@@ -107,7 +106,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: bright green leaflets; pinkish-white flowers."
+      "note": "Colours chosen by eye: bright green leaflets; pinkish-white flowers. Its flower laid out whorl by whorl (spec rework P5b): five petals between five sepals, ten stamens and a pistil of five carpels, from the characters of Oxalidaceae by the rules at the flowering plants."
     },
     "taxon": {
       "evidence": "Authored",

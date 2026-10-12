@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Acer",
+  "traits": {
+    "flower_symmetry": "actinomorphic",
+    "stamens": {"min": 5, "max": 12, "typical": 8},
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full, as Aceraceae: flowers regular, polygamous or dioecious; calyx generally 5-cleft; petals as many or none; stamens 3 to 10 on the edge of a disk; pistil 1 with a 2-lobed, 2-celled ovary and 2 styles, ripening a double samara. Jepson eFlora (as quoted in search results; the page itself was not read): stamens 5 to 12; genus summaries say mostly 8."
+    }
+  }
+}

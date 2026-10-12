@@ -85,7 +85,14 @@
         }
       },
       "flower": {
-        "shape": { "template": "flower", "petals": 5, "petal_width": 0.9, "point": 0.0, "notch": 0.35, "centre": 0.2 },
+        "shape": {
+          "template": "flower",
+          "petal_width": 0.9,
+          "point": 0.0,
+          "notch": 0.35,
+          "centre": 0.2,
+          "sepals": 0
+        },
         "inflorescence": {
           "flowers": 20,
           "size": 0.35,
@@ -169,7 +176,7 @@
     "appearance.organs.flower": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its compound umbel drawn flower by flower (spec rework L1c): its kind from the carrot family's inflorescence and its rays from its own, by the rules at the flowering plants; about 20 flowers in each umbellet (Illinois Wildflowers gives 8 to 30; no flora gives a count), each about 6 mm across with five white notched petals, on pedicels 1 to 2 cm long (Jepson: 8 to 20 mm), the umbel about 25 cm across (the Flora of North America: 15 to 30 cm). From floras and extension pages as quoted in search results; the pages themselves were not read. The enlarged outer flowers are not drawn."
+      "note": "Its compound umbel drawn flower by flower (spec rework L1c): its kind from the carrot family's inflorescence and its rays from its own, by the rules at the flowering plants; about 20 flowers in each umbellet (Illinois Wildflowers gives 8 to 30; no flora gives a count), each about 6 mm across with five white notched petals, on pedicels 1 to 2 cm long (Jepson: 8 to 20 mm), the umbel about 25 cm across (the Flora of North America: 15 to 30 cm). From floras and extension pages as quoted in search results; the pages themselves were not read. The enlarged outer flowers are not drawn. Its flower laid out whorl by whorl (spec rework P5b): five white notched petals with no sepals (by hand: sepals obsolete, Abrams's Illustrated Flora of the Pacific States, 1951, read in full) on the inferior ovary, five stamens and a pistil of two carpels, from the characters of Apiaceae by the rules at the flowering plants."
     }
   },
   "provenance": {

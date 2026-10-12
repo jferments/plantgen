@@ -2,5 +2,17 @@
   "schema": 1,
   "rank": "family",
   "name": "Urticaceae",
-  "parent": "order/rosales"
+  "parent": "order/rosales",
+  "traits": {
+    "perianth": "tepals",
+    "ovary_position": "superior",
+    "carpels": 1
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "kew-powo",
+      "note": "Accounts of the family by Michigan State's and Hamburg's Botany Online, FloraBase and Plants of the World Online, as search results quote them (the pages themselves were not read): minute unisexual flowers in cymose clusters; mostly 4 or 5 undifferentiated tepals, sometimes none; stamens as many as and opposite the tepals, their filaments inflexed in bud and springing out to shed pollen; ovary superior, 1-locular with one basal ovule, ostensibly of one carpel."
+    }
+  }
 }

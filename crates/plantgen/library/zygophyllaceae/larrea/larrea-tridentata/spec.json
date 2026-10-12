@@ -89,8 +89,7 @@
       },
       "bloom": {
         "shape": {
-          "template": "flower",
-          "petals": 5
+          "template": "flower"
         },
         "colour": [0.95, 0.85, 0.15]
       }
@@ -112,7 +111,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "leaf_arrangement": "opposite"
+    "leaf_arrangement": "opposite",
+    "carpels": 5
   },
   "evidence": {
     "generator.params": {
@@ -128,7 +128,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: dark olive-green leaves, grey stems, yellow flowers. Bark pattern (plant roadmap P4, `bark_pattern`): smooth grey stems; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye from photographs: dark olive-green leaves, grey stems, yellow flowers. Bark pattern (plant roadmap P4, `bark_pattern`): smooth grey stems; set from general knowledge of the species, not measured. Its flower laid out whorl by whorl (spec rework P5b): five yellow petals between five sepals, ten stamens and a superior pistil of five carpels, from the characters of its own and Zygophyllaceae's by the rules at the flowering plants."
     },
     "taxon": {
       "evidence": "Authored",
@@ -168,7 +168,7 @@
     "traits": {
       "evidence": "SourceInferred",
       "source": "sdsu-plants-of-san-diego",
-      "note": "Plants of San Diego County's page on the species: the leaves are opposite, each two leaflets joined at the base."
+      "note": "Plants of San Diego County's page on the species: the leaves are opposite, each two leaflets joined at the base. The Flora of North America's account of the species, as quoted in search results; the page itself was not read: petals 5, yellow, twisted at the claw; stamens 10 with basal scales; ovary densely hairy, 5-lobed, 5-locular."
     }
   },
   "provenance": {

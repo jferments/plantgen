@@ -42,7 +42,7 @@
       "flower_angle": 45,
       "stalk_life": 2,
       "leaf_area": 0.015,
-      "flower_area": 0.335,
+      "flower_area": 0.230,
       "dead_area": 0.015
     }
   },
@@ -135,7 +135,6 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 6,
           "petal_width": 0.5,
           "point": 0.3,
           "notch": 0.0,
@@ -183,7 +182,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: blue-green leaves with yellowish prickles, a straw-coloured skirt, a cream flowering spike."
+      "note": "Colours chosen by eye from photographs: blue-green leaves with yellowish prickles, a straw-coloured skirt, a cream flowering spike. Its flower laid out whorl by whorl (spec rework P5b): six small tepals in two whorls, six stamens and a superior pistil of three carpels (the plants are male or female; one flower is drawn for both), from the characters of Asparagaceae by the rules at the flowering plants."
     },
     "taxon": {
       "evidence": "Authored",

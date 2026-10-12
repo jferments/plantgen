@@ -104,12 +104,10 @@
           "flower_look": {
             "shape": {
               "template": "flower",
-              "petals": 5,
               "petal_width": 0.8,
               "point": 0.3,
               "notch": 0.0,
               "centre": 0.3,
-              "stamens": 5,
               "stamen_length": 0.4
             },
             "colour": [0.72, 0.76, 0.38],
@@ -189,7 +187,7 @@
     "appearance.organs.bloom.season.flower_look": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its flowers drawn one by one (spec rework L1b): small greenish-yellow flowers 3 to 5 mm across in umbel-like clusters that open together. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
+      "note": "Its flowers drawn one by one (spec rework L1b): small greenish-yellow flowers 3 to 5 mm across in umbel-like clusters that open together. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life. Its flower laid out whorl by whorl (spec rework P5b): five small petals between five sepals on a floral cup, five stamens and a pistil of three carpels, from the characters of Rhamnaceae by the rules at the flowering plants."
     }
   },
   "provenance": {

@@ -42,7 +42,7 @@
       "pup_rate": 0.5,
       "pup_distance": 0.2,
       "leaf_area": 0.08,
-      "flower_area": 0.335,
+      "flower_area": 0.072,
       "dead_area": 0.08
     }
   },
@@ -134,7 +134,6 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 6,
           "petal_width": 0.5,
           "point": 0.3,
           "notch": 0.0,
@@ -174,6 +173,9 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "corolla_shape": "tubular"
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -188,7 +190,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: grey-green leaves with pale teeth, yellow flowers."
+      "note": "Colours chosen by eye from photographs: grey-green leaves with pale teeth, yellow flowers. Its flower laid out whorl by whorl (spec rework P5b): six yellow tepals joined in a tube, six stamens and a superior pistil of three carpels, from the characters of its own and Asphodelaceae's by the rules at the flowering plants."
     },
     "taxon": {
       "evidence": "Authored",
@@ -224,6 +226,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America's account of the species, as quoted in search results; the page itself was not read: tepals 6, prominently 3-veined, connate basally for half their length; stamens 6, slightly unequal, included to slightly exserted. The Finnish Biodiversity Information Facility calls the perianth tubular, up to 3 cm long (as quoted in search results; the page itself was not read)."
     }
   },
   "provenance": {

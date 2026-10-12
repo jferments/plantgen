@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Achlys",
+  "traits": {
+    "perianth": "absent",
+    "stamens": {"min": 9, "max": 13, "typical": 9}
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: calyx and corolla none; stamens 9 to 13, two to three times as long as the ovary, the outer dilated upward. Jepson eFlora (as quoted in search results; the page itself was not read): stamens (8)9(13)."
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Rubus",
+  "traits": {
+    "ovary_position": "superior"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: stamens numerous; pistils many, crowded on an elevated receptacle, each ovary superior. The counts belong to each species."
+    }
+  }
+}

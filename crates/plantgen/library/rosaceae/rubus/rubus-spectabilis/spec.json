@@ -109,7 +109,6 @@
           "flower_look": {
             "shape": {
               "template": "flower",
-              "petals": 5,
               "petal_width": 1.25,
               "point": 0.0,
               "notch": 0.0,
@@ -132,6 +131,9 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "stamens": {"min": 75, "max": 100}
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -146,7 +148,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: bright green leaflets; magenta flowers; shredding golden-brown bark. Fruit (plant roadmap P4), as in mid-July: the last salmonberries, raspberry-like, yellow-orange to red, about 2 cm long. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: magenta flowers in March to May; berries yellow-orange to red in late May into July. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): golden-brown bark shredding and peeling; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: bright green leaflets; magenta flowers; shredding golden-brown bark. Fruit (plant roadmap P4), as in mid-July: the last salmonberries, raspberry-like, yellow-orange to red, about 2 cm long. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: magenta flowers in March to May; berries yellow-orange to red in late May into July. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): golden-brown bark shredding and peeling; set from general knowledge of the species, not measured. Its flower laid out whorl by whorl (spec rework P5b): five magenta petals between five sepals on a floral cup and about ninety stamens round its pistils, from the characters of its own, Rosaceae's and Rubus's by the rules at the flowering plants."
     },
     "taxon": {
       "evidence": "Authored",
@@ -182,6 +184,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "burke-herbarium",
+      "note": "The Burke Herbarium's account of the species, as quoted in search results; the page itself was not read: stamens 75 to 100; pistils numerous; petals pink to purplish red."
     }
   },
   "provenance": {

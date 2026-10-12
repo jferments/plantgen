@@ -2,5 +2,21 @@
   "schema": 1,
   "rank": "family",
   "name": "Oxalidaceae",
-  "parent": "order/oxalidales"
+  "parent": "order/oxalidales",
+  "traits": {
+    "flower_merosity": 5,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "hypanthium": false,
+    "ovary_position": "superior",
+    "stamens": 10,
+    "carpels": 5
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: flowers complete, regular, 5-merous; sepals imbricated; stamens 10, filaments somewhat dilated and united at base; ovary superior, 5-celled; styles 5, distinct."
+    }
+  }
 }

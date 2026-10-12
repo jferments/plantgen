@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Olneya",
+  "traits": {
+    "flower_symmetry": "zygomorphic",
+    "zygomorphy": "papilionaceous"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "Jepson eFlora's account of desert ironwood, as search results quote it (the page itself was not read): flower papilionaceous, the wings purple-pink, the banner and keel yellow-white to pink or purple; stamens 10, 9 fused and 1 free."
+    }
+  }
+}

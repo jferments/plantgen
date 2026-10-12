@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Avicennia",
+  "traits": {
+    "flower_merosity": 4,
+    "flower_symmetry": "actinomorphic",
+    "zygomorphy": null,
+    "corolla_shape": "rotate",
+    "stamens": 4
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz's account of the black mangroves (Avicenniaceae), as search results quote it (the page itself was not read): they differ from Acanthaceae in their regular corolla. The Flora of the Cayman Islands (Plants of the World Online) gives a corolla of a short tube and 4 almost equal spreading lobes; PROTA calls it slightly zygomorphic; calyx 5, stamens 4 in the throat (as quoted in search results; the pages themselves were not read). Drawn regular, 4-merous."
+    }
+  }
+}

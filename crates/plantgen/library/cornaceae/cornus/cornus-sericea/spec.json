@@ -104,12 +104,10 @@
           "flower_look": {
             "shape": {
               "template": "flower",
-              "petals": 4,
               "petal_width": 0.9,
               "point": 0.4,
               "notch": 0.0,
               "centre": 0.15,
-              "stamens": 4,
               "stamen_length": 0.6
             },
             "colour": [0.93, 0.92, 0.85],
@@ -189,7 +187,7 @@
     "appearance.organs.bloom.season.flower_look": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its flowers drawn one by one (spec rework L1b): creamy white flowers 6 to 8 mm across with four pointed petals and four conspicuous stamens, in flat-topped clusters that open together. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
+      "note": "Its flowers drawn one by one (spec rework L1b): creamy white flowers 6 to 8 mm across with four pointed petals and four conspicuous stamens, in flat-topped clusters that open together. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life. Its flower laid out whorl by whorl (spec rework P5b): four dull white petals between four small sepals on the inferior ovary, four stamens and a pistil of two carpels, from the characters of Cornaceae by the rules at the flowering plants."
     }
   },
   "provenance": {
