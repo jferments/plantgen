@@ -9,6 +9,9 @@
   "traits": {
     "sporangia": {
       "sori": "usually"
+    },
+    "vernation": {
+      "circinate": "usually"
     }
   },
   "evidence": {
@@ -16,6 +19,11 @@
       "evidence": "SourceInferred",
       "source": "openstax-biology-2e",
       "note": "Ferns bear their sporangia in small clusters, sori, on the underside of their fronds (Biology 2e, 25.4). Usually rather than always, as a few ferns bear them otherwise."
+    },
+    "traits.vernation": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams's flora (vol. 1, 1923; ferns by Maxon), its account of the fern family as it then stood, which held every leptosporangiate fern of the Pacific States: blades coiled in vernation, the young frond unrolling from the tip. Usually rather than always, since a few ferns of this subclass, such as the floating water ferns, do not unroll their leaves this way."
     },
     "generator.program": {
       "evidence": "Authored",

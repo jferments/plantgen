@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Athyrium",
+  "traits": {
+    "sorus_shape": "oblong",
+    "indusium": {
+      "flap": "usually",
+      "none": "rarely"
+    },
+    "sorus_position": "medial",
+    "leaf_division": "compound",
+    "division_pattern": "pinnate"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams's flora (vol. 1, 1923; ferns by Maxon): sori on the backs of the veins, slanting from the midrib, narrowly oblong or curved into a crescent or horseshoe, rarely roundish; the indusium the sorus's shape, fixed along its inner side, rarely lacking; blades one to three times pinnate."
+    }
+  }
+}

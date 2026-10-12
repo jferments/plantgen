@@ -14,7 +14,11 @@
 //! its card less the card's petiole, at the size its light form draws it
 //! (`crate::looks::Forms`); a leaf drawn as a structure of pieces (a grass
 //! blade) is the pieces' lengths added up, leaving out pieces of a type a
-//! production turns another organ into (thatch, the dead blade). Heads,
+//! production turns another organ into (thatch, the dead blade). A leaf
+//! drawn as a structure of its own axis and the leaflets on it (a fern's
+//! frond) has its stipe, the axis below the lowest leaflet, its blade, the
+//! axis above, and its width, twice the farthest a leaflet reaches out
+//! from the axis. Heads,
 //! spikelets, divided leaves and clusters measure their parts from their
 //! own layouts ([`crate::capitula::dimensions`],
 //! [`crate::spikelets::dimensions`], [`crate::divided::dimensions`],
@@ -906,6 +910,8 @@ fn arrangement(grown: &Grown<'_>, looks: &[Look], tally: &mut Tally) {
 fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tally) {
     // Pieces of each leaf structure: its index and the organs within it.
     let mut pieces: BTreeMap<u32, Vec<&GraphOrgan>> = BTreeMap::new();
+    // Leaflets each leaf structure holds: a fern's pinnae on its rachis.
+    let mut leaflets: BTreeMap<u32, Vec<&GraphOrgan>> = BTreeMap::new();
     for organ in &drawn.organs {
         if grown.later(organ) {
             continue;
@@ -915,12 +921,25 @@ fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tal
             Some(structure) if term == organs::PIECE => {
                 pieces.entry(structure).or_default().push(organ);
             }
+            Some(structure) if term == "leaflet" => {
+                leaflets.entry(structure).or_default().push(organ);
+            }
             None if term == "leaf" => {
                 if let Some((look, size)) = leaf_look(organ, looks) {
                     leaf_sizes(&look.shape, size, organ.id, tally);
                 }
             }
             _ => {}
+        }
+    }
+    for (structure, members) in &leaflets {
+        let leafy = drawn
+            .structures
+            .get(*structure as usize)
+            .and_then(|s| grown.growth.structure_types.get(usize::from(s.structure)))
+            .is_some_and(|kind| kind.term == "leaf");
+        if leafy && !pieces.contains_key(structure) {
+            frond_sizes(*structure, members, drawn, looks, tally);
         }
     }
     for (structure, members) in pieces {
@@ -951,6 +970,56 @@ fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tal
         tally.add("leaf_length_m", id, 0, length);
         tally.add("leaf_width_m", id, 0, width);
     }
+}
+
+/// A leaf drawn as a structure whose axis is its own segments and whose
+/// leaflets stand on them (a fern's frond: its stipe and rachis, and its
+/// pinnae): the stipe is the axis below the lowest leaflet, the blade the
+/// rest, and the blade's width twice the farthest a leaflet reaches out
+/// from the axis.
+fn frond_sizes(
+    structure: u32,
+    leaflets: &[&GraphOrgan],
+    drawn: &PlantGraph,
+    looks: &[Look],
+    tally: &mut Tally,
+) {
+    let bearing: BTreeSet<u32> = leaflets.iter().filter_map(|organ| organ.segment).collect();
+    let (mut stipe, mut blade) = (0.0, 0.0);
+    let mut first = true;
+    for (index, segment) in (0_u32..).zip(&drawn.segments) {
+        if segment.within != Some(structure) {
+            continue;
+        }
+        let length = (segment.end - segment.start).length();
+        // The rachis is drawn base first: bare pieces up to the first
+        // that bears a leaflet are the stipe.
+        if first && !bearing.contains(&index) {
+            stipe += length;
+        } else {
+            first = false;
+            blade += length;
+        }
+    }
+    let mut width: f64 = 0.0;
+    for organ in leaflets {
+        let Some((_, size)) = leaf_look(organ, looks) else {
+            continue;
+        };
+        let axis = organ
+            .segment
+            .and_then(|s| drawn.segments.get(s as usize))
+            .map_or(organ.heading, |s| {
+                (s.end - s.start).normalize_or(organ.heading)
+            });
+        let along = organ.heading.dot(axis).clamp(-1.0, 1.0);
+        width = width.max(2.0 * size * (1.0 - along * along).sqrt());
+    }
+    let id = drawn.structures[structure as usize].id;
+    tally.add("leaf_length_m", id, 0, blade);
+    tally.add("leaf_width_m", id, 0, width);
+    tally.add("petiole_length_m", id, 0, stipe);
+    tally.kind("division_pattern", "pinnate");
 }
 
 /// The look a leaf is drawn with in its light, and its drawn size.

@@ -14,7 +14,6 @@
     "params": {
       "fronds_per_year": 10,
       "frond_life": 2.5,
-      "frond_length": 0.45,
       "frond_seed": 0.2,
       "size_years": 3,
       "young_angle": 30,
@@ -23,8 +22,6 @@
       "angle_spread": 8,
       "frond_radius": 0.0015,
       "pieces": 16,
-      "stipe": 0.08,
-      "pinna_length": 0.11,
       "pinna_peak": 0.5,
       "pinna_base": 0.2,
       "pinna_tip": 0.3,
@@ -80,7 +77,24 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "rhizome_habit": "short_creeping",
+    "leaf_habit": "evergreen",
+    "leaf_division": "simple",
+    "leaf_incision": "dissected",
+    "division_pattern": "pinnate",
+    "division_order": 1,
+    "leaf_shape": {"linear": "usually", "oblanceolate": "often"},
+    "leaf_length_m": {"min": 0.13, "max": 0.8},
+    "leaf_width_m": {"min": 0.02, "max": 0.09},
+    "petiole_length_m": {"min": 0.02, "max": 0.3}
+  },
   "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams's flora (vol. 1, 1923; ferns by Maxon), under Struthiopteris spicant: a short-creeping woody rhizome; sterile fronds many, in a ring, spreading or ascending, 15 to 100 cm, evergreen; their stipes 2 to 30 cm; blades linear to linear-oblanceolate, 13 to 80 cm by 2 to 9 cm, cut to the midrib into 30 to 80 pairs of segments (pinnate at the base); fertile fronds few, central, erect, 40 to 150 cm, with very narrow, distant pinnae. The sizes here are the sterile fronds'."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

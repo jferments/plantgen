@@ -6,11 +6,46 @@
   "traits": {
     "reproduction": "spores"
   },
+  "rules": {
+    "generator.params.frond_length": {
+      "rule": "leaf_length_m + petiole_length_m",
+      "why": "A fern's frond is its blade and its stipe, the leaf's stalk, end to end."
+    },
+    "generator.params.stipe": {
+      "rule": "petiole_length_m / (leaf_length_m + petiole_length_m)",
+      "why": "The bare share of a frond's length is its stipe's."
+    },
+    "generator.params.pinna_length": {
+      "rule": "leaf_width_m / (2 * (leaf_length_m + petiole_length_m))",
+      "why": "A blade is as broad as its longest pair of pinnae reach out from the rachis, one each side; pinnae standing well out from the rachis reach nearly their whole length, and the program sizes them by the frond's length."
+    },
+    "generator.params.frond_life": {
+      "map": {
+        "leaf_habit": {
+          "deciduous": 1,
+          "evergreen": {
+            "rule": "leaf_life_years"
+          }
+        }
+      },
+      "why": "A deciduous fern's fronds die in their first winter, a year from when they unroll; an evergreen fern's live as long as its leaves are stated to."
+    },
+    "appearance.organs.*.shape.divided": {
+      "template": "frond",
+      "rule": "division_order >= 3 ? 1 : 0",
+      "why": "A frond's pinnae are drawn by the program and each pinna by its card, so a twice-divided frond's pinna card is divided once and a frond divided three times draws its pinnules divided again."
+    }
+  },
   "evidence": {
     "traits.reproduction": {
       "evidence": "SourceInferred",
       "source": "openstax-biology-2e",
       "note": "Ferns and horsetails are seedless vascular plants: they spread by spores shed from sporangia, not by seeds (Biology 2e, 25.4)."
+    },
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "What the fern program's parameters and the frond card mean: frond_length is the whole frond, stipe included, and stipe the share of it without pinnae; frond_life is a frond's years; the program draws the frond's first division as pinnae, so the pinna card shows the divisions below it. Floras measure a fern's blade and stipe apart, so the frond is their sum."
     }
   }
 }
