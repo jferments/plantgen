@@ -466,8 +466,8 @@ fn part_meshes_and_sites_read_back() {
 }
 
 /// Spec rework SEMLOD: a rose's bloom has coarser steps of its part mesh,
-/// listed in the manifest and read back losslessly, each with at most half
-/// the triangles of the one before and detail never finer.
+/// listed in the manifest and read back losslessly, each with at most two
+/// thirds of the triangles of the one before and detail never finer.
 #[test]
 fn part_steps_read_back() {
     let mut spec = PlantSpec::builtin("rosa-nutkana").unwrap();
@@ -511,7 +511,7 @@ fn part_steps_read_back() {
                 .unwrap();
             assert_eq!((step.coarse, triangles), (row.coarse, row.triangles));
             assert_eq!(step.variants.len(), row.variants);
-            assert!(triangles * 2 <= last, "{triangles} after {last}");
+            assert!(triangles * 3 <= last * 2, "{triangles} after {last}");
             assert!(step.detail >= detail);
             (last, detail) = (triangles, step.detail);
         }

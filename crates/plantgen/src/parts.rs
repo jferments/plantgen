@@ -40,8 +40,8 @@
 //! **Steps** (spec rework SEMLOD). A part mesh seen small draws more
 //! triangles than its pixels show, so each type may also have coarser
 //! steps ([`part_steps`]): the same organ drawn by the same layout one or
-//! more [`coarsest`] steps coarser, each with at most half the triangles
-//! of the one before, kept only where it still looks like the part mesh
+//! more [`coarsest`] steps coarser, each with at most [`STEP_SHARE`] of
+//! the triangles of the one before, kept only where it still looks like the part mesh
 //! from every direction above ([`step_difference`]: its cover within
 //! [`STEP_COVER`], its colour within [`STEP_COLOUR`]). Each step has a
 //! detail ([`detail`]), the side of a square of its triangles' mean area
@@ -273,7 +273,7 @@ pub struct PartStep {
 
 /// An organ type's part mesh in steps (spec rework SEMLOD): the part mesh
 /// ([`PartMesh`]) is the finest, and each step after it is drawn coarser
-/// with at most half the triangles of the one before.
+/// with at most [`STEP_SHARE`] of the triangles of the one before.
 ///
 /// A renderer draws, of the part mesh and its steps, the finest whose
 /// `detail` times the card's projected length covers at least its least
@@ -312,7 +312,7 @@ pub fn part_steps(looks: &[Look], parts: &[PartMesh]) -> Vec<PartSteps> {
                     break;
                 };
                 let triangles = variants.iter().map(Mesh::triangle_count).max().unwrap_or(0);
-                if fits(&variants, last / 2) && looks_alike(&part.variants, &variants) {
+                if fits(&variants, last * 2 / 3) && looks_alike(&part.variants, &variants) {
                     last = triangles;
                     // Each step's detail at least the finer one's, so a
                     // renderer moves to it no sooner.
@@ -333,14 +333,19 @@ pub fn part_steps(looks: &[Look], parts: &[PartMesh]) -> Vec<PartSteps> {
         .collect()
 }
 
+/// Most of the triangles of the step before it a step may hold: two
+/// thirds, so each step is a third or more cheaper.
+pub const STEP_SHARE: f64 = 2.0 / 3.0;
+
 /// Most a step may lose or gain of the part mesh's cover seen from any
-/// direction, as a share of the part mesh's mean cover over the
-/// directions.
+/// direction, as a share of that direction's cover or, where it shows
+/// less than the mean over the directions (a flat part seen edge on), of
+/// the mean.
 pub const STEP_COVER: f64 = 0.1;
 
 /// Most a step's mean colour seen from any direction may differ from the
 /// part mesh's in any linear channel, weighed by how much of the part mesh
-/// that direction shows against its mean: a petal's underside a shade
+/// that direction shows against its mean, at most 1: a petal's underside a shade
 /// lighter where the step draws it with fewer vertices passes, a cluster
 /// whose units turn a different colour does not.
 pub const STEP_COLOUR: f64 = 0.07;
@@ -359,9 +364,9 @@ fn looks_alike(finest: &[Mesh], step: &[Mesh]) -> bool {
 /// How far `step` is from the part mesh `finest`, variant by variant and
 /// seen along each of the cover directions (`crate::mesh`), the upper
 /// hemisphere: the most cover it loses or gains, as a share of the part
-/// mesh's mean cover over the directions, and the most its mean seen
-/// colour differs in any channel, weighed by that direction's cover over
-/// the mean. Each view is a square of [`VIEW_CELLS`] cells round the part
+/// mesh's cover that way or of its mean over the directions, whichever is
+/// more, and the most its mean seen colour differs in any channel,
+/// weighed by that direction's cover over the mean, at most 1. Each view is a square of [`VIEW_CELLS`] cells round the part
 /// mesh's outline, a cell covered when its centre falls in a triangle
 /// turned toward the viewer and coloured by the nearest one.
 #[must_use]
@@ -390,10 +395,14 @@ pub fn step_difference(finest: &[Mesh], step: &[Mesh]) -> (f64, f64) {
         }
         for (fine, coarse) in &views {
             #[allow(clippy::cast_precision_loss)]
-            let cover = (coarse.covered as f64 - fine.covered as f64).abs() / mean;
+            let cover =
+                (coarse.covered as f64 - fine.covered as f64).abs() / mean.max(fine.covered as f64);
             #[allow(clippy::cast_precision_loss)]
             let colour = (0..3)
-                .map(|k| (coarse.colour[k] - fine.colour[k]).abs() * fine.covered as f64 / mean)
+                .map(|k| {
+                    (coarse.colour[k] - fine.colour[k]).abs()
+                        * (fine.covered as f64 / mean).min(1.0)
+                })
                 .fold(0.0, f64::max);
             worst = (worst.0.max(cover), worst.1.max(colour));
         }

@@ -52,6 +52,10 @@ pub fn is_single(fruit: &Fruit) -> bool {
 pub(crate) struct Detail {
     around: u32,
     rings: u32,
+    /// The facets and rings of the finest step this one is coarser than:
+    /// a body drawn coarser is widened to cover as much as it does there
+    /// ([`Detail::widening`]).
+    fine: Option<(u32, u32)>,
 }
 
 impl Detail {
@@ -60,22 +64,27 @@ impl Detail {
         Self {
             around: 14,
             rings: 9,
+            fine: None,
         },
         Self {
             around: 10,
             rings: 7,
+            fine: None,
         },
         Self {
             around: 8,
             rings: 5,
+            fine: None,
         },
         Self {
             around: 6,
             rings: 4,
+            fine: None,
         },
         Self {
             around: 5,
             rings: 3,
+            fine: None,
         },
     ];
 
@@ -87,7 +96,33 @@ impl Detail {
             4..=12 => 2,
             _ => 3,
         };
-        Self::STEPS[(step + coarse).min(Self::STEPS.len() - 1)]
+        let fine = Self::STEPS[step];
+        let drawn = Self::STEPS[(step + coarse).min(Self::STEPS.len() - 1)];
+        Self {
+            fine: (drawn != fine).then_some((fine.around, fine.rings)),
+            ..drawn
+        }
+    }
+
+    /// How much wider (across, along) a body drawn at this detail is made
+    /// than its true size so that, seen from the side or end, it covers
+    /// what it does at its finest step: the ratio of the areas of the
+    /// polygons its facets and its rings inscribe in a circle, the finest
+    /// over its own, square-rooted; 1 at the finest.
+    fn widening(self) -> (f64, f64) {
+        // The area of a regular n-gon inscribed in the unit circle, over
+        // the circle's.
+        let share = |n: u32| {
+            let n = f64::from(n.max(3));
+            n * math::sin(std::f64::consts::TAU / n) / std::f64::consts::TAU
+        };
+        self.fine.map_or((1.0, 1.0), |(around, rings)| {
+            let along = math::sqrt(share(2 * rings) / share(2 * self.rings));
+            (
+                math::sqrt(share(around) / share(self.around)) * along,
+                along,
+            )
+        })
     }
 
     /// A cluster's units merged into one solid (`crate::clusters`).
@@ -419,6 +454,7 @@ impl One {
         core.detail = Detail {
             around: 6,
             rings: 4,
+            fine: None,
         };
         core.draw(self.direction, self.across, colour, part, mesh);
         let count: u32 = match self.detail.around {
@@ -430,14 +466,17 @@ impl One {
             14.. => Detail {
                 around: 7,
                 rings: 4,
+                fine: None,
             },
             8..=13 => Detail {
                 around: 5,
                 rings: 3,
+                fine: None,
             },
             _ => Detail {
                 around: 4,
                 rings: 2,
+                fine: None,
             },
         };
         let other = self.direction.cross(self.across);
@@ -570,11 +609,13 @@ struct Spheroid {
 impl Spheroid {
     /// The half below its centre (toward `-axis`), as an open bowl.
     fn half(&self, axis: Vec3, across: Vec3, colour: [f32; 3], part: Part, mesh: &mut Mesh) {
-        let Detail { around, rings } = self.detail;
+        let Detail { around, rings, .. } = self.detail;
+        let (wide, long) = self.detail.widening();
+        let (a, b, c) = (self.a * long, self.b * wide, self.c * wide);
         let other = axis.cross(across);
         let leaf = part.leaf(self.centre, axis, across, 0.0, 0.0, colour);
         let first = u32::try_from(mesh.positions.len()).unwrap_or(0);
-        mesh.push(leaf.vertex(self.centre - axis * self.a, colour));
+        mesh.push(leaf.vertex(self.centre - axis * a, colour));
         // Rings from the bottom up to the rim at the centre.
         let rings = rings.max(3);
         for r in 1..=rings {
@@ -583,14 +624,14 @@ impl Spheroid {
             let wave = 1.0
                 + self.wave_depth
                     * math::cos(std::f64::consts::TAU * f64::from(self.waves) * t).max(0.0);
-            let along = -math::cos(phi) * self.a;
+            let along = -math::cos(phi) * a;
             let out = math::sin(phi) * wave;
             for k in 0..around {
                 let theta = std::f64::consts::TAU * f64::from(k) / f64::from(around);
                 let point = self.centre
                     + axis * along
-                    + across * (math::cos(theta) * self.b * out)
-                    + other * (math::sin(theta) * self.c * out);
+                    + across * (math::cos(theta) * b * out)
+                    + other * (math::sin(theta) * c * out);
                 mesh.push(leaf.vertex(point, colour));
             }
         }
@@ -608,30 +649,32 @@ impl Spheroid {
     }
 
     fn draw(&self, axis: Vec3, across: Vec3, colour: [f32; 3], part: Part, mesh: &mut Mesh) {
-        let Detail { around, rings } = self.detail;
+        let Detail { around, rings, .. } = self.detail;
+        let (wide, long) = self.detail.widening();
+        let (a, b, c) = (self.a * long, self.b * wide, self.c * wide);
         let other = axis.cross(across);
         let leaf = part.leaf(self.centre, axis, across, 0.0, 0.0, colour);
         let first = u32::try_from(mesh.positions.len()).unwrap_or(0);
-        mesh.push(leaf.vertex(self.centre - axis * self.a, colour));
+        mesh.push(leaf.vertex(self.centre - axis * a, colour));
         for r in 1..rings {
             let phi = math::PI * f64::from(r) / f64::from(rings);
             let t = f64::from(r) / f64::from(rings);
             let wave = 1.0
                 + self.wave_depth
                     * math::cos(std::f64::consts::TAU * f64::from(self.waves) * t).max(0.0);
-            let along = -math::cos(phi) * self.a;
+            let along = -math::cos(phi) * a;
             let out = math::sin(phi) * wave;
             for k in 0..around {
                 let theta = std::f64::consts::TAU * f64::from(k) / f64::from(around);
                 let rib = 1.0 + self.rib_depth * math::cos(f64::from(self.ribs) * theta);
                 let point = self.centre
                     + axis * along
-                    + across * (math::cos(theta) * self.b * out * rib)
-                    + other * (math::sin(theta) * self.c * out * rib);
+                    + across * (math::cos(theta) * b * out * rib)
+                    + other * (math::sin(theta) * c * out * rib);
                 mesh.push(leaf.vertex(point, colour));
             }
         }
-        let top = mesh.push(leaf.vertex(self.centre + axis * self.a, colour));
+        let top = mesh.push(leaf.vertex(self.centre + axis * a, colour));
         let at = |r: u32, k: u32| first + 1 + (r - 1) * around + k % around;
         for k in 0..around {
             mesh.indices

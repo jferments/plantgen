@@ -42,8 +42,9 @@
 //! **Drawing.** The solid draws each bract as its boat seen from both
 //! sides, glumes in the look's colour turned half to its accent, lemmas
 //! in its colour, and each awn as a thin three-sided prism in the lemma's
-//! colour darkened. A part mesh one step coarser draws each bract as a
-//! flat kite and each awn straight; two steps a cluster's reduced
+//! colour darkened. A part mesh one step coarser draws each bract as its
+//! kite folded along the midrib, its margin out to the side its folds
+//! take, bract by bract to either, and each awn straight; two steps a cluster's reduced
 //! spikelet: one kite round its bracts. The card paints the layout square
 //! to its plane: lemmas from the lowest up, the glumes over them, the
 //! awns over everything.
@@ -335,7 +336,7 @@ fn prism(part: Part, from: Vec3, to: Vec3, radius: f64, colour: [f32; 3], mesh: 
 
 /// Draw `spikelet` in `frame` (its `radius` the spikelet's length): at
 /// `part.coarse` 0 every bract as its boat and every awn bent at its
-/// knee, at 1 bracts as flat kites and awns straight, from 2 one kite
+/// knee, at 1 bracts as folded kites and awns straight, from 2 one kite
 /// round its bracts and its longest awn (see the module).
 pub(crate) fn draw(
     spikelet: &Spikelet,
@@ -386,7 +387,7 @@ pub(crate) fn draw(
         }
         return;
     }
-    for s in &laid.scales {
+    for (index, s) in laid.scales.iter().enumerate() {
         let colour = colour_of(s);
         if part.coarse == 0 {
             let plus = frame.point(s.margin + s.flank);
@@ -395,13 +396,17 @@ pub(crate) fn draw(
             both(part, &[foot, keel, tip, plus], colour, mesh);
             both(part, &[foot, minus, tip, keel], colour, mesh);
         } else {
+            // The kite folded along its midrib, its margin to one side of
+            // the plane, bract by bract to either, so seen edge on the
+            // spikelet still shows its bracts.
+            let flank = if index % 2 == 0 { s.flank } else { -s.flank };
             both(
                 part,
                 &[
                     frame.point(s.foot),
                     frame.point(s.keel),
                     frame.point(s.tip),
-                    frame.point(s.margin),
+                    frame.point(s.margin + flank),
                 ],
                 colour,
                 mesh,
