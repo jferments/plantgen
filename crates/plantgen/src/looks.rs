@@ -84,11 +84,10 @@ pub struct OrganLook {
 #[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct Families {
-    /// Sun and shade leaves, 0 (alike) to 1: how far a leaf grown in light
-    /// past [`SUN`] of the way along [`sunlit`]'s scale is smaller,
-    /// narrower and more deeply lobed or toothed, and one grown in light
-    /// short of [`SHADE`] of the way larger, broader and shallower
-    /// ([`Shape::in_light`]).
+    /// Sun and shade leaves, 0 (alike) to 1: how far a leaf grown in full
+    /// sun is smaller, narrower and more deeply lobed or toothed than the
+    /// type's own look, and one grown in deep shade larger, broader and
+    /// shallower, by degrees between ([`light_form`], [`Shape::in_light`]).
     pub plasticity: f64,
     /// Juvenile leaves, on a plant younger than their `until` when they
     /// grew.
@@ -125,12 +124,27 @@ pub fn sunlit(light: f64) -> f64 {
     ((crate::math::ln(light.max(DEEP_SHADE)) - floor) / span).clamp(0.0, 1.0)
 }
 
-/// How far along [`sunlit`]'s scale a leaf's light must lie for it to
-/// grow as a sun leaf, and short of which it grows as a shade leaf;
-/// between, as its type's own look. On the light itself they fall at
-/// about 0.17 and 0.08.
-pub const SUN: f64 = 2.0 / 3.0;
-pub const SHADE: f64 = 1.0 / 3.0;
+/// How far toward its sun form (1) or its shade form (-1) a leaf grown in
+/// `light` is (spec rework L3): its place on [`sunlit`]'s scale, the
+/// middle fifth of which is the type's own look, from 0.1 down all shade
+/// and from 0.9 up all sun. A leaf's size follows it smoothly; its shape
+/// is drawn in [`BANDS`] steps ([`Forms`]).
+#[must_use]
+pub fn light_form(light: f64) -> f64 {
+    ((sunlit(light) - 0.5) / 0.4).clamp(-1.0, 1.0)
+}
+
+/// The steps a leaf type with sun and shade leaves draws them in, from
+/// its deepest shade form to its full sun form, its own look the middle
+/// one: each step a template of the atlas.
+pub const BANDS: usize = 5;
+
+/// The place on [`light_form`]'s scale of the leaves of step `band`.
+#[must_use]
+#[allow(clippy::cast_precision_loss)]
+pub fn band_form(band: usize) -> f64 {
+    2.0 * band.min(BANDS - 1) as f64 / (BANDS - 1) as f64 - 1.0
+}
 
 impl Families {
     /// Check the plasticity, the juvenile leaves and that `shape` has sun
@@ -141,7 +155,7 @@ impl Families {
     /// Describes the first problem.
     pub fn validate(&self, shape: &Shape) -> Result<(), String> {
         within("families plasticity", self.plasticity, 0.0, 1.0)?;
-        if self.plasticity > 0.0 && shape.in_light(true, self.plasticity).is_none() {
+        if self.plasticity > 0.0 && shape.in_light(1.0, self.plasticity).is_none() {
             return Err(format!(
                 "families plasticity needs a simple, lobed, palmate or compound leaf or a sprig, found {}",
                 shape.name()
@@ -171,22 +185,24 @@ impl Families {
 }
 
 /// Where an organ type's leaves of each family are drawn (plant roadmap
-/// P4): the indices of its sun, shade and juvenile looks among the
-/// plant's looks, when a leaf is juvenile, and the sizes of sun and shade
-/// leaves as shares of the type's. The default draws every leaf with the
-/// type's own look.
+/// P4, spec rework L3): the indices among the plant's looks of the looks
+/// its leaves wear in each of the [`BANDS`] steps of light, from deep
+/// shade to full sun (the middle one its own), its plasticity, which sizes
+/// them, and its juvenile look with when a leaf is juvenile. The default
+/// draws every leaf with the type's own look.
 #[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub struct Forms {
-    pub sun: Option<usize>,
-    pub shade: Option<usize>,
+    pub bands: Option<[usize; BANDS]>,
+    pub plasticity: f64,
     pub juvenile: Option<(usize, f64)>,
-    pub sizes: (f64, f64),
 }
 
 impl Forms {
     /// The look, of the plant's looks, that a leaf of the type whose own
     /// look is `own` is drawn with, grown in `light` on a plant `born`
-    /// years old, and its size as a share of the type's.
+    /// years old, and its size as a share of the type's: the step of its
+    /// [`light_form`] nearest, and the size of its own place on that scale
+    /// ([`Shape::size_in_light`]).
     #[must_use]
     pub fn of(&self, own: usize, light: f64, born: f64) -> (usize, f64) {
         if let Some((juvenile, until)) = self.juvenile
@@ -194,12 +210,18 @@ impl Forms {
         {
             return (juvenile, 1.0);
         }
-        let lit = sunlit(light);
-        match (self.sun, self.shade) {
-            (Some(sun), _) if lit > SUN => (sun, self.sizes.0),
-            (_, Some(shade)) if lit < SHADE => (shade, self.sizes.1),
-            _ => (own, 1.0),
-        }
+        let Some(bands) = self.bands else {
+            return (own, 1.0);
+        };
+        let form = light_form(light);
+        #[allow(
+            clippy::cast_possible_truncation,
+            clippy::cast_sign_loss,
+            clippy::cast_precision_loss
+        )]
+        let band =
+            ((f64::midpoint(form, 1.0) * (BANDS - 1) as f64).round() as usize).min(BANDS - 1);
+        (bands[band], Shape::size_in_light(form, self.plasticity))
     }
 }
 
@@ -1442,15 +1464,26 @@ impl Shape {
         }
     }
 
-    /// This leaf as grown in the sun (`sun`) or the shade, for a
-    /// `plasticity` 0 to 1 (plant roadmap P4), and its size as a share of
-    /// the leaf's own: a sun leaf is smaller, narrower and more deeply
-    /// lobed or toothed; a shade leaf larger, broader and shallower (sun
-    /// and shade leaves of one crown, as of oaks and maples). `None` for
-    /// shapes without the two forms.
+    /// The size, as a share of its type's, of a leaf `form` of the way to
+    /// its sun form (1) or its shade form (-1), for a `plasticity` 0 to 1
+    /// (see [`Self::in_light`]).
     #[must_use]
-    pub fn in_light(&self, sun: bool, plasticity: f64) -> Option<(Shape, f64)> {
-        let p = plasticity.clamp(0.0, 1.0);
+    pub fn size_in_light(form: f64, plasticity: f64) -> f64 {
+        1.0 - 0.12 * plasticity.clamp(0.0, 1.0) * form.clamp(-1.0, 1.0)
+    }
+
+    /// This leaf as grown `form` of the way to its sun form (1) or its
+    /// shade form (-1), for a `plasticity` 0 to 1 (plant roadmap P4, spec
+    /// rework L3), and its size as a share of the leaf's own: a sun leaf
+    /// is smaller, narrower and more deeply lobed or toothed; a shade leaf
+    /// larger, broader and shallower (sun and shade leaves of one crown, as
+    /// of oaks and maples). A tooth's depth is taken as a share of the
+    /// blade's half-width, as a lobe's is, so that the sun deepens how far
+    /// the teeth cut. `None` for shapes without the two forms.
+    #[must_use]
+    pub fn in_light(&self, form: f64, plasticity: f64) -> Option<(Shape, f64)> {
+        let sun = form > 0.0;
+        let p = plasticity.clamp(0.0, 1.0) * form.abs().min(1.0);
         // Narrower in the sun, broader in the shade.
         let wide = |value: f64, low: f64, high: f64, narrow: f64, broad: f64| {
             (if sun {
@@ -1468,13 +1501,25 @@ impl Shape {
                 value * (1.0 - toward * p)
             }
         };
-        let size = if sun { 1.0 - 0.12 * p } else { 1.0 + 0.12 * p };
+        // A tooth's depth as a share of the half-width it cuts into, from
+        // `half` to `then`.
+        let cut = |depth: f64, half: f64, then: f64| {
+            if half <= 0.0 {
+                return depth;
+            }
+            (deep(depth / half, 0.85, 0.4) * then).min(0.2)
+        };
+        let size = Self::size_in_light(form, plasticity);
         let shape = match self {
-            Self::Simple(s) => Self::Simple(Simple {
-                width: wide(s.width, 0.03, 1.5, 0.25, 0.15),
-                tooth_depth: deep(s.tooth_depth, 0.2, 0.3),
-                ..s.clone()
-            }),
+            Self::Simple(s) => {
+                let width = wide(s.width, 0.03, 1.5, 0.25, 0.15);
+                let half = |width: f64| 0.5 * width * (1.0 - s.petiole);
+                Self::Simple(Simple {
+                    width,
+                    tooth_depth: cut(s.tooth_depth, half(s.width), half(width)),
+                    ..s.clone()
+                })
+            }
             Self::Lobed(s) => Self::Lobed(Lobed {
                 width: wide(s.width, 0.1, 1.5, 0.12, 0.1),
                 depth: deep(s.depth, 0.9, 0.5),
@@ -1489,11 +1534,14 @@ impl Shape {
                 leaflet_width: wide(s.leaflet_width, 0.1, 1.0, 0.2, 0.15),
                 ..s.clone()
             }),
-            Self::Sprig(s) => Self::Sprig(Sprig {
-                width: wide(s.width, 0.03, 1.2, 0.2, 0.15),
-                tooth_depth: deep(s.tooth_depth, 0.2, 0.4),
-                ..s.clone()
-            }),
+            Self::Sprig(s) => {
+                let width = wide(s.width, 0.03, 1.2, 0.2, 0.15);
+                Self::Sprig(Sprig {
+                    width,
+                    tooth_depth: cut(s.tooth_depth, 0.5 * s.width, 0.5 * width),
+                    ..s.clone()
+                })
+            }
             _ => return None,
         };
         Some((shape, size))
@@ -2021,23 +2069,24 @@ impl WithFamilies for Vec<Look> {
                 inflorescence: None,
                 ..own.clone()
             };
-            if families.plasticity > 0.0
-                && let (Some((sun, sun_size)), Some((shade, shade_size))) = (
-                    own.shape.in_light(true, families.plasticity),
-                    own.shape.in_light(false, families.plasticity),
-                )
-            {
-                forms.sun = Some(self.len());
-                self.push(Look {
-                    bend: own.bend,
-                    ..variant(sun)
-                });
-                forms.shade = Some(self.len());
-                self.push(Look {
-                    bend: own.bend,
-                    ..variant(shade)
-                });
-                forms.sizes = (sun_size, shade_size);
+            if families.plasticity > 0.0 && own.shape.in_light(1.0, families.plasticity).is_some() {
+                let mut bands = [index; BANDS];
+                for (band, at) in bands.iter_mut().enumerate() {
+                    let form = band_form(band);
+                    if form == 0.0 {
+                        continue;
+                    }
+                    let Some((shape, _)) = own.shape.in_light(form, families.plasticity) else {
+                        continue;
+                    };
+                    *at = self.len();
+                    self.push(Look {
+                        bend: own.bend,
+                        ..variant(shape)
+                    });
+                }
+                forms.bands = Some(bands);
+                forms.plasticity = families.plasticity;
             }
             if let Some(juvenile) = &families.juvenile {
                 forms.juvenile = Some((self.len(), juvenile.until));
@@ -2579,19 +2628,49 @@ mod tests {
             _ => unreachable!(),
         };
         for shape in shapes {
-            let (sun, sun_size) = shape.in_light(true, 0.8).unwrap();
-            let (shade, shade_size) = shape.in_light(false, 0.8).unwrap();
+            let (sun, sun_size) = shape.in_light(1.0, 0.8).unwrap();
+            let (shade, shade_size) = shape.in_light(-1.0, 0.8).unwrap();
+            let (half_sun, half_size) = shape.in_light(0.5, 0.8).unwrap();
             sun.validate().unwrap();
             shade.validate().unwrap();
-            let (own, sun, shade) = (measure(&shape), measure(&sun), measure(&shade));
-            assert!(sun.0 < own.0 && own.0 < shade.0, "{shape:?}");
-            assert!(sun.1 >= own.1 && own.1 >= shade.1, "{shape:?}");
-            assert!(sun_size < 1.0 && shade_size > 1.0);
-            assert_eq!(shape.in_light(true, 0.0).unwrap().1, 1.0);
+            let (own, sun, half_sun, shade) = (
+                measure(&shape),
+                measure(&sun),
+                measure(&half_sun),
+                measure(&shade),
+            );
+            assert!(
+                sun.0 < half_sun.0 && half_sun.0 < own.0 && own.0 < shade.0,
+                "{shape:?}"
+            );
+            assert!(
+                sun.1 >= half_sun.1 && half_sun.1 >= own.1 && own.1 >= shade.1,
+                "{shape:?}"
+            );
+            assert!(sun_size < half_size && half_size < 1.0 && shade_size > 1.0);
+            assert_eq!(shape.in_light(1.0, 0.0).unwrap().1, 1.0);
+            assert_eq!(shape.in_light(0.0, 0.8).unwrap(), (shape.clone(), 1.0));
         }
+        // A sun leaf's teeth cut deeper into its blade, by share.
+        let oak = Shape::Sprig(Sprig {
+            width: 0.6,
+            teeth: 4,
+            tooth_depth: 0.2,
+            round: 0.8,
+            ..Sprig::default()
+        });
+        let incision = |shape: &Shape| match shape {
+            Shape::Sprig(s) => s.tooth_depth / (0.5 * s.width),
+            _ => unreachable!(),
+        };
+        let (sun, shade) = (
+            oak.in_light(1.0, 0.8).unwrap().0,
+            oak.in_light(-1.0, 0.8).unwrap().0,
+        );
+        assert!(incision(&sun) > incision(&oak) + 0.05 && incision(&shade) < incision(&oak) - 0.15);
         assert!(
             Shape::Needles(Needles::default())
-                .in_light(true, 1.0)
+                .in_light(1.0, 1.0)
                 .is_none()
         );
     }
@@ -2607,8 +2686,11 @@ mod tests {
         assert!((sunlit(middle) - 0.5).abs() < 1e-12);
         assert!(sunlit(0.1) < sunlit(0.2) && sunlit(0.2) < sunlit(0.3));
         // A dense crown's surface (light about 0.2 to 0.3 in the growth
-        // model) is mostly sunlit.
-        assert!(sunlit(0.2) > SUN && sunlit(0.08) < SHADE);
+        // model) is mostly sunlit; leaves at a tenth of the open sky are
+        // their type's own.
+        assert!(light_form(0.2) > 0.5 && light_form(0.06) < -0.5);
+        assert!(light_form(middle).abs() < 1e-12);
+        assert_eq!((light_form(FULL_SUN), light_form(DEEP_SHADE)), (1.0, -1.0));
     }
 
     #[test]
@@ -2642,12 +2724,13 @@ mod tests {
             [0.1, 0.3, 0.1],
             [0.05, 0.1, 0.05],
         );
-        // The two types' looks, then the leaf's sun, shade and juvenile.
-        assert_eq!(looks.len(), 5);
+        // The two types' looks, then the leaf's four steps from shade to
+        // sun (its own the middle one) and its juvenile look.
+        assert_eq!(looks.len(), 7);
         let forms = looks[0].forms;
         assert_eq!(
-            (forms.sun, forms.shade, forms.juvenile),
-            (Some(2), Some(3), Some((4, 3.0)))
+            (forms.bands, forms.juvenile),
+            (Some([2, 3, 0, 4, 5]), Some((6, 3.0)))
         );
         assert_eq!(looks[1].forms, Forms::default());
         assert!(
@@ -2655,13 +2738,20 @@ mod tests {
                 .iter()
                 .all(|look| look.organ == "leaf" && look.forms == Forms::default())
         );
-        assert!(matches!(looks[4].shape, Shape::Simple(_)));
-        // Juvenile on a young plant whatever its light; then by its light.
-        assert_eq!(forms.of(0, 0.9, 1.0), (4, 1.0));
-        assert_eq!(forms.of(0, 0.9, 10.0), (2, forms.sizes.0));
-        assert_eq!(forms.of(0, 0.2, 10.0), (2, forms.sizes.0));
-        assert_eq!(forms.of(0, 0.12, 10.0), (0, 1.0));
-        assert_eq!(forms.of(0, 0.06, 10.0), (3, forms.sizes.1));
+        assert!(matches!(looks[6].shape, Shape::Simple(_)));
+        // Juvenile on a young plant whatever its light; then by its light,
+        // its size smoothly.
+        assert_eq!(forms.of(0, 0.9, 1.0), (6, 1.0));
+        assert_eq!(forms.of(0, 0.9, 10.0), (5, 1.0 - 0.12 * 0.5));
+        assert_eq!(forms.of(0, 0.2, 10.0).0, 4);
+        assert_eq!(forms.of(0, 0.12, 10.0).0, 0);
+        assert_eq!(forms.of(0, 0.07, 10.0).0, 3);
+        assert_eq!(forms.of(0, 0.01, 10.0), (2, 1.0 + 0.12 * 0.5));
+        let sizes: Vec<f64> = [0.04, 0.06, 0.08, 0.1, 0.15, 0.2, 0.3]
+            .iter()
+            .map(|&light| forms.of(0, light, 10.0).1)
+            .collect();
+        assert!(sizes.windows(2).all(|pair| pair[1] < pair[0]), "{sizes:?}");
         // Families are for leaves.
         let mut flower = organs["leaf"].clone();
         flower.shape = Shape::Flower(Flower::default());

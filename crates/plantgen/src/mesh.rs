@@ -3051,7 +3051,7 @@ mod tests {
     #[test]
     fn leaves_are_drawn_by_their_family() {
         // Sun and shade leaves by their light, juvenile leaves while the
-        // plant was young (plant roadmap P4).
+        // plant was young (plant roadmap P4, spec rework L3).
         let mut appearance = appearance();
         appearance.organs.insert(
             "leaf".into(),
@@ -3095,10 +3095,11 @@ mod tests {
                 .copied()
                 .unwrap()
         };
+        let bands = forms.bands.unwrap();
         let (sun, own, shade) = (
-            by_template(forms.sun.unwrap()),
+            by_template(bands[crate::looks::BANDS - 1]),
             by_template(0),
-            by_template(forms.shade.unwrap()),
+            by_template(bands[0]),
         );
         assert!(sun.length < own.length && own.length < shade.length);
         assert!(
