@@ -109,12 +109,10 @@
           "flower_look": {
             "shape": {
               "template": "flower",
-              "petals": 5,
               "petal_width": 1.1,
               "point": 0.0,
               "notch": 0.0,
               "centre": 0.2,
-              "stamens": 20,
               "stamen_length": 0.35
             },
             "colour": [0.96, 0.9, 0.9],
@@ -145,6 +143,9 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "carpels": 3
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -199,7 +200,12 @@
     "appearance.organs.bloom.season.flower_look": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its flowers drawn one by one (spec rework L1b): white or blush flowers 15 to 20 mm across with about 20 stamens, in clusters of 6 to 12 drawn opening together (in apples the central flower opens a few days before the rest). From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
+      "note": "Its flowers drawn one by one (spec rework L1b): white or blush flowers 15 to 20 mm across with about 20 stamens, in clusters of 6 to 12 drawn opening together (in apples the central flower opens a few days before the rest). From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life. Its flower laid out whorl by whorl (spec rework P5b): five white petals between five sepals on the inferior ovary, twenty stamens and a pistil of three carpels, from the characters of its own, Rosaceae's and Malus's by the rules at the flowering plants."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full, as Pyrus rivularis: carpels commonly 3. The Burke Herbarium (as quoted in search results; the page itself was not read): usually 3 styles (or 4), joined in the lower third."
     }
   },
   "provenance": {

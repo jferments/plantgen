@@ -2,5 +2,21 @@
   "schema": 1,
   "rank": "family",
   "name": "Viburnaceae",
-  "parent": "order/dipsacales"
+  "parent": "order/dipsacales",
+  "traits": {
+    "flower_merosity": 5,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "corolla_shape": "rotate",
+    "ovary_position": "inferior",
+    "stamens": 5,
+    "carpels": {"min": 3, "max": 5}
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "Jepson eFlora's account of the family, as search results quote it (the page itself was not read): calyx teeth (2)5; corolla small, radial, rotate, (3-4)5-lobed; stamens 5, rarely 4, on the corolla; ovary more or less inferior, 1- or 3- to 5-chambered. Abrams and Ferris (volume 4, read in full) give the elders' corolla rotate and regular and the ovary 3- to 5-celled."
+    }
+  }
 }

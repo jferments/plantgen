@@ -2,5 +2,23 @@
   "schema": 1,
   "rank": "family",
   "name": "Phrymaceae",
-  "parent": "order/lamiales"
+  "parent": "order/lamiales",
+  "traits": {
+    "flower_merosity": 5,
+    "flower_symmetry": "zygomorphic",
+    "perianth": "sepals_and_petals",
+    "zygomorphy": "bilabiate",
+    "corolla_shape": "tubular",
+    "hypanthium": false,
+    "ovary_position": "superior",
+    "stamens": 4,
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams's Illustrated Flora of the Pacific States, volume 3 (1951), read in full (Scrophulariaceae by Pennell, Mimulus): calyx tubular, plicate-angled, 5-toothed; corolla tubular, two-lipped, the upper lip 2-lobed and the lower 3-lobed; stamens 4, didynamous; stigma 2-lobed. Jepson eFlora and the Flora of Tasmania (as quoted in search results; the pages themselves were not read): flowers hypogynous, ovary superior, of 2 carpels."
+    }
+  }
 }

@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Amelanchier",
+  "traits": {
+    "ovary_position": "inferior",
+    "stamens": 20,
+    "carpels": 5
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: calyx-tube campanulate, more or less adnate to the ovary; ovary partly or wholly inferior, 5-celled; styles 5, united below; stamens indefinite, about 20. The Burke Herbarium (as quoted in search results; the page itself was not read) gives stamens 12 to 20 and an inferior ovary."
+    }
+  }
+}

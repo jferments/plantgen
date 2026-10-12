@@ -2,5 +2,19 @@
   "schema": 1,
   "rank": "family",
   "name": "Bromeliaceae",
-  "parent": "order/poales"
+  "parent": "order/poales",
+  "traits": {
+    "flower_merosity": 3,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "stamens": 6,
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "ffpa-2014",
+      "note": "The Lucid key to the flowering plant families, with Plants of the World Online and a Smithsonian family text, as search results quote them (the pages themselves were not read): sepals 3 and petals 3, free or united; flowers regular, mostly bisexual (some unisexual and weakly zygomorphic); stamens 6; ovary of 3 fused carpels, 3-celled, superior to inferior, so its position is left to each genus (Hechtia's ranges from largely superior to largely inferior)."
+    }
+  }
 }

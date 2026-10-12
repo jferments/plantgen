@@ -122,12 +122,10 @@
           "flower_look": {
             "shape": {
               "template": "flower",
-              "petals": 5,
               "petal_width": 1.0,
               "point": 0.0,
               "notch": 0.0,
               "centre": 0.3,
-              "stamens": 30,
               "stamen_length": 0.4
             },
             "colour": [0.96, 0.94, 0.9],
@@ -206,7 +204,7 @@
     "appearance.organs.bloom.season.flower_look": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its flowers drawn one by one (spec rework L1b): white flowers about 1 cm across with about 30 red-tipped stamens, from pink buds, in dense rounded clusters that open from the outside in over about two weeks (as in the related P. opulifolius). From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
+      "note": "Its flowers drawn one by one (spec rework L1b): white flowers about 1 cm across with about 30 red-tipped stamens, from pink buds, in dense rounded clusters that open from the outside in over about two weeks (as in the related P. opulifolius). From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life. Its flower laid out whorl by whorl (spec rework P5b): five white petals between five sepals on a floral cup, thirty stamens and a pistil of three carpels, from the characters of Rosaceae and Physocarpus by the rules at the flowering plants."
     },
     "appearance.organs.bloom.season.opening": {
       "evidence": "Authored",

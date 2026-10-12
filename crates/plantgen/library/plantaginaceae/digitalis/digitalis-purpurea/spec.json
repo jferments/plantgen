@@ -124,12 +124,7 @@
   "traits": {
     "flower_merosity": 5,
     "flower_symmetry": "zygomorphic",
-    "perianth": "sepals_and_petals",
-    "corolla_shape": "campanulate",
-    "zygomorphy": "bilabiate",
-    "stamens": 4,
-    "carpels": 2,
-    "ovary_position": "superior"
+    "corolla_shape": "campanulate"
   },
   "evidence": {
     "generator.params": {

@@ -2,5 +2,21 @@
   "schema": 1,
   "rank": "family",
   "name": "Acanthaceae",
-  "parent": "order/lamiales"
+  "parent": "order/lamiales",
+  "traits": {
+    "flower_merosity": 5,
+    "flower_symmetry": {"zygomorphic": "usually", "actinomorphic": "sometimes"},
+    "perianth": "sepals_and_petals",
+    "zygomorphy": "bilabiate",
+    "ovary_position": "superior",
+    "stamens": {"min": 2, "max": 4, "typical": 4},
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "ffpa-2014",
+      "note": "The Lucid key to the flowering plant families, with FloraBase and the Smithsonian's family text, as search results quote them (the pages themselves were not read): corolla sympetalous, usually 5-merous, mostly zygomorphic and commonly two-lipped; ovary superior on a nectar disc, of 2 fused carpels; stamens 4 (didynamous) or 2, on the corolla tube."
+    }
+  }
 }

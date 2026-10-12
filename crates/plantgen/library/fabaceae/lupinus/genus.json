@@ -3,13 +3,8 @@
   "rank": "genus",
   "name": "Lupinus",
   "traits": {
-    "flower_merosity": 5,
     "flower_symmetry": "zygomorphic",
-    "perianth": "sepals_and_petals",
-    "zygomorphy": "papilionaceous",
-    "ovary_position": "superior",
-    "stamens": 10,
-    "carpels": 1
+    "zygomorphy": "papilionaceous"
   },
   "evidence": {
     "traits": {

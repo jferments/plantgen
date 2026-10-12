@@ -41,7 +41,7 @@
       "leaf_area": 0.235,
       "basal_area": 0.049,
       "basal_piece_area": 0.091,
-      "flower_area": 0.433,
+      "flower_area": 0.333,
       "bud_area": 0.51,
       "fruit_area": 0.763
     }
@@ -70,7 +70,6 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 6,
           "petal_width": 0.75,
           "point": 0.7,
           "notch": 0.0,
@@ -112,7 +111,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: grey-green leaves; blue-violet flowers."
+      "note": "Colours chosen by eye: grey-green leaves; blue-violet flowers. Its flower laid out whorl by whorl (spec rework P5b): six blue tepals in two whorls, six stamens and a superior pistil of three carpels, from the characters of Asparagaceae by the rules at the flowering plants."
     },
     "taxon": {
       "evidence": "Authored",

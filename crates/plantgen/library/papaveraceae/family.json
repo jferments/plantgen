@@ -2,5 +2,17 @@
   "schema": 1,
   "rank": "family",
   "name": "Papaveraceae",
-  "parent": "order/ranunculales"
+  "parent": "order/ranunculales",
+  "traits": {
+    "flower_merosity": 2,
+    "perianth": "sepals_and_petals",
+    "ovary_position": "superior"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: poppies with 2 (or 3) sepals and twice as many petals; the bleeding-hearts (Fumariaceae) with sepals 2, small and scale-like, and petals 4 in 2 dissimilar pairs; ovary superior. Merosity 2: two sepals, and petals in two pairs."
+    }
+  }
 }

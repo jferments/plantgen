@@ -5,7 +5,13 @@
   "parent": "order/asparagales",
   "traits": {
     "leaf_arrangement": "alternate",
-    "phyllotaxis_pattern": "distichous"
+    "phyllotaxis_pattern": "distichous",
+    "flower_merosity": 3,
+    "flower_symmetry": {"actinomorphic": "usually", "zygomorphic": "sometimes"},
+    "perianth": "tepals",
+    "ovary_position": "inferior",
+    "stamens": 3,
+    "carpels": 3
   },
   "evidence": {
     "traits.leaf_arrangement": {
@@ -17,6 +23,11 @@
       "evidence": "SourceInferred",
       "source": "fna-26-iridaceae",
       "note": "FNA's account of the family: the leaves are distichous, in two ranks, their blades edgewise to the stem: an iris's fan."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-26-iridaceae",
+      "note": "Michigan State's Botany Online account of the family, as search results quote it (the page itself was not read): 6 petaloid tepals in two whorls, often united in a tube; stamens 3, opposite the outer tepals; ovary inferior (superior only in Tasmania's Isophysis), 3-locular, of 3 carpels. Iris and Sisyrinchium are regular (Sisyrinchium: the NEON biorepository's genus text, as quoted in search results; the page itself was not read); gladioli and their kin are zygomorphic."
     }
   }
 }

@@ -110,7 +110,6 @@
               "notch": 0.0,
               "centre": 0.35,
               "tube": 0.6,
-              "stamens": 3,
               "stamen_length": 0.3
             },
             "colour": [0.42, 0.24, 0.2],
@@ -200,7 +199,7 @@
     "appearance.organs.flower.season": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its days by eye from the months floras give for flowering (April to August; the Burke Herbarium: May to August), for lowland plants: buds in April, each flower open about 12 days, the raceme opening from its foot over about a month (floras give no time)."
+      "note": "Its days by eye from the months floras give for flowering (April to August; the Burke Herbarium: May to August), for lowland plants: buds in April, each flower open about 12 days, the raceme opening from its foot over about a month (floras give no time). Its flower laid out whorl by whorl (spec rework P5b): four thread-like petals (by hand; floras count four) between five sepals on its tubular floral cup, three stamens and a pistil of two carpels, from the characters of Saxifragaceae and Tolmiea by the rules at the flowering plants."
     }
   },
   "provenance": {

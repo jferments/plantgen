@@ -512,7 +512,7 @@ pub const INFLORESCENCE: [(&str, Field); 11] = {
 const EVERY: &str = "appearance.organs.*.";
 
 /// The stage looks of a look's season that a rule in its `shape` also
-/// sets where they draw its template.
+/// sets where they draw its template, unless they draw the whole cluster.
 const STAGE_LOOKS: [&str; 2] = ["flower_look", "bud_look"];
 
 /// The organ of a path inside `appearance.organs`.
@@ -587,12 +587,15 @@ fn every_look(
             }
             // A season's stage looks that draw the template take the rule
             // too (spec rework P5): broom's flowers are only its flower
-            // look's.
+            // look's. A look that draws the whole cluster (a dogwood's head
+            // in its bracts) is not one flower, so it takes none.
             for stage in STAGE_LOOKS {
                 if look
                     .get("season")
                     .and_then(|season| season.get(stage))
-                    .is_some_and(draws)
+                    .is_some_and(|stage| {
+                        draws(stage) && !stage.get("whole").is_some_and(|w| w == true)
+                    })
                 {
                     paths.push(format!(
                         "appearance.organs.{organ}.season.{stage}.shape.{field}"

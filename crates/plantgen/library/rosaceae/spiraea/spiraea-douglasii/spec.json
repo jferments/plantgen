@@ -81,7 +81,13 @@
         }
       },
       "bloom": {
-        "shape": { "template": "flower", "petals": 5, "petal_width": 1.0, "point": 0.0, "notch": 0.0, "centre": 0.3 },
+        "shape": {
+          "template": "flower",
+          "petal_width": 1.0,
+          "point": 0.0,
+          "notch": 0.0,
+          "centre": 0.3
+        },
         "inflorescence": {
           "branches": 20,
           "flowers": 6,
@@ -109,6 +115,9 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "stamens": {"min": 25, "max": 50}
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -163,7 +172,12 @@
     "appearance.organs.bloom": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its panicle drawn flower by flower (spec rework L1c), its kind from its genus's inflorescence, by the rule at the flowering plants: a narrow cone of 20 short branches, each of 4 branches of 6 pink flowers, by eye, so that it is as dense as the floras say (the Flora of North America gives dense conic panicles 8 to 25 cm long and 3 to 6 cm wide, their height 2 to 4 times their width, and no count). Each flower is drawn about 4.5 mm across, its long pink stamens taken in: the flowers are 2 to 4 mm across and their stamens 2 to 3 times as long as the petals, which makes the panicle look fuzzy; the stamens are too small to draw. From floras and extension pages as quoted in search results; the pages themselves were not read."
+      "note": "Its panicle drawn flower by flower (spec rework L1c), its kind from its genus's inflorescence, by the rule at the flowering plants: a narrow cone of 20 short branches, each of 4 branches of 6 pink flowers, by eye, so that it is as dense as the floras say (the Flora of North America gives dense conic panicles 8 to 25 cm long and 3 to 6 cm wide, their height 2 to 4 times their width, and no count). Each flower is drawn about 4.5 mm across, its long pink stamens taken in: the flowers are 2 to 4 mm across and their stamens 2 to 3 times as long as the petals, which makes the panicle look fuzzy; the stamens are too small to draw. From floras and extension pages as quoted in search results; the pages themselves were not read. Its flower laid out whorl by whorl (spec rework P5b): five pink petals between five sepals on a floral cup, its long stamens and five free pistils, from the characters of its own, Rosaceae's and Spiraea's by the rules at the flowering plants."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America's account of the species, as quoted in search results; the page itself was not read: stamens 25 to 35, two to three times the petals' length; the Burke Herbarium gives 25 to 50 with pink filaments (as quoted in search results; the page itself was not read)."
     }
   },
   "provenance": {

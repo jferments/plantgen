@@ -2,5 +2,19 @@
   "schema": 1,
   "rank": "family",
   "name": "Fabaceae",
-  "parent": "order/fabales"
+  "parent": "order/fabales",
+  "traits": {
+    "flower_merosity": 5,
+    "perianth": "sepals_and_petals",
+    "ovary_position": "superior",
+    "stamens": 10,
+    "carpels": 1
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full, as Leguminosae: calyx synsepalous, 5-toothed or cleft; corolla of 5 petals, regular or somewhat irregular or commonly papilionaceous (so symmetry is each genus's); stamens 10, monadelphous, diadelphous or distinct (Acacia numerous); pistil 1, superior, 1-celled."
+    }
+  }
 }

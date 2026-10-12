@@ -86,8 +86,7 @@
       },
       "bloom": {
         "shape": {
-          "template": "flower",
-          "petals": 5
+          "template": "flower"
         },
         "colour": [0.95, 0.85, 0.2]
       }
@@ -145,7 +144,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: yellow-green bark and twigs, sparse grey-green leaflets, pale yellow flowers. Bark pattern (plant roadmap P4, `bark_pattern`): smooth yellow-green bark that photosynthesises; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye from photographs: yellow-green bark and twigs, sparse grey-green leaflets, pale yellow flowers. Bark pattern (plant roadmap P4, `bark_pattern`): smooth yellow-green bark that photosynthesises; set from general knowledge of the species, not measured. Its flower laid out whorl by whorl (spec rework P5b): five pale yellow petals between five sepals, ten stamens and one pistil, from the characters of Fabaceae and Parkinsonia by the rules at the flowering plants."
     },
     "taxon": {
       "evidence": "Authored",

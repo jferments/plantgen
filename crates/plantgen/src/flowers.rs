@@ -557,7 +557,9 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
         } else {
             Pistil::None
         }
-    } else if flower.carpels <= 5 {
+    } else if flower.carpels <= 5 || flower.ovary != Ovary::Superior {
+        // An inferior ovary is one, however many carpels it holds: a
+        // cactus's style ends in a ring of stigma lobes.
         let size = (0.3 * c).max(0.04 * r);
         let superior = flower.ovary == Ovary::Superior;
         let style = flower.stamen_length * r;
@@ -1652,6 +1654,33 @@ mod tests {
         assert!(centre + half <= laid.pieces[0].height + 1e-12);
         assert!(laid.cup.is_none(), "the ovary is the floral cup");
         assert!(matches!(laid.pistil, Pistil::One { ovary: None, .. }));
+    }
+
+    #[test]
+    fn many_carpels_are_one_pistil_below_the_whorls_and_free_above() {
+        let carpels = |ovary| {
+            let laid = layout(
+                &flower(|f| {
+                    f.ovary = ovary;
+                    f.carpels = 12;
+                }),
+                &form(),
+                0.5,
+                0.0,
+            );
+            laid.pistil
+        };
+        assert!(matches!(
+            carpels(Ovary::Inferior),
+            Pistil::One { lobes: 12, .. }
+        ));
+        assert!(matches!(
+            carpels(Ovary::Half),
+            Pistil::One { lobes: 12, .. }
+        ));
+        assert!(
+            matches!(carpels(Ovary::Superior), Pistil::Free { pistils, .. } if pistils.len() == 12)
+        );
     }
 
     #[test]

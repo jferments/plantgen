@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Urtica",
+  "traits": {
+    "flower_merosity": 2,
+    "stamens": 4
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America's account of Urtica, as search results quote it (the page itself was not read): staminate flowers with 4 tepals, distinct and equal, and 4 stamens; pistillate flowers with 4 tepals, the inner 2 as long as the achene and the outer 2 smaller. Four tepals in two pairs are two whorls of two."
+    }
+  }
+}

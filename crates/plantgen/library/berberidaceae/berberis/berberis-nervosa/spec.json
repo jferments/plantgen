@@ -79,7 +79,8 @@
           "petal_width": 1.2,
           "point": 0,
           "notch": 0,
-          "centre": 0.3
+          "centre": 0.3,
+          "sepals": 6
         },
         "colour": [0.85, 0.7, 0.12],
         "accent": [0.7, 0.5, 0.05]
@@ -117,7 +118,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: dark, slightly glossy green leaflets; yellow flowers; blue berries."
+      "note": "Colours chosen by eye: dark, slightly glossy green leaflets; yellow flowers; blue berries. Its flower laid out whorl by whorl (spec rework P5b): six yellow petals and six sepals by hand (both in two whorls of three, as Jepson's Manual of 1925 gives the family), six stamens and one pistil, from the characters of Berberidaceae by the rules at the flowering plants."
     },
     "taxon": {
       "evidence": "Authored",

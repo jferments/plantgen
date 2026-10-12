@@ -89,8 +89,7 @@
       },
       "bloom": {
         "shape": {
-          "template": "flower",
-          "petals": 4
+          "template": "flower"
         },
         "colour": [0.95, 0.95, 0.9]
       }
@@ -131,7 +130,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: grey-green leaves, very dark bark. Bark pattern (plant roadmap P4, `bark_pattern`): dark brown bark in irregular flat scales; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye from photographs: grey-green leaves, very dark bark. Bark pattern (plant roadmap P4, `bark_pattern`): dark brown bark in irregular flat scales; set from general knowledge of the species, not measured. Its flower laid out whorl by whorl (spec rework P5b): four white petals spreading from a short tube, four sepals, four stamens and a superior pistil of two carpels, from the characters of Acanthaceae and Avicennia by the rules at the flowering plants."
     },
     "taxon": {
       "evidence": "Authored",

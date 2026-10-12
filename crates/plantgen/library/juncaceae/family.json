@@ -2,5 +2,20 @@
   "schema": 1,
   "rank": "family",
   "name": "Juncaceae",
-  "parent": "order/poales"
+  "parent": "order/poales",
+  "traits": {
+    "flower_merosity": 3,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "ovary_position": "superior",
+    "stamens": {"min": 3, "max": 6, "typical": 6},
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "kew-powo",
+      "note": "Plants of the World Online's account of the family, with Go Botany, as search results quote them (the pages themselves were not read): flowers actinomorphic; perianth segments 6 in 2 whorls (rarely 3), usually glumaceous; stamens 6 or 3, free; ovary superior, of 3 united carpels, stigmas 3."
+    }
+  }
 }

@@ -106,7 +106,7 @@
     "appearance.organs.*.shape.carpels": {
       "template": "flower",
       "rule": "clamp(round(carpels), 0, 30)",
-      "why": "A flower draws one pistil of up to five carpels, or as many free pistils, up to 30."
+      "why": "A flower draws one pistil of up to five carpels, or of any number in an inferior ovary; above five in a superior one, as many free pistils, up to 30."
     },
     "appearance.organs.*.shape.spur": {
       "template": "flower",

@@ -2,5 +2,19 @@
   "schema": 1,
   "rank": "family",
   "name": "Rosaceae",
-  "parent": "order/rosales"
+  "parent": "order/rosales",
+  "traits": {
+    "flower_merosity": 5,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "hypanthium": true,
+    "ovary_position": {"superior": "usually", "inferior": "sometimes"}
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: flowers regular, commonly perfect; calyx 5 (or 4)-lobed; petals 5, rarely none; stamens 10 to numerous, inserted with the petals on the calyx or on a disk lining the calyx-tube (a hypanthium); pistils 1 to many, free from the calyx, or united in an ovary nearly or wholly inferior, as in the pomes (Amelanchier, Malus); in the other tribes the ovary is superior."
+    }
+  }
 }

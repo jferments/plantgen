@@ -127,9 +127,6 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "perianth": "sepals_and_petals",
-    "corolla_shape": "urceolate",
-    "ovary_position": "inferior",
     "stamens": {"min": 8, "max": 10},
     "carpels": {"min": 4, "max": 5}
   },

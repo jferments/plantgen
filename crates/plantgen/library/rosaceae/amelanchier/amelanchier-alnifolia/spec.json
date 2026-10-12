@@ -110,12 +110,10 @@
           "flower_look": {
             "shape": {
               "template": "flower",
-              "petals": 5,
               "petal_width": 0.55,
               "point": 0.2,
               "notch": 0.0,
               "centre": 0.15,
-              "stamens": 20,
               "stamen_length": 0.25
             },
             "colour": [0.96, 0.96, 0.93],
@@ -195,7 +193,7 @@
     "appearance.organs.bloom.season.flower_look": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its flowers drawn one by one (spec rework L1b): white strap-shaped petals 9 to 14 mm long round about 20 stamens, in short racemes that open from the base up. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
+      "note": "Its flowers drawn one by one (spec rework L1b): white strap-shaped petals 9 to 14 mm long round about 20 stamens, in short racemes that open from the base up. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life. Its flower laid out whorl by whorl (spec rework P5b): five white petals between five sepals on a floral cup joined to the inferior ovary, twenty stamens and a pistil of five carpels, from the characters of Rosaceae and Amelanchier by the rules at the flowering plants."
     },
     "appearance.organs.bloom.season.opening": {
       "evidence": "Authored",

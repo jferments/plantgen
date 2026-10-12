@@ -113,7 +113,6 @@
           "flower_look": {
             "shape": {
               "template": "flower",
-              "petals": 5,
               "petal_width": 1.3,
               "point": 0.0,
               "notch": 0.0,
@@ -144,6 +143,9 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "carpels": 30
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -198,7 +200,12 @@
     "appearance.organs.bloom.season.flower_look": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its flowers drawn one by one (spec rework L1b): large white crinkled flowers 3 to 5 cm across with many stamens, 3 to 11 in a cluster, drawn opening together. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
+      "note": "Its flowers drawn one by one (spec rework L1b): large white crinkled flowers 3 to 5 cm across with many stamens, 3 to 11 in a cluster, drawn opening together. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life. Its flower laid out whorl by whorl (spec rework P5b): five white petals between five sepals on a floral cup, its stamens by hand and thirty free pistils, from the characters of its own, Rosaceae's and Rubus's by the rules at the flowering plants."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "Jepson eFlora's account of the species, as quoted in search results; the page itself was not read: pistils more than 30, styles short and thick, ovaries densely hairy; petals 14 to 22 mm, white. Floras say only that the stamens are numerous, so their count stays by hand."
     }
   },
   "provenance": {

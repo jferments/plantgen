@@ -40,7 +40,7 @@
       "fruit_share": 0.3,
       "bud_size": 0.01,
       "fruit_size": 0.02,
-      "flower_area": 0.42,
+      "flower_area": 0.215,
       "bud_area": 0.636,
       "fruit_area": 0.51
     }
@@ -64,6 +64,7 @@
         "shape": {
           "template": "flower",
           "petals": 12,
+          "stamens": 200,
           "petal_width": 0.7,
           "point": 0.3,
           "notch": 0.0,
@@ -157,6 +158,9 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "carpels": {"min": 7, "max": 8}
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -171,7 +175,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: 20 to 35 fine white radials pressed flat to the body and one to three dark centrals, one hooked like a fishhook."
+      "note": "Colours chosen by eye from photographs: 20 to 35 fine white radials pressed flat to the body and one to three dark centrals, one hooked like a fishhook. Its flower laid out whorl by whorl (spec rework P5b): its tepals on a spiral (their count by hand: no flora counts them) on a floral cup above the inferior ovary, and a style with seven or eight stigma lobes, from the characters of its own and Cactaceae's by the rules at the flowering plants. Its 200 stamens by hand, the most a flower draws, for the numerous ones every flora gives."
     },
     "taxon": {
       "evidence": "Authored",
@@ -217,6 +221,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "The genus WCVP v16's accepted name is written in."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "LLIFLE's account of the species, as quoted in search results; the page itself was not read: stigma lobes 7 or 8, linear, green; the carpels are as many as the stigma lobes (Hamburg's Botany Online on the family, as quoted in search results; the page itself was not read)."
     }
   },
   "provenance": {

@@ -72,7 +72,13 @@
         }
       },
       "flower": {
-        "shape": { "template": "flower", "petals": 4, "petal_width": 0.8, "point": 0.3, "notch": 0.0, "centre": 0.3 },
+        "shape": {
+          "template": "flower",
+          "petal_width": 0.8,
+          "point": 0.3,
+          "notch": 0.0,
+          "centre": 0.3
+        },
         "inflorescence": {
           "branches": 6,
           "flowers": 8,
@@ -162,7 +168,7 @@
     "appearance.organs.flower": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Each of its axillary clusters drawn flower by flower (spec rework L1c), its kind and its droop from its characters, by the rules at the flowering plants: a panicle about 6 cm long of 6 branches of 8 tiny green flowers, by eye (floras give no count), leaving the stem at about 60 degrees and bending over. From floras and extension pages as quoted in search results; the pages themselves were not read."
+      "note": "Each of its axillary clusters drawn flower by flower (spec rework L1c), its kind and its droop from its characters, by the rules at the flowering plants: a panicle about 6 cm long of 6 branches of 8 tiny green flowers, by eye (floras give no count), leaving the stem at about 60 degrees and bending over. From floras and extension pages as quoted in search results; the pages themselves were not read. Its flower laid out whorl by whorl (spec rework P5b): four green tepals in two pairs, four stamens and a one-carpelled pistil (staminate and pistillate flowers are drawn as one), from the characters of Urticaceae and Urtica by the rules at the flowering plants."
     }
   },
   "provenance": {

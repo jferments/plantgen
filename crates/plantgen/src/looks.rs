@@ -1012,8 +1012,9 @@ pub struct Flower {
     /// Sterile stamens, drawn without anthers.
     #[serde(skip_serializing_if = "is_zero_count")]
     pub staminodes: u32,
-    /// 0 for the centre dome; 1 to 5 one pistil with as many stigma lobes;
-    /// more, as many free pistils.
+    /// 0 for the centre dome; 1 to 5, or any number below the whorls (an
+    /// inferior or half-inferior ovary), one pistil with as many stigma
+    /// lobes; more above them, as many free pistils.
     #[serde(skip_serializing_if = "is_zero_count")]
     pub carpels: u32,
     /// Where the ovary sits.

@@ -73,7 +73,13 @@
         "face_up": 0.4
       },
       "flower": {
-        "shape": { "template": "flower", "petals": 4, "petal_width": 0.8, "point": 0.3, "notch": 0.0, "centre": 0.2 },
+        "shape": {
+          "template": "flower",
+          "petal_width": 0.8,
+          "point": 0.3,
+          "notch": 0.0,
+          "centre": 0.2
+        },
         "inflorescence": { "per_node": 3, "size": 0.11, "spread": 50, "pedicel": 0.08 },
         "colour": [0.95, 0.95, 0.9]
       }
@@ -90,7 +96,10 @@
   "tier": "procedural_proxy",
   "traits": {
     "inflorescence": "raceme",
-    "units_per_inflorescence": {"min": 15, "max": 40}
+    "units_per_inflorescence": {"min": 15, "max": 40},
+    "flower_merosity": 2,
+    "stamens": 4,
+    "carpels": 2
   },
   "evidence": {
     "generator.params": {
@@ -146,12 +155,12 @@
     "traits": {
       "evidence": "SourceInferred",
       "source": "fna-online",
-      "note": "The Flora of North America's account of the species, as quoted in search results (the page itself was not read): inflorescences racemose, complex, 15 to 40 flowered, the flowers (1 to) 3 (to 4) at a node, their parts in twos."
+      "note": "The Flora of North America's account of the species, as quoted in search results (the page itself was not read): inflorescences racemose, complex, 15 to 40 flowered, the flowers (1 to) 3 (to 4) at a node, their parts in twos. The Flora of North America's account of the species, with Jepson eFlora and the Burke Herbarium, as quoted in search results; the pages themselves were not read: flowers 2-merous, with 4 distinct white tepals about 2.5 mm long, reflexed to spreading, and 4 stamens at their bases; a Puget Sound field-botany page adds a 2-parted ovary, so 2 carpels (the genus has 2 or 3)."
     },
     "appearance.organs.flower": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its raceme drawn flower by flower (spec rework L1c): its kind and its flowers from its characters, by the rules at the flowering plants; three flowers at each node, each a white star of four tepals about 5 mm across (tepals 2 to 3.2 mm in the Flora of North America), on short pedicels. From floras and extension pages as quoted in search results; the pages themselves were not read."
+      "note": "Its raceme drawn flower by flower (spec rework L1c): its kind and its flowers from its characters, by the rules at the flowering plants; three flowers at each node, each a white star of four tepals about 5 mm across (tepals 2 to 3.2 mm in the Flora of North America), on short pedicels. From floras and extension pages as quoted in search results; the pages themselves were not read. Its flower laid out whorl by whorl (spec rework P5b): four white tepals in two pairs, four stamens and a two-carpelled pistil, from the characters of its own and Asparagaceae's by the rules at the flowering plants."
     }
   },
   "provenance": {

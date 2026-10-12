@@ -2,5 +2,21 @@
   "schema": 1,
   "rank": "family",
   "name": "Grossulariaceae",
-  "parent": "order/saxifragales"
+  "parent": "order/saxifragales",
+  "traits": {
+    "flower_merosity": 5,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "hypanthium": true,
+    "ovary_position": "inferior",
+    "stamens": 5,
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full, Ribes: calyx-tube adnate to the 1-celled ovary and more or less produced beyond it; petals inserted on its throat; calyx-lobes, petals and stamens 5; placentae 2, styles 2. Family summaries (as quoted in search results; the pages themselves were not read) add flowers actinomorphic and sepals often larger than the small petals."
+    }
+  }
 }

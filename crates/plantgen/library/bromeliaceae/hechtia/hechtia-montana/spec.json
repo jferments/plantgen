@@ -137,7 +137,6 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 3,
           "petal_width": 0.5,
           "point": 0.3,
           "notch": 0.0,
@@ -191,7 +190,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: reddish green leaves with pale brown spines, small white flowers."
+      "note": "Colours chosen by eye from photographs: reddish green leaves with pale brown spines, small white flowers. Its flower laid out whorl by whorl (spec rework P5b): three white petals between three sepals, six stamens and a pistil of three carpels (the plants are male or female; one flower is drawn for both), from the characters of Bromeliaceae by the rules at the flowering plants."
     },
     "taxon": {
       "evidence": "Authored",
