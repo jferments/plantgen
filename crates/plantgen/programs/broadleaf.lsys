@@ -64,13 +64,14 @@
 # carry many nodes on short internodes. Only some of its buds may grow
 # long shoots: the last long_share of its nodes (acrotony, as in oaks,
 # whose buds cluster at the twig tip) or, with bud_base 1, the first
-# (basitony, as in shrubs that renew from the base); the others are
-# short-shoot buds (K),
-# which leaf out in the light but never grow out, on the short_share of
-# its nodes next to those, and latent buds on the rest, as a growth unit's
-# buds grade from long shoots to short ones to latent. So branches come in
-# clusters at a year's shoot's tip and the leaves between them sit on
-# short shoots, not one long branch every internode.
+# (basitony, as in shrubs that renew from the base). Those buds grow out
+# where they have the vigour and leaf out as short shoots where they do
+# not, as before; on the short_share of its nodes next to those, buds
+# grow short shoots (K), which leaf out in the light but never grow out;
+# the rest stay latent, as a growth unit's buds grade from long shoots to
+# short ones to latent. So branches come in clusters at a year's shoot's
+# tip with leaves along the wood between them, not one long branch every
+# internode.
 #
 # What the maples did on top of broadleaf is now broadleaf's, off unless a
 # lineage turns it on, so every broadleaf limb can live by its own light:
@@ -148,7 +149,7 @@ param space_kill = 0.75;       # free space within this of the plant is taken
 # Growth units and bud fate (revision 10).
 param unit_nodes = 1;         # nodes a year's shoot grows for each internode its vigour allows
 param long_share = 1;         # share of a year's shoot's nodes whose buds may grow long shoots; 1: every node
-param short_share = 1;        # share of its nodes, next below (or above) those, whose buds grow short shoots; the rest stay latent
+param short_share = 0;        # share of its nodes, next below (or above) those, whose buds grow short shoots; the rest stay latent
 param bud_base = 0;           # 1: those nodes are the shoot's first (basitony); 0: its last (acrotony)
 # Limbs that live by their own light (revision 10; the maples' since G1).
 param shed_ratio = 0;         # a limb older than shed_age is shed when qsum < shed_ratio * nseg; 0: only bare limbs
