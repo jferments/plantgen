@@ -8,10 +8,31 @@
     "flower_symmetry": "zygomorphic",
     "perianth": "sepals_and_petals",
     "zygomorphy": "labellate",
-    "resupinate": {"true": "usually", "false": "sometimes"},
+    "resupinate": {
+      "true": "usually",
+      "false": "sometimes"
+    },
     "ovary_position": "inferior",
-    "stamens": {"min": 1, "max": 2, "typical": 1},
+    "stamens": {
+      "min": 1,
+      "max": 2,
+      "typical": 1
+    },
     "carpels": 3
+  },
+  "forms": {
+    "forb": {
+      "generator": {
+        "program": "herb"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's forb species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    }
   },
   "evidence": {
     "traits": {

@@ -10,7 +10,24 @@
     "corolla_shape": "rotate",
     "ovary_position": "inferior",
     "stamens": 5,
-    "carpels": {"min": 3, "max": 5}
+    "carpels": {
+      "min": 3,
+      "max": 5
+    }
+  },
+  "forms": {
+    "shrub": {
+      "generator": {
+        "program": "broadleaf"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's shrub species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    }
   },
   "evidence": {
     "traits": {

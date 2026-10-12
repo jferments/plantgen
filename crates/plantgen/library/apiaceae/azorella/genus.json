@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Azorella",
+  "forms": {
+    "cushion": {
+      "generator": {
+        "program": "azorella"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The cushion azorellas' own program (growth plan G2.3a), renamed from `cushion` and homed here: a dome packed with rosettes, after the llareta (A. compacta)."
+        }
+      }
+    }
+  }
+}

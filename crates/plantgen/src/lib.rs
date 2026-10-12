@@ -164,18 +164,23 @@ pub mod venation;
 /// steps; a fruit drawn with fewer facets than its finest is widened to
 /// cover what it does there, so clusters of fruit and berries keep their
 /// cover drawn coarser.
-/// 27: a shoot is juvenile or adult (spec rework P6): a program's
+/// 27: a cluster of spikelets drawn as coarse as its branches merge draws
+/// half its spikelets, each longer, then each smallest branch as the
+/// outline of its spikelets, two crossed kites, not solids round them, so
+/// dense grass panicles get coarser steps; each step records the cover it
+/// loses or gains (`part-steps` is APSTEPS2).
+/// 28: a shoot is juvenile or adult (spec rework P6): a program's
 /// `adult(a)` sets the adultness of the organs drawn after it in the
 /// branch, a leaf type's juvenile family follows it, and a graph whose
 /// organs record it is `APGRAPH3`. The climber program draws it (an ivy's
 /// adult shoots bear entire leaves, rise and fruit), and the programs that
 /// measure first flowering by the plant's age name it `adult_age`, set
 /// from a taxon's juvenile period.
-/// 28: crown calibration: in the broadleaf program a short shoot lives
+/// 29: crown calibration: in the broadleaf program a short shoot lives
 /// while it has light, for up to 40 years, and its leaves carry their own
 /// turn, so open-grown crowns keep the leaf area per crown area of the
 /// Urban Tree Database's trees and their inner leaves grow in shade; and
 /// the deep-shade end of the light scale leaves acclimate on,
 /// `looks::DEEP_SHADE`, is 0.08, where the growth model's short shoots stop
 /// leafing out, not 0.04, which no crown's leaves reach.
-pub const GENERATOR_REVISION: u32 = 28;
+pub const GENERATOR_REVISION: u32 = 29;

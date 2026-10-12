@@ -4,7 +4,7 @@
 //! program    = header { statement }   (until the next "lsystem")
 //! chain      = program { program }
 //! header     = "lsystem" name integer [ "extends" name ] ";"
-//! statement  = "param" name "=" expr ";"
+//! statement  = "param" name [ "=" expr ] ";"
 //!            | "module" name [ "(" names ")" ] [ "queries" names ] ";"
 //!            | "organ" name kind [ "as" name ] [ "area" expr ] ";"
 //!            | "body" name ";"
@@ -254,10 +254,21 @@ impl Parser {
 
     fn param(&mut self, span: Span) -> Parsed<ParamDecl> {
         let (name, _) = self.name("a parameter name")?;
+        if self.eat(&Token::Semicolon) {
+            return Ok(ParamDecl {
+                name,
+                value: None,
+                span,
+            });
+        }
         self.expect(&Token::Assign, "after the parameter name")?;
         let value = self.expr()?;
         self.expect(&Token::Semicolon, "after the parameter value")?;
-        Ok(ParamDecl { name, value, span })
+        Ok(ParamDecl {
+            name,
+            value: Some(value),
+            span,
+        })
     }
 
     fn name_list(&mut self, what: &str) -> Parsed<Vec<(String, Span)>> {
@@ -642,19 +653,27 @@ mod tests {
         let ast = parse("lsystem p 1; param a = -2^2; param b = 8 / 4 / 2; axiom F;").unwrap();
         assert_eq!(
             ast.params[0].value,
-            Expr::Unary(
+            Some(Expr::Unary(
                 UnaryOp::Neg,
                 Box::new(Expr::Binary(
                     BinaryOp::Pow,
                     Box::new(Expr::Number(2.0)),
                     Box::new(Expr::Number(2.0))
                 ))
-            )
+            ))
         );
-        let Expr::Binary(BinaryOp::Div, left, _) = &ast.params[1].value else {
+        let Some(Expr::Binary(BinaryOp::Div, left, _)) = &ast.params[1].value else {
             panic!("expected a division");
         };
         assert!(matches!(**left, Expr::Binary(BinaryOp::Div, _, _)));
+    }
+
+    #[test]
+    fn a_parameter_may_have_no_value() {
+        let ast = parse("lsystem p 1; param a; param b = a * 2; axiom F(b);").unwrap();
+        assert_eq!(ast.params[0].name, "a");
+        assert_eq!(ast.params[0].value, None);
+        assert!(ast.params[1].value.is_some());
     }
 
     #[test]
