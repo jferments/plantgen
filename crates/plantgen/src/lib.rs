@@ -163,4 +163,11 @@ pub mod venation;
 /// adult shoots bear entire leaves, rise and fruit), and the programs that
 /// measure first flowering by the plant's age name it `adult_age`, set
 /// from a taxon's juvenile period.
-pub const GENERATOR_REVISION: u32 = 26;
+/// 27: crown calibration: in the broadleaf program a short shoot lives
+/// while it has light, for up to 40 years, and its leaves carry their own
+/// turn, so open-grown crowns keep the leaf area per crown area of the
+/// Urban Tree Database's trees and their inner leaves grow in shade; and
+/// the deep-shade end of the light scale leaves acclimate on,
+/// `looks::DEEP_SHADE`, is 0.08, where the growth model's short shoots stop
+/// leafing out, not 0.04, which no crown's leaves reach.
+pub const GENERATOR_REVISION: u32 = 27;

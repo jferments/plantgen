@@ -18,9 +18,11 @@
       "crown_base": 3,
       "crown_rate": 0.035,
       "space_density": 7,
-      "bud_years": 15,
       "internode": 0.22,
       "max_shoot": 3,
+      "pipe_rings": 7.4e-06,
+      "pipe_organ": 0.0049,
+      "pipe_tip": 0.0024,
       "branch_angle": 50,
       "apical_young": 0.65,
       "apical": 0.52,
@@ -149,7 +151,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a broadleaf evergreen with a leaning, crooked trunk, an irregular crown, thick, glossy oval leaves and clusters of small white flowers. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a broadleaf evergreen with a leaning, crooked trunk, an irregular crown, thick, glossy oval leaves and clusters of small white flowers. Not fitted to measurements. Its pipe_tip, pipe_organ and pipe_rings are scaled together (crown calibration, broadleaf revision 9) so that, with the leaf its crown now keeps, its trunk reaches the reference dbh of 40 cm at 50 years again."
     },
     "allometry": {
       "evidence": "Authored",

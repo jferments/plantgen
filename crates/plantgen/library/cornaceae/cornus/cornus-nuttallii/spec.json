@@ -20,6 +20,8 @@
       "space_density": 14,
       "internode": 0.18,
       "max_shoot": 3,
+      "pipe_organ": 0.0051,
+      "pipe_tip": 0.0025,
       "branch_angle": 50,
       "apical_young": 0.62,
       "apical": 0.52,
@@ -36,7 +38,7 @@
       "extinction": 0.4,
       "space_reach": 1.8,
       "space_kill": 0.5,
-      "pipe_rings": 1.2e-05,
+      "pipe_rings": 4.8e-06,
       "leaf_area": 0.273,
       "bloom_area": 0.871
     }
@@ -140,7 +142,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a small understory tree with a rounded crown, opposite oval leaves with curving veins, and large white flower heads of four to six petal-like bracts. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a small understory tree with a rounded crown, opposite oval leaves with curving veins, and large white flower heads of four to six petal-like bracts. Not fitted to measurements. Its pipe_tip, pipe_organ and pipe_rings are scaled together (crown calibration, broadleaf revision 9) so that, with the leaf its crown now keeps, its trunk reaches the reference dbh of 20 cm at 40 years again."
     },
     "allometry": {
       "evidence": "Authored",

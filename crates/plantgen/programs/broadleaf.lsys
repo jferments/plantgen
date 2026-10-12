@@ -47,9 +47,20 @@
 # a taxon's juvenile_period_years. It replaces bloom_age, with the same
 # default.
 #
+# Revision 9 (crown calibration): short shoots live while they have
+# light, for up to bud_years (default 40, was 12), so a crown keeps
+# leafing inside until its own shade, not its age, ends its short shoots:
+# an open-grown crown holds the leaf area per crown area of the USDA
+# Urban Tree Database's open-grown trees, and its inner leaves grow in
+# shade. A short shoot's yearly leaves carry their own turn
+# (`leaf(size, roll, pitch, level)`), one module each where
+# `[ &(leaf_angle) $ leaf(size) ]` with a roll left behind takes five, as
+# the maples' have since growth plan G1, so a crown that keeps its short
+# shoots stays within the module limit.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 8;
+lsystem broadleaf 9;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height = 22;
@@ -65,7 +76,7 @@ param apical_young = 0.68;    # Borchert-Honda lambda in a sapling
 param apical = 0.52;          # and in a mature tree: near 0.5 spreads the crown
 param apical_years = 25;      # years over which apical control relaxes
 param flux = 3;               # Borchert-Honda alpha: vigour per unit of light
-param bud_years = 12;         # years a lateral bud lives as a short shoot
+param bud_years = 40;         # years a lateral bud lives as a short shoot while it has light
 param spur_light = 0.1;       # light a short shoot needs to leaf out
 param shade_death = 0.06;     # light below which a bud dies
 param steer_weight = 0.35;    # how far a shoot turns toward free space
@@ -116,7 +127,7 @@ module B queries light, vigour, space;    # a lateral bud or short shoot
 module S queries vigour;                  # the base of a branch
 module M(n);                              # n internodes still to form this year
 module Fk(n);                             # n stems still to start at a fork
-module P(n);                              # n leaf pairs still to unfold on a short shoot
+module Q(n, k);                           # n leaf pairs still to unfold on a short shoot, its k-th pair first
 module Bo(n);                             # n blooms still to place at a short shoot's tip
 
 organ leaf leaf area leaf_area;
@@ -166,8 +177,8 @@ rule A(split) : vigour >= 1 && space > 0 ->
 # A lateral bud breaks into a long shoot when it has the vigour and free
 # space; otherwise, in enough light, it leafs out as a short shoot.
 rule B : vigour >= bud_break && space > 0 -> A(0);
-rule B : light >= spur_light && blooms > 0 && t >= adult_age -> P(spur_pairs) Bo(blooms) B;
-rule B : light >= spur_light -> P(spur_pairs) B;
+rule B : light >= spur_light && blooms > 0 && t >= adult_age -> Q(spur_pairs, age * spur_pairs) Bo(blooms) B;
+rule B : light >= spur_light -> Q(spur_pairs, age * spur_pairs) B;
 
 # One internode, turned a little at random, with a pair of buds and a pair
 # of leaves; the next pair is turned by divergence (a quarter turn:
@@ -188,14 +199,17 @@ decompose Fk(n) : n > 0 ->
 decompose Fk(n) -> ;
 
 # A short shoot's leaves crowded at its tip: two single ones, or a pair,
-# for each of spur_pairs, each turned by divergence.
-decompose P(n) : n > 0 && leaves_per_node < 2 ->
-    [ &(leaf_angle) $ leaf(spur_leaf) ] /(divergence) [ &(leaf_angle) $ leaf(spur_leaf) ]
-    /(divergence) P(n - 1);
-decompose P(n) : n > 0 ->
-    [ &(leaf_angle) $ leaf(spur_leaf) ] [ /(180) &(leaf_angle) $ leaf(spur_leaf) ]
-    /(divergence) P(n - 1);
-decompose P(n) -> ;
+# for each of spur_pairs, each turned by divergence from the one before,
+# year after year: the k-th pair since the shoot began stands k
+# divergences round (two single leaves a pair).
+decompose Q(n, k) : n > 0 && leaves_per_node < 2 ->
+    leaf(spur_leaf, divergence * 2 * k, leaf_angle, 1)
+    leaf(spur_leaf, divergence * (2 * k + 1), leaf_angle, 1)
+    Q(n - 1, k + 1);
+decompose Q(n, k) : n > 0 ->
+    leaf(spur_leaf, divergence * k, leaf_angle, 1) leaf(spur_leaf, divergence * k + 180, leaf_angle, 1)
+    Q(n - 1, k + 1);
+decompose Q(n, k) -> ;
 
 
 # Leaves fall after leaf_years; blooms last one year.

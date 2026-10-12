@@ -18,7 +18,6 @@
       "crown_base": 5,
       "crown_rate": 0.06,
       "space_density": 25,
-      "bud_years": 15,
       "internode": 0.3,
       "max_shoot": 4,
       "branch_angle": 45,
