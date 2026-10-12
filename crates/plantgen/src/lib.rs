@@ -38,6 +38,7 @@ pub mod divided;
 pub mod drawing;
 pub mod evidence;
 pub mod export;
+pub mod flowers;
 pub mod form;
 pub mod formula;
 pub mod fruit;
@@ -138,4 +139,10 @@ pub mod venation;
 /// fed by a vein and leaning its way, the middle ones largest (spec
 /// rework L3); and a leaf grows in five steps of form from deep shade to
 /// full sun, its size following its light smoothly.
-pub const GENERATOR_REVISION: u32 = 22;
+/// 23: a flower that is more than a whorl of alike petals is laid out
+/// whorl by whorl (`crate::flowers`, spec rework P5): sepals, roles,
+/// corolla and floral tubes, spurs, stamens and pistil, on its solid, its
+/// cluster's units, its card and its named parts; stamens and a flower's
+/// tube moved from its form to its card, and a lone flower's bud is the
+/// flower closed.
+pub const GENERATOR_REVISION: u32 = 23;

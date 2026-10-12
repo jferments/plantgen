@@ -1,0 +1,232 @@
+{
+  "schema": 1,
+  "id": "platanthera-dilatata",
+  "taxon": {
+    "scientific_name": "Platanthera dilatata",
+    "common_name": "white bog orchid",
+    "usda_symbol": "PLDI3",
+    "family": "Orchidaceae",
+    "genus": "Platanthera",
+    "plant_name_id": 157114
+  },
+  "growth_form": "forb",
+  "generator": {
+    "program": "herb",
+    "params": {
+      "stems": 1,
+      "stem_rate": 1,
+      "clump_radius": 0.01,
+      "stem_lean": 3,
+      "maturity": 1.5,
+      "flower_age": 3,
+      "stem_height": 0.42,
+      "young_height": 0.45,
+      "stem_radius": 0.003,
+      "wiggle": 1,
+      "nodes": 5,
+      "bare": 0.05,
+      "leaf_length": 0.18,
+      "leaf_peak": 0.1,
+      "leaf_top": 0.25,
+      "leaf_base": 0.8,
+      "leaf_angle": 25,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_size": 0.18,
+      "pedicel": 0.0,
+      "flower_angle": 0,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0,
+      "leaf_area": 0.118,
+      "flower_area": 0.064
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [2, 4, 6]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.15, 0.25, 0.1],
+    "foliage": [0.07, 0.16, 0.05],
+    "foliage_shade": [0.022, 0.05, 0.015],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "width": 0.2,
+          "widest": 0.35,
+          "tip": 0.8,
+          "base": 0.4,
+          "teeth": 0,
+          "petiole": 0.0
+        }
+      },
+      "flower": {
+        "shape": { "template": "fruit", "aspect": 0.3 },
+        "inflorescence": { "size": 0.067, "spread": 40, "taper": 0.2 },
+        "colour": [0.3, 0.38, 0.15],
+        "season": {
+          "bud": 170,
+          "flower": 185,
+          "fruit": 197,
+          "ripe": 235,
+          "fall": 280,
+          "opening": 25,
+          "bud_look": {
+            "shape": { "template": "fruit", "aspect": 0.5 },
+            "colour": [0.7, 0.78, 0.6],
+            "size": 0.6
+          },
+          "flower_look": {
+            "shape": {
+              "template": "flower",
+              "petal_width": 0.8,
+              "point": 0.6,
+              "centre": 0.1,
+              "sepal_length": 0.9,
+              "lip": 1.3
+            },
+            "colour": [0.93, 0.93, 0.86],
+            "accent": [0.85, 0.85, 0.68]
+          }
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "inflorescence": "spike",
+    "inflorescence_posture": "erect",
+    "units_per_inflorescence": {"min": 10, "max": 60},
+    "flower_size_m": {"min": 0.006, "max": 0.013},
+    "spur_length_m": {"min": 0.008, "max": 0.02}
+  },
+  "evidence": {
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hand-set from descriptions in floras and field guides, as search results quote them (the pages themselves were not read): one straight, slender, leafy stem from a fleshy rootstock; about five lanceolate leaves scattered up its lower part, the longest about 18 cm (the Flora of North America gives 3.5 to 32 cm), ascending and smaller upward, the top ones bract-like; the spike above them about 18 cm long (1 to 3 dm). A plant flowers from its third year, by eye; floras give no age. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "About 0.6 m tall at 4 years in the open, by eye within the heights floras and guides give (11 to 130 cm in the Flora of North America; commonly 15 to 70 cm), as search results quote them. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Colours chosen by eye: mid-green leaves and stem; waxy white to cream flowers (PNW Flowers and Minnesota Wildflowers, as search results quote them: white or very pale cream; the only western Platanthera that is not yellowish or greenish); pale green buds and green capsules."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The program the spec's authors chose to grow this form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America's account of the species, as other portals quote it in search results (the page itself was not read): spikes very lax to very dense, of sessile flowers."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America's account and regional floras, as search results quote them (the pages themselves were not read): a single erect, very straight stem ending in the spike."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "minnesota-wildflowers",
+      "note": "Minnesota Wildflowers, as search results quote it (the page itself was not read): 10 to 60 flowers on the spike; other floras give 10 to 70, and up to 80."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "minnesota-wildflowers",
+      "note": "Minnesota Wildflowers, as search results quote it (the page itself was not read): flowers a quarter to half an inch, 6 to 13 mm."
+    },
+    "traits.spur_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America's account, as a portal quotes it in search results (the page itself was not read): spur slenderly cylindric to filiform, 8 to 20 mm, markedly longer than the lip; the western variety leucostachys has the longest spurs, commonly one and a half times the lip or more."
+    },
+    "appearance.organs.flower": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its spike drawn as one cluster that opens by the day (spec rework L1c), its kind and flowers from its characters by the rules at the flowering plants; each flower about 1.2 cm across, set by hand within the 6 to 13 mm the characters give; slender green capsules after. The plant stands as tall as before: its stem ends where the spike begins."
+    },
+    "appearance.organs.flower.season": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its days by eye. No flora gives months for the Pacific Northwest (PNW Flowers: mid-summer); dated photographs in E-Flora BC run from June 6 to July 25, and floras elsewhere give June to September. So buds in mid-June, flowers from early July, each open about 12 days, the spike opening from its foot over about 25 days, capsules split by late August and shed by early October; an inference, not a flora's dates."
+    },
+    "appearance.organs.flower.season.flower_look.shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its flower laid out whorl by whorl (spec rework P5): three sepals and three petals, the median petal the lip, turned half round so the lip hangs below, on an inferior ovary with a column, and a spurred lip, all from the characters of the Orchidaceae and the species by the rules at the flowering plants. By hand, from the Flora of North America as portals quote it and the Wisconsin orchid pages, as search results quote them (the pages themselves were not read): the lip about 1.3 times a petal's length (lip 4 to 11 mm, petals 3 to 8 mm), the sepals about as long as the petals (3 to 9 mm), all lanceolate and pointed; the dilated base of the lip is not drawn."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Flora of North America North of Mexico, vol. 26 (Platanthera, C. J. Sheviak), as other portals quote it",
+        "url": "https://floranorthamerica.org/",
+        "licence": "copyrighted text; facts only"
+      },
+      {
+        "title": "Minnesota Wildflowers: tall white bog orchid",
+        "url": "https://www.minnesotawildflowers.info/flower/tall-white-bog-orchid",
+        "licence": "copyrighted text; facts only"
+      },
+      {
+        "title": "World Checklist of Vascular Plants, version 16",
+        "url": "https://sftp.kew.org/pub/data-repositories/WCVP/wcvp.zip",
+        "licence": "CC-BY-4.0"
+      }
+    ],
+    "contributors": ["PlantGen"],
+    "notes": "Procedural proxy added for spec rework P5 as the library's first orchid, from floras and field guides as search results quote them (the pages themselves were not read). Calibration against measurements and photographs is milestone P4."
+  }
+}

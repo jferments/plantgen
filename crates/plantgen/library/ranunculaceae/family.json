@@ -2,5 +2,16 @@
   "schema": 1,
   "rank": "family",
   "name": "Ranunculaceae",
-  "parent": "order/ranunculales"
+  "parent": "order/ranunculales",
+  "traits": {
+    "flower_symmetry": {"actinomorphic": "usually", "zygomorphic": "rarely"},
+    "ovary_position": "superior"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "kew-powo",
+      "note": "Plants of the World Online's account of the family, as search results quote it (the page itself was not read): flowers usually actinomorphic, less commonly zygomorphic (as in Aconitum); sepals (3-)5 to 8, often petaloid; stamens numerous, usually spirally arranged; carpels one to many, usually free; ovary superior."
+    }
+  }
 }

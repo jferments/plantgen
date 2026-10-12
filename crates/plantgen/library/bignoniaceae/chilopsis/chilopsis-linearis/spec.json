@@ -86,15 +86,15 @@
       "bloom": {
         "shape": {
           "template": "flower",
-          "petals": 5
+          "petals": 5,
+          "tube": 0.8
         },
         "colour": [0.9, 0.6, 0.8],
         "accent": [0.7, 0.3, 0.6],
         "form": {
           "flower": {
             "cup": 55,
-            "curl": 20,
-            "tube": 0.8
+            "curl": 20
           }
         }
       }

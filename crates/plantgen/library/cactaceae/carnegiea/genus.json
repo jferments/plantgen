@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Carnegiea",
+  "traits": {
+    "perianth": "spiral",
+    "hypanthium": true,
+    "ovary_position": "inferior"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "kew-powo",
+      "note": "Plants of the World Online's account of the cactus family, as search results quote it (the page itself was not read): tepals many, in several series grading from sepal-like outer ones to petal-like inner ones; a floral tube above the pericarpel, which holds the inferior ovary. For the saguaro, a description on the SEINet and NEON portals adds a pericarpel and floral tube 6 to 10 cm long, covered with scales."
+    }
+  }
+}

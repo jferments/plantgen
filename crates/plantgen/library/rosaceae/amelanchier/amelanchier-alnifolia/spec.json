@@ -114,7 +114,9 @@
               "petal_width": 0.55,
               "point": 0.2,
               "notch": 0.0,
-              "centre": 0.15
+              "centre": 0.15,
+              "stamens": 20,
+              "stamen_length": 0.25
             },
             "colour": [0.96, 0.96, 0.93],
             "accent": [0.85, 0.8, 0.5],
@@ -122,9 +124,7 @@
             "form": {
               "flower": {
                 "cup": 15,
-                "curl": 15,
-                "stamens": 20,
-                "stamen_length": 0.25
+                "curl": 15
               }
             }
           }

@@ -25,7 +25,7 @@
       "flower_rise": 0.06,
       "flower_size": 0.13,
       "petiole_radius": 0.004,
-      "flower_area": 0.456
+      "flower_area": 0.314
     }
   },
   "growth": {
@@ -64,11 +64,11 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 12,
           "petal_width": 0.9,
           "point": 0.6,
           "notch": 0,
-          "centre": 0.25
+          "centre": 0.25,
+          "stamen_length": 0.25
         },
         "colour": [0.97, 0.96, 0.92],
         "accent": [0.95, 0.8, 0.15],
@@ -76,9 +76,6 @@
           "flower": {
             "cup": 35,
             "curl": 0,
-            "tube": 0,
-            "stamens": 30,
-            "stamen_length": 0.25,
             "levels": 2
           }
         }
@@ -100,6 +97,12 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "perianth": "spiral",
+    "perianth_parts": {"min": 21, "max": 47},
+    "stamens": {"min": 35, "max": 120},
+    "flower_size_m": {"min": 0.06, "max": 0.19}
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -150,6 +153,16 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America on Nymphaea odorata, as search results quote it (the page itself was not read): sepals 4; petals (14-)17 to 43, white, rarely pink; stamens 35 to 120, yellow; flowers 6 to 19 cm across, floating. The tepals in all are the sepals and petals added (21 to 47), drawn as one spiral."
+    },
+    "appearance.organs.flower.shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Its flower laid out whorl by whorl (spec rework P5): a spiral of tepals and stamens from the characters by the rules at the flowering plants (as search results quote them; the pages themselves were not read)."
     }
   },
   "provenance": {

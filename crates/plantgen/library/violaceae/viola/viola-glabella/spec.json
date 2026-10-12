@@ -40,7 +40,7 @@
       "leaf_area": 0.287,
       "basal_area": 0.235,
       "basal_piece_area": 0.235,
-      "flower_area": 0.639,
+      "flower_area": 0.485,
       "bud_area": 0.89,
       "fruit_area": 0.89
     }
@@ -75,11 +75,13 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 5,
           "petal_width": 1.0,
           "point": 0.0,
           "notch": 0.0,
-          "centre": 0.2
+          "centre": 0.2,
+          "sepal_length": 0.4,
+          "corolla": "bilabiate",
+          "spur": 0.4
         },
         "colour": [0.92, 0.8, 0.1],
         "accent": [0.4, 0.2, 0.1]
@@ -95,6 +97,12 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "flower_merosity": 5,
+    "flower_symmetry": "zygomorphic",
+    "perianth": "sepals_and_petals",
+    "zygomorphy": "other"
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -145,6 +153,16 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "pnwflowers",
+      "note": "PNW Flowers on the species, as search results quote it (the page itself was not read): flowers 5-merous, solitary, axillary, zygomorphic; the Puget Prairie Plants wiki adds the lowest petal larger and spurred, the upper four in two pairs."
+    },
+    "appearance.organs.flower.shape": {
+      "evidence": "SourceInferred",
+      "source": "pnwflowers",
+      "note": "Its flower laid out whorl by whorl (spec rework P5). Drawn as two lips by hand: two upper petals, two side ones and the larger lowest, spurred, which is how a violet's petals stand though floras do not call it two-lipped; its spur short, since the search results gave no length (the pages themselves were not read)."
     }
   },
   "provenance": {
