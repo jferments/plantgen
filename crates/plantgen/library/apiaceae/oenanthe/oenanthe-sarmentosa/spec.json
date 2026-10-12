@@ -36,7 +36,7 @@
       "fruit_below": 0,
       "buds_above": 1,
       "nod": 0,
-      "leaf_area": 0.284,
+      "leaf_area": 0.312,
       "basal_area": 0.235,
       "basal_piece_area": 0.235,
       "flower_area": 0.673,
@@ -60,13 +60,7 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": {
-          "template": "compound",
-          "leaflets": 9,
-          "leaflet_width": 0.5,
-          "teeth": 4,
-          "petiole": 0.15
-        }
+        "shape": { "template": "compound", "teeth": 4, "petiole": 0.15, "angle": 55, "pinnule_angle": 55 }
       },
       "flower": {
         "shape": { "template": "flower", "petals": 5, "petal_width": 0.9, "point": 0.0, "notch": 0.2, "centre": 0.25 },
@@ -92,7 +86,14 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "inflorescence_branches": {"min": 10, "max": 20}
+    "inflorescence_branches": {"min": 10, "max": 20},
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 2,
+    "pinnae": {"min": 5, "max": 9},
+    "leaflets": {"min": 3, "max": 7},
+    "terminal_leaflet": true,
+    "leaf_shape": "ovate"
   },
   "evidence": {
     "generator.params": {
@@ -154,6 +155,46 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Its compound umbel drawn flower by flower (spec rework L1c): its kind from the carrot family's inflorescence and its rays from its own, by the rules at the flowering plants; about 12 small white flowers about 2 mm across in each umbellet, by eye (no flora gives a count; the Flora of New Zealand gives the flower's size), the umbel 5 to 7 cm across. From floras and extension pages as quoted in search results; the pages themselves were not read."
+    },
+    "traits.division_order": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "General knowledge of the species, the guides the search returned agreeing: leaves two or three times pinnate, the leaflets ovate, toothed and cleft, 1 to 6 cm long, the veins running to the teeth. The counts of pinnae and of leaflets on each are by eye from photographs."
+    },
+    "traits.leaf_division": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "General knowledge of the species, the guides the search returned agreeing: leaves two or three times pinnate, the leaflets ovate, toothed and cleft, 1 to 6 cm long, the veins running to the teeth. The counts of pinnae and of leaflets on each are by eye from photographs."
+    },
+    "traits.division_pattern": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "General knowledge of the species, the guides the search returned agreeing: leaves two or three times pinnate, the leaflets ovate, toothed and cleft, 1 to 6 cm long, the veins running to the teeth. The counts of pinnae and of leaflets on each are by eye from photographs."
+    },
+    "traits.pinnae": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "General knowledge of the species, the guides the search returned agreeing: leaves two or three times pinnate, the leaflets ovate, toothed and cleft, 1 to 6 cm long, the veins running to the teeth. The counts of pinnae and of leaflets on each are by eye from photographs."
+    },
+    "traits.leaflets": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "General knowledge of the species, the guides the search returned agreeing: leaves two or three times pinnate, the leaflets ovate, toothed and cleft, 1 to 6 cm long, the veins running to the teeth. The counts of pinnae and of leaflets on each are by eye from photographs."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "General knowledge of the species, the guides the search returned agreeing: leaves two or three times pinnate, the leaflets ovate, toothed and cleft, 1 to 6 cm long, the veins running to the teeth. The counts of pinnae and of leaflets on each are by eye from photographs."
+    },
+    "traits.leaf_shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "General knowledge of the species, the guides the search returned agreeing: leaves two or three times pinnate, the leaflets ovate, toothed and cleft, 1 to 6 cm long, the veins running to the teeth. The counts of pinnae and of leaflets on each are by eye from photographs."
+    },
+    "appearance.organs.leaf.shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The leaf drawn twice pinnate (spec rework P4), its pinnae and their leaflets counted, set and shaped from its characters by the rules at the flowering plants and the plants; before, nine leaflets stood along one rachis. By eye: pinnae and leaflets 55 degrees from their rachises."
     }
   },
   "provenance": {

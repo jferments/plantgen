@@ -780,6 +780,29 @@ mod tests {
     }
 
     #[test]
+    fn an_organ_lives_on_in_the_organ_it_becomes() {
+        let source = |successor: &str| {
+            format!(
+                "lsystem p 1; organ flower flower; organ fruit fruit; axiom flower(1);
+                 rule flower(s) -> {successor};"
+            )
+        };
+        let fruit = |successor: &str| {
+            let (program, string) = run(&source(successor), 1);
+            let fruit = program.symbol_id("fruit").unwrap();
+            let module = string.modules.iter().find(|m| m.symbol == fruit).unwrap();
+            (module.lineage, module.born)
+        };
+        // The flower in the axiom is ordinal 0 of the root, born at 0.
+        let flower = (Lineage::root(7, 0), 0.0);
+        assert_eq!(fruit("fruit(s)"), flower);
+        assert_eq!(fruit("F fruit(s) [ flower(s) ]"), flower);
+        // In a branch, or beside the flower itself, it is a new organ.
+        assert_ne!(fruit("[ fruit(s) ]").0, flower.0);
+        assert_ne!(fruit("fruit(s) flower(s)").0, flower.0);
+    }
+
+    #[test]
     fn cut_removes_the_rest_of_the_branch_and_empty_branches_vanish() {
         let (program, string) = run(
             "lsystem p 1; module A; module S; axiom F [ S F A ] [ F A ] F;

@@ -47,7 +47,7 @@
       "bloom_age": 6,
       "bloom_size": 0.03,
       "bloom_angle": 40,
-      "leaf_area": 0.094,
+      "leaf_area": 0.109,
       "thorn_area": 0.059
     }
   },
@@ -73,13 +73,7 @@
     "variation": 0.15,
     "organs": {
       "leaf": {
-        "shape": {
-          "template": "frond",
-          "pinnae": 6,
-          "width": 0.3,
-          "divided": 0,
-          "stipe": 0.1
-        }
+        "shape": { "template": "compound", "leaflet_width": 0.6, "teeth": 0, "petiole": 0.2, "angle": 22, "pinnule_angle": 60, "widest": 0.4, "tip": 0.2, "base": 0.6 }
       },
       "thorn": {
         "shape": {
@@ -114,6 +108,14 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 2,
+    "pinnae": 2,
+    "leaflets": {"min": 8, "max": 16, "low": 4, "high": 18},
+    "terminal_leaflet": false
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -179,6 +181,16 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "ua-desert-legume-program",
+      "note": "The Desert Legume Program's account of the palo verdes, as search results quote it (the page itself was not read): leaves of one pair of pinnae with 4 to 8 pairs of leaflets each, the smallest leaflets of the palo verdes. Isley's monograph (1975, as the New York Botanical Garden's copy is quoted) gives (2) 3 to 5 (9) pairs, sessile and ovate, 1 to 2 mm long. Even-pinnate."
+    },
+    "appearance.organs.leaf": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The leaf drawn as a twice-divided compound leaf (spec rework P4): its one pair of pinnae and their leaflets counted from its characters by the rules at the flowering plants; before, a fern's frond stood in for it. By eye from photographs: the pinnae forking narrowly, about 22 degrees either side; the leaflets ovate and blunt, about 0.6 as wide as long."
     }
   },
   "provenance": {

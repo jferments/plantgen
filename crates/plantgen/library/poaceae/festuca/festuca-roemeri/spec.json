@@ -32,7 +32,7 @@
       "blade_area": 0.027,
       "tip_area": 0.015,
       "thatch_area": 0.027,
-      "panicle_area": 0.095
+      "panicle_area": 0.121
     }
   },
   "growth": {
@@ -62,16 +62,26 @@
         "shade": [0.12, 0.1, 0.05]
       },
       "panicle": {
-        "shape": {
-          "template": "panicle",
-          "whorls": 6,
-          "branches": 2,
-          "spread": 20,
-          "spikelets": 5,
-          "aspect": 0.3,
-          "stalk": 0.05
+        "shape": {"template": "spikelet"},
+        "inflorescence": {
+          "branches": 8,
+          "per_node": 2,
+          "size": 0.3,
+          "spread": 15,
+          "taper": 0.5,
+          "peduncle": 0.05,
+          "stalk": [0.38, 0.38, 0.27],
+          "branch": {
+            "kind": "raceme",
+            "flowers": 5,
+            "pedicel": 0.05,
+            "peduncle": 0.3,
+            "size": 0.3,
+            "spread": 15
+          }
         },
-        "colour": [0.42, 0.42, 0.3]
+        "colour": [0.42, 0.42, 0.3],
+        "accent": [0.45, 0.4, 0.34]
       }
     }
   },
@@ -84,7 +94,29 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "inflorescence": "panicle",
+    "florets_per_spikelet": {"min": 4, "max": 6},
+    "spikelet_length_m": {"min": 0.009, "max": 0.0135},
+    "glumes": 2,
+    "lower_glume_length_m": {"min": 0.0025, "max": 0.005, "low": 0.002},
+    "upper_glume_length_m": {"min": 0.004, "max": 0.0062},
+    "lemma_length_m": {"min": 0.005, "max": 0.007, "high": 0.0082},
+    "awns": true,
+    "awn_length_m": {"min": 0.003, "max": 0.005, "low": 0.002},
+    "awn_insertion": "apical"
+  },
   "evidence": {
+    "appearance.organs.panicle": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The panicle's layout, the model's choice after FNA (volume 24), as search results quote it (the page was not read): contracted, 1 or 2 branches a node, erect to slightly spreading. Drawn as 8 branches in pairs close to the axis, each with about 5 spikelets. Colours by eye."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA's account of the species (volume 24), as search results quote it (the page itself was not read): inflorescences (7)8 to 20(25) cm, loosely to densely contracted, with 1 or 2 branches a node, the branches erect to slightly spreading; spikelets 9 to 13.5 mm, with 4 to 6 florets; glumes shorter than the upper florets, the lower (2)2.5 to 5 mm, the upper 4 to 6.2 mm; lemmas 5 to 7(8.2) mm; awns (2)3 to 5 mm, at the tip."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

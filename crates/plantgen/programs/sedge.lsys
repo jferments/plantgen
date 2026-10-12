@@ -23,9 +23,12 @@
 # cattails), the name every leaf-bearing program shares, which the rules
 # at the vascular plants set from a taxon's phyllotaxis_pattern.
 #
+# Revision 3 (spec rework M7): a spike and a tuft are inflorescences, not
+# a fruit and a leaf.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem sedge 2;
+lsystem sedge 3;
 
 param vigour_spread = 0.1;
 param shoots_per_year = 20;
@@ -62,8 +65,8 @@ module Ry(j, m);              # rays or branches j to j + m - 1 of a head
 module Sm;                    # a shoot's foot: it dies after shoot_life years
 
 organ leaf leaf area leaf_area;
-organ spike fruit area spike_area;
-organ tuft leaf area tuft_area;
+organ spike fruit as inflorescence area spike_area;
+organ tuft leaf as inflorescence area tuft_area;
 
 axiom Y(exp(gauss() * vigour_spread));
 

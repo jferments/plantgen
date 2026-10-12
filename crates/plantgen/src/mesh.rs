@@ -2390,6 +2390,7 @@ mod tests {
             shed: None,
             body: 0,
             left: Vec3::ZERO,
+            within: None,
         }
     }
 
@@ -2416,8 +2417,10 @@ mod tests {
                     born: 0.0,
                     shed: None,
                     light: 0.5,
+                    within: None,
                 })
                 .collect(),
+            structures: Vec::new(),
         }
     }
 
@@ -2620,6 +2623,7 @@ mod tests {
                     born: 0.0,
                     shed: None,
                     light: 0.5,
+                    within: None,
                 }
             })
             .collect();
@@ -2875,6 +2879,7 @@ mod tests {
                 segment(Some(0), false, up(2.0), up(4.0), 0.25),
             ],
             organs: Vec::new(),
+            structures: Vec::new(),
         }
     }
 
@@ -2978,6 +2983,7 @@ mod tests {
                 0.2,
             )],
             organs: Vec::new(),
+            structures: Vec::new(),
         };
         let mesh = build_plain(&limb, &looks(), &look, &lod(0.0, 0.0, 0.0)).wood;
         let green = |above: bool| -> f32 {
@@ -3004,6 +3010,7 @@ mod tests {
             born: 0.0,
             shed: None,
             light: 1.0,
+            within: None,
         }
     }
 
@@ -3016,6 +3023,7 @@ mod tests {
             height: 1.0,
             segments: Vec::new(),
             organs: vec![organ(heading, left)],
+            structures: Vec::new(),
         };
         build_plain(&graph, &looks, &appearance, &lod(0.0, 0.0, 0.0)).cards
     }
@@ -3043,7 +3051,7 @@ mod tests {
     #[test]
     fn leaves_are_drawn_by_their_family() {
         // Sun and shade leaves by their light, juvenile leaves while the
-        // plant was young (plant roadmap P4).
+        // plant was young (plant roadmap P4, spec rework L3).
         let mut appearance = appearance();
         appearance.organs.insert(
             "leaf".into(),
@@ -3075,6 +3083,7 @@ mod tests {
                 leaf(0.05, 8.0),
                 leaf(0.3, 2.0),
             ],
+            structures: Vec::new(),
         };
         let cards = build_plain(&graph, &looks, &appearance, &lod(0.0, 0.0, 0.0)).cards;
         let template = |at: usize| usize::from(cards[at].template);
@@ -3086,10 +3095,11 @@ mod tests {
                 .copied()
                 .unwrap()
         };
+        let bands = forms.bands.unwrap();
         let (sun, own, shade) = (
-            by_template(forms.sun.unwrap()),
+            by_template(bands[crate::looks::BANDS - 1]),
             by_template(0),
-            by_template(forms.shade.unwrap()),
+            by_template(bands[0]),
         );
         assert!(sun.length < own.length && own.length < shade.length);
         assert!(

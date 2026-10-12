@@ -22,6 +22,26 @@
     "appearance.organs.*.inflorescence.droop": {
       "map": {"inflorescence_posture": {"erect": 0, "nodding": 90, "pendent": 180}},
       "why": "An erect inflorescence's axis stays straight; a nodding one bends over by a quarter turn toward its tip, a pendent one by half a turn, so it hangs."
+    },
+    "appearance.organs.*.shape.pattern": {
+      "template": "compound",
+      "map": {"division_pattern": {"pinnate": "pinnate", "palmate": "palmate"}},
+      "why": "A compound leaf sets its leaflets along a rachis or from the petiole's tip, as its division pattern says."
+    },
+    "appearance.organs.*.shape.leaflets": {
+      "template": "compound",
+      "map": {"division_pattern": {"pinnate": {"rule": "division_order >= 2 ? (terminal_leaflet ? clamp(2 * round((pinnae - 1) / 2) + 1, 3, 41) : clamp(2 * round(pinnae / 2), 2, 40)) : (terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40))"}, "palmate": {"rule": "clamp(round(division_order >= 2 ? pinnae : leaflets), 3, 17)"}}},
+      "why": "A compound leaf divided once draws its leaflets; one divided twice (or more), its pinnae. A pinnate leaf's count is the nearest odd one if it ends in a leaflet, else the nearest even one, up to 41; a palmate leaf draws 3 to 17."
+    },
+    "appearance.organs.*.shape.pinnules": {
+      "template": "compound",
+      "map": {"division_pattern": {"pinnate": {"rule": "division_order >= 2 ? (terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40)) : 0"}, "palmate": {"rule": "division_order >= 2 ? clamp(round(leaflets), 3, 17) : 0"}}},
+      "why": "Each pinna of a twice-divided leaf (or each division of a biternate one) bears the leaflets floras count on it, odd or even as the leaf ends; a leaf divided three times or more is drawn divided twice. A leaf divided once bears none."
+    },
+    "appearance.organs.*.shape.confluent": {
+      "template": "compound",
+      "map": {"leaf_incision": {"none": 0, "dissected": 0.75}},
+      "why": "A blade dissected into fine segments is drawn as a divided leaf whose segments run together along a winged rachis; a compound leaf's leaflets stand apart."
     }
   },
   "evidence": {
@@ -29,6 +49,26 @@
       "evidence": "SourceInferred",
       "source": "openstax-biology-2e",
       "note": "The angiosperms are the flowering plants: their ovules sit inside an ovary, and their seeds ripen in a fruit (Biology 2e, 26.3)."
+    },
+    "rules.appearance.organs.*.shape.pattern": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind."
+    },
+    "rules.appearance.organs.*.shape.leaflets": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind."
+    },
+    "rules.appearance.organs.*.shape.pinnules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind."
+    },
+    "rules.appearance.organs.*.shape.confluent": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind."
     },
     "rules": {
       "evidence": "Authored",

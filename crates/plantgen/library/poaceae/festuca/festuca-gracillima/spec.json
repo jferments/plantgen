@@ -31,7 +31,7 @@
       "blade_area": 0.027,
       "tip_area": 0.015,
       "thatch_area": 0.027,
-      "panicle_area": 0.095
+      "panicle_area": 0.138
     }
   },
   "growth": {
@@ -73,16 +73,25 @@
         "shade": [0.12, 0.1, 0.05]
       },
       "panicle": {
-        "shape": {
-          "template": "panicle",
-          "whorls": 6,
-          "branches": 2,
-          "spread": 20,
-          "spikelets": 5,
-          "aspect": 0.3,
-          "stalk": 0.05
+        "shape": {"template": "spikelet"},
+        "inflorescence": {
+          "branches": 6,
+          "size": 0.35,
+          "spread": 30,
+          "taper": 0.5,
+          "peduncle": 0.05,
+          "stalk": [0.38, 0.38, 0.27],
+          "branch": {
+            "kind": "raceme",
+            "flowers": 4,
+            "pedicel": 0.08,
+            "peduncle": 0.3,
+            "size": 0.35,
+            "spread": 20
+          }
         },
-        "colour": [0.42, 0.42, 0.3]
+        "colour": [0.42, 0.42, 0.3],
+        "accent": [0.45, 0.42, 0.32]
       }
     }
   },
@@ -95,7 +104,29 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "inflorescence": "panicle",
+    "florets_per_spikelet": {"min": 4, "max": 6},
+    "spikelet_length_m": {"min": 0.014, "max": 0.015},
+    "glumes": 2,
+    "lower_glume_length_m": {"min": 0.0045, "max": 0.0065},
+    "upper_glume_length_m": {"min": 0.0065, "max": 0.008},
+    "lemma_length_m": {"min": 0.0065, "max": 0.012},
+    "awns": true,
+    "awn_length_m": {"min": 0.001, "max": 0.005},
+    "awn_insertion": "apical"
+  },
   "evidence": {
+    "appearance.organs.panicle": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The panicle's layout, the model's choice after GrassBase, as search results quote it (the page was not read): open and lanceolate, 6 to 12 cm, with large spikelets. Drawn as 6 branches of about 4 spikelets each. Colours by eye."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "kew-grassbase",
+      "note": "GrassBase's account of the species, as search results quote it (the page itself was not read): panicle open, lanceolate, 6 to 12 cm; spikelets 14 to 15 mm, of 4 to 6 fertile florets; glumes shorter than the spikelet, the lower 4.5 to 6.5 mm, the upper 6.5 to 8 mm; fertile lemma 6.5 to 12 mm; its one awn 1 to 5 mm, from a tapering tip (the tip in the search results' own words). No other flora's account was found to check it against."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

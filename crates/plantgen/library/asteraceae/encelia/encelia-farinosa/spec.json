@@ -49,6 +49,7 @@
       "bloom_age": 2,
       "bloom_size": 0.045,
       "bloom_angle": 10,
+      "bloom_area": 0.508,
       "leaf_area": 0.254
     }
   },

@@ -1,5 +1,5 @@
-//! Clusters of flowers, heads or fruit on one organ (spec rework L1,
-//! LANGUAGE.md 5.4.2).
+//! Clusters of flowers, heads, spikelets or fruit on one organ (spec
+//! rework L1, LANGUAGE.md 5.4.2).
 //!
 //! An organ whose look has an `inflorescence` is one cluster: the look's
 //! `shape` draws one unit of it, a flower, a head or one fruit, and the
@@ -47,7 +47,11 @@
 //! of units, placed as units would be, each laid out as `branch` in a frame
 //! of its own, $`s`$ long, with its `y` along the branch and its `x` square
 //! to it, away from the axis that bears it: a `panicle` is a raceme of
-//! branches, a `compound_umbel` an umbel of them. A cluster nests at most
+//! branches, a `compound_umbel` an umbel of them. A branch scaled by
+//! $`t_k`$ bears that share of its units or branches, rounded and at least
+//! one, each as long as on a branch of full length (spec rework P3): a
+//! grass's upper panicle branches are shorter, with fewer spikelets, not
+//! smaller ones. A cluster nests at most
 //! [`LEVELS`] deep and holds at most [`MOST_UNITS`] units. With `droop`
 //! $`D`$ an axis bends toward its `x` as it rises, its heading turned
 //! $`D(2u - u^2)`$ at the share $`u`$ of its length, and each unit and
@@ -237,9 +241,58 @@ impl Cluster {
     #[must_use]
     pub fn units(&self) -> u64 {
         match &self.branch {
-            Some(branch) => u64::from(self.branches) * branch.units(),
+            Some(branch) => self
+                .shares()
+                .into_iter()
+                .map(|share| branch.shortened(share).units())
+                .sum(),
             None => u64::from(self.flowers),
         }
+    }
+
+    /// The length of each unit or branch on the cluster's own axis, in
+    /// order, as a share of `size`: $`t = 1 - \tau q`$ (see the module).
+    fn shares(&self) -> Vec<f64> {
+        let n = if self.branch.is_some() {
+            self.branches
+        } else {
+            self.flowers
+        }
+        .max(1);
+        let tau = self.taper.clamp(0.0, 1.0);
+        let m = self.per_node.clamp(1, 8);
+        let nodes = n.div_ceil(m);
+        (0..n)
+            .map(|i| {
+                let q = match self.kind {
+                    ClusterKind::Umbel | ClusterKind::CompoundUmbel => {
+                        (f64::from(i) + 0.5) / f64::from(n)
+                    }
+                    _ => (f64::from(i / m) + 0.5) / f64::from(nodes),
+                };
+                1.0 - tau * q
+            })
+            .collect()
+    }
+
+    /// The cluster as a branch `share` as long as the longest (a tapered
+    /// branch, spec rework P3): that share of its units or branches, at
+    /// least one, each as long as on the longest branch.
+    fn shortened(&self, share: f64) -> std::borrow::Cow<'_, Self> {
+        if share >= 1.0 - 1e-9 {
+            return std::borrow::Cow::Borrowed(self);
+        }
+        let share = share.max(1e-3);
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let fewer = |n: u32| ((f64::from(n) * share).round() as u32).clamp(1, n.max(1));
+        let mut short = self.clone();
+        if short.branch.is_some() {
+            short.branches = fewer(self.branches);
+        } else {
+            short.flowers = fewer(self.flowers);
+        }
+        short.size = (self.size / share).min(1.0);
+        std::borrow::Cow::Owned(short)
     }
 
     /// Check an inflorescence as a spec gives it.
@@ -332,6 +385,14 @@ pub enum Unit {
     /// One fruit or cone, `aspect` its width over its length, `unripe` the
     /// share of a cluster's fruit still unripe.
     Fruit { aspect: f64, unripe: f64 },
+    /// A grass or sedge spikelet (`crate::spikelets`), `aspect` the width
+    /// of its glumes and lemmas over its length, its awns reaching `beyond`
+    /// its tip and spanning `across` its width, in its lengths.
+    Spikelet {
+        aspect: f64,
+        beyond: f64,
+        across: f64,
+    },
 }
 
 impl Unit {
@@ -345,23 +406,53 @@ impl Unit {
                 aspect: fruit.aspect,
                 unripe: fruit.unripe,
             }),
+            Shape::Spikelet(spikelet) => {
+                let laid = crate::spikelets::layout(spikelet);
+                let aspect = (2.0 * laid.body()).max(spikelet.aspect);
+                Some(Self::Spikelet {
+                    aspect,
+                    beyond: laid.height() - 1.0,
+                    across: (2.0 * laid.reach()).max(aspect),
+                })
+            }
             _ => None,
         }
     }
 
-    /// One unit's width over its length.
+    /// One unit's width over its length: a spikelet's without its awns,
+    /// which sets how thick the stalks that bear it are.
     #[must_use]
     pub fn width(self) -> f64 {
         match self {
             Self::Flower | Self::Head => 1.0,
-            Self::Fruit { aspect, .. } => aspect.clamp(0.05, 2.0),
+            Self::Fruit { aspect, .. } | Self::Spikelet { aspect, .. } => aspect.clamp(0.05, 2.0),
+        }
+    }
+
+    /// How far across the unit spans over its length, a spikelet's awns
+    /// included: what a card must hold.
+    #[must_use]
+    pub fn across(self) -> f64 {
+        match self {
+            Self::Spikelet { across, .. } => across.clamp(0.05, 4.0),
+            unit => unit.width(),
+        }
+    }
+
+    /// How far the unit reaches along its direction, in its lengths: past
+    /// 1 where a spikelet's awns reach beyond its tip.
+    #[must_use]
+    pub fn reach(self) -> f64 {
+        match self {
+            Self::Spikelet { beyond, .. } => 1.0 + beyond.max(0.0),
+            _ => 1.0,
         }
     }
 
     fn unripe(self) -> f64 {
         match self {
             Self::Fruit { unripe, .. } => unripe,
-            Self::Flower | Self::Head => 0.0,
+            Self::Flower | Self::Head | Self::Spikelet { .. } => 0.0,
         }
     }
 
@@ -388,7 +479,7 @@ impl ClusterLook {
     /// `cluster` of units drawn with `shape`, its card holding them and
     /// the units of `stages`, each a unit and its length as a share of the
     /// own unit's (a bud's, a flower's), that it shows on other days;
-    /// `None` unless the shape is a flower, a head or a fruit.
+    /// `None` unless the shape is a flower, a head, a spikelet or a fruit.
     #[must_use]
     pub fn new(cluster: Cluster, shape: &Shape, stages: &[(Unit, f64)]) -> Option<Self> {
         let unit = Unit::of(shape)?;
@@ -406,6 +497,14 @@ impl ClusterLook {
     #[must_use]
     pub fn layout(&self, turn: f64, seed: u64) -> Layout {
         layout(&self.cluster, self.unit, turn, seed)
+    }
+
+    /// The cluster laid out as it is drawn on `organ`: turned, and its
+    /// unripe fruit chosen, by the organ's id.
+    #[must_use]
+    pub fn laid_on(&self, organ: &GraphOrgan) -> Layout {
+        let turn = rng::unit(mix64(organ.id ^ 0x00F2_0175)) * std::f64::consts::TAU;
+        self.layout(turn, organ.id)
     }
 }
 
@@ -551,7 +650,8 @@ pub struct CardFrame {
     /// organ's foot where units hang lower), or where a facing card's
     /// centre is (its highest unit's base).
     pub foot: f64,
-    /// The card's length: 1 less `foot` for a standing card, twice the
+    /// The card's length: 1 (or the highest awn's tip, where spikelets'
+    /// awns reach past the organ's) less `foot` for a standing card, twice the
     /// farthest any unit reaches from the axis for a facing one, × 1.04.
     pub length: f64,
     /// Width over length: 1 for a facing card, else twice the farthest any
@@ -596,13 +696,14 @@ impl CardFrame {
                 cross: None,
             };
         }
-        let width = unit.width();
-        let (mut low, mut reach) = (0.0_f64, 0.0_f64);
+        let width = unit.across();
+        let (mut low, mut high, mut reach) = (0.0_f64, 1.0_f64, 0.0_f64);
         for p in &laid.units {
-            let tip = p.base + p.direction * p.length;
+            let tip = p.base + p.direction * (p.length * unit.reach());
             let half = p.length * width * 0.5;
             reach = reach.max(p.base.x.abs().max(tip.x.abs()) + half);
             low = low.min(p.base.y.min(tip.y) - half);
+            high = high.max(tip.y);
             // As it shows on other days: a flower or a head round its
             // centre, a bud or fruit from its base.
             for &(other, size) in stages {
@@ -610,18 +711,20 @@ impl CardFrame {
                 let tip = if other.faces() {
                     p.base
                 } else {
-                    p.base + p.direction * length
+                    p.base + p.direction * (length * other.reach())
                 };
-                let half = length * other.width() * 0.5;
+                let half = length * other.across() * 0.5;
                 reach = reach.max(p.base.x.abs().max(tip.x.abs()) + half);
                 low = low.min(p.base.y.min(tip.y) - half);
+                high = high.max(tip.y);
             }
         }
         for stalk in &laid.stalks {
             reach = reach.max(stalk.from.x.abs().max(stalk.to.x.abs()));
             low = low.min(stalk.from.y.min(stalk.to.y));
         }
-        let length = 1.0 - low;
+        // Awns may reach past the organ's tip.
+        let length = high - low;
         Self {
             mount: Mount::Along,
             foot: low,
@@ -962,10 +1065,13 @@ fn lay(
         }
         return;
     };
-    // Each branch: its ray or stalk, then the branch in its own frame.
+    // Each branch: its ray or stalk, then the branch in its own frame,
+    // shortened by the taper.
     let branch_radius = axis_radius(branch, unit) * cluster.size;
     let golden = math::radians(GOLDEN_DEGREES);
+    let shares = cluster.shares();
     for (k, slot) in axis.slots.iter().enumerate() {
+        let branch = branch.shortened(shares.get(k).copied().unwrap_or(1.0));
         let attach = frame.point(slot.attach);
         let origin = frame.point(slot.base);
         if (slot.base - slot.attach).length() > 1e-9 {
@@ -989,7 +1095,7 @@ fn lay(
         let group = laid.groups;
         let top = if level == 1 { group } else { top };
         lay(
-            branch,
+            &branch,
             unit,
             golden * to_f64(k + 1),
             Frame {
@@ -1354,13 +1460,12 @@ pub(crate) fn draw(
     }
     let (first, first_index) = (mesh.positions.len(), mesh.indices.len());
     let accent = crate::blooms::with_shading(look.accent, look.colour, colour);
-    let turn = rng::unit(mix64(organ.id ^ 0x00F2_0175)) * std::f64::consts::TAU;
     draw_laid(
         organ,
         (axis, side),
         look,
         cluster,
-        &cluster.layout(turn, organ.id),
+        &cluster.laid_on(organ),
         (colour, accent),
         part,
         mesh,
@@ -1510,6 +1615,41 @@ fn draw_laid(
                 (base, direction, unit_length, spin),
                 shown.colour,
                 shown.accent,
+                part,
+                mesh,
+            ),
+            // A head reduced (`crate::capitula`), or from the FLAT step
+            // one hexagon as a flower is.
+            (Shape::Head(head), Form::Flower(form)) if part.coarse < FLAT => {
+                crate::capitula::draw_reduced(
+                    head,
+                    form,
+                    crate::capitula::Frame {
+                        foot: base,
+                        axis: direction,
+                        side: any_perpendicular(direction),
+                        radius: unit_length * 0.5,
+                    },
+                    spin,
+                    crate::capitula::Colours::of(
+                        head,
+                        shown.colour,
+                        shown.accent,
+                        (look.colour, colour),
+                    ),
+                    part,
+                    mesh,
+                );
+            }
+            (Shape::Spikelet(spikelet), Form::Spikelet(_)) => crate::spikelets::draw(
+                spikelet,
+                crate::capitula::Frame {
+                    foot: base,
+                    axis: direction,
+                    side: any_perpendicular(direction).rotate_about(direction, spin),
+                    radius: unit_length,
+                },
+                crate::spikelets::Colours::of(shown.colour, shown.accent),
                 part,
                 mesh,
             ),
@@ -1755,6 +1895,7 @@ pub fn triangles(look: &Look) -> usize {
         born: 0.0,
         shed: None,
         light: 1.0,
+        within: None,
     };
     let mut mesh = Mesh::default();
     draw(
@@ -2046,6 +2187,49 @@ mod tests {
         assert_eq!(pairs.units[0].attach, pairs.units[1].attach);
         assert!(pairs.units[0].direction.dot(pairs.units[1].direction) < 0.5);
         assert!(pairs.units[2].attach.y > pairs.units[0].attach.y);
+    }
+
+    #[test]
+    fn a_tapered_panicles_upper_branches_bear_fewer_units_as_large() {
+        // Spec rework P3: a grass's upper branches are shorter, with fewer
+        // spikelets of the same size.
+        let cluster = Cluster::of(&Inflorescence {
+            branches: Some(4),
+            taper: Some(0.6),
+            size: Some(0.4),
+            branch: Some(Box::new(Inflorescence {
+                flowers: Some(10),
+                size: Some(0.1),
+                ..Inflorescence::default()
+            })),
+            ..spec(ClusterKind::Panicle, 10)
+        });
+        // Branch k is 1 - 0.6 (k + 0.5) / 4 long: 0.925, 0.775, 0.625 and
+        // 0.475 of the longest, bearing that share of its 10 units.
+        assert_eq!(cluster.units(), 9 + 8 + 6 + 5);
+        let laid = layout(&cluster, Unit::Flower, 0.0, 0);
+        assert_eq!(laid.units.len(), 28);
+        for top in 1..=4 {
+            let on: Vec<&Placed> = laid.units.iter().filter(|p| p.top == top).collect();
+            assert_eq!(on.len(), [9, 8, 6, 5][top as usize - 1]);
+            // Every unit 0.1 of a full branch, 0.4 of the organ, long.
+            for p in on {
+                assert!((p.length - 0.04).abs() < 1e-12, "{p:?}");
+            }
+        }
+        // A branch too short for its units' size bears one, as long as the
+        // branch.
+        let short = Cluster::of(&Inflorescence {
+            branches: Some(2),
+            taper: Some(1.0),
+            branch: Some(Box::new(Inflorescence {
+                flowers: Some(3),
+                size: Some(0.5),
+                ..Inflorescence::default()
+            })),
+            ..spec(ClusterKind::Panicle, 3)
+        });
+        assert_eq!(short.units(), 2 + 1);
     }
 
     #[test]
@@ -2376,6 +2560,7 @@ mod tests {
             born: 1.0,
             shed: Some(2.0),
             light: 1.0,
+            within: None,
         };
         let mut counts = Vec::new();
         for coarse in 0..=fruit::COARSER {
@@ -2519,6 +2704,7 @@ mod tests {
                 born: 0.0,
                 shed: None,
                 light: 1.0,
+                within: None,
             };
             let mut mesh = Mesh::default();
             let part = Part {

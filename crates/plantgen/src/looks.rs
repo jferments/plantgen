@@ -84,11 +84,10 @@ pub struct OrganLook {
 #[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct Families {
-    /// Sun and shade leaves, 0 (alike) to 1: how far a leaf grown in light
-    /// past [`SUN`] of the way along [`sunlit`]'s scale is smaller,
-    /// narrower and more deeply lobed or toothed, and one grown in light
-    /// short of [`SHADE`] of the way larger, broader and shallower
-    /// ([`Shape::in_light`]).
+    /// Sun and shade leaves, 0 (alike) to 1: how far a leaf grown in full
+    /// sun is smaller, narrower and more deeply lobed or toothed than the
+    /// type's own look, and one grown in deep shade larger, broader and
+    /// shallower, by degrees between ([`light_form`], [`Shape::in_light`]).
     pub plasticity: f64,
     /// Juvenile leaves, on a plant younger than their `until` when they
     /// grew.
@@ -125,12 +124,27 @@ pub fn sunlit(light: f64) -> f64 {
     ((crate::math::ln(light.max(DEEP_SHADE)) - floor) / span).clamp(0.0, 1.0)
 }
 
-/// How far along [`sunlit`]'s scale a leaf's light must lie for it to
-/// grow as a sun leaf, and short of which it grows as a shade leaf;
-/// between, as its type's own look. On the light itself they fall at
-/// about 0.17 and 0.08.
-pub const SUN: f64 = 2.0 / 3.0;
-pub const SHADE: f64 = 1.0 / 3.0;
+/// How far toward its sun form (1) or its shade form (-1) a leaf grown in
+/// `light` is (spec rework L3): its place on [`sunlit`]'s scale, the
+/// middle fifth of which is the type's own look, from 0.1 down all shade
+/// and from 0.9 up all sun. A leaf's size follows it smoothly; its shape
+/// is drawn in [`BANDS`] steps ([`Forms`]).
+#[must_use]
+pub fn light_form(light: f64) -> f64 {
+    ((sunlit(light) - 0.5) / 0.4).clamp(-1.0, 1.0)
+}
+
+/// The steps a leaf type with sun and shade leaves draws them in, from
+/// its deepest shade form to its full sun form, its own look the middle
+/// one: each step a template of the atlas.
+pub const BANDS: usize = 5;
+
+/// The place on [`light_form`]'s scale of the leaves of step `band`.
+#[must_use]
+#[allow(clippy::cast_precision_loss)]
+pub fn band_form(band: usize) -> f64 {
+    2.0 * band.min(BANDS - 1) as f64 / (BANDS - 1) as f64 - 1.0
+}
 
 impl Families {
     /// Check the plasticity, the juvenile leaves and that `shape` has sun
@@ -141,7 +155,7 @@ impl Families {
     /// Describes the first problem.
     pub fn validate(&self, shape: &Shape) -> Result<(), String> {
         within("families plasticity", self.plasticity, 0.0, 1.0)?;
-        if self.plasticity > 0.0 && shape.in_light(true, self.plasticity).is_none() {
+        if self.plasticity > 0.0 && shape.in_light(1.0, self.plasticity).is_none() {
             return Err(format!(
                 "families plasticity needs a simple, lobed, palmate or compound leaf or a sprig, found {}",
                 shape.name()
@@ -157,6 +171,7 @@ impl Families {
                     | Shape::Umbel(_)
                     | Shape::Spike(_)
                     | Shape::Panicle(_)
+                    | Shape::Spikelet(_)
                     | Shape::Fruit(_)
             ) {
                 return Err(format!(
@@ -170,22 +185,24 @@ impl Families {
 }
 
 /// Where an organ type's leaves of each family are drawn (plant roadmap
-/// P4): the indices of its sun, shade and juvenile looks among the
-/// plant's looks, when a leaf is juvenile, and the sizes of sun and shade
-/// leaves as shares of the type's. The default draws every leaf with the
-/// type's own look.
+/// P4, spec rework L3): the indices among the plant's looks of the looks
+/// its leaves wear in each of the [`BANDS`] steps of light, from deep
+/// shade to full sun (the middle one its own), its plasticity, which sizes
+/// them, and its juvenile look with when a leaf is juvenile. The default
+/// draws every leaf with the type's own look.
 #[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub struct Forms {
-    pub sun: Option<usize>,
-    pub shade: Option<usize>,
+    pub bands: Option<[usize; BANDS]>,
+    pub plasticity: f64,
     pub juvenile: Option<(usize, f64)>,
-    pub sizes: (f64, f64),
 }
 
 impl Forms {
     /// The look, of the plant's looks, that a leaf of the type whose own
     /// look is `own` is drawn with, grown in `light` on a plant `born`
-    /// years old, and its size as a share of the type's.
+    /// years old, and its size as a share of the type's: the step of its
+    /// [`light_form`] nearest, and the size of its own place on that scale
+    /// ([`Shape::size_in_light`]).
     #[must_use]
     pub fn of(&self, own: usize, light: f64, born: f64) -> (usize, f64) {
         if let Some((juvenile, until)) = self.juvenile
@@ -193,12 +210,18 @@ impl Forms {
         {
             return (juvenile, 1.0);
         }
-        let lit = sunlit(light);
-        match (self.sun, self.shade) {
-            (Some(sun), _) if lit > SUN => (sun, self.sizes.0),
-            (_, Some(shade)) if lit < SHADE => (shade, self.sizes.1),
-            _ => (own, 1.0),
-        }
+        let Some(bands) = self.bands else {
+            return (own, 1.0);
+        };
+        let form = light_form(light);
+        #[allow(
+            clippy::cast_possible_truncation,
+            clippy::cast_sign_loss,
+            clippy::cast_precision_loss
+        )]
+        let band =
+            ((f64::midpoint(form, 1.0) * (BANDS - 1) as f64).round() as usize).min(BANDS - 1);
+        (bands[band], Shape::size_in_light(form, self.plasticity))
     }
 }
 
@@ -305,12 +328,14 @@ pub enum Stage {
 }
 
 impl Season {
-    /// Its look in bud: its `bud_look`, or a closed bud of its flower's
-    /// colours (`colour`, the organ's own, where it sets none), half
-    /// turned to `foliage`'s (its sepals), a third its flower's size, and
+    /// Its look in bud: its `bud_look`; or for a head (`shape`, the
+    /// organ's own), the head itself with its florets all in bud (organ
+    /// phases, spec rework M7); or a closed bud of its flower's colours
+    /// (`colour`, the organ's own, where it sets none), half turned to
+    /// `foliage`'s (its sepals). Either is a third its flower's size, and
     /// whole where its flower look is.
     #[must_use]
-    pub fn bud(&self, colour: [f32; 3], foliage: [f32; 3]) -> StageLook {
+    pub fn bud(&self, shape: &Shape, colour: [f32; 3], foliage: [f32; 3]) -> StageLook {
         self.bud_look.clone().unwrap_or_else(|| {
             let (colour, size, whole) = self
                 .flower_look
@@ -318,6 +343,19 @@ impl Season {
                 .map_or((colour, 1.0, false), |flower| {
                     (flower.colour.unwrap_or(colour), flower.size, flower.whole)
                 });
+            if let Shape::Head(head) = shape {
+                return StageLook {
+                    shape: Shape::Head(Head {
+                        open: 0.0,
+                        ..head.clone()
+                    }),
+                    colour: None,
+                    accent: None,
+                    size: size / 3.0,
+                    form: None,
+                    whole,
+                };
+            }
             let closed: [f32; 3] =
                 std::array::from_fn(|channel| f32::midpoint(colour[channel], foliage[channel]));
             StageLook {
@@ -336,15 +374,40 @@ impl Season {
 
     /// A cluster's units in bud and in flower where they are drawn one by
     /// one, not `whole`: each a unit and its size as a share of the own
-    /// unit's (see [`Self::bud`] for `colour` and `foliage`).
+    /// unit's (see [`Self::bud`] for `shape`, `colour` and `foliage`).
     #[must_use]
-    pub fn units(&self, colour: [f32; 3], foliage: [f32; 3]) -> Vec<(crate::clusters::Unit, f64)> {
-        [Some(self.bud(colour, foliage)), self.flower_look.clone()]
-            .into_iter()
-            .flatten()
-            .filter(|look| !look.whole)
-            .filter_map(|look| crate::clusters::Unit::of(&look.shape).map(|unit| (unit, look.size)))
-            .collect()
+    pub fn units(
+        &self,
+        shape: &Shape,
+        colour: [f32; 3],
+        foliage: [f32; 3],
+    ) -> Vec<(crate::clusters::Unit, f64)> {
+        [
+            Some(self.bud(shape, colour, foliage)),
+            self.flower_look.clone(),
+        ]
+        .into_iter()
+        .flatten()
+        .filter(|look| !look.whole)
+        .filter_map(|look| crate::clusters::Unit::of(&look.shape).map(|unit| (unit, look.size)))
+        .collect()
+    }
+
+    /// The season with its stages' heads' unset bracts in `foliage` (see
+    /// [`Shape::with_bracts`]).
+    #[must_use]
+    pub fn with_bracts(&self, foliage: [f32; 3]) -> Self {
+        let stage = |look: &Option<StageLook>| {
+            look.as_ref().map(|look| StageLook {
+                shape: look.shape.with_bracts(foliage),
+                ..look.clone()
+            })
+        };
+        Self {
+            bud_look: stage(&self.bud_look),
+            flower_look: stage(&self.flower_look),
+            ..self.clone()
+        }
     }
 
     /// The stage on day `day` of the year (1 to 365).
@@ -357,11 +420,7 @@ impl Season {
     /// the first to open to 1 for the last (see the type).
     #[must_use]
     pub fn unit_stage(&self, day: f64, rank: f64) -> Stage {
-        let d = if day < self.bud && day + 365.0 < self.fall {
-            day + 365.0
-        } else {
-            day
-        };
+        let d = self.on(day);
         if d < self.bud || d >= self.fall {
             return Stage::Gone;
         }
@@ -378,6 +437,50 @@ impl Season {
             Stage::Fruit {
                 unripe: if d < self.ripe { 1.0 } else { 0.0 },
             }
+        }
+    }
+
+    /// How far a lone head with this season has opened on day `day` (its
+    /// `open`; organ phases, spec rework M7). Its florets are ranked as a
+    /// cluster's units are, 0 at the rim to 1 at the centre: the floret of
+    /// rank `r` opens on day `flower + r opening` and goes to seed on day
+    /// `fruit + r opening`, so the head is `(day - flower) / opening` open
+    /// in flower, up to 1, and `1 + (day - fruit) / opening` in fruit, up
+    /// to 2, every floret open before any goes to seed. With no `opening`
+    /// every floret opens at once: 0 in bud, 1 in flower, 2 in fruit.
+    #[must_use]
+    pub fn open(&self, day: f64) -> f64 {
+        let d = self.on(day);
+        let past = |from: f64| {
+            if self.opening > 0.0 {
+                ((d - from) / self.opening).clamp(0.0, 1.0)
+            } else if d >= from {
+                1.0
+            } else {
+                0.0
+            }
+        };
+        match self.stage(day) {
+            Stage::Gone | Stage::Bud => 0.0,
+            Stage::Flower => past(self.flower),
+            Stage::Fruit { .. } => 1.0 + past(self.fruit),
+        }
+    }
+
+    /// Whether day `day` of the year is past its fall, not before its bud
+    /// (both show nothing).
+    #[must_use]
+    pub fn fallen(&self, day: f64) -> bool {
+        self.on(day) >= self.fall
+    }
+
+    /// Day `day` of the year as a day of the season: a day before its bud
+    /// is in the next year where its fall comes then.
+    fn on(&self, day: f64) -> f64 {
+        if day < self.bud && day + 365.0 < self.fall {
+            day + 365.0
+        } else {
+            day
         }
     }
 
@@ -438,7 +541,9 @@ pub enum Shape {
     Simple(Simple),
     /// A pinnately lobed leaf (oaks).
     Lobed(Lobed),
-    /// A pinnately compound leaf (ashes, elders, rowans).
+    /// A compound leaf: pinnate (ashes, elders, roses) or palmate
+    /// (lupines), once or twice divided (mesquites, columbines), or a
+    /// blade dissected into segments (yarrow).
     Compound(Compound),
     /// A leafy shoot: simple leaves alternating along a twig and one at
     /// its tip, for small-leaved trees and shrubs (alders, birches,
@@ -451,7 +556,8 @@ pub enum Shape {
     Frond(Frond),
     /// A single flower, seen face on.
     Flower(Flower),
-    /// A daisy-like head of ray and disc flowers, seen face on.
+    /// A flower head, a capitulum (`crate::capitula`): florets on a shared
+    /// receptacle inside an involucre of bracts, seen face on.
     Head(Head),
     /// A flat-topped cluster of tiny flowers, seen from above.
     Umbel(Umbel),
@@ -462,6 +568,9 @@ pub enum Shape {
     /// and branchlets spreading from the axis, with spikelets clustered at
     /// their tips.
     Panicle(Panicle),
+    /// A grass or sedge spikelet (`crate::spikelets`): glumes and florets
+    /// on a short axis, seen from the side, as a cluster's unit.
+    Spikelet(Spikelet),
     /// A berry, fruit or cone.
     Fruit(Fruit),
 }
@@ -636,16 +745,70 @@ impl Default for Lobed {
     }
 }
 
+/// A compound leaf (spec rework P4; laid out by [`crate::divided`]). The
+/// fields after `petiole` are unset by default, and an unset field takes
+/// the value [`crate::divided::Form::of`] gives it.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct Compound {
-    /// Leaflets, the terminal one included.
+    /// Leaflets, the terminal one included; in a twice-divided leaf, its
+    /// divisions (pinnae). A pinnate leaf with an odd count ends in a
+    /// leaflet (odd-pinnate), one with an even count in its top pair
+    /// (even-pinnate).
     pub leaflets: u32,
     /// Leaflet width over leaflet length.
     pub leaflet_width: f64,
     /// Teeth on each side of a leaflet; 0 for entire.
     pub teeth: u32,
     pub petiole: f64,
+    /// How the leaflets are set: along a rachis (pinnate, the default) or
+    /// from the petiole's tip (palmate).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pattern: Option<Pattern>,
+    /// Leaflets on each division of a twice-divided leaf (bipinnate,
+    /// biternate), their count's parity saying how a pinna ends; unset or
+    /// 0 for a leaf divided once.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pinnules: Option<u32>,
+    /// How far each division's base runs along its rachis as a wing: 0
+    /// separate leaflets, 1 a dissected blade's segments.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub confluent: Option<f64>,
+    /// Degrees between a pinnate leaf's lateral leaflets (or pinnae) and
+    /// its rachis.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub angle: Option<f64>,
+    /// Degrees between a pinna's leaflets and its rachis.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pinnule_angle: Option<f64>,
+    /// Degrees between a palmate leaf's outermost leaflets.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub spread: Option<f64>,
+    /// Where along the rachis the lateral leaflets are longest, 0 at its
+    /// foot to 1 at its top.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub largest: Option<f64>,
+    /// The shortest leaflets' length as a share of the longest's: a
+    /// pinnate leaf's lowest (and, with `largest` below 1, its topmost), a
+    /// palmate leaf's outermost.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub lowest: Option<f64>,
+    /// The terminal leaflet's length as a share of the longest lateral's.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub terminal_size: Option<f64>,
+    /// Each leaflet's blade, as in [`Simple`]: its outline, or where it is
+    /// widest, its tip and its base.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub outline: Option<Vec<[f64; 2]>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub widest: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tip: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub base: Option<f64>,
+    /// Each leaflet's stalk, as a share of its length.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub petiolule: Option<f64>,
 }
 
 impl Default for Compound {
@@ -655,8 +818,34 @@ impl Default for Compound {
             leaflet_width: 0.4,
             teeth: 0,
             petiole: 0.15,
+            pattern: None,
+            pinnules: None,
+            confluent: None,
+            angle: None,
+            pinnule_angle: None,
+            spread: None,
+            largest: None,
+            lowest: None,
+            terminal_size: None,
+            outline: None,
+            widest: None,
+            tip: None,
+            base: None,
+            petiolule: None,
         }
     }
+}
+
+/// How a compound leaf's leaflets are set (spec rework P4).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Pattern {
+    /// In pairs along a rachis: ashes, roses, a mesquite's pinnae.
+    #[default]
+    Pinnate,
+    /// From the tip of the petiole: lupines, a blackberry's five
+    /// leaflets, a wood sorrel's three.
+    Palmate,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -777,15 +966,59 @@ impl Default for Flower {
     }
 }
 
+/// A flower head, a capitulum (spec rework P2, `crate::capitula`): florets
+/// packed on a shared receptacle inside an involucre of bracts
+/// (phyllaries), as in the daisy family. Lengths are shares of the head's
+/// radius, half the organ's size, unless they say otherwise.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct Head {
-    /// Ray flowers; 0 for a head of disc flowers only.
+    /// Ray florets round the rim of a radiate head; 0 for a head of disc
+    /// florets only.
     pub rays: u32,
     /// Ray width over the width of its share of the circle.
     pub ray_width: f64,
-    /// Radius of the disc, in the accent colour, over the head's.
+    /// Radius of the disc, the receptacle, over the head's.
     pub disc: f64,
+    /// What its florets are: rays round a disc of small tubes (`radiate`,
+    /// the rays possibly 0), disc florets only (`discoid`) or straps only
+    /// (`ligulate`, as in dandelions and cat's-ears).
+    #[serde(skip_serializing_if = "HeadKind::is_radiate")]
+    pub kind: HeadKind,
+    /// Disc florets, or every strap of a ligulate head, packed on the
+    /// receptacle in a sunflower spiral.
+    pub florets: u32,
+    /// Bracts of the involucre round the head's foot.
+    pub phyllaries: u32,
+    /// Rows they stand in, the outer shorter.
+    pub series: u32,
+    /// The involucre's height over the disc's width: about 0.3 for a flat
+    /// daisy, more than 1 for yarrow's cylinder.
+    pub involucre: f64,
+    /// The receptacle's dome, its height over the disc's radius: 0 flat,
+    /// 1 a hemisphere, more a cone.
+    pub receptacle: f64,
+    /// Degrees the phyllaries' upper halves turn outward from the
+    /// involucre's wall: 0 pressed to the head; an everlasting's dry
+    /// bracts open round its disc like petals.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub spread: f64,
+    /// How far the disc florets stand above the receptacle when open,
+    /// over the disc's radius: 0 for about their spacing, a daisy's short
+    /// tubes; a thistle's stand out of its involucre as a brush.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub floret_length: f64,
+    /// How far the head has opened from its rim inward: 0 a bud, 1 every
+    /// floret open, 2 every floret gone to seed; between, the outer share
+    /// of its florets a stage on.
+    pub open: f64,
+    /// Length of the pappus each fruit carries, over the disc's radius: 0
+    /// for none, as in daisies; drawn on florets gone to seed.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub pappus: f64,
+    /// Colour of the phyllaries; the plant's foliage colour if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub bracts: Option<[f32; 3]>,
 }
 
 impl Default for Head {
@@ -794,7 +1027,39 @@ impl Default for Head {
             rays: 21,
             ray_width: 0.7,
             disc: 0.32,
+            kind: HeadKind::Radiate,
+            florets: 60,
+            phyllaries: 16,
+            series: 2,
+            involucre: 0.4,
+            receptacle: 0.25,
+            spread: 0.0,
+            floret_length: 0.0,
+            open: 0.6,
+            pappus: 0.0,
+            bracts: None,
         }
+    }
+}
+
+/// What a head's florets are (spec rework P2): the states of the
+/// `capitulum_kind` character, a disciform head drawn as a discoid one.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum HeadKind {
+    /// Ray florets round a disc of tubular ones (daisies, asters).
+    #[default]
+    Radiate,
+    /// Tubular disc florets only (thistles, pearly everlasting).
+    Discoid,
+    /// Strap-shaped florets only (dandelions, cat's-ears).
+    Ligulate,
+}
+
+impl HeadKind {
+    #[allow(clippy::trivially_copy_pass_by_ref)]
+    fn is_radiate(&self) -> bool {
+        *self == Self::Radiate
     }
 }
 
@@ -868,6 +1133,65 @@ impl Default for Panicle {
             spikelets: 4,
             aspect: 0.6,
             stalk: 0.05,
+        }
+    }
+}
+
+/// A grass or sedge spikelet (spec rework P3, `crate::spikelets`): empty
+/// glumes at the foot of a short axis, the rachilla, and above them its
+/// florets, each shown by its lemma, in two ranks or a spiral. Lengths are
+/// shares of the spikelet's length, from its foot to the highest tip of a
+/// glume or lemma, awns left out.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct Spikelet {
+    /// Florets on the rachilla.
+    pub florets: u32,
+    /// Empty glumes at its foot: 2, 1 (the upper alone) or 0.
+    pub glumes: u32,
+    /// The upper glume's length.
+    pub glume: f64,
+    /// The lower glume's length over the upper's.
+    pub lower: f64,
+    /// Each lemma's length.
+    pub lemma: f64,
+    /// The spikelet's width across its bracts' plane over its length.
+    pub aspect: f64,
+    /// Length of a lemma's awn; 0 for none.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub awn: f64,
+    /// Where an awn leaves its lemma's keel, a share of the lemma below its
+    /// tip: 0 from the tip, more from its back.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub awn_from: f64,
+    /// The share of the florets, from the top, that bear awns.
+    pub awned: f64,
+    /// Degrees an awn bends outward at its knee: 0 straight, as a
+    /// geniculate awn is bent.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub bent: f64,
+    /// 2 for bracts in two ranks (grasses), 0 for a spiral (many sedges).
+    pub ranks: u32,
+    /// Degrees each lemma leans out from the rachilla; the glumes half as
+    /// far.
+    pub gape: f64,
+}
+
+impl Default for Spikelet {
+    fn default() -> Self {
+        Self {
+            florets: 4,
+            glumes: 2,
+            glume: 0.45,
+            lower: 0.8,
+            lemma: 0.4,
+            aspect: 0.3,
+            awn: 0.0,
+            awn_from: 0.0,
+            awned: 1.0,
+            bent: 0.0,
+            ranks: 2,
+            gape: 15.0,
         }
     }
 }
@@ -1142,6 +1466,19 @@ impl Shape {
         }
     }
 
+    /// The shape, a head's unset bracts (its phyllaries' colour) in
+    /// `foliage`, the plant's leaves' colour.
+    #[must_use]
+    pub fn with_bracts(&self, foliage: [f32; 3]) -> Self {
+        match self {
+            Self::Head(head) if head.bracts.is_none() => Self::Head(Head {
+                bracts: Some(foliage),
+                ..head.clone()
+            }),
+            _ => self.clone(),
+        }
+    }
+
     #[must_use]
     pub fn name(&self) -> &'static str {
         match self {
@@ -1159,6 +1496,7 @@ impl Shape {
             Self::Umbel(_) => "umbel",
             Self::Spike(_) => "spike",
             Self::Panicle(_) => "panicle",
+            Self::Spikelet(_) => "spikelet",
             Self::Fruit(_) => "fruit",
         }
     }
@@ -1182,7 +1520,7 @@ impl Shape {
             // two-ranked sprays keep a narrower one, so they still read
             // as foliage from the side.
             Self::Needles(needles) => Some(if needles.ranks == 0 { 1.0 } else { 0.6 }),
-            Self::Spike(_) | Self::Panicle(_) | Self::Fruit(_) => Some(1.0),
+            Self::Spike(_) | Self::Panicle(_) | Self::Spikelet(_) | Self::Fruit(_) => Some(1.0),
             _ => None,
         }
     }
@@ -1203,19 +1541,31 @@ impl Shape {
             Self::Flower(_) | Self::Head(_) | Self::Umbel(_) => 1.0,
             Self::Spike(spike) => spike.aspect,
             Self::Panicle(panicle) => panicle.aspect,
+            Self::Spikelet(spikelet) => spikelet.aspect,
             Self::Fruit(fruit) => fruit.aspect,
         }
     }
 
-    /// This leaf as grown in the sun (`sun`) or the shade, for a
-    /// `plasticity` 0 to 1 (plant roadmap P4), and its size as a share of
-    /// the leaf's own: a sun leaf is smaller, narrower and more deeply
-    /// lobed or toothed; a shade leaf larger, broader and shallower (sun
-    /// and shade leaves of one crown, as of oaks and maples). `None` for
-    /// shapes without the two forms.
+    /// The size, as a share of its type's, of a leaf `form` of the way to
+    /// its sun form (1) or its shade form (-1), for a `plasticity` 0 to 1
+    /// (see [`Self::in_light`]).
     #[must_use]
-    pub fn in_light(&self, sun: bool, plasticity: f64) -> Option<(Shape, f64)> {
-        let p = plasticity.clamp(0.0, 1.0);
+    pub fn size_in_light(form: f64, plasticity: f64) -> f64 {
+        1.0 - 0.12 * plasticity.clamp(0.0, 1.0) * form.clamp(-1.0, 1.0)
+    }
+
+    /// This leaf as grown `form` of the way to its sun form (1) or its
+    /// shade form (-1), for a `plasticity` 0 to 1 (plant roadmap P4, spec
+    /// rework L3), and its size as a share of the leaf's own: a sun leaf
+    /// is smaller, narrower and more deeply lobed or toothed; a shade leaf
+    /// larger, broader and shallower (sun and shade leaves of one crown, as
+    /// of oaks and maples). A tooth's depth is taken as a share of the
+    /// blade's half-width, as a lobe's is, so that the sun deepens how far
+    /// the teeth cut. `None` for shapes without the two forms.
+    #[must_use]
+    pub fn in_light(&self, form: f64, plasticity: f64) -> Option<(Shape, f64)> {
+        let sun = form > 0.0;
+        let p = plasticity.clamp(0.0, 1.0) * form.abs().min(1.0);
         // Narrower in the sun, broader in the shade.
         let wide = |value: f64, low: f64, high: f64, narrow: f64, broad: f64| {
             (if sun {
@@ -1233,13 +1583,25 @@ impl Shape {
                 value * (1.0 - toward * p)
             }
         };
-        let size = if sun { 1.0 - 0.12 * p } else { 1.0 + 0.12 * p };
+        // A tooth's depth as a share of the half-width it cuts into, from
+        // `half` to `then`.
+        let cut = |depth: f64, half: f64, then: f64| {
+            if half <= 0.0 {
+                return depth;
+            }
+            (deep(depth / half, 0.85, 0.4) * then).min(0.2)
+        };
+        let size = Self::size_in_light(form, plasticity);
         let shape = match self {
-            Self::Simple(s) => Self::Simple(Simple {
-                width: wide(s.width, 0.03, 1.5, 0.25, 0.15),
-                tooth_depth: deep(s.tooth_depth, 0.2, 0.3),
-                ..s.clone()
-            }),
+            Self::Simple(s) => {
+                let width = wide(s.width, 0.03, 1.5, 0.25, 0.15);
+                let half = |width: f64| 0.5 * width * (1.0 - s.petiole);
+                Self::Simple(Simple {
+                    width,
+                    tooth_depth: cut(s.tooth_depth, half(s.width), half(width)),
+                    ..s.clone()
+                })
+            }
             Self::Lobed(s) => Self::Lobed(Lobed {
                 width: wide(s.width, 0.1, 1.5, 0.12, 0.1),
                 depth: deep(s.depth, 0.9, 0.5),
@@ -1251,14 +1613,17 @@ impl Shape {
                 ..s.clone()
             }),
             Self::Compound(s) => Self::Compound(Compound {
-                leaflet_width: wide(s.leaflet_width, 0.1, 1.0, 0.2, 0.15),
+                leaflet_width: wide(s.leaflet_width, 0.05, 1.0, 0.2, 0.15),
                 ..s.clone()
             }),
-            Self::Sprig(s) => Self::Sprig(Sprig {
-                width: wide(s.width, 0.03, 1.2, 0.2, 0.15),
-                tooth_depth: deep(s.tooth_depth, 0.2, 0.4),
-                ..s.clone()
-            }),
+            Self::Sprig(s) => {
+                let width = wide(s.width, 0.03, 1.2, 0.2, 0.15);
+                Self::Sprig(Sprig {
+                    width,
+                    tooth_depth: cut(s.tooth_depth, 0.5 * s.width, 0.5 * width),
+                    ..s.clone()
+                })
+            }
             _ => return None,
         };
         Some((shape, size))
@@ -1354,17 +1719,7 @@ impl Shape {
                 check("round", s.round, 0.0, 1.0)?;
                 check("petiole", s.petiole, 0.0, 0.7)
             }
-            Self::Compound(s) => {
-                if !(3..=25).contains(&s.leaflets) || s.leaflets % 2 == 0 {
-                    return Err(format!(
-                        "compound leaflets must be odd, 3 to 25, found {}",
-                        s.leaflets
-                    ));
-                }
-                check("leaflet_width", s.leaflet_width, 0.1, 1.0)?;
-                count("teeth", s.teeth, 0, 30)?;
-                check("petiole", s.petiole, 0.0, 0.6)
-            }
+            Self::Compound(s) => s.validate(),
             Self::Sprig(s) => {
                 count("leaves", s.leaves, 2, 15)?;
                 check("angle", s.angle, 20.0, 80.0)?;
@@ -1408,11 +1763,54 @@ impl Shape {
             Self::Head(s) => {
                 count("rays", s.rays, 0, 60)?;
                 check("ray_width", s.ray_width, 0.1, 1.2)?;
-                check("disc", s.disc, 0.1, 1.0)
+                check("disc", s.disc, 0.1, 1.0)?;
+                if s.kind != HeadKind::Radiate && s.rays > 0 {
+                    return Err(format!(
+                        "rays are the rim florets of a radiate head; a {} head has none, found {}",
+                        if s.kind == HeadKind::Discoid {
+                            "discoid"
+                        } else {
+                            "ligulate"
+                        },
+                        s.rays
+                    ));
+                }
+                count("florets", s.florets, 1, 1000)?;
+                count("phyllaries", s.phyllaries, 0, 200)?;
+                count("series", s.series, 1, 12)?;
+                check("involucre", s.involucre, 0.05, 3.0)?;
+                check("receptacle", s.receptacle, 0.0, 3.0)?;
+                check("spread", s.spread, 0.0, 150.0)?;
+                check("floret_length", s.floret_length, 0.0, 3.0)?;
+                check("open", s.open, 0.0, 2.0)?;
+                check("pappus", s.pappus, 0.0, 3.0)?;
+                for channel in s.bracts.into_iter().flatten() {
+                    check("bracts", f64::from(channel), 0.0, 1.0)?;
+                }
+                Ok(())
             }
             Self::Umbel(s) => {
                 count("clusters", s.clusters, 1, 30)?;
                 count("florets", s.florets, 1, 60)
+            }
+            Self::Spikelet(s) => {
+                count("florets", s.florets, 1, 40)?;
+                count("glumes", s.glumes, 0, 2)?;
+                check("glume", s.glume, 0.0, 1.5)?;
+                check("lower", s.lower, 0.1, 1.5)?;
+                check("lemma", s.lemma, 0.05, 1.0)?;
+                check("aspect", s.aspect, 0.02, 1.5)?;
+                check("awn", s.awn, 0.0, 6.0)?;
+                check("awn_from", s.awn_from, 0.0, 0.9)?;
+                check("awned", s.awned, 0.0, 1.0)?;
+                check("bent", s.bent, 0.0, 150.0)?;
+                if s.ranks != 0 && s.ranks != 2 {
+                    return Err(format!(
+                        "spikelet ranks must be 2 (two ranks) or 0 (a spiral), found {}",
+                        s.ranks
+                    ));
+                }
+                check("gape", s.gape, 0.0, 80.0)
             }
             Self::Spike(s) => {
                 count("florets", s.florets, 1, 80)?;
@@ -1549,18 +1947,103 @@ impl Palmate {
 }
 
 impl Compound {
-    /// Length of one lateral leaflet.
+    /// Length of the longest lateral leaflet of a pinnate leaf divided
+    /// once.
     #[must_use]
     pub fn leaflet_length(&self) -> f64 {
-        let pairs = f64::from(self.leaflets / 2);
-        ((1.0 - self.petiole) * 2.4 / (pairs + 1.5)).min(0.45)
+        crate::divided::longest(self.leaflets, self.petiole)
     }
 
     fn aspect(&self) -> f64 {
-        let length = self.leaflet_length();
-        2.0 * (length * crate::math::sin(crate::math::radians(62.0))
-            + length * self.leaflet_width * 0.5)
-            + 0.03
+        let form = crate::divided::Form::of(self);
+        if form.pattern == Pattern::Pinnate && form.pinnules == 0 {
+            let length = self.leaflet_length();
+            let terminal = if self.leaflets % 2 == 1 {
+                0.5 * length * form.terminal_size * self.leaflet_width
+            } else {
+                0.0
+            };
+            return 2.0
+                * (length * crate::math::sin(crate::math::radians(form.angle))
+                    + length * self.leaflet_width * 0.5)
+                    .max(terminal)
+                + 0.03;
+        }
+        crate::divided::reach(self) * 2.0 + 0.03
+    }
+
+    fn validate(&self) -> Result<(), String> {
+        let form = crate::divided::Form::of(self);
+        let check = |field: &str, value: f64, low: f64, high: f64| {
+            if (low..=high).contains(&value) {
+                Ok(())
+            } else {
+                Err(format!(
+                    "compound {field} must be between {low} and {high}, found {value}"
+                ))
+            }
+        };
+        let divisions = |field: &str, n: u32| -> Result<(), String> {
+            match form.pattern {
+                Pattern::Pinnate if !(2..=41).contains(&n) => Err(format!(
+                    "compound {field} of a pinnate leaf must be 2 to 41, found {n}"
+                )),
+                Pattern::Palmate if !(3..=17).contains(&n) => Err(format!(
+                    "compound {field} of a palmate leaf must be 3 to 17, found {n}"
+                )),
+                _ => Ok(()),
+            }
+        };
+        divisions("leaflets", self.leaflets)?;
+        if form.pinnules > 0 {
+            divisions("pinnules", form.pinnules)?;
+            if self.leaflets * form.pinnules > 1200 {
+                return Err(format!(
+                    "a compound leaf has at most 1200 leaflets, found {} pinnae of {}",
+                    self.leaflets, form.pinnules
+                ));
+            }
+        }
+        check("leaflet_width", self.leaflet_width, 0.05, 1.0)?;
+        if self.teeth > 30 {
+            return Err(format!(
+                "compound teeth must be between 0 and 30, found {}",
+                self.teeth
+            ));
+        }
+        check("petiole", self.petiole, 0.0, 0.7)?;
+        let set = |value: Option<f64>| value.unwrap_or(f64::NAN);
+        for (field, value, low, high) in [
+            ("confluent", self.confluent, 0.0, 1.0),
+            ("angle", self.angle, 20.0, 90.0),
+            ("pinnule_angle", self.pinnule_angle, 20.0, 90.0),
+            ("spread", self.spread, 30.0, 340.0),
+            ("largest", self.largest, 0.0, 1.0),
+            ("lowest", self.lowest, 0.2, 1.0),
+            ("terminal_size", self.terminal_size, 0.3, 2.0),
+            ("widest", self.widest, 0.15, 0.85),
+            ("tip", self.tip, 0.0, 1.0),
+            ("base", self.base, 0.0, 1.0),
+            ("petiolule", self.petiolule, 0.0, 0.5),
+        ] {
+            if value.is_some() {
+                check(field, set(value), low, high)?;
+            }
+        }
+        if let Some(field) = [
+            ("widest", self.widest),
+            ("tip", self.tip),
+            ("base", self.base),
+        ]
+        .iter()
+        .find_map(|(field, value)| value.is_some().then_some(field))
+            && self.outline.is_some()
+        {
+            return Err(format!(
+                "a compound card with an outline takes its leaflets' shape from it: drop `{field}`"
+            ));
+        }
+        outline("compound", self.outline.as_deref(), [("", 0.0, 0.0); 3])
     }
 }
 
@@ -1661,6 +2144,7 @@ pub fn resolve<'a>(
         .map(|(name, kind)| match looks.get(name) {
             Some(look) => {
                 let colour = look.colour.unwrap_or(foliage);
+                let drawn = look.shape.with_bracts(foliage);
                 let shade = look.shade.unwrap_or(if look.colour.is_some() {
                     [colour[0] * 0.35, colour[1] * 0.42, colour[2] * 0.55]
                 } else {
@@ -1668,7 +2152,6 @@ pub fn resolve<'a>(
                 });
                 Look {
                     organ: name.to_string(),
-                    shape: look.shape.clone(),
                     colour,
                     shade,
                     accent: look.accent.unwrap_or(colour),
@@ -1685,14 +2168,15 @@ pub fn resolve<'a>(
                     inflorescence: look.inflorescence.as_ref().and_then(|inflorescence| {
                         crate::clusters::ClusterLook::new(
                             crate::clusters::Cluster::of(inflorescence),
-                            &look.shape,
+                            &drawn,
                             &look
                                 .season
                                 .as_ref()
-                                .map(|season| season.units(colour, foliage))
+                                .map(|season| season.units(&drawn, colour, foliage))
                                 .unwrap_or_default(),
                         )
                     }),
+                    shape: drawn,
                 }
             }
             None => Look {
@@ -1742,23 +2226,24 @@ impl WithFamilies for Vec<Look> {
                 inflorescence: None,
                 ..own.clone()
             };
-            if families.plasticity > 0.0
-                && let (Some((sun, sun_size)), Some((shade, shade_size))) = (
-                    own.shape.in_light(true, families.plasticity),
-                    own.shape.in_light(false, families.plasticity),
-                )
-            {
-                forms.sun = Some(self.len());
-                self.push(Look {
-                    bend: own.bend,
-                    ..variant(sun)
-                });
-                forms.shade = Some(self.len());
-                self.push(Look {
-                    bend: own.bend,
-                    ..variant(shade)
-                });
-                forms.sizes = (sun_size, shade_size);
+            if families.plasticity > 0.0 && own.shape.in_light(1.0, families.plasticity).is_some() {
+                let mut bands = [index; BANDS];
+                for (band, at) in bands.iter_mut().enumerate() {
+                    let form = band_form(band);
+                    if form == 0.0 {
+                        continue;
+                    }
+                    let Some((shape, _)) = own.shape.in_light(form, families.plasticity) else {
+                        continue;
+                    };
+                    *at = self.len();
+                    self.push(Look {
+                        bend: own.bend,
+                        ..variant(shape)
+                    });
+                }
+                forms.bands = Some(bands);
+                forms.plasticity = families.plasticity;
             }
             if let Some(juvenile) = &families.juvenile {
                 forms.juvenile = Some((self.len(), juvenile.until));
@@ -1793,7 +2278,9 @@ pub fn resolve_on<'a>(
         .map(|look| {
             let season = looks.get(&look.organ).and_then(|own| own.season.as_ref());
             match (season, day) {
-                (Some(season), Some(day)) => in_season(look, season, day, foliage),
+                (Some(season), Some(day)) => {
+                    in_season(look, &season.with_bracts(foliage), day, foliage)
+                }
                 _ => (look, 1.0),
             }
         })
@@ -1829,7 +2316,7 @@ pub fn staged(graph: &crate::graph::PlantGraph, sizes: &[f64]) -> Option<crate::
 fn in_season(look: Look, season: &Season, day: f64, foliage: [f32; 3]) -> (Look, f64) {
     let stage = season.stage(day);
     let whole = match stage {
-        Stage::Bud => season.bud(look.colour, foliage).whole,
+        Stage::Bud => season.bud(&look.shape, look.colour, foliage).whole,
         Stage::Flower => season
             .flower_look
             .as_ref()
@@ -1840,28 +2327,43 @@ fn in_season(look: Look, season: &Season, day: f64, foliage: [f32; 3]) -> (Look,
         return in_units(look, season, day, stage, foliage);
     }
     let is_fruit = matches!(look.shape, Shape::Fruit(_));
+    // A head opens by the day, whichever stage look draws it.
+    let open = season.open(day);
     match stage {
         Stage::Gone => (look, 0.0),
         Stage::Bud => {
-            let bud = season.bud(look.colour, foliage);
-            (in_stage(&look, &bud), bud.size)
+            let bud = season.bud(&look.shape, look.colour, foliage);
+            if season.bud_look.is_none() && matches!(look.shape, Shape::Head(_)) {
+                // The head itself, in its own colours and form.
+                return (opened(look, open), bud.size);
+            }
+            (opened(in_stage(&look, &bud), open), bud.size)
         }
         Stage::Flower => match &season.flower_look {
-            Some(flower) => (in_stage(&look, flower), flower.size),
+            Some(flower) => (opened(in_stage(&look, flower), open), flower.size),
             None if is_fruit => (look, 0.0),
-            None => (look, 1.0),
+            None => (opened(look, open), 1.0),
         },
         Stage::Fruit { unripe } => {
             if matches!(look.shape, Shape::Flower(_)) {
                 return (look, 0.0);
             }
-            let mut look = look;
+            let mut look = opened(look, open);
             if let Shape::Fruit(fruit) = &mut look.shape {
                 fruit.unripe = unripe;
             }
             (look, 1.0)
         }
     }
+}
+
+/// `look` with its head, if it draws one, opened to `open` (see
+/// [`Head::open`]).
+fn opened(mut look: Look, open: f64) -> Look {
+    if let Shape::Head(head) = &mut look.shape {
+        head.open = open;
+    }
+    look
 }
 
 /// A cluster's `look` on `day` of `season`, `stage` its first unit's,
@@ -1891,33 +2393,42 @@ fn in_units(
                 }
                 return (look, 1.0);
             }
-            Stage::Flower if !own_fruit && season.flower_look.is_none() => return (look, 1.0),
+            Stage::Flower if !own_fruit && season.flower_look.is_none() => {
+                return (opened(look, 1.0), 1.0);
+            }
             _ => {}
         }
     }
-    let unit = |stage: &StageLook| {
+    // A head is a unit too: its florets in bud, open, or gone to seed in
+    // fruit (organ phases, spec rework M7), each head in its own stage.
+    let head = matches!(look.shape, Shape::Head(_));
+    let unit = |stage: &StageLook, open: f64| {
         let colour = stage.colour.unwrap_or(look.colour);
+        let mut shape = stage.shape.clone();
+        if let Shape::Head(head) = &mut shape {
+            head.open = open;
+        }
         (!stage.whole).then(|| crate::clusters::StageUnit {
             form: stage
                 .form
                 .clone()
                 .unwrap_or_else(|| crate::blooms::Form::default_for(&stage.shape)),
-            shape: stage.shape.clone(),
+            shape,
             colour,
             accent: stage.accent.unwrap_or(colour),
             size: stage.size,
         })
     };
-    let own = crate::clusters::StageUnit {
-        shape: look.shape.clone(),
+    let own = |open: f64| crate::clusters::StageUnit {
+        shape: opened(look.clone(), open).shape,
         form: look.form.clone(),
         colour: look.colour,
         accent: look.accent,
         size: 1.0,
     };
     let flower = match &season.flower_look {
-        Some(flower) => unit(flower),
-        None => (!own_fruit).then(|| own.clone()),
+        Some(flower) => unit(flower, 1.0),
+        None => (!own_fruit).then(|| own(1.0)),
     };
     let opening = crate::clusters::Opening {
         season: Season {
@@ -1927,9 +2438,9 @@ fn in_units(
         },
         day,
         looks: [
-            unit(&season.bud(look.colour, foliage)),
+            unit(&season.bud(&look.shape, look.colour, foliage), 0.0),
             flower,
-            own_fruit.then_some(own),
+            (own_fruit || head).then(|| own(2.0)),
         ],
     };
     let Some(cluster) = &mut look.inflorescence else {
@@ -2153,17 +2664,20 @@ impl Moss {
 }
 
 impl OrganLook {
-    /// Check that `season`'s cluster keys suit the look: `opening` and
-    /// `whole` are for a cluster, and a cluster's stage looks that are not
-    /// `whole` draw one unit each.
+    /// Check that `season`'s cluster keys suit the look: `opening` is for
+    /// a cluster or a head (whose florets open over it), `whole` for a
+    /// cluster, and a cluster's stage looks that are not `whole` draw one
+    /// unit each.
     fn check_stages(&self, season: &Season) -> Result<(), String> {
         let looks = [
             ("bud_look", &season.bud_look),
             ("flower_look", &season.flower_look),
         ];
         if self.inflorescence.is_none() {
-            if season.opening > 0.0 {
-                return Err("season opening is for a look with an inflorescence".to_string());
+            if season.opening > 0.0 && !matches!(self.shape, Shape::Head(_)) {
+                return Err(
+                    "season opening is for a look with an inflorescence or a head".to_string(),
+                );
             }
             if let Some((key, _)) = looks
                 .iter()
@@ -2183,7 +2697,7 @@ impl OrganLook {
             {
                 return Err(format!(
                     "season {key} of an inflorescence draws each of its units, a flower, a \
-                     head or a fruit, found {}; set `whole` to draw the whole organ",
+                     head, a spikelet or a fruit, found {}; set `whole` to draw the whole organ",
                     look.shape.name()
                 ));
             }
@@ -2200,12 +2714,9 @@ impl OrganLook {
         self.shape.validate()?;
         if let Some(inflorescence) = &self.inflorescence {
             crate::clusters::Cluster::check(inflorescence)?;
-            if !matches!(
-                self.shape,
-                Shape::Flower(_) | Shape::Head(_) | Shape::Fruit(_)
-            ) {
+            if crate::clusters::Unit::of(&self.shape).is_none() {
                 return Err(format!(
-                    "an inflorescence's units are flowers, heads or fruit, found {}",
+                    "an inflorescence's units are flowers, heads, spikelets or fruit, found {}",
                     self.shape.name()
                 ));
             }
@@ -2274,19 +2785,49 @@ mod tests {
             _ => unreachable!(),
         };
         for shape in shapes {
-            let (sun, sun_size) = shape.in_light(true, 0.8).unwrap();
-            let (shade, shade_size) = shape.in_light(false, 0.8).unwrap();
+            let (sun, sun_size) = shape.in_light(1.0, 0.8).unwrap();
+            let (shade, shade_size) = shape.in_light(-1.0, 0.8).unwrap();
+            let (half_sun, half_size) = shape.in_light(0.5, 0.8).unwrap();
             sun.validate().unwrap();
             shade.validate().unwrap();
-            let (own, sun, shade) = (measure(&shape), measure(&sun), measure(&shade));
-            assert!(sun.0 < own.0 && own.0 < shade.0, "{shape:?}");
-            assert!(sun.1 >= own.1 && own.1 >= shade.1, "{shape:?}");
-            assert!(sun_size < 1.0 && shade_size > 1.0);
-            assert_eq!(shape.in_light(true, 0.0).unwrap().1, 1.0);
+            let (own, sun, half_sun, shade) = (
+                measure(&shape),
+                measure(&sun),
+                measure(&half_sun),
+                measure(&shade),
+            );
+            assert!(
+                sun.0 < half_sun.0 && half_sun.0 < own.0 && own.0 < shade.0,
+                "{shape:?}"
+            );
+            assert!(
+                sun.1 >= half_sun.1 && half_sun.1 >= own.1 && own.1 >= shade.1,
+                "{shape:?}"
+            );
+            assert!(sun_size < half_size && half_size < 1.0 && shade_size > 1.0);
+            assert_eq!(shape.in_light(1.0, 0.0).unwrap().1, 1.0);
+            assert_eq!(shape.in_light(0.0, 0.8).unwrap(), (shape.clone(), 1.0));
         }
+        // A sun leaf's teeth cut deeper into its blade, by share.
+        let oak = Shape::Sprig(Sprig {
+            width: 0.6,
+            teeth: 4,
+            tooth_depth: 0.2,
+            round: 0.8,
+            ..Sprig::default()
+        });
+        let incision = |shape: &Shape| match shape {
+            Shape::Sprig(s) => s.tooth_depth / (0.5 * s.width),
+            _ => unreachable!(),
+        };
+        let (sun, shade) = (
+            oak.in_light(1.0, 0.8).unwrap().0,
+            oak.in_light(-1.0, 0.8).unwrap().0,
+        );
+        assert!(incision(&sun) > incision(&oak) + 0.05 && incision(&shade) < incision(&oak) - 0.15);
         assert!(
             Shape::Needles(Needles::default())
-                .in_light(true, 1.0)
+                .in_light(1.0, 1.0)
                 .is_none()
         );
     }
@@ -2302,8 +2843,11 @@ mod tests {
         assert!((sunlit(middle) - 0.5).abs() < 1e-12);
         assert!(sunlit(0.1) < sunlit(0.2) && sunlit(0.2) < sunlit(0.3));
         // A dense crown's surface (light about 0.2 to 0.3 in the growth
-        // model) is mostly sunlit.
-        assert!(sunlit(0.2) > SUN && sunlit(0.08) < SHADE);
+        // model) is mostly sunlit; leaves at a tenth of the open sky are
+        // their type's own.
+        assert!(light_form(0.2) > 0.5 && light_form(0.06) < -0.5);
+        assert!(light_form(middle).abs() < 1e-12);
+        assert_eq!((light_form(FULL_SUN), light_form(DEEP_SHADE)), (1.0, -1.0));
     }
 
     #[test]
@@ -2337,12 +2881,13 @@ mod tests {
             [0.1, 0.3, 0.1],
             [0.05, 0.1, 0.05],
         );
-        // The two types' looks, then the leaf's sun, shade and juvenile.
-        assert_eq!(looks.len(), 5);
+        // The two types' looks, then the leaf's four steps from shade to
+        // sun (its own the middle one) and its juvenile look.
+        assert_eq!(looks.len(), 7);
         let forms = looks[0].forms;
         assert_eq!(
-            (forms.sun, forms.shade, forms.juvenile),
-            (Some(2), Some(3), Some((4, 3.0)))
+            (forms.bands, forms.juvenile),
+            (Some([2, 3, 0, 4, 5]), Some((6, 3.0)))
         );
         assert_eq!(looks[1].forms, Forms::default());
         assert!(
@@ -2350,13 +2895,20 @@ mod tests {
                 .iter()
                 .all(|look| look.organ == "leaf" && look.forms == Forms::default())
         );
-        assert!(matches!(looks[4].shape, Shape::Simple(_)));
-        // Juvenile on a young plant whatever its light; then by its light.
-        assert_eq!(forms.of(0, 0.9, 1.0), (4, 1.0));
-        assert_eq!(forms.of(0, 0.9, 10.0), (2, forms.sizes.0));
-        assert_eq!(forms.of(0, 0.2, 10.0), (2, forms.sizes.0));
-        assert_eq!(forms.of(0, 0.12, 10.0), (0, 1.0));
-        assert_eq!(forms.of(0, 0.06, 10.0), (3, forms.sizes.1));
+        assert!(matches!(looks[6].shape, Shape::Simple(_)));
+        // Juvenile on a young plant whatever its light; then by its light,
+        // its size smoothly.
+        assert_eq!(forms.of(0, 0.9, 1.0), (6, 1.0));
+        assert_eq!(forms.of(0, 0.9, 10.0), (5, 1.0 - 0.12 * 0.5));
+        assert_eq!(forms.of(0, 0.2, 10.0).0, 4);
+        assert_eq!(forms.of(0, 0.12, 10.0).0, 0);
+        assert_eq!(forms.of(0, 0.07, 10.0).0, 3);
+        assert_eq!(forms.of(0, 0.01, 10.0), (2, 1.0 + 0.12 * 0.5));
+        let sizes: Vec<f64> = [0.04, 0.06, 0.08, 0.1, 0.15, 0.2, 0.3]
+            .iter()
+            .map(|&light| forms.of(0, light, 10.0).1)
+            .collect();
+        assert!(sizes.windows(2).all(|pair| pair[1] < pair[0]), "{sizes:?}");
         // Families are for leaves.
         let mut flower = organs["leaf"].clone();
         flower.shape = Shape::Flower(Flower::default());
@@ -2407,6 +2959,7 @@ mod tests {
             Shape::Umbel(Umbel::default()),
             Shape::Spike(Spike::default()),
             Shape::Panicle(Panicle::default()),
+            Shape::Spikelet(Spikelet::default()),
             Shape::Fruit(Fruit::default()),
         ];
         for shape in shapes {
@@ -2650,6 +3203,136 @@ mod tests {
         assert_eq!(on(&organs, 150.0).1[1], 0.0);
     }
 
+    /// A daisy's head: in bud from day 120, its florets opening over 10
+    /// days from 150, going to seed over 10 days from 170.
+    fn daisy() -> Season {
+        Season {
+            bud: 120.0,
+            flower: 150.0,
+            fruit: 170.0,
+            ripe: 185.0,
+            ripening: 10.0,
+            fall: 200.0,
+            opening: 10.0,
+            bud_look: None,
+            flower_look: None,
+        }
+    }
+
+    /// Looks with a `bloom` that is a head with `season`, alone or in
+    /// `inflorescence`.
+    fn headed(season: Season, inflorescence: Option<Inflorescence>) -> BTreeMap<String, OrganLook> {
+        let mut organs = BTreeMap::new();
+        organs.insert(
+            "bloom".to_string(),
+            OrganLook {
+                shape: Shape::Head(Head::default()),
+                colour: Some([0.95, 0.95, 0.9]),
+                shade: None,
+                accent: Some([0.9, 0.7, 0.1]),
+                face_up: 0.0,
+                solid: None,
+                bend: None,
+                form: None,
+                season: Some(season),
+                families: None,
+                inflorescence,
+            },
+        );
+        organs
+    }
+
+    #[test]
+    fn a_head_opens_from_its_rim_by_the_day() {
+        let daisy = daisy();
+        assert_eq!(daisy.open(130.0), 0.0);
+        assert_eq!(daisy.open(150.0), 0.0);
+        assert_eq!(daisy.open(155.0), 0.5);
+        assert_eq!(daisy.open(165.0), 1.0);
+        assert_eq!(daisy.open(172.0), 1.2);
+        assert_eq!(daisy.open(190.0), 2.0);
+        let all_at_once = Season {
+            opening: 0.0,
+            ..daisy.clone()
+        };
+        assert_eq!(all_at_once.open(150.0), 1.0);
+        assert_eq!(all_at_once.open(170.0), 2.0);
+
+        let types = [("bloom", OrganKind::Flower)];
+        let open = |look: &Look| match &look.shape {
+            Shape::Head(head) => head.open,
+            other => panic!("not a head: {other:?}"),
+        };
+        let organs = headed(daisy, None);
+        // Its florets may open over days, as a cluster's units may; a lone
+        // flower's may not.
+        assert!(organs["bloom"].validate().is_ok());
+        let flower = OrganLook {
+            shape: Shape::Flower(Flower::default()),
+            ..organs["bloom"].clone()
+        };
+        assert!(flower.validate().unwrap_err().contains("opening"));
+        let on = |day| {
+            resolve_on(
+                types,
+                &organs,
+                [0.1, 0.3, 0.05],
+                [0.03, 0.1, 0.03],
+                Some(day),
+            )
+        };
+        // In bud it is itself, closed, a third its size, in its own colours.
+        let (looks, sizes) = on(130.0);
+        assert_eq!(open(&looks[0]), 0.0);
+        assert!((sizes[0] - 1.0 / 3.0).abs() < 1e-12);
+        assert_eq!(looks[0].colour, [0.95, 0.95, 0.9]);
+        // Then open from its rim inward, and to seed, at its full size.
+        for (day, opened) in [(155.0, 0.5), (165.0, 1.0), (175.0, 1.5), (190.0, 2.0)] {
+            let (looks, sizes) = on(day);
+            assert!((open(&looks[0]) - opened).abs() < 1e-12, "day {day}");
+            assert_eq!(sizes[0], 1.0);
+        }
+        assert_eq!(on(200.0).1[0], 0.0);
+        // Without a day it keeps the `open` its look sets.
+        let (looks, _) = resolve_on(types, &organs, [0.0; 3], [0.0; 3], None);
+        assert_eq!(open(&looks[0]), Head::default().open);
+    }
+
+    #[test]
+    fn a_clusters_heads_each_open_in_their_own_stage() {
+        // A corymb of heads opening over 40 days: each head a unit in its
+        // own stage, its florets all in bud, all open, or all in seed.
+        let corymb = Some(Inflorescence {
+            kind: Some(ClusterKind::Corymb),
+            flowers: Some(12),
+            ..Inflorescence::default()
+        });
+        let organs = headed(
+            Season {
+                opening: 40.0,
+                ..daisy()
+            },
+            corymb,
+        );
+        let types = [("bloom", OrganKind::Flower)];
+        let (looks, _) = resolve_on(types, &organs, [0.0; 3], [0.0; 3], Some(172.0));
+        let cluster = looks[0].inflorescence.as_ref().expect("a cluster");
+        let opening = cluster.opening.as_ref().expect("units in stages");
+        let shown: Vec<f64> = cluster
+            .layout(0.0, 0)
+            .units
+            .iter()
+            .filter_map(|p| opening.showing(p))
+            .map(|(unit, _)| match &unit.shape {
+                Shape::Head(head) => head.open,
+                other => panic!("not a head: {other:?}"),
+            })
+            .collect();
+        for stage in [0.0, 1.0, 2.0] {
+            assert!(shown.contains(&stage), "{shown:?}");
+        }
+    }
+
     /// A cherry's umbel of six (or `kind` of `flowers`), with `season`.
     fn clustered(kind: ClusterKind, flowers: u32, season: Season) -> OrganLook {
         OrganLook {
@@ -2749,7 +3432,11 @@ mod tests {
                 [[0.95, 0.95, 0.9], [0.6, 0.05, 0.06], [0.45, 0.5, 0.15]].contains(&slot)
                     || slot
                         == slow
-                            .bud([0.6, 0.05, 0.06], [0.1, 0.3, 0.05])
+                            .bud(
+                                &Shape::default_for(OrganKind::Fruit),
+                                [0.6, 0.05, 0.06],
+                                [0.1, 0.3, 0.05]
+                            )
                             .colour
                             .unwrap(),
                 "{slot:?}"
@@ -2838,12 +3525,14 @@ mod tests {
             born: 0.0,
             shed: None,
             light: 1.0,
+            within: None,
         };
         let graph = crate::graph::PlantGraph {
             age: 5.0,
             height: 2.0,
             segments: Vec::new(),
             organs: vec![organ(0, 0.1), organ(1, 0.04), organ(2, 0.2)],
+            structures: Vec::new(),
         };
         assert!(staged(&graph, &[1.0, 1.0, 1.0]).is_none());
         let drawn = staged(&graph, &[1.0, 0.0, 0.5]).unwrap();

@@ -39,10 +39,10 @@
       "basal_leaves": 4,
       "basal_length": 0.15,
       "basal_angle": 60,
-      "leaf_area": 0.083,
-      "basal_area": 0.059,
+      "leaf_area": 0.054,
+      "basal_area": 0.048,
       "basal_piece_area": 0.235,
-      "flower_area": 0.18,
+      "flower_area": 0.171,
       "bud_area": 0.89,
       "fruit_area": 0.89
     }
@@ -63,22 +63,10 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": {
-          "template": "compound",
-          "leaflets": 17,
-          "leaflet_width": 0.18,
-          "teeth": 3,
-          "petiole": 0.05
-        }
+        "shape": { "template": "compound", "leaflets": 21, "pinnules": 5, "leaflet_width": 0.22, "teeth": 0, "petiole": 0.05, "angle": 70, "pinnule_angle": 50, "largest": 0.4, "lowest": 0.35, "widest": 0.35, "tip": 0.6, "base": 0.5 }
       },
       "basal": {
-        "shape": {
-          "template": "compound",
-          "leaflets": 21,
-          "leaflet_width": 0.18,
-          "teeth": 3,
-          "petiole": 0.15
-        }
+        "shape": { "template": "compound", "leaflets": 25, "pinnules": 7, "leaflet_width": 0.22, "teeth": 0, "petiole": 0.15, "angle": 70, "pinnule_angle": 50, "largest": 0.4, "lowest": 0.35, "widest": 0.35, "tip": 0.6, "base": 0.5 }
       },
       "flower": {
         "shape": { "template": "head", "ray_width": 1.1, "disc": 0.5 },
@@ -100,7 +88,7 @@
   "traits": {
     "height_typical_m": {"min": 0.06, "max": 0.65},
     "leaf_division": "simple",
-    "leaf_incision": "lobed",
+    "leaf_incision": "dissected",
     "division_pattern": "pinnate",
     "division_order": {"min": 1, "max": 2},
     "leaf_shape": {"oblong": "often", "lanceolate": "often"},
@@ -110,6 +98,7 @@
     "phyllary_series": 3,
     "ray_florets": {"min": 5, "max": 8, "low": 3},
     "disc_florets": {"min": 10, "max": 20},
+    "receptacle_shape": "convex",
     "fruit_size_m": {"min": 0.001, "max": 0.002}
   },
   "evidence": {
@@ -172,6 +161,26 @@
       "evidence": "SourceInferred",
       "source": "fna-19",
       "note": "FNA's account of the species: plants 6 to 65 cm tall or more; blades oblong or lanceolate, once or twice pinnately lobed; 10 to over 100 heads in flat-topped, corymb-like arrays; 20 to 30 phyllaries in about three rows; rays 5 to 8 (as few as 3); 10 to 20 disc florets; fruits 1 to 2 mm."
+    },
+    "traits.receptacle_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-19",
+      "note": "FNA's account of the species, as search results quote copies of its text (the pages themselves were not read): receptacles convex, their paleae lanceolate, 1.5 to 4 mm."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "vicflora",
+      "note": "VicFlora's account of the species, as quoted in search results (the page itself was not read): leaves 1- or 2-pinnatisect, cut to the midrib, the ultimate lobes spreading in more than one plane. FNA's 'once or twice pinnately lobed, the ultimate lobes lanceolate, often in several planes' describes the same blade; 'dissected' is the vocabulary's word for one cut into fine segments."
+    },
+    "appearance.organs.leaf.shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The blade drawn dissected (spec rework P4): a twice-divided leaf whose segments run together along a winged rachis, its pattern and the running together from its characters by the rules at the flowering plants; before, separate toothed leaflets stood along a rachis. Counts and form by eye from photographs: about 10 to 12 pairs of primary segments, each cut into 5 to 7 narrow lobes; the segments longest 0.4 of the way up, the blade's oblong to lanceolate outline (its shape word is the blade's, so the card sets its segments' own form by hand)."
+    },
+    "appearance.organs.basal.shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The blade drawn dissected (spec rework P4): a twice-divided leaf whose segments run together along a winged rachis, its pattern and the running together from its characters by the rules at the flowering plants; before, separate toothed leaflets stood along a rachis. Counts and form by eye from photographs: about 10 to 12 pairs of primary segments, each cut into 5 to 7 narrow lobes; the segments longest 0.4 of the way up, the blade's oblong to lanceolate outline (its shape word is the blade's, so the card sets its segments' own form by hand)."
     }
   },
   "provenance": {

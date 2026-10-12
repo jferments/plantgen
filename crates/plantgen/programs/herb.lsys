@@ -26,9 +26,13 @@
 # grows as before, and the leaves of a pair or a whorl now vary in size
 # and angle as single leaves do.
 #
+# Revision 4 (spec rework M7): each basal leaf is drawn within a
+# `basal_leaf` structure, its pieces and tip pieces of it. A bud is a
+# flower, not a fruit.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem herb 3;
+lsystem herb 4;
 
 # The clump.
 param stems = 6;              # stems in a mature clump
@@ -93,11 +97,13 @@ module Rc(i, m, h, r);        # raceme nodes i to i + m - 1
 module Lf(s);                 # the leaves at one node
 
 organ leaf leaf area leaf_area;
-organ basal leaf area basal_area;
-organ basal_piece leaf area basal_piece_area;
+organ basal leaf as piece area basal_area;
+organ basal_piece leaf as piece area basal_piece_area;
 organ flower flower area flower_area;
-organ bud fruit area bud_area;
+organ bud fruit as flower area bud_area;
 organ fruit fruit area fruit_area;
+
+structure basal_leaf leaf;    # one basal leaf: its pieces and tip
 
 tool light@1 { cell = light_cell, extinction = 0.5 };
 
@@ -129,7 +135,7 @@ decompose Bs(j) : j > 0 ->
          basal_arch * uniform(0.6, 1.4)) ]
     Bs(j - 1);
 decompose Bs(j) -> ;
-decompose Bl(len, a) -> Pc(0, len * 0.12 / (1 - pow(0.88, basal_pieces)), a);
+decompose Bl(len, a) -> basal_leaf Pc(0, len * 0.12 / (1 - pow(0.88, basal_pieces)), a);
 decompose Pc(k, s, a) : k < basal_pieces - 1 ->
     basal_piece(s) f(s) /(gauss() * 4) &(a) Pc(k + 1, s * 0.88, a);
 decompose Pc(k, s, a) -> basal(s);

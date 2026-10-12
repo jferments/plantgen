@@ -14,13 +14,15 @@
 //! growth ends, when it is shed. A renderer can therefore show the plant at
 //! any age between keyframes without regrowing it.
 
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::hash::{BuildHasherDefault, Hasher};
 
 use serde::{Deserialize, Serialize};
 
 use crate::conditions::{Around, Conditions};
-use crate::graph::{GraphOrgan, GraphSegment, OrganType, PlantGraph};
+use crate::graph::{
+    GraphOrgan, GraphSegment, GraphStructure, OrganType, PlantGraph, StructureType,
+};
 use crate::lsys::derive::{Clock, Deriver};
 use crate::lsys::program::{SymbolKind, ToolKind};
 use crate::lsys::tools::{self, ToolState};
@@ -62,6 +64,9 @@ pub struct Growth {
     /// The program's body types by name, in declaration order: a graph
     /// segment's body, less one, indexes them.
     pub body_types: Vec<String>,
+    /// The program's structure types, in declaration order: a graph
+    /// structure's type indexes them (spec rework M7).
+    pub structure_types: Vec<StructureType>,
     pub keyframes: Vec<PlantGraph>,
     pub stats: GrowthStats,
     shed: ShedLog,
@@ -205,23 +210,34 @@ fn organ_types(program: &Program, organ_area: &[f64]) -> (Vec<OrganType>, Vec<u1
     let mut organ_index = vec![u16::MAX; program.symbols.len()];
     let mut types = Vec::new();
     for (symbol, info) in program.symbols.iter().enumerate() {
-        if let SymbolKind::Organ { kind, .. } = info.kind {
+        if let SymbolKind::Organ { kind, term, .. } = info.kind {
             organ_index[symbol] = u16::try_from(types.len()).unwrap_or(u16::MAX);
             types.push(OrganType {
                 name: info.name.clone(),
                 kind,
                 area: organ_area[symbol],
+                term: term.map(str::to_string),
             });
         }
     }
     (types, organ_index)
 }
 
+/// The program's structure types, in declaration order.
+fn structure_types(program: &Program) -> Vec<StructureType> {
+    program
+        .structures()
+        .map(|(name, term)| StructureType {
+            name: name.to_string(),
+            term: term.to_string(),
+        })
+        .collect()
+}
+
 /// A map keyed by a part's id. Ids are the engine's own, never read from
 /// outside, so one multiply mixes them enough and the maps a growth updates
 /// for every part at every step need not pay for `SipHash`.
 type IdMap<V> = HashMap<u64, V, BuildHasherDefault<IdHasher>>;
-type IdSet = HashSet<u64, BuildHasherDefault<IdHasher>>;
 
 /// The hasher of [`IdMap`]: Fx hashing (as in rustc), one rotate, xor and
 /// multiply per word.
@@ -311,19 +327,22 @@ fn last_seen<P>(gone: &[(u64, u32, P)], id: u64) -> Option<u32> {
 struct Litter {
     /// Last step's organs: id, symbol and size.
     standing: Vec<(u64, u16, f64)>,
-    /// This step's organ ids.
-    now: IdSet,
+    /// This step's organs: id and organ type.
+    now: IdMap<u16>,
     spare: Vec<(u64, u16, f64)>,
     fallen: Vec<ShedOrgans>,
-    /// Organs a keyframe holds, with the last step each stood before it
-    /// last went.
-    kept: IdMap<Option<u32>>,
+    /// Organs a keyframe holds, by id and organ type, with the last step
+    /// each stood as that type before it last went or became another
+    /// organ (organ phases, spec rework M7).
+    kept: IdMap<Vec<(u16, Option<u32>)>>,
 }
 
 impl Litter {
     /// This step's organs (id, symbol, size): one that stood at the last
-    /// step and does not now fell this step, at age `step · dt`. Each
-    /// type's sums add in the order the organs were drawn.
+    /// step and does not now fell this step, at age `step · dt`; one that
+    /// stands now as another organ (a blade become thatch) did not fall,
+    /// but is gone as what it was. Each type's sums add in the order the
+    /// organs were drawn.
     fn step(
         &mut self,
         step: u32,
@@ -336,21 +355,28 @@ impl Litter {
         current.clear();
         current.extend(organs);
         self.now.clear();
-        for (id, _, _) in &current {
-            self.now.insert(*id);
+        for &(id, symbol, _) in &current {
+            self.now.insert(id, organ_index[usize::from(symbol)]);
         }
         let mut fell = vec![(0_u32, 0.0_f64, 0.0_f64); types.len()];
         for &(id, symbol, size) in &self.standing {
-            if self.now.contains(&id) {
-                continue;
+            let organ = organ_index[usize::from(symbol)];
+            match self.now.get(&id) {
+                Some(&now) if now == organ => continue,
+                Some(_) => {}
+                None => {
+                    let (count, sizes, areas) = &mut fell[usize::from(organ)];
+                    *count += 1;
+                    *sizes += size;
+                    *areas += types[usize::from(organ)].area * size * size;
+                }
             }
-            let organ = usize::from(organ_index[usize::from(symbol)]);
-            let (count, sizes, areas) = &mut fell[organ];
-            *count += 1;
-            *sizes += size;
-            *areas += types[organ].area * size * size;
-            if let Some(last) = self.kept.get_mut(&id) {
-                *last = Some(step.saturating_sub(1));
+            if let Some(last) = self
+                .kept
+                .get_mut(&id)
+                .and_then(|kept| kept.iter_mut().find(|(kept, _)| *kept == organ))
+            {
+                last.1 = Some(step.saturating_sub(1));
             }
         }
         for (organ, (count, size, area)) in fell.into_iter().enumerate() {
@@ -368,19 +394,28 @@ impl Litter {
     }
 
     /// Follow the organs a keyframe holds.
-    fn keep(&mut self, scene: &Scene) {
+    fn keep(&mut self, scene: &Scene, organ_index: &[u16]) {
         for organ in &scene.organs {
-            self.kept.entry(organ.id).or_insert(None);
+            let type_ = organ_index[usize::from(organ.symbol)];
+            let kept = self.kept.entry(organ.id).or_default();
+            if !kept.iter().any(|&(kept, _)| kept == type_) {
+                kept.push((type_, None));
+            }
         }
     }
 
-    /// For an organ a keyframe holds: the last step it stood before it
-    /// went for good, if it does not stand at the end.
-    fn last_seen(&self, id: u64) -> Option<u32> {
-        if self.now.contains(&id) {
+    /// For an organ a keyframe holds as organ type `organ`: the last step
+    /// it stood as that type before it went for good or became another
+    /// organ, if it does not stand as that type at the end.
+    fn last_seen(&self, id: u64, organ: u16) -> Option<u32> {
+        if self.now.get(&id) == Some(&organ) {
             return None;
         }
-        self.kept.get(&id).copied().flatten()
+        self.kept
+            .get(&id)?
+            .iter()
+            .find(|&&(kept, _)| kept == organ)
+            .and_then(|&(_, last)| last)
     }
 }
 
@@ -598,7 +633,7 @@ pub fn grow_watched(
             settings.seed,
         )?;
         if keyframe {
-            litter.keep(&scene);
+            litter.keep(&scene, &organ_index);
             keyframes.push(snapshot(
                 &scene,
                 &radii,
@@ -612,6 +647,7 @@ pub fn grow_watched(
             let frame = watch.wants_frame(step).then(|| Growth {
                 organ_types: organ_types.clone(),
                 body_types: program.bodies().map(str::to_string).collect(),
+                structure_types: structure_types(program),
                 keyframes: vec![snapshot(
                     &scene,
                     &radii,
@@ -647,7 +683,7 @@ pub fn grow_watched(
             segment.shed = last_seen(&gone_segments, segment.id).and_then(shed_age);
         }
         for organ in &mut graph.organs {
-            organ.shed = litter.last_seen(organ.id).and_then(shed_age);
+            organ.shed = litter.last_seen(organ.id, organ.organ).and_then(shed_age);
         }
     }
     // Segments by id, as the gone list is; organs by age.
@@ -661,6 +697,7 @@ pub fn grow_watched(
     Ok(Growth {
         organ_types,
         body_types: program.bodies().map(str::to_string).collect(),
+        structure_types: structure_types(program),
         keyframes,
         stats,
         shed,
@@ -674,6 +711,8 @@ fn snapshot(
     organ_index: &[u16],
     age: f64,
 ) -> PlantGraph {
+    let (structures, kept) = structures(scene);
+    let within = |index: Option<u32>| index.and_then(|index| kept[index as usize]);
     let segments = scene
         .segments
         .iter()
@@ -709,6 +748,7 @@ fn snapshot(
                 shed: None,
                 body: segment.body,
                 left: segment.left,
+                within: within(segment.within),
             }
         })
         .collect();
@@ -727,6 +767,7 @@ fn snapshot(
             born: organ.born,
             shed: None,
             light: organ_light.get(index).copied().unwrap_or(1.0),
+            within: within(organ.within),
         })
         .collect();
     PlantGraph {
@@ -734,7 +775,50 @@ fn snapshot(
         height: scene.height,
         segments,
         organs,
+        structures,
     }
+}
+
+/// The scene's structures that hold something, a segment or an organ,
+/// directly or in a structure within them, in order, and each scene
+/// structure's index among them (`None` for one left out). A structure
+/// opened where nothing is drawn, such as a frond whose last piece has
+/// fallen, is not part of the plant.
+fn structures(scene: &Scene) -> (Vec<GraphStructure>, Vec<Option<u32>>) {
+    let mut holds = vec![false; scene.structures.len()];
+    let members = scene
+        .segments
+        .iter()
+        .map(|segment| segment.within)
+        .chain(scene.organs.iter().map(|organ| organ.within));
+    for mut within in members {
+        // Each structure comes after the one it is within, so the walk up
+        // ends; it stops early where a structure is already marked.
+        while let Some(index) = within {
+            let index = index as usize;
+            if holds[index] {
+                break;
+            }
+            holds[index] = true;
+            within = scene.structures[index].within;
+        }
+    }
+    let mut kept = vec![None; scene.structures.len()];
+    let mut structures = Vec::new();
+    for (index, structure) in scene.structures.iter().enumerate() {
+        if !holds[index] {
+            continue;
+        }
+        kept[index] = Some(u32::try_from(structures.len()).unwrap_or(u32::MAX));
+        structures.push(GraphStructure {
+            id: structure.id,
+            structure: u16::from(structure.structure),
+            // A structure that holds something is within one that does.
+            within: structure.within.and_then(|outer| kept[outer as usize]),
+            born: structure.born,
+        });
+    }
+    (structures, kept)
 }
 
 #[cfg(test)]
@@ -867,11 +951,13 @@ mod tests {
                 name: "leaf".into(),
                 kind: OrganKind::Leaf,
                 area: 2.0,
+                term: None,
             },
             OrganType {
                 name: "fruit".into(),
                 kind: OrganKind::Fruit,
                 area: 0.0,
+                term: None,
             },
         ];
         // Symbols 0 and 1 are the two types.
@@ -900,9 +986,10 @@ mod tests {
                         born: 0.0,
                         segment: None,
                         node: None,
+                        within: None,
                     })
                     .collect();
-                litter.keep(&scene);
+                litter.keep(&scene, &index);
             }
         }
         let fallen: Vec<(u16, f64, u32, f64, f64)> = litter
@@ -919,10 +1006,10 @@ mod tests {
             ]
         );
         // Organ 1 went at step 2 and again at step 4: its last going.
-        assert_eq!(litter.last_seen(1), Some(3));
-        assert_eq!(litter.last_seen(2), Some(0));
+        assert_eq!(litter.last_seen(1, 0), Some(3));
+        assert_eq!(litter.last_seen(2, 0), Some(0));
         // Organ 3 stands at the end.
-        assert_eq!(litter.last_seen(3), None);
+        assert_eq!(litter.last_seen(3, 1), None);
     }
 
     #[test]
@@ -941,6 +1028,106 @@ mod tests {
         }
         // Leaves live two years, so some leaves of the young bush are shed.
         assert!(young.organs.iter().any(|organ| organ.shed.is_some()));
+    }
+
+    #[test]
+    fn a_keyframe_keeps_the_structures_that_hold_something() {
+        // Spec rework M7: a frond keeps its identity from year to year;
+        // one whose pinnae have fallen, and one that never held anything,
+        // are not part of the plant.
+        let program = Program::compile(
+            "lsystem ferny 1;
+             module Y;
+             module P;
+             organ pinna leaf as leaflet;
+             structure frond leaf;
+             structure bud leaf;
+             axiom Y;
+             rule Y -> [ frond F(0.2) P ] [ bud ] Y;
+             rule P : age >= 2 -> ;
+             interpret P -> [ +(40) pinna(0.1) ] [ -(40) pinna(0.1) ];",
+        )
+        .unwrap();
+        let params = program.resolve_params(&BTreeMap::new()).unwrap();
+        let growth = grow(&program, &params, &settings(5.0, vec![3.0, 5.0])).unwrap();
+        assert_eq!(
+            growth.structure_types,
+            [
+                StructureType {
+                    name: "frond".into(),
+                    term: "leaf".into()
+                },
+                StructureType {
+                    name: "bud".into(),
+                    term: "leaf".into()
+                }
+            ]
+        );
+        assert_eq!(growth.organ_types[0].term.as_deref(), Some("leaflet"));
+        for graph in &growth.keyframes {
+            // Three fronds with their pinnae, and the older fronds, whose
+            // rachis still stands within them; the buds hold nothing.
+            assert!(graph.structures.iter().all(|s| s.structure == 0));
+            let mut members = vec![0; graph.structures.len()];
+            for within in graph
+                .segments
+                .iter()
+                .map(|segment| segment.within)
+                .chain(graph.organs.iter().map(|organ| organ.within))
+            {
+                members[within.expect("all within a frond") as usize] += 1;
+            }
+            assert!(members.iter().all(|&count| count > 0));
+            assert_eq!(graph.organs.len(), 6);
+            assert_eq!(graph.structures.len(), graph.segments.len());
+        }
+        let (early, late) = (&growth.keyframes[0], &growth.keyframes[1]);
+        let born: Vec<(u64, f64)> = early.structures.iter().map(|s| (s.id, s.born)).collect();
+        for (id, at) in born {
+            assert!(late.structures.iter().any(|s| s.id == id && s.born == at));
+        }
+    }
+
+    #[test]
+    fn an_organ_keeps_its_id_when_it_becomes_another() {
+        // Organ phases (spec rework M7): a blade that dies becomes thatch
+        // where it stands, with its id and birth, and falls only once, as
+        // thatch.
+        let program = Program::compile(
+            "lsystem tuft 1;
+             module Y;
+             organ blade leaf;
+             organ thatch leaf;
+             axiom Y;
+             rule Y -> [ blade(0.1) ] Y;
+             rule blade(s) -> thatch(s);
+             rule thatch(s) : age >= 2 -> ;",
+        )
+        .unwrap();
+        let params = program.resolve_params(&BTreeMap::new()).unwrap();
+        let growth = grow(&program, &params, &settings(5.0, vec![3.0, 4.0])).unwrap();
+        let (early, late) = (&growth.keyframes[0], &growth.keyframes[1]);
+        let blades: Vec<(u64, f64)> = early
+            .organs
+            .iter()
+            .filter(|organ| organ.organ == 0)
+            .map(|organ| (organ.id, organ.born))
+            .collect();
+        let thatch: Vec<(u64, f64)> = late
+            .organs
+            .iter()
+            .filter(|organ| organ.organ == 1)
+            .map(|organ| (organ.id, organ.born))
+            .collect();
+        assert!(!blades.is_empty());
+        assert!(blades.iter().all(|blade| thatch.contains(blade)));
+        // A blade's card ends when it becomes thatch, the next year.
+        for blade in early.organs.iter().filter(|organ| organ.organ == 0) {
+            assert_eq!(blade.shed, Some(blade.born + 1.0), "{blade:?}");
+        }
+        let falls = &growth.shed().organs;
+        assert!(!falls.is_empty());
+        assert!(falls.iter().all(|fall| fall.organ == 1), "{falls:?}");
     }
 
     #[test]

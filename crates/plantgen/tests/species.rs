@@ -121,9 +121,10 @@ fn builtin_species_shade_with_the_area_they_draw() {
                 ));
             }
         }
-        // Sun leaves draw less than their type's look and shade leaves
-        // more, about evenly, so a crown with as many of each draws what
-        // the light model shades with.
+        // Leaves draw less the more sun they grew in, step by step, and
+        // the sun's and the shade's about evenly about their type's look,
+        // so a crown with as many of each draws what the light model
+        // shades with.
         for (index, look) in looks.iter().enumerate().take(shading.len()) {
             let forms = look.forms;
             let area = |index: usize, size: f64| {
@@ -140,17 +141,26 @@ fn builtin_species_shade_with_the_area_they_draw() {
                     area(index, 1.0)
                 ));
             }
-            let (Some(sun), Some(shade)) = (forms.sun, forms.shade) else {
+            let Some(bands) = forms.bands else {
                 continue;
             };
-            let (own, sun, shade) = (
-                area(index, 1.0),
-                area(sun, forms.sizes.0),
-                area(shade, forms.sizes.1),
-            );
-            if !(sun < own && own < shade && spec::areas_agree(f64::midpoint(sun, shade), own)) {
+            let areas: Vec<f64> = bands
+                .iter()
+                .enumerate()
+                .map(|(band, &at)| {
+                    let size = plantgen::looks::Shape::size_in_light(
+                        plantgen::looks::band_form(band),
+                        forms.plasticity,
+                    );
+                    area(at, size)
+                })
+                .collect();
+            let (shade, own, sun) = (areas[0], areas[bands.len() / 2], areas[bands.len() - 1]);
+            if !(areas.windows(2).all(|pair| pair[1] < pair[0])
+                && spec::areas_agree(f64::midpoint(sun, shade), own))
+            {
                 failures.push(format!(
-                    "{id} `{}`: sun leaves draw {sun:.3} m², its own look {own:.3}, shade leaves {shade:.3}",
+                    "{id} `{}`: from shade to sun its leaves draw {areas:.3?} m²",
                     look.organ
                 ));
             }
@@ -162,7 +172,7 @@ fn builtin_species_shade_with_the_area_they_draw() {
 /// Grasses and herbs renew their shoots every year: at every keyframe
 /// each stem, culm, leaf and flower grew that year, so nothing lives on
 /// from the year before but a grass's thatch, the dead blades of last
-/// year's tillers.
+/// year's tillers, each born with its blade.
 #[test]
 fn grasses_and_herbs_renew_their_shoots_every_year() {
     let mut checked = 0;
@@ -194,9 +204,14 @@ fn grasses_and_herbs_renew_their_shoots_every_year() {
                 assert_eq!(segment.shed, (graph.age < 4.0).then_some(graph.age + 1.0));
             }
             for organ in &graph.organs {
+                let born = if Some(usize::from(organ.organ)) == thatch {
+                    graph.age - 1.0
+                } else {
+                    graph.age
+                };
                 assert_eq!(
                     organ.born.to_bits(),
-                    graph.age.to_bits(),
+                    born.to_bits(),
                     "{id}: an organ outlived its year"
                 );
             }
@@ -522,8 +537,9 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
         }
     }
     assert_eq!(
-        checked, 40,
-        "the 25 fruit clusters that moved in with L1a and the 15 clusters of flowers and heads of L1c"
+        checked, 58,
+        "the 25 fruit clusters that moved in with L1a, the 15 clusters of flowers and heads of \
+         L1c and the 18 inflorescences of grasses, sedges and rushes of P3"
     );
 }
 

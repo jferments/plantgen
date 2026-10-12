@@ -7,9 +7,12 @@
 //! palmate, simple, lobed and compound leaves, leafy sprigs, grass blades,
 //! fern fronds, flowers, flower heads, umbels, spikes, panicles and fruit.
 //! Simple, lobed, palmate and compound leaves and the leaves of sprigs are
-//! lit along veins grown by space colonization ([`grown_veins`],
-//! [`crate::venation`]; Runions et al. 2005) from the primary veins their
-//! generator draws.
+//! grown ([`grow_leaf`]): their teeth and lobes laid down on their margins
+//! as the blade grows ([`crate::margins`]; Runions, Tsiantis and
+//! Prusinkiewicz 2017), and their veins grown by space colonization
+//! ([`crate::venation`]; Runions et al. 2005) from the primary veins their
+//! generator draws, one into every tooth, which points the way its vein
+//! runs. They are lit along their veins.
 //!
 //! A generator works in card units, card lengths: `x` across the card from
 //! its centre line and `y` from its base (0) to its tip (1), so the card
@@ -21,14 +24,16 @@
 #![allow(clippy::many_single_char_names)]
 
 use crate::body::BodyLook;
+use crate::divided::{self, Form, Layout};
 use crate::looks::{
-    Blade, Compound, Flower, Frond, Fruit, Head, Lobed, Look, Needles, Palmate, Panicle, Scales,
-    Shape, Simple, Spike, Sprig, Umbel,
+    Blade, Compound, Flower, Frond, Fruit, Head, Lobed, Look, Needles, Palmate, Panicle, Pattern,
+    Scales, Shape, Simple, Spike, Sprig, Umbel,
 };
+use crate::margins::{self, Drawn, Margin};
 use crate::math::{self, PI};
 use crate::rng::{mix64, unit};
 use crate::spines::{self, View};
-use crate::venation::{Growth, Lamina, Venation};
+use crate::venation::{Growth, KILL, Lamina, Venation};
 
 /// Edge length of each template, in texels.
 pub const TEMPLATE_SIZE: usize = 128;
@@ -108,7 +113,7 @@ pub fn fill_share(look: &Look) -> f64 {
         return share;
     }
     let aspect = look.aspect();
-    let veins = grown_veins(shape);
+    let grew = grow_leaf(shape);
     let card = look
         .inflorescence
         .as_ref()
@@ -118,7 +123,7 @@ pub fn fill_share(look: &Look) -> f64 {
         for x in 0..FILL_SAMPLES {
             let u = (to_f64(x) + 0.5) / to_f64(FILL_SAMPLES);
             let v = (to_f64(y) + 0.5) / to_f64(FILL_SAMPLES);
-            let paint = draw_look(look, card.as_ref(), (u - 0.5) * aspect, v, veins.as_ref());
+            let paint = draw_look(look, card.as_ref(), (u - 0.5) * aspect, v, grew.as_ref());
             if paint.cover >= 0.5 {
                 kept += 1;
             }
@@ -212,7 +217,7 @@ impl Templates {
                 let mut brightness = Vec::with_capacity(texels);
                 let mut accent = Vec::with_capacity(texels);
                 let aspect = look.aspect();
-                let veins = grown_veins(&look.shape);
+                let grew = grow_leaf(&look.shape);
                 let card = look
                     .inflorescence
                     .as_ref()
@@ -229,7 +234,7 @@ impl Templates {
                                 card.as_ref(),
                                 (u - 0.5) * aspect,
                                 v,
-                                veins.as_ref(),
+                                grew.as_ref(),
                             );
                             sum.cover += paint.cover;
                             // Brightness and accent of the covered samples.
@@ -475,40 +480,56 @@ fn draw_look(
     card: Option<&ClusterCard>,
     x: f64,
     y: f64,
-    veins: Option<&Venation>,
+    grew: Option<&GrownLeaf>,
 ) -> Paint {
     match card {
         Some(card) => {
             let (across, along) = drawn_share(&look.shape);
             card.paint(&look.shape, x / across, y / along)
         }
-        None => draw(&look.shape, x, y, veins),
+        None => draw(&look.shape, (look.colour, look.accent), x, y, grew),
     }
 }
 
-/// The point `x`, `y` of a card drawn with `shape`, its leaves lit along
-/// their grown `veins` (see [`grown_veins`]) where it has them.
-fn draw(shape: &Shape, x: f64, y: f64, veins: Option<&Venation>) -> Paint {
+/// A card's two colours: its colour and its accent.
+type Colours = ([f32; 3], [f32; 3]);
+
+/// The point `x`, `y` of a card drawn with `shape` in `colours`, its
+/// colour and its accent, its leaf drawn as it `grew` (see [`grow_leaf`])
+/// where it is one.
+fn draw(shape: &Shape, colours: Colours, x: f64, y: f64, grew: Option<&GrownLeaf>) -> Paint {
     // Shapes are drawn into the card less its border: stretch the point
     // instead.
     let (across, along) = drawn_share(shape);
     let (x, y) = (x / across, y / along);
     let fine = fine(shape);
+    let veins = grew.map(|leaf| &leaf.veins);
+    let margins = grew.map_or(&[][..], |leaf| &leaf.margins);
     match shape {
         Shape::Needles(s) => needles(s, x, y, fine),
         Shape::Scales(s) => scales(s, x, y, fine),
-        Shape::Palmate(s) => palmate(s, x, y, fine, veins),
-        Shape::Simple(s) => simple(s, x, y, fine, veins),
-        Shape::Lobed(s) => lobed(s, x, y, fine, veins),
-        Shape::Compound(s) => compound(s, x, y, fine, veins),
-        Shape::Sprig(s) => sprig(s, x, y, fine, veins),
+        Shape::Palmate(s) => palmate(s, x, y, fine, veins, margins),
+        Shape::Simple(s) => simple(s, x, y, fine, veins, margins),
+        Shape::Lobed(s) => lobed(s, x, y, fine, veins, margins),
+        Shape::Compound(s) => {
+            let own;
+            let laid = if let Some(laid) = grew.and_then(|leaf| leaf.layout.as_ref()) {
+                laid
+            } else {
+                own = divided::layout(s);
+                &own
+            };
+            compound(s, laid, x, y, fine, veins, margins)
+        }
+        Shape::Sprig(s) => sprig(s, x, y, fine, veins, margins),
         Shape::Blade(s) => blade(s, x, y),
         Shape::Frond(s) => frond(s, x, y, fine),
         Shape::Flower(s) => flower(s, x, y - 0.5),
-        Shape::Head(s) => head(s, x, y - 0.5),
+        Shape::Head(s) => head(s, colours, x, y - 0.5),
         Shape::Umbel(s) => umbel(s, x, y - 0.5),
         Shape::Spike(s) => spike(s, x, y, fine),
         Shape::Panicle(s) => panicle(s, x, y, fine),
+        Shape::Spikelet(s) => spikelet(s, x, y, fine),
         Shape::Fruit(s) => fruit(s, x, y, fine),
     }
 }
@@ -620,7 +641,13 @@ fn grown(veins: Option<&Venation>, a: f64, t: f64, unit: f64, side: impl FnOnce(
 /// through its `outline`'s points if it has one, scaled so the widest is
 /// 1, else from where it is `widest`, its `base` and its `tip`
 /// ([`blade_profile`]).
-fn outline_profile(outline: Option<&[[f64; 2]]>, t: f64, widest: f64, base: f64, tip: f64) -> f64 {
+pub(crate) fn outline_profile(
+    outline: Option<&[[f64; 2]]>,
+    t: f64,
+    widest: f64,
+    base: f64,
+    tip: f64,
+) -> f64 {
     let Some(points) = outline else {
         return blade_profile(t, widest, base, tip);
     };
@@ -636,233 +663,425 @@ fn outline_profile(outline: Option<&[[f64; 2]]>, t: f64, widest: f64, base: f64,
     }
 }
 
+/// Where a blade's teeth fade in from its base and out toward its tip.
+fn blade_fade(t: f64) -> f64 {
+    math::smoothstep(0.04, 0.18, t) * (1.0 - math::smoothstep(0.88, 1.0, t))
+}
+
+/// Where a leaflet's teeth fade in and out.
+fn leaflet_fade(t: f64) -> f64 {
+    math::smoothstep(0.1, 0.25, t) * (1.0 - math::smoothstep(0.85, 1.0, t))
+}
+
+/// The share of a blade, along it, that a simple leaf's, a sprig leaf's
+/// and a leaflet's teeth and a lobed leaf's lobes form in.
+const TEETH: (f64, f64) = (0.08, 0.95);
+const LEAFLET_TEETH: (f64, f64) = (0.14, 0.92);
+const LOBES: (f64, f64) = (0.06, 0.9);
+/// The share of a palmate lobe, along it, that its teeth form in.
+const LOBE_TEETH: (f64, f64) = (0.42, 0.92);
+/// How teeth and lobes are drawn (see [`Drawn`]): a tooth's sinus moves
+/// well toward the tooth below as its vein leans, a lobe's less; teeth
+/// differ less in size than lobes.
+const TOOTH: Drawn = Drawn {
+    round: 0.0,
+    skew: 0.4,
+    least: 0.6,
+};
+const LOBE: Drawn = Drawn {
+    round: 0.0,
+    skew: 0.2,
+    least: 0.45,
+};
+const PALMATE_TOOTH: Drawn = Drawn {
+    round: 0.0,
+    skew: 0.35,
+    least: 0.6,
+};
+/// The most a blade's teeth cut into it, a share of its half-width.
+const DEEPEST: f64 = 0.85;
+
 /// A simple leaf's half-width at `t` along its blade of `length` card
-/// units, with its teeth.
-fn simple_width(s: &Simple, length: f64, t: f64) -> f64 {
+/// units, with the teeth of its side's `margin` if given.
+fn simple_width(s: &Simple, length: f64, t: f64, margin: Option<&Margin>) -> f64 {
     let profile = outline_profile(s.outline.as_deref(), t, s.widest, s.base, s.tip);
     let mut width = s.width * length * 0.5 * profile;
-    if s.teeth > 0 {
-        let fade = math::smoothstep(0.04, 0.18, t) * (1.0 - math::smoothstep(0.88, 1.0, t));
-        let phase = frac(t * f64::from(s.teeth));
-        width -= s.tooth_depth * math::pow(1.0 - phase, 1.5) * fade;
+    if let Some(margin) = margin {
+        let fall = margin.fall(t, TOOTH, |share| margins::tooth_flank(share, 0.0));
+        width -= (s.tooth_depth * blade_fade(t)).min(DEEPEST * width) * fall;
     }
     width
 }
 
+/// How far a lobe's margin falls back along its flank, from its tip (0)
+/// to its sinus (1): pointed lobes (`round` 0) narrow straight, rounded
+/// ones swell (`round` 1).
+fn lobe_flank(share: f64, round: f64) -> f64 {
+    let pointed = 1.0 - share;
+    let rounded = math::cos(0.5 * PI * share);
+    1.0 - math::pow((pointed + (rounded - pointed) * round).max(0.0), 0.7)
+}
+
 /// A pinnately lobed leaf's half-width at `t` along its blade of `length`
-/// card units, on its `left` side or its right.
-fn lobed_width(s: &Lobed, length: f64, t: f64, left: bool) -> f64 {
+/// card units, with the lobes of its side's `margin` if given.
+fn lobed_width(s: &Lobed, length: f64, t: f64, margin: Option<&Margin>) -> f64 {
     let envelope = blade_profile(t, 0.55, 0.35, 0.3);
     let mut sinus = 1.0;
-    if (0.06..0.9).contains(&t) {
-        let offset = if left { 0.35 } else { 0.0 };
-        let phase = frac((t - 0.06) / 0.84 * f64::from(s.lobes) + offset);
-        let pointed = 1.0 - (2.0 * phase - 1.0).abs();
-        let rounded = math::sin(PI * phase);
-        let bump = math::pow(pointed + (rounded - pointed) * s.round, 0.7);
+    if let Some(margin) = margin
+        && (LOBES.0..LOBES.1).contains(&t)
+    {
+        let drawn = Drawn {
+            round: s.round,
+            ..LOBE
+        };
+        let fall = margin.fall(t, drawn, |share| lobe_flank(share, s.round));
         // Sinuses shallow out toward the base and the tip.
-        let fade = math::sin(PI * (t - 0.06) / 0.84);
-        sinus = 1.0 - s.depth * (1.0 - bump) * math::pow(fade, 0.4);
+        let fade = math::sin(PI * (t - LOBES.0) / (LOBES.1 - LOBES.0));
+        sinus = 1.0 - s.depth * fall * math::pow(fade, 0.4);
     }
     s.width * length * 0.5 * envelope * sinus
 }
 
-/// A leaflet's half-width at `t` along it, for a leaflet `length` card
-/// units long.
-fn leaflet_width(s: &Compound, length: f64, t: f64) -> f64 {
-    let mut width = s.leaflet_width * length * 0.5 * blade_profile(t, 0.45, 0.5, 0.45);
-    if s.teeth > 0 {
-        let fade = math::smoothstep(0.1, 0.25, t) * (1.0 - math::smoothstep(0.85, 1.0, t));
-        width -= 0.012 * length * (1.0 - frac(t * f64::from(s.teeth))) * fade * 3.0;
+/// A leaflet's half-width at `t` along its blade, for a blade `length`
+/// card units long of a leaf `s` of `form`, with the teeth of its side's
+/// `margin` if given.
+fn leaflet_width(s: &Compound, form: &Form, length: f64, t: f64, margin: Option<&Margin>) -> f64 {
+    let profile = outline_profile(s.outline.as_deref(), t, form.widest, form.base, form.tip);
+    let mut width = s.leaflet_width * length * 0.5 * profile;
+    if let Some(margin) = margin {
+        let fall = margin.fall(t, TOOTH, |share| margins::tooth_flank(share, 0.0));
+        width -= (0.036 * length * leaflet_fade(t)).min(DEEPEST * width) * fall;
     }
     width
 }
 
-/// A sprig leaf's half-width at `t` along its blade of `blade` card units.
-fn sprig_width(s: &Sprig, blade: f64, t: f64) -> f64 {
+/// A sprig leaf's half-width at `t` along its blade of `blade` card units,
+/// with the teeth of its side's `margin` if given.
+fn sprig_width(s: &Sprig, blade: f64, t: f64, margin: Option<&Margin>) -> f64 {
     let profile = outline_profile(s.outline.as_deref(), t, s.widest, s.base, s.tip);
     let mut width = s.width * blade * 0.5 * profile;
-    if s.teeth > 0 {
-        let fade = math::smoothstep(0.04, 0.18, t) * (1.0 - math::smoothstep(0.88, 1.0, t));
-        let phase = frac(t * f64::from(s.teeth));
-        width -= s.tooth_depth * blade * tooth_notch(phase, s.round) * fade;
+    if let Some(margin) = margin {
+        let drawn = Drawn {
+            round: s.round,
+            ..TOOTH
+        };
+        let fall = margin.fall(t, drawn, |share| margins::tooth_flank(share, s.round));
+        width -= (s.tooth_depth * blade * blade_fade(t)).min(DEEPEST * width) * fall;
     }
     width
-}
-
-/// How far a tooth's margin falls back, 0 to 1, at `phase` along the
-/// tooth: saw teeth (`round` 0) rise slowly to their tip and fall back at
-/// once; rounded lobes (`round` 1) swell and narrow evenly.
-fn tooth_notch(phase: f64, round: f64) -> f64 {
-    let saw = math::pow(1.0 - phase, 1.5);
-    if round <= 0.0 {
-        return saw;
-    }
-    let lobe = 1.0 - math::pow(math::sin(PI * phase), 0.6);
-    saw + (lobe - saw) * round
-}
-
-/// The tips of a blade's `teeth` (each where its margin stands out
-/// farthest, for teeth as `round` as [`tooth_notch`] draws them) on both
-/// sides, in the blade's frame, for its half-width `half` (blade lengths)
-/// at `t` and the share of the blade the teeth fade in by.
-fn tooth_tips(
-    teeth: u32,
-    round: f64,
-    half: impl Fn(f64) -> f64,
-    fade: impl Fn(f64) -> f64,
-) -> Vec<(f64, f64)> {
-    // Where a tooth's notch is least, sampled within the tooth short of
-    // its end, where a saw tooth meets the next one's notch and a vein
-    // could not grow in.
-    let tip = (0..200)
-        .map(|i| f64::from(i) * 0.94 / 199.0)
-        .min_by(|a, b| tooth_notch(*a, round).total_cmp(&tooth_notch(*b, round)))
-        .unwrap_or(0.94);
-    let mut tips = Vec::new();
-    for k in 0..teeth {
-        let t = (f64::from(k) + tip) / f64::from(teeth);
-        if fade(t) < 0.3 {
-            continue;
-        }
-        let a = 0.96 * half(t);
-        tips.push((a, t));
-        tips.push((-a, t));
-    }
-    tips
 }
 
 /// The seed a look's veins grow from: a hash of its shape, without an
-/// unset `outline`, which cards had none of before, so a card without one
-/// keeps the veins it grew.
+/// unset `outline` or an unset field of a compound leaf's divisions,
+/// which cards had none of before, so a card without them keeps the veins
+/// it grew.
 fn shape_seed(shape: &Shape) -> u64 {
-    format!("{shape:?}")
-        .replace("outline: None, ", "")
-        .bytes()
-        .fold(0xcbf2_9ce4_8422_2325_u64, |hash, byte| {
-            (hash ^ u64::from(byte)).wrapping_mul(0x0100_0000_01b3)
-        })
+    // A compound leaf a rule says is pinnate, divided once, with its
+    // leaflets apart, is the leaf it was with those fields unset.
+    let plain = match shape {
+        Shape::Compound(c) => {
+            let mut c = c.clone();
+            if c.pattern == Some(Pattern::Pinnate) {
+                c.pattern = None;
+            }
+            if c.pinnules == Some(0) {
+                c.pinnules = None;
+            }
+            if c.confluent.is_some_and(|share| share <= 0.0) {
+                c.confluent = None;
+            }
+            Shape::Compound(c)
+        }
+        _ => shape.clone(),
+    };
+    let mut text = format!("{plain:?}").replace("outline: None, ", "");
+    for field in [
+        "pattern",
+        "pinnules",
+        "confluent",
+        "angle",
+        "pinnule_angle",
+        "spread",
+        "largest",
+        "lowest",
+        "terminal_size",
+        "outline",
+        "widest",
+        "tip",
+        "base",
+        "petiolule",
+    ] {
+        text = text.replace(&format!(", {field}: None"), "");
+    }
+    text.bytes().fold(0xcbf2_9ce4_8422_2325_u64, |hash, byte| {
+        (hash ^ u64::from(byte)).wrapping_mul(0x0100_0000_01b3)
+    })
 }
 
-/// The veins of a leaf drawn with `shape`, grown in its blade's frame
-/// (see [`crate::venation`]): a simple or lobed leaf's from its midrib, a
-/// palmate leaf's from its main veins, and one leaflet's of a compound
-/// leaf or one leaf's of a sprig, which every leaflet or leaf draws scaled
-/// to its own length. `None` for shapes without them.
+/// A leaf grown with its veins (spec rework L3): its veins, grown in its
+/// blade's frame (see [`crate::venation`]), and its margins' teeth or
+/// lobes (see [`crate::margins`]), each fed by a vein. A simple or lobed
+/// leaf's, one leaflet's of a compound leaf or one leaf's of a sprig
+/// (which every leaflet or leaf draws scaled to its own length) has two
+/// margins, its right side's (`a` > 0) then its left's; a palmate leaf's,
+/// two a lobe from the lowest on its right, each lobe's left side (looking
+/// along it) then its right.
+#[derive(Debug, Clone, PartialEq)]
+pub struct GrownLeaf {
+    pub veins: Venation,
+    pub margins: Vec<Margin>,
+    /// A compound leaf's leaflets, laid out (`crate::divided`).
+    pub layout: Option<Layout>,
+}
+
+/// The leaf drawn with `shape`, grown (see [`GrownLeaf`]): a simple or
+/// lobed leaf's veins from its midrib, a palmate leaf's from its main
+/// veins. `None` for shapes that are not such leaves.
 #[must_use]
-pub fn grown_veins(shape: &Shape) -> Option<Venation> {
+pub fn grow_leaf(shape: &Shape) -> Option<GrownLeaf> {
     let seed = shape_seed(shape);
-    let midrib = vec![vec![(0.0, 0.0), (0.0, 0.96)]];
-    let simple_fade =
-        |t: f64| math::smoothstep(0.04, 0.18, t) * (1.0 - math::smoothstep(0.88, 1.0, t));
-    let grow = |inside: &dyn Fn((f64, f64)) -> bool, half: f64, primaries, tips, growth: Growth| {
-        let blade = Lamina {
-            inside,
-            bounds: ((-half, 0.0), (half, 1.0)),
-            primaries,
-            tips,
-        };
-        Some(Venation::grow(&blade, &growth, seed))
-    };
     match shape {
         Shape::Simple(s) => {
             let length = 1.0 - s.petiole;
-            let half = |t: f64| simple_width(s, length, t) / length;
-            let inside = |p: (f64, f64)| (0.0..=1.0).contains(&p.1) && p.0.abs() < half(p.1);
-            let tips = tooth_tips(s.teeth, 0.0, half, simple_fade);
-            grow(
-                &inside,
-                0.5 * s.width + 0.02,
-                midrib,
-                tips,
-                Growth::default(),
-            )
+            Some(pinnate_leaf(
+                (s.teeth, TEETH),
+                &|t| simple_width(s, length, t, None) / length,
+                &|t, margin| simple_width(s, length, t, Some(margin)) / length,
+                (0.5 * s.width + 0.02, Growth::default()),
+                seed,
+            ))
         }
         Shape::Lobed(s) => {
             let length = 1.0 - s.petiole;
-            let half = |t: f64, left: bool| lobed_width(s, length, t, left) / length;
-            let inside =
-                |p: (f64, f64)| (0.0..=1.0).contains(&p.1) && p.0.abs() < half(p.1, p.0 < 0.0);
-            // A vein to the tip of every lobe.
-            let mut tips = Vec::new();
-            for left in [false, true] {
-                let offset = if left { 0.35 } else { 0.0 };
-                for k in 0..=s.lobes {
-                    let t = 0.06 + 0.84 * (f64::from(k) + 0.5 - offset) / f64::from(s.lobes);
-                    if (0.1..0.88).contains(&t) {
-                        let a = 0.92 * half(t, left);
-                        tips.push((if left { -a } else { a }, t));
-                    }
-                }
-            }
             let growth = Growth {
                 secondary: 0.84 / f64::from(s.lobes.max(1) * 2 + 1),
                 ..Growth::default()
             };
-            grow(&inside, 0.5 * s.width + 0.02, midrib, tips, growth)
+            Some(pinnate_leaf(
+                (s.lobes, LOBES),
+                &|t| lobed_width(s, length, t, None) / length,
+                &|t, margin| lobed_width(s, length, t, Some(margin)) / length,
+                (0.5 * s.width + 0.02, growth),
+                seed,
+            ))
         }
         Shape::Compound(s) => {
-            let half = |t: f64| leaflet_width(s, 1.0, t);
-            let inside = |p: (f64, f64)| (0.0..=1.0).contains(&p.1) && p.0.abs() < half(p.1);
-            let fade =
-                |t: f64| math::smoothstep(0.1, 0.25, t) * (1.0 - math::smoothstep(0.85, 1.0, t));
-            let tips = tooth_tips(s.teeth, 0.0, half, fade);
-            grow(
-                &inside,
-                0.5 * s.leaflet_width + 0.02,
-                midrib,
-                tips,
-                Growth::default(),
-            )
+            let form = Form::of(s);
+            Some(GrownLeaf {
+                layout: Some(divided::layout(s)),
+                ..pinnate_leaf(
+                    (s.teeth, LEAFLET_TEETH),
+                    &|t| leaflet_width(s, &form, 1.0, t, None),
+                    &|t, margin| leaflet_width(s, &form, 1.0, t, Some(margin)),
+                    (0.5 * s.leaflet_width + 0.02, Growth::default()),
+                    seed,
+                )
+            })
         }
-        Shape::Sprig(s) => {
-            let half = |t: f64| sprig_width(s, 1.0, t);
-            let inside = |p: (f64, f64)| (0.0..=1.0).contains(&p.1) && p.0.abs() < half(p.1);
-            let tips = tooth_tips(s.teeth, s.round, half, simple_fade);
-            grow(
-                &inside,
-                0.5 * s.width + 0.02,
-                midrib,
-                tips,
-                Growth::default(),
-            )
-        }
-        Shape::Palmate(s) => Some(palmate_veins(s, fine(shape), seed)),
+        Shape::Sprig(s) => Some(pinnate_leaf(
+            (s.teeth, TEETH),
+            &|t| sprig_width(s, 1.0, t, None),
+            &|t, margin| sprig_width(s, 1.0, t, Some(margin)),
+            (0.5 * s.width + 0.02, Growth::default()),
+            seed,
+        )),
+        Shape::Palmate(s) => Some(palmate_leaf(s, fine(shape), seed)),
         _ => None,
     }
 }
 
-/// A palmate leaf's veins, grown outward from its main veins in the frame
-/// of their junction and the blade's radius, inside the painter's own
-/// blade less its petiole.
-fn palmate_veins(s: &Palmate, fine: f64, seed: u64) -> Venation {
-    let (junction, radius) = s.junction();
-    let inside = |p: (f64, f64)| {
-        !(p.1 < 0.02 && p.0.abs() < 0.05)
-            && palmate(s, p.0 * radius, junction + p.1 * radius, fine, None).cover > 0.0
-    };
-    let half = i32::try_from(s.lobes / 2).unwrap_or(0);
-    let primaries = (-half..=half)
-        .map(|k| {
-            let (angle, length) = s.lobe(k);
-            let reach = 0.92 * length / radius;
-            vec![
-                (0.0, 0.0),
-                (math::sin(angle) * reach, math::cos(angle) * reach),
-            ]
-        })
+/// How far a tooth whose vein runs along `heading` leans toward its
+/// blade's tip, 0 to 1: the heading's share along the margin's `tangent`
+/// there, toward the tip.
+fn lean(heading: Option<(f64, f64)>, tangent: (f64, f64)) -> f64 {
+    let Some(heading) = heading else { return 0.0 };
+    let norm = hypot(tangent.0, tangent.1).max(1e-12);
+    ((heading.0 * tangent.0 + heading.1 * tangent.1) / norm).clamp(0.0, 1.0)
+}
+
+/// Grow a pinnately veined blade: `count` teeth or lobes a side in its
+/// `zone`, on a blade whose untoothed half-width is `outline(t)` and whose
+/// half-width with a side's margin is `half(t, margin)`, both blade lengths;
+/// its veins from its midrib with `growth`, in a box `widest` either side
+/// of it, one into every tooth's tip, which then leans the way its vein
+/// runs.
+fn pinnate_leaf(
+    (count, zone): (u32, (f64, f64)),
+    outline: &dyn Fn(f64) -> f64,
+    half: &dyn Fn(f64, &Margin) -> f64,
+    (widest, growth): (f64, Growth),
+    seed: u64,
+) -> GrownLeaf {
+    let mut margins: Vec<Margin> = (0..2_u64)
+        .map(|side| Margin::grow(count, zone, outline, mix64(seed ^ (side + 1))))
         .collect();
-    let blade = Lamina {
-        inside: &inside,
-        bounds: ((-1.05, -1.05), (1.05, 1.05)),
-        primaries,
-        tips: Vec::new(),
+    let sign = |side: usize| if side == 0 { 1.0 } else { -1.0 };
+    // A tooth's source lies within reach of its tip, so a vein reaching it
+    // runs into the tooth however narrow it is.
+    let inset = 0.5 * KILL * growth.secondary;
+    let veins = {
+        let inside = |p: (f64, f64)| {
+            (0.0..=1.0).contains(&p.1) && p.0.abs() < half(p.1, &margins[usize::from(p.0 < 0.0)])
+        };
+        let tips = margins
+            .iter()
+            .enumerate()
+            .flat_map(|(side, margin)| {
+                margin.apices.iter().map(move |apex| {
+                    let edge = half(apex.t, margin);
+                    (sign(side) * (edge - inset).max(0.5 * edge), apex.t)
+                })
+            })
+            .collect();
+        let blade = Lamina {
+            inside: &inside,
+            bounds: ((-widest, 0.0), (widest, 1.0)),
+            primaries: vec![vec![(0.0, 0.0), (0.0, 0.96)]],
+            tips,
+        };
+        Venation::grow(&blade, &growth, seed)
     };
-    let growth = Growth {
-        outward: true,
-        ..Growth::default()
+    let mut headings = veins.tip_headings().iter();
+    for (side, margin) in margins.iter_mut().enumerate() {
+        let leans: Vec<f64> = margin
+            .apices
+            .iter()
+            .map(|apex| {
+                let slope = (outline(apex.t + 0.005) - outline(apex.t - 0.005)) / 0.01;
+                lean(
+                    headings.next().copied().flatten(),
+                    (sign(side) * slope, 1.0),
+                )
+            })
+            .collect();
+        margin.lean(&leans);
+    }
+    GrownLeaf {
+        veins,
+        margins,
+        layout: None,
+    }
+}
+
+/// A palmate lobe's half-width share at `t` along it: straight sides
+/// widening from where it leaves the blade to halfway, then drawn in to a
+/// long point.
+fn lobe_profile(t: f64) -> f64 {
+    if t <= 0.5 {
+        math::pow(t / 0.5, 0.9)
+    } else {
+        math::pow((1.0 - t) / 0.5, 1.15)
+    }
+}
+
+/// How far a palmate lobe's tooth falls back along its flank from its tip
+/// (0) to its sinus (1): it narrows slowly from its point, then steeply.
+fn palmate_flank(share: f64) -> f64 {
+    1.0 - math::pow(1.0 - share, 1.8)
+}
+
+/// A palmate leaf grown: each lobe side's teeth, then its veins grown
+/// outward from its main veins in the frame of their junction and the
+/// blade's radius, inside the painter's own blade less its petiole, one
+/// into every tooth, which then leans the way its vein runs.
+fn palmate_leaf(s: &Palmate, fine: f64, seed: u64) -> GrownLeaf {
+    let (junction, radius) = s.junction();
+    let half = i32::try_from(s.lobes / 2).unwrap_or(0);
+    let lobes: Vec<(f64, f64)> = (-half..=half).map(|k| s.lobe(k)).collect();
+    let outline = |t: f64| s.lobe_width * 0.5 * lobe_profile(t);
+    let mut margins: Vec<Margin> = Vec::with_capacity(lobes.len() * 2);
+    for index in 0..lobes.len() * 2 {
+        margins.push(Margin::grow(
+            s.teeth,
+            LOBE_TEETH,
+            &outline,
+            mix64(seed ^ (index as u64 + 1)),
+        ));
+    }
+    // Where a tooth's vein ends in the veins' frame, for side 0 (left of
+    // the lobe) or 1, within reach of its tip as on a pinnate leaf, and the
+    // margin's tangent there.
+    let inset = 0.5 * KILL * Growth::default().secondary * radius;
+    let tip = |lobe: usize, side: usize, apex: margins::Apex| {
+        let (angle, length) = lobes[lobe];
+        let d = (math::sin(angle), math::cos(angle));
+        let left = (-d.1, d.0);
+        let sign = if side == 0 { 1.0 } else { -1.0 };
+        let width = |t: f64| {
+            let fade = math::smoothstep(0.42, 0.55, t);
+            let size = PALMATE_TOOTH.least + (1.0 - PALMATE_TOOTH.least) * apex.size;
+            length * (outline(t) + s.lobe_width * 0.5 * 0.55 * (1.0 - t) * size * fade)
+        };
+        let (t, edge) = (apex.t, width(apex.t));
+        let (along, across) = (t * length, sign * (edge - inset).max(0.5 * edge));
+        let slope = (width(t + 0.005) - width(t - 0.005)) / (0.01 * length);
+        (
+            (
+                (along * d.0 + across * left.0) / radius,
+                (along * d.1 + across * left.1) / radius,
+            ),
+            (d.0 + sign * slope * left.0, d.1 + sign * slope * left.1),
+        )
     };
-    Venation::grow(&blade, &growth, seed)
+    let veins = {
+        let inside = |p: (f64, f64)| {
+            !(p.1 < 0.02 && p.0.abs() < 0.05)
+                && palmate(
+                    s,
+                    p.0 * radius,
+                    junction + p.1 * radius,
+                    fine,
+                    None,
+                    &margins,
+                )
+                .cover
+                    > 0.0
+        };
+        let mut tips = Vec::new();
+        for (index, margin) in margins.iter().enumerate() {
+            for apex in &margin.apices {
+                tips.push(tip(index / 2, index % 2, *apex).0);
+            }
+        }
+        let primaries = lobes
+            .iter()
+            .map(|&(angle, length)| {
+                let reach = 0.92 * length / radius;
+                vec![
+                    (0.0, 0.0),
+                    (math::sin(angle) * reach, math::cos(angle) * reach),
+                ]
+            })
+            .collect();
+        let blade = Lamina {
+            inside: &inside,
+            bounds: ((-1.05, -1.05), (1.05, 1.05)),
+            primaries,
+            tips,
+        };
+        let growth = Growth {
+            outward: true,
+            ..Growth::default()
+        };
+        Venation::grow(&blade, &growth, seed)
+    };
+    let mut headings = veins.tip_headings().iter();
+    for (index, margin) in margins.iter_mut().enumerate() {
+        let leans: Vec<f64> = margin
+            .apices
+            .iter()
+            .map(|apex| {
+                let (_, tangent) = tip(index / 2, index % 2, *apex);
+                lean(headings.next().copied().flatten(), tangent)
+            })
+            .collect();
+        margin.lean(&leans);
+    }
+    GrownLeaf {
+        veins,
+        margins,
+        layout: None,
+    }
 }
 
 /// One axis of a needle spray in its card's frame (units of the card's
@@ -1145,7 +1364,14 @@ fn scales(s: &Scales, x: f64, y: f64, fine: f64) -> Paint {
 /// main veins meet, each widest near its middle and drawn out to a point,
 /// with a few large teeth, deep sinuses between them, and a heart-shaped
 /// base round the petiole.
-fn palmate(s: &Palmate, x: f64, y: f64, fine: f64, veins: Option<&Venation>) -> Paint {
+fn palmate(
+    s: &Palmate,
+    x: f64,
+    y: f64,
+    fine: f64,
+    veins: Option<&Venation>,
+    margins: &[Margin],
+) -> Paint {
     let (junction, radius) = s.junction();
     let p = (x, y - junction);
     if y < junction + 0.01 {
@@ -1179,24 +1405,16 @@ fn palmate(s: &Palmate, x: f64, y: f64, fine: f64, veins: Option<&Venation>) -> 
             vein = vein.max(0.32);
             accent = accent.max(0.6);
         }
-        // Straight sides widening from where the lobe leaves the blade to
-        // halfway, then drawn in to a long point.
-        let profile = if t <= 0.5 {
-            math::pow(t / 0.5, 0.9)
-        } else {
-            math::pow((1.0 - t) / 0.5, 1.15)
-        };
-        let mut width = length * s.lobe_width * 0.5 * profile;
-        if s.teeth > 0 && t > 0.42 && t < 0.92 {
-            // A few coarse teeth pointing toward the lobe's tip, on its
-            // outer half so they never close a sinus: the margin widens
-            // slowly along each tooth and falls back steeply at its point.
-            let phase = frac((t - 0.42) / 0.5 * f64::from(s.teeth));
-            let tooth = if phase < 0.82 {
-                math::pow(phase / 0.82, 1.8)
-            } else {
-                (1.0 - phase) / 0.18
-            };
+        let mut width = length * s.lobe_width * 0.5 * lobe_profile(t);
+        // A few coarse teeth on its outer half, so they never close a
+        // sinus, each where its margin grew them (`palmate_leaf`).
+        let side = usize::try_from(k + half).unwrap_or(0) * 2 + usize::from(across <= 0.0);
+        if let Some(margin) = margins.get(side)
+            && s.teeth > 0
+            && t > LOBE_TEETH.0
+            && t < LOBE_TEETH.1
+        {
+            let tooth = 1.0 - margin.fall(t, PALMATE_TOOTH, palmate_flank);
             let fade = math::smoothstep(0.42, 0.55, t);
             width += length * s.lobe_width * 0.5 * 0.55 * (1.0 - t) * tooth * fade;
         }
@@ -1235,14 +1453,21 @@ fn palmate(s: &Palmate, x: f64, y: f64, fine: f64, veins: Option<&Venation>) -> 
 
 /// An undivided leaf: a blade from ovate to lanceolate, with an optional
 /// toothed margin, a midrib, faint side veins and a petiole.
-fn simple(s: &Simple, x: f64, y: f64, fine: f64, veins: Option<&Venation>) -> Paint {
+fn simple(
+    s: &Simple,
+    x: f64,
+    y: f64,
+    fine: f64,
+    veins: Option<&Venation>,
+    margins: &[Margin],
+) -> Paint {
     let base = s.petiole;
     if y < base + 0.01 && x.abs() < fine {
         return Paint::solid(0.9, 1.0);
     }
     let length = 1.0 - base;
     let t = (y - base) / length.max(1e-6);
-    let width = simple_width(s, length, t);
+    let width = simple_width(s, length, t, margins.get(usize::from(x < 0.0)));
     if x.abs() >= width {
         return Paint::EMPTY;
     }
@@ -1261,14 +1486,21 @@ fn simple(s: &Simple, x: f64, y: f64, fine: f64, veins: Option<&Venation>) -> Pa
 
 /// A pinnately lobed leaf: rounded or pointed lobes along both sides of a
 /// midrib, alternating a little between the sides.
-fn lobed(s: &Lobed, x: f64, y: f64, fine: f64, veins: Option<&Venation>) -> Paint {
+fn lobed(
+    s: &Lobed,
+    x: f64,
+    y: f64,
+    fine: f64,
+    veins: Option<&Venation>,
+    margins: &[Margin],
+) -> Paint {
     let base = s.petiole;
     if y < base + 0.01 && x.abs() < fine {
         return Paint::solid(0.9, 1.0);
     }
     let length = 1.0 - base;
     let t = (y - base) / length.max(1e-6);
-    let width = lobed_width(s, length, t, x < 0.0);
+    let width = lobed_width(s, length, t, margins.get(usize::from(x < 0.0)));
     if x.abs() >= width {
         return Paint::EMPTY;
     }
@@ -1289,52 +1521,74 @@ fn lobed(s: &Lobed, x: f64, y: f64, fine: f64, veins: Option<&Venation>) -> Pain
     )
 }
 
-/// A pinnately compound leaf: a rachis with opposite pairs of leaflets and
-/// a terminal one.
-fn compound(s: &Compound, x: f64, y: f64, fine: f64, veins: Option<&Venation>) -> Paint {
-    let leaflet = s.leaflet_length();
-    let pairs = s.leaflets / 2;
-    let top = 1.0 - leaflet;
-    if y < top + 0.02 && y >= 0.0 && x.abs() < fine {
-        return Paint::solid(0.9, 1.0);
-    }
+/// A compound leaf as [`divided::layout`] lays it out: its petiole and
+/// rachises in the accent colour, a dissected blade's wings, and each
+/// leaflet on its stalk, the first laid out drawn over the rest.
+fn compound(
+    s: &Compound,
+    laid: &Layout,
+    x: f64,
+    y: f64,
+    fine: f64,
+    veins: Option<&Venation>,
+    margins: &[Margin],
+) -> Paint {
     let p = (x, y);
-    // (base, unit direction, length)
-    let mut leaflets = Vec::with_capacity(usize::try_from(pairs).unwrap_or(0) * 2 + 1);
-    leaflets.push(((0.0, top), (0.0, 1.0), leaflet * 0.98));
-    let angle = math::radians(62.0);
-    for j in 0..pairs {
-        let at = s.petiole + (top - s.petiole) * (f64::from(j) + 0.5) / f64::from(pairs);
-        let length = leaflet * (0.82 + 0.18 * (f64::from(j) + 0.5) / f64::from(pairs));
-        for side in [1.0, -1.0] {
-            leaflets.push((
-                (0.0, at),
-                (side * math::sin(angle), math::cos(angle)),
-                length,
-            ));
-        }
-    }
-    for (start, direction, length) in leaflets {
-        let (along, across) = local(p, start, direction);
-        let t = along / length;
-        if !(0.0..=1.0).contains(&t) {
+    let mut wing = None;
+    for axis in &laid.axes {
+        let offset = (axis.to.0 - axis.from.0, axis.to.1 - axis.from.1);
+        let length = hypot(offset.0, offset.1);
+        if length <= 0.0 {
             continue;
         }
-        let width = leaflet_width(s, length, t);
+        let (along, across) = local(p, axis.from, (offset.0 / length, offset.1 / length));
+        if along < 0.0 || along >= length {
+            continue;
+        }
+        let half = if axis.order == 0 { fine } else { 0.75 * fine };
+        if across.abs() < half {
+            return Paint::solid(0.9, 1.0);
+        }
+        let reach = axis.wing * (1.0 - 0.7 * along / length);
+        if across.abs() < reach {
+            wing = Some(across.abs() / reach);
+        }
+    }
+    let form = &laid.form;
+    for leaflet in &laid.leaflets {
+        let length = leaflet.length;
+        let (along, across) = local(p, leaflet.base, leaflet.direction);
+        if !(0.0..=length).contains(&along) {
+            continue;
+        }
+        let stalk = form.petiolule * length;
+        if along < stalk {
+            if across.abs() < 0.6 * fine {
+                return Paint::solid(0.9, 1.0);
+            }
+            continue;
+        }
+        let blade = length - stalk;
+        let t = (along - stalk) / blade;
+        let width = leaflet_width(s, form, blade, t, margins.get(usize::from(across < 0.0)));
         if across.abs() < width {
+            // A leaflet too small to show its veins is drawn plain.
+            if blade < 12.0 * fine {
+                return Paint::solid(0.92 + 0.08 * across.abs() / width.max(1e-6), 0.0);
+            }
             if t < 0.95 && across.abs() < fine * 0.6 {
                 return Paint::solid(1.15, 0.4);
             }
             return Paint::solid(
                 0.92 + 0.08 * across.abs() / width.max(1e-6)
-                    + grown(veins, across / length, t, length, || {
-                        side_veins(along, across, length / 7.0, math::radians(55.0))
+                    + grown(veins, across / blade, t, blade, || {
+                        side_veins(along - stalk, across, blade / 7.0, math::radians(55.0))
                     }),
                 0.0,
             );
         }
     }
-    Paint::EMPTY
+    wing.map_or(Paint::EMPTY, |share| Paint::solid(0.92 + 0.08 * share, 0.0))
 }
 
 /// A leafy shoot: a twig in the accent colour with simple leaves
@@ -1342,7 +1596,14 @@ fn compound(s: &Compound, x: f64, y: f64, fine: f64, veins: Option<&Venation>) -
 /// one leaf continuing the twig at its tip. Side leaves are largest in the
 /// shoot's middle; each is turned a little at random and drawn a little
 /// lighter or darker, so that overlapping leaves stay apart.
-fn sprig(s: &Sprig, x: f64, y: f64, fine: f64, veins: Option<&Venation>) -> Paint {
+fn sprig(
+    s: &Sprig,
+    x: f64,
+    y: f64,
+    fine: f64,
+    veins: Option<&Venation>,
+    margins: &[Margin],
+) -> Paint {
     let half = s.aspect() * 0.5;
     let longest = s.leaf_length();
     let top = 1.0 - longest;
@@ -1384,7 +1645,7 @@ fn sprig(s: &Sprig, x: f64, y: f64, fine: f64, veins: Option<&Venation>) -> Pain
         }
         let blade = length - stalk;
         let t = (along - stalk) / blade.max(1e-6);
-        let width = sprig_width(s, blade, t);
+        let width = sprig_width(s, blade, t, margins.get(usize::from(across < 0.0)));
         if across.abs() >= width {
             continue;
         }
@@ -1539,44 +1800,27 @@ fn flower(s: &Flower, x: f64, y: f64) -> Paint {
     Paint::solid(0.88 + 0.16 * u + vein, (1.0 - u / 0.35).max(0.0) * 0.5)
 }
 
-/// A head of ray and disc flowers seen face on: a disc in the accent colour
-/// ringed by strap-shaped rays.
-fn head(s: &Head, x: f64, y: f64) -> Paint {
-    let r = hypot(x, y);
-    let disc = s.disc * BLOOM;
-    if r < disc {
-        // Disc florets packed in a sunflower spiral.
-        let dot = spiral_dots(x, y, disc, 60);
-        return Paint::solid(
-            if dot < 0.4 { 1.1 } else { 0.78 } * (0.85 + 0.15 * r / disc),
-            1.0,
-        );
+/// A flower head seen face on, `BLOOM` its radius (`crate::capitula`): its
+/// florets on the disc, rays or straps round it and the rim of its
+/// involucre, in `colours`, its look's colour and accent.
+fn head(s: &Head, colours: Colours, x: f64, y: f64) -> Paint {
+    let painted = crate::capitula::paint(s, colours, x / BLOOM, y / BLOOM);
+    Paint {
+        cover: painted.cover,
+        bright: painted.bright,
+        accent: painted.accent,
     }
-    if s.rays == 0 {
-        return Paint::EMPTY;
+}
+
+/// A spikelet seen square to its bracts' plane (`crate::spikelets`), at
+/// `(x, y)` in shares of its length.
+fn spikelet(s: &crate::looks::Spikelet, x: f64, y: f64, fine: f64) -> Paint {
+    let painted = crate::spikelets::paint(s, x, y, fine);
+    Paint {
+        cover: painted.cover,
+        bright: painted.bright,
+        accent: painted.accent,
     }
-    let (along, across) = petal_frame(x, y, s.rays);
-    let start = disc * 0.85;
-    let u = (along - start) / (BLOOM - start);
-    if !(0.0..=1.0).contains(&u) {
-        return Paint::EMPTY;
-    }
-    let mut width = BLOOM * math::sin(PI / f64::from(s.rays)) * s.ray_width * (1.0 - 0.2 * u);
-    if u > 0.85 {
-        width *= math::sqrt((1.0 - ((u - 0.85) / 0.15).powi(2)).max(0.0));
-    }
-    if across.abs() >= width {
-        return Paint::EMPTY;
-    }
-    let groove = if across.abs() < width * 0.12 {
-        -0.06
-    } else {
-        0.0
-    };
-    Paint::solid(
-        0.94 + 0.1 * (1.0 - across.abs() / width.max(1e-6)) + groove,
-        0.0,
-    )
 }
 
 /// A flat-topped cluster of small flowers seen from above: florets packed
@@ -1930,9 +2174,12 @@ fn one_of_a_kind(s: &Fruit, x: f64, y: f64, fine: f64) -> Paint {
 pub(crate) struct ClusterCard {
     units: Vec<CardUnit>,
     stalks: Vec<CardStalk>,
-    /// The looks of units in stages of their own: each its shape and how
-    /// its colour and its accent are made of the card's two colours.
-    looks: Vec<Option<(Shape, [f64; 4])>>,
+    /// The looks of units in stages of their own: each its shape, how its
+    /// colour and its accent are made of the card's two colours, and those
+    /// two colours themselves.
+    looks: Vec<Option<StageCard>>,
+    /// The look's own colour and accent.
+    colours: Colours,
     /// Each unit's pedicel's paint.
     pedicels: Vec<Paint>,
     /// Lowest corner of the grid, its cells' size and how many a side.
@@ -1944,18 +2191,27 @@ pub(crate) struct ClusterCard {
     fine: f64,
 }
 
+/// A stage's look on a cluster's card (`ClusterCard::looks`).
+struct StageCard {
+    shape: Shape,
+    fit: [f64; 4],
+    colours: Colours,
+}
+
 /// A unit on a cluster's card, in card units, with its depth toward the
 /// viewer (larger in front), and its stage's look (`ClusterCard::looks`)
 /// where it is in a stage of its own.
 enum CardUnit {
-    /// A fruit or a bud: its base, its direction (not unit-length once
-    /// projected), length and width over length, its pedicel from
-    /// `attach`, and whether it is unripe.
+    /// A fruit, a bud or a spikelet: its base, its direction (not
+    /// unit-length once projected), length, width over length and how far
+    /// it reaches along its direction in its lengths (a spikelet's awns),
+    /// its pedicel from `attach`, and whether it is unripe.
     Fruit {
         base: crate::math::Vec3,
         direction: crate::math::Vec3,
         length: f64,
         width: f64,
+        reach: f64,
         attach: crate::math::Vec3,
         unripe: bool,
         look: Option<usize>,
@@ -2008,10 +2264,7 @@ impl ClusterCard {
     /// The card of `cluster`, drawn in a look's `colours`, its colour and
     /// its accent.
     #[allow(clippy::too_many_lines)]
-    pub(crate) fn new(
-        cluster: &crate::clusters::ClusterLook,
-        colours: ([f32; 3], [f32; 3]),
-    ) -> Self {
+    pub(crate) fn new(cluster: &crate::clusters::ClusterLook, colours: Colours) -> Self {
         use crate::math::Vec3;
         let frame = cluster.card;
         let laid = cluster.layout(0.0, 0);
@@ -2067,7 +2320,11 @@ impl ClusterCard {
                         look.as_ref().map(|look| {
                             let (a, b) = crate::clusters::blend(look.colour, slots);
                             let (c, d) = crate::clusters::blend(look.accent, slots);
-                            (look.shape.clone(), [a, b, c, d])
+                            StageCard {
+                                shape: look.shape.clone(),
+                                fit: [a, b, c, d],
+                                colours: (look.colour, look.accent),
+                            }
                         })
                     })
                     .collect()
@@ -2099,7 +2356,8 @@ impl ClusterCard {
                         base,
                         direction: turn(p.direction),
                         length: p.length * size / length,
-                        width: unit.width(),
+                        width: unit.across(),
+                        reach: unit.reach(),
                         attach,
                         unripe,
                         look,
@@ -2161,9 +2419,10 @@ impl ClusterCard {
                     direction,
                     length,
                     width,
+                    reach,
                     ..
                 } => {
-                    let tip = *base + *direction * *length;
+                    let tip = *base + *direction * (*length * reach);
                     let pad = (*length * width * 0.5).max(fine) + *length * 0.05 + fine;
                     (
                         (base.x.min(tip.x) - pad, base.y.min(tip.y) - pad),
@@ -2226,6 +2485,7 @@ impl ClusterCard {
             units,
             stalks,
             looks,
+            colours,
             pedicels,
             low,
             cell,
@@ -2242,9 +2502,9 @@ impl ClusterCard {
         &'a self,
         look: Option<usize>,
         own: &'a Shape,
-    ) -> (&'a Shape, impl Fn(Paint) -> Paint) {
+    ) -> (&'a Shape, Colours, impl Fn(Paint) -> Paint) {
         let stage = look.and_then(|index| self.looks.get(index)?.as_ref());
-        let fit = stage.map(|(_, fit)| *fit);
+        let fit = stage.map(|stage| stage.fit);
         let refit = move |paint: Paint| match fit {
             Some(fit) if fit != [1.0, 0.0, 0.0, 1.0] => {
                 let g = paint.accent;
@@ -2259,7 +2519,11 @@ impl ClusterCard {
             }
             _ => paint,
         };
-        (stage.map_or(own, |(shape, _)| shape), refit)
+        (
+            stage.map_or(own, |stage| &stage.shape),
+            stage.map_or(self.colours, |stage| stage.colours),
+            refit,
+        )
     }
 
     /// The point `x`, `y` of the card, its units drawn with `shape`.
@@ -2318,19 +2582,27 @@ impl ClusterCard {
                             look,
                             ..
                         } => {
-                            let (shape, refit) = self.in_look(*look, shape);
-                            let Shape::Fruit(s) = shape else {
-                                continue;
+                            let (shape, _, refit) = self.in_look(*look, shape);
+                            let mut paint = match shape {
+                                Shape::Fruit(s) => one_fruit(
+                                    s,
+                                    (base.x, base.y),
+                                    (direction.x, direction.y),
+                                    *length,
+                                    x,
+                                    y,
+                                    fine,
+                                ),
+                                Shape::Spikelet(s) => one_spikelet(
+                                    s,
+                                    (base.x, base.y),
+                                    (direction.x, direction.y),
+                                    *length,
+                                    (x, y),
+                                    fine,
+                                ),
+                                _ => continue,
                             };
-                            let mut paint = one_fruit(
-                                s,
-                                (base.x, base.y),
-                                (direction.x, direction.y),
-                                *length,
-                                x,
-                                y,
-                                fine,
-                            );
                             if *unripe {
                                 paint.accent = 1.0;
                             }
@@ -2344,7 +2616,7 @@ impl ClusterCard {
                             look,
                             ..
                         } => {
-                            let (shape, refit) = self.in_look(*look, shape);
+                            let (shape, colours, refit) = self.in_look(*look, shape);
                             let (dx, dy) = (x - centre.x, y - centre.y);
                             let (u, v) = (
                                 inverse[0] * dx + inverse[1] * dy,
@@ -2355,7 +2627,7 @@ impl ClusterCard {
                             }
                             let paint = match shape {
                                 Shape::Flower(s) => flower(s, u * BLOOM, v * BLOOM),
-                                Shape::Head(s) => head(s, u * BLOOM, v * BLOOM),
+                                Shape::Head(s) => head(s, colours, u * BLOOM, v * BLOOM),
                                 _ => continue,
                             };
                             consider(centre.z + a.z * u + b.z * v, refit(paint));
@@ -2367,6 +2639,32 @@ impl ClusterCard {
         }
         best.map_or(Paint::EMPTY, |(_, paint)| paint)
     }
+}
+
+/// One spikelet at card point `p`, its base, direction and length as the
+/// card sees them: seen square to its bracts' plane, its length along its
+/// projected axis, foreshortened as it leans toward or away from the card.
+fn one_spikelet(
+    s: &crate::looks::Spikelet,
+    base: (f64, f64),
+    direction: (f64, f64),
+    length: f64,
+    p: (f64, f64),
+    fine: f64,
+) -> Paint {
+    let projected = hypot(direction.0, direction.1).max(0.2);
+    let (along, across) = (
+        (direction.0 / projected, direction.1 / projected),
+        (-direction.1 / projected, direction.0 / projected),
+    );
+    let (dx, dy) = (p.0 - base.0, p.1 - base.1);
+    let scale = length.max(1e-9);
+    spikelet(
+        s,
+        (dx * across.0 + dy * across.1) / scale,
+        (dx * along.0 + dy * along.1) / (scale * projected),
+        fine / scale,
+    )
 }
 
 /// One fruit at card point `(x, y)`, its base, direction and length as the
@@ -2681,9 +2979,11 @@ mod tests {
                     | Shape::Compound(_)
                     | Shape::Sprig(_)
             );
-            let veins = grown_veins(&shape);
-            assert_eq!(veins.is_some(), leaf, "{shape:?}");
-            let Some(veins) = veins else { continue };
+            let grew = grow_leaf(&shape);
+            assert_eq!(grew.is_some(), leaf, "{shape:?}");
+            let Some(GrownLeaf { veins, .. }) = grew else {
+                continue;
+            };
             assert!(
                 veins.segments().len() > 40,
                 "{shape:?}: {}",
@@ -2707,24 +3007,67 @@ mod tests {
     }
 
     #[test]
-    fn a_vein_runs_to_every_tooth() {
-        let s = Simple {
-            teeth: 14,
-            ..Simple::default()
-        };
-        let length = 1.0 - s.petiole;
-        let fade =
-            |t: f64| math::smoothstep(0.04, 0.18, t) * (1.0 - math::smoothstep(0.88, 1.0, t));
-        let tips = tooth_tips(s.teeth, 0.0, |t| simple_width(&s, length, t) / length, fade);
-        assert!(tips.len() >= 16, "{}", tips.len());
-        let segments = grown_veins(&Shape::Simple(s)).unwrap().segments();
-        for tip in tips {
-            let reach = segments
-                .iter()
-                .map(|&(_, b, _)| (b.0 - tip.0).hypot(b.1 - tip.1))
-                .fold(f64::INFINITY, f64::min);
-            assert!(reach < 0.07, "{tip:?}: {reach}");
+    fn a_vein_runs_to_every_tooth_and_the_tooth_leans_its_way() {
+        let shapes = [
+            Shape::Simple(Simple {
+                teeth: 14,
+                ..Simple::default()
+            }),
+            Shape::Sprig(Sprig {
+                teeth: 4,
+                round: 0.8,
+                tooth_depth: 0.2,
+                ..Sprig::default()
+            }),
+            Shape::Lobed(Lobed::default()),
+            Shape::Compound(Compound {
+                teeth: 6,
+                ..Compound::default()
+            }),
+        ];
+        for shape in shapes {
+            let leaf = grow_leaf(&shape).unwrap();
+            let count = match &shape {
+                Shape::Simple(s) => s.teeth,
+                Shape::Sprig(s) => s.teeth,
+                Shape::Lobed(s) => s.lobes,
+                Shape::Compound(s) => s.teeth,
+                _ => unreachable!(),
+            };
+            assert_eq!(leaf.margins.len(), 2);
+            let mut tips = 0;
+            for margin in &leaf.margins {
+                let found = u32::try_from(margin.apices.len()).unwrap();
+                assert!(found.abs_diff(count) <= 1, "{shape:?}: {found} of {count}");
+                tips += margin.apices.len();
+                // Veins run forward into small teeth, on the whole, and
+                // out into deep lobes.
+                #[allow(clippy::cast_precision_loss)]
+                let mean = margin.apices.iter().map(|apex| apex.lean).sum::<f64>()
+                    / margin.apices.len().max(1) as f64;
+                if matches!(shape, Shape::Simple(_) | Shape::Compound(_)) {
+                    assert!(mean > 0.3, "{shape:?}: {mean}");
+                }
+            }
+            // Every tooth's tip has a vein that reached it.
+            let headings = leaf.veins.tip_headings();
+            assert_eq!(headings.len(), tips);
+            assert!(
+                headings.iter().all(Option::is_some),
+                "{shape:?}: {headings:?}"
+            );
         }
+        // Each lobe of a palmate leaf has two margins, its teeth fed too.
+        let leaf = grow_leaf(&Shape::Palmate(Palmate::default())).unwrap();
+        assert_eq!(leaf.margins.len(), 10);
+        assert!(leaf.margins.iter().all(|margin| margin.apices.len() == 2));
+        let fed = leaf
+            .veins
+            .tip_headings()
+            .iter()
+            .filter(|heading| heading.is_some())
+            .count();
+        assert!(fed >= 18, "{fed} of 20");
     }
 
     /// A blade with an outline is as wide as its points say, its widest
@@ -2746,11 +3089,14 @@ mod tests {
             ..Simple::default()
         };
         for [u, w] in &oblong {
-            assert!((simple_width(&s, 2.0, *u) - 0.4 * w).abs() < 1e-12, "{u}");
+            assert!(
+                (simple_width(&s, 2.0, *u, None) - 0.4 * w).abs() < 1e-12,
+                "{u}"
+            );
         }
         for k in 20..=80 {
             let t = f64::from(k) / 100.0;
-            assert!((simple_width(&s, 2.0, t) - 0.4).abs() < 1e-12, "{t}");
+            assert!((simple_width(&s, 2.0, t, None) - 0.4).abs() < 1e-12, "{t}");
         }
         // Points that never reach 1 are drawn to the card's width.
         let half = Sprig {
@@ -2758,12 +3104,12 @@ mod tests {
             outline: Some(oblong.iter().map(|&[u, w]| [u, w / 2.0]).collect()),
             ..Sprig::default()
         };
-        assert!((sprig_width(&half, 2.0, 0.5) - 0.4).abs() < 1e-12);
+        assert!((sprig_width(&half, 2.0, 0.5, None) - 0.4).abs() < 1e-12);
         let plain = Simple::default();
         for k in 0..=10 {
             let t = f64::from(k) / 10.0;
             let drawn = plain.width * 0.5 * blade_profile(t, plain.widest, plain.base, plain.tip);
-            assert_eq!(simple_width(&plain, 1.0, t), drawn, "{t}");
+            assert_eq!(simple_width(&plain, 1.0, t, None), drawn, "{t}");
         }
         // A card without an outline grows the veins it grew before cards
         // had one.

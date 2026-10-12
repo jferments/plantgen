@@ -50,7 +50,7 @@
       "bloom_age": 2,
       "bloom_size": 0.08,
       "bloom_angle": 80,
-      "leaf_area": 0.33,
+      "leaf_area": 0.412,
       "bloom_area": 0.521
     }
   },
@@ -70,13 +70,7 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": {
-          "template": "compound",
-          "leaflets": 5,
-          "leaflet_width": 0.65,
-          "teeth": 9,
-          "petiole": 0.15
-        }
+        "shape": { "template": "compound", "teeth": 9, "petiole": 0.35, "spread": 230, "lowest": 0.65, "petiolule": 0.1 }
       },
       "bloom": {
         "shape": {
@@ -129,6 +123,13 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "leaf_division": "compound",
+    "division_pattern": "palmate",
+    "division_order": 1,
+    "leaflets": {"min": 3, "max": 5, "typical": 5},
+    "leaf_shape": {"obovate": "often", "elliptic": "often"}
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -184,6 +185,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Its flowers drawn one by one (spec rework L1b): white to pale pink flowers 2 to 2.5 cm across with many stamens, drawn opening together. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "osu-landscape-plants",
+      "note": "Oregon State University's Landscape Plants page on the species, as search results quote it (the page itself was not read): leaves alternate, palmately compound, with 3 to 5 obovate to elliptic leaflets, each 4 to 8 cm long, their margins irregularly serrate, grey-green and softly hairy beneath. Five on the first-year canes the model draws."
+    },
+    "appearance.organs.leaf.shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The leaf drawn as a palmately compound leaf (spec rework P4), its leaflets counted, set and shaped from its characters by the rules at the flowering plants and the plants; before, five leaflets stood along a short rachis. By eye from photographs: the outer pair turned back beside the petiole (230 degrees between them) and 0.65 as long as the end leaflet, each leaflet on a short stalk."
     }
   },
   "provenance": {

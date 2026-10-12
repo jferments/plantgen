@@ -292,6 +292,7 @@ mod tests {
             born: 0.0,
             shed: None,
             light: 1.0,
+            within: None,
         }
     }
 
@@ -308,6 +309,7 @@ mod tests {
             shed: None,
             body: 0,
             left: Vec3::ZERO,
+            within: None,
         }
     }
 
@@ -354,6 +356,7 @@ mod tests {
             height: 7.5,
             segments: vec![stem(6.0)],
             organs,
+            structures: Vec::new(),
         }
     }
 

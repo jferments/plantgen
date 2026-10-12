@@ -6,8 +6,9 @@
 //! header     = "lsystem" name integer [ "extends" name ] ";"
 //! statement  = "param" name "=" expr ";"
 //!            | "module" name [ "(" names ")" ] [ "queries" names ] ";"
-//!            | "organ" name kind [ "area" expr ] ";"
+//!            | "organ" name kind [ "as" name ] [ "area" expr ] ";"
 //!            | "body" name ";"
+//!            | "structure" name name ";"
 //!            | "tool" name "@" integer "{" [ setting { "," setting } [ "," ] ] "}" ";"
 //!            | "axiom" { item } ";"
 //!            | ( "rule" | "decompose" | "interpret" ) name [ "(" names ")" ]
@@ -36,7 +37,7 @@
 use super::ProgramError;
 use super::ast::{
     BinaryOp, BodyDecl, Expr, ModuleCall, ModuleDecl, OrganDecl, ParamDecl, ProgramAst, Rule,
-    RuleKind, ToolDecl, UnaryOp,
+    RuleKind, StructureDecl, ToolDecl, UnaryOp,
 };
 use super::lexer::{Span, Spanned, Token, tokenize};
 
@@ -201,6 +202,7 @@ impl Parser {
             modules: Vec::new(),
             organs: Vec::new(),
             bodies: Vec::new(),
+            structures: Vec::new(),
             tools: Vec::new(),
             axiom: Vec::new(),
             axiom_span: Span::default(),
@@ -217,6 +219,7 @@ impl Parser {
                 "module" => ast.modules.push(self.module(span)?),
                 "organ" => ast.organs.push(self.organ(span)?),
                 "body" => ast.bodies.push(self.body(span)?),
+                "structure" => ast.structures.push(self.structure(span)?),
                 "tool" => ast.tools.push(self.tool(span)?),
                 "axiom" => {
                     if have_axiom {
@@ -237,7 +240,7 @@ impl Parser {
                         span,
                         message: format!(
                             "unknown statement `{other}`; expected param, module, organ, \
-                             body, tool, axiom, rule, decompose or interpret"
+                             body, structure, tool, axiom, rule, decompose or interpret"
                         ),
                     });
                 }
@@ -297,6 +300,11 @@ impl Parser {
     fn organ(&mut self, span: Span) -> Parsed<OrganDecl> {
         let (name, _) = self.name("an organ name")?;
         let kind = self.name("an organ kind (foliage, leaf, flower, fruit or cone)")?;
+        let term = if self.keyword("as") {
+            Some(self.name("what the organ is (an organ of the vocabulary, or piece)")?)
+        } else {
+            None
+        };
         let area = if self.keyword("area") {
             Some(self.expr()?)
         } else {
@@ -306,9 +314,17 @@ impl Parser {
         Ok(OrganDecl {
             name,
             kind,
+            term,
             area,
             span,
         })
+    }
+
+    fn structure(&mut self, span: Span) -> Parsed<StructureDecl> {
+        let (name, _) = self.name("a structure name")?;
+        let term = self.name("what the structure is (an organ of the vocabulary)")?;
+        self.expect(&Token::Semicolon, "after the structure declaration")?;
+        Ok(StructureDecl { name, term, span })
     }
 
     fn body(&mut self, span: Span) -> Parsed<BodyDecl> {

@@ -6,18 +6,20 @@
 //! reads the look's own template parameters, so every species gains its
 //! solids without new data:
 //!
-//! - A **flower** ([`Shape::Flower`], or a daisy head, [`Shape::Head`]) is
-//!   a floral diagram: `n` petals (the rays of a head) evenly round the
-//!   flower's axis $`\mathbf a`$ (the organ's heading), each a thin solid
-//!   leaf (`crate::leaves`) from the rim of the centre outward, raised by
-//!   the cup $`\gamma`$ from the plane square to the axis and curled back
-//!   by the curl over its length; a domed centre (a head's disc) in the
-//!   accent colour; a fused tube when [`FlowerForm::tube`] is set; and
+//! - A **flower** ([`Shape::Flower`]) is a floral diagram: `n` petals
+//!   evenly round the flower's axis $`\mathbf a`$ (the organ's heading),
+//!   each a thin solid leaf (`crate::leaves`) from the rim of the centre
+//!   outward, raised by the cup $`\gamma`$ from the plane square to the
+//!   axis and curled back by the curl over its length; a domed centre in
+//!   the accent colour; a fused tube when [`FlowerForm::tube`] is set; and
 //!   stamens, thin cones rising round the centre. With the flower's
 //!   radius $`R`$ (half the organ's size) and the template's centre share
 //!   $`c`$, petals start at $`r_0 = 0.6\,c R`$ and reach $`R`$, so a petal is
 //!   $`\ell = R - r_0`$ long and $`\min(\ell,\ w\,\pi (r_0 + R) / n)`$ wide
 //!   for the template's petal width $`w`$.
+//! - A **head** ([`Shape::Head`]) is a capitulum (`crate::capitula`): its
+//!   phyllaries, receptacle and florets laid out from the template, its
+//!   rays raised by the cup and curled by the curl as petals are.
 //! - A **fruit** or bud ([`Shape::Fruit`] with `cone` below a half) is an
 //!   ellipsoid along the organ's heading, its length the organ's size and
 //!   its width the template's aspect times that.
@@ -42,10 +44,13 @@ use crate::rng::{mix64, unit};
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case", deny_unknown_fields)]
 pub enum Form {
-    /// A flower or a daisy head.
+    /// A flower, or a flower head (`crate::capitula`).
     Flower(FlowerForm),
     /// A fruit, a bud or a cone.
     Fruit(FruitForm),
+    /// A grass or sedge spikelet (`crate::spikelets`), alone or as a
+    /// cluster's unit.
+    Spikelet(SpikeletForm),
     /// A thorn (plant forms F5): a slender cone along the organ, as wide at
     /// its foot as the card's aspect allows, on the nearest level.
     Thorn,
@@ -86,6 +91,20 @@ impl Default for FlowerForm {
             stamen_length: 0.35,
             levels: 1,
         }
+    }
+}
+
+/// How a spikelet is drawn beyond its template.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct SpikeletForm {
+    /// Levels, from the nearest, drawn solid: 1 or 2.
+    pub levels: u8,
+}
+
+impl Default for SpikeletForm {
+    fn default() -> Self {
+        Self { levels: 1 }
     }
 }
 
@@ -165,6 +184,7 @@ impl Form {
                 ..FlowerForm::default()
             }),
             Shape::Fruit(_) => Self::Fruit(FruitForm::default()),
+            Shape::Spikelet(_) => Self::Spikelet(SpikeletForm::default()),
             Shape::Needles(_) => Self::Shoot,
             _ => Self::Card,
         }
@@ -179,6 +199,7 @@ impl Form {
         match self {
             Self::Flower(_) => matches!(shape, Shape::Flower(_) | Shape::Head(_)),
             Self::Fruit(_) => matches!(shape, Shape::Fruit(_)),
+            Self::Spikelet(_) => matches!(shape, Shape::Spikelet(_)),
             Self::Shoot => matches!(shape, Shape::Needles(_)),
             Self::Thorn | Self::Card => true,
         }
@@ -195,6 +216,7 @@ impl Form {
             let (form, needs) = match self {
                 Self::Flower(_) => ("flower", "a flower or a head"),
                 Self::Fruit(_) => ("fruit", "a fruit"),
+                Self::Spikelet(_) => ("spikelet", "a spikelet"),
                 Self::Shoot | Self::Thorn | Self::Card => ("shoot", "needles"),
             };
             return Err(format!(
@@ -215,6 +237,9 @@ impl Form {
                 within("form fruit scales", f64::from(form.scales), 0.0, 200.0)?;
                 within("form fruit levels", f64::from(form.levels), 0.0, 2.0)
             }
+            Self::Spikelet(form) => {
+                within("form spikelet levels", f64::from(form.levels), 0.0, 2.0)
+            }
             Self::Thorn | Self::Shoot | Self::Card => Ok(()),
         }
     }
@@ -225,6 +250,7 @@ impl Form {
         let levels = match self {
             Self::Flower(form) => form.levels,
             Self::Fruit(form) => form.levels,
+            Self::Spikelet(form) => form.levels,
             Self::Thorn | Self::Shoot => 1,
             Self::Card => 0,
         };
@@ -241,9 +267,7 @@ fn triangles_per_organ(look: &Look) -> usize {
         (Form::Flower(form), Shape::Flower(flower)) => {
             flower.petals as usize * 24 + DOME_TRIANGLES + form.stamens as usize * 3
         }
-        (Form::Flower(form), Shape::Head(head)) => {
-            head.rays as usize * 24 + DOME_TRIANGLES + form.stamens as usize * 3
-        }
+        (Form::Flower(form), Shape::Head(head)) => crate::capitula::triangles(head, form, 0),
         (Form::Fruit(form), Shape::Fruit(fruit)) if !crate::fruit::is_single(fruit) => {
             crate::fruit::triangles(form, fruit)
         }
@@ -251,6 +275,7 @@ fn triangles_per_organ(look: &Look) -> usize {
             ELLIPSOID_TRIANGLES + scales(form, fruit.aspect) as usize * WEDGE_TRIANGLES
         }
         (Form::Fruit(_), _) => ELLIPSOID_TRIANGLES,
+        (Form::Spikelet(_), Shape::Spikelet(spikelet)) => crate::spikelets::triangles(spikelet, 0),
         (Form::Thorn, _) => THORN_TRIANGLES,
         (Form::Shoot, Shape::Needles(needles)) => crate::shoots::triangles(needles, 0),
         _ => 0,
@@ -353,20 +378,25 @@ pub(crate) fn build_coarse(
                 );
             }
             (Form::Flower(form), Shape::Head(head)) => {
-                let petals = Petals {
-                    count: head.rays.max(1),
-                    width: head.ray_width,
-                    centre: head.disc,
-                    pointed: 0.3,
-                };
-                draw_flower(
-                    organ,
-                    axis,
-                    side,
-                    form,
-                    &petals,
+                // The disc in the accent, the bracts in their own colour,
+                // both darkened with the organ.
+                let colours = crate::capitula::Colours::of(
+                    head,
                     painted,
-                    look.accent,
+                    with_shading(look.accent, look.colour, painted),
+                    (look.colour, painted),
+                );
+                crate::capitula::draw(
+                    head,
+                    form,
+                    crate::capitula::Frame {
+                        foot: organ.position,
+                        axis,
+                        side,
+                        radius: organ.size * 0.5,
+                    },
+                    unit(mix64(organ.id)) * std::f64::consts::TAU,
+                    colours,
                     part,
                     mesh,
                 );
@@ -389,6 +419,23 @@ pub(crate) fn build_coarse(
                 // darkened with the organ as its colour is.
                 let accent = with_shading(look.accent, look.colour, painted);
                 crate::fruit::draw(organ, axis, side, form, fruit, painted, accent, part, mesh);
+            }
+            (Form::Spikelet(_), Shape::Spikelet(spikelet)) => {
+                crate::spikelets::draw(
+                    spikelet,
+                    crate::capitula::Frame {
+                        foot: organ.position,
+                        axis,
+                        side,
+                        radius: organ.size,
+                    },
+                    crate::spikelets::Colours::of(
+                        painted,
+                        with_shading(look.accent, look.colour, painted),
+                    ),
+                    part,
+                    mesh,
+                );
             }
             (Form::Shoot, Shape::Needles(needles)) => {
                 // The axes in the accent colour, shaded with the organ.
@@ -830,6 +877,7 @@ mod tests {
             born: 2.0,
             shed: Some(3.0),
             light: 1.0,
+            within: None,
         }
     }
 
@@ -926,6 +974,7 @@ mod tests {
             height: 1.0,
             segments: Vec::new(),
             organs: vec![organ(0.03)],
+            structures: Vec::new(),
         };
         graph.organs[0].born = 0.0;
         graph.organs[0].shed = None;

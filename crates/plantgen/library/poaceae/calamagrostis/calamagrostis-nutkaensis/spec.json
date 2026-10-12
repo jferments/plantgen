@@ -33,7 +33,7 @@
       "blade_area": 0.036,
       "tip_area": 0.02,
       "thatch_area": 0.036,
-      "panicle_area": 0.168
+      "panicle_area": 0.12
     }
   },
   "growth": {
@@ -63,14 +63,23 @@
         "shade": [0.12, 0.1, 0.05]
       },
       "panicle": {
-        "shape": {
-          "template": "panicle",
-          "whorls": 10,
-          "branches": 3,
+        "shape": {"template": "spikelet"},
+        "inflorescence": {
+          "branches": 20,
+          "per_node": 2,
+          "size": 0.3,
           "spread": 15,
-          "spikelets": 8,
-          "aspect": 0.25,
-          "stalk": 0.05
+          "taper": 0.5,
+          "peduncle": 0.05,
+          "stalk": [0.38, 0.33, 0.3],
+          "branch": {
+            "kind": "raceme",
+            "flowers": 20,
+            "pedicel": 0.04,
+            "peduncle": 0.5,
+            "size": 0.075,
+            "spread": 20
+          }
         },
         "colour": [0.42, 0.33, 0.35],
         "accent": [0.4, 0.25, 0.35]
@@ -86,7 +95,38 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "inflorescence": "panicle",
+    "florets_per_spikelet": 1,
+    "spikelet_length_m": {"min": 0.0045, "max": 0.0065, "high": 0.008},
+    "glumes": 2,
+    "upper_glume_length_m": {"min": 0.005, "max": 0.007, "high": 0.0075},
+    "lemma_length_m": {"min": 0.004, "max": 0.0045, "low": 0.003, "high": 0.005},
+    "awns": true,
+    "awn_length_m": {"min": 0.001, "max": 0.003},
+    "awn_insertion": "dorsal"
+  },
   "evidence": {
+    "appearance.organs.panicle": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The panicle's layout, the model's choice after FNA (volume 24), as search results quote it (the page was not read): a contracted to somewhat loose panicle, its spikelets on the outer half of its branches. Drawn as 20 branches in pairs, close to the axis, each with about 20 spikelets on short stalks on its outer half. Colours by eye: purplish."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA's account of the species (volume 24), as search results quote it (the page itself was not read): panicles (8)12 to 23(33) cm, contracted to somewhat loose, erect to slightly nodding, the spikelets on the branches' outer half; spikelets 4.5 to 6.5(8) mm; lemmas (3)4 to 4.5(5) mm, a little shorter than the glumes; awns 1 to 3 mm, attached on the lower third to half of the lemma, not sticking out of the spikelet."
+    },
+    "traits.florets_per_spikelet": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "The Jepson eFlora's account of the genus, as search results quote it (the page itself was not read): one floret, the axis prolonged beyond it and hairy."
+    },
+    "traits.upper_glume_length_m": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "The Jepson eFlora's account of the species, as search results quote it (the page itself was not read): glumes 5 to 7(7.5) mm, smooth to rough on the keel."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
