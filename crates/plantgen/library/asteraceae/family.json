@@ -14,6 +14,54 @@
       "cypsela": "usually"
     }
   },
+  "forms": {
+    "forb": {
+      "generator": {
+        "program": "asteraceae"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The lineage's own program (growth plan G2.3a), on the herb base: it gives the values its species leave unset, which the herb program gave as defaults until then."
+        }
+      }
+    },
+    "shrub": {
+      "generator": {
+        "program": "broadleaf"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The program the authors chose to grow this taxon's shrub species (named in each species' spec until G2.3a moved it here)."
+        }
+      }
+    }
+  },
+  "evidence": {
+    "traits.inflorescence_unit": {
+      "evidence": "SourceInferred",
+      "source": "vicflora",
+      "note": "VicFlora's family description: the flowers sit packed on a shared receptacle in heads (capitula), each almost always ringed by an involucre of bracts."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "vicflora",
+      "note": "VicFlora's family description: leaves one or two to a node, rarely more; it names neither as the usual state."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "vicflora",
+      "note": "VicFlora's family description: the fruit is usually a cypsela (a one-seeded fruit from an inferior ovary), often topped by a pappus."
+    },
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws the daisy family's heads, a choice of the model's (spec rework P2): a head is laid out from its florets (`crate::capitula`), its phyllaries in rows round its foot, its receptacle domed as its shape says, its disc florets packed in a sunflower spiral and opening from the rim inward, rays round a radiate head, straps filling a ligulate one; an array of heads is a cluster of such heads (spec rework L1). Its size is its involucre's, as floras measure it, plus a ray on either side. The heights the shape words give the receptacle and the pappus lengths of crowns, scales and awns are the model's."
+    }
+  },
   "rules": {
     "appearance.organs.*.shape.kind": {
       "template": "head",
@@ -120,54 +168,6 @@
         }
       },
       "why": "A fruit in seed carries its pappus: bristles as long as the flora measures them for the disc's radius, which is about the involucre's; a crown, scales and awns, which floras seldom measure, a tenth, a quarter and a half of it."
-    }
-  },
-  "forms": {
-    "forb": {
-      "generator": {
-        "program": "herb"
-      },
-      "evidence": {
-        "generator.program": {
-          "evidence": "Authored",
-          "source": "plantgen-authors",
-          "note": "The program the authors chose to grow this taxon's forb species (named in each species' spec until G2.3a moved it here)."
-        }
-      }
-    },
-    "shrub": {
-      "generator": {
-        "program": "broadleaf"
-      },
-      "evidence": {
-        "generator.program": {
-          "evidence": "Authored",
-          "source": "plantgen-authors",
-          "note": "The program the authors chose to grow this taxon's shrub species (named in each species' spec until G2.3a moved it here)."
-        }
-      }
-    }
-  },
-  "evidence": {
-    "traits.inflorescence_unit": {
-      "evidence": "SourceInferred",
-      "source": "vicflora",
-      "note": "VicFlora's family description: the flowers sit packed on a shared receptacle in heads (capitula), each almost always ringed by an involucre of bracts."
-    },
-    "traits.leaf_arrangement": {
-      "evidence": "SourceInferred",
-      "source": "vicflora",
-      "note": "VicFlora's family description: leaves one or two to a node, rarely more; it names neither as the usual state."
-    },
-    "traits.fruit_type": {
-      "evidence": "SourceInferred",
-      "source": "vicflora",
-      "note": "VicFlora's family description: the fruit is usually a cypsela (a one-seeded fruit from an inferior ovary), often topped by a pappus."
-    },
-    "rules": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "How PlantGen draws the daisy family's heads, a choice of the model's (spec rework P2): a head is laid out from its florets (`crate::capitula`), its phyllaries in rows round its foot, its receptacle domed as its shape says, its disc florets packed in a sunflower spiral and opening from the rim inward, rays round a radiate head, straps filling a ligulate one; an array of heads is a cluster of such heads (spec rework L1). Its size is its involucre's, as floras measure it, plus a ray on either side. The heights the shape words give the receptacle and the pappus lengths of crowns, scales and awns are the model's."
     }
   }
 }
