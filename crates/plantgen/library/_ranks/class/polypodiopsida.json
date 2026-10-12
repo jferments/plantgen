@@ -19,6 +19,15 @@
       "rule": "leaf_width_m / (2 * (leaf_length_m + petiole_length_m))",
       "why": "A blade is as broad as its longest pair of pinnae reach out from the rachis, one each side; pinnae standing well out from the rachis reach nearly their whole length, and the program sizes them by the frond's length."
     },
+    "generator.params.pieces": {
+      "rule": "clamp(round(leaflets * (leaf_length_m + petiole_length_m) / (4 * leaf_length_m)), 4, 60)",
+      "why": "The program hangs two pairs of pinnae on each piece of the rachis above the stipe, so a frond with as many pinnae as its flora counts has a quarter as many blade pieces, and the stipe's pieces besides."
+    },
+    "appearance.organs.*.shape.width": {
+      "template": "simple",
+      "rule": "clamp(4 * leaf_length_m / (leaflets * leaf_width_m), 0.05, 1)",
+      "why": "A once-divided frond's pinnae stand side by side along its blade, each as broad as the gap from one pinna to the next, and as long as half the blade is wide."
+    },
     "generator.params.frond_life": {
       "map": {
         "leaf_habit": {

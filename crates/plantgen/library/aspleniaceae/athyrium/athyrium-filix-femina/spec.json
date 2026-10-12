@@ -79,14 +79,14 @@
   "tier": "procedural_proxy",
   "traits": {
     "rhizome_habit": {"erect": "usually", "ascending": "often"},
-    "division_order": {"min": 2, "max": 3},
+    "division_order": {"min": 2, "max": 3, "typical": 3},
     "leaf_shape": "lanceolate"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
-      "note": "Abrams's flora (vol. 1, 1923; ferns by Maxon): rhizome erect or ascending; fronds up to 2 m, erect and arching, on short stipes; blades lanceolate, narrowed at both ends, two or three times pinnate; sori under 1 mm, oblong to crescent- or horseshoe-shaped."
+      "note": "Abrams's flora (vol. 1, 1923; ferns by Maxon): rhizome erect or ascending; fronds up to 2 m, erect and arching, on short stipes; blades lanceolate, narrowed at both ends, two or three times pinnate, their segments toothed to cut again (so typically three); sori under 1 mm, oblong to crescent- or horseshoe-shaped."
     },
     "generator.params": {
       "evidence": "Authored",

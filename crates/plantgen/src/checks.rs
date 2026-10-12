@@ -17,8 +17,9 @@
 //! production turns another organ into (thatch, the dead blade). A leaf
 //! drawn as a structure of its own axis and the leaflets on it (a fern's
 //! frond) has its stipe, the axis below the lowest leaflet, its blade, the
-//! axis above, and its width, twice the farthest a leaflet reaches out
-//! from the axis. Heads,
+//! axis above, its width, twice the farthest a leaflet reaches out from
+//! the axis, and its leaflets (its pinnae, where they are drawn divided
+//! again), counted. Heads,
 //! spikelets, divided leaves and clusters measure their parts from their
 //! own layouts ([`crate::capitula::dimensions`],
 //! [`crate::spikelets::dimensions`], [`crate::divided::dimensions`],
@@ -1019,6 +1020,14 @@ fn frond_sizes(
     tally.add("leaf_length_m", id, 0, blade);
     tally.add("leaf_width_m", id, 0, width);
     tally.add("petiole_length_m", id, 0, stipe);
+    // Leaflets drawn as frond cards are the frond's pinnae, each divided
+    // again; drawn whole, they are its leaflets.
+    let divided = leaflets
+        .first()
+        .and_then(|organ| leaf_look(organ, looks))
+        .is_some_and(|(look, _)| matches!(look.shape, Shape::Frond(_) | Shape::Compound(_)));
+    let count = u32::try_from(leaflets.len()).unwrap_or(u32::MAX);
+    tally.count(if divided { "pinnae" } else { "leaflets" }, id, 0, count);
     tally.kind("division_pattern", "pinnate");
 }
 

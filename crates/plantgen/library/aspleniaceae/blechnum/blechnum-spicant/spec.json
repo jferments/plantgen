@@ -21,13 +21,12 @@
       "open_years": 0.6,
       "angle_spread": 8,
       "frond_radius": 0.0015,
-      "pieces": 16,
       "pinna_peak": 0.5,
       "pinna_base": 0.2,
       "pinna_tip": 0.3,
       "pinna_angle": 82,
       "pinna_lift": 5,
-      "pinna_area": 0.197,
+      "pinna_area": 0.216,
       "droop": 0.03,
       "droop_years": 2,
       "crowns": 1,
@@ -58,7 +57,6 @@
       "pinna": {
         "shape": {
           "template": "simple",
-          "width": 0.28,
           "widest": 0.4,
           "tip": 0.2,
           "base": 0.9,
@@ -85,6 +83,7 @@
     "division_pattern": "pinnate",
     "division_order": 1,
     "leaf_shape": {"linear": "usually", "oblanceolate": "often"},
+    "leaflets": {"min": 60, "max": 160},
     "leaf_length_m": {"min": 0.13, "max": 0.8},
     "leaf_width_m": {"min": 0.02, "max": 0.09},
     "petiole_length_m": {"min": 0.02, "max": 0.3}
