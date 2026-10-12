@@ -26,7 +26,8 @@
 //!
 //! A part mesh holds at most [`TRIANGLES`] triangles ([`SHOOT_TRIANGLES`]
 //! for a needle shoot, `crate::shoots`, and [`CLUSTER_TRIANGLES`] for a
-//! cluster, `crate::clusters`): a cluster or a shoot that would take more
+//! cluster, `crate::clusters`, or a flower head, `crate::capitula`, a
+//! cluster of florets): a cluster, a head or a shoot that would take more
 //! is drawn up to [`coarsest`] steps coarser, and a type that still does
 //! not fit keeps its cards.
 //!
@@ -53,8 +54,8 @@ pub const TRIANGLES: usize = 1024;
 /// of needles.
 pub const SHOOT_TRIANGLES: usize = 8192;
 
-/// Most triangles a cluster's part mesh holds: a cluster has dozens to
-/// hundreds of units.
+/// Most triangles a cluster's or a flower head's part mesh holds: a
+/// cluster has dozens to hundreds of units, a head as many florets.
 pub const CLUSTER_TRIANGLES: usize = 8192;
 
 /// A needle shoot's span over its needles' width (see the module).
@@ -121,7 +122,9 @@ pub fn part_meshes_within(looks: &[Look], share: f64) -> Vec<PartMesh> {
 pub fn cap(look: &Look) -> usize {
     match look.form {
         Form::Shoot => SHOOT_TRIANGLES,
-        _ if look.inflorescence.is_some() => CLUSTER_TRIANGLES,
+        _ if look.inflorescence.is_some() || matches!(look.shape, Shape::Head(_)) => {
+            CLUSTER_TRIANGLES
+        }
         _ => TRIANGLES,
     }
 }

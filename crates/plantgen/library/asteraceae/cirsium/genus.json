@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Cirsium",
+  "traits": {
+    "capitulum_kind": "discoid",
+    "receptacle_shape": {"flat": "often", "convex": "often"},
+    "pappus": "bristles"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "vicflora",
+      "note": "VicFlora's account of the genus, as quoted in search results (the page itself was not read): heads of tubular florets only; involucral bracts in several rows, unequal, overlapping, each ending in a spine; receptacle flat to convex, with bristle-like scales; pappus of several rows of plumose bristles joined in a ring at the base, falling as one."
+    }
+  }
+}

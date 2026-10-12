@@ -37,7 +37,7 @@
       "leaf_area": 0.235,
       "basal_area": 0.176,
       "basal_piece_area": 0.235,
-      "flower_area": 0.49,
+      "flower_area": 0.424,
       "bud_area": 0.89,
       "fruit_area": 0.89
     }
@@ -69,7 +69,7 @@
         "face_up": 0.5
       },
       "flower": {
-        "shape": { "template": "head", "rays": 30, "ray_width": 0.6, "disc": 0.25 },
+        "shape": { "template": "head", "ray_width": 0.9, "disc": 0.45 },
         "colour": [0.95, 0.82, 0.12],
         "accent": [0.9, 0.7, 0.1]
       }
@@ -84,6 +84,13 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "involucre_diameter_m": {"min": 0.01, "max": 0.02},
+    "involucre_height_m": {"min": 0.01, "max": 0.025},
+    "phyllaries": {"min": 20, "max": 30},
+    "pappus": "bristles",
+    "pappus_length_m": {"min": 0.01, "max": 0.012}
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -99,6 +106,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Colours chosen by eye: mid-green leaves; yellow heads."
+    },
+    "appearance.organs.flower": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The head's straps, the model's choice: its receptacle 0.45 of the open head's width, the straps reaching past the involucre as the flora's 10 to 15 mm florets do, each 0.9 as wide as its share of a ring, so they overlap."
     },
     "taxon": {
       "evidence": "Authored",
@@ -134,6 +146,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA's account of the species (Bogler, volume 19), as search results quote copies of its text (the pages themselves were not read): involucres cylindric or bell-shaped, 10 to 25 mm tall and 10 to 20 mm across; phyllaries 20 to 30, unequal; florets 10 to 15 mm, past the phyllaries at flowering; pappus of whitish bristles in two rows, the inner plumose, the longest 10 to 12 mm."
     }
   },
   "provenance": {

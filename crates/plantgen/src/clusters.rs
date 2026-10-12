@@ -1513,6 +1513,29 @@ fn draw_laid(
                 part,
                 mesh,
             ),
+            // A head reduced (`crate::capitula`), or from the FLAT step
+            // one hexagon as a flower is.
+            (Shape::Head(head), Form::Flower(form)) if part.coarse < FLAT => {
+                crate::capitula::draw_reduced(
+                    head,
+                    form,
+                    crate::capitula::Frame {
+                        foot: base,
+                        axis: direction,
+                        side: any_perpendicular(direction),
+                        radius: unit_length * 0.5,
+                    },
+                    spin,
+                    crate::capitula::Colours::of(
+                        head,
+                        shown.colour,
+                        shown.accent,
+                        (look.colour, colour),
+                    ),
+                    part,
+                    mesh,
+                );
+            }
             (Shape::Head(head), Form::Flower(form)) => floret(
                 &Petals {
                     count: head.rays,

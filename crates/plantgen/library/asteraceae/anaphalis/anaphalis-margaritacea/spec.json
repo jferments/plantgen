@@ -39,7 +39,7 @@
       "leaf_area": 0.092,
       "basal_area": 0.235,
       "basal_piece_area": 0.235,
-      "flower_area": 0.235,
+      "flower_area": 0.153,
       "bud_area": 0.89,
       "fruit_area": 0.89
     }
@@ -72,7 +72,7 @@
         }
       },
       "flower": {
-        "shape": { "template": "head", "rays": 14, "ray_width": 0.9, "disc": 0.45 },
+        "shape": { "template": "head", "disc": 0.5, "phyllaries": 40, "series": 5, "spread": 60, "bracts": [0.95, 0.95, 0.92] },
         "inflorescence": { "flowers": 40, "size": 0.11, "spread": 25, "peduncle": 0.2 },
         "colour": [0.95, 0.95, 0.9],
         "accent": [0.85, 0.75, 0.4]
@@ -89,7 +89,9 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "inflorescence": "corymb"
+    "inflorescence": "corymb",
+    "involucre_diameter_m": {"min": 0.006, "max": 0.008, "high": 0.01},
+    "involucre_height_m": {"min": 0.005, "max": 0.007}
   },
   "evidence": {
     "generator.params": {
@@ -150,7 +152,17 @@
     "appearance.organs.flower": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Its array drawn head by head (spec rework L1c): its kind from its characters, by the rule at the flowering plants; about 40 heads, by eye (floras say only that they are numerous), each about 9 mm across (involucres 6 to 8, to 10 mm wide, in the Flora of North America), its pearly white phyllaries drawn as a head's rays round a yellow disc of florets. From floras and extension pages as quoted in search results; the pages themselves were not read."
+      "note": "Its array drawn head by head (spec rework L1c): its kind from its characters, by the rule at the flowering plants; about 40 heads, by eye (floras say only that they are numerous), each about 9 mm across (involucres 6 to 8, to 10 mm wide, in the Flora of North America), its pearly white phyllaries drawn as phyllaries (spec rework P2): about 40 in 5 rows, by eye, their upper halves turned 60 degrees outward round the yellowish florets as the heads open in photographs, the disc half the head's width. From floras and extension pages as quoted in search results; the pages themselves were not read."
+    },
+    "traits.involucre_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA's account of the species (Nesom, volume 19), as search results quote copies of its text (the pages themselves were not read): involucres 5 to 7 mm tall and 6 to 8 mm across, rarely 10; phyllaries ovate to nearly linear, their tips white and opaque."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA's account of the species (Nesom, volume 19), as search results quote copies of its text (the pages themselves were not read): involucres 5 to 7 mm tall and 6 to 8 mm across, rarely 10."
     }
   },
   "provenance": {

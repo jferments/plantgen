@@ -9,15 +9,55 @@
     "fruit_type": {"cypsela": "usually"}
   },
   "rules": {
-    "appearance.organs.flower.shape.rays": {
+    "appearance.organs.*.shape.kind": {
       "template": "head",
-      "rule": "round(ray_florets)",
-      "why": "A head card draws each ray floret of a radiate head as a ray."
+      "map": {"capitulum_kind": {"radiate": "radiate", "discoid": "discoid", "disciform": "discoid", "liguliflorous": "ligulate"}},
+      "between": true,
+      "why": "A head is drawn as its kind: rays round a disc, a disc alone, or straps alone. A disciform head's threadlike outer florets barely show, so it is drawn as a discoid one."
     },
-    "appearance.organs.flower.shape.disc": {
+    "appearance.organs.*.shape.rays": {
       "template": "head",
-      "rule": "involucre_diameter_m / (involucre_diameter_m + 2 * ray_length_m)",
-      "why": "A head card draws the disc about as wide as the involucre, with a ray's length beyond it on either side: the disc's share of the head's width."
+      "map": {"capitulum_kind": {"radiate": {"rule": "clamp(round(ray_florets), 0, 60)"}, "discoid": 0, "disciform": 0, "liguliflorous": 0}},
+      "between": true,
+      "why": "A radiate head draws each of its ray florets as a ray; the other kinds have none."
+    },
+    "appearance.organs.*.shape.disc": {
+      "template": "head",
+      "map": {"capitulum_kind": {"radiate": {"rule": "involucre_diameter_m / (involucre_diameter_m + 2 * ray_length_m)"}, "discoid": 0.85, "disciform": 0.85}},
+      "between": true,
+      "why": "A radiate head's disc is about as wide as its involucre, with a ray's length beyond it on either side: the disc's share of the head's width. A head of disc florets alone is its disc, its florets spreading a little past the involucre's rim."
+    },
+    "appearance.organs.*.shape.florets": {
+      "template": "head",
+      "map": {"capitulum_kind": {"radiate": {"rule": "clamp(round(disc_florets), 1, 1000)"}, "discoid": {"rule": "clamp(round(disc_florets), 1, 1000)"}, "disciform": {"rule": "clamp(round(disc_florets), 1, 1000)"}, "liguliflorous": {"rule": "clamp(round(ligulate_florets), 1, 1000)"}}},
+      "between": true,
+      "why": "A head draws each of its disc florets, or of a head of straps each strap, on its receptacle, up to the 1,000 a head can hold."
+    },
+    "appearance.organs.*.shape.phyllaries": {
+      "template": "head",
+      "rule": "clamp(round(phyllaries), 0, 200)",
+      "why": "A head draws each of its phyllaries round its involucre, up to 200."
+    },
+    "appearance.organs.*.shape.series": {
+      "template": "head",
+      "rule": "clamp(round(phyllary_series), 1, 12)",
+      "why": "The phyllaries stand in their rows, the outer ones shorter."
+    },
+    "appearance.organs.*.shape.involucre": {
+      "template": "head",
+      "rule": "clamp(involucre_height_m / involucre_diameter_m, 0.05, 3)",
+      "why": "The involucre is as tall for its width as the flora measures it."
+    },
+    "appearance.organs.*.shape.receptacle": {
+      "template": "head",
+      "map": {"receptacle_shape": {"flat": 0, "convex": 0.3, "hemispheric": 1, "conic": 2}},
+      "between": true,
+      "why": "The receptacle's dome is as tall for its radius as its shape word says: none for flat, a third for convex, the radius for a half sphere, twice it for a cone; between two words, between their heights."
+    },
+    "appearance.organs.*.shape.pappus": {
+      "template": "head",
+      "map": {"pappus": {"absent": 0, "crown": 0.1, "scales": 0.25, "awns": 0.5, "bristles": {"rule": "clamp(pappus_length_m / (0.5 * involucre_diameter_m), 0, 3)"}}},
+      "why": "A fruit in seed carries its pappus: bristles as long as the flora measures them for the disc's radius, which is about the involucre's; a crown, scales and awns, which floras seldom measure, a tenth, a quarter and a half of it."
     }
   },
   "evidence": {
@@ -39,7 +79,7 @@
     "rules": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "How PlantGen's cards draw the daisy family's heads, a choice of the model's until heads are built from their florets (spec rework M6): a head card draws one head face on, its rays the ray florets' straps round a disc of florets, and an array of heads is a cluster of such heads (spec rework L1). A head's width is its involucre's, as floras measure it, plus a ray on either side."
+      "note": "How PlantGen draws the daisy family's heads, a choice of the model's (spec rework P2): a head is laid out from its florets (`crate::capitula`), its phyllaries in rows round its foot, its receptacle domed as its shape says, its disc florets packed in a sunflower spiral and opening from the rim inward, rays round a radiate head, straps filling a ligulate one; an array of heads is a cluster of such heads (spec rework L1). Its size is its involucre's, as floras measure it, plus a ray on either side. The heights the shape words give the receptacle and the pappus lengths of crowns, scales and awns are the model's."
     }
   }
 }

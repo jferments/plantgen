@@ -45,8 +45,9 @@
 //! nothing, unless it is a map that draws `between` them: a flora's "ovate
 //! to lanceolate" means the forms between, so the map gives the mean of
 //! its numbers for the states, and of lists as long as each other item by
-//! item. A formula's whole number is written as one, so a rule can set a
-//! count (`round(ray_florets)`).
+//! item, or their one value where they agree, words too (a head disciform
+//! or discoid is drawn discoid either way). A formula's whole number is
+//! written as one, so a rule can set a count (`round(ray_florets)`).
 //! Every rule lives in the taxon it holds for, its home (growth plan G2,
 //! Joshi's rule that rules belong to taxa). Traits and rules merge down
 //! the chain like values; then each rule sets its path, after the rules
@@ -708,7 +709,21 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 15] = {
         ),
         (
             "head",
-            &[("rays", Count), ("ray_width", Number), ("disc", Number)],
+            &[
+                ("rays", Count),
+                ("ray_width", Number),
+                ("disc", Number),
+                ("kind", Word),
+                ("florets", Count),
+                ("phyllaries", Count),
+                ("series", Count),
+                ("involucre", Number),
+                ("receptacle", Number),
+                ("spread", Number),
+                ("floret_length", Number),
+                ("open", Number),
+                ("pappus", Number),
+            ],
         ),
         ("umbel", &[("clusters", Count), ("florets", Count)]),
         (
@@ -1731,11 +1746,18 @@ fn readings(key: &str, value: &Value) -> Result<(Vec<Value>, Option<&'static str
     Ok((most, Some(FREQUENCIES[best])))
 }
 
-/// The value between `values`, the values of states that tie: of numbers,
-/// their mean; of lists as long as each other, each item's value between
-/// theirs (outlines on the same `u` give the outline between them).
-/// Nothing for words, or for lists of different lengths.
+/// The value between `values`, the values of states that tie: their one
+/// value where they agree (a disciform and a discoid head are both drawn
+/// discoid); else of numbers, their mean; of lists as long as each other,
+/// each item's value between theirs (outlines on the same `u` give the
+/// outline between them). Nothing for words that differ, or for lists of
+/// different lengths.
 fn between(values: &[Value]) -> Option<Value> {
+    if let Some(first) = values.first()
+        && values.iter().all(|value| value == first)
+    {
+        return Some(first.clone());
+    }
     let count = f64::from(u32::try_from(values.len()).ok()?);
     if let Some(numbers) = values
         .iter()
@@ -3098,6 +3120,11 @@ mod tests {
         );
         assert_eq!(super::between(&[json!([1, 2]), json!([1])]), None);
         assert_eq!(super::between(&[json!("a"), json!("b")]), None);
+        // Words that agree give their word.
+        assert_eq!(
+            super::between(&[json!("discoid"), json!("discoid")]),
+            Some(json!("discoid"))
+        );
     }
 
     /// An outline takes the place of the `widest`, `tip` and `base` set
