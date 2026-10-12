@@ -156,4 +156,10 @@ pub mod venation;
 /// triangles. A head one step coarser draws each ray as its outline in
 /// eight corners with its underside shaded, not a kite, which changes the
 /// part meshes of heads too large for their finest step.
-pub const GENERATOR_REVISION: u32 = 25;
+/// 26: a part-mesh step may keep up to two thirds of the triangles of the
+/// one before, and its cover is weighed against each direction's own; a
+/// needle shoot drawn coarser widens its needles for those it leaves out,
+/// and a spikelet one step coarser folds each bract's kite along its
+/// midrib, so conifer sprays and grass panicles keep their cover and get
+/// steps.
+pub const GENERATOR_REVISION: u32 = 26;

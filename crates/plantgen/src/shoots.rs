@@ -48,7 +48,9 @@
 //!
 //! A needle takes 3 triangles and an axis 7; a shoot `coarse` steps
 //! coarser fills in `coarse` fewer needles for each painted one, and once
-//! it draws the painted ones alone, leaves out places along each axis.
+//! it draws the painted ones alone, leaves out places along each axis,
+//! each needle drawn as many times wider as needles are left out for it
+//! ([`widening`]), so the shoot covers what it does finest.
 
 use crate::blooms::{Part, shade};
 use crate::graph::GraphOrgan;
@@ -89,6 +91,19 @@ pub fn fill(s: &Needles) -> usize {
     #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
     let fill = ratio.round().clamp(1.0, 64.0) as usize;
     fill.min(FILL)
+}
+
+/// How much wider a needle is drawn `coarse` steps coarser: as many times
+/// as the needles left out for each one drawn, so the shoot covers as
+/// much as it does finest.
+#[must_use]
+pub fn widening(s: &Needles, coarse: usize) -> f64 {
+    let fill = fill(s);
+    let filled = fill.saturating_sub(coarse).max(1);
+    let step = coarse.saturating_sub(fill - 1) + 1;
+    #[allow(clippy::cast_precision_loss)]
+    let widening = fill as f64 / filled as f64 * step as f64;
+    widening
 }
 
 /// Triangles a shoot of `s` takes, `coarse` steps coarser.
@@ -207,7 +222,7 @@ pub(crate) fn draw(
     let to_world = |p: Vec3| {
         base + (left * (p.x * across) + heading * (p.y * along) + out * (p.z * across)) * length
     };
-    let width = needle_width(s);
+    let width = needle_width(s) * widening(s, part.coarse);
     // The axes as thick as the painter draws them.
     let fine = templates::fine(&look.shape);
     let leaf = part.leaf(base, heading, left, 0.0, 0.0, colour);
