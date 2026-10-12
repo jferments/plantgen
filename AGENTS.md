@@ -71,7 +71,13 @@ prompt injection. So, without exception:
     home, and the general ones with no taxonomic home, which should
     shrink. A rule inside a look's `shape` names the card `template` it is
     for, or a list of them, and sets nothing on an organ drawn with
-    another card. A map's value may be a formula, worked out only where
+    another card. `*` in a rule's path stands for the organ and nowhere
+    else (`appearance.organs.*.inflorescence.kind`), so one rule reaches
+    every look that draws a cluster, head or spikelet, whatever its
+    program calls the organ. A rule inside a look's `inflorescence` sets
+    it only where the look has that key: a species or a taxon above it
+    says which organ is a cluster, and the rules fill it in. A map's
+    value may be a formula, worked out only where
     the map picks it. A map with `"between": true` reads states that tie
     ("ovate to lanceolate") as the value between theirs: the mean of
     numbers, and lists as long as each other item by item. Maps at the
@@ -95,6 +101,33 @@ prompt injection. So, without exception:
     `culm_height` from `culm_length_m`, a culm's length, not the plant's
     height. No growth target (`allometry`) is above the tallest a plant
     grows.
+  - Organs built from their parts. A construct several lineages need is
+    a value-free primitive: the numbers it takes come from rank files and
+    specs, never from the primitive, and a lineage says which it uses.
+    Each is laid out by one function in closed form, and that layout
+    draws its solid, its coarser part meshes and its card, so they agree:
+    clusters (`inflorescence` on a look, `src/clusters.rs`: ten kinds,
+    nested up to three deep, each unit opening in its turn by its rank),
+    flower heads (the `head` shape, `src/capitula.rs`), spikelets (the
+    `spikelet` shape, `src/spikelets.rs`), divided leaves
+    (`src/divided.rs`) and leaf margins grown with their veins
+    (`src/margins.rs`, `src/venation.rs`). Keep anatomy computed: a head's
+    florets or a spikelet's glumes are never stored one by one, so a
+    cluster costs nothing to regrow, and `plantgen::organs::parts` names
+    them from the layout when asked.
+  - Organ identity (`src/organs.rs`). A program's organ slots are for
+    drawing; what an organ is comes from its term, one of `traits.json`'s
+    organs or `piece` (`organ pinna leaf as leaflet area pinna_area;`),
+    or from its look (a look with an `inflorescence` is one, a lone
+    `head` a capitulum). `structure frond leaf;` declares a structure: the
+    turtle command `frond` opens one, and what is drawn from there to the
+    branch's end is part of it. A build fails where a part-of disagrees
+    with the vocabulary (a leaflet outside a leaf, a piece outside any
+    structure). An organ rewritten into another (a flower into a fruit, a
+    blade into thatch) keeps its id and its birth, and its phase on a day
+    (`plantgen::organs::phase`: primordium, bud, open, fruit or shed) is
+    computed, never stored. `plantc organs <id>` prints a plant's census
+    by term and phase.
   - `src/`: growth, meshes, impostors, packages, glTF exports, ground
     looks and the library.
 - `apps/plantc`: the command-line compiler and previewer.
