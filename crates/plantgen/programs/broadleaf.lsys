@@ -62,10 +62,13 @@
 # unit_nodes nodes for each internode its vigour allows, each internode /
 # unit_nodes long, with a bud and a leaf at every node, as real shoots
 # carry many nodes on short internodes. Only some of its buds may grow
-# long shoots: the last long_buds nodes (acrotony, as in oaks, whose buds
-# cluster at the twig tip) or, with bud_base 1, the first (basitony, as in
-# shrubs that renew from the base); the others are short-shoot buds (K),
-# which leaf out in the light but never grow out. So branches come in
+# long shoots: the last long_share of its nodes (acrotony, as in oaks,
+# whose buds cluster at the twig tip) or, with bud_base 1, the first
+# (basitony, as in shrubs that renew from the base); the others are
+# short-shoot buds (K),
+# which leaf out in the light but never grow out, on the short_share of
+# its nodes next to those, and latent buds on the rest, as a growth unit's
+# buds grade from long shoots to short ones to latent. So branches come in
 # clusters at a year's shoot's tip and the leaves between them sit on
 # short shoots, not one long branch every internode.
 #
@@ -144,7 +147,8 @@ param space_reach = 2.4;       # how far a bud senses free space
 param space_kill = 0.75;       # free space within this of the plant is taken
 # Growth units and bud fate (revision 10).
 param unit_nodes = 1;         # nodes a year's shoot grows for each internode its vigour allows
-param long_buds = 0;          # nodes of a year's shoot whose buds may grow long shoots; 0: every node
+param long_share = 1;         # share of a year's shoot's nodes whose buds may grow long shoots; 1: every node
+param short_share = 1;        # share of its nodes, next below (or above) those, whose buds grow short shoots; the rest stay latent
 param bud_base = 0;           # 1: those nodes are the shoot's first (basitony); 0: its last (acrotony)
 # Limbs that live by their own light (revision 10; the maples' since G1).
 param shed_ratio = 0;         # a limb older than shed_age is shed when qsum < shed_ratio * nseg; 0: only bare limbs
@@ -167,7 +171,7 @@ module M(n, u);                           # n nodes still to form this year, of 
 module Fk(n);                             # n stems still to start at a fork
 module Q(n, k);                           # n leaf pairs still to unfold on a short shoot, its k-th pair first
 module Bo(n);                             # n blooms still to place at a short shoot's tip
-module K queries light, vigour;           # a short-shoot bud: leafs out, never grows out
+module K(s) queries light, vigour;        # a short-shoot bud (s 1): leafs out, never grows out; s 0: latent
 module D queries light, space;            # a dormant bud
 
 organ leaf leaf area leaf_area;
@@ -243,7 +247,7 @@ rule B : light >= spur_light -> Q(spur_pairs, age * spur_pairs) B;
 # decussate). Alternate species grow theirs by the last rules of the
 # program.
 decompose M(n, u) : n > 0 && leaves_per_node >= 2 && thorns <= 0 && dormant_buds <= 0
-                    && (long_buds <= 0 || (bud_base > 0 ? u - n < long_buds : n <= long_buds)) ->
+                    && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(internode / unit_nodes)
     [ &(branch_angle) S B ] [ /(180) &(branch_angle) S B ]
     [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
@@ -286,7 +290,7 @@ rule S : age > 1 && ntip == 0 && (life <= 0 || t < life) -> %;
 # An alternate species' internode: one bud and one leaf, the next turned
 # by divergence (137.5° on the spiral).
 decompose M(n, u) : n > 0 && leaves_per_node < 2 && thorns <= 0 && dormant_buds <= 0
-                    && (long_buds <= 0 || (bud_base > 0 ? u - n < long_buds : n <= long_buds)) ->
+                    && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(internode / unit_nodes)
     [ &(branch_angle) S B ] [ &(leaf_angle) $ leaf(leaf_size) ]
     /(divergence) M(n - 1, u);
@@ -301,7 +305,7 @@ decompose Bo(n) -> ;
 # Revision 4 (plant forms F5). A thorny species' internodes: as above, with
 # a thorn beside each bud.
 decompose M(n, u) : n > 0 && leaves_per_node >= 2 && (thorns > 0 || dormant_buds <= 0)
-                    && (long_buds <= 0 || (bud_base > 0 ? u - n < long_buds : n <= long_buds)) ->
+                    && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(internode / unit_nodes)
     [ &(branch_angle) S B ] [ /(180) &(branch_angle) S B ]
     [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
@@ -309,7 +313,7 @@ decompose M(n, u) : n > 0 && leaves_per_node >= 2 && (thorns > 0 || dormant_buds
     [ /(270) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
     /(divergence) M(n - 1, u);
 decompose M(n, u) : n > 0 && leaves_per_node < 2 && (thorns > 0 || dormant_buds <= 0)
-                    && (long_buds <= 0 || (bud_base > 0 ? u - n < long_buds : n <= long_buds)) ->
+                    && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(internode / unit_nodes)
     [ &(branch_angle) S B ] [ &(leaf_angle) $ leaf(leaf_size) ]
     [ /(70) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
@@ -335,11 +339,13 @@ rule S : shed_ratio > 0 && age > shed_age && qsum < shed_ratio * nseg -> %;
 
 # A short-shoot bud: like a lateral bud that never has the vigour to grow
 # out. It leafs out each year in the light, flowers once the plant is
-# adult, and dies in deep shade or old.
-rule K : life > 0 && t >= life -> ;
-rule K : light < shade_death || age >= bud_years -> ;
-rule K : light >= spur_light && blooms > 0 && t >= adult_age -> Q(spur_pairs, age * spur_pairs) Bo(blooms) K;
-rule K : light >= spur_light -> Q(spur_pairs, age * spur_pairs) K;
+# adult, and dies in deep shade or old. A latent bud (s 0), on the nodes
+# past the short shoots, never grows.
+rule K(s) : s <= 0 -> ;
+rule K(s) : life > 0 && t >= life -> ;
+rule K(s) : light < shade_death || age >= bud_years -> ;
+rule K(s) : light >= spur_light && blooms > 0 && t >= adult_age -> Q(spur_pairs, age * spur_pairs) Bo(blooms) K(s);
+rule K(s) : light >= spur_light -> Q(spur_pairs, age * spur_pairs) K(s);
 
 # Dormant buds and reiteration: most of an old crown's leafy shoots come
 # from buds that wait on its limbs, not from the branching of its tips
@@ -351,19 +357,20 @@ rule D : age >= dormant_years -> ;
 rule D : light >= sprout_light && space > 0 -> S A(0);
 
 # A growth unit's node whose buds may not grow long shoots: short-shoot
-# buds (K) in place of lateral buds (B). And, with dormant_buds, every node
-# keeps a dormant bud D.
+# buds (K) in place of lateral buds (B), the short_share of the unit's
+# nodes next to the long ones, and latent buds on the rest. And, with
+# dormant_buds, every node keeps a dormant bud D.
 decompose M(n, u) : n > 0 && leaves_per_node >= 2 && thorns <= 0 && dormant_buds <= 0 ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(internode / unit_nodes)
-    [ &(branch_angle) S K ] [ /(180) &(branch_angle) S K ]
+    [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] [ /(180) &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ]
     [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
     /(divergence) M(n - 1, u);
 decompose M(n, u) : n > 0 && leaves_per_node < 2 && thorns <= 0 && dormant_buds <= 0 ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(internode / unit_nodes)
-    [ &(branch_angle) S K ] [ &(leaf_angle) $ leaf(leaf_size) ]
+    [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] [ &(leaf_angle) $ leaf(leaf_size) ]
     /(divergence) M(n - 1, u);
 decompose M(n, u) : n > 0 && leaves_per_node >= 2 && thorns <= 0
-                    && (long_buds <= 0 || (bud_base > 0 ? u - n < long_buds : n <= long_buds)) ->
+                    && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(internode / unit_nodes)
     [ &(branch_angle) S B ] [ /(180) &(branch_angle) S B ]
     leaf(leaf_size, 0, leaf_angle, 1) leaf(leaf_size, 180, leaf_angle, 1)
@@ -371,31 +378,31 @@ decompose M(n, u) : n > 0 && leaves_per_node >= 2 && thorns <= 0
     /(divergence) M(n - 1, u);
 decompose M(n, u) : n > 0 && leaves_per_node >= 2 && thorns <= 0 ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(internode / unit_nodes)
-    [ &(branch_angle) S K ] [ /(180) &(branch_angle) S K ]
+    [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] [ /(180) &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ]
     leaf(leaf_size, 0, leaf_angle, 1) leaf(leaf_size, 180, leaf_angle, 1)
     [ /(90) &(dormant_angle) D ]
     /(divergence) M(n - 1, u);
 decompose M(n, u) : n > 0 && leaves_per_node < 2 && thorns <= 0
-                    && (long_buds <= 0 || (bud_base > 0 ? u - n < long_buds : n <= long_buds)) ->
+                    && (long_share >= 1 || (bud_base > 0 ? u - n < long_share * u : n <= long_share * u)) ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(internode / unit_nodes)
     [ &(branch_angle) S B ] leaf(leaf_size, 0, leaf_angle, 1)
     [ /(180) &(dormant_angle) D ]
     /(divergence) M(n - 1, u);
 decompose M(n, u) : n > 0 && leaves_per_node < 2 && thorns <= 0 ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(internode / unit_nodes)
-    [ &(branch_angle) S K ] leaf(leaf_size, 0, leaf_angle, 1)
+    [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] leaf(leaf_size, 0, leaf_angle, 1)
     [ /(180) &(dormant_angle) D ]
     /(divergence) M(n - 1, u);
 decompose M(n, u) : n > 0 && leaves_per_node >= 2 ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(internode / unit_nodes)
-    [ &(branch_angle) S K ] [ /(180) &(branch_angle) S K ]
+    [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] [ /(180) &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ]
     [ &(leaf_angle) $ leaf(leaf_size) ] [ /(180) &(leaf_angle) $ leaf(leaf_size) ]
     [ /(90) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
     [ /(270) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
     /(divergence) M(n - 1, u);
 decompose M(n, u) : n > 0 && leaves_per_node < 2 ->
     ^(gauss() * wiggle / sqrt(unit_nodes)) +(gauss() * wiggle / sqrt(unit_nodes)) F(internode / unit_nodes)
-    [ &(branch_angle) S K ] [ &(leaf_angle) $ leaf(leaf_size) ]
+    [ &(branch_angle) S K((short_share >= 1 || (bud_base > 0 ? u - n < (long_share + short_share) * u : n <= (long_share + short_share) * u) ? 1 : 0)) ] [ &(leaf_angle) $ leaf(leaf_size) ]
     [ /(70) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
     [ /(-70) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
     /(divergence) M(n - 1, u);

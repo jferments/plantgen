@@ -20,15 +20,19 @@
       "rule": "max(1, min(round(shoot_leaves / (leaves_per_node * max_shoot)), floor(4 * internode / leaf_size)))",
       "why": "A year's shoot is a growth unit of many short internodes, not a few long ones: a vigorous shoot, as long as the program's most internodes a bud grows in a year, bears the taxon's leaves per vigorous long shoot, so each of its internodes is divided into as many nodes as that takes, but never into nodes nearer than a quarter of a leaf's length, so a large-leaved plant's shoots carry fewer."
     },
-    "generator.params.long_buds": {
+    "generator.params.long_share": {
       "map": {
         "bud_position": {
-          "acrotonic": {"rule": "floor(unit_nodes / 2)"},
-          "mesotonic": {"rule": "max(0, 2 * unit_nodes - 2)"},
-          "basitonic": {"rule": "floor(unit_nodes / 2)"}
+          "acrotonic": {"rule": "1 / unit_nodes"},
+          "mesotonic": {"rule": "min(1, 2 / unit_nodes)"},
+          "basitonic": {"rule": "1 / unit_nodes"}
         }
       },
       "why": "Only some of a growth unit's buds grow into long shoots, the rest into short shoots: the few nearest its tip on an acrotonic shoot or its foot on a basitonic one, more of them reaching down its middle on a mesotonic one."
+    },
+    "generator.params.short_share": {
+      "rule": "min(1, 1 / unit_nodes)",
+      "why": "Next to the buds that grow long shoots, as many grow short shoots; the growth unit's other buds stay latent, so a shoot keeps the short shoots it had before it was cut into a growth unit."
     },
     "generator.params.bud_base": {
       "map": {
@@ -88,10 +92,10 @@
       "source": "critchfield-1971",
       "note": "Critchfield (1971, read in full) found a maple's long shoot about as long as its leaf pairs are many, each pair a few centimetres up the stem; so a shoot of the program's longest year's growth carries the taxon's shoot_leaves, and each of the program's internodes is cut into as many nodes as that takes. The internode the program grows by is a step of vigour, not a node. Corner's rules (Corner 1949) tie a twig's leaves to its spacing: the larger the leaves, the fewer and farther apart, so nodes are kept at least a quarter of the leaf card's length apart."
     },
-    "rules.generator.params.long_buds": {
+    "rules.generator.params.long_share": {
       "evidence": "SourceInferred",
       "source": "barthelemy-caraglio-2007",
-      "note": "Barthélémy and Caraglio (2007, read in excerpts): the buds that grow are concentrated toward one end of the annual shoot (acrotony, basitony) or in its middle (mesotony). How many is the model's choice: half of a step of vigour's nodes at the tip or the foot, or about twice as many reaching into the middle, the rest growing short shoots; a shoot of one node a step keeps every bud able to grow."
+      "note": "Barthélémy and Caraglio (2007, read in excerpts): the buds that grow are concentrated toward one end of the annual shoot (acrotony, basitony) or in its middle (mesotony). How many is the model's choice: as many as the steps of vigour the shoot grew, so a shoot keeps the buds able to grow long that it had before it was cut into a growth unit, gathered at its tip or its foot, or twice as many reaching into its middle; the rest grow short shoots."
     },
     "rules.generator.params.bud_base": {
       "evidence": "SourceInferred",
@@ -122,6 +126,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "A choice of the model's: a sympodial axis is carried on by a lateral when its tip stops, so a tip with no free space left aborts with the maple program's chance, 0.1 a year."
+    },
+    "rules.generator.params.short_share": {
+      "evidence": "SourceInferred",
+      "source": "barthelemy-caraglio-2007",
+      "note": "Barthélémy and Caraglio (2007, read in excerpts) describe the buds of a growth unit grading along it, the most vigorous laterals at its favoured end; the buds farthest from it often never grow. How many grow short shoots is the model's choice: as many as grow long ones, so the crown's leaf area stays what the Urban Tree Database's trees fitted."
     }
   }
 }
