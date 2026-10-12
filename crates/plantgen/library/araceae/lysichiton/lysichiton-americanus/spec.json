@@ -27,7 +27,7 @@
       "basal_angle": 35,
       "raceme": 0.6,
       "flowers": 1,
-      "flower_size": 0.25,
+      "flower_size": 0.23,
       "pedicel": 0.0,
       "flower_angle": 0,
       "fruit_below": 0,
@@ -69,8 +69,17 @@
         }
       },
       "flower": {
-        "shape": { "template": "fruit", "aspect": 0.45 },
-        "colour": [0.9, 0.8, 0.15]
+        "shape": { "template": "flower" },
+        "colour": [0.62, 0.6, 0.16],
+        "inflorescence": {
+          "pedicel": 0,
+          "peduncle": 0.05,
+          "size": 0.05,
+          "spathe_width": 0.5,
+          "spathe_hood": 30,
+          "spathe_cup": 0.6,
+          "spathe_colour": [0.92, 0.76, 0.08]
+        }
       }
     }
   },
@@ -87,7 +96,8 @@
     "leaf_length_m": {"min": 0.3, "max": 1.5},
     "leaf_shape": {"oblong": "usually", "lanceolate": "often"},
     "inflorescence_length_m": {"min": 0.06, "max": 0.15},
-    "units_per_inflorescence": {"min": 350, "max": 1350, "typical": 690}
+    "units_per_inflorescence": {"min": 350, "max": 1350, "typical": 690},
+    "bract_length_m": {"min": 0.15, "max": 0.25}
   },
   "evidence": {
     "traits": {
@@ -99,6 +109,11 @@
       "evidence": "SourceInferred",
       "source": "pellmyr-patt-1986",
       "note": "Pellmyr and Patt (1986), plants near Seattle in April 1984: the spadix 6 to 15 cm long."
+    },
+    "traits.bract_length_m": {
+      "evidence": "SourceInferred",
+      "source": "pellmyr-patt-1986",
+      "note": "Pellmyr and Patt (1986): the spathe 15 to 25 cm long, partly round the spadix, turning bright yellow in the days before the flowers open. Its blade alone is 6 to 10 cm in Abrams."
     },
     "traits.units_per_inflorescence": {
       "evidence": "SourceInferred",

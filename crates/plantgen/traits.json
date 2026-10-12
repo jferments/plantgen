@@ -173,6 +173,12 @@
       "po": {"id": "PO:0009045", "name": "involucral bract"},
       "why": "one of the bracts in rows round a head's foot, its involucre"
     },
+    "inflorescence_bract": {
+      "part_of": "inflorescence",
+      "category": "organ",
+      "po": {"id": "PO:0009054", "name": "inflorescence bract"},
+      "why": "a bract at the foot of an inflorescence or on its axis: an aroid's spathe, a dogwood's petal-like bracts, an umbel's involucre"
+    },
     "spikelet": {
       "part_of": "inflorescence",
       "category": "group",
@@ -706,6 +712,28 @@
       "unit": "m",
       "range": [0.001, 10],
       "why": "an inflorescence from its lowest unit or branch to its tip"
+    },
+    "inflorescence_bracts": {
+      "group": "flowers",
+      "organ": "inflorescence",
+      "type": "count",
+      "range": [0, 100],
+      "why": "bracts at the foot of an inflorescence: an aroid's one spathe, a dogwood's four, an umbel's involucre"
+    },
+    "bract_form": {
+      "group": "flowers",
+      "organ": "inflorescence_bract",
+      "type": "enum",
+      "values": ["spathe", "petaloid", "leafy", "scale"],
+      "why": "what those bracts are: one sheathing the inflorescence's foot and hooding it, showy like petals, green like leaves, or small scales"
+    },
+    "bract_length_m": {
+      "group": "flowers",
+      "organ": "inflorescence_bract",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 2],
+      "why": "the longest of those bracts, from its foot to its tip, a spathe's sheath included"
     },
     "flower_colour": {
       "group": "flowers",

@@ -114,6 +114,7 @@ pub const SIZES: [(&str, Judged); 23] = [
     ("leaf_width_m", Judged::Organs),
     ("petiole_length_m", Judged::Organs),
     ("inflorescence_length_m", Judged::Organs),
+    ("bract_length_m", Judged::Organs),
     ("flower_size_m", Judged::Organs),
     ("involucre_diameter_m", Judged::Organs),
     ("involucre_height_m", Judged::Organs),
@@ -133,7 +134,7 @@ pub const SIZES: [(&str, Judged); 23] = [
 /// The count characters counted on grown plants (spec rework M8A), each
 /// on every organ that holds what it counts and judged as an organ's size
 /// is.
-pub const COUNTS: [&str; 16] = [
+pub const COUNTS: [&str; 17] = [
     "ray_florets",
     "disc_florets",
     "ligulate_florets",
@@ -143,6 +144,7 @@ pub const COUNTS: [&str; 16] = [
     "glumes",
     "units_per_inflorescence",
     "inflorescence_branches",
+    "inflorescence_bracts",
     "leaflets",
     "pinnae",
     "leaves_per_whorl",
@@ -154,8 +156,9 @@ pub const COUNTS: [&str; 16] = [
 
 /// The kinds a grown plant's drawing must agree with (spec rework M8A):
 /// each an enum or bool character, compared with what the plant draws.
-pub const KINDS: [&str; 11] = [
+pub const KINDS: [&str; 12] = [
     "inflorescence",
+    "bract_form",
     "capitulum_kind",
     "awns",
     "scale_arrangement",
@@ -1115,7 +1118,15 @@ fn reproductive(
         if in_stage(phase, Stage::Open)
             && !matches!(cluster.unit, crate::clusters::Unit::Fruit { .. })
         {
-            tally.kind("inflorescence", cluster.cluster.kind.name());
+            // A spike in a spathe is a spadix (PO:0030120).
+            let kind = if cluster.cluster.kind == crate::looks::ClusterKind::Spike
+                && !layout.sheets.is_empty()
+            {
+                "spadix"
+            } else {
+                cluster.cluster.kind.name()
+            };
+            tally.kind("inflorescence", kind);
         }
         if in_stage(phase, Stage::Open) {
             tally.add(
@@ -1130,6 +1141,16 @@ fn reproductive(
                 0,
                 u32::try_from(layout.units.len()).unwrap_or(u32::MAX),
             );
+            tally.count(
+                "inflorescence_bracts",
+                organ.id,
+                0,
+                u32::try_from(layout.sheets.len()).unwrap_or(u32::MAX),
+            );
+            for (index, sheet) in (0_u32..).zip(&layout.sheets) {
+                tally.add("bract_length_m", organ.id, index, organ.size * sheet.length);
+                tally.kind("bract_form", "spathe");
+            }
             if matches!(
                 cluster.cluster.kind,
                 crate::looks::ClusterKind::Panicle | crate::looks::ClusterKind::CompoundUmbel

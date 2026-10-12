@@ -182,4 +182,9 @@ pub mod venation;
 /// and bracken grow fronds of their flora's sizes; a crown a fern's
 /// rhizome sends out starts as old as the crown it came from
 /// (`polypodiidae` revision 4), so its first fronds are full-sized.
-pub const GENERATOR_REVISION: u32 = 29;
+/// 30: a cluster can wrap a spathe round its units (spec rework E6b): a
+/// leaf-like sheet from below the lowest unit, its length, width, hood,
+/// cup and colour set on the look, drawn solid near the camera and on the
+/// cluster's card, so the skunk cabbage's spadix stands in its yellow
+/// spathe.
+pub const GENERATOR_REVISION: u32 = 30;

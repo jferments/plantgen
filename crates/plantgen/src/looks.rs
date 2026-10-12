@@ -1713,6 +1713,26 @@ pub struct Inflorescence {
     /// unless set, or for a branch its cluster's.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub stalk: Option<[f32; 3]>,
+    /// A spathe (spec rework E6b): one bract sheathing the axis below the
+    /// lowest unit and opening into a blade behind the units, as long as
+    /// this share of the axis, 0 to 3; none (0) unless set. Only the
+    /// cluster's own axis bears one.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub spathe: Option<f64>,
+    /// The spathe's widest width over its length, 0.1 to 1.5; 0.5.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub spathe_width: Option<f64>,
+    /// Degrees the spathe's blade arches forward over the units from its
+    /// foot to its tip, 0 to 120; 20.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub spathe_hood: Option<f64>,
+    /// How deeply the spathe cups round the units, 0 (flat) to 1; 0.5.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub spathe_cup: Option<f64>,
+    /// The spathe's colour, on the solid and the card; the look's colour
+    /// unless set.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub spathe_colour: Option<[f32; 3]>,
 }
 
 impl Shape {
@@ -4036,8 +4056,8 @@ mod tests {
     }
 
     /// The keys `crate::inherit::INFLORESCENCE` lets rules set are the
-    /// inflorescence's own, each with what it takes; only its `branch` and
-    /// `stalk` are left to the files.
+    /// inflorescence's own, each with what it takes; only its `branch`,
+    /// `stalk` and `spathe_colour` are left to the files.
     #[test]
     fn rules_know_every_inflorescence_key() {
         use crate::inherit::{Field, INFLORESCENCE};
@@ -4052,7 +4072,7 @@ mod tests {
             .split(", ")
             .map(|name| name.trim_matches('`'))
             .collect();
-        known.retain(|key| !["branch", "stalk"].contains(key));
+        known.retain(|key| !["branch", "stalk", "spathe_colour"].contains(key));
         let listed: Vec<&str> = INFLORESCENCE.iter().map(|(key, _)| *key).collect();
         assert_eq!(listed, known, "{error}");
         for (key, takes) in INFLORESCENCE {

@@ -7,7 +7,18 @@
     "inflorescence": "spadix",
     "inflorescence_unit": "flower"
   },
+  "rules": {
+    "appearance.organs.*.inflorescence.spathe": {
+      "map": {"bract_form": {"spathe": {"rule": "clamp(bract_length_m / inflorescence_length_m, 0.2, 3)"}, "petaloid": 0, "leafy": 0, "scale": 0}},
+      "why": "An aroid's spathe is drawn as long, against its spadix, as the flora gives the two."
+    }
+  },
   "evidence": {
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "What the cluster's `spathe` means: the spathe's length as a share of its spadix's axis, a spathe's sheath included."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",

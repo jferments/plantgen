@@ -489,8 +489,9 @@ fn rivals(field: &str) -> Vec<&'static str> {
 
 /// What a rule may set inside a look's `inflorescence`
 /// (`crate::looks::Inflorescence`): every key but its `branch` and its
-/// `stalk` colour. The looks module's tests hold this to the key.
-pub const INFLORESCENCE: [(&str, Field); 11] = {
+/// `stalk` and `spathe_colour` colours. The looks module's tests hold this
+/// to the key.
+pub const INFLORESCENCE: [(&str, Field); 15] = {
     use Field::{Count, Number, Word};
     [
         ("kind", Word),
@@ -504,6 +505,10 @@ pub const INFLORESCENCE: [(&str, Field); 11] = {
         ("size", Number),
         ("taper", Number),
         ("droop", Number),
+        ("spathe", Number),
+        ("spathe_width", Number),
+        ("spathe_hood", Number),
+        ("spathe_cup", Number),
     ]
 };
 
