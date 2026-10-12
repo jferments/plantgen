@@ -35,6 +35,7 @@
 //! | `impostor-normal-depth` | PNG, world normal · 0.5 + 0.5, depth in alpha |
 //! | `organ-atlas` | PNG, one template per organ type, side by side in the program's order: brightness / 2 in red, accent weight in green, coverage in alpha |
 //! | `parts` | the part meshes, `APPARTS2` (below) |
+//! | `part-steps` | the part meshes' coarser steps, `APSTEPS1` (below) |
 //!
 //! Binary objects are little-endian with 32-bit floats. A graph is a
 //! 24-byte header (magic, age, height, segment count, organ count), then
@@ -101,6 +102,16 @@
 //! variants V, then per variant: u32 vertex count P, u32 index count Q,
 //! positions f32×3P, normals f32×3P, colours f32×3P, indices u32×Q
 //! ```
+//!
+//! Their coarser steps (`crate::parts::PartSteps`, spec rework SEMLOD)
+//! are a second object, `part-steps`, when any type has one, so a reader
+//! that knows only `parts` reads the package as before:
+//!
+//! ```text
+//! APSTEPS1, u32 type count N, then per type: u32 template, f32 detail of
+//! its part mesh, u32 steps K, then per step: u32 coarse, f32 detail, u32
+//! variants V, then per variant a mesh as in APPARTS2
+//! ```
 
 use std::collections::BTreeMap;
 use std::fmt;
@@ -149,6 +160,9 @@ pub const GRAPH_MAGIC: [u8; 8] = *b"APGRAPH1";
 pub const GRAPH_MAGIC_STRUCTURES: [u8; 8] = *b"APGRAPH2";
 pub const MESH_MAGIC: [u8; 8] = *b"APMESH1\0";
 pub const PARTS_MAGIC: [u8; 8] = *b"APPARTS2";
+
+/// Magic of the part meshes' coarser steps (see the module).
+pub const PART_STEPS_MAGIC: [u8; 8] = *b"APSTEPS1";
 /// The level of detail impostors are rendered from.
 pub const IMPOSTOR_LOD: usize = 1;
 /// Samples per impostor texel along each axis.
@@ -335,6 +349,36 @@ pub struct PartTypeRecord {
     pub span: f64,
 }
 
+/// The part meshes' coarser steps (`crate::parts::PartSteps`, spec
+/// rework SEMLOD), for the types that have any.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct PartStepsRecord {
+    pub object: String,
+    pub types: Vec<PartStepsTypeRecord>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct PartStepsTypeRecord {
+    /// The organ type (its template), as in [`PartsRecord`].
+    pub template: usize,
+    /// The size of its part mesh's triangles, a share of its card's
+    /// length (`crate::parts::detail`).
+    pub detail: f64,
+    /// Its coarser steps, finest first.
+    pub steps: Vec<PartStepRecord>,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct PartStepRecord {
+    /// How many steps coarser than its primitive's finest it is drawn.
+    pub coarse: usize,
+    pub variants: usize,
+    /// The most triangles a variant holds.
+    pub triangles: usize,
+    /// The size of its triangles, at least the finer steps'.
+    pub detail: f64,
+}
+
 fn full_span() -> f64 {
     1.0
 }
@@ -486,6 +530,9 @@ pub struct Manifest {
     /// Part meshes, when any organ type has one.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub parts: Option<PartsRecord>,
+    /// The part meshes' coarser steps, when any type has one.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub part_steps: Option<PartStepsRecord>,
     /// The day of the year the package shows, when an organ has a season
     /// (`crate::looks::Season`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -545,6 +592,8 @@ pub struct Inputs {
     atlas: (usize, usize, Vec<u8>),
     /// The organ types' part meshes, and each type, whether it has one.
     pub(crate) parts: Vec<crate::parts::PartMesh>,
+    /// Their coarser steps, one entry per part mesh.
+    pub(crate) part_steps: Vec<crate::parts::PartSteps>,
     part_types: Vec<bool>,
 }
 
@@ -695,6 +744,7 @@ impl Inputs {
         let mut parts = crate::parts::part_meshes(&looks);
         parts.retain(|part| sizes.get(part.template).is_none_or(|&size| size > 0.0));
         let part_types = crate::parts::types(&looks, &parts);
+        let part_steps = crate::parts::part_steps(&looks, &parts);
         Ok(Self {
             spec,
             program_source: source.to_string(),
@@ -708,6 +758,7 @@ impl Inputs {
             templates,
             atlas: (width, height, atlas_png),
             parts,
+            part_steps,
             part_types,
         })
     }
@@ -1307,6 +1358,7 @@ impl Work<'_> {
 /// The package from its grown variants and baked keyframes, each keyframe
 /// with its variant's and keyframe's index.
 #[allow(clippy::too_many_arguments)]
+#[allow(clippy::too_many_lines)]
 fn assemble(
     inputs: &Inputs,
     program: &Program,
@@ -1334,6 +1386,37 @@ fn assemble(
             })
             .collect(),
     });
+    let part_steps = inputs
+        .part_steps
+        .iter()
+        .any(|steps| !steps.steps.is_empty())
+        .then(|| PartStepsRecord {
+            object: store.add("part-steps", encode_part_steps(&inputs.part_steps)),
+            types: inputs
+                .part_steps
+                .iter()
+                .filter(|steps| !steps.steps.is_empty())
+                .map(|steps| PartStepsTypeRecord {
+                    template: steps.template,
+                    detail: steps.detail,
+                    steps: steps
+                        .steps
+                        .iter()
+                        .map(|step| PartStepRecord {
+                            coarse: step.coarse,
+                            variants: step.variants.len(),
+                            triangles: step
+                                .variants
+                                .iter()
+                                .map(Mesh::triangle_count)
+                                .max()
+                                .unwrap_or(0),
+                            detail: step.detail,
+                        })
+                        .collect(),
+                })
+                .collect(),
+        });
     let mut records: Vec<VariantRecord> = variants
         .iter()
         .zip(grown)
@@ -1389,6 +1472,7 @@ fn assemble(
                 .collect(),
         },
         parts,
+        part_steps,
         day: inputs.day,
         variants: records,
         validation,
@@ -1555,6 +1639,7 @@ pub fn size_text(value: f64) -> String {
 
 /// A short report of a package for people.
 #[must_use]
+#[allow(clippy::too_many_lines)]
 pub fn summary(manifest: &Manifest) -> String {
     use std::fmt::Write;
     let spec = &manifest.spec;
@@ -1615,6 +1700,36 @@ pub fn summary(manifest: &Manifest) -> String {
                 triangles.join(" / ")
             );
         }
+    }
+    if let Some(parts) = &manifest.parts {
+        let named = |template: usize| {
+            manifest
+                .organ_types
+                .get(template)
+                .map_or_else(|| template.to_string(), |organ| organ.name.clone())
+        };
+        let types: Vec<String> = parts
+            .types
+            .iter()
+            .map(|part| {
+                let steps = manifest
+                    .part_steps
+                    .as_ref()
+                    .and_then(|steps| steps.types.iter().find(|s| s.template == part.template));
+                let coarser = steps.map_or_else(String::new, |steps| {
+                    steps.steps.iter().fold(String::new(), |mut out, step| {
+                        let _ = write!(out, " / {}", step.triangles);
+                        out
+                    })
+                });
+                format!("{} {}{coarser}", named(part.template), part.triangles)
+            })
+            .collect();
+        let _ = writeln!(
+            text,
+            "  part meshes, triangles by step: {}",
+            types.join(", ")
+        );
     }
     if manifest.validation.is_empty() {
         let _ = writeln!(text, "  no reference sizes to check");
@@ -2169,19 +2284,98 @@ pub fn encode_parts(parts: &[crate::parts::PartMesh]) -> Vec<u8> {
         out.count(part.template);
         #[allow(clippy::cast_possible_truncation)]
         out.f32(part.span as f32);
-        out.count(part.variants.len());
-        for mesh in &part.variants {
-            out.count(mesh.vertex_count());
-            out.count(mesh.indices.len());
-            out.f32s(mesh.positions.as_flattened());
-            out.f32s(mesh.normals.as_flattened());
-            out.f32s(mesh.colors.iter().flat_map(|colour| &colour[..3]));
-            for index in &mesh.indices {
-                out.u32(*index);
-            }
+        write_part_variants(&mut out, &part.variants);
+    }
+    out.0
+}
+
+/// A part mesh's variants: their count, then each mesh as `APPARTS2`
+/// writes it.
+fn write_part_variants(out: &mut Writer, variants: &[Mesh]) {
+    out.count(variants.len());
+    for mesh in variants {
+        out.count(mesh.vertex_count());
+        out.count(mesh.indices.len());
+        out.f32s(mesh.positions.as_flattened());
+        out.f32s(mesh.normals.as_flattened());
+        out.f32s(mesh.colors.iter().flat_map(|colour| &colour[..3]));
+        for index in &mesh.indices {
+            out.u32(*index);
+        }
+    }
+}
+
+/// Encode the part meshes' coarser steps as `APSTEPS1` (see the module),
+/// leaving out the types that have none.
+#[must_use]
+pub fn encode_part_steps(steps: &[crate::parts::PartSteps]) -> Vec<u8> {
+    let mut out = Writer(Vec::new());
+    out.bytes(&PART_STEPS_MAGIC);
+    let stepped: Vec<_> = steps.iter().filter(|s| !s.steps.is_empty()).collect();
+    out.count(stepped.len());
+    #[allow(clippy::cast_possible_truncation)]
+    for part in stepped {
+        out.count(part.template);
+        out.f32(part.detail as f32);
+        out.count(part.steps.len());
+        for step in &part.steps {
+            out.count(step.coarse);
+            out.f32(step.detail as f32);
+            write_part_variants(&mut out, &step.variants);
         }
     }
     out.0
+}
+
+/// Decode `APSTEPS1` part-mesh steps.
+///
+/// # Errors
+///
+/// Fails on a wrong magic, a wrong length, a detail that is not positive
+/// or an index out of range.
+pub fn decode_part_steps(bytes: &[u8]) -> Result<Vec<crate::parts::PartSteps>, PackageError> {
+    let mut input = Reader {
+        bytes,
+        at: 0,
+        what: "part steps",
+    };
+    if input.array::<8>()? != PART_STEPS_MAGIC {
+        return Err(format_error("not APSTEPS1 part-mesh steps"));
+    }
+    let detail = |input: &mut Reader| -> Result<f64, PackageError> {
+        let detail = f64::from(input.f32()?);
+        if detail > 0.0 && detail.is_finite() {
+            Ok(detail)
+        } else {
+            Err(format_error("a part step's detail is not positive"))
+        }
+    };
+    let types = input.u32()? as usize;
+    input.check_room(types.saturating_mul(12))?;
+    let mut out = Vec::with_capacity(types);
+    for _ in 0..types {
+        let template = input.u32()? as usize;
+        let finest = detail(&mut input)?;
+        let count = input.u32()? as usize;
+        input.check_room(count.saturating_mul(12))?;
+        let mut steps = Vec::with_capacity(count);
+        for _ in 0..count {
+            let coarse = input.u32()? as usize;
+            let detail = detail(&mut input)?;
+            steps.push(crate::parts::PartStep {
+                coarse,
+                variants: read_part_variants(&mut input)?,
+                detail,
+            });
+        }
+        out.push(crate::parts::PartSteps {
+            template,
+            detail: finest,
+            steps,
+        });
+    }
+    input.finish()?;
+    Ok(out)
 }
 
 /// Decode `APPARTS2` part meshes. Each mesh keeps its positions, normals,
@@ -2208,35 +2402,7 @@ pub fn decode_parts(bytes: &[u8]) -> Result<Vec<crate::parts::PartMesh>, Package
         if !(span > 0.0 && span <= 1.0) {
             return Err(format_error("a part mesh's span is out of range"));
         }
-        let count = input.u32()? as usize;
-        input.check_room(count.saturating_mul(8))?;
-        let mut variants = Vec::with_capacity(count);
-        for _ in 0..count {
-            let vertices = input.u32()? as usize;
-            let indices = input.u32()? as usize;
-            input.check_room(
-                vertices
-                    .saturating_mul(36)
-                    .saturating_add(indices.saturating_mul(4)),
-            )?;
-            let mut mesh = Mesh {
-                positions: triples(&input.f32s(vertices * 3)?),
-                normals: triples(&input.f32s(vertices * 3)?),
-                colors: triples(&input.f32s(vertices * 3)?)
-                    .into_iter()
-                    .map(|[r, g, b]| [r, g, b, 1.0])
-                    .collect(),
-                ..Mesh::default()
-            };
-            for _ in 0..indices {
-                let index = input.u32()?;
-                if index as usize >= vertices {
-                    return Err(format_error("a part mesh's index is out of range"));
-                }
-                mesh.indices.push(index);
-            }
-            variants.push(mesh);
-        }
+        let variants = read_part_variants(&mut input)?;
         parts.push(crate::parts::PartMesh {
             template,
             variants,
@@ -2245,6 +2411,40 @@ pub fn decode_parts(bytes: &[u8]) -> Result<Vec<crate::parts::PartMesh>, Package
     }
     input.finish()?;
     Ok(parts)
+}
+
+/// A part mesh's variants as [`write_part_variants`] writes them.
+fn read_part_variants(input: &mut Reader) -> Result<Vec<Mesh>, PackageError> {
+    let count = input.u32()? as usize;
+    input.check_room(count.saturating_mul(8))?;
+    let mut variants = Vec::with_capacity(count);
+    for _ in 0..count {
+        let vertices = input.u32()? as usize;
+        let indices = input.u32()? as usize;
+        input.check_room(
+            vertices
+                .saturating_mul(36)
+                .saturating_add(indices.saturating_mul(4)),
+        )?;
+        let mut mesh = Mesh {
+            positions: triples(&input.f32s(vertices * 3)?),
+            normals: triples(&input.f32s(vertices * 3)?),
+            colors: triples(&input.f32s(vertices * 3)?)
+                .into_iter()
+                .map(|[r, g, b]| [r, g, b, 1.0])
+                .collect(),
+            ..Mesh::default()
+        };
+        for _ in 0..indices {
+            let index = input.u32()?;
+            if index as usize >= vertices {
+                return Err(format_error("a part mesh's index is out of range"));
+            }
+            mesh.indices.push(index);
+        }
+        variants.push(mesh);
+    }
+    Ok(variants)
 }
 
 /// Bytes per wood vertex, per card and per tuft, without padding.

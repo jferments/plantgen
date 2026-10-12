@@ -465,6 +465,64 @@ fn part_meshes_and_sites_read_back() {
     assert!(error.to_string().contains("sites"), "{error}");
 }
 
+/// Spec rework SEMLOD: a rose's bloom has coarser steps of its part mesh,
+/// listed in the manifest and read back losslessly, each with at most half
+/// the triangles of the one before and detail never finer.
+#[test]
+fn part_steps_read_back() {
+    let mut spec = PlantSpec::builtin("rosa-nutkana").unwrap();
+    spec.growth.years = 3.0;
+    spec.growth.keyframes = vec![3.0];
+    spec.variants.environments = vec![Environment::Open];
+    spec.variants.seeds = vec![1];
+    spec.allometry.clear();
+    let inputs = Inputs::new(&spec, &TINY).unwrap();
+    let built = package::build(&inputs, 2, &mut |_| {}).unwrap();
+    let parts = built
+        .manifest
+        .parts
+        .as_ref()
+        .expect("a rose has part meshes");
+    let record = built
+        .manifest
+        .part_steps
+        .as_ref()
+        .expect("a rose's bloom has steps");
+    let bytes = &built.objects[&record.object];
+    let decoded = package::decode_part_steps(bytes).unwrap();
+    assert_eq!(&package::encode_part_steps(&decoded), bytes);
+    assert_eq!(decoded.len(), record.types.len());
+    let meshes = package::decode_parts(&built.objects[&parts.object]).unwrap();
+    for (steps, listed) in decoded.iter().zip(&record.types) {
+        assert_eq!(steps.template, listed.template);
+        assert!(!steps.steps.is_empty());
+        let part = meshes
+            .iter()
+            .find(|part| part.template == steps.template)
+            .expect("steps belong to a part mesh");
+        let (mut last, mut detail) = (part.triangles(), steps.detail);
+        assert_eq!(steps.steps.len(), listed.steps.len());
+        for (step, row) in steps.steps.iter().zip(&listed.steps) {
+            let triangles = step
+                .variants
+                .iter()
+                .map(plantgen::mesh::Mesh::triangle_count)
+                .max()
+                .unwrap();
+            assert_eq!((step.coarse, triangles), (row.coarse, row.triangles));
+            assert_eq!(step.variants.len(), row.variants);
+            assert!(triangles * 2 <= last, "{triangles} after {last}");
+            assert!(step.detail >= detail);
+            (last, detail) = (triangles, step.detail);
+        }
+    }
+    // A step whose detail is not positive is refused.
+    let mut broken = decoded.clone();
+    broken[0].steps[0].detail = 0.0;
+    let error = package::decode_part_steps(&package::encode_part_steps(&broken)).unwrap_err();
+    assert!(error.to_string().contains("detail"), "{error}");
+}
+
 #[test]
 fn a_grass_knows_which_pieces_make_each_leaf() {
     // Spec rework M7: a grass draws each blade within a `leaf` structure;

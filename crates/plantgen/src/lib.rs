@@ -145,4 +145,12 @@ pub mod venation;
 /// cluster's units, its card and its named parts; stamens and a flower's
 /// tube moved from its form to its card, and a lone flower's bud is the
 /// flower closed.
-pub const GENERATOR_REVISION: u32 = 23;
+/// 24: a package ships part meshes' coarser steps beside them (spec
+/// rework SEMLOD): the organ drawn one or more steps coarser, each with at
+/// most half the triangles of the one before, the size of its triangles,
+/// and kept only where it covers and colours like the part mesh from every
+/// direction above, so a renderer draws parts farther out at fewer
+/// triangles. A head one step coarser draws each ray as its outline in
+/// eight corners with its underside shaded, not a kite, which changes the
+/// part meshes of heads too large for their finest step.
+pub const GENERATOR_REVISION: u32 = 24;
