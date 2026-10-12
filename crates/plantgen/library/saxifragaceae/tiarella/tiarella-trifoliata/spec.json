@@ -41,8 +41,8 @@
       "nod": 10,
       "bud_size": 0.004,
       "fruit_length": 0.006,
-      "leaf_area": 0.198,
-      "basal_area": 0.216,
+      "leaf_area": 0.449,
+      "basal_area": 0.239,
       "basal_piece_area": 0.235,
       "flower_area": 0.264,
       "bud_area": 0.763,
@@ -65,16 +65,10 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": { "template": "compound", "leaflets": 3, "leaflet_width": 0.6, "teeth": 5, "petiole": 0.1 }
+        "shape": { "template": "compound", "leaflet_width": 0.6, "teeth": 5, "petiole": 0.1, "spread": 150, "lowest": 0.85, "petiolule": 0.12 }
       },
       "basal": {
-        "shape": {
-          "template": "compound",
-          "leaflets": 3,
-          "leaflet_width": 0.7,
-          "teeth": 6,
-          "petiole": 0.45
-        }
+        "shape": { "template": "compound", "leaflet_width": 0.7, "teeth": 6, "petiole": 0.45, "spread": 150, "lowest": 0.85, "petiolule": 0.12 }
       },
       "flower": {
         "shape": {
@@ -107,6 +101,12 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "leaf_division": "compound",
+    "division_pattern": "palmate",
+    "division_order": 1,
+    "leaflets": 3
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -157,6 +157,21 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America's account of var. trifoliata, as search results quote it (the page itself was not read): basal leaves 3-foliolate, the blade 2 to 10 by 3 to 15 cm, its leaflets stalked (petiolulate) and lobed to about half their length; the stem leaves 3-foliolate too."
+    },
+    "appearance.organs.leaf.shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The leaves drawn with their three leaflets from one point (spec rework P4), set from its characters by the rules at the flowering plants; before, two stood opposite below the third. By eye: the side leaflets 150 degrees apart and 0.85 as long as the end one, each on a stalk an eighth of its length; their lobes are drawn as coarse teeth."
+    },
+    "appearance.organs.basal.shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The leaves drawn with their three leaflets from one point (spec rework P4), set from its characters by the rules at the flowering plants; before, two stood opposite below the third. By eye: the side leaflets 150 degrees apart and 0.85 as long as the end one, each on a stalk an eighth of its length; their lobes are drawn as coarse teeth."
     }
   },
   "provenance": {

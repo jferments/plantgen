@@ -70,7 +70,7 @@ pub enum Fall {
     /// whole needs a truer one than the crown's cards.
     Leaves {
         length_m: [f64; 2],
-        shape: Option<Shape>,
+        shape: Option<Box<Shape>>,
     },
 }
 
@@ -162,7 +162,7 @@ impl Litter {
                 },
                 FoliageKind::Leaves => Fall::Leaves {
                     length_m: foliage.length_m,
-                    shape: foliage.shape.clone(),
+                    shape: foliage.shape.clone().map(Box::new),
                 },
             },
             shed: foliage.fall_colours.clone(),
@@ -414,7 +414,8 @@ fn draw(canvas: &mut Canvas, litter: &Litter, seed: u64) {
         Fall::Sprays { length_m } => draw_sprays(canvas, litter, draws, per_m, *length_m),
         Fall::Leaves { length_m, shape } => {
             let shape = shape
-                .clone()
+                .as_deref()
+                .cloned()
                 .or_else(|| own_leaf(litter.species))
                 .unwrap_or_else(|| Shape::Simple(Simple::default()));
             draw_leaves(canvas, litter, draws, per_m, *length_m, &shape);

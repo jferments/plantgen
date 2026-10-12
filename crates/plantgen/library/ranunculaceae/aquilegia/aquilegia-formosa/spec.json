@@ -41,8 +41,8 @@
       "nod": 10,
       "bud_size": 0.015,
       "fruit_length": 0.025,
-      "leaf_area": 0.266,
-      "basal_area": 0.172,
+      "leaf_area": 0.58,
+      "basal_area": 0.313,
       "basal_piece_area": 0.235,
       "flower_area": 0.515,
       "bud_area": 0.636,
@@ -65,10 +65,10 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": { "template": "compound", "leaflets": 3, "leaflet_width": 0.8, "teeth": 3, "petiole": 0.2 }
+        "shape": { "template": "compound", "pinnules": 0, "leaflet_width": 0.8, "teeth": 3, "petiole": 0.2, "spread": 140, "lowest": 0.9, "petiolule": 0.1 }
       },
       "basal": {
-        "shape": { "template": "compound", "leaflets": 9, "leaflet_width": 0.7, "teeth": 3, "petiole": 0.4 }
+        "shape": { "template": "compound", "leaflet_width": 0.8, "teeth": 3, "petiole": 0.4, "spread": 160, "lowest": 0.9, "petiolule": 0.1 }
       },
       "flower": {
         "shape": {
@@ -101,6 +101,13 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "leaf_division": "compound",
+    "division_pattern": "palmate",
+    "division_order": 2,
+    "pinnae": 3,
+    "leaflets": 3
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -151,6 +158,21 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America's account of the species, as SEINet's copy is quoted in search results (the page itself was not read): basal leaves 2 times ternately compound, 10 to 40 cm, much shorter than the stems; leaflets 14 to 68 mm, not crowded, the primary petiolules 16 to 95 mm."
+    },
+    "appearance.organs.basal.shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The basal leaves drawn twice ternate (spec rework P4): three divisions on long stalks, each of three leaflets, from its characters by the rules at the flowering plants; before, nine leaflets stood along a rachis. By eye: the divisions 160 degrees apart, the leaflets broad, fan-like and crenate (three teeth a side stand in for their lobes)."
+    },
+    "appearance.organs.leaf.shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The stem leaves drawn once ternate, by eye: smaller and less divided than the basal ones, three leaflets from one point (spec rework P4)."
     }
   },
   "provenance": {

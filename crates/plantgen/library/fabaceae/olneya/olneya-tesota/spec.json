@@ -39,7 +39,7 @@
       "pipe_tip": 0.003,
       "pipe_organ": 0.005,
       "pipe_rings": 8e-06,
-      "light_cell": 0.3,
+      "light_cell": 0.4,
       "thorns": 1,
       "thorn_length": 0.015,
       "thorn_angle": 60,
@@ -47,7 +47,7 @@
       "bloom_age": 10,
       "bloom_size": 0.025,
       "bloom_angle": 40,
-      "leaf_area": 0.106,
+      "leaf_area": 0.236,
       "thorn_area": 0.059
     }
   },
@@ -78,13 +78,7 @@
     "variation": 0.15,
     "organs": {
       "leaf": {
-        "shape": {
-          "template": "frond",
-          "pinnae": 5,
-          "width": 0.35,
-          "divided": 0,
-          "stipe": 0.1
-        }
+        "shape": { "template": "compound", "leaflet_width": 0.45, "teeth": 0, "petiole": 0.12, "angle": 60 }
       },
       "thorn": {
         "shape": {
@@ -119,6 +113,14 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 1,
+    "leaflets": {"min": 6, "max": 16},
+    "terminal_leaflet": false,
+    "leaf_shape": {"obovate": "usually", "elliptic": "sometimes"}
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -179,6 +181,21 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "ua-desert-legume-program",
+      "note": "The Desert Legume Program's page on the species, as search results quote it (the page itself was not read): leaves once pinnate, mostly 3 to 6 cm long, with 6 to 16 small leaflets. The University of Arizona Campus Arboretum calls them even-pinnately compound, with obovate or elliptic leaflets; Virginia Tech Dendrology gives 6 to 9 pairs of obovate leaflets."
+    },
+    "appearance.organs.leaf": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The leaf drawn as a compound leaf (spec rework P4), its leaflets counted, set and shaped from its characters by the rules at the flowering plants and the plants (an even count: it ends in a pair); before, a fern's frond stood in for it. By eye from photographs: the leaflets 60 degrees from the rachis and a little under half as wide as long, so that they stand clear of each other."
+    },
+    "generator.params.light_cell": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The light grid's cells 0.4 m across, as the umbrella thorn's: with its leaves drawn as the compound leaves they are (spec rework P4), which shade twice what the frond did, 0.3 m cells let a seedling's own leaves shade it for decades (seed 2 stood at 0.64 m from its fifth year to past its 25th). A model setting, not a measurement."
     }
   },
   "provenance": {

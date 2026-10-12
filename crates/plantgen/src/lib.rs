@@ -32,6 +32,7 @@ pub mod capitula;
 pub mod clusters;
 pub mod conditions;
 pub mod cores;
+pub mod divided;
 pub mod drawing;
 pub mod evidence;
 pub mod form;

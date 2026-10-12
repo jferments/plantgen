@@ -510,7 +510,24 @@
       "organ": "leaflet",
       "type": "count",
       "range": [2, 2000],
-      "why": "leaflets on a compound leaf"
+      "why": "leaflets on a compound leaf, or on each pinna of a twice-divided one, as floras count them (a flora's pairs of leaflets are twice as many)"
+    },
+    "pinnae": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "count",
+      "range": [2, 100],
+      "when": {"leaf_division": ["compound"]},
+      "optional": true,
+      "why": "the pinnae of a twice-divided leaf: its primary divisions, each bearing leaflets of its own (a mesquite's one or two pairs)"
+    },
+    "terminal_leaflet": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "bool",
+      "when": {"division_pattern": ["pinnate"]},
+      "optional": true,
+      "why": "whether a pinnate leaf, and each pinna of a twice-pinnate one, ends in a single leaflet (odd-pinnate) rather than a pair (even-pinnate)"
     },
     "needles_per_fascicle": {
       "group": "leaves",

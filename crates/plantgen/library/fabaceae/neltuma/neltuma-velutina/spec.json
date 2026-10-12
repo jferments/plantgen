@@ -48,7 +48,7 @@
       "bloom_angle": 60,
       "life": 100,
       "snag_fall": 0.12,
-      "leaf_area": 0.178,
+      "leaf_area": 0.041,
       "bloom_area": 0.09,
       "thorn_area": 0.059
     }
@@ -80,13 +80,7 @@
     "variation": 0.15,
     "organs": {
       "leaf": {
-        "shape": {
-          "template": "frond",
-          "pinnae": 8,
-          "width": 0.5,
-          "divided": 1,
-          "stipe": 0.1
-        }
+        "shape": { "template": "compound", "leaflet_width": 0.25, "teeth": 0, "petiole": 0.35, "angle": 30, "pinnule_angle": 75, "petiolule": 0 }
       },
       "thorn": {
         "shape": {
@@ -126,7 +120,14 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "inflorescence": "raceme"
+    "inflorescence": "raceme",
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 2,
+    "pinnae": {"min": 2, "max": 4, "typical": 2},
+    "leaflets": {"min": 26, "max": 60, "typical": 34},
+    "terminal_leaflet": false,
+    "leaf_shape": "oblong"
   },
   "evidence": {
     "generator.params": {
@@ -208,6 +209,46 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Its spike-like raceme drawn flower by flower (spec rework L1c), as a spike, its pedicels too short to draw: 150 tiny pale yellow flowers about 4.5 mm long, by eye (the Fire Effects Information System says hundreds), on a raceme 8 cm long. From floras and extension pages as quoted in search results; the pages themselves were not read."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "vt-dendrology",
+      "note": "Virginia Tech Dendrology's factsheet, as search results quote it (the page itself was not read): leaves bipinnately compound, usually with only two major leaflets (pinnae), occasionally two or three pairs, each with 15 to 20 pairs of narrow, oblong minor leaflets. The University of Arizona Campus Arboretum gives two pinnae with 13 to 30 pairs of grey-green leaflets. The counts: pinnae 2 to 4, usually 2; leaflets on each pinna 26 to 60, typically 34 (17 pairs), the model's middle of the two sources; even-pinnate at both levels, as a mimosoid legume's leaf is."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "vt-dendrology",
+      "note": "Virginia Tech Dendrology's factsheet, as search results quote it (the page itself was not read): leaves bipinnately compound, usually with only two major leaflets (pinnae), occasionally two or three pairs, each with 15 to 20 pairs of narrow, oblong minor leaflets. The University of Arizona Campus Arboretum gives two pinnae with 13 to 30 pairs of grey-green leaflets. The counts: pinnae 2 to 4, usually 2; leaflets on each pinna 26 to 60, typically 34 (17 pairs), the model's middle of the two sources; even-pinnate at both levels, as a mimosoid legume's leaf is."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "vt-dendrology",
+      "note": "Virginia Tech Dendrology's factsheet, as search results quote it (the page itself was not read): leaves bipinnately compound, usually with only two major leaflets (pinnae), occasionally two or three pairs, each with 15 to 20 pairs of narrow, oblong minor leaflets. The University of Arizona Campus Arboretum gives two pinnae with 13 to 30 pairs of grey-green leaflets. The counts: pinnae 2 to 4, usually 2; leaflets on each pinna 26 to 60, typically 34 (17 pairs), the model's middle of the two sources; even-pinnate at both levels, as a mimosoid legume's leaf is."
+    },
+    "traits.pinnae": {
+      "evidence": "SourceInferred",
+      "source": "vt-dendrology",
+      "note": "Virginia Tech Dendrology's factsheet, as search results quote it (the page itself was not read): leaves bipinnately compound, usually with only two major leaflets (pinnae), occasionally two or three pairs, each with 15 to 20 pairs of narrow, oblong minor leaflets. The University of Arizona Campus Arboretum gives two pinnae with 13 to 30 pairs of grey-green leaflets. The counts: pinnae 2 to 4, usually 2; leaflets on each pinna 26 to 60, typically 34 (17 pairs), the model's middle of the two sources; even-pinnate at both levels, as a mimosoid legume's leaf is."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "vt-dendrology",
+      "note": "Virginia Tech Dendrology's factsheet, as search results quote it (the page itself was not read): leaves bipinnately compound, usually with only two major leaflets (pinnae), occasionally two or three pairs, each with 15 to 20 pairs of narrow, oblong minor leaflets. The University of Arizona Campus Arboretum gives two pinnae with 13 to 30 pairs of grey-green leaflets. The counts: pinnae 2 to 4, usually 2; leaflets on each pinna 26 to 60, typically 34 (17 pairs), the model's middle of the two sources; even-pinnate at both levels, as a mimosoid legume's leaf is."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "SourceInferred",
+      "source": "vt-dendrology",
+      "note": "Virginia Tech Dendrology's factsheet, as search results quote it (the page itself was not read): leaves bipinnately compound, usually with only two major leaflets (pinnae), occasionally two or three pairs, each with 15 to 20 pairs of narrow, oblong minor leaflets. The University of Arizona Campus Arboretum gives two pinnae with 13 to 30 pairs of grey-green leaflets. The counts: pinnae 2 to 4, usually 2; leaflets on each pinna 26 to 60, typically 34 (17 pairs), the model's middle of the two sources; even-pinnate at both levels, as a mimosoid legume's leaf is."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "vt-dendrology",
+      "note": "Virginia Tech Dendrology's factsheet, as search results quote it (the page itself was not read): leaves bipinnately compound, usually with only two major leaflets (pinnae), occasionally two or three pairs, each with 15 to 20 pairs of narrow, oblong minor leaflets. The University of Arizona Campus Arboretum gives two pinnae with 13 to 30 pairs of grey-green leaflets. The counts: pinnae 2 to 4, usually 2; leaflets on each pinna 26 to 60, typically 34 (17 pairs), the model's middle of the two sources; even-pinnate at both levels, as a mimosoid legume's leaf is."
+    },
+    "appearance.organs.leaf": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The leaf drawn as a twice-divided compound leaf (spec rework P4), its pinnae and their leaflets counted from its characters by the rules at the flowering plants; before, a fern's frond stood in for it. By eye from photographs: the pinnae forking 30 degrees either side of the petiole's line, the leaflets standing out 75 degrees from theirs, a quarter as wide as long (Arizona sources give leaflets 4 to 13 mm long and about 2 mm wide)."
     }
   },
   "provenance": {

@@ -24,9 +24,10 @@
 #![allow(clippy::many_single_char_names)]
 
 use crate::body::BodyLook;
+use crate::divided::{self, Form, Layout};
 use crate::looks::{
-    Blade, Compound, Flower, Frond, Fruit, Head, Lobed, Look, Needles, Palmate, Panicle, Scales,
-    Shape, Simple, Spike, Sprig, Umbel,
+    Blade, Compound, Flower, Frond, Fruit, Head, Lobed, Look, Needles, Palmate, Panicle, Pattern,
+    Scales, Shape, Simple, Spike, Sprig, Umbel,
 };
 use crate::margins::{self, Drawn, Margin};
 use crate::math::{self, PI};
@@ -510,7 +511,16 @@ fn draw(shape: &Shape, colours: Colours, x: f64, y: f64, grew: Option<&GrownLeaf
         Shape::Palmate(s) => palmate(s, x, y, fine, veins, margins),
         Shape::Simple(s) => simple(s, x, y, fine, veins, margins),
         Shape::Lobed(s) => lobed(s, x, y, fine, veins, margins),
-        Shape::Compound(s) => compound(s, x, y, fine, veins, margins),
+        Shape::Compound(s) => {
+            let own;
+            let laid = if let Some(laid) = grew.and_then(|leaf| leaf.layout.as_ref()) {
+                laid
+            } else {
+                own = divided::layout(s);
+                &own
+            };
+            compound(s, laid, x, y, fine, veins, margins)
+        }
         Shape::Sprig(s) => sprig(s, x, y, fine, veins, margins),
         Shape::Blade(s) => blade(s, x, y),
         Shape::Frond(s) => frond(s, x, y, fine),
@@ -631,7 +641,13 @@ fn grown(veins: Option<&Venation>, a: f64, t: f64, unit: f64, side: impl FnOnce(
 /// through its `outline`'s points if it has one, scaled so the widest is
 /// 1, else from where it is `widest`, its `base` and its `tip`
 /// ([`blade_profile`]).
-fn outline_profile(outline: Option<&[[f64; 2]]>, t: f64, widest: f64, base: f64, tip: f64) -> f64 {
+pub(crate) fn outline_profile(
+    outline: Option<&[[f64; 2]]>,
+    t: f64,
+    widest: f64,
+    base: f64,
+    tip: f64,
+) -> f64 {
     let Some(points) = outline else {
         return blade_profile(t, widest, base, tip);
     };
@@ -726,10 +742,12 @@ fn lobed_width(s: &Lobed, length: f64, t: f64, margin: Option<&Margin>) -> f64 {
     s.width * length * 0.5 * envelope * sinus
 }
 
-/// A leaflet's half-width at `t` along it, for a leaflet `length` card
-/// units long, with the teeth of its side's `margin` if given.
-fn leaflet_width(s: &Compound, length: f64, t: f64, margin: Option<&Margin>) -> f64 {
-    let mut width = s.leaflet_width * length * 0.5 * blade_profile(t, 0.45, 0.5, 0.45);
+/// A leaflet's half-width at `t` along its blade, for a blade `length`
+/// card units long of a leaf `s` of `form`, with the teeth of its side's
+/// `margin` if given.
+fn leaflet_width(s: &Compound, form: &Form, length: f64, t: f64, margin: Option<&Margin>) -> f64 {
+    let profile = outline_profile(s.outline.as_deref(), t, form.widest, form.base, form.tip);
+    let mut width = s.leaflet_width * length * 0.5 * profile;
     if let Some(margin) = margin {
         let fall = margin.fall(t, TOOTH, |share| margins::tooth_flank(share, 0.0));
         width -= (0.036 * length * leaflet_fade(t)).min(DEEPEST * width) * fall;
@@ -754,15 +772,50 @@ fn sprig_width(s: &Sprig, blade: f64, t: f64, margin: Option<&Margin>) -> f64 {
 }
 
 /// The seed a look's veins grow from: a hash of its shape, without an
-/// unset `outline`, which cards had none of before, so a card without one
-/// keeps the veins it grew.
+/// unset `outline` or an unset field of a compound leaf's divisions,
+/// which cards had none of before, so a card without them keeps the veins
+/// it grew.
 fn shape_seed(shape: &Shape) -> u64 {
-    format!("{shape:?}")
-        .replace("outline: None, ", "")
-        .bytes()
-        .fold(0xcbf2_9ce4_8422_2325_u64, |hash, byte| {
-            (hash ^ u64::from(byte)).wrapping_mul(0x0100_0000_01b3)
-        })
+    // A compound leaf a rule says is pinnate, divided once, with its
+    // leaflets apart, is the leaf it was with those fields unset.
+    let plain = match shape {
+        Shape::Compound(c) => {
+            let mut c = c.clone();
+            if c.pattern == Some(Pattern::Pinnate) {
+                c.pattern = None;
+            }
+            if c.pinnules == Some(0) {
+                c.pinnules = None;
+            }
+            if c.confluent.is_some_and(|share| share <= 0.0) {
+                c.confluent = None;
+            }
+            Shape::Compound(c)
+        }
+        _ => shape.clone(),
+    };
+    let mut text = format!("{plain:?}").replace("outline: None, ", "");
+    for field in [
+        "pattern",
+        "pinnules",
+        "confluent",
+        "angle",
+        "pinnule_angle",
+        "spread",
+        "largest",
+        "lowest",
+        "terminal_size",
+        "outline",
+        "widest",
+        "tip",
+        "base",
+        "petiolule",
+    ] {
+        text = text.replace(&format!(", {field}: None"), "");
+    }
+    text.bytes().fold(0xcbf2_9ce4_8422_2325_u64, |hash, byte| {
+        (hash ^ u64::from(byte)).wrapping_mul(0x0100_0000_01b3)
+    })
 }
 
 /// A leaf grown with its veins (spec rework L3): its veins, grown in its
@@ -777,6 +830,8 @@ fn shape_seed(shape: &Shape) -> u64 {
 pub struct GrownLeaf {
     pub veins: Venation,
     pub margins: Vec<Margin>,
+    /// A compound leaf's leaflets, laid out (`crate::divided`).
+    pub layout: Option<Layout>,
 }
 
 /// The leaf drawn with `shape`, grown (see [`GrownLeaf`]): a simple or
@@ -810,13 +865,19 @@ pub fn grow_leaf(shape: &Shape) -> Option<GrownLeaf> {
                 seed,
             ))
         }
-        Shape::Compound(s) => Some(pinnate_leaf(
-            (s.teeth, LEAFLET_TEETH),
-            &|t| leaflet_width(s, 1.0, t, None),
-            &|t, margin| leaflet_width(s, 1.0, t, Some(margin)),
-            (0.5 * s.leaflet_width + 0.02, Growth::default()),
-            seed,
-        )),
+        Shape::Compound(s) => {
+            let form = Form::of(s);
+            Some(GrownLeaf {
+                layout: Some(divided::layout(s)),
+                ..pinnate_leaf(
+                    (s.teeth, LEAFLET_TEETH),
+                    &|t| leaflet_width(s, &form, 1.0, t, None),
+                    &|t, margin| leaflet_width(s, &form, 1.0, t, Some(margin)),
+                    (0.5 * s.leaflet_width + 0.02, Growth::default()),
+                    seed,
+                )
+            })
+        }
         Shape::Sprig(s) => Some(pinnate_leaf(
             (s.teeth, TEETH),
             &|t| sprig_width(s, 1.0, t, None),
@@ -895,7 +956,11 @@ fn pinnate_leaf(
             .collect();
         margin.lean(&leans);
     }
-    GrownLeaf { veins, margins }
+    GrownLeaf {
+        veins,
+        margins,
+        layout: None,
+    }
 }
 
 /// A palmate lobe's half-width share at `t` along it: straight sides
@@ -1012,7 +1077,11 @@ fn palmate_leaf(s: &Palmate, fine: f64, seed: u64) -> GrownLeaf {
             .collect();
         margin.lean(&leans);
     }
-    GrownLeaf { veins, margins }
+    GrownLeaf {
+        veins,
+        margins,
+        layout: None,
+    }
 }
 
 /// One axis of a needle spray in its card's frame (units of the card's
@@ -1452,59 +1521,74 @@ fn lobed(
     )
 }
 
-/// A pinnately compound leaf: a rachis with opposite pairs of leaflets and
-/// a terminal one.
+/// A compound leaf as [`divided::layout`] lays it out: its petiole and
+/// rachises in the accent colour, a dissected blade's wings, and each
+/// leaflet on its stalk, the first laid out drawn over the rest.
 fn compound(
     s: &Compound,
+    laid: &Layout,
     x: f64,
     y: f64,
     fine: f64,
     veins: Option<&Venation>,
     margins: &[Margin],
 ) -> Paint {
-    let leaflet = s.leaflet_length();
-    let pairs = s.leaflets / 2;
-    let top = 1.0 - leaflet;
-    if y < top + 0.02 && y >= 0.0 && x.abs() < fine {
-        return Paint::solid(0.9, 1.0);
-    }
     let p = (x, y);
-    // (base, unit direction, length)
-    let mut leaflets = Vec::with_capacity(usize::try_from(pairs).unwrap_or(0) * 2 + 1);
-    leaflets.push(((0.0, top), (0.0, 1.0), leaflet * 0.98));
-    let angle = math::radians(62.0);
-    for j in 0..pairs {
-        let at = s.petiole + (top - s.petiole) * (f64::from(j) + 0.5) / f64::from(pairs);
-        let length = leaflet * (0.82 + 0.18 * (f64::from(j) + 0.5) / f64::from(pairs));
-        for side in [1.0, -1.0] {
-            leaflets.push((
-                (0.0, at),
-                (side * math::sin(angle), math::cos(angle)),
-                length,
-            ));
-        }
-    }
-    for (start, direction, length) in leaflets {
-        let (along, across) = local(p, start, direction);
-        let t = along / length;
-        if !(0.0..=1.0).contains(&t) {
+    let mut wing = None;
+    for axis in &laid.axes {
+        let offset = (axis.to.0 - axis.from.0, axis.to.1 - axis.from.1);
+        let length = hypot(offset.0, offset.1);
+        if length <= 0.0 {
             continue;
         }
-        let width = leaflet_width(s, length, t, margins.get(usize::from(across < 0.0)));
+        let (along, across) = local(p, axis.from, (offset.0 / length, offset.1 / length));
+        if along < 0.0 || along >= length {
+            continue;
+        }
+        let half = if axis.order == 0 { fine } else { 0.75 * fine };
+        if across.abs() < half {
+            return Paint::solid(0.9, 1.0);
+        }
+        let reach = axis.wing * (1.0 - 0.7 * along / length);
+        if across.abs() < reach {
+            wing = Some(across.abs() / reach);
+        }
+    }
+    let form = &laid.form;
+    for leaflet in &laid.leaflets {
+        let length = leaflet.length;
+        let (along, across) = local(p, leaflet.base, leaflet.direction);
+        if !(0.0..=length).contains(&along) {
+            continue;
+        }
+        let stalk = form.petiolule * length;
+        if along < stalk {
+            if across.abs() < 0.6 * fine {
+                return Paint::solid(0.9, 1.0);
+            }
+            continue;
+        }
+        let blade = length - stalk;
+        let t = (along - stalk) / blade;
+        let width = leaflet_width(s, form, blade, t, margins.get(usize::from(across < 0.0)));
         if across.abs() < width {
+            // A leaflet too small to show its veins is drawn plain.
+            if blade < 12.0 * fine {
+                return Paint::solid(0.92 + 0.08 * across.abs() / width.max(1e-6), 0.0);
+            }
             if t < 0.95 && across.abs() < fine * 0.6 {
                 return Paint::solid(1.15, 0.4);
             }
             return Paint::solid(
                 0.92 + 0.08 * across.abs() / width.max(1e-6)
-                    + grown(veins, across / length, t, length, || {
-                        side_veins(along, across, length / 7.0, math::radians(55.0))
+                    + grown(veins, across / blade, t, blade, || {
+                        side_veins(along - stalk, across, blade / 7.0, math::radians(55.0))
                     }),
                 0.0,
             );
         }
     }
-    Paint::EMPTY
+    wing.map_or(Paint::EMPTY, |share| Paint::solid(0.92 + 0.08 * share, 0.0))
 }
 
 /// A leafy shoot: a twig in the accent colour with simple leaves
