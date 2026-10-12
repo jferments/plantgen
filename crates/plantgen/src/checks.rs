@@ -1,4 +1,5 @@
-//! Checks of grown plants against their characters (spec rework M8B).
+//! Checks of grown plants against their characters (spec rework M8B and
+//! M8A).
 //!
 //! A species states what it is ([`crate::traits`]): a flora's ranges of
 //! heights, leaf, head and spikelet sizes. Here those ranges are checked
@@ -44,8 +45,26 @@
 //! young to flower) is "not grown", never a failure. The spread of the
 //! values is reported, not judged: a rule reads a range as its typical
 //! value, so most plants do not yet vary within it.
+//!
+//! **Counts and kinds (M8A).** Counts are counted on each organ that
+//! holds them, from what its layout draws ([`COUNTS`]: a head's rays,
+//! florets, phyllaries and rows, a spikelet's florets and glumes, a
+//! cluster's units and branches, a divided leaf's leaflets and pinnae,
+//! the leaves of a whorl), and judged as an organ's size is. Kinds
+//! ([`KINDS`]) pass when every state the plants draw is one the species
+//! states, plainly or qualified: a cluster's kind while its units are
+//! flowers, a head's kind, awns, a spikelet's ranks, a divided leaf's
+//! pattern and its end. How the leaves stand is measured on the graph:
+//! the leaves sharing a node, and the turn from each node to the next up
+//! its axis, the leaf below carried up the bending axis by the least
+//! rotation, the plant's median turn named by the nearest pattern
+//! (distichous 180°, spiral 137.5°, tristichous 120°, decussate half the
+//! gap between a node's leaves). A rosette's or tiller's leaves, which
+//! stand on no segment, are measured round the vertical where it stands
+//! about upright, one to a node in the order they were placed. Flower
+//! parts wait for their layout (spec rework P5).
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Write as _;
 
 use serde_json::{Map, Value};
@@ -55,6 +74,7 @@ use crate::grow::Growth;
 use crate::library::Library;
 use crate::looks::{Look, Season, Shape};
 use crate::lsys::Program;
+use crate::math::Vec3;
 use crate::organs::{self, Phase};
 use crate::spec::{Environment, PlantSpec};
 
@@ -70,7 +90,7 @@ pub enum Judged {
 }
 
 /// The size characters measured on grown plants, and how each is judged.
-pub const SIZES: [(&str, Judged); 21] = [
+pub const SIZES: [(&str, Judged); 22] = [
     ("height_typical_m", Judged::Typical),
     ("height_max_m", Judged::Greatest),
     ("crown_width_max_m", Judged::Greatest),
@@ -92,6 +112,38 @@ pub const SIZES: [(&str, Judged); 21] = [
     ("awn_length_m", Judged::Organs),
     ("fruit_size_m", Judged::Organs),
     ("cone_length_m", Judged::Organs),
+    ("divergence_deg", Judged::Typical),
+];
+
+/// The count characters counted on grown plants (spec rework M8A), each
+/// on every organ that holds what it counts and judged as an organ's size
+/// is.
+pub const COUNTS: [&str; 12] = [
+    "ray_florets",
+    "disc_florets",
+    "ligulate_florets",
+    "phyllaries",
+    "phyllary_series",
+    "florets_per_spikelet",
+    "glumes",
+    "units_per_inflorescence",
+    "inflorescence_branches",
+    "leaflets",
+    "pinnae",
+    "leaves_per_whorl",
+];
+
+/// The kinds a grown plant's drawing must agree with (spec rework M8A):
+/// each an enum or bool character, compared with what the plant draws.
+pub const KINDS: [&str; 8] = [
+    "inflorescence",
+    "capitulum_kind",
+    "awns",
+    "scale_arrangement",
+    "division_pattern",
+    "terminal_leaflet",
+    "leaf_arrangement",
+    "phyllotaxis_pattern",
 ];
 
 /// The share of a range's span beyond which a value is an error when the
@@ -103,12 +155,16 @@ pub const MARGIN: f64 = 0.25;
 /// (or one for the plant).
 pub type Measures = BTreeMap<&'static str, Vec<f64>>;
 
+/// The states one plant draws for each kind character.
+pub type Kinds = BTreeMap<&'static str, BTreeSet<String>>;
+
 /// One grown plant's measures.
 #[derive(Debug, Clone, PartialEq)]
 pub struct Plant {
     pub seed: u64,
     pub age: f64,
     pub measures: Measures,
+    pub kinds: Kinds,
 }
 
 /// A check's outcome.
@@ -293,7 +349,7 @@ pub fn judge(
     };
     let (band_low, band_high) = stated.band();
     let (far_low, far_high) = stated.extremes();
-    let shown = length_text;
+    let shown = |value: f64| value_text(character, value);
     match judged {
         Judged::Greatest => {
             let greatest = stated.greatest();
@@ -393,6 +449,7 @@ fn in_stage(phase: Option<Phase>, stage: Stage) -> bool {
 #[derive(Default)]
 struct Tally {
     seen: BTreeMap<(&'static str, u64, u32), f64>,
+    kinds: Kinds,
 }
 
 impl Tally {
@@ -402,12 +459,26 @@ impl Tally {
         }
     }
 
-    fn measures(self) -> Measures {
+    /// A count, which may be 0 (a head without rays).
+    fn count(&mut self, character: &'static str, organ: u64, part: u32, count: u32) {
+        self.seen
+            .entry((character, organ, part))
+            .or_insert(f64::from(count));
+    }
+
+    fn kind(&mut self, character: &'static str, state: &str) {
+        self.kinds
+            .entry(character)
+            .or_default()
+            .insert(state.to_owned());
+    }
+
+    fn measures(self) -> (Measures, Kinds) {
         let mut measures = Measures::new();
         for ((character, _, _), value) in self.seen {
             measures.entry(character).or_default().push(value);
         }
-        measures
+        (measures, self.kinds)
     }
 }
 
@@ -483,7 +554,7 @@ impl Grown<'_> {
 /// Measure one grown plant: every size character on every organ that has
 /// it (see the module).
 #[must_use]
-pub fn measure(grown: &Grown<'_>) -> Measures {
+pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
     let mut tally = Tally::default();
     let graph = grown.graph;
     // The plant.
@@ -496,6 +567,9 @@ pub fn measure(grown: &Grown<'_>) -> Measures {
         tally.add("stem_diameter_max_m", 0, 0, dbh);
     }
     culms(grown, &mut tally);
+    let (looks, _) =
+        crate::drawing::looks_of(grown.spec, grown.growth, crate::package::DEFAULT_DAY);
+    arrangement(grown, &looks, &mut tally);
     let seasons: Vec<Option<&Season>> = grown
         .growth
         .organ_types
@@ -544,6 +618,267 @@ fn culms(grown: &Grown<'_>, tally: &mut Tally) {
             next = segment.parent;
         }
         tally.add("culm_length_m", organ.id, 0, length);
+    }
+}
+
+/// Where a node stands: on a segment of an axis (the axis's first
+/// segment), or on the ground at a rosette, among the leaves placed there
+/// together (its place, to a millimetre, and their birth).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+enum Axis {
+    Stem(usize),
+    Ground(i64, i64, i64),
+}
+
+/// The leaves at one node of an axis.
+struct Node {
+    axis: Axis,
+    /// How far up the axis it stands; a rosette's leaves in the order
+    /// they were placed.
+    along: f64,
+    /// The axis's direction there.
+    up: Vec3,
+    /// Which way each leaf leaves the axis, square to it.
+    around: Vec<Vec3>,
+}
+
+/// `v` turned by the least rotation that takes `from` to `to` (both unit
+/// vectors), as the axis carries its frame from one node to the next.
+fn carried(v: Vec3, from: Vec3, to: Vec3) -> Vec3 {
+    let axis = from.cross(to);
+    let sin = axis.length();
+    if sin < 1e-9 {
+        return v;
+    }
+    let k = axis * (1.0 / sin);
+    let cos = from.dot(to).clamp(-1.0, 1.0);
+    v * cos + k.cross(v) * sin + k * (k.dot(v) * (1.0 - cos))
+}
+
+/// How the plant's leaves stand at their nodes, measured on the graph:
+/// the leaves at each node (`leaf_arrangement`, and `leaves_per_whorl` at
+/// a whorl), and how far each node turns from the one below it round its
+/// axis, the frame carried up the axis between them (`divergence_deg`,
+/// the plant's median, and the `phyllotaxis_pattern` nearest it). Leaves
+/// at the ground, a rosette's or a tiller's, stand one to a node, in the
+/// order they were placed, each year's apart.
+#[allow(
+    clippy::cast_possible_truncation,
+    clippy::cast_precision_loss,
+    clippy::too_many_lines
+)]
+fn arrangement(grown: &Grown<'_>, looks: &[Look], tally: &mut Tally) {
+    let graph = grown.graph;
+    let segments = &graph.segments;
+    // Each segment's axis and its end's distance up that axis.
+    let mut axis = Vec::with_capacity(segments.len());
+    let mut along_end: Vec<f64> = Vec::with_capacity(segments.len());
+    for (index, segment) in segments.iter().enumerate() {
+        let length = (segment.end - segment.start).length();
+        match segment.parent.map(|p| p as usize) {
+            Some(parent) if !segment.lateral && parent < index => {
+                axis.push(axis[parent]);
+                along_end.push(along_end[parent] + length);
+            }
+            _ => {
+                axis.push(index);
+                along_end.push(length);
+            }
+        }
+    }
+    // Where each leaf leaves its axis: a lone leaf where it is placed, a
+    // leaf drawn in pieces where its first piece's structure leaves the
+    // axis that bears it.
+    let mut first_piece: BTreeMap<u32, (&GraphOrgan, usize)> = BTreeMap::new();
+    let mut holders: Vec<(Option<usize>, Vec3, Vec3, &GraphOrgan, usize)> = Vec::new();
+    for (order, organ) in graph.organs.iter().enumerate() {
+        if grown.later(organ) {
+            continue;
+        }
+        match organ.within {
+            None if grown.term(organ) == "leaf" => {
+                // A card of several leaves (a sprig, a spray) is not one
+                // leaf at one node.
+                let one = looks.get(usize::from(organ.organ)).is_some_and(|look| {
+                    matches!(
+                        look.shape,
+                        Shape::Simple(_)
+                            | Shape::Lobed(_)
+                            | Shape::Compound(_)
+                            | Shape::Blade(_)
+                            | Shape::Palmate(_)
+                    )
+                });
+                if one {
+                    holders.push((
+                        organ.segment.map(|s| s as usize),
+                        organ.position,
+                        organ.heading,
+                        organ,
+                        order,
+                    ));
+                }
+            }
+            Some(structure) => {
+                first_piece.entry(structure).or_insert((organ, order));
+            }
+            None => {}
+        }
+    }
+    for (structure, (piece, order)) in first_piece {
+        let leafy = graph
+            .structures
+            .get(structure as usize)
+            .and_then(|s| grown.growth.structure_types.get(usize::from(s.structure)))
+            .is_some_and(|kind| kind.term == "leaf");
+        if !leafy {
+            continue;
+        }
+        let mut segment = piece.segment.map(|s| s as usize);
+        let mut position = piece.position;
+        while let Some(index) = segment
+            && segments[index].within == Some(structure)
+        {
+            position = segments[index].start;
+            segment = segments[index].parent.map(|p| p as usize);
+        }
+        holders.push((segment, position, piece.heading, piece, order));
+    }
+    // Leaves sharing a segment and a place are one node.
+    let mut nodes: BTreeMap<(Axis, [i64; 3], u64), Node> = BTreeMap::new();
+    let mut headings: BTreeMap<(Axis, [i64; 3], u64), Vec<Vec3>> = BTreeMap::new();
+    for (segment, position, heading, organ, order) in holders {
+        let at = segment.and_then(|index| segments.get(index));
+        let up = at.map_or(Vec3::Y, |at| (at.end - at.start).normalize_or(Vec3::Y));
+        let place = [position.x, position.y, position.z].map(|x| libm::round(x * 1e5) as i64);
+        let (key, along) = if let (Some(index), Some(at)) = (segment, at) {
+            (
+                (Axis::Stem(axis[index]), place, 0),
+                along_end[index] - (at.end - at.start).length() + (position - at.start).dot(up),
+            )
+        } else {
+            let ground = Axis::Ground(
+                libm::round(position.x * 1e3) as i64,
+                libm::round(position.z * 1e3) as i64,
+                libm::round(organ.born * 1e6) as i64,
+            );
+            ((ground, place, organ.id), order as f64)
+        };
+        nodes.entry(key).or_insert_with(|| Node {
+            axis: key.0,
+            along,
+            up,
+            around: Vec::new(),
+        });
+        headings.entry(key).or_default().push(heading);
+    }
+    // A tiller or rosette has no segment to give its axis: its leaves are
+    // measured round the vertical, and only where it stands about upright
+    // (their mean heading within 20° of it), since round a leaning tiller
+    // the turns cannot be told from the lean.
+    let mut leaning: BTreeMap<Axis, Vec3> = BTreeMap::new();
+    for (key, list) in &headings {
+        if matches!(key.0, Axis::Ground(..)) {
+            let sum = leaning.entry(key.0).or_insert(Vec3::ZERO);
+            for heading in list {
+                *sum += *heading;
+            }
+        }
+    }
+    let upright = crate::math::cos(crate::math::radians(20.0));
+    for (key, node) in &mut nodes {
+        if leaning
+            .get(&node.axis)
+            .is_some_and(|sum| sum.normalize_or(Vec3::X).dot(Vec3::Y) < upright)
+        {
+            continue;
+        }
+        for heading in &headings[key] {
+            let out = *heading - node.up * heading.dot(node.up);
+            if out.length() >= 1e-6 {
+                node.around.push(out.normalize_or(Vec3::X));
+            }
+        }
+    }
+    nodes.retain(|_, node| !node.around.is_empty());
+    // The plant's usual leaves at a node, and each whorl's count.
+    let mut per_node: BTreeMap<usize, usize> = BTreeMap::new();
+    for (index, node) in nodes.values().enumerate() {
+        let leaves = node.around.len();
+        *per_node.entry(leaves).or_default() += 1;
+        if leaves >= 3 {
+            tally.count(
+                "leaves_per_whorl",
+                0,
+                u32::try_from(index).unwrap_or(u32::MAX),
+                u32::try_from(leaves).unwrap_or(u32::MAX),
+            );
+        }
+    }
+    let Some(usual) = per_node
+        .iter()
+        .max_by_key(|(leaves, nodes)| (**nodes, std::cmp::Reverse(**leaves)))
+        .map(|(leaves, _)| *leaves)
+    else {
+        return;
+    };
+    tally.kind(
+        "leaf_arrangement",
+        match usual {
+            1 => "alternate",
+            2 => "opposite",
+            _ => "whorled",
+        },
+    );
+    // The turn from each node to the next up its axis, among nodes of the
+    // usual count: to the nearest leaf of the next, so a pair crossing the
+    // one below turns a quarter.
+    let mut by_axis: BTreeMap<Axis, Vec<&Node>> = BTreeMap::new();
+    for node in nodes.values().filter(|node| node.around.len() == usual) {
+        by_axis.entry(node.axis).or_default().push(node);
+    }
+    let mut turns: Vec<f64> = Vec::new();
+    for (_, mut members) in by_axis {
+        members.sort_by(|a, b| a.along.total_cmp(&b.along));
+        for pair in members.windows(2) {
+            let (below, above) = (pair[0], pair[1]);
+            if above.along - below.along <= 1e-9 {
+                continue;
+            }
+            let from = carried(below.around[0], below.up, above.up);
+            let from = (from - above.up * from.dot(above.up)).normalize_or(from);
+            if let Some(turn) = above
+                .around
+                .iter()
+                .map(|to| crate::math::degrees(crate::math::acos(from.dot(*to).clamp(-1.0, 1.0))))
+                .reduce(f64::min)
+            {
+                turns.push(turn);
+            }
+        }
+    }
+    if turns.is_empty() {
+        return;
+    }
+    turns.sort_by(f64::total_cmp);
+    let median = turns[turns.len() / 2];
+    tally.add("divergence_deg", 0, 0, median);
+    // The pattern whose turn is nearest: a pair or whorl crossing the one
+    // below turns half the gap between its leaves.
+    let patterns: &[(&str, f64)] = if usual >= 2 {
+        &[("decussate", 180.0 / usual as f64), ("superposed", 0.0)]
+    } else {
+        &[
+            ("distichous", 180.0),
+            ("spiral", 137.5),
+            ("tristichous", 120.0),
+        ]
+    };
+    if let Some((pattern, _)) = patterns
+        .iter()
+        .min_by(|a, b| (a.1 - median).abs().total_cmp(&(b.1 - median).abs()))
+    {
+        tally.kind("phyllotaxis_pattern", pattern);
     }
 }
 
@@ -619,6 +954,24 @@ fn leaf_sizes(shape: &Shape, size: f64, id: u64, tally: &mut Tally) {
             (blade, blade * lobed.width, size * lobed.petiole)
         }
         Shape::Compound(compound) => {
+            let counts = crate::divided::counts(compound);
+            for (part, leaflets) in (0_u32..).zip(&counts.leaflets) {
+                tally.count("leaflets", id, part, *leaflets);
+            }
+            if counts.pinnae > 0 {
+                tally.count("pinnae", id, 0, counts.pinnae);
+            }
+            if let Some(terminal) = counts.terminal {
+                tally.kind("terminal_leaflet", if terminal { "true" } else { "false" });
+            }
+            let pattern = compound.pattern.unwrap_or_default();
+            tally.kind(
+                "division_pattern",
+                match pattern {
+                    crate::looks::Pattern::Pinnate => "pinnate",
+                    crate::looks::Pattern::Palmate => "palmate",
+                },
+            );
             let d = crate::divided::dimensions(compound);
             (size * d.blade, size * d.width, size * d.petiole)
         }
@@ -626,6 +979,7 @@ fn leaf_sizes(shape: &Shape, size: f64, id: u64, tally: &mut Tally) {
         // Palmate lobes radiate from the petiole's tip over the card;
         // sprays, sprigs and fronds are not one leaf's blade.
         Shape::Palmate(palmate) => {
+            tally.kind("division_pattern", "palmate");
             let blade = size * (1.0 - palmate.petiole);
             (blade, size * shape.aspect(), size * palmate.petiole)
         }
@@ -648,6 +1002,14 @@ fn reproductive(
     let term = grown.term(organ);
     if let Some(cluster) = &look.inflorescence {
         let layout = cluster.laid_on(organ);
+        // The `inflorescence` character groups a shoot's flowers: a
+        // cluster of fruit, drawn on the days its units are fruit, is
+        // what the flowers became and may be drawn otherwise.
+        if in_stage(phase, Stage::Open)
+            && !matches!(cluster.unit, crate::clusters::Unit::Fruit { .. })
+        {
+            tally.kind("inflorescence", cluster.cluster.kind.name());
+        }
         if in_stage(phase, Stage::Open) {
             tally.add(
                 "inflorescence_length_m",
@@ -655,6 +1017,23 @@ fn reproductive(
                 0,
                 organ.size * layout.length(cluster.unit),
             );
+            tally.count(
+                "units_per_inflorescence",
+                organ.id,
+                0,
+                u32::try_from(layout.units.len()).unwrap_or(u32::MAX),
+            );
+            if matches!(
+                cluster.cluster.kind,
+                crate::looks::ClusterKind::Panicle | crate::looks::ClusterKind::CompoundUmbel
+            ) {
+                tally.count(
+                    "inflorescence_branches",
+                    organ.id,
+                    0,
+                    cluster.cluster.branches,
+                );
+            }
         }
         for (index, unit) in layout.units.iter().enumerate() {
             let part = u32::try_from(index + 1).unwrap_or(u32::MAX);
@@ -703,6 +1082,7 @@ fn unit_sizes(
                 );
                 tally.add("ray_length_m", organ, part, length * d.ray_length);
                 tally.add("pappus_length_m", organ, part, length * d.pappus_length);
+                head_counts(head, (organ, part), tally);
             }
             // A head's fruit are its cypselae, ripe once most of its
             // florets are in seed (a head's phase is its drawn opening
@@ -716,6 +1096,18 @@ fn unit_sizes(
             }
         }
         Shape::Spikelet(spikelet) if in_stage(phase, Stage::Open) => {
+            tally.count("florets_per_spikelet", organ, part, spikelet.florets.max(1));
+            tally.count("glumes", organ, part, spikelet.glumes.min(2));
+            let awned = spikelet.awn > 0.0 && spikelet.awned > 0.0;
+            tally.kind("awns", if awned { "true" } else { "false" });
+            tally.kind(
+                "scale_arrangement",
+                if spikelet.ranks == 2 {
+                    "distichous"
+                } else {
+                    "spiral"
+                },
+            );
             let d = crate::spikelets::dimensions(spikelet);
             tally.add("spikelet_length_m", organ, part, length * d.length);
             tally.add("upper_glume_length_m", organ, part, length * d.upper_glume);
@@ -733,6 +1125,39 @@ fn unit_sizes(
         }
         _ => {}
     }
+}
+
+/// A head's florets and phyllaries, as its layout draws them, and its
+/// kind.
+fn head_counts(head: &crate::looks::Head, (organ, part): (u64, u32), tally: &mut Tally) {
+    use crate::looks::HeadKind;
+    let florets = head.florets.max(1);
+    match head.kind {
+        HeadKind::Radiate => {
+            tally.count("ray_florets", organ, part, head.rays);
+            tally.count("disc_florets", organ, part, florets);
+        }
+        HeadKind::Discoid => tally.count("disc_florets", organ, part, florets),
+        HeadKind::Ligulate => tally.count("ligulate_florets", organ, part, florets),
+    }
+    tally.count("phyllaries", organ, part, head.phyllaries);
+    if head.phyllaries > 0 {
+        tally.count(
+            "phyllary_series",
+            organ,
+            part,
+            head.series.clamp(1, head.phyllaries),
+        );
+    }
+    tally.kind(
+        "capitulum_kind",
+        match head.kind {
+            // A radiate head drawn without rays is a disc alone.
+            HeadKind::Radiate if head.rays > 0 => "radiate",
+            HeadKind::Radiate | HeadKind::Discoid => "discoid",
+            HeadKind::Ligulate => "liguliflorous",
+        },
+    );
 }
 
 /// Grow `spec` from `seed` in `environment` to its oldest keyframe and
@@ -761,10 +1186,12 @@ pub fn grow_and_measure(
         terms: organs::of_program(&program, &spec.appearance),
         later: later_types(&program),
     };
+    let (measures, kinds) = measure(&grown);
     Ok(Plant {
         seed,
         age: graph.age,
-        measures: measure(&grown),
+        measures,
+        kinds,
     })
 }
 
@@ -776,9 +1203,34 @@ pub struct Report {
     pub environment: Environment,
     pub seeds: Vec<u64>,
     pub age: f64,
+    /// Sizes, then counts.
     pub findings: Vec<Finding>,
+    pub kinds: Vec<Agreement>,
     /// Size characters the species states that nothing here measures yet.
     pub unmeasured: Vec<String>,
+}
+
+/// A kind character judged against what the plants draw: a pass when
+/// every state drawn is one the species states (plainly, or qualified,
+/// however rarely), an error otherwise.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Agreement {
+    pub character: &'static str,
+    pub stated: Vec<String>,
+    pub drawn: BTreeSet<String>,
+    pub verdict: Verdict,
+}
+
+/// The states a kind character's value names: a plain state, or each of
+/// its qualified states.
+#[must_use]
+pub fn states_of(value: &Value) -> Vec<String> {
+    match value {
+        Value::String(state) => vec![state.clone()],
+        Value::Bool(state) => vec![state.to_string()],
+        Value::Object(qualified) => qualified.keys().cloned().collect(),
+        _ => Vec::new(),
+    }
 }
 
 impl Report {
@@ -788,6 +1240,7 @@ impl Report {
         self.findings
             .iter()
             .map(|finding| finding.verdict)
+            .chain(self.kinds.iter().map(|agreement| agreement.verdict))
             .max()
             .unwrap_or(Verdict::Pass)
     }
@@ -806,10 +1259,16 @@ pub fn seeds_of(spec: &PlantSpec, n: usize) -> Vec<u64> {
     seeds
 }
 
-/// Whether `traits` states any character [`SIZES`] measures.
+/// Whether `traits` states any character [`SIZES`], [`COUNTS`] or
+/// [`KINDS`] checks.
 #[must_use]
-pub fn states_sizes(traits: &Map<String, Value>) -> bool {
-    SIZES.iter().any(|(key, _)| traits.contains_key(*key))
+pub fn states_checked(traits: &Map<String, Value>) -> bool {
+    SIZES
+        .iter()
+        .map(|(key, _)| *key)
+        .chain(COUNTS)
+        .chain(KINDS)
+        .any(|key| traits.contains_key(key))
 }
 
 /// Check `spec`'s stated sizes (`traits`, as it inherits them) against
@@ -841,7 +1300,8 @@ pub fn judge_plants(
     plants: &[Plant],
 ) -> Report {
     let mut findings = Vec::new();
-    for (character, judged) in SIZES {
+    let counts = COUNTS.iter().map(|&count| (count, Judged::Organs));
+    for (character, judged) in SIZES.into_iter().chain(counts) {
         let Some(stated) = traits.get(character).and_then(Stated::of) else {
             continue;
         };
@@ -859,16 +1319,41 @@ pub fn judge_plants(
         }
         findings.push(judge(character, judged, stated, &mut values, with));
     }
+    let kinds = KINDS
+        .iter()
+        .filter_map(|&character| {
+            let stated = states_of(traits.get(character)?);
+            let drawn: BTreeSet<String> = plants
+                .iter()
+                .filter_map(|plant| plant.kinds.get(character))
+                .flatten()
+                .cloned()
+                .collect();
+            let verdict = if drawn.is_empty() {
+                Verdict::NotGrown
+            } else if drawn.iter().all(|state| stated.contains(state)) {
+                Verdict::Pass
+            } else {
+                Verdict::Error
+            };
+            Some(Agreement {
+                character,
+                stated,
+                drawn,
+                verdict,
+            })
+        })
+        .collect();
     let vocabulary = crate::traits::Vocabulary::builtin();
     let unmeasured = traits
         .keys()
         .filter(|key| {
-            vocabulary
-                .traits
-                .get(key.as_str())
-                .is_some_and(|t| t.group == "size" || t.unit.as_deref() == Some("m"))
+            vocabulary.traits.get(key.as_str()).is_some_and(|t| {
+                t.group == "size" || t.unit.as_deref() == Some("m") || t.kind == "count"
+            })
         })
         .filter(|key| !SIZES.iter().any(|(size, _)| size == key))
+        .filter(|key| !COUNTS.contains(&key.as_str()))
         .filter(|key| !matches!(key.as_str(), "elevation_min_m" | "elevation_max_m"))
         .cloned()
         .collect();
@@ -878,6 +1363,7 @@ pub fn judge_plants(
         seeds: plants.iter().map(|plant| plant.seed).collect(),
         age: plants.first().map_or(0.0, |plant| plant.age),
         findings,
+        kinds,
         unmeasured,
     }
 }
@@ -895,9 +1381,25 @@ pub fn length_text(metres: f64) -> String {
     }
 }
 
-/// A stated range for a report: "(low–)min–max(–high)".
+/// A value of `character` for a report: a length (a character in metres)
+/// or a count.
 #[must_use]
-pub fn range_text(stated: &Stated) -> String {
+pub fn value_text(character: &str, value: f64) -> String {
+    if character.ends_with("_m") {
+        length_text(value)
+    } else if character.ends_with("_deg") {
+        format!("{value:.0}°")
+    } else if value.fract() == 0.0 {
+        format!("{value:.0}")
+    } else {
+        format!("{value:.1}")
+    }
+}
+
+/// A stated range of `character` for a report: "(low–)min–max(–high)".
+#[must_use]
+pub fn range_text(character: &str, stated: &Stated) -> String {
+    let length_text = |value: f64| value_text(character, value);
     let mut text = String::new();
     if let Some(low) = stated.low {
         let _ = write!(text, "({}–)", length_text(low));
@@ -993,5 +1495,48 @@ mod tests {
     fn seeds_start_with_the_variants_own() {
         let spec = Library::builtin().spec("achillea-millefolium").unwrap();
         assert_eq!(seeds_of(&spec, 3), vec![1, 2, 3]);
+    }
+
+    #[test]
+    fn kinds_read_plain_and_qualified_states() {
+        assert_eq!(states_of(&json!("panicle")), vec!["panicle"]);
+        assert_eq!(states_of(&json!(true)), vec!["true"]);
+        assert_eq!(
+            states_of(&json!({"opposite": "usually", "alternate": "rarely"})),
+            vec!["alternate", "opposite"]
+        );
+        assert!(states_of(&json!(3)).is_empty());
+    }
+
+    #[test]
+    fn counts_and_turns_read_as_numbers() {
+        assert_eq!(value_text("ray_florets", 8.0), "8");
+        assert_eq!(value_text("leaflets", 6.5), "6.5");
+        assert_eq!(value_text("divergence_deg", 137.5), "138°");
+        assert_eq!(value_text("lemma_length_m", 0.004), "4.0 mm");
+        let ten = stated(&json!({"min": 5, "max": 8, "low": 3}));
+        assert_eq!(range_text("ray_florets", &ten), "(3–)5–8");
+        let mut rays = vec![5.0, 6.0, 7.0, 8.0, 8.0];
+        let pass = judge("ray_florets", Judged::Organs, ten, &mut rays, 1);
+        assert_eq!(pass.verdict, Verdict::Pass, "{pass:?}");
+        let mut two = vec![2.0, 6.0];
+        let error = judge("ray_florets", Judged::Organs, ten, &mut two, 1);
+        assert_eq!(error.verdict, Verdict::Error, "{error:?}");
+    }
+
+    #[test]
+    fn a_leaf_carried_up_a_bending_axis_keeps_its_side() {
+        // An axis bending from upright to leaning along +X carries a leaf
+        // pointing along -Z unchanged, and one along +X down below it.
+        let up = Vec3::Y;
+        let leaning = Vec3::new(1.0, 1.0, 0.0).normalize_or(Vec3::Y);
+        let side = carried(Vec3::new(0.0, 0.0, -1.0), up, leaning);
+        assert!(
+            (side - Vec3::new(0.0, 0.0, -1.0)).length() < 1e-9,
+            "{side:?}"
+        );
+        let out = carried(Vec3::X, up, leaning);
+        assert!(out.dot(leaning).abs() < 1e-9, "{out:?}");
+        assert!(out.y < 0.0, "{out:?}");
     }
 }

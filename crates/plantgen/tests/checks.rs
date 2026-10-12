@@ -1,63 +1,132 @@
-//! The size checks (spec rework M8B) over the built-in species: every
-//! species that states a size a check measures grows within that size's
-//! extremes, seed after seed.
+//! The checks (spec rework M8B and M8A) over the built-in species: every
+//! species that states a size, a count or a kind a check reads grows
+//! within that size's or count's extremes and draws the kinds it states,
+//! seed after seed.
+
+use std::sync::Mutex;
 
 use plantgen::checks::{self, Verdict};
 use plantgen::library::Library;
 use plantgen::spec::PlantSpec;
 
-/// Sizes known to fall past their extremes, each with why, until its
-/// species is retuned. A pair here that comes to pass fails the test too,
-/// so the list only shrinks.
-const KNOWN: &[(&str, &str, &str)] = &[(
-    "anaphalis-margaritacea",
-    "involucre_height_m",
-    "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
-)];
+/// Checks known to fail, each with why, until its species or program is
+/// changed: a species id, or `program:` and the program that grows every
+/// species it names. A known failure that comes to pass fails the test
+/// too, so the list only shrinks.
+const KNOWN: &[(&str, &str, &str)] = &[
+    (
+        "anaphalis-margaritacea",
+        "involucre_height_m",
+        "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
+    ),
+    (
+        "program:grass",
+        "phyllotaxis_pattern",
+        "each blade's roll is jittered ±40° (a culm leaf's ±30°), so the turn from one to the next has a median of about 146°, nearer the golden angle than half a turn",
+    ),
+    (
+        "program:herb",
+        "phyllotaxis_pattern",
+        "each basal leaf's roll is jittered ±30°, so a fan of two ranks (irises, blue-eyed grass) turns about 140° to 150° from one leaf to the next",
+    ),
+];
 
-/// Every species that states sizes, three plants each, has none past its
-/// ranges' extremes but the [`KNOWN`] ones.
+fn known(spec: &PlantSpec, character: &str) -> bool {
+    KNOWN.iter().any(|(who, what, _)| {
+        *what == character
+            && (*who == spec.id
+                || who.strip_prefix("program:") == Some(spec.generator.program.as_str()))
+    })
+}
+
+/// Every species a check reads, three plants each, has no size or count
+/// past its ranges' extremes and draws no kind it does not state, but the
+/// [`KNOWN`] ones.
 #[test]
-fn stated_sizes_hold_within_their_extremes() {
+fn stated_characters_hold_on_grown_plants() {
     let library = Library::builtin();
-    let mut checked = 0;
-    let mut errors = Vec::new();
-    let mut known = Vec::new();
-    for entry in library.species() {
-        let traits = library.traits_of(&entry.id).unwrap();
-        if !checks::states_sizes(&traits) {
-            continue;
-        }
-        let spec = PlantSpec::builtin(&entry.id).unwrap();
-        let seeds = checks::seeds_of(&spec, 3);
-        let report = checks::check(&spec, library, &traits, &seeds).unwrap();
-        checked += 1;
-        for finding in &report.findings {
-            let listed = KNOWN
-                .iter()
-                .any(|(id, character, _)| *id == spec.id && *character == finding.character);
-            if finding.verdict == Verdict::Error {
-                if listed {
-                    known.push((spec.id.clone(), finding.character));
-                } else {
-                    errors.push(format!(
-                        "{} {}: {}",
-                        spec.id, finding.character, finding.reason
-                    ));
-                }
-            }
-        }
-    }
-    assert!(checked >= 15, "only {checked} species state sizes");
+    let ids: Vec<String> = library
+        .species()
+        .iter()
+        .map(|entry| entry.id.clone())
+        .filter(|id| {
+            library
+                .traits_of(id)
+                .is_ok_and(|traits| checks::states_checked(&traits))
+        })
+        .collect();
     assert!(
-        errors.is_empty(),
-        "sizes past their extremes:\n{}",
-        errors.join("\n")
+        ids.len() >= 50,
+        "only {} species state checked characters",
+        ids.len()
     );
-    for (id, character, why) in KNOWN {
+    let next = Mutex::new(ids.iter());
+    let errors = Mutex::new(Vec::new());
+    let failing_known = Mutex::new(Vec::new());
+    let threads = std::thread::available_parallelism().map_or(4, usize::from);
+    std::thread::scope(|scope| {
+        for _ in 0..threads {
+            scope.spawn(|| {
+                loop {
+                    let Some(id) = next.lock().unwrap().next() else {
+                        break;
+                    };
+                    let traits = library.traits_of(id).unwrap();
+                    let spec = PlantSpec::builtin(id).unwrap();
+                    let seeds = checks::seeds_of(&spec, 3);
+                    let report = checks::check(&spec, library, &traits, &seeds).unwrap();
+                    let failed = report
+                        .findings
+                        .iter()
+                        .filter(|finding| finding.verdict == Verdict::Error)
+                        .map(|finding| (finding.character, finding.reason.clone()))
+                        .chain(
+                            report
+                                .kinds
+                                .iter()
+                                .filter(|agreement| agreement.verdict == Verdict::Error)
+                                .map(|agreement| {
+                                    (
+                                        agreement.character,
+                                        format!(
+                                            "draws {:?}, states {:?}",
+                                            agreement.drawn, agreement.stated
+                                        ),
+                                    )
+                                }),
+                        );
+                    for (character, reason) in failed {
+                        if known(&spec, character) {
+                            failing_known
+                                .lock()
+                                .unwrap()
+                                .push((spec.id.clone(), character));
+                        } else {
+                            errors
+                                .lock()
+                                .unwrap()
+                                .push(format!("{} {character}: {reason}", spec.id));
+                        }
+                    }
+                }
+            });
+        }
+    });
+    let mut errors = errors.into_inner().unwrap();
+    errors.sort();
+    assert!(errors.is_empty(), "checks failed:\n{}", errors.join("\n"));
+    let failing_known = failing_known.into_inner().unwrap();
+    for (who, character, why) in KNOWN {
+        let still = failing_known.iter().any(|(id, c)| {
+            c == character
+                && (id == who
+                    || who.strip_prefix("program:").is_some_and(|program| {
+                        PlantSpec::builtin(id).is_ok_and(|spec| spec.generator.program == program)
+                    }))
+        });
         assert!(
-            known.iter().any(|(k, c)| k == id && c == character),
-            "{id} {character} now holds ({why}): take it off the known list"
+            still,
+            "{who} {character} now holds ({why}): take it off the known list"
         );
     }
 }

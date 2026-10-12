@@ -53,8 +53,10 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   families have their characters; most have none yet (`plantc audit`).
   `plantc validate` grows each species from several seeds and checks the
   sizes they reach (heights, leaves, heads, spikelets and their parts)
-  against the ranges its characters state, each measured as the
-  character defines it.
+  and the counts they draw (rays, florets, glumes, leaflets) against the
+  ranges its characters state, each measured as the character defines
+  it, and that the kinds it draws (its clusters, heads, awns and how its
+  leaves stand and turn) are the ones it states.
   Rules in a taxon turn its characters into the plant: at the vascular
   plants, the leaves at a node and how far each node turns from the last
   come from how a taxon's leaves are arranged, so irises grow flat fans

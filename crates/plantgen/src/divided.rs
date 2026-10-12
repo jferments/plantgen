@@ -433,6 +433,46 @@ pub fn dimensions(c: &Compound) -> Dimensions {
     }
 }
 
+/// A compound leaf's counts as floras give them (spec rework M8A): its
+/// leaflets, one count for a leaf divided once and one for each pinna of a
+/// twice-divided leaf; its pinnae, 0 for a leaf divided once; and for a
+/// pinnate leaf whether it, or each pinna, ends in a single leaflet.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Counts {
+    pub leaflets: Vec<u32>,
+    pub pinnae: u32,
+    pub terminal: Option<bool>,
+}
+
+/// `c`'s [`Counts`], from the leaflets its layout draws.
+#[must_use]
+pub fn counts(c: &Compound) -> Counts {
+    let laid = layout(c);
+    let mut per_division: BTreeMap<u32, u32> = BTreeMap::new();
+    for leaflet in &laid.leaflets {
+        *per_division.entry(leaflet.division).or_default() += 1;
+    }
+    let once = laid.form.pinnules == 0;
+    let leaflets = if once {
+        vec![u32::try_from(laid.leaflets.len()).unwrap_or(u32::MAX)]
+    } else {
+        per_division.values().copied().collect()
+    };
+    let pinnae = if once {
+        0
+    } else {
+        u32::try_from(per_division.len()).unwrap_or(u32::MAX)
+    };
+    // An odd count ends in a leaflet, an even one in a pair.
+    let terminal = (laid.form.pattern == Pattern::Pinnate)
+        .then(|| leaflets.first().is_some_and(|count| count % 2 == 1));
+    Counts {
+        leaflets,
+        pinnae,
+        terminal,
+    }
+}
+
 impl Layout {
     /// The points that bound the leaf: its axes' ends, and each leaflet's
     /// base, tip and the edges of its blade where it is widest.
@@ -517,6 +557,27 @@ mod tests {
         let mut c = Compound::default();
         edit(&mut c);
         c
+    }
+
+    #[test]
+    fn counts_come_from_the_leaflets_laid_out() {
+        let odd = counts(&compound(|c| c.leaflets = 7));
+        assert_eq!(odd.leaflets, vec![7]);
+        assert_eq!(odd.pinnae, 0);
+        assert_eq!(odd.terminal, Some(true));
+        let twice = counts(&compound(|c| {
+            c.leaflets = 4;
+            c.pinnules = Some(6);
+        }));
+        assert_eq!(twice.pinnae, 4);
+        assert_eq!(twice.leaflets, vec![6; 4]);
+        assert_eq!(twice.terminal, Some(false));
+        let palmate = counts(&compound(|c| {
+            c.leaflets = 5;
+            c.pattern = Some(Pattern::Palmate);
+        }));
+        assert_eq!(palmate.leaflets, vec![5]);
+        assert_eq!(palmate.terminal, None);
     }
 
     #[test]

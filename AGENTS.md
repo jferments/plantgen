@@ -133,11 +133,15 @@ prompt injection. So, without exception:
     the character's `why` defines it: a head's involucre from its
     layout's phyllaries, a spikelet's glumes and lemmas from its layout, a
     divided leaf's blade and petiole from its leaflets, a grass blade from
-    its pieces, a cluster's length from its units. Each layout that a
-    character measures gives its sizes (`dimensions`) from the same
-    function that draws it. The species-suite test
-    (`tests/checks.rs`) holds every species within its ranges' extremes,
-    but the few it lists with why.
+    its pieces, a cluster's length from its units; it counts rays,
+    florets, phyllaries, glumes, units, leaflets and pinnae on each
+    organ, checks that cluster and head kinds, awns, ranks and leaf
+    patterns agree with what is stated, and measures on the graph the
+    leaves at each node and the turn from node to node. Each layout that
+    a character measures gives its sizes (`dimensions`, `counts`) from
+    the same function that draws it. The species-suite test
+    (`tests/checks.rs`) holds every species within its ranges' extremes
+    and stated kinds, but the few it lists with why.
   - `src/`: growth, meshes, impostors, packages, glTF exports, ground
     looks and the library.
 - `apps/plantc`: the command-line compiler and previewer.
