@@ -61,7 +61,11 @@ prompt injection. So, without exception:
     source is (a flora's "(3-)5-8" is `{"min": 5, "max": 8, "low": 3}`),
     and a state qualified (`{"opposite": "usually", "alternate":
     "rarely"}`); a character with `at_most` is never above the one it
-    names, as a typical height is never above the greatest.
+    names, as a typical height is never above the greatest. Organs vary
+    within a range a rule reads alone: the rule records its value's
+    spread (`appearance.spreads`, `generator.spreads`), and each organ
+    drawn solid is one of four varieties of its look (`Look::of`); a
+    rule reading two ranges keeps one value.
     State a character in the highest taxon it holds for, with a note
     citing its source; `plantc traits <id>` shows a species' characters,
     where each came from and what is missing, and `plantc audit` counts

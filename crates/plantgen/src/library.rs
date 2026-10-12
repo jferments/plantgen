@@ -3254,7 +3254,7 @@ mod tests {
     /// Stating characters changes a species' spec, and so its package,
     /// only where a rule reads them: every built-in spec is what it would
     /// be with no trait stated anywhere, but for the values rules set from
-    /// its characters and their notes.
+    /// its characters, their spreads and their notes.
     #[test]
     fn characters_change_no_spec_until_a_rule_reads_them() {
         let library = Library::builtin();
@@ -3332,6 +3332,27 @@ mod tests {
                     remove(&mut with, path);
                     remove(&mut without, path);
                 }
+            }
+            // Only ranges a rule reads spread its value.
+            for section in ["/appearance/spreads", "/generator/spreads"] {
+                assert!(without.pointer(section).is_none(), "{}", entry.id);
+            }
+            for section in ["appearance", "generator"] {
+                if let Some(inside) = with
+                    .get_mut(section)
+                    .and_then(serde_json::Value::as_object_mut)
+                {
+                    inside.remove("spreads");
+                }
+            }
+            if let Some(notes) = with
+                .get_mut("evidence")
+                .and_then(serde_json::Value::as_object_mut)
+            {
+                notes.retain(|path, _| {
+                    !path.starts_with("appearance.spreads.")
+                        && !path.starts_with("generator.spreads.")
+                });
             }
             // The notes on traits left in `own` stay out of the spec too.
             assert_eq!(without, with, "{}", entry.id);

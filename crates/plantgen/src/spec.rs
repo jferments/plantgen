@@ -208,6 +208,13 @@ pub struct Generator {
     /// Parameter values that replace the program's defaults.
     #[serde(default)]
     pub params: BTreeMap<String, f64>,
+    /// The spreads of parameters rules set from ranges, by path
+    /// (`params.<name>`; [`crate::inherit::Spread`]). No plant draws from
+    /// them yet (spec rework VARY): a cluster sizes its units as a share of
+    /// itself, so a plant with a shorter panicle would draw smaller
+    /// spikelets.
+    #[serde(default, skip_serializing_if = "serde_json::Map::is_empty")]
+    pub spreads: serde_json::Map<String, serde_json::Value>,
 }
 
 /// How long to grow and which ages to keep.
@@ -367,6 +374,12 @@ pub struct Appearance {
     /// default look.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub bodies: BTreeMap<String, BodyLook>,
+    /// The spreads of look values rules set from ranges, by path
+    /// (`organs.<organ>.<field>`; [`crate::inherit::Spread`]): each organ
+    /// drawn solid is one of [`crate::looks::VARIETIES`] varieties of its
+    /// look, each drawing its values from them ([`Look::of`]).
+    #[serde(default, skip_serializing_if = "serde_json::Map::is_empty")]
+    pub spreads: serde_json::Map<String, serde_json::Value>,
 }
 
 impl Appearance {
@@ -383,7 +396,22 @@ impl Appearance {
     /// order (see [`Program::organs`]).
     #[must_use]
     pub fn looks<'a>(&self, organs: impl IntoIterator<Item = (&'a str, OrganKind)>) -> Vec<Look> {
-        looks::resolve(organs, &self.organs, self.foliage, self.foliage_shade)
+        let organs: Vec<(&str, OrganKind)> = organs.into_iter().collect();
+        let mut looks = looks::resolve(
+            organs.iter().copied(),
+            &self.organs,
+            self.foliage,
+            self.foliage_shade,
+        );
+        self.vary(&mut looks, organs.len(), |drawn| {
+            looks::resolve(
+                organs.iter().copied(),
+                drawn,
+                self.foliage,
+                self.foliage_shade,
+            )
+        });
+        looks
     }
 
     /// The looks of [`Appearance::looks`] on day `day` of the year, with
@@ -395,7 +423,63 @@ impl Appearance {
         organs: impl IntoIterator<Item = (&'a str, OrganKind)>,
         day: Option<f64>,
     ) -> (Vec<Look>, Vec<f64>) {
-        looks::resolve_on(organs, &self.organs, self.foliage, self.foliage_shade, day)
+        let organs: Vec<(&str, OrganKind)> = organs.into_iter().collect();
+        let (mut looks, sizes) = looks::resolve_on(
+            organs.iter().copied(),
+            &self.organs,
+            self.foliage,
+            self.foliage_shade,
+            day,
+        );
+        self.vary(&mut looks, organs.len(), |drawn| {
+            looks::resolve_on(
+                organs.iter().copied(),
+                drawn,
+                self.foliage,
+                self.foliage_shade,
+                day,
+            )
+            .0
+        });
+        (looks, sizes)
+    }
+
+    /// Give each of the first `types` of `looks` whose values vary
+    /// ([`Appearance::spreads`]) and that is drawn solid its varieties
+    /// (spec rework VARY): the looks `resolve` gives each variety's looks
+    /// by organ name ([`looks::variety`]), where any differs from it.
+    fn vary(
+        &self,
+        looks: &mut [Look],
+        types: usize,
+        resolve: impl Fn(&BTreeMap<String, OrganLook>) -> Vec<Look>,
+    ) {
+        let Some(serde_json::Value::Object(varied)) = self.spreads.get("organs") else {
+            return;
+        };
+        if !looks
+            .iter()
+            .take(types)
+            .any(|look| varied.contains_key(&look.organ) && look.draws_solid())
+        {
+            return;
+        }
+        let varieties: Vec<Vec<Look>> = (0..looks::VARIETIES)
+            .map(|variety| resolve(&looks::variety(&self.organs, &self.spreads, variety)))
+            .collect();
+        for (index, look) in looks.iter_mut().enumerate().take(types) {
+            if varied.contains_key(&look.organ) && look.draws_solid() {
+                let drawn: Vec<Look> = varieties
+                    .iter()
+                    .filter_map(|drawn| drawn.get(index).cloned())
+                    .collect();
+                // A look whose varieties all draw its typical values (its
+                // spreads differ only in their rare extremes) stays one.
+                if drawn.iter().any(|variety| variety != look) {
+                    look.varieties = drawn;
+                }
+            }
+        }
     }
 
     /// Whether any organ has a season ([`looks::Season`]): then the day a

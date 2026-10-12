@@ -182,4 +182,9 @@ pub mod venation;
 /// and bracken grow fronds of their flora's sizes; a crown a fern's
 /// rhizome sends out starts as old as the crown it came from
 /// (`polypodiidae` revision 4), so its first fronds are full-sized.
-pub const GENERATOR_REVISION: u32 = 29;
+/// 32: a value a rule sets from one stated range varies within it (spec
+/// rework VARY): the effective spec records its spread, and each organ
+/// drawn solid is one of four varieties of its look, which draw its
+/// counts and sizes across their ranges; a part mesh's variant `k` is its
+/// look's variety `k`.
+pub const GENERATOR_REVISION: u32 = 32;
