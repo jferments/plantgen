@@ -72,14 +72,14 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 5
+          "petals": 5,
+          "tube": 1.2
         },
         "colour": [0.92, 0.2, 0.1],
         "form": {
           "flower": {
             "cup": 70,
-            "curl": 15,
-            "tube": 1.2
+            "curl": 15
           }
         }
       }

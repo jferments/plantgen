@@ -259,13 +259,15 @@ pub struct Season {
     #[serde(default = "default_ripening")]
     pub ripening: f64,
     pub fall: f64,
-    /// Days a cluster takes to open from its first unit to its last; 0,
-    /// all at once, by default.
+    /// Days a cluster takes to open from its first unit to its last, a
+    /// head's florets or a lone flower's petals to open; 0, all at once,
+    /// by default.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub opening: f64,
-    /// Its look in bud; without one, a closed bud a third the size of its
-    /// flower, in the flower's colour half turned to the foliage's, whole
-    /// where its flower look is.
+    /// Its look in bud; without one, a third the size of its flower: a
+    /// lone flower or head itself, closed; else a closed bud in the
+    /// flower's colour half turned to the foliage's, whole where its
+    /// flower look is.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bud_look: Option<StageLook>,
     /// Its look in flower; without one it shows its own look then, or
@@ -939,19 +941,94 @@ impl Default for Frond {
     }
 }
 
+/// A flower (spec rework P5, `crate::flowers`): laid out whorl by whorl,
+/// its floral cup, perianth, stamens and pistil. Lengths are shares of the
+/// flower's radius, half the organ's size, unless they say otherwise. The
+/// fields after `centre` default to a flower drawn as before P5.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct Flower {
+    /// Perianth parts in all: the petals, both whorls of tepals, or a
+    /// spiral's tepals.
     pub petals: u32,
     /// Petal width; 1 leaves a little gap between neighbours, 1.4 makes
     /// them overlap.
     pub petal_width: f64,
     /// 0 for round petal tips, 1 for pointed ones.
     pub point: f64,
-    /// Depth of a notch in each petal tip, 0 to 1.
+    /// Depth of a notch in each petal tip, 0 to 1; a lip's lobes.
     pub notch: f64,
     /// Radius of the centre, in the accent colour, over the flower's.
     pub centre: f64,
+    /// What surrounds the stamens.
+    #[serde(skip_serializing_if = "Perianth::is_corolla")]
+    pub perianth: Perianth,
+    /// Sepals between the petals; 0 draws none.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub sepals: u32,
+    /// Sepal length over a petal's.
+    #[serde(skip_serializing_if = "is_default_sepal_length")]
+    pub sepal_length: f64,
+    /// Share of the sepals' length joined in a calyx cup.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub sepals_fused: f64,
+    /// The sepals' colour, and a spiral's outer tepals'; a leaf green if
+    /// absent. A labellate flower's sepals take the petals' colour.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub calyx: Option<[f32; 3]>,
+    /// How the petals differ by place.
+    #[serde(skip_serializing_if = "Corolla::is_regular")]
+    pub corolla: Corolla,
+    /// A papilionaceous banner's width over a petal's.
+    #[serde(skip_serializing_if = "is_default_banner")]
+    pub banner: f64,
+    /// A bilabiate lower lip's middle petal, or a labellate lip, over a
+    /// petal.
+    #[serde(skip_serializing_if = "is_default_lip")]
+    pub lip: f64,
+    /// Share of each petal's length joined in a corolla tube.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub fused: f64,
+    /// The corolla tube's mouth radius over a petal's length.
+    #[serde(skip_serializing_if = "is_default_throat")]
+    pub throat: f64,
+    /// How much the tube swells in its middle, over a petal's length.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub belly: f64,
+    /// A spur's length over the flower's radius: every petal's on a regular
+    /// corolla, a bilabiate lower lip's middle petal's, a lip's.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub spur: f64,
+    /// A floral cup (a hypanthium or calyx tube) under the perianth, over
+    /// the flower's radius.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub tube: f64,
+    /// Stamens: in whorls up to twice the petals, on a spiral above.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub stamens: u32,
+    /// Their length over the flower's radius.
+    #[serde(skip_serializing_if = "is_default_stamen_length")]
+    pub stamen_length: f64,
+    /// Sterile stamens, drawn without anthers.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub staminodes: u32,
+    /// 0 for the centre dome; 1 to 5 one pistil with as many stigma lobes;
+    /// more, as many free pistils.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub carpels: u32,
+    /// Where the ovary sits.
+    #[serde(skip_serializing_if = "Ovary::is_superior")]
+    pub ovary: Ovary,
+    /// A labellate flower's column over the flower's radius.
+    #[serde(skip_serializing_if = "is_default_column")]
+    pub column: f64,
+    /// Degrees the whole flower turns about its axis from its
+    /// developmental frame: 180 for a resupinate orchid.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub turn: f64,
+    /// How far it has opened: 0 a closed bud, 1 open.
+    #[serde(skip_serializing_if = "is_one")]
+    pub open: f64,
 }
 
 impl Default for Flower {
@@ -962,7 +1039,168 @@ impl Default for Flower {
             point: 0.0,
             notch: 0.0,
             centre: 0.18,
+            perianth: Perianth::Corolla,
+            sepals: 0,
+            sepal_length: SEPAL_LENGTH,
+            sepals_fused: 0.0,
+            calyx: None,
+            corolla: Corolla::Regular,
+            banner: BANNER,
+            lip: LIP,
+            fused: 0.0,
+            throat: THROAT,
+            belly: 0.0,
+            spur: 0.0,
+            tube: 0.0,
+            stamens: 0,
+            stamen_length: STAMEN_LENGTH,
+            staminodes: 0,
+            carpels: 0,
+            ovary: Ovary::Superior,
+            column: COLUMN,
+            turn: 0.0,
+            open: 1.0,
         }
+    }
+}
+
+impl Flower {
+    /// Whether the flower is drawn as before P5: one whorl of alike petals
+    /// round a centre dome, nothing that the layout adds.
+    #[must_use]
+    #[allow(clippy::float_cmp)]
+    pub fn is_plain(&self) -> bool {
+        self.perianth == Perianth::Corolla
+            && self.sepals == 0
+            && self.corolla == Corolla::Regular
+            && self.fused == 0.0
+            && self.spur == 0.0
+            && self.stamens == 0
+            && self.staminodes == 0
+            && self.carpels == 0
+            && self.ovary == Ovary::Superior
+            && self.turn == 0.0
+            && self.open == 1.0
+    }
+
+    /// Whether the flower's plane of symmetry is fixed by the axis that
+    /// bears it: a zygomorphic corolla, or a flower turned.
+    #[must_use]
+    pub fn is_zygomorphic(&self) -> bool {
+        self.corolla != Corolla::Regular || self.turn != 0.0
+    }
+}
+
+const SEPAL_LENGTH: f64 = 0.5;
+const BANNER: f64 = 1.6;
+const LIP: f64 = 1.3;
+const THROAT: f64 = 0.3;
+const STAMEN_LENGTH: f64 = 0.35;
+const COLUMN: f64 = 0.45;
+
+#[allow(clippy::trivially_copy_pass_by_ref)]
+fn is_zero_count(value: &u32) -> bool {
+    *value == 0
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
+fn is_one(value: &f64) -> bool {
+    *value == 1.0
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
+fn is_default_sepal_length(value: &f64) -> bool {
+    *value == SEPAL_LENGTH
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
+fn is_default_banner(value: &f64) -> bool {
+    *value == BANNER
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
+fn is_default_lip(value: &f64) -> bool {
+    *value == LIP
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
+fn is_default_throat(value: &f64) -> bool {
+    *value == THROAT
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
+fn is_default_stamen_length(value: &f64) -> bool {
+    *value == STAMEN_LENGTH
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
+fn is_default_column(value: &f64) -> bool {
+    *value == COLUMN
+}
+
+/// What surrounds a flower's stamens (spec rework P5).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Perianth {
+    /// One whorl of petals, with the flower's `sepals` below them.
+    #[default]
+    Corolla,
+    /// Two like whorls of tepals (lilies, irises, agaves, orchids).
+    Tepals,
+    /// Tepals on a spiral (water lilies, cacti).
+    Spiral,
+    /// No perianth.
+    Absent,
+}
+
+impl Perianth {
+    #[allow(clippy::trivially_copy_pass_by_ref)]
+    fn is_corolla(&self) -> bool {
+        *self == Self::Corolla
+    }
+}
+
+/// How a flower's petals differ by place (spec rework P5): each place a
+/// role, and a role is a petal still.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Corolla {
+    /// All alike.
+    #[default]
+    Regular,
+    /// A pea flower's banner, two wings and keel (5 petals).
+    Papilionaceous,
+    /// Two lips: the petals toward the bearing axis the upper.
+    Bilabiate,
+    /// An orchid's lip and column: three sepals coloured like the petals,
+    /// two lateral petals and the lip.
+    Labellate,
+}
+
+impl Corolla {
+    #[allow(clippy::trivially_copy_pass_by_ref)]
+    fn is_regular(&self) -> bool {
+        *self == Self::Regular
+    }
+}
+
+/// Where a flower's ovary sits (spec rework P5).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Ovary {
+    /// On the receptacle, inside the whorls.
+    #[default]
+    Superior,
+    /// Half below the whorls.
+    Half,
+    /// Below the whorls, which stand on its top.
+    Inferior,
+}
+
+impl Ovary {
+    #[allow(clippy::trivially_copy_pass_by_ref)]
+    fn is_superior(&self) -> bool {
+        *self == Self::Superior
     }
 }
 
@@ -1754,11 +1992,73 @@ impl Shape {
                 check("stipe", s.stipe, 0.0, 0.6)
             }
             Self::Flower(s) => {
-                count("petals", s.petals, 3, 12)?;
+                count("petals", s.petals, 3, 60)?;
+                if s.petals > 12 && s.perianth != Perianth::Spiral {
+                    return Err(format!(
+                        "flower petals above 12 stand on a spiral: perianth must be spiral, found {}",
+                        s.petals
+                    ));
+                }
                 check("petal_width", s.petal_width, 0.1, 1.5)?;
                 check("point", s.point, 0.0, 1.0)?;
                 check("notch", s.notch, 0.0, 0.8)?;
-                check("centre", s.centre, 0.0, 0.8)
+                check("centre", s.centre, 0.0, 0.8)?;
+                count("sepals", s.sepals, 0, 12)?;
+                check("sepal_length", s.sepal_length, 0.1, 1.5)?;
+                check("sepals_fused", s.sepals_fused, 0.0, 0.95)?;
+                for channel in s.calyx.into_iter().flatten() {
+                    check("calyx", f64::from(channel), 0.0, 1.0)?;
+                }
+                check("banner", s.banner, 0.5, 3.0)?;
+                check("lip", s.lip, 0.5, 3.0)?;
+                check("fused", s.fused, 0.0, 0.95)?;
+                check("throat", s.throat, 0.05, 1.0)?;
+                check("belly", s.belly, 0.0, 0.5)?;
+                check("spur", s.spur, 0.0, 3.0)?;
+                check("tube", s.tube, 0.0, 3.0)?;
+                count("stamens", s.stamens, 0, 200)?;
+                check("stamen_length", s.stamen_length, 0.05, 2.0)?;
+                count("staminodes", s.staminodes, 0, 50)?;
+                count("carpels", s.carpels, 0, 30)?;
+                check("column", s.column, 0.1, 1.5)?;
+                check("turn", s.turn, 0.0, 360.0)?;
+                check("open", s.open, 0.0, 1.0)?;
+                if s.perianth == Perianth::Tepals && s.petals % 2 != 0 {
+                    return Err(format!(
+                        "tepals stand in two like whorls: petals must be even, found {}",
+                        s.petals
+                    ));
+                }
+                match s.corolla {
+                    Corolla::Papilionaceous if s.petals != 5 || s.perianth != Perianth::Corolla => {
+                        Err(format!(
+                            "a papilionaceous corolla is one whorl of 5 petals, found {} {}",
+                            s.petals,
+                            if s.perianth == Perianth::Corolla {
+                                "petals"
+                            } else {
+                                "tepals"
+                            }
+                        ))
+                    }
+                    Corolla::Bilabiate
+                        if !(4..=6).contains(&s.petals) || s.perianth != Perianth::Corolla =>
+                    {
+                        Err(format!(
+                            "a bilabiate corolla is one whorl of 4 to 6 petals, found {}",
+                            s.petals
+                        ))
+                    }
+                    Corolla::Labellate
+                        if s.petals != 3 || s.sepals != 3 || s.perianth != Perianth::Corolla =>
+                    {
+                        Err(format!(
+                            "a labellate flower has three sepals and three petals, one of them the lip: petals 3, sepals 3 and perianth sepals_and_petals, found petals {} sepals {}",
+                            s.petals, s.sepals
+                        ))
+                    }
+                    _ => Ok(()),
+                }
             }
             Self::Head(s) => {
                 count("rays", s.rays, 0, 60)?;
@@ -2337,12 +2637,36 @@ fn in_season(look: Look, season: &Season, day: f64, foliage: [f32; 3]) -> (Look,
                 // The head itself, in its own colours and form.
                 return (opened(look, open), bud.size);
             }
+            if season.bud_look.is_none() {
+                // A lone flower's bud is the flower itself, closed (spec
+                // rework P5).
+                let flower = season
+                    .flower_look
+                    .as_ref()
+                    .map_or_else(|| look.clone(), |flower| in_stage(&look, flower));
+                if let Shape::Flower(shape) = &flower.shape {
+                    let closed = Shape::Flower(Flower {
+                        open: 0.0,
+                        ..shape.clone()
+                    });
+                    return (
+                        Look {
+                            shape: closed,
+                            ..flower
+                        },
+                        bud.size,
+                    );
+                }
+            }
             (opened(in_stage(&look, &bud), open), bud.size)
         }
         Stage::Flower => match &season.flower_look {
-            Some(flower) => (opened(in_stage(&look, flower), open), flower.size),
+            Some(flower) => (
+                flower_opened(opened(in_stage(&look, flower), open), open),
+                flower.size,
+            ),
             None if is_fruit => (look, 0.0),
-            None => (opened(look, open), 1.0),
+            None => (flower_opened(opened(look, open), open), 1.0),
         },
         Stage::Fruit { unripe } => {
             if matches!(look.shape, Shape::Flower(_)) {
@@ -2355,6 +2679,18 @@ fn in_season(look: Look, season: &Season, day: f64, foliage: [f32; 3]) -> (Look,
             (look, 1.0)
         }
     }
+}
+
+/// `look` with its flower, if it draws one, opened `open` of the way
+/// from closed to as open as its shape sets (see [`Flower::open`]): over
+/// a season's `opening` days from its `flower`.
+fn flower_opened(mut look: Look, open: f64) -> Look {
+    if let Shape::Flower(flower) = &mut look.shape
+        && open < 1.0
+    {
+        flower.open *= open.clamp(0.0, 1.0);
+    }
+    look
 }
 
 /// `look` with its head, if it draws one, opened to `open` (see
@@ -2674,9 +3010,17 @@ impl OrganLook {
             ("flower_look", &season.flower_look),
         ];
         if self.inflorescence.is_none() {
-            if season.opening > 0.0 && !matches!(self.shape, Shape::Head(_)) {
+            let flower = season
+                .flower_look
+                .as_ref()
+                .map_or(&self.shape, |look| &look.shape);
+            if season.opening > 0.0
+                && !matches!(self.shape, Shape::Head(_))
+                && !matches!(flower, Shape::Flower(_))
+            {
                 return Err(
-                    "season opening is for a look with an inflorescence or a head".to_string(),
+                    "season opening is for a look with an inflorescence, a head or a flower"
+                        .to_string(),
                 );
             }
             if let Some((key, _)) = looks
@@ -3168,9 +3512,11 @@ mod tests {
         }
         // Gone before its bud shows.
         assert_eq!(on(&organs, 50.0).1[1], 0.0);
-        // A closed bud a third of its flower's size.
+        // Its flower closed, a third of its flower's size (spec rework
+        // P5), in its flower's colours.
         let (looks, sizes) = on(&organs, 100.0);
-        assert!(matches!(looks[1].shape, Shape::Fruit(_)));
+        assert!(matches!(&looks[1].shape, Shape::Flower(f) if f.open == 0.0));
+        assert_eq!(looks[1].colour, [0.95, 0.95, 0.9]);
         assert!((sizes[1] - 0.5 / 3.0).abs() < 1e-12);
         // Its flower look in flower.
         let (looks, sizes) = on(&organs, 120.0);
@@ -3264,14 +3610,19 @@ mod tests {
             other => panic!("not a head: {other:?}"),
         };
         let organs = headed(daisy, None);
-        // Its florets may open over days, as a cluster's units may; a lone
-        // flower's may not.
+        // Its florets may open over days, as a cluster's units and a lone
+        // flower's petals may; a fruit's may not.
         assert!(organs["bloom"].validate().is_ok());
         let flower = OrganLook {
             shape: Shape::Flower(Flower::default()),
             ..organs["bloom"].clone()
         };
-        assert!(flower.validate().unwrap_err().contains("opening"));
+        assert!(flower.validate().is_ok());
+        let fruit = OrganLook {
+            shape: Shape::Fruit(Fruit::default()),
+            ..organs["bloom"].clone()
+        };
+        assert!(fruit.validate().unwrap_err().contains("opening"));
         let on = |day| {
             resolve_on(
                 types,
@@ -3457,10 +3808,11 @@ mod tests {
         assert!(look.inflorescence.is_none());
         assert!(matches!(look.shape, Shape::Flower(_)));
         assert_eq!(size, 0.5);
-        // So is its closed bud, unless a bud look of its own says not.
+        // So is its bud, the flower closed, unless a bud look of its own
+        // says not.
         let (look, size) = on(clustered(ClusterKind::Umbel, 6, whole), 100.0);
         assert!(look.inflorescence.is_none());
-        assert!(matches!(look.shape, Shape::Fruit(_)));
+        assert!(matches!(&look.shape, Shape::Flower(f) if f.open == 0.0));
         assert!((size - 0.5 / 3.0).abs() < 1e-12, "{size}");
         // Fruit with no flower look shows nothing in flower: gone.
         let bare = Season {

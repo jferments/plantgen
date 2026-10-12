@@ -511,6 +511,10 @@ pub const INFLORESCENCE: [(&str, Field); 11] = {
 /// `*` stands for the organ.
 const EVERY: &str = "appearance.organs.*.";
 
+/// The stage looks of a look's season that a rule in its `shape` also
+/// sets where they draw its template.
+const STAGE_LOOKS: [&str; 2] = ["flower_look", "bud_look"];
+
 /// The organ of a path inside `appearance.organs`.
 fn organ_of(path: &str) -> &str {
     path.strip_prefix("appearance.organs.")
@@ -566,19 +570,36 @@ fn every_look(
         {
             continue;
         }
-        if shape_field(&at).is_some() {
-            let drawn = look
-                .get("shape")
-                .and_then(|shape| shape.get("template"))
-                .and_then(Value::as_str);
+        if let Some(field) = shape_field(&at).map(str::to_string) {
             let names = rule
                 .get("template")
                 .map(templates)
                 .transpose()?
                 .unwrap_or_default();
-            if !drawn.is_some_and(|drawn| names.contains(&drawn)) {
-                continue;
+            let draws = |look: &Value| {
+                look.get("shape")
+                    .and_then(|shape| shape.get("template"))
+                    .and_then(Value::as_str)
+                    .is_some_and(|drawn| names.contains(&drawn))
+            };
+            if draws(look) {
+                paths.push(at);
             }
+            // A season's stage looks that draw the template take the rule
+            // too (spec rework P5): broom's flowers are only its flower
+            // look's.
+            for stage in STAGE_LOOKS {
+                if look
+                    .get("season")
+                    .and_then(|season| season.get(stage))
+                    .is_some_and(draws)
+                {
+                    paths.push(format!(
+                        "appearance.organs.{organ}.season.{stage}.shape.{field}"
+                    ));
+                }
+            }
+            continue;
         }
         paths.push(at);
     }
@@ -719,6 +740,26 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("point", Number),
                 ("notch", Number),
                 ("centre", Number),
+                ("perianth", Word),
+                ("sepals", Count),
+                ("sepal_length", Number),
+                ("sepals_fused", Number),
+                ("corolla", Word),
+                ("banner", Number),
+                ("lip", Number),
+                ("fused", Number),
+                ("throat", Number),
+                ("belly", Number),
+                ("spur", Number),
+                ("tube", Number),
+                ("stamens", Count),
+                ("stamen_length", Number),
+                ("staminodes", Count),
+                ("carpels", Count),
+                ("ovary", Word),
+                ("column", Number),
+                ("turn", Number),
+                ("open", Number),
             ],
         ),
         (
@@ -849,8 +890,21 @@ fn look_field(
     template: Option<&Value>,
 ) -> Result<Option<Field>, String> {
     let (organ, look) = path.split_once('.').unwrap_or((path, ""));
-    let drawn_look = find(spec, &format!("appearance.organs.{organ}"))
+    let mut drawn_look = find(spec, &format!("appearance.organs.{organ}"))
         .ok_or_else(|| format!("it draws no `{organ}` look"))?;
+    let mut look = look;
+    // A field of one of its season's stage looks.
+    for stage in STAGE_LOOKS {
+        if let Some(rest) = look
+            .strip_prefix("season.")
+            .and_then(|rest| rest.strip_prefix(stage))
+            .and_then(|rest| rest.strip_prefix('.'))
+        {
+            drawn_look = find(spec, &format!("appearance.organs.{organ}.season.{stage}"))
+                .ok_or_else(|| format!("its `{organ}` look has no `{stage}`"))?;
+            look = rest;
+        }
+    }
     if let Some(key) = look.strip_prefix("inflorescence.") {
         if !drawn_look
             .get("inflorescence")

@@ -97,11 +97,12 @@
           "flower_look": {
             "shape": {
               "template": "flower",
-              "petals": 5,
               "petal_width": 1.2,
               "point": 0.3,
               "notch": 0.0,
-              "centre": 0.25
+              "centre": 0.25,
+              "sepal_length": 0.45,
+              "sepals_fused": 0.4
             },
             "colour": [0.35, 0.3, 0.75],
             "accent": [0.9, 0.9, 0.95],
@@ -222,6 +223,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The leaf drawn as a palmately compound leaf (spec rework P4), its leaflets counted and set from its characters by the rules at the flowering plants; before, a palmately lobed blade stood in for it. By eye from photographs: the leaflets fanned nearly all the way round the petiole's tip (300 degrees), the outer ones 0.6 as long as the middle one, each oblanceolate, tapering to its foot, and about a sixth as wide as long."
+    },
+    "appearance.organs.flower.season.flower_look.shape": {
+      "evidence": "SourceInferred",
+      "source": "vicflora",
+      "note": "Its flower laid out whorl by whorl (spec rework P5): its petals, sepals, banner, wings and keel, stamens and pistil set from the characters of Lupinus by the rules at the flowering plants. Its calyx by hand from VicFlora and the Flora of New Zealand, as search results quote it (the page itself was not read): 5 to 10 mm against a corolla of 12 to 20 mm, 2-lipped, its lobes longer than its tube."
     }
   },
   "provenance": {

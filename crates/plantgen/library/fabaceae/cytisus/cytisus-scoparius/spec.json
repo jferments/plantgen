@@ -102,11 +102,12 @@
           "flower_look": {
             "shape": {
               "template": "flower",
-              "petals": 5,
               "petal_width": 1.2,
               "point": 0.1,
               "notch": 0.0,
-              "centre": 0.1
+              "centre": 0.1,
+              "sepal_length": 0.3,
+              "sepals_fused": 0.7
             },
             "colour": [0.92, 0.78, 0.08],
             "accent": [0.85, 0.6, 0.05],
@@ -175,6 +176,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "appearance.organs.bloom.season.flower_look.shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-nz-iv-1988",
+      "note": "Its flower laid out whorl by whorl (spec rework P5): its petals, sepals, banner, wings and keel, stamens and pistil set from the characters of Cytisus by the rules at the flowering plants. Its calyx by hand from the Flora of New Zealand (vol. IV, Webb and others 1988), as search results quote it (the page itself was not read): about a quarter of the corolla's length, 2-lipped, so its sepals a third of a petal long and joined for most of it."
     }
   },
   "provenance": {

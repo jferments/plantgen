@@ -2,5 +2,15 @@
   "schema": 1,
   "rank": "family",
   "name": "Nymphaeaceae",
-  "parent": "order/nymphaeales"
+  "parent": "order/nymphaeales",
+  "traits": {
+    "perianth": "spiral"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "ffpa-2014",
+      "note": "The Families of Flowering Plants of Australia's account of the family, with SEINet's, as search results quote it (the page itself was not read): a few sepals, the petals many, spirally arranged and often grading into the stamens; drawn as a spiral of tepals, the outer ones turned toward the sepals' green."
+    }
+  }
 }

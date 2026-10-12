@@ -2,5 +2,15 @@
   "schema": 1,
   "rank": "family",
   "name": "Melanthiaceae",
-  "parent": "order/liliales"
+  "parent": "order/liliales",
+  "traits": {
+    "ovary_position": "superior"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz's DELTA account of the trillium group (Trilliaceae), as search results quote it (the page itself was not read): ovary superior, usually of 3 carpels (3 to 6, rarely 10)."
+    }
+  }
 }

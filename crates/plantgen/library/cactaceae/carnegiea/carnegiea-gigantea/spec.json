@@ -79,11 +79,13 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 12,
+          "petals": 24,
           "petal_width": 0.7,
           "point": 0,
           "notch": 0,
-          "centre": 0.3
+          "centre": 0.3,
+          "tube": 1.2,
+          "stamens": 200
         },
         "colour": [0.85, 0.84, 0.76],
         "accent": [0.8, 0.62, 0.12]
@@ -222,6 +224,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "appearance.organs.flower.shape": {
+      "evidence": "SourceInferred",
+      "source": "kew-powo",
+      "note": "Its flower laid out whorl by whorl (spec rework P5): tepals on a spiral, from green outer ones to waxy white inner ones, on a floral tube and an inferior ovary, from the characters of Carnegiea by the rules at the flowering plants. By hand (as search results quote them; the pages themselves were not read): 24 tepals (no count found); the pericarpel and floral tube, 6 to 10 cm of a flower 8.5 to 12.5 cm long, as 1.2 of the flower's radius; 200 stamens, the most a flower draws, for the thousands floras count."
     }
   },
   "provenance": {

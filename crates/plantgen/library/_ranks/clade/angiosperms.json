@@ -42,6 +42,76 @@
       "template": "compound",
       "map": {"leaf_incision": {"none": 0, "dissected": 0.75}},
       "why": "A blade dissected into fine segments is drawn as a divided leaf whose segments run together along a winged rachis; a compound leaf's leaflets stand apart."
+    },
+    "appearance.organs.*.shape.perianth": {
+      "template": "flower",
+      "map": {"perianth": {"sepals_and_petals": "corolla", "tepals": "tepals", "spiral": "spiral", "absent": "absent"}},
+      "why": "A calyx and corolla draws one whorl of petals with sepals below them; like tepals draw two whorls; a spiral, tepals on a spiral; no perianth, none."
+    },
+    "appearance.organs.*.shape.petals": {
+      "template": "flower",
+      "map": {"perianth": {"sepals_and_petals": {"rule": "clamp(round(flower_merosity), 3, 12)"}, "tepals": {"rule": "clamp(2 * round(flower_merosity), 4, 12)"}, "spiral": {"rule": "clamp(round(perianth_parts), 3, 60)"}}},
+      "why": "A flower draws its merosity's petals, twice it in tepals, or a spiral's tepals in all, up to 60."
+    },
+    "appearance.organs.*.shape.sepals": {
+      "template": "flower",
+      "map": {"perianth": {"sepals_and_petals": {"rule": "clamp(round(flower_merosity), 0, 12)"}, "tepals": 0, "spiral": 0, "absent": 0}},
+      "why": "A calyx has as many sepals as the flower's merosity; tepals and a spiral's outer tepals are drawn as the perianth itself."
+    },
+    "appearance.organs.*.shape.corolla": {
+      "template": "flower",
+      "map": {"zygomorphy": {"papilionaceous": "papilionaceous", "bilabiate": "bilabiate", "labellate": "labellate", "other": "regular"}},
+      "why": "A zygomorphic flower's parts differ by place as its zygomorphy says; any other is drawn with its petals alike."
+    },
+    "appearance.organs.*.shape.fused": {
+      "template": "flower",
+      "map": {"corolla_shape": {"rotate": 0, "cupped": 0, "campanulate": 0.45, "funnelform": 0.6, "tubular": 0.75, "salverform": 0.8, "urceolate": 0.85}}, "between": true,
+      "why": "A bell, funnel, tube or urn is a corolla whose petals are joined for that share of their length; a flat or cupped one has them free."
+    },
+    "appearance.organs.*.shape.throat": {
+      "template": "flower",
+      "map": {"corolla_shape": {"rotate": 0.3, "cupped": 0.3, "campanulate": 0.45, "funnelform": 0.4, "tubular": 0.2, "salverform": 0.12, "urceolate": 0.1}}, "between": true,
+      "why": "A tube's mouth, over a petal's length: wide for a bell, narrow for a tube, narrower for a salver's or an urn's."
+    },
+    "appearance.organs.*.shape.belly": {
+      "template": "flower",
+      "map": {"corolla_shape": {"rotate": 0, "cupped": 0, "campanulate": 0, "funnelform": 0, "tubular": 0, "salverform": 0, "urceolate": 0.25}}, "between": true,
+      "why": "An urn swells in its middle and narrows to its mouth."
+    },
+    "appearance.organs.*.shape.tube": {
+      "template": "flower",
+      "map": {"hypanthium": {"true": 0.4, "false": 0}},
+      "why": "A hypanthium is a floral cup under the perianth, 0.4 of the flower's radius long."
+    },
+    "appearance.organs.*.shape.ovary": {
+      "template": "flower",
+      "map": {"ovary_position": {"superior": "superior", "half_inferior": "half", "inferior": "inferior"}},
+      "why": "The ovary sits inside the whorls, half below them, or below them."
+    },
+    "appearance.organs.*.shape.turn": {
+      "template": "flower",
+      "map": {"resupinate": {"true": 180, "false": 0}},
+      "why": "A resupinate flower is drawn turned half round, so a lip formed toward the axis hangs below."
+    },
+    "appearance.organs.*.shape.stamens": {
+      "template": "flower",
+      "rule": "clamp(round(stamens), 0, 200)",
+      "why": "A flower draws its stamens, up to 200."
+    },
+    "appearance.organs.*.shape.staminodes": {
+      "template": "flower",
+      "rule": "clamp(round(staminodes), 0, 50)",
+      "why": "A flower draws its sterile stamens without anthers, up to 50."
+    },
+    "appearance.organs.*.shape.carpels": {
+      "template": "flower",
+      "rule": "clamp(round(carpels), 0, 30)",
+      "why": "A flower draws one pistil of up to five carpels, or as many free pistils, up to 30."
+    },
+    "appearance.organs.*.shape.spur": {
+      "template": "flower",
+      "rule": "clamp(spur_length_m / (flower_size_m / 2), 0, 3)",
+      "why": "A spur is drawn as long as its length over the flower's radius, up to three radii."
     }
   },
   "evidence": {
@@ -69,6 +139,76 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind."
+    },
+    "rules.appearance.organs.*.shape.perianth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.petals": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.sepals": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.corolla": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.fused": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.throat": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.belly": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.tube": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.ovary": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.turn": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.stamens": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.staminodes": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.carpels": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.shape.spur": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
     },
     "rules": {
       "evidence": "Authored",

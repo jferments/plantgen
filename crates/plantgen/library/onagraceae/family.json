@@ -2,5 +2,20 @@
   "schema": 1,
   "rank": "family",
   "name": "Onagraceae",
-  "parent": "order/myrtales"
+  "parent": "order/myrtales",
+  "traits": {
+    "flower_merosity": 4,
+    "perianth": "sepals_and_petals",
+    "hypanthium": {"true": "usually", "false": "sometimes"},
+    "ovary_position": "inferior",
+    "stamens": {"min": 4, "max": 8, "typical": 8},
+    "carpels": 4
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "ffpa-2014",
+      "note": "The Families of Flowering Plants of Australia's account of the family (with Watson and Dallwitz's DELTA), as search results quote it (the page itself was not read): sepals and petals (2-)4(-7), usually 4; a floral tube prolonged above the ovary except in Ludwigia (and in fireweed, whose petals are free at their base); stamens usually 8, (4-)8; ovary inferior, usually of 4 joined carpels."
+    }
+  }
 }

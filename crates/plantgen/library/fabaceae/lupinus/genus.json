@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Lupinus",
+  "traits": {
+    "flower_merosity": 5,
+    "flower_symmetry": "zygomorphic",
+    "perianth": "sepals_and_petals",
+    "zygomorphy": "papilionaceous",
+    "ovary_position": "superior",
+    "stamens": 10,
+    "carpels": 1
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "The legume family's description in Watson and Dallwitz's DELTA, on its Hamburg mirror, as search results quote it (the page itself was not read): in the subfamily Papilionoideae, to which Lupinus belongs, a papilionaceous corolla of five petals (a standard or banner, two wings, and the two lowest petals joined as the keel), five sepals, usually 10 stamens (fused in one tube in Lupinus), one carpel and a superior ovary. VicFlora and the Flora of New Zealand on Lupinus polyphyllus, as search results quote it (the page itself was not read): corolla 12 to 20 mm; calyx 2-lipped."
+    }
+  }
+}

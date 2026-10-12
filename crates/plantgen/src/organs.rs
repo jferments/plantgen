@@ -274,6 +274,9 @@ fn staged(stage: Stage, season: &Season, day: f64) -> Phase {
 pub struct Part {
     /// The vocabulary's organ it is.
     pub term: &'static str,
+    /// Its role by place, where its holder's layout gives one: a pea
+    /// flower's banner, an orchid's lip (spec rework P5).
+    pub role: Option<&'static str>,
     /// Its phase, where it has one: a cluster's unit's in its own stage, a
     /// head's floret's as the head has opened, else its holder's.
     pub phase: Option<Phase>,
@@ -288,8 +291,9 @@ pub struct Part {
 /// it holds; a head's phyllaries from the outermost row, its rays round
 /// the rim, then its disc florets or straps from the centre out; a
 /// spikelet's glumes from the lowest, then its florets from the lowest
-/// up, each with its awn. Nothing for an organ its look draws whole: a
-/// leaf, a lone flower or fruit, a cone, a cluster in bud as one bud.
+/// up, each with its awn; a flower's whorls from the outside in (spec
+/// rework P5). Nothing for an organ its look draws whole: a leaf, a lone
+/// fruit, a cone, a cluster in bud as one bud.
 #[must_use]
 pub fn parts(organ: &GraphOrgan, look: &Look, phase: Option<Phase>) -> Vec<Part> {
     let Some(cluster) = &look.inflorescence else {
@@ -304,6 +308,7 @@ pub fn parts(organ: &GraphOrgan, look: &Look, phase: Option<Phase>) -> Vec<Part>
             // Every unit in the organ's stage, drawn as its look is.
             None => Part {
                 term: unit_term(unit, phase),
+                role: None,
                 phase,
                 parts: held(&look.shape, phase),
             },
@@ -312,6 +317,7 @@ pub fn parts(organ: &GraphOrgan, look: &Look, phase: Option<Phase>) -> Vec<Part>
                 let own = staged(season.unit_stage(opening.day, p.rank), season, opening.day);
                 Part {
                     term: unit_term(unit, Some(own)),
+                    role: None,
                     phase: Some(own),
                     parts: opening
                         .showing(p)
@@ -342,8 +348,36 @@ fn held(shape: &Shape, phase: Option<Phase>) -> Vec<Part> {
         Shape::Head(head) => in_head(head),
         Shape::Spikelet(spikelet) => in_spikelet(spikelet, phase),
         Shape::Compound(compound) => in_compound(compound, phase),
+        Shape::Flower(flower) => in_flower(flower, phase),
         _ => Vec::new(),
     }
+}
+
+/// A flower's parts in the order its layout lays them out
+/// (`crate::flowers`): its sepals from the first round, its petals or
+/// tepals each with its role where it has one, its stamens, its
+/// staminodes, then its carpels; an orchid's column holds its stamens
+/// and carpels as its fields count them. Every part in the flower's
+/// `phase`; a closed bud's stamens and carpels are there, though hidden.
+fn in_flower(flower: &crate::looks::Flower, phase: Option<Phase>) -> Vec<Part> {
+    let open = crate::looks::Flower {
+        open: 1.0,
+        ..flower.clone()
+    };
+    let laid = crate::flowers::layout(&open, &crate::blooms::FlowerForm::default(), 1.0, 0.0);
+    let part = |term, role| Part {
+        term,
+        role,
+        phase,
+        parts: Vec::new(),
+    };
+    laid.pieces
+        .iter()
+        .map(|p| part(p.term.word(), p.role))
+        .chain((0..flower.stamens).map(|_| part("stamen", None)))
+        .chain((0..flower.staminodes).map(|_| part("staminode", None)))
+        .chain((0..flower.carpels).map(|_| part("carpel", None)))
+        .collect()
 }
 
 /// A compound leaf's leaflets in the order its layout lays them out
@@ -359,6 +393,7 @@ fn in_compound(compound: &crate::looks::Compound, phase: Option<Phase>) -> Vec<P
         .iter()
         .map(|_| Part {
             term: "leaflet",
+            role: None,
             phase,
             parts: Vec::new(),
         })
@@ -372,6 +407,7 @@ fn in_head(head: &Head) -> Vec<Part> {
     let laid = capitula::layout(head, 0.0, 0.0);
     let part = |term, phase| Part {
         term,
+        role: None,
         phase,
         parts: Vec::new(),
     };
@@ -423,6 +459,7 @@ fn in_spikelet(spikelet: &Spikelet, phase: Option<Phase>) -> Vec<Part> {
         .map(|s| match s.bract {
             Bract::Glume => Part {
                 term: "glume",
+                role: None,
                 phase: None,
                 parts: Vec::new(),
             },
@@ -430,11 +467,13 @@ fn in_spikelet(spikelet: &Spikelet, phase: Option<Phase>) -> Vec<Part> {
                 floret += 1;
                 let awn = Part {
                     term: "awn",
+                    role: None,
                     phase: None,
                     parts: Vec::new(),
                 };
                 Part {
                     term: "spikelet_floret",
+                    role: None,
                     phase,
                     parts: if floret > unawned {
                         vec![awn]
@@ -450,7 +489,8 @@ fn in_spikelet(spikelet: &Spikelet, phase: Option<Phase>) -> Vec<Part> {
 /// The name of the part at `path` of the organ `organ`, its term and its
 /// number, whose parts are `parts` ([`parts`]): the organ's, then each
 /// step's term and its number among the parts of that term beside it,
-/// counted from 1, as "inflorescence 12 › capitulum 7 › ray floret 3";
+/// counted from 1, as "inflorescence 12 › capitulum 7 › ray floret 3",
+/// and its role where it has one, as "flower 2 › petal 1, banner";
 /// `None` where the path leads to no part. `path` holds an index into
 /// `parts`, then into that part's parts, and so on.
 #[must_use]
@@ -460,7 +500,10 @@ pub fn name(organ: (&str, usize), parts: &[Part], path: &[usize]) -> Option<Stri
     for &index in path {
         let part = here.get(index)?;
         let number = here[..index].iter().filter(|p| p.term == part.term).count() + 1;
-        words.push(format!("{} {number}", part.term.replace('_', " ")));
+        let role = part
+            .role
+            .map_or_else(String::new, |role| format!(", {role}"));
+        words.push(format!("{} {number}{role}", part.term.replace('_', " ")));
         here = &part.parts;
     }
     Some(words.join(" › "))

@@ -11,12 +11,15 @@
 //!   each a thin solid leaf (`crate::leaves`) from the rim of the centre
 //!   outward, raised by the cup $`\gamma`$ from the plane square to the
 //!   axis and curled back by the curl over its length; a domed centre in
-//!   the accent colour; a fused tube when [`FlowerForm::tube`] is set; and
-//!   stamens, thin cones rising round the centre. With the flower's
-//!   radius $`R`$ (half the organ's size) and the template's centre share
-//!   $`c`$, petals start at $`r_0 = 0.6\,c R`$ and reach $`R`$, so a petal is
-//!   $`\ell = R - r_0`$ long and $`\min(\ell,\ w\,\pi (r_0 + R) / n)`$ wide
-//!   for the template's petal width $`w`$.
+//!   the accent colour; and a floral cup when the flower's `tube` is set.
+//!   With the flower's radius $`R`$ (half the organ's size) and the
+//!   template's centre share $`c`$, petals start at $`r_0 = 0.6\,c R`$ and
+//!   reach $`R`$, so a petal is $`\ell = R - r_0`$ long and
+//!   $`\min(\ell,\ w\,\pi (r_0 + R) / n)`$ wide for the template's petal
+//!   width $`w`$. That is a plain flower
+//!   ([`crate::looks::Flower::is_plain`]); any other (sepals, roles, a
+//!   corolla tube, stamens, a pistil: spec rework P5) is laid out whorl by
+//!   whorl by `crate::flowers`, on the same radii.
 //! - A **head** ([`Shape::Head`]) is a capitulum (`crate::capitula`): its
 //!   phyllaries, receptacle and florets laid out from the template, its
 //!   rays raised by the cup and curled by the curl as petals are.
@@ -70,15 +73,17 @@ pub struct FlowerForm {
     pub cup: f64,
     /// Degrees each petal curls back over its length.
     pub curl: f64,
-    /// Length of a fused tube before the petals, as a share of the
-    /// flower's radius.
-    pub tube: f64,
-    /// Stamens round the centre.
-    pub stamens: u32,
-    /// Their length, as a share of the flower's radius.
-    pub stamen_length: f64,
     /// Levels, from the nearest, drawn solid: 1 or 2.
     pub levels: u8,
+    /// Moved to the flower card (spec rework P5): refused here.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub tube: Option<serde_json::Value>,
+    /// Moved to the flower card (spec rework P5): refused here.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stamens: Option<serde_json::Value>,
+    /// Moved to the flower card (spec rework P5): refused here.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stamen_length: Option<serde_json::Value>,
 }
 
 impl Default for FlowerForm {
@@ -86,10 +91,10 @@ impl Default for FlowerForm {
         Self {
             cup: 30.0,
             curl: 12.0,
-            tube: 0.0,
-            stamens: 0,
-            stamen_length: 0.35,
             levels: 1,
+            tube: None,
+            stamens: None,
+            stamen_length: None,
         }
     }
 }
@@ -228,9 +233,17 @@ impl Form {
             Self::Flower(form) => {
                 within("form flower cup", form.cup, -90.0, 90.0)?;
                 within("form flower curl", form.curl, -180.0, 180.0)?;
-                within("form flower tube", form.tube, 0.0, 10.0)?;
-                within("form flower stamens", f64::from(form.stamens), 0.0, 200.0)?;
-                within("form flower stamen_length", form.stamen_length, 0.0, 3.0)?;
+                for (key, moved) in [
+                    ("tube", &form.tube),
+                    ("stamens", &form.stamens),
+                    ("stamen_length", &form.stamen_length),
+                ] {
+                    if moved.is_some() {
+                        return Err(format!(
+                            "form flower {key} moved to the flower card (P5): set the shape's `{key}`"
+                        ));
+                    }
+                }
                 within("form flower levels", f64::from(form.levels), 0.0, 2.0)
             }
             Self::Fruit(form) => {
@@ -264,9 +277,10 @@ fn triangles_per_organ(look: &Look) -> usize {
         return crate::clusters::triangles(look);
     }
     match (&look.form, &look.shape) {
-        (Form::Flower(form), Shape::Flower(flower)) => {
-            flower.petals as usize * 24 + DOME_TRIANGLES + form.stamens as usize * 3
+        (Form::Flower(_), Shape::Flower(flower)) if flower.is_plain() => {
+            flower.petals as usize * 24 + DOME_TRIANGLES
         }
+        (Form::Flower(form), Shape::Flower(flower)) => crate::flowers::triangles(flower, form, 0),
         (Form::Flower(form), Shape::Head(head)) => crate::capitula::triangles(head, form, 0),
         (Form::Fruit(form), Shape::Fruit(fruit)) if !crate::fruit::is_single(fruit) => {
             crate::fruit::triangles(form, fruit)
@@ -358,7 +372,7 @@ pub(crate) fn build_coarse(
             continue;
         }
         match (&look.form, &look.shape) {
-            (Form::Flower(form), Shape::Flower(flower)) => {
+            (Form::Flower(form), Shape::Flower(flower)) if flower.is_plain() => {
                 let petals = Petals {
                     count: flower.petals.max(1),
                     width: flower.petal_width,
@@ -367,12 +381,38 @@ pub(crate) fn build_coarse(
                 };
                 draw_flower(
                     organ,
-                    axis,
-                    side,
-                    form,
+                    (axis, side),
+                    (form, flower.tube),
                     &petals,
                     painted,
                     look.accent,
+                    part,
+                    mesh,
+                );
+            }
+            (Form::Flower(form), Shape::Flower(flower)) => {
+                // Laid out whorl by whorl (`crate::flowers`), its angles
+                // from its adaxial side where it is zygomorphic.
+                let spin =
+                    unit(mix64(organ.id)) * std::f64::consts::TAU / f64::from(flower.petals.max(1));
+                crate::flowers::draw(
+                    &crate::flowers::layout(flower, form, organ.size * 0.5, spin),
+                    crate::flowers::Frame::new(
+                        organ.position,
+                        axis,
+                        organ.heading.cross(organ.left),
+                        side,
+                        flower.is_zygomorphic(),
+                    ),
+                    crate::flowers::Colours {
+                        petal: painted,
+                        calyx: with_shading(
+                            flower.calyx.unwrap_or(crate::flowers::CALYX),
+                            look.colour,
+                            painted,
+                        ),
+                        accent: look.accent,
+                    },
                     part,
                     mesh,
                 );
@@ -511,11 +551,13 @@ pub(crate) const DOME_TRIANGLES: usize = 2 * 8 * 3;
 pub(crate) const ELLIPSOID_TRIANGLES: usize = 2 * 10 * (7 - 1);
 
 #[allow(clippy::too_many_arguments)]
+/// A plain flower ([`crate::looks::Flower::is_plain`]) as before P5: its
+/// petals round the axis, a floral cup `tube` times its radius long under
+/// them, and its centre dome.
 fn draw_flower(
     organ: &GraphOrgan,
-    axis: Vec3,
-    side: Vec3,
-    form: &FlowerForm,
+    (axis, side): (Vec3, Vec3),
+    (form, tube): (&FlowerForm, f64),
     petals: &Petals,
     colour: [f32; 3],
     accent: [f32; 3],
@@ -528,7 +570,7 @@ fn draw_flower(
     }
     let centre_radius = (petals.centre * radius).clamp(0.0, radius * 0.9);
     let start = 0.6 * centre_radius;
-    let tube = form.tube.max(0.0) * radius;
+    let tube = tube.max(0.0) * radius;
     let base = organ.position + axis * tube;
     let length = (radius - start).max(radius * 0.1);
     let n = f64::from(petals.count);
@@ -597,32 +639,6 @@ fn draw_flower(
             centre_radius * 0.5,
             accent,
             part,
-            mesh,
-        );
-    }
-    let stamen = form.stamen_length * radius;
-    let stamens = form.stamens >> part.coarse.min(4);
-    for k in 0..stamens {
-        let angle = std::f64::consts::TAU * f64::from(k) / f64::from(stamens.max(1)) + turn * 0.5;
-        let radial = side * math::cos(angle) + other * math::sin(angle);
-        let direction = (axis + radial * 0.35).normalize_or(axis);
-        let leaf = part.leaf(
-            base + radial * (centre_radius * 0.5),
-            direction,
-            axis.cross(radial).normalize_or(side),
-            stamen,
-            stamen * 0.06,
-            accent,
-        );
-        leaves::cone(
-            &leaf,
-            leaf.base,
-            direction,
-            leaf.left,
-            direction.cross(leaf.left),
-            stamen,
-            stamen * 0.03,
-            accent,
             mesh,
         );
     }
@@ -882,12 +898,9 @@ mod tests {
     }
 
     #[test]
-    fn a_flower_has_its_petals_centre_and_stamens_within_its_size() {
+    fn a_plain_flower_has_its_petals_cup_and_centre_within_its_size() {
         let mut mesh = Mesh::default();
-        let form = FlowerForm {
-            stamens: 6,
-            ..FlowerForm::default()
-        };
+        let form = FlowerForm::default();
         let petals = Petals {
             count: 5,
             width: 1.0,
@@ -901,16 +914,15 @@ mod tests {
         };
         draw_flower(
             &organ(0.05),
-            Vec3::Y,
-            Vec3::X,
-            &form,
+            (Vec3::Y, Vec3::X),
+            (&form, 0.2),
             &petals,
             [0.9, 0.9, 0.9],
             [0.9, 0.7, 0.1],
             part,
             &mut mesh,
         );
-        assert!(mesh.triangle_count() > 5 * 8, "petals, a dome and stamens");
+        assert!(mesh.triangle_count() > 5 * 8, "petals, a cup and a dome");
         for position in &mesh.positions {
             let p = Vec3::new(
                 f64::from(position[0]),

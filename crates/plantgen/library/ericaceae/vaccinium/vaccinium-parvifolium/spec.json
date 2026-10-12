@@ -105,7 +105,9 @@
               "petal_width": 0.8,
               "point": 0.0,
               "notch": 0.0,
-              "centre": 0.3
+              "centre": 0.3,
+              "sepals": 5,
+              "sepal_length": 0.15
             },
             "colour": [0.85, 0.78, 0.62],
             "accent": [0.75, 0.55, 0.45],
@@ -124,6 +126,13 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "perianth": "sepals_and_petals",
+    "corolla_shape": "urceolate",
+    "ovary_position": "inferior",
+    "stamens": {"min": 8, "max": 10},
+    "carpels": {"min": 4, "max": 5}
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -174,6 +183,16 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America (vol. 8) on Vaccinium parvifolium, through JSTOR Global Plants, as search results quote it (the page itself was not read): corolla globose to urceolate, 4 to 6 by 3 to 5 mm, pink, bronze or yellowish green; calyx lobes spreading, broadly ovate, 0.4 to 0.6 mm. Its genus account: ovary inferior, 4- or 5-locular; stamens 8 to 10."
+    },
+    "appearance.organs.bloom.season.flower_look.shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Its flower laid out whorl by whorl (spec rework P5): an urn on an inferior ovary from the characters by the rules at the flowering plants. Five petals and five tiny calyx lobes by hand, as the Flora of North America has them, as search results quote it (the page itself was not read); it gives no count."
     }
   },
   "provenance": {
