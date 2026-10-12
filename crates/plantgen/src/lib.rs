@@ -156,18 +156,26 @@ pub mod venation;
 /// triangles. A head one step coarser draws each ray as its outline in
 /// eight corners with its underside shaded, not a kite, which changes the
 /// part meshes of heads too large for their finest step.
-/// 26: a shoot is juvenile or adult (spec rework P6): a program's
+/// 26: a part-mesh step may keep up to two thirds of the triangles of the
+/// one before, and its cover is weighed against each direction's own; a
+/// needle shoot drawn coarser widens its needles for those it leaves out,
+/// and a spikelet one step coarser folds each bract's kite along its
+/// midrib, so conifer sprays and grass panicles keep their cover and get
+/// steps; a fruit drawn with fewer facets than its finest is widened to
+/// cover what it does there, so clusters of fruit and berries keep their
+/// cover drawn coarser.
+/// 27: a shoot is juvenile or adult (spec rework P6): a program's
 /// `adult(a)` sets the adultness of the organs drawn after it in the
 /// branch, a leaf type's juvenile family follows it, and a graph whose
 /// organs record it is `APGRAPH3`. The climber program draws it (an ivy's
 /// adult shoots bear entire leaves, rise and fruit), and the programs that
 /// measure first flowering by the plant's age name it `adult_age`, set
 /// from a taxon's juvenile period.
-/// 27: crown calibration: in the broadleaf program a short shoot lives
+/// 28: crown calibration: in the broadleaf program a short shoot lives
 /// while it has light, for up to 40 years, and its leaves carry their own
 /// turn, so open-grown crowns keep the leaf area per crown area of the
 /// Urban Tree Database's trees and their inner leaves grow in shade; and
 /// the deep-shade end of the light scale leaves acclimate on,
 /// `looks::DEEP_SHADE`, is 0.08, where the growth model's short shoots stop
 /// leafing out, not 0.04, which no crown's leaves reach.
-pub const GENERATOR_REVISION: u32 = 27;
+pub const GENERATOR_REVISION: u32 = 28;
