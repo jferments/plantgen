@@ -12,7 +12,6 @@
   "growth_form": "excurrent_tree",
   "generator": {
     "params": {
-      "cone_age": 20,
       "cone_chance": 0.12,
       "cone_length": 0.09,
       "cone_pitch": -70,
@@ -96,7 +95,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "juvenile_period_years": {"min": 20, "max": 50}
+  },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Howard and Aleksoff 2000, read): cone and seed production begins at 20 to 50 years of age. The Woody Plant Seed Manual (Abies, table 3, read) gives 20 as the minimum age for commercial seed bearing in northern Idaho. It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 20 years set by hand."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

@@ -5,7 +5,7 @@
 # at its foot, leaves along its lower part, alternate in a spiral or in
 # opposite pairs, and a raceme at its top that opens from the bottom up:
 # fruit below, open flowers in the middle, buds above, the bud-tipped end
-# nodding over. A plant younger than flower_age grows short stems without
+# nodding over. A plant younger than adult_age grows short stems without
 # a raceme.
 #
 # A basal leaf is one card or, with basal_pieces above 1, an arching strap
@@ -30,9 +30,15 @@
 # `basal_leaf` structure, its pieces and tip pieces of it. A bud is a
 # flower, not a fruit.
 #
+# Revision 5 (spec rework P6): the first year the plant is adult, from
+# which it flowers, is adult_age, the name the programs that measure it
+# by the plant's age share, which the rule at the seed plants sets from
+# a taxon's juvenile_period_years. It replaces flower_age, with the same
+# default.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem herb 4;
+lsystem herb 5;
 
 # The clump.
 param stems = 6;              # stems in a mature clump
@@ -40,7 +46,7 @@ param stem_rate = 0.6;        # cohort size: stems * (1 - exp(-stem_rate * age))
 param clump_radius = 0.2;     # radius a mature clump's stems spread over
 param stem_lean = 6;          # how far the outermost stems lean out
 param maturity = 1.2;         # years over which stems reach full size
-param flower_age = 2;         # the first year the plant flowers
+param adult_age = 2;          # the first year the plant is adult and flowers
 # A stem.
 param stem_height = 1.0;      # stem height at maturity, raceme included
 param height_spread = 0.12;   # stems are stem_height * (1 ± height_spread)
@@ -124,8 +130,8 @@ decompose Ss(k, m, n) : m == 1 ->
       &(stem_lean * sqrt((k + 0.5) / n) + uniform(0, 3))
       Bs(basal_leaves)
       St(stem_height * (1 - exp(-t / maturity)) * uniform(1 - height_spread, 1 + height_spread)
-         * (t >= flower_age ? 1 : young_height),
-         t >= flower_age ? raceme : 0) ];
+         * (t >= adult_age ? 1 : young_height),
+         t >= adult_age ? raceme : 0) ];
 decompose Ss(k, m, n) -> ;
 
 # Basal leaves, spread round the stem's foot.

@@ -22,9 +22,15 @@
 # structure, and its pieces, tip and thatch are pieces of it, so a grown
 # grass knows which pieces make one leaf.
 #
+# Revision 4 (spec rework P6): the first year the plant is adult, from
+# which it flowers, is adult_age, the name the programs that measure it
+# by the plant's age share, which the rule at the seed plants sets from
+# a taxon's juvenile_period_years. It replaces flower_age, with the same
+# default.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem grass 3;
+lsystem grass 4;
 
 param tillers = 80;           # living tillers in a mature tussock
 param tiller_rate = 0.5;      # cohort size: tillers * (1 - exp(-tiller_rate * age))
@@ -39,7 +45,7 @@ param arch = 10;              # mean degrees a blade bends down at each joint
 param twist = 6;              # spread of the random roll at each joint
 param pieces = 6;             # pieces in a blade, its tip included
 param maturity = 1.5;         # years over which blades and culms reach full size
-param flower_age = 2;         # the first year the plant flowers
+param adult_age = 2;          # the first year the plant is adult and flowers
 param flowering = 0.25;       # share of tillers that flower
 param culm_height = 0.9;      # culm height at maturity, panicle included
 param culm_radius = 0.0012;
@@ -110,7 +116,7 @@ decompose Pc(k, s, a) -> blade_tip(s);
 interpret Bd(a) -> /(gauss() * twist) &(a + thatch_droop * min(age, 1));
 
 # A flowering tiller's culm: a leaf at each node, the panicle at the top.
-decompose Fl : t >= flower_age && rand() < flowering ->
+decompose Fl : t >= adult_age && rand() < flowering ->
     [ Cm /(uniform(0, 360)) &(uniform(0, culm_lean)) !(culm_radius)
       Cu((culm_height * (1 - exp(-t / maturity)) * uniform(0.85, 1.15)
           - panicle_length * (1 - exp(-t / maturity))) / (culm_leaves + 1),

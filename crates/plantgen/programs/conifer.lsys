@@ -10,16 +10,22 @@
 # in cedars and hemlocks; side shoots may branch again; and the foliage
 # sprays may hang below their shoots.
 #
-# From cone_age, a branch apex in good light bears a cone (a seed cone,
+# From adult_age, a branch apex in good light bears a cone (a seed cone,
 # or a juniper's berry-like cone) with the chance cone_chance a year,
 # cone_length long and pitched cone_pitch degrees down from its shoot
 # (hanging, as in spruces; negative stands it up, as in firs), the shoot
 # first rolled level. A cone
 # stays cone_years.
 #
+# Revision 3 (spec rework P6): the first year the plant is adult, from
+# which it bears cones, is adult_age, the name the programs that measure it
+# by the plant's age share, which the rule at the seed plants sets from
+# a taxon's juvenile_period_years. It replaces cone_age, with the same
+# default.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem conifer 2;
+lsystem conifer 3;
 
 # Height of the leader over time: a Chapman-Richards curve,
 # height = height_max * (1 - exp(-height_rate * age))^height_shape.
@@ -57,7 +63,7 @@ param spray_area = 0.3;        # leaf area of a spray 1 m long, m²
 param pipe_tip = 0.003;        # radius of the twig behind one living apex
 param pipe_organ = 0.012;      # pipe radius per metre of spray
 param pipe_rings = 0.000016;   # ring area laid down per m² of foliage a year
-param cone_age = 20;           # the first year the tree bears cones
+param adult_age = 20;          # the first year it is adult and bears cones
 param cone_chance = 0.1;       # chance a year a well-lit branch apex bears one
 param cone_light = 0.4;        # least light at an apex that bears
 param cone_length = 0.08;
@@ -146,7 +152,7 @@ rule spray(s) : age >= needle_years -> ;
 
 # A well-lit apex of a tree old enough bears a cone, which falls after
 # cone_years.
-decompose Z(l) : t >= cone_age && l >= cone_light && rand() < cone_chance ->
+decompose Z(l) : t >= adult_age && l >= cone_light && rand() < cone_chance ->
     [ $ /(uniform(-20, 20)) &(cone_pitch + uniform(-15, 15)) cone(cone_length * uniform(0.85, 1.15)) ];
 decompose Z(l) -> ;
 rule cone(s) : age >= cone_years -> ;

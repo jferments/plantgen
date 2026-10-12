@@ -11,6 +11,10 @@
     "generator.params.space_density": {
       "rule": "1 / pow(space_kill, 3)",
       "why": "One point of free space for each cube the shoot spacing spans, so the spacing, not a lack of free space, decides how finely the crown branches."
+    },
+    "generator.params.adult_age": {
+      "rule": "juvenile_period_years",
+      "why": "A plant flowers, or bears cones, from the end of its juvenile period."
     }
   },
   "evidence": {
@@ -23,6 +27,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "A choice of the model's: free space sampled as finely as shoots may be spaced (space colonization, Runions, Lane and Prusinkiewicz 2007)."
+    },
+    "rules.generator.params.adult_age": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The juvenile period is the time from germination to the first flowers, cones or seed, which the Woody Plant Seed Manual's tables give as the minimum seed-bearing age (spec rework P6). adult_age is the first year a program measuring it by the plant's age lets the plant flower or bear cones, so it is the juvenile period itself."
     }
   }
 }

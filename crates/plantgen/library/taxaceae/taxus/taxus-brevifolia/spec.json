@@ -12,7 +12,7 @@
   "growth_form": "excurrent_tree",
   "generator": {
     "params": {
-      "cone_age": 20,
+      "adult_age": 20,
       "cone_chance": 0.15,
       "cone_length": 0.008,
       "cone_pitch": 90,

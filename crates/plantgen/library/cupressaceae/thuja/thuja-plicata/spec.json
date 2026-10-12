@@ -12,7 +12,6 @@
   "growth_form": "scale_leaved_tree",
   "generator": {
     "params": {
-      "cone_age": 15,
       "cone_chance": 0.15,
       "cone_length": 0.012,
       "cone_pitch": -40,
@@ -100,7 +99,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "juvenile_period_years": {"min": 10, "max": 30}
+  },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Tesky 1992, read): seed production normally begins at 20 to 30 years, but open-grown trees may produce seed by age 10. The Woody Plant Seed Manual (Thuja, read): trees as young as 10 years have produced cones. It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 15 years set by hand."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

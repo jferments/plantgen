@@ -12,7 +12,6 @@
   "growth_form": "excurrent_tree",
   "generator": {
     "params": {
-      "cone_age": 15,
       "cone_chance": 0.12,
       "cone_length": 0.075,
       "cone_pitch": 110,
@@ -104,7 +103,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "juvenile_period_years": {"min": 7, "max": 30}
+  },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual (Pseudotsuga, table 3, read): var. menziesii bears seed from 7 to 10 years, commercial collections from 20 to 25. FEIS (Uchytil 1991, read): appreciable seed from 20 to 30 years in open-grown coast Douglas-fir. The range runs from the earliest seed to appreciable crops. It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 15 years set by hand."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

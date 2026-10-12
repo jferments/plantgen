@@ -598,6 +598,33 @@ fn a_grass_knows_which_pieces_make_each_leaf() {
     let encoded = package::encode_graph(&plain);
     assert_eq!(&encoded[..8], b"APGRAPH1");
     assert_eq!(package::decode_graph(&encoded).unwrap(), plain);
+    // Organs that record adultness write APGRAPH3, with or without
+    // structures, and read back to 1/254 (spec rework P6).
+    for base in [&graph, &plain] {
+        let adult = plantgen::graph::PlantGraph {
+            organs: base
+                .organs
+                .iter()
+                .enumerate()
+                .map(|(index, organ)| plantgen::graph::GraphOrgan {
+                    adult: match index % 3 {
+                        0 => None,
+                        1 => Some(0.0),
+                        _ => Some(1.0),
+                    },
+                    ..organ.clone()
+                })
+                .collect(),
+            ..base.clone()
+        };
+        let encoded = package::encode_graph(&adult);
+        assert_eq!(&encoded[..8], b"APGRAPH3");
+        assert!(encoded.len().is_multiple_of(4));
+        let decoded = package::decode_graph(&encoded).unwrap();
+        assert_eq!(decoded, adult);
+        assert_eq!(package::encode_graph(&decoded), encoded);
+        assert!(package::decode_graph(&encoded[..encoded.len() - 4]).is_err());
+    }
 }
 
 #[test]

@@ -33,7 +33,7 @@
       "fork_stems": 3,
       "fork_angle": 30,
       "blooms": 3,
-      "bloom_age": 5,
+      "adult_age": 5,
       "bloom_size": 0.045,
       "bloom_angle": 90,
       "space_reach": 1.6,

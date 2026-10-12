@@ -46,7 +46,7 @@
       "leaves_per_node": 1,
       "leaf_years": 3,
       "blooms": 2,
-      "bloom_age": 3,
+      "adult_age": 3,
       "bloom_size": 0.08,
       "bloom_angle": 110,
       "leaf_area": 0.305,

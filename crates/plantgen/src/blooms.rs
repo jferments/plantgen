@@ -894,6 +894,7 @@ mod tests {
             shed: Some(3.0),
             light: 1.0,
             within: None,
+            adult: None,
         }
     }
 

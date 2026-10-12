@@ -2516,6 +2516,7 @@ mod tests {
             segment: None,
             node: None,
             within: None,
+            adult: None,
         }
     }
 

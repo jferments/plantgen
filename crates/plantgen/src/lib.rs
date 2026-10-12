@@ -169,6 +169,13 @@ pub mod venation;
 /// outline of its spikelets, two crossed kites, not solids round them, so
 /// dense grass panicles get coarser steps; each step records the cover it
 /// loses or gains (`part-steps` is APSTEPS2).
+/// 28: a shoot is juvenile or adult (spec rework P6): a program's
+/// `adult(a)` sets the adultness of the organs drawn after it in the
+/// branch, a leaf type's juvenile family follows it, and a graph whose
+/// organs record it is `APGRAPH3`. The climber program draws it (an ivy's
+/// adult shoots bear entire leaves, rise and fruit), and the programs that
+/// measure first flowering by the plant's age name it `adult_age`, set
+/// from a taxon's juvenile period.
 /// 29: a fern's frond is sized from its stated blade, stipe and blade
 /// width by rules of its class (spec rework E6a): the frond's length, its
 /// bare share and its longest pinna, so the sword, wood and deer ferns

@@ -45,7 +45,6 @@
       "space_reach": 0.85,
       "space_kill": 0.21,
       "blooms": 1,
-      "bloom_age": 3,
       "bloom_size": 0.02,
       "bloom_angle": 40,
       "leaf_area": 0.273
@@ -110,10 +109,16 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "juvenile_period_years": {"min": 4, "max": 13},
     "leaf_arrangement": "opposite",
     "carpels": 5
   },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual (Larrea, read): plants may fruit sparingly at 4 to 6 years of age and reach full fruiting maturity at 8 to 13 (Martin 1974). It sets adult_age through the rule at the seed plants (spec rework P6), in place of the 3 years set by hand."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

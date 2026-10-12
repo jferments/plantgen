@@ -1271,7 +1271,13 @@ fn census_rows(
             .iter()
             .map(|(name, count)| format!("`{name}` {}", grouped(*count)))
             .collect();
-        let notes = [phases.join(", "), types.join(", ")]
+        let [juvenile, adult] = tally.adult;
+        let shoots = if juvenile + adult > 0 {
+            format!("{} juvenile, {} adult", grouped(juvenile), grouped(adult))
+        } else {
+            String::new()
+        };
+        let notes = [shoots, phases.join(", "), types.join(", ")]
             .into_iter()
             .filter(|note| !note.is_empty())
             .collect::<Vec<_>>()
@@ -1511,6 +1517,15 @@ fn validate_command(args: &[String]) -> Result<(), Failure> {
         }
         if !report.unmeasured.is_empty() {
             out!("  not measured yet: {}", report.unmeasured.join(", "));
+        }
+        // A flower on a juvenile shoot is an error whatever is stated
+        // (spec rework P6).
+        if report.juvenile_flowers > 0 && group.is_none() {
+            out!(
+                "  error: {} flowers and fruit on juvenile shoots",
+                grouped(u64::try_from(report.juvenile_flowers).unwrap_or(u64::MAX))
+            );
+            tally[3] += 1;
         }
         let verdicts = report
             .findings
@@ -1945,6 +1960,7 @@ fn parts_command(args: &[String]) -> Result<(), Failure> {
                 shed: None,
                 light: 1.0,
                 within: None,
+                adult: None,
             }],
             structures: Vec::new(),
         };
@@ -2133,6 +2149,7 @@ fn year_command(args: &[String]) -> Result<(), Failure> {
                         shed: None,
                         light: 1.0,
                         within: None,
+                        adult: None,
                     }]
                 } else {
                     Vec::new()

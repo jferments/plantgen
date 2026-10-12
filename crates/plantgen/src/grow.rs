@@ -768,6 +768,7 @@ fn snapshot(
             shed: None,
             light: organ_light.get(index).copied().unwrap_or(1.0),
             within: within(organ.within),
+            adult: organ.adult,
         })
         .collect();
     PlantGraph {
@@ -987,6 +988,7 @@ mod tests {
                         segment: None,
                         node: None,
                         within: None,
+                        adult: None,
                     })
                     .collect();
                 litter.keep(&scene, &index);

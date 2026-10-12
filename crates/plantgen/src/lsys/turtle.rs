@@ -59,6 +59,9 @@ pub struct OrganInstance {
     pub node: Option<u32>,
     /// The structure it was placed in ([`Scene::structures`]), if any.
     pub within: Option<u32>,
+    /// The adultness of the shoot it was placed on, 0 juvenile to 1 adult,
+    /// if the program set one with `adult` (spec rework P6).
+    pub adult: Option<f32>,
 }
 
 /// A structure the turtle opened (spec rework M7): what is drawn after it
@@ -156,6 +159,8 @@ struct State {
     lateral: bool,
     /// The structure open here, if any.
     structure: Option<u32>,
+    /// The shoot's adultness set by `adult`, if any.
+    adult: Option<f32>,
 }
 
 /// Identity of the string module being drawn and its element counters.
@@ -519,6 +524,7 @@ impl<'a> Interpreter<'a> {
                     segment: state.segment,
                     node: state.node,
                     within: state.structure,
+                    adult: state.adult,
                 });
                 Ok(())
             }
@@ -580,6 +586,8 @@ impl<'a> Interpreter<'a> {
                     state.frame = frame.rotated(axis, angle * params[3].clamp(0.0, 1.0));
                 }
             }
+            #[allow(clippy::cast_possible_truncation)]
+            Turtle::Adult => state.adult = Some(params[0].clamp(0.0, 1.0) as f32),
         }
         Ok(())
     }
@@ -678,6 +686,7 @@ const START_STATE: State = State {
     segment: None,
     lateral: false,
     structure: None,
+    adult: None,
 };
 
 /// Strings shorter than this are drawn on one thread.
@@ -1010,6 +1019,44 @@ mod tests {
         let second = (s.segments[1].end - s.segments[1].start).normalize_or(Vec3::ZERO);
         let expected = Vec3::new(1.0, 0.0, 1.0).normalize_or(Vec3::ZERO);
         assert!(close(second, expected), "{second:?}");
+    }
+
+    #[test]
+    fn adultness_is_pushed_and_popped_with_the_branch() {
+        // Spec rework P6: organs record the adultness of their shoot, a
+        // side shoot takes its parent's unless it sets its own, and organs
+        // placed before any `adult` record none.
+        let s = scene(
+            "lsystem p 1; organ leaf leaf;
+             axiom leaf(1) adult(0) F(1) leaf(1) [ leaf(1) adult(2) leaf(1) ] leaf(1)
+                   [ adult(0.4) leaf(1) ] leaf(1);",
+        );
+        let adult: Vec<Option<f32>> = s.organs.iter().map(|organ| organ.adult).collect();
+        assert_eq!(
+            adult,
+            [
+                None,
+                Some(0.0),
+                Some(0.0),
+                Some(1.0),
+                Some(0.0),
+                Some(0.4),
+                Some(0.0)
+            ]
+        );
+        // A program without `adult` records nothing and does not draw it.
+        assert!(
+            scene("lsystem p 1; organ leaf leaf; axiom F(1) leaf(1);")
+                .organs
+                .iter()
+                .all(|organ| organ.adult.is_none())
+        );
+        let draws = |source: &str| Program::compile(source).unwrap().draws_adult();
+        assert!(!draws("lsystem p 1; module A; axiom A; rule A -> F(1) A;"));
+        assert!(draws(
+            "lsystem p 1; module A; axiom A; rule A -> F(1) [ adult(1) ] A;"
+        ));
+        assert!(draws("lsystem p 1; axiom adult(1) F(1);"));
     }
 
     #[test]

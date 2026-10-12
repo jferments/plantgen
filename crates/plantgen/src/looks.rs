@@ -89,19 +89,22 @@ pub struct Families {
     /// type's own look, and one grown in deep shade larger, broader and
     /// shallower, by degrees between ([`light_form`], [`Shape::in_light`]).
     pub plasticity: f64,
-    /// Juvenile leaves, on a plant younger than their `until` when they
-    /// grew.
+    /// Juvenile leaves, on a juvenile shoot or, where the program records
+    /// no adultness, on a plant younger than their `until` when they grew.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub juvenile: Option<Juvenile>,
 }
 
-/// An organ type's juvenile leaves: their shape, grown while the plant is
-/// younger than `until` years (a juniper's needles before its scales, a
-/// pine seedling's single needles, a young madrone's toothed leaves).
+/// An organ type's juvenile leaves (spec rework P6): their shape, grown
+/// on a juvenile shoot (an ivy's palmate leaves on its climbing shoots)
+/// or, where the program records no adultness (`adult`), while the plant
+/// is younger than `until` years (a juniper's needles before its scales,
+/// a pine seedling's single needles, a young madrone's toothed leaves).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Juvenile {
-    pub until: f64,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub until: Option<f64>,
     pub shape: Shape,
 }
 
@@ -162,7 +165,9 @@ impl Families {
             ));
         }
         if let Some(juvenile) = &self.juvenile {
-            within("families juvenile until", juvenile.until, 0.1, 200.0)?;
+            if let Some(until) = juvenile.until {
+                within("families juvenile until", until, 0.1, 200.0)?;
+            }
             juvenile.shape.validate()?;
             if matches!(
                 juvenile.shape,
@@ -188,32 +193,34 @@ impl Families {
 /// P4, spec rework L3): the indices among the plant's looks of the looks
 /// its leaves wear in each of the [`BANDS`] steps of light, from deep
 /// shade to full sun (the middle one its own), its plasticity, which sizes
-/// them, and its juvenile look with when a leaf is juvenile. The default
-/// draws every leaf with the type's own look.
+/// them, and its juvenile look with the plant age it is grown before
+/// where the program records no adultness. The default draws every leaf
+/// with the type's own look.
 #[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub struct Forms {
     pub bands: Option<[usize; BANDS]>,
     pub plasticity: f64,
-    pub juvenile: Option<(usize, f64)>,
+    pub juvenile: Option<(usize, Option<f64>)>,
 }
 
 impl Forms {
-    /// The look, of the plant's looks, that a leaf of the type whose own
-    /// look is `own` is drawn with, grown in `light` on a plant `born`
-    /// years old, and its size as a share of the type's: the step of its
-    /// [`light_form`] nearest, and the size of its own place on that scale
+    /// The look, of the plant's looks, that `organ`, a leaf of the type
+    /// whose own look is `own`, is drawn with, and its size as a share of
+    /// the type's. A juvenile leaf ([`Forms::juvenile_leaf`]) wears the
+    /// juvenile look; any other the step of its light's [`light_form`]
+    /// nearest, at the size of its own place on that scale
     /// ([`Shape::size_in_light`]).
     #[must_use]
-    pub fn of(&self, own: usize, light: f64, born: f64) -> (usize, f64) {
-        if let Some((juvenile, until)) = self.juvenile
-            && born < until
+    pub fn of(&self, own: usize, organ: &crate::graph::GraphOrgan) -> (usize, f64) {
+        if let Some((juvenile, _)) = self.juvenile
+            && self.juvenile_leaf(organ)
         {
             return (juvenile, 1.0);
         }
         let Some(bands) = self.bands else {
             return (own, 1.0);
         };
-        let form = light_form(light);
+        let form = light_form(organ.light);
         #[allow(
             clippy::cast_possible_truncation,
             clippy::cast_sign_loss,
@@ -222,6 +229,26 @@ impl Forms {
         let band =
             ((f64::midpoint(form, 1.0) * (BANDS - 1) as f64).round() as usize).min(BANDS - 1);
         (bands[band], Shape::size_in_light(form, self.plasticity))
+    }
+    /// Whether `organ` is a juvenile leaf of a type with juvenile leaves
+    /// (spec rework P6): on a shoot of adultness 0 it is, on one of 1 it
+    /// is not, and between, on a shoot changing, it is adult with a chance
+    /// of its adultness, drawn from its id. Where the program records no
+    /// adultness it is juvenile if the plant was younger than `until` when
+    /// it grew.
+    #[must_use]
+    pub fn juvenile_leaf(&self, organ: &crate::graph::GraphOrgan) -> bool {
+        let Some((_, until)) = self.juvenile else {
+            return false;
+        };
+        match organ.adult {
+            Some(adult) if adult <= 0.0 => true,
+            Some(adult) if adult >= 1.0 => false,
+            Some(adult) => {
+                crate::rng::unit(crate::rng::mix64(organ.id ^ 0x00AD_0017)) >= f64::from(adult)
+            }
+            None => until.is_some_and(|until| organ.born < until),
+        }
     }
 }
 
@@ -3212,7 +3239,7 @@ mod tests {
                 families: Some(Families {
                     plasticity: 0.5,
                     juvenile: Some(Juvenile {
-                        until: 3.0,
+                        until: Some(3.0),
                         shape: Shape::Simple(Simple::default()),
                     }),
                 }),
@@ -3232,7 +3259,7 @@ mod tests {
         let forms = looks[0].forms;
         assert_eq!(
             (forms.bands, forms.juvenile),
-            (Some([2, 3, 0, 4, 5]), Some((6, 3.0)))
+            (Some([2, 3, 0, 4, 5]), Some((6, Some(3.0))))
         );
         assert_eq!(looks[1].forms, Forms::default());
         assert!(
@@ -3243,21 +3270,76 @@ mod tests {
         assert!(matches!(looks[6].shape, Shape::Simple(_)));
         // Juvenile on a young plant whatever its light; then by its light,
         // its size smoothly.
-        assert_eq!(forms.of(0, 0.9, 1.0), (6, 1.0));
-        assert_eq!(forms.of(0, 0.9, 10.0), (5, 1.0 - 0.12 * 0.5));
-        assert_eq!(forms.of(0, 0.2, 10.0).0, 4);
-        assert_eq!(forms.of(0, 0.12, 10.0).0, 0);
-        assert_eq!(forms.of(0, 0.07, 10.0).0, 3);
-        assert_eq!(forms.of(0, 0.01, 10.0), (2, 1.0 + 0.12 * 0.5));
+        assert_eq!(forms.of(0, &leaf(0.9, 1.0, None, 1)), (6, 1.0));
+        assert_eq!(
+            forms.of(0, &leaf(0.9, 10.0, None, 1)),
+            (5, 1.0 - 0.12 * 0.5)
+        );
+        assert_eq!(forms.of(0, &leaf(0.2, 10.0, None, 1)).0, 4);
+        assert_eq!(forms.of(0, &leaf(0.12, 10.0, None, 1)).0, 0);
+        assert_eq!(forms.of(0, &leaf(0.07, 10.0, None, 1)).0, 3);
+        assert_eq!(
+            forms.of(0, &leaf(0.01, 10.0, None, 1)),
+            (2, 1.0 + 0.12 * 0.5)
+        );
         let sizes: Vec<f64> = [0.04, 0.06, 0.08, 0.1, 0.15, 0.2, 0.3]
             .iter()
-            .map(|&light| forms.of(0, light, 10.0).1)
+            .map(|&light| forms.of(0, &leaf(light, 10.0, None, 1)).1)
             .collect();
         assert!(sizes.windows(2).all(|pair| pair[1] < pair[0]), "{sizes:?}");
         // Families are for leaves.
         let mut flower = organs["leaf"].clone();
         flower.shape = Shape::Flower(Flower::default());
         assert!(flower.validate().is_err());
+    }
+
+    fn leaf(light: f64, born: f64, adult: Option<f32>, id: u64) -> crate::graph::GraphOrgan {
+        crate::graph::GraphOrgan {
+            id,
+            organ: 0,
+            segment: None,
+            position: crate::math::Vec3::ZERO,
+            heading: crate::math::Vec3::Y,
+            left: crate::math::Vec3::X,
+            size: 1.0,
+            born,
+            shed: None,
+            light,
+            within: None,
+            adult,
+        }
+    }
+
+    #[test]
+    fn a_leaf_on_a_juvenile_shoot_wears_the_juvenile_look() {
+        // Spec rework P6: a shoot's adultness picks the look, whatever the
+        // plant's age; between 0 and 1 a share of its leaves are adult.
+        let forms = Forms {
+            bands: None,
+            plasticity: 0.0,
+            juvenile: Some((1, None)),
+        };
+        assert_eq!(forms.of(0, &leaf(0.3, 30.0, Some(0.0), 7)), (1, 1.0));
+        assert_eq!(forms.of(0, &leaf(0.3, 0.5, Some(1.0), 7)), (0, 1.0));
+        // Without a recorded adultness and without `until`, adult.
+        assert_eq!(forms.of(0, &leaf(0.3, 0.5, None, 7)), (0, 1.0));
+        let adult = (0..2000)
+            .filter(|&id| forms.of(0, &leaf(0.3, 5.0, Some(0.3), id)).0 == 0)
+            .count();
+        assert!((500..700).contains(&adult), "{adult}");
+        // A recorded adultness wins over `until`.
+        let until = Forms {
+            juvenile: Some((1, Some(4.0))),
+            ..forms
+        };
+        assert_eq!(until.of(0, &leaf(0.3, 10.0, Some(0.0), 7)), (1, 1.0));
+        assert_eq!(until.of(0, &leaf(0.3, 1.0, Some(1.0), 7)), (0, 1.0));
+        assert_eq!(until.of(0, &leaf(0.3, 1.0, None, 7)), (1, 1.0));
+        // A type without juvenile leaves wears its own look.
+        assert_eq!(
+            Forms::default().of(0, &leaf(0.3, 1.0, Some(0.0), 7)),
+            (0, 1.0)
+        );
     }
 
     #[test]
@@ -3879,6 +3961,7 @@ mod tests {
             shed: None,
             light: 1.0,
             within: None,
+            adult: None,
         };
         let graph = crate::graph::PlantGraph {
             age: 5.0,

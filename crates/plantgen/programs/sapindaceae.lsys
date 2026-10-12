@@ -19,9 +19,12 @@
 # Revision 2 (phyllotaxis P1): its pairs turn by broadleaf's divergence
 # and stand for leaves_per_node 2 or more, as broadleaf's do.
 #
+# Revision 3 (spec rework P6): it reads broadleaf's adult_age, which
+# replaces bloom_age.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem sapindaceae 2 extends broadleaf;
+lsystem sapindaceae 3 extends broadleaf;
 
 param bud_years = 30;
 param crown_widest = 0.45;      # share of the crown's depth where it is widest
@@ -72,7 +75,7 @@ tool space@2 {
 # internodes, ends them in a flower cluster and forks into twin shoots from
 # the buds below it: the cluster ends the year's growth, as a maple's
 # terminal raceme does, so a fork always stands on wood.
-rule A(split) : blooms > 0 && t >= bloom_age && split <= 0 && vigour >= 1 && space > 0
+rule A(split) : blooms > 0 && t >= adult_age && split <= 0 && vigour >= 1 && space > 0
                 && light >= spur_light && (life <= 0 || t < life) && rand() < terminal_bloom ->
     steer(sx, sy, sz, steer_weight) M(min(floor(vigour), max_shoot))
     Bo(blooms) /(divergence) [ &(twin_angle) S A(0) ] [ /(180) &(twin_angle) S A(0) ];
@@ -102,7 +105,7 @@ module Q(n, a);                # n leaf pairs still to unfold, turned a quarter 
 rule B : life > 0 && t >= life -> ;
 rule B : light < shade_death || age >= bud_years -> ;
 rule B : vigour >= bud_break && space > 0 -> A(0);
-rule B : light >= spur_light && blooms > 0 && t >= bloom_age -> Q(spur_pairs, age) Bo(blooms) B;
+rule B : light >= spur_light && blooms > 0 && t >= adult_age -> Q(spur_pairs, age) Bo(blooms) B;
 rule B : light >= spur_light -> Q(spur_pairs, age) B;
 
 decompose Q(n, a) : n > 0 ->

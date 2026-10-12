@@ -373,6 +373,15 @@
       "range": [0.05, 10000],
       "why": "the oldest a plant lives"
     },
+    "juvenile_period_years": {
+      "group": "size",
+      "organ": "plant",
+      "type": "number",
+      "unit": "years",
+      "range": [0.05, 200],
+      "optional": true,
+      "why": "the years from germination to a plant's first flowers or cones (its juvenile period)"
+    },
     "root_depth_max_m": {
       "group": "size",
       "organ": "root",

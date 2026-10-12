@@ -44,7 +44,7 @@
       "boot_life": 40,
       "boot_length": 0.06,
       "crown_cone": 0.4,
-      "cone_age": 15,
+      "adult_age": 15,
       "suckers": 3,
       "sucker_age": 10,
       "sucker_rate": 0.15,
