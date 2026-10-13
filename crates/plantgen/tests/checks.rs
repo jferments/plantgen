@@ -27,11 +27,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
     ),
     (
-        "aquilegia-formosa",
-        "fruit_type",
-        "its fruit look sets no fruit kind, so its follicles are drawn as the ellipsoid of a berry or drupe",
-    ),
-    (
         "berberis-aquifolium",
         "flower_merosity",
         "its six petals stand in two whorls of three, and a corolla draws one whorl, so its spec draws six there",
@@ -47,19 +42,9 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its four petals stand in two pairs, outer and inner, and a corolla draws one whorl, so its spec draws four there",
     ),
     (
-        "dicentra-formosa",
-        "fruit_type",
-        "its fruit look sets no fruit kind, so its capsules are drawn as the ellipsoid of a berry or drupe",
-    ),
-    (
         "digitalis-purpurea",
         "corolla_shape",
         "its bell is joined 0.8 of its length round a wide mouth, its lobes short (Flora of New Zealand), but the angiosperms draw every bell joined 0.45 and a funnel 0.6, so its corolla is nearest a funnel; a longer bell needs the rule's shapes to allow one",
-    ),
-    (
-        "digitalis-purpurea",
-        "fruit_type",
-        "its fruit look sets no fruit kind, so its capsules are drawn as the ellipsoid of a berry or drupe",
     ),
     (
         "encelia-farinosa",
@@ -70,11 +55,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "larrea-tridentata",
         "leaf_division",
         "each leaf is two leaflets joined at their base, but its sprig cards draw each leaf as one blade",
-    ),
-    (
-        "lupinus-polyphyllus",
-        "fruit_type",
-        "its look in fruit sets no fruit kind, so its pods are drawn as the ellipsoid of a berry or drupe",
     ),
     (
         "lysichiton-americanus",
@@ -137,19 +117,9 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
     ),
     (
-        "tiarella-trifoliata",
-        "fruit_type",
-        "its fruit look sets no fruit kind, so its capsules are drawn as the ellipsoid of a berry or drupe",
-    ),
-    (
         "tolmiea-menziesii",
         "flower_symmetry",
         "its zygomorphy is `other`, which the angiosperms draw as a corolla of like petals, so its flowers are drawn radial",
-    ),
-    (
-        "tolmiea-menziesii",
-        "fruit_type",
-        "its look in fruit sets no fruit kind, so its capsules are drawn as the ellipsoid of a berry or drupe",
     ),
     (
         "viola-glabella",
