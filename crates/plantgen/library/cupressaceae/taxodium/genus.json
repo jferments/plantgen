@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Taxodium",
+  "traits": {
+    "leaf_form": "needle"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, pp. 68-69), Taxodiaceae, which he lists Taxodium under without describing it: linear leaves in a spiral on branchlets that are themselves shed. Read at the family; no account of the species was reachable."
+    }
+  }
+}

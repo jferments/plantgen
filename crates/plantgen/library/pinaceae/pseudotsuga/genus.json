@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Pseudotsuga",
+  "traits": {
+    "leaf_life_years": {"min": 6, "max": 8},
+    "cone_maturation_years": 1,
+    "cone_posture": "pendent"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, pp. 63-64), Pseudotsuga: leaves falling after 6 to 8 years; seed cones hang, ripen in their first autumn, and their three-pointed bracts stand out past the scales."
+    }
+  }
+}

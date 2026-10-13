@@ -14,8 +14,6 @@
     "params": {
       "cone_chance": 0.12,
       "cone_length": 0.09,
-      "cone_pitch": -70,
-      "cone_years": 1,
       "cone_area": 0.524,
       "height_max": 60,
       "height_rate": 0.02,
@@ -26,7 +24,6 @@
       "branch_sag": 0.8,
       "max_sag": 30,
       "upturn": 0.01,
-      "needle_years": 8,
       "spray_droop": 10,
       "shade_death": 0.07,
       "shade_years": 4,
@@ -68,10 +65,8 @@
       "spray": {
         "shape": {
           "template": "needles",
-          "ranks": 2,
           "twigs": 6,
           "aspect": 0.85,
-          "needle": 0.1,
           "twig_angle": 55,
           "width": 0.065
         },
@@ -96,9 +91,27 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "juvenile_period_years": {"min": 20, "max": 50}
+    "juvenile_period_years": {"min": 20, "max": 50},
+    "foliage_ranks": "two_ranked",
+    "leaf_length_m": {"min": 0.035, "max": 0.05},
+    "leaf_life_years": {"min": 7, "max": 10, "typical": 8}
   },
   "evidence": {
+    "traits.leaf_life_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's grand fir review: needles kept seven years on average; Abrams's genus gives usually 8 to 10."
+    },
+    "traits.foliage_ranks": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 66): needles 35 to 50 mm, flat and flexible, glossy above and silvery beneath, in two ranks making flat sprays. His seed cone of 12 to 18 cm reads clearly but is long for the species, so no cone length is stated until a second source checks it."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 66): needles 35 to 50 mm, flat and flexible, glossy above and silvery beneath, in two ranks making flat sprays. His seed cone of 12 to 18 cm reads clearly but is long for the species, so no cone length is stated until a second source checks it."
+    },
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
@@ -107,7 +120,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a tall fir with a narrow, domed crown, level branches and flat sprays of long, glossy needles in two ranks. Not fitted to measurements. Cones (plant forms F3): 6 to 11 cm stand upright on the top branches and shed their scales on the tree; set from general knowledge of the species, not measured."
+      "note": "Hand-set from general knowledge of the species: a tall fir with a narrow, domed crown, level branches and flat sprays of long, glossy needles in two ranks. Not fitted to measurements. Cones (plant forms F3): 6 to 11 cm stand upright on the top branches and shed their scales on the tree; set from general knowledge of the species, not measured. Spec rework E6d: `cone_pitch`, `cone_years`, `needle_years` now set by the rules at Pinidae from the stated characters."
     },
     "allometry": {
       "evidence": "Authored",
@@ -117,7 +130,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: glossy dark green needles; smooth grey bark with resin blisters, furrowed with age. Needle shoots (plant roadmap P4): flat needles 2 to 5 cm long and about 2 mm wide, so a needle 0.065 as wide as it is long (`width`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): smooth and grey with resin blisters when young, then furrowed into flat grey-brown ridges; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: glossy dark green needles; smooth grey bark with resin blisters, furrowed with age. Needle shoots (plant roadmap P4): flat needles 2 to 5 cm long and about 2 mm wide, so a needle 0.065 as wide as it is long (`width`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): smooth and grey with resin blisters when young, then furrowed into flat grey-brown ridges; set from general knowledge of the species, not measured. Spec rework E6d: `needle`, `ranks` now set by the rules at Pinidae from the stated needles."
     },
     "taxon": {
       "evidence": "Authored",

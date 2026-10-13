@@ -151,7 +151,7 @@ pub const SIZES: [(&str, Judged); 30] = [
 /// The count characters counted on grown plants (spec rework M8A), each
 /// on every organ that holds what it counts and judged as an organ's size
 /// is.
-pub const COUNTS: [&str; 20] = [
+pub const COUNTS: [&str; 21] = [
     "ray_florets",
     "disc_florets",
     "ligulate_florets",
@@ -172,11 +172,12 @@ pub const COUNTS: [&str; 20] = [
     "ribs",
     "radial_spines",
     "central_spines",
+    "needles_per_fascicle",
 ];
 
 /// The kinds a grown plant's drawing must agree with (spec rework M8A):
 /// each an enum or bool character, compared with what the plant draws.
-pub const KINDS: [&str; 13] = [
+pub const KINDS: [&str; 14] = [
     "inflorescence",
     "bract_form",
     "capitulum_kind",
@@ -190,6 +191,7 @@ pub const KINDS: [&str; 13] = [
     "ovary_position",
     "zygomorphy",
     "glochids",
+    "foliage_ranks",
 ];
 
 /// The share of a range's span beyond which a value is an error when the
@@ -675,6 +677,8 @@ pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
                 .and_then(|look| look.season.as_ref())
         })
         .collect();
+    // Each spray card's longest needles, its main axis's.
+    let mut needle_lengths = Vec::new();
     for day in days(&seasons) {
         let (looks, sizes) = crate::drawing::looks_of(grown.spec, grown.growth, day);
         let drawn = crate::drawing::drawn(graph, &sizes);
@@ -688,7 +692,23 @@ pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
             };
             let phase = organs::phase(organ, grown.season(organ), day, graph.age);
             reproductive(grown, organ, look, phase, &mut tally);
+            if let Shape::Needles(needles) = &look.shape {
+                needle_counts(needles, organ.id, &mut tally);
+                needle_lengths.push(organ.size * needles.needle);
+            }
         }
+    }
+    // A card draws its needles a share of its own length, so they grow
+    // with the spray as no shoot's needles do: the plant's usual needle
+    // is judged, one value for the plant.
+    if !needle_lengths.is_empty() {
+        needle_lengths.sort_by(f64::total_cmp);
+        tally.add(
+            "leaf_length_m",
+            0,
+            0,
+            needle_lengths[needle_lengths.len() / 2],
+        );
     }
     tally.measures()
 }
@@ -1251,6 +1271,23 @@ fn leaf_sizes(shape: &Shape, size: f64, id: u64, tally: &mut Tally) {
     tally.add("leaf_length_m", id, 0, blade);
     tally.add("leaf_width_m", id, 0, width);
     tally.add("petiole_length_m", id, 0, petiole);
+}
+
+/// A conifer's needle spray (spec rework E6d): the needles to a bundle,
+/// one where they stand in two ranks, as the card draws a bundle only
+/// all round a shoot, and how they stand.
+fn needle_counts(needles: &crate::looks::Needles, id: u64, tally: &mut Tally) {
+    let two_ranked = needles.ranks == 2;
+    let bundle = if two_ranked { 1 } else { needles.bundle.max(1) };
+    tally.count("needles_per_fascicle", id, 0, bundle);
+    tally.kind(
+        "foliage_ranks",
+        if two_ranked {
+            "two_ranked"
+        } else {
+            "all_round"
+        },
+    );
 }
 
 /// An organ's flowers, heads, spikelets, fruit and cones, alone or as a

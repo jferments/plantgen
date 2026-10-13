@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Tsuga",
+  "traits": {
+    "foliage_ranks": "two_ranked",
+    "cone_maturation_years": 1,
+    "cone_posture": "pendent"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, pp. 62-63), Tsuga: leaves mostly looking two-ranked through a twisted stalk (mountain hemlock excepted); seed cones stand up when young at the shoot tip, then mostly hang, ripening in their first season."
+    }
+  }
+}

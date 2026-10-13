@@ -212,7 +212,12 @@ pub mod venation;
 /// drawn solid is one of four varieties of its look, which draw its
 /// counts and sizes across their ranges; a part mesh's variant `k` is its
 /// look's variety `k`.
-/// 35: a broadleaf crown grows its own outline inside a loose region
+/// 35: a conifer's foliage and cones are grown from the characters its
+/// floras state (spec rework E6d), by rules at Pinidae: how long a shoot
+/// keeps its needles, a spray card's needles as long as the stated ones
+/// on a usual spray, a pine's needles to a bundle, needles in two ranks
+/// or all round, and a seed cone's length, posture and years on the tree.
+/// 36: a broadleaf crown grows its own outline inside a loose region
 /// (crown form step B, broadleaf revision 11): free space fills 1.6 times
 /// the crown's radius and 1.3 times its height; a shoot's nodes shorten
 /// with the wood between it and the base (`path_half`, fitted per species
@@ -221,4 +226,4 @@ pub mod venation;
 /// and the wood bends under its load, the stem and a fork's stems held up;
 /// a tip with no free space leafs out. Maples keep their lobed envelope
 /// (sapindaceae revision 6).
-pub const GENERATOR_REVISION: u32 = 35;
+pub const GENERATOR_REVISION: u32 = 36;

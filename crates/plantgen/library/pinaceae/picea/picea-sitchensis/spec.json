@@ -13,8 +13,6 @@
   "generator": {
     "params": {
       "cone_chance": 0.12,
-      "cone_length": 0.08,
-      "cone_pitch": 110,
       "cone_years": 2,
       "cone_area": 0.55,
       "height_max": 75,
@@ -27,7 +25,6 @@
       "max_sag": 35,
       "upturn": 0.02,
       "branch_growth": 0.32,
-      "needle_years": 7,
       "spray_droop": 40,
       "shade_death": 0.08,
       "pipe_organ": 0.011,
@@ -67,10 +64,8 @@
       "spray": {
         "shape": {
           "template": "needles",
-          "ranks": 0,
           "twigs": 4,
           "aspect": 0.6,
-          "needle": 0.07,
           "twig_angle": 50,
           "width": 0.06
         },
@@ -101,9 +96,21 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "juvenile_period_years": {"min": 20, "max": 40}
+    "juvenile_period_years": {"min": 20, "max": 40},
+    "leaf_length_m": {"min": 0.015, "max": 0.025},
+    "cone_length_m": {"min": 0.06, "max": 0.1}
   },
   "evidence": {
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 62): needles 15 to 25 mm, sharp, spreading from all sides of the twig; seed cones narrowly oblong-oval, 6 to 10 cm, their thin toothed scales twice as long as the bracts."
+    },
+    "traits.cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 62): needles 15 to 25 mm, sharp, spreading from all sides of the twig; seed cones narrowly oblong-oval, 6 to 10 cm, their thin toothed scales twice as long as the bracts."
+    },
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
@@ -112,7 +119,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a massive conifer with a broad, buttressed base, level branches with hanging branchlets and stiff, sharp needles all round the twigs; fast-growing on wet ground near the coast. Not fitted to measurements. Cones (plant forms F3): 5 to 10 cm hang from the upper branches, papery scales; set from general knowledge of the species, not measured."
+      "note": "Hand-set from general knowledge of the species: a massive conifer with a broad, buttressed base, level branches with hanging branchlets and stiff, sharp needles all round the twigs; fast-growing on wet ground near the coast. Not fitted to measurements. Cones (plant forms F3): 5 to 10 cm hang from the upper branches, papery scales; set from general knowledge of the species, not measured. Spec rework E6d: `cone_length`, `cone_pitch`, `needle_years` now set by the rules at Pinidae from the stated characters."
     },
     "allometry": {
       "evidence": "Authored",
@@ -122,7 +129,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: blue-green needles with silvery undersides; thin grey-brown bark in small scales. Needle shoots (plant roadmap P4): stiff, sharp needles 1.5 to 2.5 cm long and 1 to 1.5 mm wide, so a needle 0.06 as wide as it is long (`width`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): thin grey bark in small loose rounded scales; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: blue-green needles with silvery undersides; thin grey-brown bark in small scales. Needle shoots (plant roadmap P4): stiff, sharp needles 1.5 to 2.5 cm long and 1 to 1.5 mm wide, so a needle 0.06 as wide as it is long (`width`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): thin grey bark in small loose rounded scales; set from general knowledge of the species, not measured. Spec rework E6d: `needle`, `ranks` now set by the rules at Pinidae from the stated needles."
     },
     "taxon": {
       "evidence": "Authored",
