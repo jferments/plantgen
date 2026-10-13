@@ -872,7 +872,9 @@ fn carried(v: Vec3, from: Vec3, to: Vec3) -> Vec3 {
 /// axis, the frame carried up the axis between them (`divergence_deg`,
 /// the plant's median, and the `phyllotaxis_pattern` nearest it). Leaves
 /// at the ground, a rosette's or a tiller's, stand one to a node, in the
-/// order they were placed, each year's apart.
+/// order they were placed, each year's apart. On a stem, a node is the
+/// leaves born with the internode below it: a short shoot's leaves,
+/// crowded later where its bud stands, are no node of the stem.
 #[allow(
     clippy::cast_possible_truncation,
     clippy::cast_precision_loss,
@@ -954,6 +956,22 @@ fn arrangement(grown: &Grown<'_>, looks: &[Look], tally: &mut Tally) {
             segment = segments[index].parent.map(|p| p as usize);
         }
         holders.push((segment, position, piece.heading, piece, order));
+    }
+    // A shoot's own leaves are born with the internode below them. Leaves
+    // born there later are a short shoot's, from a bud at the node, which
+    // crowds each year's leaves at one place (with last year's until they
+    // fall); floras state the arrangement of the long shoots' leaves, so
+    // where a plant's stems bear leaves of their own, only those count.
+    let own = |segment: Option<usize>, organ: &GraphOrgan| {
+        segment
+            .and_then(|index| segments.get(index))
+            .is_none_or(|at| (at.born - organ.born).abs() < 1e-9)
+    };
+    if holders
+        .iter()
+        .any(|(segment, _, _, organ, _)| segment.is_some() && own(*segment, organ))
+    {
+        holders.retain(|(segment, _, _, organ, _)| own(*segment, organ));
     }
     // Leaves sharing a segment and a place are one node.
     let mut nodes: BTreeMap<(Axis, [i64; 3], u64), Node> = BTreeMap::new();
@@ -1990,6 +2008,29 @@ mod tests {
             judge("ray_length_m", Judged::Organs, single, &mut far, 1).verdict,
             Verdict::Error
         );
+    }
+
+    #[test]
+    fn a_short_shoots_crowded_leaves_are_no_whorl() {
+        // A shrub's lateral buds leaf out as short shoots, crowding each
+        // year's leaves where the bud stands: thimbleberry's alternate
+        // leaves and red-osier dogwood's opposite pairs read as whorls when
+        // those count as the stem's node.
+        let library = Library::builtin();
+        for (id, arrangement) in [
+            ("rubus-parviflorus", "alternate"),
+            ("cornus-sericea", "opposite"),
+        ] {
+            let spec = library.spec(id).unwrap();
+            let environment = crate::drawing::typical_environment(&spec, library);
+            let plant = grow_and_measure(&spec, library, environment, spec.variants.seeds[0], None)
+                .unwrap();
+            let states: Vec<&str> = plant.kinds["leaf_arrangement"]
+                .iter()
+                .map(String::as_str)
+                .collect();
+            assert_eq!(states, [arrangement], "{id}");
+        }
     }
 
     #[test]
