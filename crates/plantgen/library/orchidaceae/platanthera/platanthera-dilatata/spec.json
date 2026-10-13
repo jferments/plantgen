@@ -18,7 +18,6 @@
       "stem_lean": 3,
       "maturity": 1.5,
       "adult_age": 3,
-      "stem_height": 0.42,
       "young_height": 0.45,
       "stem_radius": 0.003,
       "wiggle": 1,
@@ -111,7 +110,8 @@
   "traits": {
     "height_typical_m": {
       "min": 0.4,
-      "max": 0.8
+      "max": 0.8,
+      "typical": 0.42
     },
     "leaf_length_m": {
       "min": 0.07,
@@ -127,7 +127,7 @@
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
-      "note": "Abrams vol. 1 (1923), as Limnorchis dilatata: stems 40 cm to 80 cm tall."
+      "note": "Abrams vol. 1 (1923), as Limnorchis dilatata: stems 40 cm to 80 cm tall. The typical value is the one the plant was drawn at before, inside the source's range."
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
