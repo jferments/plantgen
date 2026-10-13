@@ -474,6 +474,7 @@ pub(crate) fn build_shaded(
     if let Some(roots) = &appearance.roots {
         crate::roots::build(graph, roots, appearance.bark, level <= 1, &mut mesh.wood);
     }
+    grounded(&mut mesh.cards);
     // Only tubes and sticks, the first wood drawn, are shaded.
     let mut shades = shade.apart.unwrap_or_default();
     if apart {
@@ -1057,7 +1058,13 @@ fn twigs(
                 .iter()
                 .map(|&i| twigs[i].5)
                 .try_fold(f64::NEG_INFINITY, |s, shed| shed.map(|shed| s.max(shed)));
-            let start = centre + direction * low;
+            let mut start = centre + direction * low;
+            // A stick standing in for twigs near the ground stands on it:
+            // its lower end ring (its direction points up) clears it.
+            let reach = radius * widen * (1.0 - direction.y * direction.y).max(0.0).sqrt();
+            if start.y - reach < GROUND {
+                start.y = GROUND + reach;
+            }
             let normal = any_perpendicular(direction);
             let binormal = direction.cross(normal);
             #[allow(clippy::cast_sign_loss, clippy::cast_possible_truncation)]
@@ -1229,7 +1236,7 @@ fn wood(
                 #[allow(clippy::cast_possible_truncation)]
                 let uv = [(f64::from(side) / f64::from(sides)) as f32, along as f32];
                 out.push(Vertex {
-                    position: current.centre + direction * (radius * widen),
+                    position: footed(root, current.centre, direction * (radius * widen)),
                     normal: surface,
                     uv,
                     color: bark_alpha(
@@ -1265,6 +1272,18 @@ fn wood(
     }
 }
 
+/// The point `out` from `centre` on a ring of an axis, a `stem`'s cut
+/// flat at the ground: a stem's foot meets level ground in a flat cut, so
+/// a ring standing on the ground whose side would dip into it, as a
+/// leaning or flared trunk's foot ring does, keeps that side on it.
+fn footed(stem: bool, centre: Vec3, out: Vec3) -> Vec3 {
+    let mut position = centre + out;
+    if stem && centre.y >= GROUND && position.y < GROUND {
+        position.y = GROUND;
+    }
+    position
+}
+
 /// A card while it is placed, in double precision.
 #[derive(Debug, Clone, Copy)]
 struct Placed {
@@ -1297,6 +1316,160 @@ impl Placed {
             shed: self.shed.map_or(f32::INFINITY, |shed| shed as f32),
             bend: self.bend,
         }
+    }
+}
+
+/// The ground a plant stands on in its own frame: the level plane of its
+/// foot. No card reaches below it ([`grounded`]).
+pub const GROUND: f64 = 0.0;
+
+/// How far below the [`GROUND`] a keyframe reaches, in metres (0 when
+/// nothing does): its wood as grown (segment ends), its organs where they
+/// stand, and as drawn at one level, its wood mesh (tubes, sticks, solid
+/// leaves and flowers, fleshy bodies and any roots) and its cards.
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
+pub struct Below {
+    pub segments: f64,
+    pub organs: f64,
+    pub wood: f64,
+    pub cards: f64,
+}
+
+impl Below {
+    /// The graph's depths, with no mesh.
+    #[must_use]
+    pub fn graph(graph: &PlantGraph) -> Self {
+        let depth = |y: f64| (GROUND - y).max(0.0);
+        Self {
+            segments: graph
+                .segments
+                .iter()
+                .map(|segment| depth(segment.start.y.min(segment.end.y)))
+                .fold(0.0, f64::max),
+            organs: graph
+                .organs
+                .iter()
+                .map(|organ| depth(organ.position.y))
+                .fold(0.0, f64::max),
+            wood: 0.0,
+            cards: 0.0,
+        }
+    }
+
+    /// The graph's depths, and `mesh`'s, one of its levels.
+    #[must_use]
+    pub fn drawn(graph: &PlantGraph, mesh: &PlantMesh) -> Self {
+        let depth = |y: f32| (GROUND - f64::from(y)).max(0.0);
+        let vector = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
+        Self {
+            wood: mesh
+                .wood
+                .positions
+                .iter()
+                .map(|position| depth(position[1]))
+                .fold(0.0, f64::max),
+            cards: mesh
+                .cards
+                .iter()
+                .map(|card| {
+                    let low = card_low(
+                        card,
+                        vector(card.base),
+                        vector(card.heading),
+                        vector(card.left),
+                    );
+                    (GROUND - low).max(0.0)
+                })
+                .fold(0.0, f64::max),
+            ..Self::graph(graph)
+        }
+    }
+
+    /// The deepest of them.
+    #[must_use]
+    pub fn most(&self) -> f64 {
+        self.segments
+            .max(self.organs)
+            .max(self.wood)
+            .max(self.cards)
+    }
+}
+
+/// The lowest height `card` reaches, drawn as a renderer draws it: its four
+/// corners, or every corner of a bent card's grid ([`crate::bend`]).
+fn card_low(card: &Card, base: Vec3, heading: Vec3, left: Vec3) -> f64 {
+    let half = f64::from(card.width) * 0.5;
+    let length = f64::from(card.length);
+    if card.bend.is_flat() {
+        return base.y + (heading.y * length).min(0.0) - left.y.abs() * half;
+    }
+    (0..crate::bend::VERTICES)
+        .map(|k| {
+            let (x, v) = crate::bend::corner(k);
+            card.bend
+                .position(base, heading, left, half, length, x, v)
+                .y
+        })
+        .fold(f64::INFINITY, f64::min)
+}
+
+/// `cards` kept above the [`GROUND`]: a card that would reach below it, a
+/// leaf drooping into the soil or a spray placed at a seedling's foot, is
+/// turned up about its base by the least angle that lifts it clear, as a
+/// leaf comes to rest on the ground; one that no turn clears (its base at
+/// the ground, or it already points up) is raised until it stands on it.
+/// Cards clear of the ground keep their bytes.
+fn grounded(cards: &mut [Card]) {
+    let vector = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
+    for card in cards.iter_mut() {
+        let (base, heading, left) = (vector(card.base), vector(card.heading), vector(card.left));
+        // No point of a card is farther from its base than its length and
+        // half its width.
+        if base.y - f64::from(card.length) - f64::from(card.width) * 0.5 >= GROUND {
+            continue;
+        }
+        let low = card_low(card, base, heading, left);
+        if low >= GROUND {
+            continue;
+        }
+        // Turn toward up about the level axis across the heading (about
+        // its left when it points straight down).
+        let across = heading.cross(Vec3::Y);
+        let axis = if across.length() > 1.0e-9 {
+            across.normalize_or(left)
+        } else {
+            left.normalize_or(Vec3::X)
+        };
+        let most = math::acos(heading.y.clamp(-1.0, 1.0));
+        let turned = |angle: f64| {
+            (
+                heading.rotate_about(axis, angle),
+                left.rotate_about(axis, angle),
+            )
+        };
+        let clears = |angle: f64| {
+            let (h, l) = turned(angle);
+            card_low(card, base, h, l) >= GROUND
+        };
+        let (heading, left, base) = if most > 1.0e-6 && clears(most) {
+            // The least turn that clears, to well under a millimetre.
+            let (mut short, mut enough) = (0.0, most);
+            for _ in 0..32 {
+                let middle = f64::midpoint(short, enough);
+                if clears(middle) {
+                    enough = middle;
+                } else {
+                    short = middle;
+                }
+            }
+            let (h, l) = turned(enough);
+            (h, l, base)
+        } else {
+            (heading, left, base + Vec3::Y * (GROUND - low))
+        };
+        card.base = base.to_f32();
+        card.heading = heading.to_f32();
+        card.left = left.to_f32();
     }
 }
 
@@ -2552,6 +2725,70 @@ mod tests {
     use crate::graph::{GraphOrgan, GraphSegment};
     use crate::looks::{Flower, Needles, OrganLook, Shape};
     use crate::lsys::OrganKind;
+
+    fn card_at(base: [f32; 3], heading: [f32; 3], bend: Bend) -> Card {
+        Card {
+            base,
+            heading,
+            left: [0.0, 0.0, 1.0],
+            length: 0.3,
+            width: 0.1,
+            color: [0.2, 0.5, 0.2],
+            template: 0,
+            born: 0.0,
+            shed: f32::INFINITY,
+            bend,
+        }
+    }
+
+    fn low_of(card: &Card) -> f64 {
+        let vector = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
+        card_low(
+            card,
+            vector(card.base),
+            vector(card.heading),
+            vector(card.left),
+        )
+    }
+
+    /// A leaf drooping into the soil turns up about its base just enough to
+    /// rest on it; a spray standing at the foot is raised onto the ground;
+    /// a card clear of the ground keeps its bytes.
+    #[test]
+    fn cards_stay_above_the_ground() {
+        let s = std::f32::consts::FRAC_1_SQRT_2;
+        let drooping = card_at([0.0, 0.1, 0.0], [s, -s, 0.0], Bend::FLAT);
+        // Face up, so its midrib droops toward the ground.
+        let arching = Card {
+            left: [0.0, 0.0, -1.0],
+            ..card_at(
+                [0.0, 0.05, 0.0],
+                [1.0, 0.0, 0.0],
+                Bend {
+                    droop: 60.0,
+                    ..Bend::FLAT
+                },
+            )
+        };
+        let sunk = card_at([0.0, -0.15, 0.0], [0.0, 1.0, 0.0], Bend::FLAT);
+        let high = card_at([0.0, 0.3, 0.0], [s, -s, 0.0], Bend::FLAT);
+        let mut cards = vec![drooping, arching, sunk, high];
+        assert!(cards[..3].iter().all(|card| low_of(card) < -0.01));
+        grounded(&mut cards);
+        for card in &cards {
+            assert!(low_of(card) > -1.0e-5, "{card:?}");
+        }
+        // Turned, not moved, and only as far as the ground.
+        assert_eq!(cards[0].base, drooping.base);
+        assert!(cards[0].heading[1] > drooping.heading[1]);
+        assert!(low_of(&cards[0]) < 1.0e-3);
+        assert_eq!(cards[1].base, arching.base);
+        assert!(low_of(&cards[1]) < 1.0e-3);
+        // Pointing up already: raised to stand on the ground.
+        assert_eq!(cards[2].heading, sunk.heading);
+        assert!((cards[2].base[1] - 0.0).abs() < 1.0e-5);
+        assert_eq!(cards[3], high);
+    }
 
     /// A plant without bodies at its nearest level.
     fn build_plain(

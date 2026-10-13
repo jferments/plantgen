@@ -170,6 +170,13 @@ prompt injection. So, without exception:
     the same function that draws it. The species-suite test
     (`tests/checks.rs`) holds every species within its ranges' extremes
     and stated kinds, but the few it lists with why.
+  - Whole drawings (`tests/species.rs`): no organ floats free of what
+    bears it (`mesh::loose_organs`), and nothing of any species reaches
+    more than 5 cm below the ground it stands on, the level plane of its
+    foot (`mesh::Below`), so a host can stand it on level ground. Cards
+    are kept above it as they are built (`mesh::grounded`); wood grown
+    into it is growth's to fix, and the test lists those species with
+    why.
   - `src/`: growth, meshes, impostors, packages, glTF exports, ground
     looks and the library.
 - `apps/plantc`: the command-line compiler and previewer.

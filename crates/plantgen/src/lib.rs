@@ -231,4 +231,11 @@ pub mod venation;
 /// VARY): one plant is the typical one, three take the middles of the
 /// range's thirds; a part's size, or a parameter a formula works out from
 /// a range, records no spread and keeps its value.
-pub const GENERATOR_REVISION: u32 = 38;
+/// 42: nothing drawn reaches below the ground the plant stands on (the
+/// level plane of its foot): a card that would, a leaf drooping into the
+/// soil or a spray at a seedling's foot, turns up about its base just
+/// enough to rest on the ground, or rises onto it when no turn clears it;
+/// and a stem's foot ring meets the ground in a flat cut where a leaning
+/// or flared trunk's side would dip into it (39 to 41 are #67, #70 and
+/// #72).
+pub const GENERATOR_REVISION: u32 = 42;
