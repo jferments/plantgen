@@ -3,11 +3,17 @@
   "rank": "genus",
   "name": "Corylus",
   "traits": {
+    "wood_density_basic_kg_m3": 530,
     "leaf_arrangement": "alternate",
     "phyllotaxis_pattern": "distichous",
     "flowering_position": "both"
   },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {
+      "evidence": "SourceInferred",
+      "source": "gwdd-v2",
+      "note": "GWDD v.2.2 genus aggregate for Corylus (gwddagg_v2.2_genus.csv, read): specific gravity 0.53 (wsg_est, the hierarchical-model genus mean, from 18 records in 10 sources); trunks 0.53, branches 0.51. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."
+    },
     "traits.leaf_arrangement": {
       "evidence": "SourceInferred",
       "source": "lowden-1997",

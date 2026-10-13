@@ -22,7 +22,6 @@
       "apical_young": 0.62,
       "apical": 0.52,
       "apical_years": 8,
-      "leaves_per_node": 1,
       "bud_years": 40,
       "leaf_size": 0.16,
       "spur_leaf": 0.2,
@@ -114,7 +113,11 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "wood_density_basic_kg_m3": 490
+  },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Chilopsis linearis (gwddagg_v2.2_species.csv, read): specific gravity 0.49 (wsg_est, the database's hierarchical-model species mean, from 3 records in 3 sources); trunks 0.49, branches 0.5. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",
       "source": "plantgen-authors",

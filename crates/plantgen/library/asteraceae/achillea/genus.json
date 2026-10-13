@@ -3,11 +3,17 @@
   "rank": "genus",
   "name": "Achillea",
   "traits": {
+    "wood_density_basic_kg_m3": 450,
     "capitulum_kind": "radiate",
     "receptacle": "paleate",
     "pappus": "absent"
   },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {
+      "evidence": "SourceInferred",
+      "source": "gwdd-v2",
+      "note": "GWDD v.2.2 genus aggregate for Achillea (gwddagg_v2.2_genus.csv, read): specific gravity 0.45 (wsg_est, the hierarchical-model genus mean, from 2 records in 1 source); trunks 0.45, branches 0.47. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."
+    },
     "traits.capitulum_kind": {
       "evidence": "SourceInferred",
       "source": "fna-19",

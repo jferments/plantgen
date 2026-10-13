@@ -84,7 +84,28 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.2,
+      "max": 0.6,
+      "low": 0.1
+    },
+    "leaf_length_m": {
+      "min": 0.02,
+      "max": 0.06
+    }
+  },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960), as Eriophyllum lanatum: stems (from 10 cm) 20 cm to 60 cm tall."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960), as Eriophyllum lanatum: leaves 2 cm to 6 cm long."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

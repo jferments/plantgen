@@ -23,7 +23,6 @@
       "arch": 6,
       "pieces": 7,
       "flowering": 0.3,
-      "culm_height": 1.1,
       "culm_radius": 0.0025,
       "culm_leaves": 0,
       "culm_lean": 3,
@@ -96,7 +95,19 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "culm_length_m": {
+      "min": 0.5,
+      "max": 1.5,
+      "typical": 1.1
+    }
+  },
   "evidence": {
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Carex obnupta: culms 50 cm to 1.5 m tall."
+    },
     "appearance.organs.panicle": {
       "evidence": "Authored",
       "source": "plantgen-authors",

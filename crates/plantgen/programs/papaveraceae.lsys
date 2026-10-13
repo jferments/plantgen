@@ -20,3 +20,5 @@ param basal_arch = 12;           # degrees an arching basal leaf bends at each j
 param flower_divergence = 137.5; # roll from one flower of the raceme to the next
 param fruit_angle = 25;
 param light_cell = 0.05;         # light voxel edge
+param flowering_share = 1;     # every adult stem ends in a raceme
+param scape = 0;               # a flowering stem keeps its leaves

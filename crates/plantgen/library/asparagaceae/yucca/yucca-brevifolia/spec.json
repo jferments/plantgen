@@ -192,9 +192,11 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "wood_density_basic_kg_m3": 430,
     "juvenile_period_years": {"min": 50, "max": 70}
   },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Yucca brevifolia (gwddagg_v2.2_species.csv, read): specific gravity 0.43 (wsg_est, the database's hierarchical-model species mean, from 2 records in 2 sources); trunks 0.43, branches 0.46. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",
       "source": "nps-joshua-trees",

@@ -103,9 +103,11 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "wood_density_basic_kg_m3": 480,
     "juvenile_period_years": 10
   },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Hedera helix (gwddagg_v2.2_species.csv, read): specific gravity 0.48 (wsg_est, the database's hierarchical-model species mean, from 4 records in 3 sources); trunks 0.47, branches 0.48. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.adult_light": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",

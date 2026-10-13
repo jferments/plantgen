@@ -105,6 +105,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "wood_density_basic_kg_m3": 540,
     "juvenile_period_years": {"min": 10, "max": 20},
     "leaf_form": "scale",
     "leaf_length_m": {"min": 0.001, "max": 0.003},
@@ -114,6 +115,7 @@
     "cone_retention_years": {"min": 0, "max": 1, "typical": 0}
   },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Juniperus scopulorum (gwddagg_v2.2_species.csv, read): specific gravity 0.54 (wsg_est, the database's hierarchical-model species mean, from 4 records in 4 sources); trunks 0.53, branches 0.57. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",

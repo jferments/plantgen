@@ -116,11 +116,30 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_typical_m": {
+      "min": 0.5,
+      "max": 2.5
+    },
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.15,
+      "high": 0.2
+    },
     "inflorescence": "raceme",
     "inflorescence_posture": "erect",
     "leaf_arrangement": "alternate"
   },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Epilobium angustifolium: stems 50 cm to 2.5 m tall."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Epilobium angustifolium: leaves 5 cm to 15 cm (to 20 cm) long."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
