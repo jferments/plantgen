@@ -11,7 +11,7 @@
   },
   "growth_form": "shrub",
   "generator": {
-    "program": "broadleaf",
+    "program": "ranunculales",
     "params": {
       "crown_height": 1.8,
       "crown_radius": 0.8,
@@ -57,16 +57,36 @@
   "growth": {
     "years": 12,
     "step": 1,
-    "keyframes": [3, 6, 12]
+    "keyframes": [
+      3,
+      6,
+      12
+    ]
   },
   "variants": {
-    "environments": ["open"],
-    "seeds": [1]
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
   },
   "appearance": {
-    "bark": [0.32, 0.27, 0.17],
-    "foliage": [0.04, 0.11, 0.03],
-    "foliage_shade": [0.012, 0.035, 0.01],
+    "bark": [
+      0.32,
+      0.27,
+      0.17
+    ],
+    "foliage": [
+      0.04,
+      0.11,
+      0.03
+    ],
+    "foliage_shade": [
+      0.012,
+      0.035,
+      0.01
+    ],
     "variation": 0.2,
     "organs": {
       "leaf": {
@@ -84,9 +104,23 @@
           "aspect": 0.95,
           "unripe": 0.7
         },
-        "inflorescence": { "kind": "raceme", "flowers": 14, "size": 0.15, "spread": 40, "pedicel": 0.135 },
-        "colour": [0.2, 0.25, 0.45],
-        "accent": [0.35, 0.5, 0.15],
+        "inflorescence": {
+          "kind": "raceme",
+          "flowers": 14,
+          "size": 0.15,
+          "spread": 40,
+          "pedicel": 0.135
+        },
+        "colour": [
+          0.2,
+          0.25,
+          0.45
+        ],
+        "accent": [
+          0.35,
+          0.5,
+          0.15
+        ],
         "season": {
           "bud": 60,
           "flower": 80,
@@ -106,8 +140,16 @@
               "stamen_length": 0.4,
               "sepals": 6
             },
-            "colour": [0.93, 0.78, 0.1],
-            "accent": [0.85, 0.6, 0.05],
+            "colour": [
+              0.93,
+              0.78,
+              0.1
+            ],
+            "accent": [
+              0.85,
+              0.6,
+              0.05
+            ],
             "size": 1.1,
             "form": {
               "flower": {
@@ -163,7 +205,7 @@
     "generator.program": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "The program the spec's authors chose to grow this form."
+      "note": "Its order's woody program (growth plan G2.3a): Berberis spans two forms and Berberidaceae's own program grows its herbs, so the species names the order's."
     },
     "growth": {
       "evidence": "Authored",
@@ -213,7 +255,9 @@
         "licence": "project contribution under the repository's terms"
       }
     ],
-    "contributors": ["Project After"],
+    "contributors": [
+      "Project After"
+    ],
     "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
   }
 }
