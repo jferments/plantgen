@@ -42,6 +42,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its six petals stand in two whorls of three, and a corolla draws one whorl, so its spec draws six there",
     ),
     (
+        "cyperus-papyrus",
+        "leaf_shape",
+        "its leaves are the brown sheaths at its culms' foot, drawn as cards tapering from the base, 0.15 as broad as long, so they read deltate or lanceolate against the linear blades Cyperaceae state; papyrus bears no blades",
+    ),
+    (
         "dicentra-formosa",
         "flower_merosity",
         "its four petals stand in two pairs, outer and inner, and a corolla draws one whorl, so its spec draws four there",
@@ -78,6 +83,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "lysichiton-americanus",
+        "leaf_shape",
+        "its spec draws the blade widest at 0.6 of its length and 0.45 as broad as long by hand, so it reads oblanceolate or obovate against Abrams's oblong-lanceolate",
+    ),
+    (
+        "lysichiton-americanus",
         "units_per_inflorescence",
         "a cluster draws at most 200 units, so the spadix's 350 to 1350 flowers are drawn as 200",
     ),
@@ -97,19 +107,24 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its zygomorphy is `other`, which the angiosperms draw as a corolla of like petals, so its flowers are drawn radial",
     ),
     (
+        "phyllostachys-aurea",
+        "leaf_shape",
+        "its sprig leaves are drawn lanceolate, 0.15 as broad as long, as a bamboo's are, against the linear blades Poaceae state for its grasses; the species states no shape of its own",
+    ),
+    (
         "program:broadleaf",
         "crown_outline_fit",
         "its crowns still fill the envelope of the space tool (an ellipsoid), so from the side they fit an ellipse at about 0.90 to 0.95 against open-grown trees' 0.82 to 0.84; crown form step B grows the shape from light and space with no outline",
     ),
     (
         "program:grass",
-        "phyllotaxis_pattern",
-        "each blade's roll is jittered ±40° (a culm leaf's ±30°), so the turn from one to the next has a median of about 146°, nearer the golden angle than half a turn",
+        "leaf_width_m",
+        "since the Poaceae rule sets blade cards from Hitchcock's widths, the median blade measured sits inside the flora's range, but the narrowest run up to half its least width (smaller blades of young tillers, inferred, not traced)",
     ),
     (
         "program:grass",
-        "leaf_width_m",
-        "since the Poaceae rule sets blade cards from Hitchcock's widths, the median blade measured sits inside the flora's range, but the narrowest run up to half its least width (smaller blades of young tillers, inferred, not traced)",
+        "phyllotaxis_pattern",
+        "each blade's roll is jittered ±40° (a culm leaf's ±30°), so the turn from one to the next has a median of about 146°, nearer the golden angle than half a turn",
     ),
     (
         "program:grass",
@@ -150,6 +165,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "tiarella-trifoliata",
         "fruit_type",
         "its fruit look sets no fruit kind, so its capsules are drawn as the ellipsoid of a berry or drupe",
+    ),
+    (
+        "tillandsia-usneoides",
+        "leaf_shape",
+        "its leaves are drawn as cards tapering from the base, an eighth as broad as long, so they read deltate or lanceolate against the linear leaves Bromeliaceae state",
     ),
     (
         "tolmiea-menziesii",

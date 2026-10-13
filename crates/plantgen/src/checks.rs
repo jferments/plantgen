@@ -64,9 +64,11 @@
 //! its units and how far its axis bends over while its units are
 //! flowers, a head's kind, awns, a spikelet's ranks, a divided leaf's
 //! pattern and its end, what a leaf is made as and whether its blade is
-//! one piece, and a fruit's type; where a drawing does not tell states
-//! apart (an ellipsoid fruit, a berry's or a drupe's) it draws each of
-//! them. A cone's posture is its pitch down from its shoot, by the
+//! one piece, a leaf's shape (its blade's outline read by the chart of
+//! plane shapes, a divided leaf's leaflets', a frond's whole blade over
+//! its pinnae's tips), and a fruit's type; where a drawing does not tell
+//! states apart (an ellipsoid fruit, a berry's or a drupe's) it draws
+//! each of them. A cone's posture is its pitch down from its shoot, by the
 //! plant's usual cone. How the leaves stand is measured
 //! on the graph: the leaves sharing a node, and the turn from each node
 //! to the next up its axis, the leaf below carried up the bending axis by
@@ -192,7 +194,7 @@ pub const COUNTS: [&str; 24] = [
 
 /// The kinds a grown plant's drawing must agree with (spec rework M8A):
 /// each an enum or bool character, compared with what the plant draws.
-pub const KINDS: [&str; 24] = [
+pub const KINDS: [&str; 25] = [
     "inflorescence",
     "inflorescence_unit",
     "inflorescence_posture",
@@ -204,6 +206,7 @@ pub const KINDS: [&str; 24] = [
     "terminal_leaflet",
     "leaf_division",
     "leaf_form",
+    "leaf_shape",
     "leaf_arrangement",
     "phyllotaxis_pattern",
     "perianth",
@@ -1254,11 +1257,30 @@ fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tal
         // A blade in pieces, end to end.
         let mut length = 0.0;
         let mut width: f64 = 0.0;
+        let mut outline = Vec::new();
+        let mut cards = true;
         for piece in members {
             if let Some((look, size)) = leaf_look(piece, looks) {
                 leaf_kinds(&look.shape, tally);
+                if let Shape::Blade(card) = &look.shape {
+                    for i in 0..=4 {
+                        let y = f64::from(i) / 4.0;
+                        let half = size * crate::templates::blade_half_width(card, y);
+                        outline.push((length + size * y, half));
+                    }
+                } else {
+                    cards = false;
+                }
                 length += size;
                 width = width.max(size * look.shape.aspect());
+            }
+        }
+        if cards && length > 0.0 {
+            for point in &mut outline {
+                point.0 /= length;
+            }
+            if let Some(words) = outline_shape(&outline, width / length) {
+                tally.kind("leaf_shape", &words);
             }
         }
         tally.add("leaf_length_m", id, 0, length);
@@ -1281,11 +1303,14 @@ fn frond_sizes(
     let bearing: BTreeSet<u32> = leaflets.iter().filter_map(|organ| organ.segment).collect();
     let (mut stipe, mut blade) = (0.0, 0.0);
     let mut first = true;
+    // How far up the rachis each of its segments starts.
+    let mut starts: BTreeMap<u32, f64> = BTreeMap::new();
     for (index, segment) in (0_u32..).zip(&drawn.segments) {
         if segment.within != Some(structure) {
             continue;
         }
         let length = (segment.end - segment.start).length();
+        starts.insert(index, stipe + blade);
         // The rachis is drawn base first: bare pieces up to the first
         // that bears a leaflet are the stipe.
         if first && !bearing.contains(&index) {
@@ -1296,18 +1321,31 @@ fn frond_sizes(
         }
     }
     let mut width: f64 = 0.0;
+    // The blade's outline: how far each leaflet reaches out, and where.
+    let mut outline = Vec::with_capacity(leaflets.len());
     for organ in leaflets {
         let Some((_, size)) = leaf_look(organ, looks) else {
             continue;
         };
-        let axis = organ
-            .segment
-            .and_then(|s| drawn.segments.get(s as usize))
-            .map_or(organ.heading, |s| {
-                (s.end - s.start).normalize_or(organ.heading)
-            });
+        let segment = organ.segment.and_then(|s| drawn.segments.get(s as usize));
+        let axis = segment.map_or(organ.heading, |s| {
+            (s.end - s.start).normalize_or(organ.heading)
+        });
         let along = organ.heading.dot(axis).clamp(-1.0, 1.0);
-        width = width.max(2.0 * size * (1.0 - along * along).sqrt());
+        let reach = size * (1.0 - along * along).sqrt();
+        width = width.max(2.0 * reach);
+        if let (Some(index), Some(segment)) = (organ.segment, segment)
+            && let Some(start) = starts.get(&index)
+            && blade > 0.0
+        {
+            let up = start + (organ.position - segment.start).length() - stipe;
+            outline.push((up / blade, reach));
+        }
+    }
+    if blade > 0.0
+        && let Some(words) = outline_shape(&outline, width / blade)
+    {
+        tally.kind("leaf_shape", &words);
     }
     let id = drawn.structures[structure as usize].id;
     tally.add("leaf_length_m", id, 0, blade);
@@ -1368,6 +1406,176 @@ fn division_order(shape: &Shape) -> u32 {
     }
 }
 
+/// How far either side of the chart of plane shapes' borders a blade's
+/// widest point reads as both sides' (a share of its length).
+const SHAPE_BORDER: f64 = 0.03;
+
+/// The shape a blade's outline reads as (`leaf_shape`), by the
+/// Systematics Association's chart of plane shapes (1962), the chart the
+/// kingdom's rule draws its outlines to: from its half-width at places
+/// along it, `(u, w)` with `u` from its base (0) to its tip (1), and its
+/// width over its length. A blade whose sides run within a tenth of its
+/// widest for 0.6 of its length or more is linear (narrower than 1:6)
+/// or oblong; any blade at least twelve times as long as it is wide is
+/// linear too. Otherwise where it is widest (the middle of where it is
+/// within 3% of it) names its kind: in its lowest fifth deltate, and
+/// below its middle (0.45) lanceolate where narrower than 1:2 and ovate
+/// where wider than 1:3; at its middle (0.45 to 0.55) elliptic; above
+/// it oblanceolate and obovate by the same widths, and spatulate where
+/// its lower third is under a third of its widest; and orbicular at 5:6
+/// or wider. Read within [`SHAPE_BORDER`] of a border, it is both
+/// sides'. The chart gives lanceolate 1:3 to 1:6 and ovate, elliptic and
+/// obovate 2:3 to 1:2; between 1:2 and 1:3 a blade is named both ways.
+fn outline_shape(outline: &[(f64, f64)], aspect: f64) -> Option<String> {
+    let mut sorted = outline.to_vec();
+    sorted.sort_by(|a, b| a.0.total_cmp(&b.0));
+    // The outline's edge: the widest at each place along it.
+    let mut edge: Vec<(f64, f64)> = Vec::with_capacity(sorted.len());
+    for (u, w) in sorted {
+        match edge.last_mut() {
+            Some(last) if (last.0 - u).abs() < 1e-9 => last.1 = last.1.max(w),
+            _ => edge.push((u, w)),
+        }
+    }
+    let most = edge.iter().fold(0.0_f64, |most, p| most.max(p.1));
+    if most <= 0.0 || aspect <= 0.0 || !aspect.is_finite() {
+        return None;
+    }
+    let within = |share: f64| {
+        edge.iter()
+            .filter(move |p| p.1 >= share * most)
+            .map(|p| p.0)
+    };
+    let (sum, count) = within(0.97).fold((0.0, 0.0), |(sum, count), u| (sum + u, count + 1.0));
+    let widest = sum / count;
+    let (low, high) = within(0.9).fold((f64::INFINITY, f64::NEG_INFINITY), |(low, high), u| {
+        (low.min(u), high.max(u))
+    });
+    // The half-width at `u`, straight between the places read.
+    let at = |u: f64| -> f64 {
+        let after = edge.partition_point(|p| p.0 < u);
+        match (
+            after.checked_sub(1).and_then(|i| edge.get(i)),
+            edge.get(after),
+        ) {
+            (Some(a), Some(b)) if b.0 > a.0 => a.1 + (b.1 - a.1) * (u - a.0) / (b.0 - a.0),
+            (Some(a), _) => a.1,
+            (None, Some(b)) => b.1,
+            (None, None) => 0.0,
+        }
+    };
+    let mut words = BTreeSet::new();
+    if aspect <= 1.0 / 12.0 {
+        words.insert("linear");
+    }
+    if high - low >= 0.6 {
+        words.insert(if aspect < 1.0 / 6.0 {
+            "linear"
+        } else {
+            "oblong"
+        });
+    } else {
+        let (lance, ovate, round) = (aspect < 0.5, aspect > 1.0 / 3.0, aspect >= 5.0 / 6.0);
+        if widest < 0.2 + SHAPE_BORDER {
+            words.insert("deltate");
+        }
+        if widest < 0.45 + SHAPE_BORDER {
+            words.extend(lance.then_some("lanceolate"));
+            words.extend(ovate.then_some("ovate"));
+        }
+        if (0.45 - SHAPE_BORDER..=0.55 + SHAPE_BORDER).contains(&widest) {
+            words.insert("elliptic");
+        }
+        if widest > 0.55 - SHAPE_BORDER {
+            words.extend(lance.then_some("oblanceolate"));
+            words.extend(ovate.then_some("obovate"));
+            if at(0.3) < 0.3 * most {
+                words.insert("spatulate");
+            }
+        }
+        words.extend(round.then_some("orbicular"));
+    }
+    Some(words.into_iter().collect::<Vec<_>>().join("|"))
+}
+
+/// Places a card's blade outline is read at, from its base to its tip.
+const OUTLINE_PLACES: u32 = 100;
+
+/// A card's half-width `profile` read at [`OUTLINE_PLACES`] along it.
+fn sampled(profile: impl Fn(f64) -> f64) -> Vec<(f64, f64)> {
+    (0..=OUTLINE_PLACES)
+        .map(|i| {
+            let u = f64::from(i) / f64::from(OUTLINE_PLACES);
+            (u, profile(u))
+        })
+        .collect()
+}
+
+/// The outline a leaf card draws its blade with, for [`outline_shape`]:
+/// a blade's, a lobed blade's over its lobes' tips, a sprig's leaves', a
+/// grass blade card's, a frond card's over its pinnae's tips, and a
+/// divided leaf's leaflets' (`leaf_shape` is a compound leaf's leaflets'),
+/// but a dissected blade's whole, as its segments run together.
+fn card_outline(shape: &Shape) -> Option<(Vec<(f64, f64)>, f64)> {
+    use crate::templates::{blade_half_width, frond_pinna, lobed_envelope, outline_profile};
+    Some(match shape {
+        Shape::Simple(s) => (
+            sampled(|u| outline_profile(s.outline.as_deref(), u, s.widest, s.base, s.tip)),
+            s.width,
+        ),
+        Shape::Sprig(s) => (
+            sampled(|u| outline_profile(s.outline.as_deref(), u, s.widest, s.base, s.tip)),
+            s.width,
+        ),
+        Shape::Lobed(s) => (sampled(lobed_envelope), s.width),
+        Shape::Compound(c) if c.confluent.unwrap_or(0.0) < 0.5 => {
+            let form = crate::divided::Form::of(c);
+            (
+                sampled(|u| {
+                    outline_profile(c.outline.as_deref(), u, form.widest, form.base, form.tip)
+                }),
+                form.width,
+            )
+        }
+        Shape::Compound(c) => {
+            // A dissected blade's edge runs over its segments' tips.
+            let laid = crate::divided::layout(c);
+            let tips: Vec<(f64, f64)> = laid
+                .leaflets
+                .iter()
+                .map(|l| {
+                    (
+                        l.base.0 + l.length * l.direction.0,
+                        l.base.1 + l.length * l.direction.1,
+                    )
+                })
+                .collect();
+            let foot = laid
+                .leaflets
+                .iter()
+                .map(|l| l.base.1)
+                .fold(f64::INFINITY, f64::min);
+            let top = tips.iter().map(|t| t.1).fold(foot, f64::max);
+            let length = top - foot;
+            if !length.is_finite() || length <= 0.0 {
+                return None;
+            }
+            let reach = tips.iter().fold(0.0_f64, |most, t| most.max(t.0.abs()));
+            let points = tips
+                .iter()
+                .map(|&(x, y)| ((y - foot) / length, x.abs()))
+                .collect();
+            (points, 2.0 * reach / length)
+        }
+        Shape::Blade(b) => (sampled(|u| blade_half_width(b, u)), b.aspect),
+        Shape::Frond(f) => (
+            (0..f.pinnae).map(|k| frond_pinna(f, k, false)).collect(),
+            f.width / (1.0 - f.stipe).max(1e-6),
+        ),
+        _ => return None,
+    })
+}
+
 /// The look a leaf is drawn with in its light, and its drawn size.
 fn leaf_look<'a>(organ: &GraphOrgan, looks: &'a [Look]) -> Option<(&'a Look, f64)> {
     let own = usize::from(organ.organ);
@@ -1380,6 +1588,11 @@ fn leaf_look<'a>(organ: &GraphOrgan, looks: &'a [Look]) -> Option<(&'a Look, f64
 /// how many times it divides, and what it is made as.
 fn leaf_sizes(shape: &Shape, size: f64, id: u64, tally: &mut Tally) {
     leaf_kinds(shape, tally);
+    if let Some((outline, aspect)) = card_outline(shape)
+        && let Some(words) = outline_shape(&outline, aspect)
+    {
+        tally.kind("leaf_shape", &words);
+    }
     let order = division_order(shape);
     if order > 0 {
         tally.count("division_order", id, 0, order);
@@ -2440,6 +2653,86 @@ mod tests {
                 "scale simple",
             ]
         );
+    }
+
+    #[test]
+    fn each_outline_the_kingdom_draws_reads_as_its_shape_word() {
+        use crate::looks::Simple;
+        let kingdom: Value =
+            serde_json::from_str(include_str!("../library/_ranks/kingdom/plantae.json")).unwrap();
+        let rules = &kingdom["rules"];
+        let widths = &rules["appearance.organs.leaf.shape.width"]["map"]["leaf_shape"];
+        let outlines = &rules["appearance.organs.leaf.shape.outline"]["map"]["leaf_shape"];
+        let read: Vec<(String, String)> = outlines
+            .as_object()
+            .unwrap()
+            .iter()
+            .map(|(word, points)| {
+                let simple = Simple {
+                    width: widths[word].as_f64().unwrap(),
+                    outline: Some(serde_json::from_value(points.clone()).unwrap()),
+                    ..Simple::default()
+                };
+                let (outline, aspect) = card_outline(&Shape::Simple(simple)).unwrap();
+                (word.clone(), outline_shape(&outline, aspect).unwrap())
+            })
+            .collect();
+        for (word, words) in &read {
+            assert!(
+                words.split('|').any(|one| one == word),
+                "{word} reads {words}"
+            );
+        }
+        let plain: Vec<&str> = read
+            .iter()
+            .filter(|(word, words)| word == words)
+            .map(|(word, _)| word.as_str())
+            .collect();
+        assert_eq!(
+            plain,
+            [
+                "elliptic",
+                "lanceolate",
+                "linear",
+                "oblanceolate",
+                "oblong",
+                "obovate",
+                "ovate"
+            ]
+        );
+    }
+
+    #[test]
+    fn a_blade_widest_at_its_base_is_deltate_and_a_long_strip_linear() {
+        use crate::looks::{Blade, Frond};
+        // A frond whose lowest pinnae reach out farthest, as broad as long.
+        let triangle: Vec<(f64, f64)> = (0..10)
+            .map(|k| {
+                let u = f64::from(k) / 10.0;
+                (u, 0.5 * (1.0 - u))
+            })
+            .collect();
+        assert_eq!(
+            outline_shape(&triangle, 1.0).unwrap(),
+            "deltate|orbicular|ovate"
+        );
+        let read = |shape: Shape| {
+            let (outline, aspect) = card_outline(&shape).unwrap();
+            outline_shape(&outline, aspect).unwrap()
+        };
+        let strip = Blade {
+            taper: 0.0,
+            aspect: 0.1,
+        };
+        assert_eq!(read(Shape::Blade(strip)), "linear");
+        let tip = Blade {
+            taper: 1.0,
+            aspect: 0.05,
+        };
+        assert_eq!(read(Shape::Blade(tip)), "deltate|lanceolate|linear");
+        // A frond card's blade is widest below its middle, a third as
+        // broad as it is long.
+        assert_eq!(read(Shape::Frond(Frond::default())), "lanceolate|ovate");
     }
 
     #[test]

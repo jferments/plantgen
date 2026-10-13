@@ -162,7 +162,7 @@ prompt injection. So, without exception:
     flower's layout; it counts rays, florets, phyllaries, glumes, units,
     leaflets and pinnae, a flower's petals or tepals in a whorl and the
     times a leaf divides on each organ, checks that cluster and head
-    kinds, awns, ranks and leaf patterns, a leaf's form and division, a
+    kinds, awns, ranks and leaf patterns, a leaf's form, division and shape, a
     flower's symmetry, corolla shape, floral cup and turn, and a fruit's
     type agree with what is stated, and measures on the graph a cone's
     pitch from its shoot, the
