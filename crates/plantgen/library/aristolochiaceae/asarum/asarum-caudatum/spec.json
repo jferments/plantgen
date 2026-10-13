@@ -78,7 +78,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "shoot_leaves": 2
+  },
   "evidence": {
+    "traits.shoot_leaves": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Asarum caudatum: the rootstock bears its leaves 2 at a node. Read here as a year's growth of the rootstock, one node with its pair (inferred)."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
