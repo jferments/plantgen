@@ -27,7 +27,10 @@
 #
 # A fern spreads by its rhizome: from crown_age, with the chance crown_rate
 # a year, a new crown appears rhizome metres away, at most `crowns` of them
-# (bracken runs far; a tufted fern makes a clump a few crowns wide).
+# (bracken runs far; a tufted fern makes a clump a few crowns wide). A
+# new crown starts crown_start of its parent crown's age: 0 a sporeling,
+# whose first fronds are small, 1 a crown the established rhizome feeds,
+# whose fronds are as large as its parent's.
 #
 # Revision 2 (spec rework M7): each frond is drawn within a `frond`
 # structure, and its pinnae are leaflets of it.
@@ -37,9 +40,12 @@
 # its families and genera extend it where they grow otherwise. It grows
 # every plant as before.
 #
+# Revision 4 (spec rework E6a): a new crown may start as old as its
+# parent (crown_start); by default it starts as a sporeling, as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem polypodiidae 3;
+lsystem polypodiidae 4;
 
 param vigour_spread = 0.12;   # a fern grows exp(gauss() * vigour_spread) times as fast
 # Fronds.
@@ -76,26 +82,28 @@ param crowns = 0;             # most new crowns a fern sends out
 param crown_age = 3;          # the first year of new crowns
 param crown_rate = 0.3;       # chance a year of a new crown
 param rhizome = 0.3;          # how far away a new crown appears
+param crown_start = 0;        # a new crown's age, as a share of its parent crown's
 
-module Y(v, n);               # a crown: vigour, crowns sent out so far
+module Y(v, n, c0);           # a crown: vigour, crowns sent out so far, age it started at
 module Fc(i, m, c);           # fronds i to i + m - 1 of this year's cohort, on a crown c years old
 module Fr(s, a, e);           # a frond s long at a degrees, emerging at phase e of its year
 module Pc(k, m, s, e);        # pieces k to k + m - 1 of a frond's rachis
 module Pp(k, s, e);           # a drawn piece of a rachis
 module Pn(k, s, e, h);        # a pair of pinnae h of a piece along piece k
 module Pq(z);                 # a pair of pinnae z long
-module Cn(n);                 # a new crown on its rhizome, the n-th
+module Cn(n, c);              # a new crown on its rhizome, the n-th, starting c years old
 
 organ pinna leaf as leaflet area pinna_area;
 
 structure frond leaf;         # one frond: its rachis and its pinnae
 
-axiom /(uniform(0, 360)) Y(exp(gauss() * vigour_spread), 0);
+axiom /(uniform(0, 360)) Y(exp(gauss() * vigour_spread), 0, 0);
 
 # The crown: this year's fronds, and perhaps a new crown on the rhizome.
-rule Y(v, n) : crowns > n && age >= crown_age && rand() < crown_rate ->
-    [ Cn(n + 1) ] Fc(0, max(1, round(fronds_per_year * v)), age * v) Y(v, n + 1);
-rule Y(v, n) -> Fc(0, max(1, round(fronds_per_year * v)), age * v) Y(v, n);
+rule Y(v, n, c0) : crowns > n && age >= crown_age && rand() < crown_rate ->
+    [ Cn(n + 1, (age + c0) * crown_start) ]
+    Fc(0, max(1, round(fronds_per_year * v)), (age + c0) * v) Y(v, n + 1, c0);
+rule Y(v, n, c0) -> Fc(0, max(1, round(fronds_per_year * v)), (age + c0) * v) Y(v, n, c0);
 
 decompose Fc(i, m, c) : m > 1 ->
     Fc(i, floor(m / 2), c) Fc(i + floor(m / 2), m - floor(m / 2), c);
@@ -143,6 +151,6 @@ interpret Pn(k, s, e, h) ->
 interpret Pq(z) -> [ +(pinna_angle) ^(pinna_lift) pinna(z) ] [ -(pinna_angle) ^(pinna_lift) pinna(z) ];
 
 # A new crown: out along the rhizome, then up.
-decompose Cn(n) ->
+decompose Cn(n, c) ->
     /(uniform(0, 360)) &(90) f(rhizome * uniform(0.6, 1.4)) ^(90)
-    Y(exp(gauss() * vigour_spread), n);
+    Y(exp(gauss() * vigour_spread), n, c);
