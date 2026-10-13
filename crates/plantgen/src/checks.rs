@@ -51,7 +51,8 @@
 //! values is reported, not judged: organs drawn solid vary within a range
 //! a rule reads alone (spec rework VARY, each a variety of its look), but
 //! a size set by hand, by a rule reading two ranges or by the plant's
-//! parameters, or drawn only on a card, does not.
+//! parameters, or drawn only on a card, does not: a plant draws only
+//! characters of the whole plant (the years to its first flowers).
 //!
 //! **Counts and kinds (M8A).** Counts are counted on each organ that
 //! holds them, from what its layout draws ([`COUNTS`]: a head's rays,

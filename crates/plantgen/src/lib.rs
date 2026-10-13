@@ -212,4 +212,9 @@ pub mod venation;
 /// drawn solid is one of four varieties of its look, which draw its
 /// counts and sizes across their ranges; a part mesh's variant `k` is its
 /// look's variety `k`.
-pub const GENERATOR_REVISION: u32 = 34;
+/// 37: a package's plants share out the range of each parameter that is a
+/// stated character itself, in its own units (spec rework VARY): one
+/// plant is the typical one, three take the middles of the range's
+/// thirds; a parameter a formula works out from a range records no spread
+/// and keeps its value, and so does one that sizes a cluster's organ.
+pub const GENERATOR_REVISION: u32 = 37;
