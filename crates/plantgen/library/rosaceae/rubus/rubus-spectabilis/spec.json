@@ -130,10 +130,19 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 0.91,
+      "max": 2.74
+    },
     "stamens": {"min": 75, "max": 100},
     "flowering_position": "lateral"
   },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson (1925), as R. spectabilis: grows 91 cm to 2.74 m tall (converted from feet)."
+    },
     "generator.params.path_half": {
       "evidence": "Authored",
       "source": "plantgen-authors",
