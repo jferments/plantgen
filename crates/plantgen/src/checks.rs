@@ -1573,14 +1573,23 @@ fn cluster_kinds(
     let Some(flowers) = flowers else {
         return;
     };
-    // A spike in a spathe is a spadix (PO:0030120).
-    let kind =
-        if cluster.cluster.kind == crate::looks::ClusterKind::Spike && !layout.sheets.is_empty() {
-            "spadix"
-        } else {
-            cluster.cluster.kind.name()
-        };
-    tally.kind("inflorescence", kind);
+    use crate::looks::ClusterKind;
+    // A spike in a spathe is a spadix (PO:0030120). Units up an axis that
+    // all stand at its one node (a raceme of a pair, as twinberry's) are
+    // drawn as a few-flowered cyme's or an umbel's would be.
+    let one_node = matches!(
+        cluster.cluster.kind,
+        ClusterKind::Raceme | ClusterKind::Spike | ClusterKind::Catkin | ClusterKind::Corymb
+    ) && cluster.cluster.branches == 0
+        && (2..=cluster.cluster.per_node.clamp(1, 8) as usize).contains(&layout.units.len());
+    let kind = if cluster.cluster.kind == ClusterKind::Spike && !layout.sheets.is_empty() {
+        "spadix".to_owned()
+    } else if one_node {
+        format!("{}|cyme|umbel", cluster.cluster.kind.name())
+    } else {
+        cluster.cluster.kind.name().to_owned()
+    };
+    tally.kind("inflorescence", &kind);
     tally.kind(
         "inflorescence_unit",
         match flowers {

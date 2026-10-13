@@ -54,7 +54,7 @@ const KNOWN: &[(&str, &str, &str)] = &[
     (
         "digitalis-purpurea",
         "corolla_shape",
-        "its spec joins its petals for 0.8 of their length by hand, against the 0.45 a bell is drawn with, so its long, wide tube is nearest a funnel",
+        "its bell is joined 0.8 of its length round a wide mouth, its lobes short (Flora of New Zealand), but the angiosperms draw every bell joined 0.45 and a funnel 0.6, so its corolla is nearest a funnel; a longer bell needs the rule's shapes to allow one",
     ),
     (
         "digitalis-purpurea",
@@ -70,11 +70,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "larrea-tridentata",
         "leaf_division",
         "each leaf is two leaflets joined at their base, but its sprig cards draw each leaf as one blade",
-    ),
-    (
-        "lonicera-involucrata",
-        "inflorescence",
-        "its spec draws the two flowers on each stalk as a raceme by hand, against the cymes and heads Caprifoliaceae state (read since a cluster whose units open by the day is read in flower)",
     ),
     (
         "lupinus-polyphyllus",
