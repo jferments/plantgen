@@ -32,21 +32,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its fruit look sets no fruit kind, so its follicles are drawn as the ellipsoid of a berry or drupe",
     ),
     (
-        "berberis-aquifolium",
-        "flower_merosity",
-        "its six petals stand in two whorls of three, and a corolla draws one whorl, so its spec draws six there",
-    ),
-    (
-        "berberis-nervosa",
-        "flower_merosity",
-        "its six petals stand in two whorls of three, and a corolla draws one whorl, so its spec draws six there",
-    ),
-    (
-        "dicentra-formosa",
-        "flower_merosity",
-        "its four petals stand in two pairs, outer and inner, and a corolla draws one whorl, so its spec draws four there",
-    ),
-    (
         "dicentra-formosa",
         "fruit_type",
         "its fruit look sets no fruit kind, so its capsules are drawn as the ellipsoid of a berry or drupe",

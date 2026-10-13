@@ -255,4 +255,8 @@ pub mod venation;
 /// piggyback plant) draws its upper petal unlike the rest, wider by
 /// `banner` and more upright (an unequal corolla), not a corolla of like
 /// petals (41 to 44 are #73, #72, #77 and #79 in landing order).
-pub const GENERATOR_REVISION: u32 = 45;
+/// 47: a regular corolla may stand in two like whorls (`petal_whorls`
+/// 2), the inner turned half a petal: tall and dull Oregon grape draw
+/// three petals and three, bleeding heart an outer and an inner pair, and
+/// their stamens stand in whorls of as many. (46 is #88.)
+pub const GENERATOR_REVISION: u32 = 47;
