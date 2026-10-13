@@ -73,6 +73,14 @@
 //! draws its perianth's kind, its ovary's place and its corolla's
 //! zygomorphy, as its layout has them (spec rework P5).
 //!
+//! **Crown form (crown form research, 2026-10-12).** A crown's outline
+//! seen from the side is fitted to an ellipse (`crown_outline_fit`) and
+//! the sky through it is measured (`crown_see_through`), as
+//! [`crate::form`] defines them, each judged by the plants' median as a
+//! typical size is. A tree (growth form `excurrent_tree` or
+//! `decurrent_tree`) that states no fit is held to [`TREE_OUTLINE_FIT`],
+//! so no tree's crown passes as a ball or an egg.
+//!
 //! **Juvenile and adult (spec rework P6).** A plant's juvenile period
 //! (`juvenile_period_years`) is the birth of its first flower, fruit or
 //! cone of any size, watched step by step as it grows up to the range's
@@ -106,7 +114,7 @@ pub enum Judged {
 }
 
 /// The size characters measured on grown plants, and how each is judged.
-pub const SIZES: [(&str, Judged); 23] = [
+pub const SIZES: [(&str, Judged); 25] = [
     ("height_typical_m", Judged::Typical),
     ("height_max_m", Judged::Greatest),
     ("crown_width_max_m", Judged::Greatest),
@@ -130,6 +138,8 @@ pub const SIZES: [(&str, Judged); 23] = [
     ("cone_length_m", Judged::Organs),
     ("divergence_deg", Judged::Typical),
     ("juvenile_period_years", Judged::Typical),
+    ("crown_outline_fit", Judged::Typical),
+    ("crown_see_through", Judged::Typical),
 ];
 
 /// The count characters counted on grown plants (spec rework M8A), each
@@ -174,6 +184,33 @@ pub const KINDS: [&str; 11] = [
 /// range states no extremes, and around a single stated number within
 /// which the population passes.
 pub const MARGIN: f64 = 0.25;
+
+/// The outline fit a tree's crown is held to where its species states
+/// none (see the module): photographs of open-grown Oregon white oaks fit
+/// at 0.82 to 0.84, and every broadleaf crown grown inside its envelope at
+/// 0.89 to 0.94 (crown form research, 2026-10-12), so a median above 0.87
+/// is a warning and above 0.90 an error.
+pub const TREE_OUTLINE_FIT: Stated = Stated {
+    min: 0.6,
+    max: 0.87,
+    low: Some(0.4),
+    high: Some(0.9),
+    typical: None,
+};
+
+/// `character` as `spec` states it in `traits`, or as a check holds it
+/// where it states none ([`TREE_OUTLINE_FIT`]).
+#[must_use]
+pub fn stated(spec: &PlantSpec, traits: &Map<String, Value>, character: &str) -> Option<Stated> {
+    traits.get(character).and_then(Stated::of).or_else(|| {
+        (character == "crown_outline_fit"
+            && matches!(
+                spec.growth_form,
+                crate::spec::GrowthForm::ExcurrentTree | crate::spec::GrowthForm::DecurrentTree
+            ))
+        .then_some(TREE_OUTLINE_FIT)
+    })
+}
 
 /// What one plant measured: each size character's values, one per organ
 /// (or one for the plant).
@@ -598,6 +635,12 @@ pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
     tally.add("height_max_m", 0, 0, graph.height);
     if let Some(form) = crate::form::measure(graph, &grown.growth.organ_types) {
         tally.add("crown_width_max_m", 0, 0, 2.0 * form.crown_radius);
+        if let Some(fit) = form.outline_fit {
+            tally.add("crown_outline_fit", 0, 0, fit);
+        }
+        if let Some(through) = form.see_through {
+            tally.add("crown_see_through", 0, 0, through);
+        }
     }
     if let Some(dbh) = graph.diameter_at_breast_height() {
         tally.add("stem_diameter_max_m", 0, 0, dbh);
@@ -1503,16 +1546,17 @@ pub fn seeds_of(spec: &PlantSpec, n: usize) -> Vec<u64> {
     seeds
 }
 
-/// Whether `traits` states any character [`SIZES`], [`COUNTS`] or
-/// [`KINDS`] checks.
+/// Whether `spec`, with its `traits`, states any character [`SIZES`],
+/// [`COUNTS`] or [`KINDS`] checks, or is held to one where it states none
+/// ([`stated`]).
 #[must_use]
-pub fn states_checked(traits: &Map<String, Value>) -> bool {
+pub fn states_checked(spec: &PlantSpec, traits: &Map<String, Value>) -> bool {
     SIZES
         .iter()
         .map(|(key, _)| *key)
         .chain(COUNTS)
         .chain(KINDS)
-        .any(|key| traits.contains_key(key))
+        .any(|key| traits.contains_key(key) || stated(spec, traits, key).is_some())
 }
 
 /// Check `spec`'s stated sizes (`traits`, as it inherits them) against
@@ -1552,7 +1596,7 @@ pub fn judge_plants(
     let mut findings = Vec::new();
     let counts = COUNTS.iter().map(|&count| (count, Judged::Organs));
     for (character, judged) in SIZES.into_iter().chain(counts) {
-        let Some(stated) = traits.get(character).and_then(Stated::of) else {
+        let Some(stated) = stated(spec, traits, character) else {
             continue;
         };
         let mut values = Vec::new();
@@ -1638,6 +1682,8 @@ pub fn length_text(metres: f64) -> String {
 pub fn value_text(character: &str, value: f64) -> String {
     if character.ends_with("_m") {
         length_text(value)
+    } else if character.starts_with("crown_") {
+        format!("{value:.2}")
     } else if character.ends_with("_deg") {
         format!("{value:.0}°")
     } else if let Some(years) = character.strip_suffix("_years") {

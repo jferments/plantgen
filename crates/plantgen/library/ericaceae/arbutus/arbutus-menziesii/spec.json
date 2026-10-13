@@ -146,6 +146,9 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "flowering_position": "terminal"
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -201,6 +204,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit, a convention (no source gives a raceme's opening time)."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Arbutus menziesii review (page read): the flowers are borne in showy terminal clusters."
     }
   },
   "provenance": {

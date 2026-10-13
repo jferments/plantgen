@@ -189,9 +189,16 @@ pub mod venation;
 /// the deep-shade end of the light scale leaves acclimate on,
 /// `looks::DEEP_SHADE`, is 0.08, where the growth model's short shoots stop
 /// leafing out, not 0.04, which no crown's leaves reach.
-/// 33: a value a rule sets from one stated range varies within it (spec
+/// 31: crown form, step A: in the broadleaf program a year's shoot is a
+/// growth unit of several nodes, only those at its acrotonic or basitonic
+/// end growing long shoots, a few next to them short shoots and the rest
+/// latent; and every broadleaf tree may fork where its flowers end a
+/// shoot, lose tips that have no space, shed limbs that do not pay their
+/// way, sprout from dormant buds and grow back into freed space, as a
+/// maple did, each set by rules from the taxon's architecture traits.
+/// 34: a value a rule sets from one stated range varies within it (spec
 /// rework VARY): the effective spec records its spread, and each organ
 /// drawn solid is one of four varieties of its look, which draw its
 /// counts and sizes across their ranges; a part mesh's variant `k` is its
 /// look's variety `k`.
-pub const GENERATOR_REVISION: u32 = 33;
+pub const GENERATOR_REVISION: u32 = 34;

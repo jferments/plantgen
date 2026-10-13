@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Salix",
+  "traits": {"epicormic": true},
+  "evidence": {
+    "traits.epicormic": {
+      "evidence": "SourceInferred",
+      "source": "meier-2012-epicormic",
+      "note": "Meier, Saunders and Michler (2012, read in full) place willows among trees whose epicormic buds are single and whose first meristems lie buried in the bark for decades (Salix alba), sprouting when released."
+    }
+  }
+}

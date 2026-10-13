@@ -5,7 +5,8 @@
   "traits": {
     "inflorescence": "panicle",
     "ovary_position": "superior",
-    "carpels": 5
+    "carpels": 5,
+    "flowering_position": "terminal"
   },
   "evidence": {
     "traits.inflorescence": {
@@ -17,6 +18,11 @@
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",
       "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: petals ovate; stamens 10 to 50, much exserted; pods commonly 5, in the superior-ovaried tribe Spiraeeae."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual's Spiraea chapter (read in full): the flowers are borne in terminal clusters."
     }
   }
 }
