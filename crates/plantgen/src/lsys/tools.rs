@@ -2447,7 +2447,7 @@ pub struct Flux {
     /// Tips after each node in its branch, not counting the node itself.
     pub tips: Vec<u32>,
     /// The whole plant's light per segment: summed light over segments at
-    /// the base (summed over every base node), 0 with no segments.
+    /// the base (summed over every base node), counting at least one.
     pub mean: f64,
 }
 
@@ -2560,11 +2560,7 @@ fn vigour(
         .fold((0.0, 0_u32), |(q, n), index| {
             (q + light[index], n + segments[index])
         });
-    let mean = if base_segments > 0 {
-        base_light / f64::from(base_segments)
-    } else {
-        0.0
-    };
+    let mean = base_light / f64::from(base_segments.max(1));
     Ok(Flux {
         light,
         vigour,

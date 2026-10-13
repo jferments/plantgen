@@ -79,7 +79,8 @@ pub enum EnvField {
     /// not counting its own leaf area (crowding that decides bud fate).
     Crowd,
     /// `qmean`: the whole plant's light per segment, `qsum / nseg` at the
-    /// base, so a branch can compare its own with it (relative shedding).
+    /// base, at least one segment counted, so a branch can compare its own
+    /// with it (relative shedding) and the plant can weigh its upkeep.
     Qmean,
     /// `fx`, `fy`, `fz`: unit direction away from the leaf area in the
     /// light voxels around the module's own, 0 where none is near: the
