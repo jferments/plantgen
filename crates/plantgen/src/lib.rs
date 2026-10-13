@@ -247,6 +247,7 @@ pub mod venation;
 /// joints that sag to the ground lie on it (`rest`, on the conditions'
 /// substrate or level soil) instead of passing into it, so the deer and
 /// sword ferns, Engelmann's prickly pear and saw palmetto stay above the
-/// ground (41 is the conifers' lower crowns, #72; 42 the mesh seated on
-/// the ground, #73).
+/// ground; bend@1 can hold bent wood up on the ground too (`ground`),
+/// which no program uses yet (41 is the conifers' lower crowns, #72; 42
+/// the mesh seated on the ground, #73).
 pub const GENERATOR_REVISION: u32 = 43;

@@ -628,6 +628,7 @@ pub fn grow_watched(
                 &values,
                 &mut rest_bends,
                 settings.dt,
+                ground,
             )?;
         }
         segments.step(scene.segments.iter().zip(&radii).map(|(segment, radius)| {
