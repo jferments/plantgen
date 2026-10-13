@@ -178,8 +178,14 @@ pub fn value_paths(document: &serde_json::Value, skip: &[&str]) -> Vec<String> {
                 }
             }
             serde_json::Value::Array(items) if items.iter().any(serde_json::Value::is_object) => {
+                // An item with a `role` (a body's spine set) by its role,
+                // as a rule's path names it; any other by its place.
                 for (index, inner) in items.iter().enumerate() {
-                    walk(inner, &join(&index.to_string()), paths);
+                    let at = inner
+                        .get("role")
+                        .and_then(serde_json::Value::as_str)
+                        .map_or_else(|| index.to_string(), str::to_string);
+                    walk(inner, &join(&at), paths);
                 }
             }
             _ => paths.push(path.to_string()),

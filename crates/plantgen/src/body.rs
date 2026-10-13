@@ -193,6 +193,12 @@ impl Default for Areoles {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(default, deny_unknown_fields)]
 pub struct SpineSet {
+    /// What the set is (spec rework E6c): a taxon's rules set a set by its
+    /// role, as in `appearance.bodies.stem.spines.radial.count`, so they
+    /// never depend on the order a species wrote its sets in. Optional:
+    /// a set without one is set only by hand.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub role: Option<SpineRole>,
     /// Fewest and most spines of the set on one areole.
     pub count: [u32; 2],
     /// Angle from the skin: 0 lies on it, 90 stands straight out.
@@ -223,9 +229,39 @@ pub struct SpineSet {
     pub tip: Option<[f32; 3]>,
 }
 
+/// What a set of an areole's spines is.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum SpineRole {
+    /// Round the areole's edge, spreading flat or nearly so; where a flora
+    /// does not tell radials from centrals, every spine.
+    Radial,
+    /// Standing out from its middle.
+    Central,
+    /// The one central that stands apart from the others, stouter,
+    /// hooked or flattened: a fishhook barrel's hook. A central too.
+    Main,
+    /// Tufts of fine, barbed bristles (chollas and prickly pears).
+    Glochid,
+}
+
+impl SpineRole {
+    /// The role as a path names it.
+    #[must_use]
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::Radial => "radial",
+            Self::Central => "central",
+            Self::Main => "main",
+            Self::Glochid => "glochid",
+        }
+    }
+}
+
 impl Default for SpineSet {
     fn default() -> Self {
         Self {
+            role: None,
             count: [8, 12],
             angle: 20.0,
             angle_spread: 8.0,
@@ -371,7 +407,14 @@ impl BodyLook {
             ));
         }
         let mut most = 0;
-        for set in &self.spines {
+        for (index, set) in self.spines.iter().enumerate() {
+            if let Some(role) = set.role
+                && self.spines[..index]
+                    .iter()
+                    .any(|other| other.role == Some(role))
+            {
+                return Err(format!("two spine sets are `{}`", role.name()));
+            }
             let [low, high] = set.count;
             if high < low {
                 return Err(format!(
@@ -1557,6 +1600,81 @@ pub fn build_between(
     }
 }
 
+/// The ribs round an axis of `look` whose widest radius is `widest`: as
+/// many as fit at the ribs' spacing, within their count (0 without ribs).
+fn rib_count(look: &BodyLook, widest: f64) -> u32 {
+    look.ribs.as_ref().map_or(0, |ribs| {
+        // A small whole number of ribs.
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let fitted = (2.0 * PI * widest / ribs.spacing).round() as u32;
+        fitted.clamp(ribs.count[0], ribs.count[1]).max(3)
+    })
+}
+
+/// One body axis as it is drawn, for the checks (spec rework E6c): a
+/// column, a barrel's stem, an arm or a joint (a tree cholla's trunk
+/// joints make one axis).
+#[derive(Debug, Clone, PartialEq)]
+pub struct Measured {
+    /// Index of the body type among the program's bodies.
+    pub body: usize,
+    /// The first segment's identity: seeds its areoles' draws here.
+    pub id: u64,
+    /// Whether it stands on the ground (no parent).
+    pub root: bool,
+    /// Whether no other body axis grows from it: a terminal joint.
+    pub tip: bool,
+    /// Its length along its spline, metres.
+    pub length: f64,
+    /// Its widest radius, or a pad's half width, metres.
+    pub widest: f64,
+    /// Ribs round it where it is widest (0 without ribs).
+    pub ribs: u32,
+}
+
+/// Every body axis of `graph` drawn with `looks`, parents first.
+#[must_use]
+pub fn measure(graph: &PlantGraph, looks: &[BodyLook]) -> Vec<Measured> {
+    let axes = axes(graph);
+    // The axis each body segment is on, to find the axes others grow from.
+    let mut on = vec![usize::MAX; graph.segments.len()];
+    for (index, axis) in axes.iter().enumerate() {
+        for &segment in &axis.segments {
+            on[segment] = index;
+        }
+    }
+    let mut bearing = vec![false; axes.len()];
+    for axis in &axes {
+        if let Some(parent) = graph.segments[axis.segments[0]].parent
+            && let Some(&from) = on.get(parent as usize)
+            && from != usize::MAX
+        {
+            bearing[from] = true;
+        }
+    }
+    axes.iter()
+        .zip(bearing)
+        .filter_map(|(axis, bearing)| {
+            let look = looks.get(axis.body)?;
+            let line = Centreline::new(graph, axis, look, 0.0)?;
+            let widest = line
+                .stations
+                .iter()
+                .map(|station| station.radius)
+                .fold(0.0, f64::max);
+            Some(Measured {
+                body: axis.body,
+                id: axis.id,
+                root: graph.segments[axis.segments[0]].parent.is_none(),
+                tip: !bearing,
+                length: line.length,
+                widest,
+                ribs: rib_count(look, widest),
+            })
+        })
+        .collect()
+}
+
 /// An axis's grid at one level.
 struct Layout {
     /// Ribs round the axis, and whether the level folds them.
@@ -1601,12 +1719,7 @@ impl Body<'_> {
             / f64::from(u32::try_from(line.stations.len()).unwrap_or(1).max(1));
 
         // Ribs round this axis, and whether this level folds them.
-        let ribs = look.ribs.as_ref().map_or(0, |ribs| {
-            // A small whole number of ribs.
-            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-            let fitted = (2.0 * PI * widest / ribs.spacing).round() as u32;
-            fitted.clamp(ribs.count[0], ribs.count[1]).max(3)
-        });
+        let ribs = rib_count(look, widest);
         let per_rib = if ribs > 0 && detail.per_rib > 0 {
             let per = detail.per_rib.min(detail.max_sides / ribs);
             if per >= 2 { per - per % 2 } else { 0 }

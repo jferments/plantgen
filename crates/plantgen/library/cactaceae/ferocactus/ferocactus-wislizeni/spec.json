@@ -19,7 +19,6 @@
       "height_rate": 0.02,
       "height_shape": 1.8,
       "radius_min": 0.015,
-      "radius_max": 0.3,
       "radius_height": 0.6,
       "fill": 0.95,
       "fill_years": 20,
@@ -92,7 +91,6 @@
         "valley": [0.04, 0.08, 0.03],
         "dome": 0.55,
         "ribs": {
-          "count": [20, 28],
           "spacing": 0.065,
           "depth": 0.15,
           "sharpness": 0.75
@@ -103,21 +101,20 @@
           "point": 1.0
         },
         "areoles": {
-          "spacing": 0.035,
           "felt_radius": 0.006,
           "felt": [0.3, 0.25, 0.18]
         },
         "spines": [
           {
-            "count": [12, 20],
+            "role": "radial",
             "angle": 15,
-            "length": 0.04,
             "width": 0.0003,
             "colour": [0.7, 0.68, 0.62],
             "angle_spread": 10,
             "length_spread": 0.3
           },
           {
+            "role": "central",
             "count": [3, 3],
             "angle": 35,
             "length": 0.04,
@@ -129,9 +126,9 @@
             "tip": [0.3, 0.25, 0.2]
           },
           {
+            "role": "main",
             "count": [1, 1],
             "angle": 30,
-            "length": 0.055,
             "width": 0.0028,
             "colour": [0.5, 0.13, 0.06],
             "angle_spread": 8,
@@ -171,7 +168,47 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "ribs": {"min": 20, "max": 28, "typical": 25},
+    "stem_diameter_max_m": {"min": 0.45, "max": 0.83},
+    "areole_spacing_m": {"min": 0.02, "max": 0.03},
+    "radial_spines": {"min": 12, "max": 20},
+    "radial_spine_length_m": 0.05,
+    "central_spines": 4,
+    "central_spine_length_m": {"min": 0.038, "max": 0.05},
+    "central_spine_form": "hooked"
+  },
   "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 3, 1922, p. 128): ribs numerous, often 25, about 3 cm high; areoles 2 to 3 cm apart, large and brown-felted; radial spines thread-like to needle-like, the longest 5 cm; several centrals, one much stouter, flattened and strongly hooked."
+    },
+    "traits.ribs": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's review of Ferocactus wislizeni (Matthews 1994): 20 to 28 ribs; Britton and Rose's usual count is 25."
+    },
+    "traits.stem_diameter_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's review of Ferocactus wislizeni (Matthews 1994): stems 45 to 83 cm across."
+    },
+    "traits.radial_spines": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's review of Ferocactus wislizeni (Matthews 1994): 12 to 20 radial spines."
+    },
+    "traits.central_spines": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's review of Ferocactus wislizeni (Matthews 1994): 4 central spines, the larger ones 3.8 to 5 cm long."
+    },
+    "traits.central_spine_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's review of Ferocactus wislizeni (Matthews 1994): the larger central spines 3.8 to 5 cm long."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

@@ -14,7 +14,6 @@
     "params": {
       "vigour_spread": 0.12,
       "lean": 5,
-      "joints": 1,
       "joint_length": 0.2,
       "joint_radius": 0.017,
       "joint_spread": 0.3,
@@ -104,14 +103,23 @@
         },
         "spines": [
           {
-            "count": [8, 20],
+            "role": "radial",
             "angle": 40,
-            "length": 0.022,
             "width": 0.0006,
             "colour": [0.65, 0.55, 0.35],
             "angle_spread": 25,
             "length_spread": 0.35,
             "tip": [0.55, 0.45, 0.3]
+          },
+          {
+            "role": "glochid",
+            "count": [10, 20],
+            "angle": 55,
+            "length": 0.003,
+            "width": 0.00012,
+            "colour": [0.78, 0.66, 0.3],
+            "angle_spread": 20,
+            "length_spread": 0.3
           }
         ],
         "greying": {
@@ -143,7 +151,16 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "radial_spines": {"min": 8, "max": 25},
+    "radial_spine_length_m": {"min": 0.02, "max": 0.03}
+  },
   "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, p. 57), as Opuntia acanthocarpa: 8 to 25 needle-like, dark brown spines 2 to 3 cm long (the count's scan is unsure), not told apart as radials and centrals, so stated as radials; glochids numerous, yellow. Their terminal joints, 4 to 8 cm, are shorter than other accounts give, so the joints' length is not stated."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -188,6 +205,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "appearance.bodies.stem.spines.glochid": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, pp. 42 and 57 to 67): the areoles bear glochids above the spines, here numerous, yellow. Their count, length and angle are set by eye like a prickly pear's, smaller, as no flora measures them."
     }
   },
   "provenance": {

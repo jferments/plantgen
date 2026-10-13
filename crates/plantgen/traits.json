@@ -78,6 +78,13 @@
       "po": {"id": "PO:0025359", "name": "sorus"},
       "why": "a cluster of sporangia on a fern's leaf, on its underside or along its edge"
     },
+    "areole": {
+      "part_of": "stem",
+      "category": "organ",
+      "when": {"spines": ["areoles"]},
+      "po": {"id": "PO:0025353", "name": "areole bud"},
+      "why": "a cactus's short, felted bud at a node, on a rib, a tubercle or a joint's face, from which its spines, glochids, flowers and branches come"
+    },
     "spine": {
       "part_of": "stem",
       "category": "organ",
@@ -437,6 +444,117 @@
       "type": "enum",
       "values": ["none", "areoles", "thorns", "prickles", "leaf_spines"],
       "why": "what a plant is armed with: spines from areoles, thorns from shoots, prickles from bark, or spines on its leaves"
+    },
+    "stem_form": {
+      "group": "form",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["columnar", "globose", "cylindric_joints", "flat_joints"],
+      "when": {"spines": ["areoles"]},
+      "why": "what a cactus's stem is built as: a column or a barrel growing on at its tip, or a chain of joints, cylindrical (a cholla's) or flattened into pads (a prickly pear's)"
+    },
+    "ribs": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "count",
+      "range": [0, 64],
+      "when": {"spines": ["areoles"]},
+      "why": "ribs running down a cactus's stem, its areoles along their crests; 0 where its areoles sit on tubercles or scattered over its joints"
+    },
+    "tubercles": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "bool",
+      "when": {"spines": ["areoles"]},
+      "why": "whether a cactus's areoles sit on tubercles, knobs of the stem, alone (a pincushion's) or along its ribs"
+    },
+    "joint_length_m": {
+      "group": "size",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m",
+      "range": [0.005, 2],
+      "when": {"stem_form": ["cylindric_joints", "flat_joints"]},
+      "why": "a grown joint of a cholla or a prickly pear's pad, from its foot to its tip"
+    },
+    "joint_width_m": {
+      "group": "size",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m",
+      "range": [0.003, 1],
+      "when": {"stem_form": ["cylindric_joints", "flat_joints"]},
+      "why": "a grown joint's thickness across, or a pad's width at its widest"
+    },
+    "areole_spacing_m": {
+      "group": "stem_and_bark",
+      "organ": "areole",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.2],
+      "why": "from one areole to the next along a rib, or between neighbours on a joint"
+    },
+    "glochids": {
+      "group": "stem_and_bark",
+      "organ": "areole",
+      "type": "bool",
+      "why": "whether the areoles bear glochids, tufts of fine barbed bristles that come away at a touch (chollas and prickly pears)"
+    },
+    "radial_spines": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "count",
+      "range": [0, 100],
+      "when": {"spines": ["areoles"]},
+      "why": "spines round an areole's edge, spreading flat or nearly so; where a flora does not tell radials from centrals, all of them"
+    },
+    "central_spines": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "count",
+      "range": [0, 30],
+      "when": {"spines": ["areoles"]},
+      "why": "spines standing out from an areole's middle, usually stouter than the radials"
+    },
+    "radial_spine_length_m": {
+      "group": "size",
+      "organ": "spine",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.3],
+      "when": {"spines": ["areoles"]},
+      "why": "the longest radial spines (or the longest spines, where a flora does not tell them apart)"
+    },
+    "central_spine_length_m": {
+      "group": "size",
+      "organ": "spine",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 0.3],
+      "when": {"spines": ["areoles"]},
+      "why": "the longest central spine"
+    },
+    "central_spine_form": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["straight", "curved", "hooked", "flattened", "twisted"],
+      "when": {"spines": ["areoles"]},
+      "why": "the main central spine's form: straight, curved, hooked at its tip (a fishhook's), flattened, or twisted"
+    },
+    "spine_sheaths": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "bool",
+      "when": {"spines": ["areoles"]},
+      "why": "whether each spine wears a papery sheath, as a cholla's do"
+    },
+    "spine_colour": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "colour",
+      "when": {"spines": ["areoles"]},
+      "why": "a grown spine's colour before it greys"
     },
     "leaf_form": {
       "group": "leaves",
