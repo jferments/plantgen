@@ -41,7 +41,8 @@
       "shade_years": 5,
       "pipe_organ": 0.009,
       "spray_area": 0.23,
-      "branch_reach": 6.0
+      "branch_reach": 6.0,
+      "side_years": 10
     }
   },
   "growth": {
@@ -133,6 +134,11 @@
     "wood_moisture_green_share": {"min": 1.21, "max": 1.71, "typical": 1.46}
   },
   "evidence": {
+    "generator.params.side_years": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (conifer form, pinidae revision 5): a side shoot grows for 10 years, not pinidae's 20. Bald cypress sheds its leafy branchlets with their needles each autumn (Abrams 1923 at Taxodiaceae, see the genus), so few side shoots persist and build up as an evergreen's do; with 20 years its open crown at 80 years drew 249,000 segments, two and a half times another conifer's, and its motion rig took 1.9 s. At 10 it draws 115,000 and keeps its reference heights."
+    },
     "traits.wood_modulus_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Baldcypress, green: modulus of elasticity 8,100 MPa in static bending (clear wood, centre-loaded, span 14 depths; specific gravity 0.42)."},
     "traits.wood_rupture_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Baldcypress, green: modulus of rupture 46,000 kPa (clear wood in static bending)."},
     "traits.wood_moisture_green_share": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 4-1, Baldcypress: average moisture content of green wood, heartwood 121% and sapwood 171% of oven-dry mass; stated as a share, the range between them with its middle typical where both are given."},
