@@ -2,5 +2,36 @@
   "schema": 1,
   "rank": "family",
   "name": "Amaryllidaceae",
-  "parent": "order/asparagales"
+  "parent": "order/asparagales",
+  "traits": {
+    "woodiness": "herbaceous",
+    "leaf_venation": "parallel",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "flower_merosity": 3,
+    "stamens": {
+      "min": 6,
+      "max": 6
+    },
+    "inflorescence": {
+      "umbel": "usually",
+      "solitary": "sometimes"
+    },
+    "ovary_position": {
+      "inferior": "often",
+      "superior": "often"
+    },
+    "carpels": 3,
+    "fruit_type": {
+      "capsule": "usually",
+      "berry": "rarely"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 385 Amaryllidaceae, which takes in the onions (tribe Allieae) and Agapanthus as APG does: herbs from a coated bulb, very rarely a rhizome; leaves few, from the base, more or less linear, with parallel veins; flowers showy, bisexual, regular, one to many in an umbel atop a leafless stalk, within two or more papery bracts; perianth of 6 petal-like parts in two whorls of 3, often with a corona; stamens 6, rarely more; ovary superior (onions) or inferior (daffodils), of three cells; fruit a capsule, or fleshy and staying shut."
+    }
+  }
 }

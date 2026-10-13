@@ -2,5 +2,39 @@
   "schema": 1,
   "rank": "family",
   "name": "Anacardiaceae",
-  "parent": "order/sapindales"
+  "parent": "order/sapindales",
+  "traits": {
+    "woodiness": "woody",
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_division": {
+      "compound": "often",
+      "simple": "often"
+    },
+    "stipules": false,
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "rarely"
+    },
+    "flower_merosity": {
+      "min": 3,
+      "max": 7
+    },
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "superior",
+    "fruit_type": "drupe"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 218 Anacardiaceae: trees or shrubs, often with resinous bark; leaves alternate, very rarely opposite, simple or compound; no stipules (very rarely obscure ones); flowers bisexual or unisexual, mostly regular; petals 3 to 7, or none; stamens often twice the petals; ovary superior, mostly of one cell with one ovule; fruit mostly a drupe (mango, pistachio, sumac). The flowers bisexual or of one sex with bisexual ones on the same plant are read as hermaphrodite or polygamous."
+    }
+  }
 }

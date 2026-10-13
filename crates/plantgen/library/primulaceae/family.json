@@ -2,5 +2,47 @@
   "schema": 1,
   "rank": "family",
   "name": "Primulaceae",
-  "parent": "order/ericales"
+  "parent": "order/ericales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "often",
+      "woody": "often"
+    },
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes",
+      "whorled": "rarely"
+    },
+    "stipules": false,
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "perianth": "sepals_and_petals",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5,
+      "typical": 5
+    },
+    "corolla_shape": {
+      "rotate": "often",
+      "tubular": "often"
+    },
+    "ovary_position": {
+      "superior": "usually",
+      "half_inferior": "rarely"
+    },
+    "fruit_type": {
+      "capsule": "often",
+      "berry": "often",
+      "drupe": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 203 Myrsinaceae, 204 Theophrastaceae and 295 Primulaceae, which APG joins as Primulaceae: the primroses perennial or annual herbs, the myrsines trees and shrubs (Library 1.0's family is half woody); leaves alternate, opposite or whorled in the primroses, alternate in the myrsines; no stipules; flowers regular, very rarely irregular; corolla united, a tube or a flat wheel, usually 5-lobed (4 or 5 in the woody ones); stamens opposite the petals; ovary superior, rarely half-inferior, of one cell with a free central placenta; fruit a capsule in the primroses, a berry or drupe in the myrsines. The wheel-shaped corolla is read from 'corolla rotate or tubular'."
+    }
+  }
 }
