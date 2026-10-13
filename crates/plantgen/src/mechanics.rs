@@ -100,13 +100,23 @@ pub struct Material {
     /// Green wood's density, kg/m³: the basic density times one plus the
     /// green moisture share.
     pub wood_density: f64,
-    /// Green wood's modulus of elasticity, Pa.
+    /// Green wood's modulus of elasticity along the grain, Pa: the stated
+    /// static-bending modulus with its shear deflection taken out
+    /// ([`SHEAR_CORRECTION`]).
     pub modulus: f64,
     /// Green wood's modulus of rupture, Pa, where the species states it.
     pub rupture: Option<f64>,
-    /// Fresh leaf mass per one-sided area, kg/m².
-    pub leaf_mass: f64,
+    /// Fresh leaf mass per one-sided area, kg/m², where the species states
+    /// it; unstated, leaves are counted by area but not weighed.
+    pub leaf_mass: Option<f64>,
 }
+
+/// The Wood Handbook's (FPL-GTR-282, table 5-3a, note c) factor from a
+/// static-bending modulus of elasticity, measured on a centre-loaded beam of
+/// span 14 depths, to the modulus along the grain: bending tests include
+/// shear deflection, which the beams here leave out, so the modulus is
+/// raised 10%.
+pub const SHEAR_CORRECTION: f64 = 1.1;
 
 /// A character's value: a number, or a range's typical value, else its
 /// middle.
@@ -126,13 +136,16 @@ impl Material {
     /// # Errors
     ///
     /// The characters it needs and does not state, in [`CHARACTERS`]'
-    /// order; strength alone may be missing.
+    /// order; strength and leaf mass may be missing.
     pub fn of(traits: &Map<String, Value>) -> Result<Self, Vec<&'static str>> {
         let get = |key| typical(traits, key);
         let missing: Vec<&'static str> = CHARACTERS
             .iter()
             .copied()
-            .filter(|&key| key != "wood_rupture_green_mpa" && get(key).is_none())
+            .filter(|&key| {
+                !matches!(key, "wood_rupture_green_mpa" | "leaf_mass_fresh_kg_m2")
+                    && get(key).is_none()
+            })
             .collect();
         if !missing.is_empty() {
             return Err(missing);
@@ -141,9 +154,9 @@ impl Material {
         let moisture = get("wood_moisture_green_share").unwrap_or(0.0);
         Ok(Self {
             wood_density: basic * (1.0 + moisture),
-            modulus: get("wood_modulus_green_mpa").unwrap_or(0.0) * 1.0e6,
+            modulus: get("wood_modulus_green_mpa").unwrap_or(0.0) * 1.0e6 * SHEAR_CORRECTION,
             rupture: get("wood_rupture_green_mpa").map(|mpa| mpa * 1.0e6),
-            leaf_mass: get("leaf_mass_fresh_kg_m2").unwrap_or(0.0),
+            leaf_mass: get("leaf_mass_fresh_kg_m2"),
         })
     }
 
@@ -163,7 +176,9 @@ impl Material {
         };
         positive("wood density", self.wood_density)?;
         positive("modulus", self.modulus)?;
-        positive("leaf mass", self.leaf_mass)?;
+        if let Some(leaf_mass) = self.leaf_mass {
+            positive("leaf mass", leaf_mass)?;
+        }
         if let Some(rupture) = self.rupture {
             positive("rupture", rupture)?;
         }
@@ -393,7 +408,7 @@ impl Beams {
                 .and_then(|segment| beams.beam_of[segment as usize]);
             match beam {
                 Some(beam) => {
-                    let mass = material.leaf_mass * area;
+                    let mass = material.leaf_mass.unwrap_or(0.0) * area;
                     beams.mass[beam as usize] += mass;
                     beams.leaf[beam as usize] += mass;
                     beams.leaf_area[beam as usize] += area;
@@ -1076,7 +1091,7 @@ mod tests {
         wood_density: 800.0,
         modulus: 10.0e9,
         rupture: Some(50.0e6),
-        leaf_mass: 0.2,
+        leaf_mass: Some(0.2),
     };
 
     fn segment(
@@ -1364,7 +1379,7 @@ mod tests {
         .unwrap();
         assert_eq!(
             Material::of(&traits),
-            Err(vec!["wood_moisture_green_share", "leaf_mass_fresh_kg_m2"])
+            Err(vec!["wood_moisture_green_share"])
         );
         let traits: Map<String, Value> = serde_json::from_str(
             r#"{"wood_density_basic_kg_m3": 440, "wood_moisture_green_share": 0.5,
@@ -1373,7 +1388,9 @@ mod tests {
         .unwrap();
         let material = Material::of(&traits).unwrap();
         close(material.wood_density, 660.0, 1.0e-12);
-        close(material.modulus, 10.0e9, 1.0e-12);
+        // A range reads as its middle, then loses its shear deflection.
+        close(material.modulus, 10.0e9 * SHEAR_CORRECTION, 1.0e-12);
         assert_eq!(material.rupture, None);
+        assert_eq!(material.leaf_mass, Some(0.3));
     }
 }

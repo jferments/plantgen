@@ -89,9 +89,15 @@
   "tier": "procedural_proxy",
   "traits": {
     "wood_density_basic_kg_m3": 410,
+    "wood_modulus_green_mpa": 5900,
+    "wood_rupture_green_mpa": 35,
+    "wood_moisture_green_share": {"min": 0.95, "max": 1.13, "typical": 1.04},
     "juvenile_period_years": {"min": 2, "max": 3}
   },
   "evidence": {
+    "traits.wood_modulus_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Aspen, quaking, green: modulus of elasticity 5,900 MPa in static bending (clear wood, centre-loaded, span 14 depths; specific gravity 0.35). Table 4-1 gives one row for aspen, quaking and bigtooth together."},
+    "traits.wood_rupture_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Aspen, quaking, green: modulus of rupture 35,000 kPa (clear wood in static bending). Table 4-1 gives one row for aspen, quaking and bigtooth together."},
+    "traits.wood_moisture_green_share": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 4-1, Aspen, quaking: average moisture content of green wood, heartwood 95% and sapwood 113% of oven-dry mass; stated as a share, the range between them with its middle typical where both are given. Table 4-1 gives one row for aspen, quaking and bigtooth together."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Populus tremuloides (gwddagg_v2.2_species.csv, read): specific gravity 0.41 (wsg_est, the database's hierarchical-model species mean, from 516 records in 7 sources); trunks 0.41, branches 0.44. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",

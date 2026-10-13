@@ -224,11 +224,13 @@ Usage:
       Grow a woody species to its oldest keyframe, or N years, and print
       it as a structure of beams (plant motion S1): its material, mass,
       sag under its own weight, lowest vibration modes and its heaviest
-      bones (default 256 in all, N rows shown, default 12). Values the
-      species does not state stop it, unless given: --modulus (green
-      modulus of elasticity), --moisture (green water over dry mass) and
-      --leaf-mass (fresh leaf mass per area) fill only unstated ones, and
-      the output marks them as given, not the species'.
+      bones (default 256 in all, N rows shown, default 12). A species
+      that does not state its green stiffness or moisture stops it, unless
+      given; unstated leaf mass leaves the leaves unweighed. --modulus
+      (green modulus of elasticity in static bending, as the Wood Handbook
+      gives it), --moisture (green water over dry mass) and --leaf-mass
+      (fresh leaf mass per area) fill only unstated ones, and the output
+      marks them as given, not the species'.
   plantc measure [<species|spec.json>...] [--generator PROGRAM] [--env ENV]
                  [--seed N] [--years N]
       Grow each species (default every one in the library; --generator
@@ -1434,7 +1436,7 @@ fn mechanics_command(args: &[String]) -> Result<(), Failure> {
     }
     let material = Material::of(&traits).map_err(|missing| {
         format!(
-            "{} does not state {}; give --modulus, --moisture or --leaf-mass to explore",
+            "{} does not state {}; give --modulus or --moisture to explore",
             spec.id,
             missing.join(", ")
         )
@@ -1465,7 +1467,7 @@ fn mechanics_command(args: &[String]) -> Result<(), Failure> {
         graph.height
     );
     out!(
-        "wood {:.0} kg/m3 green{}, modulus {:.0} MPa{}, rupture {}, leaves {:.3} kg/m2{}",
+        "wood {:.0} kg/m3 green{}, modulus {:.0} MPa{} along the grain, rupture {}, leaves {}{}",
         material.wood_density,
         mark("wood_moisture_green_share"),
         material.modulus / 1.0e6,
@@ -1474,7 +1476,10 @@ fn mechanics_command(args: &[String]) -> Result<(), Failure> {
             || "unstated".to_string(),
             |pa| format!("{:.0} MPa", pa / 1.0e6)
         ),
-        material.leaf_mass,
+        material.leaf_mass.map_or_else(
+            || "unstated (not weighed)".to_string(),
+            |mass| format!("{mass:.3} kg/m2")
+        ),
         mark("leaf_mass_fresh_kg_m2"),
     );
     let beams = &found.beams;

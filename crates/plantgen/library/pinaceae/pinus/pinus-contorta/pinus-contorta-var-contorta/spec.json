@@ -103,9 +103,15 @@
   "tier": "procedural_proxy",
   "traits": {
     "wood_density_basic_kg_m3": 400,
+    "wood_modulus_green_mpa": 7400,
+    "wood_rupture_green_mpa": 38,
+    "wood_moisture_green_share": {"min": 0.41, "max": 1.2, "typical": 0.8},
     "juvenile_period_years": {"min": 4, "max": 8}
   },
   "evidence": {
+    "traits.wood_modulus_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Pine, lodgepole, green: modulus of elasticity 7,400 MPa in static bending (clear wood, centre-loaded, span 14 depths; specific gravity 0.38). The handbook's lodgepole pine is the species as cut for timber, mostly the inland variety latifolia; shore pine (var. contorta) is not tested apart."},
+    "traits.wood_rupture_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Pine, lodgepole, green: modulus of rupture 38,000 kPa (clear wood in static bending). The handbook's lodgepole pine is the species as cut for timber, mostly the inland variety latifolia; shore pine (var. contorta) is not tested apart."},
+    "traits.wood_moisture_green_share": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 4-1, Pine, lodgepole: average moisture content of green wood, heartwood 41% and sapwood 120% of oven-dry mass; stated as a share, the range between them with its middle typical where both are given. The handbook's lodgepole pine is the species as cut for timber, mostly the inland variety latifolia; shore pine (var. contorta) is not tested apart."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Pinus contorta (gwddagg_v2.2_species.csv, read): specific gravity 0.4 (wsg_est, the database's hierarchical-model species mean, from 51 records in 8 sources); trunks 0.4, branches 0.44. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",

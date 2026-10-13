@@ -125,9 +125,13 @@
   "tier": "procedural_proxy",
   "traits": {
     "wood_density_basic_kg_m3": 530,
+    "wood_modulus_green_mpa": 7800,
+    "wood_rupture_green_mpa": 52,
     "juvenile_period_years": 30
   },
   "evidence": {
+    "traits.wood_modulus_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Ash, Oregon, green: modulus of elasticity 7,800 MPa in static bending (clear wood, centre-loaded, span 14 depths; specific gravity 0.5)."},
+    "traits.wood_rupture_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Ash, Oregon, green: modulus of rupture 52,000 kPa (clear wood in static bending)."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Fraxinus latifolia (gwddagg_v2.2_species.csv, read): specific gravity 0.53 (wsg_est, the database's hierarchical-model species mean, from 3 records in 3 sources); trunks 0.53, branches 0.56. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",
