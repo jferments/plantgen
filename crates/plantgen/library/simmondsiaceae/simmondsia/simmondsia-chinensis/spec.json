@@ -32,8 +32,8 @@
       "internode": 0.05,
       "branch_angle": 40,
       "bud_years": 8,
-      "leaf_size": 0.06,
-      "spur_leaf": 0.055,
+      "leaf_size": 0.036,
+      "spur_leaf": 0.033,
       "spur_pairs": 2,
       "leaf_angle": 35,
       "leaf_years": 3,
@@ -97,6 +97,16 @@
     "self_pruning": true
   },
   "evidence": {
+    "generator.params.spur_leaf": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A short shoot's leaf card, a little smaller than a long shoot's (leaf_size), within Abrams vol. 3 (1951): leaves 2 to 4 cm long."
+    },
+    "generator.params.leaf_size": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaf card length, petiole included, sized so every leaf drawn stays within Abrams vol. 3 (1951): leaves 2 to 4 cm long (0.06 drew them 5.4 to 5.9 cm)."
+    },
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Simmondsia chinensis (gwddagg_v2.2_species.csv, read): specific gravity 0.63 (wsg_est, the database's hierarchical-model species mean, from 2 records in 2 sources); trunks 0.63, branches 0.59. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",

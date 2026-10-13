@@ -251,4 +251,10 @@ pub mod venation;
 /// enough to rest on the ground, or rises onto it when no turn clears it;
 /// and a stem's foot ring meets the ground in a flat cut where a leaning
 /// or flared trunk's side would dip into it.
-pub const GENERATOR_REVISION: u32 = 41;
+/// 46: nine broadleaf shrubs and trees are drawn within their floras'
+/// sizes: desert willow, burrobush, beaked hazelnut, cascara and creosote
+/// bush no taller than their greatest height (`path_half` refitted), and
+/// desert willow, burrobush, vine maple, osoberry, thimbleberry and jojoba
+/// with leaves no larger than their floras give, desert willow's narrowly
+/// linear. (42 to 45 are #72, #77, #79 and #86.)
+pub const GENERATOR_REVISION: u32 = 46;
