@@ -132,6 +132,21 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a stem grows all its nodes' leaves in its one year (2 on foamflower's, 36 on Columbia lily's, 45 on fireweed's), against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
+        "program:pinidae",
+        "cone_maturation_years",
+        "a cone's look ripens it in its first season, so a pine's and a Rocky Mountain juniper's cones, which take two, are drawn ripe a year early",
+    ),
+    (
+        "program:pinidae",
+        "cone_retention_years",
+        "a cone falls at `age >= cone_years`, a step late, so it stays a year past the seasons it ripens and hangs (grand fir's one season reads a year held once ripe); a pine's, drawn ripe in its first season, read a year more again",
+    ),
+    (
+        "program:pinidae",
+        "leaf_life_years",
+        "foliage falls at `age >= n`, a step late, so it lives a year past its keep (shore pine's needle_years 2.5 reads 4, Pacific yew's 4.5 up to 7), and every conifer's lower crown keeps it needle_low times as long as its top (1.56, a redcedar's), so western white pine's reads up to 5 and ponderosa's up to 6, against 2 to 4",
+    ),
+    (
         "program:rosette",
         "shoot_leaves",
         "a rosette's crown adds its year's leaves where they stand (29 to 38 on common sotol's), against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
@@ -265,6 +280,30 @@ fn stated_characters_hold_on_grown_plants() {
         assert!(
             still,
             "{who} {character} now holds ({why}): take it off the known list"
+        );
+    }
+}
+
+/// A plant is kept [`checks::LIFE_YEARS`] before the end of growth to see
+/// its leaves and cones fall, so no species may state a leaf or a cone
+/// that lives longer.
+#[test]
+fn leaves_and_cones_fall_within_the_years_kept() {
+    let library = Library::builtin();
+    for entry in library.species() {
+        let traits = library.traits_of(&entry.id).unwrap();
+        let life = |key: &str| {
+            traits
+                .get(key)
+                .and_then(checks::Stated::of)
+                .map_or(0.0, |stated| stated.extremes().1)
+        };
+        let longest = life("leaf_life_years")
+            .max(life("cone_maturation_years") + life("cone_retention_years"));
+        assert!(
+            longest < checks::LIFE_YEARS,
+            "{} states a leaf or a cone that lives up to {longest} years",
+            entry.id
         );
     }
 }

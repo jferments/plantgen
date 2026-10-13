@@ -101,6 +101,18 @@
 //! upper extreme, and judged by the plants' median as a typical size is.
 //! A flower or fruit on a shoot whose recorded adultness is below 0.5, a
 //! juvenile shoot, is an error whatever the species states.
+//!
+//! **Leaf and cone lives (checks, 2026-10-13).** A plant is also kept
+//! [`LIFE_YEARS`] before the end of growth (halfway on a shorter life),
+//! where each organ carries the age it was shed at. A leaf shed by the
+//! end lived from its birth to then (`leaf_life_years`, each leaf judged
+//! as an organ's size is; a leaf drawn in pieces, a fern's frond, as its
+//! structure); one that fell with its limb, or still stands at the end,
+//! is not counted. A plant is evergreen (`leaf_habit`) where a leaf stands
+//! on it into its second year, else deciduous. A cone takes to ripen
+//! (`cone_maturation_years`) the seasons the youngest cone drawn ripe has
+//! stood, its first counted, one value for the plant, and stays once ripe
+//! (`cone_retention_years`) its life less those.
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Write as _;
@@ -129,7 +141,7 @@ pub enum Judged {
 }
 
 /// The size characters measured on grown plants, and how each is judged.
-pub const SIZES: [(&str, Judged); 32] = [
+pub const SIZES: [(&str, Judged); 35] = [
     ("height_typical_m", Judged::Typical),
     ("height_max_m", Judged::Greatest),
     ("crown_width_max_m", Judged::Greatest),
@@ -160,6 +172,9 @@ pub const SIZES: [(&str, Judged); 32] = [
     ("cone_length_m", Judged::Organs),
     ("divergence_deg", Judged::Typical),
     ("juvenile_period_years", Judged::Typical),
+    ("leaf_life_years", Judged::Organs),
+    ("cone_maturation_years", Judged::Typical),
+    ("cone_retention_years", Judged::Organs),
     ("crown_outline_fit", Judged::Typical),
     ("crown_see_through", Judged::Typical),
 ];
@@ -196,7 +211,7 @@ pub const COUNTS: [&str; 24] = [
 
 /// The kinds a grown plant's drawing must agree with (spec rework M8A):
 /// each an enum or bool character, compared with what the plant draws.
-pub const KINDS: [&str; 31] = [
+pub const KINDS: [&str; 32] = [
     "inflorescence",
     "inflorescence_unit",
     "inflorescence_posture",
@@ -228,6 +243,7 @@ pub const KINDS: [&str; 31] = [
     "cone_posture",
     "glochids",
     "foliage_ranks",
+    "leaf_habit",
 ];
 
 /// The share of a range's span beyond which a value is an error when the
@@ -579,6 +595,13 @@ impl Tally {
             .or_insert(f64::from(count));
     }
 
+    /// A span of years, which may be none (a cone shed as it ripens).
+    fn years(&mut self, character: &'static str, organ: u64, part: u32, years: f64) {
+        if years.is_finite() && years >= 0.0 {
+            self.seen.entry((character, organ, part)).or_insert(years);
+        }
+    }
+
     fn kind(&mut self, character: &'static str, state: &str) {
         self.kinds
             .entry(character)
@@ -637,6 +660,9 @@ pub struct Grown<'a> {
     pub terms: Vec<&'static str>,
     /// Each organ type, whether it is a later phase ([`later_types`]).
     pub later: Vec<bool>,
+    /// The plant [`LIFE_YEARS`] earlier, whose organs carry the age they
+    /// were shed at, if by the end of growth.
+    pub before: Option<&'a PlantGraph>,
 }
 
 impl Grown<'_> {
@@ -717,6 +743,8 @@ pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
     let mut needle_lengths = Vec::new();
     // Each ripe cone's pitch down from its shoot.
     let mut cone_pitches = BTreeMap::new();
+    // The fewest seasons any cone is drawn ripe in, its first counted.
+    let mut ripening: Option<f64> = None;
     for day in days(&seasons) {
         let (looks, sizes) = crate::drawing::looks_of(grown.spec, grown.growth, day);
         let drawn = crate::drawing::drawn(graph, &sizes);
@@ -734,11 +762,12 @@ pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
                 needle_counts(needles, organ.id, &mut tally);
                 needle_lengths.push(organ.size * needles.needle);
             }
-            if grown.term(organ) == "cone"
-                && in_stage(phase, Stage::Ripe)
-                && let Some(pitch) = pitch_from_shoot(organ, &drawn)
-            {
-                cone_pitches.entry(organ.id).or_insert(pitch);
+            if grown.term(organ) == "cone" && in_stage(phase, Stage::Ripe) {
+                let seasons = libm::round(graph.age - organ.born) + 1.0;
+                ripening = Some(ripening.map_or(seasons, |least| least.min(seasons)));
+                if let Some(pitch) = pitch_from_shoot(organ, &drawn) {
+                    cone_pitches.entry(organ.id).or_insert(pitch);
+                }
             }
         }
     }
@@ -773,7 +802,145 @@ pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
             needle_lengths[needle_lengths.len() / 2],
         );
     }
+    // The seasons a cone takes to ripen: the youngest drawn ripe, one
+    // value for the plant.
+    if let Some(seasons) = ripening {
+        tally.add("cone_maturation_years", 0, 0, seasons);
+    }
+    lives(grown, ripening, &mut tally);
+    leaf_habit(grown, &mut tally);
     tally.measures()
+}
+
+/// The structure termed `leaf` that `structure` is or is within (a fern's
+/// frond, round a pinna), if any.
+fn leaf_of(grown: &Grown<'_>, graph: &PlantGraph, structure: u32) -> Option<u32> {
+    let mut next = Some(structure);
+    // Each structure stands within one listed before it, so the walk ends.
+    while let Some(index) = next {
+        let at = graph.structures.get(index as usize)?;
+        let term = grown
+            .growth
+            .structure_types
+            .get(usize::from(at.structure))?;
+        if term.term == "leaf" {
+            return Some(index);
+        }
+        next = at.within;
+    }
+    None
+}
+
+/// How long the plant's leaves and cones live, read on the plant
+/// [`LIFE_YEARS`] before the end of growth (see the module): each one
+/// shed by the end lived from its birth to then, a leaf drawn in pieces
+/// (a fern's frond) as its structure did. One that fell with the wood
+/// bearing it (a shed limb) did not die of age and is not counted, nor is
+/// one still on the plant at the end. A cone's years on the tree once
+/// ripe are its life less the seasons it took to ripen (`ripening`).
+fn lives(grown: &Grown<'_>, ripening: Option<f64>, tally: &mut Tally) {
+    let Some(before) = grown.before else {
+        return;
+    };
+    let segments = &before.segments;
+    // Whether something shed at `shed` fell with the segment bearing it.
+    let with_wood = |segment: Option<usize>, shed: f64| {
+        segment
+            .and_then(|index| segments.get(index))
+            .and_then(|wood| wood.shed)
+            .is_some_and(|wood| (wood - shed).abs() < 1e-9)
+    };
+    // Each frond's pieces' last shed (none while one stays) and a piece's
+    // segment.
+    let mut fronds: BTreeMap<u32, (Option<f64>, Option<usize>)> = BTreeMap::new();
+    for organ in &before.organs {
+        if grown.later(organ) {
+            continue;
+        }
+        let segment = organ.segment.map(|s| s as usize);
+        match organ.within.and_then(|s| leaf_of(grown, before, s)) {
+            Some(frond) => {
+                let (shed, piece) = fronds.entry(frond).or_insert((organ.shed, segment));
+                *shed = shed.zip(organ.shed).map(|(a, b)| a.max(b));
+                if piece.is_none() {
+                    *piece = segment;
+                }
+            }
+            None if organ.within.is_none() => {
+                let Some(shed) = organ.shed.filter(|&shed| !with_wood(segment, shed)) else {
+                    continue;
+                };
+                match grown.term(organ) {
+                    "leaf" => tally.years("leaf_life_years", organ.id, 0, shed - organ.born),
+                    "cone" => {
+                        if let Some(ripening) = ripening {
+                            let held = libm::round(shed - organ.born - ripening).max(0.0);
+                            tally.years("cone_retention_years", organ.id, 0, held);
+                        }
+                    }
+                    _ => {}
+                }
+            }
+            None => {}
+        }
+    }
+    for (frond, (shed, piece)) in fronds {
+        let Some(shed) = shed else {
+            continue;
+        };
+        // The segment the frond stands on, below its own.
+        let mut segment = piece;
+        while let Some(index) = segment
+            && let Some(at) = segments.get(index)
+            && at.within.and_then(|s| leaf_of(grown, before, s)) == Some(frond)
+        {
+            segment = at.parent.map(|p| p as usize);
+        }
+        if !with_wood(segment, shed) {
+            let at = &before.structures[frond as usize];
+            tally.years("leaf_life_years", at.id, 1, shed - at.born);
+        }
+    }
+}
+
+/// Whether the plant keeps leaves through the winter (`leaf_habit`): an
+/// evergreen's stand on it into their second year or later, a deciduous
+/// plant's live out one season.
+fn leaf_habit(grown: &Grown<'_>, tally: &mut Tally) {
+    let graph = grown.graph;
+    let lone = graph
+        .organs
+        .iter()
+        .filter(|organ| {
+            organ.within.is_none() && !grown.later(organ) && grown.term(organ) == "leaf"
+        })
+        .map(|organ| organ.born);
+    let fronds = graph
+        .structures
+        .iter()
+        .filter(|at| {
+            grown
+                .growth
+                .structure_types
+                .get(usize::from(at.structure))
+                .is_some_and(|kind| kind.term == "leaf")
+        })
+        .map(|at| at.born);
+    let mut oldest: Option<f64> = None;
+    for born in lone.chain(fronds) {
+        let age = graph.age - born;
+        oldest = Some(oldest.map_or(age, |most| most.max(age)));
+    }
+    if let Some(oldest) = oldest {
+        tally.kind(
+            "leaf_habit",
+            if oldest >= 1.0 - 1e-9 {
+                "evergreen"
+            } else {
+                "deciduous"
+            },
+        );
+    }
 }
 
 /// Degrees `organ` is pitched down from the shoot that bears it, in the
@@ -791,6 +958,11 @@ fn pitch_from_shoot(organ: &GraphOrgan, graph: &PlantGraph) -> Option<f64> {
     let heading = organ.heading;
     Some(libm::atan2(heading.dot(down), heading.dot(shoot)).to_degrees())
 }
+
+/// Years before the end of growth at which a plant is kept to see how
+/// long its leaves and cones live: past the longest a built-in species
+/// states (a redcedar's lower foliage, 10.6 years).
+pub const LIFE_YEARS: f64 = 20.0;
 
 /// Areoles sampled on each body axis to count and measure their spines.
 const AREOLES: u64 = 24;
@@ -2257,13 +2429,21 @@ pub fn grow_and_measure(
         until: first_flower_by.unwrap_or(-1.0),
         born: None,
     };
+    // The plant is also kept LIFE_YEARS before the end, or halfway on a
+    // shorter life, to see how long its leaves and cones live.
+    let before = libm::round((years - LIFE_YEARS).max(years / 2.0));
+    let keyframes = if before > 0.0 && before < years {
+        vec![before, years]
+    } else {
+        vec![years]
+    };
     let growth = crate::drawing::grow_variant_watched(
         spec,
         library,
         None,
         environment,
         seed,
-        vec![years],
+        keyframes,
         years,
         Some(&mut first),
     )?;
@@ -2274,6 +2454,7 @@ pub fn grow_and_measure(
         graph,
         terms: organs::of_program(&program, &spec.appearance),
         later: later_types(&program),
+        before: (growth.keyframes.len() > 1).then(|| &growth.keyframes[0]),
     };
     let (mut measures, kinds) = measure(&grown);
     if let Some(born) = first.born {
@@ -2561,7 +2742,12 @@ pub fn value_text(character: &str, value: f64) -> String {
     } else if character.ends_with("_deg") {
         format!("{value:.0}°")
     } else if let Some(years) = character.strip_suffix("_years") {
-        format!("{} years", value_text(years, value))
+        let unit = if (value - 1.0).abs() < 1e-9 {
+            "year"
+        } else {
+            "years"
+        };
+        format!("{} {unit}", value_text(years, value))
     } else if value.fract() == 0.0 {
         format!("{value:.0}")
     } else {
@@ -2574,7 +2760,12 @@ pub fn value_text(character: &str, value: f64) -> String {
 pub fn range_text(character: &str, stated: &Stated) -> String {
     // Years are named once, after the range.
     if let Some(bare) = character.strip_suffix("_years") {
-        return format!("{} years", range_text(bare, stated));
+        let unit = if stated.single() && (stated.min - 1.0).abs() < 1e-9 {
+            "year"
+        } else {
+            "years"
+        };
+        return format!("{} {unit}", range_text(bare, stated));
     }
     let length_text = |value: f64| value_text(character, value);
     let mut text = String::new();
@@ -3099,6 +3290,36 @@ mod tests {
                 .collect();
             assert_eq!(states, [arrangement], "{id}");
         }
+    }
+
+    #[test]
+    fn leaves_and_cones_live_from_their_birth_to_their_fall() {
+        let library = Library::builtin();
+        let grow = |id: &str| {
+            let spec = library.spec(id).unwrap();
+            let environment = crate::drawing::typical_environment(&spec, library);
+            grow_and_measure(&spec, library, environment, spec.variants.seeds[0], None).unwrap()
+        };
+        // A redcedar's sprays live in whole years, longer low in the crown;
+        // its cones are drawn ripe in their first season.
+        let cedar = grow("thuja-plicata");
+        let lives = &cedar.measures["leaf_life_years"];
+        assert!(lives.iter().all(|&life| life >= 1.0 && life.fract() == 0.0));
+        let (least, most) = lives.iter().fold((f64::MAX, 0.0_f64), |(a, b), &life| {
+            (a.min(life), b.max(life))
+        });
+        assert!(most > least, "{least} to {most}");
+        assert_eq!(cedar.measures["cone_maturation_years"], [1.0]);
+        assert!(cedar.measures.contains_key("cone_retention_years"));
+        let habit: Vec<&str> = cedar.kinds["leaf_habit"]
+            .iter()
+            .map(String::as_str)
+            .collect();
+        assert_eq!(habit, ["evergreen"]);
+        // A fern's fronds, drawn in pieces, each live as a whole.
+        let fern = grow("blechnum-spicant");
+        let fronds = &fern.measures["leaf_life_years"];
+        assert!(!fronds.is_empty() && fronds.iter().all(|&life| (life - fronds[0]).abs() < 1e-9));
     }
 
     #[test]
