@@ -47,6 +47,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its leaves are the brown sheaths at its culms' foot, drawn as cards tapering from the base, 0.15 as broad as long, so they read deltate or lanceolate against the linear blades Cyperaceae state; papyrus bears no blades",
     ),
     (
+        "deschampsia-cespitosa",
+        "awn_form",
+        "it states straight or geniculate awns (FNA), which the Poales' rule draws between them, bent 30°, nearest a contorted awn's 40°",
+    ),
+    (
         "dicentra-formosa",
         "flower_merosity",
         "its four petals stand in two pairs, outer and inner, and a corolla draws one whorl, so its spec draws four there",
@@ -67,9 +72,19 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its fruit look sets no fruit kind, so its capsules are drawn as the ellipsoid of a berry or drupe",
     ),
     (
+        "echinocereus-engelmannii",
+        "central_spine_form",
+        "its main central is drawn flattened and straight (its lower central, by eye from photographs), against the curved and twisted centrals Britton and Rose describe; a twisted spine is not drawn",
+    ),
+    (
         "encelia-farinosa",
         "shoot_leaves",
         "its most vigorous shoots grow one to three of the four internodes a year they may, two nodes each, so they bear 2 to 6 leaves against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
+    ),
+    (
+        "ferocactus-acanthodes-subsp-acanthodes",
+        "stem_form",
+        "Ferocactus states its stems globose, but Britton and Rose's 'globular to cylindric' allows a column, and its longest stem grows at least three times as long as wide",
     ),
     (
         "larrea-tridentata",
