@@ -57,22 +57,25 @@
 //! **Counts and kinds (M8A).** Counts are counted on each organ that
 //! holds them, from what its layout draws ([`COUNTS`]: a head's rays,
 //! florets, phyllaries and rows, a spikelet's florets and glumes, a
-//! cluster's units and branches, a divided leaf's leaflets and pinnae,
-//! the leaves of a whorl), and judged as an organ's size is. Kinds
-//! ([`KINDS`]) pass when every state the plants draw is one the species
-//! states, plainly or qualified: a cluster's kind while its units are
-//! flowers, a head's kind, awns, a spikelet's ranks, a divided leaf's
-//! pattern and its end. How the leaves stand is measured on the graph:
-//! the leaves sharing a node, and the turn from each node to the next up
-//! its axis, the leaf below carried up the bending axis by the least
-//! rotation, the plant's median turn named by the nearest pattern
-//! (distichous 180°, spiral 137.5°, tristichous 120°, decussate half the
-//! gap between a node's leaves). A rosette's or tiller's leaves, which
-//! stand on no segment, are measured round the vertical where it stands
-//! about upright, one to a node in the order they were placed. A flower
-//! counts its stamens, staminodes and carpels and a spiral's tepals, and
-//! draws its perianth's kind, its ovary's place and its corolla's
-//! zygomorphy, as its layout has them (spec rework P5).
+//! cluster's units and branches, a divided leaf's leaflets and pinnae
+//! and the times it divides, the leaves of a whorl), and judged as an
+//! organ's size is. Kinds ([`KINDS`]) pass when every state the plants
+//! draw is one the species states, plainly or qualified: a cluster's kind
+//! while its units are flowers, a head's kind, awns, a spikelet's ranks,
+//! a divided leaf's pattern and its end. How the leaves stand is measured
+//! on the graph: the leaves sharing a node, and the turn from each node
+//! to the next up its axis, the leaf below carried up the bending axis by
+//! the least rotation, the plant's median turn named by the nearest
+//! pattern (distichous 180°, spiral 137.5°, tristichous 120°, decussate
+//! half the gap between a node's leaves). A rosette's or tiller's leaves,
+//! which stand on no segment, are measured round the vertical where it
+//! stands about upright, one to a node in the order they were placed. A
+//! year's growth of an axis bears the leaves of its own nodes, the most on
+//! any one counted for the plant (`shoot_leaves`). A flower counts its
+//! petals or tepals in a whorl, its stamens, staminodes and carpels and a
+//! spiral's tepals, measures its spurs, and draws its perianth's kind,
+//! its ovary's place and its corolla's zygomorphy, as its layout has them
+//! (spec rework P5).
 //!
 //! **Crown form (crown form research, 2026-10-12).** A crown's outline
 //! seen from the side is fitted to an ellipse (`crown_outline_fit`) and
@@ -116,7 +119,7 @@ pub enum Judged {
 }
 
 /// The size characters measured on grown plants, and how each is judged.
-pub const SIZES: [(&str, Judged); 30] = [
+pub const SIZES: [(&str, Judged); 32] = [
     ("height_typical_m", Judged::Typical),
     ("height_max_m", Judged::Greatest),
     ("crown_width_max_m", Judged::Greatest),
@@ -126,12 +129,14 @@ pub const SIZES: [(&str, Judged); 30] = [
     ("joint_width_m", Judged::Typical),
     ("radial_spine_length_m", Judged::Typical),
     ("central_spine_length_m", Judged::Typical),
+    ("areole_spacing_m", Judged::Typical),
     ("leaf_length_m", Judged::Organs),
     ("leaf_width_m", Judged::Organs),
     ("petiole_length_m", Judged::Organs),
     ("inflorescence_length_m", Judged::Organs),
     ("bract_length_m", Judged::Organs),
     ("flower_size_m", Judged::Organs),
+    ("spur_length_m", Judged::Organs),
     ("involucre_diameter_m", Judged::Organs),
     ("involucre_height_m", Judged::Organs),
     ("ray_length_m", Judged::Organs),
@@ -152,7 +157,7 @@ pub const SIZES: [(&str, Judged); 30] = [
 /// The count characters counted on grown plants (spec rework M8A), each
 /// on every organ that holds what it counts and judged as an organ's size
 /// is.
-pub const COUNTS: [&str; 21] = [
+pub const COUNTS: [&str; 24] = [
     "ray_florets",
     "disc_florets",
     "ligulate_florets",
@@ -165,7 +170,10 @@ pub const COUNTS: [&str; 21] = [
     "inflorescence_bracts",
     "leaflets",
     "pinnae",
+    "division_order",
     "leaves_per_whorl",
+    "shoot_leaves",
+    "flower_merosity",
     "stamens",
     "staminodes",
     "carpels",
@@ -721,12 +729,13 @@ const AREOLES: u64 = 24;
 /// is widest (none on one without ribs); each column's or trunk's
 /// greatest diameter; each terminal joint's length and width (a pad's),
 /// as floras measure them, judged by the usual joint, as the program
-/// draws a branch's deeper joints shorter; and on sampled areoles of
-/// each, the spines of each role as they are drawn full-grown, counted
-/// (none where no set has the role, a main central among the centrals)
-/// and each one's length, judged by the usual spine: the rules draw it a
-/// fifth below the longest a flora gives; and whether they bear
-/// glochids.
+/// draws a branch's deeper joints shorter; its areoles' spacing, along a
+/// rib's crest or between neighbours on a joint, as its look sets it; and
+/// on sampled areoles of each, the spines of each role as they are drawn
+/// full-grown, counted (none where no set has the role, a main central
+/// among the centrals) and each one's length, judged by the usual spine:
+/// the rules draw it a fifth below the longest a flora gives; and whether
+/// they bear glochids.
 fn bodies(grown: &Grown<'_>, tally: &mut Tally) {
     use crate::body::SpineRole;
     let looks = crate::drawing::bodies_of(grown.spec, grown.growth);
@@ -747,6 +756,7 @@ fn bodies(grown: &Grown<'_>, tally: &mut Tally) {
     for axis in crate::body::measure(grown.graph, &looks) {
         let look = &looks[axis.body];
         tally.count("ribs", axis.id, 0, axis.ribs);
+        tally.add("areole_spacing_m", axis.id, 0, look.areoles.spacing);
         if !jointed || (axis.root && trunk) {
             tally.add("stem_diameter_max_m", axis.id, 0, 2.0 * axis.widest);
         } else if axis.tip {
@@ -874,7 +884,10 @@ fn carried(v: Vec3, from: Vec3, to: Vec3) -> Vec3 {
 /// at the ground, a rosette's or a tiller's, stand one to a node, in the
 /// order they were placed, each year's apart. On a stem, a node is the
 /// leaves born with the internode below it: a short shoot's leaves,
-/// crowded later where its bud stands, are no node of the stem.
+/// crowded later where its bud stands, are no node of the stem. A stem's
+/// leaves of its own on one year's growth of one axis are what a long
+/// shoot bears in a year (`shoot_leaves`), the most on any one counted,
+/// one value for the plant: its most vigorous shoot's.
 #[allow(
     clippy::cast_possible_truncation,
     clippy::cast_precision_loss,
@@ -972,6 +985,21 @@ fn arrangement(grown: &Grown<'_>, looks: &[Look], tally: &mut Tally) {
         .any(|(segment, _, _, organ, _)| segment.is_some() && own(*segment, organ))
     {
         holders.retain(|(segment, _, _, organ, _)| own(*segment, organ));
+    }
+    // A step is a year, so an axis's segments born in one step are a
+    // year's growth of it: the most leaves of their own any one bears are
+    // what the plant's most vigorous long shoot bears in a year.
+    let mut units: BTreeMap<(usize, i64), u32> = BTreeMap::new();
+    for (segment, _, _, organ, _) in &holders {
+        if let Some(index) = *segment
+            && own(*segment, organ)
+        {
+            let year = libm::round(segments[index].born * 1e6) as i64;
+            *units.entry((axis[index], year)).or_default() += 1;
+        }
+    }
+    if let Some(most) = units.values().max() {
+        tally.count("shoot_leaves", 0, 0, *most);
     }
     // Leaves sharing a segment and a place are one node.
     let mut nodes: BTreeMap<(Axis, [i64; 3], u64), Node> = BTreeMap::new();
@@ -1227,13 +1255,28 @@ fn frond_sizes(
     tally.add("petiole_length_m", id, 0, stipe);
     // Leaflets drawn as frond cards are the frond's pinnae, each divided
     // again; drawn whole, they are its leaflets.
-    let divided = leaflets
+    let again = leaflets
         .first()
         .and_then(|organ| leaf_look(organ, looks))
-        .is_some_and(|(look, _)| matches!(look.shape, Shape::Frond(_) | Shape::Compound(_)));
+        .map_or(0, |(look, _)| division_order(&look.shape));
     let count = u32::try_from(leaflets.len()).unwrap_or(u32::MAX);
-    tally.count(if divided { "pinnae" } else { "leaflets" }, id, 0, count);
+    tally.count(if again > 0 { "pinnae" } else { "leaflets" }, id, 0, count);
+    tally.count("division_order", id, 0, 1 + again);
     tally.kind("division_pattern", "pinnate");
+}
+
+/// How many times a leaf drawn as `shape` divides (`division_order`): a
+/// divided leaf once, or twice where it bears pinnae; lobes once; a frond
+/// card once, and again where its pinnae are cut at least halfway to
+/// their midribs (its `divided` cuts them three quarters of the way at
+/// 1); a leaf drawn whole 0.
+fn division_order(shape: &Shape) -> u32 {
+    match shape {
+        Shape::Compound(compound) => 1 + u32::from(compound.pinnules.unwrap_or(0) > 0),
+        Shape::Frond(frond) => 1 + u32::from(frond.divided >= 0.5),
+        Shape::Lobed(_) | Shape::Palmate(_) => 1,
+        _ => 0,
+    }
 }
 
 /// The look a leaf is drawn with in its light, and its drawn size.
@@ -1244,8 +1287,13 @@ fn leaf_look<'a>(organ: &GraphOrgan, looks: &'a [Look]) -> Option<(&'a Look, f64
     Some((looks.get(index).unwrap_or(look), organ.size * share))
 }
 
-/// A leaf card's blade, its width and its petiole, for a card `size` long.
+/// A leaf card's blade, its width and its petiole, for a card `size` long,
+/// and how many times it divides.
 fn leaf_sizes(shape: &Shape, size: f64, id: u64, tally: &mut Tally) {
+    let order = division_order(shape);
+    if order > 0 {
+        tally.count("division_order", id, 0, order);
+    }
     let (blade, width, petiole) = match shape {
         Shape::Simple(simple) => {
             let blade = size * (1.0 - simple.petiole);
@@ -1385,7 +1433,7 @@ fn reproductive(
                 None => in_stage(phase, Stage::Open).then_some(&look.shape),
             };
             if let Some(Shape::Flower(flower)) = shown {
-                flower_parts(flower, (organ.id, part), tally);
+                flower_parts(flower, organ.size * unit.length, (organ.id, part), tally);
             }
             unit_sizes(
                 &look.shape,
@@ -1403,7 +1451,7 @@ fn reproductive(
         && in_stage(phase, Stage::Open)
         && !grown.clustered(organ)
     {
-        flower_parts(flower, (organ.id, 0), tally);
+        flower_parts(flower, organ.size, (organ.id, 0), tally);
     }
 }
 
@@ -1483,17 +1531,48 @@ fn unit_sizes(
     }
 }
 
-/// A flower's parts, as its layout draws them (spec rework P5): its
-/// stamens, staminodes and carpels, a spiral's tepals, and the kind of
-/// its perianth, its ovary's place and how its petals differ by place.
-fn flower_parts(flower: &crate::looks::Flower, (organ, part): (u64, u32), tally: &mut Tally) {
+/// A flower `width` across, its parts as its layout draws them (spec
+/// rework P5): the petals or tepals in a whorl (a corolla's one whorl of
+/// petals, half of two whorls of tepals; a spiral has none), its
+/// stamens, staminodes and carpels, a spiral's tepals, its spurs' length,
+/// and the kind of its perianth, its ovary's place and how its petals
+/// differ by place.
+fn flower_parts(
+    flower: &crate::looks::Flower,
+    width: f64,
+    (organ, part): (u64, u32),
+    tally: &mut Tally,
+) {
     use crate::looks::{Corolla, Ovary, Perianth};
     tally.count("stamens", organ, part, flower.stamens);
     tally.count("staminodes", organ, part, flower.staminodes);
     tally.count("carpels", organ, part, flower.carpels);
+    let floral = crate::flowers::layout(
+        flower,
+        &crate::blooms::FlowerForm::default(),
+        0.5 * width,
+        0.0,
+    );
+    let spur = floral
+        .spurs
+        .iter()
+        .map(|rod| rod.length)
+        .fold(0.0, f64::max);
+    tally.add("spur_length_m", organ, part, spur);
     let perianth = match flower.perianth {
-        Perianth::Corolla => "sepals_and_petals",
-        Perianth::Tepals => "tepals",
+        Perianth::Corolla => {
+            tally.count("flower_merosity", organ, part, flower.petals);
+            "sepals_and_petals"
+        }
+        Perianth::Tepals => {
+            tally.add(
+                "flower_merosity",
+                organ,
+                part,
+                f64::from(flower.petals) / 2.0,
+            );
+            "tepals"
+        }
         Perianth::Spiral => {
             tally.count("perianth_parts", organ, part, flower.petals);
             "spiral"
@@ -1930,14 +2009,14 @@ mod tests {
             ovary: Ovary::Inferior,
             ..Flower::default()
         };
-        flower_parts(&cactus, (1, 0), &mut tally);
+        flower_parts(&cactus, 0.1, (1, 0), &mut tally);
         let pea = Flower {
             corolla: Corolla::Papilionaceous,
             stamens: 10,
             carpels: 1,
             ..Flower::default()
         };
-        flower_parts(&pea, (2, 0), &mut tally);
+        flower_parts(&pea, 0.02, (2, 0), &mut tally);
         let (measures, kinds) = tally.measures();
         assert_eq!(measures["stamens"], [200.0, 10.0]);
         assert_eq!(measures["carpels"], [12.0, 1.0]);
@@ -1946,6 +2025,65 @@ mod tests {
         assert_eq!(states("perianth"), ["sepals_and_petals", "spiral"]);
         assert_eq!(states("ovary_position"), ["inferior", "superior"]);
         assert_eq!(states("zygomorphy"), ["other", "papilionaceous"]);
+    }
+
+    #[test]
+    fn a_whorl_holds_a_corollas_petals_or_half_the_tepals() {
+        use crate::looks::{Corolla, Flower, Perianth};
+        let mut tally = Tally::default();
+        let lily = Flower {
+            perianth: Perianth::Tepals,
+            petals: 6,
+            ..Flower::default()
+        };
+        flower_parts(&lily, 0.1, (1, 0), &mut tally);
+        // A columbine spurs every petal; a pea's keel draws no spur.
+        let columbine = Flower {
+            spur: 1.5,
+            ..Flower::default()
+        };
+        flower_parts(&columbine, 0.04, (2, 0), &mut tally);
+        let pea = Flower {
+            corolla: Corolla::Papilionaceous,
+            spur: 1.0,
+            ..Flower::default()
+        };
+        flower_parts(&pea, 0.02, (3, 0), &mut tally);
+        let water_lily = Flower {
+            perianth: Perianth::Spiral,
+            petals: 24,
+            ..Flower::default()
+        };
+        flower_parts(&water_lily, 0.1, (4, 0), &mut tally);
+        let (measures, _) = tally.measures();
+        assert_eq!(measures["flower_merosity"], [3.0, 5.0, 5.0]);
+        let [spur] = measures["spur_length_m"][..] else {
+            panic!("{:?}", measures["spur_length_m"]);
+        };
+        assert!((spur - 0.03).abs() < 1e-12, "{spur}");
+    }
+
+    #[test]
+    fn a_leaf_divides_once_or_again() {
+        use crate::looks::{Compound, Frond, Lobed};
+        let once = Compound::default();
+        let twice = Compound {
+            pinnules: Some(5),
+            ..Compound::default()
+        };
+        let bracken = Frond {
+            divided: 1.0,
+            ..Frond::default()
+        };
+        let orders = [
+            Shape::Compound(once),
+            Shape::Compound(twice),
+            Shape::Frond(Frond::default()),
+            Shape::Frond(bracken),
+            Shape::Lobed(Lobed::default()),
+        ]
+        .map(|shape| division_order(&shape));
+        assert_eq!(orders, [1, 2, 1, 2, 1]);
     }
 
     #[test]
