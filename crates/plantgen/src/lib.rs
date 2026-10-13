@@ -234,10 +234,19 @@ pub mod venation;
 /// 39: western redcedar keeps its foliage as long as its scale leaves
 /// were measured to live (about nine years), not the three years its
 /// branchlets were once said to last.
+/// 40: a broadleaf crown grows its own outline inside a loose region
+/// (crown form step B, broadleaf revision 11): free space fills 1.6 times
+/// the crown's radius and 1.3 times its height; a shoot's nodes shorten
+/// with the wood between it and the base (`path_half`, fitted per species
+/// to its height); a tip's light gathers with saturation, so shaded shoots
+/// keep growing; the stem steers upright, limbs toward their held angle,
+/// and the wood bends under its load, the stem and a fork's stems held up;
+/// a tip with no free space leafs out. Maples keep their lobed envelope
+/// (sapindaceae revision 6). (39 is redcedar's leaf life, #70.)
 /// 43: a fern's, a palm's, a tree fern's or a cycad's fronds and a cactus's
 /// joints that sag to the ground lie on it (`rest`, on the conditions'
 /// substrate or level soil) instead of passing into it, so the deer and
 /// sword ferns, Engelmann's prickly pear and saw palmetto stay above the
-/// ground (40 is the broadleaf crown's own outline, #67; 41 the conifers'
-/// lower crowns, #72; 42 the mesh seated on the ground, #73).
+/// ground (41 is the conifers' lower crowns, #72; 42 the mesh seated on
+/// the ground, #73).
 pub const GENERATOR_REVISION: u32 = 43;

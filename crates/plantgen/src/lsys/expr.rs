@@ -12,7 +12,7 @@ use crate::rng::{hash_words, normal, unit};
 /// Values the environment tools wrote for one module in the last step.
 pub type EnvValues = [f64; ENV_FIELDS];
 
-pub const ENV_FIELDS: usize = 30;
+pub const ENV_FIELDS: usize = 31;
 
 /// The environment fields a rule can read, grouped by the query that
 /// provides them.
@@ -70,6 +70,10 @@ pub enum EnvField {
     Lx,
     Ly,
     Lz,
+    /// `limb`: the part of `path` that is limb wood, metres: wood of `[ ]`
+    /// branches from an axis that goes on past them, so not the stems a
+    /// fork divides into (crown form B).
+    Limb,
 }
 
 impl EnvField {
@@ -104,6 +108,7 @@ impl EnvField {
         (Self::Lx, "lx"),
         (Self::Ly, "ly"),
         (Self::Lz, "lz"),
+        (Self::Limb, "limb"),
     ];
 
     #[must_use]
