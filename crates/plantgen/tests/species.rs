@@ -15,7 +15,7 @@ fn grow_variant(spec: &PlantSpec, variant: &Variant, years: f64, keyframes: Vec<
     let (program, params) = spec.program().unwrap();
     grow(
         &program,
-        &params,
+        &spec.seeded_params(&program, &params, variant.seed),
         &GrowthSettings {
             seed: variant.seed,
             dt: spec.growth.step,

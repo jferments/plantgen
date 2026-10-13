@@ -109,6 +109,7 @@ pub fn grow_variant_watched(
             .host_geometry_in(library)
             .map_err(|error| error.to_string())?,
     };
+    let params = spec.seeded_params(&program, &params, seed);
     grow_watched(&program, &params, &settings, watch)
         .map_err(|error| format!("{}: {error}", spec.id))
 }
