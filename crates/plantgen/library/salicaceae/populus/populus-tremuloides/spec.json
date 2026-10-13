@@ -30,9 +30,12 @@
       "wiggle": 4,
       "lean": 2,
       "extinction": 0.45,
-      "pipe_rings": 1.2e-05,
+      "pipe_rings": 2.16e-08,
       "leaf_area": 0.288,
-      "bloom_area": 0.639
+      "bloom_area": 0.639,
+      "path_half": 6.54,
+      "pipe_tip": 0.00256,
+      "pipe_organ": 0.00513
     }
   },
   "growth": {
@@ -91,6 +94,16 @@
     "juvenile_period_years": {"min": 2, "max": 3}
   },
   "evidence": {
+    "generator.params.path_half": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region."
+    },
+    "generator.params.pipe_tip": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (crown form step B): the twig's and the leaf's pipe radii are scaled together so the stem's diameter at breast height matches the oldest reference size; the fuller crowns of broadleaf revision 11 carry more leaf, so the yearly rings (pipe_rings) are fitted near zero and the pipe model sets the diameter."
+    },
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",

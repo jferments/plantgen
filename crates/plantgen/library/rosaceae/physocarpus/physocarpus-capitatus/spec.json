@@ -48,7 +48,8 @@
       "bloom_size": 0.05,
       "bloom_angle": 20,
       "leaf_area": 0.573,
-      "bloom_area": 0.715
+      "bloom_area": 0.715,
+      "path_half": 1.79
     }
   },
   "growth": {
@@ -149,6 +150,11 @@
   ],
   "tier": "procedural_proxy",
   "evidence": {
+    "generator.params.path_half": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
