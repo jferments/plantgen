@@ -109,6 +109,14 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_typical_m": {
+      "min": 0.4,
+      "max": 0.8
+    },
+    "leaf_length_m": {
+      "min": 0.07,
+      "max": 0.2
+    },
     "inflorescence": "spike",
     "inflorescence_posture": "erect",
     "units_per_inflorescence": {"min": 10, "max": 60},
@@ -116,6 +124,16 @@
     "spur_length_m": {"min": 0.008, "max": 0.02}
   },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Limnorchis dilatata: stems 40 cm to 80 cm tall."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Limnorchis dilatata: leaves 7 cm to 20 cm long."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

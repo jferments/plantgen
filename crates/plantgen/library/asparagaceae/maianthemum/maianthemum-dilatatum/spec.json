@@ -94,6 +94,19 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_typical_m": {
+      "min": 0.15,
+      "max": 0.35
+    },
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.1
+    },
+    "leaf_width_m": {
+      "min": 0.05,
+      "max": 0.08
+    },
+    "shoot_leaves": 2,
     "inflorescence": "raceme",
     "units_per_inflorescence": {"min": 15, "max": 40},
     "flower_merosity": 2,
@@ -101,6 +114,26 @@
     "carpels": 2
   },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Unifolium dilatatum: stems 15 cm to 35 cm tall."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Unifolium dilatatum: leaves 5 cm to 10 cm long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Unifolium dilatatum: leaves 5 cm to 8 cm wide."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Unifolium dilatatum: the flowering stems usually bear 2 leaves; the stem grows in one season."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

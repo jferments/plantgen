@@ -80,7 +80,18 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "culm_length_m": {
+      "min": 1.5,
+      "max": 3.0
+    }
+  },
   "evidence": {
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Typha latifolia: culms 1.5 m to 3 m tall."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

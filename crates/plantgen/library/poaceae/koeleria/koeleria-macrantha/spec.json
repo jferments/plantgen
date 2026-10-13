@@ -23,11 +23,9 @@
       "arch": 8,
       "pieces": 5,
       "flowering": 0.4,
-      "culm_height": 0.4,
       "culm_radius": 0.0008,
       "culm_leaves": 1,
       "culm_lean": 6,
-      "panicle_length": 0.08,
       "panicle_nod": 5,
       "blade_area": 0.036,
       "tip_area": 0.02,
@@ -95,6 +93,16 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "culm_length_m": {
+      "min": 0.3,
+      "max": 0.6,
+      "typical": 0.4
+    },
+    "inflorescence_length_m": {
+      "min": 0.04,
+      "max": 0.15,
+      "typical": 0.08
+    },
     "inflorescence": "panicle",
     "florets_per_spikelet": {"min": 2, "max": 2, "high": 3},
     "spikelet_length_m": {"min": 0.0025, "max": 0.0065},
@@ -103,6 +111,16 @@
     "lemma_length_m": {"min": 0.0025, "max": 0.0065}
   },
   "evidence": {
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935), as Koeleria cristata: culms 30 cm to 60 cm tall."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935), as Koeleria cristata: panicle 4 cm to 15 cm long."
+    },
     "appearance.organs.panicle": {
       "evidence": "Authored",
       "source": "plantgen-authors",

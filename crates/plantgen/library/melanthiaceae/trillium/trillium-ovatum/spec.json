@@ -21,7 +21,6 @@
       "stem_radius": 0.003,
       "wiggle": 2,
       "nodes": 1,
-      "leaves_per_node": 3,
       "bare": 0.82,
       "leaf_length": 0.14,
       "leaf_peak": 0.5,
@@ -96,6 +95,17 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 0.5
+    },
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.15
+    },
+    "shoot_leaves": 3,
+    "leaf_arrangement": "whorled",
+    "leaves_per_whorl": 3,
     "flower_merosity": 3,
     "perianth": "sepals_and_petals",
     "stamens": 6,
@@ -103,6 +113,31 @@
     "ovary_position": "superior"
   },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Trillium ovatum: stems 30 cm to 50 cm tall."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Trillium ovatum: leaves 5 cm to 15 cm long."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), genus Trillium: 3 leaves in a whorl at the top of the stem, which grows in one season."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams, Illustrated Flora of the Pacific States vol. 1 (1923), genus Trillium: unbranched herbs with three leaves whorled at the top of the stem, below the single flower (single long-stalked leaves sometimes rise from the rootstock)."
+    },
+    "traits.leaves_per_whorl": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), genus Trillium: three leaves in the whorl."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
