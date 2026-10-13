@@ -53,18 +53,18 @@
     },
     "traits.leaf_division": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1934",
-      "note": "Hutchinson (vol. 2, 1934), family 386 Iridaceae: leaves mostly narrowly linear, flattened sideways and sheathing (equitant); fruit a capsule opening by valves along its cells."
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 386 Iridaceae: leaves mostly narrowly linear, flattened sideways and sheathing (equitant); fruit a capsule opening by valves along its cells."
     },
     "traits.leaf_shape": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1934",
-      "note": "Hutchinson (vol. 2, 1934), family 386 Iridaceae: leaves mostly narrowly linear, flattened sideways and sheathing (equitant); fruit a capsule opening by valves along its cells."
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 386 Iridaceae: leaves mostly narrowly linear, flattened sideways and sheathing (equitant); fruit a capsule opening by valves along its cells."
     },
     "traits.fruit_type": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1934",
-      "note": "Hutchinson (vol. 2, 1934), family 386 Iridaceae: leaves mostly narrowly linear, flattened sideways and sheathing (equitant); fruit a capsule opening by valves along its cells."
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 386 Iridaceae: leaves mostly narrowly linear, flattened sideways and sheathing (equitant); fruit a capsule opening by valves along its cells."
     }
   }
 }

@@ -38,23 +38,23 @@
     },
     "traits.perianth": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1934",
-      "note": "Hutchinson (vol. 2, 1934), families 372 Liliaceae (its false hellebores, death camases and bear grass) and 374 Trilliaceae (Trillium and Paris), which APG joins as Melanthiaceae: perianth of six parts in two whorls, alike in most, the outer green and sepal-like and the inner petal-like in Trillium and Paris; stamens as many as the perianth's parts, usually 6; ovary superior, of 3 carpels; fruit a capsule, or a berry in Paris and many trilliums."
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), families 372 Liliaceae (its false hellebores, death camases and bear grass) and 374 Trilliaceae (Trillium and Paris), which APG joins as Melanthiaceae: perianth of six parts in two whorls, alike in most, the outer green and sepal-like and the inner petal-like in Trillium and Paris; stamens as many as the perianth's parts, usually 6; ovary superior, of 3 carpels; fruit a capsule, or a berry in Paris and many trilliums."
     },
     "traits.stamens": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1934",
-      "note": "Hutchinson (vol. 2, 1934), families 372 Liliaceae (its false hellebores, death camases and bear grass) and 374 Trilliaceae (Trillium and Paris), which APG joins as Melanthiaceae: perianth of six parts in two whorls, alike in most, the outer green and sepal-like and the inner petal-like in Trillium and Paris; stamens as many as the perianth's parts, usually 6; ovary superior, of 3 carpels; fruit a capsule, or a berry in Paris and many trilliums."
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), families 372 Liliaceae (its false hellebores, death camases and bear grass) and 374 Trilliaceae (Trillium and Paris), which APG joins as Melanthiaceae: perianth of six parts in two whorls, alike in most, the outer green and sepal-like and the inner petal-like in Trillium and Paris; stamens as many as the perianth's parts, usually 6; ovary superior, of 3 carpels; fruit a capsule, or a berry in Paris and many trilliums."
     },
     "traits.carpels": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1934",
-      "note": "Hutchinson (vol. 2, 1934), families 372 Liliaceae (its false hellebores, death camases and bear grass) and 374 Trilliaceae (Trillium and Paris), which APG joins as Melanthiaceae: perianth of six parts in two whorls, alike in most, the outer green and sepal-like and the inner petal-like in Trillium and Paris; stamens as many as the perianth's parts, usually 6; ovary superior, of 3 carpels; fruit a capsule, or a berry in Paris and many trilliums."
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), families 372 Liliaceae (its false hellebores, death camases and bear grass) and 374 Trilliaceae (Trillium and Paris), which APG joins as Melanthiaceae: perianth of six parts in two whorls, alike in most, the outer green and sepal-like and the inner petal-like in Trillium and Paris; stamens as many as the perianth's parts, usually 6; ovary superior, of 3 carpels; fruit a capsule, or a berry in Paris and many trilliums."
     },
     "traits.fruit_type": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1934",
-      "note": "Hutchinson (vol. 2, 1934), families 372 Liliaceae (its false hellebores, death camases and bear grass) and 374 Trilliaceae (Trillium and Paris), which APG joins as Melanthiaceae: perianth of six parts in two whorls, alike in most, the outer green and sepal-like and the inner petal-like in Trillium and Paris; stamens as many as the perianth's parts, usually 6; ovary superior, of 3 carpels; fruit a capsule, or a berry in Paris and many trilliums."
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), families 372 Liliaceae (its false hellebores, death camases and bear grass) and 374 Trilliaceae (Trillium and Paris), which APG joins as Melanthiaceae: perianth of six parts in two whorls, alike in most, the outer green and sepal-like and the inner petal-like in Trillium and Paris; stamens as many as the perianth's parts, usually 6; ovary superior, of 3 carpels; fruit a capsule, or a berry in Paris and many trilliums."
     }
   }
 }

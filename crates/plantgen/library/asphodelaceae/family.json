@@ -38,13 +38,13 @@
     },
     "traits.leaf_division": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1934",
-      "note": "Hutchinson (vol. 2, 1934), family 372 Liliaceae, whose asphodels, aloes and day-lilies APG puts in Asphodelaceae: leaves simple, in a basal tuft or rosette; fruit mostly a capsule opening along its cells, rarely a berry."
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 372 Liliaceae, whose asphodels, aloes and day-lilies APG puts in Asphodelaceae: leaves simple, in a basal tuft or rosette; fruit mostly a capsule opening along its cells, rarely a berry."
     },
     "traits.fruit_type": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1934",
-      "note": "Hutchinson (vol. 2, 1934), family 372 Liliaceae, whose asphodels, aloes and day-lilies APG puts in Asphodelaceae: leaves simple, in a basal tuft or rosette; fruit mostly a capsule opening along its cells, rarely a berry."
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 372 Liliaceae, whose asphodels, aloes and day-lilies APG puts in Asphodelaceae: leaves simple, in a basal tuft or rosette; fruit mostly a capsule opening along its cells, rarely a berry."
     }
   }
 }

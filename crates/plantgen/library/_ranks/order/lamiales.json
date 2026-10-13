@@ -20,8 +20,8 @@
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1926",
-      "note": "Hutchinson (vol. 1, 1926), families 231 Oleaceae, 239 Bignoniaceae, 243 Verbenaceae, 324 Scrophulariaceae, 325 Acanthaceae, 326 Gesneriaceae, 327 Orobanchaceae and 342 Labiatae, the bulk of APG's Lamiales: leaves mostly opposite (alternate in many figworts and broomrapes); stipules absent; flowers mostly zygomorphic, often two-lipped (the olive family's regular); the ovary superior, of two carpels."
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 231 Oleaceae, 239 Bignoniaceae, 243 Verbenaceae, 324 Scrophulariaceae, 325 Acanthaceae, 326 Gesneriaceae, 327 Orobanchaceae and 342 Labiatae, the bulk of APG's Lamiales: leaves mostly opposite (alternate in many figworts and broomrapes); stipules absent; flowers mostly zygomorphic, often two-lipped (the olive family's regular); the ovary superior, of two carpels."
     }
   }
 }

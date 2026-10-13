@@ -53,13 +53,13 @@
     },
     "traits.leaf_division": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1934",
-      "note": "Hutchinson (vol. 2, 1934), families 372 Liliaceae (its squills, hyacinths, asparagus and lily-of-the-valley kin) and 392 Agavaceae (agaves, yuccas, Dracaena), which with others make APG's Asparagaceae: leaves simple, often narrow and crowded at the stem's base; fruit a capsule or a berry."
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), families 372 Liliaceae (its squills, hyacinths, asparagus and lily-of-the-valley kin) and 392 Agavaceae (agaves, yuccas, Dracaena), which with others make APG's Asparagaceae: leaves simple, often narrow and crowded at the stem's base; fruit a capsule or a berry."
     },
     "traits.fruit_type": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1934",
-      "note": "Hutchinson (vol. 2, 1934), families 372 Liliaceae (its squills, hyacinths, asparagus and lily-of-the-valley kin) and 392 Agavaceae (agaves, yuccas, Dracaena), which with others make APG's Asparagaceae: leaves simple, often narrow and crowded at the stem's base; fruit a capsule or a berry."
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), families 372 Liliaceae (its squills, hyacinths, asparagus and lily-of-the-valley kin) and 392 Agavaceae (agaves, yuccas, Dracaena), which with others make APG's Asparagaceae: leaves simple, often narrow and crowded at the stem's base; fruit a capsule or a berry."
     }
   }
 }

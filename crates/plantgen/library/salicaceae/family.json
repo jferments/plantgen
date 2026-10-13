@@ -34,8 +34,8 @@
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1926",
-      "note": "Hutchinson (vol. 1, 1926), family 57 Salicaceae (the willows and poplars): trees or shrubs; leaves alternate, simple; stipules small or leafy; flowers on separate trees, in catkins, with no perianth; ovary superior; fruit a capsule of many hairy seeds. APG's Salicaceae also holds most of the old Flacourtiaceae, trees and shrubs with alternate simple leaves and flowers with a perianth, often also on separate plants; their catkins, missing perianths and capsules belong to the willows' and poplars' genus files."
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 57 Salicaceae (the willows and poplars): trees or shrubs; leaves alternate, simple; stipules small or leafy; flowers on separate trees, in catkins, with no perianth; ovary superior; fruit a capsule of many hairy seeds. APG's Salicaceae also holds most of the old Flacourtiaceae, trees and shrubs with alternate simple leaves and flowers with a perianth, often also on separate plants; their catkins, missing perianths and capsules belong to the willows' and poplars' genus files."
     }
   }
 }

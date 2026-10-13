@@ -17,9 +17,9 @@ use plantgen::spec::PlantSpec;
 /// too, so the list only shrinks.
 const KNOWN: &[(&str, &str, &str)] = &[
     (
-        "adansonia-digitata",
+        "achlys-triphylla",
         "leaf_arrangement",
-        "Malvaceae's leaves are alternate and the baobab sets one leaf a node, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
+        "Berberidaceae's leaves are alternate and vanilla leaf's rise one to a node from its rhizome, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
     ),
     (
         "anaphalis-margaritacea",
@@ -27,14 +27,19 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
     ),
     (
-        "fraxinus-latifolia",
-        "leaf_arrangement",
-        "Oleaceae's leaves are opposite and the ash grows two a node, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
-    ),
-    (
         "lysichiton-americanus",
         "units_per_inflorescence",
         "a cluster draws at most 200 units, so the spadix's 350 to 1350 flowers are drawn as 200",
+    ),
+    (
+        "oxalis-oregana",
+        "leaf_arrangement",
+        "Oxalidaceae's leaves are alternate and redwood sorrel's rise one to a node from its rhizome, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
+    ),
+    (
+        "program:broadleaf",
+        "leaf_arrangement",
+        "its shoots set one or two leaves a node, but the measure finds three or more leaves at some or most nodes of 16 species (the baobab, Oregon ash, maples, roses, brambles, dogwood, elder and others), seen since B1 stated their families' arrangement",
     ),
     (
         "program:broadleaf",

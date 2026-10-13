@@ -18,8 +18,8 @@
     },
     "traits.woodiness": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1926",
-      "note": "Hutchinson's conspectus (vol. 1, 1926): the gymnosperms (cycads, Ginkgo, conifers, Gnetales) are trees and shrubs, with wood; none is a herb."
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson's conspectus (vol. 1, 2nd ed., 1959): the gymnosperms (cycads, Ginkgo, conifers, Gnetales) are trees and shrubs, with wood; none is a herb."
     }
   }
 }

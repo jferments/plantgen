@@ -38,13 +38,13 @@
     },
     "traits.leaf_division": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1934",
-      "note": "Hutchinson (vol. 2, 1934), family 372 Liliaceae, of which APG keeps the lilies, tulips, fritillaries and their kin: leaves simple; fruit a capsule opening along or between its cells, or a fleshy berry (the berries in Clintonia and Streptopus)."
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 372 Liliaceae, of which APG keeps the lilies, tulips, fritillaries and their kin: leaves simple; fruit a capsule opening along or between its cells, or a fleshy berry (the berries in Clintonia and Streptopus)."
     },
     "traits.fruit_type": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1934",
-      "note": "Hutchinson (vol. 2, 1934), family 372 Liliaceae, of which APG keeps the lilies, tulips, fritillaries and their kin: leaves simple; fruit a capsule opening along or between its cells, or a fleshy berry (the berries in Clintonia and Streptopus)."
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 372 Liliaceae, of which APG keeps the lilies, tulips, fritillaries and their kin: leaves simple; fruit a capsule opening along or between its cells, or a fleshy berry (the berries in Clintonia and Streptopus)."
     }
   }
 }

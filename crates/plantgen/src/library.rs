@@ -3127,6 +3127,10 @@ mod tests {
         let params = own["generator"]["params"].as_object_mut().unwrap();
         params.remove("space_density");
         params.remove("leaves_per_node");
+        own["evidence"]
+            .as_object_mut()
+            .unwrap()
+            .remove("generator.params.leaves_per_node");
         folder.write(
             "library/sapindaceae/acer/acer-test/spec.json",
             &serde_json::to_string_pretty(&own).unwrap(),
@@ -3187,9 +3191,11 @@ mod tests {
                 "`leaf_arrangement` has no one most usual state: alternate and opposite are each often"
             )
         );
-        // Nor does a family that states no arrangement yet: a maple keeps
-        // its program's pairs.
-        assert_eq!(arrangement("acer-macrophyllum"), (None, None));
+        // Maples: their genus's opposite leaves, in pairs.
+        assert_eq!(arrangement("acer-macrophyllum"), (Some(2.0), None));
+        // Nor does a family that states no arrangement yet: a cycad keeps
+        // its program's.
+        assert_eq!(arrangement("cycas-revoluta"), (None, None));
     }
 
     #[test]

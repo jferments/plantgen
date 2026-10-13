@@ -19,8 +19,8 @@
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1926",
-      "note": "Hutchinson's conspectus of the flowering plants (vol. 1, 1926): the monocotyledons' leaves are typically parallel-nerved and alternate, and their flowers usually in threes. Net-veined leaves (yams, aroids) and whorled or opposite ones (Trillium, Paris) are the exceptions, which their families state."
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson's conspectus of the flowering plants (vol. 1, 2nd ed., 1959): the monocotyledons' leaves are typically parallel-nerved and alternate, and their flowers usually in threes. Net-veined leaves (yams, aroids) and whorled or opposite ones (Trillium, Paris) are the exceptions, which their families state."
     }
   }
 }

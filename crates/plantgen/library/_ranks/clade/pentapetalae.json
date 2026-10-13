@@ -19,8 +19,8 @@
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1926",
-      "note": "Hutchinson (vol. 1, 1926): the dicotyledons' flowers are usually in fives or fours, with an outer whorl of sepals and an inner one of petals. The Pentapetalae (APG) are the core eudicots with that five-parted perianth of calyx and corolla; families whose flowers lack petals or have tepals (Fagaceae, Urticaceae, Polygonaceae, Cactaceae) state theirs."
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959): the dicotyledons' flowers are usually in fives or fours, with an outer whorl of sepals and an inner one of petals. The Pentapetalae (APG) are the core eudicots with that five-parted perianth of calyx and corolla; families whose flowers lack petals or have tepals (Fagaceae, Urticaceae, Polygonaceae, Cactaceae) state theirs."
     }
   }
 }

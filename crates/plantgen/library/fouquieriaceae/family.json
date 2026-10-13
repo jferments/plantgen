@@ -14,7 +14,10 @@
       "min": 10,
       "max": 15
     },
-    "carpels": 3
+    "carpels": 3,
+    "woodiness": "woody",
+    "leaf_division": "simple",
+    "fruit_type": "capsule"
   },
   "forms": {
     "shrub": {
@@ -35,6 +38,21 @@
       "evidence": "SourceInferred",
       "source": "abrams-1951",
       "note": "Abrams's Illustrated Flora of the Pacific States, volume 3 (1951), read in full: sepals 5, imbricated, persistent; corolla sympetalous, tubular, 5-lobed; stamens 10 to 15 on the base of the corolla tube; ovary imperfectly 3-celled. SEINet's genus text (as quoted in search results; the page itself was not read): pistil 3-carpelled, ovary superior."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 98 Fouquieriaceae: spiny trees or shrubs with soft wood; leaves in clusters or single, small, fleshy; fruit a capsule with winged seeds."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 98 Fouquieriaceae: spiny trees or shrubs with soft wood; leaves in clusters or single, small, fleshy; fruit a capsule with winged seeds."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 98 Fouquieriaceae: spiny trees or shrubs with soft wood; leaves in clusters or single, small, fleshy; fruit a capsule with winged seeds."
     }
   }
 }

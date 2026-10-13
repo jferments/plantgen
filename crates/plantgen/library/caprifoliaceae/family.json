@@ -30,8 +30,8 @@
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1926",
-      "note": "Hutchinson (vol. 1, 1926), families 48 Caprifoliaceae, 312 Valerianaceae and 313 Dipsacaceae, which APG joins as Caprifoliaceae (Sambucus and Viburnum go to Viburnaceae): leaves opposite, simple or deeply divided; flowers mostly in cymes, in heads in the teasels. The order's file states the opposite leaves, the missing stipules and the inferior ovary."
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 48 Caprifoliaceae, 312 Valerianaceae and 313 Dipsacaceae, which APG joins as Caprifoliaceae (Sambucus and Viburnum go to Viburnaceae): leaves opposite, simple or deeply divided; flowers mostly in cymes, in heads in the teasels. The order's file states the opposite leaves, the missing stipules and the inferior ovary."
     }
   }
 }

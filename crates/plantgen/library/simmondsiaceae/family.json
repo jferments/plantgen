@@ -33,8 +33,8 @@
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1926",
-      "note": "Hutchinson (vol. 1, 1926), family 54 Buxaceae, under which he kept Simmondsia, APG's only genus of Simmondsiaceae: evergreen shrubs; leaves leathery, simple, without stipules (Simmondsia's opposite and entire, by his key); sepals and no petals; ovary superior, 3-celled; Simmondsia's fruit a capsule opening by three valves. Abrams's flora (vol. 3, 1951) agrees on the opposite, entire, evergreen leaves, the sepals (usually 5) and the capsule."
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 54 Buxaceae, under which he kept Simmondsia, APG's only genus of Simmondsiaceae: evergreen shrubs; leaves leathery, simple, without stipules (Simmondsia's opposite and entire, by his key); sepals and no petals; ovary superior, 3-celled; Simmondsia's fruit a capsule opening by three valves. Abrams's flora (vol. 3, 1951) agrees on the opposite, entire, evergreen leaves, the sepals (usually 5) and the capsule."
     },
     "traits.sexual_system": {
       "evidence": "SourceInferred",

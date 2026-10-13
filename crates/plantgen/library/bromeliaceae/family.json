@@ -55,23 +55,23 @@
     },
     "traits.leaf_division": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1934",
-      "note": "Hutchinson (vol. 2, 1934), family 365 Bromeliaceae: mostly short-stemmed epiphytes or rock plants; leaves usually in a dense cluster, long and strap-shaped; flowers bisexual or rarely unisexual. Spanish moss, whose leaves stand singly along hanging stems, states its own form."
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 365 Bromeliaceae: mostly short-stemmed epiphytes or rock plants; leaves usually in a dense cluster, long and strap-shaped; flowers bisexual or rarely unisexual. Spanish moss, whose leaves stand singly along hanging stems, states its own form."
     },
     "traits.leaf_shape": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1934",
-      "note": "Hutchinson (vol. 2, 1934), family 365 Bromeliaceae: mostly short-stemmed epiphytes or rock plants; leaves usually in a dense cluster, long and strap-shaped; flowers bisexual or rarely unisexual. Spanish moss, whose leaves stand singly along hanging stems, states its own form."
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 365 Bromeliaceae: mostly short-stemmed epiphytes or rock plants; leaves usually in a dense cluster, long and strap-shaped; flowers bisexual or rarely unisexual. Spanish moss, whose leaves stand singly along hanging stems, states its own form."
     },
     "traits.rosette": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1934",
-      "note": "Hutchinson (vol. 2, 1934), family 365 Bromeliaceae: mostly short-stemmed epiphytes or rock plants; leaves usually in a dense cluster, long and strap-shaped; flowers bisexual or rarely unisexual. Spanish moss, whose leaves stand singly along hanging stems, states its own form."
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 365 Bromeliaceae: mostly short-stemmed epiphytes or rock plants; leaves usually in a dense cluster, long and strap-shaped; flowers bisexual or rarely unisexual. Spanish moss, whose leaves stand singly along hanging stems, states its own form."
     },
     "traits.sexual_system": {
       "evidence": "SourceInferred",
-      "source": "hutchinson-1934",
-      "note": "Hutchinson (vol. 2, 1934), family 365 Bromeliaceae: mostly short-stemmed epiphytes or rock plants; leaves usually in a dense cluster, long and strap-shaped; flowers bisexual or rarely unisexual. Spanish moss, whose leaves stand singly along hanging stems, states its own form."
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 365 Bromeliaceae: mostly short-stemmed epiphytes or rock plants; leaves usually in a dense cluster, long and strap-shaped; flowers bisexual or rarely unisexual. Spanish moss, whose leaves stand singly along hanging stems, states its own form."
     }
   }
 }
