@@ -226,4 +226,7 @@ pub mod venation;
 /// 37: a cactus column's ring of flowers sits at the radius of its newest
 /// piece as drawn, not its tip's, so a young pup's flowers stand on its
 /// body (36 is the strap pieces' join, #65).
-pub const GENERATOR_REVISION: u32 = 37;
+/// 40: western redcedar keeps its foliage as long as its scale leaves
+/// were measured to live (about nine years), not the three years its
+/// branchlets were once said to last (38 and 39 are #66's and #67's).
+pub const GENERATOR_REVISION: u32 = 40;

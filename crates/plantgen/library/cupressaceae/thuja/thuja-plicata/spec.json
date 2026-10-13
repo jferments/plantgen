@@ -99,7 +99,7 @@
   "traits": {
     "juvenile_period_years": {"min": 10, "max": 30},
     "leaf_length_m": {"min": 0.0015, "max": 0.003},
-    "leaf_life_years": {"min": 2, "max": 3},
+    "leaf_life_years": {"min": 6.8, "max": 10.6, "typical": 8.9},
     "cone_length_m": {"min": 0.01, "max": 0.012},
     "cone_posture": "erect"
   },
@@ -116,8 +116,8 @@
     },
     "traits.leaf_life_years": {
       "evidence": "SourceInferred",
-      "source": "abrams-1923",
-      "note": "Abrams (vol. 1, 1923, p. 71), as Thuya plicata: scale leaves about 3 mm (FEIS: 1.5 to 3 mm), twice that on leading shoots; the branchlets usually fall in their third year, taking their leaves; seed cones 10 to 12 mm, clustered near the branch ends and strongly bent back."
+      "source": "harlow-duursma-marshall-2005",
+      "note": "Harlow, Duursma and Marshall (2005, abstract) aged the scale leaves of 26 dominant and codominant redcedars in northern Idaho by the growth rings where they fall: 8.9 years on average, about 6.8 in the upper third of the crown and 10.6 in the lower third. Abrams (1923, p. 71) has the branchlets falling in their third year, taking their leaves; that is the small side branchlets the tree sheds, not how long a leaf lives, so the measured span replaces his."
     },
     "traits.cone_length_m": {
       "evidence": "SourceInferred",
