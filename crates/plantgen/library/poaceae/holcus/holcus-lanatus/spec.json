@@ -27,7 +27,6 @@
       "culm_radius": 0.0012,
       "culm_leaves": 2,
       "culm_lean": 6,
-      "panicle_length": 0.12,
       "panicle_nod": 10,
       "blade_area": 0.064,
       "tip_area": 0.035,
@@ -95,6 +94,15 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "culm_length_m": {
+      "min": 0.3,
+      "max": 0.6
+    },
+    "inflorescence_length_m": {
+      "min": 0.08,
+      "max": 0.15,
+      "typical": 0.12
+    },
     "inflorescence": "panicle",
     "florets_per_spikelet": 2,
     "spikelet_length_m": {"min": 0.004, "max": 0.006},
@@ -106,6 +114,16 @@
     "awn_form": "hooked"
   },
   "evidence": {
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935), as Holcus lanatus: culms 30 cm to 60 cm tall."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935), as Holcus lanatus: panicle 8 cm to 15 cm long."
+    },
     "appearance.organs.panicle": {
       "evidence": "Authored",
       "source": "plantgen-authors",

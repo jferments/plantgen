@@ -3,12 +3,18 @@
   "rank": "genus",
   "name": "Amelanchier",
   "traits": {
+    "wood_density_basic_kg_m3": 710,
     "ovary_position": "inferior",
     "stamens": 20,
     "carpels": 5,
     "flowering_position": "both"
   },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {
+      "evidence": "SourceInferred",
+      "source": "gwdd-v2",
+      "note": "GWDD v.2.2 genus aggregate for Amelanchier (gwddagg_v2.2_genus.csv, read): specific gravity 0.71 (wsg_est, the hierarchical-model genus mean, from 7 records in 5 sources); trunks 0.71, branches 0.65. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",

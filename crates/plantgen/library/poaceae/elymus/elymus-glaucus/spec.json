@@ -23,11 +23,9 @@
       "arch": 10,
       "pieces": 6,
       "flowering": 0.5,
-      "culm_height": 1.1,
       "culm_radius": 0.0015,
       "culm_leaves": 3,
       "culm_lean": 6,
-      "panicle_length": 0.14,
       "panicle_nod": 25,
       "blade_area": 0.064,
       "tip_area": 0.035,
@@ -87,6 +85,16 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "culm_length_m": {
+      "min": 0.6,
+      "max": 1.2,
+      "typical": 1.1
+    },
+    "inflorescence_length_m": {
+      "min": 0.05,
+      "max": 0.2,
+      "typical": 0.14
+    },
     "inflorescence": "spike",
     "inflorescence_posture": {"erect": "usually", "nodding": "sometimes"},
     "florets_per_spikelet": {"min": 2, "max": 4, "low": 1, "high": 6},
@@ -99,6 +107,16 @@
     "awn_length_m": {"min": 0.001, "max": 0.03, "high": 0.035}
   },
   "evidence": {
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935), as Elymus glaucus: culms 60 cm to 1.2 m tall."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935), as Elymus glaucus: panicle 5 cm to 20 cm long."
+    },
     "appearance.organs.panicle": {
       "evidence": "Authored",
       "source": "plantgen-authors",

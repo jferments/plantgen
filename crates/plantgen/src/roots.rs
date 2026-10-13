@@ -354,6 +354,7 @@ fn tube(
                 born,
                 shed: None,
                 level: 0,
+                segment: crate::mesh::GROUNDED,
             });
         }
     }

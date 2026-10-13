@@ -114,9 +114,18 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_typical_m": {
+      "min": 1.0,
+      "max": 3.0
+    },
     "inflorescence_branches": {"min": 15, "max": 30}
   },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Heracleum lanatum: stems 1 m to 3 m tall."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

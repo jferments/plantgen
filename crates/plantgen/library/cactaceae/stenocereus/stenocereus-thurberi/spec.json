@@ -148,11 +148,13 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "wood_density_basic_kg_m3": 490,
     "ribs": {"min": 12, "max": 17},
     "stem_diameter_max_m": {"min": 0.15, "max": 0.2},
     "areole_spacing_m": {"min": 0.01, "max": 0.015, "high": 0.03}
   },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Stenocereus thurberi (gwddagg_v2.2_species.csv, read): specific gravity 0.49 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.49, branches 0.49. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",
