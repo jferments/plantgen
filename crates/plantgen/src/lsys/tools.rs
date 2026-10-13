@@ -13,6 +13,8 @@
 //!   at any share of the crown's depth and of any fullness (`widest`,
 //!   `fullness`), lobes round its edge (`lobes`, `lobe_depth`), and billows,
 //!   its edge moved in and out by smooth noise (`bumps`, `bump_size`).
+//!   Under either, no point lies inside the conditions' substrate (when
+//!   they give one) or inside a neighbour's crown.
 //! - `vigour@1`: the Borchert-Honda resource model: light collected by the
 //!   tips flows to the base and back out, split by apical control.
 //! - `pipe@1`: the pipe model of stem radii (Shinozaki et al. 1964).
@@ -394,6 +396,14 @@ pub fn run(
         }
         Some(config) => {
             let values = settings(config, globals, clock, seed, &mut stack);
+            // Room taken by the substrate or the neighbours, when the
+            // conditions give either.
+            let field = surroundings.substrate();
+            let taken = |point: Vec3| {
+                surroundings.occupied(point) || field.is_some_and(|field| field.solid(point))
+            };
+            let taken: Option<&(dyn Fn(Vec3) -> bool + Sync)> =
+                (field.is_some() || surroundings.crowded()).then_some(&taken);
             colonize(
                 scene,
                 &space_queries,
@@ -402,6 +412,7 @@ pub fn run(
                 state,
                 limits,
                 seed,
+                taken,
             )?
         }
         None => vec![(0, Vec3::ZERO); scene.queries.len()],
@@ -1642,6 +1653,7 @@ fn colonize(
     state: &mut ToolState,
     limits: &Limits,
     seed: u64,
+    taken: Option<&(dyn Fn(Vec3) -> bool + Sync)>,
 ) -> Result<Vec<(u32, Vec3)>, GrowthError> {
     let (first, later) = values.split_at(values.len().min(8));
     let [shape, base, height, radius, density, influence, kill, angle] = first[..] else {
@@ -1865,6 +1877,9 @@ fn colonize(
                             continue;
                         }
                     }
+                }
+                if taken.is_some_and(|taken| taken(point)) {
+                    continue;
                 }
                 on_point(at, cell);
             }
@@ -3190,6 +3205,7 @@ mod tests {
     fn around(substrate: Option<&SubstrateField>) -> crate::conditions::Around<'_> {
         crate::conditions::Around {
             neighbourhood: &Neighbourhood::OPEN,
+            envelopes: &[],
             host: None,
             substrate,
             sun: None,
