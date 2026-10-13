@@ -2437,9 +2437,101 @@ pub struct Look {
     /// The cluster the organ is, each of its units drawn with `shape`
     /// (spec rework L1); `None` for an organ that is one unit.
     pub inflorescence: Option<crate::clusters::ClusterLook>,
+    /// Its [`VARIETIES`] varieties (spec rework VARY), where values of its
+    /// look were set from ranges and it is drawn solid: each organ is
+    /// drawn as one ([`Look::of`]). Empty for a look that does not vary;
+    /// its card is always drawn with the look itself.
+    pub varieties: Vec<Look>,
+}
+
+/// The varieties of each look that varies (spec rework VARY): as many as
+/// a part mesh's variants, so variant `k` is variety `k`.
+pub const VARIETIES: usize = crate::parts::VARIANTS;
+
+/// The variety of its type's look the organ with id `id` is drawn as.
+#[must_use]
+pub fn variety_of(id: u64) -> usize {
+    usize::try_from(crate::rng::mix64(id ^ 0x0056_4152_4945) % VARIETIES as u64).unwrap_or(0)
+}
+
+/// How far through the spread of the value at `path` (in an appearance's
+/// `spreads`) variety `variety` draws it: the middle of its own of
+/// [`VARIETIES`] equal parts of the spread, the parts dealt to the
+/// varieties in an order `path` shuffles, so the varieties draw every
+/// value across its spread, and pair the values of different paths at
+/// random.
+#[must_use]
+pub fn variety_share(variety: usize, path: &str) -> f64 {
+    let mut order: [usize; VARIETIES] = std::array::from_fn(|part| part);
+    let mut hash = crate::rng::hash_str(path);
+    for last in (1..VARIETIES).rev() {
+        hash = crate::rng::mix64(hash);
+        let pick = usize::try_from(hash % (last as u64 + 1)).unwrap_or(0);
+        order.swap(last, pick);
+    }
+    #[allow(clippy::cast_precision_loss)]
+    let share = (order[variety % VARIETIES] as f64 + 0.5) / VARIETIES as f64;
+    share
+}
+
+/// `looks`, a species' looks by organ name, as variety `variety` draws
+/// them: each value `spreads` (its appearance's) holds a spread for,
+/// under `organs.<organ>`, drawn at [`variety_share`] of its spread.
+#[must_use]
+pub fn variety(
+    looks: &BTreeMap<String, OrganLook>,
+    spreads: &serde_json::Map<String, serde_json::Value>,
+    variety: usize,
+) -> BTreeMap<String, OrganLook> {
+    use serde_json::Value;
+    let mut drawn = looks.clone();
+    let Some(Value::Object(organs)) = spreads.get("organs") else {
+        return drawn;
+    };
+    for (organ, spread) in organs {
+        let (Some(look), Value::Object(spread)) = (looks.get(organ), spread) else {
+            continue;
+        };
+        let Ok(mut value) = serde_json::to_value(look) else {
+            continue;
+        };
+        for (path, spread) in crate::inherit::Spread::all(spread) {
+            let at = spread.at(variety_share(variety, &format!("organs.{organ}.{path}")));
+            #[allow(clippy::cast_possible_truncation)]
+            let number = if spread.whole {
+                Value::from(at as i64)
+            } else {
+                Value::from(at)
+            };
+            if let Some(slot) = value
+                .pointer_mut(&format!("/{}", path.replace('.', "/")))
+                .filter(|slot| slot.is_number())
+            {
+                *slot = number;
+            }
+        }
+        if let Ok(look) = serde_json::from_value(value) {
+            drawn.insert(organ.clone(), look);
+        }
+    }
+    drawn
 }
 
 impl Look {
+    /// The look organ `id` is drawn with: its variety ([`variety_of`])
+    /// where the look varies, else the look itself.
+    #[must_use]
+    pub fn of(&self, id: u64) -> &Look {
+        self.varieties.get(variety_of(id)).unwrap_or(self)
+    }
+
+    /// Whether organs of this look are drawn one by one as solids near
+    /// the camera, so they can show its varieties.
+    #[must_use]
+    pub fn draws_solid(&self) -> bool {
+        self.solid.is_none() && self.form.solid_at(0)
+    }
+
     /// How the organ's card sits on it: as its shape's, or as its
     /// cluster's (`crate::clusters::CardFrame`).
     #[must_use]
@@ -2529,6 +2621,7 @@ pub fn resolve<'a>(
                         )
                     }),
                     shape: drawn,
+                    varieties: Vec::new(),
                 }
             }
             None => Look {
@@ -2543,6 +2636,7 @@ pub fn resolve<'a>(
                 solid: None,
                 forms: Forms::default(),
                 inflorescence: None,
+                varieties: Vec::new(),
             },
         })
         .collect::<Vec<_>>()
@@ -2865,6 +2959,7 @@ fn in_stage(look: &Look, stage: &StageLook) -> Look {
         forms: Forms::default(),
         // A stage look draws the whole organ.
         inflorescence: None,
+        varieties: Vec::new(),
     }
 }
 

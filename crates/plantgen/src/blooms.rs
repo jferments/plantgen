@@ -351,7 +351,7 @@ pub(crate) fn build_coarse(
 ) {
     for organ in &graph.organs {
         let index = usize::from(organ.organ);
-        let Some(look) = looks.get(index) else {
+        let Some(look) = looks.get(index).map(|look| look.of(organ.id)) else {
             continue;
         };
         if !solid.get(index).copied().unwrap_or(false) || look.solid.is_some() {

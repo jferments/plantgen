@@ -207,4 +207,9 @@ pub mod venation;
 /// areoles' spacing, spines a fifth shorter than the longest a flora
 /// gives, a column's girth and a joint's length and width; spine sets
 /// name their role, and the chollas' areoles bear glochids.
-pub const GENERATOR_REVISION: u32 = 33;
+/// 34: a value a rule sets from one stated range varies within it (spec
+/// rework VARY): the effective spec records its spread, and each organ
+/// drawn solid is one of four varieties of its look, which draw its
+/// counts and sizes across their ranges; a part mesh's variant `k` is its
+/// look's variety `k`.
+pub const GENERATOR_REVISION: u32 = 34;
