@@ -1552,6 +1552,7 @@ fn cluster_kinds(
     phase: Option<Phase>,
     tally: &mut Tally,
 ) {
+    use crate::looks::ClusterKind;
     let opened = cluster
         .opening
         .as_ref()
@@ -1573,7 +1574,6 @@ fn cluster_kinds(
     let Some(flowers) = flowers else {
         return;
     };
-    use crate::looks::ClusterKind;
     // A spike in a spathe is a spadix (PO:0030120). Units up an axis that
     // all stand at its one node (a raceme of a pair, as twinberry's) are
     // drawn as a few-flowered cyme's or an umbel's would be.
