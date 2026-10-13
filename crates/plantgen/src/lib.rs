@@ -245,4 +245,10 @@ pub mod venation;
 /// and the wood bends under its load, the stem and a fork's stems held up;
 /// a tip with no free space leafs out. Maples keep their lobed envelope
 /// (sapindaceae revision 6). (39 is redcedar's leaf life, #70.)
-pub const GENERATOR_REVISION: u32 = 40;
+/// 41: nothing drawn reaches below the ground the plant stands on (the
+/// level plane of its foot): a card that would, a leaf drooping into the
+/// soil or a spray at a seedling's foot, turns up about its base just
+/// enough to rest on the ground, or rises onto it when no turn clears it;
+/// and a stem's foot ring meets the ground in a flat cut where a leaning
+/// or flared trunk's side would dip into it.
+pub const GENERATOR_REVISION: u32 = 41;
