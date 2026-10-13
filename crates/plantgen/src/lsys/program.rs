@@ -73,12 +73,17 @@ pub enum Turtle {
     /// `face(x, y, z, w)`: turn the frame so its up vector moves toward the
     /// plant-frame direction `(x, y, z)` by the share `w` (crown form B).
     Face,
+    /// `rest(g)`: the later segments in the branch rest on the substrate:
+    /// one that would end within `g` metres of its surface turns along the
+    /// surface instead of into it, as the ground holds up a frond or a pad
+    /// that reaches it (plants fitted to their place, PF1).
+    Rest,
 }
 
 impl Turtle {
     /// Every built-in symbol in symbol-id order, with its text and argument
     /// count after defaults are filled in.
-    pub const ALL: [(Self, &'static str, u8); 19] = [
+    pub const ALL: [(Self, &'static str, u8); 20] = [
         (Self::Push, "[", 0),
         (Self::Pop, "]", 0),
         (Self::Cut, "%", 0),
@@ -98,6 +103,7 @@ impl Turtle {
         (Self::Adult, "adult", 1),
         (Self::Incline, "incline", 2),
         (Self::Face, "face", 4),
+        (Self::Rest, "rest", 1),
     ];
 
     fn is_turn(self) -> bool {
@@ -117,7 +123,7 @@ pub const MOVE: u16 = 4;
 pub const ROLL: u16 = 10;
 /// `adult`: a shoot's adultness (spec rework P6).
 pub const ADULT: u16 = 16;
-pub const FIRST_USER_SYMBOL: u16 = 19;
+pub const FIRST_USER_SYMBOL: u16 = 20;
 
 /// What an organ is, which decides how it is drawn and shaded.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]

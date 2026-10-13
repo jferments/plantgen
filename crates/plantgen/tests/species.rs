@@ -219,6 +219,54 @@ fn builtin_species_draw_no_floating_organs() {
     assert!(failures.is_empty(), "{}", failures.join("\n"));
 }
 
+/// Plants fitted to their place (PF1): a fern's fronds, a palm's or a
+/// cycad's and a cactus's joints that sag to the ground lie on it
+/// (`rest`), so no species of those programs, in any variant, ends wood
+/// or an organ more than 0.05 m below the ground at any keyframe.
+#[test]
+fn fronds_and_pads_lie_on_the_ground() {
+    const RESTING: [&str; 5] = [
+        "polypodiidae",
+        "palm",
+        "arecaceae",
+        "cyatheaceae",
+        "cycadaceae",
+    ];
+    let mut checked = 0;
+    let mut failures = Vec::new();
+    for (id, _) in spec::all_species() {
+        let spec = PlantSpec::builtin(id).unwrap();
+        let program = spec.generator.program.as_str();
+        if !RESTING.contains(&program) && program != "cactaceae" {
+            continue;
+        }
+        checked += 1;
+        let oldest = *spec.growth.keyframes.last().unwrap();
+        for variant in spec.variant_list() {
+            let growth = grow_variant(&spec, &variant, oldest, spec.growth.keyframes.clone());
+            for graph in &growth.keyframes {
+                let lowest = graph
+                    .segments
+                    .iter()
+                    .map(|segment| segment.end.y)
+                    .chain(graph.organs.iter().map(|organ| organ.position.y))
+                    .fold(f64::INFINITY, f64::min);
+                if lowest < -0.05 {
+                    failures.push(format!(
+                        "{id} {:?} seed {} at {} years: {lowest:.3} m below the ground",
+                        variant.environment, variant.seed, graph.age
+                    ));
+                }
+            }
+        }
+    }
+    assert!(failures.is_empty(), "{}", failures.join("\n"));
+    assert_eq!(
+        checked, 24,
+        "five ferns, five palms, a tree fern, a cycad and twelve cacti"
+    );
+}
+
 /// Grasses and herbs renew their shoots every year: at every keyframe
 /// each stem, culm, leaf and flower grew that year, so nothing lives on
 /// from the year before but a grass's thatch, the dead blades of last

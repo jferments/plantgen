@@ -15,6 +15,7 @@ use super::{GrowthError, Limits};
 use crate::cores::{self, Lease};
 use crate::math::{self, Frame, Vec3};
 use crate::rng::{Lineage, combine};
+use crate::substrate::SubstrateField;
 
 /// Element kinds hashed into segment and organ identities.
 pub const KIND_SEGMENT: u64 = 0x7365_676d;
@@ -165,6 +166,8 @@ struct State {
     /// share of the way toward it each segment turns (0: off).
     incline: f64,
     incline_rate: f64,
+    /// `rest`'s gap above the substrate, metres (0: off).
+    rest: f64,
 }
 
 /// Identity of the string module being drawn and its element counters.
@@ -191,6 +194,8 @@ pub struct Interpreter<'a> {
     /// whether it popped one.
     floor: usize,
     breached: bool,
+    /// The substrate `rest` lays segments on, if any.
+    ground: Option<&'a SubstrateField>,
 }
 
 impl<'a> Interpreter<'a> {
@@ -205,7 +210,16 @@ impl<'a> Interpreter<'a> {
             sizes: [0; KINDS],
             floor: 0,
             breached: false,
+            ground: None,
         }
+    }
+
+    /// The substrate that segments after a `rest` lie on; without one,
+    /// `rest` does nothing.
+    #[must_use]
+    pub fn on_ground(mut self, ground: &'a SubstrateField) -> Self {
+        self.ground = Some(ground);
+        self
     }
 
     /// Draw a string.
@@ -594,6 +608,7 @@ impl<'a> Interpreter<'a> {
                     state.frame = turned_toward(frame, frame.u, target, params[3]);
                 }
             }
+            Turtle::Rest => state.rest = params[0].max(0.0),
         }
         Ok(())
     }
@@ -644,6 +659,11 @@ impl Interpreter<'_> {
                 limit: self.limits.max_segments as u64,
             });
         }
+        if state.rest > 0.0
+            && let Some(ground) = self.ground
+        {
+            state.frame = rested(state.frame, state.position, length, state.rest, ground);
+        }
         let frame = state.frame;
         let start = state.position;
         let end = start + frame.h * length;
@@ -693,6 +713,31 @@ impl Interpreter<'_> {
     }
 }
 
+/// The frame of a segment `length` long from `start` that rests on the
+/// substrate `ground`: unchanged if the segment would end at least `gap`
+/// from its surface or heads away from it, else turned so that its heading
+/// runs along the surface, with the part of it that points into the
+/// surface taken away.
+fn rested(frame: Frame, start: Vec3, length: f64, gap: f64, ground: &SubstrateField) -> Frame {
+    let end = start + frame.h * length;
+    if ground.distance(end) >= gap {
+        return frame;
+    }
+    let normal = ground.normal(end);
+    let into = frame.h.dot(normal);
+    if into >= 0.0 {
+        return frame;
+    }
+    let along = frame.h - normal * into;
+    if along.length() < 1e-9 {
+        // Straight into the surface: lie along it in the frame's up
+        // vector's way, which a frond or a pad faces.
+        let up = frame.u - normal * frame.u.dot(normal);
+        return turned_toward(frame, frame.h, up, 1.0);
+    }
+    turned_toward(frame, frame.h, along, 1.0)
+}
+
 /// The frame turned so that its vector `from` (its heading or its up
 /// vector) moves toward `target` by the share `share` (0 to 1) of the
 /// angle between them, by the smallest turn that does so.
@@ -729,6 +774,7 @@ const START_STATE: State = State {
     adult: None,
     incline: 0.0,
     incline_rate: 0.0,
+    rest: 0.0,
 };
 
 /// Strings shorter than this are drawn on one thread.
@@ -979,6 +1025,10 @@ mod tests {
     use std::collections::BTreeMap;
 
     fn scene(source: &str) -> Scene {
+        scene_on(source, None)
+    }
+
+    fn scene_on(source: &str, ground: Option<&SubstrateField>) -> Scene {
         let program = Program::compile(source).unwrap();
         let globals = program.resolve_params(&BTreeMap::new()).unwrap();
         let limits = Limits::default();
@@ -990,9 +1040,13 @@ mod tests {
             t: 0.0,
             dt: 1.0,
         };
-        Interpreter::new(&program, &globals, &limits)
-            .interpret(&string, clock)
-            .unwrap()
+        let interpreter = Interpreter::new(&program, &globals, &limits);
+        match ground {
+            Some(ground) => interpreter.on_ground(ground),
+            None => interpreter,
+        }
+        .interpret(&string, clock)
+        .unwrap()
     }
 
     fn close(a: Vec3, b: Vec3) -> bool {
@@ -1081,6 +1135,35 @@ mod tests {
         assert!(angle(&s.segments[2]) < 1.0e-9);
         let last = s.segments.last().unwrap();
         assert!((angle(last) - 60.0).abs() < 0.1, "{}", angle(last));
+    }
+
+    #[test]
+    fn rest_lays_a_drooping_branch_on_the_ground() {
+        // Plants fitted to their place (PF1): a frond bending down to the
+        // ground lies along it instead of passing into it, on level soil
+        // as substrate@1 reads it; without `rest` it goes under.
+        let source = |rest: &str| {
+            format!(
+                "lsystem p 1; axiom F(0.3) &(80) {rest} T(0, -1, 0, 0.5)
+                 F(0.1) F(0.1) F(0.1) F(0.1) F(0.1) F(0.1) F(0.1) F(0.1);"
+            )
+        };
+        let flat = SubstrateField::flat();
+        let lowest = |s: &Scene| {
+            s.segments
+                .iter()
+                .map(|segment| segment.end.y)
+                .fold(f64::INFINITY, f64::min)
+        };
+        let rested = scene_on(&source("rest(0.02)"), Some(&flat));
+        assert!(lowest(&rested) > -0.01, "{}", lowest(&rested));
+        let last = rested.segments.last().unwrap();
+        assert!((last.end.y - last.start.y).abs() < 1.0e-3, "{last:?}");
+        let free = scene_on(&source(""), Some(&flat));
+        assert!(lowest(&free) < -0.1, "{}", lowest(&free));
+        // With no ground given, `rest` does nothing.
+        let unground = scene_on(&source("rest(0.02)"), None);
+        assert!((lowest(&unground) - lowest(&free)).abs() < 1.0e-12);
     }
 
     #[test]

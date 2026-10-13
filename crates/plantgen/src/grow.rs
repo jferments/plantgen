@@ -565,10 +565,19 @@ pub fn grow_watched(
 
     let limits = settings.limits;
     let mut deriver = Deriver::new(program, params, &limits);
-    let mut interpreter = Interpreter::new(program, params, &limits);
     let mut tool_state = ToolState::default();
     let neighbourhood = settings.conditions.neighbourhood();
     let substrate = substrate_field(settings)?;
+    // `rest` lays segments on the conditions' substrate, or on level soil
+    // without one, as substrate@1 reads it.
+    let flat;
+    let ground = if let Some(field) = &substrate {
+        field
+    } else {
+        flat = crate::substrate::SubstrateField::flat();
+        &flat
+    };
+    let mut interpreter = Interpreter::new(program, params, &limits).on_ground(ground);
     let around = Around {
         neighbourhood: &neighbourhood,
         host: settings.host.as_deref(),

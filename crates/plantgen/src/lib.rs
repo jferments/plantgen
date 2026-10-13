@@ -234,4 +234,10 @@ pub mod venation;
 /// 39: western redcedar keeps its foliage as long as its scale leaves
 /// were measured to live (about nine years), not the three years its
 /// branchlets were once said to last.
-pub const GENERATOR_REVISION: u32 = 39;
+/// 43: a fern's, a palm's, a tree fern's or a cycad's fronds and a cactus's
+/// joints that sag to the ground lie on it (`rest`, on the conditions'
+/// substrate or level soil) instead of passing into it, so the deer and
+/// sword ferns, Engelmann's prickly pear and saw palmetto stay above the
+/// ground (40 is the broadleaf crown's own outline, #67; 41 the conifers'
+/// lower crowns, #72; 42 the mesh seated on the ground, #73).
+pub const GENERATOR_REVISION: u32 = 43;
