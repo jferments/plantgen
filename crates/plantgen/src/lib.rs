@@ -217,7 +217,13 @@ pub mod venation;
 /// keeps its needles, a spray card's needles as long as the stated ones
 /// on a usual spray, a pine's needles to a bundle, needles in two ranks
 /// or all round, and a seed cone's length, posture and years on the tree.
-/// 36: a broadleaf crown grows its own outline inside a loose region
+/// 36: the pieces of a strap join (an arching grass or sedge blade, a
+/// basal leaf drawn in pieces): each piece of a chain is turned against
+/// its card's droop by half of it and lengthened by its arc over its
+/// chord, so its bent card ends where the next piece stands, and drawn at
+/// its own size, not its sun or shade form's; before, every piece drooped
+/// away from the next and the strap fell apart into floating pieces.
+/// 39: a broadleaf crown grows its own outline inside a loose region
 /// (crown form step B, broadleaf revision 11): free space fills 1.6 times
 /// the crown's radius and 1.3 times its height; a shoot's nodes shorten
 /// with the wood between it and the base (`path_half`, fitted per species
@@ -226,4 +232,4 @@ pub mod venation;
 /// and the wood bends under its load, the stem and a fork's stems held up;
 /// a tip with no free space leafs out. Maples keep their lobed envelope
 /// (sapindaceae revision 6).
-pub const GENERATOR_REVISION: u32 = 36;
+pub const GENERATOR_REVISION: u32 = 39;
