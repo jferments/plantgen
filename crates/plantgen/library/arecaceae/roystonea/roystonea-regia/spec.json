@@ -88,7 +88,11 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "wood_density_basic_kg_m3": 570
+  },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Roystonea regia (gwddagg_v2.2_species.csv, read): specific gravity 0.57 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.56, branches 0.56. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

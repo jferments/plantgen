@@ -3,9 +3,11 @@
   "rank": "genus",
   "name": "Stenocereus",
   "traits": {
+    "wood_density_basic_kg_m3": 460,
     "carpels": {"min": 5, "max": 15}
   },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 genus aggregate for Stenocereus (gwddagg_v2.2_genus.csv, read): specific gravity 0.46 (wsg_est, the hierarchical-model genus mean, from 2 records in 1 source); trunks 0.46, branches 0.48. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "fna-online",

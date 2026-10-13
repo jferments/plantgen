@@ -130,9 +130,11 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "wood_density_basic_kg_m3": 600,
     "juvenile_period_years": {"min": 6, "max": 10}
   },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Cornus nuttallii (gwddagg_v2.2_species.csv, read): specific gravity 0.6 (wsg_est, the database's hierarchical-model species mean, from 3 records in 3 sources); trunks 0.61, branches 0.58. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",

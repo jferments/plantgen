@@ -432,6 +432,42 @@
       "values": ["none", "areoles", "thorns", "prickles", "leaf_spines"],
       "why": "what a plant is armed with: spines from areoles, thorns from shoots, prickles from bark, or spines on its leaves"
     },
+    "wood_density_basic_kg_m3": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "kg/m3",
+      "range": [80, 1400],
+      "when": {"woodiness": ["woody", "semi"]},
+      "why": "the basic density of the stem's wood: its oven-dry mass over its green volume, as wood-density databases give it (the specific gravity times 1000)"
+    },
+    "wood_moisture_green_share": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "share",
+      "range": [0.2, 4],
+      "when": {"woodiness": ["woody", "semi"]},
+      "why": "the water in living (green) wood as a share of its oven-dry mass, sapwood and heartwood together; green wood weighs its basic density times one plus this"
+    },
+    "wood_modulus_green_mpa": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "MPa",
+      "range": [500, 30000],
+      "when": {"woodiness": ["woody", "semi"]},
+      "why": "the modulus of elasticity of green wood in static bending: how stiff a living stem or branch is, its bending stiffness this times the section's second moment of area"
+    },
+    "wood_rupture_green_mpa": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "number",
+      "unit": "MPa",
+      "range": [5, 250],
+      "when": {"woodiness": ["woody", "semi"]},
+      "why": "the modulus of rupture of green wood in static bending: the stress at which a living stem or branch breaks, its breaking moment this times the section modulus"
+    },
     "leaf_form": {
       "group": "leaves",
       "organ": "leaf",
@@ -520,6 +556,14 @@
       "type": "enum",
       "values": ["none", "basal", "terminal"],
       "why": "leaves crowded on short internodes: not at all, at the base, or at the tips of stems"
+    },
+    "leaf_mass_fresh_kg_m2": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "number",
+      "unit": "kg/m2",
+      "range": [0.02, 3],
+      "why": "the fresh (living) mass of a leaf per square metre of its one-sided area, its water included: the load leaves put on the branches that hold them"
     },
     "leaf_length_m": {
       "group": "leaves",

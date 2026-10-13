@@ -3,11 +3,17 @@
   "rank": "genus",
   "name": "Spiraea",
   "traits": {
+    "wood_density_basic_kg_m3": 690,
     "inflorescence": "panicle",
     "ovary_position": "superior",
     "carpels": 5
   },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {
+      "evidence": "SourceInferred",
+      "source": "gwdd-v2",
+      "note": "GWDD v.2.2 genus aggregate for Spiraea (gwddagg_v2.2_genus.csv, read): specific gravity 0.69 (wsg_est, the hierarchical-model genus mean, from 46 records in 2 sources); trunks 0.69, branches 0.64. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."
+    },
     "traits.inflorescence": {
       "evidence": "SourceInferred",
       "source": "fna-online",

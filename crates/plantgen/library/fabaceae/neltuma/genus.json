@@ -3,9 +3,15 @@
   "rank": "genus",
   "name": "Neltuma",
   "traits": {
+    "wood_density_basic_kg_m3": 720,
     "flower_symmetry": "actinomorphic"
   },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {
+      "evidence": "SourceInferred",
+      "source": "gwdd-v2",
+      "note": "GWDD v.2.2 genus aggregate for Neltuma (gwddagg_v2.2_genus.csv, read): specific gravity 0.72 (wsg_est, the hierarchical-model genus mean, from 61 records in 21 sources); trunks 0.73, branches 0.67. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "jepson-eflora",
