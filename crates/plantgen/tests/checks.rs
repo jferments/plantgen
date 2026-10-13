@@ -167,16 +167,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
     ),
     (
-        "sambucus-racemosa",
-        "inflorescence",
-        "its spec draws its pyramidal panicle as a head by hand, against the panicle it states (read since a cluster whose units open by the day is read in flower)",
-    ),
-    (
-        "symphoricarpos-albus",
-        "inflorescence",
-        "its spec draws its few-flowered clusters as an umbel by hand, against the cymes and heads Caprifoliaceae state (read since a cluster whose units open by the day is read in flower)",
-    ),
-    (
         "tiarella-trifoliata",
         "fruit_type",
         "its fruit look sets no fruit kind, so its capsules are drawn as the ellipsoid of a berry or drupe",
