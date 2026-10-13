@@ -23,7 +23,6 @@
       "apical_young": 0.62,
       "apical": 0.52,
       "apical_years": 10,
-      "leaves_per_node": 2,
       "leaf_size": 0.28,
       "spur_leaf": 0.25200000000000006,
       "spur_pairs": 2,
@@ -112,9 +111,11 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "wood_density_basic_kg_m3": 830,
     "stamens": 8
   },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Rhizophora mangle (gwddagg_v2.2_species.csv, read): specific gravity 0.83 (wsg_est, the database's hierarchical-model species mean, from 28 records in 13 sources); trunks 0.88, branches 0.69. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",
       "source": "plantgen-authors",

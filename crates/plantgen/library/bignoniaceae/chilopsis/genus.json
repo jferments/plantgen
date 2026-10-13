@@ -3,12 +3,18 @@
   "rank": "genus",
   "name": "Chilopsis",
   "traits": {
+    "wood_density_basic_kg_m3": 510,
     "corolla_shape": "funnelform",
     "leaf_arrangement": {
       "alternate": "usually"
     }
   },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {
+      "evidence": "SourceInferred",
+      "source": "gwdd-v2",
+      "note": "GWDD v.2.2 genus aggregate for Chilopsis (gwddagg_v2.2_genus.csv, read): specific gravity 0.51 (wsg_est, the hierarchical-model genus mean, from 4 records in 4 sources); trunks 0.51, branches 0.51. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",

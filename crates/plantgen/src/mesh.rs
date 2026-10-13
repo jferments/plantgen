@@ -57,7 +57,19 @@ pub struct Mesh {
     /// Wind hierarchy level: 0 stem, 1 branch, 2 twig, 3 organ.
     pub levels: Vec<u8>,
     pub indices: Vec<u32>,
+    /// The graph segment that bears each vertex, [`NO_SEGMENT`] where none
+    /// does (roots, scenery), for binding it to the plant's bones (plant
+    /// motion S2). Not packaged with the mesh; it may run short of the
+    /// vertices, the rest bearing none.
+    pub segments: Vec<u32>,
 }
+
+/// A vertex or card no graph segment bears.
+pub const NO_SEGMENT: u32 = u32::MAX;
+
+/// A vertex or card the ground bears: roots, and organs at the plant's foot
+/// that no segment bears (a rosette's leaves).
+pub const GROUNDED: u32 = u32::MAX - 1;
 
 /// One vertex, for building a [`Mesh`].
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -69,6 +81,8 @@ pub struct Vertex {
     pub born: f64,
     pub shed: Option<f64>,
     pub level: u8,
+    /// The graph segment that bears it, or [`NO_SEGMENT`].
+    pub segment: u32,
 }
 
 impl Vertex {
@@ -84,7 +98,14 @@ impl Vertex {
             born: 0.0,
             shed: None,
             level: 0,
+            segment: NO_SEGMENT,
         }
+    }
+
+    /// The same vertex, borne by graph segment `segment`.
+    #[must_use]
+    pub fn on(self, segment: u32) -> Self {
+        Self { segment, ..self }
     }
 }
 
@@ -114,7 +135,37 @@ impl Mesh {
                 .push(vertex.shed.map_or(f32::INFINITY, |shed| shed as f32));
         }
         self.levels.push(vertex.level);
+        if vertex.segment != NO_SEGMENT || !self.segments.is_empty() {
+            self.segments.resize(index as usize, NO_SEGMENT);
+            self.segments.push(vertex.segment);
+        }
         index
+    }
+
+    /// Marks the vertices from `first` on as borne by graph segment
+    /// `segment`: for parts drawn whole, an organ or a body.
+    pub fn bear(&mut self, first: usize, segment: u32) {
+        let count = self.positions.len();
+        if segment == NO_SEGMENT && self.segments.is_empty() {
+            return;
+        }
+        self.segments.resize(count, NO_SEGMENT);
+        for at in first.min(count)..count {
+            self.segments[at] = segment;
+        }
+    }
+
+    /// The graph segment that bears vertex `index`, if any.
+    #[must_use]
+    pub fn segment(&self, index: usize) -> Option<u32> {
+        Some(self.bearer(index)).filter(|&segment| segment != NO_SEGMENT && segment != GROUNDED)
+    }
+
+    /// What bears vertex `index`: a graph segment, [`GROUNDED`] or
+    /// [`NO_SEGMENT`].
+    #[must_use]
+    pub fn bearer(&self, index: usize) -> u32 {
+        self.segments.get(index).copied().unwrap_or(NO_SEGMENT)
     }
 }
 
@@ -139,6 +190,9 @@ pub struct Card {
     /// How it bends on the levels that keep a card per organ
     /// ([`crate::bend`]); flat elsewhere. A level's bent cards come first.
     pub bend: Bend,
+    /// The graph segment that bears its organ (the first organ of a
+    /// cluster), or [`NO_SEGMENT`]; not packaged with the mesh.
+    pub segment: u32,
 }
 
 /// Wood and organ cards of one plant at one level of detail, and on the
@@ -214,6 +268,7 @@ impl PlantMesh {
                     born: f64::from(card.born),
                     shed,
                     level: 3,
+                    segment: card.segment,
                 });
             }
             // Counter-clockwise seen from the side the normal points to.
@@ -254,6 +309,7 @@ fn bent_card(card: &Card, base: Vec3, heading: Vec3, left: Vec3, out: &mut Mesh)
             born: f64::from(card.born),
             shed,
             level: 3,
+            segment: card.segment,
         });
         out.indices.push(index);
     }
@@ -518,6 +574,8 @@ struct Ring {
     radius: f64,
     born: f64,
     shed: Option<f64>,
+    /// The graph segment it starts (ends, for an axis's last ring).
+    segment: u32,
 }
 
 /// The rings of the axis that starts at segment `start`: the start of every
@@ -558,6 +616,7 @@ fn axis_rings(
                 radius: segment.radius,
                 born: segment.born,
                 shed: segment.shed,
+                segment: u32::try_from(index).unwrap_or(NO_SEGMENT),
             }
         })
         .collect();
@@ -568,6 +627,7 @@ fn axis_rings(
         radius: end_radii[end],
         born: last.born,
         shed: last.shed,
+        segment: u32::try_from(end).unwrap_or(NO_SEGMENT),
     });
     // Keep the ends.
     let cos_bend = math::cos(math::radians(lod.bend));
@@ -841,7 +901,7 @@ pub const STICK_TRIANGLES: usize = 2 * STICK_SIDES as usize;
 
 /// A twig a level drops (see [`twigs`]): its middle, its direction
 /// (pointing up), its length, its mean radius, and its birth and shed ages.
-type Twig = (Vec3, Vec3, f64, f64, f64, Option<f64>);
+type Twig = (Vec3, Vec3, f64, f64, f64, Option<f64>, u32);
 
 /// A cell for gathering the twigs a level drops, in its `min_radius`s,
 /// where the level merges no organs (see [`twigs`]).
@@ -913,6 +973,7 @@ fn twigs(
             f64::midpoint(segment.radius, end_radius),
             segment.born,
             segment.shed,
+            u32::try_from(index).unwrap_or(NO_SEGMENT),
         ));
     }
     let widen = math::PI / (f64::from(STICK_SIDES) * math::sin(math::PI / f64::from(STICK_SIDES)));
@@ -1057,6 +1118,15 @@ fn twigs(
                 .iter()
                 .map(|&i| twigs[i].5)
                 .try_fold(f64::NEG_INFINITY, |s, shed| shed.map(|shed| s.max(shed)));
+            // Borne by the segment of the share that covers most.
+            let bearer = share
+                .iter()
+                .max_by(|&&a, &&b| {
+                    (twigs[a].3 * twigs[a].2)
+                        .total_cmp(&(twigs[b].3 * twigs[b].2))
+                        .then(b.cmp(&a))
+                })
+                .map_or(NO_SEGMENT, |&i| twigs[i].6);
             let start = centre + direction * low;
             let normal = any_perpendicular(direction);
             let binormal = direction.cross(normal);
@@ -1091,6 +1161,7 @@ fn twigs(
                         born,
                         shed,
                         level: 2,
+                        segment: bearer,
                     });
                 }
             }
@@ -1135,6 +1206,7 @@ fn axis_frames(rings: &[Ring]) -> Vec<(Vec3, Vec3, Vec3, f64)> {
     frames
 }
 
+#[allow(clippy::too_many_lines)]
 fn wood(
     graph: &PlantGraph,
     appearance: &Appearance,
@@ -1249,6 +1321,7 @@ fn wood(
                     born: current.born,
                     shed: current.shed,
                     level,
+                    segment: current.segment,
                 });
             }
             if let Some(previous) = first_ring {
@@ -1278,6 +1351,7 @@ struct Placed {
     born: f64,
     shed: Option<f64>,
     bend: Bend,
+    segment: u32,
 }
 
 impl Placed {
@@ -1296,6 +1370,7 @@ impl Placed {
             born: self.born as f32,
             shed: self.shed.map_or(f32::INFINITY, |shed| shed as f32),
             bend: self.bend,
+            segment: self.segment,
         }
     }
 }
@@ -1675,6 +1750,7 @@ fn organ_card(
         born: organ.born,
         shed: organ.shed,
         bend: shown.bend,
+        segment: organ.segment.unwrap_or(GROUNDED),
     };
     if let Some(cross) = shown.cross().or(across) {
         // A second card across the first keeps organs that stand
@@ -2537,6 +2613,9 @@ fn cluster_cards(
                     born: cluster.born,
                     shed: cluster.shed.is_finite().then_some(cluster.shed),
                     bend: Bend::FLAT,
+                    segment: cluster.organs.first().map_or(NO_SEGMENT, |&first| {
+                        graph.organs[first].segment.unwrap_or(GROUNDED)
+                    }),
                 }
                 .finish(),
             );

@@ -23,7 +23,6 @@
       "arch": 8,
       "pieces": 6,
       "flowering": 0.35,
-      "culm_height": 0.6,
       "culm_radius": 0.001,
       "culm_lean": 8,
       "panicle_length": 0.08,
@@ -84,6 +83,11 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "culm_length_m": {
+      "min": 0.3,
+      "max": 0.8,
+      "typical": 0.6
+    },
     "inflorescence": "raceme",
     "units_per_inflorescence": {"min": 3, "max": 6, "low": 2, "high": 10},
     "florets_per_spikelet": {"min": 3, "max": 8},
@@ -97,6 +101,11 @@
     "awn_form": "geniculate"
   },
   "evidence": {
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935), as Danthonia californica: culms 30 cm to 80 cm tall."
+    },
     "appearance.organs.panicle": {
       "evidence": "Authored",
       "source": "plantgen-authors",
