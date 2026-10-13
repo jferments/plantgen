@@ -1,0 +1,14 @@
+# Grapes and their kin (Vitaceae), on the climber base (growth plan
+# G2.3a). It gives the values its species leave unset (5 of climber's
+# parameters), as the climber program's defaults until then; each species
+# sets the rest.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem vitaceae 1 extends climber;
+
+param vigour_spread = 0.1;
+param shade_shoot = 0.4;   # share of them it grows in deep shade
+param reach = 3;           # how far a shoot senses its host
+param adult_rise = 0;      # upward tropism of an adult shoot of its own habit; 0 none
+param adult_light = 2;     # least light at a tip in reach that makes it adult; over 1 never

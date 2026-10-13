@@ -197,4 +197,31 @@ pub mod venation;
 /// shoot, lose tips that have no space, shed limbs that do not pay their
 /// way, sprout from dormant buds and grow back into freed space, as a
 /// maple did, each set by rules from the taxon's architecture traits.
-pub const GENERATOR_REVISION: u32 = 31;
+/// 32: a cluster can wrap a spathe round its units (spec rework E6b): a
+/// leaf-like sheet from below the lowest unit, its length, width, hood,
+/// cup and colour set on the look, drawn solid near the camera and on the
+/// cluster's card, so the skunk cabbage's spadix stands in its yellow
+/// spathe.
+/// 33: a cactus's ribs, areoles, spines and joints are grown from the
+/// characters its floras state (spec rework E6c), by rules of its family,
+/// subfamily and genus: rib and spine counts within their stated ranges,
+/// areoles' spacing, spines a fifth shorter than the longest a flora
+/// gives, a column's girth and a joint's length and width; spine sets
+/// name their role, and the chollas' areoles bear glochids.
+/// 34: a value a rule sets from one stated range varies within it (spec
+/// rework VARY): the effective spec records its spread, and each organ
+/// drawn solid is one of four varieties of its look, which draw its
+/// counts and sizes across their ranges; a part mesh's variant `k` is its
+/// look's variety `k`.
+/// 35: a conifer's foliage and cones are grown from the characters its
+/// floras state (spec rework E6d), by rules at Pinidae: how long a shoot
+/// keeps its needles, a spray card's needles as long as the stated ones
+/// on a usual spray, a pine's needles to a bundle, needles in two ranks
+/// or all round, and a seed cone's length, posture and years on the tree.
+/// 36: the pieces of a strap join (an arching grass or sedge blade, a
+/// basal leaf drawn in pieces): each piece of a chain is turned against
+/// its card's droop by half of it and lengthened by its arc over its
+/// chord, so its bent card ends where the next piece stands, and drawn at
+/// its own size, not its sun or shade form's; before, every piece drooped
+/// away from the next and the strap fell apart into floating pieces.
+pub const GENERATOR_REVISION: u32 = 36;

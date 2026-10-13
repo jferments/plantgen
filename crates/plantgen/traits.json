@@ -78,6 +78,13 @@
       "po": {"id": "PO:0025359", "name": "sorus"},
       "why": "a cluster of sporangia on a fern's leaf, on its underside or along its edge"
     },
+    "areole": {
+      "part_of": "stem",
+      "category": "organ",
+      "when": {"spines": ["areoles"]},
+      "po": {"id": "PO:0025353", "name": "areole bud"},
+      "why": "a cactus's short, felted bud at a node, on a rib, a tubercle or a joint's face, from which its spines, glochids, flowers and branches come"
+    },
     "spine": {
       "part_of": "stem",
       "category": "organ",
@@ -172,6 +179,12 @@
       "category": "organ",
       "po": {"id": "PO:0009045", "name": "involucral bract"},
       "why": "one of the bracts in rows round a head's foot, its involucre"
+    },
+    "inflorescence_bract": {
+      "part_of": "inflorescence",
+      "category": "organ",
+      "po": {"id": "PO:0009054", "name": "inflorescence bract"},
+      "why": "a bract at the foot of an inflorescence or on its axis: an aroid's spathe, a dogwood's petal-like bracts, an umbel's involucre"
     },
     "spikelet": {
       "part_of": "inflorescence",
@@ -450,6 +463,117 @@
       "values": ["none", "areoles", "thorns", "prickles", "leaf_spines"],
       "why": "what a plant is armed with: spines from areoles, thorns from shoots, prickles from bark, or spines on its leaves"
     },
+    "stem_form": {
+      "group": "form",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["columnar", "globose", "cylindric_joints", "flat_joints"],
+      "when": {"spines": ["areoles"]},
+      "why": "what a cactus's stem is built as: a column or a barrel growing on at its tip, or a chain of joints, cylindrical (a cholla's) or flattened into pads (a prickly pear's)"
+    },
+    "ribs": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "count",
+      "range": [0, 64],
+      "when": {"spines": ["areoles"]},
+      "why": "ribs running down a cactus's stem, its areoles along their crests; 0 where its areoles sit on tubercles or scattered over its joints"
+    },
+    "tubercles": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "bool",
+      "when": {"spines": ["areoles"]},
+      "why": "whether a cactus's areoles sit on tubercles, knobs of the stem, alone (a pincushion's) or along its ribs"
+    },
+    "joint_length_m": {
+      "group": "size",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m",
+      "range": [0.005, 2],
+      "when": {"stem_form": ["cylindric_joints", "flat_joints"]},
+      "why": "a grown joint of a cholla or a prickly pear's pad, from its foot to its tip"
+    },
+    "joint_width_m": {
+      "group": "size",
+      "organ": "stem",
+      "type": "number",
+      "unit": "m",
+      "range": [0.003, 1],
+      "when": {"stem_form": ["cylindric_joints", "flat_joints"]},
+      "why": "a grown joint's thickness across, or a pad's width at its widest"
+    },
+    "areole_spacing_m": {
+      "group": "stem_and_bark",
+      "organ": "areole",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.2],
+      "why": "from one areole to the next along a rib, or between neighbours on a joint"
+    },
+    "glochids": {
+      "group": "stem_and_bark",
+      "organ": "areole",
+      "type": "bool",
+      "why": "whether the areoles bear glochids, tufts of fine barbed bristles that come away at a touch (chollas and prickly pears)"
+    },
+    "radial_spines": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "count",
+      "range": [0, 100],
+      "when": {"spines": ["areoles"]},
+      "why": "spines round an areole's edge, spreading flat or nearly so; where a flora does not tell radials from centrals, all of them"
+    },
+    "central_spines": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "count",
+      "range": [0, 30],
+      "when": {"spines": ["areoles"]},
+      "why": "spines standing out from an areole's middle, usually stouter than the radials"
+    },
+    "radial_spine_length_m": {
+      "group": "size",
+      "organ": "spine",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 0.3],
+      "when": {"spines": ["areoles"]},
+      "why": "the longest radial spines (or the longest spines, where a flora does not tell them apart)"
+    },
+    "central_spine_length_m": {
+      "group": "size",
+      "organ": "spine",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 0.3],
+      "when": {"spines": ["areoles"]},
+      "why": "the longest central spine"
+    },
+    "central_spine_form": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "enum",
+      "values": ["straight", "curved", "hooked", "flattened", "twisted"],
+      "when": {"spines": ["areoles"]},
+      "why": "the main central spine's form: straight, curved, hooked at its tip (a fishhook's), flattened, or twisted"
+    },
+    "spine_sheaths": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "bool",
+      "when": {"spines": ["areoles"]},
+      "why": "whether each spine wears a papery sheath, as a cholla's do"
+    },
+    "spine_colour": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "colour",
+      "when": {"spines": ["areoles"]},
+      "why": "a grown spine's colour before it greys"
+    },
     "wood_density_basic_kg_m3": {
       "group": "stem_and_bark",
       "organ": "stem",
@@ -703,6 +827,14 @@
       "when": {"leaf_form": ["needle"]},
       "why": "needles in a pine's bundle"
     },
+    "foliage_ranks": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["all_round", "two_ranked"],
+      "when": {"leaf_form": ["needle"]},
+      "why": "how a conifer's needles stand on a shoot: out all round it, or spread into two flat ranks, often by a twist at their base though they are set in a spiral (a yew's, a hemlock's)"
+    },
     "stipules": {
       "group": "leaves",
       "organ": "leaf",
@@ -768,6 +900,28 @@
       "unit": "m",
       "range": [0.001, 10],
       "why": "an inflorescence from its lowest unit or branch to its tip"
+    },
+    "inflorescence_bracts": {
+      "group": "flowers",
+      "organ": "inflorescence",
+      "type": "count",
+      "range": [0, 100],
+      "why": "bracts at the foot of an inflorescence: an aroid's one spathe, a dogwood's four, an umbel's involucre"
+    },
+    "bract_form": {
+      "group": "flowers",
+      "organ": "inflorescence_bract",
+      "type": "enum",
+      "values": ["spathe", "petaloid", "leafy", "scale"],
+      "why": "what those bracts are: one sheathing the inflorescence's foot and hooding it, showy like petals, green like leaves, or small scales"
+    },
+    "bract_length_m": {
+      "group": "flowers",
+      "organ": "inflorescence_bract",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 2],
+      "why": "the longest of those bracts, from its foot to its tip, a spathe's sheath included"
     },
     "flower_colour": {
       "group": "flowers",
@@ -1128,6 +1282,29 @@
       "unit": "m",
       "range": [0.002, 0.7],
       "why": "a ripe cone"
+    },
+    "cone_posture": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "enum",
+      "values": ["erect", "spreading", "deflexed", "pendent"],
+      "why": "how a seed cone sits on its shoot: standing up (a fir's), out to the side, bent down, or hanging (a spruce's)"
+    },
+    "cone_maturation_years": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "number",
+      "unit": "years",
+      "range": [1, 3],
+      "why": "the seasons a seed cone takes from pollination to ripe: one for a spruce, two for most pines"
+    },
+    "cone_retention_years": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "number",
+      "unit": "years",
+      "range": [0, 40],
+      "why": "how long a ripe cone stays on the tree once it has shed its seed: none where it falls apart on the branch (a fir's), many where it stays shut or hangs on (a shore pine's)"
     },
     "seed_length_m": {
       "group": "fruit_and_cones",

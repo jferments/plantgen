@@ -952,8 +952,16 @@ impl Vocabulary {
         rule: &Map<String, Value>,
         programs: &Programs,
     ) -> Result<(), String> {
-        if let Some(Value::String(formula)) = rule.get("rule") {
+        let formulas: Vec<&str> = match rule.get("rule") {
+            Some(Value::String(formula)) => vec![formula.as_str()],
+            Some(Value::Array(formulas)) => formulas.iter().filter_map(Value::as_str).collect(),
+            _ => Vec::new(),
+        };
+        for formula in formulas {
             for name in Formula::parse(formula)?.names() {
+                // `min(name)` and `max(name)` read a trait's bounds.
+                let name =
+                    crate::formula::bound(&name).map_or(name.clone(), |(name, _)| name.to_string());
                 let param = programs.values().any(|params| params.contains_key(&name));
                 if param && self.traits.contains_key(&name) {
                     return Err(format!(

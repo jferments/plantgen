@@ -40,7 +40,20 @@
 //! (or a rule before it), else as the program's default; so a rule can
 //! say what a leaf card of the species' own size means for its shoots.
 //! A trait stated as a range reads as its `typical` value, else the middle
-//! of its `min` and `max`; one stated as qualified states reads as its most
+//! of its `min` and `max`, and as `min(name)` and `max(name)` its bounds
+//! (a number stated alone is both), so a rule whose `rule` is a list of
+//! formulas, one for each item, can set a range a look varies within:
+//! ribs stated as 12 to 24 set a body's `[12, 24]`. A rule that reads one
+//! range (or one parameter a rule before it spread), and nothing else
+//! that varies, is also worked out at five points of it ([`SPREAD_AT`],
+//! [`range_at`]): its lowest, its `min`, its `typical`, its `max` and its
+//! highest (spec rework VARY); one reading two keeps its one value, as no
+//! flora says how two ranges vary together, and a bound is one number.
+//! Where its numbers differ, the effective spec records them beside the
+//! value as its spread ([`spread_path`], [`Spread`]), from which each
+//! organ drawn solid draws its look (`crate::looks::variety`); a list a
+//! rule sets, and a body's look, vary within their own ranges and record
+//! none. A trait stated as qualified states reads as its most
 //! usual state ([`FREQUENCIES`]), and a rule reading states that tie sets
 //! nothing, unless it is a map that draws `between` them: a flora's "ovate
 //! to lanceolate" means the forms between, so the map gives the mean of
@@ -126,6 +139,131 @@ pub const FREQUENCIES: [&str; 4] = ["usually", "often", "sometimes", "rarely"];
 /// known the rare extremes, `low` and `high`, and the usual value,
 /// `typical`. A flora's "(3-)5-8" is `{"min": 5, "max": 8, "low": 3}`.
 pub const RANGE: [&str; 5] = ["min", "max", "low", "high", "typical"];
+
+/// The share of a range drawn below its `min` where it states a `low`,
+/// and above its `max` where it states a `high`: its rare extremes.
+pub const TAIL: f64 = 0.05;
+
+/// The points a rule reading a range is worked out at, as shares of the
+/// way through the range ([`range_at`]): its lowest, its `min`, its
+/// `typical`, its `max` and its highest.
+pub const SPREAD_AT: [f64; 5] = [0.0, TAIL, 0.5, 1.0 - TAIL, 1.0];
+
+/// The value a range stated as `stated` takes `share` of the way through
+/// it: half its values lie below its `typical` (else the middle of its
+/// `min` and `max`) and half above, evenly within each half, and
+/// [`TAIL`] of them below `min` down to `low` and above `max` up to
+/// `high` where it states them. Nothing for a range without a `min` and a
+/// `max`.
+#[must_use]
+pub fn range_at(stated: &Map<String, Value>, share: f64) -> Option<f64> {
+    let bound = |name: &str| stated.get(name).and_then(Value::as_f64);
+    let (min, max) = (bound("min")?, bound("max")?);
+    let mut points = vec![(0.0, bound("low").unwrap_or(min))];
+    if bound("low").is_some() {
+        points.push((TAIL, min));
+    }
+    points.push((
+        0.5,
+        bound("typical").unwrap_or_else(|| f64::midpoint(min, max)),
+    ));
+    if bound("high").is_some() {
+        points.push((1.0 - TAIL, max));
+    }
+    points.push((1.0, bound("high").unwrap_or(max)));
+    Some(through(&points, share))
+}
+
+/// The value `share` of the way along `points`, each a share and its
+/// value, straight between them.
+fn through(points: &[(f64, f64)], share: f64) -> f64 {
+    let share = share.clamp(0.0, 1.0);
+    for pair in points.windows(2) {
+        let ((from, low), (to, high)) = (pair[0], pair[1]);
+        if share <= to {
+            return if to > from {
+                low + (high - low) * (share - from) / (to - from)
+            } else {
+                high
+            };
+        }
+    }
+    points.last().map_or(0.0, |point| point.1)
+}
+
+/// Where the effective spec records the spread of the value at `path`:
+/// `appearance.spreads.<rest>` for a value in `appearance` (a look's
+/// `appearance.organs.head.shape.rays` at
+/// `appearance.spreads.organs.head.shape.rays`), `generator.spreads.<rest>`
+/// for one in `generator`; nothing elsewhere.
+#[must_use]
+pub fn spread_path(path: &str) -> Option<String> {
+    let (section, rest) = path.split_once('.')?;
+    ["appearance", "generator"]
+        .contains(&section)
+        .then(|| format!("{section}.spreads.{rest}"))
+}
+
+/// The spread of a value a rule sets from a range: its values at the
+/// points of [`SPREAD_AT`], whole numbers where the rule sets a count.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Spread {
+    pub values: [f64; 5],
+    pub whole: bool,
+}
+
+impl Spread {
+    /// The spread the effective spec records as `value`: five numbers.
+    #[must_use]
+    pub fn of(value: &Value) -> Option<Self> {
+        let items = value
+            .as_array()
+            .filter(|items| items.len() == SPREAD_AT.len())?;
+        let mut values = [0.0; 5];
+        for (slot, item) in values.iter_mut().zip(items) {
+            *slot = item.as_f64().filter(|number| number.is_finite())?;
+        }
+        Some(Self {
+            values,
+            whole: items.iter().all(|item| item.is_i64() || item.is_u64()),
+        })
+    }
+
+    /// Its value `share` of the way through it, straight between its
+    /// points; the nearest whole number for a count.
+    #[must_use]
+    pub fn at(&self, share: f64) -> f64 {
+        let points: Vec<(f64, f64)> = SPREAD_AT.into_iter().zip(self.values).collect();
+        let value = through(&points, share);
+        if self.whole { value.round() } else { value }
+    }
+
+    /// Every spread recorded within `spreads` (a section's `spreads`),
+    /// each with its path there.
+    #[must_use]
+    pub fn all(spreads: &Map<String, Value>) -> Vec<(String, Self)> {
+        fn walk(map: &Map<String, Value>, at: &str, found: &mut Vec<(String, Spread)>) {
+            for (key, value) in map {
+                let path = if at.is_empty() {
+                    key.clone()
+                } else {
+                    format!("{at}.{key}")
+                };
+                match value {
+                    Value::Object(inside) => walk(inside, &path, found),
+                    other => {
+                        if let Some(spread) = Spread::of(other) {
+                            found.push((path, spread));
+                        }
+                    }
+                }
+            }
+        }
+        let mut found = Vec::new();
+        walk(spreads, "", &mut found);
+        found
+    }
+}
 
 fn level(rank: &str) -> Option<usize> {
     LEVELS.iter().position(|level| *level == rank)
@@ -441,6 +579,12 @@ fn check_rule(path: &str, rule: &Value) -> Result<(), String> {
     }
     match (rule.get("rule"), rule.get("map")) {
         (Some(Value::String(formula)), None) => Formula::parse(formula).map(|_| ()),
+        (Some(Value::Array(formulas)), None) if !formulas.is_empty() => {
+            formulas.iter().try_for_each(|formula| match formula {
+                Value::String(formula) => Formula::parse(formula).map(|_| ()),
+                _ => Err("a list `rule` is formulas, one for each item".into()),
+            })
+        }
         (None, Some(Value::Object(map))) => match map.iter().next() {
             Some((_, Value::Object(table))) if map.len() == 1 => table
                 .values()
@@ -448,7 +592,7 @@ fn check_rule(path: &str, rule: &Value) -> Result<(), String> {
                 .try_for_each(|formula| Formula::parse(formula).map(|_| ())),
             _ => Err("a `map` names one trait, then its values' spec values".into()),
         },
-        _ => Err("a rule has a `rule` (a formula) or a `map`, not both".into()),
+        _ => Err("a rule has a `rule` (a formula, or a list of them) or a `map`, not both".into()),
     }
 }
 
@@ -489,8 +633,9 @@ fn rivals(field: &str) -> Vec<&'static str> {
 
 /// What a rule may set inside a look's `inflorescence`
 /// (`crate::looks::Inflorescence`): every key but its `branch` and its
-/// `stalk` colour. The looks module's tests hold this to the key.
-pub const INFLORESCENCE: [(&str, Field); 11] = {
+/// `stalk` and `spathe_colour` colours. The looks module's tests hold this
+/// to the key.
+pub const INFLORESCENCE: [(&str, Field); 15] = {
     use Field::{Count, Number, Word};
     [
         ("kind", Word),
@@ -504,12 +649,51 @@ pub const INFLORESCENCE: [(&str, Field); 11] = {
         ("size", Number),
         ("taper", Number),
         ("droop", Number),
+        ("spathe", Number),
+        ("spathe_width", Number),
+        ("spathe_hood", Number),
+        ("spathe_cup", Number),
     ]
 };
 
 /// The start of a rule's path that sets something in every look it may:
 /// `*` stands for the organ.
 const EVERY: &str = "appearance.organs.*.";
+
+/// The start of a rule's path inside a body's look (spec rework E6c).
+const BODIES: &str = "appearance.bodies.";
+
+/// Whether a rule at `at` may set it in `spec`: in a body's look, a rule
+/// fills in what the look has, so the body, its ribs or a spine set of
+/// the role it names must be there.
+fn in_body(spec: &Map<String, Value>, at: &str) -> Result<(), String> {
+    if let Some(inside) = at.strip_prefix(BODIES)
+        && let Some((within, _)) = at.rsplit_once('.')
+        && find(spec, within).is_none()
+    {
+        let body = inside.split('.').next().unwrap_or_default();
+        return Err(format!(
+            "its `{body}` body has no `{}`",
+            &within[BODIES.len() + body.len() + 1..]
+        ));
+    }
+    Ok(())
+}
+
+/// A bound of the trait `name` as stated (`value`), read as `min(name)`
+/// or `max(name)`: of a range, its `min` or `max`; of a number, the
+/// number.
+fn bound_of(name: &str, bound: &str, value: &Value) -> Result<Value, String> {
+    match value {
+        Value::Object(range) => range
+            .get(bound)
+            .filter(|bound| bound.is_number())
+            .cloned()
+            .ok_or_else(|| format!("`{name}` states no `{bound}`")),
+        Value::Number(_) => Ok(value.clone()),
+        _ => Err(format!("`{name}` is no number to read the {bound} of")),
+    }
+}
 
 /// The stage looks of a look's season that a rule in its `shape` also
 /// sets where they draw its template, unless they draw the whole cluster.
@@ -1037,11 +1221,22 @@ pub fn find<'a>(values: &'a Map<String, Value>, path: &str) -> Option<&'a Value>
     for part in parts {
         value = match value {
             Value::Object(map) => map.get(part)?,
-            Value::Array(items) => items.get(part.parse::<usize>().ok()?)?,
+            Value::Array(items) => match part.parse::<usize>() {
+                Ok(index) => items.get(index)?,
+                Err(_) => by_role(items, part)?,
+            },
             _ => return None,
         };
     }
     Some(value)
+}
+
+/// The item of a list of objects whose `role` is `role`: a body's spine
+/// set, as a rule's path names it (`appearance.bodies.stem.spines.radial`).
+fn by_role<'a>(items: &'a [Value], role: &str) -> Option<&'a Value> {
+    items
+        .iter()
+        .find(|item| item.get("role").and_then(Value::as_str) == Some(role))
 }
 
 /// The rank files a species of the genus `genus` in the family `family`
@@ -1437,6 +1632,22 @@ struct Ruled<'a> {
 /// A species' rules, by the path each sets: the rule and its layer.
 type Rules = BTreeMap<String, (Map<String, Value>, usize)>;
 
+/// Fail a rule on `generator.params.<name>` unless the species' program
+/// has that parameter.
+fn has_param<T>(
+    at: &str,
+    program: Option<&str>,
+    params: Option<&BTreeMap<String, T>>,
+) -> Result<(), String> {
+    if let Some(param) = at.strip_prefix("generator.params.") {
+        let program = program.ok_or("the species names no program")?;
+        if !params.is_some_and(|params| params.contains_key(param)) {
+            return Err(format!("program `{program}` has no parameter `{param}`"));
+        }
+    }
+    Ok(())
+}
+
 impl Ruled<'_> {
     /// Run a species' rules in [`order`] on its merged `spec`, and return
     /// each one's file and, if it set nothing, why.
@@ -1494,6 +1705,20 @@ impl Ruled<'_> {
             };
             outcomes.insert(path.to_string(), (layers[*index].0.clone(), outcome));
         }
+        // A spread a rule replaced leaves no empty objects behind.
+        for section in ["appearance", "generator"] {
+            if let Some(Value::Object(inside)) = spec.get_mut(section) {
+                if let Some(Value::Object(spreads)) = inside.get_mut("spreads") {
+                    prune(spreads);
+                }
+                if inside
+                    .get("spreads")
+                    .is_some_and(|spreads| spreads.as_object().is_some_and(Map::is_empty))
+                {
+                    inside.remove("spreads");
+                }
+            }
+        }
         outcomes
     }
 
@@ -1508,23 +1733,25 @@ impl Ruled<'_> {
         notes: &mut BTreeMap<String, (Origin, Value)>,
     ) -> Result<(), String> {
         let params = program.and_then(|program| programs.get(program));
-        if let Some(param) = self.at.strip_prefix("generator.params.") {
-            let program = program.ok_or("the species names no program")?;
-            if !params.is_some_and(|params| params.contains_key(param)) {
-                return Err(format!("program `{program}` has no parameter `{param}`"));
-            }
-        }
+        has_param(self.at, program, params)?;
         let field = match self.at.strip_prefix("appearance.organs.") {
             Some(look) => look_field(spec, look, self.rule.get("template"))?,
             None => None,
         };
+        in_body(spec, self.at)?;
         let mut depth = self.index;
         let mut from = Vec::new();
         let mut inputs: BTreeMap<String, Value> = BTreeMap::new();
         // A trait as stated, or a parameter.
         let mut read = |key: &str| -> Result<Value, String> {
             let path = format!("generator.params.{key}");
-            let value = if let Some((value, at)) = self.traits.get(key) {
+            let value = if let Some((name, bound)) = crate::formula::bound(key)
+                && let Some((value, at)) = self.traits.get(name)
+            {
+                depth = depth.max(*at);
+                from.push(format!("{name} from {}", self.layers[*at].0));
+                bound_of(name, bound, value)?
+            } else if let Some((value, at)) = self.traits.get(key) {
                 depth = depth.max(*at);
                 from.push(format!("{key} from {}", self.layers[*at].0));
                 value.clone()
@@ -1574,12 +1801,13 @@ impl Ruled<'_> {
                 }
             }
         }
-        if let Some((label, by)) = origins.get(self.at)
+        if let Some((label, by)) = origins.get(self.at).or_else(|| self.listed(spec, origins))
             && *by >= depth
         {
             return Err(format!("set by hand in {label}"));
         }
         let rivals = self.rivals(field, spec, origins, depth)?;
+        let typical = inputs.clone();
         let value = picked(self.rule, &picks, &mut inputs).map_err(|why| {
             // Its number failed for want of a name it could not read.
             match unread.first() {
@@ -1588,13 +1816,8 @@ impl Ruled<'_> {
             }
         })?;
         fits(field, &value)?;
-        for rival in &rivals {
-            remove(spec, rival);
-            forget(origins, rival);
-            notes.retain(|path, _| !within(path, rival));
-        }
-        set(spec, self.at, value);
-        forget(origins, self.at);
+        let spread = self.spread(&picks, &typical, spec, &value);
+        let set_at = put(spec, origins, notes, (self.at, value, spread), &rivals);
         let file = &self.layers[self.index].0;
         let label = if from.is_empty() {
             format!("{file}: rule")
@@ -1602,18 +1825,96 @@ impl Ruled<'_> {
             format!("{file}: rule on {}", from.join(", "))
         };
         let origin = (label, depth);
-        origins.insert(self.at.to_string(), origin.clone());
-        notes.retain(|path, _| !within(path, self.at));
         // The rule's note: on its path, else on all of its file's rules.
         let part = self.layers[self.index].1;
-        if let Some(note) = part
+        let note = part
             .notes
             .get(&format!("rules.{}", self.path))
-            .or_else(|| part.notes.get("rules"))
-        {
-            notes.insert(self.at.to_string(), (origin, note.clone()));
+            .or_else(|| part.notes.get("rules"));
+        for at in set_at {
+            if let Some(note) = note {
+                notes.insert(at.clone(), (origin.clone(), note.clone()));
+            }
+            origins.insert(at, origin.clone());
         }
         Ok(())
+    }
+
+    /// The spread of `value`, the rule's value from `inputs`, where it
+    /// reads one thing that varies, a range or a parameter a rule before it
+    /// spread: its value at each point of [`SPREAD_AT`] with that read
+    /// there ([`range_at`]), the middle one `value` itself. Nothing where
+    /// it reads none (a bound, `min(name)`, is one number), or two (how
+    /// two ranges vary together is not stated), or its values are not all
+    /// numbers or all the same, or it sets a body's look, which varies
+    /// within the ranges it states.
+    fn spread(
+        &self,
+        picks: &[Value],
+        inputs: &BTreeMap<String, Value>,
+        spec: &Map<String, Value>,
+        value: &Value,
+    ) -> Option<Value> {
+        if self.at.starts_with(BODIES) {
+            return None;
+        }
+        let varying: Vec<(&String, [f64; 5])> = inputs
+            .keys()
+            .filter_map(|name| {
+                let mut at = [0.0; 5];
+                match self.traits.get(name) {
+                    Some((Value::Object(stated), _)) if stated.values().all(Value::is_number) => {
+                        for (slot, share) in at.iter_mut().zip(SPREAD_AT) {
+                            *slot = range_at(stated, share)?;
+                        }
+                    }
+                    Some(_) => return None,
+                    None => {
+                        at = Spread::of(find(spec, &format!("generator.spreads.params.{name}"))?)?
+                            .values;
+                    }
+                }
+                Some((name, at))
+            })
+            .collect();
+        let [(name, at)] = varying.as_slice() else {
+            return None;
+        };
+        if !value.is_number() {
+            return None;
+        }
+        let mut values = Vec::with_capacity(SPREAD_AT.len());
+        for (point, at) in at.iter().enumerate() {
+            if point == SPREAD_AT.len() / 2 {
+                values.push(value.clone());
+                continue;
+            }
+            let mut read = inputs.clone();
+            read.insert((*name).clone(), Value::from(*at));
+            values.push(picked(self.rule, picks, &mut read).ok()?);
+        }
+        (values.iter().all(Value::is_number) && values.iter().any(|other| other != value))
+            .then_some(Value::Array(values))
+    }
+
+    /// Where the rule sets a field of a list's item by its role
+    /// (`spines.radial.count`), the origin of the list, if the item has
+    /// the field: a field written in a list a file sets is set by hand
+    /// there.
+    fn listed<'b>(
+        &self,
+        spec: &Map<String, Value>,
+        origins: &'b BTreeMap<String, Origin>,
+    ) -> Option<&'b Origin> {
+        find(spec, self.at)?;
+        let mut at = self.at;
+        while let Some((outer, _)) = at.rsplit_once('.') {
+            if find(spec, outer).is_some_and(Value::is_array) {
+                return origins.get(outer);
+            }
+            at = outer;
+        }
+        None
     }
 
     /// The fields of the rule's card in `spec` that cannot stand beside the
@@ -1748,8 +2049,17 @@ fn reads(rule: &Map<String, Value>) -> Vec<String> {
             .map(|formula| formula.names())
             .unwrap_or_default()
     };
-    if let Some(Value::String(formula)) = rule.get("rule") {
-        return names(formula).into_iter().collect();
+    match rule.get("rule") {
+        Some(Value::String(formula)) => return names(formula).into_iter().collect(),
+        Some(Value::Array(formulas)) => {
+            let all: BTreeSet<String> = formulas
+                .iter()
+                .filter_map(Value::as_str)
+                .flat_map(names)
+                .collect();
+            return all.into_iter().collect();
+        }
+        _ => {}
     }
     let Some((key, table)) = map_of(rule) else {
         return Vec::new();
@@ -1920,8 +2230,16 @@ fn evaluate(rule: &Map<String, Value>, inputs: &BTreeMap<String, Value>) -> Resu
             .and_then(written)
             .ok_or_else(|| NO_NUMBER.to_string())
     };
-    if let Some(Value::String(formula)) = rule.get("rule") {
-        return calculate(formula);
+    match rule.get("rule") {
+        Some(Value::String(formula)) => return calculate(formula),
+        Some(Value::Array(formulas)) => {
+            return formulas
+                .iter()
+                .map(|formula| calculate(formula.as_str().unwrap_or_default()))
+                .collect::<Result<Vec<_>, _>>()
+                .map(Value::Array);
+        }
+        _ => {}
     }
     if let Some((key, table)) = map_of(rule) {
         let value = inputs
@@ -1982,6 +2300,18 @@ fn set(target: &mut Map<String, Value>, path: &str, value: Value) {
             let entry = target
                 .entry(key.to_string())
                 .or_insert_with(|| Value::Object(Map::new()));
+            // A list's item by its role (`spines.radial.count`).
+            if let Value::Array(items) = entry {
+                let (role, rest) = rest.split_once('.').unwrap_or((rest, ""));
+                if let Some(Value::Object(inside)) = items
+                    .iter_mut()
+                    .find(|item| item.get("role").and_then(Value::as_str) == Some(role))
+                    && !rest.is_empty()
+                {
+                    set(inside, rest, value);
+                }
+                return;
+            }
             if !entry.is_object() {
                 *entry = Value::Object(Map::new());
             }
@@ -2116,6 +2446,47 @@ fn merge(
             }
         }
     }
+}
+
+/// Set `value` at `at` in `spec`, and beside it its `spread`, if any
+/// ([`spread_path`]), in place of what was at either and of `rivals` and
+/// their spreads, whose origins and notes go with them; the paths set.
+fn put(
+    spec: &mut Map<String, Value>,
+    origins: &mut BTreeMap<String, Origin>,
+    notes: &mut BTreeMap<String, (Origin, Value)>,
+    (at, value, spread): (&str, Value, Option<Value>),
+    rivals: &[String],
+) -> Vec<String> {
+    let spread_at = spread_path(at);
+    let replaced = rivals
+        .iter()
+        .flat_map(|rival| std::iter::once(rival.clone()).chain(spread_path(rival)))
+        .chain(std::iter::once(at.to_string()))
+        .chain(spread_at.clone());
+    for path in replaced {
+        remove(spec, &path);
+        forget(origins, &path);
+        notes.retain(|noted, _| !within(noted, &path));
+    }
+    set(spec, at, value);
+    let mut set_at = vec![at.to_string()];
+    if let (Some(spread_at), Some(spread)) = (spread_at, spread) {
+        set(spec, &spread_at, spread);
+        set_at.push(spread_at);
+    }
+    set_at
+}
+
+/// Remove every object within `map` left empty, from the inside out.
+fn prune(map: &mut Map<String, Value>) {
+    map.retain(|_, value| match value {
+        Value::Object(inside) => {
+            prune(inside);
+            !inside.is_empty()
+        }
+        _ => true,
+    });
 }
 
 /// Forget the origins of the value at `path` and of everything inside it.
@@ -2788,6 +3159,85 @@ mod tests {
         );
         // 8 × 3^0.75, to 6 significant digits.
         assert_eq!(small.spec["generator"]["params"]["space_density"], 18.2361);
+    }
+
+    /// A rule sets a body's look (spec rework E6c): a list of formulas
+    /// sets a range from a trait's bounds, a spine set is named by its
+    /// role, a field written in the species' list is set by hand, and a
+    /// look without ribs or a set of the role gets nothing.
+    #[test]
+    fn rules_fill_in_bodies_by_role_from_bounds() {
+        let files = ranks(&[(
+            "cactaceae/family.json",
+            json!({"schema": 1, "rank": "family", "name": "Cactaceae",
+                "rules": {
+                    "appearance.bodies.stem.ribs.count": {"rule": ["min(ribs)", "max(ribs)"]},
+                    "appearance.bodies.stem.spines.radial.count":
+                        {"rule": ["min(radial_spines)", "max(radial_spines)"]},
+                    "appearance.bodies.stem.spines.radial.length":
+                        {"rule": "max(radial_spine_length_m) / 1.25"},
+                    "appearance.bodies.stem.spines.central.length":
+                        {"rule": "max(radial_spine_length_m)"}},
+                "evidence": {"rules": {"evidence": "Authored", "note": "Cacti."}}}),
+        )]);
+        let grow = |own: &Value| {
+            let chain = above(&files, "cactaceae", "testcactus").unwrap();
+            inherit(
+                "cactaceae/testcactus/testcactus-one/spec.json",
+                own,
+                &chain,
+                &programs(),
+            )
+            .unwrap()
+        };
+        let traits = json!({"ribs": {"min": 12, "max": 20},
+            "radial_spines": {"min": 8, "max": 12, "typical": 10},
+            "radial_spine_length_m": {"min": 0.01, "max": 0.02}});
+        let ribbed = grow(&json!({"id": "testcactus-one", "traits": traits,
+            "appearance": {"bodies": {"stem": {"ribs": {"spacing": 0.05},
+                "spines": [{"role": "central", "count": [1, 1], "length": 0.03},
+                           {"role": "radial", "angle": 10}]}}}}));
+        let stem = &ribbed.spec["appearance"]["bodies"]["stem"];
+        assert_eq!(stem["ribs"], json!({"spacing": 0.05, "count": [12, 20]}));
+        assert_eq!(
+            stem["spines"],
+            json!([{"role": "central", "count": [1, 1], "length": 0.03},
+                   {"role": "radial", "angle": 10, "count": [8, 12], "length": 0.016}])
+        );
+        assert_eq!(
+            ribbed.rules["appearance.bodies.stem.spines.central.length"]
+                .1
+                .as_deref(),
+            Some("set by hand in cactaceae/testcactus/testcactus-one/spec.json")
+        );
+        // No ribs and no radial set: those rules set nothing.
+        let bare = grow(&json!({"id": "testcactus-one", "traits": traits,
+            "appearance": {"bodies": {"stem": {"spines": [{"role": "glochid"}]}}}}));
+        assert!(
+            bare.spec["appearance"]["bodies"]["stem"]
+                .get("ribs")
+                .is_none()
+        );
+        assert_eq!(
+            bare.rules["appearance.bodies.stem.ribs.count"].1.as_deref(),
+            Some("its `stem` body has no `ribs`")
+        );
+        assert_eq!(
+            bare.rules["appearance.bodies.stem.spines.radial.count"]
+                .1
+                .as_deref(),
+            Some("its `stem` body has no `spines.radial`")
+        );
+        // A range without the bound a rule reads gives it nothing.
+        let unbounded = grow(&json!({"id": "testcactus-one",
+            "traits": {"ribs": {"typical": 14}},
+            "appearance": {"bodies": {"stem": {"ribs": {}}}}}));
+        assert_eq!(
+            unbounded.rules["appearance.bodies.stem.ribs.count"]
+                .1
+                .as_deref(),
+            Some("`ribs` states no `max`")
+        );
     }
 
     /// A rule reads a range as its typical value, else its middle, and

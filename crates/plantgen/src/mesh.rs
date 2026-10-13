@@ -424,6 +424,9 @@ pub(crate) fn build_shaded(
     sticks: Option<usize>,
     apart: bool,
 ) -> (PlantMesh, Vec<f32>) {
+    // Pieces of a strap stand on the drawn ends of the pieces before them.
+    let seated = seated(graph, looks);
+    let graph = seated.as_ref().unwrap_or(graph);
     let parts = parts.filter(|_| level == 0);
     let is_part =
         |index: usize| parts.is_some_and(|parts| parts.get(index).copied().unwrap_or(false));
@@ -1372,6 +1375,227 @@ pub(crate) fn place(organ: &GraphOrgan, look: &Look) -> (Vec3, Vec3, Vec3, f64) 
             )
         }
     }
+}
+
+/// `graph` with the pieces of every strap turned so their drawn cards
+/// span them, or `None` when no organ changes. A program draws an arching
+/// strap (a grass blade, a basal leaf) as a chain of pieces, each standing
+/// where the turtle left the one before, and arches it by the turns between
+/// them. Each piece's card bends by its look ([`crate::bend`]: its midrib
+/// droops along an arc), so drawn on the turtle's line it ended short of
+/// the next piece and below it, and the strap fell apart into floating
+/// pieces. A piece of a chain (an organ that stands on the straight end of
+/// another in the same structure, or that another stands on) is turned
+/// against its droop by half of it and lengthened by the arc over its
+/// chord, and drawn at its own size when its look's sun and shade forms
+/// would size it otherwise: its card then runs from where the organ stands
+/// to where the next one stands, as the program arched it. Joints keep the
+/// difference between the program's turn and the droop, a few degrees.
+fn seated(graph: &PlantGraph, looks: &[Look]) -> Option<PlantGraph> {
+    // Ends to the micrometre: the turtle's own sums, so continuing pieces
+    // stand on them bit for bit.
+    #[allow(clippy::cast_possible_truncation)]
+    let key = |within: Option<u32>, at: Vec3| {
+        (
+            within,
+            (at.x * 1e6).round() as i64,
+            (at.y * 1e6).round() as i64,
+            (at.z * 1e6).round() as i64,
+        )
+    };
+    let along = |index: usize| {
+        looks.get(index).is_some_and(|look| {
+            look.inflorescence.is_none() && look.solid.is_none() && look.mount() == Mount::Along
+        })
+    };
+    let candidates = || {
+        graph
+            .organs
+            .iter()
+            .enumerate()
+            .filter(|(_, organ)| along(usize::from(organ.organ)))
+    };
+    let ends: std::collections::HashMap<_, usize> = candidates()
+        .map(|(number, organ)| {
+            (
+                key(organ.within, organ.position + organ.heading * organ.size),
+                number,
+            )
+        })
+        .collect();
+    let mut chained = vec![false; graph.organs.len()];
+    for (number, organ) in candidates() {
+        if let Some(&before) = ends.get(&key(organ.within, organ.position))
+            && before != number
+        {
+            chained[before] = true;
+            chained[number] = true;
+        }
+    }
+    let mut out: Option<PlantGraph> = None;
+    for (number, organ) in graph.organs.iter().enumerate() {
+        if !chained[number] {
+            continue;
+        }
+        let index = usize::from(organ.organ);
+        let (drawn, share) = looks[index].forms.of(index, organ);
+        let Some(shown) = looks.get(drawn) else {
+            continue;
+        };
+        let droop = math::radians(shown.bend.droop);
+        let chord = if droop.abs() < 1e-9 {
+            1.0
+        } else {
+            2.0 * math::sin(0.5 * droop) / droop
+        };
+        if droop.abs() < 1e-9 && (share - 1.0).abs() < 1e-12 {
+            continue;
+        }
+        let face = organ.heading.cross(organ.left);
+        let turned = &mut out.get_or_insert_with(|| graph.clone()).organs[number];
+        turned.heading = organ.heading * math::cos(0.5 * droop) + face * math::sin(0.5 * droop);
+        turned.size = organ.size / (share * chord);
+    }
+    out
+}
+
+/// The organs whose cards float: each organ's index in `graph` and how far
+/// its card's foot is from what bears it, metres, for every organ more than
+/// `tolerance` from it. An organ is borne by the wood it grew on (its
+/// segment's axis, out to its radius) or, a piece of a strap, by the drawn
+/// end of the piece it stands on, or by an organ on the same wood it is
+/// within the size of; the graph is drawn as [`build`] draws it.
+/// An organ on neither (a basal leaf, the first piece of a strap) is
+/// where its program put it, and never loose.
+#[must_use]
+#[allow(clippy::too_many_lines)]
+pub fn loose_organs(graph: &PlantGraph, looks: &[Look], tolerance: f64) -> Vec<(usize, f64)> {
+    let seated = seated(graph, looks);
+    let drawn = seated.as_ref().unwrap_or(graph);
+    // The drawn end of each card that reaches along its organ, by where
+    // the organ's straight end was.
+    #[allow(clippy::cast_possible_truncation)]
+    let key = |within: Option<u32>, at: Vec3| {
+        (
+            within,
+            (at.x * 1e6).round() as i64,
+            (at.y * 1e6).round() as i64,
+            (at.z * 1e6).round() as i64,
+        )
+    };
+    let mut ends = std::collections::HashMap::new();
+    for (number, (organ, shown)) in graph.organs.iter().zip(&drawn.organs).enumerate() {
+        let index = usize::from(shown.organ);
+        let Some(look) = looks.get(index) else {
+            continue;
+        };
+        if look.inflorescence.is_some() || look.solid.is_some() || look.mount() != Mount::Along {
+            continue;
+        }
+        let (form, share) = look.forms.of(index, shown);
+        let Some(form) = looks.get(form) else {
+            continue;
+        };
+        let (base, heading, left, length) = place(shown, look);
+        let length = length * share;
+        let half = 0.5 * length * form.aspect();
+        let tip = form
+            .bend
+            .point(base, heading, left, half, length, 0.0, 1.0)
+            .0;
+        ends.insert(
+            key(organ.within, organ.position + organ.heading * organ.size),
+            (number, tip),
+        );
+    }
+    // Each organ's foot, and how far it is from the wood that bears it.
+    let feet: Vec<Vec3> = drawn
+        .organs
+        .iter()
+        .map(|shown| match looks.get(usize::from(shown.organ)) {
+            Some(look) if look.inflorescence.is_none() && look.mount() == Mount::Along => {
+                place(shown, look).0
+            }
+            _ => shown.position,
+        })
+        .collect();
+    // The piece each organ stands on, if any.
+    let pieces: Vec<Option<usize>> = graph
+        .organs
+        .iter()
+        .enumerate()
+        .map(|(number, organ)| {
+            ends.get(&key(organ.within, organ.position))
+                .map(|&(before, _)| before)
+                .filter(|&before| before != number)
+        })
+        .collect();
+    let mut distance: Vec<f64> = graph
+        .organs
+        .iter()
+        .zip(&feet)
+        .zip(&pieces)
+        .map(|((organ, &foot), piece)| {
+            let Some(segment) = organ
+                .segment
+                .and_then(|segment| graph.segments.get(segment as usize))
+            else {
+                // On no wood: where its program put it, on the ground or
+                // a clump's foot, unless it stands on a piece (below).
+                return if piece.is_some() { f64::INFINITY } else { 0.0 };
+            };
+            let axis = segment.end - segment.start;
+            let t = ((foot - segment.start).dot(axis) / axis.dot(axis).max(1e-18)).clamp(0.0, 1.0);
+            // A fleshy body's ribs and dome reach past its segment's
+            // radius; one more radius holds what sits on them.
+            let reach = segment.radius * if segment.body == 0 { 1.0 } else { 2.0 };
+            ((foot - (segment.start + axis * t)).length() - reach).max(0.0)
+        })
+        .collect();
+    // Then by what is borne, until nothing changes: a piece by the drawn
+    // end of the piece it stands on, any organ by another on the same wood
+    // it touches (within that one's size of where it stands), as a chain
+    // of fruit hangs from fruit.
+    let mut by_segment: std::collections::HashMap<Option<u32>, Vec<usize>> =
+        std::collections::HashMap::new();
+    for (number, organ) in graph.organs.iter().enumerate() {
+        by_segment.entry(organ.segment).or_default().push(number);
+    }
+    loop {
+        let mut changed = false;
+        for number in 0..graph.organs.len() {
+            if distance[number] <= tolerance {
+                continue;
+            }
+            let organ = &graph.organs[number];
+            let foot = feet[number];
+            let mut best = distance[number];
+            if let Some(before) = pieces[number]
+                && distance[before] <= tolerance
+            {
+                let (_, end) = ends[&key(organ.within, organ.position)];
+                best = best.min((foot - end).length());
+            }
+            for &other in &by_segment[&organ.segment] {
+                if other != number && distance[other] <= tolerance {
+                    let next = &drawn.organs[other];
+                    best = best.min(((foot - next.position).length() - next.size).max(0.0));
+                }
+            }
+            if best < distance[number] {
+                changed |= best <= tolerance;
+                distance[number] = best;
+            }
+        }
+        if !changed {
+            break;
+        }
+    }
+    distance
+        .into_iter()
+        .enumerate()
+        .filter(|&(_, distance)| distance > tolerance)
+        .collect()
 }
 
 /// `organ`'s card as the coarse levels trace it: its foot, heading, left
@@ -2353,6 +2577,7 @@ mod tests {
             roots: None,
             bark_pattern: None,
             bodies: BTreeMap::new(),
+            spreads: serde_json::Map::new(),
         }
     }
 
@@ -3049,6 +3274,74 @@ mod tests {
 
     fn vector(v: [f32; 3]) -> Vec3 {
         Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]))
+    }
+
+    /// A strap of three blade pieces, the turtle pitching down between
+    /// them: each piece's card, bent by its look, ends where the next one
+    /// starts, and the last ends where the program's line ends.
+    #[test]
+    fn the_pieces_of_a_strap_join() {
+        let mut appearance = appearance();
+        appearance.organs.insert(
+            "leaf".into(),
+            look(Shape::Blade(crate::looks::Blade::default()), 0.0),
+        );
+        let looks = appearance.looks([("leaf", OrganKind::Leaf)]);
+        assert!(looks[0].bend.droop > 0.0 && looks[0].bend.twist > 0.0);
+        let (mut position, left) = (Vec3::ZERO, Vec3::X);
+        let mut heading = Vec3::new(0.0, 0.9, 0.44).normalize_or(Vec3::Y);
+        let mut organs = Vec::new();
+        for (k, size) in [0.12, 0.1, 0.088].into_iter().enumerate() {
+            organs.push(GraphOrgan {
+                id: k as u64,
+                position,
+                heading,
+                left,
+                size,
+                within: Some(0),
+                ..organ(heading, left)
+            });
+            position += heading * size;
+            // Pitch down 14 degrees about the left.
+            heading = heading.rotate_about(left, -14f64.to_radians());
+        }
+        let end = position;
+        let graph = PlantGraph {
+            age: 1.0,
+            height: 0.3,
+            segments: Vec::new(),
+            organs,
+            structures: Vec::new(),
+        };
+        let cards = build_plain(&graph, &looks, &appearance, &lod(0.0, 0.0, 0.0)).cards;
+        assert_eq!(cards.len(), 3);
+        let tip = |card: &Card| {
+            let half = 0.5 * f64::from(card.width);
+            card.bend
+                .point(
+                    vector(card.base),
+                    vector(card.heading),
+                    vector(card.left),
+                    half,
+                    f64::from(card.length),
+                    0.0,
+                    1.0,
+                )
+                .0
+        };
+        for pair in cards.windows(2) {
+            let gap = (tip(&pair[0]) - vector(pair[1].base)).length();
+            assert!(gap < 1e-5, "a gap of {gap} m between pieces");
+        }
+        assert!((tip(&cards[2]) - end).length() < 1e-5);
+        // Undrawn, the first piece's droop leaves it short and below.
+        let flat = place(&graph.organs[0], &looks[0]);
+        let straight = looks[0]
+            .bend
+            .point(flat.0, flat.1, flat.2, 0.006, flat.3, 0.0, 1.0)
+            .0;
+        assert!((straight - graph.organs[1].position).length() > 0.01);
+        assert!(loose_organs(&graph, &looks, 1e-5).is_empty());
     }
 
     #[test]

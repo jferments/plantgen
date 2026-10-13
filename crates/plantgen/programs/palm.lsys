@@ -18,7 +18,7 @@
 #   long, its tip bent down by the blade's own bend; a costapalmate fan
 #   (as in the cabbage palm) has a short rachis (costa) the rays follow.
 #
-# A frond unrolls as a fern's does (`fern`): emerging at a phase e of the
+# A frond unrolls as a fern's does (`polypodiidae`): emerging at a phase e of the
 # year, it has unrolled the share u = clamp((age + season - e) / unroll,
 # 0, 1) at the keyframe, each piece beyond u coiling back by up to `curl`
 # degrees (set curl 0 for a palm, whose spear opens without coiling). It
@@ -46,73 +46,79 @@
 # a taxon's juvenile_period_years. It replaces cone_age, with the same
 # default.
 #
+# Revision 4 (growth plan G2.3a): a starting base with no values. Each
+# parameter given as a number is `param name;`, and the lineage programs
+# that extend it (`arecaceae`, `cyatheaceae`, `cycadaceae`) give the
+# values their species leave unset, as this program's defaults were until
+# then.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem palm 3;
+lsystem palm 4;
 
 # The plant.
-param vigour_spread = 0.1;    # a palm grows exp(gauss() * vigour_spread) times as fast
-param lean = 3;               # most degrees the trunk leans at its foot
-param upturn = 0;             # how strongly a leaning trunk turns back up, radians a metre
+param vigour_spread;          # a palm grows exp(gauss() * vigour_spread) times as fast
+param lean;                   # most degrees the trunk leans at its foot
+param upturn;                 # how strongly a leaning trunk turns back up, radians a metre
 # The trunk.
-param trunk_rate = 0.3;       # metres a year once established
-param trunk_radius = 0.2;
-param stemless_years = 6;     # years before the trunk rises at its full rate
-param internode = 0.005;      # trunk between one frond and the next
+param trunk_rate;             # metres a year once established
+param trunk_radius;
+param stemless_years;         # years before the trunk rises at its full rate
+param internode;              # trunk between one frond and the next
 # Fronds.
-param fronds_per_year = 12;
-param frond_life = 3;         # years a frond lives
-param frond_length = 3;       # a full-size frond, petiole included
-param frond_seed = 0.15;      # a seedling's fronds, as a share of full size
-param size_years = 8;         # fronds reach full size over about this many years
-param frond_spread = 0.08;    # fronds are l (1 ± frond_spread) long
-param divergence = 137.5;     # roll from one frond to the next
-param young_angle = 10;       # angle of a new frond to the vertical
-param old_angle = 70;         # the angle an old frond opens to
-param open_years = 1;         # how fast a frond opens, years
-param angle_spread = 6;
-param petiole = 0.35;         # share of the frond's length that is petiole
-param petiole_radius = 0.02;  # its radius
-param pieces = 12;            # pieces of the rachis
+param fronds_per_year;
+param frond_life;             # years a frond lives
+param frond_length;           # a full-size frond, petiole included
+param frond_seed;             # a seedling's fronds, as a share of full size
+param size_years;             # fronds reach full size over about this many years
+param frond_spread;           # fronds are l (1 ± frond_spread) long
+param divergence;             # roll from one frond to the next
+param young_angle;            # angle of a new frond to the vertical
+param old_angle;              # the angle an old frond opens to
+param open_years;             # how fast a frond opens, years
+param angle_spread;
+param petiole;                # share of the frond's length that is petiole
+param petiole_radius;         # its radius
+param pieces;                 # pieces of the rachis
 # Feather fronds.
-param fan = 0;                # 1: a fan frond
-param leaflet_length = 0.25;  # the longest leaflet, as a share of the frond's length
-param leaflet_peak = 0.35;    # where it sits along the rachis, 0 to 1
-param leaflet_base = 0.4;     # the lowest leaflet, as a share of the longest
-param leaflet_tip = 0.25;     # the topmost leaflet, as a share of the longest
-param leaflet_angle = 60;     # angle of a leaflet to the rachis
-param leaflet_lift = 25;      # degrees the leaflets rise into a V
-param leaflet_area = 0.1;     # leaf area of a leaflet 1 m long, m²
+param fan;                    # 1: a fan frond
+param leaflet_length;         # the longest leaflet, as a share of the frond's length
+param leaflet_peak;           # where it sits along the rachis, 0 to 1
+param leaflet_base;           # the lowest leaflet, as a share of the longest
+param leaflet_tip;            # the topmost leaflet, as a share of the longest
+param leaflet_angle;          # angle of a leaflet to the rachis
+param leaflet_lift;           # degrees the leaflets rise into a V
+param leaflet_area;           # leaf area of a leaflet 1 m long, m²
 # Fan fronds.
-param rays = 40;              # segments of a fan
-param fan_spread = 200;       # degrees the segments spread over
-param fan_length = 0.5;       # a segment, as a share of the frond's length
-param fan_cup = 15;           # degrees the fan's segments rise into a shallow cup
-param costa = 0;              # share of the frond's length along which the rays rise from a rib
-param ray_area = 0.1;         # leaf area of a segment 1 m long, m²
+param rays;                   # segments of a fan
+param fan_spread;             # degrees the segments spread over
+param fan_length;             # a segment, as a share of the frond's length
+param fan_cup;                # degrees the fan's segments rise into a shallow cup
+param costa;                  # share of the frond's length along which the rays rise from a rib
+param ray_area;               # leaf area of a segment 1 m long, m²
 # Unrolling, sagging and dying.
-param season = 0.5;           # share of the year at the keyframe
-param emerge_spread = 1;      # fronds emerge over this share of the year
-param unroll = 0.2;           # share of a year a frond takes to open
-param curl = 0;               # degrees each coiled piece turns back
-param droop = 0.01;           # sag per year of a frond's age
-param droop_years = 3;
-param skirt = 0;              # 1: dead fronds hang
-param dead_angle = 165;       # angle of a hanging dead frond to the vertical
-param dead_life = 0;          # years a dead frond hangs
-param dead_area = 0.15;       # leaf area of a dead frond 1 m long
-param boots = 0;              # 1: a fallen frond leaves its boot
-param boot_life = 10;         # years a boot stays
-param boot_length = 0.25;     # a boot, metres
-param boot_area = 0.2;
+param season;                 # share of the year at the keyframe
+param emerge_spread;          # fronds emerge over this share of the year
+param unroll;                 # share of a year a frond takes to open
+param curl;                   # degrees each coiled piece turns back
+param droop;                  # sag per year of a frond's age
+param droop_years;
+param skirt;                  # 1: dead fronds hang
+param dead_angle;             # angle of a hanging dead frond to the vertical
+param dead_life;              # years a dead frond hangs
+param dead_area;              # leaf area of a dead frond 1 m long
+param boots;                  # 1: a fallen frond leaves its boot
+param boot_life;              # years a boot stays
+param boot_length;            # a boot, metres
+param boot_area;
 # A cone and suckers.
-param crown_cone = 0;         # length of a cone at the crown's centre; 0 none
-param adult_age = 10;         # the first year the plant is adult and bears one
-param cone_area = 0.6;
-param suckers = 0;
-param sucker_age = 5;
-param sucker_rate = 0.3;
-param sucker_distance = 0.4;
+param crown_cone;             # length of a cone at the crown's centre; 0 none
+param adult_age;              # the first year the plant is adult and bears one
+param cone_area;
+param suckers;
+param sucker_age;
+param sucker_rate;
+param sucker_distance;
 
 module Y(v, n);               # a crown: vigour, suckers so far
 module Fc(i, m, c);           # fronds i to i + m - 1 of this year's cohort, on a crown c years old

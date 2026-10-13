@@ -18,8 +18,6 @@
       "stem_rate": 0.15,
       "clump_radius": 0.15,
       "stem_lean": 20,
-      "joints": 1,
-      "pad": 1,
       "joint_length": 0.17,
       "joint_radius": 0.085,
       "joint_spread": 0.15,
@@ -102,9 +100,8 @@
         },
         "spines": [
           {
-            "count": [0, 2],
+            "role": "radial",
             "angle": 30,
-            "length": 0.04,
             "width": 0.001,
             "colour": [0.35, 0.2, 0.12],
             "angle_spread": 15,
@@ -113,6 +110,7 @@
             "length_spread": 0.4
           },
           {
+            "role": "glochid",
             "count": [10, 20],
             "angle": 60,
             "length": 0.004,
@@ -140,7 +138,16 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "radial_spines": {"min": 0, "max": 2, "high": 3},
+    "radial_spine_length_m": {"min": 0.04, "max": 0.05, "high": 0.1}
+  },
   "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, p. 141): the lower areoles (sometimes all) spineless, the others with one spine, sometimes 2, rarely 3, 4 to 5 cm long, even 10 cm, brown and usually weak; stated as radials, as the flora does not tell them apart."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

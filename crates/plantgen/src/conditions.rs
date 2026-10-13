@@ -6,7 +6,8 @@
 //! `soil`, `disturbance` and `interactions`. Only `neighbours` changes how
 //! a plant grows today, through `light@1`; the others are data that later
 //! tools read, so they change nothing yet, except `substrate`, which
-//! `substrate@1` and `light@2` read (G3). The four environments are named
+//! `substrate@1` and `light@2` read (G3), and a `light` section with a
+//! `sun_and_sky` sky, which `light@3` reads. The four environments are named
 //! presets of the document ([`Conditions::preset`]), and a preset expands
 //! to exactly the numbers `Environment::neighbourhood` gives, so every
 //! package keeps its bytes.
@@ -68,6 +69,12 @@ pub trait Surroundings: Sync {
     fn substrate(&self) -> Option<&SubstrateField> {
         None
     }
+
+    /// The latitude in degrees whose sun `light@3` adds to the sky; `None`
+    /// under an overcast sky.
+    fn sun_latitude(&self) -> Option<f64> {
+        None
+    }
 }
 
 impl Surroundings for Neighbourhood {
@@ -86,6 +93,8 @@ pub struct Around<'a> {
     pub neighbourhood: &'a Neighbourhood,
     pub host: Option<&'a Host>,
     pub substrate: Option<&'a SubstrateField>,
+    /// The latitude of the sun, degrees, when the sky has one.
+    pub sun: Option<f64>,
 }
 
 impl Surroundings for Around<'_> {
@@ -103,6 +112,10 @@ impl Surroundings for Around<'_> {
 
     fn substrate(&self) -> Option<&SubstrateField> {
         self.substrate
+    }
+
+    fn sun_latitude(&self) -> Option<f64> {
+        self.sun
     }
 }
 
@@ -204,11 +217,21 @@ pub struct Light {
     pub sky: Sky,
 }
 
-/// The sky's light: today only `light@1`'s uniform overcast.
+impl Light {
+    /// The latitude whose sun the sky carries, if it carries one.
+    #[must_use]
+    pub fn sun_latitude(&self) -> Option<f64> {
+        (self.sky == Sky::SunAndSky).then_some(self.latitude_deg)
+    }
+}
+
+/// The sky's light: `light@1`'s uniform overcast, or the overcast sky with
+/// the direct sun over the year at `latitude_deg`, which `light@3` reads.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
 pub enum Sky {
     Overcast,
+    SunAndSky,
 }
 
 /// The climate a plant grows through.
@@ -641,6 +664,21 @@ mod tests {
             interior.class().to_string(),
             "2ffbeb9dd5ed42be0d179e8bb53e76065b7baf7d9404b91c371402947dd706aa"
         );
+    }
+
+    #[test]
+    fn a_sunny_sky_names_its_latitude() {
+        let sunny = Conditions::from_json(
+            r#"{"schema": 1, "light": {"version": 1, "latitude_deg": 45, "sky": "sun_and_sky"}}"#,
+        )
+        .unwrap();
+        assert_eq!(sunny.light.as_ref().unwrap().sun_latitude(), Some(45.0));
+        let overcast = Conditions::from_json(
+            r#"{"schema": 1, "light": {"version": 1, "latitude_deg": 45, "sky": "overcast"}}"#,
+        )
+        .unwrap();
+        assert_eq!(overcast.light.as_ref().unwrap().sun_latitude(), None);
+        assert_ne!(sunny.class(), overcast.class());
     }
 
     #[test]

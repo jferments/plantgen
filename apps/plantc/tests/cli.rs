@@ -78,7 +78,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let seed_plants = "(clade Spermatophyta: _ranks/clade/spermatophyta.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (74):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (94):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
@@ -170,7 +170,7 @@ fn rules_and_traits_say_where_they_come_from() {
     .unwrap();
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
-    assert!(rules.starts_with("Rules, by their home (75):\n"), "{rules}");
+    assert!(rules.starts_with("Rules, by their home (95):\n"), "{rules}");
     assert!(
         rules.contains(
             "\n  generator.params.leaves_per_node  (family Sapindaceae: sapindaceae/family.json)\n"
@@ -263,7 +263,7 @@ fn a_library_folder_replaces_built_in_species() {
     let library = dir.to_str().unwrap();
     let listed = stdout(&plantc(&["list", "--library", library]));
     assert!(
-        listed.contains("Douglas-fir from a folder (Pseudotsuga menziesii), program `conifer`, from the library folder"),
+        listed.contains("Douglas-fir from a folder (Pseudotsuga menziesii), program `pinidae`, from the library folder"),
         "{listed}"
     );
     assert!(listed.contains("carnegiea-gigantea"), "{listed}");
@@ -294,7 +294,7 @@ fn a_library_folder_replaces_built_in_species() {
         "pseudotsuga-menziesii",
     ]));
     assert!(
-        checked.contains("\n  stands on pinaceae/family.json, _ranks/order/pinales.json, "),
+        checked.contains("\n  stands on pinaceae/pseudotsuga/genus.json, pinaceae/family.json, _ranks/order/pinales.json, "),
         "{checked}"
     );
     let spec = stdout(&plantc(&[
@@ -306,7 +306,7 @@ fn a_library_folder_replaces_built_in_species() {
     let own = "pinaceae/pseudotsuga/pseudotsuga-menziesii/spec.json";
     assert!(
         spec.starts_with(&format!(
-            "pseudotsuga-menziesii: {own} on pinaceae/family.json, _ranks/order/pinales.json, "
+            "pseudotsuga-menziesii: {own} on pinaceae/pseudotsuga/genus.json, pinaceae/family.json, _ranks/order/pinales.json, "
         )),
         "{spec}"
     );
@@ -315,7 +315,7 @@ fn a_library_folder_replaces_built_in_species() {
         "{spec}"
     );
     assert!(
-        spec.contains(&format!("  generator.program = \"conifer\"  ({own})\n")),
+        spec.contains(&format!("  generator.program = \"pinidae\"  ({own})\n")),
         "{spec}"
     );
     assert!(

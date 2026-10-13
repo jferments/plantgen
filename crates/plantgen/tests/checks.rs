@@ -7,17 +7,24 @@ use std::sync::Mutex;
 
 use plantgen::checks::{self, Verdict};
 use plantgen::library::Library;
+use plantgen::lsys::parser::extends_of;
 use plantgen::spec::PlantSpec;
 
 /// Checks known to fail, each with why, until its species or program is
-/// changed: a species id, or `program:` and the program that grows every
-/// species it names. A known failure that comes to pass fails the test
+/// changed: a species id, or `program:` and a program that grows every
+/// species it names or that the program growing them extends. A known
+/// failure that comes to pass fails the test
 /// too, so the list only shrinks.
 const KNOWN: &[(&str, &str, &str)] = &[
     (
         "anaphalis-margaritacea",
         "involucre_height_m",
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
+    ),
+    (
+        "lysichiton-americanus",
+        "units_per_inflorescence",
+        "a cluster draws at most 200 units, so the spadix's 350 to 1350 flowers are drawn as 200",
     ),
     (
         "program:broadleaf",
@@ -50,8 +57,23 @@ fn known(spec: &PlantSpec, character: &str) -> bool {
     KNOWN.iter().any(|(who, what, _)| {
         *what == character
             && (*who == spec.id
-                || who.strip_prefix("program:") == Some(spec.generator.program.as_str()))
+                || who
+                    .strip_prefix("program:")
+                    .is_some_and(|program| grows_on(spec, program)))
     })
+}
+
+/// Whether `spec`'s program is `program` or extends it.
+fn grows_on(spec: &PlantSpec, program: &str) -> bool {
+    let library = Library::builtin();
+    let mut name = Some(spec.generator.program.clone());
+    while let Some(current) = name {
+        if current == program {
+            return true;
+        }
+        name = library.program_text(&current).and_then(extends_of);
+    }
+    false
 }
 
 /// Every species a check reads, three plants each, has no size or count
@@ -137,7 +159,7 @@ fn stated_characters_hold_on_grown_plants() {
             c == character
                 && (id == who
                     || who.strip_prefix("program:").is_some_and(|program| {
-                        PlantSpec::builtin(id).is_ok_and(|spec| spec.generator.program == program)
+                        PlantSpec::builtin(id).is_ok_and(|spec| grows_on(&spec, program))
                     }))
         });
         assert!(

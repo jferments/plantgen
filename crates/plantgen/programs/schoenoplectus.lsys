@@ -1,0 +1,14 @@
+# Bulrushes (Schoenoplectus, Cyperaceae), on the grass base (growth plan
+# G2.3a). It gives the values its species leave unset (5 of grass's
+# parameters), as the grass program's defaults until then; each species
+# sets the rest.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem schoenoplectus 1 extends grass;
+
+param maturity = 1.5;    # years over which blades and culms reach full size
+param adult_age = 2;     # the first year the plant is adult and flowers
+param thatch_years = 1;  # years dead blades stay on
+param thatch_droop = 8;  # extra degrees a dead blade bends at each joint
+param light_cell = 0.04; # light voxel edge: about a blade's spacing

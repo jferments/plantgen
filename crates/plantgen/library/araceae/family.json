@@ -3,16 +3,38 @@
   "rank": "family",
   "name": "Araceae",
   "parent": "order/alismatales",
+  "traits": {
+    "inflorescence": "spadix",
+    "inflorescence_unit": "flower"
+  },
+  "rules": {
+    "appearance.organs.*.inflorescence.spathe": {
+      "map": {"bract_form": {"spathe": {"rule": "clamp(bract_length_m / inflorescence_length_m, 0.2, 3)"}, "petaloid": 0, "leafy": 0, "scale": 0}},
+      "why": "An aroid's spathe is drawn as long, against its spadix, as the flora gives the two."
+    }
+  },
+  "evidence": {
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "What the cluster's `spathe` means: the spathe's length as a share of its spadix's axis, a spathe's sheath included."
+    },
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams's flora (vol. 1, 1923): the arum family's flowers are small and crowded on a spadix, which a spathe encloses or stands below; the perianth is of four to six scale-like parts or lacking."
+    }
+  },
   "forms": {
     "forb": {
       "generator": {
-        "program": "herb"
+        "program": "araceae"
       },
       "evidence": {
         "generator.program": {
           "evidence": "Authored",
           "source": "plantgen-authors",
-          "note": "The program the authors chose to grow this taxon's forb species (named in each species' spec until G2.3a moved it here)."
+          "note": "The lineage's own program (growth plan G2.3a), on the herb base: it gives the values its species leave unset, which the herb program gave as defaults until then."
         }
       }
     }

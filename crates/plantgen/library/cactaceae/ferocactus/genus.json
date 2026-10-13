@@ -2,14 +2,24 @@
   "schema": 1,
   "rank": "genus",
   "name": "Ferocactus",
+  "parent": "subfamily/cactoideae",
   "traits": {
-    "carpels": {"min": 13, "max": 20}
+    "carpels": {
+      "min": 13,
+      "max": 20
+    },
+    "stem_form": "globose"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "The Flora of North America's account of Ferocactus, as search results quote it (the page itself was not read): stigma lobes 13 to 20, unusually long, yellow, orange or red; the carpels are as many as the stigma lobes (Hamburg's Botany Online on the family, as quoted in search results; the page itself was not read)."
+    },
+    "traits.stem_form": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 3, 1922, p. 123): globular to cylindric, often large, normally one stem growing on at its tip (branching mostly after injury), with thick, prominent ribs."
     }
   }
 }

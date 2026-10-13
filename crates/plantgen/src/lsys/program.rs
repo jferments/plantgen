@@ -66,12 +66,19 @@ pub enum Turtle {
     /// `adult(a)`: the adultness of the organs drawn after it in the
     /// branch, 0 a juvenile shoot to 1 an adult one (spec rework P6).
     Adult,
+    /// `incline(a, r)`: after each later segment in the branch, turn the
+    /// heading toward `a` degrees from straight up, in its vertical plane,
+    /// by the share `r` (a gravitropic set-point angle; crown form B).
+    Incline,
+    /// `face(x, y, z, w)`: turn the frame so its up vector moves toward the
+    /// plant-frame direction `(x, y, z)` by the share `w` (crown form B).
+    Face,
 }
 
 impl Turtle {
     /// Every built-in symbol in symbol-id order, with its text and argument
     /// count after defaults are filled in.
-    pub const ALL: [(Self, &'static str, u8); 17] = [
+    pub const ALL: [(Self, &'static str, u8); 19] = [
         (Self::Push, "[", 0),
         (Self::Pop, "]", 0),
         (Self::Cut, "%", 0),
@@ -89,6 +96,8 @@ impl Turtle {
         (Self::Tropism, "T", 4),
         (Self::Steer, "steer", 4),
         (Self::Adult, "adult", 1),
+        (Self::Incline, "incline", 2),
+        (Self::Face, "face", 4),
     ];
 
     fn is_turn(self) -> bool {
@@ -108,7 +117,7 @@ pub const MOVE: u16 = 4;
 pub const ROLL: u16 = 10;
 /// `adult`: a shoot's adultness (spec rework P6).
 pub const ADULT: u16 = 16;
-pub const FIRST_USER_SYMBOL: u16 = 17;
+pub const FIRST_USER_SYMBOL: u16 = 19;
 
 /// What an organ is, which decides how it is drawn and shaded.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
@@ -258,6 +267,7 @@ pub enum ToolKind {
     Pipe = 3,
     Host = 4,
     Substrate = 5,
+    Bend = 6,
 }
 
 pub struct ToolSpec {
@@ -272,7 +282,7 @@ pub struct ToolSpec {
 /// The first random call site of tool settings, far above any rule's.
 pub const TOOL_SITES: u32 = 1 << 24;
 
-pub const TOOLS: [ToolSpec; 9] = [
+pub const TOOLS: [ToolSpec; 11] = [
     ToolSpec {
         kind: ToolKind::Light,
         name: "light",
@@ -291,6 +301,22 @@ pub const TOOLS: [ToolSpec; 9] = [
             ("extinction", 0.5),
             ("bud", 0.01),
             ("reach", 0.5),
+        ],
+    },
+    // Crown form step B: `light@2` with the way the light comes from at
+    // each module (`lx ly lz`), and a share `sun` of it from the direct
+    // sun over the year at the conditions' latitude when their sky is
+    // `sun_and_sky` (`super::tools`).
+    ToolSpec {
+        kind: ToolKind::Light,
+        name: "light",
+        version: 3,
+        keys: &[
+            ("cell", 0.5),
+            ("extinction", 0.5),
+            ("bud", 0.01),
+            ("reach", 0.5),
+            ("sun", 0.5),
         ],
     },
     ToolSpec {
@@ -374,6 +400,20 @@ pub const TOOLS: [ToolSpec; 9] = [
         version: 1,
         keys: &[],
     },
+    // Crown form step B: wood bends under its own weight and its leaves'
+    // after `pipe@1`, keeping part of each year's sag (`super::tools`).
+    ToolSpec {
+        kind: ToolKind::Bend,
+        name: "bend",
+        version: 1,
+        keys: &[
+            ("density", 600.0),
+            ("modulus", 10000.0),
+            ("leaf_mass", 0.1),
+            ("set", 0.3),
+            ("straighten", 0.1),
+        ],
+    },
 ];
 
 /// A configured tool: one expression per registry key, re-evaluated each step.
@@ -405,7 +445,7 @@ pub struct Program {
     pub productions: Vec<Vec<CompiledRule>>,
     pub decompositions: Vec<Vec<CompiledRule>>,
     pub interpretations: Vec<Vec<CompiledRule>>,
-    pub tools: [Option<ToolConfig>; 6],
+    pub tools: [Option<ToolConfig>; 7],
 }
 
 impl Program {
@@ -595,7 +635,9 @@ const BUILTIN_NAMES: [&str; 13] = [
 fn reserved(name: &str) -> Option<&'static str> {
     if KEYWORDS.contains(&name) {
         Some("a keyword")
-    } else if BUILTIN_NAMES.contains(&name) || name == "steer" || name == "adult" {
+    } else if BUILTIN_NAMES.contains(&name)
+        || matches!(name, "steer" | "adult" | "incline" | "face")
+    {
         Some("a built-in name")
     } else if EnvField::from_name(name).is_some() {
         Some("an environment field")
@@ -636,7 +678,7 @@ struct Compiler {
 }
 
 /// Every module that queries light, vigour or space needs that tool.
-fn check_queries(ast: &ProgramAst, tools: &[Option<ToolConfig>; 6]) -> Result<(), ProgramError> {
+fn check_queries(ast: &ProgramAst, tools: &[Option<ToolConfig>; 7]) -> Result<(), ProgramError> {
     for decl in &ast.modules {
         for (name, span) in &decl.queries {
             let tool = match Query::from_name(name) {
@@ -973,8 +1015,8 @@ impl Compiler {
     fn configure_tools(
         &mut self,
         ast: &ProgramAst,
-    ) -> Result<[Option<ToolConfig>; 6], ProgramError> {
-        let mut tools: [Option<ToolConfig>; 6] = [None, None, None, None, None, None];
+    ) -> Result<[Option<ToolConfig>; 7], ProgramError> {
+        let mut tools: [Option<ToolConfig>; 7] = [None, None, None, None, None, None, None];
         let context = Context {
             what: "a tool setting",
             globals: self.params.len(),

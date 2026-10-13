@@ -14,8 +14,6 @@
     "params": {
       "vigour_spread": 0.12,
       "lean": 4,
-      "joints": 1,
-      "joint_length": 0.1,
       "joint_radius": 0.025,
       "joint_spread": 0.3,
       "daughters_low": 0.5,
@@ -107,6 +105,7 @@
         },
         "spines": [
           {
+            "role": "radial",
             "count": [8, 12],
             "angle": 50,
             "length": 0.025,
@@ -115,6 +114,16 @@
             "angle_spread": 25,
             "length_spread": 0.3,
             "tip": [0.75, 0.7, 0.55]
+          },
+          {
+            "role": "glochid",
+            "count": [10, 20],
+            "angle": 55,
+            "length": 0.003,
+            "width": 0.00012,
+            "colour": [0.8, 0.74, 0.5],
+            "angle_spread": 20,
+            "length_spread": 0.3
           }
         ],
         "greying": {
@@ -146,7 +155,15 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "joint_length_m": {"min": 0.05, "max": 0.15}
+  },
   "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, p. 58), as Opuntia bigelovii: joints 5 to 15 cm long, very turgid, their tubercles about as long as broad; spines numerous and pale yellow, with papery sheaths, their count and length not given."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -191,6 +208,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "appearance.bodies.stem.spines.glochid": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, pp. 42 and 57 to 67): the areoles bear glochids above the spines, here not described for the species; the genus's are usually numerous, so drawn pale yellow like its spines. Their count, length and angle are set by eye like a prickly pear's, smaller, as no flora measures them."
     }
   },
   "provenance": {

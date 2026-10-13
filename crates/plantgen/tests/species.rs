@@ -169,6 +169,59 @@ fn builtin_species_shade_with_the_area_they_draw() {
     assert!(failures.is_empty(), "{}", failures.join("\n"));
 }
 
+/// No built-in species draws an organ floating free of the plant: each
+/// stands on its wood, on the drawn end of the strap piece before it, or
+/// on an organ it touches (`mesh::loose_organs`), at its oldest keyframe.
+/// Cochemiea's first-year pups flower on a ring sized for a grown column,
+/// a few millimetres off their bodies, until the cactus program sizes it
+/// to the pup.
+#[test]
+fn builtin_species_draw_no_floating_organs() {
+    const KNOWN: [&str; 1] = ["cochemiea-grahamii"];
+    let species: Vec<&str> = spec::all_species().map(|(id, _)| id).collect();
+    let threads = std::thread::available_parallelism().map_or(4, usize::from);
+    let failures: Vec<String> = std::thread::scope(|scope| {
+        let workers: Vec<_> = species
+            .chunks(species.len().div_ceil(threads))
+            .map(|chunk| {
+                scope.spawn(move || {
+                    let mut failures = Vec::new();
+                    for &id in chunk {
+                        let spec = PlantSpec::builtin(id).unwrap();
+                        let years = spec.growth.keyframes.iter().copied().fold(0.0, f64::max);
+                        let variant = &spec.variant_list()[0];
+                        let growth = grow_variant(&spec, variant, years, vec![years]);
+                        let looks = spec.appearance.looks(
+                            growth
+                                .organ_types
+                                .iter()
+                                .map(|organ| (organ.name.as_str(), organ.kind)),
+                        );
+                        let graph = &growth.keyframes[0];
+                        let loose = plantgen::mesh::loose_organs(graph, &looks, 0.002);
+                        if !loose.is_empty() && !KNOWN.contains(&id) {
+                            let (organ, distance) =
+                                loose.iter().max_by(|a, b| a.1.total_cmp(&b.1)).unwrap();
+                            failures.push(format!(
+                                "{id}: {} organs float, a `{}` {:.1} mm from what bears it",
+                                loose.len(),
+                                growth.organ_types[usize::from(graph.organs[*organ].organ)].name,
+                                distance * 1000.0
+                            ));
+                        }
+                    }
+                    failures
+                })
+            })
+            .collect();
+        workers
+            .into_iter()
+            .flat_map(|worker| worker.join().unwrap())
+            .collect()
+    });
+    assert!(failures.is_empty(), "{}", failures.join("\n"));
+}
+
 /// Grasses and herbs renew their shoots every year: at every keyframe
 /// each stem, culm, leaf and flower grew that year, so nothing lives on
 /// from the year before but a grass's thatch, the dead blades of last
@@ -411,7 +464,7 @@ fn conifers_bear_cones_once_old() {
     let mut checked = 0;
     for (id, _) in spec::all_species() {
         let spec = PlantSpec::builtin(id).unwrap();
-        if spec.generator.program != "conifer" {
+        if spec.generator.program != "pinidae" {
             continue;
         }
         checked += 1;
@@ -537,10 +590,10 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
         }
     }
     assert_eq!(
-        checked, 59,
+        checked, 60,
         "the 25 fruit clusters that moved in with L1a, the 15 clusters of flowers and heads of \
-         L1c, the 18 inflorescences of grasses, sedges and rushes of P3 and the orchid's spike \
-         of P5"
+         L1c, the 18 inflorescences of grasses, sedges and rushes of P3, the orchid's spike \
+         of P5 and the skunk cabbage's spadix of E6b"
     );
 }
 

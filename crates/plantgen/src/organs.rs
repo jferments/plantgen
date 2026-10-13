@@ -606,8 +606,9 @@ impl Tally {
 /// structures, down to what its organs' layouts give ([`parts`]), in the
 /// order the graph first holds each. `organ_types` and `structure_types`
 /// give each type's name and term; `looks` each organ type's look that
-/// day and `seasons` its season. An organ before its bud day or shed
-/// holds nothing.
+/// day, each organ holding what its variety of it draws
+/// ([`crate::looks::Look::of`]), and `seasons` its season. An organ
+/// before its bud day or shed holds nothing.
 #[must_use]
 pub fn census(
     graph: &PlantGraph,
@@ -666,7 +667,7 @@ pub fn census(
         }
         held.insert((organ.within, term));
         if !matches!(phase, Some(Phase::Primordium | Phase::Shed))
-            && let Some(look) = looks.get(index)
+            && let Some(look) = looks.get(index).map(|look| look.of(organ.id))
         {
             here.add_parts(&parts(organ, look, phase));
         }
