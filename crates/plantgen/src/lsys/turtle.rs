@@ -177,6 +177,7 @@ struct Owner {
     expansions: u64,
 }
 
+#[derive(Clone)]
 pub struct Interpreter<'a> {
     program: &'a Program,
     globals: &'a [f64],
