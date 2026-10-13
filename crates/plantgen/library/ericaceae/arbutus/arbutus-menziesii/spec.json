@@ -147,11 +147,29 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 3.0,
+      "max": 40.0
+    },
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.12
+    },
     "wood_density_basic_kg_m3": 570,
     "flowering_position": "terminal",
     "fruit_type": "berry"
   },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Arbutus Menziesii: grows 3 m to 40 m tall."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Arbutus Menziesii: leaves 5 cm to 12 cm long."
+    },
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Arbutus menziesii (gwddagg_v2.2_species.csv, read): specific gravity 0.57 (wsg_est, the database's hierarchical-model species mean, from 6 records in 5 sources); trunks 0.57, branches 0.54. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",

@@ -95,9 +95,18 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_width_m": {
+      "min": 0.07,
+      "max": 0.15
+    },
     "inflorescence": "panicle"
   },
   "evidence": {
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Vitis californica: leaves 7 cm to 15 cm wide."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
