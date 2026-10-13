@@ -28,7 +28,8 @@
       "spray_droop": 40,
       "shade_death": 0.08,
       "pipe_organ": 0.011,
-      "spray_area": 0.25
+      "spray_area": 0.25,
+      "branch_reach": 7.4
     }
   },
   "growth": {
@@ -119,7 +120,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a massive conifer with a broad, buttressed base, level branches with hanging branchlets and stiff, sharp needles all round the twigs; fast-growing on wet ground near the coast. Not fitted to measurements. Cones (plant forms F3): 5 to 10 cm hang from the upper branches, papery scales; set from general knowledge of the species, not measured. Spec rework E6d: `cone_length`, `cone_pitch`, `needle_years` now set by the rules at Pinidae from the stated characters."
+      "note": "Hand-set from general knowledge of the species: a massive conifer with a broad, buttressed base, level branches with hanging branchlets and stiff, sharp needles all round the twigs; fast-growing on wet ground near the coast. Not fitted to measurements. Cones (plant forms F3): 5 to 10 cm hang from the upper branches, papery scales; set from general knowledge of the species, not measured. Spec rework E6d: `cone_length`, `cone_pitch`, `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe."
     },
     "allometry": {
       "evidence": "Authored",

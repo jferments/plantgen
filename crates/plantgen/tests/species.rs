@@ -500,6 +500,88 @@ fn conifers_bear_cones_once_old() {
     );
 }
 
+/// Conifer form (pinidae revision 5): open-grown conifers hold the leaf
+/// area per crown area of the USDA Urban Tree Database's open-grown trees
+/// of their species (`usfs-urban-tree-database-2016`, leaf area over the
+/// area of the mean crown diameter, between its 10th and 90th percentiles
+/// for the ages), and those that are not pines keep foliage on the inner
+/// half of their lower branches at their oldest keyframe: a branch's
+/// shoots die by light, not by age, and its side shoots and dormant buds
+/// refoliate it.
+#[test]
+fn open_conifers_keep_their_lower_crowns() {
+    // Species, age, the database's 10th and 90th percentiles, its trees.
+    for (id, age, low, high) in [
+        // Longview, WA: 8 trees 60 to 300 years old.
+        ("pseudotsuga-menziesii", 60.0, 3.6, 16.5),
+        // Longview, as Pinus contorta: 20 trees 20 to 35.
+        ("pinus-contorta-var-contorta", 30.0, 3.6, 6.8),
+    ] {
+        let spec = PlantSpec::builtin(id).unwrap();
+        let variant = *spec
+            .variant_list()
+            .iter()
+            .find(|variant| variant.environment == spec::Environment::Open)
+            .unwrap();
+        let growth = grow_variant(&spec, &variant, age, vec![age]);
+        let graph = &growth.keyframes[0];
+        let radius = graph.crown_radius();
+        let index = graph.leaf_area(&growth.organ_types) / (std::f64::consts::PI * radius * radius);
+        assert!(
+            (low..=high).contains(&index),
+            "{id} at {age} years: {index:.2} m² of leaf per m² of crown, the database {low} to {high}"
+        );
+    }
+    let mut checked = 0;
+    for (id, _) in spec::all_species() {
+        let spec = PlantSpec::builtin(id).unwrap();
+        if spec.generator.program != "pinidae" || id.starts_with("pinus-") {
+            continue;
+        }
+        let Some(variant) = spec
+            .variant_list()
+            .into_iter()
+            .find(|variant| variant.environment == spec::Environment::Open)
+        else {
+            continue;
+        };
+        checked += 1;
+        let oldest = *spec.growth.keyframes.last().unwrap();
+        let growth = grow_variant(&spec, &variant, oldest, vec![oldest]);
+        let graph = &growth.keyframes[0];
+        let radius = graph.crown_radius();
+        let spray = growth
+            .organ_types
+            .iter()
+            .position(|organ| organ.name == "spray")
+            .unwrap_or_else(|| panic!("{id}: no spray organ"));
+        let lower: Vec<_> = graph
+            .organs
+            .iter()
+            .filter(|organ| {
+                usize::from(organ.organ) == spray && organ.position.y < 0.5 * graph.height
+            })
+            .collect();
+        let area = |organs: &[&plantgen::graph::GraphOrgan]| {
+            organs
+                .iter()
+                .map(|organ| organ.size * organ.size)
+                .sum::<f64>()
+        };
+        let inner: Vec<_> = lower
+            .iter()
+            .copied()
+            .filter(|organ| organ.position.x.hypot(organ.position.z) < 0.5 * radius)
+            .collect();
+        let share = area(&inner) / area(&lower);
+        assert!(
+            share >= 0.12,
+            "{id} at {oldest} years: {share:.2} of the lower crown's foliage on the inner half of its branches"
+        );
+    }
+    assert_eq!(checked, 7, "the open-grown conifers that are not pines");
+}
+
 /// Plant roadmap P4: every species whose foliage is needles draws them
 /// near the camera as a solid shoot, a part mesh within its cap whose span
 /// is its needles' width, so it shows only where they are a pixel wide.

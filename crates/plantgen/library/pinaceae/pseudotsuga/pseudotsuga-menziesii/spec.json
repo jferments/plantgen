@@ -24,7 +24,9 @@
       "upturn": 0.012,
       "spray_droop": 25,
       "spray_area": 0.23,
-      "pipe_organ": 0.0095
+      "pipe_organ": 0.0095,
+      "branch_reach": 6.0,
+      "pipe_rings": 9.8e-06
     }
   },
   "growth": {
@@ -139,7 +141,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set to give a plausible Douglas-fir: annual whorls of about five branches, upper branches swept up and lower ones level to drooping with upturned tips, a stiff leader, foliage kept about six years, height near 35 m at 50 years on a good site. Spray area matched to the drawn needle sprays. Not fitted to data. Cones (plant forms F3): 5 to 10 cm hang, with three-pointed bracts between the scales; set from general knowledge of the species, not measured. Spec rework E6d: `cone_length`, `cone_pitch`, `cone_years`, `needle_years` now set by the rules at Pinidae from the stated characters."
+      "note": "Hand-set to give a plausible Douglas-fir: annual whorls of about five branches, upper branches swept up and lower ones level to drooping with upturned tips, a stiff leader, foliage kept about six years, height near 35 m at 50 years on a good site. Spray area matched to the drawn needle sprays. Not fitted to data. Cones (plant forms F3): 5 to 10 cm hang, with three-pointed bracts between the scales; set from general knowledge of the species, not measured. Spec rework E6d: `cone_length`, `cone_pitch`, `cone_years`, `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe, and `pipe_rings` refitted to the dbh references now that the crown holds more foliage."
     },
     "allometry": {
       "evidence": "Authored",

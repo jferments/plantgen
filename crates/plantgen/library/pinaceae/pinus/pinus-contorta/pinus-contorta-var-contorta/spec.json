@@ -27,15 +27,16 @@
       "max_sag": 20,
       "upturn": 0.025,
       "branch_growth": 0.22,
-      "branch_ageing": 0.975,
       "side_chance": 0.6,
       "spray_base": 0.15,
       "spray_length": 0.9,
       "shade_death": 0.15,
       "shade_years": 2,
       "pipe_organ": 0.012,
-      "pipe_rings": 2.2e-05,
-      "spray_area": 0.273
+      "pipe_rings": 1.6e-05,
+      "spray_area": 0.273,
+      "branch_reach": 4.2,
+      "epi_chance": 0
     }
   },
   "growth": {
@@ -132,7 +133,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a small, irregular pine with a rounded to flat-topped crown, stout upturned branches and tufts of short, paired needles at the twig ends. Not fitted to measurements. Cones (plant forms F3): 3 to 6 cm, often closed and kept on the tree for years; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles. Spec rework E6d: `cone_length`, `needle_years` now set by the rules at Pinidae from the stated characters."
+      "note": "Hand-set from general knowledge of the species: a small, irregular pine with a rounded to flat-topped crown, stout upturned branches and tufts of short, paired needles at the twig ends. Not fitted to measurements. Cones (plant forms F3): 3 to 6 cm, often closed and kept on the tree for years; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles. Spec rework E6d: `cone_length`, `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe, and `pipe_rings` refitted to the dbh references now that the crown holds more foliage; `branch_ageing` is gone with the calendar ageing it set; `epi_chance` 0, as pines seldom sprout from dormant buds on their branches (general knowledge, not measured)."
     },
     "allometry": {
       "evidence": "Authored",

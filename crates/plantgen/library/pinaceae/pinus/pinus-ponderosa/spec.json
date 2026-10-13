@@ -28,8 +28,10 @@
       "spray_base": 0.25,
       "spray_length": 1.0,
       "shade_death": 0.15,
-      "pipe_rings": 8e-06,
-      "spray_area": 0.471
+      "pipe_rings": 1.2e-06,
+      "spray_area": 0.471,
+      "branch_reach": 6.0,
+      "epi_chance": 0
     }
   },
   "growth": {
@@ -138,7 +140,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a large pine with an open, rounded crown, stout branches and long needles in bundles of three, tufted at the twig ends. Not fitted to measurements. Cones (plant forms F3): 8 to 14 cm, spreading to hanging; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles. Spec rework E6d: `cone_length`, `cone_years`, `cone_pitch`, `needle_years` now set by the rules at Pinidae from the stated characters."
+      "note": "Hand-set from general knowledge of the species: a large pine with an open, rounded crown, stout branches and long needles in bundles of three, tufted at the twig ends. Not fitted to measurements. Cones (plant forms F3): 8 to 14 cm, spreading to hanging; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles. Spec rework E6d: `cone_length`, `cone_years`, `cone_pitch`, `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe, and `pipe_rings` refitted to the dbh references now that the crown holds more foliage; `epi_chance` 0, as pines seldom sprout from dormant buds on their branches (general knowledge, not measured)."
     },
     "allometry": {
       "evidence": "Authored",

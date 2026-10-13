@@ -27,9 +27,26 @@
 # `conifer` and homed at Pinidae, whose families extend it where they grow
 # otherwise. It grows every plant as before.
 #
+# Revision 5 (conifer form): the lower crown of an open-grown conifer
+# stays full. A branch's yearly shoot shortens with the wood between its
+# apex and the stem, by 1 / (1 + (wood / branch_reach)²), not with the
+# branch's age, so a well-lit limb lives as long as its light pays for
+# it. Foliage lasts needle_years at the top of the crown and up to
+# needle_low times as long at its foot, as leaves live longer deeper in
+# the crown (Harlow, Duursma & Marshall 2005, western redcedar). Each
+# branch shoot keeps a dormant bud that, after epi_delay years, sprouts
+# a side shoot with the chance epi_chance a year where light reaches it
+# (epi_light), as epicormic shoots refoliate old Douglas-fir limbs
+# (Ishii & Ford 2001); a bud waits up to epi_years, about as long as its
+# branch lives. Side shoots grow for side_years 20, not 10, so a branch
+# keeps foliage along its length, not only at its tip. A year's sprays
+# are drawn with their own turns (`spray(size, roll, pitch, level)`), a
+# third of the modules they took, so the fuller crown fits the module
+# limit.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem pinidae 4;
+lsystem pinidae 5;
 
 # Height of the leader over time: a Chapman-Richards curve,
 # height = height_max * (1 - exp(-height_rate * age))^height_shape.
@@ -48,17 +65,22 @@ param branch_sag = 0.8;        # degrees a branch bends down per year of age
 param max_sag = 25;            # the most it bends down
 param upturn = 0.015;          # how strongly shoots bend toward the sky
 param branch_growth = 0.3;     # yearly shoot of a first-order branch in full light
-param branch_ageing = 0.985;   # each year a branch grows this fraction as fast
+param branch_reach = 6;        # wood from the stem at which a branch's yearly shoot is half as long
 param side_growth = 0.55;      # side shoots grow this fraction as fast
 param side_chance = 0.75;      # chance of a side shoot on each side each year
 param side_angle = 50;         # angle between a branch and its side shoots
 param side_order = 1;          # highest branch order that forms side shoots
-param side_years = 10;         # years a side shoot keeps growing
+param side_years = 20;         # years a side shoot keeps growing
 param min_shoot = 0.025;       # an apex dies once its shoot would be shorter
 param shade_death = 0.1;       # light below which an apex starves
 param shade_years = 3;         # years in a row an apex survives starving
 param dead_years = 4;          # years a dead branch stays on the tree
-param needle_years = 7;        # years a shoot keeps its foliage
+param needle_years = 7;        # years a shoot keeps its foliage at the top of the crown
+param needle_low = 1.6;        # and how many times as long at the foot of the crown
+param epi_delay = 5;           # years a branch's dormant bud waits before it may sprout
+param epi_light = 0.3;         # light a dormant bud needs to sprout
+param epi_chance = 0.03;       # chance a year that a waiting bud in the light sprouts
+param epi_years = 300;         # years a dormant bud lives
 param spray_base = 0.2;        # foliage spray length on the shortest shoot
 param spray_length = 1.3;      # and how much longer per metre of shoot
 param twig_angle = 42;         # angle of the twig sprays beside each shoot
@@ -77,16 +99,18 @@ param cone_area = 0.55;        # area a cone 1 m long draws, m² (its template's
 
 module A queries light;                 # the leader's apex
 module N;                               # nods a young leader shoot over
-module C(order, vigour, starved) queries light, position;  # a branch apex
+module C(order, vigour, starved, wood) queries light, position;  # a branch apex, wood metres from the stem
 module S queries vigour;                # the base of a living branch
 module K;                               # the base of a dead branch
 module D;                               # bends a branch down as it ages
 module W(n);                            # whorl branches still to be formed
 module I(n);                            # interwhorl branches still to be formed
-module G(order, length);                # this year's shoot
-module L(order);                        # a possible side shoot on the left
-module R(order);                        # and on the right
+module G(order, length, keep, wood);    # this year's shoot, its foliage kept keep years, wood metres from the stem
+module L(order, wood);                  # a possible side shoot on the left
+module R(order, wood);                  # and on the right
 module Z(light);                        # a cone, perhaps, at a branch apex
+module Y(n);                            # holds a shoot's foliage, which falls after n years
+module E(order, wood) queries light;    # a dormant bud on a branch shoot
 
 organ spray foliage area spray_area;
 organ cone cone area cone_area;
@@ -100,17 +124,17 @@ axiom !(0.003) A;
 # The leader: this year's height growth with its foliage, then a whorl.
 rule A -> G(0, (richards(t + dt, height_max, height_rate, height_shape)
                 - richards(t, height_max, height_rate, height_shape))
-               * (leader_shade + (1 - leader_shade) * light))
+               * (leader_shade + (1 - leader_shade) * light), needle_years, 0)
           W(whorl) /(137.5) A;
 
 decompose W(n) : n > 0 ->
     [ /(360 * n / whorl + uniform(-20, 20)) &(branch_angle + uniform(-8, 8))
-      D T(0, 1, 0, upturn) S C(1, 1, 0) ]
+      D T(0, 1, 0, upturn) S C(1, 1, 0, 0) ]
     W(n - 1);
 decompose W(n) -> ;
 decompose I(n) : n > 0 ->
     [ /(uniform(0, 360)) &(branch_angle + uniform(-8, 8))
-      D T(0, 1, 0, upturn) S C(1, interwhorl_vigour, 0) ]
+      D T(0, 1, 0, upturn) S C(1, interwhorl_vigour, 0, 0) ]
     I(n - 1);
 decompose I(n) -> ;
 
@@ -122,37 +146,43 @@ interpret N -> &(0.5 * nod * max(0, 1 - age / nod_years));
 
 # An apex dies after shade_years starving in deep shade, once its shoot
 # would be too short, on a side shoot after side_years, or when its
-# drooping branch reaches the ground.
-rule C(o, v, s) : py < 0.2 -> ;
-rule C(o, v, s) : light < shade_death && s + 1 >= shade_years -> ;
-rule C(o, v, s) : o > 1 && age >= side_years -> ;
-rule C(o, v, s) : branch_growth * v * pow(side_growth, o - 1) * pow(branch_ageing, age)
-                  * (0.3 + 0.7 * light) < min_shoot -> ;
-rule C(o, v, s) -> G(o, branch_growth * v * pow(side_growth, o - 1) * pow(branch_ageing, age)
-                        * (0.3 + 0.7 * light))
-                   Z(light) C(o, v, light < shade_death ? s + 1 : 0);
+# drooping branch reaches the ground. Its shoot shortens with the wood
+# between it and the stem (revision 5).
+rule C(o, v, s, w) : py < 0.2 -> ;
+rule C(o, v, s, w) : light < shade_death && s + 1 >= shade_years -> ;
+rule C(o, v, s, w) : o > 1 && age >= side_years -> ;
+rule C(o, v, s, w) : branch_growth * v * pow(side_growth, o - 1) / (1 + pow(w / branch_reach, 2))
+                     * (0.3 + 0.7 * light) < min_shoot -> ;
+rule C(o, v, s, w) -> G(o, branch_growth * v * pow(side_growth, o - 1) / (1 + pow(w / branch_reach, 2))
+                           * (0.3 + 0.7 * light),
+                        needle_years * (1 + (needle_low - 1) * max(0, 1 - py / max(height, 0.1))),
+                        w)
+                      Z(light)
+                      C(o, v, light < shade_death ? s + 1 : 0,
+                        w + branch_growth * v * pow(side_growth, o - 1) / (1 + pow(w / branch_reach, 2))
+                            * (0.3 + 0.7 * light));
 
 # One year's leader shoot: its foliage, with the interwhorl branches halfway.
-decompose G(o, l) : o == 0 ->
-    [ spray((spray_base + spray_length * l) * 0.6) ]
+decompose G(o, l, k, w) : o == 0 ->
+    [ Y(k) spray((spray_base + spray_length * l) * 0.6) ]
     N F(l * 0.5) I(interwhorl) N F(l * 0.5);
 # One year's branch shoot: a spray along it and a twig spray to each side,
-# then possible side shoots at its end. A shaded shoot is short, but its
-# twigs and needles are not much smaller.
-decompose G(o, l) ->
-    [ /(uniform(-25, 25)) $ &(spray_droop * 0.5) spray(spray_base + spray_length * l) ]
-    [ +(twig_angle) /(uniform(-20, 20)) $ &(spray_droop)
-      spray((spray_base + spray_length * l) * 0.75) ]
-    [ -(twig_angle) /(uniform(-20, 20)) $ &(spray_droop)
-      spray((spray_base + spray_length * l) * 0.75) ]
-    F(l) L(o) R(o);
-decompose L(o) : o <= side_order && rand() < side_chance -> [ +(side_angle) S C(o + 1, 1, 0) ];
-decompose L(o) -> ;
-decompose R(o) : o <= side_order && rand() < side_chance -> [ -(side_angle) S C(o + 1, 1, 0) ];
-decompose R(o) -> ;
+# hanging by spray_droop, each with its own turn; then a dormant bud and
+# possible side shoots at its end. A shaded shoot is short, but its twigs
+# and needles are not much smaller.
+decompose G(o, l, k, w) ->
+    [ Y(k) spray(spray_base + spray_length * l, uniform(-25, 25), spray_droop * 0.5, 1)
+      spray((spray_base + spray_length * l) * 0.75, 90 + spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
+      spray((spray_base + spray_length * l) * 0.75, -90 - spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1) ]
+    F(l) E(o, w + l) L(o, w + l) R(o, w + l);
+decompose L(o, w) : o <= side_order && rand() < side_chance -> [ +(side_angle) S C(o + 1, 1, 0, w) ];
+decompose L(o, w) -> ;
+decompose R(o, w) : o <= side_order && rand() < side_chance -> [ -(side_angle) S C(o + 1, 1, 0, w) ];
+decompose R(o, w) -> ;
 
-# Foliage falls after needle_years.
-rule spray(s) : age >= needle_years -> ;
+# Foliage falls after its shoot's keep years: needle_years at the top of
+# the crown, up to needle_low times as long at its foot (revision 5).
+rule Y(n) : age >= n -> %;
 
 # A well-lit apex of a tree old enough bears a cone, which falls after
 # cone_years.
@@ -164,3 +194,10 @@ rule cone(s) : age >= cone_years -> ;
 # A branch with no living apex dies, and falls dead_years later.
 rule S : age > 2 && ntip == 0 -> K;
 rule K : age >= dead_years -> %;
+
+# Revision 5: a branch shoot's dormant bud sprouts a side shoot where
+# light reaches it after epi_delay years (epicormic shoots); it waits
+# up to epi_years, and dies at once beyond the orders that branch.
+rule E(o, w) : epi_delay <= 0 || age >= epi_years || o > side_order -> ;
+rule E(o, w) : age >= epi_delay && light >= epi_light && rand() < epi_chance ->
+    [ /(uniform(0, 360)) &(side_angle) S C(o + 1, 1, 0, w) ];

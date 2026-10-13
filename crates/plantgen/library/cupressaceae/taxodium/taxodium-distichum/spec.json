@@ -40,7 +40,8 @@
       "shade_death": 0.06,
       "shade_years": 5,
       "pipe_organ": 0.009,
-      "spray_area": 0.23
+      "spray_area": 0.23,
+      "branch_reach": 6.0
     }
   },
   "growth": {
@@ -129,7 +130,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a deciduous conifer of southern swamps and rivers, 20 to 35 m tall, with soft, feathery two-ranked needles that turn rust in autumn, a strongly buttressed, fluted base and woody knees rising from its roots round it; round cones. Not fitted to measurements. Spray area (plant roadmap P4): the area its card draws with needles of their true length."
+      "note": "Hand-set from general knowledge of the species: a deciduous conifer of southern swamps and rivers, 20 to 35 m tall, with soft, feathery two-ranked needles that turn rust in autumn, a strongly buttressed, fluted base and woody knees rising from its roots round it; round cones. Not fitted to measurements. Spray area (plant roadmap P4): the area its card draws with needles of their true length. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe."
     },
     "allometry": {
       "evidence": "Authored",
