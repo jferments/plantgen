@@ -37,7 +37,9 @@
       "shade_death": 0.06,
       "shade_years": 5,
       "pipe_organ": 0.009,
-      "spray_area": 0.242
+      "spray_area": 0.242,
+      "branch_reach": 6.0,
+      "pipe_rings": 6.8e-06
     }
   },
   "growth": {
@@ -136,7 +138,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a tall, narrow conifer with a drooping leader, slender level to drooping branches and feathery, flat sprays of short needles in two ranks; very shade tolerant. Not fitted to measurements. Cones (plant forms F3): 1.5 to 3 cm hang from the shoot tips; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws with needles of their true length. Spec rework E6d: `cone_length`, `cone_pitch` now set by the rules at Pinidae from the stated characters."
+      "note": "Hand-set from general knowledge of the species: a tall, narrow conifer with a drooping leader, slender level to drooping branches and feathery, flat sprays of short needles in two ranks; very shade tolerant. Not fitted to measurements. Cones (plant forms F3): 1.5 to 3 cm hang from the shoot tips; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws with needles of their true length. Spec rework E6d: `cone_length`, `cone_pitch` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe, and `pipe_rings` refitted to the dbh references now that the crown holds more foliage."
     },
     "allometry": {
       "evidence": "Authored",

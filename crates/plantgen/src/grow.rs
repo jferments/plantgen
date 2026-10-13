@@ -241,7 +241,7 @@ type IdMap<V> = HashMap<u64, V, BuildHasherDefault<IdHasher>>;
 
 /// The hasher of [`IdMap`]: Fx hashing (as in rustc), one rotate, xor and
 /// multiply per word.
-#[derive(Default)]
+#[derive(Clone, Default)]
 struct IdHasher(u64);
 
 impl Hasher for IdHasher {
@@ -264,6 +264,7 @@ impl Hasher for IdHasher {
 /// each as it was the last step it stood: the shed log in the making. Only
 /// standing parts are looked up, so the work follows the plant as it is,
 /// not every leaf it has ever shed.
+#[derive(Clone)]
 struct Parts<P> {
     standing: IdMap<(u32, P)>,
     now: IdMap<(u32, P)>,
@@ -323,7 +324,7 @@ fn last_seen<P>(gone: &[(u64, u32, P)], id: u64) -> Option<u32> {
 /// and the litter so far: organs counted by type at the step they fell.
 /// Only organs a keyframe holds are followed by id, for the age their
 /// keyframes show them shed at.
-#[derive(Default)]
+#[derive(Clone, Default)]
 struct Litter {
     /// Last step's organs: id, symbol and size.
     standing: Vec<(u64, u16, f64)>,
@@ -421,7 +422,7 @@ impl Litter {
 
 /// Girth bookkeeping across steps: the annual rings laid down on each
 /// segment and the widest radius it has had.
-#[derive(Default)]
+#[derive(Clone, Default)]
 struct Girth {
     widest: IdMap<f64>,
     ring_area: IdMap<f64>,
@@ -495,10 +496,9 @@ fn step_settings(
 
 /// The conditions' substrate, decoded once for the whole growth (G3).
 fn substrate_field(
-    settings: &GrowthSettings,
+    conditions: &Conditions,
 ) -> Result<Option<crate::substrate::SubstrateField>, GrowthError> {
-    settings
-        .conditions
+    conditions
         .substrate
         .as_ref()
         .map(crate::substrate::Substrate::field)
@@ -559,131 +559,366 @@ pub fn grow_watched(
     settings: &GrowthSettings,
     mut watch: Option<&mut dyn Watch>,
 ) -> Result<Growth, GrowthError> {
-    let (steps, keyframe_steps) = schedule(settings)?;
-    let organ_area = tools::organ_areas(program, params)?;
-    let (organ_types, organ_index) = organ_types(program, &organ_area);
+    let mut grower = Grower::new(program, params, settings)?;
+    while grower.step(watch.as_deref_mut())? {}
+    Ok(grower.finish())
+}
 
-    let limits = settings.limits;
-    let mut deriver = Deriver::new(program, params, &limits);
-    let mut interpreter = Interpreter::new(program, params, &limits);
-    let mut tool_state = ToolState::default();
-    let neighbourhood = settings.conditions.neighbourhood();
-    let substrate = substrate_field(settings)?;
-    let around = Around {
-        neighbourhood: &neighbourhood,
-        host: settings.host.as_deref(),
-        substrate: substrate.as_ref(),
-        sun: settings
-            .conditions
-            .light
-            .as_ref()
-            .and_then(crate::conditions::Light::sun_latitude),
-    };
-    let mut string = deriver.axiom(settings.seed, settings.dt)?;
-    let mut stats = GrowthStats {
-        steps,
-        ..GrowthStats::default()
-    };
-    let mut girth = Girth::default();
+/// Grow as [`grow_watched`] does in `settings`' conditions until
+/// `from_age` years, then on in `place` laid over them
+/// ([`Conditions::over`]): the library's young plant, the same for the
+/// same seed, grown on where a host puts it. At `from_age` 0 it grows in
+/// the place from its first step.
+///
+/// # Errors
+///
+/// As [`Grower::run_in`].
+pub fn grow_in(
+    program: &Program,
+    params: &[f64],
+    settings: &GrowthSettings,
+    place: &Conditions,
+    from_age: f64,
+    watch: Option<&mut dyn Watch>,
+) -> Result<Growth, GrowthError> {
+    let mut grower = Grower::new(program, params, settings)?;
+    grower.run_in(place, from_age, watch)?;
+    Ok(grower.finish())
+}
+
+/// The time one growth step took, by phase, when a [`Grower`] keeps it
+/// ([`Grower::timed`]): what makes a plant slow to grow (fitting plan
+/// PF6).
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
+pub struct StepTime {
+    /// The plant's age at the step, years.
+    pub age: f64,
+    /// Drawing the string into a scene.
+    pub interpret: f64,
+    /// Girth (`pipe@1`), rest bends (`bend@1`) and the shed bookkeeping.
+    pub girth: f64,
+    /// The environment tools: light, space, vigour, substrate and host.
+    pub tools: f64,
+    /// Keyframes kept, and the watch's frame.
+    pub keep: f64,
+    /// Rewriting the string by the program's rules.
+    pub derive: f64,
+    /// Segments and organs standing at the step.
+    pub segments: usize,
+    pub organs: usize,
+}
+
+impl StepTime {
+    /// Seconds the step took in all.
+    #[must_use]
+    pub fn total(&self) -> f64 {
+        self.interpret + self.girth + self.tools + self.keep + self.derive
+    }
+}
+
+/// A plant growing one step at a time: what [`grow`] runs to the end, kept
+/// open so a caller can change the conditions it grows in partway (grow a
+/// plant's young years in the open, then on in its place: fitting plan
+/// PF3), grow several side by side (stands, PF5), branch one young plant
+/// into several by cloning it, or time each step (PF6). Run to the end
+/// with the same settings throughout, it grows exactly what [`grow`]
+/// grows.
+#[derive(Clone)]
+pub struct Grower<'a> {
+    program: &'a Program,
+    params: &'a [f64],
+    settings: &'a GrowthSettings,
+    /// What it grows in from the next step on.
+    conditions: Conditions,
+    neighbourhood: crate::lsys::tools::Neighbourhood,
+    substrate: Option<crate::substrate::SubstrateField>,
+    sun: Option<f64>,
+    steps: u32,
+    keyframe_steps: Vec<u32>,
+    organ_area: Vec<f64>,
+    organ_types: Vec<OrganType>,
+    organ_index: Vec<u16>,
+    deriver: Deriver<'a>,
+    interpreter: Interpreter<'a>,
+    tool_state: ToolState,
+    string: crate::lsys::derive::ModuleString,
+    stats: GrowthStats,
+    girth: Girth,
     // Each segment's rest bend under `bend@1`.
-    let mut rest_bends: IdMap<crate::math::Vec3> = IdMap::default();
+    rest_bends: IdMap<crate::math::Vec3>,
     // Each segment as it was the last step it stood, and the organs that
     // fell, for the shed log.
-    let mut segments: Parts<ShedSegment> = Parts::default();
-    let mut litter = Litter::default();
-    let mut keyframes = Vec::with_capacity(keyframe_steps.len());
-    let mut next_keyframe = 0;
-    let mut stack = Vec::new();
+    segments: Parts<ShedSegment>,
+    litter: Litter,
+    keyframes: Vec<PlantGraph>,
+    next_keyframe: usize,
+    stack: Vec<f64>,
+    /// The next step to take; past the last once growth is over.
+    step: u32,
+    over: bool,
+    times: Option<Vec<StepTime>>,
+}
 
-    for step in 0..=steps {
+impl<'a> Grower<'a> {
+    /// A plant at its axiom, before its first step, in `settings`'
+    /// conditions.
+    ///
+    /// # Errors
+    ///
+    /// Fails on invalid settings or conditions, or when the axiom does.
+    pub fn new(
+        program: &'a Program,
+        params: &'a [f64],
+        settings: &'a GrowthSettings,
+    ) -> Result<Self, GrowthError> {
+        let (steps, keyframe_steps) = schedule(settings)?;
+        let organ_area = tools::organ_areas(program, params)?;
+        let (organ_types, organ_index) = organ_types(program, &organ_area);
+        let mut deriver = Deriver::new(program, params, &settings.limits);
+        let string = deriver.axiom(settings.seed, settings.dt)?;
+        let mut grower = Self {
+            program,
+            params,
+            settings,
+            conditions: settings.conditions.clone(),
+            neighbourhood: settings.conditions.neighbourhood(),
+            substrate: None,
+            sun: None,
+            steps,
+            keyframe_steps,
+            organ_area,
+            organ_types,
+            organ_index,
+            deriver,
+            interpreter: Interpreter::new(program, params, &settings.limits),
+            tool_state: ToolState::default(),
+            string,
+            stats: GrowthStats {
+                steps,
+                ..GrowthStats::default()
+            },
+            girth: Girth::default(),
+            rest_bends: IdMap::default(),
+            segments: Parts::default(),
+            litter: Litter::default(),
+            keyframes: Vec::new(),
+            next_keyframe: 0,
+            stack: Vec::new(),
+            step: 0,
+            over: false,
+            times: None,
+        };
+        grower.keyframes.reserve(grower.keyframe_steps.len());
+        grower.set_conditions(settings.conditions.clone())?;
+        Ok(grower)
+    }
+
+    /// Keep the time each step takes, by phase, from the next step on.
+    #[must_use]
+    pub fn timed(mut self) -> Self {
+        self.times.get_or_insert_with(Vec::new);
+        self
+    }
+
+    /// The steps timed so far, in order (none unless [`Self::timed`]).
+    #[must_use]
+    pub fn times(&self) -> &[StepTime] {
+        self.times.as_deref().unwrap_or_default()
+    }
+
+    /// Grow in `conditions` from the next step on: its neighbours, light
+    /// and substrate. What has grown stays as it grew.
+    ///
+    /// # Errors
+    ///
+    /// Fails when the conditions' substrate is not a valid grid.
+    pub fn set_conditions(&mut self, conditions: Conditions) -> Result<(), GrowthError> {
+        self.substrate = substrate_field(&conditions)?;
+        self.neighbourhood = conditions.neighbourhood();
+        self.sun = conditions
+            .light
+            .as_ref()
+            .and_then(crate::conditions::Light::sun_latitude);
+        self.conditions = conditions;
+        Ok(())
+    }
+
+    /// The conditions it grows in from the next step on.
+    #[must_use]
+    pub fn conditions(&self) -> &Conditions {
+        &self.conditions
+    }
+
+    /// The plant's age at its next step, years.
+    #[must_use]
+    pub fn age(&self) -> f64 {
+        f64::from(self.step) * self.settings.dt
+    }
+
+    /// Whether growth is over.
+    #[must_use]
+    pub fn is_over(&self) -> bool {
+        self.over
+    }
+
+    /// Grow to the end, from `from_age` years on (or now, if older) in
+    /// `place` laid over the conditions it grows in ([`Conditions::over`]).
+    ///
+    /// # Errors
+    ///
+    /// When `place` is not a valid document or `from_age` is negative, and
+    /// as [`Self::step`].
+    pub fn run_in(
+        &mut self,
+        place: &Conditions,
+        from_age: f64,
+        mut watch: Option<&mut (dyn Watch + '_)>,
+    ) -> Result<(), GrowthError> {
+        place
+            .validate()
+            .map_err(|message| GrowthError::Settings(format!("the place: {message}")))?;
+        if !(from_age.is_finite() && from_age >= 0.0) {
+            return Err(GrowthError::Settings(format!(
+                "from_age must be 0 or more years, found {from_age}"
+            )));
+        }
+        let mut place = Some(place);
+        loop {
+            // The step that starts at `from_age`, or the first past it, is
+            // the first in the place.
+            if self.age() >= from_age - 1e-9 * self.settings.dt
+                && let Some(place) = place.take()
+            {
+                self.set_conditions(place.over(&self.conditions))?;
+            }
+            if !self.step(watch.as_deref_mut())? {
+                return Ok(());
+            }
+        }
+    }
+
+    /// Take one step, telling `watch`. Returns whether steps remain.
+    ///
+    /// # Errors
+    ///
+    /// Fails on a rule or tool error or a sandbox limit, and with
+    /// [`GrowthError::Stopped`] when the watch stops it.
+    #[allow(clippy::too_many_lines)]
+    pub fn step(&mut self, watch: Option<&mut (dyn Watch + '_)>) -> Result<bool, GrowthError> {
+        if self.over {
+            return Ok(false);
+        }
+        let (program, params, settings) = (self.program, self.params, self.settings);
+        let step = self.step;
+        let steps = self.steps;
         let clock = Clock {
             step,
             t: f64::from(step) * settings.dt,
             dt: settings.dt,
         };
-        let mut scene = interpreter.interpret(&string, clock)?;
-        stats.peak_modules = stats.peak_modules.max(string.len());
-        stats.peak_segments = stats.peak_segments.max(scene.segments.len());
-        stats.peak_organs = stats.peak_organs.max(scene.organs.len());
+        let mut timer = self.times.is_some().then(Timer::start);
+        let mut time = StepTime {
+            age: clock.t,
+            ..StepTime::default()
+        };
+        let mut scene = self.interpreter.interpret(&self.string, clock)?;
+        Timer::lap(timer.as_mut(), &mut time.interpret);
+        self.stats.peak_modules = self.stats.peak_modules.max(self.string.len());
+        self.stats.peak_segments = self.stats.peak_segments.max(scene.segments.len());
+        self.stats.peak_organs = self.stats.peak_organs.max(scene.organs.len());
+        time.segments = scene.segments.len();
+        time.organs = scene.organs.len();
 
-        let pipes = match pipe_settings(program, params, clock, &mut stack) {
-            Some(values) => Some(tools::pipe(&scene, &organ_area, &values)?),
+        let pipes = match pipe_settings(program, params, clock, &mut self.stack) {
+            Some(values) => Some(tools::pipe(&scene, &self.organ_area, &values)?),
             None => None,
         };
-        let radii = girth.radii(&scene, pipes.as_ref(), settings.dt);
-        if let Some(values) = step_settings(program, ToolKind::Bend, params, clock, &mut stack) {
+        let radii = self.girth.radii(&scene, pipes.as_ref(), settings.dt);
+        if let Some(values) = step_settings(program, ToolKind::Bend, params, clock, &mut self.stack)
+        {
             tools::bend(
                 &mut scene,
                 &radii,
-                &organ_area,
+                &self.organ_area,
                 &values,
-                &mut rest_bends,
+                &mut self.rest_bends,
                 settings.dt,
             )?;
         }
-        segments.step(scene.segments.iter().zip(&radii).map(|(segment, radius)| {
-            let part = ShedSegment {
-                id: segment.id,
-                born: segment.born,
-                shed: 0.0,
-                radius: *radius,
-                length: segment.start.distance(segment.end),
-                order: segment.order,
-                height: 0.5 * (segment.start.y + segment.end.y),
-                body: segment.body,
-            };
-            (segment.id, step, part)
-        }));
-        litter.step(
+        self.segments
+            .step(scene.segments.iter().zip(&radii).map(|(segment, radius)| {
+                let part = ShedSegment {
+                    id: segment.id,
+                    born: segment.born,
+                    shed: 0.0,
+                    radius: *radius,
+                    length: segment.start.distance(segment.end),
+                    order: segment.order,
+                    height: 0.5 * (segment.start.y + segment.end.y),
+                    body: segment.body,
+                };
+                (segment.id, step, part)
+            }));
+        self.litter.step(
             step,
             settings.dt,
             scene
                 .organs
                 .iter()
                 .map(|organ| (organ.id, organ.symbol, organ.size)),
-            &organ_types,
-            &organ_index,
+            &self.organ_types,
+            &self.organ_index,
         );
+        Timer::lap(timer.as_mut(), &mut time.girth);
 
-        let keyframe = keyframe_steps.get(next_keyframe) == Some(&step);
+        let keyframe = self.keyframe_steps.get(self.next_keyframe) == Some(&step);
         if step == steps && !keyframe {
-            break;
+            self.end(time);
+            return Ok(false);
         }
+        let around = Around {
+            neighbourhood: &self.neighbourhood,
+            envelopes: self.conditions.envelopes(),
+            host: settings.host.as_deref(),
+            substrate: self.substrate.as_ref(),
+            sun: self.sun,
+        };
         let output = tools::run(
             program,
             params,
-            &organ_area,
+            &self.organ_area,
             clock,
             &scene,
             &around,
-            &mut tool_state,
-            &limits,
+            &mut self.tool_state,
+            &settings.limits,
             settings.seed,
         )?;
+        Timer::lap(timer.as_mut(), &mut time.tools);
         if keyframe {
-            litter.keep(&scene, &organ_index);
-            keyframes.push(snapshot(
+            self.litter.keep(&scene, &self.organ_index);
+            self.keyframes.push(snapshot(
                 &scene,
                 &radii,
                 &output.organ_light,
-                &organ_index,
+                &self.organ_index,
                 clock.t,
             ));
-            next_keyframe += 1;
+            self.next_keyframe += 1;
         }
-        if let Some(watch) = watch.as_deref_mut() {
+        if let Some(watch) = watch {
             let frame = watch.wants_frame(step).then(|| Growth {
-                organ_types: organ_types.clone(),
+                organ_types: self.organ_types.clone(),
                 body_types: program.bodies().map(str::to_string).collect(),
                 structure_types: structure_types(program),
                 keyframes: vec![snapshot(
                     &scene,
                     &radii,
                     &output.organ_light,
-                    &organ_index,
+                    &self.organ_index,
                     clock.t,
                 )],
-                stats,
+                stats: self.stats,
                 shed: ShedLog::default(),
             });
             let progress = Progress {
@@ -696,40 +931,87 @@ pub fn grow_watched(
                 return Err(GrowthError::Stopped);
             }
         }
+        Timer::lap(timer.as_mut(), &mut time.keep);
         if step == steps {
-            break;
+            self.end(time);
+            return Ok(false);
         }
-        string = deriver.derive(&string, &output.env, clock)?;
+        self.string = self.deriver.derive(&self.string, &output.env, clock)?;
+        Timer::lap(timer.as_mut(), &mut time.derive);
+        if let Some(times) = &mut self.times {
+            times.push(time);
+        }
+        self.step += 1;
+        Ok(true)
     }
 
-    // Every part stood at some step; one gone before the last was shed the
-    // step after it was last seen.
-    let shed_age = |seen: u32| (seen < steps).then(|| f64::from(seen + 1) * settings.dt);
-    let gone_segments = segments.gone();
-    for graph in &mut keyframes {
-        for segment in &mut graph.segments {
-            segment.shed = last_seen(&gone_segments, segment.id).and_then(shed_age);
+    fn end(&mut self, time: StepTime) {
+        if let Some(times) = &mut self.times {
+            times.push(time);
         }
-        for organ in &mut graph.organs {
-            organ.shed = litter.last_seen(organ.id, organ.organ).and_then(shed_age);
+        self.step = self.steps + 1;
+        self.over = true;
+    }
+
+    /// The grown plant: its keyframes so far, with every part's shed age.
+    /// A plant whose growth is not over is finished where it stands; a
+    /// keyframe not reached is left out.
+    #[must_use]
+    pub fn finish(self) -> Growth {
+        let (steps, dt) = (self.steps, self.settings.dt);
+        // Every part stood at some step; one gone before the last was shed
+        // the step after it was last seen.
+        let shed_age = |seen: u32| (seen < steps).then(|| f64::from(seen + 1) * dt);
+        let gone_segments = self.segments.gone();
+        let mut keyframes = self.keyframes;
+        for graph in &mut keyframes {
+            for segment in &mut graph.segments {
+                segment.shed = last_seen(&gone_segments, segment.id).and_then(shed_age);
+            }
+            for organ in &mut graph.organs {
+                organ.shed = self
+                    .litter
+                    .last_seen(organ.id, organ.organ)
+                    .and_then(shed_age);
+            }
+        }
+        // Segments by id, as the gone list is; organs by age.
+        let shed = ShedLog {
+            segments: gone_segments
+                .into_iter()
+                .filter_map(|(_, seen, part)| {
+                    shed_age(seen).map(|shed| ShedSegment { shed, ..part })
+                })
+                .collect(),
+            organs: self.litter.fallen,
+        };
+        Growth {
+            organ_types: self.organ_types,
+            body_types: self.program.bodies().map(str::to_string).collect(),
+            structure_types: structure_types(self.program),
+            keyframes,
+            stats: self.stats,
+            shed,
         }
     }
-    // Segments by id, as the gone list is; organs by age.
-    let shed = ShedLog {
-        segments: gone_segments
-            .into_iter()
-            .filter_map(|(_, seen, part)| shed_age(seen).map(|shed| ShedSegment { shed, ..part }))
-            .collect(),
-        organs: litter.fallen,
-    };
-    Ok(Growth {
-        organ_types,
-        body_types: program.bodies().map(str::to_string).collect(),
-        structure_types: structure_types(program),
-        keyframes,
-        stats,
-        shed,
-    })
+}
+
+/// Times the phases of a step, only when asked to ([`Grower::timed`]).
+struct Timer(std::time::Instant);
+
+impl Timer {
+    fn start() -> Self {
+        Self(std::time::Instant::now())
+    }
+
+    /// Add the time since the last lap to `into`.
+    fn lap(timer: Option<&mut Self>, into: &mut f64) {
+        if let Some(timer) = timer {
+            let now = std::time::Instant::now();
+            *into += now.duration_since(timer.0).as_secs_f64();
+            timer.0 = now;
+        }
+    }
 }
 
 fn snapshot(
@@ -885,6 +1167,55 @@ mod tests {
             limits: Limits::default(),
             host: None,
         }
+    }
+
+    /// A grower run step by step grows what `grow` grows, bit for bit; so
+    /// do two clones of it parted halfway, and one told the conditions it
+    /// already grows in. Changing them partway changes only what grows
+    /// after: the keyframe before is the plant grown in the first ones.
+    #[test]
+    fn a_grower_grows_what_grow_grows_and_changes_course_when_told() {
+        use crate::spec::Environment;
+        let program = Program::compile(BUSH).unwrap();
+        let params = program.resolve_params(&BTreeMap::new()).unwrap();
+        let settings = settings(8.0, vec![3.0, 8.0]);
+        let grown = grow(&program, &params, &settings).unwrap().digest();
+
+        let mut grower = Grower::new(&program, &params, &settings).unwrap().timed();
+        while grower.age() < 4.0 {
+            assert!(grower.step(None).unwrap());
+        }
+        let mut twin = grower.clone();
+        let mut told = grower.clone();
+        told.set_conditions(Conditions::preset(Environment::Open))
+            .unwrap();
+        let mut shaded = grower.clone();
+        shaded
+            .set_conditions(Conditions::preset(Environment::Suppressed))
+            .unwrap();
+        for plant in [&mut grower, &mut twin, &mut told, &mut shaded] {
+            while plant.step(None).unwrap() {}
+            assert!(plant.is_over());
+        }
+        assert_eq!(grower.times().len(), 9);
+        assert!(grower.times().iter().all(|time| time.total() >= 0.0));
+        let open = grower.finish();
+        assert_eq!(open.digest(), grown);
+        assert_eq!(twin.finish().digest(), grown);
+        assert_eq!(told.finish().digest(), grown);
+        let shaded = shaded.finish();
+        // The same plant at 3 years, but for when its parts fall later.
+        let unshed = |graph: &PlantGraph| {
+            let mut graph = graph.clone();
+            graph
+                .segments
+                .iter_mut()
+                .for_each(|segment| segment.shed = None);
+            graph.organs.iter_mut().for_each(|organ| organ.shed = None);
+            graph
+        };
+        assert_eq!(unshed(&shaded.keyframes[0]), unshed(&open.keyframes[0]));
+        assert_ne!(unshed(&shaded.keyframes[1]), unshed(&open.keyframes[1]));
     }
 
     /// Crown form step B: a leafy limb sags under `bend@1` and keeps the
@@ -1245,31 +1576,36 @@ mod tests {
     /// A shoot that creeps west at ankle height and stops short of
     /// whatever it meets (`substrate@1`, G3).
     fn creeper(substrate: Option<crate::substrate::SubstratePreset>) -> f64 {
-        let program = Program::compile(
-            "lsystem creeper 1;
-             module A queries substrate;
-             tool substrate@1 {};
-             axiom f(0.1) steer(-1, 0, 0, 1) A;
-             rule A : sd > 0.06 -> F(0.05) A;",
-        )
-        .unwrap();
-        let params = program.resolve_params(&BTreeMap::new()).unwrap();
         let mut conditions = Conditions::preset(crate::spec::Environment::Open);
         conditions.substrate = substrate.map(crate::substrate::Substrate::preset);
-        let growth = grow(
-            &program,
-            &params,
-            &GrowthSettings {
-                conditions,
-                ..settings(12.0, vec![12.0])
-            },
-        )
-        .unwrap();
-        growth.keyframes[0]
+        let growth = creep(&conditions, None);
+        growth.keyframes[1]
             .segments
             .iter()
             .map(|segment| segment.end.x)
             .fold(0.0, f64::min)
+    }
+
+    const CREEPER: &str = "lsystem creeper 1;
+         module A queries substrate;
+         tool substrate@1 {};
+         axiom f(0.1) steer(-1, 0, 0, 1) A;
+         rule A : sd > 0.06 -> F(0.05) A;";
+
+    /// The creeper grown 12 years in `conditions`, keeping ages 4 and 12,
+    /// grown on in a place from an age when `place` gives one.
+    fn creep(conditions: &Conditions, place: Option<(&Conditions, f64)>) -> Growth {
+        let program = Program::compile(CREEPER).unwrap();
+        let params = program.resolve_params(&BTreeMap::new()).unwrap();
+        let settings = GrowthSettings {
+            conditions: conditions.clone(),
+            ..settings(12.0, vec![4.0, 12.0])
+        };
+        match place {
+            Some((place, from_age)) => grow_in(&program, &params, &settings, place, from_age, None),
+            None => grow(&program, &params, &settings),
+        }
+        .unwrap()
     }
 
     #[test]
@@ -1280,5 +1616,79 @@ mod tests {
         assert!((open + 0.6).abs() < 1.0e-9, "open ground: {open}");
         let cleft = creeper(Some(crate::substrate::SubstratePreset::Cleft));
         assert!((-0.25..-0.15).contains(&cleft), "cleft: {cleft}");
+    }
+
+    #[test]
+    fn a_plant_grows_on_in_a_place_from_an_age() {
+        let open = Conditions::preset(crate::spec::Environment::Open);
+        // A cleft twice the preset's size: its west block's face 0.5 m out.
+        let cleft = Conditions::from_json(
+            r#"{"schema": 1, "substrate": {"version": 1, "preset": "cleft", "scale": 2}}"#,
+        )
+        .unwrap();
+        let reach = |growth: &Growth, keyframe: usize| {
+            growth.keyframes[keyframe]
+                .segments
+                .iter()
+                .map(|segment| segment.end.x)
+                .fold(0.0, f64::min)
+        };
+        let free = creep(&open, None);
+        assert!((reach(&free, 1) + 0.6).abs() < 1e-9);
+        // In the cleft from the start, it stops at the scaled face.
+        let placed = creep(&open, Some((&cleft, 0.0)));
+        assert!(
+            (-0.5..-0.4).contains(&reach(&placed, 1)),
+            "{}",
+            reach(&placed, 1)
+        );
+        // Moved there at 4 years, it is the open-grown plant until then.
+        let moved = creep(&open, Some((&cleft, 4.0)));
+        assert_eq!(moved.keyframes[0], free.keyframes[0]);
+        assert_eq!(reach(&moved, 1), reach(&placed, 1));
+        // A place it would move to after its last year changes nothing.
+        let never = creep(&open, Some((&cleft, 20.0)));
+        assert_eq!(never.keyframes, free.keyframes);
+        // The place keeps the plant's own stand: it has none of its own.
+        let stand = Conditions::preset(crate::spec::Environment::Interior);
+        let program = Program::compile(CREEPER).unwrap();
+        let params = program.resolve_params(&BTreeMap::new()).unwrap();
+        let in_stand = GrowthSettings {
+            conditions: stand.clone(),
+            ..settings(2.0, vec![2.0])
+        };
+        let mut grower = Grower::new(&program, &params, &in_stand).unwrap();
+        grower.run_in(&cleft, 1.0, None).unwrap();
+        assert_eq!(grower.conditions().neighbourhood(), stand.neighbourhood());
+        assert_eq!(grower.conditions().substrate, cleft.substrate);
+        // A bad place or age is refused.
+        assert!(
+            creep_in(
+                &open,
+                r#"{"schema": 1, "substrate": {"version": 1, "preset": "wall", "scale": 0}}"#,
+                0.0
+            )
+            .contains("the place: substrate scale")
+        );
+        assert!(creep_in(&open, r#"{"schema": 1}"#, -1.0).contains("from_age"));
+    }
+
+    fn creep_in(conditions: &Conditions, place: &str, from_age: f64) -> String {
+        let program = Program::compile(CREEPER).unwrap();
+        let params = program.resolve_params(&BTreeMap::new()).unwrap();
+        let place: Conditions = serde_json::from_str(place).unwrap();
+        grow_in(
+            &program,
+            &params,
+            &GrowthSettings {
+                conditions: conditions.clone(),
+                ..settings(2.0, vec![2.0])
+            },
+            &place,
+            from_age,
+            None,
+        )
+        .unwrap_err()
+        .to_string()
     }
 }

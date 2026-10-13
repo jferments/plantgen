@@ -251,8 +251,14 @@ pub mod venation;
 /// enough to rest on the ground, or rises onto it when no turn clears it;
 /// and a stem's foot ring meets the ground in a flat cut where a leaning
 /// or flared trunk's side would dip into it.
+/// 42: a conifer's lower crown stays full (pinidae 5): a branch's shoot
+/// shortens with its wood from the stem, not its age; foliage lasts longer
+/// low in the crown; dormant buds sprout on lit branch wood; side shoots
+/// grow 20 years; sprays are drawn with their own turns; a limb that
+/// reaches the ground is shed there, and a dead branch falls (41 is the
+/// ground plane, #73).
 /// 45: a flower whose zygomorphy is of no named kind (palo verde,
 /// piggyback plant) draws its upper petal unlike the rest, wider by
 /// `banner` and more upright (an unequal corolla), not a corolla of like
-/// petals (41 to 44 are #73, #72, #77 and #79 in landing order).
+/// petals (43 and 44 are #77 and #79).
 pub const GENERATOR_REVISION: u32 = 45;
