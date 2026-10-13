@@ -582,6 +582,45 @@ fn open_conifers_keep_their_lower_crowns() {
     assert_eq!(checked, 7, "the open-grown conifers that are not pines");
 }
 
+/// Conifer form (pinidae revision 5): no conifer's wood or foliage passes
+/// into the ground. A limb that sags to within `ground_gap` of it is shed
+/// from there out, so in every variant at every keyframe no segment ends,
+/// and no organ sits, more than 5 cm below the foot's plane.
+#[test]
+fn conifers_keep_above_the_ground() {
+    let mut checked = 0;
+    for (id, _) in spec::all_species() {
+        let spec = PlantSpec::builtin(id).unwrap();
+        if spec.generator.program != "pinidae" {
+            continue;
+        }
+        checked += 1;
+        let oldest = *spec.growth.keyframes.last().unwrap();
+        for variant in spec.variant_list() {
+            let growth = grow_variant(&spec, &variant, oldest, spec.growth.keyframes.clone());
+            for graph in &growth.keyframes {
+                let lowest = graph
+                    .segments
+                    .iter()
+                    .map(|segment| segment.end.y)
+                    .chain(graph.organs.iter().map(|organ| organ.position.y))
+                    .fold(f64::INFINITY, f64::min);
+                assert!(
+                    lowest >= -0.05,
+                    "{id} {:?} seed {} at {} years: wood or foliage {lowest:.3} m below the ground",
+                    variant.environment,
+                    variant.seed,
+                    graph.age
+                );
+            }
+        }
+    }
+    assert_eq!(
+        checked, 11,
+        "the ten conifers of the forest and the bald cypress"
+    );
+}
+
 /// Plant roadmap P4: every species whose foliage is needles draws them
 /// near the camera as a solid shoot, a part mesh within its cap whose span
 /// is its needles' width, so it shows only where they are a pixel wide.

@@ -37,12 +37,16 @@
 # lower (Harlow, Duursma & Marshall 2005). Each branch shoot keeps a
 # dormant bud that, after epi_delay years, sprouts a side shoot with the
 # chance epi_chance a year where light reaches it (epi_light), as
-# epicormic shoots refoliate old Douglas-fir limbs (Ishii & Ford 2001);
-# a bud waits up to epi_years, about as long as its branch lives. Side
-# shoots grow for side_years 20, not 10, so a branch keeps foliage along
-# its length, not only at its tip. A year's sprays are drawn with their
-# own turns (`spray(size, roll, pitch, level)`), a third of the modules
-# they took, so the fuller crown fits the module limit.
+# epicormic shoots refoliate old Douglas-fir limbs (Ishii & Ford 2001).
+# A bud waits up to epi_years, about as long as its branch lives, at the
+# foot of its shoot, so a branch whose apexes have died still dies
+# though its buds wait. Side shoots grow for side_years 20, not 10, so a
+# branch keeps foliage along its length, not only at its tip. A branch
+# that sags to within ground_gap of the ground, or of the substrate it
+# grows on (substrate@1), is shed from there out, so no limb passes into
+# the ground. A year's sprays are drawn with their own turns
+# (`spray(size, roll, pitch, level)`), a third of the modules they took,
+# so the fuller crown fits the module limit.
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
@@ -74,6 +78,8 @@ param side_years = 20;         # years a side shoot keeps growing
 param min_shoot = 0.025;       # an apex dies once its shoot would be shorter
 param shade_death = 0.1;       # light below which an apex starves
 param shade_years = 3;         # years in a row an apex survives starving
+param ground_gap = 0.1;        # a branch is shed where it comes this close to the ground
+param ground_watch = 1;        # height below which a side shoot's foot watches the ground
 param dead_years = 4;          # years a dead branch stays on the tree
 param needle_years = 7;        # years a shoot keeps its foliage, on average through the crown
 param needle_low = 1.56;       # how many times as long at the crown's foot as at its top
@@ -99,8 +105,8 @@ param cone_area = 0.55;        # area a cone 1 m long draws, m² (its template's
 
 module A queries light;                 # the leader's apex
 module N;                               # nods a young leader shoot over
-module C(order, vigour, starved, wood) queries light, position;  # a branch apex, wood metres from the stem
-module S queries vigour;                # the base of a living branch
+module C(order, vigour, starved, wood) queries light, position, substrate;  # a branch apex, wood metres from the stem
+module S queries vigour, substrate;     # the base of a living branch
 module K;                               # the base of a dead branch
 module D;                               # bends a branch down as it ages
 module W(n);                            # whorl branches still to be formed
@@ -110,7 +116,8 @@ module L(order, wood);                  # a possible side shoot on the left
 module R(order, wood);                  # and on the right
 module Z(light);                        # a cone, perhaps, at a branch apex
 module Y(n);                            # holds a shoot's foliage, which falls after n years
-module E(order, wood) queries light;    # a dormant bud on a branch shoot
+module E(order, wood) queries light, position, substrate;  # a dormant bud where a branch shoot starts, watching the ground
+module H queries substrate;             # where a branch shoot starts, its bud spent, watching the ground
 
 organ spray foliage area spray_area;
 organ cone cone area cone_area;
@@ -118,6 +125,7 @@ organ cone cone area cone_area;
 tool light@1 { cell = 0.4, extinction = 0.35, bud = 0.01 };
 tool vigour@1 { lambda = 0.7, alpha = 2 };
 tool pipe@1 { exponent = 2.4, tip = pipe_tip, organ = pipe_organ, rings = pipe_rings };
+tool substrate@1 {};
 
 axiom !(0.003) A;
 
@@ -148,7 +156,7 @@ interpret N -> &(0.5 * nod * max(0, 1 - age / nod_years));
 # would be too short, on a side shoot after side_years, or when its
 # drooping branch reaches the ground. Its shoot shortens with the wood
 # between it and the stem (revision 5).
-rule C(o, v, s, w) : py < 0.2 -> ;
+rule C(o, v, s, w) : sd < ground_gap + 0.05 -> ;
 rule C(o, v, s, w) : light < shade_death && s + 1 >= shade_years -> ;
 rule C(o, v, s, w) : o > 1 && age >= side_years -> ;
 rule C(o, v, s, w) : branch_growth * v * pow(side_growth, o - 1) / (1 + pow(w / branch_reach, 2))
@@ -167,14 +175,14 @@ decompose G(o, l, k, w) : o == 0 ->
     [ Y(k) spray((spray_base + spray_length * l) * 0.6) ]
     N F(l * 0.5) I(interwhorl) N F(l * 0.5);
 # One year's branch shoot: a spray along it and a twig spray to each side,
-# hanging by spray_droop, each with its own turn; then a dormant bud and
-# possible side shoots at its end. A shaded shoot is short, but its twigs
+# hanging by spray_droop, each with its own turn; a dormant bud at its
+# foot, which watches the ground; possible side shoots at its end. A shaded shoot is short, but its twigs
 # and needles are not much smaller.
 decompose G(o, l, k, w) ->
     [ Y(k) spray(spray_base + spray_length * l, uniform(-25, 25), spray_droop * 0.5, 1)
       spray((spray_base + spray_length * l) * 0.75, 90 + spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
       spray((spray_base + spray_length * l) * 0.75, -90 - spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1) ]
-    F(l) E(o, w + l) L(o, w + l) R(o, w + l);
+    E(o, w) F(l) L(o, w + l) R(o, w + l);
 decompose L(o, w) : o <= side_order && rand() < side_chance -> [ +(side_angle) S C(o + 1, 1, 0, w) ];
 decompose L(o, w) -> ;
 decompose R(o, w) : o <= side_order && rand() < side_chance -> [ -(side_angle) S C(o + 1, 1, 0, w) ];
@@ -192,12 +200,22 @@ decompose Z(l) -> ;
 rule cone(s) : age >= cone_years -> ;
 
 # A branch with no living apex dies, and falls dead_years later.
+rule S : sd < ground_gap -> %;
 rule S : age > 2 && ntip == 0 -> K;
 rule K : age >= dead_years -> %;
 
-# Revision 5: a branch shoot's dormant bud sprouts a side shoot where
-# light reaches it after epi_delay years (epicormic shoots); it waits
-# up to epi_years, and dies at once beyond the orders that branch.
-rule E(o, w) : epi_delay <= 0 || age >= epi_years || o > side_order -> ;
-rule E(o, w) : age >= epi_delay && light >= epi_light && rand() < epi_chance ->
-    [ /(uniform(0, 360)) &(side_angle) S C(o + 1, 1, 0, w) ];
+# Revision 5: a branch that sags to within ground_gap of the ground (or
+# of the substrate) is shed from there out.
+rule H : sd < ground_gap -> %;
+
+# Revision 5: a branch shoot's dormant bud sprouts a side shoot after
+# epi_delay years where light reaches it (epicormic shoots). Once it has
+# sprouted or waited epi_years it is spent (H) and only watches the
+# ground. A bud beyond the orders that branch is spent at once, and
+# goes unless it is within ground_watch of the ground; the bud at a
+# branch's foot, on the stem, never sprouts.
+rule E(o, w) : o > side_order && py > ground_watch -> ;
+rule E(o, w) : sd < ground_gap -> %;
+rule E(o, w) : epi_delay <= 0 || age >= epi_years || o > side_order -> H;
+rule E(o, w) : w > 0 && age >= epi_delay && light >= epi_light && rand() < epi_chance ->
+    [ /(uniform(0, 360)) &(side_angle) S C(o + 1, 1, 0, w) ] H;
