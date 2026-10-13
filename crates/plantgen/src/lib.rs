@@ -217,9 +217,9 @@ pub mod venation;
 /// keeps its needles, a spray card's needles as long as the stated ones
 /// on a usual spray, a pine's needles to a bundle, needles in two ranks
 /// or all round, and a seed cone's length, posture and years on the tree.
-/// 37: a package's plants share out the range of each character of the
+/// 38: a package's plants share out the range of each character of the
 /// whole plant that a parameter takes in its own units (spec rework
 /// VARY): one plant is the typical one, three take the middles of the
 /// range's thirds; a part's size, or a parameter a formula works out from
 /// a range, records no spread and keeps its value.
-pub const GENERATOR_REVISION: u32 = 37;
+pub const GENERATOR_REVISION: u32 = 38;
