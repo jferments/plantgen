@@ -206,6 +206,15 @@ pub struct Cluster {
     /// Degrees.
     pub droop: f64,
     pub stalk: [f32; 3],
+    /// The spathe's length, a share of the axis; 0 where there is none
+    /// (always on a branch).
+    pub spathe: f64,
+    pub spathe_width: f64,
+    /// Degrees.
+    pub spathe_hood: f64,
+    pub spathe_cup: f64,
+    /// The look's colour where unset.
+    pub spathe_colour: Option<[f32; 3]>,
 }
 
 impl Cluster {
@@ -265,6 +274,15 @@ impl Cluster {
             taper: spec.taper.unwrap_or(0.0),
             droop: spec.droop.unwrap_or(0.0),
             stalk,
+            spathe: if level == 1 {
+                spec.spathe.unwrap_or(0.0)
+            } else {
+                0.0
+            },
+            spathe_width: spec.spathe_width.unwrap_or(0.5),
+            spathe_hood: spec.spathe_hood.unwrap_or(20.0),
+            spathe_cup: spec.spathe_cup.unwrap_or(0.5),
+            spathe_colour: spec.spathe_colour,
         }
     }
 
@@ -364,6 +382,10 @@ impl Cluster {
             ("size", spec.size, 0.005, 1.0),
             ("taper", spec.taper, 0.0, 1.0),
             ("droop", spec.droop, 0.0, 180.0),
+            ("spathe", spec.spathe, 0.0, 3.0),
+            ("spathe_width", spec.spathe_width, 0.1, 1.5),
+            ("spathe_hood", spec.spathe_hood, 0.0, 120.0),
+            ("spathe_cup", spec.spathe_cup, 0.0, 1.0),
         ];
         for (key, value, low, high) in values {
             if let Some(value) = value {
@@ -372,6 +394,12 @@ impl Cluster {
         }
         for channel in spec.stalk.into_iter().flatten() {
             within("inflorescence stalk", f64::from(channel), 0.0, 1.0)?;
+        }
+        for channel in spec.spathe_colour.into_iter().flatten() {
+            within("inflorescence spathe_colour", f64::from(channel), 0.0, 1.0)?;
+        }
+        if level > 1 && spec.spathe.is_some_and(|spathe| spathe > 0.0) {
+            return Err("only an inflorescence's own axis bears a spathe".to_string());
         }
         let branches = spec.branches.unwrap_or_else(|| kind.default_branches());
         if branches > 0 && !kind.bears_branches() {
@@ -754,6 +782,11 @@ impl CardFrame {
             reach = reach.max(stalk.from.x.abs().max(stalk.to.x.abs()));
             low = low.min(stalk.from.y.min(stalk.to.y));
         }
+        for sheet in &laid.sheets {
+            reach = reach.max(0.5 * sheet.width);
+            low = low.min(sheet.foot.y);
+            high = high.max(sheet.tip().y);
+        }
         // Awns may reach past the organ's tip.
         let length = high - low;
         Self {
@@ -808,11 +841,93 @@ pub struct Stalk {
     pub axis: bool,
 }
 
-/// A cluster's units and stalks, in the organ's frame.
+/// A bract at the foot of a cluster (spec rework E6b): a spathe, one
+/// blade from `foot` up along `up`, behind the units on the side `back`
+/// points to, cupped round them and arching over them.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Sheet {
+    pub foot: Vec3,
+    pub up: Vec3,
+    pub back: Vec3,
+    pub length: f64,
+    /// Its widest width.
+    pub width: f64,
+    /// Degrees its blade arches forward from foot to tip.
+    pub hood: f64,
+    /// How deeply it cups, 0 to 1.
+    pub cup: f64,
+    /// The look's colour where `None`.
+    pub colour: Option<[f32; 3]>,
+}
+
+impl Sheet {
+    /// Width along the sheet, a share of its widest, `u` from foot (0) to
+    /// tip (1): narrow where it sheathes the axis, widest a little below
+    /// its middle, drawn out to a point.
+    #[must_use]
+    pub fn width_at(u: f64) -> f64 {
+        let u = u.clamp(0.0, 1.0);
+        if u < SHEET_WIDEST {
+            SHEET_BASE
+                + (1.0 - SHEET_BASE) * math::sin(0.5 * std::f64::consts::PI * u / SHEET_WIDEST)
+        } else {
+            math::pow((1.0 - u) / (1.0 - SHEET_WIDEST), SHEET_TAPER).sqrt()
+        }
+    }
+
+    /// The solid it is drawn with ([`crate::leaves::Leaf::draw`]).
+    #[must_use]
+    pub fn solid(&self) -> crate::leaves::SolidLeaf {
+        crate::leaves::SolidLeaf {
+            section: crate::leaves::Section::Channelled,
+            thickness: 0.03,
+            fold: self.cup,
+            widest: SHEET_WIDEST,
+            base: SHEET_BASE,
+            taper: SHEET_TAPER,
+            // The face toward the units, so a forward arch bends against
+            // the leaf's own.
+            arch: -self.hood,
+            twist: 0.0,
+            margin: None,
+            teeth: None,
+            spine: None,
+            levels: 2,
+        }
+    }
+
+    /// Where its tip is, the arch followed.
+    #[must_use]
+    pub fn tip(&self) -> Vec3 {
+        let forward = -self.back;
+        let hood = math::radians(self.hood);
+        if hood < 1e-6 {
+            return self.foot + self.up * self.length;
+        }
+        // A circular arc of length `length` turning `hood`.
+        let radius = self.length / hood;
+        self.foot
+            + self.up * (radius * math::sin(hood))
+            + forward * (radius * (1.0 - math::cos(hood)))
+    }
+}
+
+/// Where a spathe is widest, a share of its length from its foot.
+const SHEET_WIDEST: f64 = 0.45;
+/// A spathe's width at its foot, a share of its widest.
+const SHEET_BASE: f64 = 0.35;
+/// How long its point is drawn out (see `crate::leaves::SolidLeaf::taper`).
+const SHEET_TAPER: f64 = 1.4;
+/// How far below its lowest unit a spathe's foot sheathes the axis, a
+/// share of the spathe's length.
+const SHEATH: f64 = 0.15;
+
+/// A cluster's units, stalks and bracts, in the organ's frame.
 #[derive(Debug, Clone, Default, PartialEq)]
 pub struct Layout {
     pub units: Vec<Placed>,
     pub stalks: Vec<Stalk>,
+    pub sheets: Vec<Sheet>,
 }
 
 impl Layout {
@@ -1022,9 +1137,31 @@ pub fn layout(cluster: &Cluster, unit: Unit, turn: f64, seed: u64) -> Layout {
         1,
         &mut laid,
     );
-    // A bent cluster can reach past its organ's tip (a nodding corymb's
-    // long lower pedicels turn upright): it shrinks to fit its organ.
+    // A spathe: its foot round the axis a little below the lowest unit,
+    // its blade behind the units.
     let mut layout = laid.layout;
+    if cluster.spathe > 0.0 {
+        let length = cluster.spathe;
+        let lowest = layout
+            .units
+            .iter()
+            .map(|p| p.attach.y)
+            .fold(cluster.peduncle, f64::min);
+        let radius = axis_radius(cluster, unit);
+        layout.sheets.push(Sheet {
+            foot: Vec3::new(0.0, (lowest - SHEATH * length).max(0.0), -radius),
+            up: Vec3::Y,
+            back: -Vec3::Z,
+            length,
+            width: length * cluster.spathe_width,
+            hood: cluster.spathe_hood,
+            cup: cluster.spathe_cup,
+            colour: cluster.spathe_colour,
+        });
+    }
+    // A bent cluster can reach past its organ's tip (a nodding corymb's
+    // long lower pedicels turn upright), and a spathe past its units: it
+    // shrinks to fit its organ.
     let high = layout
         .units
         .iter()
@@ -1034,6 +1171,12 @@ pub fn layout(cluster: &Cluster, unit: Unit, turn: f64, seed: u64) -> Layout {
                 .stalks
                 .iter()
                 .map(|stalk| stalk.from.y.max(stalk.to.y)),
+        )
+        .chain(
+            layout
+                .sheets
+                .iter()
+                .map(|sheet| sheet.foot.y + sheet.length),
         )
         .fold(1.0, f64::max);
     if high > 1.0 + 1e-9 {
@@ -1047,6 +1190,11 @@ pub fn layout(cluster: &Cluster, unit: Unit, turn: f64, seed: u64) -> Layout {
             stalk.from = stalk.from * shrink;
             stalk.to = stalk.to * shrink;
             stalk.radius *= shrink;
+        }
+        for sheet in &mut layout.sheets {
+            sheet.foot = sheet.foot * shrink;
+            sheet.length *= shrink;
+            sheet.width *= shrink;
         }
     }
     layout
@@ -1630,6 +1778,29 @@ fn draw_laid(
                 mesh,
             );
         }
+    }
+    // A spathe, at every step: it is what shows of the cluster from afar.
+    for sheet in &laid.sheets {
+        let leaf = part.leaf(
+            to_world(sheet.foot),
+            to_direction(sheet.up),
+            // So the leaf's face (heading × left) is toward the units.
+            to_direction(sheet.back.cross(sheet.up)),
+            sheet.length * length,
+            sheet.width * length,
+            sheet.colour.map_or(colour, painted),
+        );
+        let (stations, across) = crate::leaves::detail_of(
+            part.coarse.min(1),
+            sheet.length * length,
+            sheet.width * length,
+        );
+        let (stations, across) = if part.coarse >= FLAT {
+            (stations.min(4), 1)
+        } else {
+            (stations, across)
+        };
+        leaf.draw(&sheet.solid(), stations, across, mesh);
     }
     let thinned = thinned(cluster, part.coarse);
     if outlined(cluster, part.coarse) {

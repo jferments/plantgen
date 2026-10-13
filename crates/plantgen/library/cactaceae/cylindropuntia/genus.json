@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Cylindropuntia",
+  "parent": "subfamily/opuntioideae",
+  "traits": {
+    "stem_form": "cylindric_joints",
+    "tubercles": true,
+    "spine_sheaths": true
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, pp. 44 to 46), as their subgenus Cylindropuntia of Opuntia, now a genus: joints all terete, never flattened, on plants of several many-jointed branches; the North American series (the three species here among them) have papery spine sheaths; the joints are tubercled, the tubercles long in some series, broad and low in others."
+    }
+  }
+}

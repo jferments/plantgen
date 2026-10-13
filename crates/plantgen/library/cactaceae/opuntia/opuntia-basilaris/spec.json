@@ -18,9 +18,6 @@
       "stem_rate": 0.2,
       "clump_radius": 0.18,
       "stem_lean": 45,
-      "joints": 1,
-      "pad": 1,
-      "joint_length": 0.13,
       "joint_radius": 0.05,
       "joint_spread": 0.2,
       "daughters_low": 0.4,
@@ -102,6 +99,7 @@
         },
         "spines": [
           {
+            "role": "glochid",
             "count": [30, 50],
             "angle": 50,
             "length": 0.003,
@@ -129,7 +127,16 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "joint_length_m": {"min": 0.08, "max": 0.2},
+    "radial_spines": 0
+  },
   "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, p. 120): joints broadly obovate, 8 to 20 cm long; spines none, or rarely a few on the upper areoles; glochids brownish."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

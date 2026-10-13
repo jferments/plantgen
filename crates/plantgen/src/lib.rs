@@ -196,4 +196,15 @@ pub mod venation;
 /// shoot, lose tips that have no space, shed limbs that do not pay their
 /// way, sprout from dormant buds and grow back into freed space, as a
 /// maple did, each set by rules from the taxon's architecture traits.
-pub const GENERATOR_REVISION: u32 = 31;
+/// 32: a cluster can wrap a spathe round its units (spec rework E6b): a
+/// leaf-like sheet from below the lowest unit, its length, width, hood,
+/// cup and colour set on the look, drawn solid near the camera and on the
+/// cluster's card, so the skunk cabbage's spadix stands in its yellow
+/// spathe.
+/// 33: a cactus's ribs, areoles, spines and joints are grown from the
+/// characters its floras state (spec rework E6c), by rules of its family,
+/// subfamily and genus: rib and spine counts within their stated ranges,
+/// areoles' spacing, spines a fifth shorter than the longest a flora
+/// gives, a column's girth and a joint's length and width; spine sets
+/// name their role, and the chollas' areoles bear glochids.
+pub const GENERATOR_REVISION: u32 = 33;

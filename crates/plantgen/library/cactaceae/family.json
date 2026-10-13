@@ -13,9 +13,54 @@
     },
     "perianth": "spiral",
     "hypanthium": true,
-    "ovary_position": "inferior"
+    "ovary_position": "inferior",
+    "spines": "areoles"
+  },
+  "rules": {
+    "appearance.bodies.stem.ribs.count": {
+      "rule": [
+        "min(ribs)",
+        "max(ribs)"
+      ],
+      "why": "A stem's ribs vary within the count its flora gives; the body draws more of them round a thicker stem."
+    },
+    "appearance.bodies.stem.areoles.spacing": {
+      "rule": "areole_spacing_m",
+      "why": "Areoles sit along a rib's crest, or over a joint, this far apart."
+    },
+    "appearance.bodies.stem.spines.radial.count": {
+      "rule": [
+        "min(radial_spines)",
+        "max(radial_spines)"
+      ],
+      "why": "An areole bears as many radial spines as its flora counts, varying within its range."
+    },
+    "appearance.bodies.stem.spines.radial.length": {
+      "rule": "max(radial_spine_length_m) / 1.25",
+      "why": "Floras give the longest spines; a set's spines vary a quarter either way about its length, so the longest stand about a quarter above it."
+    },
+    "appearance.bodies.stem.spines.central.count": {
+      "rule": [
+        "min(central_spines)",
+        "max(central_spines)"
+      ],
+      "why": "An areole bears as many central spines as its flora counts. Where one central stands apart as the main one, the others are set by hand, so the two sets together make the count."
+    },
+    "appearance.bodies.stem.spines.central.length": {
+      "rule": "max(central_spine_length_m) / 1.25",
+      "why": "As for the radials: the longest central stands about a quarter above the set's length."
+    },
+    "appearance.bodies.stem.spines.main.length": {
+      "rule": "max(central_spine_length_m) / 1.25",
+      "why": "The main central is the longest a flora gives, about a quarter above its set's length."
+    }
   },
   "evidence": {
+    "traits.spines": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, p. 8): every cactus has areoles, special organs in the axils of its leaves or where they would be, which bear its spines (and glochids, hairs or glands), its branches and its flowers."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
@@ -25,6 +70,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The cacti's own program (growth plan G2.3a): columns, barrels and chains of joints, their ribs, areoles and spines from each species' look."
+    },
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Spec rework E6c: the cacti's ribs, areoles and spines grown from the characters their floras state, in each body look that has ribs or a spine set of that role."
     }
   }
 }

@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "rank": "subfamily",
+  "name": "Opuntioideae",
+  "parent": "family/cactaceae",
+  "traits": {
+    "glochids": true,
+    "ribs": 0
+  },
+  "rules": {
+    "generator.params.joints": {
+      "map": {
+        "stem_form": {
+          "cylindric_joints": 1,
+          "flat_joints": 1
+        }
+      },
+      "why": "Chollas and prickly pears grow as chains of joints."
+    },
+    "generator.params.joint_length": {
+      "rule": "joint_length_m",
+      "why": "A grown joint's length."
+    },
+    "generator.params.joint_radius": {
+      "rule": "joint_width_m / 2",
+      "why": "A joint's radius, or a pad's half width."
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, pp. 8 and 24), as their tribe Opuntieae, today's subfamily Opuntioideae: the only cacti whose areoles bear glochids (Maihuenia aside), and joints without ribs, their areoles scattered over them (Grusonia aside)."
+    },
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Spec rework E6c: the joints of chollas and prickly pears from their stated form and size."
+    }
+  }
+}

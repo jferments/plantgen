@@ -161,6 +161,10 @@ struct State {
     structure: Option<u32>,
     /// The shoot's adultness set by `adult`, if any.
     adult: Option<f32>,
+    /// `incline`'s set-point angle from straight up, radians, and the
+    /// share of the way toward it each segment turns (0: off).
+    incline: f64,
+    incline_rate: f64,
 }
 
 /// Identity of the string module being drawn and its element counters.
@@ -575,19 +579,21 @@ impl<'a> Interpreter<'a> {
             Turtle::Steer => {
                 let target = Vec3::new(params[0], params[1], params[2]);
                 if target.length() > 1e-12 {
-                    let target = target.normalize_or(frame.h);
-                    let angle = math::acos(frame.h.dot(target));
-                    let axis = frame.h.cross(target);
-                    let axis = if axis.length() > 1e-9 {
-                        axis.normalize_or(frame.l)
-                    } else {
-                        frame.l
-                    };
-                    state.frame = frame.rotated(axis, angle * params[3].clamp(0.0, 1.0));
+                    state.frame = turned_toward(frame, frame.h, target, params[3]);
                 }
             }
             #[allow(clippy::cast_possible_truncation)]
             Turtle::Adult => state.adult = Some(params[0].clamp(0.0, 1.0) as f32),
+            Turtle::Incline => {
+                state.incline = math::radians(params[0].clamp(0.0, 180.0));
+                state.incline_rate = params[1].clamp(0.0, 1.0);
+            }
+            Turtle::Face => {
+                let target = Vec3::new(params[0], params[1], params[2]);
+                if target.length() > 1e-12 {
+                    state.frame = turned_toward(frame, frame.u, target, params[3]);
+                }
+            }
         }
         Ok(())
     }
@@ -666,8 +672,42 @@ impl Interpreter<'_> {
                 state.frame = frame.rotated(axis / strength, state.elasticity * strength);
             }
         }
+        if state.incline_rate > 0.0 {
+            let h = state.frame.h;
+            // The heading's way round the vertical: its own, or for a
+            // vertical heading the up vector's.
+            let level = Vec3::new(h.x, 0.0, h.z);
+            let level = if level.length() > 1e-9 {
+                level
+            } else {
+                Vec3::new(state.frame.u.x, 0.0, state.frame.u.z)
+            };
+            if level.length() > 1e-9 {
+                let level = level.normalize_or(Vec3::new(1.0, 0.0, 0.0));
+                let target = Vec3::new(0.0, math::cos(state.incline), 0.0)
+                    + level * math::sin(state.incline);
+                state.frame = turned_toward(state.frame, h, target, state.incline_rate);
+            }
+        }
         Ok(())
     }
+}
+
+/// The frame turned so that its vector `from` (its heading or its up
+/// vector) moves toward `target` by the share `share` (0 to 1) of the
+/// angle between them, by the smallest turn that does so.
+fn turned_toward(frame: Frame, from: Vec3, target: Vec3, share: f64) -> Frame {
+    let target = target.normalize_or(from);
+    let angle = math::acos(from.dot(target));
+    let axis = from.cross(target);
+    let axis = if axis.length() > 1e-9 {
+        axis.normalize_or(frame.l)
+    } else if from == frame.h {
+        frame.l
+    } else {
+        frame.h
+    };
+    frame.rotated(axis, angle * share.clamp(0.0, 1.0))
 }
 
 fn index_u32(index: usize) -> u32 {
@@ -687,6 +727,8 @@ const START_STATE: State = State {
     lateral: false,
     structure: None,
     adult: None,
+    incline: 0.0,
+    incline_rate: 0.0,
 };
 
 /// Strings shorter than this are drawn on one thread.
@@ -1019,6 +1061,42 @@ mod tests {
         let second = (s.segments[1].end - s.segments[1].start).normalize_or(Vec3::ZERO);
         let expected = Vec3::new(1.0, 0.0, 1.0).normalize_or(Vec3::ZERO);
         assert!(close(second, expected), "{second:?}");
+    }
+
+    #[test]
+    fn incline_holds_a_branch_at_its_angle_from_straight_up() {
+        // Crown form step B: each segment turns half way to 60° from +Y.
+        let s = scene(
+            "lsystem p 1; axiom [ incline(90, 1) F(1) F(1) ] incline(60, 0.5) F(1) F(1) F(1) F(1)
+                   F(1) F(1) F(1) F(1) F(1) F(1) F(1) F(1);",
+        );
+        let angle = |segment: &Segment| {
+            let h = (segment.end - segment.start).normalize_or(Vec3::ZERO);
+            math::acos(h.y).to_degrees()
+        };
+        // The side branch's first segment is drawn upright, its next level;
+        // the main stem's own incline starts after its branch closes.
+        assert!(angle(&s.segments[0]) < 1.0e-9);
+        assert!((angle(&s.segments[1]) - 90.0).abs() < 1.0e-9);
+        assert!(angle(&s.segments[2]) < 1.0e-9);
+        let last = s.segments.last().unwrap();
+        assert!((angle(last) - 60.0).abs() < 0.1, "{}", angle(last));
+    }
+
+    #[test]
+    fn face_turns_a_leaf_toward_a_direction() {
+        let s = scene(
+            "lsystem p 1; organ leaf leaf;
+             axiom +(70) /(40) face(0, 1, 0, 1) leaf(1) face(1, 0, 0, 0.5) leaf(1);",
+        );
+        assert!(
+            close(s.organs[0].frame.u, Vec3::Y),
+            "{:?}",
+            s.organs[0].frame
+        );
+        // Half way from straight up to +X.
+        let half = Vec3::new(1.0, 1.0, 0.0).normalize_or(Vec3::ZERO);
+        assert!(close(s.organs[1].frame.u, half), "{:?}", s.organs[1].frame);
     }
 
     #[test]

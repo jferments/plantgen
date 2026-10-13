@@ -40,7 +40,10 @@
 //! (or a rule before it), else as the program's default; so a rule can
 //! say what a leaf card of the species' own size means for its shoots.
 //! A trait stated as a range reads as its `typical` value, else the middle
-//! of its `min` and `max`; one stated as qualified states reads as its most
+//! of its `min` and `max`, and as `min(name)` and `max(name)` its bounds
+//! (a number stated alone is both), so a rule whose `rule` is a list of
+//! formulas, one for each item, can set a range a look varies within:
+//! ribs stated as 12 to 24 set a body's `[12, 24]`; one stated as qualified states reads as its most
 //! usual state ([`FREQUENCIES`]), and a rule reading states that tie sets
 //! nothing, unless it is a map that draws `between` them: a flora's "ovate
 //! to lanceolate" means the forms between, so the map gives the mean of
@@ -441,6 +444,12 @@ fn check_rule(path: &str, rule: &Value) -> Result<(), String> {
     }
     match (rule.get("rule"), rule.get("map")) {
         (Some(Value::String(formula)), None) => Formula::parse(formula).map(|_| ()),
+        (Some(Value::Array(formulas)), None) if !formulas.is_empty() => {
+            formulas.iter().try_for_each(|formula| match formula {
+                Value::String(formula) => Formula::parse(formula).map(|_| ()),
+                _ => Err("a list `rule` is formulas, one for each item".into()),
+            })
+        }
         (None, Some(Value::Object(map))) => match map.iter().next() {
             Some((_, Value::Object(table))) if map.len() == 1 => table
                 .values()
@@ -448,7 +457,7 @@ fn check_rule(path: &str, rule: &Value) -> Result<(), String> {
                 .try_for_each(|formula| Formula::parse(formula).map(|_| ())),
             _ => Err("a `map` names one trait, then its values' spec values".into()),
         },
-        _ => Err("a rule has a `rule` (a formula) or a `map`, not both".into()),
+        _ => Err("a rule has a `rule` (a formula, or a list of them) or a `map`, not both".into()),
     }
 }
 
@@ -489,8 +498,9 @@ fn rivals(field: &str) -> Vec<&'static str> {
 
 /// What a rule may set inside a look's `inflorescence`
 /// (`crate::looks::Inflorescence`): every key but its `branch` and its
-/// `stalk` colour. The looks module's tests hold this to the key.
-pub const INFLORESCENCE: [(&str, Field); 11] = {
+/// `stalk` and `spathe_colour` colours. The looks module's tests hold this
+/// to the key.
+pub const INFLORESCENCE: [(&str, Field); 15] = {
     use Field::{Count, Number, Word};
     [
         ("kind", Word),
@@ -504,12 +514,51 @@ pub const INFLORESCENCE: [(&str, Field); 11] = {
         ("size", Number),
         ("taper", Number),
         ("droop", Number),
+        ("spathe", Number),
+        ("spathe_width", Number),
+        ("spathe_hood", Number),
+        ("spathe_cup", Number),
     ]
 };
 
 /// The start of a rule's path that sets something in every look it may:
 /// `*` stands for the organ.
 const EVERY: &str = "appearance.organs.*.";
+
+/// The start of a rule's path inside a body's look (spec rework E6c).
+const BODIES: &str = "appearance.bodies.";
+
+/// Whether a rule at `at` may set it in `spec`: in a body's look, a rule
+/// fills in what the look has, so the body, its ribs or a spine set of
+/// the role it names must be there.
+fn in_body(spec: &Map<String, Value>, at: &str) -> Result<(), String> {
+    if let Some(inside) = at.strip_prefix(BODIES)
+        && let Some((within, _)) = at.rsplit_once('.')
+        && find(spec, within).is_none()
+    {
+        let body = inside.split('.').next().unwrap_or_default();
+        return Err(format!(
+            "its `{body}` body has no `{}`",
+            &within[BODIES.len() + body.len() + 1..]
+        ));
+    }
+    Ok(())
+}
+
+/// A bound of the trait `name` as stated (`value`), read as `min(name)`
+/// or `max(name)`: of a range, its `min` or `max`; of a number, the
+/// number.
+fn bound_of(name: &str, bound: &str, value: &Value) -> Result<Value, String> {
+    match value {
+        Value::Object(range) => range
+            .get(bound)
+            .filter(|bound| bound.is_number())
+            .cloned()
+            .ok_or_else(|| format!("`{name}` states no `{bound}`")),
+        Value::Number(_) => Ok(value.clone()),
+        _ => Err(format!("`{name}` is no number to read the {bound} of")),
+    }
+}
 
 /// The stage looks of a look's season that a rule in its `shape` also
 /// sets where they draw its template, unless they draw the whole cluster.
@@ -1037,11 +1086,22 @@ pub fn find<'a>(values: &'a Map<String, Value>, path: &str) -> Option<&'a Value>
     for part in parts {
         value = match value {
             Value::Object(map) => map.get(part)?,
-            Value::Array(items) => items.get(part.parse::<usize>().ok()?)?,
+            Value::Array(items) => match part.parse::<usize>() {
+                Ok(index) => items.get(index)?,
+                Err(_) => by_role(items, part)?,
+            },
             _ => return None,
         };
     }
     Some(value)
+}
+
+/// The item of a list of objects whose `role` is `role`: a body's spine
+/// set, as a rule's path names it (`appearance.bodies.stem.spines.radial`).
+fn by_role<'a>(items: &'a [Value], role: &str) -> Option<&'a Value> {
+    items
+        .iter()
+        .find(|item| item.get("role").and_then(Value::as_str) == Some(role))
 }
 
 /// The rank files a species of the genus `genus` in the family `family`
@@ -1437,6 +1497,22 @@ struct Ruled<'a> {
 /// A species' rules, by the path each sets: the rule and its layer.
 type Rules = BTreeMap<String, (Map<String, Value>, usize)>;
 
+/// Fail a rule on `generator.params.<name>` unless the species' program
+/// has that parameter.
+fn has_param<T>(
+    at: &str,
+    program: Option<&str>,
+    params: Option<&BTreeMap<String, T>>,
+) -> Result<(), String> {
+    if let Some(param) = at.strip_prefix("generator.params.") {
+        let program = program.ok_or("the species names no program")?;
+        if !params.is_some_and(|params| params.contains_key(param)) {
+            return Err(format!("program `{program}` has no parameter `{param}`"));
+        }
+    }
+    Ok(())
+}
+
 impl Ruled<'_> {
     /// Run a species' rules in [`order`] on its merged `spec`, and return
     /// each one's file and, if it set nothing, why.
@@ -1508,23 +1584,25 @@ impl Ruled<'_> {
         notes: &mut BTreeMap<String, (Origin, Value)>,
     ) -> Result<(), String> {
         let params = program.and_then(|program| programs.get(program));
-        if let Some(param) = self.at.strip_prefix("generator.params.") {
-            let program = program.ok_or("the species names no program")?;
-            if !params.is_some_and(|params| params.contains_key(param)) {
-                return Err(format!("program `{program}` has no parameter `{param}`"));
-            }
-        }
+        has_param(self.at, program, params)?;
         let field = match self.at.strip_prefix("appearance.organs.") {
             Some(look) => look_field(spec, look, self.rule.get("template"))?,
             None => None,
         };
+        in_body(spec, self.at)?;
         let mut depth = self.index;
         let mut from = Vec::new();
         let mut inputs: BTreeMap<String, Value> = BTreeMap::new();
         // A trait as stated, or a parameter.
         let mut read = |key: &str| -> Result<Value, String> {
             let path = format!("generator.params.{key}");
-            let value = if let Some((value, at)) = self.traits.get(key) {
+            let value = if let Some((name, bound)) = crate::formula::bound(key)
+                && let Some((value, at)) = self.traits.get(name)
+            {
+                depth = depth.max(*at);
+                from.push(format!("{name} from {}", self.layers[*at].0));
+                bound_of(name, bound, value)?
+            } else if let Some((value, at)) = self.traits.get(key) {
                 depth = depth.max(*at);
                 from.push(format!("{key} from {}", self.layers[*at].0));
                 value.clone()
@@ -1574,7 +1652,7 @@ impl Ruled<'_> {
                 }
             }
         }
-        if let Some((label, by)) = origins.get(self.at)
+        if let Some((label, by)) = origins.get(self.at).or_else(|| self.listed(spec, origins))
             && *by >= depth
         {
             return Err(format!("set by hand in {label}"));
@@ -1614,6 +1692,26 @@ impl Ruled<'_> {
             notes.insert(self.at.to_string(), (origin, note.clone()));
         }
         Ok(())
+    }
+
+    /// Where the rule sets a field of a list's item by its role
+    /// (`spines.radial.count`), the origin of the list, if the item has
+    /// the field: a field written in a list a file sets is set by hand
+    /// there.
+    fn listed<'b>(
+        &self,
+        spec: &Map<String, Value>,
+        origins: &'b BTreeMap<String, Origin>,
+    ) -> Option<&'b Origin> {
+        find(spec, self.at)?;
+        let mut at = self.at;
+        while let Some((outer, _)) = at.rsplit_once('.') {
+            if find(spec, outer).is_some_and(Value::is_array) {
+                return origins.get(outer);
+            }
+            at = outer;
+        }
+        None
     }
 
     /// The fields of the rule's card in `spec` that cannot stand beside the
@@ -1748,8 +1846,17 @@ fn reads(rule: &Map<String, Value>) -> Vec<String> {
             .map(|formula| formula.names())
             .unwrap_or_default()
     };
-    if let Some(Value::String(formula)) = rule.get("rule") {
-        return names(formula).into_iter().collect();
+    match rule.get("rule") {
+        Some(Value::String(formula)) => return names(formula).into_iter().collect(),
+        Some(Value::Array(formulas)) => {
+            let all: BTreeSet<String> = formulas
+                .iter()
+                .filter_map(Value::as_str)
+                .flat_map(names)
+                .collect();
+            return all.into_iter().collect();
+        }
+        _ => {}
     }
     let Some((key, table)) = map_of(rule) else {
         return Vec::new();
@@ -1920,8 +2027,16 @@ fn evaluate(rule: &Map<String, Value>, inputs: &BTreeMap<String, Value>) -> Resu
             .and_then(written)
             .ok_or_else(|| NO_NUMBER.to_string())
     };
-    if let Some(Value::String(formula)) = rule.get("rule") {
-        return calculate(formula);
+    match rule.get("rule") {
+        Some(Value::String(formula)) => return calculate(formula),
+        Some(Value::Array(formulas)) => {
+            return formulas
+                .iter()
+                .map(|formula| calculate(formula.as_str().unwrap_or_default()))
+                .collect::<Result<Vec<_>, _>>()
+                .map(Value::Array);
+        }
+        _ => {}
     }
     if let Some((key, table)) = map_of(rule) {
         let value = inputs
@@ -1982,6 +2097,18 @@ fn set(target: &mut Map<String, Value>, path: &str, value: Value) {
             let entry = target
                 .entry(key.to_string())
                 .or_insert_with(|| Value::Object(Map::new()));
+            // A list's item by its role (`spines.radial.count`).
+            if let Value::Array(items) = entry {
+                let (role, rest) = rest.split_once('.').unwrap_or((rest, ""));
+                if let Some(Value::Object(inside)) = items
+                    .iter_mut()
+                    .find(|item| item.get("role").and_then(Value::as_str) == Some(role))
+                    && !rest.is_empty()
+                {
+                    set(inside, rest, value);
+                }
+                return;
+            }
             if !entry.is_object() {
                 *entry = Value::Object(Map::new());
             }
@@ -2788,6 +2915,85 @@ mod tests {
         );
         // 8 × 3^0.75, to 6 significant digits.
         assert_eq!(small.spec["generator"]["params"]["space_density"], 18.2361);
+    }
+
+    /// A rule sets a body's look (spec rework E6c): a list of formulas
+    /// sets a range from a trait's bounds, a spine set is named by its
+    /// role, a field written in the species' list is set by hand, and a
+    /// look without ribs or a set of the role gets nothing.
+    #[test]
+    fn rules_fill_in_bodies_by_role_from_bounds() {
+        let files = ranks(&[(
+            "cactaceae/family.json",
+            json!({"schema": 1, "rank": "family", "name": "Cactaceae",
+                "rules": {
+                    "appearance.bodies.stem.ribs.count": {"rule": ["min(ribs)", "max(ribs)"]},
+                    "appearance.bodies.stem.spines.radial.count":
+                        {"rule": ["min(radial_spines)", "max(radial_spines)"]},
+                    "appearance.bodies.stem.spines.radial.length":
+                        {"rule": "max(radial_spine_length_m) / 1.25"},
+                    "appearance.bodies.stem.spines.central.length":
+                        {"rule": "max(radial_spine_length_m)"}},
+                "evidence": {"rules": {"evidence": "Authored", "note": "Cacti."}}}),
+        )]);
+        let grow = |own: &Value| {
+            let chain = above(&files, "cactaceae", "testcactus").unwrap();
+            inherit(
+                "cactaceae/testcactus/testcactus-one/spec.json",
+                own,
+                &chain,
+                &programs(),
+            )
+            .unwrap()
+        };
+        let traits = json!({"ribs": {"min": 12, "max": 20},
+            "radial_spines": {"min": 8, "max": 12, "typical": 10},
+            "radial_spine_length_m": {"min": 0.01, "max": 0.02}});
+        let ribbed = grow(&json!({"id": "testcactus-one", "traits": traits,
+            "appearance": {"bodies": {"stem": {"ribs": {"spacing": 0.05},
+                "spines": [{"role": "central", "count": [1, 1], "length": 0.03},
+                           {"role": "radial", "angle": 10}]}}}}));
+        let stem = &ribbed.spec["appearance"]["bodies"]["stem"];
+        assert_eq!(stem["ribs"], json!({"spacing": 0.05, "count": [12, 20]}));
+        assert_eq!(
+            stem["spines"],
+            json!([{"role": "central", "count": [1, 1], "length": 0.03},
+                   {"role": "radial", "angle": 10, "count": [8, 12], "length": 0.016}])
+        );
+        assert_eq!(
+            ribbed.rules["appearance.bodies.stem.spines.central.length"]
+                .1
+                .as_deref(),
+            Some("set by hand in cactaceae/testcactus/testcactus-one/spec.json")
+        );
+        // No ribs and no radial set: those rules set nothing.
+        let bare = grow(&json!({"id": "testcactus-one", "traits": traits,
+            "appearance": {"bodies": {"stem": {"spines": [{"role": "glochid"}]}}}}));
+        assert!(
+            bare.spec["appearance"]["bodies"]["stem"]
+                .get("ribs")
+                .is_none()
+        );
+        assert_eq!(
+            bare.rules["appearance.bodies.stem.ribs.count"].1.as_deref(),
+            Some("its `stem` body has no `ribs`")
+        );
+        assert_eq!(
+            bare.rules["appearance.bodies.stem.spines.radial.count"]
+                .1
+                .as_deref(),
+            Some("its `stem` body has no `spines.radial`")
+        );
+        // A range without the bound a rule reads gives it nothing.
+        let unbounded = grow(&json!({"id": "testcactus-one",
+            "traits": {"ribs": {"typical": 14}},
+            "appearance": {"bodies": {"stem": {"ribs": {}}}}}));
+        assert_eq!(
+            unbounded.rules["appearance.bodies.stem.ribs.count"]
+                .1
+                .as_deref(),
+            Some("`ribs` states no `max`")
+        );
     }
 
     /// A rule reads a range as its typical value, else its middle, and

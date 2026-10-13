@@ -2,14 +2,30 @@
   "schema": 1,
   "rank": "genus",
   "name": "Stenocereus",
+  "parent": "subfamily/cactoideae",
   "traits": {
-    "carpels": {"min": 5, "max": 15}
+    "carpels": {
+      "min": 5,
+      "max": 15
+    },
+    "stem_form": "columnar",
+    "tubercles": false
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "The Flora of North America's account of Stenocereus, as search results quote it (the page itself was not read): stigma lobes 5 to 15, white; the carpels are as many as the stigma lobes (Hamburg's Botany Online on the family, as quoted in search results; the page itself was not read)."
+    },
+    "traits.stem_form": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 2, 1920, p. 85), as Lemaireocereus, which held today's Stenocereus: usually large, tall, branching columns, ribbed, the areoles large and felted on the ribs."
+    },
+    "traits.tubercles": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 2, 1920, p. 85), as Lemaireocereus, which held today's Stenocereus: usually large, tall, branching columns, ribbed, the areoles large and felted on the ribs."
     }
   }
 }

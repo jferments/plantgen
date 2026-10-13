@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Cochemiea",
+  "parent": "subfamily/cactoideae",
+  "traits": {
+    "stem_form": "globose",
+    "ribs": 0,
+    "tubercles": true
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 4, 1923, p. 65), as Neomammillaria, the mammillarias, among which today's broad Cochemiea (the hook-spined mammillarias) stands: stems globose to short-cylindric, their tubercles in spiral rows, never on ribs, each tipped with its spine cluster."
+    }
+  }
+}

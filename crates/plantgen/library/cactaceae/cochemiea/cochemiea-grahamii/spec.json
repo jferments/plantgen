@@ -104,18 +104,17 @@
         },
         "spines": [
           {
-            "count": [20, 30],
+            "role": "radial",
             "angle": 8,
-            "length": 0.008,
             "width": 0.00015,
             "colour": [0.8, 0.78, 0.72],
             "angle_spread": 5,
             "length_spread": 0.25
           },
           {
+            "role": "central",
             "count": [0, 2],
             "angle": 50,
-            "length": 0.012,
             "width": 0.0004,
             "colour": [0.35, 0.25, 0.2],
             "angle_spread": 15,
@@ -123,9 +122,9 @@
             "length_spread": 0.3
           },
           {
+            "role": "main",
             "count": [1, 1],
             "angle": 60,
-            "length": 0.015,
             "width": 0.0005,
             "colour": [0.3, 0.18, 0.12],
             "angle_spread": 10,
@@ -158,9 +157,39 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "carpels": {"min": 7, "max": 8}
+    "carpels": {"min": 7, "max": 8},
+    "radial_spines": {"min": 15, "max": 30},
+    "radial_spine_length_m": {"min": 0.006, "max": 0.012},
+    "central_spines": {"min": 1, "max": 3},
+    "central_spine_length_m": 0.018,
+    "central_spine_form": "hooked"
   },
   "evidence": {
+    "traits.radial_spines": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 4, 1923, p. 155), under Neomammillaria microcarpa, which they took Mammillaria grahamii into: 15 to 30 slender, rigid, white radial spines 6 to 12 mm long; 1 to 3 dark centrals, often 18 mm, hooked."
+    },
+    "traits.radial_spine_length_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 4, 1923, p. 155), under Neomammillaria microcarpa, which they took Mammillaria grahamii into: 15 to 30 slender, rigid, white radial spines 6 to 12 mm long; 1 to 3 dark centrals, often 18 mm, hooked."
+    },
+    "traits.central_spines": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 4, 1923, p. 155), under Neomammillaria microcarpa, which they took Mammillaria grahamii into: 15 to 30 slender, rigid, white radial spines 6 to 12 mm long; 1 to 3 dark centrals, often 18 mm, hooked."
+    },
+    "traits.central_spine_length_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 4, 1923, p. 155), under Neomammillaria microcarpa, which they took Mammillaria grahamii into: 15 to 30 slender, rigid, white radial spines 6 to 12 mm long; 1 to 3 dark centrals, often 18 mm, hooked."
+    },
+    "traits.central_spine_form": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 4, 1923, p. 155), under Neomammillaria microcarpa, which they took Mammillaria grahamii into: 15 to 30 slender, rigid, white radial spines 6 to 12 mm long; 1 to 3 dark centrals, often 18 mm, hooked."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

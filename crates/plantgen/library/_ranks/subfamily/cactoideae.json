@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "rank": "subfamily",
+  "name": "Cactoideae",
+  "parent": "family/cactaceae",
+  "traits": {
+    "glochids": false,
+    "spine_sheaths": false
+  },
+  "rules": {
+    "generator.params.radius_max": {
+      "rule": "stem_diameter_max_m / 2",
+      "why": "A column or a barrel grows to its stated thickness at its tip."
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 2, 1920, p. 1), as their tribe Cereeae, today's subfamily Cactoideae: never glochids, and spines never sheathed."
+    },
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Spec rework E6c: a column's or barrel's girth from its stated diameter."
+    }
+  }
+}
