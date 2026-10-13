@@ -17,9 +17,10 @@
       "crown_base": 2.5,
       "crown_rate": 0.025,
       "space_density": 8,
-      "bud_years": 15,
       "internode": 0.2,
       "max_shoot": 3,
+      "pipe_organ": 0.0048,
+      "pipe_tip": 0.0024,
       "bud_break": 1.4,
       "branch_angle": 55,
       "apical_young": 0.62,
@@ -37,7 +38,7 @@
       "fork_angle": 35,
       "droop": 0.02,
       "extinction": 0.4,
-      "pipe_rings": 1.4e-05,
+      "pipe_rings": 4.9e-06,
       "leaf_area": 0.303,
       "bloom_area": 0.72,
       "blooms": 1,
@@ -155,7 +156,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a slow, long-lived oak with a broad, rounded crown of crooked, gnarled limbs and deeply lobed, leathery leaves. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a slow, long-lived oak with a broad, rounded crown of crooked, gnarled limbs and deeply lobed, leathery leaves. Not fitted to measurements. Its pipe_tip, pipe_organ and pipe_rings are scaled together (crown calibration, broadleaf revision 9) so that, with the leaf its crown now keeps, its trunk reaches the reference dbh of 50 cm at 80 years again."
     },
     "allometry": {
       "evidence": "Authored",

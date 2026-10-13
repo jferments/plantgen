@@ -182,9 +182,16 @@ pub mod venation;
 /// and bracken grow fronds of their flora's sizes; a crown a fern's
 /// rhizome sends out starts as old as the crown it came from
 /// (`polypodiidae` revision 4), so its first fronds are full-sized.
-/// 32: a value a rule sets from one stated range varies within it (spec
+/// 30: crown calibration: in the broadleaf program a short shoot lives
+/// while it has light, for up to 40 years, and its leaves carry their own
+/// turn, so open-grown crowns keep the leaf area per crown area of the
+/// Urban Tree Database's trees and their inner leaves grow in shade; and
+/// the deep-shade end of the light scale leaves acclimate on,
+/// `looks::DEEP_SHADE`, is 0.08, where the growth model's short shoots stop
+/// leafing out, not 0.04, which no crown's leaves reach.
+/// 33: a value a rule sets from one stated range varies within it (spec
 /// rework VARY): the effective spec records its spread, and each organ
 /// drawn solid is one of four varieties of its look, which draw its
 /// counts and sizes across their ranges; a part mesh's variant `k` is its
 /// look's variety `k`.
-pub const GENERATOR_REVISION: u32 = 32;
+pub const GENERATOR_REVISION: u32 = 33;
