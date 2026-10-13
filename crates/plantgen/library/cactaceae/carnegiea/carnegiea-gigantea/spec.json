@@ -172,6 +172,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "wood_density_basic_kg_m3": 340,
     "juvenile_period_years": {"min": 30, "max": 50, "typical": 40},
     "ribs": {"min": 12, "max": 24},
     "stem_diameter_max_m": {"min": 0.3, "max": 0.65},
@@ -179,6 +180,7 @@
     "central_spine_length_m": 0.07
   },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Carnegiea gigantea (gwddagg_v2.2_species.csv, read): specific gravity 0.34 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.34, branches 0.4. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",

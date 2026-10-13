@@ -36,6 +36,8 @@
 //! | `organ-atlas` | PNG, one template per organ type, side by side in the program's order: brightness / 2 in red, accent weight in green, coverage in alpha |
 //! | `parts` | the part meshes, `APPARTS2` (below) |
 //! | `part-steps` | the part meshes' coarser steps, `APSTEPS2` (below) |
+//! | `mechanics` | one keyframe's bones and branches, JSON, in motion packages only ([`crate::motion`]) |
+//! | `binding` | one level of detail's vertices and cards on those bones, `APBIND1`, in motion packages only ([`crate::motion`]) |
 //!
 //! Binary objects are little-endian with 32-bit floats. A graph is a
 //! 24-byte header (magic, age, height, segment count, organ count), then
@@ -338,6 +340,10 @@ pub struct LodRecord {
     pub wood_vertices: usize,
     pub wood_triangles: usize,
     pub cards: usize,
+    /// Its vertices and cards on the keyframe's bones, in a motion package
+    /// (`crate::motion`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub binding: Option<String>,
     /// Areoles of fleshy bodies, on the nearest level only.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub tufts: usize,
@@ -445,6 +451,9 @@ pub struct KeyframeRecord {
     pub graph: String,
     pub lods: Vec<LodRecord>,
     pub impostor: ImpostorRecord,
+    /// Its bones and branches, in a motion package (`crate::motion`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub mechanics: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -559,6 +568,9 @@ pub struct Manifest {
     /// The part meshes' coarser steps, when any type has one.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub part_steps: Option<PartStepsRecord>,
+    /// [`crate::motion::MECHANICS_REVISION`], in a motion package.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub mechanics_revision: Option<u32>,
     /// The day of the year the package shows, when an organ has a season
     /// (`crate::looks::Season`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -621,6 +633,9 @@ pub struct Inputs {
     /// Their coarser steps, one entry per part mesh.
     pub(crate) part_steps: Vec<crate::parts::PartSteps>,
     part_types: Vec<bool>,
+    /// Motion objects to build beside the meshes (`crate::motion`); none
+    /// for a static package.
+    pub motion: Option<crate::motion::Motion>,
 }
 
 impl Inputs {
@@ -786,7 +801,28 @@ impl Inputs {
             parts,
             part_steps,
             part_types,
+            motion: None,
         })
+    }
+
+    /// The same inputs with motion objects built beside the meshes
+    /// (`crate::motion`): the key gains the motion's revision, material
+    /// and settings, so a static package keeps its key.
+    #[must_use]
+    pub fn with_motion(mut self, motion: crate::motion::Motion) -> Self {
+        let mut hasher = Sha256::new();
+        for (label, bytes) in [
+            ("static", self.key.as_bytes().to_vec()),
+            ("motion", motion.key_bytes()),
+        ] {
+            hasher.update(label.as_bytes());
+            hasher.update([0]);
+            hasher.update((bytes.len() as u64).to_le_bytes());
+            hasher.update(&bytes);
+        }
+        self.key = hex(&hasher.finalize());
+        self.motion = Some(motion);
+        self
     }
 
     /// The directory name the package will have.
@@ -857,11 +893,17 @@ impl Store {
         organ_types: &[OrganType],
         baked: BakedKeyframe,
     ) -> KeyframeRecord {
+        let (mechanics, mut bindings) = match baked.motion {
+            Some((record, bindings)) => (Some(self.add("mechanics", record)), bindings),
+            None => (None, Vec::new()),
+        };
+        bindings.reverse();
         let lods = baked
             .lods
             .into_iter()
             .map(|(bytes, record)| LodRecord {
                 mesh: self.add("mesh", bytes),
+                binding: bindings.pop().map(|bytes| self.add("binding", bytes)),
                 ..record
             })
             .collect();
@@ -880,6 +922,7 @@ impl Store {
                 radius: baked.impostor.radius,
                 lod: IMPOSTOR_LOD,
             },
+            mechanics,
         }
     }
 
@@ -1045,6 +1088,9 @@ pub fn compare_allometry(
 struct BakedKeyframe {
     graph: Vec<u8>,
     lods: Vec<(Vec<u8>, LodRecord)>,
+    /// In a motion package: the `mechanics` object and each level's
+    /// `binding`.
+    motion: Option<(Vec<u8>, Vec<Vec<u8>>)>,
     albedo: Vec<u8>,
     normal_depth: Vec<u8>,
     impostor: impostor::Impostor,
@@ -1117,11 +1163,30 @@ pub(crate) fn level_mesh(
     level_mesh
 }
 
-fn bake_keyframe(graph: &PlantGraph, inputs: &Inputs) -> Result<BakedKeyframe, PackageError> {
+fn bake_keyframe(
+    graph: &PlantGraph,
+    organ_types: &[OrganType],
+    inputs: &Inputs,
+) -> Result<BakedKeyframe, PackageError> {
     let meshes: Vec<PlantMesh> = level_meshes(graph, inputs, false)
         .into_iter()
         .map(|(mesh, _)| mesh)
         .collect();
+    let motion = match &inputs.motion {
+        Some(motion) => {
+            let found = motion.of_graph(graph, organ_types);
+            let record = serde_json::to_vec(&crate::motion::record(&found, motion))
+                .map_err(|error| format_error(error.to_string()))?;
+            let bindings = meshes
+                .iter()
+                .map(|plant| {
+                    crate::motion::encode_binding(&crate::motion::bind(plant, graph, &found))
+                })
+                .collect();
+            Some((record, bindings))
+        }
+        None => None,
+    };
     let impostor = impostor::bake(
         &meshes[IMPOSTOR_LOD],
         &inputs.templates,
@@ -1142,6 +1207,7 @@ fn bake_keyframe(graph: &PlantGraph, inputs: &Inputs) -> Result<BakedKeyframe, P
                         wood_vertices: plant.wood.vertex_count(),
                         wood_triangles: plant.wood.triangle_count(),
                         cards: plant.cards.len(),
+                        binding: None,
                         tufts: plant.tufts.len(),
                         bent: plant.bent_cards(),
                         sites: plant.sites.len(),
@@ -1149,6 +1215,7 @@ fn bake_keyframe(graph: &PlantGraph, inputs: &Inputs) -> Result<BakedKeyframe, P
                 )
             })
             .collect(),
+        motion,
         albedo: png(atlas, atlas, &impostor.albedo)?,
         normal_depth: png(atlas, atlas, &impostor.normal_depth)?,
         impostor,
@@ -1361,7 +1428,7 @@ impl Work<'_> {
         };
         let graph = &growth.keyframes[keyframe];
         let started = Instant::now();
-        let result = bake_keyframe(graph, self.inputs);
+        let result = bake_keyframe(graph, &growth.organ_types, self.inputs);
         if let Ok(baked) = &result {
             (self.say)(&format!(
                 "baked {} at {} years: LOD0 {} triangles, LOD3 {}, impostor {}² ({:.1} s)",
@@ -1501,6 +1568,10 @@ fn assemble(
         },
         parts,
         part_steps,
+        mechanics_revision: inputs
+            .motion
+            .as_ref()
+            .map(|_| crate::motion::MECHANICS_REVISION),
         day: inputs.day,
         variants: records,
         validation,
@@ -2583,6 +2654,7 @@ fn decode_wood(input: &mut Reader<'_>) -> Result<Mesh, PackageError> {
         sheds,
         levels,
         indices: Vec::with_capacity(indices),
+        segments: Vec::new(),
     };
     for _ in 0..indices {
         let index = input.u32()?;
@@ -2618,6 +2690,7 @@ fn decode_cards(input: &mut Reader<'_>) -> Result<Vec<Card>, PackageError> {
             born: births[index],
             shed: sheds[index],
             bend: crate::bend::Bend::FLAT,
+            segment: crate::mesh::NO_SEGMENT,
         })
         .collect();
     input.skip_padding()?;

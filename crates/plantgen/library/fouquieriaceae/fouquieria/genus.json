@@ -15,5 +15,15 @@
         }
       }
     }
+  },
+  "traits": {
+    "wood_density_basic_kg_m3": 440
+  },
+  "evidence": {
+    "traits.wood_density_basic_kg_m3": {
+      "evidence": "SourceInferred",
+      "source": "gwdd-v2",
+      "note": "GWDD v.2.2 genus aggregate for Fouquieria (gwddagg_v2.2_genus.csv, read): specific gravity 0.44 (wsg_est, the hierarchical-model genus mean, from 3 records in 3 sources); trunks 0.44, branches 0.46. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."
+    }
   }
 }

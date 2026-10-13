@@ -112,7 +112,11 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "wood_density_basic_kg_m3": 280
+  },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Cycas revoluta (gwddagg_v2.2_species.csv, read): specific gravity 0.28 (wsg_est, the database's hierarchical-model species mean, from 3 records in 1 source); trunks 0.28, branches 0.37. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

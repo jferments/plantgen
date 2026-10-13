@@ -15,5 +15,15 @@
         }
       }
     }
+  },
+  "traits": {
+    "wood_density_basic_kg_m3": 420
+  },
+  "evidence": {
+    "traits.wood_density_basic_kg_m3": {
+      "evidence": "SourceInferred",
+      "source": "gwdd-v2",
+      "note": "GWDD v.2.2 genus aggregate for Azorella (gwddagg_v2.2_genus.csv, read): specific gravity 0.42 (wsg_est, the hierarchical-model genus mean, from 2 records in 2 sources); trunks 0.41, branches 0.42. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."
+    }
   }
 }
