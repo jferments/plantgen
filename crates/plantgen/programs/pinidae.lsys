@@ -31,18 +31,18 @@
 # stays full. A branch's yearly shoot shortens with the wood between its
 # apex and the stem, by 1 / (1 + (wood / branch_reach)²), not with the
 # branch's age, so a well-lit limb lives as long as its light pays for
-# it. Foliage lasts needle_years at the top of the crown and up to
-# needle_low times as long at its foot, as leaves live longer deeper in
-# the crown (Harlow, Duursma & Marshall 2005, western redcedar). Each
-# branch shoot keeps a dormant bud that, after epi_delay years, sprouts
-# a side shoot with the chance epi_chance a year where light reaches it
-# (epi_light), as epicormic shoots refoliate old Douglas-fir limbs
-# (Ishii & Ford 2001); a bud waits up to epi_years, about as long as its
-# branch lives. Side shoots grow for side_years 20, not 10, so a branch
-# keeps foliage along its length, not only at its tip. A year's sprays
-# are drawn with their own turns (`spray(size, roll, pitch, level)`), a
-# third of the modules they took, so the fuller crown fits the module
-# limit.
+# it. Foliage lasts needle_years on average and needle_low times as long
+# at the crown's foot as at its top, as leaves live longer deeper in the
+# crown: 6.8 years in a western redcedar's upper third, 10.6 in its
+# lower (Harlow, Duursma & Marshall 2005). Each branch shoot keeps a
+# dormant bud that, after epi_delay years, sprouts a side shoot with the
+# chance epi_chance a year where light reaches it (epi_light), as
+# epicormic shoots refoliate old Douglas-fir limbs (Ishii & Ford 2001);
+# a bud waits up to epi_years, about as long as its branch lives. Side
+# shoots grow for side_years 20, not 10, so a branch keeps foliage along
+# its length, not only at its tip. A year's sprays are drawn with their
+# own turns (`spray(size, roll, pitch, level)`), a third of the modules
+# they took, so the fuller crown fits the module limit.
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
@@ -75,8 +75,8 @@ param min_shoot = 0.025;       # an apex dies once its shoot would be shorter
 param shade_death = 0.1;       # light below which an apex starves
 param shade_years = 3;         # years in a row an apex survives starving
 param dead_years = 4;          # years a dead branch stays on the tree
-param needle_years = 7;        # years a shoot keeps its foliage at the top of the crown
-param needle_low = 1.6;        # and how many times as long at the foot of the crown
+param needle_years = 7;        # years a shoot keeps its foliage, on average through the crown
+param needle_low = 1.56;       # how many times as long at the crown's foot as at its top
 param epi_delay = 5;           # years a branch's dormant bud waits before it may sprout
 param epi_light = 0.3;         # light a dormant bud needs to sprout
 param epi_chance = 0.03;       # chance a year that a waiting bud in the light sprouts
@@ -124,7 +124,7 @@ axiom !(0.003) A;
 # The leader: this year's height growth with its foliage, then a whorl.
 rule A -> G(0, (richards(t + dt, height_max, height_rate, height_shape)
                 - richards(t, height_max, height_rate, height_shape))
-               * (leader_shade + (1 - leader_shade) * light), needle_years, 0)
+               * (leader_shade + (1 - leader_shade) * light), needle_years * 2 / (1 + needle_low), 0)
           W(whorl) /(137.5) A;
 
 decompose W(n) : n > 0 ->
@@ -155,7 +155,7 @@ rule C(o, v, s, w) : branch_growth * v * pow(side_growth, o - 1) / (1 + pow(w / 
                      * (0.3 + 0.7 * light) < min_shoot -> ;
 rule C(o, v, s, w) -> G(o, branch_growth * v * pow(side_growth, o - 1) / (1 + pow(w / branch_reach, 2))
                            * (0.3 + 0.7 * light),
-                        needle_years * (1 + (needle_low - 1) * max(0, 1 - py / max(height, 0.1))),
+                        needle_years * 2 / (1 + needle_low) * (1 + (needle_low - 1) * max(0, 1 - py / max(height, 0.1))),
                         w)
                       Z(light)
                       C(o, v, light < shade_death ? s + 1 : 0,
@@ -180,8 +180,8 @@ decompose L(o, w) -> ;
 decompose R(o, w) : o <= side_order && rand() < side_chance -> [ -(side_angle) S C(o + 1, 1, 0, w) ];
 decompose R(o, w) -> ;
 
-# Foliage falls after its shoot's keep years: needle_years at the top of
-# the crown, up to needle_low times as long at its foot (revision 5).
+# Foliage falls after its shoot's keep years: needle_years on average,
+# needle_low times as long at the crown's foot as at its top (revision 5).
 rule Y(n) : age >= n -> %;
 
 # A well-lit apex of a tree old enough bears a cone, which falls after

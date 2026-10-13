@@ -231,9 +231,9 @@ pub mod venation;
 /// VARY): one plant is the typical one, three take the middles of the
 /// range's thirds; a part's size, or a parameter a formula works out from
 /// a range, records no spread and keeps its value.
-/// 40: a conifer's lower crown stays full (pinidae 5): a branch's shoot
+/// 41: a conifer's lower crown stays full (pinidae 5): a branch's shoot
 /// shortens with its wood from the stem, not its age; foliage lasts longer
 /// low in the crown; dormant buds sprout on lit branch wood; side shoots
 /// grow 20 years; sprays are drawn with their own turns (39 is the
-/// broadleaf crown's own outline, #67).
-pub const GENERATOR_REVISION: u32 = 40;
+/// broadleaf crown's own outline, #67; 40 redcedar's leaf life, #70).
+pub const GENERATOR_REVISION: u32 = 41;
