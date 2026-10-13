@@ -2012,14 +2012,14 @@ mod tests {
 
     #[test]
     fn a_short_shoots_crowded_leaves_are_no_whorl() {
-        // A shrub's lateral buds leaf out as short shoots, crowding each
-        // year's leaves where the bud stands: thimbleberry's alternate
-        // leaves and red-osier dogwood's opposite pairs read as whorls when
-        // those count as the stem's node.
+        // A broadleaf's lateral buds leaf out as short shoots, crowding
+        // each year's leaves where the bud stands: thimbleberry's
+        // alternate leaves and Oregon ash's opposite pairs read as whorls
+        // when those count as the stem's node.
         let library = Library::builtin();
         for (id, arrangement) in [
             ("rubus-parviflorus", "alternate"),
-            ("cornus-sericea", "opposite"),
+            ("fraxinus-latifolia", "opposite"),
         ] {
             let spec = library.spec(id).unwrap();
             let environment = crate::drawing::typical_environment(&spec, library);
