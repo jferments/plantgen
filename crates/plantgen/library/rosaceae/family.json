@@ -11,6 +11,14 @@
     "ovary_position": {
       "superior": "usually",
       "inferior": "sometimes"
+    },
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "often"
     }
   },
   "forms": {
@@ -44,6 +52,16 @@
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",
       "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: flowers regular, commonly perfect; calyx 5 (or 4)-lobed; petals 5, rarely none; stamens 10 to numerous, inserted with the petals on the calyx or on a disk lining the calyx-tube (a hypanthium); pistils 1 to many, free from the calyx, or united in an ovary nearly or wholly inferior, as in the pomes (Amelanchier, Malus); in the other tribes the ovary is superior."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 24 Rosaceae: trees, shrubs or herbs; leaves of many kinds, simple or compound, alternate or rarely opposite; stipules mostly present, in pairs, sometimes joined to the leaf stalk."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 24 Rosaceae: trees, shrubs or herbs; leaves of many kinds, simple or compound, alternate or rarely opposite; stipules mostly present, in pairs, sometimes joined to the leaf stalk."
     }
   }
 }

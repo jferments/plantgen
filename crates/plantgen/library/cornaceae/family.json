@@ -10,7 +10,20 @@
     "hypanthium": false,
     "ovary_position": "inferior",
     "stamens": 4,
-    "carpels": 2
+    "carpels": 2,
+    "woodiness": {
+      "woody": "usually",
+      "herbaceous": "rarely"
+    },
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "alternate": "sometimes"
+    },
+    "leaf_division": "simple",
+    "fruit_type": {
+      "drupe": "usually",
+      "berry": "sometimes"
+    }
   },
   "forms": {
     "decurrent_tree": {
@@ -43,6 +56,26 @@
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",
       "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: flowers perfect, regular, in cymes or heads; calyx-tube coherent with the ovary, its limb 4 small teeth or none; petals 4, epigynous; stamens 4, alternate with the petals; ovary 2-celled. The calyx tube is wholly joined to the ovary, so no floral cup stands above it."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 43 Cornaceae: trees, shrubs or rarely perennial herbs; leaves opposite or alternate, simple; stipules absent; fruit a drupe or berry."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 43 Cornaceae: trees, shrubs or rarely perennial herbs; leaves opposite or alternate, simple; stipules absent; fruit a drupe or berry."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 43 Cornaceae: trees, shrubs or rarely perennial herbs; leaves opposite or alternate, simple; stipules absent; fruit a drupe or berry."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 43 Cornaceae: trees, shrubs or rarely perennial herbs; leaves opposite or alternate, simple; stipules absent; fruit a drupe or berry."
     }
   }
 }

@@ -13,7 +13,16 @@
       "max": 6,
       "typical": 6
     },
-    "carpels": 3
+    "carpels": 3,
+    "leaf_division": "simple",
+    "leaf_shape": {
+      "linear": "usually"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "rarely"
+    },
+    "fruit_type": "capsule"
   },
   "forms": {
     "graminoid": {
@@ -34,6 +43,26 @@
       "evidence": "SourceInferred",
       "source": "kew-powo",
       "note": "Plants of the World Online's account of the family, with Go Botany, as search results quote them (the pages themselves were not read): flowers actinomorphic; perianth segments 6 in 2 whorls (rarely 3), usually glumaceous; stamens 6 or 3, free; ovary superior, of 3 united carpels, stigmas 3."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 406 Juncaceae: leaves mostly in a basal tuft, cylindrical to flat and grass-like, mostly linear or thread-like, or only a sheath; flowers bisexual, or unisexual on separate plants; fruit a dry capsule opening along its cells."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 406 Juncaceae: leaves mostly in a basal tuft, cylindrical to flat and grass-like, mostly linear or thread-like, or only a sheath; flowers bisexual, or unisexual on separate plants; fruit a dry capsule opening along its cells."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 406 Juncaceae: leaves mostly in a basal tuft, cylindrical to flat and grass-like, mostly linear or thread-like, or only a sheath; flowers bisexual, or unisexual on separate plants; fruit a dry capsule opening along its cells."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 406 Juncaceae: leaves mostly in a basal tuft, cylindrical to flat and grass-like, mostly linear or thread-like, or only a sheath; flowers bisexual, or unisexual on separate plants; fruit a dry capsule opening along its cells."
     }
   }
 }

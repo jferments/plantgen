@@ -2,5 +2,18 @@
   "schema": 1,
   "rank": "order",
   "name": "Asparagales",
-  "parent": "clade/monocots"
+  "parent": "clade/monocots",
+  "traits": {
+    "perianth": {
+      "tepals": "usually",
+      "sepals_and_petals": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), families 372 Liliaceae (the asphodels, onions and hyacinths), Amaryllidaceae, 386 Iridaceae and 405 Orchidaceae, the bulk of APG's Asparagales: perianth of six petal-like segments in two whorls of three; an orchid's are unlike (its lip), which its family states."
+    }
+  }
 }

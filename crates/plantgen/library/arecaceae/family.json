@@ -3,6 +3,27 @@
   "rank": "family",
   "name": "Arecaceae",
   "parent": "order/arecales",
+  "traits": {
+    "woodiness": "woody",
+    "leaf_venation": "parallel",
+    "rosette": {
+      "terminal": "usually"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "stamens": {
+      "min": 6,
+      "max": 6,
+      "high": 1000
+    },
+    "carpels": 3,
+    "ovary_position": "superior",
+    "inflorescence": "panicle",
+    "fruit_type": {
+      "drupe": "usually",
+      "berry": "often"
+    }
+  },
   "forms": {
     "palm": {
       "generator": {
@@ -15,6 +36,13 @@
           "note": "The lineage's own program (growth plan G2.3a), on the palm base: it gives the values its species leave unset, which the palm program gave as defaults until then."
         }
       }
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 393 Palmae: stems often clothed in the bases of old leaves, the leaves in a cluster at the top (scattered in climbing palms), whole or divided pinnately or palmately; flowers small and regular, in an often paniculate inflorescence among or below the leaves, with one to many spathes; perianth double, three sepals and three petals; stamens usually 6, rarely many; ovary superior, of three carpels, free or joined; fruit a berry or drupe. The stems' wood is the palms' own, with no secondary growth; they are counted woody, as the floras call them trees."
     }
   }
 }

@@ -13,7 +13,21 @@
       "inferior": "sometimes"
     },
     "stamens": 5,
-    "carpels": 3
+    "carpels": 3,
+    "woodiness": "woody",
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "often"
+    },
+    "leaf_division": "simple",
+    "stipules": {
+      "true": "usually",
+      "false": "sometimes"
+    },
+    "fruit_type": {
+      "drupe": "usually",
+      "capsule": "sometimes"
+    }
   },
   "forms": {
     "decurrent_tree": {
@@ -34,6 +48,31 @@
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",
       "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: flowers small, regular; calyx-lobes, petals and stamens 5 (or 4); petals hooded, sometimes wanting; calyx-tube lined with a disk on whose edge the petals and stamens are inserted; ovary free from or adnate by the disk to the base of the calyx, 3 (or 2)-celled. For cascara, Jepson eFlora calls the ovary more or less inferior while the Burke Herbarium and Jepson (1925) call it superior, free of the disk (as quoted in search results; the pages themselves were not read); the superior reading is kept."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 201 Rhamnaceae: trees or shrubs, very rarely herbs, sometimes climbing; leaves simple, alternate or opposite; stipules mostly present; fruit of several kinds, often a drupe."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 201 Rhamnaceae: trees or shrubs, very rarely herbs, sometimes climbing; leaves simple, alternate or opposite; stipules mostly present; fruit of several kinds, often a drupe."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 201 Rhamnaceae: trees or shrubs, very rarely herbs, sometimes climbing; leaves simple, alternate or opposite; stipules mostly present; fruit of several kinds, often a drupe."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 201 Rhamnaceae: trees or shrubs, very rarely herbs, sometimes climbing; leaves simple, alternate or opposite; stipules mostly present; fruit of several kinds, often a drupe."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 201 Rhamnaceae: trees or shrubs, very rarely herbs, sometimes climbing; leaves simple, alternate or opposite; stipules mostly present; fruit of several kinds, often a drupe."
     }
   }
 }

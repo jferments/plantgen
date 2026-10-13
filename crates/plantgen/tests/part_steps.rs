@@ -102,8 +102,11 @@ fn part_steps_keep_cover_and_colour() {
     failures.sort();
     assert!(failures.is_empty(), "steps wrong:\n{}", failures.join("\n"));
     let stepped = stepped.into_inner().unwrap();
+    // 74 since Violaceae's characters (B1) gave the stream violet 5
+    // stamens: its flower, at under half the triangles, is already as
+    // coarse as its first step, so it has none.
     assert!(
-        stepped.len() >= 75,
+        stepped.len() >= 74,
         "only {} part meshes have steps: {stepped:?}",
         stepped.len()
     );
