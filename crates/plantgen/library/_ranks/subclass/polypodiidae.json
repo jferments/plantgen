@@ -9,6 +9,15 @@
   "traits": {
     "sporangia": {
       "sori": "usually"
+    },
+    "vernation": {
+      "circinate": "usually"
+    }
+  },
+  "rules": {
+    "generator.params.crown_start": {
+      "map": {"rhizome_habit": {"none": 0, "erect": 1, "ascending": 1, "short_creeping": 1, "long_creeping": 1}},
+      "why": "A crown a fern's rhizome branches into is part of the same plant and fed by it, so its first fronds are as large as the crown it came from; only a fern with no rhizome starts each crown from a spore."
     }
   },
   "evidence": {
@@ -16,6 +25,16 @@
       "evidence": "SourceInferred",
       "source": "openstax-biology-2e",
       "note": "Ferns bear their sporangia in small clusters, sori, on the underside of their fronds (Biology 2e, 25.4). Usually rather than always, as a few ferns bear them otherwise."
+    },
+    "traits.vernation": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams's flora (vol. 1, 1923; ferns by Maxon), its account of the fern family as it then stood, which held every leptosporangiate fern of the Pacific States: blades coiled in vernation, the young frond unrolling from the tip. Usually rather than always, since a few ferns of this subclass, such as the floating water ferns, do not unroll their leaves this way."
+    },
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "What the program's crown_start means: a new crown's age as a share of its parent's. Floras give a fern's fronds' sizes for the plant, not for a seedling, and describe tufted and creeping ferns as clumps or colonies of crowns of like fronds (Abrams 1923, under the sword, deer and wood ferns and bracken)."
     },
     "generator.program": {
       "evidence": "Authored",

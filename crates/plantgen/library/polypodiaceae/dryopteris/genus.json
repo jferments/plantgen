@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Dryopteris",
+  "traits": {
+    "sorus_shape": {
+      "round": "usually"
+    },
+    "indusium": {
+      "kidney": "usually",
+      "none": "sometimes"
+    },
+    "leaf_division": "compound",
+    "division_pattern": "pinnate"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams's flora (vol. 1, 1923; ferns by Maxon): sori mostly roundish, on the backs of the veins; the indusium, where there is one, roundish-kidney-shaped and fixed at its notch, lacking in a few species; blades one to three times pinnate, rarely simple."
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Pteridium",
+  "traits": {
+    "rhizome_habit": "long_creeping",
+    "clonal": true,
+    "sorus_shape": "marginal",
+    "indusium": "margin",
+    "sorus_position": "marginal",
+    "leaf_division": "compound",
+    "division_pattern": "pinnate"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams's flora (vol. 1, 1923; ferns by Maxon): a slender, branching rhizome creeping far underground, fronds borne singly along it; blades pinnately decompound; sori in a continuous line along the margin, covered by the blade's own rolled-back edge (with a minute inner indusium)."
+    }
+  }
+}

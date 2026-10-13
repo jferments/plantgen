@@ -14,7 +14,6 @@
     "params": {
       "fronds_per_year": 12,
       "frond_life": 2.5,
-      "frond_length": 1.0,
       "frond_seed": 0.15,
       "size_years": 4,
       "young_angle": 12,
@@ -23,8 +22,6 @@
       "angle_spread": 10,
       "frond_radius": 0.003,
       "pieces": 18,
-      "stipe": 0.2,
-      "pinna_length": 0.1,
       "pinna_peak": 0.25,
       "pinna_base": 0.55,
       "pinna_tip": 0.15,
@@ -81,7 +78,24 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "rhizome_habit": "ascending",
+    "leaf_habit": "evergreen",
+    "division_order": 1,
+    "leaf_shape": "lanceolate",
+    "leaf_margin": "serrate",
+    "leaf_length_m": {"min": 0.25, "max": 1.0},
+    "leaf_width_m": {"min": 0.05, "max": 0.25},
+    "petiole_length_m": {"min": 0.05, "max": 0.6},
+    "sorus_position": {"medial": "usually", "submarginal": "often"},
+    "sori_rows": {"min": 1, "max": 1, "high": 3}
+  },
   "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams's flora (vol. 1, 1923; ferns by Maxon): a stout, ascending rhizome; fronds 30 to 140 cm, rigidly ascending in a crown, evergreen and leathery; stipes 5 to 60 cm; blades linear-lanceolate, 25 to 100 cm by 5 to 25 cm, once pinnate, the pinnae many, narrow, sharply double-toothed; sori large, in one row halfway to the margin or nearer it, sometimes in several crowded rows."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
