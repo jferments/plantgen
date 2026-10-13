@@ -27,6 +27,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
     ),
     (
+        "aquilegia-formosa",
+        "fruit_type",
+        "its fruit look sets no fruit kind, so its follicles are drawn as the ellipsoid of a berry or drupe",
+    ),
+    (
         "berberis-aquifolium",
         "flower_merosity",
         "its six petals stand in two whorls of three, and a corolla draws one whorl, so its spec draws six there",
@@ -42,9 +47,39 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its four petals stand in two pairs, outer and inner, and a corolla draws one whorl, so its spec draws four there",
     ),
     (
+        "dicentra-formosa",
+        "fruit_type",
+        "its fruit look sets no fruit kind, so its capsules are drawn as the ellipsoid of a berry or drupe",
+    ),
+    (
+        "digitalis-purpurea",
+        "corolla_shape",
+        "its spec joins its petals for 0.8 of their length by hand, against the 0.45 a bell is drawn with, so its long, wide tube is nearest a funnel",
+    ),
+    (
+        "digitalis-purpurea",
+        "fruit_type",
+        "its fruit look sets no fruit kind, so its capsules are drawn as the ellipsoid of a berry or drupe",
+    ),
+    (
         "encelia-farinosa",
         "shoot_leaves",
         "its most vigorous shoots grow one to three of the four internodes a year they may, two nodes each, so they bear 2 to 6 leaves against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
+    ),
+    (
+        "larrea-tridentata",
+        "leaf_division",
+        "each leaf is two leaflets joined at their base, but its sprig cards draw each leaf as one blade",
+    ),
+    (
+        "lonicera-involucrata",
+        "inflorescence",
+        "its spec draws the two flowers on each stalk as a raceme by hand, against the cymes and heads Caprifoliaceae state (read since a cluster whose units open by the day is read in flower)",
+    ),
+    (
+        "lupinus-polyphyllus",
+        "fruit_type",
+        "its look in fruit sets no fruit kind, so its pods are drawn as the ellipsoid of a berry or drupe",
     ),
     (
         "lysichiton-americanus",
@@ -60,6 +95,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "oxalis-oregana",
         "leaf_arrangement",
         "Oxalidaceae's leaves are alternate and redwood sorrel's rise one to a node from its rhizome, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
+    ),
+    (
+        "parkinsonia-microphylla",
+        "flower_symmetry",
+        "its zygomorphy is `other`, which the angiosperms draw as a corolla of like petals, so its flowers are drawn radial",
     ),
     (
         "program:broadleaf",
@@ -95,6 +135,31 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "program:sapindaceae",
         "crown_outline_fit",
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
+    ),
+    (
+        "sambucus-racemosa",
+        "inflorescence",
+        "its spec draws its pyramidal panicle as a head by hand, against the panicle it states (read since a cluster whose units open by the day is read in flower)",
+    ),
+    (
+        "symphoricarpos-albus",
+        "inflorescence",
+        "its spec draws its few-flowered clusters as an umbel by hand, against the cymes and heads Caprifoliaceae state (read since a cluster whose units open by the day is read in flower)",
+    ),
+    (
+        "tiarella-trifoliata",
+        "fruit_type",
+        "its fruit look sets no fruit kind, so its capsules are drawn as the ellipsoid of a berry or drupe",
+    ),
+    (
+        "tolmiea-menziesii",
+        "flower_symmetry",
+        "its zygomorphy is `other`, which the angiosperms draw as a corolla of like petals, so its flowers are drawn radial",
+    ),
+    (
+        "tolmiea-menziesii",
+        "fruit_type",
+        "its look in fruit sets no fruit kind, so its capsules are drawn as the ellipsoid of a berry or drupe",
     ),
     (
         "viola-glabella",

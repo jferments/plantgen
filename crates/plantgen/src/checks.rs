@@ -60,9 +60,14 @@
 //! cluster's units and branches, a divided leaf's leaflets and pinnae
 //! and the times it divides, the leaves of a whorl), and judged as an
 //! organ's size is. Kinds ([`KINDS`]) pass when every state the plants
-//! draw is one the species states, plainly or qualified: a cluster's kind
-//! while its units are flowers, a head's kind, awns, a spikelet's ranks,
-//! a divided leaf's pattern and its end. How the leaves stand is measured
+//! draw is one the species states, plainly or qualified: a cluster's kind,
+//! its units and how far its axis bends over while its units are
+//! flowers, a head's kind, awns, a spikelet's ranks, a divided leaf's
+//! pattern and its end, what a leaf is made as and whether its blade is
+//! one piece, and a fruit's type; where a drawing does not tell states
+//! apart (an ellipsoid fruit, a berry's or a drupe's) it draws each of
+//! them. A cone's posture is its pitch down from its shoot, by the
+//! plant's usual cone. How the leaves stand is measured
 //! on the graph: the leaves sharing a node, and the turn from each node
 //! to the next up its axis, the leaf below carried up the bending axis by
 //! the least rotation, the plant's median turn named by the nearest
@@ -74,8 +79,9 @@
 //! any one counted for the plant (`shoot_leaves`). A flower counts its
 //! petals or tepals in a whorl, its stamens, staminodes and carpels and a
 //! spiral's tepals, measures its spurs, and draws its perianth's kind,
-//! its ovary's place and its corolla's zygomorphy, as its layout has them
-//! (spec rework P5).
+//! its ovary's place, its corolla's zygomorphy and so its symmetry, its
+//! corolla's shape, whether a floral cup bears its whorls and whether it
+//! is turned half round, as its layout has them (spec rework P5).
 //!
 //! **Crown form (crown form research, 2026-10-12).** A crown's outline
 //! seen from the side is fitted to an ellipse (`crown_outline_fit`) and
@@ -186,19 +192,29 @@ pub const COUNTS: [&str; 24] = [
 
 /// The kinds a grown plant's drawing must agree with (spec rework M8A):
 /// each an enum or bool character, compared with what the plant draws.
-pub const KINDS: [&str; 14] = [
+pub const KINDS: [&str; 24] = [
     "inflorescence",
+    "inflorescence_unit",
+    "inflorescence_posture",
     "bract_form",
     "capitulum_kind",
     "awns",
     "scale_arrangement",
     "division_pattern",
     "terminal_leaflet",
+    "leaf_division",
+    "leaf_form",
     "leaf_arrangement",
     "phyllotaxis_pattern",
     "perianth",
     "ovary_position",
+    "flower_symmetry",
     "zygomorphy",
+    "corolla_shape",
+    "hypanthium",
+    "resupinate",
+    "fruit_type",
+    "cone_posture",
     "glochids",
     "foliage_ranks",
 ];
@@ -688,6 +704,8 @@ pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
         .collect();
     // Each spray card's longest needles, its main axis's.
     let mut needle_lengths = Vec::new();
+    // Each ripe cone's pitch down from its shoot.
+    let mut cone_pitches = BTreeMap::new();
     for day in days(&seasons) {
         let (looks, sizes) = crate::drawing::looks_of(grown.spec, grown.growth, day);
         let drawn = crate::drawing::drawn(graph, &sizes);
@@ -705,7 +723,32 @@ pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
                 needle_counts(needles, organ.id, &mut tally);
                 needle_lengths.push(organ.size * needles.needle);
             }
+            if grown.term(organ) == "cone"
+                && in_stage(phase, Stage::Ripe)
+                && let Some(pitch) = pitch_from_shoot(organ, &drawn)
+            {
+                cone_pitches.entry(organ.id).or_insert(pitch);
+            }
         }
+    }
+    // A cone's posture on its shoot, by the plant's usual cone: each is
+    // drawn pitched a little more or less than the next.
+    if !cone_pitches.is_empty() {
+        let mut pitches: Vec<f64> = cone_pitches.into_values().collect();
+        pitches.sort_by(f64::total_cmp);
+        let pitch = rank(&pitches, 0.5);
+        tally.kind(
+            "cone_posture",
+            if pitch < 0.0 {
+                "erect"
+            } else if pitch < 75.0 {
+                "spreading"
+            } else if pitch < 105.0 {
+                "deflexed"
+            } else {
+                "pendent"
+            },
+        );
     }
     // A card draws its needles a share of its own length, so they grow
     // with the spray as no shoot's needles do: the plant's usual needle
@@ -720,6 +763,22 @@ pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
         );
     }
     tally.measures()
+}
+
+/// Degrees `organ` is pitched down from the shoot that bears it, in the
+/// plane of the shoot and the vertical: negative where it stands up from
+/// the shoot, past 90 where it hangs back along it. None on a vertical
+/// shoot, which has no side down.
+fn pitch_from_shoot(organ: &GraphOrgan, graph: &PlantGraph) -> Option<f64> {
+    let segment = graph.segments.get(organ.segment? as usize)?;
+    let shoot = (segment.end - segment.start).normalize_or(Vec3::ZERO);
+    // Down, square to the shoot.
+    let down = (shoot * shoot.y - Vec3::Y).normalize_or(Vec3::ZERO);
+    if shoot == Vec3::ZERO || down == Vec3::ZERO {
+        return None;
+    }
+    let heading = organ.heading;
+    Some(libm::atan2(heading.dot(down), heading.dot(shoot)).to_degrees())
 }
 
 /// Areoles sampled on each body axis to count and measure their spines.
@@ -1197,6 +1256,7 @@ fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tal
         let mut width: f64 = 0.0;
         for piece in members {
             if let Some((look, size)) = leaf_look(piece, looks) {
+                leaf_kinds(&look.shape, tally);
                 length += size;
                 width = width.max(size * look.shape.aspect());
             }
@@ -1263,6 +1323,35 @@ fn frond_sizes(
     tally.count(if again > 0 { "pinnae" } else { "leaflets" }, id, 0, count);
     tally.count("division_order", id, 0, 1 + again);
     tally.kind("division_pattern", "pinnate");
+    tally.kind("leaf_division", "compound");
+    tally.kind("leaf_form", "blade");
+}
+
+/// What a leaf drawn as `shape` is made as (`leaf_form`: a needle, a
+/// scale or a flat blade) and whether its blade is one piece
+/// (`leaf_division`): a divided leaf's leaflets and a frond's pinnae
+/// stand apart, as separate leaflets; a dissected blade's segments run
+/// together along its rachis (`confluent` half or more, 0.75 as the
+/// angiosperms draw one), and lobes, a sprig's leaves, a grass blade,
+/// needles and scales are each one piece.
+fn leaf_kinds(shape: &Shape, tally: &mut Tally) {
+    let (form, division) = match shape {
+        Shape::Needles(_) => ("needle", "simple"),
+        Shape::Scales(_) => ("scale", "simple"),
+        Shape::Compound(compound) if compound.confluent.unwrap_or(0.0) < 0.5 => {
+            ("blade", "compound")
+        }
+        Shape::Frond(_) => ("blade", "compound"),
+        Shape::Compound(_)
+        | Shape::Simple(_)
+        | Shape::Lobed(_)
+        | Shape::Palmate(_)
+        | Shape::Sprig(_)
+        | Shape::Blade(_) => ("blade", "simple"),
+        _ => return,
+    };
+    tally.kind("leaf_form", form);
+    tally.kind("leaf_division", division);
 }
 
 /// How many times a leaf drawn as `shape` divides (`division_order`): a
@@ -1288,8 +1377,9 @@ fn leaf_look<'a>(organ: &GraphOrgan, looks: &'a [Look]) -> Option<(&'a Look, f64
 }
 
 /// A leaf card's blade, its width and its petiole, for a card `size` long,
-/// and how many times it divides.
+/// how many times it divides, and what it is made as.
 fn leaf_sizes(shape: &Shape, size: f64, id: u64, tally: &mut Tally) {
+    leaf_kinds(shape, tally);
     let order = division_order(shape);
     if order > 0 {
         tally.count("division_order", id, 0, order);
@@ -1369,22 +1459,7 @@ fn reproductive(
     let term = grown.term(organ);
     if let Some(cluster) = &look.inflorescence {
         let layout = cluster.laid_on(organ);
-        // The `inflorescence` character groups a shoot's flowers: a
-        // cluster of fruit, drawn on the days its units are fruit, is
-        // what the flowers became and may be drawn otherwise.
-        if in_stage(phase, Stage::Open)
-            && !matches!(cluster.unit, crate::clusters::Unit::Fruit { .. })
-        {
-            // A spike in a spathe is a spadix (PO:0030120).
-            let kind = if cluster.cluster.kind == crate::looks::ClusterKind::Spike
-                && !layout.sheets.is_empty()
-            {
-                "spadix"
-            } else {
-                cluster.cluster.kind.name()
-            };
-            tally.kind("inflorescence", kind);
-        }
+        cluster_kinds(cluster, &layout, look, phase, tally);
         if in_stage(phase, Stage::Open) {
             tally.add(
                 "inflorescence_length_m",
@@ -1429,11 +1504,12 @@ fn reproductive(
                     .shown(unit)
                     .filter(|(look, _)| *look == 1)
                     .and_then(|(look, _)| opening.looks[look].as_ref())
-                    .map(|stage| &stage.shape),
-                None => in_stage(phase, Stage::Open).then_some(&look.shape),
+                    .map(|stage| (&stage.shape, stage.size)),
+                None => in_stage(phase, Stage::Open).then_some((&look.shape, 1.0)),
             };
-            if let Some(Shape::Flower(flower)) = shown {
-                flower_parts(flower, organ.size * unit.length, (organ.id, part), tally);
+            if let Some((Shape::Flower(flower), size)) = shown {
+                let width = organ.size * unit.length * size;
+                flower_parts(flower, width, (organ.id, part), tally);
             }
             unit_sizes(
                 &look.shape,
@@ -1447,12 +1523,85 @@ fn reproductive(
         return;
     }
     unit_sizes(&look.shape, organ.size, term, phase, (organ.id, 0), tally);
-    if let Shape::Flower(flower) = &look.shape
-        && in_stage(phase, Stage::Open)
-        && !grown.clustered(organ)
-    {
-        flower_parts(flower, organ.size, (organ.id, 0), tally);
+    if in_stage(phase, Stage::Open) && !grown.clustered(organ) {
+        // A flower, head or spikelet borne alone.
+        let unit = match &look.shape {
+            Shape::Flower(flower) => {
+                flower_parts(flower, organ.size, (organ.id, 0), tally);
+                "flower"
+            }
+            Shape::Head(_) => "capitulum",
+            Shape::Spikelet(_) => "spikelet",
+            _ => return,
+        };
+        tally.kind("inflorescence_unit", unit);
     }
+}
+
+/// A cluster's kind, its units and how far its axis bends over, while
+/// its units are flowers (heads, spikelets). The `inflorescence`
+/// character groups a shoot's flowers: a cluster of fruit, drawn on the
+/// days its units are fruit, is what the flowers became and may be drawn
+/// otherwise. Its units in flower are the look's own while it is open,
+/// or, where they open by the day, its flower look while any shows it (a
+/// look whose own is its fruit, as a lupine's).
+fn cluster_kinds(
+    cluster: &crate::clusters::ClusterLook,
+    layout: &crate::clusters::Layout,
+    look: &Look,
+    phase: Option<Phase>,
+    tally: &mut Tally,
+) {
+    let opened = cluster
+        .opening
+        .as_ref()
+        .filter(|opening| {
+            layout
+                .units
+                .iter()
+                .any(|unit| matches!(opening.shown(unit), Some((1, _))))
+        })
+        .and_then(|opening| opening.looks[1].as_ref())
+        .map(|stage| &stage.shape);
+    let flowers = if in_stage(phase, Stage::Open)
+        && !matches!(cluster.unit, crate::clusters::Unit::Fruit { .. })
+    {
+        Some(&look.shape)
+    } else {
+        opened
+    };
+    let Some(flowers) = flowers else {
+        return;
+    };
+    // A spike in a spathe is a spadix (PO:0030120).
+    let kind =
+        if cluster.cluster.kind == crate::looks::ClusterKind::Spike && !layout.sheets.is_empty() {
+            "spadix"
+        } else {
+            cluster.cluster.kind.name()
+        };
+    tally.kind("inflorescence", kind);
+    tally.kind(
+        "inflorescence_unit",
+        match flowers {
+            Shape::Head(_) => "capitulum",
+            Shape::Spikelet(_) => "spikelet",
+            _ => "flower",
+        },
+    );
+    // A nodding one bends over a quarter turn by its tip, a hanging one
+    // half a turn.
+    let droop = cluster.cluster.droop;
+    tally.kind(
+        "inflorescence_posture",
+        if droop < 45.0 {
+            "erect"
+        } else if droop < 135.0 {
+            "nodding"
+        } else {
+            "pendent"
+        },
+    );
 }
 
 /// One flower, head, spikelet, fruit or cone drawn with `shape`, `length`
@@ -1497,6 +1646,7 @@ fn unit_sizes(
             };
             if ripe {
                 tally.add("fruit_size_m", organ, part, length * d.cypsela);
+                tally.kind("fruit_type", "cypsela");
             }
         }
         Shape::Spikelet(spikelet) if in_stage(phase, Stage::Open) => {
@@ -1519,15 +1669,45 @@ fn unit_sizes(
             tally.add("lemma_length_m", organ, part, length * d.lemma);
             tally.add("awn_length_m", organ, part, length * d.awn);
         }
-        Shape::Fruit(_) if in_stage(phase, Stage::Ripe) => {
-            let character = if term == "cone" {
-                "cone_length_m"
+        // A flower drawn as a fruit with no season is its bud (a herb's
+        // `bud`), never a fruit.
+        Shape::Fruit(_) if term == "flower" && phase.is_none() => {}
+        Shape::Fruit(fruit) if in_stage(phase, Stage::Ripe) => {
+            if term == "cone" {
+                tally.add("cone_length_m", organ, part, length);
             } else {
-                "fruit_size_m"
-            };
-            tally.add(character, organ, part, length);
+                tally.add("fruit_size_m", organ, part, length);
+                // A fruit card drawn as a cone's scales (an alder's woody
+                // catkin) shows no one fruit's kind.
+                if fruit.cone < 0.5 {
+                    tally.kind("fruit_type", fruit_types(fruit.kind));
+                }
+            }
         }
         _ => {}
+    }
+}
+
+/// The fruit types a fruit drawn as `kind` may be (`fruit_type`), joined
+/// by `|` where the drawing does not tell them apart: an ellipsoid is a
+/// berry or a drupe; one crowned by its calyx a berry or a pome, as a
+/// fleshy fruit from an inferior ovary is; drupelets an aggregate; a rose
+/// hip the achenes in its cup, an aggregate; a wing a samara, or the
+/// pair of them a maple's schizocarp splits into; a nut in a cup or a
+/// husk a nut; a pod a legume or another pod; a ribbed fruit a capsule
+/// or a follicle.
+fn fruit_types(kind: crate::looks::FruitKind) -> &'static str {
+    use crate::looks::FruitKind;
+    match kind {
+        FruitKind::Berry => "berry|drupe",
+        FruitKind::Crowned => "berry|pome",
+        FruitKind::Pome => "pome",
+        FruitKind::Drupelets => "aggregate",
+        FruitKind::Hip => "aggregate|achene",
+        FruitKind::Samara => "samara|schizocarp",
+        FruitKind::Acorn | FruitKind::Husked => "nut",
+        FruitKind::Pod => "legume|pod",
+        FruitKind::Capsule => "capsule|follicle",
     }
 }
 
@@ -1535,8 +1715,9 @@ fn unit_sizes(
 /// rework P5): the petals or tepals in a whorl (a corolla's one whorl of
 /// petals, half of two whorls of tepals; a spiral has none), its
 /// stamens, staminodes and carpels, a spiral's tepals, its spurs' length,
-/// and the kind of its perianth, its ovary's place and how its petals
-/// differ by place.
+/// and the kind of its perianth, its ovary's place, how its petals
+/// differ by place and so its symmetry, its corolla's shape, whether a
+/// floral cup bears its whorls and whether it is turned half round.
 fn flower_parts(
     flower: &crate::looks::Flower,
     width: f64,
@@ -1597,6 +1778,67 @@ fn flower_parts(
             Corolla::Labellate => "labellate",
         },
     );
+    tally.kind(
+        "flower_symmetry",
+        if flower.is_zygomorphic() {
+            "zygomorphic"
+        } else {
+            "actinomorphic"
+        },
+    );
+    if matches!(flower.perianth, Perianth::Corolla | Perianth::Tepals) {
+        tally.kind("corolla_shape", &corolla_shape(flower));
+    }
+    tally.kind(
+        "hypanthium",
+        if flower.tube > 0.0 { "true" } else { "false" },
+    );
+    // A resupinate flower is drawn turned half round.
+    tally.kind(
+        "resupinate",
+        if libm::fabs(flower.turn) >= 90.0 {
+            "true"
+        } else {
+            "false"
+        },
+    );
+}
+
+/// Each corolla shape as the angiosperms draw it (`_ranks/clade/
+/// angiosperms.json`): the share of each petal joined in a tube, the
+/// tube's mouth over a petal's length, and how much it swells.
+const COROLLA_SHAPES: [(&str, [f64; 3]); 7] = [
+    ("rotate", [0.0, 0.3, 0.0]),
+    ("cupped", [0.0, 0.3, 0.0]),
+    ("campanulate", [0.45, 0.45, 0.0]),
+    ("funnelform", [0.6, 0.4, 0.0]),
+    ("tubular", [0.75, 0.2, 0.0]),
+    ("salverform", [0.8, 0.12, 0.0]),
+    ("urceolate", [0.85, 0.1, 0.25]),
+];
+
+/// The corolla shape a flower draws: the nearest of [`COROLLA_SHAPES`] to
+/// its tube, or each of the nearest where they are drawn alike (a flat
+/// and a cupped corolla, both free petals).
+fn corolla_shape(flower: &crate::looks::Flower) -> String {
+    let drawn = [flower.fused, flower.throat, flower.belly];
+    let distance = |shape: &[f64; 3]| -> f64 {
+        shape
+            .iter()
+            .zip(&drawn)
+            .map(|(a, b)| (a - b) * (a - b))
+            .sum()
+    };
+    let nearest = COROLLA_SHAPES
+        .iter()
+        .map(|(_, shape)| distance(shape))
+        .fold(f64::INFINITY, f64::min);
+    COROLLA_SHAPES
+        .iter()
+        .filter(|(_, shape)| distance(shape) <= nearest + 1e-12)
+        .map(|(name, _)| *name)
+        .collect::<Vec<_>>()
+        .join("|")
 }
 
 /// A head's florets and phyllaries, as its layout draws them, and its
@@ -1759,7 +2001,9 @@ pub struct Report {
 
 /// A kind character judged against what the plants draw: a pass when
 /// every state drawn is one the species states (plainly, or qualified,
-/// however rarely), an error otherwise.
+/// however rarely), an error otherwise. A state drawn that could be any
+/// of several, as an ellipsoid fruit could be a berry or a drupe, is
+/// their names joined by `|`, and passes when the species states one.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Agreement {
     pub character: &'static str,
@@ -1888,9 +2132,14 @@ pub fn judge_plants(
                 .flatten()
                 .cloned()
                 .collect();
+            // A drawn state may be any of several (`berry|drupe`), where
+            // the drawing does not tell them apart.
             let verdict = if drawn.is_empty() {
                 Verdict::NotGrown
-            } else if drawn.iter().all(|state| stated.contains(state)) {
+            } else if drawn
+                .iter()
+                .all(|state| state.split('|').any(|one| stated.iter().any(|s| s == one)))
+            {
                 Verdict::Pass
             } else {
                 Verdict::Error
@@ -2084,6 +2333,156 @@ mod tests {
         ]
         .map(|shape| division_order(&shape));
         assert_eq!(orders, [1, 2, 1, 2, 1]);
+    }
+
+    #[test]
+    fn a_flower_draws_its_symmetry_corolla_cup_and_turn() {
+        use crate::looks::{Corolla, Flower, Perianth};
+        let kinds = |flower: &Flower| {
+            let mut tally = Tally::default();
+            flower_parts(flower, 0.02, (1, 0), &mut tally);
+            let (_, kinds) = tally.measures();
+            [
+                "flower_symmetry",
+                "corolla_shape",
+                "hypanthium",
+                "resupinate",
+            ]
+            .map(|character| {
+                kinds
+                    .get(character)
+                    .map(|states| states.iter().cloned().collect::<Vec<_>>().join(","))
+                    .unwrap_or_default()
+            })
+        };
+        assert_eq!(
+            kinds(&Flower::default()),
+            ["actinomorphic", "rotate|cupped", "false", "false"]
+        );
+        let rose = Flower {
+            tube: 0.4,
+            ..Flower::default()
+        };
+        assert_eq!(kinds(&rose)[2], "true");
+        let huckleberry = Flower {
+            fused: 0.85,
+            throat: 0.1,
+            belly: 0.25,
+            ..Flower::default()
+        };
+        assert_eq!(kinds(&huckleberry)[1], "urceolate");
+        // Usually a bell, sometimes a funnel: drawn between them, nearer
+        // the bell.
+        let harebell = Flower {
+            fused: 0.5,
+            throat: 0.43,
+            ..Flower::default()
+        };
+        assert_eq!(kinds(&harebell)[1], "campanulate");
+        let orchid = Flower {
+            perianth: Perianth::Tepals,
+            petals: 6,
+            corolla: Corolla::Labellate,
+            turn: 180.0,
+            ..Flower::default()
+        };
+        assert_eq!(
+            kinds(&orchid),
+            ["zygomorphic", "rotate|cupped", "false", "true"]
+        );
+        let water_lily = Flower {
+            perianth: Perianth::Spiral,
+            petals: 24,
+            ..Flower::default()
+        };
+        assert_eq!(kinds(&water_lily)[1], "");
+    }
+
+    #[test]
+    fn a_leaf_is_a_blade_needle_or_scale_in_one_piece_or_leaflets() {
+        use crate::looks::{Compound, Frond, Needles, Scales, Simple};
+        let yarrow = Compound {
+            confluent: Some(0.75),
+            ..Compound::default()
+        };
+        let kinds = [
+            Shape::Simple(Simple::default()),
+            Shape::Compound(Compound::default()),
+            Shape::Compound(yarrow),
+            Shape::Frond(Frond::default()),
+            Shape::Needles(Needles::default()),
+            Shape::Scales(Scales::default()),
+        ]
+        .map(|shape| {
+            let mut tally = Tally::default();
+            leaf_kinds(&shape, &mut tally);
+            let (_, kinds) = tally.measures();
+            let one = |character: &str| kinds[character].iter().next().cloned().unwrap();
+            format!("{} {}", one("leaf_form"), one("leaf_division"))
+        });
+        assert_eq!(
+            kinds,
+            [
+                "blade simple",
+                "blade compound",
+                "blade simple",
+                "blade compound",
+                "needle simple",
+                "scale simple",
+            ]
+        );
+    }
+
+    #[test]
+    fn a_cone_is_pitched_from_its_shoot_toward_the_ground() {
+        use crate::graph::GraphSegment;
+        let shoot = GraphSegment {
+            id: 1,
+            parent: None,
+            lateral: true,
+            order: 1,
+            start: Vec3::ZERO,
+            end: Vec3::X,
+            radius: 0.01,
+            born: 1.0,
+            shed: None,
+            body: 0,
+            left: Vec3::ZERO,
+            within: None,
+        };
+        let cone = |heading: Vec3| GraphOrgan {
+            id: 2,
+            organ: 0,
+            segment: Some(0),
+            position: Vec3::X,
+            heading,
+            left: Vec3::Z,
+            size: 0.1,
+            born: 1.0,
+            shed: None,
+            light: 1.0,
+            within: None,
+            adult: None,
+        };
+        let mut graph = PlantGraph {
+            age: 1.0,
+            height: 1.0,
+            segments: vec![shoot],
+            organs: Vec::new(),
+            structures: Vec::new(),
+        };
+        let pitch = |graph: &PlantGraph, heading: Vec3| {
+            pitch_from_shoot(&cone(heading.normalize_or(Vec3::Y)), graph).unwrap()
+        };
+        // On a level shoot: a fir's cone stands up, a spruce's hangs.
+        assert!((pitch(&graph, Vec3::Y) + 90.0).abs() < 1e-9);
+        assert!((pitch(&graph, Vec3::new(1.0, -1.0, 0.0)) - 45.0).abs() < 1e-9);
+        assert!((pitch(&graph, Vec3::new(-0.5, -1.0, 0.0)) - 116.565).abs() < 1e-3);
+        // Rolled off the vertical plane, it is pitched by its share in it.
+        assert!((pitch(&graph, Vec3::new(0.0, -1.0, 1.0)) - 90.0).abs() < 1e-9);
+        // A vertical shoot has no side down.
+        graph.segments[0].end = Vec3::Y;
+        assert!(pitch_from_shoot(&cone(Vec3::X), &graph).is_none());
     }
 
     #[test]
