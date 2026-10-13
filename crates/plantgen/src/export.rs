@@ -1839,6 +1839,7 @@ mod tests {
     fn a_bent_cards_grid_shares_its_corners() {
         use crate::bend::{self, Bend};
         let card = Card {
+            segment: crate::mesh::NO_SEGMENT,
             base: [0.0, 1.0, 0.0],
             heading: [0.0, 1.0, 0.0],
             left: [1.0, 0.0, 0.0],

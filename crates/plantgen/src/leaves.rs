@@ -285,7 +285,9 @@ pub fn build(
             shed: organ.shed,
         };
         let (stations, across) = detail_of(detail, leaf.length, leaf.width);
+        let first = mesh.positions.len();
         leaf.draw(solid, stations, across, mesh);
+        mesh.bear(first, organ.segment.unwrap_or(crate::mesh::GROUNDED));
     }
 }
 
@@ -322,6 +324,7 @@ impl Leaf {
             born: self.born,
             shed: self.shed,
             level: 3,
+            segment: crate::mesh::NO_SEGMENT,
         }
     }
 

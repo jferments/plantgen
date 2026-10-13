@@ -270,9 +270,12 @@ Usage:
       or with `--looks litter` the 23 canopy species' litters: each look's
       colour above its relief.
   plantc build <species|spec.json> [--out DIR] [--quality draft|standard]
-               [--threads N]
+               [--threads N] [--profile static|motion]
       Build a .afterplant package in DIR (default `plants`) and print its
-      key. A package that is already built is not built again.
+      key. A package that is already built is not built again. With
+      --profile motion it also holds each keyframe's bones and branches
+      and each level's binding to them (plant motion S2), under a key of
+      its own; the static package is unchanged.
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
   plantc export <species|spec.json|package.afterplant> [--out DIR]
@@ -2667,7 +2670,10 @@ fn templates_of(
 }
 
 fn build_command(args: &[String]) -> Result<(), Failure> {
-    let options = Options::parse(args, &["out", "quality", "threads", "program", "day"])?;
+    let options = Options::parse(
+        args,
+        &["out", "quality", "threads", "program", "day", "profile"],
+    )?;
     let spec = load_spec(options.one_positional("a species")?)?;
     let out = PathBuf::from(options.flags.get("out").map_or("plants", String::as_str));
     build_package(&spec, &options, &out)?;
@@ -2690,6 +2696,24 @@ fn build_package(spec: &PlantSpec, options: &Options, out: &Path) -> Result<Path
         None => Inputs::on_day_in(spec, library(), &quality, day),
     }
     .map_err(|error| error.to_string())?;
+    let inputs = match options.flags.get("profile").map(String::as_str) {
+        None | Some("static") => inputs,
+        Some("motion") => {
+            let traits = library()
+                .traits_of(&spec.id)
+                .map_err(|error| error.to_string())?;
+            let motion = plantgen::motion::Motion::of(&traits);
+            if motion.assumed.len() > 1 {
+                out!(
+                    "{} does not state {}: generic values stand in",
+                    spec.id,
+                    motion.assumed[..motion.assumed.len() - 1].join(", ")
+                );
+            }
+            inputs.with_motion(motion)
+        }
+        Some(other) => return Err(format!("--profile is static or motion, not `{other}`").into()),
+    };
     if let Some(path) = package::existing(out, &spec.id, &inputs.key) {
         out!(
             "{} is already built:\n  key {}\n  {}",

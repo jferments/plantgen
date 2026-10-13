@@ -59,6 +59,7 @@ pub mod math;
 pub mod mechanics;
 pub mod mesh;
 pub mod meshopt;
+pub mod motion;
 pub mod niche;
 pub mod occlusion;
 pub mod organs;

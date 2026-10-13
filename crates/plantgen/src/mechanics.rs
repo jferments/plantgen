@@ -66,10 +66,10 @@
 //! stands in for one.
 //!
 //! What is not modelled yet: segments drawn as fleshy bodies (cacti) or
-//! within structures (fronds, grass blades) are carried as mass by the
-//! wood that bears them, not bent; flowers, fruit and cones weigh nothing;
-//! roots and the soil are a clamp at the foot; and nothing here is drawn
-//! or packaged.
+//! within structures (fronds, grass blades) bend as beams of the wood's
+//! material, a stand-in until their tissues are stated; flowers, fruit and
+//! cones weigh nothing; and roots and the soil are a clamp at the foot.
+//! [`crate::motion`] packages what is here.
 
 use std::collections::BTreeMap;
 
@@ -265,7 +265,8 @@ pub struct Beams {
     pub unborne: usize,
     /// Flowers, fruit and cones, which weigh nothing yet.
     pub unweighed: usize,
-    /// Graph segments that are not beams (bodies, structures).
+    /// Beams that are not wood (fleshy bodies, axes within structures),
+    /// bent with the wood's material until their own tissue is stated.
     pub carried: usize,
 }
 
@@ -294,25 +295,14 @@ impl Beams {
         let segments = &graph.segments;
         let n = segments.len();
         let end_radii = graph.end_radii();
-        // The nearest wood segment at or below each segment, following
-        // parents (a segment's parent comes before it in the graph).
-        let mut wood_at: Vec<Option<u32>> = vec![None; n];
-        for (index, segment) in segments.iter().enumerate() {
-            wood_at[index] = if is_wood(segment) {
-                u32::try_from(index).ok()
-            } else {
-                segment
-                    .parent
-                    .and_then(|parent| wood_at.get(parent as usize).copied().flatten())
-            };
-        }
-        // Children of each wood segment among the wood, in graph order.
+        // Every segment is a beam, a cactus's body and a fern's frond as
+        // well as wood, so every plant has bones; a segment's parent comes
+        // before it in the graph.
+        let wood_at: Vec<Option<u32>> = (0..n).map(|index| u32::try_from(index).ok()).collect();
+        // Children of each segment, in graph order.
         let mut children: Vec<Vec<u32>> = vec![Vec::new(); n];
         let mut roots = Vec::new();
         for (index, segment) in segments.iter().enumerate() {
-            if !is_wood(segment) {
-                continue;
-            }
             let below = segment
                 .parent
                 .and_then(|parent| wood_at.get(parent as usize).copied().flatten());
@@ -392,20 +382,7 @@ impl Beams {
                 beams.beyond[parent as usize] += 1 + beams.beyond[beam];
             }
         }
-        // What is carried: segments that are not wood weigh as wood at the
-        // end of the wood bearing them; leaves as their area.
-        for (index, segment) in segments.iter().enumerate() {
-            if is_wood(segment) {
-                continue;
-            }
-            let r0 = segment.radius.max(0.0);
-            let r1 = end_radii.get(index).copied().unwrap_or(r0).max(0.0);
-            let wood = material.wood_density * frustum(segment.end.distance(segment.start), r0, r1);
-            match wood_at[index].and_then(|at| beams.beam_of[at as usize]) {
-                Some(beam) => beams.mass[beam as usize] += wood,
-                None => beams.grounded += wood,
-            }
-        }
+        // Leaves weigh as their area.
         for organ in &graph.organs {
             let Some(kind) = types.get(usize::from(organ.organ)) else {
                 continue;
