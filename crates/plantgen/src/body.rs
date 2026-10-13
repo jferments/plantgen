@@ -1843,6 +1843,7 @@ impl Body<'_> {
             surface.swell = f64::from(spines::reach(look).out) * cover;
         }
 
+        let first = out.wood.positions.len();
         self.mesh(
             &surface,
             sides,
@@ -1850,11 +1851,21 @@ impl Body<'_> {
             (tint, if tinted { cover } else { 0.0 }),
             out,
         );
-
         if detail.spines != Spines::Tint {
             self.spines(&surface, &sites, out);
         }
+        // A body and its spines move with its first segment.
+        out.wood.bear(first, self.bearer());
         sites.len()
+    }
+
+    /// The graph segment its vertices and cards are borne by: its first.
+    fn bearer(&self) -> u32 {
+        self.axis
+            .segments
+            .first()
+            .and_then(|&segment| u32::try_from(segment).ok())
+            .unwrap_or(crate::mesh::NO_SEGMENT)
     }
 
     /// The surface as a grid of rings, `sides` vertices round each.
@@ -1914,6 +1925,7 @@ impl Body<'_> {
                     born: station.born,
                     shed: station.shed,
                     level: 0,
+                    segment: crate::mesh::NO_SEGMENT,
                 });
             }
             if let Some(below) = previous {
@@ -2006,6 +2018,7 @@ impl Body<'_> {
                 born: tuft.born,
                 shed: tuft.shed,
                 bend: crate::bend::Bend::FLAT,
+                segment: self.bearer(),
             });
             // Fans stand along the axis and across it in turn, so the
             // outline bristles from every side.
@@ -2021,6 +2034,7 @@ impl Body<'_> {
                 born: tuft.born,
                 shed: tuft.shed,
                 bend: crate::bend::Bend::FLAT,
+                segment: self.bearer(),
             });
         }
     }

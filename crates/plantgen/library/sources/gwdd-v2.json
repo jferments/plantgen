@@ -1,0 +1,10 @@
+{
+  "id": "gwdd-v2",
+  "title": "Global Wood Density Database v.2 (GWDD v.2), release 2.2: wood density aggregated by species and genus",
+  "authors": "Fischer, F. J., Chave, J., Zanne, A., Jucker, T., Fajardo, A. and others (Fischer et al. 2026, New Phytologist, doi:10.1111/nph.70860)",
+  "year": 2026,
+  "url": "https://doi.org/10.5281/zenodo.16919509",
+  "licence": "CC BY 4.0",
+  "tier": 1,
+  "kind": "dataset"
+}

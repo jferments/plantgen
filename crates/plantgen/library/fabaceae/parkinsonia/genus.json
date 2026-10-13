@@ -3,10 +3,16 @@
   "rank": "genus",
   "name": "Parkinsonia",
   "traits": {
+    "wood_density_basic_kg_m3": 600,
     "flower_symmetry": "zygomorphic",
     "zygomorphy": "other"
   },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {
+      "evidence": "SourceInferred",
+      "source": "gwdd-v2",
+      "note": "GWDD v.2.2 genus aggregate for Parkinsonia (gwddagg_v2.2_genus.csv, read): specific gravity 0.6 (wsg_est, the hierarchical-model genus mean, from 18 records in 11 sources); trunks 0.6, branches 0.58. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "jepson-eflora",

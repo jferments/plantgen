@@ -124,6 +124,7 @@ fn run() -> Result<(), Failure> {
         "lineup" => lineup_command(&args),
         "atlas" => atlas_command(&args),
         "measure" => measure_command(&args),
+        "mechanics" => mechanics_command(&args),
         "validate" => validate_command(&args),
         "ground" => ground_command(&args),
         "build" => build_command(&args),
@@ -217,6 +218,23 @@ Usage:
                 [--view side|three-quarter|top] [--size PIXELS]
       Render a row per species of its first N seeds (default 4) at one
       age (default its oldest keyframe), each row at one scale.
+  plantc mechanics <species|spec.json> [--env ENV] [--seed N] [--years N]
+                   [--bones N] [--piece M] [--frequencies fast|exact]
+                   [--modulus MPA] [--moisture SHARE]
+                   [--leaf-mass KG_M2] [--rows N]
+      Grow a woody species to its oldest keyframe, or N years, and print
+      it as a structure of beams (plant motion S1, S2): its material,
+      mass, sag under its own weight, lowest vibration modes, the
+      branches a host can prune and its heaviest bones (default 512 in
+      all, each at most M metres long, default 2; N rows shown, default
+      12) with their bend limits. Bone frequencies are by Rayleigh's
+      quotient (fast) or subspace iteration (exact, slow). A species
+      that does not state its green stiffness or moisture stops it, unless
+      given; unstated leaf mass leaves the leaves unweighed. --modulus
+      (green modulus of elasticity in static bending, as the Wood Handbook
+      gives it), --moisture (green water over dry mass) and --leaf-mass
+      (fresh leaf mass per area) fill only unstated ones, and the output
+      marks them as given, not the species'.
   plantc measure [<species|spec.json>...] [--generator PROGRAM] [--env ENV]
                  [--seed N] [--years N]
       Grow each species (default every one in the library; --generator
@@ -252,9 +270,12 @@ Usage:
       or with `--looks litter` the 23 canopy species' litters: each look's
       colour above its relief.
   plantc build <species|spec.json> [--out DIR] [--quality draft|standard]
-               [--threads N]
+               [--threads N] [--profile static|motion]
       Build a .afterplant package in DIR (default `plants`) and print its
-      key. A package that is already built is not built again.
+      key. A package that is already built is not built again. With
+      --profile motion it also holds each keyframe's bones and branches
+      and each level's binding to them (plant motion S2), under a key of
+      its own; the static package is unchanged.
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
   plantc export <species|spec.json|package.afterplant> [--out DIR]
@@ -1381,6 +1402,181 @@ fn measure_command(args: &[String]) -> Result<(), Failure> {
     Ok(())
 }
 
+/// `plantc mechanics`: a grown plant as beams and bones (plant motion S1).
+#[allow(clippy::too_many_lines)]
+fn mechanics_command(args: &[String]) -> Result<(), Failure> {
+    use plantgen::mechanics::{self, Material, Settings};
+    let options = Options::parse(
+        args,
+        &[
+            "env",
+            "seed",
+            "years",
+            "bones",
+            "piece",
+            "frequencies",
+            "modulus",
+            "moisture",
+            "leaf-mass",
+            "rows",
+        ],
+    )?;
+    let [id] = options.positional.as_slice() else {
+        return Err("`plantc mechanics` takes one species".into());
+    };
+    let spec = load_spec(id)?;
+    let mut traits = library()
+        .traits_of(&spec.id)
+        .map_err(|error| error.to_string())?;
+    // Fill only what the species leaves unstated, and say so.
+    let mut given = Vec::new();
+    for (flag, key) in [
+        ("modulus", "wood_modulus_green_mpa"),
+        ("moisture", "wood_moisture_green_share"),
+        ("leaf-mass", "leaf_mass_fresh_kg_m2"),
+    ] {
+        if let Some(value) = options.number::<f64>(flag)? {
+            if traits.contains_key(key) {
+                out!("--{flag} ignored: {} states {key}", spec.id);
+            } else {
+                traits.insert(key.to_string(), value.into());
+                given.push(key);
+            }
+        }
+    }
+    let material = Material::of(&traits).map_err(|missing| {
+        format!(
+            "{} does not state {}; give --modulus or --moisture to explore",
+            spec.id,
+            missing.join(", ")
+        )
+    })?;
+    material.validate()?;
+    let environment = options.environment(&spec)?;
+    let seed = options.number("seed")?.unwrap_or(spec.variants.seeds[0]);
+    let years = options.number("years")?.unwrap_or(spec.growth.years);
+    let growth = grow_variant(&spec, None, environment, seed, vec![years], years)?;
+    let Some(graph) = growth.keyframes.last() else {
+        return Err(format!("{} grew nothing", spec.id).into());
+    };
+    let exact = match options.flags.get("frequencies").map(String::as_str) {
+        None | Some("fast") => false,
+        Some("exact") => true,
+        Some(other) => {
+            return Err(format!("--frequencies is fast or exact, not `{other}`").into());
+        }
+    };
+    let settings = Settings {
+        bones: options
+            .number("bones")?
+            .unwrap_or(Settings::default().bones),
+        piece: options
+            .number("piece")?
+            .unwrap_or(Settings::default().piece),
+        exact,
+        ..Settings::default()
+    };
+    let started = Instant::now();
+    let found = mechanics::mechanics(graph, &growth.organ_types, &material, &settings);
+    let took = started.elapsed();
+    let mark = |key: &str| if given.contains(&key) { " (given)" } else { "" };
+    out!(
+        "{} ({}), seed {seed}, {:.0} years, {:.1} m",
+        spec.taxon.common_name,
+        spec.id,
+        graph.age,
+        graph.height
+    );
+    out!(
+        "wood {:.0} kg/m3 green{}, modulus {:.0} MPa{} along the grain, rupture {}, leaves {}{}",
+        material.wood_density,
+        mark("wood_moisture_green_share"),
+        material.modulus / 1.0e6,
+        mark("wood_modulus_green_mpa"),
+        material.rupture.map_or_else(
+            || "unstated".to_string(),
+            |pa| format!("{:.0} MPa", pa / 1.0e6)
+        ),
+        material.leaf_mass.map_or_else(
+            || "unstated (not weighed)".to_string(),
+            |mass| format!("{mass:.3} kg/m2")
+        ),
+        mark("leaf_mass_fresh_kg_m2"),
+    );
+    let beams = &found.beams;
+    out!(
+        "{} beams, {} carried segments, {} axes, {} bones, {} branches; {:.1} kg, of which leaves {:.2} kg; {} organs unweighed",
+        beams.len(),
+        beams.carried,
+        found.axes,
+        found.bones.len(),
+        found.branches.len(),
+        found.mass(),
+        found.leaf_mass(),
+        beams.unweighed
+    );
+    out!(
+        "own weight once more moves an end up to {:.1} mm",
+        found.sag() * 1000.0
+    );
+    let modes: Vec<String> = found
+        .modes
+        .iter()
+        .map(|mode| format!("{:.3}", mode.frequency))
+        .collect();
+    out!("lowest modes, Hz: {}", modes.join(" "));
+    out!("solved in {:.1} ms", took.as_secs_f64() * 1000.0);
+    let rows = options.number::<usize>("rows")?.unwrap_or(12);
+    let mut order: Vec<usize> = (0..found.bones.len()).collect();
+    order.sort_by(|&a, &b| {
+        found.bones[b]
+            .mass_beyond
+            .total_cmp(&found.bones[a].mass_beyond)
+            .then(a.cmp(&b))
+    });
+    out!(
+        "{:>5} {:>6} {:>5} {:>6} {:>7} {:>6} {:>9} {:>7} {:>7} {:>9} {:>6} {:>6}",
+        "bone",
+        "parent",
+        "depth",
+        "length",
+        "foot cm",
+        "kg",
+        "beyond kg",
+        "f1 Hz",
+        "f2 Hz",
+        "moment Nm",
+        "break",
+        "bend°"
+    );
+    for &at in order.iter().take(rows) {
+        let bone = &found.bones[at];
+        out!(
+            "{:>5} {:>6} {:>5} {:>6.2} {:>7.1} {:>6.2} {:>9.2} {:>7.3} {:>7.3} {:>9.1} {:>6} {:>6}",
+            at,
+            bone.parent
+                .map_or_else(|| "-".to_string(), |p| p.to_string()),
+            bone.depth,
+            bone.length,
+            bone.radius[0] * 200.0,
+            bone.mass,
+            bone.mass_beyond,
+            bone.frequencies[0],
+            bone.frequencies[1],
+            bone.weight_moment,
+            bone.breaking_moment.map_or_else(
+                || "-".to_string(),
+                |breaking| format!("{:.0}%", 100.0 * bone.weight_moment / breaking)
+            ),
+            bone.bend_limit.map_or_else(
+                || "-".to_string(),
+                |limit| format!("{:.0}", limit.to_degrees())
+            )
+        );
+    }
+    Ok(())
+}
+
 /// `plantc validate`: stated sizes, counts and kinds against grown plants
 /// (spec rework M8B and M8A).
 #[allow(clippy::too_many_lines)]
@@ -2474,7 +2670,10 @@ fn templates_of(
 }
 
 fn build_command(args: &[String]) -> Result<(), Failure> {
-    let options = Options::parse(args, &["out", "quality", "threads", "program", "day"])?;
+    let options = Options::parse(
+        args,
+        &["out", "quality", "threads", "program", "day", "profile"],
+    )?;
     let spec = load_spec(options.one_positional("a species")?)?;
     let out = PathBuf::from(options.flags.get("out").map_or("plants", String::as_str));
     build_package(&spec, &options, &out)?;
@@ -2497,6 +2696,24 @@ fn build_package(spec: &PlantSpec, options: &Options, out: &Path) -> Result<Path
         None => Inputs::on_day_in(spec, library(), &quality, day),
     }
     .map_err(|error| error.to_string())?;
+    let inputs = match options.flags.get("profile").map(String::as_str) {
+        None | Some("static") => inputs,
+        Some("motion") => {
+            let traits = library()
+                .traits_of(&spec.id)
+                .map_err(|error| error.to_string())?;
+            let motion = plantgen::motion::Motion::of(&traits);
+            if motion.assumed.len() > 1 {
+                out!(
+                    "{} does not state {}: generic values stand in",
+                    spec.id,
+                    motion.assumed[..motion.assumed.len() - 1].join(", ")
+                );
+            }
+            inputs.with_motion(motion)
+        }
+        Some(other) => return Err(format!("--profile is static or motion, not `{other}`").into()),
+    };
     if let Some(path) = package::existing(out, &spec.id, &inputs.key) {
         out!(
             "{} is already built:\n  key {}\n  {}",

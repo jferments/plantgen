@@ -349,7 +349,13 @@ pub(crate) fn build_coarse(
     coarse: usize,
     mesh: &mut Mesh,
 ) {
+    // Each organ's vertices are borne by its segment: marked when the
+    // next organ starts, and after the last.
+    let mut drawn: Option<(usize, u32)> = None;
     for organ in &graph.organs {
+        if let Some((first, segment)) = drawn.take() {
+            mesh.bear(first, segment);
+        }
         let index = usize::from(organ.organ);
         let Some(look) = looks.get(index).map(|look| look.of(organ.id)) else {
             continue;
@@ -359,6 +365,7 @@ pub(crate) fn build_coarse(
         }
         let first = mesh.positions.len();
         let first_index = mesh.indices.len();
+        drawn = Some((first, organ.segment.unwrap_or(crate::mesh::GROUNDED)));
         let painted = colour(look, organ);
         let axis = organ.heading.normalize_or(Vec3::Y);
         let side = organ.left.normalize_or(any_perpendicular(axis));
@@ -502,6 +509,9 @@ pub(crate) fn build_coarse(
             _ => continue,
         }
         leaves::smooth_normals(mesh, first, first_index);
+    }
+    if let Some((first, segment)) = drawn {
+        mesh.bear(first, segment);
     }
 }
 

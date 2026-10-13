@@ -3,10 +3,16 @@
   "rank": "genus",
   "name": "Cytisus",
   "traits": {
+    "wood_density_basic_kg_m3": 630,
     "flower_symmetry": "zygomorphic",
     "zygomorphy": "papilionaceous"
   },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {
+      "evidence": "SourceInferred",
+      "source": "gwdd-v2",
+      "note": "GWDD v.2.2 genus aggregate for Cytisus (gwddagg_v2.2_genus.csv, read): specific gravity 0.63 (wsg_est, the hierarchical-model genus mean, from 4 records in 4 sources); trunks 0.63, branches 0.61. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

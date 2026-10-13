@@ -827,8 +827,13 @@ fn same_drawing(plant: &PlantMesh, shades: &[f32], packaged: &PlantMesh) -> bool
         );
     let cards = plant.cards.len() == packaged.cards.len()
         && plant.cards.iter().zip(&packaged.cards).all(|(a, b)| {
-            // A package's cards keep no bend (its atlas records it).
-            Card { bend: b.bend, ..*a } == *b
+            // A package's cards keep no bend (its atlas records it) and
+            // no bearing segment (a motion package's binding does).
+            Card {
+                bend: b.bend,
+                segment: b.segment,
+                ..*a
+            } == *b
         });
     colours
         && cards
@@ -1839,6 +1844,7 @@ mod tests {
     fn a_bent_cards_grid_shares_its_corners() {
         use crate::bend::{self, Bend};
         let card = Card {
+            segment: crate::mesh::NO_SEGMENT,
             base: [0.0, 1.0, 0.0],
             heading: [0.0, 1.0, 0.0],
             left: [1.0, 0.0, 0.0],

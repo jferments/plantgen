@@ -432,6 +432,7 @@ pub fn tuft_mesh_within(tufts: &[Tuft], looks: &[&BodyLook], share: f64) -> Mesh
                 born,
                 shed,
                 level: 0,
+                segment: crate::mesh::NO_SEGMENT,
             });
         }
         for rim in 0..6u32 {
@@ -453,6 +454,7 @@ pub fn tuft_mesh_within(tufts: &[Tuft], looks: &[&BodyLook], share: f64) -> Mesh
                     born,
                     shed,
                     level: 3,
+                    segment: crate::mesh::NO_SEGMENT,
                 });
             }
             for triangle in &triangles {
