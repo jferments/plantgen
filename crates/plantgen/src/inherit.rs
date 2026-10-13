@@ -794,6 +794,16 @@ fn every_look(
                     .and_then(Value::as_str)
                     .is_some_and(|drawn| names.contains(&drawn))
             };
+            // A rule on the fruit card is about fruit (a fruit's kind
+            // from its type): a look with a season shows its fruit in its
+            // own shape, and one with none is a fruit unless it is the
+            // plant's buds. A season's bud and flower looks are no fruit.
+            if names == ["fruit"] {
+                if draws(look) && (look.get("season").is_some() || organ != "bud") {
+                    paths.push(at);
+                }
+                continue;
+            }
             if draws(look) {
                 paths.push(at);
             }
@@ -3596,6 +3606,40 @@ mod tests {
             outcome(&solitary, "appearance.organs.*.inflorescence.kind").as_deref(),
             Some("in its `bloom` look, its map holds nothing for `inflorescence` solitary")
         );
+    }
+
+    /// A rule on the fruit card sets only the looks that show fruit: an
+    /// organ with a season (its own shape is its fruit) or with none that
+    /// is not the plant's buds, and none of a season's stage looks.
+    #[test]
+    fn a_rule_on_the_fruit_card_sets_only_fruit() {
+        let file = "testaceae/family.json";
+        let files = ranks(&[(
+            file,
+            json!({"schema": 1, "rank": "family", "name": "Testaceae",
+                "generator": {"program": "broadleaf"},
+                "rules": {"appearance.organs.*.shape.kind": {
+                    "template": "fruit", "map": {"fruit_type": {"capsule": "capsule"}}}}}),
+        )]);
+        let chain = above(&files, "testaceae", "plain").unwrap();
+        let species = "testaceae/plain/plain-one/spec.json";
+        let own = json!({"id": "plain-one", "traits": {"fruit_type": "capsule"},
+            "appearance": {"organs": {
+                "flower": {"shape": {"template": "fruit"}, "season": {
+                    "bud_look": {"shape": {"template": "fruit"}},
+                    "flower_look": {"shape": {"template": "flower"}}}},
+                "bud": {"shape": {"template": "fruit"}},
+                "fruit": {"shape": {"template": "fruit"}}}}});
+        let grown = inherit(species, &own, &chain, &programs()).unwrap();
+        let looks = &grown.spec["appearance"]["organs"];
+        assert_eq!(looks["flower"]["shape"]["kind"], json!("capsule"));
+        assert_eq!(looks["fruit"]["shape"]["kind"], json!("capsule"));
+        assert!(
+            looks["flower"]["season"]["bud_look"]["shape"]
+                .get("kind")
+                .is_none()
+        );
+        assert!(looks["bud"]["shape"].get("kind").is_none());
     }
 
     /// A rule inside one look's `inflorescence` waits for that look to be
