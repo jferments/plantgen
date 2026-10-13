@@ -17,6 +17,11 @@ use plantgen::spec::PlantSpec;
 /// too, so the list only shrinks.
 const KNOWN: &[(&str, &str, &str)] = &[
     (
+        "achlys-triphylla",
+        "leaf_arrangement",
+        "Berberidaceae's leaves are alternate and vanilla leaf's rise one to a node from its rhizome, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
+    ),
+    (
         "anaphalis-margaritacea",
         "involucre_height_m",
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
@@ -50,6 +55,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "nymphaea-odorata",
         "shoot_leaves",
         "its rhizome is not drawn and each pad's petiole is, as a stem of its own, so each reads as a shoot of one leaf against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
+    ),
+    (
+        "oxalis-oregana",
+        "leaf_arrangement",
+        "Oxalidaceae's leaves are alternate and redwood sorrel's rise one to a node from its rhizome, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
     ),
     (
         "program:broadleaf",

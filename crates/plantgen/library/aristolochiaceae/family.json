@@ -3,6 +3,17 @@
   "rank": "family",
   "name": "Aristolochiaceae",
   "parent": "order/piperales",
+  "traits": {
+    "leaf_division": "simple",
+    "stipules": false,
+    "perianth": "tepals",
+    "flower_merosity": 3,
+    "ovary_position": {
+      "inferior": "usually",
+      "half_inferior": "rarely"
+    },
+    "fruit_type": "capsule"
+  },
   "forms": {
     "forb": {
       "generator": {
@@ -15,6 +26,13 @@
           "note": "The lineage's own program (growth plan G2.3a), on the herb base: it gives the values its species leave unset, which the herb program gave as defaults until then."
         }
       }
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 260 Aristolochiaceae: leaves simple, mostly entire, without stipules; flowers with an often enlarged, petal-like calyx, its limb 3-lobed or one-sided, and no petals; ovary inferior or rarely half inferior; fruit a capsule, rarely not opening. APG's family holds Asarum too, whose calyx is three-lobed in the same way. Hutchinson calls the leaves alternate; Asarum's crowd near the rhizome's tip, often seeming paired, so the arrangement is left to the genera."
     }
   }
 }

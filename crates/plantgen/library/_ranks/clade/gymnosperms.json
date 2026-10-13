@@ -4,13 +4,22 @@
   "name": "gymnosperms",
   "parent": "clade/spermatophyta",
   "traits": {
-    "reproduction": {"cones": "usually", "solitary_seeds": "rarely"}
+    "reproduction": {
+      "cones": "usually",
+      "solitary_seeds": "rarely"
+    },
+    "woodiness": "woody"
   },
   "evidence": {
     "traits.reproduction": {
       "evidence": "SourceInferred",
       "source": "openstax-biology-2e",
       "note": "A gymnosperm's seeds lie bare on the scales of a cone or on modified leaves (Biology 2e, 26.2). Most bear seed cones; a few, such as ginkgo and the yews, bear their seeds singly, the rare state here."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson's conspectus (vol. 1, 2nd ed., 1959): the gymnosperms (cycads, Ginkgo, conifers, Gnetales) are trees and shrubs, with wood; none is a herb."
     }
   }
 }

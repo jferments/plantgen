@@ -12,18 +12,25 @@
     "ovary_position": "superior",
     "stamens": 4,
     "staminodes": 1,
-    "carpels": 2
+    "carpels": 2,
+    "woodiness": "woody",
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "alternate": "rarely"
+    },
+    "stipules": false,
+    "fruit_type": "capsule"
   },
   "forms": {
     "decurrent_tree": {
       "generator": {
-        "program": "broadleaf"
+        "program": "bignoniaceae"
       },
       "evidence": {
         "generator.program": {
           "evidence": "Authored",
           "source": "plantgen-authors",
-          "note": "The program the authors chose to grow this taxon's decurrent tree species (named in each species' spec until G2.3a moved it here)."
+          "note": "The lineage's own program (growth plan G2.3a), on the broadleaf base: it gives the values its species leave unset, which the broadleaf program gave as defaults until then."
         }
       }
     }
@@ -33,6 +40,26 @@
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",
       "note": "Abrams and Ferris's Illustrated Flora of the Pacific States, volume 4 (1960), read in full: corolla campanulate, funnelform or tubular, 5-lobed and commonly two-lipped; anther-bearing stamens 2 or 4 on the corolla tube; ovary mostly 2-celled. Plants of the World Online (as quoted in search results; the page itself was not read): flowers hypogynous, ovary superior; the fifth stamen usually a staminode."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 239 Bignoniaceae: trees or shrubs, sometimes climbing, very rarely herbs; leaves opposite, rarely alternate, mostly compound; stipules absent; fruit a capsule, or fleshy and not opening."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 239 Bignoniaceae: trees or shrubs, sometimes climbing, very rarely herbs; leaves opposite, rarely alternate, mostly compound; stipules absent; fruit a capsule, or fleshy and not opening."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 239 Bignoniaceae: trees or shrubs, sometimes climbing, very rarely herbs; leaves opposite, rarely alternate, mostly compound; stipules absent; fruit a capsule, or fleshy and not opening."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 239 Bignoniaceae: trees or shrubs, sometimes climbing, very rarely herbs; leaves opposite, rarely alternate, mostly compound; stipules absent; fruit a capsule, or fleshy and not opening."
     }
   }
 }

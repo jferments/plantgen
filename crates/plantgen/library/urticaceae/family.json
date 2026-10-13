@@ -6,7 +6,21 @@
   "traits": {
     "perianth": "tepals",
     "ovary_position": "superior",
-    "carpels": 1
+    "carpels": 1,
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "sometimes"
+    },
+    "leaf_division": "simple",
+    "stipules": true,
+    "sexual_system": {
+      "monoecious": "usually",
+      "dioecious": "often"
+    },
+    "fruit_type": {
+      "achene": "usually",
+      "drupe": "sometimes"
+    }
   },
   "forms": {
     "forb": {
@@ -27,6 +41,31 @@
       "evidence": "SourceInferred",
       "source": "kew-powo",
       "note": "Accounts of the family by Michigan State's and Hamburg's Botany Online, FloraBase and Plants of the World Online, as search results quote them (the pages themselves were not read): minute unisexual flowers in cymose clusters; mostly 4 or 5 undifferentiated tepals, sometimes none; stamens as many as and opposite the tepals, their filaments inflexed in bud and springing out to shed pollen; ovary superior, 1-locular with one basal ovule, ostensibly of one carpel."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 71 Urticaceae: herbs, undershrubs or rarely soft-wooded trees, often with stinging hairs; leaves alternate or opposite, simple; stipules present, very rarely absent; flowers very small and of one sex; fruit a dry achene or a fleshy drupe."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 71 Urticaceae: herbs, undershrubs or rarely soft-wooded trees, often with stinging hairs; leaves alternate or opposite, simple; stipules present, very rarely absent; flowers very small and of one sex; fruit a dry achene or a fleshy drupe."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 71 Urticaceae: herbs, undershrubs or rarely soft-wooded trees, often with stinging hairs; leaves alternate or opposite, simple; stipules present, very rarely absent; flowers very small and of one sex; fruit a dry achene or a fleshy drupe."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 71 Urticaceae: herbs, undershrubs or rarely soft-wooded trees, often with stinging hairs; leaves alternate or opposite, simple; stipules present, very rarely absent; flowers very small and of one sex; fruit a dry achene or a fleshy drupe."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 71 Urticaceae: herbs, undershrubs or rarely soft-wooded trees, often with stinging hairs; leaves alternate or opposite, simple; stipules present, very rarely absent; flowers very small and of one sex; fruit a dry achene or a fleshy drupe."
     }
   }
 }

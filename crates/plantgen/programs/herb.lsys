@@ -46,9 +46,18 @@
 # `urticaceae`, `violaceae`) give the values their species leave unset, as
 # this program's defaults were until then.
 #
+# Revision 7 (growth plan G2.3a): an adult cohort's stems need not all
+# flower. Only the share flowering_share of them end in a raceme, spread
+# evenly round the clump; the rest are leafy stems as tall as a flowering
+# stem's leafy part, so a herb whose leaves and flowers rise on separate
+# stalks (vanilla leaf, redwood sorrel) draws as many leaves as it has and
+# no more flowers. With scape 1 a flowering stem is a leafless scape: a
+# bare stalk below its raceme. With flowering_share 1 and scape 0, as its
+# lineages give them, a herb grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem herb 6;
+lsystem herb 7;
 
 # The clump.
 param stems;                  # stems in a mature clump
@@ -85,6 +94,8 @@ param basal_area;             # leaf area of a basal leaf, or of its last piece,
 param basal_piece_area;
 # The raceme.
 param raceme;                 # share of the stem's height that flowers
+param flowering_share;        # share of an adult cohort's stems that end in a raceme; the rest bear leaves only
+param scape;                  # 1: a flowering stem is a leafless scape, its raceme on a bare stalk
 param flowers;                # flowers, fruit and buds on a raceme
 param flower_size;            # flower diameter
 param pedicel;                # flower stalk length
@@ -140,8 +151,9 @@ decompose Ss(k, m, n) : m == 1 ->
       &(stem_lean * sqrt((k + 0.5) / n) + uniform(0, 3))
       Bs(basal_leaves)
       St(stem_height * (1 - exp(-t / maturity)) * uniform(1 - height_spread, 1 + height_spread)
-         * (t >= adult_age ? 1 : young_height),
-         t >= adult_age ? raceme : 0) ];
+         * (t < adult_age ? young_height
+            : floor((k + 1) * flowering_share) > floor(k * flowering_share) ? 1 : 1 - raceme),
+         t >= adult_age && floor((k + 1) * flowering_share) > floor(k * flowering_share) ? raceme : 0) ];
 decompose Ss(k, m, n) -> ;
 
 # Basal leaves, spread round the stem's foot.
@@ -160,11 +172,11 @@ decompose Pc(k, s, a) -> basal(s);
 # height. Nodes split in halves so a long stem stays within the
 # decomposition depth.
 decompose St(h, r) : arch > 0 ->
-    T(0, -1, 0, arch) !(stem_radius) F(h * (1 - r) * bare)
-    Nd(0, nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
+    T(0, -1, 0, arch) !(stem_radius) F(h * (1 - r) * (r > 0 && scape > 0 ? 1 : bare))
+    Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
 decompose St(h, r) ->
-    !(stem_radius) F(h * (1 - r) * bare)
-    Nd(0, nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
+    !(stem_radius) F(h * (1 - r) * (r > 0 && scape > 0 ? 1 : bare))
+    Nd(0, r > 0 && scape > 0 ? 0 : nodes, h, r) Rc(0, r > 0 ? flowers : 0, h, r);
 decompose Nd(i, m, h, r) : m > 1 ->
     Nd(i, floor(m / 2), h, r) Nd(i + floor(m / 2), m - floor(m / 2), h, r);
 # One node: an internode, then its leaves, sized by where the node sits

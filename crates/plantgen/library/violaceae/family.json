@@ -3,6 +3,32 @@
   "rank": "family",
   "name": "Violaceae",
   "parent": "order/malpighiales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_division": "simple",
+    "stipules": true,
+    "flower_merosity": 5,
+    "flower_symmetry": {
+      "zygomorphic": "usually",
+      "actinomorphic": "sometimes"
+    },
+    "zygomorphy": "other",
+    "perianth": "sepals_and_petals",
+    "stamens": 5,
+    "carpels": {
+      "min": 3,
+      "max": 5,
+      "typical": 3
+    },
+    "ovary_position": "superior",
+    "fruit_type": {
+      "capsule": "usually",
+      "berry": "rarely"
+    }
+  },
   "forms": {
     "forb": {
       "generator": {
@@ -15,6 +41,13 @@
           "note": "The lineage's own program (growth plan G2.3a), on the herb base: it gives the values its species leave unset, which the herb program gave as defaults until then."
         }
       }
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 99 Violaceae: leaves alternate, rarely opposite, simple; stipules leafy or small; flowers regular or irregular, the lowest petal often larger and spurred; sepals 5; petals 5; stamens 5, ringed round the ovary; ovary free (superior), with 3 to 5 placentas; fruit a capsule that splits elastically, or a berry. The irregular flower is none of the named kinds (pea, two-lipped, orchid lip): zygomorphy other."
     }
   }
 }

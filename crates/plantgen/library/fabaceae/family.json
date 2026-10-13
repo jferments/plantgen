@@ -8,18 +8,23 @@
     "perianth": "sepals_and_petals",
     "ovary_position": "superior",
     "stamens": 10,
-    "carpels": 1
+    "carpels": 1,
+    "leaf_division": {
+      "compound": "usually",
+      "simple": "rarely"
+    },
+    "fruit_type": "legume"
   },
   "forms": {
     "decurrent_tree": {
       "generator": {
-        "program": "broadleaf"
+        "program": "fabales"
       },
       "evidence": {
         "generator.program": {
           "evidence": "Authored",
           "source": "plantgen-authors",
-          "note": "The program the authors chose to grow this taxon's decurrent tree species (named in each species' spec until G2.3a moved it here)."
+          "note": "The order's woody program (growth plan G2.3a), on the broadleaf base: Fabaceae's own program grows its herbs, so its trees and shrubs take the order's, which gives the values its species leave unset, as the broadleaf program's defaults until then."
         }
       }
     },
@@ -37,13 +42,13 @@
     },
     "shrub": {
       "generator": {
-        "program": "broadleaf"
+        "program": "fabales"
       },
       "evidence": {
         "generator.program": {
           "evidence": "Authored",
           "source": "plantgen-authors",
-          "note": "The program the authors chose to grow this taxon's shrub species (named in each species' spec until G2.3a moved it here)."
+          "note": "The order's woody program (growth plan G2.3a), on the broadleaf base: Fabaceae's own program grows its herbs, so its trees and shrubs take the order's, which gives the values its species leave unset, as the broadleaf program's defaults until then."
         }
       }
     }
@@ -53,6 +58,16 @@
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",
       "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full, as Leguminosae: calyx synsepalous, 5-toothed or cleft; corolla of 5 petals, regular or somewhat irregular or commonly papilionaceous (so symmetry is each genus's); stamens 10, monadelphous, diadelphous or distinct (Acacia numerous); pistil 1, superior, 1-celled."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 27 Caesalpiniaceae and 28 Mimosaceae (and his Papilionaceae, whose page this scan does not reach), which APG joins as Fabaceae: leaves pinnate or bipinnate, rarely simple or of one leaflet; fruit a legume or one that does not split."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 27 Caesalpiniaceae and 28 Mimosaceae (and his Papilionaceae, whose page this scan does not reach), which APG joins as Fabaceae: leaves pinnate or bipinnate, rarely simple or of one leaflet; fruit a legume or one that does not split."
     }
   }
 }

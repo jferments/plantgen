@@ -32,9 +32,20 @@
 # year's shoot is broadleaf's growth unit. A maple grows as before but
 # for the draws those rules take, which now stand at broadleaf's sites.
 #
+# Revision 6 (crown form, step B): a maple takes broadleaf 11's posture
+# and bending, and its stem holds itself upright as broadleaf's does, but
+# its lobed envelope still draws its crown (room_width and room_height 1)
+# and its tips gather light in proportion (light_half 0, flux 3, as at
+# revision 5): a dense maple crown that renews its space outgrows the
+# string's module limit in a looser region or with saturating light.
+#
+# Revision 7 (growth plan G2.3a): broadleaf (revision 12) gives no
+# values, so the broadleaf values a maple leaves unset are given here, as
+# broadleaf's defaults were until then. A maple grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem sapindaceae 5 extends broadleaf;
+lsystem sapindaceae 7 extends broadleaf;
 
 param bud_years = 30;
 param crown_widest = 0.45;      # share of the crown's depth where it is widest
@@ -50,6 +61,40 @@ param rise = 0.03;            # upward pull on shoots (negative gravitropism); 0
 param steer_weight = 0.1;     # broadleaf's 0.35 sends a renewing crown's shoots looping after free space
 
 param pipe_exponent = 2.3;     # the pipe model's exponent (broadleaf's 2.3); Leonardo's rule is 2
+
+# The broadleaf values its maples leave unset, the broadleaf program's
+# defaults until growth plan G2.3a made it a base with no values.
+param internode = 0.25;     # length of one internode
+param max_shoot = 3;        # most internodes a bud grows in one year
+param branch_angle = 45;    # angle between a shoot and its lateral buds
+param apical = 0.52;        # and in a mature tree: near 0.5 spreads the crown
+param apical_years = 25;    # years over which apical control relaxes
+param shade_death = 0.06;   # light below which a bud dies
+param leaf_angle = 55;
+param leaf_years = 1;       # years a leaf stays on: more than 1 for evergreens
+param droop = 0.015;
+param thorns = 0;           # 1: a thorn beside each bud
+param thorn_length = 0.02;
+param thorn_angle = 60;     # angle of a thorn to its shoot
+param thorn_area = 0.235;   # leaf area of a thorn card 1 m long, m² (the default leaf card's)
+param wind = 0;             # strength of a steady wind toward +X; 0 none
+param wind_bend = 0.05;     # extra downwind bending per unit of wind
+param wind_kill = 0.3;      # a tip heading upwind beyond this dies
+param life = 0;             # age at which the plant dies; 0 never
+param snag_fall = 0.15;     # chance a year that a dead branch falls
+param extinction = 0.5;
+param light_cell = 0.5;     # light voxel edge; smaller for shrubs
+param path_half = 0;        # wood from the base at which a shoot's nodes are half as long; 0: no limit
+param limb_path = 1;        # how many times a limb's wood counts toward path_half (1: as the stem's)
+param leader_rate = 0.3;    # how far each node of the stem turns back toward upright
+param set_point = 50;       # a limb's held angle from straight up
+param incline_rate = 0.3;   # how far each node of a limb turns toward set_point
+param wood_density = 600;   # kg/m³ of green wood
+param wood_modulus = 10000; # modulus of elasticity, MPa
+param leaf_mass = 0.1;      # kg per m² of leaf
+param bend_set = 0.1;       # share of each year's sag the wood keeps
+param stem_bend = 0;        # share of its sag the stem and a fork's stems take: reaction wood holds them up
+param straighten = 0.3;     # share of its kept bend the wood straightens each year
 tool pipe@1 { exponent = pipe_exponent };
 
 # The crown's height may approach its envelope at its own rate: a maple
@@ -67,9 +112,9 @@ param crown_vary = 0;
 param height_vary = 0;
 param widest_vary = 0;
 tool space@2 {
-    height = crown_height * uniform(1 - height_vary, 1 + height_vary)
+    height = room_height * crown_height * uniform(1 - height_vary, 1 + height_vary)
         * (1 - exp(-(height_rate > 0 ? height_rate : crown_rate) * (t + 3))),
-    radius = crown_radius * uniform(1 - crown_vary, 1 + crown_vary)
+    radius = room_width * crown_radius * uniform(1 - crown_vary, 1 + crown_vary)
         * (1 - exp(-crown_rate * (t + 3))),
     widest = crown_widest + uniform(-widest_vary, widest_vary),
     fullness = crown_fullness,
@@ -94,11 +139,18 @@ param sprout_light = 0.25;
 param dormant_angle = 60;
 param space_renew = 1;
 
+# The lobed envelope draws the crown, and light counts in proportion
+# (revision 6; see above).
+param room_width = 1;
+param room_height = 1;
+param light_half = 0;
+param flux = 3;
+
 # Shoots rise toward the light against their weight when rise > 0, the
 # same pull broadleaf's droop gives downward otherwise, shared by a growth
 # unit's nodes.
 axiom !(0.004) T(wind, rise > 0 ? 1 : -1, 0, (rise > 0 ? rise : droop + wind_bend * wind) / unit_nodes)
-      /(uniform(0, 360)) &(uniform(0, lean)) A(fork_height * uniform(0.7, 1.3));
+      incline(0, leader_rate) /(uniform(0, 360)) &(uniform(0, lean)) A(fork_height * uniform(0.7, 1.3));
 
 # Blooms spread round a short shoot's tip, as broadleaf's, each carrying
 # its own turn.

@@ -17,18 +17,21 @@
       "max": 4,
       "typical": 4
     },
-    "carpels": 2
+    "carpels": 2,
+    "leaf_arrangement": "opposite",
+    "stipules": false,
+    "fruit_type": "capsule"
   },
   "forms": {
     "decurrent_tree": {
       "generator": {
-        "program": "broadleaf"
+        "program": "acanthaceae"
       },
       "evidence": {
         "generator.program": {
           "evidence": "Authored",
           "source": "plantgen-authors",
-          "note": "The program the authors chose to grow this taxon's decurrent tree species (named in each species' spec until G2.3a moved it here)."
+          "note": "The lineage's own program (growth plan G2.3a), on the broadleaf base: it gives the values its species leave unset, which the broadleaf program gave as defaults until then."
         }
       }
     }
@@ -38,6 +41,21 @@
       "evidence": "SourceInferred",
       "source": "ffpa-2014",
       "note": "The Lucid key to the flowering plant families, with FloraBase and the Smithsonian's family text, as search results quote them (the pages themselves were not read): corolla sympetalous, usually 5-merous, mostly zygomorphic and commonly two-lipped; ovary superior on a nectar disc, of 2 fused carpels; stamens 4 (didynamous) or 2, on the corolla tube."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 325 Acanthaceae: herbs or climbers, rarely somewhat shrubby; leaves opposite; stipules absent; fruit a capsule, mostly springing open from the tip. APG adds the black mangroves (Avicennia), which also have opposite leaves and a capsule."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 325 Acanthaceae: herbs or climbers, rarely somewhat shrubby; leaves opposite; stipules absent; fruit a capsule, mostly springing open from the tip. APG adds the black mangroves (Avicennia), which also have opposite leaves and a capsule."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 325 Acanthaceae: herbs or climbers, rarely somewhat shrubby; leaves opposite; stipules absent; fruit a capsule, mostly springing open from the tip. APG adds the black mangroves (Avicennia), which also have opposite leaves and a capsule."
     }
   }
 }

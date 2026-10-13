@@ -12,7 +12,11 @@
     "hypanthium": false,
     "ovary_position": "superior",
     "stamens": 4,
-    "carpels": 2
+    "carpels": 2,
+    "woodiness": "herbaceous",
+    "stipules": false,
+    "leaf_arrangement": "alternate",
+    "fruit_type": "capsule"
   },
   "forms": {
     "forb": {
@@ -33,6 +37,26 @@
       "evidence": "SourceInferred",
       "source": "jepson-eflora",
       "note": "Jepson eFlora's account of the family (Wetherwax), as search results quote it (the page itself was not read): flowers strongly bilateral; corolla of 5 united petals, two-lipped, the upper lip 2-lobed (a beak, the galea, in paintbrushes), the lower 3-lobed; stamens 4, didynamous, on the corolla tube; ovary superior, of 2 carpels."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 327 Orobanchaceae (broomrapes), with the green half-parasites he keeps in Scrophulariaceae (Castilleja, Pedicularis), which APG joins as Orobanchaceae: herbs; leaves or scales alternate; stipules absent; fruit a capsule opening by two valves."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 327 Orobanchaceae (broomrapes), with the green half-parasites he keeps in Scrophulariaceae (Castilleja, Pedicularis), which APG joins as Orobanchaceae: herbs; leaves or scales alternate; stipules absent; fruit a capsule opening by two valves."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 327 Orobanchaceae (broomrapes), with the green half-parasites he keeps in Scrophulariaceae (Castilleja, Pedicularis), which APG joins as Orobanchaceae: herbs; leaves or scales alternate; stipules absent; fruit a capsule opening by two valves."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 327 Orobanchaceae (broomrapes), with the green half-parasites he keeps in Scrophulariaceae (Castilleja, Pedicularis), which APG joins as Orobanchaceae: herbs; leaves or scales alternate; stipules absent; fruit a capsule opening by two valves."
     }
   }
 }
