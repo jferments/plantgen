@@ -23,11 +23,9 @@
       "arch": 12,
       "pieces": 6,
       "flowering": 0.5,
-      "culm_height": 1.2,
       "culm_radius": 0.002,
       "culm_leaves": 4,
       "culm_lean": 6,
-      "panicle_length": 0.25,
       "panicle_nod": 35,
       "blade_area": 0.073,
       "tip_area": 0.04,
@@ -95,6 +93,16 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "culm_length_m": {
+      "min": 1.0,
+      "max": 2.0,
+      "typical": 1.2
+    },
+    "inflorescence_length_m": {
+      "min": 0.15,
+      "max": 0.3,
+      "typical": 0.25
+    },
     "inflorescence": "panicle",
     "florets_per_spikelet": {"min": 3, "max": 4, "high": 6},
     "spikelet_length_m": {"min": 0.003, "max": 0.006},
@@ -105,6 +113,16 @@
     "awns": false
   },
   "evidence": {
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935), as Glyceria elata: culms 1 m to 2 m tall."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935), as Glyceria elata: panicle 15 cm to 30 cm long."
+    },
     "appearance.organs.panicle": {
       "evidence": "Authored",
       "source": "plantgen-authors",

@@ -121,11 +121,20 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_typical_m": {
+      "min": 1.2,
+      "max": 1.8
+    },
     "flower_merosity": 5,
     "flower_symmetry": "zygomorphic",
     "corolla_shape": "campanulate"
   },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Digitalis purpurea: stems 1.2 m to 1.8 m tall."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

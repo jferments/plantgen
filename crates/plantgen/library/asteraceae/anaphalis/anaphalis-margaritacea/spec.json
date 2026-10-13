@@ -88,11 +88,29 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_typical_m": {
+      "min": 0.2,
+      "max": 0.8
+    },
+    "leaf_width_m": {
+      "min": 0.002,
+      "max": 0.02
+    },
     "inflorescence": "corymb",
     "involucre_diameter_m": {"min": 0.006, "max": 0.008, "high": 0.01},
     "involucre_height_m": {"min": 0.005, "max": 0.007}
   },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960), as Anaphalis margaritacea: stems 20 cm to 80 cm tall."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960), as Anaphalis margaritacea: leaves 2 mm to 2 cm wide."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

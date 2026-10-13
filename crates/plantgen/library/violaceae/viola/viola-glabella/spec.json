@@ -97,12 +97,21 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_typical_m": {
+      "min": 0.07,
+      "max": 0.3
+    },
     "flower_merosity": 5,
     "flower_symmetry": "zygomorphic",
     "perianth": "sepals_and_petals",
     "zygomorphy": "other"
   },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Viola glabella: stems 7 cm to 30 cm tall."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
