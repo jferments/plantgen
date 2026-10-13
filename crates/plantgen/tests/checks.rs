@@ -27,9 +27,34 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
     ),
     (
+        "berberis-aquifolium",
+        "flower_merosity",
+        "its six petals stand in two whorls of three, and a corolla draws one whorl, so its spec draws six there",
+    ),
+    (
+        "berberis-nervosa",
+        "flower_merosity",
+        "its six petals stand in two whorls of three, and a corolla draws one whorl, so its spec draws six there",
+    ),
+    (
+        "dicentra-formosa",
+        "flower_merosity",
+        "its four petals stand in two pairs, outer and inner, and a corolla draws one whorl, so its spec draws four there",
+    ),
+    (
+        "encelia-farinosa",
+        "shoot_leaves",
+        "its most vigorous shoots grow one to three of the four internodes a year they may, two nodes each, so they bear 2 to 6 leaves against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
+    ),
+    (
         "lysichiton-americanus",
         "units_per_inflorescence",
         "a cluster draws at most 200 units, so the spadix's 350 to 1350 flowers are drawn as 200",
+    ),
+    (
+        "nymphaea-odorata",
+        "shoot_leaves",
+        "its rhizome is not drawn and each pad's petiole is, as a stem of its own, so each reads as a shoot of one leaf against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
         "oxalis-oregana",
@@ -52,9 +77,24 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "since the Poaceae rule sets blade cards from Hitchcock's widths, the median blade measured sits inside the flora's range, but the narrowest run up to half its least width (smaller blades of young tillers, inferred, not traced)",
     ),
     (
+        "program:grass",
+        "shoot_leaves",
+        "a culm's own leaves are its 1 to 3 culm leaves and a tiller's blades stand at the ground on no stem, against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
+    ),
+    (
         "program:herb",
         "phyllotaxis_pattern",
         "each basal leaf's roll is jittered ±30°, so a fan of two ranks (irises, blue-eyed grass) turns about 140° to 150° from one leaf to the next",
+    ),
+    (
+        "program:herb",
+        "shoot_leaves",
+        "a stem grows all its nodes' leaves in its one year (2 on foamflower's, 36 on Columbia lily's, 45 on fireweed's), against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
+    ),
+    (
+        "program:rosette",
+        "shoot_leaves",
+        "a rosette's crown adds its year's leaves where they stand (29 to 38 on common sotol's), against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
         "program:sapindaceae",
