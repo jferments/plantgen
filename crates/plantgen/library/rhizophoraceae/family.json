@@ -16,7 +16,17 @@
       "min": 8,
       "max": 10
     },
-    "carpels": 2
+    "carpels": 2,
+    "woodiness": "woody",
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "alternate": "rarely"
+    },
+    "leaf_division": "simple",
+    "stipules": {
+      "true": "usually",
+      "false": "rarely"
+    }
   },
   "forms": {
     "decurrent_tree": {
@@ -37,6 +47,26 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz's account of the family, with the Lucid key and FloraBase, as search results quote them (the pages themselves were not read): flowers regular, usually 4-merous or 5-merous; calyx fleshy or leathery, persistent; petals free, often shorter than the sepals; stamens usually twice the petals; ovary half-inferior (superior to inferior across the family), usually 2-locular. A free hypanthium is present in some and absent in others, so none is stated."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 164 Rhizophoraceae: trees or shrubs, often on sea shores, with branches swollen at the nodes; leaves opposite with stipules between the leaf stalks that soon fall, rarely alternate and without stipules; leathery, simple."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 164 Rhizophoraceae: trees or shrubs, often on sea shores, with branches swollen at the nodes; leaves opposite with stipules between the leaf stalks that soon fall, rarely alternate and without stipules; leathery, simple."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 164 Rhizophoraceae: trees or shrubs, often on sea shores, with branches swollen at the nodes; leaves opposite with stipules between the leaf stalks that soon fall, rarely alternate and without stipules; leathery, simple."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 164 Rhizophoraceae: trees or shrubs, often on sea shores, with branches swollen at the nodes; leaves opposite with stipules between the leaf stalks that soon fall, rarely alternate and without stipules; leathery, simple."
     }
   }
 }

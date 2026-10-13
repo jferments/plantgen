@@ -2,5 +2,22 @@
   "schema": 1,
   "rank": "order",
   "name": "Myrtales",
-  "parent": "clade/malvids"
+  "parent": "clade/malvids",
+  "traits": {
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "alternate": "often"
+    },
+    "hypanthium": {
+      "true": "usually",
+      "false": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 162 Myrtaceae, 167 Combretaceae, 168 Melastomataceae, 288 Lythraceae and 289 Onagraceae, the bulk of APG's Myrtales: the sepals joined in a tube (a floral cup) round or on the ovary, the petals and stamens borne at its rim; leaves mostly opposite, alternate in some (Combretaceae, Onagraceae in part)."
+    }
+  }
 }

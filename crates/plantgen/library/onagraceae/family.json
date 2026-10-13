@@ -16,7 +16,21 @@
       "max": 8,
       "typical": 8
     },
-    "carpels": 4
+    "carpels": 4,
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "rarely"
+    },
+    "leaf_division": "simple",
+    "stipules": {
+      "false": "usually",
+      "true": "rarely"
+    },
+    "fruit_type": {
+      "capsule": "usually",
+      "berry": "rarely",
+      "nut": "rarely"
+    }
   },
   "forms": {
     "forb": {
@@ -37,6 +51,26 @@
       "evidence": "SourceInferred",
       "source": "ffpa-2014",
       "note": "The Families of Flowering Plants of Australia's account of the family (with Watson and Dallwitz's DELTA), as search results quote it (the page itself was not read): sepals and petals (2-)4(-7), usually 4; a floral tube prolonged above the ovary except in Ludwigia (and in fireweed, whose petals are free at their base); stamens usually 8, (4-)8; ovary inferior, usually of 4 joined carpels."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 289 Onagraceae: herbs, rarely shrubs; leaves simple, opposite or alternate; stipules mostly absent or falling early; fruit a capsule, berry or nut."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 289 Onagraceae: herbs, rarely shrubs; leaves simple, opposite or alternate; stipules mostly absent or falling early; fruit a capsule, berry or nut."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 289 Onagraceae: herbs, rarely shrubs; leaves simple, opposite or alternate; stipules mostly absent or falling early; fruit a capsule, berry or nut."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 289 Onagraceae: herbs, rarely shrubs; leaves simple, opposite or alternate; stipules mostly absent or falling early; fruit a capsule, berry or nut."
     }
   }
 }
