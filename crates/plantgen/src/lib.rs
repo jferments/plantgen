@@ -231,4 +231,7 @@ pub mod venation;
 /// VARY): one plant is the typical one, three take the middles of the
 /// range's thirds; a part's size, or a parameter a formula works out from
 /// a range, records no spread and keeps its value.
-pub const GENERATOR_REVISION: u32 = 38;
+/// 39: western redcedar keeps its foliage as long as its scale leaves
+/// were measured to live (about nine years), not the three years its
+/// branchlets were once said to last.
+pub const GENERATOR_REVISION: u32 = 39;
