@@ -13,9 +13,6 @@
   "generator": {
     "params": {
       "cone_chance": 0.1,
-      "cone_length": 0.11,
-      "cone_pitch": 90,
-      "cone_years": 2,
       "cone_area": 0.785,
       "height_max": 45,
       "height_rate": 0.022,
@@ -28,7 +25,6 @@
       "max_sag": 40,
       "upturn": 0.03,
       "branch_growth": 0.28,
-      "needle_years": 4,
       "spray_base": 0.25,
       "spray_length": 1.0,
       "shade_death": 0.15,
@@ -69,13 +65,10 @@
       "spray": {
         "shape": {
           "template": "needles",
-          "ranks": 0,
           "twigs": 2,
           "aspect": 0.8,
-          "needle": 0.28,
           "twig_angle": 30,
-          "width": 0.009,
-          "bundle": 3
+          "width": 0.009
         },
         "accent": [0.35, 0.22, 0.12]
       }
@@ -98,9 +91,45 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "juvenile_period_years": {"min": 7, "max": 20}
+    "juvenile_period_years": {"min": 7, "max": 20},
+    "needles_per_fascicle": 3,
+    "leaf_length_m": {"min": 0.12, "max": 0.25},
+    "leaf_life_years": {"min": 3, "max": 4},
+    "cone_length_m": {"min": 0.07, "max": 0.15},
+    "cone_posture": "deflexed",
+    "cone_retention_years": 0
   },
   "evidence": {
+    "traits.leaf_life_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's ponderosa pine review: needles kept three or four years and shed in autumn; Abrams gives about three."
+    },
+    "traits.needles_per_fascicle": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 56): needles in threes (sometimes twos), 12 to 25 cm, in dense tufts at the branch ends, kept about three years; seed cones 7 to 15 cm, short-stalked, set horizontally or bent somewhat down, shedding seed in their second year and soon falling."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 56): needles in threes (sometimes twos), 12 to 25 cm, in dense tufts at the branch ends, kept about three years; seed cones 7 to 15 cm, short-stalked, set horizontally or bent somewhat down, shedding seed in their second year and soon falling."
+    },
+    "traits.cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 56): needles in threes (sometimes twos), 12 to 25 cm, in dense tufts at the branch ends, kept about three years; seed cones 7 to 15 cm, short-stalked, set horizontally or bent somewhat down, shedding seed in their second year and soon falling."
+    },
+    "traits.cone_posture": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 56): needles in threes (sometimes twos), 12 to 25 cm, in dense tufts at the branch ends, kept about three years; seed cones 7 to 15 cm, short-stalked, set horizontally or bent somewhat down, shedding seed in their second year and soon falling."
+    },
+    "traits.cone_retention_years": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 56): needles in threes (sometimes twos), 12 to 25 cm, in dense tufts at the branch ends, kept about three years; seed cones 7 to 15 cm, short-stalked, set horizontally or bent somewhat down, shedding seed in their second year and soon falling."
+    },
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
@@ -109,7 +138,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a large pine with an open, rounded crown, stout branches and long needles in bundles of three, tufted at the twig ends. Not fitted to measurements. Cones (plant forms F3): 8 to 14 cm, spreading to hanging; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles."
+      "note": "Hand-set from general knowledge of the species: a large pine with an open, rounded crown, stout branches and long needles in bundles of three, tufted at the twig ends. Not fitted to measurements. Cones (plant forms F3): 8 to 14 cm, spreading to hanging; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles. Spec rework E6d: `cone_length`, `cone_years`, `cone_pitch`, `needle_years` now set by the rules at Pinidae from the stated characters."
     },
     "allometry": {
       "evidence": "Authored",
@@ -119,7 +148,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: yellow-green needles; orange-brown bark in large plates. Needle shoots (plant roadmap P4): needles in threes, 12 to 25 cm long and about 1.5 mm wide, so a needle 0.009 as wide as it is long (`width`), 3 to a fascicle (`bundle`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): large cinnamon-orange plates between deep dark fissures on old trees; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: yellow-green needles; orange-brown bark in large plates. Needle shoots (plant roadmap P4): needles in threes, 12 to 25 cm long and about 1.5 mm wide, so a needle 0.009 as wide as it is long (`width`), 3 to a fascicle (`bundle`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): large cinnamon-orange plates between deep dark fissures on old trees; set from general knowledge of the species, not measured. Spec rework E6d: `needle`, `bundle`, `ranks` now set by the rules at Pinidae from the stated needles."
     },
     "taxon": {
       "evidence": "Authored",

@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Picea",
+  "traits": {
+    "foliage_ranks": "all_round",
+    "leaf_life_years": {"min": 7, "max": 10},
+    "cone_maturation_years": 1,
+    "cone_posture": "pendent"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 61), Picea: leaves spirally set and standing out on all sides of the twig, each on a woody peg, kept 7 to 10 years; seed cones hang and ripen in their first autumn, shed whole with their scales."
+    }
+  }
+}

@@ -2,5 +2,16 @@
   "schema": 1,
   "rank": "family",
   "name": "Pinaceae",
-  "parent": "order/pinales"
+  "parent": "order/pinales",
+  "traits": {
+    "sexual_system": "monoecious",
+    "leaf_form": "needle"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 52), Pinaceae: resinous trees whose linear or needle-like leaves are set in spirals; pollen and seed cones on the same tree; the seed cone woody, ripening in its first or second season."
+    }
+  }
 }

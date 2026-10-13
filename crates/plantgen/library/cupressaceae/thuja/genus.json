@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Thuja",
+  "traits": {
+    "leaf_form": "scale",
+    "sexual_system": "monoecious",
+    "cone_maturation_years": 1
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 71), Thuya (Thuja): scale leaves in crossing pairs on flattened sprays; pollen and seed cones on the same tree, the seed cone ripening in its first autumn."
+    }
+  }
+}

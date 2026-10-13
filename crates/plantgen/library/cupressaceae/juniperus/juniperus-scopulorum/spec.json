@@ -13,9 +13,7 @@
   "generator": {
     "params": {
       "cone_chance": 0.25,
-      "cone_length": 0.007,
       "cone_pitch": 90,
-      "cone_years": 2,
       "cone_area": 1.27,
       "height_max": 10,
       "height_rate": 0.04,
@@ -107,9 +105,45 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "juvenile_period_years": {"min": 10, "max": 20}
+    "juvenile_period_years": {"min": 10, "max": 20},
+    "leaf_form": "scale",
+    "leaf_length_m": {"min": 0.001, "max": 0.003},
+    "sexual_system": "dioecious",
+    "cone_length_m": {"min": 0.006, "max": 0.008, "low": 0.004},
+    "cone_maturation_years": 2,
+    "cone_retention_years": {"min": 0, "max": 1, "typical": 0}
   },
   "evidence": {
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Rocky Mountain juniper review: scale leaves 1 to 3 mm; juvenile awl-shaped leaves 3 to 12 mm."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Rocky Mountain juniper review: mostly dioecious, rarely monoecious."
+    },
+    "traits.cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Rocky Mountain juniper review: cones 4 to 8 mm; Abrams's 6 to 8 mm is the usual range."
+    },
+    "traits.cone_retention_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Rocky Mountain juniper review: cones ripen in November or December of their second year and hang until March or April; some stay up to three years."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 76), as Sabina scopulorum: adult leaves scale-like, in pairs pressed to the shoot; berry-like cones globose, 6 to 8 mm, bright blue under a bloom, ripening in their second autumn."
+    },
+    "traits.cone_maturation_years": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 76), as Sabina scopulorum: adult leaves scale-like, in pairs pressed to the shoot; berry-like cones globose, 6 to 8 mm, bright blue under a bloom, ripening in their second autumn."
+    },
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
@@ -118,7 +152,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a small, bushy tree with a rounded crown of upswept branches and fine sprays of overlapping scale leaves. Not fitted to measurements. Cones (plant forms F3): berry-like cones about 6 mm, blue under a pale bloom; set from general knowledge of the species, not measured."
+      "note": "Hand-set from general knowledge of the species: a small, bushy tree with a rounded crown of upswept branches and fine sprays of overlapping scale leaves. Not fitted to measurements. Cones (plant forms F3): berry-like cones about 6 mm, blue under a pale bloom; set from general knowledge of the species, not measured. Spec rework E6d: `cone_length`, `cone_years` now set by the rules at Pinidae from the stated characters."
     },
     "allometry": {
       "evidence": "Authored",
