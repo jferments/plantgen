@@ -5,8 +5,8 @@
 //! left `L` and up `U` with `H × L = U`. The plant starts at the origin with
 //! `H` along +Y.
 
-use std::sync::Mutex;
 use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::{Arc, Mutex};
 
 use super::derive::{Clock, ModuleString, choose};
 use super::expr::{NO_ENV, Scope, eval};
@@ -180,6 +180,7 @@ struct Owner {
     expansions: u64,
 }
 
+#[derive(Clone)]
 pub struct Interpreter<'a> {
     program: &'a Program,
     globals: &'a [f64],
@@ -195,7 +196,7 @@ pub struct Interpreter<'a> {
     floor: usize,
     breached: bool,
     /// The substrate `rest` lays segments on, if any.
-    ground: Option<&'a SubstrateField>,
+    ground: Option<Arc<SubstrateField>>,
 }
 
 impl<'a> Interpreter<'a> {
@@ -217,9 +218,15 @@ impl<'a> Interpreter<'a> {
     /// The substrate that segments after a `rest` lie on; without one,
     /// `rest` does nothing.
     #[must_use]
-    pub fn on_ground(mut self, ground: &'a SubstrateField) -> Self {
+    pub fn on_ground(mut self, ground: Arc<SubstrateField>) -> Self {
         self.ground = Some(ground);
         self
+    }
+
+    /// Lay segments after a `rest` on `ground` from the next string drawn
+    /// on, or on nothing.
+    pub fn set_ground(&mut self, ground: Option<Arc<SubstrateField>>) {
+        self.ground = ground;
     }
 
     /// Draw a string.
@@ -349,6 +356,7 @@ impl<'a> Interpreter<'a> {
         };
         let draw = |task: PieceTask, hand: &dyn Fn(PieceTask)| {
             let mut interpreter = Interpreter::new(self.program, self.globals, self.limits);
+            interpreter.ground.clone_from(&self.ground);
             let id = task.id;
             let piece = interpreter.piece(string, &matches, &task, least, clock, &next, hand);
             drawn
@@ -660,7 +668,7 @@ impl Interpreter<'_> {
             });
         }
         if state.rest > 0.0
-            && let Some(ground) = self.ground
+            && let Some(ground) = &self.ground
         {
             state.frame = rested(state.frame, state.position, length, state.rest, ground);
         }
@@ -1028,7 +1036,7 @@ mod tests {
         scene_on(source, None)
     }
 
-    fn scene_on(source: &str, ground: Option<&SubstrateField>) -> Scene {
+    fn scene_on(source: &str, ground: Option<Arc<SubstrateField>>) -> Scene {
         let program = Program::compile(source).unwrap();
         let globals = program.resolve_params(&BTreeMap::new()).unwrap();
         let limits = Limits::default();
@@ -1148,22 +1156,46 @@ mod tests {
                  F(0.1) F(0.1) F(0.1) F(0.1) F(0.1) F(0.1) F(0.1) F(0.1);"
             )
         };
-        let flat = SubstrateField::flat();
+        let flat = Arc::new(SubstrateField::flat());
         let lowest = |s: &Scene| {
             s.segments
                 .iter()
                 .map(|segment| segment.end.y)
                 .fold(f64::INFINITY, f64::min)
         };
-        let rested = scene_on(&source("rest(0.02)"), Some(&flat));
+        let rested = scene_on(&source("rest(0.02)"), Some(Arc::clone(&flat)));
         assert!(lowest(&rested) > -0.01, "{}", lowest(&rested));
         let last = rested.segments.last().unwrap();
         assert!((last.end.y - last.start.y).abs() < 1.0e-3, "{last:?}");
-        let free = scene_on(&source(""), Some(&flat));
+        let free = scene_on(&source(""), Some(Arc::clone(&flat)));
         assert!(lowest(&free) < -0.1, "{}", lowest(&free));
         // With no ground given, `rest` does nothing.
         let unground = scene_on(&source("rest(0.02)"), None);
         assert!((lowest(&unground) - lowest(&free)).abs() < 1.0e-12);
+        // Drawn in pieces side by side, each branch still lies on it.
+        let program = Program::compile(
+            "lsystem p 1; axiom F(0.3) rest(0.02)
+             [ &(80) T(0, -1, 0, 0.5) F(0.1) F(0.1) F(0.1) F(0.1) F(0.1) F(0.1) ]
+             [ ^(80) T(0, -1, 0, 0.5) F(0.1) F(0.1) F(0.1) F(0.1) F(0.1) F(0.1) ];",
+        )
+        .unwrap();
+        let globals = program.resolve_params(&BTreeMap::new()).unwrap();
+        let limits = Limits::default();
+        let string = Deriver::new(&program, &globals, &limits)
+            .axiom(3, 1.0)
+            .unwrap();
+        let clock = Clock {
+            step: 0,
+            t: 0.0,
+            dt: 1.0,
+        };
+        let mut interpreter = Interpreter::new(&program, &globals, &limits).on_ground(flat);
+        let in_order = interpreter.in_order(&string, clock).unwrap();
+        assert!(lowest(&in_order) > -0.01, "{}", lowest(&in_order));
+        let pieces = interpreter
+            .in_pieces(&string, clock, 2, 0)
+            .expect("the pieces stitch");
+        assert_eq!(pieces, in_order);
     }
 
     #[test]

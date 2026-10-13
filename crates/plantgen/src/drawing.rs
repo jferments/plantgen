@@ -15,7 +15,7 @@ use std::borrow::Cow;
 use crate::body::BodyLook;
 use crate::conditions::Conditions;
 use crate::graph::PlantGraph;
-use crate::grow::{Growth, GrowthSettings, Watch, grow_watched};
+use crate::grow::{Growth, GrowthSettings, Watch, grow_in, grow_watched};
 use crate::library::Library;
 use crate::looks::{self, Look};
 use crate::lsys::{Limits, Neighbourhood};
@@ -93,6 +93,38 @@ pub fn grow_variant_watched(
     years: f64,
     watch: Option<&mut dyn Watch>,
 ) -> Result<Growth, String> {
+    grow_variant_in(
+        spec,
+        library,
+        program,
+        environment,
+        seed,
+        keyframes,
+        years,
+        None,
+        watch,
+    )
+}
+
+/// [`grow_variant_watched`], grown on from an age in a place
+/// ([`crate::grow::grow_in`]) when `place` gives one: the conditions laid
+/// over the variant's, and the age in years.
+///
+/// # Errors
+///
+/// As [`grow_variant_watched`], and when the place is not valid.
+#[allow(clippy::too_many_arguments)]
+pub fn grow_variant_in(
+    spec: &PlantSpec,
+    library: &Library,
+    program: Option<&str>,
+    environment: Environment,
+    seed: u64,
+    keyframes: Vec<f64>,
+    years: f64,
+    place: Option<(&Conditions, f64)>,
+    watch: Option<&mut dyn Watch>,
+) -> Result<Growth, String> {
     let (program, params) = match program {
         Some(source) => spec.program_from(source),
         None => spec.program_in(library),
@@ -110,8 +142,11 @@ pub fn grow_variant_watched(
             .map_err(|error| error.to_string())?,
     };
     let params = spec.seeded_params(&program, &params, seed);
-    grow_watched(&program, &params, &settings, watch)
-        .map_err(|error| format!("{}: {error}", spec.id))
+    match place {
+        Some((place, from_age)) => grow_in(&program, &params, &settings, place, from_age, watch),
+        None => grow_watched(&program, &params, &settings, watch),
+    }
+    .map_err(|error| format!("{}: {error}", spec.id))
 }
 
 /// Each organ type's look on `day`, and its size that day as a share of

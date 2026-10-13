@@ -212,6 +212,7 @@ impl Sink for Writer<'_> {
 }
 
 /// Rewrites strings for one program, parameter set and seed.
+#[derive(Clone)]
 pub struct Deriver<'a> {
     program: &'a Program,
     globals: &'a [f64],
