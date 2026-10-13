@@ -14,7 +14,12 @@
     "perianth": "tepals",
     "ovary_position": "inferior",
     "stamens": 3,
-    "carpels": 3
+    "carpels": 3,
+    "leaf_division": "simple",
+    "leaf_shape": {
+      "linear": "usually"
+    },
+    "fruit_type": "capsule"
   },
   "forms": {
     "forb": {
@@ -45,6 +50,21 @@
       "evidence": "SourceInferred",
       "source": "fna-26-iridaceae",
       "note": "Michigan State's Botany Online account of the family, as search results quote it (the page itself was not read): 6 petaloid tepals in two whorls, often united in a tube; stamens 3, opposite the outer tepals; ovary inferior (superior only in Tasmania's Isophysis), 3-locular, of 3 carpels. Iris and Sisyrinchium are regular (Sisyrinchium: the NEON biorepository's genus text, as quoted in search results; the page itself was not read); gladioli and their kin are zygomorphic."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1934",
+      "note": "Hutchinson (vol. 2, 1934), family 386 Iridaceae: leaves mostly narrowly linear, flattened sideways and sheathing (equitant); fruit a capsule opening by valves along its cells."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1934",
+      "note": "Hutchinson (vol. 2, 1934), family 386 Iridaceae: leaves mostly narrowly linear, flattened sideways and sheathing (equitant); fruit a capsule opening by valves along its cells."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1934",
+      "note": "Hutchinson (vol. 2, 1934), family 386 Iridaceae: leaves mostly narrowly linear, flattened sideways and sheathing (equitant); fruit a capsule opening by valves along its cells."
     }
   }
 }
