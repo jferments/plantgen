@@ -110,6 +110,11 @@
       "rule": "clamp(round(carpels), 0, 30)",
       "why": "A flower draws one pistil of up to five carpels, or of any number in an inferior ovary; above five in a superior one, as many free pistils, up to 30."
     },
+    "appearance.organs.*.shape.kind": {
+      "template": "fruit",
+      "map": {"fruit_type": {"berry": "berry", "drupe": "berry", "pome": "pome", "capsule": "capsule", "follicle": "capsule", "pod": "pod", "legume": "pod", "samara": "samara"}},
+      "why": "A berry or drupe is drawn as an ellipsoid; a pome dimpled at its top; a capsule or follicle ribbed lengthwise; a legume or other pod long, flat and bulging over its seeds; a samara as a seed at the base of a wing. A nut's cup or husk, an aggregate's drupelets and a berry's crown are the lineage's to say."
+    },
     "appearance.organs.*.shape.spur": {
       "template": "flower",
       "rule": "clamp(spur_length_m / (flower_size_m / 2), 0, 3)",
