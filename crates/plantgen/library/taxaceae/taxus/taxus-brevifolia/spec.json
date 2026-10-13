@@ -32,7 +32,6 @@
       "branch_growth": 0.2,
       "branch_ageing": 0.99,
       "side_chance": 0.85,
-      "needle_years": 6,
       "spray_droop": 30,
       "shade_death": 0.03,
       "shade_years": 8,
@@ -78,10 +77,8 @@
       "spray": {
         "shape": {
           "template": "needles",
-          "ranks": 2,
           "twigs": 5,
           "aspect": 0.7,
-          "needle": 0.07,
           "twig_angle": 50,
           "width": 0.09
         },
@@ -105,11 +102,31 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "leaf_length_m": {"min": 0.012, "max": 0.016, "low": 0.01, "high": 0.03},
+    "leaf_life_years": {"min": 4, "max": 5, "high": 6},
+    "seed_length_m": 0.008
+  },
   "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 51): needles flat, 12 to 16 mm, kept four or five years; the seed about 8 mm, in a scarlet cup-shaped aril."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Pacific yew review: needles 1 to 3 cm; Abrams's 12 to 16 mm is the usual range."
+    },
+    "traits.leaf_life_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Pacific yew review: needles kept at least five or six years; Abrams gives four or five."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a small, slow, often crooked understory tree with long, drooping branches and flat sprays of soft, pointed needles. Not fitted to measurements. Cones (plant forms F3): seeds in a red fleshy aril about 8 mm; set from general knowledge of the species, not measured."
+      "note": "Hand-set from general knowledge of the species: a small, slow, often crooked understory tree with long, drooping branches and flat sprays of soft, pointed needles. Not fitted to measurements. Cones (plant forms F3): seeds in a red fleshy aril about 8 mm; set from general knowledge of the species, not measured. Spec rework E6d: `needle_years` now set by the rules at Pinidae from the stated characters."
     },
     "allometry": {
       "evidence": "Authored",
@@ -119,7 +136,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: dark yellowish-green needles; thin, scaly, reddish-purple bark. Needle shoots (plant roadmap P4): flat needles 1 to 3 cm long and about 2 mm wide, so a needle 0.09 as wide as it is long (`width`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): thin purplish scales peeling to show red inner bark; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: dark yellowish-green needles; thin, scaly, reddish-purple bark. Needle shoots (plant roadmap P4): flat needles 1 to 3 cm long and about 2 mm wide, so a needle 0.09 as wide as it is long (`width`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): thin purplish scales peeling to show red inner bark; set from general knowledge of the species, not measured. Spec rework E6d: `needle`, `ranks` now set by the rules at Pinidae from the stated needles."
     },
     "taxon": {
       "evidence": "Authored",

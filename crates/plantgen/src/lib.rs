@@ -212,4 +212,9 @@ pub mod venation;
 /// drawn solid is one of four varieties of its look, which draw its
 /// counts and sizes across their ranges; a part mesh's variant `k` is its
 /// look's variety `k`.
-pub const GENERATOR_REVISION: u32 = 34;
+/// 35: a conifer's foliage and cones are grown from the characters its
+/// floras state (spec rework E6d), by rules at Pinidae: how long a shoot
+/// keeps its needles, a spray card's needles as long as the stated ones
+/// on a usual spray, a pine's needles to a bundle, needles in two ranks
+/// or all round, and a seed cone's length, posture and years on the tree.
+pub const GENERATOR_REVISION: u32 = 35;
