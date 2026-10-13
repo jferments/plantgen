@@ -245,4 +245,8 @@ pub mod venation;
 /// and the wood bends under its load, the stem and a fork's stems held up;
 /// a tip with no free space leafs out. Maples keep their lobed envelope
 /// (sapindaceae revision 6). (39 is redcedar's leaf life, #70.)
-pub const GENERATOR_REVISION: u32 = 40;
+/// 45: a flower whose zygomorphy is of no named kind (palo verde,
+/// piggyback plant) draws its upper petal unlike the rest, wider by
+/// `banner` and more upright (an unequal corolla), not a corolla of like
+/// petals (41 to 44 are #73, #72, #77 and #79 in landing order).
+pub const GENERATOR_REVISION: u32 = 45;

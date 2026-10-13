@@ -62,8 +62,8 @@
     },
     "appearance.organs.*.shape.corolla": {
       "template": "flower",
-      "map": {"zygomorphy": {"papilionaceous": "papilionaceous", "bilabiate": "bilabiate", "labellate": "labellate", "other": "regular"}},
-      "why": "A zygomorphic flower's parts differ by place as its zygomorphy says; any other is drawn with its petals alike."
+      "map": {"zygomorphy": {"papilionaceous": "papilionaceous", "bilabiate": "bilabiate", "labellate": "labellate", "other": "unequal"}},
+      "why": "A zygomorphic flower's parts differ by place as its zygomorphy says; one of no named kind draws its upper petal unlike the rest, wider and more upright."
     },
     "appearance.organs.*.shape.fused": {
       "template": "flower",
