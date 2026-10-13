@@ -27,9 +27,9 @@
       "culm_leaves": 2,
       "culm_lean": 6,
       "panicle_nod": 10,
-      "blade_area": 0.036,
-      "tip_area": 0.02,
-      "thatch_area": 0.036,
+      "blade_area": 0.063,
+      "tip_area": 0.035,
+      "thatch_area": 0.063,
       "panicle_area": 0.12
     }
   },
@@ -49,13 +49,13 @@
     "variation": 0.2,
     "organs": {
       "blade": {
-        "shape": { "template": "blade", "taper": 0, "aspect": 0.04 }
+        "shape": { "template": "blade", "taper": 0 }
       },
       "blade_tip": {
-        "shape": { "template": "blade", "taper": 1, "aspect": 0.04 }
+        "shape": { "template": "blade", "taper": 1 }
       },
       "thatch": {
-        "shape": { "template": "blade", "taper": 0, "aspect": 0.04 },
+        "shape": { "template": "blade", "taper": 0 },
         "colour": [0.38, 0.31, 0.18],
         "shade": [0.12, 0.1, 0.05]
       },
@@ -93,6 +93,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_width_m": {
+      "min": 0.008,
+      "max": 0.012
+    },
     "culm_length_m": {
       "min": 1.0,
       "max": 1.5,
@@ -114,6 +118,11 @@
     "awn_insertion": "dorsal"
   },
   "evidence": {
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935), as Calamagrostis nutkaensis: blades 8 mm to 1.2 cm wide."
+    },
     "traits.culm_length_m": {
       "evidence": "SourceInferred",
       "source": "hitchcock-1935",

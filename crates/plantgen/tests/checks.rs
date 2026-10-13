@@ -73,6 +73,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "program:grass",
+        "leaf_width_m",
+        "since the Poaceae rule sets blade cards from Hitchcock's widths, the median blade measured sits inside the flora's range, but the narrowest run up to half its least width (smaller blades of young tillers, inferred, not traced)",
+    ),
+    (
+        "program:grass",
         "shoot_leaves",
         "a culm's own leaves are its 1 to 3 culm leaves and a tiller's blades stand at the ground on no stem, against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),

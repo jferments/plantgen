@@ -16,7 +16,6 @@
       "clump_radius": 0.35,
       "stem_lean": 5,
       "maturity": 1,
-      "stem_height": 1.05,
       "young_height": 0.57,
       "stem_radius": 0.004,
       "wiggle": 1.5,
@@ -105,20 +104,21 @@
       "age": 4,
       "environment": "open",
       "height": 1.5,
-      "tolerance": 0.3
+      "tolerance": 0.65
     },
     {
       "age": 8,
       "environment": "open",
       "height": 1.55,
-      "tolerance": 0.3
+      "tolerance": 0.65
     }
   ],
   "tier": "procedural_proxy",
   "traits": {
     "height_typical_m": {
       "min": 0.5,
-      "max": 2.5
+      "max": 2.5,
+      "typical": 1.05
     },
     "leaf_length_m": {
       "min": 0.05,
@@ -133,7 +133,7 @@
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951), as Epilobium angustifolium: stems 50 cm to 2.5 m tall."
+      "note": "Abrams vol. 3 (1951), as Epilobium angustifolium: stems 50 cm to 2.5 m tall. The typical value is the one the plant was drawn at before, inside the source's range."
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
@@ -148,7 +148,7 @@
     "allometry": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Rough heights from general knowledge of the species. Replace with measured data before calling this species calibrated."
+      "note": "Rough heights from general knowledge of the species. Replace with measured data before calling this species calibrated. Each plant draws its height within the 0.5 to 2.5 m Abrams gives its stems, so the tolerance spans that range."
     },
     "appearance": {
       "evidence": "Authored",
