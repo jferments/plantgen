@@ -3,6 +3,32 @@
   "rank": "family",
   "name": "Araliaceae",
   "parent": "order/apiales",
+  "traits": {
+    "woodiness": {
+      "woody": "usually",
+      "herbaceous": "sometimes"
+    },
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "stipules": {
+      "true": "usually",
+      "false": "rarely"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "ovary_position": "inferior",
+    "fruit_type": {
+      "berry": "usually",
+      "drupe": "often"
+    },
+    "inflorescence": {
+      "umbel": "usually",
+      "head": "sometimes",
+      "raceme": "sometimes"
+    }
+  },
   "forms": {
     "vine": {
       "generator": {
@@ -15,6 +41,13 @@
           "note": "The program the authors chose to grow this taxon's vine species (named in each species' spec until G2.3a moved it here)."
         }
       }
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 47 Araliaceae: mostly woody, some climbing by aerial roots (ivy); leaves alternate, rarely opposite; stipules joined to the leaf stalk's base or within it, rarely absent; flowers regular, in umbels, racemes or heads; calyx small on an inferior ovary; petals often 5; fruit a berry or drupe."
     }
   }
 }

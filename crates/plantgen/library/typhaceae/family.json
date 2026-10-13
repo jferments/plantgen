@@ -5,7 +5,14 @@
   "parent": "order/poales",
   "traits": {
     "leaf_arrangement": "alternate",
-    "phyllotaxis_pattern": "distichous"
+    "phyllotaxis_pattern": "distichous",
+    "woodiness": "herbaceous",
+    "leaf_division": "simple",
+    "leaf_shape": {
+      "linear": "usually"
+    },
+    "sexual_system": "monoecious",
+    "inflorescence": "spike"
   },
   "forms": {
     "graminoid": {
@@ -31,6 +38,31 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz's description of the family: the leaves are distichous, in two ranks."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 384 Typhaceae: marsh or lake herbs from creeping rhizomes; leaves mostly from the base, long and linear; flowers unisexual, very many, crowded on a terminal spike (his spadix), the male above the female on the same plant. APG adds the bur-reeds (Sparganium), also herbs of wet ground with linear leaves and unisexual flowers on one plant, in heads."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 384 Typhaceae: marsh or lake herbs from creeping rhizomes; leaves mostly from the base, long and linear; flowers unisexual, very many, crowded on a terminal spike (his spadix), the male above the female on the same plant. APG adds the bur-reeds (Sparganium), also herbs of wet ground with linear leaves and unisexual flowers on one plant, in heads."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 384 Typhaceae: marsh or lake herbs from creeping rhizomes; leaves mostly from the base, long and linear; flowers unisexual, very many, crowded on a terminal spike (his spadix), the male above the female on the same plant. APG adds the bur-reeds (Sparganium), also herbs of wet ground with linear leaves and unisexual flowers on one plant, in heads."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 384 Typhaceae: marsh or lake herbs from creeping rhizomes; leaves mostly from the base, long and linear; flowers unisexual, very many, crowded on a terminal spike (his spadix), the male above the female on the same plant. APG adds the bur-reeds (Sparganium), also herbs of wet ground with linear leaves and unisexual flowers on one plant, in heads."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 384 Typhaceae: marsh or lake herbs from creeping rhizomes; leaves mostly from the base, long and linear; flowers unisexual, very many, crowded on a terminal spike (his spadix), the male above the female on the same plant. APG adds the bur-reeds (Sparganium), also herbs of wet ground with linear leaves and unisexual flowers on one plant, in heads."
     }
   }
 }

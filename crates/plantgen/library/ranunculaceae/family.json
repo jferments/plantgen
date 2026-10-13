@@ -8,7 +8,20 @@
       "actinomorphic": "usually",
       "zygomorphic": "rarely"
     },
-    "ovary_position": "superior"
+    "ovary_position": "superior",
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "sometimes"
+    },
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes"
+    },
+    "stipules": false,
+    "fruit_type": {
+      "achene": "usually",
+      "follicle": "often"
+    }
   },
   "forms": {
     "forb": {
@@ -29,6 +42,26 @@
       "evidence": "SourceInferred",
       "source": "kew-powo",
       "note": "Plants of the World Online's account of the family, as search results quote it (the page itself was not read): flowers usually actinomorphic, less commonly zygomorphic (as in Aconitum); sepals (3-)5 to 8, often petaloid; stamens numerous, usually spirally arranged; carpels one to many, usually free; ovary superior."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 249 Ranunculaceae (buttercups, anemones, Clematis) and 248 Helleboraceae (hellebores, columbines, larkspurs), which APG joins as Ranunculaceae: mostly perennial or annual herbs with basal and alternate leaves, a few shrubs or climbers (Clematis) with opposite leaves; stipules absent or only sheathing bases of the leaf stalk; fruit a cluster of dry achenes in the first, follicles in the second."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 249 Ranunculaceae (buttercups, anemones, Clematis) and 248 Helleboraceae (hellebores, columbines, larkspurs), which APG joins as Ranunculaceae: mostly perennial or annual herbs with basal and alternate leaves, a few shrubs or climbers (Clematis) with opposite leaves; stipules absent or only sheathing bases of the leaf stalk; fruit a cluster of dry achenes in the first, follicles in the second."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 249 Ranunculaceae (buttercups, anemones, Clematis) and 248 Helleboraceae (hellebores, columbines, larkspurs), which APG joins as Ranunculaceae: mostly perennial or annual herbs with basal and alternate leaves, a few shrubs or climbers (Clematis) with opposite leaves; stipules absent or only sheathing bases of the leaf stalk; fruit a cluster of dry achenes in the first, follicles in the second."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 249 Ranunculaceae (buttercups, anemones, Clematis) and 248 Helleboraceae (hellebores, columbines, larkspurs), which APG joins as Ranunculaceae: mostly perennial or annual herbs with basal and alternate leaves, a few shrubs or climbers (Clematis) with opposite leaves; stipules absent or only sheathing bases of the leaf stalk; fruit a cluster of dry achenes in the first, follicles in the second."
     }
   }
 }

@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Digitalis",
+  "traits": {
+    "leaf_arrangement": "alternate"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams's Illustrated Flora of the Pacific States, volume 3 (1951), Scrophulariaceae, the genus Digitalis: erect perennial or biennial herbs with alternate leaves, unlike the opposite leaves usual in the Lamiales."
+    }
+  }
+}

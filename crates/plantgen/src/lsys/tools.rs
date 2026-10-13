@@ -376,6 +376,7 @@ pub fn run(
         ),
     };
 
+    let (path, limb) = path_lengths(scene);
     let space_queries: Vec<bool> = scene
         .queries
         .iter()
@@ -432,7 +433,6 @@ pub fn run(
         .tool(ToolKind::Substrate)
         .map(|_| substrate_of(surroundings));
 
-    let path = path_lengths(scene);
     let mut env = Vec::with_capacity(scene.queries.len());
     for (index, query) in scene.queries.iter().enumerate() {
         let mut values = [0.0; ENV_FIELDS];
@@ -463,6 +463,7 @@ pub fn run(
         values[EnvField::Order as usize] = f64::from(query.order);
         values[EnvField::Height as usize] = scene.height;
         values[EnvField::Path as usize] = path[query.node as usize];
+        values[EnvField::Limb as usize] = limb[query.node as usize];
         if let Some(reach) = host_reach {
             let found = surroundings
                 .host()
@@ -481,13 +482,41 @@ pub fn run(
     Ok(ToolOutput { env, organ_light })
 }
 
-/// The length of wood from the plant's base to each node along its branch,
-/// metres: a segment's node counts its own length. Parents come before
-/// their children in the node list.
-fn path_lengths(scene: &Scene) -> Vec<f64> {
-    let mut path = vec![0.0; scene.nodes.len()];
+/// Which nodes stand on a limb: a `[ ]` branch from an axis that goes on
+/// past it, or anything it bears. The branches a fork ends its axis with
+/// are stems, and so is what they bear until a branch leaves an axis that
+/// goes on. Parents come before their children in the node list.
+fn on_limbs(scene: &Scene) -> Vec<bool> {
+    let count = scene.nodes.len();
+    let mut goes_on = vec![false; count];
+    for node in &scene.nodes {
+        if let (Some(parent), false) = (node.parent, node.lateral) {
+            goes_on[parent as usize] = true;
+        }
+    }
+    let mut on_limb = vec![false; count];
     for (index, node) in scene.nodes.iter().enumerate() {
-        let before = node.parent.map_or(0.0, |parent| path[parent as usize]);
+        if let Some(parent) = node.parent {
+            let parent = parent as usize;
+            on_limb[index] = on_limb[parent] || (node.lateral && goes_on[parent]);
+        }
+    }
+    on_limb
+}
+
+/// The length of wood from the plant's base to each node along its branch,
+/// metres, and the part of it that is limb wood (see [`on_limbs`]): a
+/// segment's node counts its own length. Parents come before their
+/// children in the node list.
+fn path_lengths(scene: &Scene) -> (Vec<f64>, Vec<f64>) {
+    let count = scene.nodes.len();
+    let on_limb = on_limbs(scene);
+    let mut path = vec![0.0; count];
+    let mut limb = vec![0.0; count];
+    for (index, node) in scene.nodes.iter().enumerate() {
+        let (before, before_limb) = node.parent.map_or((0.0, 0.0), |parent| {
+            (path[parent as usize], limb[parent as usize])
+        });
         let own = match node.kind {
             NodeKind::Segment(segment) => {
                 let segment = &scene.segments[segment as usize];
@@ -496,8 +525,9 @@ fn path_lengths(scene: &Scene) -> Vec<f64> {
             NodeKind::Query(_) => 0.0,
         };
         path[index] = before + own;
+        limb[index] = before_limb + if on_limb[index] { own } else { 0.0 };
     }
-    path
+    (path, limb)
 }
 
 /// Sky directions for `light@1` as voxel steps `(dx, dz)` per layer up,
@@ -2362,6 +2392,11 @@ pub struct Flux {
 ///
 /// so `lambda` near 1 gives a dominant leader (excurrent) and near 0.5 a
 /// spreading crown (decurrent).
+///
+/// With `saturation` above 0 a tip's light `L` (0 to 1 of the open sky's)
+/// counts as `Q = L (1 + s) / (L + s)`: full light still counts 1, but as
+/// in a leaf's response to light, which saturates, a shaded tip gathers
+/// more than its share of the light, half of full light's at `L = s`.
 fn vigour(
     scene: &Scene,
     offsets: &[u32],
@@ -2370,13 +2405,19 @@ fn vigour(
     lit: bool,
     values: &[f64],
 ) -> Result<Flux, GrowthError> {
-    let [lambda, alpha, cap] = values[..] else {
+    let [lambda, alpha, cap, saturation] = values[..] else {
         return Err(invalid("vigour", "wrong number of settings".into()));
     };
     if !(0.0..=1.0).contains(&lambda) || !alpha.is_finite() || cap.is_nan() {
         return Err(invalid(
             "vigour",
             format!("lambda must be 0 to 1 and alpha finite; found {lambda} and {alpha}"),
+        ));
+    }
+    if !(saturation >= 0.0 && saturation.is_finite()) {
+        return Err(invalid(
+            "vigour",
+            format!("saturation must be 0 or more, found {saturation}"),
         ));
     }
     let count = scene.nodes.len();
@@ -2401,7 +2442,12 @@ fn vigour(
         tips[index] = tip_count;
         if leaf && let NodeKind::Query(query) = node.kind {
             total += if lit {
-                query_light[query as usize]
+                let light = query_light[query as usize];
+                if saturation > 0.0 {
+                    light * (1.0 + saturation) / (light + saturation)
+                } else {
+                    light
+                }
             } else {
                 1.0
             };
@@ -2603,6 +2649,9 @@ impl Rigid {
 ///   step: each year it keeps `set` of the year's sag and straightens by
 ///   `straighten` of itself, `rest += dt (set · sag − straighten · rest)`.
 /// - A segment turns at most until it hangs straight down.
+/// - Stems' segments (those not on a limb, as `limb` counts them: the
+///   trunk and the stems a fork divides it into) take the share `stem` of
+///   their sag (default 1), as reaction wood holds a trunk upright.
 ///
 /// Segments, organs and query points move with what they follow; the
 /// string does not change.
@@ -2619,7 +2668,7 @@ pub fn bend(
     rest: &mut HashMap<u64, Vec3, impl std::hash::BuildHasher>,
     dt: f64,
 ) -> Result<(), GrowthError> {
-    let [density, modulus, leaf_mass, set, straighten] = values[..] else {
+    let [density, modulus, leaf_mass, set, straighten, stem] = values[..] else {
         return Err(invalid("bend", "wrong number of settings".into()));
     };
     let valid = density >= 0.0
@@ -2629,19 +2678,21 @@ pub fn bend(
         && leaf_mass >= 0.0
         && leaf_mass.is_finite()
         && (0.0..=1.0).contains(&set)
-        && (0.0..=1.0).contains(&straighten);
+        && (0.0..=1.0).contains(&straighten)
+        && (0.0..=1.0).contains(&stem);
     if !valid {
         return Err(invalid(
             "bend",
             format!(
                 "density, modulus and leaf_mass must be finite and not negative (modulus above \
-                 0), set and straighten between 0 and 1; found {density}, {modulus}, \
-                 {leaf_mass}, {set}, {straighten}"
+                 0), set, straighten and stem between 0 and 1; found {density}, {modulus}, \
+                 {leaf_mass}, {set}, {straighten}, {stem}"
             ),
         ));
     }
     let stiffness = modulus * 1.0e6;
     let count = scene.nodes.len();
+    let on_limb = on_limbs(scene);
     // The mass after each node and its first moment, before bending.
     let mut mass = vec![0.0_f64; count];
     let mut moment = vec![Vec3::ZERO; count];
@@ -2691,7 +2742,10 @@ pub fn bend(
             let bending = torque - along * torque.dot(along);
             let inertia = math::PI * radius * radius * radius * radius / 4.0;
             // Back into the unbent frame, where the rest bend is kept.
-            let world = bending * (length / (stiffness * inertia));
+            // A stem takes the share `stem` of it: reaction wood holds a
+            // trunk up against its load.
+            let share = if on_limb[index] { 1.0 } else { stem };
+            let world = bending * (share * length / (stiffness * inertia));
             sag = Vec3::new(
                 before.x.dot(world),
                 before.y.dot(world),
@@ -2823,6 +2877,10 @@ mod tests {
     }
 
     fn tools(setup: &Setup, neighbourhood: &Neighbourhood) -> ToolOutput {
+        try_tools(setup, neighbourhood).unwrap()
+    }
+
+    fn try_tools(setup: &Setup, neighbourhood: &Neighbourhood) -> Result<ToolOutput, GrowthError> {
         let areas = organ_areas(&setup.program, &setup.globals).unwrap();
         let clock = Clock {
             step: 0,
@@ -2840,7 +2898,6 @@ mod tests {
             &Limits::default(),
             5,
         )
-        .unwrap()
     }
 
     fn leaf(position: Vec3) -> crate::lsys::turtle::OrganInstance {
@@ -2973,6 +3030,54 @@ mod tests {
         assert!((main[EnvField::Vigour as usize] - 1.5).abs() < 1e-12);
         assert!((lateral[EnvField::Vigour as usize] - 0.5).abs() < 1e-12);
         assert_eq!(main[EnvField::Qsum as usize], 1.0);
+    }
+
+    #[test]
+    fn vigour_1_saturation_lets_a_shaded_tip_gather_more() {
+        // A bud under foliage and one in the open; with saturation s a
+        // tip's light L counts L (1 + s) / (L + s), full light still 1.
+        let source = |saturation: f64| {
+            format!(
+                "lsystem p 1; module B queries light, vigour; organ leaf foliage area 0.5;
+                 tool light@1 {{ cell = 0.5, extinction = 1 }};
+                 tool vigour@1 {{ lambda = 0.5, alpha = 1, saturation = {saturation} }};
+                 axiom [ B ] F(2) [ leaf(1) leaf(1) leaf(1) ] [ f(5) B ];"
+            )
+        };
+        let plain = tools(&setup(&source(0.0)), &Neighbourhood::OPEN);
+        let saturating = tools(&setup(&source(0.3)), &Neighbourhood::OPEN);
+        let read = |output: &ToolOutput, i: usize, field: EnvField| output.env[i].1[field as usize];
+        let low = read(&plain, 0, EnvField::Light);
+        assert!(low < 0.95);
+        assert!((read(&plain, 0, EnvField::Qsum) - low).abs() < 1e-12);
+        let counted = read(&saturating, 0, EnvField::Qsum);
+        assert!(
+            (counted - low * 1.3 / (low + 0.3)).abs() < 1e-12,
+            "{counted}"
+        );
+        assert!(counted > low);
+        assert!((read(&saturating, 1, EnvField::Qsum) - 1.0).abs() < 1e-12);
+    }
+
+    #[test]
+    fn limb_is_the_wood_of_branches_off_an_axis_that_goes_on() {
+        // A limb off the stem, then a fork that ends the stem in two.
+        let setup = setup(
+            "lsystem p 1; module A queries position;
+             axiom F(1) [ +(60) F(0.5) [ -(30) F(0.25) A ] F(0.5) A ] F(2)
+                   [ +(30) F(1) A ] [ -(30) F(1) A ];",
+        );
+        let output = tools(&setup, &Neighbourhood::OPEN);
+        let read = |i: usize, field: EnvField| output.env[i].1[field as usize];
+        let near = |a: f64, b: f64| (a - b).abs() < 1e-9;
+        // The limb's twig and tip: all their wood past the stem is limb.
+        assert!(near(read(0, EnvField::Path), 1.75));
+        assert!(near(read(0, EnvField::Limb), 0.75));
+        assert!(near(read(1, EnvField::Limb), 1.0));
+        // The fork's stems are stems.
+        assert!(near(read(2, EnvField::Path), 4.0));
+        assert_eq!(read(2, EnvField::Limb), 0.0);
+        assert_eq!(read(3, EnvField::Limb), 0.0);
     }
 
     #[test]
@@ -3303,7 +3408,7 @@ mod tests {
         let inertia = std::f64::consts::PI * radius.powi(4) / 4.0;
         let expected = mass * 9.81 * lever / (1.0e10 * inertia);
         let mut rest: HashMap<u64, Vec3> = HashMap::new();
-        let settings = [600.0, 10000.0, 0.1, 0.3, 0.1];
+        let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, 1.0];
         bend(
             &mut setup.scene,
             &[radius],
@@ -3337,7 +3442,7 @@ mod tests {
         let mut upright = setup("lsystem p 1; axiom F(1) F(1);");
         let before = upright.scene.segments.clone();
         let mut rest: HashMap<u64, Vec3> = HashMap::new();
-        let settings = [600.0, 10000.0, 0.1, 0.3, 0.1];
+        let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, 1.0];
         bend(
             &mut upright.scene,
             &[0.01, 0.01],
@@ -3352,7 +3457,7 @@ mod tests {
         }
         // A twig as soft as rubber hangs straight down from its start.
         let mut soft = setup("lsystem p 1; axiom &(90) F(1);");
-        let rubber = [600.0, 1.0e-3, 0.1, 0.3, 0.1];
+        let rubber = [600.0, 1.0e-3, 0.1, 0.3, 0.1, 1.0];
         bend(
             &mut soft.scene,
             &[0.01],
@@ -3393,6 +3498,36 @@ mod tests {
         let side = setup.scene.queries[2].position - setup.scene.queries[0].position;
         assert!(out.dot(up) < 0.0 && out.dot(side) < 0.0);
         assert!((out.length() - 1.0).abs() < 1.0e-9);
+    }
+
+    #[test]
+    fn bend_1_lets_a_stem_take_only_its_share_of_the_sag() {
+        // A leaning stem 1 m long: with `stem` 0 it keeps its line, with
+        // 0.5 it turns half as far as a branch would.
+        let lean = |stem: f64| {
+            let mut leaning = setup("lsystem p 1; axiom &(45) F(1);");
+            let start = leaning.scene.segments[0].end - leaning.scene.segments[0].start;
+            let mut rest: HashMap<u64, Vec3> = HashMap::new();
+            let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, stem];
+            bend(
+                &mut leaning.scene,
+                &[0.01],
+                &[0.0; 20],
+                &settings,
+                &mut rest,
+                1.0,
+            )
+            .unwrap();
+            let bent = leaning.scene.segments[0].end - leaning.scene.segments[0].start;
+            math::acos(bent.dot(start) / (bent.length() * start.length()))
+        };
+        let (none, half, all) = (lean(0.0), lean(0.5), lean(1.0));
+        assert!(none.abs() < 1.0e-9, "{none}");
+        assert!(all > 1.0e-6);
+        assert!(
+            (half - 0.5 * all).abs() < 1.0e-9 * all.max(1.0),
+            "{half} {all}"
+        );
     }
 
     #[test]
