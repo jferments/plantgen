@@ -30,8 +30,10 @@
       "spray_length": 1.1,
       "shade_death": 0.12,
       "pipe_organ": 0.009,
-      "pipe_rings": 8e-06,
-      "spray_area": 0.428
+      "pipe_rings": 3.7e-06,
+      "spray_area": 0.428,
+      "branch_reach": 7.3,
+      "epi_chance": 0
     }
   },
   "growth": {
@@ -126,7 +128,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a tall, straight pine with a narrow crown of slender, level branches and soft needles in fives. Not fitted to measurements. Cones (plant forms F3): 10 to 25 cm, long and slender, hanging from the top; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles. Spec rework E6d: `cone_length`, `cone_years`, `needle_years` now set by the rules at Pinidae from the stated characters."
+      "note": "Hand-set from general knowledge of the species: a tall, straight pine with a narrow crown of slender, level branches and soft needles in fives. Not fitted to measurements. Cones (plant forms F3): 10 to 25 cm, long and slender, hanging from the top; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles. Spec rework E6d: `cone_length`, `cone_years`, `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe, and `pipe_rings` refitted to the dbh references now that the crown holds more foliage; `epi_chance` 0, as pines seldom sprout from dormant buds on their branches (general knowledge, not measured)."
     },
     "allometry": {
       "evidence": "Authored",

@@ -252,4 +252,10 @@ pub mod venation;
 /// enough to rest on the ground, or rises onto it when no turn clears it;
 /// and a stem's foot ring meets the ground in a flat cut where a leaning
 /// or flared trunk's side would dip into it.
-pub const GENERATOR_REVISION: u32 = 41;
+/// 42: a conifer's lower crown stays full (pinidae 5): a branch's shoot
+/// shortens with its wood from the stem, not its age; foliage lasts longer
+/// low in the crown; dormant buds sprout on lit branch wood; side shoots
+/// grow 20 years; sprays are drawn with their own turns; a limb that
+/// reaches the ground is shed there, and a dead branch falls (41 is the
+/// ground plane, #73).
+pub const GENERATOR_REVISION: u32 = 42;
