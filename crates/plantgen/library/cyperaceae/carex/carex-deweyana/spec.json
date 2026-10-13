@@ -23,7 +23,6 @@
       "arch": 14,
       "pieces": 6,
       "flowering": 0.4,
-      "culm_height": 0.6,
       "culm_radius": 0.0008,
       "culm_leaves": 0,
       "culm_lean": 15,
@@ -93,7 +92,28 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "culm_length_m": {
+      "min": 0.3,
+      "max": 0.75,
+      "typical": 0.6
+    },
+    "leaf_width_m": {
+      "min": 0.0025,
+      "max": 0.005
+    }
+  },
   "evidence": {
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Carex leptopoda: culms 30 cm to 75 cm tall."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Carex leptopoda: leaves 2.5 mm to 5 mm wide."
+    },
     "appearance.organs.panicle": {
       "evidence": "Authored",
       "source": "plantgen-authors",

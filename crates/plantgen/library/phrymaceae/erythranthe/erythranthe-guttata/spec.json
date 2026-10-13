@@ -102,7 +102,27 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.4,
+      "max": 1.0
+    },
+    "leaf_length_m": {
+      "min": 0.015,
+      "max": 0.09
+    }
+  },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Mimulus guttatus: stems 40 cm to 1 m tall."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Mimulus guttatus: leaves 1.5 cm to 9 cm long."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

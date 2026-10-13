@@ -99,6 +99,14 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_typical_m": {
+      "min": 0.6,
+      "max": 1.2
+    },
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.1
+    },
     "leaf_arrangement": {
       "whorled": "usually",
       "alternate": "often"
@@ -110,6 +118,16 @@
     }
   },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Lilium columbianum: stems 60 cm to 1.2 m tall. The scan's text reads cm, which the plant's own parts show is a misreading of dm."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Lilium columbianum: leaves 5 cm to 10 cm long."
+    },
     "traits.leaf_arrangement": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",

@@ -96,7 +96,18 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.2,
+      "max": 0.6
+    }
+  },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Quamasia quamash: stems 20 cm to 60 cm tall. The scan's text reads cm, which the plant's own parts show is a misreading of dm."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

@@ -88,7 +88,18 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.2,
+      "max": 0.4
+    }
+  },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Castilleja hispida: stems 20 cm to 40 cm tall."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
