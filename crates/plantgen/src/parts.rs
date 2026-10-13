@@ -21,7 +21,9 @@
 //! (`crate::mesh::place`; a look that turns its cards to face up keeps
 //! them). Variant `v` is the organ drawn with the id `mix64(v + 1)`, so a
 //! cluster's turn and which of its fruit are unripe differ from variant to
-//! variant; a renderer picks one per organ. Its colours are the look's
+//! variant, and where the look varies within its species' ranges
+//! (`crate::looks::Look::varieties`, spec rework VARY) variant `v` is its
+//! variety `v`; a renderer picks one per organ. Its colours are the look's
 //! own, and the renderer shades them as the card's colour is shaded.
 //!
 //! A part mesh holds at most [`TRIANGLES`] triangles ([`SHOOT_TRIANGLES`]
@@ -236,6 +238,20 @@ fn variants_at(looks: &[Look], index: usize, coarse: usize) -> Option<Vec<Mesh>>
     Some(
         (0..VARIANTS as u64)
             .map(|variant| {
+                // Variant `k` is the look's variety `k` where it varies.
+                let varied;
+                let looks = match usize::try_from(variant)
+                    .ok()
+                    .and_then(|variant| looks[index].varieties.get(variant))
+                {
+                    Some(variety) => {
+                        let mut own = looks.to_vec();
+                        own[index] = variety.clone();
+                        varied = own;
+                        &varied[..]
+                    }
+                    None => looks,
+                };
                 let graph = PlantGraph {
                     age: 1.0,
                     height: 1.0,
@@ -818,6 +834,7 @@ mod tests {
             solid: None,
             forms: crate::looks::Forms::default(),
             inflorescence: None,
+            varieties: Vec::new(),
         }
     }
 

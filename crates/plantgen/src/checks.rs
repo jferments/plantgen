@@ -48,8 +48,10 @@
 //! not absolute, and a value a little outside one is a warning to look at,
 //! not a wrong plant. A character no plant grew an organ for (a plant too
 //! young to flower) is "not grown", never a failure. The spread of the
-//! values is reported, not judged: a rule reads a range as its typical
-//! value, so most plants do not yet vary within it.
+//! values is reported, not judged: organs drawn solid vary within a range
+//! a rule reads alone (spec rework VARY, each a variety of its look), but
+//! a size set by hand, by a rule reading two ranges or by the plant's
+//! parameters, or drawn only on a card, does not.
 //!
 //! **Counts and kinds (M8A).** Counts are counted on each organ that
 //! holds them, from what its layout draws ([`COUNTS`]: a head's rays,
@@ -678,7 +680,10 @@ pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
         let drawn = crate::drawing::drawn(graph, &sizes);
         leaves(grown, &drawn, &looks, &mut tally);
         for organ in &drawn.organs {
-            let Some(look) = looks.get(usize::from(organ.organ)) else {
+            let Some(look) = looks
+                .get(usize::from(organ.organ))
+                .map(|look| look.of(organ.id))
+            else {
                 continue;
             };
             let phase = organs::phase(organ, grown.season(organ), day, graph.age);
