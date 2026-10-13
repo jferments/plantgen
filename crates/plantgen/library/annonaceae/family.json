@@ -2,5 +2,27 @@
   "schema": 1,
   "rank": "family",
   "name": "Annonaceae",
-  "parent": "order/magnoliales"
+  "parent": "order/magnoliales",
+  "traits": {
+    "woodiness": "woody",
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "stipules": false,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "flower_merosity": 3,
+    "ovary_position": "superior",
+    "fruit_type": {
+      "aggregate": "usually",
+      "berry": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 10 Annonaceae: trees, shrubs or climbers with aromatic wood and leaves; leaves alternate, entire; no stipules; sepals usually 3; petals often 6 in two whorls of 3; stamens numerous, spirally set; carpels numerous or few, free, rarely joined into one ovary, each often stalked in fruit, dry or fleshy (the custard apple's fused into one fleshy mass): read as an aggregate fruit, sometimes a berry. Simple leaves from 'entire' (inferred)."
+    }
+  }
 }

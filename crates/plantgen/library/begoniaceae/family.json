@@ -2,5 +2,31 @@
   "schema": 1,
   "rank": "family",
   "name": "Begoniaceae",
-  "parent": "order/cucurbitales"
+  "parent": "order/cucurbitales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "usually",
+      "semi": "sometimes"
+    },
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "stipules": true,
+    "sexual_system": "monoecious",
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "inflorescence": {
+      "cyme": "usually"
+    },
+    "ovary_position": "inferior",
+    "fruit_type": "capsule"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 110 Begoniaceae: undershrubs or herbs, mostly succulent, the stems jointed; leaves alternate, simple, often lopsided; stipules free, falling; flowers on one plant in two sexes, regular or irregular, mostly in cymes in the leaf axils, showy; the male with 2 (rarely 5) sepals and 0 to 5 petals and many stamens. The inferior ovary and the winged capsule are from common knowledge (the account is cut short in the copy read), inferred, not traced."
+    }
+  }
 }

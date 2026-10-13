@@ -2,5 +2,41 @@
   "schema": 1,
   "rank": "family",
   "name": "Scrophulariaceae",
-  "parent": "order/lamiales"
+  "parent": "order/lamiales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "often",
+      "woody": "often"
+    },
+    "leaf_arrangement": {
+      "opposite": "often",
+      "alternate": "often",
+      "whorled": "rarely"
+    },
+    "flower_symmetry": {
+      "zygomorphic": "usually",
+      "actinomorphic": "sometimes"
+    },
+    "flower_merosity": {
+      "min": 4,
+      "max": 5
+    },
+    "corolla_shape": "tubular",
+    "stamens": {
+      "min": 2,
+      "max": 5,
+      "typical": 4
+    },
+    "fruit_type": {
+      "capsule": "usually",
+      "drupe": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 324 Scrophulariaceae (its core: Verbascum, Scrophularia, Nemesia, Sutera), 227 Buddleiaceae, 339 Myoporaceae and 340 Selaginaceae, which APG joins as Scrophulariaceae (Hutchinson's figwort family also held what APG puts in Plantaginaceae and Orobanchaceae): herbs or shrubs, rarely small trees; leaves alternate, opposite or whorled; no stipules; flowers mostly irregular, the butterfly bushes' regular; corolla united, a tube of 4 or 5 lobes, often two-lipped; stamens 4 (two long, two short) or 2, rarely 5; ovary superior, of two cells; fruit a capsule, the myoporums' a drupe. The order (Lamiales) states the stipules, the ovary and the two carpels."
+    }
+  }
 }
