@@ -3,6 +3,9 @@
   "rank": "subclass",
   "name": "Pinidae",
   "parent": "clade/gymnosperms",
+  "generator": {
+    "program": "pinidae"
+  },
   "rules": {
     "generator.params.needle_years": {
       "rule": "leaf_life_years",
@@ -49,36 +52,15 @@
     }
   },
   "evidence": {
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The conifers' own program (growth plan G2.3a), renamed from `conifer` and homed here: a leader laying down whorls of branches each year, with sprays of foliage and cones."
+    },
     "rules": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Spec rework E6d: the conifer program's foliage life, cones and needle bundles and ranks from each taxon's stated characters."
-    }
-  },
-  "forms": {
-    "excurrent_tree": {
-      "generator": {
-        "program": "conifer"
-      },
-      "evidence": {
-        "generator.program": {
-          "evidence": "Authored",
-          "source": "plantgen-authors",
-          "note": "The program the authors chose to grow this taxon's excurrent tree species (named in each species' spec until G2.3a moved it here)."
-        }
-      }
-    },
-    "scale_leaved_tree": {
-      "generator": {
-        "program": "conifer"
-      },
-      "evidence": {
-        "generator.program": {
-          "evidence": "Authored",
-          "source": "plantgen-authors",
-          "note": "The program the authors chose to grow this taxon's scale leaved tree species (named in each species' spec until G2.3a moved it here)."
-        }
-      }
+      "note": "Spec rework E6d: the pinidae program's foliage life, cones and needle bundles and ranks from each taxon's stated characters."
     }
   }
 }

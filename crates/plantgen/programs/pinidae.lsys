@@ -1,4 +1,4 @@
-# Excurrent conifer: one leader that lays down a whorl of branches each
+# Conifers (Pinidae): one leader that lays down a whorl of branches each
 # year, with a few smaller branches between whorls. Branch shoots carry
 # sprays of foliage and fork into flat side shoots. An apex dies in deep
 # shade or once it grows too slowly to keep up; a branch with no living
@@ -23,9 +23,13 @@
 # a taxon's juvenile_period_years. It replaces cone_age, with the same
 # default.
 #
+# Revision 4 (growth plan G2.3a): the conifers' own program, renamed from
+# `conifer` and homed at Pinidae, whose families extend it where they grow
+# otherwise. It grows every plant as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem conifer 3;
+lsystem pinidae 4;
 
 # Height of the leader over time: a Chapman-Richards curve,
 # height = height_max * (1 - exp(-height_rate * age))^height_shape.

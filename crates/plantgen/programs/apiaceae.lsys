@@ -1,0 +1,23 @@
+# The herbs of Apiaceae, on the herb base (growth plan G2.3a). It gives
+# the values its species leave unset (15 of herb's parameters), as the
+# herb program's defaults until then; each species sets the rest.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem apiaceae 1 extends herb;
+
+param adult_age = 2;             # the first year the plant is adult and flowers
+param height_spread = 0.12;      # stems are stem_height * (1 ± height_spread)
+param young_height = 0.35;       # a stem without a raceme, as a share of stem_height
+param arch = 0;                  # how strongly a stem bends toward the ground at each node
+param leaves_per_node = 1;       # leaves at a node: 1 alternate, 2 opposite, more whorled
+param basal_leaves = 0;          # basal leaves at the foot of each stem
+param basal_length = 0.2;
+param basal_angle = 35;          # mean angle of a basal leaf to the vertical
+param basal_pieces = 1;          # pieces in a basal leaf
+param basal_arch = 12;           # degrees an arching basal leaf bends at each joint
+param flower_divergence = 137.5; # roll from one flower of the raceme to the next
+param fruit_length = 0.06;
+param fruit_angle = 25;
+param bud_size = 0.012;
+param light_cell = 0.05;         # light voxel edge

@@ -27,8 +27,8 @@ pub const SPEC_SCHEMA: u32 = 1;
 pub const UNNOTED: &[&str] = &["schema", "id", "tier", "evidence", "provenance"];
 
 /// Built-in plant programs, by name.
-pub const PROGRAMS: [(&str, &str); 24] = [
-    ("conifer", include_str!("../programs/conifer.lsys")),
+pub const PROGRAMS: [(&str, &str); 56] = [
+    ("pinidae", include_str!("../programs/pinidae.lsys")),
     ("broadleaf", include_str!("../programs/broadleaf.lsys")),
     ("grass", include_str!("../programs/grass.lsys")),
     ("herb", include_str!("../programs/herb.lsys")),
@@ -67,6 +67,68 @@ pub const PROGRAMS: [(&str, &str); 24] = [
         "phoradendron",
         include_str!("../programs/phoradendron.lsys"),
     ),
+    ("apiaceae", include_str!("../programs/apiaceae.lsys")),
+    ("araceae", include_str!("../programs/araceae.lsys")),
+    ("arecaceae", include_str!("../programs/arecaceae.lsys")),
+    (
+        "aristolochiaceae",
+        include_str!("../programs/aristolochiaceae.lsys"),
+    ),
+    ("asteraceae", include_str!("../programs/asteraceae.lsys")),
+    (
+        "berberidaceae",
+        include_str!("../programs/berberidaceae.lsys"),
+    ),
+    ("camassia", include_str!("../programs/camassia.lsys")),
+    ("carex", include_str!("../programs/carex.lsys")),
+    ("cyatheaceae", include_str!("../programs/cyatheaceae.lsys")),
+    ("cycadaceae", include_str!("../programs/cycadaceae.lsys")),
+    (
+        "equisetaceae",
+        include_str!("../programs/equisetaceae.lsys"),
+    ),
+    ("fabaceae", include_str!("../programs/fabaceae.lsys")),
+    ("hedera", include_str!("../programs/hedera.lsys")),
+    ("iridaceae", include_str!("../programs/iridaceae.lsys")),
+    ("juncaceae", include_str!("../programs/juncaceae.lsys")),
+    ("liliaceae", include_str!("../programs/liliaceae.lsys")),
+    ("maianthemum", include_str!("../programs/maianthemum.lsys")),
+    (
+        "melanthiaceae",
+        include_str!("../programs/melanthiaceae.lsys"),
+    ),
+    ("onagraceae", include_str!("../programs/onagraceae.lsys")),
+    ("orchidaceae", include_str!("../programs/orchidaceae.lsys")),
+    (
+        "orobanchaceae",
+        include_str!("../programs/orobanchaceae.lsys"),
+    ),
+    ("oxalidaceae", include_str!("../programs/oxalidaceae.lsys")),
+    (
+        "papaveraceae",
+        include_str!("../programs/papaveraceae.lsys"),
+    ),
+    ("phrymaceae", include_str!("../programs/phrymaceae.lsys")),
+    (
+        "plantaginaceae",
+        include_str!("../programs/plantaginaceae.lsys"),
+    ),
+    ("poaceae", include_str!("../programs/poaceae.lsys")),
+    (
+        "ranunculaceae",
+        include_str!("../programs/ranunculaceae.lsys"),
+    ),
+    (
+        "saxifragaceae",
+        include_str!("../programs/saxifragaceae.lsys"),
+    ),
+    (
+        "schoenoplectus",
+        include_str!("../programs/schoenoplectus.lsys"),
+    ),
+    ("urticaceae", include_str!("../programs/urticaceae.lsys")),
+    ("violaceae", include_str!("../programs/violaceae.lsys")),
+    ("vitaceae", include_str!("../programs/vitaceae.lsys")),
 ];
 
 /// A built-in program's source, by name.
@@ -1136,7 +1198,7 @@ mod tests {
         juvenile.until = None;
         assert!(
             spec.validate().unwrap_err().0.ends_with(
-                ": families juvenile needs until: program conifer records no adult shoots"
+                ": families juvenile needs until: program pinidae records no adult shoots"
             )
         );
     }
