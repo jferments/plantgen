@@ -39,7 +39,8 @@
       "light_cell": 0.6,
       "space_reach": 3.5,
       "space_kill": 1.0,
-      "leaf_area": 0.27
+      "leaf_area": 0.27,
+      "path_half": 30.9
     }
   },
   "growth": {
@@ -101,6 +102,11 @@
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Adansonia digitata (gwddagg_v2.2_species.csv, read): specific gravity 0.31 (wsg_est, the database's hierarchical-model species mean, from 2 records in 1 source); trunks 0.3, branches 0.37. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
+    "generator.params.path_half": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

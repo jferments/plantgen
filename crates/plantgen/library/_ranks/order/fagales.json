@@ -2,5 +2,25 @@
   "schema": 1,
   "rank": "order",
   "name": "Fagales",
-  "parent": "clade/fabids"
+  "parent": "clade/fabids",
+  "traits": {
+    "woodiness": "woody",
+    "leaf_arrangement": "alternate",
+    "sexual_system": {
+      "monoecious": "usually",
+      "dioecious": "sometimes"
+    },
+    "ovary_position": "inferior",
+    "inflorescence": {
+      "catkin": "usually",
+      "spike": "often"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 59-65 (Myricaceae, Betulaceae, Fagaceae, Corylaceae, Juglandaceae), which with Nothofagaceae and Casuarinaceae make APG's Fagales: trees or shrubs; leaves alternate; flowers unisexual, mostly monoecious (Myricaceae sometimes dioecious); the male flowers in catkins or catkin-like spikes; the female calyx adnate to an inferior ovary (Myricaceae's ovary is naked)."
+    }
+  }
 }

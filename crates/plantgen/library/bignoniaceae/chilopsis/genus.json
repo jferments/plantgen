@@ -4,7 +4,10 @@
   "name": "Chilopsis",
   "traits": {
     "wood_density_basic_kg_m3": 510,
-    "corolla_shape": "funnelform"
+    "corolla_shape": "funnelform",
+    "leaf_arrangement": {
+      "alternate": "usually"
+    }
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {
@@ -16,6 +19,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",
       "note": "Abrams and Ferris's Illustrated Flora of the Pacific States, volume 4 (1960), read in full: corolla funnelform, 5-lobed and obscurely two-lipped, 2.5 to 3.5 cm long; calyx inflated, deeply two-lipped; stamens 4, the fifth a rudimentary filament."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris, Illustrated Flora of the Pacific States vol. 4 (1960), Bignoniaceae, Chilopsis: a shrub with simple leaves, usually alternate, unlike the family's opposite ones."
     }
   }
 }

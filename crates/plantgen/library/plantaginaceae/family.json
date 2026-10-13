@@ -16,7 +16,13 @@
       "max": 4,
       "typical": 4
     },
-    "carpels": 2
+    "carpels": 2,
+    "stipules": false,
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "sometimes"
+    },
+    "fruit_type": "capsule"
   },
   "forms": {
     "forb": {
@@ -37,6 +43,21 @@
       "evidence": "SourceInferred",
       "source": "ffpa-2014",
       "note": "The Lucid key to the flowering plant families, with Reed College's family page, as search results quote them (the pages themselves were not read): corolla sympetalous, usually 4- or 5-lobed, often two-lipped (regular in Plantago); stamens 4 (didynamous) or 2, on the corolla tube; ovary superior, of 2 carpels, one style."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 324 Scrophulariaceae (in part: foxgloves, speedwells, snapdragons, beardtongues) and 297 Plantaginaceae (plantains), which APG joins as Plantaginaceae: herbs or shrubs; leaves alternate, opposite or whorled; stipules absent; fruit a capsule, in the plantains opening by a lid."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 324 Scrophulariaceae (in part: foxgloves, speedwells, snapdragons, beardtongues) and 297 Plantaginaceae (plantains), which APG joins as Plantaginaceae: herbs or shrubs; leaves alternate, opposite or whorled; stipules absent; fruit a capsule, in the plantains opening by a lid."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 324 Scrophulariaceae (in part: foxgloves, speedwells, snapdragons, beardtongues) and 297 Plantaginaceae (plantains), which APG joins as Plantaginaceae: herbs or shrubs; leaves alternate, opposite or whorled; stipules absent; fruit a capsule, in the plantains opening by a lid."
     }
   }
 }

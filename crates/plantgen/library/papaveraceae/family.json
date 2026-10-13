@@ -6,7 +6,14 @@
   "traits": {
     "flower_merosity": 2,
     "perianth": "sepals_and_petals",
-    "ovary_position": "superior"
+    "ovary_position": "superior",
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "rarely"
+    },
+    "leaf_arrangement": "alternate",
+    "stipules": false,
+    "fruit_type": "capsule"
   },
   "forms": {
     "forb": {
@@ -27,6 +34,26 @@
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",
       "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: poppies with 2 (or 3) sepals and twice as many petals; the bleeding-hearts (Fumariaceae) with sepals 2, small and scale-like, and petals 4 in 2 dissimilar pairs; ovary superior. Merosity 2: two sepals, and petals in two pairs."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 267 Papaveraceae (poppies) and 268 Fumariaceae (bleeding hearts and fumitories), which APG joins as Papaveraceae: annual to perennial herbs, rarely shrubs or small trees; leaves alternate (rarely the floral ones opposite), often much divided; stipules none; fruit a capsule opening by valves or pores, in the fumitories a capsule or a nut."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 267 Papaveraceae (poppies) and 268 Fumariaceae (bleeding hearts and fumitories), which APG joins as Papaveraceae: annual to perennial herbs, rarely shrubs or small trees; leaves alternate (rarely the floral ones opposite), often much divided; stipules none; fruit a capsule opening by valves or pores, in the fumitories a capsule or a nut."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 267 Papaveraceae (poppies) and 268 Fumariaceae (bleeding hearts and fumitories), which APG joins as Papaveraceae: annual to perennial herbs, rarely shrubs or small trees; leaves alternate (rarely the floral ones opposite), often much divided; stipules none; fruit a capsule opening by valves or pores, in the fumitories a capsule or a nut."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 267 Papaveraceae (poppies) and 268 Fumariaceae (bleeding hearts and fumitories), which APG joins as Papaveraceae: annual to perennial herbs, rarely shrubs or small trees; leaves alternate (rarely the floral ones opposite), often much divided; stipules none; fruit a capsule opening by valves or pores, in the fumitories a capsule or a nut."
     }
   }
 }

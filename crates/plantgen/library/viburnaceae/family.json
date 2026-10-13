@@ -13,18 +13,20 @@
     "carpels": {
       "min": 3,
       "max": 5
-    }
+    },
+    "leaf_arrangement": "opposite",
+    "fruit_type": "drupe"
   },
   "forms": {
     "shrub": {
       "generator": {
-        "program": "broadleaf"
+        "program": "viburnaceae"
       },
       "evidence": {
         "generator.program": {
           "evidence": "Authored",
           "source": "plantgen-authors",
-          "note": "The program the authors chose to grow this taxon's shrub species (named in each species' spec until G2.3a moved it here)."
+          "note": "The lineage's own program (growth plan G2.3a), on the broadleaf base: it gives the values its species leave unset, which the broadleaf program gave as defaults until then."
         }
       }
     }
@@ -34,6 +36,16 @@
       "evidence": "SourceInferred",
       "source": "jepson-eflora",
       "note": "Jepson eFlora's account of the family, as search results quote it (the page itself was not read): calyx teeth (2)5; corolla small, radial, rotate, (3-4)5-lobed; stamens 5, rarely 4, on the corolla; ovary more or less inferior, 1- or 3- to 5-chambered. Abrams and Ferris (volume 4, read in full) give the elders' corolla rotate and regular and the ovary 3- to 5-celled."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 306 Adoxaceae (moschatel), with the elders and viburnums he still keeps in Caprifoliaceae, which APG joins as Viburnaceae (Adoxaceae): leaves opposite; fruit a drupe."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 306 Adoxaceae (moschatel), with the elders and viburnums he still keeps in Caprifoliaceae, which APG joins as Viburnaceae (Adoxaceae): leaves opposite; fruit a drupe."
     }
   }
 }

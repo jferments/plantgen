@@ -767,8 +767,10 @@ impl Library {
     /// rank file's part: its traits and rules against the vocabulary and
     /// the programs, and a note of its own, citing a source, on each value,
     /// trait and rule it sets. Then the traits it inherits with its own:
-    /// none of them a character that another of them rules out, such as
-    /// bark on a herbaceous stem, nor above a character it is at most,
+    /// none of them a character that another of them, stated at least as
+    /// far off, rules out, such as bark on a herbaceous stem (a nearer file
+    /// may narrow a wider one: flowers' parts stated for a clade do not
+    /// reach a family whose units are heads of florets), nor above a character it is at most,
     /// such as a typical height above the greatest, nor grown to a target
     /// (`allometry`) above the tallest it grows (`height_max_m`).
     ///
@@ -788,8 +790,37 @@ impl Library {
                 .map_err(|error| format!("{}: {error}", entry.file()))?;
         }
         for entry in &self.species {
-            let traits = self.traits_of(&entry.id).map_err(|error| error.0)?;
-            if let Some(key) = vocabulary.coverage(&traits).ruled_out.first() {
+            let inherited = self.inherited(&entry.id).map_err(|error| error.0)?;
+            let traits = inherited.trait_values();
+            // A character a wider taxon states holds where its organ
+            // exists: a nearer file that rules the organ out (a head of
+            // florets, not single flowers, in a family under a clade that
+            // states its flowers' parts) narrows it, and is no error. Only
+            // a character ruled out by what is stated at least as far off
+            // as itself is refused.
+            let depth = |file: &str| {
+                let file = file.split(", ").next().unwrap_or(file);
+                inherited
+                    .chain
+                    .iter()
+                    .position(|link| link == file || link.ends_with(&format!("/{file}")))
+                    .unwrap_or(0)
+            };
+            let refused = vocabulary
+                .coverage(&traits)
+                .ruled_out
+                .into_iter()
+                .find(|key| {
+                    let at = depth(&inherited.traits[key].file);
+                    let farther: serde_json::Map<String, Value> = inherited
+                        .traits
+                        .iter()
+                        .filter(|(_, stated)| depth(&stated.file) >= at)
+                        .map(|(name, stated)| (name.clone(), stated.value.clone()))
+                        .collect();
+                    vocabulary.coverage(&farther).ruled_out.contains(key)
+                });
+            if let Some(key) = refused.as_ref() {
                 let why = vocabulary.ruled_out_by(key, &traits).unwrap_or_default();
                 return Err(format!(
                     "{}: it states `{key}` with what it inherits, but {why}",
@@ -3097,6 +3128,10 @@ mod tests {
         let params = own["generator"]["params"].as_object_mut().unwrap();
         params.remove("space_density");
         params.remove("leaves_per_node");
+        own["evidence"]
+            .as_object_mut()
+            .unwrap()
+            .remove("generator.params.leaves_per_node");
         folder.write(
             "library/sapindaceae/acer/acer-test/spec.json",
             &serde_json::to_string_pretty(&own).unwrap(),
@@ -3157,9 +3192,11 @@ mod tests {
                 "`leaf_arrangement` has no one most usual state: alternate and opposite are each often"
             )
         );
-        // Nor does a family that states no arrangement yet: a maple keeps
-        // its program's pairs.
-        assert_eq!(arrangement("acer-macrophyllum"), (None, None));
+        // Maples: their genus's opposite leaves, in pairs.
+        assert_eq!(arrangement("acer-macrophyllum"), (Some(2.0), None));
+        // Nor does a family that states no arrangement yet: a cycad keeps
+        // its program's.
+        assert_eq!(arrangement("cycas-revoluta"), (None, None));
     }
 
     #[test]
@@ -3259,6 +3296,29 @@ mod tests {
             )),
             "{message}"
         );
+    }
+
+    #[test]
+    fn a_nearer_file_narrows_a_wider_one() {
+        // A nearer file may narrow a wider one: bark stated for the
+        // genus, and a herbaceous species in it, has no bark.
+        let folder = Folder::new("narrowed-ruled-out");
+        folder.write(
+            "library/sapindaceae/acer/genus.json",
+            r#"{"schema": 1, "rank": "genus", "name": "Acer",
+                "traits": {"bark_texture": "smooth"},
+                "evidence": {"traits": {"evidence": "Authored",
+                    "source": "plantgen-authors", "note": "Test."}}}"#,
+        );
+        let mut own: serde_json::Value = serde_json::from_str(source("acer-circinatum")).unwrap();
+        own["traits"] = serde_json::json!({"woodiness": "herbaceous"});
+        own["evidence"]["traits"] = serde_json::json!({"evidence": "Authored",
+            "source": "plantgen-authors", "note": "Test."});
+        folder.write(
+            "library/sapindaceae/acer/acer-circinatum/spec.json",
+            &own.to_string(),
+        );
+        Library::from_dir(&folder.0).unwrap();
     }
 
     /// No trait is named as a parameter of a built-in program, so a

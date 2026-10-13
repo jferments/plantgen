@@ -6,30 +6,38 @@
   "traits": {
     "inflorescence": {
       "catkin": "usually"
+    },
+    "leaf_division": "simple",
+    "leaf_venation": "pinnate",
+    "stipules": true,
+    "sexual_system": "monoecious",
+    "fruit_type": {
+      "nut": "usually",
+      "samara": "often"
     }
   },
   "forms": {
     "decurrent_tree": {
       "generator": {
-        "program": "broadleaf"
+        "program": "betulaceae"
       },
       "evidence": {
         "generator.program": {
           "evidence": "Authored",
           "source": "plantgen-authors",
-          "note": "The program the authors chose to grow this taxon's decurrent tree species (named in each species' spec until G2.3a moved it here)."
+          "note": "The lineage's own program (growth plan G2.3a), on the broadleaf base: it gives the values its species leave unset, which the broadleaf program gave as defaults until then."
         }
       }
     },
     "shrub": {
       "generator": {
-        "program": "broadleaf"
+        "program": "betulaceae"
       },
       "evidence": {
         "generator.program": {
           "evidence": "Authored",
           "source": "plantgen-authors",
-          "note": "The program the authors chose to grow this taxon's shrub species (named in each species' spec until G2.3a moved it here)."
+          "note": "The lineage's own program (growth plan G2.3a), on the broadleaf base: it gives the values its species leave unset, which the broadleaf program gave as defaults until then."
         }
       }
     }
@@ -39,6 +47,31 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "The Flora of North America's account of the family, as quoted in search results (the page itself was not read): inflorescences unisexual, the staminate catkins pendulous, elongate, cylindric and conspicuously bracteate; the pistillate erect to pendulous bracteate catkins, or compact clusters of two or three flowers under leafy involucres (the hazels)."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 61 Betulaceae (birches and alders) and 63 Corylaceae (hazels and hornbeams), which APG joins as Betulaceae: leaves alternate, simple, pinnately veined with prominent nerves, mostly toothed; stipules present, often falling early; flowers monoecious, the male in catkins; fruit a small nut, bare or winged in the birches and alders, held in a leafy husk in the hazels."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 61 Betulaceae (birches and alders) and 63 Corylaceae (hazels and hornbeams), which APG joins as Betulaceae: leaves alternate, simple, pinnately veined with prominent nerves, mostly toothed; stipules present, often falling early; flowers monoecious, the male in catkins; fruit a small nut, bare or winged in the birches and alders, held in a leafy husk in the hazels."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 61 Betulaceae (birches and alders) and 63 Corylaceae (hazels and hornbeams), which APG joins as Betulaceae: leaves alternate, simple, pinnately veined with prominent nerves, mostly toothed; stipules present, often falling early; flowers monoecious, the male in catkins; fruit a small nut, bare or winged in the birches and alders, held in a leafy husk in the hazels."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 61 Betulaceae (birches and alders) and 63 Corylaceae (hazels and hornbeams), which APG joins as Betulaceae: leaves alternate, simple, pinnately veined with prominent nerves, mostly toothed; stipules present, often falling early; flowers monoecious, the male in catkins; fruit a small nut, bare or winged in the birches and alders, held in a leafy husk in the hazels."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 61 Betulaceae (birches and alders) and 63 Corylaceae (hazels and hornbeams), which APG joins as Betulaceae: leaves alternate, simple, pinnately veined with prominent nerves, mostly toothed; stipules present, often falling early; flowers monoecious, the male in catkins; fruit a small nut, bare or winged in the birches and alders, held in a leafy husk in the hazels."
     }
   }
 }

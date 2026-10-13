@@ -10,7 +10,13 @@
     "hypanthium": false,
     "ovary_position": "superior",
     "stamens": 6,
-    "carpels": 1
+    "carpels": 1,
+    "leaf_arrangement": "alternate",
+    "stipules": false,
+    "fruit_type": {
+      "berry": "usually",
+      "follicle": "sometimes"
+    }
   },
   "forms": {
     "forb": {
@@ -31,6 +37,21 @@
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",
       "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: flowers perfect, regular, hypogynous; sepals 6, in 2 circles; petals 6, in 2 circles; stamens as many and opposite them, the anthers opening by uplifted valves; ovary one, superior, 1-celled. Achlys is anomalous, with no perianth and 9 to 13 stamens."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 257 Nandinaceae and 251 Podophyllaceae (his Berberidaceae page is not in this scan), which APG joins with the barberries as Berberidaceae: leaves alternate or basal, simple, lobed or compound; stipules absent; fruit a berry, or a follicle."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 257 Nandinaceae and 251 Podophyllaceae (his Berberidaceae page is not in this scan), which APG joins with the barberries as Berberidaceae: leaves alternate or basal, simple, lobed or compound; stipules absent; fruit a berry, or a follicle."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 257 Nandinaceae and 251 Podophyllaceae (his Berberidaceae page is not in this scan), which APG joins with the barberries as Berberidaceae: leaves alternate or basal, simple, lobed or compound; stipules absent; fruit a berry, or a follicle."
     }
   }
 }

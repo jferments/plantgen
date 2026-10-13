@@ -12,18 +12,24 @@
     "carpels": {
       "min": 3,
       "max": 5
-    }
+    },
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "alternate": "often"
+    },
+    "leaf_division": "compound",
+    "stipules": true
   },
   "forms": {
     "shrub": {
       "generator": {
-        "program": "broadleaf"
+        "program": "zygophyllaceae"
       },
       "evidence": {
         "generator.program": {
           "evidence": "Authored",
           "source": "plantgen-authors",
-          "note": "The program the authors chose to grow this taxon's shrub species (named in each species' spec until G2.3a moved it here)."
+          "note": "The lineage's own program (growth plan G2.3a), on the broadleaf base: it gives the values its species leave unset, which the broadleaf program gave as defaults until then."
         }
       }
     }
@@ -33,6 +39,21 @@
       "evidence": "SourceInferred",
       "source": "ffpa-2014",
       "note": "The Lucid key to the flowering plant families, with the Flora of Tasmania, as search results quote them (the pages themselves were not read): sepals (4-)5; petals 4 or 5, free, clawed, on a disc; flowers usually actinomorphic; stamens (4-6) 8 or 10, usually twice the petals; ovary superior, often angled or winged, of 3 to 5 fused carpels."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 132 Zygophyllaceae: shrubs or herbs woody at the base, rarely trees, often jointed at the nodes; leaves opposite or alternate, of two leaflets or pinnate, rarely of three; stipules paired and persistent, often spiny; fruit of many kinds but never a berry."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 132 Zygophyllaceae: shrubs or herbs woody at the base, rarely trees, often jointed at the nodes; leaves opposite or alternate, of two leaflets or pinnate, rarely of three; stipules paired and persistent, often spiny; fruit of many kinds but never a berry."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 132 Zygophyllaceae: shrubs or herbs woody at the base, rarely trees, often jointed at the nodes; leaves opposite or alternate, of two leaflets or pinnate, rarely of three; stipules paired and persistent, often spiny; fruit of many kinds but never a berry."
     }
   }
 }

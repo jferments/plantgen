@@ -19,9 +19,9 @@
       "space_density": 12,
       "internode": 0.28,
       "max_shoot": 4,
-      "pipe_rings": 1e-05,
-      "pipe_organ": 0.0057,
-      "pipe_tip": 0.0028,
+      "pipe_rings": 3.61e-07,
+      "pipe_organ": 0.00445,
+      "pipe_tip": 0.00219,
       "branch_angle": 45,
       "apical_young": 0.72,
       "apical": 0.6,
@@ -38,7 +38,8 @@
       "bloom_size": 0.045,
       "bloom_angle": 130,
       "leaf_area": 0.304,
-      "bloom_area": 0.289
+      "bloom_area": 0.289,
+      "path_half": 7.05
     }
   },
   "growth": {
@@ -145,6 +146,16 @@
     "traits.wood_rupture_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Birch, paper, green: modulus of rupture 44,000 kPa (clear wood in static bending)."},
     "traits.wood_moisture_green_share": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 4-1, Birch, paper: average moisture content of green wood, heartwood 89% and sapwood 72% of oven-dry mass; stated as a share, the range between them with its middle typical where both are given."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Betula papyrifera (gwddagg_v2.2_species.csv, read): specific gravity 0.52 (wsg_est, the database's hierarchical-model species mean, from 53 records in 5 sources); trunks 0.52, branches 0.51. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
+    "generator.params.path_half": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region."
+    },
+    "generator.params.pipe_tip": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (crown form step B): the twig's and the leaf's pipe radii are scaled together so the stem's diameter at breast height matches the oldest reference size; the fuller crowns of broadleaf revision 11 carry more leaf, so the yearly rings (pipe_rings) are fitted near zero and the pipe model sets the diameter."
+    },
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",

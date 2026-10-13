@@ -45,7 +45,8 @@
       "pipe_rings": 2e-06,
       "space_reach": 0.68,
       "space_kill": 0.168,
-      "leaf_area": 0.275
+      "leaf_area": 0.275,
+      "path_half": 1.08
     }
   },
   "growth": {
@@ -98,6 +99,11 @@
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Simmondsia chinensis (gwddagg_v2.2_species.csv, read): specific gravity 0.63 (wsg_est, the database's hierarchical-model species mean, from 2 records in 2 sources); trunks 0.63, branches 0.59. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
+    "generator.params.path_half": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
