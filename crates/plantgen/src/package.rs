@@ -950,7 +950,7 @@ fn grow_variant(
     );
     grow(
         program,
-        params,
+        &spec.seeded_params(program, params, variant.seed),
         &GrowthSettings {
             seed: variant.seed,
             dt: spec.growth.step,
@@ -979,7 +979,7 @@ pub(crate) fn grow_one(
     };
     grow(
         &program,
-        &params,
+        &spec.seeded_params(&program, &params, variant.seed),
         &GrowthSettings {
             seed: variant.seed,
             dt: spec.growth.step,
