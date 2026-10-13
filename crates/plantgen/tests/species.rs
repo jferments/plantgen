@@ -229,15 +229,13 @@ fn builtin_species_draw_no_floating_organs() {
 fn builtin_species_stand_above_the_ground() {
     // Wood grown into the ground: segments that end below it, which
     // growth has to stop (ground as an obstacle in growth, the M6
-    // thread). Low limbs of open-grown conifers sag onto it; two shrubs'
-    // arching canes, two ferns' fronds and a prickly pear's pads lie
-    // under it. A water lily's frame stands on the water's surface, with
+    // thread). Low limbs of open-grown conifers sag onto it; two ferns'
+    // fronds and a prickly pear's pads lie under it. A water lily's frame stands on the water's surface, with
     // its rhizome on the bottom below (`programs/nymphaeaceae.lsys`).
-    const KNOWN: [&str; 13] = [
+    const KNOWN: [&str; 11] = [
         "abies-grandis",
         "blechnum-spicant",
         "nymphaea-odorata",
-        "oemleria-cerasiformis",
         "opuntia-engelmannii",
         "picea-sitchensis",
         "pinus-monticola",
@@ -246,7 +244,6 @@ fn builtin_species_stand_above_the_ground() {
         "pseudotsuga-menziesii",
         "thuja-plicata",
         "tsuga-heterophylla",
-        "vaccinium-parvifolium",
     ];
     const BED: f64 = 0.05;
     let species: Vec<&str> = spec::all_species().map(|(id, _)| id).collect();
