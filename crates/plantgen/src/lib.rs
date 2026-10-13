@@ -176,18 +176,24 @@ pub mod venation;
 /// adult shoots bear entire leaves, rise and fruit), and the programs that
 /// measure first flowering by the plant's age name it `adult_age`, set
 /// from a taxon's juvenile period.
-/// 29: crown calibration: in the broadleaf program a short shoot lives
+/// 29: a fern's frond is sized from its stated blade, stipe and blade
+/// width by rules of its class (spec rework E6a): the frond's length, its
+/// bare share and its longest pinna, so the sword, wood and deer ferns
+/// and bracken grow fronds of their flora's sizes; a crown a fern's
+/// rhizome sends out starts as old as the crown it came from
+/// (`polypodiidae` revision 4), so its first fronds are full-sized.
+/// 30: crown calibration: in the broadleaf program a short shoot lives
 /// while it has light, for up to 40 years, and its leaves carry their own
 /// turn, so open-grown crowns keep the leaf area per crown area of the
 /// Urban Tree Database's trees and their inner leaves grow in shade; and
 /// the deep-shade end of the light scale leaves acclimate on,
 /// `looks::DEEP_SHADE`, is 0.08, where the growth model's short shoots stop
 /// leafing out, not 0.04, which no crown's leaves reach.
-/// 30: crown form, step A: in the broadleaf program a year's shoot is a
+/// 31: crown form, step A: in the broadleaf program a year's shoot is a
 /// growth unit of several nodes, only those at its acrotonic or basitonic
 /// end growing long shoots, a few next to them short shoots and the rest
 /// latent; and every broadleaf tree may fork where its flowers end a
 /// shoot, lose tips that have no space, shed limbs that do not pay their
 /// way, sprout from dormant buds and grow back into freed space, as a
 /// maple did, each set by rules from the taxon's architecture traits.
-pub const GENERATOR_REVISION: u32 = 30;
+pub const GENERATOR_REVISION: u32 = 31;

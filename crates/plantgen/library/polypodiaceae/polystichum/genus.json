@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Polystichum",
+  "traits": {
+    "sorus_shape": "round",
+    "indusium": {
+      "shield": "usually",
+      "none": "rarely"
+    },
+    "leaf_division": "compound",
+    "division_pattern": "pinnate"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams's flora (vol. 1, 1923; ferns by Maxon): sori round, on the backs of the veins or near their ends; the indusium a round shield fixed at its centre, sometimes lacking; blades from simple to three times pinnate, nearly all of ours pinnate. The genus's simple-bladed species are tropical."
+    }
+  }
+}

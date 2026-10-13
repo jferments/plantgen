@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Blechnum",
+  "traits": {
+    "frond_dimorphism": "dimorphic",
+    "sorus_shape": "linear",
+    "indusium": "flap",
+    "sorus_position": "submarginal",
+    "fertile_share": 1
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams's flora (vol. 1, 1923; ferns by Maxon), under Struthiopteris, the name it then used for the deer fern's genus: fronds of two kinds, the fertile ones few and long-stalked with narrow segments bearing sporangia over their whole underside; each sorus a line parallel to the midrib just inside the margin, under an indusium fixed inside the margin and facing the midrib. Stated at the genus as the flora gives it; Blechnum as WCVP v16 takes it is wider, and its other species say otherwise in their own files."
+    }
+  }
+}
