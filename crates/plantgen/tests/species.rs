@@ -1024,3 +1024,48 @@ fn grown_as_broadleaf(spec: &PlantSpec) -> bool {
     }
     false
 }
+
+/// A herb whose leaves and flowers rise on separate stalks: with
+/// `flowering_share` a third of an adult cohort's stems end in a raceme and
+/// the rest bear leaves only, and with `scape` 1 a flowering stem bears no
+/// leaves, so vanilla leaf grown on a stem a leaf draws a leaf per leafy
+/// stem and a raceme per flowering one.
+#[test]
+fn a_herb_may_flower_on_some_stems_and_leaf_on_the_rest() {
+    let mut spec = PlantSpec::builtin("achlys-triphylla").unwrap();
+    let variant = spec.variant_list()[0];
+    let count = |spec: &PlantSpec| {
+        let growth = grow_variant(spec, &variant, 6.0, vec![6.0]);
+        let index = |name: &str| {
+            growth
+                .organ_types
+                .iter()
+                .position(|organ| organ.name == name)
+                .unwrap()
+        };
+        let (leaf, flower) = (index("leaf"), index("flower"));
+        let organs = &growth.keyframes[0].organs;
+        let of = |kind: usize| {
+            organs
+                .iter()
+                .filter(|organ| usize::from(organ.organ) == kind)
+                .count()
+        };
+        (of(leaf), of(flower))
+    };
+    let params = &mut spec.generator.params;
+    params.insert("stems".into(), 18.0);
+    params.insert("leaves_per_node".into(), 1.0);
+    let (leaves, flowers) = count(&spec);
+    assert_eq!(leaves, flowers, "every stem flowers and bears its leaf");
+    let params = &mut spec.generator.params;
+    params.insert("flowering_share".into(), 1.0 / 3.0);
+    params.insert("scape".into(), 1.0);
+    let (leaves_apart, flowers_apart) = count(&spec);
+    assert_eq!(
+        leaves_apart + flowers_apart,
+        leaves,
+        "a stem is one or the other"
+    );
+    assert_eq!(flowers_apart, leaves / 3, "every third stem flowers");
+}
