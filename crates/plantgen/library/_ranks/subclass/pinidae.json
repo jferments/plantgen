@@ -3,30 +3,14 @@
   "rank": "subclass",
   "name": "Pinidae",
   "parent": "clade/gymnosperms",
-  "forms": {
-    "excurrent_tree": {
-      "generator": {
-        "program": "conifer"
-      },
-      "evidence": {
-        "generator.program": {
-          "evidence": "Authored",
-          "source": "plantgen-authors",
-          "note": "The program the authors chose to grow this taxon's excurrent tree species (named in each species' spec until G2.3a moved it here)."
-        }
-      }
-    },
-    "scale_leaved_tree": {
-      "generator": {
-        "program": "conifer"
-      },
-      "evidence": {
-        "generator.program": {
-          "evidence": "Authored",
-          "source": "plantgen-authors",
-          "note": "The program the authors chose to grow this taxon's scale leaved tree species (named in each species' spec until G2.3a moved it here)."
-        }
-      }
+  "generator": {
+    "program": "pinidae"
+  },
+  "evidence": {
+    "generator.program": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The conifers' own program (growth plan G2.3a), renamed from `conifer` and homed here: a leader laying down whorls of branches each year, with sprays of foliage and cones."
     }
   }
 }

@@ -176,7 +176,7 @@ fn the_key_follows_every_input() {
             }
         )
     );
-    let source = format!("{}\n# a comment\n", builtin_program("conifer").unwrap());
+    let source = format!("{}\n# a comment\n", builtin_program("pinidae").unwrap());
     assert_ne!(
         base,
         Inputs::with_program(&spec, &source, &TINY).unwrap().key

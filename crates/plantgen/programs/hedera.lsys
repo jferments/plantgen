@@ -1,0 +1,12 @@
+# Ivies (Hedera, Araliaceae), on the climber base (growth plan G2.3a). It
+# gives the values its species leave unset (4 of climber's parameters), as
+# the climber program's defaults until then; each species sets the rest.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem hedera 1 extends climber;
+
+param vigour_spread = 0.1;
+param shade_shoot = 0.4;   # share of them it grows in deep shade
+param reach = 3;           # how far a shoot senses its host
+param divergence = 137.5;  # roll from one node to the next
