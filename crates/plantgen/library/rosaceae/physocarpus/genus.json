@@ -5,13 +5,19 @@
   "traits": {
     "ovary_position": "superior",
     "stamens": {"min": 20, "max": 40},
-    "carpels": {"min": 1, "max": 5, "typical": 3}
+    "carpels": {"min": 1, "max": 5, "typical": 3},
+    "flowering_position": "terminal"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",
       "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: calyx campanulate, 5-cleft; petals rounded, equal; stamens 20 to 24; carpels 1 to 5, mostly 3, somewhat united toward the base; ovary superior (tribe Spiraeeae). The Burke Herbarium (as quoted in search results; the page itself was not read) gives about 30 stamens and 3 to 5 carpels for Pacific ninebark."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual's Physocarpus chapter (read in full): ninebark flowers cluster in terminal corymbs."
     }
   }
 }

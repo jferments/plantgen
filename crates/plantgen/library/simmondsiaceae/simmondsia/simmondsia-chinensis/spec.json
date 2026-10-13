@@ -17,7 +17,7 @@
       "leaves_per_node": 2,
       "max_shoot": 4,
       "bud_break": 1.2,
-      "apical_young": 0.56,
+      "apical_young": 0.62,
       "apical": 0.5,
       "apical_years": 4,
       "flux": 4,
@@ -91,6 +91,10 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "flowering_position": "lateral",
+    "self_pruning": true
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -136,6 +140,16 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual's Simmondsia chapter (read in full): the flowers are borne in the axils of the leaves."
+    },
+    "traits.self_pruning": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's jojoba review (page read): as the plant ages its lower foliage is shaded out and pruned, leaving a high canopy."
     }
   },
   "provenance": {

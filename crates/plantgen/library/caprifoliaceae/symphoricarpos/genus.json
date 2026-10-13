@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Symphoricarpos",
+  "traits": {"flowering_position": "both"},
+  "evidence": {
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual's Symphoricarpos chapter (read in full): the flowers are borne in dense axillary or terminal clusters."
+    }
+  }
+}
