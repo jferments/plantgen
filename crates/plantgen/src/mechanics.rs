@@ -771,8 +771,12 @@ pub enum BoneKind {
 #[derive(Debug, Clone, PartialEq)]
 pub struct Bone {
     pub kind: BoneKind,
-    /// The bone it grows from.
+    /// The bone it grows from, always earlier in the list.
     pub parent: Option<u32>,
+    /// Axes between it and the stem: 0 for a stem, 1 for an axis on it.
+    /// Bones come shallowest first, then heaviest first, so any first
+    /// bones of the list are a rig of their own.
+    pub depth: u32,
     /// Its beams, foot first.
     pub beams: Vec<u32>,
     /// Where it starts and ends.
@@ -910,7 +914,24 @@ pub fn mechanics(
     let mut ranked: Vec<usize> = axes.keys().copied().collect();
     ranked.sort_by(|&a, &b| beyond_mass[b].total_cmp(&beyond_mass[a]).then(a.cmp(&b)));
     ranked.truncate(settings.bones.max(1));
-    ranked.sort_unstable();
+    // Coarse first, so any first bones are a rig of their own: by depth
+    // (the stem 0, axes on it 1, and so on), then heaviest first. Every
+    // bone's parent, shallower, comes before it.
+    let mut depth_of = vec![0_u32; count];
+    for beam in 0..count {
+        let axis = axis_of[beam];
+        depth_of[beam] = if beam == axis {
+            beams.parent[beam].map_or(0, |p| depth_of[p as usize] + 1)
+        } else {
+            depth_of[axis]
+        };
+    }
+    ranked.sort_by(|&a, &b| {
+        depth_of[a]
+            .cmp(&depth_of[b])
+            .then(beyond_mass[b].total_cmp(&beyond_mass[a]))
+            .then(a.cmp(&b))
+    });
     let mut bone_of_axis: BTreeMap<usize, u32> = BTreeMap::new();
     for (bone, &axis) in ranked.iter().enumerate() {
         bone_of_axis.insert(axis, bone as u32);
@@ -993,6 +1014,7 @@ pub fn mechanics(
                 BoneKind::Branch
             },
             parent,
+            depth: depth_of[first],
             beams: own.iter().map(|&beam| beam as u32).collect(),
             foot,
             tip: beams.end[last],
@@ -1314,6 +1336,13 @@ mod tests {
         // Along each bone the bindings grow.
         let trunk: Vec<f32> = (0..8).map(|at| found.binding[at].unwrap().along).collect();
         assert!(trunk.windows(2).all(|pair| pair[1] > pair[0]));
+        // Coarse first: every parent earlier and shallower.
+        for (at, bone) in found.bones.iter().enumerate() {
+            if let Some(parent) = bone.parent {
+                assert!((parent as usize) < at);
+                assert_eq!(found.bones[parent as usize].depth + 1, bone.depth);
+            }
+        }
         // Masses add up.
         let total: f64 = found.bones.iter().map(|bone| bone.mass).sum();
         close(total, found.mass() - found.beams.grounded, 1.0e-12);

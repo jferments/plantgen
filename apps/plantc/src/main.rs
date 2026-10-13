@@ -1462,9 +1462,10 @@ fn mechanics_command(args: &[String]) -> Result<(), Failure> {
         mark("wood_moisture_green_share"),
         material.modulus / 1.0e6,
         mark("wood_modulus_green_mpa"),
-        material
-            .rupture
-            .map_or_else(|| "unstated".to_string(), |pa| format!("{:.0} MPa", pa / 1.0e6)),
+        material.rupture.map_or_else(
+            || "unstated".to_string(),
+            |pa| format!("{:.0} MPa", pa / 1.0e6)
+        ),
         material.leaf_mass,
         mark("leaf_mass_fresh_kg_m2"),
     );
@@ -1516,7 +1517,8 @@ fn mechanics_command(args: &[String]) -> Result<(), Failure> {
         out!(
             "{:>5} {:>6} {:>6.2} {:>7.1} {:>6.2} {:>9.2} {:>7.3} {:>7.3} {:>9.1} {:>6}",
             at,
-            bone.parent.map_or_else(|| "-".to_string(), |p| p.to_string()),
+            bone.parent
+                .map_or_else(|| "-".to_string(), |p| p.to_string()),
             bone.length,
             bone.radius[0] * 200.0,
             bone.mass,

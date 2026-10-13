@@ -2022,12 +2022,13 @@ mod tests {
     #[test]
     fn a_spec_file_stands_on_its_species_rank_files() {
         let library = Library::builtin();
-        let entry = library.entry("cytisus-scoparius").unwrap();
+        // A species that states no characters or rules of its own.
+        let entry = library.entry("typha-latifolia").unwrap();
         let copy = library.effective_text("copy.json", entry.own_source());
         assert_eq!(copy.unwrap().as_deref(), Some(entry.source()));
         let other = entry
             .own_source()
-            .replace("\"cytisus-scoparius\"", "\"cytisus-test\"");
+            .replace("\"typha-latifolia\"", "\"typha-test\"");
         assert_eq!(library.effective_text("other.json", &other), Ok(None));
     }
 
