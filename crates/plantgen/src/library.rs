@@ -2069,12 +2069,10 @@ mod tests {
         // A base leaves its values to the lineages on it.
         assert_eq!(library.program_params()["rosette"]["leaf_rate"], None);
         assert_eq!(library.program_params()["aloe"]["leaf_rate"], Some(8.0));
-        // herb's `divergence` follows `leaves_per_node`.
+        // herb's `divergence` follows `leaves_per_node`, which its
+        // lineages give.
         assert_eq!(library.program_params()["herb"]["divergence"], None);
-        assert_eq!(
-            library.program_params()["herb"]["leaves_per_node"],
-            Some(1.0)
-        );
+        assert_eq!(library.program_params()["herb"]["leaves_per_node"], None);
     }
 
     /// The paths of a JSON value's leaves (an array is one) and their
@@ -2576,7 +2574,12 @@ mod tests {
             )
         };
         let pinaceae = family("Pinaceae", "order/pinales", "pinaceae");
+        // A base named for no taxon, as the conifers' program was before
+        // it was named for Pinidae.
+        let conifer =
+            source_of_program("pinidae").replace("lsystem pinidae 4;", "lsystem conifer 1;");
         let folder = Folder::new("taxon-programs");
+        folder.write("programs/conifer.lsys", &conifer);
         folder.write(
             "programs/pinaceae.lsys",
             "lsystem pinaceae 1 extends conifer;\nparam whorl = 4;\n",
@@ -2589,12 +2592,19 @@ mod tests {
         assert_eq!(home.extends.as_deref(), Some("conifer"));
         assert_eq!(home.named_by, ["pinaceae/family.json"]);
         assert_eq!(home.species.len(), 7);
-        let conifer = homes.iter().find(|home| home.name == "conifer").unwrap();
-        assert_eq!(conifer.home, None);
-        assert_eq!(conifer.species.len(), 4);
+        let base = homes.iter().find(|home| home.name == "conifer").unwrap();
+        assert_eq!(base.home, None);
+        assert_eq!(base.species.len(), 0);
+        let pinidae = homes.iter().find(|home| home.name == "pinidae").unwrap();
+        assert_eq!(
+            pinidae.home.as_deref(),
+            Some("_ranks/subclass/pinidae.json")
+        );
+        assert_eq!(pinidae.species.len(), 4);
 
         let refused = |files: &[(&str, &str)], expected: &str| {
             let folder = Folder::new("taxon-programs-refused");
+            folder.write("programs/conifer.lsys", &conifer);
             folder.write(
                 "programs/pinaceae.lsys",
                 "lsystem pinaceae 1 extends conifer;\n",
@@ -2661,7 +2671,7 @@ mod tests {
         // not read.
         let new_species = source("thuja-plicata")
             .replace("\"thuja-plicata\"", "\"zelkova-test\"")
-            .replace("\"program\": \"conifer\"", "\"program\": \"conifer-test\"")
+            .replace("\"program\": \"pinidae\"", "\"program\": \"conifer-test\"")
             .replace("\"Thuja plicata\"", "\"Zelkova test\"")
             .replace("\"family\": \"Cupressaceae\"", "\"family\": \"Ulmaceae\"")
             .replace("\"genus\": \"Thuja\"", "\"genus\": \"Zelkova\"");
@@ -2681,7 +2691,7 @@ mod tests {
                 "evidence": {"aliases.zelkova-old": {"evidence": "Synthetic",
                 "source": "plantgen-authors", "note": "A test rename."}}}"#,
         );
-        let conifer = source_of_program("conifer");
+        let conifer = source_of_program("pinidae");
         folder.write("programs/conifer-test.lsys", conifer);
         folder.write("programs/README.md", "not a program");
 
@@ -3279,7 +3289,7 @@ mod tests {
     /// Stating characters changes a species' spec, and so its package,
     /// only where a rule reads them: every built-in spec is what it would
     /// be with no trait stated anywhere, but for the values rules set from
-    /// its characters and their notes.
+    /// its characters, their spreads and their notes.
     #[test]
     fn characters_change_no_spec_until_a_rule_reads_them() {
         let library = Library::builtin();
@@ -3357,6 +3367,27 @@ mod tests {
                     remove(&mut with, path);
                     remove(&mut without, path);
                 }
+            }
+            // Only ranges a rule reads spread its value.
+            for section in ["/appearance/spreads", "/generator/spreads"] {
+                assert!(without.pointer(section).is_none(), "{}", entry.id);
+            }
+            for section in ["appearance", "generator"] {
+                if let Some(inside) = with
+                    .get_mut(section)
+                    .and_then(serde_json::Value::as_object_mut)
+                {
+                    inside.remove("spreads");
+                }
+            }
+            if let Some(notes) = with
+                .get_mut("evidence")
+                .and_then(serde_json::Value::as_object_mut)
+            {
+                notes.retain(|path, _| {
+                    !path.starts_with("appearance.spreads.")
+                        && !path.starts_with("generator.spreads.")
+                });
             }
             // The notes on traits left in `own` stay out of the spec too.
             assert_eq!(without, with, "{}", entry.id);

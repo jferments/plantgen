@@ -1,0 +1,22 @@
+# The herbs of Papaveraceae, on the herb base (growth plan G2.3a). It
+# gives the values its species leave unset (14 of herb's parameters), as
+# the herb program's defaults until then; each species sets the rest.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem papaveraceae 1 extends herb;
+
+param adult_age = 2;             # the first year the plant is adult and flowers
+param height_spread = 0.12;      # stems are stem_height * (1 ± height_spread)
+param young_height = 0.35;       # a stem without a raceme, as a share of stem_height
+param leaves_per_node = 1;       # leaves at a node: 1 alternate, 2 opposite, more whorled
+param leaf_length = 0.12;        # the longest leaf
+param leaf_peak = 0.3;           # where it sits along the leafy part, 0 to 1
+param leaf_top = 0.3;            # the topmost leaf, as a share of the longest
+param leaf_base = 0.6;           # the lowest leaf, as a share of the longest
+param leaf_angle = 50;           # angle of a leaf to the stem
+param basal_pieces = 1;          # pieces in a basal leaf
+param basal_arch = 12;           # degrees an arching basal leaf bends at each joint
+param flower_divergence = 137.5; # roll from one flower of the raceme to the next
+param fruit_angle = 25;
+param light_cell = 0.05;         # light voxel edge

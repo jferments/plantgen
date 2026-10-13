@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Camassia",
+  "forms": {
+    "forb": {
+      "generator": {
+        "program": "camassia"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The lineage's own program (growth plan G2.3a), on the herb base: it gives the values its species leave unset, which the herb program gave as defaults until then."
+        }
+      }
+    }
+  }
+}

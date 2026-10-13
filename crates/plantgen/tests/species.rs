@@ -464,7 +464,7 @@ fn conifers_bear_cones_once_old() {
     let mut checked = 0;
     for (id, _) in spec::all_species() {
         let spec = PlantSpec::builtin(id).unwrap();
-        if spec.generator.program != "conifer" {
+        if spec.generator.program != "pinidae" {
             continue;
         }
         checked += 1;

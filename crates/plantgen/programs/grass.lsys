@@ -28,40 +28,46 @@
 # a taxon's juvenile_period_years. It replaces flower_age, with the same
 # default.
 #
+# Revision 5 (growth plan G2.3a): a starting base with no values. Each
+# parameter given as a number is `param name;`, and the lineage programs
+# that extend it (`poaceae`, `juncaceae`, `carex`, `schoenoplectus`) give
+# the values their species leave unset, as this program's defaults were
+# until then.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem grass 4;
+lsystem grass 5;
 
-param tillers = 80;           # living tillers in a mature tussock
-param tiller_rate = 0.5;      # cohort size: tillers * (1 - exp(-tiller_rate * age))
-param tussock_radius = 0.08;  # radius of a mature tussock's base
-param tiller_lean = 15;       # how far the outermost tillers lean out
-param leaves = 3;             # blades on a tiller, give or take one
-param leaf_length = 0.35;     # mean blade length at maturity
-param leaf_spread = 0.3;      # blades are leaf_length * (1 ± leaf_spread)
-param leaf_angle = 18;        # mean angle of a blade to its tiller at the base
-param divergence = 180;       # roll from one blade or culm leaf to the next
-param arch = 10;              # mean degrees a blade bends down at each joint
-param twist = 6;              # spread of the random roll at each joint
-param pieces = 6;             # pieces in a blade, its tip included
-param maturity = 1.5;         # years over which blades and culms reach full size
-param adult_age = 2;          # the first year the plant is adult and flowers
-param flowering = 0.25;       # share of tillers that flower
-param culm_height = 0.9;      # culm height at maturity, panicle included
-param culm_radius = 0.0012;
-param culm_leaves = 2;        # leaves on a culm
-param culm_lean = 6;          # most a culm leans off its tiller
-param panicle_length = 0.2;
-param panicle_nod = 15;       # degrees a panicle tips over
-param thatch_years = 1;       # years dead blades stay on
-param thatch_droop = 8;       # extra degrees a dead blade bends at each joint
-param light_cell = 0.04;      # light voxel edge: about a blade's spacing
+param tillers;                # living tillers in a mature tussock
+param tiller_rate;            # cohort size: tillers * (1 - exp(-tiller_rate * age))
+param tussock_radius;         # radius of a mature tussock's base
+param tiller_lean;            # how far the outermost tillers lean out
+param leaves;                 # blades on a tiller, give or take one
+param leaf_length;            # mean blade length at maturity
+param leaf_spread;            # blades are leaf_length * (1 ± leaf_spread)
+param leaf_angle;             # mean angle of a blade to its tiller at the base
+param divergence;             # roll from one blade or culm leaf to the next
+param arch;                   # mean degrees a blade bends down at each joint
+param twist;                  # spread of the random roll at each joint
+param pieces;                 # pieces in a blade, its tip included
+param maturity;               # years over which blades and culms reach full size
+param adult_age;              # the first year the plant is adult and flowers
+param flowering;              # share of tillers that flower
+param culm_height;            # culm height at maturity, panicle included
+param culm_radius;
+param culm_leaves;            # leaves on a culm
+param culm_lean;              # most a culm leans off its tiller
+param panicle_length;
+param panicle_nod;            # degrees a panicle tips over
+param thatch_years;           # years dead blades stay on
+param thatch_droop;           # extra degrees a dead blade bends at each joint
+param light_cell;             # light voxel edge: about a blade's spacing
 # Leaf area of each organ 1 m long, m². Match each to the area its look
 # draws (`plantc atlas`).
-param blade_area = 0.11;
-param tip_area = 0.06;
-param thatch_area = 0.11;
-param panicle_area = 0.25;
+param blade_area;
+param tip_area;
+param thatch_area;
+param panicle_area;
 
 module Y;                     # the crown: sends up a cohort each year
 module Ts(k, m, n);           # tillers k to k + m - 1 of a cohort of n

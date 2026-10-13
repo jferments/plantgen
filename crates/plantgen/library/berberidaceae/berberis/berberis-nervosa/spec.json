@@ -11,7 +11,7 @@
   },
   "growth_form": "shrub",
   "generator": {
-    "program": "herb",
+    "program": "berberidaceae",
     "params": {
       "stems": 4,
       "stem_rate": 0.4,
@@ -133,7 +133,7 @@
     "generator.program": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "The program the spec's authors chose to grow this form."
+      "note": "Its family's herb program, though it grows as a low shrub: Berberis spans two forms, so the species names its own (growth plan G2.3a)."
     },
     "growth": {
       "evidence": "Authored",

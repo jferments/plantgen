@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Abies",
+  "traits": {
+    "leaf_life_years": {"min": 8, "max": 10},
+    "cone_maturation_years": 1,
+    "cone_posture": "erect",
+    "cone_retention_years": 0
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 65), Abies: leaves kept usually 8 to 10 years; seed cones stand upright on the upper side of the branchlets near the top of the tree and ripen in their first autumn, when their scales fall with the bracts and seeds and leave the bare axis on the branch."
+    }
+  }
+}

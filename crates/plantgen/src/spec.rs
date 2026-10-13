@@ -27,8 +27,8 @@ pub const SPEC_SCHEMA: u32 = 1;
 pub const UNNOTED: &[&str] = &["schema", "id", "tier", "evidence", "provenance"];
 
 /// Built-in plant programs, by name.
-pub const PROGRAMS: [(&str, &str); 24] = [
-    ("conifer", include_str!("../programs/conifer.lsys")),
+pub const PROGRAMS: [(&str, &str); 56] = [
+    ("pinidae", include_str!("../programs/pinidae.lsys")),
     ("broadleaf", include_str!("../programs/broadleaf.lsys")),
     ("grass", include_str!("../programs/grass.lsys")),
     ("herb", include_str!("../programs/herb.lsys")),
@@ -67,6 +67,68 @@ pub const PROGRAMS: [(&str, &str); 24] = [
         "phoradendron",
         include_str!("../programs/phoradendron.lsys"),
     ),
+    ("apiaceae", include_str!("../programs/apiaceae.lsys")),
+    ("araceae", include_str!("../programs/araceae.lsys")),
+    ("arecaceae", include_str!("../programs/arecaceae.lsys")),
+    (
+        "aristolochiaceae",
+        include_str!("../programs/aristolochiaceae.lsys"),
+    ),
+    ("asteraceae", include_str!("../programs/asteraceae.lsys")),
+    (
+        "berberidaceae",
+        include_str!("../programs/berberidaceae.lsys"),
+    ),
+    ("camassia", include_str!("../programs/camassia.lsys")),
+    ("carex", include_str!("../programs/carex.lsys")),
+    ("cyatheaceae", include_str!("../programs/cyatheaceae.lsys")),
+    ("cycadaceae", include_str!("../programs/cycadaceae.lsys")),
+    (
+        "equisetaceae",
+        include_str!("../programs/equisetaceae.lsys"),
+    ),
+    ("fabaceae", include_str!("../programs/fabaceae.lsys")),
+    ("hedera", include_str!("../programs/hedera.lsys")),
+    ("iridaceae", include_str!("../programs/iridaceae.lsys")),
+    ("juncaceae", include_str!("../programs/juncaceae.lsys")),
+    ("liliaceae", include_str!("../programs/liliaceae.lsys")),
+    ("maianthemum", include_str!("../programs/maianthemum.lsys")),
+    (
+        "melanthiaceae",
+        include_str!("../programs/melanthiaceae.lsys"),
+    ),
+    ("onagraceae", include_str!("../programs/onagraceae.lsys")),
+    ("orchidaceae", include_str!("../programs/orchidaceae.lsys")),
+    (
+        "orobanchaceae",
+        include_str!("../programs/orobanchaceae.lsys"),
+    ),
+    ("oxalidaceae", include_str!("../programs/oxalidaceae.lsys")),
+    (
+        "papaveraceae",
+        include_str!("../programs/papaveraceae.lsys"),
+    ),
+    ("phrymaceae", include_str!("../programs/phrymaceae.lsys")),
+    (
+        "plantaginaceae",
+        include_str!("../programs/plantaginaceae.lsys"),
+    ),
+    ("poaceae", include_str!("../programs/poaceae.lsys")),
+    (
+        "ranunculaceae",
+        include_str!("../programs/ranunculaceae.lsys"),
+    ),
+    (
+        "saxifragaceae",
+        include_str!("../programs/saxifragaceae.lsys"),
+    ),
+    (
+        "schoenoplectus",
+        include_str!("../programs/schoenoplectus.lsys"),
+    ),
+    ("urticaceae", include_str!("../programs/urticaceae.lsys")),
+    ("violaceae", include_str!("../programs/violaceae.lsys")),
+    ("vitaceae", include_str!("../programs/vitaceae.lsys")),
 ];
 
 /// A built-in program's source, by name.
@@ -208,6 +270,13 @@ pub struct Generator {
     /// Parameter values that replace the program's defaults.
     #[serde(default)]
     pub params: BTreeMap<String, f64>,
+    /// The spreads of parameters rules set from ranges, by path
+    /// (`params.<name>`; [`crate::inherit::Spread`]). No plant draws from
+    /// them yet (spec rework VARY): a cluster sizes its units as a share of
+    /// itself, so a plant with a shorter panicle would draw smaller
+    /// spikelets.
+    #[serde(default, skip_serializing_if = "serde_json::Map::is_empty")]
+    pub spreads: serde_json::Map<String, serde_json::Value>,
 }
 
 /// How long to grow and which ages to keep.
@@ -367,6 +436,12 @@ pub struct Appearance {
     /// default look.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub bodies: BTreeMap<String, BodyLook>,
+    /// The spreads of look values rules set from ranges, by path
+    /// (`organs.<organ>.<field>`; [`crate::inherit::Spread`]): each organ
+    /// drawn solid is one of [`crate::looks::VARIETIES`] varieties of its
+    /// look, each drawing its values from them ([`Look::of`]).
+    #[serde(default, skip_serializing_if = "serde_json::Map::is_empty")]
+    pub spreads: serde_json::Map<String, serde_json::Value>,
 }
 
 impl Appearance {
@@ -383,7 +458,22 @@ impl Appearance {
     /// order (see [`Program::organs`]).
     #[must_use]
     pub fn looks<'a>(&self, organs: impl IntoIterator<Item = (&'a str, OrganKind)>) -> Vec<Look> {
-        looks::resolve(organs, &self.organs, self.foliage, self.foliage_shade)
+        let organs: Vec<(&str, OrganKind)> = organs.into_iter().collect();
+        let mut looks = looks::resolve(
+            organs.iter().copied(),
+            &self.organs,
+            self.foliage,
+            self.foliage_shade,
+        );
+        self.vary(&mut looks, organs.len(), |drawn| {
+            looks::resolve(
+                organs.iter().copied(),
+                drawn,
+                self.foliage,
+                self.foliage_shade,
+            )
+        });
+        looks
     }
 
     /// The looks of [`Appearance::looks`] on day `day` of the year, with
@@ -395,7 +485,63 @@ impl Appearance {
         organs: impl IntoIterator<Item = (&'a str, OrganKind)>,
         day: Option<f64>,
     ) -> (Vec<Look>, Vec<f64>) {
-        looks::resolve_on(organs, &self.organs, self.foliage, self.foliage_shade, day)
+        let organs: Vec<(&str, OrganKind)> = organs.into_iter().collect();
+        let (mut looks, sizes) = looks::resolve_on(
+            organs.iter().copied(),
+            &self.organs,
+            self.foliage,
+            self.foliage_shade,
+            day,
+        );
+        self.vary(&mut looks, organs.len(), |drawn| {
+            looks::resolve_on(
+                organs.iter().copied(),
+                drawn,
+                self.foliage,
+                self.foliage_shade,
+                day,
+            )
+            .0
+        });
+        (looks, sizes)
+    }
+
+    /// Give each of the first `types` of `looks` whose values vary
+    /// ([`Appearance::spreads`]) and that is drawn solid its varieties
+    /// (spec rework VARY): the looks `resolve` gives each variety's looks
+    /// by organ name ([`looks::variety`]), where any differs from it.
+    fn vary(
+        &self,
+        looks: &mut [Look],
+        types: usize,
+        resolve: impl Fn(&BTreeMap<String, OrganLook>) -> Vec<Look>,
+    ) {
+        let Some(serde_json::Value::Object(varied)) = self.spreads.get("organs") else {
+            return;
+        };
+        if !looks
+            .iter()
+            .take(types)
+            .any(|look| varied.contains_key(&look.organ) && look.draws_solid())
+        {
+            return;
+        }
+        let varieties: Vec<Vec<Look>> = (0..looks::VARIETIES)
+            .map(|variety| resolve(&looks::variety(&self.organs, &self.spreads, variety)))
+            .collect();
+        for (index, look) in looks.iter_mut().enumerate().take(types) {
+            if varied.contains_key(&look.organ) && look.draws_solid() {
+                let drawn: Vec<Look> = varieties
+                    .iter()
+                    .filter_map(|drawn| drawn.get(index).cloned())
+                    .collect();
+                // A look whose varieties all draw its typical values (its
+                // spreads differ only in their rare extremes) stays one.
+                if drawn.iter().any(|variety| variety != look) {
+                    look.varieties = drawn;
+                }
+            }
+        }
     }
 
     /// Whether any organ has a season ([`looks::Season`]): then the day a
@@ -1136,7 +1282,7 @@ mod tests {
         juvenile.until = None;
         assert!(
             spec.validate().unwrap_err().0.ends_with(
-                ": families juvenile needs until: program conifer records no adult shoots"
+                ": families juvenile needs until: program pinidae records no adult shoots"
             )
         );
     }
