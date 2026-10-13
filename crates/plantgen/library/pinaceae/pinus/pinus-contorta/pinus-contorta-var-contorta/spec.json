@@ -13,7 +13,6 @@
   "generator": {
     "params": {
       "cone_chance": 0.12,
-      "cone_length": 0.045,
       "cone_pitch": 60,
       "cone_years": 10,
       "cone_area": 0.785,
@@ -30,7 +29,6 @@
       "branch_growth": 0.22,
       "branch_ageing": 0.975,
       "side_chance": 0.6,
-      "needle_years": 4,
       "spray_base": 0.15,
       "spray_length": 0.9,
       "shade_death": 0.15,
@@ -73,13 +71,10 @@
       "spray": {
         "shape": {
           "template": "needles",
-          "ranks": 0,
           "twigs": 2,
           "aspect": 0.5,
-          "needle": 0.14,
           "twig_angle": 35,
-          "width": 0.03,
-          "bundle": 2
+          "width": 0.03
         },
         "accent": [0.3, 0.2, 0.1]
       }
@@ -102,9 +97,33 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "juvenile_period_years": {"min": 4, "max": 8}
+    "juvenile_period_years": {"min": 4, "max": 8},
+    "needles_per_fascicle": 2,
+    "leaf_length_m": {"min": 0.03, "max": 0.05},
+    "leaf_life_years": {"min": 2, "max": 3},
+    "cone_length_m": {"min": 0.03, "max": 0.05}
   },
   "evidence": {
+    "traits.needles_per_fascicle": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 59), Pinus contorta in its shore form: needles in twos, the sheath kept, 3 to 5 cm, dense on the branches, kept two or three years, rarely longer; seed cones ovoid and oblique, 3 to 5 cm (FEIS: 3.8 to 5.1 cm). They open when ripe and then fall soon or hang on for many years, so no retention is stated."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 59), Pinus contorta in its shore form: needles in twos, the sheath kept, 3 to 5 cm, dense on the branches, kept two or three years, rarely longer; seed cones ovoid and oblique, 3 to 5 cm (FEIS: 3.8 to 5.1 cm). They open when ripe and then fall soon or hang on for many years, so no retention is stated."
+    },
+    "traits.leaf_life_years": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 59), Pinus contorta in its shore form: needles in twos, the sheath kept, 3 to 5 cm, dense on the branches, kept two or three years, rarely longer; seed cones ovoid and oblique, 3 to 5 cm (FEIS: 3.8 to 5.1 cm). They open when ripe and then fall soon or hang on for many years, so no retention is stated."
+    },
+    "traits.cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 59), Pinus contorta in its shore form: needles in twos, the sheath kept, 3 to 5 cm, dense on the branches, kept two or three years, rarely longer; seed cones ovoid and oblique, 3 to 5 cm (FEIS: 3.8 to 5.1 cm). They open when ripe and then fall soon or hang on for many years, so no retention is stated."
+    },
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",
@@ -113,7 +132,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a small, irregular pine with a rounded to flat-topped crown, stout upturned branches and tufts of short, paired needles at the twig ends. Not fitted to measurements. Cones (plant forms F3): 3 to 6 cm, often closed and kept on the tree for years; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles."
+      "note": "Hand-set from general knowledge of the species: a small, irregular pine with a rounded to flat-topped crown, stout upturned branches and tufts of short, paired needles at the twig ends. Not fitted to measurements. Cones (plant forms F3): 3 to 6 cm, often closed and kept on the tree for years; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles. Spec rework E6d: `cone_length`, `needle_years` now set by the rules at Pinidae from the stated characters."
     },
     "allometry": {
       "evidence": "Authored",
@@ -123,7 +142,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: yellow-green needles; dark, thick, furrowed bark. Needle shoots (plant roadmap P4): needles in pairs, 3 to 7 cm long and 1 to 2 mm wide, so a needle 0.03 as wide as it is long (`width`), 2 to a fascicle (`bundle`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): dark brown bark broken into small blocky plates; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: yellow-green needles; dark, thick, furrowed bark. Needle shoots (plant roadmap P4): needles in pairs, 3 to 7 cm long and 1 to 2 mm wide, so a needle 0.03 as wide as it is long (`width`), 2 to a fascicle (`bundle`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): dark brown bark broken into small blocky plates; set from general knowledge of the species, not measured. Spec rework E6d: `needle`, `bundle`, `ranks` now set by the rules at Pinidae from the stated needles."
     },
     "taxon": {
       "evidence": "Authored",

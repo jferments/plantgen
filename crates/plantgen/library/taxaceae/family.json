@@ -2,5 +2,17 @@
   "schema": 1,
   "rank": "family",
   "name": "Taxaceae",
-  "parent": "order/cupressales"
+  "parent": "order/cupressales",
+  "traits": {
+    "sexual_system": "dioecious",
+    "leaf_form": "needle",
+    "foliage_ranks": "two_ranked"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 50), Taxaceae: evergreen trees or shrubs with linear leaves set in a spiral that mostly look two-ranked, the flattened leaf base twisting them into one plane; the sexes on separate plants."
+    }
+  }
 }

@@ -212,9 +212,14 @@ pub mod venation;
 /// drawn solid is one of four varieties of its look, which draw its
 /// counts and sizes across their ranges; a part mesh's variant `k` is its
 /// look's variety `k`.
-/// 37: a package's plants share out the range of each parameter that is a
-/// stated character itself, in its own units (spec rework VARY): one
-/// plant is the typical one, three take the middles of the range's
-/// thirds; a parameter a formula works out from a range records no spread
-/// and keeps its value, and so does one that sizes a cluster's organ.
+/// 35: a conifer's foliage and cones are grown from the characters its
+/// floras state (spec rework E6d), by rules at Pinidae: how long a shoot
+/// keeps its needles, a spray card's needles as long as the stated ones
+/// on a usual spray, a pine's needles to a bundle, needles in two ranks
+/// or all round, and a seed cone's length, posture and years on the tree.
+/// 37: a package's plants share out the range of each character of the
+/// whole plant that a parameter takes in its own units (spec rework
+/// VARY): one plant is the typical one, three take the middles of the
+/// range's thirds; a part's size, or a parameter a formula works out from
+/// a range, records no spread and keeps its value.
 pub const GENERATOR_REVISION: u32 = 37;
