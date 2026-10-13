@@ -369,11 +369,18 @@ pub const TOOLS: [ToolSpec; 11] = [
         version: 3,
         keys: &[("radius", 0.01)],
     },
+    // With `saturation` (crown form B), a tip's light gathers as a leaf's
+    // photosynthesis does: half of full light's at `saturation`.
     ToolSpec {
         kind: ToolKind::Vigour,
         name: "vigour",
         version: 1,
-        keys: &[("lambda", 0.5), ("alpha", 2.0), ("max", 1.0e9)],
+        keys: &[
+            ("lambda", 0.5),
+            ("alpha", 2.0),
+            ("max", 1.0e9),
+            ("saturation", 0.0),
+        ],
     },
     ToolSpec {
         kind: ToolKind::Pipe,
@@ -412,6 +419,7 @@ pub const TOOLS: [ToolSpec; 11] = [
             ("leaf_mass", 0.1),
             ("set", 0.3),
             ("straighten", 0.1),
+            ("stem", 1.0),
         ],
     },
 ];
