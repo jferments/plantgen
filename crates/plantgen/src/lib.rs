@@ -217,6 +217,12 @@ pub mod venation;
 /// keeps its needles, a spray card's needles as long as the stated ones
 /// on a usual spray, a pine's needles to a bundle, needles in two ranks
 /// or all round, and a seed cone's length, posture and years on the tree.
+/// 36: the pieces of a strap join (an arching grass or sedge blade, a
+/// basal leaf drawn in pieces): each piece of a chain is turned against
+/// its card's droop by half of it and lengthened by its arc over its
+/// chord, so its bent card ends where the next piece stands, and drawn at
+/// its own size, not its sun or shade form's; before, every piece drooped
+/// away from the next and the strap fell apart into floating pieces.
 /// 37: a cactus column's ring of flowers sits at the radius of its newest
 /// piece as drawn, not its tip's, so a young pup's flowers stand on its
 /// body (36 is the strap pieces' join, #65).
