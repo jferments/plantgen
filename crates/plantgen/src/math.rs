@@ -259,7 +259,7 @@ impl Vec3 {
 
     /// [`Vec3::rotate_about`] given the angle's sine `s` and cosine `c`.
     #[must_use]
-    fn turned(self, axis: Self, s: f64, c: f64) -> Self {
+    pub fn turned(self, axis: Self, s: f64, c: f64) -> Self {
         self * c + axis.cross(self) * s + axis * (axis.dot(self) * (1.0 - c))
     }
 

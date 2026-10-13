@@ -2683,12 +2683,14 @@ impl Rigid {
             return *self;
         }
         let axis = turn * (1.0 / angle);
-        let r = |v: Vec3| self.turn(v.rotate_about(axis, angle));
+        // One sine and cosine for the four turns (`Vec3::rotate_about`).
+        let (s, c) = (math::sin(angle), math::cos(angle));
+        let r = |v: Vec3| self.turn(v.turned(axis, s, c));
         Self {
             x: r(Vec3::X),
             y: r(Vec3::Y),
             z: r(Vec3::Z),
-            t: self.turn(pivot - pivot.rotate_about(axis, angle)) + self.t,
+            t: self.turn(pivot - pivot.turned(axis, s, c)) + self.t,
         }
     }
 }
@@ -2723,7 +2725,7 @@ pub fn bend(
     radii: &[f64],
     organ_area: &[f64],
     values: &[f64],
-    rest: &mut HashMap<u64, Vec3, impl std::hash::BuildHasher>,
+    rest: &mut HashMap<u64, Vec3, impl std::hash::BuildHasher + Clone>,
     dt: f64,
 ) -> Result<(), GrowthError> {
     let [density, modulus, leaf_mass, set, straighten, stem] = values[..] else {
@@ -2777,7 +2779,7 @@ pub fn bend(
     }
 
     let mut motion = vec![Rigid::IDENTITY; count];
-    let mut seen = HashMap::with_capacity(scene.segments.len());
+    let mut seen = HashMap::with_capacity_and_hasher(scene.segments.len(), rest.hasher().clone());
     for index in 0..count {
         let before = scene.nodes[index]
             .parent
@@ -2822,8 +2824,7 @@ pub fn bend(
         motion[index] = before.after(segment.start, turn);
         seen.insert(segment.id, held + (sag * set - held * straighten) * dt);
     }
-    rest.clear();
-    rest.extend(seen);
+    *rest = seen;
 
     let mut height = 0.0_f64;
     for segment in &mut scene.segments {
