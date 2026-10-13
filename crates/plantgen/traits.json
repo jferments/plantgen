@@ -362,6 +362,24 @@
       "range": [0.001, 200],
       "why": "the widest a crown or clump grows"
     },
+    "crown_outline_fit": {
+      "group": "form",
+      "organ": "plant",
+      "type": "number",
+      "unit": "share",
+      "range": [0, 1],
+      "optional": true,
+      "why": "how nearly a grown, open-grown crown's outline seen from the side is an ellipse: its intersection over union with the ellipse of the same area and second moments, 1 for an ellipse (crown form research, 2026-10-12); a lobed, flat-topped or vase-shaped crown fits less"
+    },
+    "crown_see_through": {
+      "group": "form",
+      "organ": "plant",
+      "type": "number",
+      "unit": "share",
+      "range": [0, 1],
+      "optional": true,
+      "why": "the share of a grown, open-grown crown's outline seen from the side that the sky shows through, between its leaves, its wood and its lobes"
+    },
     "culm_length_m": {
       "group": "size",
       "organ": "stem",
@@ -1407,6 +1425,26 @@
       "organ": "stem",
       "type": "bool",
       "why": "whether it grows long shoots and short ones (spurs)"
+    },
+    "bud_position": {
+      "group": "architecture",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["acrotonic", "mesotonic", "basitonic"],
+      "why": "where along a year's shoot the buds that grow into long shoots sit: near its tip (acrotonic, most trees), in its middle (mesotonic), or near its foot (basitonic, many shrubs, which renew from their base)"
+    },
+    "shoot_leaves": {
+      "group": "architecture",
+      "organ": "stem",
+      "type": "count",
+      "range": [1, 200],
+      "why": "the leaves a vigorous long shoot bears in one year's growth (its growth unit), from its foot to its tip"
+    },
+    "epicormic": {
+      "group": "architecture",
+      "organ": "stem",
+      "type": "bool",
+      "why": "whether dormant buds under the bark of old limbs and the trunk sprout into new shoots where light reaches them (delayed reiteration)"
     },
     "ramification_order": {
       "group": "architecture",

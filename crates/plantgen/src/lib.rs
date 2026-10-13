@@ -182,15 +182,29 @@ pub mod venation;
 /// and bracken grow fronds of their flora's sizes; a crown a fern's
 /// rhizome sends out starts as old as the crown it came from
 /// (`polypodiidae` revision 4), so its first fronds are full-sized.
-/// 30: a cluster can wrap a spathe round its units (spec rework E6b): a
+/// 30: crown calibration: in the broadleaf program a short shoot lives
+/// while it has light, for up to 40 years, and its leaves carry their own
+/// turn, so open-grown crowns keep the leaf area per crown area of the
+/// Urban Tree Database's trees and their inner leaves grow in shade; and
+/// the deep-shade end of the light scale leaves acclimate on,
+/// `looks::DEEP_SHADE`, is 0.08, where the growth model's short shoots stop
+/// leafing out, not 0.04, which no crown's leaves reach.
+/// 31: crown form, step A: in the broadleaf program a year's shoot is a
+/// growth unit of several nodes, only those at its acrotonic or basitonic
+/// end growing long shoots, a few next to them short shoots and the rest
+/// latent; and every broadleaf tree may fork where its flowers end a
+/// shoot, lose tips that have no space, shed limbs that do not pay their
+/// way, sprout from dormant buds and grow back into freed space, as a
+/// maple did, each set by rules from the taxon's architecture traits.
+/// 32: a cluster can wrap a spathe round its units (spec rework E6b): a
 /// leaf-like sheet from below the lowest unit, its length, width, hood,
 /// cup and colour set on the look, drawn solid near the camera and on the
 /// cluster's card, so the skunk cabbage's spadix stands in its yellow
 /// spathe.
-/// 31: a cactus's ribs, areoles, spines and joints are grown from the
+/// 33: a cactus's ribs, areoles, spines and joints are grown from the
 /// characters its floras state (spec rework E6c), by rules of its family,
 /// subfamily and genus: rib and spine counts within their stated ranges,
 /// areoles' spacing, spines a fifth shorter than the longest a flora
 /// gives, a column's girth and a joint's length and width; spine sets
 /// name their role, and the chollas' areoles bear glochids.
-pub const GENERATOR_REVISION: u32 = 31;
+pub const GENERATOR_REVISION: u32 = 33;

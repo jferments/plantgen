@@ -6,7 +6,8 @@
     "inflorescence": "panicle",
     "ovary_position": "superior",
     "stamens": 20,
-    "carpels": 5
+    "carpels": 5,
+    "flowering_position": "terminal"
   },
   "evidence": {
     "traits.inflorescence": {
@@ -18,6 +19,11 @@
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",
       "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: petals 5; stamens 20 on a ring-like perigynous disk; pistils 5, distinct. Jepson eFlora (as quoted in search results; the page itself was not read): hypanthium saucer-shaped; pistils 5, ovaries superior; stamens 15 to 20."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual's Holodiscus chapter (read in full) and FEIS's ocean-spray review (page read): showy terminal panicles."
     }
   }
 }

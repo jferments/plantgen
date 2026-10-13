@@ -24,7 +24,6 @@
       "apical_young": 0.56,
       "apical": 0.5,
       "apical_years": 4,
-      "bud_years": 6,
       "flux": 4,
       "spur_light": 0.08,
       "shade_death": 0.03,
@@ -143,7 +142,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "carpels": 30
+    "carpels": 30,
+    "flowering_position": "terminal"
   },
   "evidence": {
     "generator.params": {
@@ -200,6 +200,11 @@
       "evidence": "SourceInferred",
       "source": "jepson-eflora",
       "note": "Jepson eFlora's account of the species, as quoted in search results; the page itself was not read: pistils more than 30, styles short and thick, ovaries densely hairy; petals 14 to 22 mm, white. Floras say only that the stamens are numerous, so their count stays by hand."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's thimbleberry review (page read): flowers in clusters of 2 to 10 at the ends of the branches, on second-year stems."
     }
   },
   "provenance": {

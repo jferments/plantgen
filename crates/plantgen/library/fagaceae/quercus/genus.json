@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Quercus",
+  "traits": {"flowering_position": "lateral", "epicormic": true, "self_pruning": true},
+  "evidence": {
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual's oak chapter (read in full): staminate catkins come mostly from the axils of the previous year's leaves and pistillate flowers from the axils of the current year's; FEIS's Quercus garryana review (page read) says the same of the Oregon white oak. No shoot of an oak ends in its flowers."
+    },
+    "traits.epicormic": {
+      "evidence": "SourceInferred",
+      "source": "meier-2012-epicormic",
+      "note": "Meier, Saunders and Michler (2012, read in full) name oaks the best-studied example of temperate trees whose epicormic buds sit in clusters on the bark and sprout into new shoots; FEIS's Quercus garryana review (page read) reports epicormic sprouts on Oregon white oaks after disturbance and when competing conifers are removed."
+    },
+    "traits.self_pruning": {
+      "evidence": "SourceInferred",
+      "source": "devine-harrington-2010",
+      "note": "Devine and Harrington's guide to planting native oaks in the Pacific Northwest (read in full) says an overtopped oak loses vigour and its limbs begin to die; inferred from that, as no source read here uses the words self-pruning."
+    }
+  }
+}

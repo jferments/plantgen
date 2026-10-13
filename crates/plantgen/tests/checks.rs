@@ -25,6 +25,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a cluster draws at most 200 units, so the spadix's 350 to 1350 flowers are drawn as 200",
     ),
     (
+        "program:broadleaf",
+        "crown_outline_fit",
+        "its crowns still fill the envelope of the space tool (an ellipsoid), so from the side they fit an ellipse at about 0.90 to 0.95 against open-grown trees' 0.82 to 0.84; crown form step B grows the shape from light and space with no outline",
+    ),
+    (
         "program:grass",
         "phyllotaxis_pattern",
         "each blade's roll is jittered ±40° (a culm leaf's ±30°), so the turn from one to the next has a median of about 146°, nearer the golden angle than half a turn",
@@ -33,6 +38,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "program:herb",
         "phyllotaxis_pattern",
         "each basal leaf's roll is jittered ±30°, so a fan of two ranks (irises, blue-eyed grass) turns about 140° to 150° from one leaf to the next",
+    ),
+    (
+        "program:sapindaceae",
+        "crown_outline_fit",
+        "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
     ),
     (
         "viola-glabella",
@@ -60,9 +70,10 @@ fn stated_characters_hold_on_grown_plants() {
         .iter()
         .map(|entry| entry.id.clone())
         .filter(|id| {
-            library
-                .traits_of(id)
-                .is_ok_and(|traits| checks::states_checked(&traits))
+            let (Ok(spec), Ok(traits)) = (library.spec(id), library.traits_of(id)) else {
+                return false;
+            };
+            checks::states_checked(&spec, &traits)
         })
         .collect();
     assert!(

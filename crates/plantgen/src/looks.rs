@@ -111,12 +111,16 @@ pub struct Juvenile {
 /// The ends of the scale leaves acclimate on, in the growth model's light
 /// (its share of open-sky light, `light@1`). In that model a dense crown's
 /// outermost leaves see only about a third of the open sky, since each
-/// light voxel's own leaves shade it, so the scale tops out there: a leaf
-/// in [`FULL_SUN`] or more is drawn in its look's colour, one in
-/// [`DEEP_SHADE`] or less in its shade colour, and between them it moves
-/// with the logarithm of its light ([`sunlit`]), as leaves acclimate.
+/// light voxel's own leaves shade it, so the scale tops out there; and its
+/// innermost leaves are where short shoots stop leafing out, 0.08 to 0.1
+/// in the broadleaf programs (`spur_light`), so the scale bottoms out
+/// there (crown calibration; 0.04 before, which no crown's leaves
+/// reached). A leaf in [`FULL_SUN`] or more is drawn in its look's colour,
+/// one in [`DEEP_SHADE`] or less in its shade colour, and between them it
+/// moves with the logarithm of its light ([`sunlit`]), as leaves
+/// acclimate.
 pub const FULL_SUN: f64 = 0.35;
-pub const DEEP_SHADE: f64 = 0.04;
+pub const DEEP_SHADE: f64 = 0.08;
 
 /// Where `light` lies on the scale from [`DEEP_SHADE`] (0) to
 /// [`FULL_SUN`] (1), by its logarithm.
@@ -3234,10 +3238,10 @@ mod tests {
         let middle = crate::math::sqrt(DEEP_SHADE * FULL_SUN);
         assert!((sunlit(middle) - 0.5).abs() < 1e-12);
         assert!(sunlit(0.1) < sunlit(0.2) && sunlit(0.2) < sunlit(0.3));
-        // A dense crown's surface (light about 0.2 to 0.3 in the growth
-        // model) is mostly sunlit; leaves at a tenth of the open sky are
-        // their type's own.
-        assert!(light_form(0.2) > 0.5 && light_form(0.06) < -0.5);
+        // A dense crown's surface (light about 0.3 to 0.4 in the growth
+        // model) is sunlit; the leaves where short shoots stop leafing out
+        // (0.08) wear their shade form.
+        assert!(light_form(0.3) > 0.5 && light_form(0.08) < -0.5);
         assert!(light_form(middle).abs() < 1e-12);
         assert_eq!((light_form(FULL_SUN), light_form(DEEP_SHADE)), (1.0, -1.0));
     }
@@ -3296,13 +3300,13 @@ mod tests {
             (5, 1.0 - 0.12 * 0.5)
         );
         assert_eq!(forms.of(0, &leaf(0.2, 10.0, None, 1)).0, 4);
-        assert_eq!(forms.of(0, &leaf(0.12, 10.0, None, 1)).0, 0);
-        assert_eq!(forms.of(0, &leaf(0.07, 10.0, None, 1)).0, 3);
+        assert_eq!(forms.of(0, &leaf(0.17, 10.0, None, 1)).0, 0);
+        assert_eq!(forms.of(0, &leaf(0.11, 10.0, None, 1)).0, 3);
         assert_eq!(
             forms.of(0, &leaf(0.01, 10.0, None, 1)),
             (2, 1.0 + 0.12 * 0.5)
         );
-        let sizes: Vec<f64> = [0.04, 0.06, 0.08, 0.1, 0.15, 0.2, 0.3]
+        let sizes: Vec<f64> = [0.08, 0.1, 0.12, 0.15, 0.2, 0.3]
             .iter()
             .map(|&light| forms.of(0, &leaf(light, 10.0, None, 1)).1)
             .collect();

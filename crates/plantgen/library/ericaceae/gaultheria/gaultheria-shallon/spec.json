@@ -24,7 +24,6 @@
       "apical_young": 0.56,
       "apical": 0.5,
       "apical_years": 4,
-      "bud_years": 6,
       "flux": 4,
       "spur_light": 0.08,
       "shade_death": 0.03,
@@ -121,6 +120,9 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "flowering_position": "both"
+  },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
@@ -176,6 +178,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit, a convention (no source gives a raceme's opening time)."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's salal review (page read): terminal and subterminal racemes with bracts."
     }
   },
   "provenance": {
