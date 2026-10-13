@@ -3,6 +3,20 @@
   "rank": "family",
   "name": "Salicaceae",
   "parent": "order/malpighiales",
+  "traits": {
+    "woodiness": "woody",
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "stipules": {
+      "true": "usually",
+      "false": "sometimes"
+    },
+    "sexual_system": {
+      "dioecious": "usually",
+      "hermaphrodite": "sometimes"
+    },
+    "ovary_position": "superior"
+  },
   "forms": {
     "decurrent_tree": {
       "generator": {
@@ -15,6 +29,13 @@
           "note": "The program the authors chose to grow this taxon's decurrent tree species (named in each species' spec until G2.3a moved it here)."
         }
       }
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1926",
+      "note": "Hutchinson (vol. 1, 1926), family 57 Salicaceae (the willows and poplars): trees or shrubs; leaves alternate, simple; stipules small or leafy; flowers on separate trees, in catkins, with no perianth; ovary superior; fruit a capsule of many hairy seeds. APG's Salicaceae also holds most of the old Flacourtiaceae, trees and shrubs with alternate simple leaves and flowers with a perianth, often also on separate plants; their catkins, missing perianths and capsules belong to the willows' and poplars' genus files."
     }
   }
 }

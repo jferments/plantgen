@@ -2,5 +2,20 @@
   "schema": 1,
   "rank": "order",
   "name": "Dipsacales",
-  "parent": "clade/campanulids"
+  "parent": "clade/campanulids",
+  "traits": {
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "whorled": "rarely"
+    },
+    "ovary_position": "inferior",
+    "stipules": false
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1926",
+      "note": "Hutchinson (vol. 1, 1926), families 48 Caprifoliaceae, 306 Adoxaceae, 312 Valerianaceae and 313 Dipsacaceae, which make APG's Dipsacales (Caprifoliaceae in the wide sense, and Viburnaceae): leaves opposite, rarely whorled; stipules absent or very small; the calyx on an inferior ovary."
+    }
+  }
 }

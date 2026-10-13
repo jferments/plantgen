@@ -3,6 +3,22 @@
   "rank": "family",
   "name": "Malvaceae",
   "parent": "order/malvales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_venation": {
+      "palmate": "usually",
+      "pinnate": "often"
+    },
+    "stipules": true,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "flower_merosity": 5,
+    "ovary_position": "superior",
+    "fruit_type": {
+      "capsule": "usually",
+      "schizocarp": "often"
+    }
+  },
   "forms": {
     "decurrent_tree": {
       "generator": {
@@ -15,6 +31,13 @@
           "note": "The program the authors chose to grow this taxon's decurrent tree species (named in each species' spec until G2.3a moved it here)."
         }
       }
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1926",
+      "note": "Hutchinson (vol. 1, 1926), families 117 Sterculiaceae, 119 Bombacaceae (the baobab) and 120 Malvaceae, which APG joins with the lindens as Malvaceae: leaves alternate, simple or digitate, mostly palmately veined; stipules present, often falling early; flowers regular; sepals (3-)5, joined, valvate, often with an epicalyx; petals 5; stamens many, often in a column; ovary superior; fruit a capsule, or splitting into its carpels (cocci)."
     }
   }
 }

@@ -3,6 +3,15 @@
   "rank": "family",
   "name": "Nothofagaceae",
   "parent": "order/fagales",
+  "traits": {
+    "woodiness": "woody",
+    "leaf_division": "simple",
+    "leaf_venation": "pinnate",
+    "stipules": true,
+    "sexual_system": "monoecious",
+    "perianth": "tepals",
+    "fruit_type": "nut"
+  },
   "forms": {
     "decurrent_tree": {
       "generator": {
@@ -15,6 +24,13 @@
           "note": "The program the authors chose to grow this taxon's decurrent tree species (named in each species' spec until G2.3a moved it here)."
         }
       }
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1926",
+      "note": "Hutchinson (vol. 1, 1926), family 62 Fagaceae, under which he kept Nothofagus (APG's Nothofagaceae): trees; leaves simple, pinnately veined, with stipules soon falling; flowers unisexual on the same tree, a calyx and no petals; the female in a cup of scales; fruit small nuts in that cup."
     }
   }
 }

@@ -2,5 +2,19 @@
   "schema": 1,
   "rank": "clade",
   "name": "eudicots",
-  "parent": "clade/mesangiosperms"
+  "parent": "clade/mesangiosperms",
+  "traits": {
+    "leaf_venation": {
+      "pinnate": "usually",
+      "palmate": "often",
+      "parallel": "rarely"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1926",
+      "note": "Hutchinson's conspectus (vol. 1, 1926): the dicotyledons' leaves are typically net-veined, most often pinnately (a midrib with side veins), often palmately; parallel veins are rare among them. Hutchinson's dicotyledons hold the magnoliids too; the statement sits here at the eudicots, the APG clade whose families this library grows."
+    }
+  }
 }

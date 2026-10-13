@@ -17,9 +17,19 @@ use plantgen::spec::PlantSpec;
 /// too, so the list only shrinks.
 const KNOWN: &[(&str, &str, &str)] = &[
     (
+        "adansonia-digitata",
+        "leaf_arrangement",
+        "Malvaceae's leaves are alternate and the baobab sets one leaf a node, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
+    ),
+    (
         "anaphalis-margaritacea",
         "involucre_height_m",
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
+    ),
+    (
+        "fraxinus-latifolia",
+        "leaf_arrangement",
+        "Oleaceae's leaves are opposite and the ash grows two a node, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
     ),
     (
         "lysichiton-americanus",

@@ -3,6 +3,21 @@
   "rank": "family",
   "name": "Santalaceae",
   "parent": "order/santalales",
+  "traits": {
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "stipules": false,
+    "perianth": "tepals",
+    "ovary_position": {
+      "inferior": "usually",
+      "half_inferior": "sometimes"
+    },
+    "fruit_type": {
+      "drupe": "usually",
+      "berry": "sometimes",
+      "nut": "sometimes"
+    }
+  },
   "forms": {
     "shrub": {
       "generator": {
@@ -15,6 +30,13 @@
           "note": "The program the authors chose to grow this taxon's shrub species (named in each species' spec until G2.3a moved it here)."
         }
       }
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1926",
+      "note": "Hutchinson (vol. 1, 1926), family 196 Santalaceae: trees, shrubs or herbs, often parasitic on trees or roots; leaves alternate or opposite, entire, sometimes reduced to scales; stipules absent; calyx green or petal-like, 3- to 6-lobed, no petals; ovary inferior or half inferior; fruit a nut or drupe. APG's Santalaceae holds Viscaceae (the mistletoes), whose fruit is a berry."
     }
   }
 }
