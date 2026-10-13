@@ -132,7 +132,27 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 2,
+      "max": 5
+    },
+    "leaf_length_m": {
+      "min": 0.03,
+      "max": 0.1
+    }
+  },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Cornus stolonifera: grows 2 m to 5 m tall."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Cornus stolonifera: leaves 3 cm to 10 cm long."
+    },
     "generator.params.path_half": {
       "evidence": "Authored",
       "source": "plantgen-authors",
