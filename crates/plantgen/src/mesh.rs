@@ -2353,6 +2353,7 @@ mod tests {
             roots: None,
             bark_pattern: None,
             bodies: BTreeMap::new(),
+            spreads: serde_json::Map::new(),
         }
     }
 

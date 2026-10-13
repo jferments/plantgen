@@ -43,7 +43,17 @@
 //! of its `min` and `max`, and as `min(name)` and `max(name)` its bounds
 //! (a number stated alone is both), so a rule whose `rule` is a list of
 //! formulas, one for each item, can set a range a look varies within:
-//! ribs stated as 12 to 24 set a body's `[12, 24]`; one stated as qualified states reads as its most
+//! ribs stated as 12 to 24 set a body's `[12, 24]`. A rule that reads one
+//! range (or one parameter a rule before it spread), and nothing else
+//! that varies, is also worked out at five points of it ([`SPREAD_AT`],
+//! [`range_at`]): its lowest, its `min`, its `typical`, its `max` and its
+//! highest (spec rework VARY); one reading two keeps its one value, as no
+//! flora says how two ranges vary together, and a bound is one number.
+//! Where its numbers differ, the effective spec records them beside the
+//! value as its spread ([`spread_path`], [`Spread`]), from which each
+//! organ drawn solid draws its look (`crate::looks::variety`); a list a
+//! rule sets, and a body's look, vary within their own ranges and record
+//! none. A trait stated as qualified states reads as its most
 //! usual state ([`FREQUENCIES`]), and a rule reading states that tie sets
 //! nothing, unless it is a map that draws `between` them: a flora's "ovate
 //! to lanceolate" means the forms between, so the map gives the mean of
@@ -129,6 +139,131 @@ pub const FREQUENCIES: [&str; 4] = ["usually", "often", "sometimes", "rarely"];
 /// known the rare extremes, `low` and `high`, and the usual value,
 /// `typical`. A flora's "(3-)5-8" is `{"min": 5, "max": 8, "low": 3}`.
 pub const RANGE: [&str; 5] = ["min", "max", "low", "high", "typical"];
+
+/// The share of a range drawn below its `min` where it states a `low`,
+/// and above its `max` where it states a `high`: its rare extremes.
+pub const TAIL: f64 = 0.05;
+
+/// The points a rule reading a range is worked out at, as shares of the
+/// way through the range ([`range_at`]): its lowest, its `min`, its
+/// `typical`, its `max` and its highest.
+pub const SPREAD_AT: [f64; 5] = [0.0, TAIL, 0.5, 1.0 - TAIL, 1.0];
+
+/// The value a range stated as `stated` takes `share` of the way through
+/// it: half its values lie below its `typical` (else the middle of its
+/// `min` and `max`) and half above, evenly within each half, and
+/// [`TAIL`] of them below `min` down to `low` and above `max` up to
+/// `high` where it states them. Nothing for a range without a `min` and a
+/// `max`.
+#[must_use]
+pub fn range_at(stated: &Map<String, Value>, share: f64) -> Option<f64> {
+    let bound = |name: &str| stated.get(name).and_then(Value::as_f64);
+    let (min, max) = (bound("min")?, bound("max")?);
+    let mut points = vec![(0.0, bound("low").unwrap_or(min))];
+    if bound("low").is_some() {
+        points.push((TAIL, min));
+    }
+    points.push((
+        0.5,
+        bound("typical").unwrap_or_else(|| f64::midpoint(min, max)),
+    ));
+    if bound("high").is_some() {
+        points.push((1.0 - TAIL, max));
+    }
+    points.push((1.0, bound("high").unwrap_or(max)));
+    Some(through(&points, share))
+}
+
+/// The value `share` of the way along `points`, each a share and its
+/// value, straight between them.
+fn through(points: &[(f64, f64)], share: f64) -> f64 {
+    let share = share.clamp(0.0, 1.0);
+    for pair in points.windows(2) {
+        let ((from, low), (to, high)) = (pair[0], pair[1]);
+        if share <= to {
+            return if to > from {
+                low + (high - low) * (share - from) / (to - from)
+            } else {
+                high
+            };
+        }
+    }
+    points.last().map_or(0.0, |point| point.1)
+}
+
+/// Where the effective spec records the spread of the value at `path`:
+/// `appearance.spreads.<rest>` for a value in `appearance` (a look's
+/// `appearance.organs.head.shape.rays` at
+/// `appearance.spreads.organs.head.shape.rays`), `generator.spreads.<rest>`
+/// for one in `generator`; nothing elsewhere.
+#[must_use]
+pub fn spread_path(path: &str) -> Option<String> {
+    let (section, rest) = path.split_once('.')?;
+    ["appearance", "generator"]
+        .contains(&section)
+        .then(|| format!("{section}.spreads.{rest}"))
+}
+
+/// The spread of a value a rule sets from a range: its values at the
+/// points of [`SPREAD_AT`], whole numbers where the rule sets a count.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Spread {
+    pub values: [f64; 5],
+    pub whole: bool,
+}
+
+impl Spread {
+    /// The spread the effective spec records as `value`: five numbers.
+    #[must_use]
+    pub fn of(value: &Value) -> Option<Self> {
+        let items = value
+            .as_array()
+            .filter(|items| items.len() == SPREAD_AT.len())?;
+        let mut values = [0.0; 5];
+        for (slot, item) in values.iter_mut().zip(items) {
+            *slot = item.as_f64().filter(|number| number.is_finite())?;
+        }
+        Some(Self {
+            values,
+            whole: items.iter().all(|item| item.is_i64() || item.is_u64()),
+        })
+    }
+
+    /// Its value `share` of the way through it, straight between its
+    /// points; the nearest whole number for a count.
+    #[must_use]
+    pub fn at(&self, share: f64) -> f64 {
+        let points: Vec<(f64, f64)> = SPREAD_AT.into_iter().zip(self.values).collect();
+        let value = through(&points, share);
+        if self.whole { value.round() } else { value }
+    }
+
+    /// Every spread recorded within `spreads` (a section's `spreads`),
+    /// each with its path there.
+    #[must_use]
+    pub fn all(spreads: &Map<String, Value>) -> Vec<(String, Self)> {
+        fn walk(map: &Map<String, Value>, at: &str, found: &mut Vec<(String, Spread)>) {
+            for (key, value) in map {
+                let path = if at.is_empty() {
+                    key.clone()
+                } else {
+                    format!("{at}.{key}")
+                };
+                match value {
+                    Value::Object(inside) => walk(inside, &path, found),
+                    other => {
+                        if let Some(spread) = Spread::of(other) {
+                            found.push((path, spread));
+                        }
+                    }
+                }
+            }
+        }
+        let mut found = Vec::new();
+        walk(spreads, "", &mut found);
+        found
+    }
+}
 
 fn level(rank: &str) -> Option<usize> {
     LEVELS.iter().position(|level| *level == rank)
@@ -1570,6 +1705,20 @@ impl Ruled<'_> {
             };
             outcomes.insert(path.to_string(), (layers[*index].0.clone(), outcome));
         }
+        // A spread a rule replaced leaves no empty objects behind.
+        for section in ["appearance", "generator"] {
+            if let Some(Value::Object(inside)) = spec.get_mut(section) {
+                if let Some(Value::Object(spreads)) = inside.get_mut("spreads") {
+                    prune(spreads);
+                }
+                if inside
+                    .get("spreads")
+                    .is_some_and(|spreads| spreads.as_object().is_some_and(Map::is_empty))
+                {
+                    inside.remove("spreads");
+                }
+            }
+        }
         outcomes
     }
 
@@ -1658,6 +1807,7 @@ impl Ruled<'_> {
             return Err(format!("set by hand in {label}"));
         }
         let rivals = self.rivals(field, spec, origins, depth)?;
+        let typical = inputs.clone();
         let value = picked(self.rule, &picks, &mut inputs).map_err(|why| {
             // Its number failed for want of a name it could not read.
             match unread.first() {
@@ -1666,13 +1816,8 @@ impl Ruled<'_> {
             }
         })?;
         fits(field, &value)?;
-        for rival in &rivals {
-            remove(spec, rival);
-            forget(origins, rival);
-            notes.retain(|path, _| !within(path, rival));
-        }
-        set(spec, self.at, value);
-        forget(origins, self.at);
+        let spread = self.spread(&picks, &typical, spec, &value);
+        let set_at = put(spec, origins, notes, (self.at, value, spread), &rivals);
         let file = &self.layers[self.index].0;
         let label = if from.is_empty() {
             format!("{file}: rule")
@@ -1680,18 +1825,76 @@ impl Ruled<'_> {
             format!("{file}: rule on {}", from.join(", "))
         };
         let origin = (label, depth);
-        origins.insert(self.at.to_string(), origin.clone());
-        notes.retain(|path, _| !within(path, self.at));
         // The rule's note: on its path, else on all of its file's rules.
         let part = self.layers[self.index].1;
-        if let Some(note) = part
+        let note = part
             .notes
             .get(&format!("rules.{}", self.path))
-            .or_else(|| part.notes.get("rules"))
-        {
-            notes.insert(self.at.to_string(), (origin, note.clone()));
+            .or_else(|| part.notes.get("rules"));
+        for at in set_at {
+            if let Some(note) = note {
+                notes.insert(at.clone(), (origin.clone(), note.clone()));
+            }
+            origins.insert(at, origin.clone());
         }
         Ok(())
+    }
+
+    /// The spread of `value`, the rule's value from `inputs`, where it
+    /// reads one thing that varies, a range or a parameter a rule before it
+    /// spread: its value at each point of [`SPREAD_AT`] with that read
+    /// there ([`range_at`]), the middle one `value` itself. Nothing where
+    /// it reads none (a bound, `min(name)`, is one number), or two (how
+    /// two ranges vary together is not stated), or its values are not all
+    /// numbers or all the same, or it sets a body's look, which varies
+    /// within the ranges it states.
+    fn spread(
+        &self,
+        picks: &[Value],
+        inputs: &BTreeMap<String, Value>,
+        spec: &Map<String, Value>,
+        value: &Value,
+    ) -> Option<Value> {
+        if self.at.starts_with(BODIES) {
+            return None;
+        }
+        let varying: Vec<(&String, [f64; 5])> = inputs
+            .keys()
+            .filter_map(|name| {
+                let mut at = [0.0; 5];
+                match self.traits.get(name) {
+                    Some((Value::Object(stated), _)) if stated.values().all(Value::is_number) => {
+                        for (slot, share) in at.iter_mut().zip(SPREAD_AT) {
+                            *slot = range_at(stated, share)?;
+                        }
+                    }
+                    Some(_) => return None,
+                    None => {
+                        at = Spread::of(find(spec, &format!("generator.spreads.params.{name}"))?)?
+                            .values;
+                    }
+                }
+                Some((name, at))
+            })
+            .collect();
+        let [(name, at)] = varying.as_slice() else {
+            return None;
+        };
+        if !value.is_number() {
+            return None;
+        }
+        let mut values = Vec::with_capacity(SPREAD_AT.len());
+        for (point, at) in at.iter().enumerate() {
+            if point == SPREAD_AT.len() / 2 {
+                values.push(value.clone());
+                continue;
+            }
+            let mut read = inputs.clone();
+            read.insert((*name).clone(), Value::from(*at));
+            values.push(picked(self.rule, picks, &mut read).ok()?);
+        }
+        (values.iter().all(Value::is_number) && values.iter().any(|other| other != value))
+            .then_some(Value::Array(values))
     }
 
     /// Where the rule sets a field of a list's item by its role
@@ -2243,6 +2446,47 @@ fn merge(
             }
         }
     }
+}
+
+/// Set `value` at `at` in `spec`, and beside it its `spread`, if any
+/// ([`spread_path`]), in place of what was at either and of `rivals` and
+/// their spreads, whose origins and notes go with them; the paths set.
+fn put(
+    spec: &mut Map<String, Value>,
+    origins: &mut BTreeMap<String, Origin>,
+    notes: &mut BTreeMap<String, (Origin, Value)>,
+    (at, value, spread): (&str, Value, Option<Value>),
+    rivals: &[String],
+) -> Vec<String> {
+    let spread_at = spread_path(at);
+    let replaced = rivals
+        .iter()
+        .flat_map(|rival| std::iter::once(rival.clone()).chain(spread_path(rival)))
+        .chain(std::iter::once(at.to_string()))
+        .chain(spread_at.clone());
+    for path in replaced {
+        remove(spec, &path);
+        forget(origins, &path);
+        notes.retain(|noted, _| !within(noted, &path));
+    }
+    set(spec, at, value);
+    let mut set_at = vec![at.to_string()];
+    if let (Some(spread_at), Some(spread)) = (spread_at, spread) {
+        set(spec, &spread_at, spread);
+        set_at.push(spread_at);
+    }
+    set_at
+}
+
+/// Remove every object within `map` left empty, from the inside out.
+fn prune(map: &mut Map<String, Value>) {
+    map.retain(|_, value| match value {
+        Value::Object(inside) => {
+            prune(inside);
+            !inside.is_empty()
+        }
+        _ => true,
+    });
 }
 
 /// Forget the origins of the value at `path` and of everything inside it.
