@@ -177,9 +177,11 @@ fn rules_and_traits_say_where_they_come_from() {
         ),
         "{rules}"
     );
+    // The maples' genus states their leaves opposite, nearer than the
+    // family, and the family's rule reads it.
     let spec = stdout(&plantc(&["--library", library, "spec", "acer-circinatum"]));
     assert!(
-        spec.contains("\n  leaf_arrangement = \"opposite\"  (sapindaceae/family.json)\n"),
+        spec.contains("\n  leaf_arrangement = \"opposite\"  (sapindaceae/acer/genus.json)\n"),
         "{spec}"
     );
     assert!(

@@ -18,7 +18,13 @@
     "hypanthium": false,
     "ovary_position": "inferior",
     "stamens": 5,
-    "carpels": 2
+    "carpels": 2,
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "rarely"
+    },
+    "leaf_arrangement": "alternate",
+    "fruit_type": "schizocarp"
   },
   "forms": {
     "forb": {
@@ -56,6 +62,21 @@
       "evidence": "SourceInferred",
       "source": "abrams-1951",
       "note": "Abrams's Illustrated Flora of the Pacific States, volume 3 (1951), read in full (Umbelliferae by Mathias and Constance): flowers small, epigynous; sepals usually 5, evident or often obsolete; petals 5 on the margin of the hypanthium, which is wholly adnate to the ovary (so no floral cup stands above it); stamens 5; ovary bicarpellate, 2-celled; outer flowers of an umbel sometimes radiant."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 311 Umbelliferae: herbs, very rarely somewhat woody, with furrowed stems; leaves alternate, mostly much divided, sheathing at the base; fruit dry, splitting into two one-seeded halves (mericarps)."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 311 Umbelliferae: herbs, very rarely somewhat woody, with furrowed stems; leaves alternate, mostly much divided, sheathing at the base; fruit dry, splitting into two one-seeded halves (mericarps)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 311 Umbelliferae: herbs, very rarely somewhat woody, with furrowed stems; leaves alternate, mostly much divided, sheathing at the base; fruit dry, splitting into two one-seeded halves (mericarps)."
     }
   }
 }

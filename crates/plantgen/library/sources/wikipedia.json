@@ -1,0 +1,10 @@
+{
+  "id": "wikipedia",
+  "title": "Wikipedia, the free encyclopedia (English); each note names the article and the date it was read",
+  "authors": "Wikipedia contributors",
+  "year": 2026,
+  "url": "https://en.wikipedia.org/",
+  "licence": "CC-BY-SA-4.0; facts only",
+  "tier": 3,
+  "kind": "text"
+}
