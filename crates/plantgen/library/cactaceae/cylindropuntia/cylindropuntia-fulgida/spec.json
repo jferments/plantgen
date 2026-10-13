@@ -14,9 +14,6 @@
     "params": {
       "vigour_spread": 0.12,
       "lean": 4,
-      "joints": 1,
-      "joint_length": 0.14,
-      "joint_radius": 0.022,
       "joint_spread": 0.3,
       "daughters_low": 0.6,
       "daughters_high": 2.2,
@@ -109,14 +106,23 @@
         },
         "spines": [
           {
-            "count": [2, 12],
+            "role": "radial",
             "angle": 45,
-            "length": 0.02,
             "width": 0.0006,
             "colour": [0.75, 0.68, 0.45],
             "angle_spread": 25,
             "length_spread": 0.35,
             "tip": [0.7, 0.65, 0.5]
+          },
+          {
+            "role": "glochid",
+            "count": [10, 20],
+            "angle": 55,
+            "length": 0.003,
+            "width": 0.00012,
+            "colour": [0.82, 0.78, 0.58],
+            "angle_spread": 20,
+            "length_spread": 0.3
           }
         ],
         "greying": {
@@ -148,7 +154,19 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "joint_length_m": {"min": 0.1, "max": 0.2},
+    "joint_width_m": {"min": 0.03, "max": 0.05},
+    "stem_diameter_max_m": {"min": 0.1, "max": 0.2},
+    "radial_spines": {"min": 2, "max": 12},
+    "radial_spine_length_m": {"min": 0.025, "max": 0.035}
+  },
   "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, p. 67), as Opuntia fulgida: a woody trunk 10 to 20 cm thick; terminal joints 10 to 20 cm long, 3 to 5 cm thick; 2 to 12 needle-like, yellowish to brown spines 2.5 to 3.5 cm long, not told apart as radials and centrals, so stated as radials; glochids small, whitish to light yellow."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -193,6 +211,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "appearance.bodies.stem.spines.glochid": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, pp. 42 and 57 to 67): the areoles bear glochids above the spines, here small, whitish to light yellow. Their count, length and angle are set by eye like a prickly pear's, smaller, as no flora measures them."
     }
   },
   "provenance": {

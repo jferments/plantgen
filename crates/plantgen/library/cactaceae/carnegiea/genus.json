@@ -1,5 +1,17 @@
 {
   "schema": 1,
   "rank": "genus",
-  "name": "Carnegiea"
+  "name": "Carnegiea",
+  "parent": "subfamily/cactoideae",
+  "traits": {
+    "stem_form": "columnar",
+    "tubercles": false
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 2, 1920, p. 164): one species, a great columnar cactus of stout, erect, many-ribbed stems and branches, its areoles on the ribs."
+    }
+  }
 }

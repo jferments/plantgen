@@ -109,6 +109,7 @@
         },
         "spines": [
           {
+            "role": "radial",
             "count": [10, 15],
             "angle": 25,
             "length": 0.035,
@@ -120,9 +121,9 @@
             "tip": [0.6, 0.5, 0.25]
           },
           {
+            "role": "central",
             "count": [4, 4],
             "angle": 40,
-            "length": 0.06,
             "width": 0.0016,
             "colour": [0.6, 0.18, 0.08],
             "angle_spread": 15,
@@ -154,7 +155,16 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "central_spine_length_m": {"min": 0.1, "max": 0.12},
+    "central_spine_form": {"curved": "usually", "twisted": "often"}
+  },
   "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 3, 1922, pp. 129 to 130), as Ferocactus acanthodes: the central spines slender, spreading, somewhat flattened, ringed, twisted and somewhat curved, never hooked, the longest 10 to 12 cm. Rib and spine counts are given only as 'numerous', so they are not stated."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

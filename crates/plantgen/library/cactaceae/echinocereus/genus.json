@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Echinocereus",
+  "parent": "subfamily/cactoideae",
+  "traits": {
+    "stem_form": "columnar",
+    "tubercles": false
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 3, 1922, p. 3): always low, single or clumping, globular to cylindric stems growing on at their tips, so columns here however short; ribbed, the areoles on the ribs."
+    }
+  }
+}

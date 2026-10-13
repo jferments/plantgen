@@ -2183,6 +2183,8 @@ fn one_of_a_kind(s: &Fruit, x: f64, y: f64, fine: f64) -> Paint {
 pub(crate) struct ClusterCard {
     units: Vec<CardUnit>,
     stalks: Vec<CardStalk>,
+    /// Spathes, behind the rest.
+    sheets: Vec<CardSheet>,
     /// The looks of units in stages of their own: each its shape, how its
     /// colour and its accent are made of the card's two colours, and those
     /// two colours themselves.
@@ -2195,7 +2197,8 @@ pub(crate) struct ClusterCard {
     low: (f64, f64),
     cell: (f64, f64),
     side: usize,
-    /// Per cell: the stalks, then the units, it may show, in order.
+    /// Per cell: the stalks, the units, then the spathes, it may show, in
+    /// order.
     cells: Vec<Vec<CardItem>>,
     fine: f64,
 }
@@ -2251,10 +2254,20 @@ struct CardStalk {
     paint: Paint,
 }
 
+/// A spathe on a cluster's card: its foot and tip, its widest width,
+/// card units, and its paint.
+struct CardSheet {
+    foot: crate::math::Vec3,
+    tip: crate::math::Vec3,
+    width: f64,
+    paint: Paint,
+}
+
 #[derive(Clone, Copy)]
 enum CardItem {
     Stalk(usize),
     Unit(usize),
+    Sheet(usize),
 }
 
 impl CardUnit {
@@ -2318,6 +2331,23 @@ impl ClusterCard {
             })
             .collect();
         let pedicels: Vec<Paint> = laid.units.iter().map(|p| stalk_paint(p.stalk)).collect();
+        // A spathe in its colour made of the card's two, as a stalk among
+        // flowers is.
+        let sheets: Vec<CardSheet> = laid
+            .sheets
+            .iter()
+            .map(|sheet| {
+                let colour = sheet.colour.unwrap_or(colours.0);
+                let (a, b) = crate::clusters::blend(colour, colours);
+                let sum = a + b;
+                CardSheet {
+                    foot: project(sheet.foot),
+                    tip: project(sheet.tip()),
+                    width: sheet.width / length,
+                    paint: Paint::solid(sum.min(1.0), if sum > 1e-9 { b / sum } else { 0.0 }),
+                }
+            })
+            .collect();
         // Each stage's colour and accent made of the card's two.
         let looks = opening
             .zip(slots)
@@ -2453,10 +2483,24 @@ impl ClusterCard {
                 (high.0.max(attach.x + pad), high.1.max(attach.y + pad)),
             )
         };
+        let sheet_box = |sheet: &CardSheet| {
+            let pad = 0.5 * sheet.width + fine;
+            (
+                (
+                    sheet.foot.x.min(sheet.tip.x) - pad,
+                    sheet.foot.y.min(sheet.tip.y) - fine,
+                ),
+                (
+                    sheet.foot.x.max(sheet.tip.x) + pad,
+                    sheet.foot.y.max(sheet.tip.y) + fine,
+                ),
+            )
+        };
         let boxes: Vec<((f64, f64), (f64, f64))> = stalks
             .iter()
             .map(stalk_box)
             .chain(units.iter().map(unit_box))
+            .chain(sheets.iter().map(sheet_box))
             .collect();
         let (low, high) = boxes.iter().fold(
             ((f64::MAX, f64::MAX), (f64::MIN, f64::MIN)),
@@ -2481,8 +2525,10 @@ impl ClusterCard {
         for (number, &(a, b)) in boxes.iter().enumerate() {
             let item = if number < stalks.len() {
                 CardItem::Stalk(number)
-            } else {
+            } else if number < stalks.len() + units.len() {
                 CardItem::Unit(number - stalks.len())
+            } else {
+                CardItem::Sheet(number - stalks.len() - units.len())
             };
             for row in index(a.1, low.1, cell.1)..=index(b.1, low.1, cell.1) {
                 for column in index(a.0, low.0, cell.0)..=index(b.0, low.0, cell.0) {
@@ -2493,6 +2539,7 @@ impl ClusterCard {
         Self {
             units,
             stalks,
+            sheets,
             looks,
             colours,
             pedicels,
@@ -2558,6 +2605,22 @@ impl ClusterCard {
         };
         for &item in &self.cells[at] {
             match item {
+                CardItem::Sheet(number) => {
+                    // Seen from the front, its outline: as wide along its
+                    // length as the solid draws it, behind everything.
+                    let sheet = &self.sheets[number];
+                    let span = sheet.tip.y - sheet.foot.y;
+                    if span.abs() > 1e-9 {
+                        let u = (y - sheet.foot.y) / span;
+                        if (0.0..=1.0).contains(&u) {
+                            let centre = sheet.foot.x + (sheet.tip.x - sheet.foot.x) * u;
+                            let half = 0.5 * sheet.width * crate::clusters::Sheet::width_at(u);
+                            if (x - centre).abs() < half.max(fine * 0.5) {
+                                consider(-3.0, sheet.paint);
+                            }
+                        }
+                    }
+                }
                 CardItem::Stalk(number) => {
                     let stalk = &self.stalks[number];
                     let (distance, _) = segment(
