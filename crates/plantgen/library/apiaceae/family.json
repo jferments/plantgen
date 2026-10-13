@@ -41,13 +41,13 @@
     },
     "shrub": {
       "generator": {
-        "program": "broadleaf"
+        "program": "apiales"
       },
       "evidence": {
         "generator.program": {
           "evidence": "Authored",
           "source": "plantgen-authors",
-          "note": "The program the authors chose to grow this taxon's shrub species (named in each species' spec until G2.3a moved it here)."
+          "note": "The order's woody program (growth plan G2.3a), on the broadleaf base: Apiaceae's own program grows its herbs, so its trees and shrubs take the order's, which gives the values its species leave unset, as the broadleaf program's defaults until then."
         }
       }
     }
