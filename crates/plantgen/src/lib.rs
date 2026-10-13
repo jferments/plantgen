@@ -207,4 +207,10 @@ pub mod venation;
 /// areoles' spacing, spines a fifth shorter than the longest a flora
 /// gives, a column's girth and a joint's length and width; spine sets
 /// name their role, and the chollas' areoles bear glochids.
-pub const GENERATOR_REVISION: u32 = 33;
+/// 36: the pieces of a strap join (an arching grass or sedge blade, a
+/// basal leaf drawn in pieces): each piece of a chain is turned against
+/// its card's droop by half of it and lengthened by its arc over its
+/// chord, so its bent card ends where the next piece stands, and drawn at
+/// its own size, not its sun or shade form's; before, every piece drooped
+/// away from the next and the strap fell apart into floating pieces.
+pub const GENERATOR_REVISION: u32 = 36;
