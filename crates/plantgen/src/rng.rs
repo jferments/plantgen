@@ -52,6 +52,26 @@ pub fn unit(hash: u64) -> f64 {
     top * (1.0 / 9_007_199_254_740_992.0)
 }
 
+/// How far through a range the `index`th of `count` draws takes it: the
+/// middle of its own of `count` equal parts, the parts dealt out in an
+/// order `name` shuffles, so the `count` draws cover the range once each
+/// and pair the values of different names at random. One draw takes the
+/// middle.
+#[must_use]
+pub fn dealt(index: usize, count: usize, name: &str) -> f64 {
+    let count = count.max(1);
+    let mut order: Vec<usize> = (0..count).collect();
+    let mut hash = hash_str(name);
+    for last in (1..count).rev() {
+        hash = mix64(hash);
+        let pick = usize::try_from(hash % (last as u64 + 1)).unwrap_or(0);
+        order.swap(last, pick);
+    }
+    #[allow(clippy::cast_precision_loss)]
+    let share = (order[index % count] as f64 + 0.5) / count as f64;
+    share
+}
+
 /// Approximately standard-normal draw from two hashes (Box-Muller with libm).
 #[must_use]
 pub fn normal(hash: u64) -> f64 {
