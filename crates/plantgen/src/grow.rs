@@ -586,7 +586,7 @@ pub fn grow_watched(
     };
     let mut girth = Girth::default();
     // Each segment's rest bend under `bend@1`.
-    let mut rest_bends: IdMap<crate::math::Vec3> = IdMap::default();
+    let mut rest_bends: IdMap<(crate::math::Vec3, f64)> = IdMap::default();
     // Each segment as it was the last step it stood, and the organs that
     // fell, for the shed log.
     let mut segments: Parts<ShedSegment> = Parts::default();

@@ -420,6 +420,7 @@ pub const TOOLS: [ToolSpec; 11] = [
             ("set", 0.3),
             ("straighten", 0.1),
             ("stem", 1.0),
+            ("budget", 0.0),
         ],
     },
 ];

@@ -12,7 +12,7 @@ use crate::rng::{hash_words, normal, unit};
 /// Values the environment tools wrote for one module in the last step.
 pub type EnvValues = [f64; ENV_FIELDS];
 
-pub const ENV_FIELDS: usize = 31;
+pub const ENV_FIELDS: usize = 33;
 
 /// The environment fields a rule can read, grouped by the query that
 /// provides them.
@@ -74,6 +74,13 @@ pub enum EnvField {
     /// branches from an axis that goes on past them, so not the stems a
     /// fork divides into (crown form B).
     Limb,
+    /// `crowd`: leaf area density around the module, square metres per
+    /// cubic metre, over the 3 × 3 × 3 light voxels centred on its own and
+    /// not counting its own leaf area (crowding that decides bud fate).
+    Crowd,
+    /// `qmean`: the whole plant's light per segment, `qsum / nseg` at the
+    /// base, so a branch can compare its own with it (relative shedding).
+    Qmean,
 }
 
 impl EnvField {
@@ -109,6 +116,8 @@ impl EnvField {
         (Self::Ly, "ly"),
         (Self::Lz, "lz"),
         (Self::Limb, "limb"),
+        (Self::Crowd, "crowd"),
+        (Self::Qmean, "qmean"),
     ];
 
     #[must_use]
@@ -123,8 +132,8 @@ impl EnvField {
     #[must_use]
     pub fn query(self) -> Query {
         match self {
-            Self::Light | Self::Lx | Self::Ly | Self::Lz => Query::Light,
-            Self::Vigour | Self::Qsum | Self::Nseg | Self::Ntip => Query::Vigour,
+            Self::Light | Self::Lx | Self::Ly | Self::Lz | Self::Crowd => Query::Light,
+            Self::Vigour | Self::Qsum | Self::Nseg | Self::Ntip | Self::Qmean => Query::Vigour,
             Self::Space | Self::Sx | Self::Sy | Self::Sz => Query::Space,
             Self::Gd | Self::Gx | Self::Gy | Self::Gz => Query::Host,
             Self::Sd | Self::Snx | Self::Sny | Self::Snz | Self::Smat => Query::Substrate,

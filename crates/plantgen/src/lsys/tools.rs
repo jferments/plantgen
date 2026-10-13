@@ -357,9 +357,11 @@ pub fn run(
 
     // The way the light comes from at each query, under `light@3` only.
     let mut light_from = None;
+    let mut crowd = None;
     let (query_light, organ_light) = match program.tool(ToolKind::Light) {
         Some(config) => {
             let values = settings(config, globals, clock, seed, &mut stack);
+            crowd = Some(crowding(scene, &anchors, organ_area, &values)?);
             if config.version >= 2 {
                 let lit = light_below(scene, &anchors, organ_area, &values, surroundings, limits)?;
                 if config.version >= 3 {
@@ -448,6 +450,10 @@ pub fn run(
             values[EnvField::Qsum as usize] = flux.light[node];
             values[EnvField::Nseg as usize] = f64::from(flux.segments[node]);
             values[EnvField::Ntip as usize] = f64::from(flux.tips[node]);
+            values[EnvField::Qmean as usize] = flux.mean;
+        }
+        if let Some(crowd) = &crowd {
+            values[EnvField::Crowd as usize] = crowd[index];
         }
         let (count, direction) = space[index];
         values[EnvField::Space as usize] = f64::from(count);
@@ -592,6 +598,47 @@ fn sky_directions() -> Vec<SkyDirection> {
         }
     }
     directions
+}
+
+/// Leaf area density around each query, square metres per cubic metre:
+/// the leaf area of the 3 × 3 × 3 light voxels centred on the query's own
+/// (organs, and `bud` for each living tip), less the query's own, over
+/// their volume. Bud fate follows crowding like this: a bud among many
+/// leaves stays dormant or dies even in fair light.
+fn crowding(
+    scene: &Scene,
+    anchors: &[bool],
+    organ_area: &[f64],
+    values: &[f64],
+) -> Result<Vec<f64>, GrowthError> {
+    let (cell, _, bud) = light_settings(&values[..3.min(values.len())])?;
+    let receivers = light_receivers(scene, anchors, organ_area, bud);
+    // Positions are bounded by the segment limit times segment length;
+    // saturating conversion keeps absurd programs from wrapping.
+    #[allow(clippy::cast_possible_truncation)]
+    let key = |point: Vec3| [point.x, point.y, point.z].map(|value| (value / cell).floor() as i64);
+    let mut area: HashMap<[i64; 3], f64> = HashMap::with_capacity(receivers.len());
+    for (point, own) in &receivers {
+        if *own > 0.0 {
+            *area.entry(key(*point)).or_insert(0.0) += own;
+        }
+    }
+    let volume = 27.0 * cell * cell * cell;
+    Ok(receivers[..scene.queries.len()]
+        .iter()
+        .map(|(point, own)| {
+            let [x, y, z] = key(*point);
+            let mut sum = -own;
+            for dx in -1..=1 {
+                for dy in -1..=1 {
+                    for dz in -1..=1 {
+                        sum += area.get(&[x + dx, y + dy, z + dz]).copied().unwrap_or(0.0);
+                    }
+                }
+            }
+            sum.max(0.0) / volume
+        })
+        .collect())
 }
 
 /// The `light` tool's settings: voxel size, extinction coefficient and the
@@ -2378,6 +2425,9 @@ pub struct Flux {
     pub segments: Vec<u32>,
     /// Tips after each node in its branch, not counting the node itself.
     pub tips: Vec<u32>,
+    /// The whole plant's light per segment: summed light over segments at
+    /// the base (summed over every base node), 0 with no segments.
+    pub mean: f64,
 }
 
 /// The Borchert-Honda resource model as used by Pałubicki et al. (2009).
@@ -2484,11 +2534,22 @@ fn vigour(
             };
         }
     }
+    let (base_light, base_segments) = (0..count)
+        .filter(|&index| scene.nodes[index].parent.is_none())
+        .fold((0.0, 0_u32), |(q, n), index| {
+            (q + light[index], n + segments[index])
+        });
+    let mean = if base_segments > 0 {
+        base_light / f64::from(base_segments)
+    } else {
+        0.0
+    };
     Ok(Flux {
         light,
         vigour,
         segments,
         tips,
+        mean,
     })
 }
 
@@ -2652,6 +2713,12 @@ impl Rigid {
 /// - Stems' segments (those not on a limb, as `limb` counts them: the
 ///   trunk and the stems a fork divides it into) take the share `stem` of
 ///   their sag (default 1), as reaction wood holds a trunk upright.
+/// - With `budget` above 0, straightening is reaction wood and costs
+///   growth (Alméras & Fournier 2009): a segment straightens by at most
+///   `budget · ΔA / A` of its rest bend in a step, where `ΔA / A` is the
+///   share of its cross-section that grew since the last step. A thick
+///   limb that has stopped thickening keeps its sag; a young one rights
+///   itself. Each segment's radius is kept with its rest bend.
 ///
 /// Segments, organs and query points move with what they follow; the
 /// string does not change.
@@ -2665,10 +2732,10 @@ pub fn bend(
     radii: &[f64],
     organ_area: &[f64],
     values: &[f64],
-    rest: &mut HashMap<u64, Vec3, impl std::hash::BuildHasher>,
+    rest: &mut HashMap<u64, (Vec3, f64), impl std::hash::BuildHasher>,
     dt: f64,
 ) -> Result<(), GrowthError> {
-    let [density, modulus, leaf_mass, set, straighten, stem] = values[..] else {
+    let [density, modulus, leaf_mass, set, straighten, stem, budget] = values[..] else {
         return Err(invalid("bend", "wrong number of settings".into()));
     };
     let valid = density >= 0.0
@@ -2679,14 +2746,16 @@ pub fn bend(
         && leaf_mass.is_finite()
         && (0.0..=1.0).contains(&set)
         && (0.0..=1.0).contains(&straighten)
-        && (0.0..=1.0).contains(&stem);
+        && (0.0..=1.0).contains(&stem)
+        && budget >= 0.0
+        && budget.is_finite();
     if !valid {
         return Err(invalid(
             "bend",
             format!(
-                "density, modulus and leaf_mass must be finite and not negative (modulus above \
-                 0), set, straighten and stem between 0 and 1; found {density}, {modulus}, \
-                 {leaf_mass}, {set}, {straighten}, {stem}"
+                "density, modulus, leaf_mass and budget must be finite and not negative \
+                 (modulus above 0), set, straighten and stem between 0 and 1; found {density}, \
+                 {modulus}, {leaf_mass}, {set}, {straighten}, {stem}, {budget}"
             ),
         ));
     }
@@ -2731,7 +2800,7 @@ pub fn bend(
         let segment = &scene.segments[which as usize];
         let radius = radii[which as usize];
         let length = segment.start.distance(segment.end);
-        let held = rest.get(&segment.id).copied().unwrap_or(Vec3::ZERO);
+        let (held, was) = rest.get(&segment.id).copied().unwrap_or((Vec3::ZERO, 0.0));
         let mut sag = Vec3::ZERO;
         if mass[index] > 0.0 && radius > 0.0 && length > 0.0 {
             // Where the segment starts and where its load hangs, bent.
@@ -2762,7 +2831,19 @@ pub fn bend(
             turn = turn * (limit / angle);
         }
         motion[index] = before.after(segment.start, turn);
-        seen.insert(segment.id, held + (sag * set - held * straighten) * dt);
+        let mut righting = straighten * dt;
+        if budget > 0.0 {
+            let grown = if radius > 0.0 {
+                (1.0 - (was * was) / (radius * radius)).max(0.0)
+            } else {
+                0.0
+            };
+            righting = righting.min(budget * grown);
+        }
+        seen.insert(
+            segment.id,
+            (held + sag * (set * dt) - held * righting, radius),
+        );
     }
     rest.clear();
     rest.extend(seen);
@@ -3407,8 +3488,8 @@ mod tests {
         let lever = 0.5 * (end - start).x.hypot((end - start).z);
         let inertia = std::f64::consts::PI * radius.powi(4) / 4.0;
         let expected = mass * 9.81 * lever / (1.0e10 * inertia);
-        let mut rest: HashMap<u64, Vec3> = HashMap::new();
-        let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, 1.0];
+        let mut rest: HashMap<u64, (Vec3, f64)> = HashMap::new();
+        let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, 1.0, 0.0];
         bend(
             &mut setup.scene,
             &[radius],
@@ -3433,7 +3514,7 @@ mod tests {
                 < 1.0e-12
         );
         // A year keeps `set` of the sag as the rest bend.
-        let held = rest[&setup.scene.segments[0].id].length();
+        let held = rest[&setup.scene.segments[0].id].0.length();
         assert!((held - 0.3 * expected).abs() < 1.0e-9 * expected.max(1.0));
     }
 
@@ -3441,8 +3522,8 @@ mod tests {
     fn bend_1_leaves_a_stem_upright_and_never_bends_past_hanging() {
         let mut upright = setup("lsystem p 1; axiom F(1) F(1);");
         let before = upright.scene.segments.clone();
-        let mut rest: HashMap<u64, Vec3> = HashMap::new();
-        let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, 1.0];
+        let mut rest: HashMap<u64, (Vec3, f64)> = HashMap::new();
+        let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, 1.0, 0.0];
         bend(
             &mut upright.scene,
             &[0.01, 0.01],
@@ -3457,7 +3538,7 @@ mod tests {
         }
         // A twig as soft as rubber hangs straight down from its start.
         let mut soft = setup("lsystem p 1; axiom &(90) F(1);");
-        let rubber = [600.0, 1.0e-3, 0.1, 0.3, 0.1, 1.0];
+        let rubber = [600.0, 1.0e-3, 0.1, 0.3, 0.1, 1.0, 0.0];
         bend(
             &mut soft.scene,
             &[0.01],
@@ -3507,8 +3588,8 @@ mod tests {
         let lean = |stem: f64| {
             let mut leaning = setup("lsystem p 1; axiom &(45) F(1);");
             let start = leaning.scene.segments[0].end - leaning.scene.segments[0].start;
-            let mut rest: HashMap<u64, Vec3> = HashMap::new();
-            let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, stem];
+            let mut rest: HashMap<u64, (Vec3, f64)> = HashMap::new();
+            let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, stem, 0.0];
             bend(
                 &mut leaning.scene,
                 &[0.01],
@@ -3528,6 +3609,70 @@ mod tests {
             (half - 0.5 * all).abs() < 1.0e-9 * all.max(1.0),
             "{half} {all}"
         );
+    }
+
+    #[test]
+    fn bend_1_budget_lets_only_a_thickening_limb_straighten() {
+        // A held bend of 0.1 rad on a limb: without a budget a year takes
+        // `straighten` of it away; with one, a limb whose radius has not
+        // grown keeps all of it and one that doubled its cross-section
+        // loses `straighten` of it (the budget allows more).
+        let held = |budget: f64, was: f64| {
+            let mut limb = setup("lsystem p 1; axiom &(45) F(1);");
+            let id = limb.scene.segments[0].id;
+            let mut rest: HashMap<u64, (Vec3, f64)> = HashMap::new();
+            rest.insert(id, (Vec3::new(0.1, 0.0, 0.0), was));
+            // No load, so only the rest bend changes.
+            let settings = [0.0, 10000.0, 0.0, 0.3, 0.1, 1.0, budget];
+            bend(
+                &mut limb.scene,
+                &[0.02],
+                &[0.0; 20],
+                &settings,
+                &mut rest,
+                1.0,
+            )
+            .unwrap();
+            let (bend, radius) = rest[&id];
+            assert!((radius - 0.02).abs() < 1.0e-12);
+            bend.x
+        };
+        assert!((held(0.0, 0.02) - 0.09).abs() < 1.0e-12);
+        assert!((held(1.0, 0.02) - 0.1).abs() < 1.0e-12);
+        let grown = 0.02 / 2.0_f64.sqrt();
+        assert!((held(1.0, grown) - 0.09).abs() < 1.0e-12);
+        // A small budget lets a doubled limb right only budget · ½.
+        assert!((held(0.1, grown) - 0.095).abs() < 1.0e-12);
+    }
+
+    #[test]
+    fn crowd_counts_the_leaf_area_around_a_bud_but_not_its_own() {
+        let setup = setup(
+            "lsystem p 1; module B queries light; organ leaf foliage area 0.5;
+             tool light@1 { cell = 0.5, bud = 0.25 };
+             axiom [ B ] [ f(0.1) leaf(1) ] [ f(0.2) leaf(1) ] [ f(5) B ];",
+        );
+        let output = tools(&setup, &Neighbourhood::OPEN);
+        let read = |i: usize| output.env[i].1[EnvField::Crowd as usize];
+        let volume = 27.0 * 0.125;
+        // The first bud has two leaves of 0.5 m² and nothing else; its own
+        // 0.25 m² does not count.
+        assert!((read(0) - 1.0 / volume).abs() < 1.0e-12, "{}", read(0));
+        assert!(read(1).abs() < 1.0e-12);
+    }
+
+    #[test]
+    fn qmean_is_the_plants_light_per_segment() {
+        let setup = setup(
+            "lsystem p 1; module A queries vigour;
+             tool vigour@1 {};
+             axiom F(1) [ +(30) F(1) A ] F(1) F(1) A;",
+        );
+        let output = tools(&setup, &Neighbourhood::OPEN);
+        // Two tips gather 1 each over four segments.
+        for (_, values) in &output.env {
+            assert!((values[EnvField::Qmean as usize] - 0.5).abs() < 1.0e-12);
+        }
     }
 
     #[test]
