@@ -3300,7 +3300,7 @@ mod tests {
                 within: Some(0),
                 ..organ(heading, left)
             });
-            position = position + heading * size;
+            position += heading * size;
             // Pitch down 14 degrees about the left.
             heading = heading.rotate_about(left, -14f64.to_radians());
         }
