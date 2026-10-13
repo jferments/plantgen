@@ -23,7 +23,6 @@
       "apical_young": 0.75,
       "apical": 0.6,
       "apical_years": 25,
-      "leaves_per_node": 1,
       "leaf_size": 0.42,
       "spur_leaf": 0.36,
       "spur_pairs": 2,

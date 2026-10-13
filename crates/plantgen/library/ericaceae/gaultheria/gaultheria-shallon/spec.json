@@ -42,7 +42,6 @@
       "spur_leaf": 0.09,
       "spur_pairs": 1,
       "leaf_angle": 45,
-      "leaves_per_node": 1,
       "leaf_years": 3,
       "blooms": 2,
       "adult_age": 3,

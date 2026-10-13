@@ -21,7 +21,6 @@
       "stem_radius": 0.003,
       "wiggle": 2,
       "nodes": 6,
-      "leaves_per_node": 2,
       "bare": 0.1,
       "leaf_length": 0.06,
       "leaf_peak": 0.3,

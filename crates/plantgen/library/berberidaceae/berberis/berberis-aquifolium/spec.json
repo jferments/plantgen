@@ -39,7 +39,6 @@
       "pipe_rings": 3e-06,
       "space_reach": 0.85,
       "space_kill": 0.21,
-      "leaves_per_node": 1,
       "leaf_years": 3,
       "leaf_size": 0.22,
       "spur_leaf": 0.18,

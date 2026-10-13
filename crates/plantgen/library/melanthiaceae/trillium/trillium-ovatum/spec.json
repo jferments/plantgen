@@ -21,7 +21,6 @@
       "stem_radius": 0.003,
       "wiggle": 2,
       "nodes": 1,
-      "leaves_per_node": 3,
       "bare": 0.82,
       "leaf_length": 0.14,
       "leaf_peak": 0.5,
@@ -96,6 +95,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_arrangement": "whorled",
+    "leaves_per_whorl": 3,
     "flower_merosity": 3,
     "perianth": "sepals_and_petals",
     "stamens": 6,
@@ -103,6 +104,16 @@
     "ovary_position": "superior"
   },
   "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams, Illustrated Flora of the Pacific States vol. 1 (1923), genus Trillium: unbranched herbs with three leaves whorled at the top of the stem, below the single flower (single long-stalked leaves sometimes rise from the rootstock)."
+    },
+    "traits.leaves_per_whorl": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), genus Trillium: three leaves in the whorl."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
