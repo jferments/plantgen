@@ -27,7 +27,7 @@ pub const SPEC_SCHEMA: u32 = 1;
 pub const UNNOTED: &[&str] = &["schema", "id", "tier", "evidence", "provenance"];
 
 /// Built-in plant programs, by name.
-pub const PROGRAMS: [(&str, &str); 56] = [
+pub const PROGRAMS: [(&str, &str); 79] = [
     ("pinidae", include_str!("../programs/pinidae.lsys")),
     ("broadleaf", include_str!("../programs/broadleaf.lsys")),
     ("grass", include_str!("../programs/grass.lsys")),
@@ -129,6 +129,53 @@ pub const PROGRAMS: [(&str, &str); 56] = [
     ("urticaceae", include_str!("../programs/urticaceae.lsys")),
     ("violaceae", include_str!("../programs/violaceae.lsys")),
     ("vitaceae", include_str!("../programs/vitaceae.lsys")),
+    ("acanthaceae", include_str!("../programs/acanthaceae.lsys")),
+    ("apiales", include_str!("../programs/apiales.lsys")),
+    ("asterales", include_str!("../programs/asterales.lsys")),
+    ("betulaceae", include_str!("../programs/betulaceae.lsys")),
+    (
+        "bignoniaceae",
+        include_str!("../programs/bignoniaceae.lsys"),
+    ),
+    (
+        "caprifoliaceae",
+        include_str!("../programs/caprifoliaceae.lsys"),
+    ),
+    ("cornaceae", include_str!("../programs/cornaceae.lsys")),
+    ("ericaceae", include_str!("../programs/ericaceae.lsys")),
+    ("fabales", include_str!("../programs/fabales.lsys")),
+    ("fagaceae", include_str!("../programs/fagaceae.lsys")),
+    (
+        "grossulariaceae",
+        include_str!("../programs/grossulariaceae.lsys"),
+    ),
+    ("malvaceae", include_str!("../programs/malvaceae.lsys")),
+    ("moraceae", include_str!("../programs/moraceae.lsys")),
+    (
+        "nothofagaceae",
+        include_str!("../programs/nothofagaceae.lsys"),
+    ),
+    ("oleaceae", include_str!("../programs/oleaceae.lsys")),
+    (
+        "ranunculales",
+        include_str!("../programs/ranunculales.lsys"),
+    ),
+    ("rhamnaceae", include_str!("../programs/rhamnaceae.lsys")),
+    (
+        "rhizophoraceae",
+        include_str!("../programs/rhizophoraceae.lsys"),
+    ),
+    ("rosaceae", include_str!("../programs/rosaceae.lsys")),
+    ("salicaceae", include_str!("../programs/salicaceae.lsys")),
+    (
+        "simmondsiaceae",
+        include_str!("../programs/simmondsiaceae.lsys"),
+    ),
+    ("viburnaceae", include_str!("../programs/viburnaceae.lsys")),
+    (
+        "zygophyllaceae",
+        include_str!("../programs/zygophyllaceae.lsys"),
+    ),
 ];
 
 /// A built-in program's source, by name.
