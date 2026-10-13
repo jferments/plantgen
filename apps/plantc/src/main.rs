@@ -20,7 +20,7 @@ use plantgen::conditions::Conditions;
 use plantgen::export;
 use plantgen::graph::{GraphOrgan, OrganType, PlantGraph};
 use plantgen::ground::{self, GROUND_LOOK_SIZE};
-use plantgen::grow::{Growth, GrowthSettings, grow};
+use plantgen::grow::{Grower, Growth, GrowthSettings, StepTime, grow};
 use plantgen::library::{Library, ProgramHome};
 use plantgen::litter;
 use plantgen::looks::{self, Look, Stage};
@@ -179,7 +179,11 @@ Usage:
       farther file it replaces leaves out, such as a rootless species in
       a phylum with roots: often right, but worth a look.
   plantc grow <species|spec.json> [--env ENV] [--seed N] [--years N]
-      Grow one variant and print its size at every keyframe.
+              [--digest] [--profile]
+      Grow one variant and print its size at every keyframe. --digest
+      prints the growth's digest; --profile the seconds each year took,
+      by phase (drawing the string, girth and bends, the environment
+      tools, keyframes, rewriting), and the parts standing.
   plantc render <species|spec.json> --out FILE.png [--env ENV] [--seed N]
                 [--age N] [--view side|three-quarter|top] [--lod 0-3]
                 [--size PIXELS] [--quality draft|standard]
@@ -1173,6 +1177,97 @@ fn grow_variant(
     grow(&program, &params, &settings).map_err(|error| format!("{}: {error}", spec.id))
 }
 
+/// [`grow_variant`], step by step, with the time each step took by phase.
+fn grow_variant_timed(
+    spec: &PlantSpec,
+    program: Option<&str>,
+    environment: Environment,
+    seed: u64,
+    keyframes: Vec<f64>,
+    years: f64,
+) -> Result<(Growth, Vec<StepTime>), String> {
+    let (program, params) = match program {
+        Some(source) => spec.program_from(source),
+        None => spec.program_in(library()),
+    }
+    .map_err(|error| error.to_string())?;
+    let settings = GrowthSettings {
+        seed,
+        dt: spec.growth.step,
+        years,
+        keyframes,
+        conditions: Conditions::in_neighbourhood(environment, neighbourhood(spec, environment)),
+        limits: Limits::default(),
+        host: spec
+            .host_geometry_in(library())
+            .map_err(|error| error.to_string())?,
+    };
+    let params = spec.seeded_params(&program, &params, seed);
+    let failed = |error: plantgen::lsys::GrowthError| format!("{}: {error}", spec.id);
+    let mut grower = Grower::new(&program, &params, &settings)
+        .map_err(failed)?
+        .timed();
+    while grower.step(None).map_err(failed)? {}
+    let times = grower.times().to_vec();
+    Ok((grower.finish(), times))
+}
+
+/// Where a growth's time went: a row per year (its steps summed) with the
+/// parts standing at its end, then the whole run by phase.
+fn profile_lines(times: &[StepTime]) -> Vec<String> {
+    let mut lines = vec![
+        "  profile, seconds: year  segments    organs  interpret     girth     tools      keep    derive     total"
+            .to_string(),
+    ];
+    let mut whole = StepTime::default();
+    let mut index = 0;
+    while index < times.len() {
+        #[allow(clippy::cast_possible_truncation)]
+        let year = times[index].age.floor() as i64;
+        let mut row = StepTime::default();
+        #[allow(clippy::cast_possible_truncation)]
+        while index < times.len() && times[index].age.floor() as i64 == year {
+            let time = &times[index];
+            row.interpret += time.interpret;
+            row.girth += time.girth;
+            row.tools += time.tools;
+            row.keep += time.keep;
+            row.derive += time.derive;
+            row.segments = time.segments;
+            row.organs = time.organs;
+            index += 1;
+        }
+        whole.interpret += row.interpret;
+        whole.girth += row.girth;
+        whole.tools += row.tools;
+        whole.keep += row.keep;
+        whole.derive += row.derive;
+        lines.push(format!(
+            "  {year:>22} {:>9} {:>9} {:>10.3} {:>9.3} {:>9.3} {:>9.3} {:>9.3} {:>9.3}",
+            row.segments,
+            row.organs,
+            row.interpret,
+            row.girth,
+            row.tools,
+            row.keep,
+            row.derive,
+            row.total()
+        ));
+    }
+    let total = whole.total().max(1e-12);
+    let share = |part: f64| 100.0 * part / total;
+    lines.push(format!(
+        "  all steps {:.2} s: interpret {:.0} %, girth {:.0} %, tools {:.0} %, keep {:.0} %, derive {:.0} %",
+        whole.total(),
+        share(whole.interpret),
+        share(whole.girth),
+        share(whole.tools),
+        share(whole.keep),
+        share(whole.derive)
+    ));
+    lines
+}
+
 fn describe(graph: &PlantGraph, types: &[OrganType]) -> String {
     if graph.segments.is_empty() && graph.organs.is_empty() {
         return format!(
@@ -1775,11 +1870,12 @@ fn validate_command(args: &[String]) -> Result<(), Failure> {
 }
 
 fn grow_command(args: &[String]) -> Result<(), Failure> {
-    // `--digest` takes no value.
+    // `--digest` and `--profile` take no value.
     let digest = args.iter().any(|arg| arg == "--digest");
+    let profile = args.iter().any(|arg| arg == "--profile");
     let args: Vec<String> = args
         .iter()
-        .filter(|arg| *arg != "--digest")
+        .filter(|arg| *arg != "--digest" && *arg != "--profile")
         .cloned()
         .collect();
     let options = Options::parse(&args, &["env", "seed", "years", "program"])?;
@@ -1806,14 +1902,26 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
     keyframes.sort_by(f64::total_cmp);
     keyframes.dedup();
     let started = Instant::now();
-    let growth = grow_variant(
-        &spec,
-        program.as_deref(),
-        environment,
-        seed,
-        keyframes,
-        years,
-    )?;
+    let (growth, times) = if profile {
+        grow_variant_timed(
+            &spec,
+            program.as_deref(),
+            environment,
+            seed,
+            keyframes,
+            years,
+        )?
+    } else {
+        let growth = grow_variant(
+            &spec,
+            program.as_deref(),
+            environment,
+            seed,
+            keyframes,
+            years,
+        )?;
+        (growth, Vec::new())
+    };
     out!(
         "{} ({}), {} environment, seed {seed}: grown in {:.1} s; peak {} modules, {} segments, {} organs",
         spec.taxon.common_name,
@@ -1839,6 +1947,11 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
     }
     if digest {
         out!("  digest {}", growth.digest());
+    }
+    if profile {
+        for line in profile_lines(&times) {
+            out!("{line}");
+        }
     }
     Ok(())
 }

@@ -150,7 +150,7 @@ fn invalid(tool: &'static str, message: String) -> GrowthError {
 }
 
 /// State a tool keeps between steps.
-#[derive(Debug, Default)]
+#[derive(Debug, Clone, Default)]
 pub struct ToolState {
     /// The attraction points drawn so far, and which `space@1` consumed.
     points: Lattice,
@@ -163,7 +163,7 @@ pub struct ToolState {
 /// so each point is drawn once: its position, its azimuth round the stem
 /// and its billows' noise, which never change, and whether `space@1` has
 /// consumed it.
-#[derive(Debug, Default)]
+#[derive(Debug, Clone, Default)]
 struct Lattice {
     /// The box's lowest cell and its extent, x, y and z.
     low: [i64; 3],
