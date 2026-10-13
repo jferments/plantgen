@@ -217,4 +217,7 @@ pub mod venation;
 /// keeps its needles, a spray card's needles as long as the stated ones
 /// on a usual spray, a pine's needles to a bundle, needles in two ranks
 /// or all round, and a seed cone's length, posture and years on the tree.
-pub const GENERATOR_REVISION: u32 = 35;
+/// 37: a cactus column's ring of flowers sits at the radius of its newest
+/// piece as drawn, not its tip's, so a young pup's flowers stand on its
+/// body (36 is the strap pieces' join, #65).
+pub const GENERATOR_REVISION: u32 = 37;
