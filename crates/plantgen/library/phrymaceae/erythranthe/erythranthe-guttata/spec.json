@@ -17,7 +17,6 @@
       "clump_radius": 0.12,
       "stem_lean": 25,
       "maturity": 1.0,
-      "stem_height": 0.4,
       "stem_radius": 0.003,
       "wiggle": 2,
       "nodes": 6,
@@ -105,7 +104,8 @@
   "traits": {
     "height_typical_m": {
       "min": 0.4,
-      "max": 1.0
+      "max": 1.0,
+      "typical": 0.4
     },
     "leaf_length_m": {
       "min": 0.015,
@@ -116,7 +116,7 @@
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951), as Mimulus guttatus: stems 40 cm to 1 m tall."
+      "note": "Abrams vol. 3 (1951), as Mimulus guttatus: stems 40 cm to 1 m tall. The typical value is the one the plant was drawn at before, inside the source's range."
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",

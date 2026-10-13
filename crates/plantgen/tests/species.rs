@@ -267,6 +267,70 @@ fn fronds_and_pads_lie_on_the_ground() {
     );
 }
 
+/// Nothing a package draws reaches below the ground its plant stands on
+/// (the level plane of its foot), so a host can stand it on level ground
+/// without leaving it out: no segment, organ, wood vertex or card of any
+/// built-in species, at any keyframe of its first variant and any level,
+/// ends more than 5 cm below it. Roots are left out: they are drawn to
+/// meet the ground, and surface roots run half sunk in it.
+#[test]
+fn builtin_species_stand_above_the_ground() {
+    // Wood grown into the ground: segments that end below it, which
+    // growth has to stop (ground as an obstacle in growth, the M6
+    // thread). Low limbs of open-grown conifers sag onto it (#72). A water
+    // lily's frame stands on the water's surface, with its rhizome on the
+    // bottom below (`programs/nymphaeaceae.lsys`).
+    const KNOWN: [&str; 8] = [
+        "abies-grandis",
+        "nymphaea-odorata",
+        "picea-sitchensis",
+        "pinus-monticola",
+        "pinus-ponderosa",
+        "pseudotsuga-menziesii",
+        "thuja-plicata",
+        "tsuga-heterophylla",
+    ];
+    const BED: f64 = 0.05;
+    let species: Vec<&str> = spec::all_species().map(|(id, _)| id).collect();
+    let threads = std::thread::available_parallelism().map_or(4, usize::from);
+    let failures: Vec<String> = std::thread::scope(|scope| {
+        let workers: Vec<_> = species
+            .chunks(species.len().div_ceil(threads))
+            .map(|chunk| {
+                scope.spawn(move || {
+                    let mut failures = Vec::new();
+                    for &id in chunk {
+                        let mut spec = PlantSpec::builtin(id).unwrap();
+                        spec.appearance.roots = None;
+                        let inputs = package::Inputs::new(&spec, &plantgen::quality::STANDARD).unwrap();
+                        let years = spec.growth.keyframes.iter().copied().fold(0.0, f64::max);
+                        let variant = &spec.variant_list()[0];
+                        let growth = grow_variant(&spec, variant, years, spec.growth.keyframes.clone());
+                        for graph in &growth.keyframes {
+                            for (level, mesh) in package::keyframe_meshes(graph, &inputs).iter().enumerate() {
+                                let below = plantgen::mesh::Below::drawn(graph, mesh);
+                                if below.most() > BED && !KNOWN.contains(&id) {
+                                    failures.push(format!(
+                                        "{id}: at {} years, level {level}, {:.3} m below the ground ({below:?})",
+                                        graph.age,
+                                        below.most(),
+                                    ));
+                                }
+                            }
+                        }
+                    }
+                    failures
+                })
+            })
+            .collect();
+        workers
+            .into_iter()
+            .flat_map(|worker| worker.join().unwrap())
+            .collect()
+    });
+    assert!(failures.is_empty(), "{}", failures.join("\n"));
+}
+
 /// Grasses and herbs renew their shoots every year: at every keyframe
 /// each stem, culm, leaf and flower grew that year, so nothing lives on
 /// from the year before but a grass's thatch, the dead blades of last
