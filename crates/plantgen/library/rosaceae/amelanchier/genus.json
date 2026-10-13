@@ -6,7 +6,8 @@
     "wood_density_basic_kg_m3": 710,
     "ovary_position": "inferior",
     "stamens": 20,
-    "carpels": 5
+    "carpels": 5,
+    "flowering_position": "both"
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {
@@ -18,6 +19,11 @@
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",
       "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full: calyx-tube campanulate, more or less adnate to the ovary; ovary partly or wholly inferior, 5-celled; styles 5, united below; stamens indefinite, about 20. The Burke Herbarium (as quoted in search results; the page itself was not read) gives stamens 12 to 20 and an inferior ovary."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual's Amelanchier chapter (read in full): serviceberry flowers come in terminal and lateral clusters."
     }
   }
 }

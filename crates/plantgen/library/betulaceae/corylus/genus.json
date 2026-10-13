@@ -5,7 +5,8 @@
   "traits": {
     "wood_density_basic_kg_m3": 530,
     "leaf_arrangement": "alternate",
-    "phyllotaxis_pattern": "distichous"
+    "phyllotaxis_pattern": "distichous",
+    "flowering_position": "both"
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {
@@ -22,6 +23,11 @@
       "evidence": "SourceInferred",
       "source": "lowden-1997",
       "note": "Lowden's key to the birch family: the hazels' doubly toothed or cut leaves are two-ranked."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual's Corylus chapter (read in full): male and female flowers on separate one-year-old lateral twigs; FEIS's Corylus cornuta review (page read): male catkins beside short shoots and female flowers at the ends of short branches."
     }
   }
 }

@@ -5,7 +5,8 @@
   "traits": {
     "wood_density_basic_kg_m3": 470,
     "leaf_arrangement": "alternate",
-    "phyllotaxis_pattern": {"tristichous": "usually", "distichous": "sometimes"}
+    "phyllotaxis_pattern": {"tristichous": "usually", "distichous": "sometimes"},
+    "flowering_position": "lateral"
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 genus aggregate for Alnus (gwddagg_v2.2_genus.csv, read): specific gravity 0.47 (wsg_est, the hierarchical-model genus mean, from 567 records in 40 sources); trunks 0.47, branches 0.47. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."},
@@ -18,6 +19,11 @@
       "evidence": "SourceInferred",
       "source": "fna-3-alnus",
       "note": "FNA's account of the genus: the leaves, on long or short shoots, are three-ranked to nearly two-ranked."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual's Alnus chapter (read in full): male and female catkins ripen on the previous year's twigs; FEIS's red alder review (page read) puts the staminate catkins in clusters near a twig's end, beside its shoot, not ending it."
     }
   }
 }

@@ -147,7 +147,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "wood_density_basic_kg_m3": 570
+    "wood_density_basic_kg_m3": 570,
+    "flowering_position": "terminal"
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Arbutus menziesii (gwddagg_v2.2_species.csv, read): specific gravity 0.57 (wsg_est, the database's hierarchical-model species mean, from 6 records in 5 sources); trunks 0.57, branches 0.54. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
@@ -205,6 +206,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit, a convention (no source gives a raceme's opening time)."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Arbutus menziesii review (page read): the flowers are borne in showy terminal clusters."
     }
   },
   "provenance": {

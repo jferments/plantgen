@@ -235,7 +235,9 @@ Usage:
       keeps those run by one program) to its oldest keyframe, or N years,
       and print its form: crown width over depth, where it is widest,
       its departure from an ellipse (0 an orb), its lobing, crown width
-      over dbh and the median leaf card length.
+      over dbh, the median leaf card length, and from the side its
+      outline's fit to an ellipse (1 an ellipse) and the share of its
+      outline the sky shows through.
   plantc validate [<species>...] [--seeds N] [--group sizes|counts|kinds]
       Check each species (default every one that states a character a
       check reads) against
@@ -1330,7 +1332,7 @@ fn measure_command(args: &[String]) -> Result<(), Failure> {
     };
     let wanted = options.flags.get("generator");
     out!(
-        "{:<28} {:>5} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>5} {:>6} {:>6}",
+        "{:<28} {:>5} {:>6} {:>6} {:>6} {:>6} {:>6} {:>6} {:>5} {:>6} {:>6} {:>5} {:>5}",
         "species",
         "age",
         "height",
@@ -1341,7 +1343,9 @@ fn measure_command(args: &[String]) -> Result<(), Failure> {
         "ellip",
         "lobe",
         "w/dbh",
-        "leaf"
+        "leaf",
+        "fit",
+        "sky"
     );
     for id in &ids {
         let spec = load_spec(id)?;
@@ -1360,7 +1364,7 @@ fn measure_command(args: &[String]) -> Result<(), Failure> {
         };
         match plantgen::form::measure(graph, &growth.organ_types) {
             Some(form) => out!(
-                "{:<28} {:>5.0} {:>6.1} {:>6} {:>6.1} {:>6.2} {:>6.2} {:>6.2} {:>5.2} {:>6} {:>6}",
+                "{:<28} {:>5.0} {:>6.1} {:>6} {:>6.1} {:>6.2} {:>6.2} {:>6.2} {:>5.2} {:>6} {:>6} {:>5} {:>5}",
                 spec.id,
                 graph.age,
                 form.height,
@@ -1372,7 +1376,11 @@ fn measure_command(args: &[String]) -> Result<(), Failure> {
                 form.lobing,
                 form.width_to_dbh
                     .map_or_else(|| "-".to_string(), |r| format!("{r:.0}")),
-                cm(form.leaf_length)
+                cm(form.leaf_length),
+                form.outline_fit
+                    .map_or_else(|| "-".to_string(), |fit| format!("{fit:.2}")),
+                form.see_through
+                    .map_or_else(|| "-".to_string(), |sky| format!("{:.0}%", sky * 100.0))
             ),
             None => out!(
                 "{:<28} {:>5.0} too few living organs to measure",
@@ -1554,9 +1562,10 @@ fn validate_command(args: &[String]) -> Result<(), Failure> {
             .iter()
             .map(|entry| entry.id.clone())
             .filter(|id| {
-                library
-                    .traits_of(id)
-                    .is_ok_and(|traits| checks::states_checked(&traits))
+                let (Ok(spec), Ok(traits)) = (library.spec(id), library.traits_of(id)) else {
+                    return false;
+                };
+                checks::states_checked(&spec, &traits)
             })
             .collect()
     } else {
