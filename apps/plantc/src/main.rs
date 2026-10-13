@@ -1162,6 +1162,7 @@ fn grow_variant(
             .host_geometry_in(library())
             .map_err(|error| error.to_string())?,
     };
+    let params = spec.seeded_params(&program, &params, seed);
     grow(&program, &params, &settings).map_err(|error| format!("{}: {error}", spec.id))
 }
 

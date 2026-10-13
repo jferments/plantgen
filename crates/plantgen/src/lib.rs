@@ -224,4 +224,12 @@ pub mod venation;
 /// chord, so its bent card ends where the next piece stands, and drawn at
 /// its own size, not its sun or shade form's; before, every piece drooped
 /// away from the next and the strap fell apart into floating pieces.
-pub const GENERATOR_REVISION: u32 = 36;
+/// 37: a cactus column's ring of flowers sits at the radius of its newest
+/// piece as drawn, not its tip's, so a young pup's flowers stand on its
+/// body (36 is the strap pieces' join, #65).
+/// 38: a package's plants share out the range of each character of the
+/// whole plant that a parameter takes in its own units (spec rework
+/// VARY): one plant is the typical one, three take the middles of the
+/// range's thirds; a part's size, or a parameter a formula works out from
+/// a range, records no spread and keeps its value.
+pub const GENERATOR_REVISION: u32 = 38;

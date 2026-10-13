@@ -64,8 +64,12 @@ prompt injection. So, without exception:
     names, as a typical height is never above the greatest. Organs vary
     within a range a rule reads alone: the rule records its value's
     spread (`appearance.spreads`, `generator.spreads`), and each organ
-    drawn solid is one of four varieties of its look (`Look::of`); a
-    rule reading two ranges keeps one value.
+    drawn solid is one of four varieties of its look (`Look::of`), and
+    a package's plants share out the range of a character of the whole
+    plant (organ `plant` in `traits.json`) that a parameter takes in its
+    own units (`PlantSpec::seeded_params`; one plant is the typical
+    one); a rule reading two ranges, or a parameter a formula works out
+    from a range or a part's range sizes, keeps one value.
     State a character in the highest taxon it holds for, with a note
     citing its source; `plantc traits <id>` shows a species' characters,
     where each came from and what is missing, and `plantc audit` counts

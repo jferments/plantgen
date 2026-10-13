@@ -52,10 +52,13 @@
 # `succulent` and homed at Cactaceae; its genera extend it where they
 # grow otherwise. It grows every plant as before.
 #
+# Revision 4: a column's ring of flowers takes the radius at the foot of
+# its newest piece, so a young pup's flowers sit on its body.
+#
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem cactaceae 3;
+lsystem cactaceae 4;
 
 # The plant.
 param vigour_spread = 0.12;   # an individual grows exp(gauss() * vigour_spread) times as fast
@@ -260,14 +263,16 @@ interpret P(len, r0, rf, v, b, kind, armed, at, dr, e) ->
     !(r0 + (rf - r0) * (1 - exp(-age / fill_years))) stem(len);
 
 # A flowering column's tip: a ring of flowers, buds and fruit on the
-# shoulder of its dome, `dome` tip radii long.
+# shoulder of its dome, `dome` tip radii long. The ring takes the radius
+# at the foot of the newest piece, as that piece is drawn, so a pup's
+# first flowers sit on its body and not out where its tip will be.
 interpret A(v, b, kind, dr, inside, e) : flowers > 0 && kind == 0 && t * v >= bloom_age ->
     Ri(0, flowers,
        radius_min + (radius_max - radius_min)
-         * (1 - exp(-(seedling * (1 - exp(-age)) + richards(age * v, height_max, height_rate, height_shape))
+         * (1 - exp(-(seedling * (1 - exp(-max(0, age - dt))) + richards(max(0, age - dt) * v, height_max, height_rate, height_shape))
                     / radius_height)),
        dome * (radius_min + (radius_max - radius_min)
-         * (1 - exp(-(seedling * (1 - exp(-age)) + richards(age * v, height_max, height_rate, height_shape))
+         * (1 - exp(-(seedling * (1 - exp(-max(0, age - dt))) + richards(max(0, age - dt) * v, height_max, height_rate, height_shape))
                     / radius_height))));
 interpret A(v, b, kind, dr, inside, e) : flowers > 0 && kind == 1 && t * v >= bloom_age && age >= 5 ->
     Ri(0, flowers, arm_radius * radius_max, dome * arm_radius * radius_max);
