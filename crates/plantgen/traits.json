@@ -310,6 +310,13 @@
       "type": "bool",
       "why": "whether it spreads by its own shoots, runners or roots"
     },
+    "rhizome_habit": {
+      "group": "form",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["none", "erect", "ascending", "short_creeping", "long_creeping"],
+      "why": "how a plant's rhizome grows, where it has one: upright or rising under a crown, creeping a little so the plant forms a clump, or running far underground so it forms a colony"
+    },
     "habit_notes": {
       "group": "form",
       "organ": "plant",
@@ -538,6 +545,39 @@
       "range": [0, 5],
       "why": "the stalk between blade and shoot"
     },
+    "vernation": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["circinate", "conduplicate", "involute", "flat"],
+      "why": "how a young leaf lies in the bud: coiled from its tip downward (circinate, a fern's fiddlehead), folded along its midrib, rolled in from its edges, or flat"
+    },
+    "leaf_life_years": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "number",
+      "unit": "years",
+      "range": [0.05, 50],
+      "why": "how long a leaf lives from unfolding to falling: under one for a deciduous leaf, several for a fir's needles"
+    },
+    "frond_dimorphism": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["monomorphic", "dimorphic", "hemidimorphic"],
+      "when": {"reproduction": ["spores"]},
+      "why": "whether a fern's fertile and sterile leaves differ: alike, wholly different (a deer fern's erect, narrow fertile fronds), or differing only in the fertile part of each leaf"
+    },
+    "fertile_share": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "number",
+      "unit": "share",
+      "range": [0, 1],
+      "when": {"sporangia": ["sori"]},
+      "optional": true,
+      "why": "the share of a fertile blade, from its tip down, that bears sori"
+    },
     "leaf_margin": {
       "group": "leaves",
       "organ": "leaf",
@@ -559,6 +599,22 @@
       "type": "count",
       "range": [2, 2000],
       "why": "leaflets on a compound leaf, or on each pinna of a twice-divided one, as floras count them (a flora's pairs of leaflets are twice as many)"
+    },
+    "leaflet_length_m": {
+      "group": "leaves",
+      "organ": "leaflet",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0005, 2],
+      "why": "a grown leaflet's blade, or a fern's pinna, the longest on the leaf, without its stalk"
+    },
+    "leaflet_width_m": {
+      "group": "leaves",
+      "organ": "leaflet",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0001, 0.5],
+      "why": "a grown leaflet's blade, or a fern's pinna, at its widest"
     },
     "pinnae": {
       "group": "leaves",
@@ -1038,6 +1094,21 @@
       "type": "enum",
       "values": ["none", "kidney", "shield", "flap", "margin"],
       "why": "what covers a young sorus: nothing, a kidney-shaped flap, a round shield on a central stalk, a flap along one side, or the leaf's own edge rolled over it"
+    },
+    "sorus_position": {
+      "group": "fruit_and_cones",
+      "organ": "sorus",
+      "type": "enum",
+      "values": ["costal", "medial", "submarginal", "marginal"],
+      "why": "where on a pinna or segment its sori sit: beside its midrib, about halfway to its edge, near the edge, or on it"
+    },
+    "sori_rows": {
+      "group": "fruit_and_cones",
+      "organ": "sorus",
+      "type": "count",
+      "range": [1, 20],
+      "optional": true,
+      "why": "rows of sori on each side of a pinna's or segment's midrib"
     },
     "capsule_length_m": {
       "group": "fruit_and_cones",
