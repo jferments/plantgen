@@ -38,11 +38,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "program:broadleaf",
-        "leaf_arrangement",
-        "its shoots set one or two leaves a node, but the measure finds three or more leaves at some or most nodes of 16 species (the baobab, Oregon ash, maples, roses, brambles, dogwood, elder and others), seen since B1 stated their families' arrangement",
-    ),
-    (
-        "program:broadleaf",
         "crown_outline_fit",
         "its crowns still fill the envelope of the space tool (an ellipsoid), so from the side they fit an ellipse at about 0.90 to 0.95 against open-grown trees' 0.82 to 0.84; crown form step B grows the shape from light and space with no outline",
     ),
