@@ -86,7 +86,7 @@
           "aspect": 1.0,
           "unripe": 0.5
         },
-        "inflorescence": { "kind": "umbel", "flowers": 5, "size": 0.4, "spread": 50 },
+        "inflorescence": { "kind": "cyme", "flowers": 5, "size": 0.4, "spread": 50 },
         "colour": [0.92, 0.92, 0.9],
         "accent": [0.6, 0.7, 0.5],
         "season": {
