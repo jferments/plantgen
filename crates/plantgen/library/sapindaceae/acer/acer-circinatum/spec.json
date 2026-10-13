@@ -136,6 +136,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 10,
+      "max": 15
+    },
     "wood_density_basic_kg_m3": 560
   },
   "evidence": {
@@ -148,6 +152,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Leaf card length, petiole included, sized so every leaf drawn stays within Abrams vol. 3 (1951, as Acer circinatum): leaves 7 to 12 cm wide (0.16 drew them 17 to 21 cm wide)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Acer circinatum: grows 10 m to 15 m tall."
     },
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Acer circinatum (gwddagg_v2.2_species.csv, read): specific gravity 0.56 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.56, branches 0.53. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params": {

@@ -27,7 +27,8 @@
       "nod_years": 2,
       "spray_droop": 65,
       "spray_area": 0.25,
-      "pipe_organ": 0.0095
+      "pipe_organ": 0.0095,
+      "branch_reach": 6.0
     }
   },
   "growth": {
@@ -140,7 +141,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set for a western redcedar: a leader that nods over and straightens, branches that sweep down and turn up at the tips, flat scale-leaved sprays hanging below them, foliage kept about five years. Spray area matched to the drawn sprays. Not fitted to data. Cones (plant forms F3): about 1 cm, upright, in clusters; set from general knowledge of the species, not measured. Spec rework E6d: `cone_length`, `cone_pitch`, `needle_years` now set by the rules at Pinidae from the stated characters."
+      "note": "Hand-set for a western redcedar: a leader that nods over and straightens, branches that sweep down and turn up at the tips, flat scale-leaved sprays hanging below them, foliage kept about five years. Spray area matched to the drawn sprays. Not fitted to data. Cones (plant forms F3): about 1 cm, upright, in clusters; set from general knowledge of the species, not measured. Spec rework E6d: `cone_length`, `cone_pitch`, `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe."
     },
     "allometry": {
       "evidence": "Authored",

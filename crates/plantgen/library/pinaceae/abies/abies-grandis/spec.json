@@ -28,8 +28,9 @@
       "shade_death": 0.07,
       "shade_years": 4,
       "pipe_organ": 0.009,
-      "pipe_rings": 8e-06,
-      "spray_area": 0.393
+      "pipe_rings": 6.6e-06,
+      "spray_area": 0.393,
+      "branch_reach": 6.0
     }
   },
   "growth": {
@@ -128,7 +129,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a tall fir with a narrow, domed crown, level branches and flat sprays of long, glossy needles in two ranks. Not fitted to measurements. Cones (plant forms F3): 6 to 11 cm stand upright on the top branches and shed their scales on the tree; set from general knowledge of the species, not measured. Spec rework E6d: `cone_pitch`, `cone_years`, `needle_years` now set by the rules at Pinidae from the stated characters."
+      "note": "Hand-set from general knowledge of the species: a tall fir with a narrow, domed crown, level branches and flat sprays of long, glossy needles in two ranks. Not fitted to measurements. Cones (plant forms F3): 6 to 11 cm stand upright on the top branches and shed their scales on the tree; set from general knowledge of the species, not measured. Spec rework E6d: `cone_pitch`, `cone_years`, `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe, and `pipe_rings` refitted to the dbh references now that the crown holds more foliage."
     },
     "allometry": {
       "evidence": "Authored",

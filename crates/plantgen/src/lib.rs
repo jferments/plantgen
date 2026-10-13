@@ -251,10 +251,16 @@ pub mod venation;
 /// enough to rest on the ground, or rises onto it when no turn clears it;
 /// and a stem's foot ring meets the ground in a flat cut where a leaning
 /// or flared trunk's side would dip into it.
+/// 42: a conifer's lower crown stays full (pinidae 5): a branch's shoot
+/// shortens with its wood from the stem, not its age; foliage lasts longer
+/// low in the crown; dormant buds sprout on lit branch wood; side shoots
+/// grow 20 years; sprays are drawn with their own turns; a limb that
+/// reaches the ground is shed there, and a dead branch falls (41 is the
+/// ground plane, #73).
 /// 46: nine broadleaf shrubs and trees are drawn within their floras'
 /// sizes: desert willow, burrobush, beaked hazelnut, cascara and creosote
 /// bush no taller than their greatest height (`path_half` refitted), and
 /// desert willow, burrobush, vine maple, osoberry, thimbleberry and jojoba
 /// with leaves no larger than their floras give, desert willow's narrowly
-/// linear. (42 to 45 are #72, #77, #79 and #86.)
+/// linear. (43 to 45 are #77, #79 and #86.)
 pub const GENERATOR_REVISION: u32 = 46;
