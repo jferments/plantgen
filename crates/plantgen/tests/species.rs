@@ -172,12 +172,9 @@ fn builtin_species_shade_with_the_area_they_draw() {
 /// No built-in species draws an organ floating free of the plant: each
 /// stands on its wood, on the drawn end of the strap piece before it, or
 /// on an organ it touches (`mesh::loose_organs`), at its oldest keyframe.
-/// Cochemiea's first-year pups flower on a ring sized for a grown column,
-/// a few millimetres off their bodies, until the cactus program sizes it
-/// to the pup.
 #[test]
 fn builtin_species_draw_no_floating_organs() {
-    const KNOWN: [&str; 1] = ["cochemiea-grahamii"];
+    const KNOWN: [&str; 0] = [];
     let species: Vec<&str> = spec::all_species().map(|(id, _)| id).collect();
     let threads = std::thread::available_parallelism().map_or(4, usize::from);
     let failures: Vec<String> = std::thread::scope(|scope| {
