@@ -827,8 +827,13 @@ fn same_drawing(plant: &PlantMesh, shades: &[f32], packaged: &PlantMesh) -> bool
         );
     let cards = plant.cards.len() == packaged.cards.len()
         && plant.cards.iter().zip(&packaged.cards).all(|(a, b)| {
-            // A package's cards keep no bend (its atlas records it).
-            Card { bend: b.bend, ..*a } == *b
+            // A package's cards keep no bend (its atlas records it) and
+            // no bearing segment (a motion package's binding does).
+            Card {
+                bend: b.bend,
+                segment: b.segment,
+                ..*a
+            } == *b
         });
     colours
         && cards
