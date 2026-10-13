@@ -34,7 +34,6 @@
 //! Every tool is deterministic: the same scene gives the same values on every
 //! machine.
 
-use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 use std::sync::{Mutex, PoisonError};
 
@@ -742,15 +741,7 @@ fn light(
     let mut factors = vec![0.0_f64; directions.len() * groups.len()];
     let sweep = |direction: &SkyDirection, row: &mut [f64], beyond: &mut [f64]| {
         // beyond[v] = Σ D over v and every voxel past it along the direction.
-        for y in (0..ny).rev() {
-            for z in 0..nz {
-                for x in 0..nx {
-                    let here = [x, y, z];
-                    let past = next(here, direction.step).map_or(0.0, |voxel| beyond[flat(voxel)]);
-                    beyond[flat(here)] = density[flat(here)] + past;
-                }
-            }
-        }
+        sweep_beyond(&density, beyond, [nx, ny, nz], direction.step);
         let length = extinction * cell * direction.cells_per_layer;
         for (factor, (voxel, own)) in row.iter_mut().zip(&groups) {
             let past = next(*voxel, direction.step).map_or(0.0, |voxel| beyond[flat(voxel)]);
@@ -783,11 +774,63 @@ fn light(
     Ok((light, organs))
 }
 
-/// What the plant grows on: the conditions' substrate, or level soil.
-fn substrate_of(surroundings: &dyn Surroundings) -> Cow<'_, SubstrateField> {
+/// `beyond[v]` = `density[v]` plus `beyond` at the voxel one layer up and
+/// `step` (x, z) over, or nothing past the grid's edge: the leaf area
+/// density summed from each voxel out of the grid along a direction. One
+/// pass, top layer first, in `light`'s voxel order (`(y·nz + z)·nx + x`).
+fn sweep_beyond(density: &[f64], beyond: &mut [f64], [nx, ny, nz]: [usize; 3], step: (i64, i64)) {
+    let layer = nx * nz;
+    let (dx, dz) = step;
+    // The x (or z) whose neighbour `d` over stays inside `0..n`.
+    let inside = |n: usize, d: i64| -> std::ops::Range<usize> {
+        let n = i64::try_from(n).unwrap_or(i64::MAX);
+        let from = usize::try_from((-d).clamp(0, n)).unwrap_or(0);
+        let to = usize::try_from((n - d).clamp(0, n)).unwrap_or(0);
+        from..to.max(from)
+    };
+    let (xs, zs) = (inside(nx, dx), inside(nz, dz));
+    for y in (0..ny).rev() {
+        let here = y * layer;
+        if y + 1 == ny {
+            for v in here..here + layer {
+                beyond[v] = density[v] + 0.0;
+            }
+            continue;
+        }
+        let (row, above) = beyond.split_at_mut(here + layer);
+        let row = &mut row[here..];
+        for z in 0..nz {
+            let line = z * nx;
+            if !zs.contains(&z) || xs.is_empty() {
+                for x in 0..nx {
+                    row[line + x] = density[here + line + x] + 0.0;
+                }
+                continue;
+            }
+            let over = usize::try_from(i64::try_from(z).unwrap_or(0) + dz).unwrap_or(0) * nx;
+            let out = &mut row[line..line + nx];
+            let own = &density[here + line..here + line + nx];
+            for x in (0..xs.start).chain(xs.end..nx) {
+                out[x] = own[x] + 0.0;
+            }
+            // Inside, the voxel over is `x + dx` on the line above: slices
+            // side by side, which the compiler vectorizes.
+            let from = usize::try_from(i64::try_from(xs.start).unwrap_or(0) + dx).unwrap_or(0);
+            let past = &above[over + from..over + from + xs.len()];
+            for ((out, own), past) in out[xs.clone()].iter_mut().zip(&own[xs.clone()]).zip(past) {
+                *out = own + past;
+            }
+        }
+    }
+}
+
+/// What the plant grows on: the conditions' substrate, or level soil
+/// (built once: it is the same grid every step).
+fn substrate_of(surroundings: &dyn Surroundings) -> &SubstrateField {
+    static LEVEL: std::sync::OnceLock<SubstrateField> = std::sync::OnceLock::new();
     surroundings
         .substrate()
-        .map_or_else(|| Cow::Owned(SubstrateField::flat()), Cow::Borrowed)
+        .unwrap_or_else(|| LEVEL.get_or_init(SubstrateField::flat))
 }
 
 /// `substrate@1`'s readings at a module that asks for them: distance,
@@ -804,12 +847,12 @@ fn read_substrate(
     if queries & Query::Substrate.bit() == 0 {
         return;
     }
-    let normal = field.normal(query.position);
-    values[EnvField::Sd as usize] = field.distance(query.position);
+    let (distance, normal, material) = field.reading(query.position);
+    values[EnvField::Sd as usize] = distance;
     values[EnvField::Snx as usize] = normal.x;
     values[EnvField::Sny as usize] = normal.y;
     values[EnvField::Snz as usize] = normal.z;
-    values[EnvField::Smat as usize] = f64::from(field.surface_material(query.position));
+    values[EnvField::Smat as usize] = f64::from(material);
 }
 
 /// `light@2`'s settings: `light@1`'s, and how far past the plant the
@@ -2862,6 +2905,52 @@ mod tests {
     use crate::lsys::derive::Deriver;
     use crate::lsys::turtle::Interpreter;
     use std::collections::BTreeMap;
+
+    #[test]
+    #[allow(
+        clippy::cast_possible_wrap,
+        clippy::cast_sign_loss,
+        clippy::cast_possible_truncation
+    )]
+    fn the_light_sweep_sums_every_voxel_out_of_the_grid() {
+        // Against the sum taken voxel by voxel, for steps inside, at and
+        // past the grid's width, on uneven grids.
+        for [nx, ny, nz] in [[1, 1, 1], [2, 3, 2], [5, 4, 3], [3, 6, 7]] {
+            #[allow(clippy::cast_precision_loss)]
+            let density: Vec<f64> = (0..nx * ny * nz)
+                .map(|v| ((v * 37 % 11) as f64).mul_add(0.1, 0.3))
+                .collect();
+            for step in [(0, 0), (1, 0), (-1, 1), (2, -3), (-4, 5), (6, 6), (-9, 0)] {
+                let mut beyond = vec![f64::NAN; density.len()];
+                sweep_beyond(&density, &mut beyond, [nx, ny, nz], step);
+                for y in 0..ny {
+                    for z in 0..nz {
+                        for x in 0..nx {
+                            let (mut sum, mut at) = (0.0, [x as i64, y as i64, z as i64]);
+                            loop {
+                                let [cx, cy, cz] = at.map(|value| value as usize);
+                                sum += density[(cy * nz + cz) * nx + cx];
+                                at = [at[0] + step.0, at[1] + 1, at[2] + step.1];
+                                let outside = at[0] < 0
+                                    || at[2] < 0
+                                    || at[0] >= nx as i64
+                                    || at[1] >= ny as i64
+                                    || at[2] >= nz as i64;
+                                if outside {
+                                    break;
+                                }
+                            }
+                            let got = beyond[(y * nz + z) * nx + x];
+                            assert!(
+                                (got - sum).abs() < 1e-12,
+                                "{nx}x{ny}x{nz} step {step:?} at {x},{y},{z}: {got} != {sum}"
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     struct Setup {
         program: Program,

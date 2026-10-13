@@ -207,6 +207,17 @@ impl Vec3 {
         }
     }
 
+    /// [`Self::normalize_or`] with the fallback made only when needed.
+    #[must_use]
+    pub fn normalize_or_else(self, fallback: impl FnOnce() -> Self) -> Self {
+        let length = self.length();
+        if length > 1e-12 && length.is_finite() {
+            self / length
+        } else {
+            fallback()
+        }
+    }
+
     #[must_use]
     pub fn distance(self, other: Self) -> f64 {
         (self - other).length()
@@ -341,7 +352,7 @@ impl Frame {
     #[must_use]
     pub fn orthonormalized(self) -> Self {
         let h = self.h.normalize_or(Vec3::Y);
-        let l = (self.l - h * h.dot(self.l)).normalize_or(any_perpendicular(h));
+        let l = (self.l - h * h.dot(self.l)).normalize_or_else(|| any_perpendicular(h));
         let u = h.cross(l);
         Self { h, l, u }
     }
