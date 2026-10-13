@@ -1084,6 +1084,17 @@ pub fn compare_allometry(
     records
 }
 
+/// Every level of detail of keyframe `graph` as a package holds them,
+/// nearest first: the meshes [`build`] bakes, for checks outside the
+/// crate (such as nothing below the ground, `crate::mesh::below`).
+#[must_use]
+pub fn keyframe_meshes(graph: &PlantGraph, inputs: &Inputs) -> Vec<PlantMesh> {
+    level_meshes(graph, inputs, false)
+        .into_iter()
+        .map(|(mesh, _)| mesh)
+        .collect()
+}
+
 /// One keyframe's derived objects, before they enter the store.
 struct BakedKeyframe {
     graph: Vec<u8>,
@@ -1168,10 +1179,7 @@ fn bake_keyframe(
     organ_types: &[OrganType],
     inputs: &Inputs,
 ) -> Result<BakedKeyframe, PackageError> {
-    let meshes: Vec<PlantMesh> = level_meshes(graph, inputs, false)
-        .into_iter()
-        .map(|(mesh, _)| mesh)
-        .collect();
+    let meshes = keyframe_meshes(graph, inputs);
     let motion = match &inputs.motion {
         Some(motion) => {
             let found = motion.of_graph(graph, organ_types);
