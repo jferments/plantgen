@@ -22,9 +22,13 @@
 # Revision 3 (spec rework P6): it reads broadleaf's adult_age, which
 # replaces bloom_age.
 #
+# Revision 4 (crown calibration): its short shoots' leaves with their own
+# turn moved to broadleaf (revision 9), which it now inherits; a maple
+# grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem sapindaceae 3 extends broadleaf;
+lsystem sapindaceae 4 extends broadleaf;
 
 param bud_years = 30;
 param crown_widest = 0.45;      # share of the crown's depth where it is widest
@@ -91,27 +95,6 @@ rule A(split) : apex_death > 0 && space <= 0 && t > 10 && rand() < apex_death ->
 # same pull broadleaf's droop gives downward otherwise.
 axiom !(0.004) T(wind, rise > 0 ? 1 : -1, 0, rise > 0 ? rise : droop + wind_bend * wind)
       /(uniform(0, 360)) &(uniform(0, lean)) A(fork_height * uniform(0.7, 1.3));
-
-# A short shoot's yearly leaves, turned by its age rather than by a roll
-# left behind each year (broadleaf's `P` leaves one `/(divergence)` a year, which
-# piles up over centuries). Leaves and blooms carry their own turn
-# (`leaf(size, roll, pitch, level)`), one module each where
-# `[ /(roll) &(pitch) $ leaf(size) ]` takes five: an old maple holds about
-# a hundred thousand leaves at once. The rules repeat broadleaf's short-shoot rules
-# with that one change, and keep their order: death, a long shoot, then
-# leaves with or without blooms.
-module Q(n, a);                # n leaf pairs still to unfold, turned a quarter turns
-
-rule B : life > 0 && t >= life -> ;
-rule B : light < shade_death || age >= bud_years -> ;
-rule B : vigour >= bud_break && space > 0 -> A(0);
-rule B : light >= spur_light && blooms > 0 && t >= adult_age -> Q(spur_pairs, age) Bo(blooms) B;
-rule B : light >= spur_light -> Q(spur_pairs, age) B;
-
-decompose Q(n, a) : n > 0 ->
-    leaf(spur_leaf, divergence * a, leaf_angle, 1) leaf(spur_leaf, divergence * a + 180, leaf_angle, 1)
-    Q(n - 1, a + 1);
-decompose Q(n, a) -> ;
 
 # A limb that no longer pays its way is shed, as in Pałubicki et al.
 # (2009): the light its tips collect, qsum, over the internodes it carries,

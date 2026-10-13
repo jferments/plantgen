@@ -760,6 +760,60 @@ fn the_juvenile_period_sets_adult_age() {
     assert_eq!(joshua.generator.params.get("flower_age"), Some(&25.0));
 }
 
+/// Open-grown broadleaf crowns hold the leaf area per crown area of the
+/// USDA Urban Tree Database's open-grown trees of their species, or of
+/// their genus where it has none (`usfs-urban-tree-database-2016`, leaf
+/// area over the area of the mean crown diameter, between its 10th and
+/// 90th percentiles at the age), and an old oak's inner leaves grow in
+/// shade (crown calibration): short shoots live while they have light.
+#[test]
+fn open_crowns_hold_the_leaf_area_of_open_grown_trees() {
+    // Species, age, the database's 10th and 90th percentiles, its trees.
+    for (id, age, low, high) in [
+        // Longview, WA: 15 trees 60 to 200 years old.
+        ("acer-macrophyllum", 120.0, 4.4, 8.7),
+        // Longview: 13 trees 35 to 60.
+        ("fraxinus-latifolia", 50.0, 2.1, 17.2),
+        // Longview, as Populus balsamifera subsp. trichocarpa: 12 trees 35 to 60.
+        ("populus-tristis", 40.0, 4.2, 14.8),
+        // Sacramento's valley oaks (Quercus lobata), white oaks as it is:
+        // 18 trees 60 to 200.
+        ("quercus-garryana", 80.0, 1.9, 5.3),
+        // Longview's European white birches: 9 trees 35 to 60.
+        ("betula-papyrifera", 40.0, 1.8, 11.1),
+    ] {
+        let spec = PlantSpec::builtin(id).unwrap();
+        let variant = *spec
+            .variant_list()
+            .iter()
+            .find(|variant| variant.environment == spec::Environment::Open)
+            .unwrap();
+        let growth = grow_variant(&spec, &variant, age, vec![age]);
+        let graph = &growth.keyframes[0];
+        let radius = graph.crown_radius();
+        let index = graph.leaf_area(&growth.organ_types) / (std::f64::consts::PI * radius * radius);
+        assert!(
+            (low..=high).contains(&index),
+            "{id} at {age} years: {index:.2} m² of leaf per m² of crown, the database {low} to {high}"
+        );
+        if id == "quercus-garryana" {
+            let leaf = |organ: &&plantgen::graph::GraphOrgan| {
+                growth.organ_types[usize::from(organ.organ)].name == "leaf"
+            };
+            let leaves: Vec<_> = graph.organs.iter().filter(leaf).collect();
+            let shaded = leaves
+                .iter()
+                .filter(|organ| plantgen::looks::light_form(organ.light) < -0.25)
+                .count();
+            assert!(
+                shaded * 10 >= leaves.len(),
+                "{shaded} of {} leaves in shade",
+                leaves.len()
+            );
+        }
+    }
+}
+
 /// A tree grown in a steady wind leans its crown downwind (plant forms
 /// F7): the lenga's leaves lie mostly on the lee side (+X) of its stem.
 #[test]

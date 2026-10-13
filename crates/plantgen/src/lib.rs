@@ -182,4 +182,11 @@ pub mod venation;
 /// and bracken grow fronds of their flora's sizes; a crown a fern's
 /// rhizome sends out starts as old as the crown it came from
 /// (`polypodiidae` revision 4), so its first fronds are full-sized.
-pub const GENERATOR_REVISION: u32 = 29;
+/// 30: crown calibration: in the broadleaf program a short shoot lives
+/// while it has light, for up to 40 years, and its leaves carry their own
+/// turn, so open-grown crowns keep the leaf area per crown area of the
+/// Urban Tree Database's trees and their inner leaves grow in shade; and
+/// the deep-shade end of the light scale leaves acclimate on,
+/// `looks::DEEP_SHADE`, is 0.08, where the growth model's short shoots stop
+/// leafing out, not 0.04, which no crown's leaves reach.
+pub const GENERATOR_REVISION: u32 = 30;

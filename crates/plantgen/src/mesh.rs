@@ -3082,7 +3082,7 @@ mod tests {
             segments: Vec::new(),
             organs: vec![
                 leaf(0.3, 8.0),
-                leaf(0.12, 8.0),
+                leaf(0.17, 8.0),
                 leaf(0.05, 8.0),
                 leaf(0.3, 2.0),
             ],
