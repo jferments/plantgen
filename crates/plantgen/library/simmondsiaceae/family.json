@@ -3,6 +3,19 @@
   "rank": "family",
   "name": "Simmondsiaceae",
   "parent": "order/caryophyllales",
+  "traits": {
+    "woodiness": "woody",
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_habit": "evergreen",
+    "stipules": false,
+    "sexual_system": "dioecious",
+    "perianth": "tepals",
+    "ovary_position": "superior",
+    "carpels": 3,
+    "fruit_type": "capsule"
+  },
   "forms": {
     "shrub": {
       "generator": {
@@ -15,6 +28,18 @@
           "note": "The program the authors chose to grow this taxon's shrub species (named in each species' spec until G2.3a moved it here)."
         }
       }
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 54 Buxaceae, under which he kept Simmondsia, APG's only genus of Simmondsiaceae: evergreen shrubs; leaves leathery, simple, without stipules (Simmondsia's opposite and entire, by his key); sepals and no petals; ovary superior, 3-celled; Simmondsia's fruit a capsule opening by three valves. Abrams's flora (vol. 3, 1951) agrees on the opposite, entire, evergreen leaves, the sepals (usually 5) and the capsule."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia's article Jojoba (read 2026-10-13): the plants are male or female, hermaphrodites very rare. Abrams (vol. 3, 1951) calls the genus monoecious, which later floras do not follow."
     }
   }
 }

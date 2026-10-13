@@ -117,7 +117,8 @@
   "tier": "procedural_proxy",
   "traits": {
     "inflorescence": "raceme",
-    "inflorescence_posture": "erect"
+    "inflorescence_posture": "erect",
+    "leaf_arrangement": "alternate"
   },
   "evidence": {
     "generator.params": {
@@ -179,6 +180,11 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "The Flora of North America's account of the species, as quoted in search results (the page itself was not read): inflorescences erect racemes, 5 to 50 cm."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams's Illustrated Flora of the Pacific States, volume 3 (1951), Onagraceae by P. A. Munz: fireweed's leaves are alternate, unlike most willow-herbs, whose lower leaves are opposite; the Myrtales' usual opposite leaves do not hold for it."
     },
     "appearance.organs.flower": {
       "evidence": "Authored",

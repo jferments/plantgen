@@ -2,5 +2,16 @@
   "schema": 1,
   "rank": "order",
   "name": "Cornales",
-  "parent": "clade/asterids"
+  "parent": "clade/asterids",
+  "traits": {
+    "ovary_position": "inferior",
+    "stipules": false
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 33 Hydrangeaceae, 43 Cornaceae, 46 Nyssaceae and 105 Loasaceae, which make APG's Cornales: leaves without stipules; the calyx tube adnate to an inferior ovary."
+    }
+  }
 }

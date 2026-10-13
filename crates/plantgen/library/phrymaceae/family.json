@@ -12,7 +12,14 @@
     "hypanthium": false,
     "ovary_position": "superior",
     "stamens": 4,
-    "carpels": 2
+    "carpels": 2,
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "rarely"
+    },
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "stipules": false
   },
   "forms": {
     "forb": {
@@ -33,6 +40,26 @@
       "evidence": "SourceInferred",
       "source": "abrams-1951",
       "note": "Abrams's Illustrated Flora of the Pacific States, volume 3 (1951), read in full (Scrophulariaceae by Pennell, Mimulus): calyx tubular, plicate-angled, 5-toothed; corolla tubular, two-lipped, the upper lip 2-lobed and the lower 3-lobed; stamens 4, didynamous; stigma 2-lobed. Jepson eFlora and the Flora of Tasmania (as quoted in search results; the pages themselves were not read): flowers hypogynous, ovary superior, of 2 carpels."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 246 Phrymaceae (Phryma alone), with the monkeyflowers he keeps in Scrophulariaceae, which APG joins as Phrymaceae: herbs; leaves opposite, simple; stipules absent."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 246 Phrymaceae (Phryma alone), with the monkeyflowers he keeps in Scrophulariaceae, which APG joins as Phrymaceae: herbs; leaves opposite, simple; stipules absent."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 246 Phrymaceae (Phryma alone), with the monkeyflowers he keeps in Scrophulariaceae, which APG joins as Phrymaceae: herbs; leaves opposite, simple; stipules absent."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 246 Phrymaceae (Phryma alone), with the monkeyflowers he keeps in Scrophulariaceae, which APG joins as Phrymaceae: herbs; leaves opposite, simple; stipules absent."
     }
   }
 }

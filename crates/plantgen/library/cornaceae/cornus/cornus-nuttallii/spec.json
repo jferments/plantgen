@@ -39,7 +39,8 @@
       "space_kill": 0.5,
       "pipe_rings": 4.8e-06,
       "leaf_area": 0.273,
-      "bloom_area": 0.871
+      "bloom_area": 0.871,
+      "path_half": 10.0
     }
   },
   "growth": {
@@ -133,6 +134,11 @@
     "juvenile_period_years": {"min": 6, "max": 10}
   },
   "evidence": {
+    "generator.params.path_half": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region."
+    },
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",

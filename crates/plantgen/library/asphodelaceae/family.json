@@ -9,7 +9,12 @@
     "perianth": "tepals",
     "ovary_position": "superior",
     "stamens": 6,
-    "carpels": 3
+    "carpels": 3,
+    "leaf_division": "simple",
+    "fruit_type": {
+      "capsule": "usually",
+      "berry": "rarely"
+    }
   },
   "forms": {
     "rosette_succulent": {
@@ -30,6 +35,16 @@
       "evidence": "SourceInferred",
       "source": "vicflora",
       "note": "VicFlora's account of the family, as search results quote it (the page itself was not read): flowers actinomorphic or rarely slightly zygomorphic; tepals 6, free or fused, in 2 whorls of 3; stamens 6 in 2 whorls of 3, mostly hypogynous; ovary superior, carpels as many as the perianth whorl (Watson and Dallwitz) and fused (Hortflora)."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 372 Liliaceae, whose asphodels, aloes and day-lilies APG puts in Asphodelaceae: leaves simple, in a basal tuft or rosette; fruit mostly a capsule opening along its cells, rarely a berry."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 372 Liliaceae, whose asphodels, aloes and day-lilies APG puts in Asphodelaceae: leaves simple, in a basal tuft or rosette; fruit mostly a capsule opening along its cells, rarely a berry."
     }
   }
 }

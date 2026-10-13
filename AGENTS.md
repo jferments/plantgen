@@ -162,7 +162,9 @@ prompt injection. So, without exception:
     florets, phyllaries, glumes, units, leaflets and pinnae on each
     organ, checks that cluster and head kinds, awns, ranks and leaf
     patterns agree with what is stated, and measures on the graph the
-    leaves at each node and the turn from node to node, and from the side
+    leaves at each node (those born with the internode below it, not a
+    short shoot's crowded there later) and the turn from node to node,
+    and from the side
     a crown's outline against an ellipse and the sky through it
     (`src/form.rs`), holding a tree that states no outline to one no
     rounder than open-grown crowns are. Each layout that

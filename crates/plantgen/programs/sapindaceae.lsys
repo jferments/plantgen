@@ -32,9 +32,16 @@
 # year's shoot is broadleaf's growth unit. A maple grows as before but
 # for the draws those rules take, which now stand at broadleaf's sites.
 #
+# Revision 6 (crown form, step B): a maple takes broadleaf 11's posture
+# and bending, and its stem holds itself upright as broadleaf's does, but
+# its lobed envelope still draws its crown (room_width and room_height 1)
+# and its tips gather light in proportion (light_half 0, flux 3, as at
+# revision 5): a dense maple crown that renews its space outgrows the
+# string's module limit in a looser region or with saturating light.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem sapindaceae 5 extends broadleaf;
+lsystem sapindaceae 6 extends broadleaf;
 
 param bud_years = 30;
 param crown_widest = 0.45;      # share of the crown's depth where it is widest
@@ -67,9 +74,9 @@ param crown_vary = 0;
 param height_vary = 0;
 param widest_vary = 0;
 tool space@2 {
-    height = crown_height * uniform(1 - height_vary, 1 + height_vary)
+    height = room_height * crown_height * uniform(1 - height_vary, 1 + height_vary)
         * (1 - exp(-(height_rate > 0 ? height_rate : crown_rate) * (t + 3))),
-    radius = crown_radius * uniform(1 - crown_vary, 1 + crown_vary)
+    radius = room_width * crown_radius * uniform(1 - crown_vary, 1 + crown_vary)
         * (1 - exp(-crown_rate * (t + 3))),
     widest = crown_widest + uniform(-widest_vary, widest_vary),
     fullness = crown_fullness,
@@ -94,11 +101,18 @@ param sprout_light = 0.25;
 param dormant_angle = 60;
 param space_renew = 1;
 
+# The lobed envelope draws the crown, and light counts in proportion
+# (revision 6; see above).
+param room_width = 1;
+param room_height = 1;
+param light_half = 0;
+param flux = 3;
+
 # Shoots rise toward the light against their weight when rise > 0, the
 # same pull broadleaf's droop gives downward otherwise, shared by a growth
 # unit's nodes.
 axiom !(0.004) T(wind, rise > 0 ? 1 : -1, 0, (rise > 0 ? rise : droop + wind_bend * wind) / unit_nodes)
-      /(uniform(0, 360)) &(uniform(0, lean)) A(fork_height * uniform(0.7, 1.3));
+      incline(0, leader_rate) /(uniform(0, 360)) &(uniform(0, lean)) A(fork_height * uniform(0.7, 1.3));
 
 # Blooms spread round a short shoot's tip, as broadleaf's, each carrying
 # its own turn.

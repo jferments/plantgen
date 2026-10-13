@@ -2,5 +2,22 @@
   "schema": 1,
   "rank": "order",
   "name": "Liliales",
-  "parent": "clade/monocots"
+  "parent": "clade/monocots",
+  "traits": {
+    "perianth": {
+      "tepals": "usually",
+      "sepals_and_petals": "sometimes"
+    },
+    "ovary_position": {
+      "superior": "usually",
+      "inferior": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 372 Liliaceae (wide sense, which held the lilies, Melanthiaceae, Colchicaceae and Smilacaceae of APG's Liliales): perianth of six segments in two whorls, mostly alike (petal-like tepals); Trillium and its kin have green sepals and coloured petals. The ovary is superior in most; Alstroemeriaceae, also in the order, have it inferior."
+    }
+  }
 }

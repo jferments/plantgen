@@ -10,7 +10,14 @@
     "hypanthium": true,
     "ovary_position": "inferior",
     "stamens": 5,
-    "carpels": 2
+    "carpels": 2,
+    "woodiness": "woody",
+    "leaf_division": "simple",
+    "stipules": {
+      "false": "usually",
+      "true": "sometimes"
+    },
+    "fruit_type": "berry"
   },
   "forms": {
     "shrub": {
@@ -31,6 +38,26 @@
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",
       "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full, Ribes: calyx-tube adnate to the 1-celled ovary and more or less produced beyond it; petals inserted on its throat; calyx-lobes, petals and stamens 5; placentae 2, styles 2. Family summaries (as quoted in search results; the pages themselves were not read) add flowers actinomorphic and sepals often larger than the small petals."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 34 Grossulariaceae (currants and gooseberries): shrubs, often spiny; leaves often clustered, simple, pleated or rolled in bud; stipules absent or joined to the leaf stalk; fruit a pulpy berry crowned by the persistent calyx."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 34 Grossulariaceae (currants and gooseberries): shrubs, often spiny; leaves often clustered, simple, pleated or rolled in bud; stipules absent or joined to the leaf stalk; fruit a pulpy berry crowned by the persistent calyx."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 34 Grossulariaceae (currants and gooseberries): shrubs, often spiny; leaves often clustered, simple, pleated or rolled in bud; stipules absent or joined to the leaf stalk; fruit a pulpy berry crowned by the persistent calyx."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 34 Grossulariaceae (currants and gooseberries): shrubs, often spiny; leaves often clustered, simple, pleated or rolled in bud; stipules absent or joined to the leaf stalk; fruit a pulpy berry crowned by the persistent calyx."
     }
   }
 }
