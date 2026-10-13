@@ -219,12 +219,16 @@ Usage:
       Render a row per species of its first N seeds (default 4) at one
       age (default its oldest keyframe), each row at one scale.
   plantc mechanics <species|spec.json> [--env ENV] [--seed N] [--years N]
-                   [--bones N] [--modulus MPA] [--moisture SHARE]
+                   [--bones N] [--piece M] [--frequencies fast|exact]
+                   [--modulus MPA] [--moisture SHARE]
                    [--leaf-mass KG_M2] [--rows N]
       Grow a woody species to its oldest keyframe, or N years, and print
-      it as a structure of beams (plant motion S1): its material, mass,
-      sag under its own weight, lowest vibration modes and its heaviest
-      bones (default 256 in all, N rows shown, default 12). A species
+      it as a structure of beams (plant motion S1, S2): its material,
+      mass, sag under its own weight, lowest vibration modes, the
+      branches a host can prune and its heaviest bones (default 512 in
+      all, each at most M metres long, default 2; N rows shown, default
+      12) with their bend limits. Bone frequencies are by Rayleigh's
+      quotient (fast) or subspace iteration (exact, slow). A species
       that does not state its green stiffness or moisture stops it, unless
       given; unstated leaf mass leaves the leaves unweighed. --modulus
       (green modulus of elasticity in static bending, as the Wood Handbook
@@ -1406,6 +1410,8 @@ fn mechanics_command(args: &[String]) -> Result<(), Failure> {
             "seed",
             "years",
             "bones",
+            "piece",
+            "frequencies",
             "modulus",
             "moisture",
             "leaf-mass",
@@ -1450,10 +1456,21 @@ fn mechanics_command(args: &[String]) -> Result<(), Failure> {
     let Some(graph) = growth.keyframes.last() else {
         return Err(format!("{} grew nothing", spec.id).into());
     };
+    let exact = match options.flags.get("frequencies").map(String::as_str) {
+        None | Some("fast") => false,
+        Some("exact") => true,
+        Some(other) => {
+            return Err(format!("--frequencies is fast or exact, not `{other}`").into());
+        }
+    };
     let settings = Settings {
         bones: options
             .number("bones")?
             .unwrap_or(Settings::default().bones),
+        piece: options
+            .number("piece")?
+            .unwrap_or(Settings::default().piece),
+        exact,
         ..Settings::default()
     };
     let started = Instant::now();
@@ -1485,11 +1502,12 @@ fn mechanics_command(args: &[String]) -> Result<(), Failure> {
     );
     let beams = &found.beams;
     out!(
-        "{} beams, {} carried segments, {} axes, {} bones; {:.1} kg, of which leaves {:.2} kg; {} organs unweighed",
+        "{} beams, {} carried segments, {} axes, {} bones, {} branches; {:.1} kg, of which leaves {:.2} kg; {} organs unweighed",
         beams.len(),
         beams.carried,
         found.axes,
         found.bones.len(),
+        found.branches.len(),
         found.mass(),
         found.leaf_mass(),
         beams.unweighed
@@ -1514,9 +1532,10 @@ fn mechanics_command(args: &[String]) -> Result<(), Failure> {
             .then(a.cmp(&b))
     });
     out!(
-        "{:>5} {:>6} {:>6} {:>7} {:>6} {:>9} {:>7} {:>7} {:>9} {:>6}",
+        "{:>5} {:>6} {:>5} {:>6} {:>7} {:>6} {:>9} {:>7} {:>7} {:>9} {:>6} {:>6}",
         "bone",
         "parent",
+        "depth",
         "length",
         "foot cm",
         "kg",
@@ -1524,15 +1543,17 @@ fn mechanics_command(args: &[String]) -> Result<(), Failure> {
         "f1 Hz",
         "f2 Hz",
         "moment Nm",
-        "break"
+        "break",
+        "bend°"
     );
     for &at in order.iter().take(rows) {
         let bone = &found.bones[at];
         out!(
-            "{:>5} {:>6} {:>6.2} {:>7.1} {:>6.2} {:>9.2} {:>7.3} {:>7.3} {:>9.1} {:>6}",
+            "{:>5} {:>6} {:>5} {:>6.2} {:>7.1} {:>6.2} {:>9.2} {:>7.3} {:>7.3} {:>9.1} {:>6} {:>6}",
             at,
             bone.parent
                 .map_or_else(|| "-".to_string(), |p| p.to_string()),
+            bone.depth,
             bone.length,
             bone.radius[0] * 200.0,
             bone.mass,
@@ -1543,6 +1564,10 @@ fn mechanics_command(args: &[String]) -> Result<(), Failure> {
             bone.breaking_moment.map_or_else(
                 || "-".to_string(),
                 |breaking| format!("{:.0}%", 100.0 * bone.weight_moment / breaking)
+            ),
+            bone.bend_limit.map_or_else(
+                || "-".to_string(),
+                |limit| format!("{:.0}", limit.to_degrees())
             )
         );
     }

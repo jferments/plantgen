@@ -199,6 +199,16 @@ pub struct Settings {
     /// Subspace iterations: enough for the modes to settle to a part in
     /// a thousand on the plants tested.
     pub iterations: u32,
+    /// The longest a bone is, m: a longer axis is cut into equal pieces,
+    /// each a bone, chained foot to tip.
+    pub piece: f64,
+    /// Bones' frequencies by subspace iteration (the reference) rather
+    /// than by Rayleigh's quotient on two static solves (a few per cent
+    /// high, and hundreds of times faster).
+    pub exact: bool,
+    /// The share of its breaking stress a bone's wood takes at its bend
+    /// limit ([`Bone::bend_limit`]).
+    pub bend_share: f64,
 }
 
 impl Default for Settings {
@@ -208,9 +218,12 @@ impl Default for Settings {
             // fifteenth of its Young's modulus; torsion matters only where
             // a branch's weight twists the axis it stands on.
             shear: 1.0 / 16.0,
-            bones: 256,
+            bones: 512,
             modes: 6,
             iterations: 60,
+            piece: 2.0,
+            exact: false,
+            bend_share: 0.5,
         }
     }
 }
@@ -516,6 +529,42 @@ impl Beams {
             .collect()
     }
 
+    /// The two lowest frequencies, Hz, of the run of `root` clamped at its
+    /// foot, only the `flexible` beams bending, by Rayleigh's quotient on
+    /// its static shape under its own weight turned across `axis`, one way
+    /// and the other: `ω² = g Σ m d·u / Σ m u·u`. On a uniform cantilever
+    /// that is 0.4% above the exact first frequency.
+    #[must_use]
+    pub fn rayleigh(&self, root: usize, axis: Vec3, flexible: &[bool]) -> [f64; 2] {
+        let up = Vec3::Y - axis * axis.dot(Vec3::Y);
+        let first = if up.length() > 1.0e-6 {
+            up.normalize_or(Vec3::X)
+        } else {
+            (Vec3::X - axis * axis.dot(Vec3::X)).normalize_or(Vec3::Z)
+        };
+        let second = axis.cross(first).normalize_or(Vec3::Z);
+        let mut found = [0.0; 2];
+        let mut loads = vec![Vec3::ZERO; self.len()];
+        for (slot, across) in [first, second].into_iter().enumerate() {
+            for beam in self.run(root) {
+                loads[beam] = across * (self.mass[beam] * GRAVITY);
+            }
+            let moved = self.deflect(&loads, Some(root), Some(flexible));
+            let mut work = 0.0;
+            let mut inertia = 0.0;
+            for beam in self.run(root) {
+                work += loads[beam].dot(moved[beam]);
+                inertia += self.mass[beam] * moved[beam].dot(moved[beam]);
+            }
+            found[slot] = if inertia > 0.0 && work > 0.0 {
+                (work / inertia).sqrt() / (2.0 * math::PI)
+            } else {
+                0.0
+            };
+        }
+        found
+    }
+
     /// The lowest `count` vibration modes of the run of `within` (all the
     /// plant when `None`), only the `flexible` beams bending: each one's
     /// frequency, Hz, and its shape, the ends' displacements (mass
@@ -813,8 +862,10 @@ pub struct Bone {
     /// wood and riding axes (twice radius times length), m², for drag.
     pub leaf_area: f64,
     pub wood_area: f64,
-    /// Its two lowest frequencies, Hz: its axis clamped at its foot, the
-    /// bones beyond it rigid.
+    /// Where its mass sits, m along it from its foot.
+    pub centre_of_mass: f64,
+    /// Its two lowest frequencies, Hz, lowest first: its axis clamped at
+    /// its foot, the bones beyond it rigid.
     pub frequencies: [f64; 2],
     /// The bending moment at its foot from the weight of all it carries,
     /// N m, at rest in the grown shape.
@@ -823,14 +874,59 @@ pub struct Bone {
     /// modulus of rupture times the section modulus `π r³ / 4`, where the
     /// species states its strength.
     pub breaking_moment: Option<f64>,
+    /// The largest bend it takes at rest, radians from foot to tip: a
+    /// moment along it that brings the fibres at its foot to
+    /// [`Settings::bend_share`] of the green modulus of rupture,
+    /// `share × MOR × L / (E r)`, where the species states its strength.
+    /// A host may hold it bent (a pushed or snow-laden branch) up to this.
+    pub bend_limit: Option<f64>,
+}
+
+/// An axis that grows from a stem or from another branch, whole under one
+/// chain of bones: what a host prunes.
+#[derive(Debug, Clone, PartialEq)]
+pub struct Branch {
+    /// The graph id of its first segment: the same at every age.
+    pub id: u64,
+    /// The branch it grows from, if not a stem.
+    pub parent: Option<u32>,
+    /// Its first bone. Pruning it takes this bone, every bone whose
+    /// parents lead back to it, and every vertex bound to them.
+    pub bone: u32,
+    /// Its own axis's bones, foot first.
+    pub chain: Vec<u32>,
+    /// Where it leaves its parent, and its direction there.
+    pub base: Vec3,
+    pub direction: Vec3,
+    /// Its branch order (0 for a stem).
+    pub order: u16,
+    /// Its own axis's length, m.
+    pub length: f64,
+    /// The wood pruning it takes away, it and all beyond, m³.
+    pub volume: f64,
+    /// Everything it carries, kg.
+    pub mass_beyond: f64,
+    /// The cut face a prune leaves.
+    pub stub: Stub,
+}
+
+/// The cut face of a pruned branch: a disc on its axis, one parent radius
+/// out from the joint so it stands clear of the parent's bark.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Stub {
+    pub centre: Vec3,
+    pub normal: Vec3,
+    pub radius: f64,
 }
 
 /// Where a graph segment lies on the bones: the bone that moves it and how
-/// far along that bone its end is, 0 at the bone's foot and 1 at its tip.
-/// A segment of an axis that rides another bone lies where its axis joins.
+/// far along that bone its start and end are, 0 at the bone's foot and 1
+/// at its tip. A segment of an axis that rides another bone lies where its
+/// axis joins, and so does one that is not wood (a body, a structure).
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Binding {
     pub bone: u32,
+    pub from: f32,
     pub along: f32,
 }
 
@@ -840,6 +936,8 @@ pub struct Mechanics {
     pub material: Material,
     pub beams: Beams,
     pub bones: Vec<Bone>,
+    /// The axes a host can prune, in their first bones' order.
+    pub branches: Vec<Branch>,
     /// Per graph segment; none for a segment no wood bears.
     pub binding: Vec<Option<Binding>>,
     /// The whole plant's lowest modes.
@@ -881,6 +979,8 @@ impl Mechanics {
 #[allow(
     clippy::too_many_lines,
     clippy::cast_possible_truncation,
+    clippy::cast_precision_loss,
+    clippy::cast_sign_loss,
     clippy::similar_names
 )]
 pub fn mechanics(
@@ -924,14 +1024,6 @@ pub fn mechanics(
                 .fold(0.0, |total, mass| total + mass)
         })
         .collect();
-    // The heaviest axes are bones; ties go to the earlier, so an axis's
-    // parent (as heavy at least, and earlier) is always kept before it.
-    let mut ranked: Vec<usize> = axes.keys().copied().collect();
-    ranked.sort_by(|&a, &b| beyond_mass[b].total_cmp(&beyond_mass[a]).then(a.cmp(&b)));
-    ranked.truncate(settings.bones.max(1));
-    // Coarse first, so any first bones are a rig of their own: by depth
-    // (the stem 0, axes on it 1, and so on), then heaviest first. Every
-    // bone's parent, shallower, comes before it.
     let mut depth_of = vec![0_u32; count];
     for beam in 0..count {
         let axis = axis_of[beam];
@@ -941,52 +1033,108 @@ pub fn mechanics(
             depth_of[axis]
         };
     }
+    // Pieces: each axis cut into as few equal runs as keep every one
+    // within `settings.piece` metres; a beam goes to the piece its middle
+    // falls in. A piece is named by its first beam.
+    let mut piece_of = vec![0_usize; count];
+    let mut pieces: BTreeMap<usize, Vec<usize>> = BTreeMap::new();
+    for own in axes.values() {
+        let total = own.iter().map(|&beam| beams.length[beam]).sum::<f64>();
+        let cuts = if settings.piece > 0.0 {
+            (total / settings.piece - 1.0e-9).ceil().max(1.0)
+        } else {
+            1.0
+        };
+        let share = total / cuts;
+        let mut walked = 0.0;
+        let mut first = own[0];
+        let mut current = 0.0_f64;
+        for &beam in own {
+            let middle = walked + 0.5 * beams.length[beam];
+            let index = if share > 0.0 {
+                (middle / share).floor().min(cuts - 1.0)
+            } else {
+                0.0
+            };
+            if index > current {
+                current = index;
+                first = beam;
+            }
+            walked += beams.length[beam];
+            piece_of[beam] = first;
+            pieces.entry(first).or_default().push(beam);
+        }
+    }
+    let piece_parent = |piece: usize| beams.parent[piece].map(|p| piece_of[p as usize]);
+    // The bones: every stem piece and the first piece of every axis on a
+    // stem (so each low branch is whole under one chain), then the
+    // heaviest of the rest, up to the cap; a piece whose parent missed
+    // the cap misses it too.
+    let kept =
+        |piece: usize| depth_of[piece] == 0 || (depth_of[piece] == 1 && axis_of[piece] == piece);
+    let mut ranked: Vec<usize> = pieces.keys().copied().collect();
+    ranked.sort_by(|&a, &b| {
+        kept(b)
+            .cmp(&kept(a))
+            .then(beyond_mass[b].total_cmp(&beyond_mass[a]))
+            .then(a.cmp(&b))
+    });
+    ranked.truncate(settings.bones.max(1));
+    let mut chosen = vec![false; count];
+    for &piece in &ranked {
+        chosen[piece] = true;
+    }
+    for &piece in pieces.keys() {
+        if chosen[piece] && piece_parent(piece).is_some_and(|parent| !chosen[parent]) {
+            chosen[piece] = false;
+        }
+    }
+    // Coarse first, so any first bones are a rig of their own: by depth
+    // (the stem 0, axes on it 1, and so on), then heaviest first. Every
+    // bone's parent, shallower or heavier, comes before it.
+    let mut ranked: Vec<usize> = pieces.keys().copied().filter(|&p| chosen[p]).collect();
     ranked.sort_by(|&a, &b| {
         depth_of[a]
             .cmp(&depth_of[b])
             .then(beyond_mass[b].total_cmp(&beyond_mass[a]))
             .then(a.cmp(&b))
     });
-    let mut bone_of_axis: BTreeMap<usize, u32> = BTreeMap::new();
-    for (bone, &axis) in ranked.iter().enumerate() {
-        bone_of_axis.insert(axis, bone as u32);
+    let mut bone_of_piece: BTreeMap<usize, u32> = BTreeMap::new();
+    for (bone, &piece) in ranked.iter().enumerate() {
+        bone_of_piece.insert(piece, bone as u32);
     }
-    // Each beam's bone: its axis's, else the bone its axis rides, which is
-    // the bone of the beam its axis grows from.
+    // Each beam's bone: its piece's, else the bone its piece rides, which
+    // is the bone of the beam it grows from. Arc lengths from each bone's
+    // foot to each beam's start and end; a riding beam keeps the place
+    // where its piece joins.
     let mut bone_of = vec![0_u32; count];
-    let mut rides = vec![false; count];
-    for beam in 0..count {
-        let axis = axis_of[beam];
-        if let Some(&bone) = bone_of_axis.get(&axis) {
-            bone_of[beam] = bone;
-        } else {
-            let from = beams.parent[axis].map_or(axis, |p| p as usize);
-            bone_of[beam] = bone_of[from];
-            rides[beam] = true;
-        }
-    }
-    // Arc length from each bone's foot to each beam's end; a riding beam
-    // keeps the place where its axis joins.
+    let mut from = vec![0.0_f64; count];
     let mut along = vec![0.0_f64; count];
     for beam in 0..count {
+        let piece = piece_of[beam];
         let parent = beams.parent[beam].map(|p| p as usize);
-        along[beam] = if rides[beam] {
-            let axis = axis_of[beam];
-            match beams.parent[axis] {
-                Some(from) if beam == axis => along[from as usize],
-                _ => parent.map_or(0.0, |p| along[p]),
-            }
-        } else if beam == axis_of[beam] {
-            beams.length[beam]
+        if let Some(&bone) = bone_of_piece.get(&piece) {
+            bone_of[beam] = bone;
+            from[beam] = if beam == piece {
+                0.0
+            } else {
+                parent.map_or(0.0, |p| along[p])
+            };
+            along[beam] = from[beam] + beams.length[beam];
         } else {
-            parent.map_or(0.0, |p| along[p]) + beams.length[beam]
-        };
+            let joins = parent.unwrap_or(beam);
+            if joins != beam {
+                bone_of[beam] = bone_of[joins];
+                along[beam] = along[joins];
+            }
+            from[beam] = along[beam];
+        }
     }
     let weights = beams.weights();
     let mut bones = Vec::with_capacity(ranked.len());
-    for &axis in &ranked {
-        let own = &axes[&axis];
-        let bone = bone_of_axis[&axis];
+    for &piece in &ranked {
+        let own = &pieces[&piece];
+        let bone = bone_of_piece[&piece];
         let first = own[0];
         let last = *own.last().unwrap_or(&first);
         let length = own.iter().map(|&beam| beams.length[beam]).sum::<f64>();
@@ -1006,15 +1154,32 @@ pub fn mechanics(
             .iter()
             .map(|&beam| (beams.radius[beam][0] + beams.radius[beam][1]) * beams.length[beam])
             .sum::<f64>();
+        let centre_of_mass = if mass > 0.0 {
+            carried
+                .iter()
+                .map(|&beam| beams.mass[beam] * along[beam])
+                .sum::<f64>()
+                / mass
+        } else {
+            0.0
+        };
         // Its frequencies: its own beams flexible, the rest rigid.
         let mut flexible = vec![false; count];
         for &beam in own {
             flexible[beam] = true;
         }
-        let modes = beams.modes(2, Some(first), Some(&flexible), settings.iterations);
-        let frequency = |index: usize| modes.get(index).map_or(0.0, |mode| mode.frequency);
-        // The moment of everything it carries about its foot, across it.
         let foot = beams.start[first];
+        let tip = beams.end[last];
+        let mut frequencies = if settings.exact {
+            let modes = beams.modes(2, Some(first), Some(&flexible), settings.iterations);
+            let frequency = |index: usize| modes.get(index).map_or(0.0, |mode| mode.frequency);
+            [frequency(0), frequency(1)]
+        } else {
+            let chord = (tip - foot).normalize_or(beams.axis[first]);
+            beams.rayleigh(first, chord, &flexible)
+        };
+        frequencies.sort_by(f64::total_cmp);
+        // The moment of everything it carries about its foot, across it.
         let mut moment = Vec3::ZERO;
         for at in beams.run(first) {
             moment += (beams.end[at] - foot).cross(weights[at]);
@@ -1032,7 +1197,7 @@ pub fn mechanics(
             depth: depth_of[first],
             beams: own.iter().map(|&beam| beam as u32).collect(),
             foot,
-            tip: beams.end[last],
+            tip,
             length,
             radius: [r0, beams.radius[last][1]],
             bending: beams.bending[first],
@@ -1041,18 +1206,74 @@ pub fn mechanics(
             mass_beyond: beyond_mass[first],
             leaf_area,
             wood_area,
-            frequencies: [frequency(0), frequency(1)],
+            centre_of_mass,
+            frequencies,
             weight_moment: bending_moment,
             breaking_moment: material
                 .rupture
                 .map(|rupture| rupture * 0.25 * math::PI * r0 * r0 * r0),
+            bend_limit: material
+                .rupture
+                .filter(|_| r0 > 0.0)
+                .map(|rupture| settings.bend_share * rupture * length / (material.modulus * r0)),
+        });
+    }
+    // Branches: an axis off a stem, or off another branch, whose first
+    // piece is a bone, with what pruning it takes away.
+    let mut branch_of_axis: BTreeMap<usize, u32> = BTreeMap::new();
+    let mut branches = Vec::new();
+    for &piece in &ranked {
+        if axis_of[piece] != piece || depth_of[piece] == 0 {
+            continue;
+        }
+        let first = piece;
+        let own = &axes[&first];
+        let segment = &segments[beams.segment[first] as usize];
+        let joins = beams.parent[first].map(|p| p as usize);
+        let parent = joins.and_then(|joins| branch_of_axis.get(&axis_of[joins]).copied());
+        let chain: Vec<u32> = own
+            .iter()
+            .filter(|&&beam| piece_of[beam] == beam)
+            .filter_map(|beam| bone_of_piece.get(beam))
+            .copied()
+            .collect();
+        let direction = beams.axis[first];
+        let collar = joins.map_or(0.0, |joins| beams.radius[joins][1]);
+        let base = beams.start[first];
+        branch_of_axis.insert(first, branches.len() as u32);
+        branches.push(Branch {
+            id: segment.id,
+            parent,
+            bone: bone_of_piece[&first],
+            chain,
+            base,
+            direction,
+            order: segment.order,
+            length: own.iter().map(|&beam| beams.length[beam]).sum(),
+            volume: beams
+                .run(first)
+                .map(|beam| {
+                    frustum(
+                        beams.length[beam],
+                        beams.radius[beam][0],
+                        beams.radius[beam][1],
+                    )
+                })
+                .sum(),
+            mass_beyond: beyond_mass[first],
+            stub: Stub {
+                centre: base + direction * collar,
+                normal: direction,
+                radius: beams.radius[first][0],
+            },
         });
     }
     // Bindings for every graph segment, through the wood bearing it.
     let mut binding: Vec<Option<Binding>> = vec![None; segments.len()];
     let mut wood_at: Vec<Option<u32>> = vec![None; segments.len()];
     for (index, segment) in segments.iter().enumerate() {
-        wood_at[index] = beams.beam_of[index].or_else(|| {
+        let own = beams.beam_of[index];
+        wood_at[index] = own.or_else(|| {
             segment
                 .parent
                 .and_then(|parent| wood_at.get(parent as usize).copied().flatten())
@@ -1060,22 +1281,36 @@ pub fn mechanics(
         binding[index] = wood_at[index].map(|beam| {
             let beam = beam as usize;
             let bone = bone_of[beam];
-            let length = bones[bone as usize].length;
-            Binding {
-                bone,
-                along: if length > 0.0 {
-                    (along[beam] / length).clamp(0.0, 1.0) as f32
+            let length = bones.get(bone as usize).map_or(0.0, |bone| bone.length);
+            let share = |at: f64| {
+                if length > 0.0 {
+                    (at / length).clamp(0.0, 1.0) as f32
                 } else {
                     0.0
+                }
+            };
+            let end = share(along[beam]);
+            Binding {
+                bone,
+                from: if own.is_some() {
+                    share(from[beam])
+                } else {
+                    end
                 },
+                along: end,
             }
         });
     }
-    let modes = beams.modes(settings.modes, None, None, settings.iterations);
+    let modes = if settings.modes > 0 {
+        beams.modes(settings.modes, None, None, settings.iterations)
+    } else {
+        Vec::new()
+    };
     Mechanics {
         material: *material,
         beams,
         bones,
+        branches,
         binding,
         modes,
         axes: axes.len(),
@@ -1259,6 +1494,12 @@ mod tests {
         close(modes[1].frequency, first, 0.01);
         close(modes[2].frequency, second, 0.02);
         close(modes[3].frequency, second, 0.02);
+        // Rayleigh's quotient on the static shape: a little high, close.
+        let all = vec![true; beams.len()];
+        for estimate in beams.rayleigh(0, Vec3::Y, &all) {
+            assert!(estimate >= modes[0].frequency * 0.999);
+            close(estimate, modes[0].frequency, 0.01);
+        }
     }
 
     /// An L of a post and an arm, pushed sideways at the arm's tip: the arm
@@ -1333,6 +1574,7 @@ mod tests {
         let plant = graph(segments);
         let settings = Settings {
             bones: 2,
+            piece: 0.0,
             ..Settings::default()
         };
         let found = mechanics(&plant, &[], &MATERIAL, &settings);
@@ -1369,6 +1611,112 @@ mod tests {
             assert!(bone.frequencies[0] <= bone.frequencies[1] * (1.0 + 1.0e-9));
         }
         assert!(found.bones[0].breaking_moment.unwrap() > found.bones[0].weight_moment);
+    }
+
+    /// The trunk, branch, twig and small branch of the plant above, with
+    /// bones of at most 2 m: the 4 m trunk is two chained bones; every
+    /// axis heads a branch a host can prune, with its stub cap clear of
+    /// the bark it leaves; frequencies by Rayleigh are near the exact ones.
+    #[test]
+    fn long_axes_are_chains_and_branches_prune_whole() {
+        let mut segments = Vec::new();
+        rod(&mut segments, None, Vec3::ZERO, Vec3::Y, 4.0, 0.1, 8);
+        let up = Vec3::new(0.7, 0.7, 0.0).normalize_or(Vec3::Y);
+        rod(&mut segments, Some(3), Vec3::Y * 2.0, up, 2.0, 0.04, 4);
+        let branch_end = u32::try_from(segments.len() - 1).ok();
+        rod(
+            &mut segments,
+            branch_end,
+            Vec3::new(1.4, 3.4, 0.0),
+            Vec3::X,
+            0.4,
+            0.01,
+            2,
+        );
+        let left = Vec3::new(-0.7, 0.7, 0.0).normalize_or(Vec3::Y);
+        rod(&mut segments, Some(5), Vec3::Y * 3.0, left, 1.0, 0.02, 3);
+        for (index, segment) in segments.iter_mut().enumerate() {
+            segment.id = 100 + index as u64;
+        }
+        let plant = graph(segments);
+        let found = mechanics(&plant, &[], &MATERIAL, &Settings::default());
+        assert_eq!(found.bones.len(), 5);
+        // The trunk's two pieces come first, the upper riding the lower.
+        assert_eq!((found.bones[0].depth, found.bones[1].depth), (0, 0));
+        assert_eq!(found.bones[1].parent, Some(0));
+        close(found.bones[0].length, 2.0, 1.0e-9);
+        close(found.bones[1].length, 2.0, 1.0e-9);
+        assert_eq!(found.binding[3].unwrap().bone, 0);
+        assert_eq!(found.binding[4].unwrap().bone, 1);
+        let lower = found.binding[4].unwrap();
+        assert!(lower.from.abs() < 1.0e-6 && (lower.along - 0.25).abs() < 1.0e-6);
+        // Every bone's parent is earlier, as shallow or one step up.
+        for (at, bone) in found.bones.iter().enumerate() {
+            if let Some(parent) = bone.parent {
+                assert!((parent as usize) < at);
+                let step = bone.depth - found.bones[parent as usize].depth;
+                assert!(step <= 1);
+            }
+        }
+        // Three branches: the branch, its twig, the small branch; the twig
+        // is the branch's.
+        assert_eq!(found.branches.len(), 3);
+        let branch = found
+            .branches
+            .iter()
+            .position(|branch| branch.id == plant.segments[8].id)
+            .unwrap();
+        let twig = found
+            .branches
+            .iter()
+            .find(|branch| branch.id == plant.segments[12].id)
+            .unwrap();
+        assert_eq!(twig.parent, Some(u32::try_from(branch).unwrap()));
+        let branch = &found.branches[branch];
+        assert_eq!(branch.parent, None);
+        assert_eq!(branch.chain, vec![branch.bone]);
+        close(branch.length, 2.0, 1.0e-9);
+        // Its wood and its twig's.
+        let wood = |segment: &GraphSegment, radius: f64| {
+            frustum(segment.end.distance(segment.start), radius, radius)
+        };
+        assert!(
+            branch.volume
+                > (8..12)
+                    .map(|at| wood(&plant.segments[at], 0.03))
+                    .sum::<f64>()
+        );
+        let trunk_radius = found.beams.radius[found.beams.beam_of[3].unwrap() as usize][1];
+        close(
+            branch.stub.centre.distance(branch.base),
+            trunk_radius,
+            1.0e-9,
+        );
+        close(branch.stub.radius, 0.04, 1.0e-9);
+        // The bend limit: half the breaking stress over the bone's length.
+        let bone = &found.bones[branch.bone as usize];
+        let expected =
+            0.5 * MATERIAL.rupture.unwrap() * bone.length / (MATERIAL.modulus * bone.radius[0]);
+        close(bone.bend_limit.unwrap(), expected, 1.0e-12);
+        // Rayleigh's frequencies sit just above the subspace solver's
+        // (which finds none on a bone of two beams, too few to iterate on).
+        let exact = mechanics(
+            &plant,
+            &[],
+            &MATERIAL,
+            &Settings {
+                exact: true,
+                ..Settings::default()
+            },
+        );
+        for (fast, slow) in found.bones.iter().zip(&exact.bones) {
+            if slow.beams.len() < 3 {
+                assert!(fast.frequencies[0] > 0.0);
+                continue;
+            }
+            assert!(fast.frequencies[0] >= slow.frequencies[0] * 0.999);
+            close(fast.frequencies[0], slow.frequencies[0], 0.05);
+        }
     }
 
     #[test]
