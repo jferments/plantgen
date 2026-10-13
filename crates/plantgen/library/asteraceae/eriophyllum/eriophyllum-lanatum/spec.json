@@ -17,7 +17,6 @@
       "clump_radius": 0.15,
       "stem_lean": 25,
       "maturity": 1.0,
-      "stem_height": 0.35,
       "stem_radius": 0.0015,
       "wiggle": 3,
       "nodes": 10,
@@ -88,7 +87,8 @@
     "height_typical_m": {
       "min": 0.2,
       "max": 0.6,
-      "low": 0.1
+      "low": 0.1,
+      "typical": 0.35
     },
     "leaf_length_m": {
       "min": 0.02,
@@ -99,7 +99,7 @@
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",
-      "note": "Abrams and Ferris vol. 4 (1960), as Eriophyllum lanatum: stems (from 10 cm) 20 cm to 60 cm tall."
+      "note": "Abrams and Ferris vol. 4 (1960), as Eriophyllum lanatum: stems (from 10 cm) 20 cm to 60 cm tall. The typical value is the one the plant was drawn at before, inside the source's range."
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",

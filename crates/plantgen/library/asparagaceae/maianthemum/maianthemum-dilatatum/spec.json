@@ -17,7 +17,6 @@
       "clump_radius": 0.2,
       "stem_lean": 10,
       "maturity": 1.2,
-      "stem_height": 0.18,
       "stem_radius": 0.0015,
       "wiggle": 2,
       "nodes": 2,
@@ -96,7 +95,8 @@
   "traits": {
     "height_typical_m": {
       "min": 0.15,
-      "max": 0.35
+      "max": 0.35,
+      "typical": 0.18
     },
     "leaf_length_m": {
       "min": 0.05,
@@ -117,7 +117,7 @@
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
-      "note": "Abrams vol. 1 (1923), as Unifolium dilatatum: stems 15 cm to 35 cm tall."
+      "note": "Abrams vol. 1 (1923), as Unifolium dilatatum: stems 15 cm to 35 cm tall. The typical value is the one the plant was drawn at before, inside the source's range."
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
