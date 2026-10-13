@@ -92,12 +92,81 @@ fn a_rule_on_two_ranges_keeps_its_value() {
         !shape.iter().any(|path| path.ends_with(".aspect")),
         "{shape:?}"
     );
-    // A parameter set from one range records its spread, which no plant
-    // draws from yet.
-    assert_eq!(
-        spreads(&spec.generator.spreads),
-        ["params.leaf_length", "params.panicle_length"]
+    // Its leaf and panicle lengths, parameters set from one range each,
+    // are sizes of parts, which vary part by part: no plant draws them.
+    assert!((spec.generator.params["leaf_length"] - 0.275).abs() < 1e-12);
+    assert!(
+        spec.generator.spreads.is_empty(),
+        "{:?}",
+        spec.generator.spreads
     );
+}
+
+#[test]
+fn each_plant_draws_its_parameters_from_their_spreads() {
+    // Red alder comes of age at 3 to 10 years. Its package grows one
+    // plant, the typical one; any other seed draws its own age by its hash,
+    // the same on every machine.
+    let spec = PlantSpec::builtin("alnus-rubra").unwrap();
+    let (program, params) = spec.program().unwrap();
+    let at = |program: &plantgen::lsys::Program| {
+        program
+            .params
+            .iter()
+            .position(|param| param.name == "adult_age")
+            .unwrap()
+    };
+    assert_eq!(spec.variants.seeds, [1]);
+    assert_eq!(spec.seeded_params(&program, &params, 1), params);
+    let ages: Vec<f64> = (2..=9)
+        .map(|seed| spec.seeded_params(&program, &params, seed)[at(&program)])
+        .collect();
+    let distinct: BTreeSet<u64> = ages.iter().map(|age| age.to_bits()).collect();
+    assert!(distinct.len() >= 6, "{ages:?}");
+    assert!(
+        ages.iter().all(|age| (3.0..=10.0).contains(age)),
+        "{ages:?}"
+    );
+    assert_eq!(
+        spec.seeded_params(&program, &params, 4)[at(&program)].to_bits(),
+        ages[2].to_bits()
+    );
+    // Creosote bush comes of age at 4 to 13 years, typically 8.5. Its
+    // package grows three plants, which come of age at the middles of the
+    // range's thirds.
+    let spec = PlantSpec::builtin("larrea-tridentata").unwrap();
+    let (program, params) = spec.program().unwrap();
+    let mut ages: Vec<f64> = spec
+        .variants
+        .seeds
+        .iter()
+        .map(|seed| spec.seeded_params(&program, &params, *seed)[at(&program)])
+        .collect();
+    ages.sort_by(f64::total_cmp);
+    assert_eq!(ages.len(), 3);
+    for (age, middle) in ages.iter().zip([5.5, 8.5, 11.5]) {
+        assert!((age - middle).abs() < 1e-9, "{ages:?}");
+    }
+    // A part's size a parameter takes varies part by part, so no plant
+    // draws it: a teddy-bear cholla's joints. Nor one a formula works out
+    // from a range, the program's tuning at the typical value: lenga
+    // beech's growth units, from the leaves a vigorous shoot bears.
+    for (id, param) in [
+        ("cylindropuntia-bigelovii", "joint_length"),
+        ("nothofagus-pumilio", "unit_nodes"),
+    ] {
+        let spec = PlantSpec::builtin(id).unwrap();
+        assert!(spec.generator.params.contains_key(param), "{id}");
+        assert!(
+            spec.generator.spreads.is_empty(),
+            "{id}: {:?}",
+            spec.generator.spreads
+        );
+    }
+    // Yarrow states no range a parameter is set from.
+    let spec = PlantSpec::builtin("achillea-millefolium").unwrap();
+    let (program, params) = spec.program().unwrap();
+    assert_eq!(spec.seeded_params(&program, &params, 3), params);
 }
 
 #[test]

@@ -270,11 +270,10 @@ pub struct Generator {
     /// Parameter values that replace the program's defaults.
     #[serde(default)]
     pub params: BTreeMap<String, f64>,
-    /// The spreads of parameters rules set from ranges, by path
-    /// (`params.<name>`; [`crate::inherit::Spread`]). No plant draws from
-    /// them yet (spec rework VARY): a cluster sizes its units as a share of
-    /// itself, so a plant with a shorter panicle would draw smaller
-    /// spikelets.
+    /// The spreads of parameters rules pass a range of a character of the
+    /// whole plant through to, by path (`params.<name>`;
+    /// [`crate::inherit::Spread`]), from which each plant draws its own by
+    /// its seed (spec rework VARY, [`PlantSpec::seeded_params`]).
     #[serde(default, skip_serializing_if = "serde_json::Map::is_empty")]
     pub spreads: serde_json::Map<String, serde_json::Value>,
 }
@@ -771,7 +770,7 @@ impl PlantSpec {
         let (program, params) = spec.program_from(source)?;
         let growth = crate::grow::grow(
             &program,
-            &params,
+            &spec.seeded_params(&program, &params, variant.seed),
             &crate::grow::GrowthSettings {
                 seed: variant.seed,
                 dt: spec.growth.step,
@@ -1077,6 +1076,42 @@ impl PlantSpec {
         let params = program.resolve_params(&self.generator.params)?;
         self.check_names(&program)?;
         Ok((program, params))
+    }
+
+    /// The parameters the plant grown from `seed` grows with (spec rework
+    /// VARY): `params`, the spec's as [`PlantSpec::program_in`] resolves
+    /// them for `program`, with each that has a spread
+    /// ([`Generator::spreads`]: a character of the whole plant a rule
+    /// passes through) drawn from it, and the parameters that follow from
+    /// it following it. The seeds a package grows ([`VariantPlan::seeds`])
+    /// share each spread out as an organ's varieties do
+    /// ([`crate::rng::dealt`]), so one seed grows the typical plant and
+    /// three draw from the middles of a range's thirds; another seed draws
+    /// by its hash. A seed grows the same plant on every machine and in
+    /// every environment.
+    #[must_use]
+    pub fn seeded_params(&self, program: &Program, params: &[f64], seed: u64) -> Vec<f64> {
+        let Some(serde_json::Value::Object(spreads)) = self.generator.spreads.get("params") else {
+            return params.to_vec();
+        };
+        let mut drawn = self.generator.params.clone();
+        let mut any = false;
+        for (name, spread) in crate::inherit::Spread::all(spreads) {
+            if let Some(value) = drawn.get_mut(&name) {
+                let share = match self.variants.seeds.iter().position(|own| *own == seed) {
+                    Some(index) => crate::rng::dealt(index, self.variants.seeds.len(), &name),
+                    None => crate::rng::unit(crate::rng::mix64(seed ^ crate::rng::hash_str(&name))),
+                };
+                *value = spread.at(share);
+                any = true;
+            }
+        }
+        if !any {
+            return params.to_vec();
+        }
+        program
+            .resolve_params(&drawn)
+            .unwrap_or_else(|_| params.to_vec())
     }
 
     /// Check the spec against the program that grows it: every organ type

@@ -51,9 +51,13 @@
 //! flora says how two ranges vary together, and a bound is one number.
 //! Where its numbers differ, the effective spec records them beside the
 //! value as its spread ([`spread_path`], [`Spread`]), from which each
-//! organ drawn solid draws its look (`crate::looks::variety`); a list a
-//! rule sets, and a body's look, vary within their own ranges and record
-//! none. A trait stated as qualified states reads as its most
+//! organ drawn solid draws its look (`crate::looks::variety`), and each
+//! plant a parameter that is a character of the whole plant in its own
+//! units (`crate::spec::PlantSpec::seeded_params`); a parameter a formula
+//! works out from a range, or one sized by a part's range, keeps its one
+//! value, and a list a rule sets, and a body's look, vary within their own
+//! ranges and record none. A trait
+//! stated as qualified states reads as its most
 //! usual state ([`FREQUENCIES`]), and a rule reading states that tie sets
 //! nothing, unless it is a map that draws `between` them: a flora's "ovate
 //! to lanceolate" means the forms between, so the map gives the mean of
@@ -94,6 +98,7 @@
 //! The module reads nothing but JSON, so the build script compiles it too
 //! and merges every built-in species' chain while compiling.
 
+use std::cell::RefCell;
 use std::collections::{BTreeMap, BTreeSet, btree_map::Entry};
 
 use serde_json::{Map, Value};
@@ -678,6 +683,29 @@ fn in_body(spec: &Map<String, Value>, at: &str) -> Result<(), String> {
         ));
     }
     Ok(())
+}
+
+/// The organ `traits.json` says the trait `name` describes (`plant`,
+/// `leaf`, `stem`, ...), if it is one. The build script reads this module
+/// too, so it reads the vocabulary itself.
+fn trait_organ(name: &str) -> Option<&'static str> {
+    static ORGANS: std::sync::OnceLock<BTreeMap<String, String>> = std::sync::OnceLock::new();
+    ORGANS
+        .get_or_init(|| {
+            let vocabulary: Value =
+                serde_json::from_str(include_str!("../traits.json")).unwrap_or_default();
+            vocabulary
+                .get("traits")
+                .and_then(Value::as_object)
+                .into_iter()
+                .flatten()
+                .filter_map(|(key, about)| {
+                    Some((key.clone(), about.get("organ")?.as_str()?.to_string()))
+                })
+                .collect()
+        })
+        .get(name)
+        .map(String::as_str)
 }
 
 /// A bound of the trait `name` as stated (`value`), read as `min(name)`
@@ -1627,6 +1655,10 @@ struct Ruled<'a> {
     index: usize,
     layers: &'a [(String, &'a Part)],
     traits: &'a BTreeMap<String, (Value, usize)>,
+    /// The values at the points of [`SPREAD_AT`] of each parameter a rule
+    /// before it set from one range, recorded as a spread or not, so a
+    /// rule that reads it reads a range.
+    ranged: &'a RefCell<BTreeMap<String, [f64; 5]>>,
 }
 
 /// A species' rules, by the path each sets: the rule and its layer.
@@ -1666,6 +1698,7 @@ impl Ruled<'_> {
             .and_then(Value::as_str)
             .map(str::to_string);
         let mut outcomes = BTreeMap::new();
+        let ranged = RefCell::new(BTreeMap::new());
         for (path, waits) in order(rules) {
             let (rule, index) = &rules[path];
             let outcome = if waits.is_empty() {
@@ -1680,6 +1713,7 @@ impl Ruled<'_> {
                         index: *index,
                         layers,
                         traits,
+                        ranged: &ranged,
                     };
                     match one.apply(program.as_deref(), programs, spec, origins, notes) {
                         Ok(()) => set += 1,
@@ -1816,7 +1850,7 @@ impl Ruled<'_> {
             }
         })?;
         fits(field, &value)?;
-        let spread = self.spread(&picks, &typical, spec, &value);
+        let spread = self.spread(&picks, &typical, &value);
         let set_at = put(spec, origins, notes, (self.at, value, spread), &rivals);
         let file = &self.layers[self.index].0;
         let label = if from.is_empty() {
@@ -1842,17 +1876,19 @@ impl Ruled<'_> {
 
     /// The spread of `value`, the rule's value from `inputs`, where it
     /// reads one thing that varies, a range or a parameter a rule before it
-    /// spread: its value at each point of [`SPREAD_AT`] with that read
-    /// there ([`range_at`]), the middle one `value` itself. Nothing where
-    /// it reads none (a bound, `min(name)`, is one number), or two (how
-    /// two ranges vary together is not stated), or its values are not all
-    /// numbers or all the same, or it sets a body's look, which varies
-    /// within the ranges it states.
+    /// set from one: its value at each point of [`SPREAD_AT`] with that
+    /// read there ([`range_at`]), the middle one `value` itself, kept for
+    /// the rules that read the parameter it sets ([`Ruled::ranged`]).
+    /// Nothing where it reads none (a bound, `min(name)`, is one number),
+    /// or two (how two ranges vary together is not stated), or its values
+    /// are not all numbers or all the same, or it sets a body's look, which
+    /// varies within the ranges it states; nor, though kept, where it sets
+    /// a parameter to other than a character of the whole plant in its own
+    /// units.
     fn spread(
         &self,
         picks: &[Value],
         inputs: &BTreeMap<String, Value>,
-        spec: &Map<String, Value>,
         value: &Value,
     ) -> Option<Value> {
         if self.at.starts_with(BODIES) {
@@ -1869,10 +1905,7 @@ impl Ruled<'_> {
                         }
                     }
                     Some(_) => return None,
-                    None => {
-                        at = Spread::of(find(spec, &format!("generator.spreads.params.{name}"))?)?
-                            .values;
-                    }
+                    None => at = *self.ranged.borrow().get(name)?,
                 }
                 Some((name, at))
             })
@@ -1893,8 +1926,41 @@ impl Ruled<'_> {
             read.insert((*name).clone(), Value::from(*at));
             values.push(picked(self.rule, picks, &mut read).ok()?);
         }
-        (values.iter().all(Value::is_number) && values.iter().any(|other| other != value))
-            .then_some(Value::Array(values))
+        // A parameter varies plant by plant only where it is a character of
+        // the whole plant (`traits.json` names its organ `plant`: the years
+        // to its first flowers), in its own units. A part's size (a leaf's,
+        // a joint's) varies part by part, and drawn for a whole plant spans
+        // all its parts span: a teddy-bear cholla drawn with its shortest
+        // joints grew to 41% of its reference height. One a formula works
+        // out from a range is the program's tuning at the typical value:
+        // drawn by plant, spermatophyta's growth units grew a lenga beech to
+        // half its height.
+        let of_plant = || trait_organ(name).is_none_or(|organ| organ == "plant");
+        let scale = value
+            .as_f64()
+            .zip(Some(at[SPREAD_AT.len() / 2]).filter(|middle| *middle != 0.0))
+            .map(|(value, middle)| value / middle);
+        let recorded = !self.at.starts_with("generator.")
+            || of_plant()
+                && scale.is_some_and(|scale| {
+                    values.iter().zip(at).all(|(value, at)| {
+                        value.as_f64().is_some_and(|value| {
+                            (value - scale * at).abs() <= 1e-9 * (scale * at).abs().max(1e-9)
+                        })
+                    })
+                });
+        if !values.iter().all(Value::is_number) || values.iter().all(|other| other == value) {
+            return None;
+        }
+        let spread = Value::Array(values);
+        if let Some(param) = self.at.strip_prefix("generator.params.")
+            && let Some(found) = Spread::of(&spread)
+        {
+            self.ranged
+                .borrow_mut()
+                .insert(param.to_string(), found.values);
+        }
+        recorded.then_some(spread)
     }
 
     /// Where the rule sets a field of a list's item by its role

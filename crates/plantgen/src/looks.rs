@@ -2462,16 +2462,7 @@ pub fn variety_of(id: u64) -> usize {
 /// random.
 #[must_use]
 pub fn variety_share(variety: usize, path: &str) -> f64 {
-    let mut order: [usize; VARIETIES] = std::array::from_fn(|part| part);
-    let mut hash = crate::rng::hash_str(path);
-    for last in (1..VARIETIES).rev() {
-        hash = crate::rng::mix64(hash);
-        let pick = usize::try_from(hash % (last as u64 + 1)).unwrap_or(0);
-        order.swap(last, pick);
-    }
-    #[allow(clippy::cast_precision_loss)]
-    let share = (order[variety % VARIETIES] as f64 + 0.5) / VARIETIES as f64;
-    share
+    crate::rng::dealt(variety, VARIETIES, path)
 }
 
 /// `looks`, a species' looks by organ name, as variety `variety` draws
