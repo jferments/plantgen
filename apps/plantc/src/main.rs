@@ -1771,7 +1771,11 @@ fn validate_command(args: &[String]) -> Result<(), Failure> {
                     .kinds
                     .iter()
                     .map(|agreement| {
-                        let drawn: Vec<&str> = agreement.drawn.iter().map(String::as_str).collect();
+                        let drawn: Vec<String> = agreement
+                            .drawn
+                            .iter()
+                            .map(|state| state.replace('|', " or "))
+                            .collect();
                         let reason = match agreement.verdict {
                             checks::Verdict::Error => "draws a state the species does not state",
                             checks::Verdict::NotGrown => "nothing drawn to compare",
