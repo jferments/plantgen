@@ -5,8 +5,11 @@
 //! comparisons, `&&`, `||`, `a ? b : c`, and the language's arithmetic
 //! functions `min`, `max`, `clamp`, `abs`, `sqrt`, `exp`, `ln`, `log10`,
 //! `pow`, `floor`, `ceil`, `round`, `frac`, `sign`, `lerp`, `smoothstep`
-//! and `step`, which behave as they do in a program. It draws nothing at
-//! random: a rule states a fact. Transcendental functions go through
+//! and `step`, which behave as they do in a program. With one argument, a
+//! name, `min` and `max` read the bounds of what it names instead: a rule
+//! reading `min(ribs)` and `max(ribs)` of ribs stated as 12 to 24 reads 12
+//! and 24, as the names `ribs.min` and `ribs.max` ([`bound`]). It draws
+//! nothing at random: a rule states a fact. Transcendental functions go through
 //! `libm`, as everywhere in `PlantGen`. The module reads nothing but its
 //! text, so the build script compiles it too.
 
@@ -286,6 +289,12 @@ impl Parser {
                         self.expect(",")?;
                     }
                 }
+                // A range's bound: `min(ribs)` reads the name `ribs.min`.
+                if matches!(func, Func::Min | Func::Max)
+                    && let [Node::Name(read)] = args.as_slice()
+                {
+                    return Ok(Node::Name(format!("{read}.{name}")));
+                }
                 if args.len() != arity {
                     return Err(format!(
                         "`{name}` takes {arity} arguments, not {}",
@@ -338,6 +347,14 @@ impl Formula {
     pub fn eval(&self, value: &dyn Fn(&str) -> Option<f64>) -> Option<f64> {
         eval(&self.0, value).filter(|result| result.is_finite())
     }
+}
+
+/// The name and the bound a name read as `min(name)` or `max(name)`
+/// stands for: `ribs.min` is `("ribs", "min")`.
+#[must_use]
+pub fn bound(name: &str) -> Option<(&str, &str)> {
+    name.split_once('.')
+        .filter(|(_, bound)| ["min", "max"].contains(bound))
 }
 
 fn collect(node: &Node, names: &mut BTreeSet<String>) {
@@ -504,6 +521,22 @@ mod tests {
                 .collect::<Vec<_>>(),
             ["leaf_length_m", "leaflets"]
         );
+        // With one name, `min` and `max` read its bounds.
+        let bounds = Formula::parse("max(ribs) - min(ribs) + min(ribs, 3)").unwrap();
+        assert_eq!(
+            bounds.names().into_iter().collect::<Vec<_>>(),
+            ["ribs", "ribs.max", "ribs.min"]
+        );
+        let read = |name: &str| match name {
+            "ribs" => Some(18.0),
+            "ribs.min" => Some(12.0),
+            "ribs.max" => Some(24.0),
+            _ => None,
+        };
+        assert_eq!(bounds.eval(&read), Some(15.0));
+        assert_eq!(super::bound("ribs.max"), Some(("ribs", "max")));
+        assert_eq!(super::bound("ribs"), None);
+        assert!(Formula::parse("min(2)").is_err());
     }
 
     #[test]

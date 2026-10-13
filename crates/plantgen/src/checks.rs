@@ -107,23 +107,29 @@ use crate::spec::{Environment, PlantSpec};
 pub enum Judged {
     /// Every organ's value, by the population's middle (see the module).
     Organs,
-    /// A plant's usual value, by the plants' median.
+    /// A plant's usual value (the median of its organs' where it has
+    /// several), by the plants' median.
     Typical,
     /// The greatest any plant may reach.
     Greatest,
 }
 
 /// The size characters measured on grown plants, and how each is judged.
-pub const SIZES: [(&str, Judged); 25] = [
+pub const SIZES: [(&str, Judged); 30] = [
     ("height_typical_m", Judged::Typical),
     ("height_max_m", Judged::Greatest),
     ("crown_width_max_m", Judged::Greatest),
     ("stem_diameter_max_m", Judged::Greatest),
     ("culm_length_m", Judged::Organs),
+    ("joint_length_m", Judged::Typical),
+    ("joint_width_m", Judged::Typical),
+    ("radial_spine_length_m", Judged::Typical),
+    ("central_spine_length_m", Judged::Typical),
     ("leaf_length_m", Judged::Organs),
     ("leaf_width_m", Judged::Organs),
     ("petiole_length_m", Judged::Organs),
     ("inflorescence_length_m", Judged::Organs),
+    ("bract_length_m", Judged::Organs),
     ("flower_size_m", Judged::Organs),
     ("involucre_diameter_m", Judged::Organs),
     ("involucre_height_m", Judged::Organs),
@@ -145,7 +151,7 @@ pub const SIZES: [(&str, Judged); 25] = [
 /// The count characters counted on grown plants (spec rework M8A), each
 /// on every organ that holds what it counts and judged as an organ's size
 /// is.
-pub const COUNTS: [&str; 16] = [
+pub const COUNTS: [&str; 20] = [
     "ray_florets",
     "disc_florets",
     "ligulate_florets",
@@ -155,6 +161,7 @@ pub const COUNTS: [&str; 16] = [
     "glumes",
     "units_per_inflorescence",
     "inflorescence_branches",
+    "inflorescence_bracts",
     "leaflets",
     "pinnae",
     "leaves_per_whorl",
@@ -162,12 +169,16 @@ pub const COUNTS: [&str; 16] = [
     "staminodes",
     "carpels",
     "perianth_parts",
+    "ribs",
+    "radial_spines",
+    "central_spines",
 ];
 
 /// The kinds a grown plant's drawing must agree with (spec rework M8A):
 /// each an enum or bool character, compared with what the plant draws.
-pub const KINDS: [&str; 11] = [
+pub const KINDS: [&str; 13] = [
     "inflorescence",
+    "bract_form",
     "capitulum_kind",
     "awns",
     "scale_arrangement",
@@ -178,6 +189,7 @@ pub const KINDS: [&str; 11] = [
     "perianth",
     "ovary_position",
     "zygomorphy",
+    "glochids",
 ];
 
 /// The share of a range's span beyond which a value is an error when the
@@ -646,6 +658,7 @@ pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
         tally.add("stem_diameter_max_m", 0, 0, dbh);
     }
     culms(grown, &mut tally);
+    bodies(grown, &mut tally);
     let (looks, _) =
         crate::drawing::looks_of(grown.spec, grown.growth, crate::package::DEFAULT_DAY);
     arrangement(grown, &looks, &mut tally);
@@ -678,6 +691,101 @@ pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
         }
     }
     tally.measures()
+}
+
+/// Areoles sampled on each body axis to count and measure their spines.
+const AREOLES: u64 = 24;
+
+/// A cactus's bodies (spec rework E6c): the ribs round each stem where it
+/// is widest (none on one without ribs); each column's or trunk's
+/// greatest diameter; each terminal joint's length and width (a pad's),
+/// as floras measure them, judged by the usual joint, as the program
+/// draws a branch's deeper joints shorter; and on sampled areoles of
+/// each, the spines of each role as they are drawn full-grown, counted
+/// (none where no set has the role, a main central among the centrals)
+/// and each one's length, judged by the usual spine: the rules draw it a
+/// fifth below the longest a flora gives; and whether they bear
+/// glochids.
+fn bodies(grown: &Grown<'_>, tally: &mut Tally) {
+    use crate::body::SpineRole;
+    let looks = crate::drawing::bodies_of(grown.spec, grown.growth);
+    if looks.is_empty() {
+        return;
+    }
+    let param = |name: &str| {
+        grown
+            .spec
+            .generator
+            .params
+            .get(name)
+            .copied()
+            .unwrap_or_default()
+    };
+    let jointed = param("joints") > 0.0;
+    let trunk = param("trunk_joints") > 1.0;
+    for axis in crate::body::measure(grown.graph, &looks) {
+        let look = &looks[axis.body];
+        tally.count("ribs", axis.id, 0, axis.ribs);
+        if !jointed || (axis.root && trunk) {
+            tally.add("stem_diameter_max_m", axis.id, 0, 2.0 * axis.widest);
+        } else if axis.tip {
+            tally.add("joint_length_m", axis.id, 0, axis.length);
+            tally.add("joint_width_m", axis.id, 0, 2.0 * axis.widest);
+        }
+        let has = |roles: &[SpineRole]| {
+            look.spines
+                .iter()
+                .any(|set| set.role.is_some_and(|role| roles.contains(&role)))
+        };
+        tally.kind(
+            "glochids",
+            if has(&[SpineRole::Glochid]) {
+                "true"
+            } else {
+                "false"
+            },
+        );
+        for (roles, count, length) in [
+            (
+                &[SpineRole::Radial][..],
+                "radial_spines",
+                "radial_spine_length_m",
+            ),
+            (
+                &[SpineRole::Central, SpineRole::Main][..],
+                "central_spines",
+                "central_spine_length_m",
+            ),
+        ] {
+            if !has(roles) {
+                tally.count(count, axis.id, 0, 0);
+                continue;
+            }
+            for areole in 0..AREOLES {
+                // The low bits of a well-mixed hash.
+                #[allow(clippy::cast_possible_truncation)]
+                let seed = crate::rng::mix64(axis.id ^ areole.wrapping_mul(0x9E37)) as u32;
+                // Areoles number far fewer than 2^32, spines on one
+                // fewer than 2^8.
+                #[allow(clippy::cast_possible_truncation)]
+                let part = (areole as u32) << 8;
+                let mut n = 0;
+                for (set, lengths) in look
+                    .spines
+                    .iter()
+                    .zip(crate::spines::areole_spines(look, seed))
+                {
+                    if set.role.is_some_and(|role| roles.contains(&role)) {
+                        for long in lengths {
+                            tally.add(length, axis.id, part + n, f64::from(long));
+                            n += 1;
+                        }
+                    }
+                }
+                tally.count(count, axis.id, part, n);
+            }
+        }
+    }
 }
 
 /// Each culm: the axis that bears an inflorescence, from its foot (where
@@ -1163,7 +1271,15 @@ fn reproductive(
         if in_stage(phase, Stage::Open)
             && !matches!(cluster.unit, crate::clusters::Unit::Fruit { .. })
         {
-            tally.kind("inflorescence", cluster.cluster.kind.name());
+            // A spike in a spathe is a spadix (PO:0030120).
+            let kind = if cluster.cluster.kind == crate::looks::ClusterKind::Spike
+                && !layout.sheets.is_empty()
+            {
+                "spadix"
+            } else {
+                cluster.cluster.kind.name()
+            };
+            tally.kind("inflorescence", kind);
         }
         if in_stage(phase, Stage::Open) {
             tally.add(
@@ -1178,6 +1294,16 @@ fn reproductive(
                 0,
                 u32::try_from(layout.units.len()).unwrap_or(u32::MAX),
             );
+            tally.count(
+                "inflorescence_bracts",
+                organ.id,
+                0,
+                u32::try_from(layout.sheets.len()).unwrap_or(u32::MAX),
+            );
+            for (index, sheet) in (0_u32..).zip(&layout.sheets) {
+                tally.add("bract_length_m", organ.id, index, organ.size * sheet.length);
+                tally.kind("bract_form", "spathe");
+            }
             if matches!(
                 cluster.cluster.kind,
                 crate::looks::ClusterKind::Panicle | crate::looks::ClusterKind::CompoundUmbel
@@ -1605,7 +1731,11 @@ pub fn judge_plants(
             if let Some(found) = plant.measures.get(character) {
                 with += 1;
                 if judged == Judged::Typical {
-                    values.push(found[0]);
+                    // The plant's usual value: its one value, or the
+                    // median of its organs' (a cactus's joints, spines).
+                    let mut found = found.clone();
+                    found.sort_by(f64::total_cmp);
+                    values.push(rank(&found, 0.5));
                 } else {
                     values.extend_from_slice(found);
                 }

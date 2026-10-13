@@ -182,6 +182,37 @@ fn single(value: f64) -> f32 {
     value as f32
 }
 
+/// The length of spine `i` of set `index` on the tuft with `seed`, at
+/// `scale` of its full length.
+fn spine_length(set: &SpineSet, index: u32, seed: u32, i: u32, scale: f32) -> f32 {
+    single(set.length)
+        * scale
+        * (1.0 + single(set.length_spread) * (2.0 * draw(seed, index, i, 2) - 1.0))
+}
+
+/// Each spine set's spines on a grown areole with `seed`, as [`expand`]
+/// draws them: each one's length, metres. The checks count and measure
+/// an areole's spines by this (spec rework E6c).
+#[must_use]
+pub fn areole_spines(look: &BodyLook, seed: u32) -> Vec<Vec<f32>> {
+    let mut total = 0;
+    look.spines
+        .iter()
+        .enumerate()
+        .take(MAX_SPINE_SETS)
+        .map(|(index, set)| {
+            // At most eight sets.
+            #[allow(clippy::cast_possible_truncation)]
+            let index = index as u32;
+            let n = count(set, index, seed).min(MAX_TUFT_SPINES - total);
+            total += n;
+            (0..n)
+                .map(|i| spine_length(set, index, seed, i, 1.0))
+                .collect()
+        })
+        .collect()
+}
+
 /// The spines of `tuft`, drawn from its body's look, appended to `out`.
 /// Its old colour comes from the look's greying.
 // One spine's geometry from its draws: clearer as one piece, and in the
@@ -228,9 +259,7 @@ pub fn expand(tuft: &Tuft, look: &BodyLook, out: &mut Vec<Spine>) {
             };
             let elevation = single(set.angle)
                 + single(set.angle_spread) * (2.0 * draw(tuft.seed, index, i, 1) - 1.0);
-            let length = single(set.length)
-                * tuft.scale
-                * (1.0 + single(set.length_spread) * (2.0 * draw(tuft.seed, index, i, 2) - 1.0));
+            let length = spine_length(set, index, tuft.seed, i, tuft.scale);
             let curve = single(set.curve) * (0.8 + 0.4 * draw(tuft.seed, index, i, 3));
             let (az, el) = (radians(azimuth), radians(elevation));
             let toward = add(scale(up, libm::cosf(az)), scale(side, libm::sinf(az)));

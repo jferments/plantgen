@@ -355,11 +355,17 @@ pub fn run(
         .map(|query| !has_children(query.node))
         .collect();
 
+    // The way the light comes from at each query, under `light@3` only.
+    let mut light_from = None;
     let (query_light, organ_light) = match program.tool(ToolKind::Light) {
         Some(config) => {
             let values = settings(config, globals, clock, seed, &mut stack);
             if config.version >= 2 {
-                light_below(scene, &anchors, organ_area, &values, surroundings, limits)?
+                let lit = light_below(scene, &anchors, organ_area, &values, surroundings, limits)?;
+                if config.version >= 3 {
+                    light_from = Some(lit.from);
+                }
+                (lit.queries, lit.organs)
             } else {
                 light(scene, &anchors, organ_area, &values, surroundings, limits)?
             }
@@ -426,10 +432,16 @@ pub fn run(
         .tool(ToolKind::Substrate)
         .map(|_| substrate_of(surroundings));
 
+    let path = path_lengths(scene);
     let mut env = Vec::with_capacity(scene.queries.len());
     for (index, query) in scene.queries.iter().enumerate() {
         let mut values = [0.0; ENV_FIELDS];
         values[EnvField::Light as usize] = query_light[index];
+        if let Some(from) = &light_from {
+            values[EnvField::Lx as usize] = from[index].x;
+            values[EnvField::Ly as usize] = from[index].y;
+            values[EnvField::Lz as usize] = from[index].z;
+        }
         if let Some(flux) = &flux {
             let node = query.node as usize;
             values[EnvField::Vigour as usize] = flux.vigour[node];
@@ -450,6 +462,7 @@ pub fn run(
         values[EnvField::Hz as usize] = query.heading.z;
         values[EnvField::Order as usize] = f64::from(query.order);
         values[EnvField::Height as usize] = scene.height;
+        values[EnvField::Path as usize] = path[query.node as usize];
         if let Some(reach) = host_reach {
             let found = surroundings
                 .host()
@@ -466,6 +479,25 @@ pub fn run(
         env.push((query.module, values));
     }
     Ok(ToolOutput { env, organ_light })
+}
+
+/// The length of wood from the plant's base to each node along its branch,
+/// metres: a segment's node counts its own length. Parents come before
+/// their children in the node list.
+fn path_lengths(scene: &Scene) -> Vec<f64> {
+    let mut path = vec![0.0; scene.nodes.len()];
+    for (index, node) in scene.nodes.iter().enumerate() {
+        let before = node.parent.map_or(0.0, |parent| path[parent as usize]);
+        let own = match node.kind {
+            NodeKind::Segment(segment) => {
+                let segment = &scene.segments[segment as usize];
+                segment.start.distance(segment.end)
+            }
+            NodeKind::Query(_) => 0.0,
+        };
+        path[index] = before + own;
+    }
+    path
 }
 
 /// Sky directions for `light@1` as voxel steps `(dx, dz)` per layer up,
@@ -740,8 +772,8 @@ fn read_substrate(
 }
 
 /// `light@2`'s settings: `light@1`'s, and how far past the plant the
-/// substrate is looked at.
-fn light_below_settings(values: &[f64]) -> Result<(f64, f64, f64, f64), GrowthError> {
+/// substrate is looked at; `light@3` adds the sun's share of the light.
+fn light_below_settings(values: &[f64]) -> Result<(f64, f64, f64, f64, f64), GrowthError> {
     let (cell, extinction, bud) = light_settings(&values[..3])?;
     let reach = values[3];
     if !(reach >= 0.0 && reach.is_finite()) {
@@ -750,7 +782,68 @@ fn light_below_settings(values: &[f64]) -> Result<(f64, f64, f64, f64), GrowthEr
             format!("reach must be finite and not negative, found {reach}"),
         ));
     }
-    Ok((cell, extinction, bud, reach))
+    let sun = values.get(4).copied().unwrap_or(0.0);
+    if !(0.0..=1.0).contains(&sun) {
+        return Err(invalid(
+            "light",
+            format!("sun must be between 0 and 1, found {sun}"),
+        ));
+    }
+    Ok((cell, extinction, bud, reach, sun))
+}
+
+/// Light under `light@2` and `light@3`: at each query and each organ, and
+/// the way it comes from at each query.
+struct LightBelow {
+    queries: Vec<f64>,
+    organs: Vec<f64>,
+    from: Vec<Vec3>,
+}
+
+/// The sun's tilt toward the poles at the solstices, degrees.
+const SOLSTICE_DECLINATION: f64 = 23.44;
+
+/// The direct sun's share of each sky direction over the year at
+/// `latitude` degrees, summing to 1: the sun every hour of the two
+/// solstices and, counted twice, the equinox, each hour weighted by the
+/// sine of its elevation (a short path through the air) and given to the
+/// sky direction nearest it. World axes: +X east, +Y up, +Z south.
+fn sun_shares(latitude: f64, directions: &[SkyDirection]) -> Vec<f64> {
+    let mut shares = vec![0.0; directions.len()];
+    let phi = math::radians(latitude);
+    for (declination, days) in [
+        (SOLSTICE_DECLINATION, 1.0),
+        (0.0, 2.0),
+        (-SOLSTICE_DECLINATION, 1.0),
+    ] {
+        let delta = math::radians(declination);
+        for hour in 0..24_u32 {
+            let h = math::radians(f64::from(hour) * 15.0 - 180.0);
+            let up = math::sin(phi) * math::sin(delta)
+                + math::cos(phi) * math::cos(delta) * math::cos(h);
+            if up <= 1.0e-9 {
+                continue;
+            }
+            let east = -math::cos(delta) * math::sin(h);
+            let north = math::cos(phi) * math::sin(delta)
+                - math::sin(phi) * math::cos(delta) * math::cos(h);
+            let toward = Vec3::new(east, up, -north);
+            let mut nearest = 0;
+            for (index, direction) in directions.iter().enumerate() {
+                if direction.unit.dot(toward) > directions[nearest].unit.dot(toward) {
+                    nearest = index;
+                }
+            }
+            shares[nearest] += days * up;
+        }
+    }
+    let total: f64 = shares.iter().sum();
+    if total > 0.0 {
+        for share in &mut shares {
+            *share /= total;
+        }
+    }
+    shares
 }
 
 /// Light under `light@2` (G3): `light@1`'s overcast sky through the
@@ -769,6 +862,15 @@ fn light_below_settings(values: &[f64]) -> Result<(f64, f64, f64, f64), GrowthEr
 /// `R = 7/9` is the radiance of a level, matte surface under the overcast
 /// sky over the sky's zenith radiance, so a receiver can see more than the
 /// open sky alone (at most 2).
+///
+/// `light@3` also returns the way the light comes from at each query: the
+/// unit sum of every direction's unit vector (pointing to the sky, or down
+/// to the ground that reflects it) times the light it brings; zero in the
+/// dark. When the conditions' sky has a sun (`sun_and_sky`), a share `s`
+/// of the open-sky light comes from it: each upward direction `j` weighs
+/// `(1 − s) · w_j + s · W · σ_j`, where `W = Σ_up w_j` and `σ_j` is the
+/// sun's share of that direction over the year ([`sun_shares`]). The ground
+/// reflects diffusely, so the directions under the horizon keep `w_j`.
 #[allow(clippy::too_many_lines)]
 fn light_below(
     scene: &Scene,
@@ -777,16 +879,26 @@ fn light_below(
     values: &[f64],
     surroundings: &dyn Surroundings,
     limits: &Limits,
-) -> Result<(Vec<f64>, Vec<f64>), GrowthError> {
-    let (cell, extinction, bud, reach) = light_below_settings(values)?;
+) -> Result<LightBelow, GrowthError> {
+    let (cell, extinction, bud, reach, sun) = light_below_settings(values)?;
     let receivers = light_receivers(scene, anchors, organ_area, bud);
     let split = scene.queries.len();
     if receivers.is_empty() {
-        return Ok((Vec::new(), Vec::new()));
+        return Ok(LightBelow {
+            queries: Vec::new(),
+            organs: Vec::new(),
+            from: Vec::new(),
+        });
     }
     let field = substrate_of(surroundings);
     let directions = sky_directions();
     let total_weight: f64 = directions.iter().map(|direction| direction.weight).sum();
+    let sun_weights = surroundings.sun_latitude().map(|latitude| {
+        sun_shares(latitude, &directions)
+            .into_iter()
+            .map(|share| sun * total_weight * share)
+            .collect::<Vec<f64>>()
+    });
     // The radiance of a matte surface under the overcast sky.
     let reflected = 7.0 / 9.0;
 
@@ -859,12 +971,22 @@ fn light_below(
     }
 
     let mut light = vec![0.0_f64; receivers.len()];
+    let mut from = vec![Vec3::ZERO; split];
     let mut beyond = vec![0.0_f64; nx * ny * nz];
     // The albedo of the first solid voxel past each voxel; negative where
     // the direction leaves the grid in open air.
     let mut meets = vec![-1.0_f64; nx * ny * nz];
     for up in [true, false] {
-        for direction in &directions {
+        for (which, direction) in directions.iter().enumerate() {
+            let weight = match &sun_weights {
+                Some(sun_weights) if up => (1.0 - sun) * direction.weight + sun_weights[which],
+                _ => direction.weight,
+            };
+            let toward = if up {
+                direction.unit
+            } else {
+                Vec3::new(direction.unit.x, -direction.unit.y, direction.unit.z)
+            };
             let layers: Vec<usize> = if up {
                 (0..ny).rev().collect()
             } else {
@@ -910,7 +1032,11 @@ fn light_below(
                 } else {
                     0.0
                 };
-                light[receiver] += direction.weight * open * gain * math::exp(-depth);
+                let brought = weight * open * gain * math::exp(-depth);
+                light[receiver] += brought;
+                if receiver < split {
+                    from[receiver] += toward * brought;
+                }
             }
         }
     }
@@ -918,7 +1044,14 @@ fn light_below(
         *value = (*value / total_weight).clamp(0.0, 2.0);
     }
     let organs = light.split_off(split);
-    Ok((light, organs))
+    for way in &mut from {
+        *way = way.normalize_or(Vec3::ZERO);
+    }
+    Ok(LightBelow {
+        queries: light,
+        organs,
+        from,
+    })
 }
 
 /// Contact under `space@3` (G3): living tips (the queries that end a
@@ -2410,6 +2543,211 @@ pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, 
     })
 }
 
+/// Standard gravity, m/s².
+const GRAVITY: f64 = 9.81;
+
+/// A rigid motion `p ↦ R p + t`, with `R` given by the images of the axes.
+#[derive(Debug, Clone, Copy)]
+struct Rigid {
+    x: Vec3,
+    y: Vec3,
+    z: Vec3,
+    t: Vec3,
+}
+
+impl Rigid {
+    const IDENTITY: Self = Self {
+        x: Vec3::X,
+        y: Vec3::Y,
+        z: Vec3::Z,
+        t: Vec3::ZERO,
+    };
+
+    fn turn(&self, v: Vec3) -> Vec3 {
+        self.x * v.x + self.y * v.y + self.z * v.z
+    }
+
+    fn apply(&self, p: Vec3) -> Vec3 {
+        self.turn(p) + self.t
+    }
+
+    /// This motion after turning by the rotation vector `turn` (radians,
+    /// right-handed) about `pivot`.
+    fn after(&self, pivot: Vec3, turn: Vec3) -> Self {
+        let angle = turn.length();
+        if angle <= 0.0 {
+            return *self;
+        }
+        let axis = turn * (1.0 / angle);
+        let r = |v: Vec3| self.turn(v.rotate_about(axis, angle));
+        Self {
+            x: r(Vec3::X),
+            y: r(Vec3::Y),
+            z: r(Vec3::Z),
+            t: self.turn(pivot - pivot.rotate_about(axis, angle)) + self.t,
+        }
+    }
+}
+
+/// Bending under load (`bend@1`, crown form step B): each segment, from
+/// the base up, turns what follows it about its start by the rotation
+/// vector `ω = rest + M⊥ ℓ / (E I)`.
+///
+/// - `M⊥` is the moment about the segment's start of the weight it carries
+///   (its own wood and everything after it, where they hang after the
+///   segments below have bent), less its part along the segment: wood
+///   weighs `density · π r² ℓ`, leaves `leaf_mass` per square metre.
+/// - `E` is `modulus` in megapascals and `I = π r⁴ / 4` for the segment's
+///   radius.
+/// - `rest` is the segment's rest bend, kept by its identity from step to
+///   step: each year it keeps `set` of the year's sag and straightens by
+///   `straighten` of itself, `rest += dt (set · sag − straighten · rest)`.
+/// - A segment turns at most until it hangs straight down.
+///
+/// Segments, organs and query points move with what they follow; the
+/// string does not change.
+///
+/// # Errors
+///
+/// Fails on settings out of range.
+#[allow(clippy::implicit_hasher, clippy::too_many_lines)]
+pub fn bend(
+    scene: &mut Scene,
+    radii: &[f64],
+    organ_area: &[f64],
+    values: &[f64],
+    rest: &mut HashMap<u64, Vec3, impl std::hash::BuildHasher>,
+    dt: f64,
+) -> Result<(), GrowthError> {
+    let [density, modulus, leaf_mass, set, straighten] = values[..] else {
+        return Err(invalid("bend", "wrong number of settings".into()));
+    };
+    let valid = density >= 0.0
+        && density.is_finite()
+        && modulus > 0.0
+        && modulus.is_finite()
+        && leaf_mass >= 0.0
+        && leaf_mass.is_finite()
+        && (0.0..=1.0).contains(&set)
+        && (0.0..=1.0).contains(&straighten);
+    if !valid {
+        return Err(invalid(
+            "bend",
+            format!(
+                "density, modulus and leaf_mass must be finite and not negative (modulus above \
+                 0), set and straighten between 0 and 1; found {density}, {modulus}, \
+                 {leaf_mass}, {set}, {straighten}"
+            ),
+        ));
+    }
+    let stiffness = modulus * 1.0e6;
+    let count = scene.nodes.len();
+    // The mass after each node and its first moment, before bending.
+    let mut mass = vec![0.0_f64; count];
+    let mut moment = vec![Vec3::ZERO; count];
+    for organ in &scene.organs {
+        if let Some(node) = organ.node {
+            let m = leaf_mass * organ_area[usize::from(organ.symbol)] * organ.size * organ.size;
+            mass[node as usize] += m;
+            moment[node as usize] += organ.position * m;
+        }
+    }
+    for (segment, radius) in scene.segments.iter().zip(radii) {
+        let length = segment.start.distance(segment.end);
+        let m = density * math::PI * radius * radius * length;
+        let node = segment.node as usize;
+        mass[node] += m;
+        moment[node] += (segment.start + segment.end) * (0.5 * m);
+    }
+    for index in (0..count).rev() {
+        if let Some(parent) = scene.nodes[index].parent {
+            let (m, q) = (mass[index], moment[index]);
+            mass[parent as usize] += m;
+            moment[parent as usize] += q;
+        }
+    }
+
+    let mut motion = vec![Rigid::IDENTITY; count];
+    let mut seen = HashMap::with_capacity(scene.segments.len());
+    for index in 0..count {
+        let before = scene.nodes[index]
+            .parent
+            .map_or(Rigid::IDENTITY, |parent| motion[parent as usize]);
+        let NodeKind::Segment(which) = scene.nodes[index].kind else {
+            motion[index] = before;
+            continue;
+        };
+        let segment = &scene.segments[which as usize];
+        let radius = radii[which as usize];
+        let length = segment.start.distance(segment.end);
+        let held = rest.get(&segment.id).copied().unwrap_or(Vec3::ZERO);
+        let mut sag = Vec3::ZERO;
+        if mass[index] > 0.0 && radius > 0.0 && length > 0.0 {
+            // Where the segment starts and where its load hangs, bent.
+            let start = before.apply(segment.start);
+            let centre = before.apply(moment[index] * (1.0 / mass[index]));
+            let along = before.turn(segment.end - segment.start) * (1.0 / length);
+            let torque = (centre - start).cross(Vec3::new(0.0, -GRAVITY * mass[index], 0.0));
+            let bending = torque - along * torque.dot(along);
+            let inertia = math::PI * radius * radius * radius * radius / 4.0;
+            // Back into the unbent frame, where the rest bend is kept.
+            let world = bending * (length / (stiffness * inertia));
+            sag = Vec3::new(
+                before.x.dot(world),
+                before.y.dot(world),
+                before.z.dot(world),
+            );
+        }
+        let mut turn = held + sag;
+        let along = before
+            .turn(segment.end - segment.start)
+            .normalize_or(Vec3::ZERO);
+        let limit = math::acos((-along.y).clamp(-1.0, 1.0));
+        let angle = turn.length();
+        if angle > limit {
+            turn = turn * (limit / angle);
+        }
+        motion[index] = before.after(segment.start, turn);
+        seen.insert(segment.id, held + (sag * set - held * straighten) * dt);
+    }
+    rest.clear();
+    rest.extend(seen);
+
+    let mut height = 0.0_f64;
+    for segment in &mut scene.segments {
+        let node = segment.node as usize;
+        let before = scene.nodes[node]
+            .parent
+            .map_or(Rigid::IDENTITY, |parent| motion[parent as usize]);
+        segment.start = before.apply(segment.start);
+        segment.end = motion[node].apply(segment.end);
+        segment.left = motion[node].turn(segment.left);
+        height = height.max(segment.end.y);
+    }
+    for organ in &mut scene.organs {
+        let Some(node) = organ.node else {
+            continue;
+        };
+        let to = motion[node as usize];
+        organ.position = to.apply(organ.position);
+        organ.frame = crate::math::Frame {
+            h: to.turn(organ.frame.h),
+            l: to.turn(organ.frame.l),
+            u: to.turn(organ.frame.u),
+        }
+        .orthonormalized();
+        let reach = organ.position + organ.frame.h * organ.size;
+        height = height.max(organ.position.y).max(reach.y);
+    }
+    for query in &mut scene.queries {
+        let to = motion[query.node as usize];
+        query.position = to.apply(query.position);
+        query.heading = to.turn(query.heading);
+    }
+    scene.height = height;
+    Ok(())
+}
+
 /// Shading area per unit size² of every organ symbol (0 for other symbols).
 ///
 /// # Errors
@@ -2749,6 +3087,7 @@ mod tests {
             neighbourhood: &Neighbourhood::OPEN,
             host: None,
             substrate,
+            sun: None,
         }
     }
 
@@ -2774,7 +3113,7 @@ mod tests {
             &Limits::default(),
         )
         .unwrap()
-        .0;
+        .queries;
         // At most the sky and all the soil's reflection; the lowest
         // directions leave the grid (reach) before they meet the soil.
         let reflected = 1.0 + crate::substrate::ALBEDO[1] * 7.0 / 9.0;
@@ -2795,7 +3134,7 @@ mod tests {
             &Limits::default(),
         )
         .unwrap()
-        .0;
+        .queries;
         assert!(
             walled[1] < flat[1] - 0.2,
             "the wall's foot gets {}",
@@ -2813,6 +3152,222 @@ mod tests {
         .unwrap()
         .0;
         assert_eq!(old, vec![1.0, 1.0]);
+    }
+
+    #[test]
+    fn light_3_points_to_the_open_side() {
+        // A bud beside a dense block of leaves to its east (+X): the light
+        // comes from above and the west, and the bud gets less than open sky.
+        let mut organs = Vec::new();
+        for i in 0..4 {
+            for j in 0..6 {
+                for k in 0..4 {
+                    #[allow(clippy::cast_precision_loss)]
+                    let at = |n: i32| f64::from(n) * 0.1;
+                    organs.push(leaf(Vec3::new(0.15 + at(i), at(j) - 0.1, at(k) - 0.15)));
+                }
+            }
+        }
+        let scene = Scene {
+            queries: vec![bud(Vec3::new(0.0, 0.0, 0.0))],
+            organs,
+            ..Scene::default()
+        };
+        let mut organ_area = vec![0.0; 18];
+        organ_area[usize::from(scene.organs[0].symbol)] = 0.05;
+        let lit = light_below(
+            &scene,
+            &[true],
+            &organ_area,
+            &[0.1, 0.5, 0.0, 0.0, 0.5],
+            &around(None),
+            &Limits::default(),
+        )
+        .unwrap();
+        let from = lit.from[0];
+        assert!(lit.queries[0] < 0.95, "the bud gets {}", lit.queries[0]);
+        assert!((from.length() - 1.0).abs() < 1.0e-12);
+        assert!(
+            from.x < -0.1 && from.y > 0.5,
+            "the light comes from {from:?}"
+        );
+    }
+
+    #[test]
+    fn light_3_sun_at_45_north_comes_from_the_south() {
+        let directions = sky_directions();
+        let shares = sun_shares(45.0, &directions);
+        assert!((shares.iter().sum::<f64>() - 1.0).abs() < 1.0e-12);
+        let mean = directions
+            .iter()
+            .zip(&shares)
+            .fold(Vec3::ZERO, |sum, (direction, share)| {
+                sum + direction.unit * *share
+            });
+        // +Z is south: the year's sun stands to the south, not east or west.
+        assert!(mean.z > 0.3, "the sun stands at {mean:?}");
+        assert!(
+            mean.x.abs() < 1.0e-9,
+            "the sun leans east or west: {mean:?}"
+        );
+        let south = sun_shares(-45.0, &directions);
+        let mean_south = directions
+            .iter()
+            .zip(&south)
+            .fold(Vec3::ZERO, |sum, (direction, share)| {
+                sum + direction.unit * *share
+            });
+        assert!(mean_south.z < -0.3, "in the south the sun stands north");
+        // A bud in the open turns its light toward the sun.
+        let scene = Scene {
+            queries: vec![bud(Vec3::new(0.0, 0.0, 0.0))],
+            ..Scene::default()
+        };
+        let mut sunny = around(None);
+        sunny.sun = Some(45.0);
+        let lit = light_below(
+            &scene,
+            &[true],
+            &[0.0; 18],
+            &[0.1, 0.5, 0.0, 0.0, 0.5],
+            &sunny,
+            &Limits::default(),
+        )
+        .unwrap();
+        assert!(
+            (lit.queries[0] - 1.0).abs() < 1.0e-9,
+            "open sky gives {}",
+            lit.queries[0]
+        );
+        assert!(
+            lit.from[0].z > 0.1,
+            "the light comes from {:?}",
+            lit.from[0]
+        );
+    }
+
+    #[test]
+    fn light_3_without_a_sun_matches_light_2() {
+        let scene = Scene {
+            queries: vec![bud(Vec3::new(0.0, 0.2, 0.0)), bud(Vec3::new(0.1, 0.3, 0.0))],
+            organs: vec![leaf(Vec3::new(0.05, 0.4, 0.0))],
+            ..Scene::default()
+        };
+        let mut organ_area = vec![0.0; 18];
+        organ_area[usize::from(scene.organs[0].symbol)] = 0.02;
+        let run = |settings: &[f64], sun: Option<f64>| {
+            let mut surroundings = around(None);
+            surroundings.sun = sun;
+            light_below(
+                &scene,
+                &[true, true],
+                &organ_area,
+                settings,
+                &surroundings,
+                &Limits::default(),
+            )
+            .unwrap()
+        };
+        let two = run(&[0.1, 0.5, 0.01, 0.5], Some(45.0));
+        let three = run(&[0.1, 0.5, 0.01, 0.5, 0.5], None);
+        let bits = |values: &[f64]| values.iter().map(|v| v.to_bits()).collect::<Vec<_>>();
+        assert_eq!(bits(&two.queries), bits(&three.queries));
+        assert_eq!(bits(&two.organs), bits(&three.organs));
+    }
+
+    #[test]
+    fn path_is_the_wood_from_the_base_along_the_branch() {
+        let setup = setup(
+            "lsystem p 1; module A queries position;
+             axiom F(1) A [ +(60) F(0.5) A ] F(2) A;",
+        );
+        let output = tools(&setup, &Neighbourhood::OPEN);
+        let path: Vec<f64> = output
+            .env
+            .iter()
+            .map(|(_, values)| values[EnvField::Path as usize])
+            .collect();
+        assert_eq!(path, [1.0, 1.5, 3.0]);
+    }
+
+    #[test]
+    fn bend_1_sags_a_branch_by_the_beam_formula_and_keeps_part_of_it() {
+        // One branch 1 m long at 45° from vertical, 1 cm thick, of wood
+        // 600 kg/m³ and 10 GPa: its weight hangs at its middle.
+        let mut setup = setup("lsystem p 1; axiom &(45) F(1) A; module A queries position;");
+        let start = setup.scene.segments[0].start;
+        let end = setup.scene.segments[0].end;
+        let radius = 0.01;
+        let mass = 600.0 * std::f64::consts::PI * radius * radius;
+        let lever = 0.5 * (end - start).x.hypot((end - start).z);
+        let inertia = std::f64::consts::PI * radius.powi(4) / 4.0;
+        let expected = mass * 9.81 * lever / (1.0e10 * inertia);
+        let mut rest: HashMap<u64, Vec3> = HashMap::new();
+        let settings = [600.0, 10000.0, 0.1, 0.3, 0.1];
+        bend(
+            &mut setup.scene,
+            &[radius],
+            &[0.0; 20],
+            &settings,
+            &mut rest,
+            1.0,
+        )
+        .unwrap();
+        let bent = setup.scene.segments[0].end - setup.scene.segments[0].start;
+        let angle = math::acos(bent.dot(end - start) / (bent.length() * (end - start).length()));
+        assert!(
+            (angle - expected).abs() < 1.0e-9 * expected.max(1.0),
+            "bent {angle}, expected {expected}"
+        );
+        assert!(bent.y < (end - start).y, "the branch bends down: {bent:?}");
+        // The query at its tip moves with it.
+        assert!(
+            setup.scene.queries[0]
+                .position
+                .distance(setup.scene.segments[0].end)
+                < 1.0e-12
+        );
+        // A year keeps `set` of the sag as the rest bend.
+        let held = rest[&setup.scene.segments[0].id].length();
+        assert!((held - 0.3 * expected).abs() < 1.0e-9 * expected.max(1.0));
+    }
+
+    #[test]
+    fn bend_1_leaves_a_stem_upright_and_never_bends_past_hanging() {
+        let mut upright = setup("lsystem p 1; axiom F(1) F(1);");
+        let before = upright.scene.segments.clone();
+        let mut rest: HashMap<u64, Vec3> = HashMap::new();
+        let settings = [600.0, 10000.0, 0.1, 0.3, 0.1];
+        bend(
+            &mut upright.scene,
+            &[0.01, 0.01],
+            &[0.0; 20],
+            &settings,
+            &mut rest,
+            1.0,
+        )
+        .unwrap();
+        for (old, new) in before.iter().zip(&upright.scene.segments) {
+            assert!(old.end.distance(new.end) < 1.0e-12);
+        }
+        // A twig as soft as rubber hangs straight down from its start.
+        let mut soft = setup("lsystem p 1; axiom &(90) F(1);");
+        let rubber = [600.0, 1.0e-3, 0.1, 0.3, 0.1];
+        bend(
+            &mut soft.scene,
+            &[0.01],
+            &[0.0; 20],
+            &rubber,
+            &mut rest,
+            1.0,
+        )
+        .unwrap();
+        let hanging = soft.scene.segments[0].end - soft.scene.segments[0].start;
+        assert!(
+            (hanging.normalize_or(Vec3::ZERO).y + 1.0).abs() < 1.0e-9,
+            "{hanging:?}"
+        );
+        assert!((soft.scene.height - 0.0).abs() < 1.0e-12);
     }
 
     #[test]

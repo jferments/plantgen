@@ -12,7 +12,7 @@ use crate::rng::{hash_words, normal, unit};
 /// Values the environment tools wrote for one module in the last step.
 pub type EnvValues = [f64; ENV_FIELDS];
 
-pub const ENV_FIELDS: usize = 26;
+pub const ENV_FIELDS: usize = 30;
 
 /// The environment fields a rule can read, grouped by the query that
 /// provides them.
@@ -62,6 +62,14 @@ pub enum EnvField {
     /// `smat`: the material of the substrate's surface there: 0 air (out
     /// of reach), 1 soil, 2 rock, 3 bark, 4 wood, 5 built.
     Smat,
+    /// `path`: length of wood from the plant's base to the module along
+    /// its branch, metres (crown form B).
+    Path,
+    /// `lx`, `ly`, `lz`: unit direction the light reaching the module
+    /// comes from (`light@3`; 0 under other light tools or with none).
+    Lx,
+    Ly,
+    Lz,
 }
 
 impl EnvField {
@@ -92,6 +100,10 @@ impl EnvField {
         (Self::Sny, "sny"),
         (Self::Snz, "snz"),
         (Self::Smat, "smat"),
+        (Self::Path, "path"),
+        (Self::Lx, "lx"),
+        (Self::Ly, "ly"),
+        (Self::Lz, "lz"),
     ];
 
     #[must_use]
@@ -106,7 +118,7 @@ impl EnvField {
     #[must_use]
     pub fn query(self) -> Query {
         match self {
-            Self::Light => Query::Light,
+            Self::Light | Self::Lx | Self::Ly | Self::Lz => Query::Light,
             Self::Vigour | Self::Qsum | Self::Nseg | Self::Ntip => Query::Vigour,
             Self::Space | Self::Sx | Self::Sy | Self::Sz => Query::Space,
             Self::Gd | Self::Gx | Self::Gy | Self::Gz => Query::Host,

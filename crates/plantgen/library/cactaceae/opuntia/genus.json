@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Opuntia",
+  "parent": "subfamily/opuntioideae",
+  "traits": {
+    "stem_form": "flat_joints",
+    "tubercles": false,
+    "spine_sheaths": false
+  },
+  "rules": {
+    "generator.params.pad": {
+      "map": {
+        "stem_form": {
+          "flat_joints": 1
+        }
+      },
+      "why": "A prickly pear's joints are flat pads."
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, pp. 44 to 45 and 99), as their subgenus Platyopuntia, the prickly pears, today's Opuntia: joints flattened, their spines without sheaths; the areoles sit on the joint's face, not on tubercles."
+    },
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Spec rework E6c: a prickly pear's joints drawn as pads."
+    }
+  }
+}

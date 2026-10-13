@@ -462,7 +462,18 @@ fn pipe_settings(
     clock: Clock,
     stack: &mut Vec<f64>,
 ) -> Option<Vec<f64>> {
-    let config = program.tool(ToolKind::Pipe)?;
+    step_settings(program, ToolKind::Pipe, params, clock, stack)
+}
+
+/// A tool's settings at this step, if the program configures it.
+fn step_settings(
+    program: &Program,
+    tool: ToolKind,
+    params: &[f64],
+    clock: Clock,
+    stack: &mut Vec<f64>,
+) -> Option<Vec<f64>> {
+    let config = program.tool(tool)?;
     let scope = crate::lsys::expr::Scope {
         globals: params,
         locals: &[],
@@ -562,6 +573,11 @@ pub fn grow_watched(
         neighbourhood: &neighbourhood,
         host: settings.host.as_deref(),
         substrate: substrate.as_ref(),
+        sun: settings
+            .conditions
+            .light
+            .as_ref()
+            .and_then(crate::conditions::Light::sun_latitude),
     };
     let mut string = deriver.axiom(settings.seed, settings.dt)?;
     let mut stats = GrowthStats {
@@ -569,6 +585,8 @@ pub fn grow_watched(
         ..GrowthStats::default()
     };
     let mut girth = Girth::default();
+    // Each segment's rest bend under `bend@1`.
+    let mut rest_bends: IdMap<crate::math::Vec3> = IdMap::default();
     // Each segment as it was the last step it stood, and the organs that
     // fell, for the shed log.
     let mut segments: Parts<ShedSegment> = Parts::default();
@@ -583,7 +601,7 @@ pub fn grow_watched(
             t: f64::from(step) * settings.dt,
             dt: settings.dt,
         };
-        let scene = interpreter.interpret(&string, clock)?;
+        let mut scene = interpreter.interpret(&string, clock)?;
         stats.peak_modules = stats.peak_modules.max(string.len());
         stats.peak_segments = stats.peak_segments.max(scene.segments.len());
         stats.peak_organs = stats.peak_organs.max(scene.organs.len());
@@ -593,6 +611,16 @@ pub fn grow_watched(
             None => None,
         };
         let radii = girth.radii(&scene, pipes.as_ref(), settings.dt);
+        if let Some(values) = step_settings(program, ToolKind::Bend, params, clock, &mut stack) {
+            tools::bend(
+                &mut scene,
+                &radii,
+                &organ_area,
+                &values,
+                &mut rest_bends,
+                settings.dt,
+            )?;
+        }
         segments.step(scene.segments.iter().zip(&radii).map(|(segment, radius)| {
             let part = ShedSegment {
                 id: segment.id,
@@ -857,6 +885,62 @@ mod tests {
             limits: Limits::default(),
             host: None,
         }
+    }
+
+    /// Crown form step B: a leafy limb sags under `bend@1` and keeps the
+    /// sag; a shoot steered by `light@3` turns to the year's sun, south at
+    /// 45° N (+Z).
+    #[test]
+    fn limbs_sag_and_shoots_turn_to_the_sun() {
+        let limb = |bend: &str| {
+            let program = Program::compile(&format!(
+                "lsystem limb 1; module A; organ leaf foliage area 0.05;
+                 tool pipe@1 {{ exponent = 2.5, tip = 0.004 }}; {bend}
+                 axiom &(80) A; rule A -> F(0.3) [ leaf(1) ] A;"
+            ))
+            .unwrap();
+            let growth = grow(&program, &[], &settings(8.0, vec![8.0])).unwrap();
+            growth.keyframes[0]
+                .segments
+                .iter()
+                .map(|segment| segment.end.y)
+                .fold(f64::INFINITY, f64::min)
+        };
+        let straight = limb("");
+        let sagging = limb("tool bend@1 { modulus = 2000 };");
+        assert!(sagging < straight - 0.05, "{sagging} against {straight}");
+
+        let shoot = |sky: &str| {
+            let program = Program::compile(
+                "lsystem shoot 1; module A queries light;
+                 tool light@3 { cell = 0.3, sun = 0.8 };
+                 axiom A; rule A -> steer(lx, ly, lz, 0.3) F(0.3) A;",
+            )
+            .unwrap();
+            let conditions = Conditions::from_json(&format!(
+                r#"{{"schema": 1, "preset": "open",
+                    "light": {{"version": 1, "latitude_deg": 45, "sky": "{sky}"}}}}"#
+            ))
+            .unwrap();
+            let growth = grow(
+                &program,
+                &[],
+                &GrowthSettings {
+                    conditions,
+                    ..settings(6.0, vec![6.0])
+                },
+            )
+            .unwrap();
+            growth.keyframes[0].segments.last().unwrap().end
+        };
+        let sunny = shoot("sun_and_sky");
+        let overcast = shoot("overcast");
+        assert!(sunny.z > 0.2, "the sunny shoot ends at {sunny:?}");
+        // Under the overcast sky only the voxel grid's edges lean it.
+        assert!(
+            overcast.z.abs() < 0.01 && overcast.x.abs() < 0.01,
+            "{overcast:?}"
+        );
     }
 
     fn bush(seed: u64) -> Growth {

@@ -18,9 +18,6 @@
       "stem_rate": 0.15,
       "clump_radius": 0.2,
       "stem_lean": 25,
-      "joints": 1,
-      "pad": 1,
-      "joint_length": 0.24,
       "joint_radius": 0.085,
       "joint_spread": 0.2,
       "daughters_low": 0.8,
@@ -102,9 +99,8 @@
         },
         "spines": [
           {
-            "count": [1, 4],
+            "role": "radial",
             "angle": 30,
-            "length": 0.03,
             "width": 0.0012,
             "colour": [0.75, 0.72, 0.6],
             "angle_spread": 15,
@@ -115,6 +111,7 @@
             "tip": [0.6, 0.5, 0.3]
           },
           {
+            "role": "glochid",
             "count": [15, 30],
             "angle": 60,
             "length": 0.004,
@@ -146,7 +143,17 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "joint_length_m": {"min": 0.2, "max": 0.3},
+    "radial_spines": {"min": 1, "max": 4, "typical": 3, "high": 10},
+    "radial_spine_length_m": 0.05
+  },
   "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, p. 147): joints oblong to round, 20 to 30 cm long; usually 3 or 4 spines to an areole, sometimes 1 or none on the lower ones and 10 or more on old joints, porrect or a little spreading, never reflexed, the larger much flattened, the longest 5 cm; not told apart as radials and centrals, so stated as radials. Their Arizona plant, O. discata (p. 149), is much the same."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

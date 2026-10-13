@@ -2081,7 +2081,21 @@ mod tests {
     /// values, leaving out its `evidence`, `traits` and `rules`, which stay
     /// out of the spec.
     fn leaves(value: &serde_json::Value, at: &str, found: &mut Vec<(String, serde_json::Value)>) {
+        let roles = |items: &[serde_json::Value]| {
+            !items.is_empty()
+                && items
+                    .iter()
+                    .all(|item| item.get("role").is_some_and(serde_json::Value::is_string))
+        };
         match value {
+            // A list of items with roles (a body's spine sets), item by
+            // item, as rules fill in what an item leaves out.
+            serde_json::Value::Array(items) if roles(items) => {
+                for item in items {
+                    let role = item["role"].as_str().unwrap_or_default();
+                    leaves(item, &format!("{at}.{role}"), found);
+                }
+            }
             serde_json::Value::Object(map) => {
                 for (key, inside) in map {
                     if at.is_empty() && ["evidence", "traits", "rules"].contains(&key.as_str()) {
@@ -3251,6 +3265,17 @@ mod tests {
         }
     }
 
+    /// The value at `key` inside `at`, or a list's item by its role, as a
+    /// rule names a spine set.
+    fn step<'a>(at: &'a mut serde_json::Value, key: &str) -> Option<&'a mut serde_json::Value> {
+        match at {
+            serde_json::Value::Array(items) => items
+                .iter_mut()
+                .find(|item| item.get("role").and_then(serde_json::Value::as_str) == Some(key)),
+            _ => at.get_mut(key),
+        }
+    }
+
     /// Stating characters changes a species' spec, and so its package,
     /// only where a rule reads them: every built-in spec is what it would
     /// be with no trait stated anywhere, but for the values rules set from
@@ -3264,7 +3289,7 @@ mod tests {
             let (outer, key) = path.rsplit_once('.').unwrap();
             if let Some(parent) = outer
                 .split('.')
-                .try_fold(&mut *spec, |at, key| at.get_mut(key))
+                .try_fold(&mut *spec, step)
                 .and_then(serde_json::Value::as_object_mut)
             {
                 parent.remove(key);
