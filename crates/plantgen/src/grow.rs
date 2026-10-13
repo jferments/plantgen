@@ -564,6 +564,28 @@ pub fn grow_watched(
     Ok(grower.finish())
 }
 
+/// Grow as [`grow_watched`] does in `settings`' conditions until
+/// `from_age` years, then on in `place` laid over them
+/// ([`Conditions::over`]): the library's young plant, the same for the
+/// same seed, grown on where a host puts it. At `from_age` 0 it grows in
+/// the place from its first step.
+///
+/// # Errors
+///
+/// As [`Grower::run_in`].
+pub fn grow_in(
+    program: &Program,
+    params: &[f64],
+    settings: &GrowthSettings,
+    place: &Conditions,
+    from_age: f64,
+    watch: Option<&mut dyn Watch>,
+) -> Result<Growth, GrowthError> {
+    let mut grower = Grower::new(program, params, settings)?;
+    grower.run_in(place, from_age, watch)?;
+    Ok(grower.finish())
+}
+
 /// The time one growth step took, by phase, when a [`Grower`] keeps it
 /// ([`Grower::timed`]): what makes a plant slow to grow (fitting plan
 /// PF6).
@@ -739,6 +761,42 @@ impl<'a> Grower<'a> {
         self.over
     }
 
+    /// Grow to the end, from `from_age` years on (or now, if older) in
+    /// `place` laid over the conditions it grows in ([`Conditions::over`]).
+    ///
+    /// # Errors
+    ///
+    /// When `place` is not a valid document or `from_age` is negative, and
+    /// as [`Self::step`].
+    pub fn run_in(
+        &mut self,
+        place: &Conditions,
+        from_age: f64,
+        mut watch: Option<&mut (dyn Watch + '_)>,
+    ) -> Result<(), GrowthError> {
+        place
+            .validate()
+            .map_err(|message| GrowthError::Settings(format!("the place: {message}")))?;
+        if !(from_age.is_finite() && from_age >= 0.0) {
+            return Err(GrowthError::Settings(format!(
+                "from_age must be 0 or more years, found {from_age}"
+            )));
+        }
+        let mut place = Some(place);
+        loop {
+            // The step that starts at `from_age`, or the first past it, is
+            // the first in the place.
+            if self.age() >= from_age - 1e-9 * self.settings.dt
+                && let Some(place) = place.take()
+            {
+                self.set_conditions(place.over(&self.conditions))?;
+            }
+            if !self.step(watch.as_deref_mut())? {
+                return Ok(());
+            }
+        }
+    }
+
     /// Take one step, telling `watch`. Returns whether steps remain.
     ///
     /// # Errors
@@ -820,6 +878,7 @@ impl<'a> Grower<'a> {
         }
         let around = Around {
             neighbourhood: &self.neighbourhood,
+            envelopes: self.conditions.envelopes(),
             host: settings.host.as_deref(),
             substrate: self.substrate.as_ref(),
             sun: self.sun,
@@ -1517,31 +1576,36 @@ mod tests {
     /// A shoot that creeps west at ankle height and stops short of
     /// whatever it meets (`substrate@1`, G3).
     fn creeper(substrate: Option<crate::substrate::SubstratePreset>) -> f64 {
-        let program = Program::compile(
-            "lsystem creeper 1;
-             module A queries substrate;
-             tool substrate@1 {};
-             axiom f(0.1) steer(-1, 0, 0, 1) A;
-             rule A : sd > 0.06 -> F(0.05) A;",
-        )
-        .unwrap();
-        let params = program.resolve_params(&BTreeMap::new()).unwrap();
         let mut conditions = Conditions::preset(crate::spec::Environment::Open);
         conditions.substrate = substrate.map(crate::substrate::Substrate::preset);
-        let growth = grow(
-            &program,
-            &params,
-            &GrowthSettings {
-                conditions,
-                ..settings(12.0, vec![12.0])
-            },
-        )
-        .unwrap();
-        growth.keyframes[0]
+        let growth = creep(&conditions, None);
+        growth.keyframes[1]
             .segments
             .iter()
             .map(|segment| segment.end.x)
             .fold(0.0, f64::min)
+    }
+
+    const CREEPER: &str = "lsystem creeper 1;
+         module A queries substrate;
+         tool substrate@1 {};
+         axiom f(0.1) steer(-1, 0, 0, 1) A;
+         rule A : sd > 0.06 -> F(0.05) A;";
+
+    /// The creeper grown 12 years in `conditions`, keeping ages 4 and 12,
+    /// grown on in a place from an age when `place` gives one.
+    fn creep(conditions: &Conditions, place: Option<(&Conditions, f64)>) -> Growth {
+        let program = Program::compile(CREEPER).unwrap();
+        let params = program.resolve_params(&BTreeMap::new()).unwrap();
+        let settings = GrowthSettings {
+            conditions: conditions.clone(),
+            ..settings(12.0, vec![4.0, 12.0])
+        };
+        match place {
+            Some((place, from_age)) => grow_in(&program, &params, &settings, place, from_age, None),
+            None => grow(&program, &params, &settings),
+        }
+        .unwrap()
     }
 
     #[test]
@@ -1552,5 +1616,79 @@ mod tests {
         assert!((open + 0.6).abs() < 1.0e-9, "open ground: {open}");
         let cleft = creeper(Some(crate::substrate::SubstratePreset::Cleft));
         assert!((-0.25..-0.15).contains(&cleft), "cleft: {cleft}");
+    }
+
+    #[test]
+    fn a_plant_grows_on_in_a_place_from_an_age() {
+        let open = Conditions::preset(crate::spec::Environment::Open);
+        // A cleft twice the preset's size: its west block's face 0.5 m out.
+        let cleft = Conditions::from_json(
+            r#"{"schema": 1, "substrate": {"version": 1, "preset": "cleft", "scale": 2}}"#,
+        )
+        .unwrap();
+        let reach = |growth: &Growth, keyframe: usize| {
+            growth.keyframes[keyframe]
+                .segments
+                .iter()
+                .map(|segment| segment.end.x)
+                .fold(0.0, f64::min)
+        };
+        let free = creep(&open, None);
+        assert!((reach(&free, 1) + 0.6).abs() < 1e-9);
+        // In the cleft from the start, it stops at the scaled face.
+        let placed = creep(&open, Some((&cleft, 0.0)));
+        assert!(
+            (-0.5..-0.4).contains(&reach(&placed, 1)),
+            "{}",
+            reach(&placed, 1)
+        );
+        // Moved there at 4 years, it is the open-grown plant until then.
+        let moved = creep(&open, Some((&cleft, 4.0)));
+        assert_eq!(moved.keyframes[0], free.keyframes[0]);
+        assert_eq!(reach(&moved, 1), reach(&placed, 1));
+        // A place it would move to after its last year changes nothing.
+        let never = creep(&open, Some((&cleft, 20.0)));
+        assert_eq!(never.keyframes, free.keyframes);
+        // The place keeps the plant's own stand: it has none of its own.
+        let stand = Conditions::preset(crate::spec::Environment::Interior);
+        let program = Program::compile(CREEPER).unwrap();
+        let params = program.resolve_params(&BTreeMap::new()).unwrap();
+        let in_stand = GrowthSettings {
+            conditions: stand.clone(),
+            ..settings(2.0, vec![2.0])
+        };
+        let mut grower = Grower::new(&program, &params, &in_stand).unwrap();
+        grower.run_in(&cleft, 1.0, None).unwrap();
+        assert_eq!(grower.conditions().neighbourhood(), stand.neighbourhood());
+        assert_eq!(grower.conditions().substrate, cleft.substrate);
+        // A bad place or age is refused.
+        assert!(
+            creep_in(
+                &open,
+                r#"{"schema": 1, "substrate": {"version": 1, "preset": "wall", "scale": 0}}"#,
+                0.0
+            )
+            .contains("the place: substrate scale")
+        );
+        assert!(creep_in(&open, r#"{"schema": 1}"#, -1.0).contains("from_age"));
+    }
+
+    fn creep_in(conditions: &Conditions, place: &str, from_age: f64) -> String {
+        let program = Program::compile(CREEPER).unwrap();
+        let params = program.resolve_params(&BTreeMap::new()).unwrap();
+        let place: Conditions = serde_json::from_str(place).unwrap();
+        grow_in(
+            &program,
+            &params,
+            &GrowthSettings {
+                conditions: conditions.clone(),
+                ..settings(2.0, vec![2.0])
+            },
+            &place,
+            from_age,
+            None,
+        )
+        .unwrap_err()
+        .to_string()
     }
 }
