@@ -84,7 +84,7 @@ const KNOWN: &[(&str, &str, &str)] = &[
     (
         "program:herb",
         "shoot_leaves",
-        "a stem grows all its nodes' leaves in its one year (2 on western wild ginger's, false lily-of-the-valley's and foamflower's, 36 on Columbia lily's, 45 on fireweed's), against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
+        "a stem grows all its nodes' leaves in its one year (2 on foamflower's, 36 on Columbia lily's, 45 on fireweed's), against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
         "program:rosette",
