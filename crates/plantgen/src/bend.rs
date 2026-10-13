@@ -156,7 +156,7 @@ impl Bend {
     }
 
     #[allow(clippy::too_many_arguments)]
-    fn position(
+    pub(crate) fn position(
         &self,
         base: Vec3,
         h: Vec3,
