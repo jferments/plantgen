@@ -453,7 +453,11 @@ pub fn run(
             values[EnvField::Qmean as usize] = flux.mean;
         }
         if let Some(crowd) = &crowd {
-            values[EnvField::Crowd as usize] = crowd[index];
+            let (density, away) = crowd[index];
+            values[EnvField::Crowd as usize] = density;
+            values[EnvField::Fx as usize] = away.x;
+            values[EnvField::Fy as usize] = away.y;
+            values[EnvField::Fz as usize] = away.z;
         }
         let (count, direction) = space[index];
         values[EnvField::Space as usize] = f64::from(count);
@@ -604,13 +608,16 @@ fn sky_directions() -> Vec<SkyDirection> {
 /// the leaf area of the 3 × 3 × 3 light voxels centred on the query's own
 /// (organs, and `bud` for each living tip), less the query's own, over
 /// their volume. Bud fate follows crowding like this: a bud among many
-/// leaves stays dormant or dies even in fair light.
+/// leaves stays dormant or dies even in fair light. With it, the unit
+/// direction away from that leaf area, each voxel's pulling along the way
+/// from the query to its centre (zero when nothing is near): the way out
+/// of the neighbours' shade.
 fn crowding(
     scene: &Scene,
     anchors: &[bool],
     organ_area: &[f64],
     values: &[f64],
-) -> Result<Vec<f64>, GrowthError> {
+) -> Result<Vec<(f64, Vec3)>, GrowthError> {
     let (cell, _, bud) = light_settings(&values[..3.min(values.len())])?;
     let receivers = light_receivers(scene, anchors, organ_area, bud);
     // Positions are bounded by the segment limit times segment length;
@@ -628,15 +635,29 @@ fn crowding(
         .iter()
         .map(|(point, own)| {
             let [x, y, z] = key(*point);
-            let mut sum = -own;
+            let mut sum = 0.0;
+            let mut toward = Vec3::ZERO;
             for dx in -1..=1 {
                 for dy in -1..=1 {
                     for dz in -1..=1 {
-                        sum += area.get(&[x + dx, y + dy, z + dz]).copied().unwrap_or(0.0);
+                        let at = [x + dx, y + dy, z + dz];
+                        let Some(&here) = area.get(&at) else {
+                            continue;
+                        };
+                        let here = if at == [x, y, z] { here - own } else { here };
+                        sum += here;
+                        #[allow(clippy::cast_precision_loss)]
+                        let centre = Vec3::new(
+                            (at[0] as f64 + 0.5) * cell,
+                            (at[1] as f64 + 0.5) * cell,
+                            (at[2] as f64 + 0.5) * cell,
+                        );
+                        toward += (centre - *point).normalize_or(Vec3::ZERO) * here;
                     }
                 }
             }
-            sum.max(0.0) / volume
+            let away = (toward * -1.0).normalize_or(Vec3::ZERO);
+            (sum.max(0.0) / volume, away)
         })
         .collect())
 }
@@ -3659,6 +3680,10 @@ mod tests {
         // 0.25 m² does not count.
         assert!((read(0) - 1.0 / volume).abs() < 1.0e-12, "{}", read(0));
         assert!(read(1).abs() < 1.0e-12);
+        // The way out of the leaves' shade leads down, away from them.
+        let away = |i: usize, f: EnvField| output.env[i].1[f as usize];
+        assert!(away(0, EnvField::Fy) < -0.5, "{}", away(0, EnvField::Fy));
+        assert!(away(1, EnvField::Fy).abs() < 1.0e-12);
     }
 
     #[test]
