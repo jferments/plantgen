@@ -212,4 +212,13 @@ pub mod venation;
 /// drawn solid is one of four varieties of its look, which draw its
 /// counts and sizes across their ranges; a part mesh's variant `k` is its
 /// look's variety `k`.
-pub const GENERATOR_REVISION: u32 = 34;
+/// 35: a broadleaf crown grows its own outline inside a loose region
+/// (crown form step B, broadleaf revision 11): free space fills 1.6 times
+/// the crown's radius and 1.3 times its height; a shoot's nodes shorten
+/// with the wood between it and the base (`path_half`, fitted per species
+/// to its height); a tip's light gathers with saturation, so shaded shoots
+/// keep growing; the stem steers upright, limbs toward their held angle,
+/// and the wood bends under its load, the stem and a fork's stems held up;
+/// a tip with no free space leafs out. Maples keep their lobed envelope
+/// (sapindaceae revision 6).
+pub const GENERATOR_REVISION: u32 = 35;

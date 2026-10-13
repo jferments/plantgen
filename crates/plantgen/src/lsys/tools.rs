@@ -514,9 +514,9 @@ fn path_lengths(scene: &Scene) -> (Vec<f64>, Vec<f64>) {
     let mut path = vec![0.0; count];
     let mut limb = vec![0.0; count];
     for (index, node) in scene.nodes.iter().enumerate() {
-        let (before, before_limb) = node
-            .parent
-            .map_or((0.0, 0.0), |parent| (path[parent as usize], limb[parent as usize]));
+        let (before, before_limb) = node.parent.map_or((0.0, 0.0), |parent| {
+            (path[parent as usize], limb[parent as usize])
+        });
         let own = match node.kind {
             NodeKind::Segment(segment) => {
                 let segment = &scene.segments[segment as usize];
@@ -2880,10 +2880,7 @@ mod tests {
         try_tools(setup, neighbourhood).unwrap()
     }
 
-    fn try_tools(
-        setup: &Setup,
-        neighbourhood: &Neighbourhood,
-    ) -> Result<ToolOutput, GrowthError> {
+    fn try_tools(setup: &Setup, neighbourhood: &Neighbourhood) -> Result<ToolOutput, GrowthError> {
         let areas = organ_areas(&setup.program, &setup.globals).unwrap();
         let clock = Clock {
             step: 0,
@@ -3054,7 +3051,10 @@ mod tests {
         assert!(low < 0.95);
         assert!((read(&plain, 0, EnvField::Qsum) - low).abs() < 1e-12);
         let counted = read(&saturating, 0, EnvField::Qsum);
-        assert!((counted - low * 1.3 / (low + 0.3)).abs() < 1e-12, "{counted}");
+        assert!(
+            (counted - low * 1.3 / (low + 0.3)).abs() < 1e-12,
+            "{counted}"
+        );
         assert!(counted > low);
         assert!((read(&saturating, 1, EnvField::Qsum) - 1.0).abs() < 1e-12);
     }
@@ -3524,7 +3524,10 @@ mod tests {
         let (none, half, all) = (lean(0.0), lean(0.5), lean(1.0));
         assert!(none.abs() < 1.0e-9, "{none}");
         assert!(all > 1.0e-6);
-        assert!((half - 0.5 * all).abs() < 1.0e-9 * all.max(1.0), "{half} {all}");
+        assert!(
+            (half - 0.5 * all).abs() < 1.0e-9 * all.max(1.0),
+            "{half} {all}"
+        );
     }
 
     #[test]
