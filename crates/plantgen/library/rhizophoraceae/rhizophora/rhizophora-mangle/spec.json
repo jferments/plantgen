@@ -40,7 +40,8 @@
       "blooms": 1,
       "adult_age": 6,
       "bloom_size": 0.03,
-      "bloom_angle": 80
+      "bloom_angle": 80,
+      "path_half": 6.3
     }
   },
   "growth": {
@@ -113,6 +114,11 @@
     "stamens": 8
   },
   "evidence": {
+    "generator.params.path_half": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
