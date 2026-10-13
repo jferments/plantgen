@@ -1206,6 +1206,7 @@ fn axis_frames(rings: &[Ring]) -> Vec<(Vec3, Vec3, Vec3, f64)> {
     frames
 }
 
+#[allow(clippy::too_many_lines)]
 fn wood(
     graph: &PlantGraph,
     appearance: &Appearance,
