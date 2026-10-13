@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Pinus",
+  "traits": {
+    "foliage_ranks": "all_round",
+    "cone_maturation_years": {"min": 2, "max": 3, "typical": 2}
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 52), Pinus: needles in sheathed bundles of two to five on dwarf shoots, standing out all round the twig; seed cones ripen in their second season, sometimes their third."
+    }
+  }
+}

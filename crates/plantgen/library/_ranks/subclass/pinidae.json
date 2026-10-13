@@ -3,6 +3,58 @@
   "rank": "subclass",
   "name": "Pinidae",
   "parent": "clade/gymnosperms",
+  "rules": {
+    "generator.params.needle_years": {
+      "rule": "leaf_life_years",
+      "why": "A shoot keeps its foliage as long as its needles or scale leaves live."
+    },
+    "generator.params.cone_length": {
+      "rule": "cone_length_m",
+      "why": "A ripe seed cone's length."
+    },
+    "generator.params.cone_years": {
+      "rule": "max(1, round(cone_maturation_years + cone_retention_years))",
+      "why": "A cone is drawn from its first season on the tree until it falls: the seasons it takes to ripen, then the years it hangs on once ripe."
+    },
+    "generator.params.cone_pitch": {
+      "map": {
+        "cone_posture": {
+          "erect": -60,
+          "spreading": 60,
+          "deflexed": 90,
+          "pendent": 115
+        }
+      },
+      "why": "Degrees down from its shoot: a negative pitch stands a cone up."
+    },
+    "appearance.organs.*.shape.bundle": {
+      "rule": "needles_per_fascicle",
+      "template": "needles",
+      "why": "A pine's needles in their bundles."
+    },
+    "appearance.organs.*.shape.needle": {
+      "rule": "clamp(leaf_length_m / (1.2 * spray_base), 0.01, 0.4)",
+      "template": "needles",
+      "why": "A spray card draws its needles a share of its length, and a usual spray is about a fifth longer than the shortest shoot's (spray_base), measured over the conifers' cards at 60 years: so the usual needle is the stated one, up to the 0.4 a card holds."
+    },
+    "appearance.organs.*.shape.ranks": {
+      "map": {
+        "foliage_ranks": {
+          "all_round": 0,
+          "two_ranked": 2
+        }
+      },
+      "template": "needles",
+      "why": "Needles out all round the shoot, or in two flat ranks."
+    }
+  },
+  "evidence": {
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Spec rework E6d: the conifer program's foliage life, cones and needle bundles and ranks from each taxon's stated characters."
+    }
+  },
   "forms": {
     "excurrent_tree": {
       "generator": {

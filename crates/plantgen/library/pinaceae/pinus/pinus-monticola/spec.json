@@ -14,9 +14,7 @@
     "params": {
       "adult_age": 15,
       "cone_chance": 0.1,
-      "cone_length": 0.2,
       "cone_pitch": 120,
-      "cone_years": 1,
       "cone_area": 0.289,
       "height_max": 55,
       "height_rate": 0.02,
@@ -28,7 +26,6 @@
       "max_sag": 30,
       "upturn": 0.02,
       "branch_growth": 0.3,
-      "needle_years": 4,
       "spray_base": 0.2,
       "spray_length": 1.1,
       "shade_death": 0.12,
@@ -70,13 +67,10 @@
       "spray": {
         "shape": {
           "template": "needles",
-          "ranks": 0,
           "twigs": 2,
           "aspect": 0.55,
-          "needle": 0.18,
           "twig_angle": 35,
-          "width": 0.012,
-          "bundle": 5
+          "width": 0.012
         },
         "accent": [0.3, 0.25, 0.18]
       }
@@ -98,11 +92,33 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "needles_per_fascicle": 5,
+    "leaf_length_m": {"min": 0.05, "max": 0.1},
+    "leaf_life_years": {"min": 2, "max": 3},
+    "cone_length_m": {"min": 0.1, "max": 0.2, "high": 0.38},
+    "cone_retention_years": 0
+  },
   "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams (vol. 1, 1923, p. 53): needles five to a bundle, the sheath shed, 5 to 10 cm, kept two or three years; seed cones cylindric, long-stalked, 10 to 20 cm (12 to 25 in his key), falling soon after they shed their seed in the autumn of their second year."
+    },
+    "traits.cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's western white pine review: cones 12 to 38 cm; the usual range is Abrams's 10 to 20 cm, and FEIS's 38 cm its far extreme."
+    },
+    "traits.needles_per_fascicle": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's western white pine review agrees with Abrams: needles in fives, 5 to 10 cm."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a tall, straight pine with a narrow crown of slender, level branches and soft needles in fives. Not fitted to measurements. Cones (plant forms F3): 10 to 25 cm, long and slender, hanging from the top; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles."
+      "note": "Hand-set from general knowledge of the species: a tall, straight pine with a narrow crown of slender, level branches and soft needles in fives. Not fitted to measurements. Cones (plant forms F3): 10 to 25 cm, long and slender, hanging from the top; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles. Spec rework E6d: `cone_length`, `cone_years`, `needle_years` now set by the rules at Pinidae from the stated characters."
     },
     "allometry": {
       "evidence": "Authored",
@@ -112,7 +128,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: blue-green needles; grey bark broken into small square plates. Needle shoots (plant roadmap P4): slender needles in fives, 5 to 13 cm long and under 1 mm wide, so a needle 0.012 as wide as it is long (`width`), 5 to a fascicle (`bundle`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): smooth and grey when young, then cut into small square plates; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: blue-green needles; grey bark broken into small square plates. Needle shoots (plant roadmap P4): slender needles in fives, 5 to 13 cm long and under 1 mm wide, so a needle 0.012 as wide as it is long (`width`), 5 to a fascicle (`bundle`), from general knowledge of the species, not measured. Bark pattern (plant roadmap P4, `bark_pattern`): smooth and grey when young, then cut into small square plates; set from general knowledge of the species, not measured. Spec rework E6d: `needle`, `bundle`, `ranks` now set by the rules at Pinidae from the stated needles."
     },
     "taxon": {
       "evidence": "Authored",

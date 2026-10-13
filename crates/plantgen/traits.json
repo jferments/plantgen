@@ -783,6 +783,14 @@
       "when": {"leaf_form": ["needle"]},
       "why": "needles in a pine's bundle"
     },
+    "foliage_ranks": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["all_round", "two_ranked"],
+      "when": {"leaf_form": ["needle"]},
+      "why": "how a conifer's needles stand on a shoot: out all round it, or spread into two flat ranks, often by a twist at their base though they are set in a spiral (a yew's, a hemlock's)"
+    },
     "stipules": {
       "group": "leaves",
       "organ": "leaf",
@@ -1230,6 +1238,29 @@
       "unit": "m",
       "range": [0.002, 0.7],
       "why": "a ripe cone"
+    },
+    "cone_posture": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "enum",
+      "values": ["erect", "spreading", "deflexed", "pendent"],
+      "why": "how a seed cone sits on its shoot: standing up (a fir's), out to the side, bent down, or hanging (a spruce's)"
+    },
+    "cone_maturation_years": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "number",
+      "unit": "years",
+      "range": [1, 3],
+      "why": "the seasons a seed cone takes from pollination to ripe: one for a spruce, two for most pines"
+    },
+    "cone_retention_years": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "number",
+      "unit": "years",
+      "range": [0, 40],
+      "why": "how long a ripe cone stays on the tree once it has shed its seed: none where it falls apart on the branch (a fir's), many where it stays shut or hangs on (a shore pine's)"
     },
     "seed_length_m": {
       "group": "fruit_and_cones",

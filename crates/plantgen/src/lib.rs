@@ -207,4 +207,9 @@ pub mod venation;
 /// areoles' spacing, spines a fifth shorter than the longest a flora
 /// gives, a column's girth and a joint's length and width; spine sets
 /// name their role, and the chollas' areoles bear glochids.
-pub const GENERATOR_REVISION: u32 = 33;
+/// 35: a conifer's foliage and cones are grown from the characters its
+/// floras state (spec rework E6d), by rules at Pinidae: how long a shoot
+/// keeps its needles, a spray card's needles as long as the stated ones
+/// on a usual spray, a pine's needles to a bundle, needles in two ranks
+/// or all round, and a seed cone's length, posture and years on the tree.
+pub const GENERATOR_REVISION: u32 = 35;
