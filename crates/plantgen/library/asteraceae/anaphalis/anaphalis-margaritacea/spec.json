@@ -17,7 +17,6 @@
       "clump_radius": 0.15,
       "stem_lean": 8,
       "maturity": 1.2,
-      "stem_height": 0.6,
       "stem_radius": 0.002,
       "wiggle": 2,
       "nodes": 22,
@@ -90,7 +89,8 @@
   "traits": {
     "height_typical_m": {
       "min": 0.2,
-      "max": 0.8
+      "max": 0.8,
+      "typical": 0.6
     },
     "leaf_width_m": {
       "min": 0.002,
@@ -104,7 +104,7 @@
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",
-      "note": "Abrams and Ferris vol. 4 (1960), as Anaphalis margaritacea: stems 20 cm to 80 cm tall."
+      "note": "Abrams and Ferris vol. 4 (1960), as Anaphalis margaritacea: stems 20 cm to 80 cm tall. The typical value is the one the plant was drawn at before, inside the source's range."
     },
     "traits.leaf_width_m": {
       "evidence": "SourceInferred",
