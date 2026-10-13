@@ -156,7 +156,8 @@
       "max": 0.12
     },
     "wood_density_basic_kg_m3": 570,
-    "flowering_position": "terminal"
+    "flowering_position": "terminal",
+    "fruit_type": "berry"
   },
   "evidence": {
     "traits.height_max_m": {
@@ -234,6 +235,11 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS's Arbutus menziesii review (page read): the flowers are borne in showy terminal clusters."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Arbutus menziesii review (page read): the fruit is a pea-sized berry of mealy pulp and numerous seeds, against the capsule most of the heath family bear."
     }
   },
   "provenance": {
