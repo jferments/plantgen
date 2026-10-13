@@ -24,9 +24,9 @@
       "culm_radius": 0.001,
       "culm_lean": 8,
       "panicle_nod": 20,
-      "blade_area": 0.041,
-      "tip_area": 0.022,
-      "thatch_area": 0.041,
+      "blade_area": 0.028,
+      "tip_area": 0.015,
+      "thatch_area": 0.028,
       "panicle_area": 0.181
     }
   },
@@ -46,13 +46,13 @@
     "variation": 0.3,
     "organs": {
       "blade": {
-        "shape": { "template": "blade", "taper": 0, "aspect": 0.045 }
+        "shape": { "template": "blade", "taper": 0 }
       },
       "blade_tip": {
-        "shape": { "template": "blade", "taper": 1, "aspect": 0.045 }
+        "shape": { "template": "blade", "taper": 1 }
       },
       "thatch": {
-        "shape": { "template": "blade", "taper": 0, "aspect": 0.045 },
+        "shape": { "template": "blade", "taper": 0 },
         "colour": [0.36, 0.29, 0.16],
         "shade": [0.12, 0.09, 0.05]
       },
@@ -98,6 +98,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_width_m": {
+      "min": 0.0015,
+      "max": 0.004
+    },
     "culm_length_m": {
       "min": 0.6,
       "max": 1.2,
@@ -121,6 +125,11 @@
     "awn_form": {"straight": "often", "geniculate": "often"}
   },
   "evidence": {
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935), as Deschampsia caespitosa: blades 1.5 mm to 4 mm wide."
+    },
     "traits.culm_length_m": {
       "evidence": "SourceInferred",
       "source": "hitchcock-1935",

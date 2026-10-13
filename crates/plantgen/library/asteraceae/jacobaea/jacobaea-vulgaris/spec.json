@@ -17,7 +17,6 @@
       "clump_radius": 0.08,
       "stem_lean": 6,
       "maturity": 1.2,
-      "stem_height": 0.9,
       "stem_radius": 0.004,
       "wiggle": 2,
       "nodes": 18,
@@ -105,7 +104,8 @@
   "traits": {
     "height_typical_m": {
       "min": 0.2,
-      "max": 1.0
+      "max": 1.0,
+      "typical": 0.9
     },
     "leaf_length_m": {
       "min": 0.04,
@@ -116,7 +116,7 @@
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",
-      "note": "Abrams and Ferris vol. 4 (1960), as Senecio jacobaea: stems 20 cm to 1 m tall."
+      "note": "Abrams and Ferris vol. 4 (1960), as Senecio jacobaea: stems 20 cm to 1 m tall. The typical value is the one the plant was drawn at before, inside the source's range."
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
