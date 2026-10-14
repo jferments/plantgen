@@ -1227,7 +1227,8 @@ impl PlantSpec {
     /// A program's `sex` ([`SEX`]) is each plant's own draw from 0 to 1,
     /// dealt the same way: in a dioecious species the plants below a half
     /// are male, the rest female, so a package's seeds grow both, and the
-    /// typical plant (one seed, or none) is female.
+    /// typical plant (one seed, or none) is female. A plant of a species
+    /// that is not dioecious draws no sex and keeps its value.
     #[must_use]
     pub fn seeded_params(&self, program: &Program, params: &[f64], seed: u64) -> Vec<f64> {
         let share = |name: &str| match self.variants.seeds.iter().position(|own| *own == seed) {
@@ -1244,7 +1245,12 @@ impl PlantSpec {
                 }
             }
         }
-        if program.params.iter().any(|param| param.name == SEX) {
+        let dioecious = program
+            .params
+            .iter()
+            .position(|param| param.name == "dioecious")
+            .is_some_and(|at| params[at] >= 0.5);
+        if dioecious && program.params.iter().any(|param| param.name == SEX) {
             drawn.insert(SEX.to_string(), share(SEX));
             any = true;
         }
