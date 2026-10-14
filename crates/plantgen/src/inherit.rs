@@ -567,7 +567,7 @@ fn check_rule(path: &str, rule: &Value) -> Result<(), String> {
         Some(_) => return Err("`between` is `true`, or left out".into()),
     }
     if rule.contains_key("else") && !rule.contains_key("map") {
-        return Err("only a `map` has an `else`, its value where its trait is not stated".into());
+        return Err("only a `map` has an `else`, its value where its trait is not stated or names no one most usual state".into());
     }
     if shape_field(path) == Some("template") {
         if path.starts_with(EVERY) {
@@ -615,8 +615,8 @@ fn check_rule(path: &str, rule: &Value) -> Result<(), String> {
 
 /// Checks a `map` rule's shape: one trait and its table, whose values are
 /// formulas (`{"rule": formula}`), maps on another trait (`{"map": ...}`,
-/// with their own `else`) or plain values, each plain value (and `else`)
-/// passing `plain`.
+/// with their own `else`) or plain values, as its `else` is, each plain
+/// value passing `plain`.
 fn check_map(
     rule: &Map<String, Value>,
     plain: &dyn Fn(&Value) -> Result<(), String>,
@@ -628,10 +628,7 @@ fn check_map(
         Some((_, Value::Object(table))) if map.len() == 1 => table,
         _ => return Err("a `map` names one trait, then its values' spec values".into()),
     };
-    if let Some(value) = rule.get("else") {
-        plain(value)?;
-    }
-    for value in table.values() {
+    for value in table.values().chain(rule.get("else")) {
         if let Some(formula) = map_formula(value) {
             Formula::parse(formula)?;
         } else if let Some(inner) = map_rule(value) {
@@ -1687,12 +1684,18 @@ pub fn inherit(
 /// growth form, stated high in the tree, fills what a lineage's own program
 /// does not give and yields to what it does. A rule may still set the
 /// parameter, as over any value a farther file set; and a rule may set a
-/// default (`generator.defaults.<name>`), which goes in as it is set.
+/// default (`generator.defaults.<name>`), which goes in as it is set, in
+/// place of a default `filled` earlier from a file no nearer than the
+/// rule's: a form's rule sizing a part from the species' facts replaces
+/// the size stated farther up for species that state none. A default
+/// filled in stands farthest of all, so a rule setting the parameter
+/// itself replaces it from any file.
 fn fill_defaults(
     spec: &mut Map<String, Value>,
     programs: &Programs,
     origins: &mut BTreeMap<String, Origin>,
     notes: &mut BTreeMap<String, (Origin, Value)>,
+    filled: &mut BTreeMap<String, Origin>,
 ) {
     let Some(Value::Object(generator)) = spec.get_mut("generator") else {
         return;
@@ -1708,19 +1711,28 @@ fn fill_defaults(
         let from = format!("generator.defaults.{key}");
         let to = format!("generator.params.{key}");
         let valueless = params.is_some_and(|params| params.get(&key) == Some(&None));
+        let origin = origins.get(&from).cloned();
+        let depth = origin.as_ref().map_or(0, |(_, depth)| *depth);
+        // Unset, or still the default filled from a file no nearer.
         let unset = generator
             .get("params")
             .and_then(|params| params.get(&key))
-            .is_none();
+            .is_none()
+            || filled.get(&key).is_some_and(|(label, earlier)| {
+                *earlier <= depth && origins.get(&to) == Some(&(label.clone(), 0))
+            });
         if valueless && unset {
             if let Value::Object(params) = generator
                 .entry("params")
                 .or_insert_with(|| Value::Object(Map::new()))
             {
-                params.insert(key, value);
+                params.insert(key.clone(), value);
             }
-            if let Some(origin) = origins.get(&from).cloned() {
-                origins.insert(to.clone(), origin);
+            // A default stands farthest of all, so any rule may set the
+            // parameter over it.
+            if let Some((label, depth)) = origin {
+                origins.insert(to.clone(), (label.clone(), 0));
+                filled.insert(key, (label, depth));
             }
             let note = notes
                 .iter()
@@ -1811,7 +1823,8 @@ impl Ruled<'_> {
         origins: &mut BTreeMap<String, Origin>,
         notes: &mut BTreeMap<String, (Origin, Value)>,
     ) -> BTreeMap<String, (String, Option<String>)> {
-        fill_defaults(spec, programs, origins, notes);
+        let mut filled = BTreeMap::new();
+        fill_defaults(spec, programs, origins, notes, &mut filled);
         let program = spec
             .get("generator")
             .and_then(|generator| generator.get("program"))
@@ -1848,7 +1861,7 @@ impl Ruled<'_> {
                 }
                 // A rule's default goes in at once, for the rules reading it.
                 if set > 0 && within(path, "generator.defaults") {
-                    fill_defaults(spec, programs, origins, notes);
+                    fill_defaults(spec, programs, origins, notes, &mut filled);
                 }
                 match looks {
                     Err(error) => Some(error),
@@ -1942,15 +1955,30 @@ impl Ruled<'_> {
         let names = if let Some((key, table)) = map_of(self.rule) {
             match read(key) {
                 Ok(stated) => {
-                    picks = if self.rule.contains_key("between") {
-                        readings(key, &stated)?.0
+                    let read = if self.rule.contains_key("between") {
+                        readings(key, &stated).map(|(picks, _)| picks)
                     } else {
-                        vec![reading(key, &stated)?]
+                        reading(key, &stated).map(|pick| vec![pick])
                     };
-                    picked_reads(key, table, &picks)?
+                    match read {
+                        Ok(read) => {
+                            picks = read;
+                            picked_reads(key, table, &picks)?
+                        }
+                        // Its states tie for the most usual, or none says
+                        // how often: a map with an `else` gives that.
+                        Err(_) if self.rule.contains_key("else") => Vec::new(),
+                        Err(why) => return Err(why),
+                    }
                 }
-                // Its trait unstated, a map with an `else` gives that.
-                Err(_) if self.rule.contains_key("else") => Vec::new(),
+                // Its trait unstated, a map with an `else` gives that, or
+                // what the map its `else` holds reads.
+                Err(_) if self.rule.contains_key("else") => self
+                    .rule
+                    .get("else")
+                    .and_then(map_rule)
+                    .map(reads)
+                    .unwrap_or_default(),
                 Err(why) => return Err(why),
             }
         } else {
@@ -2321,7 +2349,13 @@ fn reads(rule: &Map<String, Value>) -> Vec<String> {
         .values()
         .filter_map(map_formula)
         .flat_map(names)
-        .chain(table.values().filter_map(map_rule).flat_map(reads))
+        .chain(
+            table
+                .values()
+                .chain(rule.get("else"))
+                .filter_map(map_rule)
+                .flat_map(reads),
+        )
         .collect();
     read.extend(more.into_iter().filter(|name| name != key));
     read
@@ -2367,8 +2401,8 @@ fn map_formula(value: &Value) -> Option<&str> {
     }
 }
 
-/// A map's value that is a map on another trait, `{"map": ...}` with its
-/// own `else`, worked out only when the outer map picks it.
+/// A map's value (or `else`) that is a map on another trait, `{"map":
+/// ...}` with its own `else`, worked out only when the outer map picks it.
 fn map_rule(value: &Value) -> Option<&Map<String, Value>> {
     match value {
         Value::Object(entry) if entry.contains_key("map") => Some(entry),
@@ -2509,10 +2543,13 @@ fn evaluate(rule: &Map<String, Value>, inputs: &BTreeMap<String, Value>) -> Resu
     }
     if let Some((key, table)) = map_of(rule) {
         let Some(value) = inputs.get(key) else {
-            return rule
-                .get("else")
-                .cloned()
-                .ok_or_else(|| format!("no `{key}` to read"));
+            return match rule.get("else") {
+                Some(otherwise) => match map_rule(otherwise) {
+                    Some(inner) => evaluate(inner, inputs),
+                    None => Ok(otherwise.clone()),
+                },
+                None => Err(format!("no `{key}` to read")),
+            };
         };
         let name = state(value);
         let picked = table
@@ -4301,6 +4338,109 @@ mod tests {
         assert_eq!(tree.spec.get("generator"), None);
     }
 
+    /// A form's rule sizing a part from the species' facts replaces the
+    /// size a farther file states for species that state none, and a rule
+    /// setting the parameter itself replaces any default, from any file.
+    #[test]
+    fn rules_replace_the_defaults_they_size() {
+        let note = |text: &str| json!({"evidence": "Authored", "note": text});
+        let programs = program_params([("open", "lsystem open 1;\nparam a;\nparam b;")]);
+        let files = ranks(&[
+            (
+                "_ranks/clade/far.json",
+                json!({"schema": 1, "rank": "clade", "name": "Far",
+                    "rules": {"generator.params.b": {"rule": "juvenile * 2"}},
+                    "forms": {"forb": {"generator": {"defaults": {"a": 1.0}},
+                        "evidence": {"generator": note("Far sizes.")}}},
+                    "evidence": {"rules": note("Ages.")}}),
+            ),
+            (
+                "_ranks/clade/near.json",
+                json!({"schema": 1, "rank": "clade", "name": "Near", "parent": "clade/far",
+                    "forms": {"forb": {
+                        "generator": {"program": "open", "defaults": {"b": 7.0}},
+                        "rules": {"generator.defaults.a": {"rule": "leaf * 3"}},
+                        "evidence": {"generator": note("Forbs."), "rules": note("Sizes.")}}}}),
+            ),
+            (
+                "testaceae/family.json",
+                json!({"schema": 1, "rank": "family", "name": "Testaceae",
+                    "parent": "clade/near"}),
+            ),
+        ]);
+        let grow = |own: Value| {
+            let chain = above(&files, "testaceae", "genus").unwrap();
+            inherit("testaceae/genus/one/spec.json", &own, &chain, &programs)
+                .unwrap()
+                .spec["generator"]["params"]
+                .clone()
+        };
+        assert_eq!(
+            grow(json!({"id": "one", "growth_form": "forb"})),
+            json!({"a": 1.0, "b": 7.0})
+        );
+        assert_eq!(
+            grow(json!({"id": "one", "growth_form": "forb",
+                "traits": {"leaf": 2, "juvenile": 4}})),
+            json!({"a": 6, "b": 8})
+        );
+    }
+
+    /// A map with an `else` gives it where its trait is unstated and where
+    /// the trait's states tie for the most usual, as a family that is often
+    /// rosulate and often not; a state stated as usual picks its value.
+    #[test]
+    fn a_map_gives_its_else_where_states_tie() {
+        let note = |text: &str| json!({"evidence": "Authored", "note": text});
+        let programs = program_params([("open", "lsystem open 1;\nparam basal;")]);
+        let family = |name: &str, rosette: Value| {
+            let mut file = json!({"schema": 1, "rank": "family", "name": name,
+                "parent": "clade/top"});
+            if !rosette.is_null() {
+                file["traits"] = json!({"rosette": rosette});
+            }
+            (format!("{}/family.json", name.to_lowercase()), file)
+        };
+        let mut files = vec![(
+            "_ranks/clade/top.json".to_string(),
+            json!({"schema": 1, "rank": "clade", "name": "Top",
+                "forms": {"forb": {
+                    "generator": {"program": "open"},
+                    "rules": {"generator.defaults.basal": {
+                        "map": {"rosette": {"basal": 5, "none": 0}}, "else": 1}},
+                    "evidence": {"generator": note("Forbs."), "rules": note("Rosettes.")}}}}),
+        )];
+        files.push(family(
+            "Tiedaceae",
+            json!({"basal": "often", "none": "often"}),
+        ));
+        files.push(family(
+            "Rosulaceae",
+            json!({"basal": "usually", "none": "rarely"}),
+        ));
+        files.push(family("Plainaceae", Value::Null));
+        let files = ranks(
+            &files
+                .iter()
+                .map(|(path, value)| (path.as_str(), value.clone()))
+                .collect::<Vec<_>>(),
+        );
+        let basal = |family: &str| {
+            let chain = above(&files, family, "genus").unwrap();
+            let grown = inherit(
+                &format!("{family}/genus/one/spec.json"),
+                &json!({"id": "one", "growth_form": "forb"}),
+                &chain,
+                &programs,
+            )
+            .unwrap();
+            grown.spec["generator"]["params"]["basal"].clone()
+        };
+        assert_eq!(basal("tiedaceae"), json!(1));
+        assert_eq!(basal("rosulaceae"), json!(5));
+        assert_eq!(basal("plainaceae"), json!(1));
+    }
+
     /// A rule may choose an organ's card from characters, through maps
     /// on further characters with their own `else`: it fills a look that
     /// names no card, replaces a farther file's card and the fields that
@@ -4365,6 +4505,55 @@ mod tests {
         );
         let bare = grow(json!({"id": "one"}));
         assert_eq!(shape(&bare)["template"], "simple");
+    }
+
+    /// A map's `else` may map another trait: a regular flower draws its
+    /// petals alike in a family whose zygomorphic flowers are two-lipped,
+    /// and a flower of unstated symmetry draws as its zygomorphy says.
+    #[test]
+    fn an_else_may_map_another_trait() {
+        let note = |text: &str| json!({"evidence": "Authored", "note": text});
+        let lips = json!({"map": {"zygomorphy": {"bilabiate": 2, "other": 1}}});
+        let files = ranks(&[
+            (
+                "_ranks/clade/top.json",
+                json!({"schema": 1, "rank": "clade", "name": "Top",
+                    "generator": {"program": "broadleaf"},
+                    "rules": {"generator.params.a": {
+                        "map": {"flower_symmetry": {"actinomorphic": 0, "zygomorphic": lips}},
+                        "else": lips}},
+                    "evidence": {"rules": note("Lips.")}}),
+            ),
+            (
+                "testaceae/family.json",
+                json!({"schema": 1, "rank": "family", "name": "Testaceae",
+                    "parent": "clade/top", "traits": {"zygomorphy": "bilabiate"},
+                    "evidence": {"traits": note("Two lips.")}}),
+            ),
+        ]);
+        let a = |traits: Value| {
+            let chain = above(&files, "testaceae", "genus").unwrap();
+            let own = json!({"id": "one", "traits": traits});
+            inherit("testaceae/genus/one/spec.json", &own, &chain, &programs())
+                .unwrap()
+                .spec["generator"]["params"]["a"]
+                .clone()
+        };
+        assert_eq!(a(json!({"flower_symmetry": "actinomorphic"})), json!(0));
+        assert_eq!(a(json!({"flower_symmetry": "zygomorphic"})), json!(2));
+        assert_eq!(a(json!({})), json!(2));
+        assert_eq!(
+            a(json!({"flower_symmetry": "zygomorphic", "zygomorphy": "other"})),
+            json!(1)
+        );
+        assert!(
+            super::check_rule(
+                "generator.params.a",
+                &json!({"map": {"x": {"y": 1}}, "else": {"map": {"z": {"w": 1}}, "why": "no"}})
+            )
+            .unwrap_err()
+            .contains("not a map's")
+        );
     }
 
     /// A rule choosing a card names its organ and maps to cards.

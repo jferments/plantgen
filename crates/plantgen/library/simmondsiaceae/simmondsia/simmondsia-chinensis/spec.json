@@ -32,8 +32,8 @@
       "internode": 0.05,
       "branch_angle": 40,
       "bud_years": 8,
-      "leaf_size": 0.06,
-      "spur_leaf": 0.055,
+      "leaf_size": 0.036,
+      "spur_leaf": 0.033,
       "spur_pairs": 2,
       "leaf_angle": 35,
       "leaf_years": 3,
@@ -101,6 +101,16 @@
     "self_pruning": true
   },
   "evidence": {
+    "generator.params.spur_leaf": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A short shoot's leaf card, a little smaller than a long shoot's (leaf_size), within Abrams vol. 3 (1951): leaves 2 to 4 cm long."
+    },
+    "generator.params.leaf_size": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaf card length, petiole included, sized so every leaf drawn stays within Abrams vol. 3 (1951): leaves 2 to 4 cm long (0.06 drew them 5.4 to 5.9 cm)."
+    },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",

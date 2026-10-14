@@ -2,5 +2,19 @@
   "schema": 1,
   "rank": "family",
   "name": "Gleicheniaceae",
-  "parent": "order/gleicheniales"
+  "parent": "order/gleicheniales",
+  "traits": {
+    "rhizome_habit": "long_creeping",
+    "leaf_division": "compound",
+    "sporangia": "sori",
+    "sorus_shape": "round",
+    "indusium": "none"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Gleicheniaceae: terrestrial ferns of open ground, often forming thickets, on creeping, forking rhizomes; the rachis pinnate to bipinnate or forking again and again, growing on without end, to 7 m; sori round, of a few sporangia, on the underside, without indusium."
+    }
+  }
 }

@@ -48,9 +48,15 @@
 # (`spray(size, roll, pitch, level)`), a third of the modules they took,
 # so the fuller crown fits the module limit.
 #
+# Revision 6 (dioecy): in a dioecious species (dioecious 1, from the
+# sexual system its taxa state) a plant whose own draw `sex` is below a
+# half is male and bears no seed cones (its pollen cones are too small to
+# draw); the rest are female and bear them as before. A plant that bears
+# both sexes (dioecious 0) grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem pinidae 5;
+lsystem pinidae 6;
 
 # Height of the leader over time: a Chapman-Richards curve,
 # height = height_max * (1 - exp(-height_rate * age))^height_shape.
@@ -102,6 +108,8 @@ param cone_length = 0.08;
 param cone_pitch = 100;        # degrees down from the shoot; negative stands it up
 param cone_years = 2;          # years a cone stays on the tree
 param cone_area = 0.55;        # area a cone 1 m long draws, m² (its template's)
+param dioecious;               # 1: each plant is male or female; 0: every plant bears both
+param sex;                     # this plant's own draw, 0 to 1: below a half, a dioecious plant is male
 
 module A queries light;                 # the leader's apex
 module N;                               # nods a young leader shoot over
@@ -193,8 +201,9 @@ decompose R(o, w) -> ;
 rule Y(n) : age >= n -> %;
 
 # A well-lit apex of a tree old enough bears a cone, which falls after
-# cone_years.
-decompose Z(l) : t >= adult_age && l >= cone_light && rand() < cone_chance ->
+# cone_years; on a dioecious species, only a female tree does.
+decompose Z(l) : t >= adult_age && l >= cone_light && rand() < cone_chance
+                 && (dioecious < 0.5 || sex >= 0.5) ->
     [ $ /(uniform(-20, 20)) &(cone_pitch + uniform(-15, 15)) cone(cone_length * uniform(0.85, 1.15)) ];
 decompose Z(l) -> ;
 rule cone(s) : age >= cone_years -> ;

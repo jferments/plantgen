@@ -38,8 +38,8 @@
       "pipe_rings": 3e-06,
       "space_reach": 1.275,
       "space_kill": 0.315,
-      "leaf_size": 0.12,
-      "spur_leaf": 0.11,
+      "leaf_size": 0.06,
+      "spur_leaf": 0.055,
       "spur_pairs": 2,
       "leaf_angle": 40,
       "blooms": 1,
@@ -133,6 +133,16 @@
   ],
   "tier": "procedural_proxy",
   "evidence": {
+    "generator.params.spur_leaf": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A short shoot's leaf card, a little smaller than a long shoot's (leaf_size), within Jepson (1925): leaves 3.8 to 6.3 cm long."
+    },
+    "generator.params.leaf_size": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaf card length, petiole included, sized so every leaf drawn stays within Jepson (1925, as O. cerasiformis): leaves 1.5 to 2.5 in (3.8 to 6.3 cm) long (0.12 drew them 10 to 11 cm)."
+    },
     "generator.params.path_half": {
       "evidence": "Authored",
       "source": "plantgen-authors",

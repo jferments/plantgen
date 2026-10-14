@@ -2,5 +2,15 @@
   "schema": 1,
   "rank": "family",
   "name": "Selaginellaceae",
-  "parent": "order/selaginellales"
+  "parent": "order/selaginellales",
+  "traits": {
+    "leaf_form": "scale"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Selaginellaceae: erect, sprawling, tufted, creeping and rooting or climbing moss-like plants whose stems fork in pairs, sometimes into frond-like sprays; leaves scale-like, either all alike in spirals or of two sizes in four ranks; sporangia in terminal cones."
+    }
+  }
 }

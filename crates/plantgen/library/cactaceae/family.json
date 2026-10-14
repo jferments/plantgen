@@ -14,7 +14,8 @@
     "perianth": "spiral",
     "hypanthium": true,
     "ovary_position": "inferior",
-    "spines": "areoles"
+    "spines": "areoles",
+    "life_span": "perennial"
   },
   "rules": {
     "appearance.bodies.stem.ribs.count": {
@@ -75,6 +76,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Spec rework E6c: the cacti's ribs, areoles and spines grown from the characters their floras state, in each body look that has ribs or a spine set of that role."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cactaceae: the herbs' life form (character 21), coded perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   }
 }

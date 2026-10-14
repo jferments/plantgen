@@ -2,5 +2,25 @@
   "schema": 1,
   "rank": "family",
   "name": "Dennstaedtiaceae",
-  "parent": "order/polypodiales"
+  "parent": "order/polypodiales",
+  "traits": {
+    "rhizome_habit": "long_creeping",
+    "leaf_division": "compound",
+    "sporangia": "sori",
+    "sorus_position": {
+      "marginal": "usually",
+      "submarginal": "often"
+    },
+    "indusium": {
+      "margin": "often",
+      "flap": "often"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Dennstaedtiaceae: terrestrial ferns, mostly on creeping rhizomes with jointed hairs and no scales; leaves small to large and much divided, the stalks often with buds; sori at or just inside the margin, the indusium a line, a cup, or the margin turned back over the sorus."
+    }
+  }
 }

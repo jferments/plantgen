@@ -2,5 +2,20 @@
   "schema": 1,
   "rank": "family",
   "name": "Lycopodiaceae",
-  "parent": "order/lycopodiales"
+  "parent": "order/lycopodiales",
+  "traits": {
+    "leaf_habit": "evergreen",
+    "leaf_form": {
+      "scale": "often",
+      "needle": "often"
+    },
+    "leaf_venation": "single"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Lycopodiaceae: evergreen herbs, sometimes epiphytic, with stems forking in pairs; leaves scale- or needle-like, each with a single vascular strand; sporangia in terminal cones or in the axils of the leaves (Huperzia), the spores all alike."
+    }
+  }
 }
