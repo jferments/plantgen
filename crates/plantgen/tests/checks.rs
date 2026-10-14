@@ -42,16 +42,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its rosette leaves are drawn by hand on a sprig card 0.4 as broad as long, so they read elliptic against the linear leaves Reiche gives",
     ),
     (
-        "berberis-aquifolium",
-        "flower_merosity",
-        "its six petals stand in two whorls of three, and a corolla draws one whorl, so its spec draws six there",
-    ),
-    (
-        "berberis-nervosa",
-        "flower_merosity",
-        "its six petals stand in two whorls of three, and a corolla draws one whorl, so its spec draws six there",
-    ),
-    (
         "cirsium-vulgare",
         "leaf_shape",
         "its pinnatifid blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate as well as oblanceolate, against the lanceolate to oblong blades Abrams and Ferris give",
@@ -70,11 +60,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "deschampsia-cespitosa",
         "awn_form",
         "it states straight or geniculate awns (FNA), which the Poales' rule draws between them, bent 30°, nearest a contorted awn's 40°",
-    ),
-    (
-        "dicentra-formosa",
-        "flower_merosity",
-        "its four petals stand in two pairs, outer and inner, and a corolla draws one whorl, so its spec draws four there",
     ),
     (
         "digitalis-purpurea",
