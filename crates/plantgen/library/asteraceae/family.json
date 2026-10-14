@@ -10,6 +10,8 @@
       "opposite": "often",
       "whorled": "rarely"
     },
+    "leaf_division": {"simple": "usually", "compound": "rarely"},
+    "division_pattern": {"pinnate": "usually", "palmate": "rarely"},
     "fruit_type": {
       "cypsela": "usually"
     }
@@ -50,6 +52,16 @@
       "evidence": "SourceInferred",
       "source": "vicflora",
       "note": "VicFlora's family description: leaves one or two to a node, rarely more; it names neither as the usual state."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris (vol. 4, 1960, p. 98), Compositae: leaves entire or more or less dissected, that is one blade however deeply cut. Watson and Dallwitz (1992) give simple or compound; the compound leaves of a few genera (Bidens, Dahlia and some Coreopsis) make compound the rare state (inferred: neither source gives a share)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz (1992), Compositae: dissected blades pinnatifid, palmatifid, runcinate or spinose, with no frequencies. Pinnatifid and runcinate cuts run along a midrib, so pinnate is the usual state; palmatifid blades are the few (inferred)."
     },
     "traits.fruit_type": {
       "evidence": "SourceInferred",
