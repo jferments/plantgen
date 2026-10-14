@@ -404,6 +404,8 @@ pub fn run(
             };
             let taken: Option<&(dyn Fn(Vec3) -> bool + Sync)> =
                 (field.is_some() || surroundings.crowded()).then_some(&taken);
+            let buried = |point: Vec3| field.is_some_and(|field| field.solid(point));
+            let buried: Option<&(dyn Fn(Vec3) -> bool + Sync)> = field.is_some().then_some(&buried);
             colonize(
                 scene,
                 &space_queries,
@@ -413,6 +415,7 @@ pub fn run(
                 limits,
                 seed,
                 taken,
+                buried,
             )?
         }
         None => vec![(0, Vec3::ZERO); scene.queries.len()],
@@ -1644,6 +1647,9 @@ fn lobe_phases(seed: u64) -> [f64; 2] {
 /// within `kill` of the plant is consumed for good; otherwise it attracts the
 /// nearest apex that declared `queries space` within `influence` and inside
 /// its perception cone. Each apex gets the count and the mean direction.
+/// A point where `taken` holds (a solid or a neighbour's crown) attracts
+/// nothing, and an apex where `buried` holds (inside the substrate's
+/// solid) perceives nothing.
 #[allow(clippy::too_many_arguments, clippy::too_many_lines)]
 fn colonize(
     scene: &Scene,
@@ -1654,6 +1660,7 @@ fn colonize(
     limits: &Limits,
     seed: u64,
     taken: Option<&(dyn Fn(Vec3) -> bool + Sync)>,
+    buried: Option<&(dyn Fn(Vec3) -> bool + Sync)>,
 ) -> Result<Vec<(u32, Vec3)>, GrowthError> {
     let (first, later) = values.split_at(values.len().min(8));
     let [shape, base, height, radius, density, influence, kill, angle] = first[..] else {
@@ -1740,6 +1747,10 @@ fn colonize(
         .iter()
         .enumerate()
         .filter(|(index, _)| space_queries[*index])
+        // A bud inside the substrate's solid perceives nothing: it does
+        // not grow there, as a meristem pressed into rock or a wall does
+        // not.
+        .filter(|(_, query)| !buried.is_some_and(|buried| buried(query.position)))
         .map(|(index, query)| {
             let apex = Apex {
                 index: u32::try_from(index).unwrap_or(u32::MAX),
