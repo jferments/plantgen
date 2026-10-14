@@ -31,8 +31,8 @@ jobs:
     runs-on: [self-hosted, linux, x64, plantgen-ci]
     timeout-minutes: 60
     env:
-      # Per runner: two runners share the 20 GiB one runner had.
-      CARGO_TARGET_BUDGET_GIB: "10"
+      # Per runner, so up to 40 GiB for both.
+      CARGO_TARGET_BUDGET_GIB: "20"
       CARGO_INCREMENTAL: "0"
       CARGO_TERM_COLOR: never
     steps:
