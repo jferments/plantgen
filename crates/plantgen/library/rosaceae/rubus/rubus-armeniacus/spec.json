@@ -12,7 +12,6 @@
   "growth_form": "shrub",
   "generator": {
     "params": {
-      "crown_height": 2.5,
       "crown_radius": 2.0,
       "crown_base": 0,
       "crown_rate": 0.22,
@@ -44,7 +43,6 @@
       "spur_pairs": 1,
       "leaf_angle": 55,
       "blooms": 2,
-      "adult_age": 2,
       "bloom_size": 0.08,
       "bloom_angle": 80,
       "leaf_area": 0.412,
@@ -115,6 +113,11 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 0.8,
+      "max": 3.4
+    },
+    "juvenile_period_years": 3,
     "leaf_division": "compound",
     "division_pattern": "palmate",
     "division_order": 1,
@@ -135,6 +138,16 @@
       "evidence": "SourceInferred",
       "source": "usa-npn",
       "note": "USA National Phenology Network observations (Nature's Notebook) at lowland sites west of the Cascades in Washington and Oregon (below 300 m, west of 121.8° W; 2009 to 2026, fetched 2026-10-14): 17 plant-years at 10 sites seen with ripe fruit, by the months they were seen in (Jun 1, Jul 10, Aug 12, Sep 13, Oct 9, Nov 3); stated as the months with at least a third as many as the busiest, July to October. FEIS (Rubus spp.): ripe in August and September in the Pacific Northwest (the Washington row is the same)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS review (Fryer 2021), Botanical Description: Himalayan blackberry stands in western Oregon were 0.8 m to 3.4 m tall, mean 1.5 m; its arching canes are generally 1 m to 7 m long. No old flora covers the species: Abrams, Jepson 1925, Sargent and Silvics lack it."
+    },
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Rubus armeniacus, R. bifrons review, read): Himalayan blackberry seedlings take 3 years to produce flowering canes; the Woody Plant Seed Manual's Rubus chapter gives no age."
     },
     "generator.params.path_half": {
       "evidence": "Authored",

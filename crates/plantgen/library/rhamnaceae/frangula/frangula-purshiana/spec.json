@@ -11,7 +11,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_height": 9,
       "crown_radius": 3.5,
       "crown_base": 1.5,
       "crown_rate": 0.06,
@@ -134,6 +133,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 3,
+      "max": 10
+    },
     "leaf_length_m": {
       "min": 0.08,
       "max": 0.2
@@ -147,6 +150,11 @@
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",
       "note": "Seed Manual, Frangula chapter (printed p. 531): from late May to mid-June over three years in northern Idaho (FEIS tabulates the same study). Too few iNaturalist records in the Puget Sound lowlands are annotated as flowering to count (9)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Rhamnus Purshiana: a small tree or tree-like shrub 3 m to 10 m high."
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",

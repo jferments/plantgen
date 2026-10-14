@@ -12,7 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_height": 18,
       "crown_radius": 4.5,
       "crown_base": 4,
       "crown_rate": 0.05,
@@ -129,6 +128,11 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 21,
+      "max": 30,
+      "typical": 21
+    },
     "leaf_length_m": {
       "min": 0.06,
       "max": 0.1
@@ -151,6 +155,11 @@
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",
       "note": "Seed Manual, Betula chapter (printed p. 305): ripe in August and September in the middle of the range, and shed from August into the spring; FEIS (Betula papyrifera) says nearly all of it is shed from September to November. So ripe catkins are on the tree from August to November."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "silvics-1990-hardwoods",
+      "note": "Silvics of North America vol. 2 (1990), Betula papyrifera (Safford, Bjorkbom and Zasada), Growth and Yield: trees in mature stands average 21 m (70 ft) tall, and on the best sites an occasional old tree exceeds 30 m (100 ft). The typical value is that stand average. Sargent (1922, p. 212) says usually 60 to 70 ft."
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",

@@ -246,9 +246,10 @@ fn written_packages_read_back_losslessly_and_detect_corruption() {
     // Graphs and meshes decode and encode to the same bytes, and the graph
     // matches the grown plant to 32-bit precision.
     let variant = &manifest.variants[0];
+    let (program, params) = spec.program().unwrap();
     let growth = grow(
-        &spec.program().unwrap().0,
-        &spec.program().unwrap().1,
+        &program,
+        &spec.seeded_params(&program, &params, variant.seed),
         &GrowthSettings {
             seed: variant.seed,
             dt: spec.growth.step,

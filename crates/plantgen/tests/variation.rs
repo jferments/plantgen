@@ -163,8 +163,8 @@ fn each_plant_draws_its_parameters_from_their_spreads() {
             spec.generator.spreads
         );
     }
-    // Yarrow states no range a parameter is set from.
-    let spec = PlantSpec::builtin("achillea-millefolium").unwrap();
+    // Redwood sorrel states no range a parameter is set from.
+    let spec = PlantSpec::builtin("oxalis-oregana").unwrap();
     let (program, params) = spec.program().unwrap();
     assert_eq!(spec.seeded_params(&program, &params, 3), params);
 }

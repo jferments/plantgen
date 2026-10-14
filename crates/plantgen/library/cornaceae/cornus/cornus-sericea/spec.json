@@ -12,7 +12,6 @@
   "growth_form": "shrub",
   "generator": {
     "params": {
-      "crown_height": 3.0,
       "crown_radius": 1.8,
       "crown_base": 0,
       "crown_rate": 0.22,
@@ -43,7 +42,6 @@
       "spur_pairs": 1,
       "leaf_angle": 50,
       "blooms": 1,
-      "adult_age": 3,
       "bloom_size": 0.05,
       "bloom_angle": 10,
       "leaf_area": 0.276,
@@ -128,6 +126,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "juvenile_period_years": {
+      "min": 3,
+      "max": 4
+    },
     "height_max_m": {
       "min": 2,
       "max": 5
@@ -149,6 +151,11 @@
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",
       "note": "Seed Manual, Cornus chapter (printed p. 430): ripe from July to November for the western subspecies (ssp. occidentalis, southern British Columbia to northern Idaho and south to California)."
+    },
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Cornus sericea review, read): redosier dogwood generally produces its first seeds at 3 to 4 years of age; the Woody Plant Seed Manual's Cornus table 3 gives no seed-bearing age for C. sericea."
     },
     "traits.height_max_m": {
       "evidence": "SourceInferred",

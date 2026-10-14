@@ -12,7 +12,6 @@
   "growth_form": "shrub",
   "generator": {
     "params": {
-      "crown_height": 3.0,
       "crown_radius": 1.5,
       "crown_base": 0,
       "crown_rate": 0.22,
@@ -144,6 +143,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 1,
+      "max": 5
+    },
     "leaf_length_m": {
       "min": 0.0254,
       "max": 0.0762
@@ -161,6 +164,11 @@
       "evidence": "SourceInferred",
       "source": "usa-npn",
       "note": "USA National Phenology Network observations (Nature's Notebook) at lowland sites west of the Cascades in Washington and Oregon (below 300 m, west of 121.8° W; 2009 to 2026, fetched 2026-10-14): 37 plant-years at 8 sites seen with ripe fruit, by the months they were seen in (Jan 5, Feb 1, May 1, Jun 11, Jul 12, Aug 18, Sep 18, Oct 19, Nov 13, Dec 7); stated as the months with at least a third as many as the busiest, June to December. The Seed Manual (Physocarpus chapter, printed p. 790) gives no month for its dry follicles, and says some may stay on until the end of winter."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944), as Physocarpus capitatus: a shrub with erect or suckering branches, 1 m to 5 m high."
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",

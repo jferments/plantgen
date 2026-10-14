@@ -24,7 +24,6 @@
       "twist": 1,
       "pieces": 8,
       "flowering": 0.3,
-      "culm_height": 1.6,
       "culm_radius": 0.005,
       "culm_leaves": 0,
       "culm_lean": 2,
@@ -95,6 +94,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "culm_length_m": {
+      "min": 0.9144,
+      "max": 2.7432
+    },
     "inflorescence_unit": "spikelet",
     "scale_arrangement": "spiral",
     "spikelet_length_m": {"min": 0.006, "max": 0.018, "high": 0.024},
@@ -104,6 +107,11 @@
     "awn_form": "contorted"
   },
   "evidence": {
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson 1925, as Scirpus acutus (common tule), Fig. 147, p. 153: stems 3 ft to 9 ft high (FEIS's schacu review gives 3-10 ft, occasionally taller; Abrams vol. 1 p. 275 gives no figure)."
+    },
     "appearance.organs.panicle": {
       "evidence": "Authored",
       "source": "plantgen-authors",

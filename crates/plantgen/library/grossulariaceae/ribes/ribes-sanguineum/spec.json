@@ -12,7 +12,6 @@
   "growth_form": "shrub",
   "generator": {
     "params": {
-      "crown_height": 2.5,
       "crown_radius": 1.2,
       "crown_base": 0,
       "crown_rate": 0.22,
@@ -44,7 +43,6 @@
       "spur_pairs": 2,
       "leaf_angle": 50,
       "blooms": 1,
-      "adult_age": 3,
       "bloom_size": 0.05,
       "bloom_angle": 120,
       "leaf_area": 0.518,
@@ -125,6 +123,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "juvenile_period_years": {
+      "min": 3,
+      "max": 5
+    },
     "height_max_m": {
       "min": 1.22,
       "max": 2.74
@@ -146,6 +148,11 @@
       "evidence": "SourceInferred",
       "source": "usa-npn",
       "note": "USA National Phenology Network observations (Nature's Notebook) at lowland sites west of the Cascades in Washington and Oregon (below 300 m, west of 121.8° W; 2009 to 2026, fetched 2026-10-14): 17 plant-years at 11 sites seen with ripe fruit, by the months they were seen in (Apr 1, May 1, Jul 5, Aug 8, Sep 6, Oct 2, Dec 1); stated as the months with at least a third as many as the busiest, July to September. Seed Manual, Ribes chapter (printed p. 963): ripe in July and August in Oregon."
+    },
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual (Ribes chapter, text, read): earliest seed crops come when plants are 3 to 5 years old; this is stated for Sierra gooseberry and prickly and sticky currants, not R. sanguineum, so it is a genus-level value."
     },
     "traits.height_max_m": {
       "evidence": "SourceInferred",

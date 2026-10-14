@@ -310,9 +310,27 @@ pub mod venation;
 /// say, not one year more (pinidae 8, as 44 did for the other programs),
 /// and a pine's lowest needles as long as its species' longest stated
 /// needle life (Pinus's `needle_low`) (50 is conifer sag, #95).
-/// 52: flowers and fruit follow the year from the months a species states
+/// 52: a broadleaf tree's or shrub's crown narrows among neighbours
+/// (broadleaf 15, sapindaceae 8, `space@4`): its free-space region is
+/// scaled at each height and side as far as a crown front grown from the
+/// lineage's tropisms under the neighbours' shade falls short of the
+/// open-grown one, so stand-grown crowns are narrower and an edge tree's
+/// reaches toward open sky; open-grown plants are unchanged. At a stand's
+/// edge only a point reaching toward the stand's side reaches into the
+/// neighbours' crowns (51 is
+/// #96).
+/// 53: 62 built-in species take their heights, culm lengths and juvenile
+/// periods from floras in place of hand-set `crown_height`, `height_max`,
+/// `stem_height`, `culm_height` and `adult_age`, so the rank rules size
+/// them, and a stated range spreads their heights across seeds.
+/// 54: a conifer's side shoots live as long as their light pays for them
+/// (pinidae 9), not 20 years, so old limbs keep foliage along their
+/// length and open-grown spruces, firs, hemlocks and cedars fill in
+/// (53 is heights from floras,
+/// #113).
+/// 55: flowers and fruit follow the year from the months a species states
 /// them in: rules at the flowering plants set a season's bud, flower,
 /// fruit, ripe and fall days from `flowering_months` and
 /// `fruiting_months`, and 28 species that state both drop their hand-set
-/// days (51 is conifer lives, #96).
-pub const GENERATOR_REVISION: u32 = 52;
+/// days (54 is conifer side shoots, #107).
+pub const GENERATOR_REVISION: u32 = 55;

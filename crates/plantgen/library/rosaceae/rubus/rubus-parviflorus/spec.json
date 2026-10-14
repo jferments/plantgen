@@ -12,7 +12,6 @@
   "growth_form": "shrub",
   "generator": {
     "params": {
-      "crown_height": 1.8,
       "crown_radius": 1.2,
       "crown_base": 0,
       "crown_rate": 0.22,
@@ -137,6 +136,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_width_m": {
+      "min": 0.0762,
+      "max": 0.1778
+    },
     "height_max_m": {
       "min": 0.91,
       "max": 1.83
@@ -147,6 +150,11 @@
     "fruiting_months": [6, 7]
   },
   "evidence": {
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson (1925), as R. parviflorus: leaves 7.6 cm to 17.8 cm wide (converted from inches)."
+    },
     "generator.params.spur_leaf": {
       "evidence": "Authored",
       "source": "plantgen-authors",
