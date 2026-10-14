@@ -48,6 +48,18 @@
 //! and Blender's current importer read. [`Attributes`] leaves out the
 //! growth or wind attributes below for a model that never grows or sways.
 //!
+//! Exports of motion inputs ([`Inputs::with_motion`], `plantc export
+//! --profile motion`, or a motion package) are also skinned to the plant's
+//! bones (plant motion S2, [`crate::motion`]): a joint per bone, nested as
+//! the bones are under a `ground` joint at the plant's foot (the last of
+//! the skin's joints), every wood, card and spine vertex wholly on its
+//! bone's joint (`JOINTS_0`, `WEIGHTS_0`) with its place along the bone in
+//! `_PLANTGEN_ALONG`, and each part placed in its bone's joint's frame, so
+//! moving a joint moves all it bears. The document's `PLANTGEN_motion`
+//! extension holds the keyframe's `mechanics` record, as a motion package
+//! holds it, skin joint `j` being bone `j`. At rest the skin draws the
+//! plant where a static export does; a static export keeps its bytes.
+//!
 //! Positions are metres from the plant's foot with +Y up, as glTF's are.
 //! Besides glTF's own attributes, solid meshes carry `PlantGen`'s, which
 //! engines that don't know them ignore:
@@ -59,6 +71,7 @@
 //! | `_PLANTGEN_WIND` | wind level: 0 stem, 1 branch, 2 twig, 3 organ |
 //! | `_PLANTGEN_RADIUS` | wood: radius of the stem a bark vertex lies on, metres; 0 off bark |
 //! | `_PLANTGEN_SHADE` | wood: share of its colour the sky leaves it, [`crate::mesh::WOOD_SHADE`] to 1 |
+//! | `_PLANTGEN_ALONG` | motion exports: place along its bone, 0 at its foot and 1 at its tip |
 //!
 //! Every file and the index carry the package key, the generator revision,
 //! the variant, the age and the species' provenance in `extras`. The same
@@ -77,7 +90,8 @@
 //! pattern (a tile per species or a bake per tree, waiting on the owner's
 //! call), normal and roughness maps, tangents, impostors,
 //! coverage-preserving mipmaps (PNG holds no mipmaps), wind and growth
-//! animation, and other formats.
+//! animation (a motion export carries the skeleton and tables a host
+//! sways it by), and other formats.
 
 use std::borrow::Cow;
 use std::collections::{BTreeMap, HashMap};
@@ -87,10 +101,12 @@ use serde_json::{Value, json};
 
 use crate::budget::Detail;
 use crate::gltf::{self, Document, Index, number, numbers};
-use crate::graph::PlantGraph;
+use crate::graph::{OrganType, PlantGraph};
 use crate::library::Library;
 use crate::math::{self, Vec3};
+use crate::mechanics::Mechanics;
 use crate::mesh::{Card, Mesh, PlantMesh};
+use crate::motion;
 use crate::package::{self, Inputs, Manifest, Measurements, PackageError};
 use crate::parts::{PartMesh, Placement};
 use crate::quality::{self, Quality};
@@ -249,6 +265,8 @@ pub struct Plant {
     pub class: Option<String>,
     /// The plant at the age, as its keyframe in a package.
     pub graph: PlantGraph,
+    /// Its program's organ types, which its mechanics weigh.
+    pub organ_types: Vec<OrganType>,
     pub size: Measurements,
 }
 
@@ -333,7 +351,13 @@ pub fn inputs_of(
     let source = std::str::from_utf8(program)
         .map_err(|_| format_error("the package's program is not UTF-8"))?;
     let day = manifest.day.unwrap_or(package::DEFAULT_DAY);
-    let inputs = Inputs::with_program_in(&manifest.spec, library, source, quality, day)?;
+    let mut inputs = Inputs::with_program_in(&manifest.spec, library, source, quality, day)?;
+    if manifest.mechanics_revision.is_some() {
+        let traits = library
+            .traits_of(&manifest.spec.id)
+            .map_err(|error| format_error(error.to_string()))?;
+        inputs = inputs.with_motion(motion::Motion::of(&traits));
+    }
     if inputs.key != manifest.key {
         return Err(format_error(format!(
             "{} was built by generator revision {} or from other inputs; this is revision {}, \
@@ -388,18 +412,20 @@ pub fn grow(inputs: &Inputs, variant: usize, age: f64) -> Result<Plant, PackageE
         )));
     }
     let growth = package::grow_one(inputs, chosen, &[age])?;
+    let organ_types = growth.organ_types;
     let graph = growth
         .keyframes
         .into_iter()
         .next()
         .ok_or_else(|| format_error("the growth kept no keyframe"))?;
-    let size = Measurements::of(&graph, &growth.organ_types);
+    let size = Measurements::of(&graph, &organ_types);
     Ok(Plant {
         variant,
         environment: chosen.environment,
         seed: chosen.seed,
         class: chosen.class.map(|class| class.to_string()),
         graph,
+        organ_types,
         size,
     })
 }
@@ -420,8 +446,10 @@ pub fn export(
 ) -> Result<Export, PackageError> {
     let stem = stem(inputs, plant);
     let file = |level: usize| format!("{stem}-lod{level}.glb");
+    let rig = Rig::of(inputs, plant);
+    let rig = rig.as_ref();
     let files = if settings.budget.is_some() {
-        budgeted(inputs, plant, *settings, &file)?
+        budgeted(inputs, plant, *settings, rig, &file)?
     } else {
         let levels = package::level_meshes(&plant.graph, inputs, true);
         if let Some(built) = built {
@@ -435,7 +463,7 @@ pub fn export(
                 detail: Detail::level(&inputs.quality, plant.graph.height, level),
                 parts: Cow::Borrowed(&inputs.parts),
             };
-            files.push(drawn.file(inputs, plant, *settings, level, file(level))?);
+            files.push(drawn.file(inputs, plant, *settings, rig, level, file(level))?);
         }
         files
     };
@@ -508,17 +536,22 @@ impl Drawn<'_> {
         inputs: &Inputs,
         plant: &Plant,
         settings: Settings,
+        rig: Option<&Rig>,
         level: usize,
         file: String,
     ) -> Result<Level, PackageError> {
-        let pieces = Pieces::of(&self.mesh, inputs, &self.parts, &self.detail);
+        let pieces = Pieces::of(&self.mesh, inputs, &self.parts, &self.detail, rig.is_some());
+        let drawing = Drawing {
+            plant: &self.mesh,
+            shades: &self.shades,
+            pieces: &pieces,
+            parts: &self.parts,
+        };
         let (glb, position_step) = level_glb(
-            &self.mesh,
-            &self.shades,
-            &pieces,
-            &self.parts,
+            &drawing,
             inputs,
             settings,
+            rig.map(|rig| (rig, &plant.graph)),
             &|step| metadata(inputs, plant, Some((level, &self.detail, step)), settings),
         );
         let summary =
@@ -559,6 +592,7 @@ struct Trials<'a> {
     inputs: &'a Inputs,
     plant: &'a Plant,
     settings: Settings,
+    rig: Option<&'a Rig>,
     /// The keyframe as drawn on the inputs' day.
     drawn: &'a PlantGraph,
     /// By the dial's bits: its triangles, and its file's bytes once
@@ -599,7 +633,14 @@ impl<'a> Trials<'a> {
         }
         let drawing = drawn.unwrap_or_else(|| self.draw(dial));
         let bytes = drawing
-            .file(self.inputs, self.plant, self.settings, 0, String::new())?
+            .file(
+                self.inputs,
+                self.plant,
+                self.settings,
+                self.rig,
+                0,
+                String::new(),
+            )?
             .glb
             .len();
         self.tried.insert(dial.to_bits(), (triangles, Some(bytes)));
@@ -641,6 +682,7 @@ fn budgeted(
     inputs: &Inputs,
     plant: &Plant,
     settings: Settings,
+    rig: Option<&Rig>,
     file: &dyn Fn(usize) -> String,
 ) -> Result<Vec<Level>, PackageError> {
     let budget = settings.budget;
@@ -649,6 +691,7 @@ fn budgeted(
         inputs,
         plant,
         settings,
+        rig,
         drawn: staged.as_ref().unwrap_or(&plant.graph),
         tried: HashMap::new(),
     };
@@ -709,7 +752,7 @@ fn budgeted(
     for (level, dial) in dials.into_iter().enumerate() {
         let drawing = Drawn::at(trials.drawn, inputs, trials.detail(dial), finer);
         finer = Some(drawing.mesh.wood.triangle_count());
-        let mut written = drawing.file(inputs, plant, settings, level, file(level))?;
+        let mut written = drawing.file(inputs, plant, settings, rig, level, file(level))?;
         let (drawn, bytes) = (written.summary.triangles, written.glb.len());
         // The search counts a drawing's triangles as its file draws them.
         debug_assert_eq!(drawing.triangles(inputs), drawn);
@@ -861,6 +904,11 @@ struct Arrays {
     /// Wood only.
     radii: Vec<f32>,
     shades: Vec<f32>,
+    /// In a motion export: each vertex's joint and weight, four a vertex
+    /// (`JOINTS_0`, `WEIGHTS_0`), and its place along its bone.
+    joints: Vec<i32>,
+    weights: Vec<i32>,
+    alongs: Vec<f32>,
     indices: Vec<u32>,
 }
 
@@ -901,6 +949,27 @@ impl Arrays {
                 .extend(colour(vertex).map(|channel| channel.clamp(0.0, 1.0)));
         }
         out
+    }
+
+    /// Bind each vertex wholly to the bone `bound` packs for it
+    /// ([`motion::pack`]): skin joint `bone`, or `ground` for
+    /// [`motion::GROUND`].
+    fn bind(&mut self, bound: &[u32], ground: usize) {
+        self.joints = Vec::with_capacity(4 * bound.len());
+        self.weights = Vec::with_capacity(4 * bound.len());
+        self.alongs = Vec::with_capacity(bound.len());
+        for &packed in bound {
+            let (bone, along) = motion::unpack(packed);
+            let joint = if bone == motion::GROUND {
+                ground
+            } else {
+                bone as usize
+            };
+            self.joints
+                .extend([i32::try_from(joint).unwrap_or(0), 0, 0, 0]);
+            self.weights.extend([255, 0, 0, 0]);
+            self.alongs.push(along);
+        }
     }
 
     /// Leave out the attributes `attributes` does not keep.
@@ -967,12 +1036,23 @@ impl Arrays {
             }
             insert("COLOR_0", document.attribute(&self.colours, 3, false));
         }
+        if !self.joints.is_empty() {
+            insert(
+                "JOINTS_0",
+                document.integer_attribute(&self.joints, 4, gltf::UNSIGNED_SHORT, false, false),
+            );
+            insert(
+                "WEIGHTS_0",
+                document.integer_attribute(&self.weights, 4, gltf::UNSIGNED_BYTE, true, false),
+            );
+        }
         for (name, values) in [
             ("_PLANTGEN_BIRTH", &self.births),
             ("_PLANTGEN_SHED", &self.sheds),
             ("_PLANTGEN_WIND", &self.winds),
             ("_PLANTGEN_RADIUS", &self.radii),
             ("_PLANTGEN_SHADE", &self.shades),
+            ("_PLANTGEN_ALONG", &self.alongs),
         ] {
             if !values.is_empty() {
                 insert(name, document.attribute(values, 1, false));
@@ -1056,10 +1136,11 @@ impl Grid {
 
 /// `mesh` with each run of identical vertices stored once, in the order
 /// they first appear, and its triangles unchanged: a bent card's grid
-/// shares its inner corners.
-fn welded(mesh: &Mesh) -> Mesh {
+/// shares its inner corners. With `bearers`, vertices borne by different
+/// segments stay apart and keep what bears them.
+fn welded(mesh: &Mesh, bearers: bool) -> Mesh {
     let mut out = Mesh::default();
-    let mut seen: HashMap<[u32; 15], u32> = HashMap::with_capacity(mesh.positions.len());
+    let mut seen: HashMap<[u32; 16], u32> = HashMap::with_capacity(mesh.positions.len());
     let mut index_of = Vec::with_capacity(mesh.positions.len());
     for vertex in 0..mesh.positions.len() {
         let (p, n, uv, c) = (
@@ -1084,6 +1165,7 @@ fn welded(mesh: &Mesh) -> Mesh {
             mesh.births[vertex].to_bits(),
             mesh.sheds[vertex].to_bits(),
             u32::from(mesh.levels[vertex]),
+            if bearers { mesh.bearer(vertex) } else { 0 },
         ];
         let next = u32::try_from(out.positions.len()).unwrap_or(u32::MAX);
         let index = *seen.entry(key).or_insert_with(|| {
@@ -1094,6 +1176,9 @@ fn welded(mesh: &Mesh) -> Mesh {
             out.births.push(mesh.births[vertex]);
             out.sheds.push(mesh.sheds[vertex]);
             out.levels.push(mesh.levels[vertex]);
+            if bearers {
+                out.segments.push(mesh.bearer(vertex));
+            }
             next
         });
         index_of.push(index);
@@ -1104,6 +1189,22 @@ fn welded(mesh: &Mesh) -> Mesh {
         .map(|&index| index_of[index as usize])
         .collect();
     out
+}
+
+/// Append `other` to `out`, every vertex borne by `bearer`.
+fn append(out: &mut Mesh, other: &Mesh, bearer: u32) {
+    let first = out.positions.len();
+    let offset = u32::try_from(first).unwrap_or(u32::MAX);
+    out.positions.extend_from_slice(&other.positions);
+    out.normals.extend_from_slice(&other.normals);
+    out.uvs.extend_from_slice(&other.uvs);
+    out.colors.extend_from_slice(&other.colors);
+    out.births.extend_from_slice(&other.births);
+    out.sheds.extend_from_slice(&other.sheds);
+    out.levels.extend_from_slice(&other.levels);
+    out.indices
+        .extend(other.indices.iter().map(|&index| index + offset));
+    out.bear(first, bearer);
 }
 
 /// A plain material: vertex colours times white, not metallic.
@@ -1119,12 +1220,15 @@ fn plain_material(name: &str, roughness: f32, factor: f32) -> Value {
 }
 
 /// `primitives` as one mesh named `name` and a node drawing it; quantized,
-/// on one grid whose step it returns.
+/// on one grid whose step it returns. With a `skeleton`, the node is
+/// skinned to it, and the grid's translation and scale are in its inverse
+/// bind matrices, as a skinned node's own transform is ignored.
 fn mesh_node(
     document: &mut Document,
     name: &str,
     primitives: &[(Arrays, Index)],
     quantize: bool,
+    skeleton: Option<&Skeleton>,
 ) -> (Index, Option<f32>) {
     let grid = quantize.then(|| Grid::around(primitives.iter().map(|(arrays, _)| arrays)));
     let written = primitives
@@ -1133,7 +1237,15 @@ fn mesh_node(
         .collect();
     let mesh = document.mesh(name, written);
     let mut node = json!({ "name": name, "mesh": mesh });
-    if let Some(grid) = &grid {
+    if let Some(skeleton) = skeleton {
+        let matrices = skeleton.inverse_binds(grid.as_ref());
+        let matrices = document.matrices(&matrices);
+        node["skin"] = json!(document.skin(json!({
+            "joints": skeleton.joints,
+            "inverseBindMatrices": matrices,
+            "skeleton": skeleton.root,
+        })));
+    } else if let Some(grid) = &grid {
         node["translation"] = numbers(&grid.origin);
         node["scale"] = numbers(&[grid.step; 3]);
     }
@@ -1165,7 +1277,8 @@ fn solid(number: usize, salt: u64, share: f64) -> bool {
 impl Pieces {
     /// Where `plant`, a level placing `parts`, draws its organs as part
     /// meshes; which of its cards they and solid spines leave out; and the
-    /// tufts it draws as solid spines. With `detail`, a level between two
+    /// tufts it draws as solid spines, with the segment bearing each (its
+    /// star card's). With `detail`, a level between two
     /// ([`Detail::solid_share`]), only that share of its organs and
     /// areoles; the others keep their cards.
     fn left_out(
@@ -1173,7 +1286,7 @@ impl Pieces {
         inputs: &Inputs,
         parts: &[PartMesh],
         detail: &Detail,
-    ) -> (Vec<Placement>, Vec<bool>, Vec<Tuft>) {
+    ) -> (Vec<Placement>, Vec<bool>, Vec<(Tuft, u32)>) {
         let templates = &inputs.templates;
         let share = detail.solid_share;
         // Parts on the nearest level; their cards are left out.
@@ -1202,7 +1315,12 @@ impl Pieces {
             let paired = spine_cards.len() == 2 * plant.tufts.len();
             for (number, tuft) in plant.tufts.iter().enumerate() {
                 if !paired || solid(number, AREOLE_SALT, share) {
-                    tufts.push(*tuft);
+                    let bearer = if paired {
+                        plant.cards[spine_cards[2 * number]].segment
+                    } else {
+                        crate::mesh::NO_SEGMENT
+                    };
+                    tufts.push((*tuft, bearer));
                     if paired {
                         dropped[spine_cards[2 * number]] = true;
                         dropped[spine_cards[2 * number + 1]] = true;
@@ -1234,13 +1352,34 @@ impl Pieces {
     }
 
     /// The pieces of `plant`, a level placing `parts`, drawn with `detail`'s
-    /// solids.
-    fn of(plant: &PlantMesh, inputs: &Inputs, parts: &[PartMesh], detail: &Detail) -> Self {
+    /// solids; with `bearers`, each vertex keeping the segment that bears
+    /// it, for a motion export's skin.
+    fn of(
+        plant: &PlantMesh,
+        inputs: &Inputs,
+        parts: &[PartMesh],
+        detail: &Detail,
+        bearers: bool,
+    ) -> Self {
         let templates = &inputs.templates;
         let (placements, dropped, tufts) = Self::left_out(plant, inputs, parts, detail);
         let spines = (!tufts.is_empty()).then(|| {
             let looks: Vec<&crate::body::BodyLook> = templates.bodies.iter().collect();
-            crate::spines::tuft_mesh_within(&tufts, &looks, detail.solid_detail)
+            if !bearers {
+                let tufts: Vec<Tuft> = tufts.iter().map(|(tuft, _)| *tuft).collect();
+                return crate::spines::tuft_mesh_within(&tufts, &looks, detail.solid_detail);
+            }
+            // Tuft by tuft, each borne by its areole's segment.
+            let mut spines = Mesh::default();
+            for (tuft, bearer) in &tufts {
+                let one = crate::spines::tuft_mesh_within(
+                    std::slice::from_ref(tuft),
+                    &looks,
+                    detail.solid_detail,
+                );
+                append(&mut spines, &one, *bearer);
+            }
+            spines
         });
         let cards = (0..templates.templates.len())
             .filter_map(|index| {
@@ -1256,7 +1395,7 @@ impl Pieces {
                     ..PlantMesh::default()
                 }
                 .card_mesh();
-                (!mesh.indices.is_empty()).then(|| (index, welded(&mesh)))
+                (!mesh.indices.is_empty()).then(|| (index, welded(&mesh, bearers)))
             })
             .collect();
         Self {
@@ -1271,6 +1410,7 @@ impl Pieces {
     fn count(plant: &PlantMesh, inputs: &Inputs, parts: &[PartMesh], detail: &Detail) -> usize {
         let (placements, dropped, tufts) = Self::left_out(plant, inputs, parts, detail);
         let looks: Vec<&crate::body::BodyLook> = inputs.templates.bodies.iter().collect();
+        let tufts: Vec<Tuft> = tufts.into_iter().map(|(tuft, _)| tuft).collect();
         let spines = crate::spines::tuft_triangles(&tufts, &looks, detail.solid_detail);
         let bent = 2 * (crate::bend::ACROSS * crate::bend::ALONG) as usize;
         let cards: usize = plant
@@ -1288,18 +1428,200 @@ impl Pieces {
     }
 }
 
+/// What a level's file draws: its mesh, its bark's shades, its pieces and
+/// the part meshes they place.
+struct Drawing<'a> {
+    plant: &'a PlantMesh,
+    shades: &'a [f32],
+    pieces: &'a Pieces,
+    parts: &'a [PartMesh],
+}
+
+/// A motion export's rig (plant motion S2): the plant's bones
+/// ([`crate::mechanics`]) and the `mechanics` record a motion package holds
+/// for it, which every level's file binds to and carries.
+struct Rig {
+    found: Mechanics,
+    record: motion::Record,
+}
+
+impl Rig {
+    /// The rig of `plant`, when `inputs` build motion.
+    fn of(inputs: &Inputs, plant: &Plant) -> Option<Self> {
+        let motion = inputs.motion.as_ref()?;
+        let found = motion.of_graph(&plant.graph, &plant.organ_types);
+        let record = motion::record(&found, motion, &plant.graph, &plant.organ_types);
+        Some(Self { found, record })
+    }
+
+    /// Each joint's rest place in the plant, its foot and its turn (a unit
+    /// quaternion x, y, z, w): bone `j`'s, and last the ground's, at the
+    /// plant's foot unturned.
+    fn places(&self) -> Vec<(Vec3, [f64; 4])> {
+        self.record
+            .bones
+            .iter()
+            .map(|bone| {
+                let [x, y, z] = bone.origin;
+                (Vec3::new(x, y, z), bone.frame)
+            })
+            .chain(std::iter::once((Vec3::ZERO, [0.0, 0.0, 0.0, 1.0])))
+            .collect()
+    }
+
+    /// The `PLANTGEN_motion` extension's object: the record, and which skin
+    /// joint is which bone.
+    fn extension(&self) -> Value {
+        let mut value = serde_json::to_value(&self.record).unwrap_or(Value::Null);
+        if let Value::Object(fields) = &mut value {
+            fields.insert(
+                "contract".into(),
+                json!("jferments/after-claude project-files/plant-physics/CONTRACT.md, mechanics revision 2"),
+            );
+            fields.insert(
+                "joints".into(),
+                json!("skin joint j is bone j; the last joint is the ground"),
+            );
+            fields.insert("ground_joint".into(), json!(self.record.bones.len()));
+        }
+        value
+    }
+}
+
+/// A file's skeleton: a node per joint, nested as the bones are, under the
+/// ground's node.
+struct Skeleton {
+    /// Skin joint `j`'s node: bone `j`'s, and last the ground's.
+    joints: Vec<Index>,
+    /// Each joint's rest place in the plant ([`Rig::places`]).
+    places: Vec<(Vec3, [f64; 4])>,
+    /// The ground's node, the skeleton's root.
+    root: Index,
+}
+
+impl Skeleton {
+    /// The joints' nodes in `document`, each holding the nodes of
+    /// `children` placed on it, in its own frame.
+    fn build(document: &mut Document, rig: &Rig, mut children: Vec<Vec<Index>>) -> Self {
+        let places = rig.places();
+        let ground = places.len() - 1;
+        let parent = |bone: usize| rig.record.bones[bone].parent.map_or(ground, |p| p as usize);
+        for bone in 0..ground {
+            children[parent(bone)].push(usize::MAX - bone);
+        }
+        // Later bones first and the ground last, so every joint's children
+        // are nodes already.
+        let mut joints = vec![0; places.len()];
+        for joint in (0..ground).rev().chain(std::iter::once(ground)) {
+            let (foot, turn) = places[joint];
+            let (base, base_turn) = if joint == ground {
+                (Vec3::ZERO, [0.0, 0.0, 0.0, 1.0])
+            } else {
+                places[parent(joint)]
+            };
+            let back = conjugate(base_turn);
+            #[allow(clippy::cast_possible_truncation)]
+            let rotation = product(back, turn).map(|value| value as f32);
+            let translation = turned(back, foot - base).to_f32();
+            let kids: Vec<Index> = children[joint]
+                .iter()
+                .map(|&child| {
+                    if child > usize::MAX - places.len() {
+                        joints[usize::MAX - child]
+                    } else {
+                        child
+                    }
+                })
+                .collect();
+            let mut node = json!({
+                "name": if joint == ground { "ground".to_string() } else { format!("bone {joint}") },
+            });
+            if joint != ground {
+                node["translation"] = numbers(&translation);
+                node["rotation"] = numbers(&rotation);
+            }
+            if !kids.is_empty() {
+                node["children"] = json!(kids);
+            }
+            joints[joint] = document.node(node);
+        }
+        Self {
+            root: joints[ground],
+            joints,
+            places,
+        }
+    }
+
+    /// The inverse bind matrices of a mesh on `grid` (none: positions as
+    /// they are): each joint's rest place undone after the grid's
+    /// translation and scale, column-major.
+    fn inverse_binds(&self, grid: Option<&Grid>) -> Vec<f32> {
+        let (origin, step) = grid.map_or((Vec3::ZERO, 1.0), |grid| {
+            let [x, y, z] = grid.origin;
+            (
+                Vec3::new(f64::from(x), f64::from(y), f64::from(z)),
+                f64::from(grid.step),
+            )
+        });
+        let mut out = Vec::with_capacity(16 * self.places.len());
+        for &(foot, turn) in &self.places {
+            let back = conjugate(turn);
+            // Columns of the inverse turn, scaled by the step.
+            let columns = [Vec3::X, Vec3::Y, Vec3::Z].map(|axis| turned(back, axis) * step);
+            let moved = turned(back, origin - foot);
+            for column in columns {
+                out.extend_from_slice(&column.to_f32());
+                out.push(0.0);
+            }
+            out.extend_from_slice(&moved.to_f32());
+            out.push(1.0);
+        }
+        out
+    }
+}
+
+/// A unit quaternion's inverse.
+fn conjugate(q: [f64; 4]) -> [f64; 4] {
+    [-q[0], -q[1], -q[2], q[3]]
+}
+
+/// The turn `a` after `b`.
+fn product(a: [f64; 4], b: [f64; 4]) -> [f64; 4] {
+    let [ax, ay, az, aw] = a;
+    let [bx, by, bz, bw] = b;
+    [
+        aw * bx + ax * bw + ay * bz - az * by,
+        aw * by - ax * bz + ay * bw + az * bx,
+        aw * bz + ax * by - ay * bx + az * bw,
+        aw * bw - ax * bx - ay * by - az * bz,
+    ]
+}
+
+/// `v` turned by the unit quaternion `q`.
+fn turned(q: [f64; 4], v: Vec3) -> Vec3 {
+    let u = Vec3::new(q[0], q[1], q[2]);
+    let t = u.cross(v) * 2.0;
+    v + t * q[3] + u.cross(t)
+}
+
 /// One level as a GLB file, with `extras` given the level's largest
-/// position step when quantized; and that step.
+/// position step when quantized; and that step. With a rig, every mesh is
+/// skinned to the plant's bones and its parts ride them
+/// (`PLANTGEN_motion`).
 #[allow(clippy::too_many_lines)]
 fn level_glb(
-    plant: &PlantMesh,
-    shades: &[f32],
-    pieces: &Pieces,
-    parts: &[PartMesh],
+    drawing: &Drawing<'_>,
     inputs: &Inputs,
     settings: Settings,
+    rig: Option<(&Rig, &PlantGraph)>,
     extras: &dyn Fn(Option<f32>) -> Value,
 ) -> (Vec<u8>, Option<f32>) {
+    let Drawing {
+        plant,
+        shades,
+        pieces,
+        parts,
+    } = *drawing;
     let templates = &inputs.templates;
     let quantize = settings.compression != Compression::None;
     let mut document = Document::new();
@@ -1311,6 +1633,57 @@ fn level_glb(
     }
     let mut children = Vec::new();
     let mut steps = Vec::new();
+    // Skinned meshes stand at the scene's root, where their skin alone
+    // places them.
+    let mut skinned = Vec::new();
+
+    // A rig's skeleton, with the parts riding its joints, comes first.
+    let mut skeleton = None;
+    let mut bound = motion::Bound::default();
+    if let Some((rig, graph)) = rig {
+        bound = motion::bind(plant, graph, &rig.found);
+        let ground = rig.record.bones.len();
+        let mut riders = vec![Vec::new(); ground + 1];
+        if !pieces.placements.is_empty() {
+            let places = rig.places();
+            let joint_of = |card: usize| {
+                let bone = motion::unpack(bound.cards[card]).0;
+                if bone == motion::GROUND {
+                    ground
+                } else {
+                    bone as usize
+                }
+            };
+            let ride = Ride {
+                joint_of: &joint_of,
+                places: &places,
+            };
+            for (node, joint) in part_nodes(
+                &mut document,
+                &pieces.placements,
+                parts,
+                inputs,
+                settings,
+                Some(&ride),
+            ) {
+                riders[joint].push(node);
+            }
+        }
+        let built = Skeleton::build(&mut document, rig, riders);
+        children.push(built.root);
+        document.root_extension("PLANTGEN_motion", rig.extension());
+        skeleton = Some(built);
+    }
+    let skeleton = skeleton.as_ref();
+    let bind = |arrays: &mut Arrays, mesh: &Mesh, packed: Option<&[u32]>| {
+        if let (Some(skeleton), Some((rig, graph))) = (skeleton, rig) {
+            let ground = skeleton.joints.len() - 1;
+            match packed {
+                Some(packed) => arrays.bind(packed, ground),
+                None => arrays.bind(&motion::bind_mesh(mesh, graph, &rig.found).0, ground),
+            }
+        }
+    };
 
     // Wood: plain colours, the bark's shade apart or multiplied in.
     if !plant.wood.indices.is_empty() {
@@ -1335,9 +1708,20 @@ fn level_glb(
             arrays.shades = shades.to_vec();
         }
         arrays.keep(settings.attributes);
+        bind(&mut arrays, wood, Some(&bound.wood));
         let material = document.material(plain_material("wood", 0.9, 1.0));
-        let (node, step) = mesh_node(&mut document, "wood", &[(arrays, material)], quantize);
-        children.push(node);
+        let (node, step) = mesh_node(
+            &mut document,
+            "wood",
+            &[(arrays, material)],
+            quantize,
+            skeleton,
+        );
+        if skeleton.is_some() {
+            skinned.push(node);
+        } else {
+            children.push(node);
+        }
         steps.extend(step);
     }
 
@@ -1352,9 +1736,20 @@ fn level_glb(
             [r, g, b]
         });
         arrays.keep(settings.attributes);
+        bind(&mut arrays, spines, None);
         let material = document.material(plain_material("spines", 0.6, 1.0));
-        let (node, step) = mesh_node(&mut document, "spines", &[(arrays, material)], quantize);
-        children.push(node);
+        let (node, step) = mesh_node(
+            &mut document,
+            "spines",
+            &[(arrays, material)],
+            quantize,
+            skeleton,
+        );
+        if skeleton.is_some() {
+            skinned.push(node);
+        } else {
+            children.push(node);
+        }
         steps.extend(step);
     }
 
@@ -1403,16 +1798,31 @@ fn level_glb(
             ratios[vertex].map(|ratio| (ratio * scale) as f32)
         });
         arrays.keep(settings.attributes);
+        bind(&mut arrays, quads, None);
         primitives.push((arrays, material));
     }
     if !primitives.is_empty() {
-        let (node, step) = mesh_node(&mut document, "cards", &primitives, quantize);
-        children.push(node);
+        let (node, step) = mesh_node(&mut document, "cards", &primitives, quantize, skeleton);
+        if skeleton.is_some() {
+            skinned.push(node);
+        } else {
+            children.push(node);
+        }
         steps.extend(step);
     }
 
-    if !pieces.placements.is_empty() {
-        let parts = part_nodes(&mut document, &pieces.placements, parts, inputs, settings);
+    if skeleton.is_none() && !pieces.placements.is_empty() {
+        let parts = part_nodes(
+            &mut document,
+            &pieces.placements,
+            parts,
+            inputs,
+            settings,
+            None,
+        )
+        .into_iter()
+        .map(|(node, _)| node)
+        .collect::<Vec<_>>();
         children.push(document.node(json!({ "name": "parts", "children": parts })));
     }
 
@@ -1421,12 +1831,13 @@ fn level_glb(
         "children": children,
     }));
     let step = steps.into_iter().reduce(f32::max);
+    let roots: Vec<Index> = std::iter::once(root).chain(skinned).collect();
     let glb = document.glb(
         json!({
             "version": "2.0",
             "generator": format!("PlantGen plantc, generator revision {}", crate::GENERATOR_REVISION),
         }),
-        &[root],
+        &roots,
         Value::Object(std::iter::once(("plantgen".to_owned(), extras(step))).collect()),
     );
     (glb, step)
@@ -1541,16 +1952,27 @@ fn side_of(texels: usize) -> usize {
     side
 }
 
+/// How a motion export's parts ride its joints: the joint each card's
+/// organ is on, and each joint's rest place ([`Rig::places`]).
+struct Ride<'a> {
+    joint_of: &'a dyn Fn(usize) -> usize,
+    places: &'a [(Vec3, [f64; 4])],
+}
+
 /// The part meshes of `placements` and the nodes placing them: a node per
 /// organ, or, quantized, a node per mesh drawing each of its organs as an
-/// instance (`EXT_mesh_gpu_instancing`).
+/// instance (`EXT_mesh_gpu_instancing`). With a `ride`, each node is placed
+/// in the frame of the joint its organs ride, and instances are grouped by
+/// joint too; each node with its joint (0 without).
+#[allow(clippy::too_many_lines)]
 fn part_nodes(
     document: &mut Document,
     placements: &[Placement],
     parts: &[PartMesh],
     inputs: &Inputs,
     settings: Settings,
-) -> Vec<Index> {
+    ride: Option<&Ride<'_>>,
+) -> Vec<(Index, usize)> {
     // Each part's colours are multiplied by its lightest organ's shade, as
     // far as they stay within 1, so its materials' factors, the shades over
     // that, stay at most 1 (a lighter organ's is clipped there).
@@ -1615,45 +2037,59 @@ fn part_nodes(
             primitive["material"] = json!(material);
             document.mesh(&format!("{organ} part {variant}"), vec![primitive])
         });
-        let rotation = quaternion(placement.left, placement.heading, placement.out);
+        let mut rotation = quaternion(placement.left, placement.heading, placement.out);
         #[allow(clippy::cast_possible_truncation)]
-        let (translation, length) = (placement.base.to_f32(), placement.length as f32);
-        placed.push((mesh, translation, rotation, length));
+        let (mut translation, length) = (placement.base.to_f32(), placement.length as f32);
+        let mut joint = 0;
+        if let Some(ride) = ride {
+            joint = (ride.joint_of)(placement.card);
+            let (foot, turn) = ride.places[joint];
+            let back = conjugate(turn);
+            translation = turned(back, placement.base - foot).to_f32();
+            #[allow(clippy::cast_possible_truncation)]
+            {
+                rotation = product(back, rotation.map(f64::from)).map(|value| value as f32);
+            }
+        }
+        placed.push((mesh, joint, translation, rotation, length));
     }
     if settings.compression == Compression::None {
         return placed
             .into_iter()
-            .map(|(mesh, translation, rotation, length)| {
-                document.node(json!({
+            .map(|(mesh, joint, translation, rotation, length)| {
+                let node = document.node(json!({
                     "mesh": mesh,
                     "translation": numbers(&translation),
                     "rotation": numbers(&rotation),
                     "scale": numbers(&[length, length, length]),
-                }))
+                }));
+                (node, joint)
             })
             .collect();
     }
-    // Instances by mesh, each in the order its organs were placed.
+    // Instances by mesh (and joint), each in the order its organs were
+    // placed.
     document.extension("EXT_mesh_gpu_instancing", true);
-    let mut by_mesh: BTreeMap<Index, [Vec<f32>; 3]> = BTreeMap::new();
-    for (mesh, translation, rotation, length) in placed {
-        let [translations, rotations, scales] = by_mesh.entry(mesh).or_default();
+    let mut by_mesh: BTreeMap<(Index, usize), [Vec<f32>; 3]> = BTreeMap::new();
+    for (mesh, joint, translation, rotation, length) in placed {
+        let [translations, rotations, scales] = by_mesh.entry((mesh, joint)).or_default();
         translations.extend_from_slice(&translation);
         rotations.extend_from_slice(&rotation);
         scales.extend_from_slice(&[length; 3]);
     }
     by_mesh
         .into_iter()
-        .map(|(mesh, [translations, rotations, scales])| {
+        .map(|((mesh, joint), [translations, rotations, scales])| {
             let attributes = json!({
                 "TRANSLATION": document.instance_attribute(&translations, 3),
                 "ROTATION": document.instance_attribute(&rotations, 4),
                 "SCALE": document.instance_attribute(&scales, 3),
             });
-            document.node(json!({
+            let node = document.node(json!({
                 "mesh": mesh,
                 "extensions": { "EXT_mesh_gpu_instancing": { "attributes": attributes } },
-            }))
+            }));
+            (node, joint)
         })
         .collect()
 }
@@ -1735,6 +2171,13 @@ fn metadata(
         "attributes": settings.attributes.name(),
         "provenance": spec.provenance,
     });
+    if let (Some(_), Value::Object(fields)) = (&inputs.motion, &mut value) {
+        fields.insert("profile".into(), json!("motion"));
+        fields.insert(
+            "mechanics_revision".into(),
+            json!(motion::MECHANICS_REVISION),
+        );
+    }
     if let (Some((level, detail, step)), Value::Object(fields)) = (level, &mut value) {
         fields.insert("level".into(), json!(level));
         if let Some(step) = step {
@@ -1869,7 +2312,7 @@ mod tests {
             ..PlantMesh::default()
         }
         .card_mesh();
-        let shared = welded(&mesh);
+        let shared = welded(&mesh, false);
         // The bent card's grid of cells keeps one vertex per corner, the
         // flat card's quad its four.
         let corners = (bend::ACROSS + 1) * (bend::ALONG + 1) + 4;

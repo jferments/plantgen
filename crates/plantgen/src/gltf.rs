@@ -77,6 +77,9 @@ pub struct Document {
     materials: Vec<Value>,
     meshes: Vec<Value>,
     nodes: Vec<Value>,
+    skins: Vec<Value>,
+    /// The document's own extension objects, by name.
+    extensions: Map<String, Value>,
     extensions_used: Vec<String>,
     extensions_required: Vec<String>,
     /// How each buffer view may be compressed, and whether it is.
@@ -279,6 +282,44 @@ impl Document {
         self.accessors.len() - 1
     }
 
+    /// Inverse bind matrices for a skin: 16 floats a joint, each a 4×4
+    /// matrix in column-major order (`MAT4`).
+    ///
+    /// # Panics
+    ///
+    /// When `values` is not a whole number of matrices.
+    pub fn matrices(&mut self, values: &[f32]) -> Index {
+        assert!(
+            values.len().is_multiple_of(16),
+            "a matrix is sixteen floats"
+        );
+        let bytes: Vec<u8> = values
+            .iter()
+            .flat_map(|value| value.to_le_bytes())
+            .collect();
+        let view = self.view(&bytes, None, Codec::None);
+        self.accessors.push(json!({
+            "bufferView": view,
+            "componentType": FLOAT,
+            "count": values.len() / 16,
+            "type": "MAT4",
+        }));
+        self.accessors.len() - 1
+    }
+
+    /// A skin: `{"joints": …, "inverseBindMatrices": …, "skeleton": …}`.
+    pub fn skin(&mut self, skin: Value) -> Index {
+        self.skins.push(skin);
+        self.skins.len() - 1
+    }
+
+    /// Give the document extension `name`'s object `value`, declaring it
+    /// used (not required).
+    pub fn root_extension(&mut self, name: &str, value: Value) {
+        self.extension(name, false);
+        self.extensions.insert(name.to_string(), value);
+    }
+
     /// Declare an extension the document uses; `required` when a viewer
     /// without it cannot draw the document right.
     pub fn extension(&mut self, name: &str, required: bool) {
@@ -384,9 +425,13 @@ impl Document {
         if !self.extensions_required.is_empty() {
             root.insert("extensionsRequired".into(), json!(self.extensions_required));
         }
+        if !self.extensions.is_empty() {
+            root.insert("extensions".into(), Value::Object(self.extensions));
+        }
         let arrays = [
             ("nodes", self.nodes),
             ("meshes", self.meshes),
+            ("skins", self.skins),
             ("materials", self.materials),
             ("textures", self.textures),
             ("samplers", self.samplers),
@@ -529,6 +574,8 @@ pub struct Summary {
     /// Triangles over every primitive of every mesh drawn, as a renderer
     /// draws them.
     pub triangles: usize,
+    /// Joints over every skin.
+    pub joints: usize,
 }
 
 /// A GLB file split into its two chunks.
@@ -623,6 +670,7 @@ impl<'a> Glb<'a> {
             Some("VEC2") => 2,
             Some("VEC3") => 3,
             Some("VEC4") => 4,
+            Some("MAT4") => 16,
             _ => return Err(format!("accessor {index} has an unknown type")),
         };
         let kind = field(accessor, "componentType")
@@ -820,6 +868,7 @@ pub fn check(glb: &[u8]) -> Result<Summary, String> {
         images: array("images").len(),
         instances: 0,
         triangles: 0,
+        joints: 0,
     };
     let meshes = array("meshes");
     let mut mesh_triangles = vec![0; meshes.len()];
@@ -851,7 +900,88 @@ pub fn check(glb: &[u8]) -> Result<Summary, String> {
         summary.instances += count;
         summary.triangles += triangles * count;
     }
+    summary.joints = check_skins(root, &meshes, &data)?;
     Ok(summary)
+}
+
+/// Check every skin and the nodes skinned by it: joints that are nodes,
+/// one inverse bind matrix each, and on every primitive of a skinned node's
+/// mesh joints inside the skin and weights that add up to one; the joints
+/// over every skin.
+fn check_skins(
+    root: &Value,
+    meshes: &[Value],
+    data: &[(Vec<f64>, usize)],
+) -> Result<usize, String> {
+    let empty = Vec::new();
+    let list = |name: &str| root.get(name).and_then(Value::as_array).unwrap_or(&empty);
+    let (skins, nodes) = (list("skins"), list("nodes"));
+    let mut joints = 0;
+    let mut sizes = Vec::with_capacity(skins.len());
+    for (index, skin) in skins.iter().enumerate() {
+        let named = skin
+            .get("joints")
+            .and_then(Value::as_array)
+            .ok_or(format!("skin {index} has no joints"))?;
+        if named.iter().any(|joint| {
+            joint
+                .as_u64()
+                .is_none_or(|joint| joint >= nodes.len() as u64)
+        }) {
+            return Err(format!("skin {index} names a joint that is no node"));
+        }
+        if let Some(matrices) = field(skin, "inverseBindMatrices") {
+            let (values, width) = data
+                .get(matrices)
+                .ok_or(format!("skin {index}'s matrices name no accessor"))?;
+            if *width != 16 || values.len() / 16 != named.len() {
+                return Err(format!("skin {index} has not one matrix a joint"));
+            }
+        }
+        joints += named.len();
+        sizes.push(named.len());
+    }
+    for (index, node) in nodes.iter().enumerate() {
+        let Some(skin) = field(node, "skin") else {
+            continue;
+        };
+        let size = *sizes
+            .get(skin)
+            .ok_or(format!("node {index} names no skin"))?;
+        let mesh = field(node, "mesh")
+            .and_then(|mesh| meshes.get(mesh))
+            .ok_or(format!("skinned node {index} has no mesh"))?;
+        for primitive in mesh
+            .get("primitives")
+            .and_then(Value::as_array)
+            .unwrap_or(&empty)
+        {
+            let read = |name: &str| {
+                primitive
+                    .pointer(&format!("/attributes/{name}"))
+                    .and_then(Value::as_u64)
+                    .and_then(|at| data.get(usize::try_from(at).ok()?))
+                    .ok_or(format!("skinned node {index}'s mesh has no {name}"))
+            };
+            let ((joint, 4), (weight, 4)) = (read("JOINTS_0")?, read("WEIGHTS_0")?) else {
+                return Err(format!(
+                    "skinned node {index}'s joints or weights are not VEC4"
+                ));
+            };
+            #[allow(clippy::cast_precision_loss)]
+            if joint.iter().any(|&joint| joint >= size as f64) {
+                return Err(format!("skinned node {index} names a joint past its skin"));
+            }
+            for weights in weight.as_chunks::<4>().0 {
+                if (weights.iter().sum::<f64>() - 1.0).abs() > 2.0e-3 {
+                    return Err(format!(
+                        "skinned node {index} has weights not adding to one"
+                    ));
+                }
+            }
+        }
+    }
+    Ok(joints)
 }
 
 /// Check one primitive of mesh `index`: positions with bounds, every
