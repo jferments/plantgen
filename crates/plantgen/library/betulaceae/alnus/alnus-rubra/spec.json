@@ -153,7 +153,7 @@
     "wood_moisture_green_share": 0.97,
     "juvenile_period_years": {"min": 3, "max": 10},
     "flowering_months": [2, 3, 4, 5],
-    "fruiting_months": [8, 9, 10, 11, 12, 1, 2]
+    "fruiting_months": [8, 9, 10]
   },
   "evidence": {
     "traits.flowering_months": {
@@ -164,7 +164,7 @@
     "traits.fruiting_months": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
-      "note": "FEIS (Alnus rubra): fruit ripe from early August to late October at 17 places in Oregon and Washington, and its seed shed through the fall and winter; so ripe cones are on the tree from August to February."
+      "note": "FEIS (Alnus rubra): fruit ripe from early August to late October at 17 places in Oregon and Washington. Its seed is shed through the fall and winter, and old cones hang on longer still (USA-NPN observers see ripe fruit on it in every month), but a season holds one year from its February buds, so only the ripening months are stated."
     },
     "traits.height_max_m": {
       "evidence": "SourceInferred",

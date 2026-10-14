@@ -181,7 +181,7 @@
     "wood_rupture_green_mpa": 51,
     "juvenile_period_years": 10,
     "flowering_months": [3, 4],
-    "fruiting_months": [8, 9, 10, 11, 12, 1]
+    "fruiting_months": [7, 8, 9, 10, 11]
   },
   "evidence": {
     "generator.params.sprout_light": {
@@ -196,8 +196,8 @@
     },
     "traits.fruiting_months": {
       "evidence": "SourceInferred",
-      "source": "usfs-feis",
-      "note": "FEIS (Acer macrophyllum): seeds ripe from August to October and shed from October to January, some staying on the tree until March; so ripe samaras are on the tree from August to January."
+      "source": "usa-npn",
+      "note": "USA National Phenology Network observations (Nature's Notebook) at lowland sites west of the Cascades in Washington and Oregon (below 300 m, west of 121.8° W; 2009 to 2026, fetched 2026-10-14): 92 plant-years at 51 sites seen with ripe fruit, by the months they were seen in (Jan 4, Feb 1, Mar 1, Apr 1, May 6, Jun 10, Jul 33, Aug 31, Sep 43, Oct 29, Nov 23, Dec 8); stated as the months with at least a third as many as the busiest, July to November. FEIS (Acer macrophyllum): seeds ripe from August to October and shed from October to January, some staying on the tree until March; so ripe samaras are on the tree from August to January."
     },
     "traits.height_max_m": {
       "evidence": "SourceInferred",

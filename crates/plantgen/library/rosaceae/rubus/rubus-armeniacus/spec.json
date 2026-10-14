@@ -123,7 +123,7 @@
     "stamens": 100,
     "carpels": 30,
     "flowering_months": [6, 7],
-    "fruiting_months": [8, 9]
+    "fruiting_months": [7, 8, 9, 10]
   },
   "evidence": {
     "traits.flowering_months": {
@@ -133,8 +133,8 @@
     },
     "traits.fruiting_months": {
       "evidence": "SourceInferred",
-      "source": "usfs-feis",
-      "note": "FEIS (Rubus spp.): ripe in August and September in the Pacific Northwest (the Washington row is the same)."
+      "source": "usa-npn",
+      "note": "USA National Phenology Network observations (Nature's Notebook) at lowland sites west of the Cascades in Washington and Oregon (below 300 m, west of 121.8° W; 2009 to 2026, fetched 2026-10-14): 17 plant-years at 10 sites seen with ripe fruit, by the months they were seen in (Jun 1, Jul 10, Aug 12, Sep 13, Oct 9, Nov 3); stated as the months with at least a third as many as the busiest, July to October. FEIS (Rubus spp.): ripe in August and September in the Pacific Northwest (the Washington row is the same)."
     },
     "generator.params.path_half": {
       "evidence": "Authored",

@@ -69,22 +69,25 @@ fn list_and_check_name_the_built_in_species() {
 #[test]
 #[allow(clippy::too_many_lines)]
 fn rules_and_traits_say_where_they_come_from() {
-    // Clusters, divided leaves and flowers in every look, homed at the
-    // flowering plants, then the juvenile period's and Corner's rules at
-    // the seed plants, then the families'; a rule on a look's card names
-    // the card.
+    // Clusters, divided leaves, flowers and seasons in every look, homed
+    // at the flowering plants, then the juvenile period's and Corner's
+    // rules at the seed plants, then the families'; a rule on a look's
+    // card names the card.
     let built_in = stdout(&plantc(&["rules"]));
     let flowering = "(clade angiosperms: _ranks/clade/angiosperms.json)";
     let seed_plants = "(clade Spermatophyta: _ranks/clade/spermatophyta.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (109):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (114):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
     for line in [
         format!(
-            "\n  appearance.organs.*.inflorescence.kind  {flowering}\n  appearance.organs.*.shape.belly on `flower` cards  {flowering}\n"
+            "\n  appearance.organs.*.inflorescence.kind  {flowering}\n  appearance.organs.*.season.bud  {flowering}\n"
+        ),
+        format!(
+            "\n  appearance.organs.*.season.ripe  {flowering}\n  appearance.organs.*.shape.belly on `flower` cards  {flowering}\n"
         ),
         format!(
             "\n  appearance.organs.*.shape.carpels on `flower` cards  {flowering}\n  appearance.organs.*.shape.confluent on `compound` cards  {flowering}\n"
@@ -179,7 +182,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
     assert!(
-        rules.starts_with("Rules, by their home (110):\n"),
+        rules.starts_with("Rules, by their home (115):\n"),
         "{rules}"
     );
     assert!(
@@ -399,15 +402,15 @@ fn organs_counts_a_plant_by_what_its_parts_are() {
     ] {
         assert!(yarrow.contains(line), "{line:?} in {yarrow}");
     }
-    // Fireweed in August: the lowest of each raceme's flowers in fruit,
-    // the top ones open or in bud.
+    // Fireweed in July: the lowest of each raceme's flowers in fruit, the
+    // top ones open or in bud.
     let fireweed = stdout(&plantc(&[
         "organs",
         "epilobium-angustifolium",
         "--age",
         "2",
         "--day",
-        "230",
+        "200",
     ]));
     assert!(fireweed.contains("\n    fruit "), "{fireweed}");
     assert!(fireweed.contains("\n    flower "), "{fireweed}");

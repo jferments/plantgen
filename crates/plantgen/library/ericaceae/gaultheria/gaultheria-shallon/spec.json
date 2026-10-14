@@ -126,7 +126,7 @@
     },
     "flowering_position": "both",
     "flowering_months": [5, 6, 7],
-    "fruiting_months": [8, 9, 10, 11, 12]
+    "fruiting_months": [7, 8, 9, 10, 11]
   },
   "evidence": {
     "traits.flowering_months": {
@@ -136,8 +136,8 @@
     },
     "traits.fruiting_months": {
       "evidence": "SourceInferred",
-      "source": "usfs-feis",
-      "note": "FEIS (Gaultheria shallon): ripe from August to October, and the fruit may stay on the stem until December."
+      "source": "usa-npn",
+      "note": "USA National Phenology Network observations (Nature's Notebook) at lowland sites west of the Cascades in Washington and Oregon (below 300 m, west of 121.8° W; 2009 to 2026, fetched 2026-10-14): 49 plant-years at 19 sites seen with ripe fruit, by the months they were seen in (Feb 2, Mar 2, May 2, Jul 16, Aug 20, Sep 20, Oct 11, Nov 8, Dec 4); stated as the months with at least a third as many as the busiest, July to November. FEIS (Gaultheria shallon): ripe from August to October, and the fruit may stay on the stem until December."
     },
     "traits.height_max_m": {
       "evidence": "SourceInferred",

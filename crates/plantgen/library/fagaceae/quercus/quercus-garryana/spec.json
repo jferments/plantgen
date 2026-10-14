@@ -152,7 +152,7 @@
     "wood_density_basic_kg_m3": 650,
     "juvenile_period_years": 20,
     "flowering_months": [4, 5, 6],
-    "fruiting_months": [8, 9, 10, 11]
+    "fruiting_months": [8, 9, 10]
   },
   "evidence": {
     "generator.params.spur_light": {
@@ -167,8 +167,8 @@
     },
     "traits.fruiting_months": {
       "evidence": "SourceInferred",
-      "source": "usfs-feis",
-      "note": "FEIS (Quercus garryana): acorns ripen from August to November across the range."
+      "source": "usa-npn",
+      "note": "USA National Phenology Network observations (Nature's Notebook) at lowland sites west of the Cascades in Washington and Oregon (below 300 m, west of 121.8° W; 2009 to 2026, fetched 2026-10-14): 26 plant-years at 17 sites seen with ripe fruit, by the months they were seen in (Jul 1, Aug 10, Sep 14, Oct 9, Nov 4); stated as the months with at least a third as many as the busiest, August to October. FEIS (Quercus garryana): acorns ripen from August to November across the range."
     },
     "traits.height_max_m": {
       "evidence": "SourceInferred",

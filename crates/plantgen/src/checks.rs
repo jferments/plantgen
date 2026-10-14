@@ -3566,13 +3566,13 @@ mod tests {
                 .collect()
         };
         // A flowering currant, stated to flower in March and April and be
-        // ripe in July and August: its racemes open their first flower on
-        // day 60 and their last 21 days later, the last going to fruit on
-        // day 121; its berries are half ripe from day 182 until they fall
-        // on day 244.
+        // ripe from July to September: its racemes open their first flower
+        // on day 60 and their last 21 days later, the last going to fruit
+        // on day 121; its berries are half ripe from day 182 until they
+        // fall on day 274.
         let currant = grow("ribes-sanguineum");
         assert_eq!(months(&currant, "flowering_months"), [3, 4]);
-        assert_eq!(months(&currant, "fruiting_months"), [7, 8]);
+        assert_eq!(months(&currant, "fruiting_months"), [7, 8, 9]);
         // An organ with no season shows its own look all year.
         let yarrow = grow("achillea-millefolium");
         assert_eq!(months(&yarrow, "flowering_months").len(), 12);

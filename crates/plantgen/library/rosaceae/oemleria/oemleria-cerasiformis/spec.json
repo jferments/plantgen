@@ -129,7 +129,7 @@
   "tier": "procedural_proxy",
   "traits": {
     "flowering_months": [2, 3, 4],
-    "fruiting_months": [5, 6, 7]
+    "fruiting_months": [6, 7]
   },
   "evidence": {
     "generator.params.spur_leaf": {
@@ -149,8 +149,8 @@
     },
     "traits.fruiting_months": {
       "evidence": "SourceInferred",
-      "source": "bonner-karrfalt-2008",
-      "note": "Seed Manual, Oemleria chapter (printed p. 750): ripe by early summer, and in the Pacific Northwest birds and mammals take the fruit from May to July; so ripe fruit is on the plant from May to July."
+      "source": "usa-npn",
+      "note": "USA National Phenology Network observations (Nature's Notebook) at lowland sites west of the Cascades in Washington and Oregon (below 300 m, west of 121.8° W; 2009 to 2026, fetched 2026-10-14): 30 plant-years at 10 sites seen with ripe fruit, by the months they were seen in (Apr 1, May 5, Jun 19, Jul 10, Aug 3, Sep 2, Oct 1); stated as the months with at least a third as many as the busiest, June and July. Seed Manual, Oemleria chapter (printed p. 750): ripe by early summer, and in the Pacific Northwest birds and mammals take the fruit from May to July; so ripe fruit is on the plant from May to July."
     },
     "generator.params.path_half": {
       "evidence": "Authored",

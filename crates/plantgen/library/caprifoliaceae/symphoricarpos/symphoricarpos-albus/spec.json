@@ -135,8 +135,8 @@
     },
     "traits.fruiting_months": {
       "evidence": "SourceInferred",
-      "source": "usfs-feis",
-      "note": "FEIS (Symphoricarpos albus): ripe in late August and early September, and the berries often stay on over winter (the Seed Manual: until the next spring, unless eaten); so ripe berries are on the plant from August to February."
+      "source": "usa-npn",
+      "note": "USA National Phenology Network observations (Nature's Notebook) at lowland sites west of the Cascades in Washington and Oregon (below 300 m, west of 121.8° W; 2009 to 2026, fetched 2026-10-14): 156 plant-years at 34 sites seen with ripe fruit, by the months they were seen in (Jan 46, Feb 33, Mar 22, Apr 5, May 1, Jul 23, Aug 52, Sep 64, Oct 78, Nov 84, Dec 61); stated as the months with at least a third as many as the busiest, August to February. FEIS (Symphoricarpos albus): ripe in late August and early September, and the berries often stay on over winter (the Seed Manual: until the next spring, unless eaten); so ripe berries are on the plant from August to February."
     },
     "traits.height_max_m": {
       "evidence": "SourceInferred",

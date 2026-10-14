@@ -141,7 +141,7 @@
     },
     "inflorescence": "panicle",
     "flowering_months": [4, 5],
-    "fruiting_months": [6, 7, 8]
+    "fruiting_months": [6, 7]
   },
   "evidence": {
     "traits.flowering_months": {
@@ -151,8 +151,8 @@
     },
     "traits.fruiting_months": {
       "evidence": "SourceInferred",
-      "source": "usfs-feis",
-      "note": "FEIS (Sambucus racemosa): ripe from June to August in western Oregon."
+      "source": "usa-npn",
+      "note": "USA National Phenology Network observations (Nature's Notebook) at lowland sites west of the Cascades in Washington and Oregon (below 300 m, west of 121.8° W; 2009 to 2026, fetched 2026-10-14): 24 plant-years at 10 sites seen with ripe fruit, by the months they were seen in (May 4, Jun 12, Jul 14, Aug 2, Oct 1, Nov 1); stated as the months with at least a third as many as the busiest, June and July. FEIS (Sambucus racemosa): ripe from June to August in western Oregon."
     },
     "traits.height_max_m": {
       "evidence": "SourceInferred",

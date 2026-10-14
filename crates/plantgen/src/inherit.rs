@@ -3615,6 +3615,13 @@ mod tests {
             days(&shared),
             [106, 121, 213, 213, 335].map(|day| json!(day))
         );
+        // Flowering from January, its buds in the December before and its
+        // year counted on from there.
+        let hazel = grow(json!([1, 2, 3]), json!([8, 9, 10, 11]), json!({}));
+        assert_eq!(
+            days(&hazel),
+            [351, 366, 456, 568, 700].map(|day| json!(day))
+        );
         // With no season, the rules set nothing.
         let chain = above(&files, "testaceae", "testus").unwrap();
         let bare = inherit(

@@ -137,7 +137,7 @@
     },
     "wood_density_basic_kg_m3": 560,
     "flowering_months": [4, 5],
-    "fruiting_months": [9, 10, 11]
+    "fruiting_months": [7, 8, 9, 10, 11, 12]
   },
   "evidence": {
     "generator.params.spur_leaf": {
@@ -157,8 +157,8 @@
     },
     "traits.fruiting_months": {
       "evidence": "SourceInferred",
-      "source": "usfs-feis",
-      "note": "FEIS (Acer circinatum): ripe in September or October, the seed then shed through November; so ripe samaras are on the plant from September to November."
+      "source": "usa-npn",
+      "note": "USA National Phenology Network observations (Nature's Notebook) at lowland sites west of the Cascades in Washington and Oregon (below 300 m, west of 121.8° W; 2009 to 2026, fetched 2026-10-14): 290 plant-years at 48 sites seen with ripe fruit, by the months they were seen in (Jan 25, Feb 10, Mar 3, Apr 1, May 15, Jun 39, Jul 81, Aug 119, Sep 152, Oct 137, Nov 107, Dec 54); stated as the months with at least a third as many as the busiest, July to December. FEIS (Acer circinatum): ripe in September or October, the seed then shed through November; so ripe samaras are on the plant from September to November."
     },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
