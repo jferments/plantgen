@@ -77,7 +77,7 @@ impl Front {
             let (right, left) = profiles(&outline);
             for half in &mut halves {
                 for row in 0..=ROWS {
-                    half[row] = 0.5 * (right[row] + left[row]);
+                    half[row] = f64::midpoint(right[row], left[row]);
                 }
             }
             return Self { halves };
@@ -134,15 +134,17 @@ impl Front {
             ((low.clamp(0.0, 1.0) * rows).floor() as usize).min(ROWS),
             ((high.clamp(0.0, 1.0) * rows).ceil() as usize).min(ROWS),
         );
-        let mut least = f64::INFINITY;
-        let mut most: f64 = 0.0;
+        let mut narrowest = f64::INFINITY;
+        let mut broadest: f64 = 0.0;
         for half in &self.halves {
             for value in &half[first..=last] {
-                most = most.max(*value);
+                broadest = broadest.max(*value);
             }
-            least = least.min(row_radius(half, low)).min(row_radius(half, high));
+            narrowest = narrowest
+                .min(row_radius(half, low))
+                .min(row_radius(half, high));
         }
-        (least.min(most), most)
+        (narrowest.min(broadest), broadest)
     }
 
     /// How far this front falls short of `open`, the same lineage's
@@ -345,7 +347,7 @@ fn profiles(points: &[[f64; 2]]) -> ([f64; ROWS + 1], [f64; ROWS + 1]) {
         for k in 0..count {
             let a = points[k];
             let b = points[(k + 1) % count];
-            if (a[1] - level) * (b[1] - level) > 0.0 || a[1] == b[1] {
+            if (a[1] - level) * (b[1] - level) > 0.0 || (a[1] - b[1]).abs() < 1e-12 {
                 continue;
             }
             let x = a[0] + (level - a[1]) / (b[1] - a[1]) * (b[0] - a[0]);

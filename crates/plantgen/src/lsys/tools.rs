@@ -1815,7 +1815,7 @@ fn grown_front(
     let tropisms = [gravitropism, phototropism];
     let open = surroundings.clear_sky();
     if let Some(kept) = &state.front
-        && kept.tropisms == tropisms
+        && kept.tropisms.map(f64::to_bits) == tropisms.map(f64::to_bits)
         && (open || height < 1.5 * kept.height)
     {
         return (kept.clone(), scale);
