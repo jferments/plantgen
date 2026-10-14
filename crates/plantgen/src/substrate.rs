@@ -393,8 +393,25 @@ impl SubstrateField {
     /// the surface is beyond the field's narrow band.
     #[must_use]
     pub fn surface_material(&self, point: Vec3) -> u8 {
+        self.reading(point).2
+    }
+
+    /// The distance, normal and surface material at `point` at once, as
+    /// [`Self::distance`], [`Self::normal`] and
+    /// [`Self::surface_material`] give them, reading the grid half as
+    /// often.
+    #[must_use]
+    pub fn reading(&self, point: Vec3) -> (f64, Vec3, u8) {
         let distance = self.distance(point);
         let normal = self.normal(point);
+        (
+            distance,
+            normal,
+            self.material_below(point, distance, normal),
+        )
+    }
+
+    fn material_below(&self, point: Vec3, distance: f64, normal: Vec3) -> u8 {
         let inside = point - normal * (distance + self.cell * 0.75);
         let material = self.material_at(inside);
         if material == AIR {
