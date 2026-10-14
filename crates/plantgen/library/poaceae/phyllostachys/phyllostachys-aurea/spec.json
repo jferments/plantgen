@@ -12,6 +12,7 @@
   "growth_form": "shrub",
   "generator": {
     "params": {
+      "flower_area": 0.231,
       "canes": 200,
       "cane_rate": 10,
       "cane_lean": 8,
@@ -86,6 +87,7 @@
   ],
   "tier": "procedural_proxy",
   "evidence": {
+    "generator.params.flower_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `flower` look draws on an organ 1 m long (visual forms Skill 1, 2026-10-14; plantc atlas), so it shades with what it shows: the look now takes its card from the taxa's characters, where before it drew the generic card (-)."},
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
