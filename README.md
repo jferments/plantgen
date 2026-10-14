@@ -35,7 +35,7 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
 
 ## What it does
 
-- **Species as data.** 152 built-in species in 62 families: trees, shrubs,
+- **Species as data.** 153 built-in species in 63 families: trees, shrubs,
   ferns, grasses, herbs, cacti and other succulents, palms, climbers and
   epiphytes. Each lives in its own folder, filed by family and genus
   (`crates/plantgen/library/<family>/<genus>/<species>/`). There it has a
@@ -49,8 +49,10 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   ranges and states can be qualified ("usually opposite, rarely
   alternate"), each with the source it comes from. A species inherits
   what its genus and family state, and `plantc traits <species>` shows
-  where each character came from and which are still missing. The first
-  families have their characters; most have none yet (`plantc audit`).
+  where each character came from and which are still missing. Of the
+  11,489 characters that apply to the 153 species, 2,898 (25%) are
+  stated so far, own or inherited, by 435 rank files; `plantc audit`
+  counts them by family.
   `plantc validate` grows each species from several seeds and checks the
   sizes they reach (heights, leaves, heads, spikelets and their parts)
   and the counts they draw (rays, florets, glumes, leaflets) against the
@@ -68,7 +70,7 @@ with every flower, fruit and spine drawn as its own mesh (`--parts on`).*
   phyllaries, florets, rays and pappus, and in the grasses a blade's and
   a spikelet's glumes, florets and awns, come from a flora's numbers; and
   a leaf's outline comes from the word for its shape.
-- **Plant programs.** 15 programs in PlantGen's open L-system language
+- **Plant programs.** 79 programs in PlantGen's open L-system language
   (`crates/plantgen/programs/*.lsys`), from conifers and broadleaf trees to
   grasses, ferns, cacti and climbers. Versioned environment tools let a
   growing tip ask about light, space, vigour and its host, and a ring,
@@ -145,6 +147,13 @@ that names one), and a species' characters and what each family has
 stated so far (`plantc traits`, `plantc audit`).
 `--library DIR` reads species and programs from a folder on top of the
 built-in ones, so you can write your own.
+
+PlantLab (`lab/`) grows plants under chosen conditions and renders them on
+the GPU: thumbnails, review sheets, close-ups and batches of cut-outs with
+a clear background, which is how plantgen.io's pictures are made (see
+`lab/README.md`). How a species' spec, its taxa's characters and their
+rules become a drawing is told step by step, with four plants, at
+[plantgen.io/how-plants-are-made](https://plantgen.io/how-plants-are-made/).
 
 ## Contributing
 
