@@ -87,6 +87,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its rhizome is not drawn and each pad's petiole is, as a stem of its own, so each reads as a shoot of one leaf against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
+        "olneya-tesota",
+        "leaf_length_m",
+        "a short shoot's leaf card draws a cluster of its small leaves, a branchlet's worth, 0.26 m long, so the crown keeps within the module limit, against Abrams's leaves 3 to 10 cm",
+    ),
+    (
         "oxalis-oregana",
         "leaf_arrangement",
         "Oxalidaceae's leaves are alternate and redwood sorrel's rise one to a node from its rhizome, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
@@ -95,6 +100,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "parkinsonia-microphylla",
         "flower_symmetry",
         "its zygomorphy is `other`, which the angiosperms draw as a corolla of like petals, so its flowers are drawn radial",
+    ),
+    (
+        "parkinsonia-microphylla",
+        "leaf_length_m",
+        "a short shoot's leaf card draws a cluster of its small leaves, a branchlet's worth, so the crown keeps within the module limit, against Abrams's pinnae 1 to 3 cm",
     ),
     (
         "program:broadleaf",

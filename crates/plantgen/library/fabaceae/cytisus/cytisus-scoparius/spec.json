@@ -84,11 +84,9 @@
       "bloom": {
         "shape": {
           "template": "fruit",
-          "kind": "pod",
           "aspect": 0.22,
           "unripe": 0.4
         },
-        "inflorescence": { "kind": "raceme", "flowers": 2, "per_node": 2, "divergence": 90, "pedicel": 0.2, "peduncle": 1, "size": 0.8, "spread": 20 },
         "colour": [0.12, 0.1, 0.08],
         "accent": [0.33, 0.45, 0.15],
         "season": {
@@ -110,7 +108,7 @@
             },
             "colour": [0.92, 0.78, 0.08],
             "accent": [0.85, 0.6, 0.05],
-            "size": 0.44
+            "size": 0.352
           }
         }
       }
@@ -126,7 +124,25 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "wood_density_basic_kg_m3": 640
+    "wood_density_basic_kg_m3": 640,
+    "height_typical_m": {"min": 1, "max": 2},
+    "woodiness": "woody",
+    "life_span": "perennial",
+    "leaf_division": {"compound": "usually", "simple": "sometimes"},
+    "division_pattern": "palmate",
+    "division_order": 1,
+    "leaflets": 3,
+    "leaflet_length_m": {"min": 0.004, "max": 0.008},
+    "leaf_shape": "obovate",
+    "petiole_length_m": {"min": 0.002, "max": 0.01},
+    "inflorescence": "solitary",
+    "units_per_inflorescence": {"min": 1, "max": 3},
+    "flowering_position": "lateral",
+    "flower_size_m": {"min": 0.018, "max": 0.02},
+    "flower_colour": [255, 205, 0],
+    "flowering_months": [4, 5, 6],
+    "fruit_size_m": {"min": 0.015, "max": 0.06},
+    "fruit_colour_ripe": [30, 25, 20]
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Cytisus scoparius (gwddagg_v2.2_species.csv, read): specific gravity 0.64 (wsg_est, the database's hierarchical-model species mean, from 3 records in 3 sources); trunks 0.63, branches 0.64. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
@@ -184,6 +200,101 @@
       "evidence": "SourceInferred",
       "source": "flora-nz-iv-1988",
       "note": "Its flower laid out whorl by whorl (spec rework P5): its petals, sepals, banner, wings and keel, stamens and pistil set from the characters of Fabaceae and Cytisus by the rules at the flowering plants. Its calyx by hand from the Flora of New Zealand (vol. IV, Webb and others 1988), as search results quote it (the page itself was not read): about a quarter of the corolla's length, 2-lipped, so its sepals a third of a petal long and joined for most of it."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: shrub 1-2 m high with angled, bare or sparsely leafy broom-like branches; leaves of 1 to 3 leaflets on petioles 2-10 mm long; leaflets 4-8 mm long, obovate, acute or with a small point; flowers bright yellow, alone or 2 or 3 together in the leaf axils, about 2 cm long (18-20 mm in the key); pedicels 6-10 mm; pod hairy on the edges only; April to June."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: shrub 1-2 m high with angled, bare or sparsely leafy broom-like branches; leaves of 1 to 3 leaflets on petioles 2-10 mm long; leaflets 4-8 mm long, obovate, acute or with a small point; flowers bright yellow, alone or 2 or 3 together in the leaf axils, about 2 cm long (18-20 mm in the key); pedicels 6-10 mm; pod hairy on the edges only; April to June."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: shrub 1-2 m high with angled, bare or sparsely leafy broom-like branches; leaves of 1 to 3 leaflets on petioles 2-10 mm long; leaflets 4-8 mm long, obovate, acute or with a small point; flowers bright yellow, alone or 2 or 3 together in the leaf axils, about 2 cm long (18-20 mm in the key); pedicels 6-10 mm; pod hairy on the edges only; April to June."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: shrub 1-2 m high with angled, bare or sparsely leafy broom-like branches; leaves of 1 to 3 leaflets on petioles 2-10 mm long; leaflets 4-8 mm long, obovate, acute or with a small point; flowers bright yellow, alone or 2 or 3 together in the leaf axils, about 2 cm long (18-20 mm in the key); pedicels 6-10 mm; pod hairy on the edges only; April to June. The upper leaves often have a single leaflet, so a leaf is sometimes simple in effect."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: shrub 1-2 m high with angled, bare or sparsely leafy broom-like branches; leaves of 1 to 3 leaflets on petioles 2-10 mm long; leaflets 4-8 mm long, obovate, acute or with a small point; flowers bright yellow, alone or 2 or 3 together in the leaf axils, about 2 cm long (18-20 mm in the key); pedicels 6-10 mm; pod hairy on the edges only; April to June. Three leaflets from one point (Abrams's genus allows palmate or pinnate threes; the species' are palmate, digitately trifoliolate)."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: shrub 1-2 m high with angled, bare or sparsely leafy broom-like branches; leaves of 1 to 3 leaflets on petioles 2-10 mm long; leaflets 4-8 mm long, obovate, acute or with a small point; flowers bright yellow, alone or 2 or 3 together in the leaf axils, about 2 cm long (18-20 mm in the key); pedicels 6-10 mm; pod hairy on the edges only; April to June."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: shrub 1-2 m high with angled, bare or sparsely leafy broom-like branches; leaves of 1 to 3 leaflets on petioles 2-10 mm long; leaflets 4-8 mm long, obovate, acute or with a small point; flowers bright yellow, alone or 2 or 3 together in the leaf axils, about 2 cm long (18-20 mm in the key); pedicels 6-10 mm; pod hairy on the edges only; April to June. Three on the lower leaves; the vocabulary counts from 2, so the one-leaflet upper leaves are carried by leaf_division's 'simple: sometimes'."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: shrub 1-2 m high with angled, bare or sparsely leafy broom-like branches; leaves of 1 to 3 leaflets on petioles 2-10 mm long; leaflets 4-8 mm long, obovate, acute or with a small point; flowers bright yellow, alone or 2 or 3 together in the leaf axils, about 2 cm long (18-20 mm in the key); pedicels 6-10 mm; pod hairy on the edges only; April to June."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: shrub 1-2 m high with angled, bare or sparsely leafy broom-like branches; leaves of 1 to 3 leaflets on petioles 2-10 mm long; leaflets 4-8 mm long, obovate, acute or with a small point; flowers bright yellow, alone or 2 or 3 together in the leaf axils, about 2 cm long (18-20 mm in the key); pedicels 6-10 mm; pod hairy on the edges only; April to June. The leaflets' outline."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: shrub 1-2 m high with angled, bare or sparsely leafy broom-like branches; leaves of 1 to 3 leaflets on petioles 2-10 mm long; leaflets 4-8 mm long, obovate, acute or with a small point; flowers bright yellow, alone or 2 or 3 together in the leaf axils, about 2 cm long (18-20 mm in the key); pedicels 6-10 mm; pod hairy on the edges only; April to June."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: shrub 1-2 m high with angled, bare or sparsely leafy broom-like branches; leaves of 1 to 3 leaflets on petioles 2-10 mm long; leaflets 4-8 mm long, obovate, acute or with a small point; flowers bright yellow, alone or 2 or 3 together in the leaf axils, about 2 cm long (18-20 mm in the key); pedicels 6-10 mm; pod hairy on the edges only; April to June. Flowers single or in axillary clusters of 2-3, not a raceme."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: shrub 1-2 m high with angled, bare or sparsely leafy broom-like branches; leaves of 1 to 3 leaflets on petioles 2-10 mm long; leaflets 4-8 mm long, obovate, acute or with a small point; flowers bright yellow, alone or 2 or 3 together in the leaf axils, about 2 cm long (18-20 mm in the key); pedicels 6-10 mm; pod hairy on the edges only; April to June."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: shrub 1-2 m high with angled, bare or sparsely leafy broom-like branches; leaves of 1 to 3 leaflets on petioles 2-10 mm long; leaflets 4-8 mm long, obovate, acute or with a small point; flowers bright yellow, alone or 2 or 3 together in the leaf axils, about 2 cm long (18-20 mm in the key); pedicels 6-10 mm; pod hairy on the edges only; April to June."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: shrub 1-2 m high with angled, bare or sparsely leafy broom-like branches; leaves of 1 to 3 leaflets on petioles 2-10 mm long; leaflets 4-8 mm long, obovate, acute or with a small point; flowers bright yellow, alone or 2 or 3 together in the leaf axils, about 2 cm long (18-20 mm in the key); pedicels 6-10 mm; pod hairy on the edges only; April to June. This is the pea flower's length (banner to keel), the measure floras give, not a width across."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: shrub 1-2 m high with angled, bare or sparsely leafy broom-like branches; leaves of 1 to 3 leaflets on petioles 2-10 mm long; leaflets 4-8 mm long, obovate, acute or with a small point; flowers bright yellow, alone or 2 or 3 together in the leaf axils, about 2 cm long (18-20 mm in the key); pedicels 6-10 mm; pod hairy on the edges only; April to June. 'Bright yellow' as RGB."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: shrub 1-2 m high with angled, bare or sparsely leafy broom-like branches; leaves of 1 to 3 leaflets on petioles 2-10 mm long; leaflets 4-8 mm long, obovate, acute or with a small point; flowers bright yellow, alone or 2 or 3 together in the leaf axils, about 2 cm long (18-20 mm in the key); pedicels 6-10 mm; pod hairy on the edges only; April to June. California to Washington, where it is naturalized."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-nz-iv-1988",
+      "note": "Flora of New Zealand vol. IV (Webb and others 1988), as search results quote it (the page itself was not read): pod black, oblong, many-seeded, 15-60 mm long, hairy on its edges. The Flora of Hawaii's account, quoted in the same results, gives 2.5-5(-7) cm long and 8-13 mm wide, brownish black."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "flora-nz-iv-1988",
+      "note": "Flora of New Zealand vol. IV (1988), as search results quote it (the page itself was not read): the ripe pod black (Flora of Hawaii: brownish black). Near-black as RGB."
+    },
+    "appearance.organs.bloom": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Its flowers stand alone or two or three together in the leaf axils (Abrams vol. 2, 1944, p. 519), not in a raceme, so each bloom is one flower and its pod; the flower's card is sized so it draws about 2 cm long, as Abrams's 18 to 20 mm."
     }
   },
   "provenance": {

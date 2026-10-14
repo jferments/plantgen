@@ -23,13 +23,11 @@
       "wiggle": 1.5,
       "nodes": 6,
       "bare": 0.1,
-      "leaf_length": 0.15,
       "leaf_peak": 0.2,
-      "leaf_top": 0.5,
+      "leaf_top": 0.7,
       "leaf_base": 1.0,
       "leaf_angle": 55,
       "basal_leaves": 6,
-      "basal_length": 0.25,
       "basal_angle": 50,
       "raceme": 0.03,
       "flowers": 1,
@@ -61,11 +59,11 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": { "template": "compound", "leaflet_width": 0.16, "teeth": 0, "petiole": 0.5, "spread": 300, "lowest": 0.6, "widest": 0.6, "tip": 0.5, "base": 0 },
+        "shape": { "template": "compound", "leaflet_width": 0.16, "teeth": 0, "spread": 300, "lowest": 0.6, "widest": 0.6, "tip": 0.5, "base": 0 },
         "face_up": 0.5
       },
       "basal": {
-        "shape": { "template": "compound", "leaflet_width": 0.16, "teeth": 0, "petiole": 0.55, "spread": 300, "lowest": 0.6, "widest": 0.6, "tip": 0.5, "base": 0 },
+        "shape": { "template": "compound", "leaflet_width": 0.16, "teeth": 0, "spread": 300, "lowest": 0.6, "widest": 0.6, "tip": 0.5, "base": 0 },
         "face_up": 0.4
       },
       "flower": {
@@ -121,11 +119,22 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "inflorescence": "raceme",
     "leaf_division": "compound",
-    "division_pattern": "palmate",
     "division_order": 1,
-    "leaflets": {"min": 9, "max": 17, "low": 5}
+    "leaflets": {"min": 9, "max": 17, "low": 5},
+    "height_typical_m": {"min": 0.5, "max": 1.5},
+    "woodiness": "herbaceous",
+    "life_span": "perennial",
+    "petiole_length_m": {"min": 0.15, "max": 0.3},
+    "leaflet_length_m": {"min": 0.07, "max": 0.15},
+    "leaflet_width_m": {"min": 0.015, "max": 0.03},
+    "leaf_shape": "oblanceolate",
+    "inflorescence_length_m": {"min": 0.15, "max": 0.6},
+    "flower_size_m": {"min": 0.012, "max": 0.014},
+    "flower_colour": [90, 80, 185],
+    "fruit_size_m": {"min": 0.025, "max": 0.04},
+    "fruit_colour_ripe": [80, 55, 35],
+    "flowering_months": [5, 6, 7, 8]
   },
   "evidence": {
     "generator.params": {
@@ -173,11 +182,6 @@
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
-    "traits.inflorescence": {
-      "evidence": "SourceInferred",
-      "source": "jepson-eflora",
-      "note": "Jepson eFlora's account of the species, as quoted in search results (the page itself was not read): inflorescence 5 to 40 cm, open to dense, the flowers more or less whorled or spiralled; peduncle 2 to 13 cm; pedicels 2 to 15 mm; flower 9 to 18 mm."
-    },
     "appearance.organs.flower": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -194,11 +198,6 @@
       "note": "Jepson eFlora's account of the species, as Calscape quotes it in search results (the page itself was not read): leaves palmately compound, leaflets (5) 9 to 17, 3 to 15 cm long."
     },
     "traits.leaf_division": {
-      "evidence": "SourceInferred",
-      "source": "jepson-eflora",
-      "note": "Jepson eFlora's account of the species, as Calscape quotes it in search results (the page itself was not read): leaves palmately compound, leaflets (5) 9 to 17, 3 to 15 cm long."
-    },
-    "traits.division_pattern": {
       "evidence": "SourceInferred",
       "source": "jepson-eflora",
       "note": "Jepson eFlora's account of the species, as Calscape quotes it in search results (the page itself was not read): leaves palmately compound, leaflets (5) 9 to 17, 3 to 15 cm long."
@@ -222,6 +221,76 @@
       "evidence": "SourceInferred",
       "source": "vicflora",
       "note": "Its flower laid out whorl by whorl (spec rework P5): its petals, sepals, banner, wings and keel, stamens and pistil set from the characters of Fabaceae and Lupinus by the rules at the flowering plants. Its calyx by hand from VicFlora and the Flora of New Zealand, as search results quote it (the page itself was not read): 5 to 10 mm against a corolla of 12 to 20 mm, 2-lipped, its lobes longer than its tube."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 515), Lupinus polyphyllus: erect, mostly unbranched, hollow-stemmed, 5-15 dm tall; leaves few, long-stalked, petioles 15-30 cm; leaflets 10-17, oblanceolate, 7-15 cm long, 15-30 mm wide; peduncles 3-8 cm; racemes 15-60 cm; flowers 12-14 mm long, loosely whorled, on pedicels 10-16 mm; petals blue, purple, reddish or yellowish; pods dark brown, loosely hairy, 25-40 mm long, 7-9 mm wide; May to August."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 515), Lupinus polyphyllus: erect, mostly unbranched, hollow-stemmed, 5-15 dm tall; leaves few, long-stalked, petioles 15-30 cm; leaflets 10-17, oblanceolate, 7-15 cm long, 15-30 mm wide; peduncles 3-8 cm; racemes 15-60 cm; flowers 12-14 mm long, loosely whorled, on pedicels 10-16 mm; petals blue, purple, reddish or yellowish; pods dark brown, loosely hairy, 25-40 mm long, 7-9 mm wide; May to August. The key (p. 483 onward) places it among the perennial, herbaceous lupines."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 515), Lupinus polyphyllus: erect, mostly unbranched, hollow-stemmed, 5-15 dm tall; leaves few, long-stalked, petioles 15-30 cm; leaflets 10-17, oblanceolate, 7-15 cm long, 15-30 mm wide; peduncles 3-8 cm; racemes 15-60 cm; flowers 12-14 mm long, loosely whorled, on pedicels 10-16 mm; petals blue, purple, reddish or yellowish; pods dark brown, loosely hairy, 25-40 mm long, 7-9 mm wide; May to August. Keyed under 'Plants perennial' (p. 483)."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 515), Lupinus polyphyllus: erect, mostly unbranched, hollow-stemmed, 5-15 dm tall; leaves few, long-stalked, petioles 15-30 cm; leaflets 10-17, oblanceolate, 7-15 cm long, 15-30 mm wide; peduncles 3-8 cm; racemes 15-60 cm; flowers 12-14 mm long, loosely whorled, on pedicels 10-16 mm; petals blue, purple, reddish or yellowish; pods dark brown, loosely hairy, 25-40 mm long, 7-9 mm wide; May to August."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 515), Lupinus polyphyllus: erect, mostly unbranched, hollow-stemmed, 5-15 dm tall; leaves few, long-stalked, petioles 15-30 cm; leaflets 10-17, oblanceolate, 7-15 cm long, 15-30 mm wide; peduncles 3-8 cm; racemes 15-60 cm; flowers 12-14 mm long, loosely whorled, on pedicels 10-16 mm; petals blue, purple, reddish or yellowish; pods dark brown, loosely hairy, 25-40 mm long, 7-9 mm wide; May to August."
+    },
+    "traits.leaflet_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 515), Lupinus polyphyllus: erect, mostly unbranched, hollow-stemmed, 5-15 dm tall; leaves few, long-stalked, petioles 15-30 cm; leaflets 10-17, oblanceolate, 7-15 cm long, 15-30 mm wide; peduncles 3-8 cm; racemes 15-60 cm; flowers 12-14 mm long, loosely whorled, on pedicels 10-16 mm; petals blue, purple, reddish or yellowish; pods dark brown, loosely hairy, 25-40 mm long, 7-9 mm wide; May to August."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 515), Lupinus polyphyllus: erect, mostly unbranched, hollow-stemmed, 5-15 dm tall; leaves few, long-stalked, petioles 15-30 cm; leaflets 10-17, oblanceolate, 7-15 cm long, 15-30 mm wide; peduncles 3-8 cm; racemes 15-60 cm; flowers 12-14 mm long, loosely whorled, on pedicels 10-16 mm; petals blue, purple, reddish or yellowish; pods dark brown, loosely hairy, 25-40 mm long, 7-9 mm wide; May to August. The leaflets' outline."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 515), Lupinus polyphyllus: erect, mostly unbranched, hollow-stemmed, 5-15 dm tall; leaves few, long-stalked, petioles 15-30 cm; leaflets 10-17, oblanceolate, 7-15 cm long, 15-30 mm wide; peduncles 3-8 cm; racemes 15-60 cm; flowers 12-14 mm long, loosely whorled, on pedicels 10-16 mm; petals blue, purple, reddish or yellowish; pods dark brown, loosely hairy, 25-40 mm long, 7-9 mm wide; May to August."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 515), Lupinus polyphyllus: erect, mostly unbranched, hollow-stemmed, 5-15 dm tall; leaves few, long-stalked, petioles 15-30 cm; leaflets 10-17, oblanceolate, 7-15 cm long, 15-30 mm wide; peduncles 3-8 cm; racemes 15-60 cm; flowers 12-14 mm long, loosely whorled, on pedicels 10-16 mm; petals blue, purple, reddish or yellowish; pods dark brown, loosely hairy, 25-40 mm long, 7-9 mm wide; May to August. The pea flower's length, as floras measure it."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 515), Lupinus polyphyllus: erect, mostly unbranched, hollow-stemmed, 5-15 dm tall; leaves few, long-stalked, petioles 15-30 cm; leaflets 10-17, oblanceolate, 7-15 cm long, 15-30 mm wide; peduncles 3-8 cm; racemes 15-60 cm; flowers 12-14 mm long, loosely whorled, on pedicels 10-16 mm; petals blue, purple, reddish or yellowish; pods dark brown, loosely hairy, 25-40 mm long, 7-9 mm wide; May to August. Blue to purple as one blue-violet RGB; reddish and yellowish forms occur."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 515), Lupinus polyphyllus: erect, mostly unbranched, hollow-stemmed, 5-15 dm tall; leaves few, long-stalked, petioles 15-30 cm; leaflets 10-17, oblanceolate, 7-15 cm long, 15-30 mm wide; peduncles 3-8 cm; racemes 15-60 cm; flowers 12-14 mm long, loosely whorled, on pedicels 10-16 mm; petals blue, purple, reddish or yellowish; pods dark brown, loosely hairy, 25-40 mm long, 7-9 mm wide; May to August."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 515), Lupinus polyphyllus: erect, mostly unbranched, hollow-stemmed, 5-15 dm tall; leaves few, long-stalked, petioles 15-30 cm; leaflets 10-17, oblanceolate, 7-15 cm long, 15-30 mm wide; peduncles 3-8 cm; racemes 15-60 cm; flowers 12-14 mm long, loosely whorled, on pedicels 10-16 mm; petals blue, purple, reddish or yellowish; pods dark brown, loosely hairy, 25-40 mm long, 7-9 mm wide; May to August. 'Dark brown' as RGB."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 515), Lupinus polyphyllus: erect, mostly unbranched, hollow-stemmed, 5-15 dm tall; leaves few, long-stalked, petioles 15-30 cm; leaflets 10-17, oblanceolate, 7-15 cm long, 15-30 mm wide; peduncles 3-8 cm; racemes 15-60 cm; flowers 12-14 mm long, loosely whorled, on pedicels 10-16 mm; petals blue, purple, reddish or yellowish; pods dark brown, loosely hairy, 25-40 mm long, 7-9 mm wide; May to August."
+    },
+    "generator.params.leaf_top": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Its leaves are few and all long-stalked, on petioles 15 to 30 cm (Abrams vol. 2, 1944, p. 515), so the topmost stem leaf is drawn 0.7 as long as the longest, by hand: no flora gives how they shrink up the stem."
     }
   },
   "provenance": {

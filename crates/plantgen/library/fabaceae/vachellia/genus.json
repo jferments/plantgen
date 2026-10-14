@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Vachellia",
+  "traits": {"flower_symmetry": "actinomorphic", "stamens": {"min": 35, "max": 215}},
+  "evidence": {
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "brenan-1959-ftea-mimosoideae",
+      "note": "Brenan's Flora of Tropical East Africa account of Mimosoideae (1959): subfamily (p. 1) flowers usually small or very small and regular; Acacia (p. 49), which then held Vachellia: flowers in spikes, spike-like racemes or round heads, stamens many (35 to about 215 in the East African species), free; the native species almost all armed. Abrams (vol. 2, 1944, p. 475) for Acacia: flowers small, usually yellow, in heads or spikes, stamens many, exserted."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "brenan-1959-ftea-mimosoideae",
+      "note": "Brenan's Flora of Tropical East Africa account of Mimosoideae (1959): subfamily (p. 1) flowers usually small or very small and regular; Acacia (p. 49), which then held Vachellia: flowers in spikes, spike-like racemes or round heads, stamens many (35 to about 215 in the East African species), free; the native species almost all armed. Abrams (vol. 2, 1944, p. 475) for Acacia: flowers small, usually yellow, in heads or spikes, stamens many, exserted. The range is for Acacia in the old wide sense in East Africa; no figure for Vachellia alone."
+    }
+  }
+}
