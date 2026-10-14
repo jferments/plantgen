@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Holcus",
+  "traits": {"life_span": "perennial"},
+  "evidence": {
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock's genus description of Holcus (p. 300): perennials with flat blades and contracted panicles."
+    }
+  }
+}

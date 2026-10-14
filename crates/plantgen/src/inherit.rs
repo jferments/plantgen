@@ -1703,6 +1703,15 @@ fn fill_defaults(
     let Some(Value::Object(defaults)) = generator.remove("defaults") else {
         return;
     };
+    // A default's spread (from a rule reading a range) goes with it.
+    let mut spreads = match generator
+        .get_mut("spreads")
+        .and_then(Value::as_object_mut)
+        .and_then(|spreads| spreads.remove("defaults"))
+    {
+        Some(Value::Object(spreads)) => spreads,
+        _ => Map::new(),
+    };
     let params = generator
         .get("program")
         .and_then(Value::as_str)
@@ -1732,7 +1741,7 @@ fn fill_defaults(
             // parameter over it.
             if let Some((label, depth)) = origin {
                 origins.insert(to.clone(), (label.clone(), 0));
-                filled.insert(key, (label, depth));
+                filled.insert(key.clone(), (label, depth));
             }
             let note = notes
                 .iter()
@@ -1742,10 +1751,30 @@ fn fill_defaults(
             if let Some(note) = note {
                 notes.insert(to, note);
             }
+            if let Some(spread) = spreads.remove(&key) {
+                let section = generator
+                    .entry("spreads")
+                    .or_insert_with(|| Value::Object(Map::new()));
+                if let Value::Object(section) = section {
+                    if let Value::Object(params) = section
+                        .entry("params")
+                        .or_insert_with(|| Value::Object(Map::new()))
+                    {
+                        params.insert(key.clone(), spread);
+                    }
+                }
+                let from = format!("generator.spreads.defaults.{key}");
+                if let Some(origin) = origins.get(&from).cloned() {
+                    origins.insert(format!("generator.spreads.params.{key}"), origin);
+                }
+            }
         }
     }
     forget(origins, "generator.defaults");
-    notes.retain(|path, _| !within(path, "generator.defaults"));
+    forget(origins, "generator.spreads.defaults");
+    notes.retain(|path, _| {
+        !within(path, "generator.defaults") && !within(path, "generator.spreads.defaults")
+    });
 }
 
 /// The parts a species merges, from the top down, each with its file's

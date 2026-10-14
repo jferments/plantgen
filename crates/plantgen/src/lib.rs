@@ -294,4 +294,11 @@ pub mod venation;
 /// 2), the inner turned half a petal: tall and dull Oregon grape draw
 /// three petals and three, bleeding heart an outer and an inner pair, and
 /// their stamens stand in whorls of as many (47 is dioecy, #103).
-pub const GENERATOR_REVISION: u32 = 48;
+/// 49: the daisy, grass, carrot and pea families' 34 built-in species grow
+/// from their characters (spec rework E1 to E4): head, leaf, blade, culm,
+/// panicle and cane sizes from their floras by rules in their taxa; a
+/// grass holds its blades in two ranks (grass program 6, `roll_spread`
+/// per lineage, sedges and rushes as before); cow parsnip's leaves are
+/// three leaflets; broom's flowers stand alone in the leaf axils (48 is
+/// corollas in two whorls, #90).
+pub const GENERATOR_REVISION: u32 = 49;

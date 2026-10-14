@@ -114,7 +114,8 @@
     "lower_glume_length_m": {"min": 0.0007, "max": 0.0015},
     "upper_glume_length_m": {"min": 0.001, "max": 0.0015},
     "lemma_length_m": {"min": 0.0017, "max": 0.0022},
-    "awns": false
+    "awns": false,
+    "flowering_months": [6, 7, 8]
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -186,6 +187,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (Panicularia elata, no. 6, fig. 496): flowers June-August in wet meadows, springs and moist woods."
     }
   },
   "provenance": {
