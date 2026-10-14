@@ -23,7 +23,6 @@
       "arch": 12,
       "pieces": 5,
       "flowering": 0.3,
-      "culm_height": 0.2,
       "culm_radius": 0.0008,
       "culm_leaves": 0,
       "culm_lean": 10,
@@ -93,7 +92,18 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "culm_length_m": {
+      "min": 0.2,
+      "max": 0.35
+    }
+  },
   "evidence": {
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), Carex inops, Fig. 768, p. 319: very slender culms 2 dm to 3.5 dm high (FEIS's carino review, citing FNA, gives a broader 10-50 cm for the species)."
+    },
     "appearance.organs.panicle": {
       "evidence": "Authored",
       "source": "plantgen-authors",

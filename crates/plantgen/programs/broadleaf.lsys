@@ -119,9 +119,26 @@
 # the step's end, so a rule that ends a part by its age counts the step it
 # is in (`age + dt >=`).
 #
+# Revision 14 (dioecy): in a dioecious species (dioecious 1, from the
+# sexual system its taxa state) a plant whose own draw `sex` is below a
+# half is male: its blooms are `bloom_male`, drawn as its blooms are in
+# bud and flower and fallen where they would set fruit. The rest are
+# female and bloom and fruit as before; so does a plant that bears both
+# sexes (dioecious 0). bloom_male is declared last, so the other organs
+# keep their places.
+#
+# Revision 15 (crown form, item 1): the region narrows among neighbours
+# (space@4). In the open it is the same ellipsoid as before; among
+# neighbours, or at a stand's edge, each height and side of it is scaled
+# as far as the front a crown as wide for its depth grows (Duchemin et al.
+# 2018; the lineage's gravitropism that gives that width in the open, and
+# its phototropism crown_phototropism) falls short under their shade. Less
+# light comes from the side there, more so on a stand's side, so the crown
+# grows narrower, and toward open sky at an edge.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 13;
+lsystem broadleaf 15;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -155,6 +172,8 @@ param adult_age;              # the first year the plant is adult and flowers
 param bloom_size;             # bloom card length
 param bloom_angle;            # angle of a bloom to its shoot; past 90 it hangs
 param bloom_area;             # leaf area of a bloom card 1 m long, m²
+param dioecious;              # 1: each plant is male or female; 0: every plant bears both
+param sex;                    # this plant's own draw, 0 to 1: below a half, a dioecious plant is male
 param droop;
 param lean;                   # the most the stem leans from upright
 param wiggle;                 # spread of the random turn at each internode
@@ -200,6 +219,7 @@ param apex_death;             # chance a year that a tip with no free space abor
 # The crown grows its own outline (revision 11).
 param room_width;             # free space fills this many times the crown's radius
 param room_height;            # and this many times its height
+param crown_phototropism;     # how far the region's front turns toward its light (revision 14)
 param path_half;              # wood from the base at which a shoot's nodes are half as long; 0: no limit
 param limb_path;              # how many times a limb's wood counts toward path_half (1: as the stem's)
 param leader_rate;            # how far each node of the stem turns back toward upright
@@ -227,20 +247,22 @@ module D queries light, space;            # a dormant bud
 organ leaf leaf area leaf_area;
 organ bloom flower area bloom_area;
 organ thorn leaf as spine area thorn_area;
+organ bloom_male flower area bloom_area;
 
 tool light@1 { cell = light_cell, extinction = extinction, bud = 0.01 };
-tool space@2 {
-    shape = 1,
+tool space@4 {
     base = crown_base * (1 - exp(-crown_rate * (t + 3))),
     height = room_height * crown_height * (1 - exp(-crown_rate * (t + 3))),
     radius = room_width * crown_radius * (1 - exp(-crown_rate * (t + 3))),
+    ratio = room_width * crown_radius / max(room_height * crown_height - crown_base, 0.01),
+    phototropism = crown_phototropism,
+    widest = 0.5,
+    fullness = 2,
     density = space_density,
     influence = space_reach,
     kill = space_kill,
     angle = 80,
-    renew = space_renew,
-    widest = 0.5,
-    fullness = 2
+    renew = space_renew
 };
 tool vigour@1 {
     lambda = apical + (apical_young - apical) * max(0, 1 - t / apical_years),
@@ -340,9 +362,10 @@ decompose Q(n, k) : n > 0 ->
 decompose Q(n, k) -> ;
 
 
-# Leaves fall after leaf_years; blooms last one year.
+# Leaves fall after leaf_years; blooms, a male plant's too, last one year.
 rule leaf(s) : age + dt >= leaf_years -> ;
 rule bloom(s) : age + dt >= 1 -> ;
+rule bloom_male(s) : age + dt >= 1 -> ;
 
 # A branch with no living bud is shed; on a dead plant, one by one (the
 # last rules).
@@ -360,7 +383,13 @@ decompose M(n, u, l) : n > 0 && leaves_per_node < 2 && thorns <= 0 && dormant_bu
     [ &(branch_angle) incline(set_point, incline_rate) S B ] [ &(leaf_angle) $ leaf(leaf_size) ]
     /(divergence) M(n - 1, u, l);
 
-# Blooms spread round a short shoot's tip.
+# Blooms spread round a short shoot's tip: a male plant's are male, set
+# with no random draws (they vary by their place), so every rule's draws
+# keep their sites.
+decompose Bo(n) : n > 0 && dioecious >= 0.5 && sex < 0.5 ->
+    [ /(n * 137.5 + 40 * frac(n * 0.618) - 20) &(bloom_angle * (0.8 + 0.4 * frac(n * 0.382)))
+      bloom_male(bloom_size * (0.85 + 0.3 * frac(n * 0.754))) ]
+    Bo(n - 1);
 decompose Bo(n) : n > 0 ->
     [ /(n * 137.5 + uniform(-20, 20)) &(bloom_angle * uniform(0.8, 1.2))
       bloom(bloom_size * uniform(0.85, 1.15)) ]

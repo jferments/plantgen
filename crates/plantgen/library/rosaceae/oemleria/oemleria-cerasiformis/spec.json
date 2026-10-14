@@ -12,7 +12,6 @@
   "growth_form": "shrub",
   "generator": {
     "params": {
-      "crown_height": 3.5,
       "crown_radius": 1.5,
       "crown_base": 0,
       "crown_rate": 0.22,
@@ -43,7 +42,6 @@
       "spur_pairs": 2,
       "leaf_angle": 40,
       "blooms": 1,
-      "adult_age": 3,
       "bloom_size": 0.035,
       "bloom_angle": 120,
       "leaf_area": 0.177,
@@ -132,7 +130,33 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "leaf_length_m": {
+      "min": 0.0381,
+      "max": 0.0635
+    },
+    "height_max_m": {
+      "min": 1,
+      "max": 5
+    },
+    "juvenile_period_years": 2
+  },
   "evidence": {
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson (1925), as O. cerasiformis: leaves 3.8 cm to 6.3 cm long (converted from inches)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944), as Osmaronia cerasiformis: a shrub or small tree 1 m to 5 m high."
+    },
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual (Oemleria chapter, text, read): first flowering occurred 2 years after germination on male plants raised from seed (no figure given for female, fruit-bearing plants)."
+    },
     "generator.params.spur_leaf": {
       "evidence": "Authored",
       "source": "plantgen-authors",

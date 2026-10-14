@@ -18,7 +18,6 @@
       "cone_pitch": 100,
       "cone_years": 1,
       "cone_area": 1.176,
-      "height_max": 35,
       "height_rate": 0.025,
       "height_shape": 1.3,
       "leader_shade": 0.5,
@@ -28,9 +27,9 @@
       "interwhorl": 3,
       "interwhorl_vigour": 0.6,
       "branch_angle": 75,
-      "branch_sag": 0.6,
-      "max_sag": 25,
       "upturn": 0.008,
+      "bend_set": 0.1,
+      "straighten": 0.3,
       "branch_growth": 0.28,
       "side_growth": 0.6,
       "side_chance": 0.85,
@@ -128,12 +127,26 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 43,
+      "max": 46
+    },
     "wood_density_basic_kg_m3": 410,
     "wood_modulus_green_mpa": 8100,
     "wood_rupture_green_mpa": 46,
     "wood_moisture_green_share": {"min": 1.21, "max": 1.71, "typical": 1.46}
   },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "silvics-1990-conifers",
+      "note": "Silvics vol. 1 (1990), Baldcypress chapter: the largest trees of the virgin forests were 43 to 46 m (140 to 150 ft) tall; the 1982 champion was only 25 m. Sargent (1922) and Britton and Brown (1913) both give about 150 ft as the maximum."
+    },
+    "generator.params.bend_set": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Conifer sag (M6, bend@1): the share of each year's sag its wood keeps, with `straighten` the share of that bend it straightens each year. Set by eye from renders at 60 to 80 years: with the program's creep (0.5 and 0.02) the bald cypress's thin, slow limbs hang down, so it keeps the milder creep the broadleaf program uses (0.1 and 0.3)."
+    },
     "generator.params.side_years": {
       "evidence": "Authored",
       "source": "plantgen-authors",

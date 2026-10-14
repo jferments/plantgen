@@ -20,13 +20,22 @@
       "max": 9
     },
     "ovary_position": "superior",
-    "fruit_type": "achene"
+    "fruit_type": "achene",
+    "rosette": {
+      "basal": "often",
+      "none": "usually"
+    }
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 276 Polygonaceae: herbs, shrubs or climbers, rarely trees; leaves alternate, rarely opposite, the stalk's base often widened into a papery sheath round the stem (the ochrea, read here as its stipules); flowers small, regular; 3 to 6 sepals, often growing papery in fruit, and no petals, read as tepals; stamens usually 6 to 9; ovary superior, of one cell with one ovule; fruit a three-angled or two-sided nut, read as an achene."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Polygonaceae: whether the leaves gather in rosettes (character 22), coded usually no rosette, often a basal rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   }
 }

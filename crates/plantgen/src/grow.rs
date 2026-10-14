@@ -431,8 +431,14 @@ struct Girth {
 impl Girth {
     /// This step's radii: the larger of the pipe model and the rings laid
     /// down so far, never shrinking, so a trunk keeps the girth it reached
-    /// before its lower branches were shed.
-    fn radii(&mut self, scene: &Scene, pipes: Option<&tools::Pipes>, dt: f64) -> Vec<f64> {
+    /// before its lower branches were shed. With them, how much each
+    /// radius grew since the last step (all of it for new wood).
+    fn radii(
+        &mut self,
+        scene: &Scene,
+        pipes: Option<&tools::Pipes>,
+        dt: f64,
+    ) -> (Vec<f64>, Vec<f64>) {
         scene
             .segments
             .iter()
@@ -449,10 +455,11 @@ impl Girth {
                     None => segment.width,
                 };
                 let widest = self.widest.entry(segment.id).or_insert(0.0);
+                let was = *widest;
                 *widest = widest.max(radius);
-                *widest
+                (*widest, *widest - was)
             })
-            .collect()
+            .unzip()
     }
 }
 
@@ -893,12 +900,13 @@ impl<'a> Grower<'a> {
             Some(values) => Some(tools::pipe(&scene, &self.organ_area, &values)?),
             None => None,
         };
-        let radii = self.girth.radii(&scene, pipes.as_ref(), settings.dt);
+        let (radii, grown) = self.girth.radii(&scene, pipes.as_ref(), settings.dt);
         if let Some(values) = step_settings(program, ToolKind::Bend, params, clock, &mut self.stack)
         {
             tools::bend(
                 &mut scene,
                 &radii,
+                &grown,
                 &self.organ_area,
                 &values,
                 &mut self.rest_bends,

@@ -17,20 +17,18 @@
       "tussock_radius": 0.08,
       "tiller_lean": 12,
       "leaves": 3,
-      "leaf_length": 0.25,
       "leaf_spread": 0.3,
       "leaf_angle": 18,
       "arch": 9,
       "pieces": 6,
       "flowering": 0.4,
-      "culm_height": 0.7,
       "culm_radius": 0.0012,
       "culm_leaves": 2,
       "culm_lean": 6,
       "panicle_nod": 10,
-      "blade_area": 0.098,
-      "tip_area": 0.054,
-      "thatch_area": 0.098,
+      "blade_area": 0.203,
+      "tip_area": 0.11,
+      "thatch_area": 0.203,
       "panicle_area": 0.152
     }
   },
@@ -115,7 +113,13 @@
     "awns": true,
     "awn_length_m": {"min": 0.001, "max": 0.0015},
     "awn_insertion": "subapical",
-    "awn_form": "hooked"
+    "awn_form": "hooked",
+    "rhizome_habit": "none",
+    "clonal": false,
+    "lower_glume_length_m": 0.004,
+    "upper_glume_length_m": 0.004,
+    "leaf_length_m": {"min": 0.04, "max": 0.2},
+    "flowering_months": [6, 7]
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -187,6 +191,36 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 300): his key separates H. lanatus, rhizomes wanting, from H. mollis, rhizomes present; Abrams 1923 keys it the same way."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 300): rhizomes wanting; a tufted plant that does not spread by its own shoots."
+    },
+    "traits.lower_glume_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 300, no. 1): spikelets 4 mm long, and the genus has glumes about equal and longer than the two florets, so each glume is about 4 mm."
+    },
+    "traits.upper_glume_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 300, no. 1): spikelets 4 mm long; glumes about equal and longer than the florets (the second broader, 3-nerved), so about 4 mm."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "kew-grassbase",
+      "note": "GrassBase's entry (as search results quote it; the page itself was not read): leaf-blades 4-20 cm long, 3-10 mm wide."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (Notholcus lanatus, no. 1, fig. 367): flowers June-July, abundantly escaped on the Pacific Coast."
     }
   },
   "provenance": {

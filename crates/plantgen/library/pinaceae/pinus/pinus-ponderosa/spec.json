@@ -14,16 +14,13 @@
     "params": {
       "cone_chance": 0.1,
       "cone_area": 0.785,
-      "height_max": 45,
       "height_rate": 0.022,
       "height_shape": 1.4,
       "leader_shade": 0.25,
       "whorl": 4,
       "interwhorl": 0,
       "branch_angle": 70,
-      "branch_sag": 1.2,
-      "max_sag": 40,
-      "upturn": 0.03,
+      "upturn": 0.015,
       "branch_growth": 0.28,
       "spray_base": 0.25,
       "spray_length": 1.0,
@@ -93,6 +90,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 27.4,
+      "max": 39.6
+    },
     "wood_density_basic_kg_m3": 420,
     "wood_modulus_green_mpa": 6900,
     "wood_rupture_green_mpa": 35,
@@ -106,6 +107,11 @@
     "cone_retention_years": 0
   },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "silvics-1990-conifers",
+      "note": "Silvics vol. 1 (1990), Ponderosa Pine chapter: heights of 27.4 to 39.6 m (90 to 130 ft) are common through most of the range; a record of 70.7 m has been measured."
+    },
     "traits.wood_modulus_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Pine, ponderosa, green: modulus of elasticity 6,900 MPa in static bending (clear wood, centre-loaded, span 14 depths; specific gravity 0.38)."},
     "traits.wood_rupture_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Pine, ponderosa, green: modulus of rupture 35,000 kPa (clear wood in static bending)."},
     "traits.wood_moisture_green_share": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 4-1, Pine, ponderosa: average moisture content of green wood, heartwood 40% and sapwood 148% of oven-dry mass; stated as a share, the range between them with its middle typical where both are given."},

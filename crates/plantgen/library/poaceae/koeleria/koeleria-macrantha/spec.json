@@ -17,7 +17,6 @@
       "tussock_radius": 0.05,
       "tiller_lean": 12,
       "leaves": 3,
-      "leaf_length": 0.15,
       "leaf_spread": 0.3,
       "leaf_angle": 15,
       "arch": 8,
@@ -112,7 +111,14 @@
     "spikelet_length_m": {"min": 0.0025, "max": 0.0065},
     "glumes": 2,
     "upper_glume_length_m": {"min": 0.0025, "max": 0.005},
-    "lemma_length_m": {"min": 0.0025, "max": 0.0065}
+    "lemma_length_m": {"min": 0.0025, "max": 0.0065},
+    "life_span": "perennial",
+    "rhizome_habit": "none",
+    "clonal": false,
+    "lower_glume_length_m": {"min": 0.003, "max": 0.004},
+    "inflorescence_posture": "erect",
+    "leaf_length_m": {"min": 0.05, "max": 0.2},
+    "flowering_months": [6, 7]
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -184,6 +190,41 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 276, K. cristata, the name he used for this plant): a tufted perennial."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 276, K. cristata): a tufted perennial, no rhizomes named."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 276, K. cristata): tufted, with no rhizomes or stolons named; he adds that the plants are rather scattered."
+    },
+    "traits.lower_glume_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 276-277, K. cristata): glumes and lemmas scaberulous, 3 to 4 mm long; the genus has the lower glume narrow and sometimes shorter than the upper."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 276, K. cristata): panicle erect, spikelike and dense (loose at flowering), tapering at the top."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "kew-grassbase",
+      "note": "GrassBase's entry (as search results quote it; the page itself was not read): leaf-blades filiform or linear, 5-20 cm long, 1-2.5 mm wide."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (Koeleria no. 2, K. cristata, fig. 385): flowers June-July on prairies."
     }
   },
   "provenance": {

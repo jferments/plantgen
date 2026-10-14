@@ -102,7 +102,13 @@
     "pinnae": {"min": 5, "max": 9},
     "leaflets": {"min": 3, "max": 7},
     "terminal_leaflet": true,
-    "leaf_shape": "ovate"
+    "leaf_shape": "ovate",
+    "leaflet_length_m": {"min": 0.01, "max": 0.06},
+    "leaf_margin": "dentate",
+    "flower_size_m": 0.002,
+    "fruit_size_m": {"min": 0.0025, "max": 0.0035},
+    "flowering_months": [6, 7, 8, 9, 10],
+    "life_span": "perennial"
   },
   "evidence": {
     "traits.height_typical_m": {
@@ -204,6 +210,36 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The leaf drawn twice pinnate (spec rework P4), its pinnae and their leaflets counted, set and shaped from its characters by the rules at the flowering plants and the plants; before, nine leaflets stood along one rachis. By eye: pinnae and leaflets 55 degrees from their rachises."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), p. 238, fig. 3521: leaves twice pinnate, the divisions close together, ovate, 1 to 6 cm long, long-pointed, toothed, often lobed at the base. (The Flora of New Zealand factsheet, as quoted in search results, gives segments 10 to 35 mm.)"
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), p. 238: leaf divisions toothed (no finer word); written as dentate. Popular accounts call them serrated; serrate is as defensible."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-nz-iv-1988",
+      "note": "The Flora of New Zealand's factsheet for the naturalised plant (nzflora.info), as quoted in search results (the page itself was not read): flowers many, white, about 2 mm across."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), p. 238: fruit 2.5 to 3.5 mm long, oblong (genus), the ribs very corky; styles long, about half the fruit's length (family key)."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), p. 238: flowering June to October."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia's article on Oenanthe sarmentosa, as quoted in search results (the page itself was not read): a perennial herb. Abrams (1951) does not say."
     }
   },
   "provenance": {

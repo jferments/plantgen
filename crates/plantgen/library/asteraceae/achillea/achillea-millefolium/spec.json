@@ -17,15 +17,11 @@
       "clump_radius": 0.08,
       "stem_lean": 8,
       "maturity": 1.2,
-      "stem_height": 0.5,
       "stem_radius": 0.002,
       "wiggle": 2,
       "nodes": 9,
       "bare": 0.05,
-      "leaf_length": 0.08,
       "leaf_peak": 0.1,
-      "leaf_top": 0.35,
-      "leaf_base": 1.0,
       "leaf_angle": 45,
       "raceme": 0.04,
       "flowers": 1,
@@ -36,7 +32,6 @@
       "buds_above": 1,
       "nod": 0,
       "basal_leaves": 4,
-      "basal_length": 0.15,
       "basal_angle": 60,
       "leaf_area": 0.054,
       "basal_area": 0.048,
@@ -68,7 +63,7 @@
         "shape": { "template": "compound", "leaflets": 25, "pinnules": 7, "leaflet_width": 0.22, "teeth": 0, "petiole": 0.15, "angle": 70, "pinnule_angle": 50, "largest": 0.4, "lowest": 0.35, "widest": 0.35, "tip": 0.6, "base": 0.5 }
       },
       "flower": {
-        "shape": { "template": "head", "ray_width": 1.1, "disc": 0.5 },
+        "shape": { "template": "head", "ray_width": 1.1, "disc": 0.5, "involucre": 1.8 },
         "inflorescence": { "size": 0.075, "spread": 40, "peduncle": 0.55 },
         "colour": [0.92, 0.9, 0.84],
         "accent": [0.85, 0.8, 0.6]
@@ -98,7 +93,13 @@
     "ray_florets": {"min": 5, "max": 8, "low": 3},
     "disc_florets": {"min": 10, "max": 20},
     "receptacle_shape": "convex",
-    "fruit_size_m": {"min": 0.001, "max": 0.002}
+    "fruit_size_m": {"min": 0.001, "max": 0.002},
+    "leaf_length_m": {"min": 0.05, "max": 0.2, "high": 0.4},
+    "ray_colour": [250, 250, 245],
+    "disc_colour": [240, 236, 220],
+    "involucre_height_m": {"min": 0.004, "max": 0.007, "high": 0.009},
+    "flowering_months": [3, 4, 5, 6, 7, 8, 9, 10, 11],
+    "rhizome_habit": {"short_creeping": "often", "long_creeping": "often"}
   },
   "evidence": {
     "generator.params": {
@@ -175,6 +176,41 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The blade drawn dissected (spec rework P4): a twice-divided leaf whose segments run together along a winged rachis, its pattern and the running together from its characters by the rules at the flowering plants; before, separate toothed leaflets stood along a rachis. Counts and form by eye from photographs: about 10 to 12 pairs of primary segments, each cut into 5 to 7 narrow lobes; the segments longest 0.4 of the way up, the blade's oblong to lanceolate outline (its shape word is the blade's, so the card sets its segments' own form by hand)."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, varieties of A. millefolium (pp. 390-391): leaves mostly 5-20 cm long; 10-30 cm in var. californica and 15-40 cm in var. gigantea."
+    },
+    "traits.ray_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, A. millefolium (p. 390): the 3-8 broad rays are generally white, now and then pink. Word: white."
+    },
+    "traits.disc_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, A. millefolium (p. 390): disc florets the same colour as the rays, i.e. white (an off-white given). Word: white (same as rays)."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, varieties of A. millefolium (pp. 390-391): heads/involucres mostly 4-7 mm high, up to 9 mm in var. californica."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, varieties of A. millefolium (pp. 390-391): flowering periods given per variety run from March (vars. californica, arenicola) to November (var. arenicola); most varieties May to August."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, A. millefolium (pp. 390-391): plants rhizomatous to tufted; rhizomes short and stout in some varieties, long and slender in others."
+    },
+    "appearance.organs.flower.shape.involucre": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The involucre drawn about 1.8 times as tall as the disc is wide, so its height comes to the flora's 4 to 7 mm on a head drawn 6 mm across (spec rework E1); the daisy family's rule sets it from the involucre's height and width, and no flora read gives yarrow's width."
     }
   },
   "provenance": {

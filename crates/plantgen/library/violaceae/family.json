@@ -27,6 +27,10 @@
     "fruit_type": {
       "capsule": "usually",
       "berry": "rarely"
+    },
+    "rosette": {
+      "basal": "often",
+      "none": "often"
     }
   },
   "forms": {
@@ -48,6 +52,11 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 99 Violaceae: leaves alternate, rarely opposite, simple; stipules leafy or small; flowers regular or irregular, the lowest petal often larger and spurred; sepals 5; petals 5; stamens 5, ringed round the ovary; ovary free (superior), with 3 to 5 placentas; fruit a capsule that splits elastically, or a berry. The irregular flower is none of the named kinds (pea, two-lipped, orchid lip): zygomorphy other."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Violaceae: whether the leaves gather in rosettes (character 22), coded often a basal rosette, often no rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   }
 }

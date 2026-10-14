@@ -59,10 +59,16 @@
 # ground lies on it, `rest_gap` above the substrate (substrate@1's, or
 # level soil), as a prickly pear's pads do, instead of passing into it.
 #
+# Revision 6 (dioecy): in a dioecious species (dioecious 1, from the
+# sexual system its taxa state) a plant whose own draw `sex` is below a
+# half is male: its rings bear open flowers where a female's bear fruit,
+# and its joints hang no chains of fruit. The rest are female and fruit as
+# before; so does a plant that bears both sexes (dioecious 0).
+#
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem cactaceae 5;
+lsystem cactaceae 6;
 
 # The plant.
 param vigour_spread = 0.12;   # an individual grows exp(gauss() * vigour_spread) times as fast
@@ -147,6 +153,8 @@ param chain_max = 7;          # most fruit in a chain
 param flower_area = 0.64;
 param bud_area = 0.89;
 param fruit_area = 0.89;
+param dioecious;              # 1: each plant is male or female; 0: every plant bears both
+param sex;                    # this plant's own draw, 0 to 1: below a half, a dioecious plant is male
 
 module Y(k, v, b);                      # the crown: k stems so far, vigour, arm propensity
 module Ss(k, m, v, b);                  # stems k to k + m - 1 sprouting this year
@@ -287,7 +295,7 @@ interpret Ri(k, m, r, d) : m == 1 ->
     [ /(k * 360 / flowers + uniform(-12, 12)) f(-d * (1 - cos(rad(ring_angle))))
       &(90) f(r * sin(rad(ring_angle))) ^(90 - flower_angle * uniform(0.8, 1.2)) Fo ];
 interpret Fo : rand(1) < bud_share -> bud(bud_size * uniform(0.8, 1.2));
-interpret Fo : rand(1) < bud_share + fruit_share -> fruit(fruit_size * uniform(0.85, 1.15));
+interpret Fo : rand(1) < bud_share + fruit_share && (dioecious < 0.5 || sex >= 0.5) -> fruit(fruit_size * uniform(0.85, 1.15));
 interpret Fo -> flower(flower_size * uniform(0.85, 1.15));
 
 # A joint in its second year sprouts its daughters (a trunk joint also
@@ -377,7 +385,7 @@ interpret Fl(k, m, n, l, r) : m == 1 ->
 
 # A chain of fruit hangs from its joint and grows one more fruit at its
 # end each year, as the last one flowers again.
-decompose Cb(n) : n > 0 -> [ &(150 + uniform(-15, 15)) /(uniform(0, 360)) Cf Ch(1) ];
+decompose Cb(n) : n > 0 && (dioecious < 0.5 || sex >= 0.5) -> [ &(150 + uniform(-15, 15)) /(uniform(0, 360)) Cf Ch(1) ];
 decompose Cb(n) -> ;
 rule Ch(n) : n < chain_max -> Cf Ch(n + 1);
 interpret Cf ->

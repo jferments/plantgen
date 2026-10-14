@@ -797,7 +797,9 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
                 if look.inflorescence.is_none() {
                     continue;
                 }
-                if day.is_none() {
+                // A male look copies its bloom's (dioecy), so it is checked
+                // but not counted.
+                if day.is_none() && !look.organ.ends_with(spec::MALE) {
                     checked += 1;
                 }
                 let part = meshes
@@ -815,8 +817,8 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
         }
     }
     assert_eq!(
-        checked, 60,
-        "the 25 fruit clusters that moved in with L1a, the 15 clusters of flowers and heads of \
+        checked, 59,
+        "the 24 fruit clusters that moved in with L1a (broom's flowers stand alone since E4), the 15 clusters of flowers and heads of \
          L1c, the 18 inflorescences of grasses, sedges and rushes of P3, the orchid's spike \
          of P5 and the skunk cabbage's spadix of E6b"
     );
