@@ -12,6 +12,7 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
+      "bloom_area": 0.459,
       "crown_radius": 8,
       "crown_base": 2.5,
       "crown_rate": 0.05,
@@ -114,6 +115,7 @@
     "wood_density_basic_kg_m3": 450
   },
   "evidence": {
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (visual forms Skill 1, 2026-10-14; plantc atlas), so it shades with what it shows: the look now takes its card from the taxa's characters, where before it drew the generic card (-)."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "sargent-1922",

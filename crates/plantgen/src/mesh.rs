@@ -2887,6 +2887,7 @@ mod tests {
             foliage_shade: [0.05, 0.15, 0.08],
             variation: 0.2,
             organs: BTreeMap::new(),
+            defaults: BTreeMap::new(),
             ridges: None,
             flare: None,
             moss: None,

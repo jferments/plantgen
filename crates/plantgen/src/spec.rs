@@ -514,6 +514,12 @@ pub struct Appearance {
     /// listed get their kind's default look (see [`crate::looks`]).
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub organs: BTreeMap<String, OrganLook>,
+    /// The look of each organ kind (`leaf`, `flower`, …) for the organs
+    /// the program draws that `organs` does not list, which a rank file
+    /// states: inheritance gives each such organ its kind's, so an
+    /// effective spec carries none ([`crate::inherit`]).
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub defaults: BTreeMap<String, OrganLook>,
     /// Furrowed bark on thick wood.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub ridges: Option<Ridges>,
@@ -724,6 +730,15 @@ impl Appearance {
         for (organ, look) in &self.organs {
             look.validate()
                 .map_err(|message| format!("appearance.organs.{organ}: {message}"))?;
+        }
+        for (kind, look) in &self.defaults {
+            if crate::lsys::OrganKind::from_name(kind).is_none() {
+                return Err(format!(
+                    "appearance.defaults.{kind}: no organ kind is called `{kind}`"
+                ));
+            }
+            look.validate()
+                .map_err(|message| format!("appearance.defaults.{kind}: {message}"))?;
         }
         if let Some(ridges) = &self.ridges {
             ridges
