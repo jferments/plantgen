@@ -4,6 +4,9 @@
   "name": "Polygonaceae",
   "parent": "order/caryophyllales",
   "traits": {
+    "flower_merosity": {"min": 3, "max": 5, "typical": 3, "low": 2},
+    "carpels": {"min": 3, "max": 3, "low": 2, "high": 4},
+    "hypanthium": {"true": "usually", "false": "sometimes"},
     "woodiness": {
       "herbaceous": "usually",
       "woody": "sometimes"
@@ -27,6 +30,9 @@
     }
   },
   "evidence": {
+    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 381: tepals usually 3+3 (three per whorl) or 5 in a quincunx, rarely 2+2."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 381: ovary of 3, rarely 2 or 4, carpels with one locule (Floral Diagrams p. 170: 2 to 3, rarely 4)."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 170, 171: all flowers have a hypanthium, often well developed; Simpson p. 381 says hypanthium absent or present, so 'false' is kept as sometimes."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

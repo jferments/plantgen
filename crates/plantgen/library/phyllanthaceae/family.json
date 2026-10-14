@@ -4,6 +4,10 @@
   "name": "Phyllanthaceae",
   "parent": "order/malpighiales",
   "traits": {
+    "perianth": {"tepals": "often", "sepals_and_petals": "often"},
+    "flower_merosity": {"min": 5, "max": 5, "low": 3, "high": 9},
+    "stamens": {"min": 2, "max": 35},
+    "carpels": {"min": 2, "max": 3, "typical": 3, "low": 1, "high": 15},
     "woodiness": {
       "woody": "usually",
       "herbaceous": "sometimes"
@@ -23,6 +27,10 @@
     }
   },
   "evidence": {
+    "traits.perianth": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 260, 261: flowers unisexual, petals generally smaller than the sepals or absent (general formula K2-8, C0 or 3-9). A sepal-only flower is mapped to 'tepals'."},
+    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 261: perianth mostly 5-merous, sometimes 3- to 9-merous."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 260: Ronse De Craene general formula: stamens 2 to 35, one whorl usually alternating with the petals."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 260, 261: carpels 3 or 2, always 3 in 5-merous flowers; general formula 1 to 15."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

@@ -4,6 +4,7 @@
   "name": "Ericaceae",
   "parent": "order/ericales",
   "traits": {
+    "hypanthium": false,
     "inflorescence": {
       "raceme": "often",
       "panicle": "sometimes",
@@ -82,6 +83,7 @@
     }
   },
   "evidence": {
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 389, 505: Simpson calls the flowers hypogynous or epigynous, neither of which has a hypanthium. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits.inflorescence": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

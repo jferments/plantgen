@@ -4,6 +4,11 @@
   "name": "Araliaceae",
   "parent": "order/apiales",
   "traits": {
+    "flower_merosity": {"min": 5, "max": 5, "low": 3, "high": 12},
+    "stamens": {"min": 5, "max": 10, "low": 3, "high": 120},
+    "carpels": {"min": 2, "max": 5, "low": 1, "high": 200},
+    "corolla_shape": "rotate",
+    "hypanthium": false,
     "woodiness": {
       "woody": "usually",
       "herbaceous": "sometimes"
@@ -46,6 +51,11 @@
     }
   },
   "evidence": {
+    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 431, 435: 5, rarely 3 to 12, petals."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 431, 435: stamens 5 to 10, rarely 3 to many; Floral Diagrams p. 340 gives up to 120."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 431, 435: carpels 2 to 5, rarely to many; Floral Diagrams p. 340 general formula 1 to 10, up to 200."},
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 431: petals free (rarely basally joined or a cap), valvate. Free petals: rotate by PlantGen's free-petal rule; the book names no other corolla form."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 431, 505: flowers epigynous, rarely hypogynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

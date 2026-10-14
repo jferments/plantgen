@@ -4,6 +4,7 @@
   "name": "Amaryllidaceae",
   "parent": "order/asparagales",
   "traits": {
+    "hypanthium": {"true": "often", "false": "often"},
     "woodiness": "herbaceous",
     "leaf_venation": "parallel",
     "flower_symmetry": "actinomorphic",
@@ -28,6 +29,7 @@
     }
   },
   "evidence": {
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 229, 227: Amaryllidaceae s.s. have a short to long hypanthial tube (formula 'hypanthium present', p. 229); Alliaceae, which APG includes, are hypogynous with the hypanthium absent (p. 227)."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
