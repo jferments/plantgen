@@ -1890,7 +1890,10 @@ fn validate_command(args: &[String]) -> Result<(), Failure> {
                     .map(|timing| {
                         let reason = match timing.verdict {
                             checks::Verdict::Warning => "a month off at an end",
-                            checks::Verdict::Error => "drawn in months the species does not state",
+                            checks::Verdict::Error if timing.strays() => {
+                                "drawn in months the species does not state"
+                            }
+                            checks::Verdict::Error => "not drawn in months the species states",
                             checks::Verdict::NotGrown => "nothing drawn to compare",
                             checks::Verdict::Pass => "",
                         }

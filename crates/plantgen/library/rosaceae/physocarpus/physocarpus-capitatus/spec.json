@@ -152,9 +152,15 @@
     "leaf_length_m": {
       "min": 0.0254,
       "max": 0.0762
-    }
+    },
+    "flowering_months": [5, 6]
   },
   "evidence": {
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "gbif-inaturalist",
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 82 records annotated as flowering (May 41, Jun 37, Jul 4); stated as the months holding at least a tenth of them, May and June. The Seed Manual (Physocarpus chapter, printed p. 790) gives April to June."
+    },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",

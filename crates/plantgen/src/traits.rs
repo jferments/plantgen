@@ -959,9 +959,27 @@ impl Vocabulary {
         };
         for formula in formulas {
             for name in Formula::parse(formula)?.names() {
-                // `min(name)` and `max(name)` read a trait's bounds.
-                let name =
-                    crate::formula::bound(&name).map_or(name.clone(), |(name, _)| name.to_string());
+                // A rule setting a day of a look's season reads the
+                // season's own opening and ripening.
+                if crate::inherit::season_day(path).is_some()
+                    && crate::inherit::SEASON_READS
+                        .iter()
+                        .any(|(read, _)| *read == name)
+                {
+                    continue;
+                }
+                // `min(name)` and `max(name)` read a trait's bounds: a
+                // range's, or the first and last of its months.
+                let bounded = crate::formula::bound(&name);
+                let name = bounded.map_or(name.clone(), |(name, _)| name.to_string());
+                if bounded.is_some()
+                    && self
+                        .traits
+                        .get(&name)
+                        .is_some_and(|item| item.kind == "months")
+                {
+                    continue;
+                }
                 let param = programs.values().any(|params| params.contains_key(&name));
                 if param && self.traits.contains_key(&name) {
                     return Err(format!(

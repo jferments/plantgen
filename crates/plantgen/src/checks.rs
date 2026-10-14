@@ -2681,12 +2681,6 @@ impl Timing {
     /// `drawn` judged against `stated`.
     #[must_use]
     pub fn judge(character: &'static str, stated: BTreeSet<u8>, drawn: BTreeSet<u8>) -> Self {
-        let near = |month: u8, months: &BTreeSet<u8>| {
-            months.iter().any(|&other| {
-                let apart = month.abs_diff(other);
-                apart.min(12 - apart) <= 1
-            })
-        };
         let verdict = if drawn.is_empty() {
             Verdict::NotGrown
         } else if drawn == stated {
@@ -2705,6 +2699,21 @@ impl Timing {
             verdict,
         }
     }
+
+    /// Whether it draws a month more than a month from every month stated
+    /// (else an error is for stated months it leaves undrawn).
+    #[must_use]
+    pub fn strays(&self) -> bool {
+        self.drawn.iter().any(|&month| !near(month, &self.stated))
+    }
+}
+
+/// Whether `month` is within a month of one of `months`, round the year.
+fn near(month: u8, months: &BTreeSet<u8>) -> bool {
+    months.iter().any(|&other| {
+        let apart = month.abs_diff(other);
+        apart.min(12 - apart) <= 1
+    })
 }
 
 /// The months of a stated months character, 1 to 12.
@@ -3556,13 +3565,14 @@ mod tests {
                 .into_iter()
                 .collect()
         };
-        // A flowering currant's racemes open their first flower on day 75
-        // and their last 21 days later, each in flower 35 days, so the
-        // last goes to fruit on day 131; its berries are half ripe from
-        // day 186 until they fall on day 250.
+        // A flowering currant, stated to flower in March and April and be
+        // ripe in July and August: its racemes open their first flower on
+        // day 60 and their last 21 days later, the last going to fruit on
+        // day 121; its berries are half ripe from day 182 until they fall
+        // on day 244.
         let currant = grow("ribes-sanguineum");
-        assert_eq!(months(&currant, "flowering_months"), [3, 4, 5]);
-        assert_eq!(months(&currant, "fruiting_months"), [7, 8, 9]);
+        assert_eq!(months(&currant, "flowering_months"), [3, 4]);
+        assert_eq!(months(&currant, "fruiting_months"), [7, 8]);
         // An organ with no season shows its own look all year.
         let yarrow = grow("achillea-millefolium");
         assert_eq!(months(&yarrow, "flowering_months").len(), 12);

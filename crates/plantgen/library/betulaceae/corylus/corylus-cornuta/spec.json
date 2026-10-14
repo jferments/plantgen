@@ -101,12 +101,7 @@
         "colour": [0.38, 0.55, 0.18],
         "accent": [0.42, 0.56, 0.2],
         "season": {
-          "bud": 35,
-          "flower": 45,
-          "fruit": 100,
-          "ripe": 230,
           "ripening": 30,
-          "fall": 290,
           "flower_look": {
             "shape": {
               "template": "spike",
@@ -137,9 +132,21 @@
       "min": 0.035,
       "max": 0.08
     },
-    "wood_density_basic_kg_m3": 530
+    "wood_density_basic_kg_m3": 530,
+    "flowering_months": [1, 2, 3],
+    "fruiting_months": [8, 9, 10, 11]
   },
   "evidence": {
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Corylus cornuta): California hazelnut (var. californica) flowers from January to March on the Willamette, Mount Hood and Siuslaw National Forests of western Oregon. Too few iNaturalist records in the Puget Sound lowlands are annotated as flowering to count (17)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Corylus cornuta): nuts ripe from August to November in the west coast states and British Columbia, falling when fully ripe in the autumn."
+    },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
@@ -164,7 +171,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: soft mid-green leaves; smooth grey-brown stems. Fruit (plant roadmap P4), as in mid-July: nuts in pairs, each in a green, bristly husk drawn out into a long beak. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: yellow catkins in February and March; nuts in green husks through the summer, ripe in August and September. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth grey-brown bark with lenticels; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): an understory shrub: broad shade leaves, smaller and more sharply toothed in sun; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
+      "note": "Colours chosen by eye: soft mid-green leaves; smooth grey-brown stems. Fruit (plant roadmap P4), as in mid-July: nuts in pairs, each in a green, bristly husk drawn out into a long beak. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: yellow catkins in February and March; nuts in green husks through the summer, ripe in August and September. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth grey-brown bark with lenticels; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): an understory shrub: broad shade leaves, smaller and more sharply toothed in sun; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
     },
     "taxon": {
       "evidence": "Authored",

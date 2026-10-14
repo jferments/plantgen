@@ -135,6 +135,26 @@
     "appearance.organs.flower.shape.template": {
       "map": {"inflorescence_unit": {"flower": "flower", "capitulum": "head", "spikelet": "spikelet"}}, "else": "flower",
       "why": "Single flowers are drawn on a flower card, heads of florets on a head card and spikelets on a spikelet card; the inflorescence rules lay them out. A flowering plant whose taxa do not say is drawn with single flowers."
+    },
+    "appearance.organs.*.season.bud": {
+      "rule": "max(1, month_start(min(flowering_months)) - 15)",
+      "why": "A look's buds show half a month before the first month it flowers in."
+    },
+    "appearance.organs.*.season.flower": {
+      "rule": "month_start(min(flowering_months))",
+      "why": "Its first flowers open as the first month it flowers in begins."
+    },
+    "appearance.organs.*.season.fruit": {
+      "rule": "max(month_start(min(flowering_months)) + 1, min(month_start(max(flowering_months) + 1), max(month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), round((month_start(max(flowering_months) + 1) + month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0))) / 2))) - opening)",
+      "why": "Its last flowers go to fruit as the last month it flowers in ends, or where it is ripe before then, in the middle of the months it both flowers and is ripe in; a cluster's first go its units' opening days before."
+    },
+    "appearance.organs.*.season.ripe": {
+      "rule": "max(max(month_start(min(flowering_months)) + 1, min(month_start(max(flowering_months) + 1), max(month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), round((month_start(max(flowering_months) + 1) + month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0))) / 2))) - opening), max(min(month_start(max(flowering_months) + 1), max(month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), round((month_start(max(flowering_months) + 1) + month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0))) / 2))), month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0))) - ripening / 2)",
+      "why": "Its fruit is half ripe as the first month it is ripe in begins (one before its flowers' is in the next year), or where its last flowers are still open then, as they go to fruit; it ripens only once it is fruit."
+    },
+    "appearance.organs.*.season.fall": {
+      "rule": "min(max(1, month_start(min(flowering_months)) - 15) + 365, month_start(max(fruiting_months) + 1 + (min(fruiting_months) < min(flowering_months) ? 12 : 0)))",
+      "why": "Its fruit falls as the last month it is ripe in ends, within a year of its buds."
     }
   },
   "evidence": {
@@ -232,6 +252,31 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
+    },
+    "rules.appearance.organs.*.season.bud": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a plant's year, a choice of the model's (development, 2026-10-14): the months a species is stated to flower in and to bear ripe fruit in (traits `flowering_months` and `fruiting_months`) set the days of each look with a season, so its flowers are open through the first and its fruit ripe through the second. Its buds show 15 days before its first flowers, about as long as the hand-set seasons this replaces gave them. A cluster's units open over its season's `opening` days, so its first goes to fruit that many days before its last; fruit ripens over its `ripening` days. A season holds one stage at a time for its first unit, so where its fruit is ripe in a month it still flowers in, the months it does both are shared out: its last flowers go to fruit in the middle of them and its fruit is drawn ripe from then, each up to a month short of the months stated."
+    },
+    "rules.appearance.organs.*.season.flower": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a plant's year, a choice of the model's (development, 2026-10-14): the months a species is stated to flower in and to bear ripe fruit in (traits `flowering_months` and `fruiting_months`) set the days of each look with a season, so its flowers are open through the first and its fruit ripe through the second. Its buds show 15 days before its first flowers, about as long as the hand-set seasons this replaces gave them. A cluster's units open over its season's `opening` days, so its first goes to fruit that many days before its last; fruit ripens over its `ripening` days. A season holds one stage at a time for its first unit, so where its fruit is ripe in a month it still flowers in, the months it does both are shared out: its last flowers go to fruit in the middle of them and its fruit is drawn ripe from then, each up to a month short of the months stated."
+    },
+    "rules.appearance.organs.*.season.fruit": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a plant's year, a choice of the model's (development, 2026-10-14): the months a species is stated to flower in and to bear ripe fruit in (traits `flowering_months` and `fruiting_months`) set the days of each look with a season, so its flowers are open through the first and its fruit ripe through the second. Its buds show 15 days before its first flowers, about as long as the hand-set seasons this replaces gave them. A cluster's units open over its season's `opening` days, so its first goes to fruit that many days before its last; fruit ripens over its `ripening` days. A season holds one stage at a time for its first unit, so where its fruit is ripe in a month it still flowers in, the months it does both are shared out: its last flowers go to fruit in the middle of them and its fruit is drawn ripe from then, each up to a month short of the months stated."
+    },
+    "rules.appearance.organs.*.season.ripe": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a plant's year, a choice of the model's (development, 2026-10-14): the months a species is stated to flower in and to bear ripe fruit in (traits `flowering_months` and `fruiting_months`) set the days of each look with a season, so its flowers are open through the first and its fruit ripe through the second. Its buds show 15 days before its first flowers, about as long as the hand-set seasons this replaces gave them. A cluster's units open over its season's `opening` days, so its first goes to fruit that many days before its last; fruit ripens over its `ripening` days. A season holds one stage at a time for its first unit, so where its fruit is ripe in a month it still flowers in, the months it does both are shared out: its last flowers go to fruit in the middle of them and its fruit is drawn ripe from then, each up to a month short of the months stated."
+    },
+    "rules.appearance.organs.*.season.fall": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a plant's year, a choice of the model's (development, 2026-10-14): the months a species is stated to flower in and to bear ripe fruit in (traits `flowering_months` and `fruiting_months`) set the days of each look with a season, so its flowers are open through the first and its fruit ripe through the second. Its buds show 15 days before its first flowers, about as long as the hand-set seasons this replaces gave them. A cluster's units open over its season's `opening` days, so its first goes to fruit that many days before its last; fruit ripens over its `ripening` days. A season holds one stage at a time for its first unit, so where its fruit is ripe in a month it still flowers in, the months it does both are shared out: its last flowers go to fruit in the middle of them and its fruit is drawn ripe from then, each up to a month short of the months stated."
     },
     "rules": {
       "evidence": "Authored",

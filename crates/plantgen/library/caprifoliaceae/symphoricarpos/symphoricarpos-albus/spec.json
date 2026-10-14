@@ -90,12 +90,7 @@
         "colour": [0.92, 0.92, 0.9],
         "accent": [0.6, 0.7, 0.5],
         "season": {
-          "bud": 120,
-          "flower": 140,
-          "fruit": 185,
-          "ripe": 225,
           "ripening": 30,
-          "fall": 440,
           "flower_look": {
             "shape": {
               "template": "fruit",
@@ -128,9 +123,21 @@
       "min": 0.015,
       "max": 0.03
     },
-    "wood_density_basic_kg_m3": 630
+    "wood_density_basic_kg_m3": 630,
+    "flowering_months": [5, 6, 7],
+    "fruiting_months": [8, 9, 10, 11, 12, 1, 2]
   },
   "evidence": {
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "gbif-inaturalist",
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 63 records annotated as flowering (May 7, Jun 35, Jul 15, Aug 4, Sep 2); stated as the months holding at least a tenth of them, May to July. FEIS (Symphoricarpos albus) gives May to August across the range, most in June and July."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Symphoricarpos albus): ripe in late August and early September, and the berries often stay on over winter (the Seed Manual: until the next spring, unless eaten); so ripe berries are on the plant from August to February."
+    },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",
@@ -160,7 +167,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: dull blue-green leaves; white berries. Fruit (plant roadmap P4), as in mid-July: small clusters of berries at the twig tips, pale green turning white. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: small pink bells in May to July; berries green, white from August, hanging through the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
+      "note": "Colours chosen by eye: dull blue-green leaves; white berries. Fruit (plant roadmap P4), as in mid-July: small clusters of berries at the twig tips, pale green turning white. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: small pink bells in May to July; berries green, white from August, hanging through the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     },
     "taxon": {
       "evidence": "Authored",

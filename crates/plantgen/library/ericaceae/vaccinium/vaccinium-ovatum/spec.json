@@ -93,12 +93,7 @@
         "colour": [0.06, 0.05, 0.09],
         "accent": [0.4, 0.5, 0.2],
         "season": {
-          "bud": 95,
-          "flower": 115,
-          "fruit": 170,
-          "ripe": 225,
           "ripening": 40,
-          "fall": 345,
           "opening": 18,
           "flower_look": {
             "shape": {
@@ -128,9 +123,21 @@
       "min": 0.5,
       "max": 2
     },
-    "flowering_position": "lateral"
+    "flowering_position": "lateral",
+    "flowering_months": [4, 5],
+    "fruiting_months": [7, 8, 9]
   },
   "evidence": {
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "gbif-inaturalist",
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 106 records annotated as flowering (Jan 1, Mar 6, Apr 50, May 45, Jun 3, Dec 1); stated as the months holding at least a tenth of them, April and May. FEIS (Vaccinium ovatum) gives April to August for the Pacific Northwest."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Vaccinium ovatum): ripe from July to September across the range; it has no Pacific Northwest row. iNaturalist records in the Puget Sound lowlands show fruit mostly from August to November (their annotations do not tell ripe fruit from green)."
+    },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
@@ -154,7 +161,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: very dark glossy green leaves, bronze when new; pink bells; black berries. Fruit (plant roadmap P4), as in mid-July: small clusters of green berries that ripen black from August. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: pink bells in April to June; berries green in summer, black from mid-August into the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
+      "note": "Colours chosen by eye: very dark glossy green leaves, bronze when new; pink bells; black berries. Fruit (plant roadmap P4), as in mid-July: small clusters of green berries that ripen black from August. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: pink bells in April to June; berries green in summer, black from mid-August into the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     },
     "taxon": {
       "evidence": "Authored",
@@ -194,7 +201,7 @@
     "appearance.organs.bloom.season.opening": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit, a convention (no source gives a raceme's opening time)."
+      "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit as they were set by hand before 2026-10-14, a convention (no source gives a raceme's opening time)."
     },
     "traits.flowering_position": {
       "evidence": "SourceInferred",

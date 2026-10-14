@@ -93,12 +93,7 @@
         "colour": [0.62, 0.05, 0.06],
         "accent": [0.45, 0.5, 0.15],
         "season": {
-          "bud": 95,
-          "flower": 110,
-          "fruit": 135,
-          "ripe": 175,
           "ripening": 25,
-          "fall": 245,
           "flower_look": {
             "shape": {
               "template": "flower",
@@ -138,9 +133,21 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "wood_density_basic_kg_m3": 490
+    "wood_density_basic_kg_m3": 490,
+    "flowering_months": [4, 5, 6],
+    "fruiting_months": [7, 8, 9]
   },
   "evidence": {
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Prunus emarginata): April to June in British Columbia. Too few iNaturalist records in the Puget Sound lowlands are annotated as flowering to count (22)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Prunus emarginata): ripe from July to September, its seed dispersed in August and September."
+    },
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Prunus emarginata (gwddagg_v2.2_species.csv, read): specific gravity 0.49 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.49, branches 0.54. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",
@@ -165,7 +172,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: green leaves; smooth, shiny reddish-brown bark. Fruit (plant roadmap P4), as in mid-July: corymbs of bright red cherries about 1 cm across, a few still green. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: white flowers in April and May; cherries red in July, gone by early September. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth reddish-brown bark with prominent horizontal lenticels; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves a little smaller and narrower than shade leaves; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
+      "note": "Colours chosen by eye: green leaves; smooth, shiny reddish-brown bark. Fruit (plant roadmap P4), as in mid-July: corymbs of bright red cherries about 1 cm across, a few still green. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: white flowers in April and May; cherries red in July, gone by early September. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth reddish-brown bark with prominent horizontal lenticels; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves a little smaller and narrower than shade leaves; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
     },
     "taxon": {
       "evidence": "Authored",

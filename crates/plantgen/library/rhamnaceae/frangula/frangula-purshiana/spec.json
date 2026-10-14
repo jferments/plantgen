@@ -139,9 +139,15 @@
       "max": 0.2
     },
     "wood_density_basic_kg_m3": 510,
-    "juvenile_period_years": {"min": 5, "max": 7}
+    "juvenile_period_years": {"min": 5, "max": 7},
+    "flowering_months": [5, 6]
   },
   "evidence": {
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "Seed Manual, Frangula chapter (printed p. 531): from late May to mid-June over three years in northern Idaho (FEIS tabulates the same study). Too few iNaturalist records in the Puget Sound lowlands are annotated as flowering to count (9)."
+    },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",

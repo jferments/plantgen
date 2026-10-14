@@ -92,12 +92,7 @@
         "colour": [0.8, 0.08, 0.06],
         "accent": [0.4, 0.5, 0.15],
         "season": {
-          "bud": 85,
-          "flower": 100,
-          "fruit": 130,
-          "ripe": 165,
           "ripening": 25,
-          "fall": 230,
           "bud_look": {
             "shape": {
               "template": "fruit",
@@ -144,9 +139,21 @@
       "min": 2,
       "max": 5
     },
-    "inflorescence": "panicle"
+    "inflorescence": "panicle",
+    "flowering_months": [4, 5],
+    "fruiting_months": [6, 7, 8]
   },
   "evidence": {
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "gbif-inaturalist",
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 179 records annotated as flowering (Mar 1, Apr 148, May 29, Jun 1); stated as the months holding at least a tenth of them, April and May. FEIS (Sambucus racemosa) gives April to July for Washington."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Sambucus racemosa): ripe from June to August in western Oregon."
+    },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",
@@ -170,7 +177,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: mid-green leaflets; red berry clusters; grey-brown warty bark. Fruit (plant roadmap P4), as in mid-July: dome-shaped clusters of bright red berries about 5 mm across. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: creamy pyramidal clusters in April and May; berries red in late June and July, eaten by August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): grey-brown bark with conspicuous warty lenticels; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: mid-green leaflets; red berry clusters; grey-brown warty bark. Fruit (plant roadmap P4), as in mid-July: dome-shaped clusters of bright red berries about 5 mm across. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: creamy pyramidal clusters in April and May; berries red in late June and July, eaten by August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): grey-brown bark with conspicuous warty lenticels; set from general knowledge of the species, not measured."
     },
     "taxon": {
       "evidence": "Authored",

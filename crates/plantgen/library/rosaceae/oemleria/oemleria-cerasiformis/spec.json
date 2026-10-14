@@ -94,12 +94,7 @@
         "colour": [0.08, 0.07, 0.14],
         "accent": [0.85, 0.45, 0.15],
         "season": {
-          "bud": 40,
-          "flower": 55,
-          "fruit": 95,
-          "ripe": 150,
           "ripening": 40,
-          "fall": 210,
           "opening": 13,
           "flower_look": {
             "shape": {
@@ -132,6 +127,10 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "flowering_months": [2, 3, 4],
+    "fruiting_months": [5, 6, 7]
+  },
   "evidence": {
     "generator.params.spur_leaf": {
       "evidence": "Authored",
@@ -142,6 +141,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Leaf card length, petiole included, sized so every leaf drawn stays within Jepson (1925, as O. cerasiformis): leaves 1.5 to 2.5 in (3.8 to 6.3 cm) long (0.12 drew them 10 to 11 cm)."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "gbif-inaturalist",
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 602 records annotated as flowering (Jan 13, Feb 113, Mar 344, Apr 132); stated as the months holding at least a tenth of them, February to April. The Seed Manual (Oemleria chapter, printed p. 750) gives January to May, with latitude and elevation."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "Seed Manual, Oemleria chapter (printed p. 750): ripe by early summer, and in the Pacific Northwest birds and mammals take the fruit from May to July; so ripe fruit is on the plant from May to July."
     },
     "generator.params.path_half": {
       "evidence": "Authored",
@@ -161,7 +170,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: light green leaves; white hanging flowers; purple-brown bark. Fruit (plant roadmap P4), as in mid-July: short hanging racemes of plum-like drupes, orange ripening blue-black. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: hanging white racemes in February and March; fruit orange, then blue-black from June, gone by August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth purplish-brown bark with lenticels; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: light green leaves; white hanging flowers; purple-brown bark. Fruit (plant roadmap P4), as in mid-July: short hanging racemes of plum-like drupes, orange ripening blue-black. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: hanging white racemes in February and March; fruit orange, then blue-black from June, gone by August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth purplish-brown bark with lenticels; set from general knowledge of the species, not measured."
     },
     "taxon": {
       "evidence": "Authored",
@@ -201,7 +210,7 @@
     "appearance.organs.bloom.season.opening": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit, a convention (no source gives a raceme's opening time)."
+      "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit as they were set by hand before 2026-10-14, a convention (no source gives a raceme's opening time)."
     }
   },
   "provenance": {

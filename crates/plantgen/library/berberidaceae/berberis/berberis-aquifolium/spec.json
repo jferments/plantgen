@@ -121,12 +121,7 @@
           0.15
         ],
         "season": {
-          "bud": 60,
-          "flower": 80,
-          "fruit": 130,
-          "ripe": 185,
           "ripening": 30,
-          "fall": 290,
           "opening": 17,
           "flower_look": {
             "shape": {
@@ -171,9 +166,21 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "wood_density_basic_kg_m3": 690
+    "wood_density_basic_kg_m3": 690,
+    "flowering_months": [3, 4],
+    "fruiting_months": [7, 8]
   },
   "evidence": {
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "gbif-inaturalist",
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 219 records annotated as flowering (Jan 1, Feb 10, Mar 52, Apr 145, May 11); stated as the months holding at least a tenth of them, March and April. The Seed Manual (Mahonia chapter, printed p. 708, as M. aquifolium) gives March to May at 685 m in Jackson County, Oregon."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "Seed Manual, Mahonia chapter (printed p. 708, as M. aquifolium): ripe from late July to early August at 975 m in Mineral County, Montana, and in September and October at 685 m in Jackson County, Oregon. iNaturalist records in the Puget Sound lowlands show fruit mostly from June to August, most in July (their annotations do not tell ripe fruit from green), so the earlier row is taken."
+    },
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Berberis aquifolium (gwddagg_v2.2_species.csv, read): specific gravity 0.69 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.69, branches 0.67. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",
@@ -193,7 +200,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: glossy dark green leaflets; yellow flower clusters; grey-tan stems. Fruit (plant roadmap P4), as in mid-July: grape-like racemes of berries, green turning powdery blue. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: yellow racemes in March to May; berries blue with a bloom in July and August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
+      "note": "Colours chosen by eye: glossy dark green leaflets; yellow flower clusters; grey-tan stems. Fruit (plant roadmap P4), as in mid-July: grape-like racemes of berries, green turning powdery blue. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: yellow racemes in March to May; berries blue with a bloom in July and August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     },
     "taxon": {
       "evidence": "Authored",
@@ -248,7 +255,7 @@
     "appearance.organs.bloom.season.opening": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit, a convention (no source gives a raceme's opening time)."
+      "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit as they were set by hand before 2026-10-14, a convention (no source gives a raceme's opening time)."
     }
   },
   "provenance": {

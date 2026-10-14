@@ -96,12 +96,7 @@
         "colour": [0.75, 0.08, 0.06],
         "accent": [0.35, 0.48, 0.15],
         "season": {
-          "bud": 90,
-          "flower": 110,
-          "fruit": 145,
-          "ripe": 250,
           "ripening": 30,
-          "fall": 320,
           "flower_look": {
             "shape": {
               "template": "flower",
@@ -140,9 +135,21 @@
       "max": 0.1
     },
     "wood_density_basic_kg_m3": 600,
-    "juvenile_period_years": {"min": 6, "max": 10}
+    "juvenile_period_years": {"min": 6, "max": 10},
+    "flowering_months": [4, 5],
+    "fruiting_months": [9, 10]
   },
   "evidence": {
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "gbif-inaturalist",
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 51 records annotated as flowering (Apr 32, May 18, Jun 1); stated as the months holding at least a tenth of them, April and May. FEIS (Cornus nuttallii) gives April to June across the range."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Cornus nuttallii): ripe in September and October across the range."
+    },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
@@ -177,7 +184,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: green leaves; white bracts round a greenish button; smooth grey-brown bark. Fruit (plant roadmap P4), as in mid-July: tight heads of green drupes that turn red in autumn. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: white bracts in April and May; the fruit heads green in summer, red in September and October. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth thin grey-brown bark becoming checkered into small plates; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): a shade-tolerant understory tree: broad thin shade leaves, smaller narrower sun leaves; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
+      "note": "Colours chosen by eye: green leaves; white bracts round a greenish button; smooth grey-brown bark. Fruit (plant roadmap P4), as in mid-July: tight heads of green drupes that turn red in autumn. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: white bracts in April and May; the fruit heads green in summer, red in September and October. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth thin grey-brown bark becoming checkered into small plates; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): a shade-tolerant understory tree: broad thin shade leaves, smaller narrower sun leaves; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
     },
     "taxon": {
       "evidence": "Authored",

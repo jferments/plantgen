@@ -88,12 +88,7 @@
         "colour": [0.6, 0.5, 0.28],
         "accent": [0.4, 0.46, 0.18],
         "season": {
-          "bud": 65,
-          "flower": 80,
-          "fruit": 110,
-          "ripe": 245,
           "ripening": 30,
-          "fall": 335,
           "flower_look": {
             "shape": {
               "template": "spike",
@@ -134,9 +129,21 @@
     "wood_density_basic_kg_m3": 530,
     "wood_modulus_green_mpa": 7800,
     "wood_rupture_green_mpa": 52,
-    "juvenile_period_years": 30
+    "juvenile_period_years": 30,
+    "flowering_months": [4, 5],
+    "fruiting_months": [8, 9]
   },
   "evidence": {
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "Seed Manual, Fraxinus chapter (printed p. 538): April and May, with no place given. Too few iNaturalist records in the Puget Sound lowlands are annotated as flowering to count (3)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "Seed Manual, Fraxinus chapter (printed p. 538): ripe in August and September."
+    },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
@@ -173,7 +180,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: light green leaves; grey-brown bark in interlacing diamond ridges. Fruit (plant roadmap P4), as in mid-July: dense hanging clusters of single green samaras 3 to 5 cm long. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: small flowers before the leaves in March and April; samaras green in summer, tan from September, falling into the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): grey-brown bark deeply furrowed into interlacing ridges; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaflets narrower than shade leaflets; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
+      "note": "Colours chosen by eye: light green leaves; grey-brown bark in interlacing diamond ridges. Fruit (plant roadmap P4), as in mid-July: dense hanging clusters of single green samaras 3 to 5 cm long. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: small flowers before the leaves in March and April; samaras green in summer, tan from September, falling into the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): grey-brown bark deeply furrowed into interlacing ridges; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaflets narrower than shade leaflets; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
     },
     "taxon": {
       "evidence": "Authored",

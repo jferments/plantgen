@@ -39,9 +39,13 @@
 //! species' program parameters by name, a parameter as the files set it
 //! (or a rule before it), else as the program's default; so a rule can
 //! say what a leaf card of the species' own size means for its shoots.
+//! A rule that sets a day of a look's season (`bud`, `flower`, `fruit`,
+//! `ripe` or `fall`) applies only to looks with a season, and reads the
+//! season's own `opening` and `ripening` by those names.
 //! A trait stated as a range reads as its `typical` value, else the middle
 //! of its `min` and `max`, and as `min(name)` and `max(name)` its bounds
-//! (a number stated alone is both), so a rule whose `rule` is a list of
+//! (a number stated alone is both; months, the first and the last of the
+//! run they make round the year), so a rule whose `rule` is a list of
 //! formulas, one for each item, can set a range a look varies within:
 //! ribs stated as 12 to 24 set a body's `[12, 24]`. A rule that reads one
 //! range (or one parameter a rule before it spread), and nothing else
@@ -755,7 +759,8 @@ fn trait_organ(name: &str) -> Option<&'static str> {
 
 /// A bound of the trait `name` as stated (`value`), read as `min(name)`
 /// or `max(name)`: of a range, its `min` or `max`; of a number, the
-/// number.
+/// number; of months, the first and the last of the run they make round
+/// the year ([`months_run`]).
 fn bound_of(name: &str, bound: &str, value: &Value) -> Result<Value, String> {
     match value {
         Value::Object(range) => range
@@ -764,8 +769,46 @@ fn bound_of(name: &str, bound: &str, value: &Value) -> Result<Value, String> {
             .cloned()
             .ok_or_else(|| format!("`{name}` states no `{bound}`")),
         Value::Number(_) => Ok(value.clone()),
+        Value::Array(months) => {
+            let (first, last) =
+                months_run(months).ok_or_else(|| format!("`{name}` names no months"))?;
+            Ok(Value::from(if bound == "min" { first } else { last }))
+        }
         _ => Err(format!("`{name}` is no number to read the {bound} of")),
     }
+}
+
+/// The first and the last of `months` (each 1 to 12) as one run round
+/// the year: from the month after the longest gap between them to the
+/// month before it, a month past 12 being one of the next year. November
+/// to February is 11 and 14; April, May and September, 4 and 9 (the run
+/// takes in its shorter gaps); every month, 1 and 12.
+fn months_run(months: &[Value]) -> Option<(u64, u64)> {
+    let months: Vec<u64> = months
+        .iter()
+        .filter_map(Value::as_u64)
+        .filter(|month| (1..=12).contains(month))
+        .collect::<BTreeSet<u64>>()
+        .into_iter()
+        .collect();
+    let count = months.len();
+    if count == 0 {
+        return None;
+    }
+    // The month after the longest gap, the first such round the year.
+    let mut after = 0;
+    let mut longest = 0;
+    for (index, &month) in months.iter().enumerate() {
+        let next = months[(index + 1) % count];
+        let gap = (next + 11 - month) % 12;
+        if gap > longest {
+            longest = gap;
+            after = (index + 1) % count;
+        }
+    }
+    let first = months[after];
+    let last = months[(after + count - 1) % count];
+    Some((first, if last < first { last + 12 } else { last }))
 }
 
 /// The stage looks of a look's season that a rule in its `shape` also
@@ -784,6 +827,37 @@ fn organ_of(path: &str) -> &str {
 fn inflorescence_field(path: &str) -> Option<&str> {
     let (_, look) = path.strip_prefix("appearance.organs.")?.split_once('.')?;
     look.strip_prefix("inflorescence.")
+}
+
+/// The days of a look's season a rule may set (`crate::looks::Season`),
+/// each a day of the year.
+const SEASON_DAYS: [&str; 5] = ["bud", "flower", "fruit", "ripe", "fall"];
+
+/// The day a rule's `path` sets in a look's season
+/// (`appearance.organs.<organ>.season.<day>`), if it sets one.
+#[must_use]
+pub fn season_day(path: &str) -> Option<&str> {
+    let (_, look) = path.strip_prefix("appearance.organs.")?.split_once('.')?;
+    look.strip_prefix("season.")
+        .filter(|day| SEASON_DAYS.contains(day))
+}
+
+/// The fields of a look's season a rule setting one of its days reads by
+/// name, and what each is where the season does not set it: the days its
+/// units take to open, and its fruit to ripen.
+pub const SEASON_READS: [(&str, f64); 2] = [("opening", 0.0), ("ripening", 20.0)];
+
+/// The value of `key`, one of [`SEASON_READS`], in the season whose day
+/// `at` sets, as `spec` has it.
+fn season_read(spec: &Map<String, Value>, at: &str, key: &str) -> Option<Value> {
+    season_day(at)?;
+    let (_, default) = SEASON_READS.iter().find(|(name, _)| *name == key)?;
+    let season = format!("appearance.organs.{}.season.{key}", organ_of(at));
+    Some(
+        find(spec, &season)
+            .cloned()
+            .unwrap_or_else(|| Value::from(*default)),
+    )
 }
 
 /// What the inflorescence's `key` takes.
@@ -825,6 +899,9 @@ fn every_look(
         if inflorescence_field(&at).is_some()
             && !look.get("inflorescence").is_some_and(Value::is_object)
         {
+            continue;
+        }
+        if season_day(&at).is_some() && !look.get("season").is_some_and(Value::is_object) {
             continue;
         }
         if let Some(field) = shape_field(&at).map(str::to_string) {
@@ -876,6 +953,8 @@ fn every_look(
     if paths.is_empty() {
         return Err(if inflorescence_field(path).is_some() {
             "it draws no look as a cluster (with an `inflorescence`)".to_string()
+        } else if season_day(path).is_some() {
+            "it draws no look with a `season`".to_string()
         } else if shape_field(path).is_some() {
             let names = rule
                 .get("template")
@@ -1174,6 +1253,14 @@ fn look_field(
                 .ok_or_else(|| format!("its `{organ}` look has no `{stage}`"))?;
             look = rest;
         }
+    }
+    if let Some(day) = look.strip_prefix("season.")
+        && SEASON_DAYS.contains(&day)
+    {
+        if !drawn_look.get("season").is_some_and(Value::is_object) {
+            return Err(format!("its `{organ}` look has no `season`"));
+        }
+        return Ok(Some(Field::Number));
     }
     if let Some(key) = look.strip_prefix("inflorescence.") {
         if !drawn_look
@@ -1905,12 +1992,18 @@ impl Ruled<'_> {
                 && let Some((value, at)) = self.traits.get(name)
             {
                 depth = depth.max(*at);
-                from.push(format!("{name} from {}", self.layers[*at].0));
+                let source = format!("{name} from {}", self.layers[*at].0);
+                if !from.contains(&source) {
+                    from.push(source);
+                }
                 bound_of(name, bound, value)?
             } else if let Some((value, at)) = self.traits.get(key) {
                 depth = depth.max(*at);
                 from.push(format!("{key} from {}", self.layers[*at].0));
                 value.clone()
+            } else if let Some(value) = season_read(spec, self.at, key) {
+                // A season's own opening or ripening, where it sets a day.
+                value
             } else if let Some(value) = find(spec, &path) {
                 // A parameter as the files, or a rule that ran before this
                 // one, set it.
@@ -3449,6 +3542,96 @@ mod tests {
     /// sets a range from a trait's bounds, a spine set is named by its
     /// role, a field written in the species' list is set by hand, and a
     /// look without ribs or a set of the role gets nothing.
+    /// The angiosperms' rules set the days of each look's season from the
+    /// months it flowers and its fruit is ripe in, reading the season's own
+    /// opening and ripening, and share out the months it does both; a look
+    /// with no season takes none.
+    #[test]
+    fn rules_set_a_seasons_days_from_its_months() {
+        let angiosperms: Value =
+            serde_json::from_str(include_str!("../library/_ranks/clade/angiosperms.json")).unwrap();
+        let rules: serde_json::Map<String, Value> = angiosperms["rules"]
+            .as_object()
+            .unwrap()
+            .iter()
+            .filter(|(path, _)| path.contains(".season."))
+            .map(|(path, rule)| (path.clone(), rule.clone()))
+            .collect();
+        assert_eq!(rules.len(), 5);
+        let files = ranks(&[(
+            "testaceae/family.json",
+            family(
+                json!({"traits": {"reproduction": "flowers"}, "rules": rules,
+                "evidence": {"rules": {"evidence": "Authored", "note": "Seasons."}}}),
+            ),
+        )]);
+        let grow = |flowering: Value, fruiting: Value, season: Value| {
+            let chain = above(&files, "testaceae", "testus").unwrap();
+            inherit(
+                "testaceae/testus/testus-one/spec.json",
+                &json!({"id": "testus-one",
+                    "traits": {"flowering_months": flowering, "fruiting_months": fruiting},
+                    "appearance": {"organs": {
+                        "bloom": {"shape": {"template": "fruit"}, "season": season},
+                        "leaf": {"shape": {"template": "simple"}}}}}),
+                &chain,
+                &programs(),
+            )
+            .unwrap()
+        };
+        let days = |grown: &super::Inherited| {
+            ["bud", "flower", "fruit", "ripe", "fall"]
+                .map(|day| grown.spec["appearance"]["organs"]["bloom"]["season"][day].clone())
+        };
+        // Flowering in March and April, its units opening over 21 days;
+        // ripe in July and August, ripening over 30.
+        let spring = grow(
+            json!([3, 4]),
+            json!([7, 8]),
+            json!({"opening": 21, "ripening": 30}),
+        );
+        assert_eq!(days(&spring), [45, 60, 100, 167, 244].map(|day| json!(day)));
+        assert!(
+            spring.spec["appearance"]["organs"]["leaf"]
+                .get("season")
+                .is_none()
+        );
+        // Flowering in November and December, ripe in February and March of
+        // the next year, ripening over the default 20 days.
+        let winter = grow(json!([11, 12]), json!([2, 3]), json!({}));
+        assert_eq!(
+            days(&winter),
+            [290, 305, 366, 387, 456].map(|day| json!(day))
+        );
+        // Flowering from May to August, ripe from July to November: the
+        // last flowers go to fruit on August 1, in the middle of July and
+        // August, and the fruit ripens from then.
+        let shared = grow(
+            json!([5, 6, 7, 8]),
+            json!([7, 8, 9, 10, 11]),
+            json!({"ripening": 30}),
+        );
+        assert_eq!(
+            days(&shared),
+            [106, 121, 213, 213, 335].map(|day| json!(day))
+        );
+        // With no season, the rules set nothing.
+        let chain = above(&files, "testaceae", "testus").unwrap();
+        let bare = inherit(
+            "testaceae/testus/testus-one/spec.json",
+            &json!({"id": "testus-one",
+                "traits": {"flowering_months": [4], "fruiting_months": [6]},
+                "appearance": {"organs": {"leaf": {"shape": {"template": "simple"}}}}}),
+            &chain,
+            &programs(),
+        )
+        .unwrap();
+        assert_eq!(
+            bare.rules["appearance.organs.*.season.flower"].1.as_deref(),
+            Some("it draws no look with a `season`")
+        );
+    }
+
     #[test]
     fn rules_fill_in_bodies_by_role_from_bounds() {
         let files = ranks(&[(

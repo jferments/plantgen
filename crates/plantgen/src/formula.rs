@@ -5,7 +5,10 @@
 //! comparisons, `&&`, `||`, `a ? b : c`, and the language's arithmetic
 //! functions `min`, `max`, `clamp`, `abs`, `sqrt`, `exp`, `ln`, `log10`,
 //! `pow`, `floor`, `ceil`, `round`, `frac`, `sign`, `lerp`, `smoothstep`
-//! and `step`, which behave as they do in a program. With one argument, a
+//! and `step`, which behave as they do in a program, and `month_start`,
+//! the day of the year a month begins on in a year of 365 days (1 for
+//! January, 335 for December; a month past 12 is one of the next year, 13
+//! the day after the year's last). With one argument, a
 //! name, `min` and `max` read the bounds of what it names instead: a rule
 //! reading `min(ribs)` and `max(ribs)` of ribs stated as 12 to 24 reads 12
 //! and 24, as the names `ribs.min` and `ribs.max` ([`bound`]). It draws
@@ -66,9 +69,10 @@ enum Func {
     Lerp,
     Smoothstep,
     Step,
+    MonthStart,
 }
 
-const FUNCS: [(Func, &str, usize); 17] = [
+const FUNCS: [(Func, &str, usize); 18] = [
     (Func::Min, "min", 2),
     (Func::Max, "max", 2),
     (Func::Clamp, "clamp", 3),
@@ -86,6 +90,12 @@ const FUNCS: [(Func, &str, usize); 17] = [
     (Func::Lerp, "lerp", 3),
     (Func::Smoothstep, "smoothstep", 3),
     (Func::Step, "step", 2),
+    (Func::MonthStart, "month_start", 1),
+];
+
+/// The day of the year each month begins on, in a year of 365 days.
+const MONTH_STARTS: [f64; 12] = [
+    1.0, 32.0, 60.0, 91.0, 121.0, 152.0, 182.0, 213.0, 244.0, 274.0, 305.0, 335.0,
 ];
 
 #[derive(Debug, Clone, PartialEq)]
@@ -467,6 +477,13 @@ fn apply(func: Func, a: [f64; 3]) -> f64 {
             t * t * (3.0 - 2.0 * t)
         }
         Func::Step => flag(a[1] >= a[0]),
+        Func::MonthStart => {
+            let month = a[0].floor() - 1.0;
+            let year = (month / 12.0).floor();
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let within = (month - 12.0 * year) as usize;
+            MONTH_STARTS[within.min(11)] + 365.0 * year
+        }
     }
 }
 
@@ -510,6 +527,12 @@ mod tests {
         );
         assert_eq!(value("1e-3 * 1000"), Some(1.0));
         assert!((value("ln(exp(2)) + log10(100)").unwrap() - 4.0).abs() < 1e-12);
+        // The day a month begins on; a month past 12 is the next year's.
+        assert_eq!(value("month_start(1)"), Some(1.0));
+        assert_eq!(value("month_start(3)"), Some(60.0));
+        assert_eq!(value("month_start(12)"), Some(335.0));
+        assert_eq!(value("month_start(13)"), Some(366.0));
+        assert_eq!(value("month_start(14)"), Some(397.0));
         // A name with no value, or a result that is no number, gives none.
         assert_eq!(value("leaf_width_m * 2"), None);
         assert_eq!(value("1 / 0"), None);

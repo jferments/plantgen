@@ -1,0 +1,10 @@
+{
+  "id": "gbif-inaturalist",
+  "title": "iNaturalist research-grade observations, as GBIF.org serves them (occurrence search, with the observers' flowering and fruiting annotations)",
+  "authors": "iNaturalist contributors; GBIF.org",
+  "year": 2026,
+  "url": "https://www.gbif.org/dataset/50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+  "licence": "records CC0, CC BY or CC BY-NC; counts of records only",
+  "tier": 3,
+  "kind": "observations"
+}
