@@ -22,11 +22,9 @@
       "nodes": 0,
       "bare": 1.0,
       "basal_leaves": 9,
-      "basal_length": 0.15,
       "basal_angle": 75,
       "raceme": 0.06,
       "flowers": 1,
-      "flower_size": 0.035,
       "pedicel": 0.01,
       "flower_angle": 0,
       "fruit_below": 0,
@@ -67,7 +65,7 @@
         "face_up": 0.5
       },
       "flower": {
-        "shape": { "template": "head", "ray_width": 0.9, "disc": 0.45 },
+        "shape": { "template": "head", "ray_width": 0.9 },
         "colour": [0.95, 0.82, 0.12],
         "accent": [0.9, 0.7, 0.1]
       }
@@ -96,7 +94,14 @@
     "involucre_height_m": {"min": 0.01, "max": 0.025},
     "phyllaries": {"min": 20, "max": 30},
     "pappus": "bristles",
-    "pappus_length_m": {"min": 0.01, "max": 0.012}
+    "pappus_length_m": {"min": 0.01, "max": 0.012},
+    "life_span": "perennial",
+    "leaf_shape": {"oblanceolate": "often", "obovate": "often"},
+    "leaf_division": "simple",
+    "leaf_incision": {"cleft": "often", "none": "often"},
+    "division_pattern": "pinnate",
+    "leaf_margin": "dentate",
+    "flowering_months": [4, 5, 6, 7, 8, 9, 10, 11]
   },
   "evidence": {
     "traits.height_typical_m": {
@@ -163,6 +168,41 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "FNA's account of the species (Bogler, volume 19), as search results quote copies of its text (the pages themselves were not read): involucres cylindric or bell-shaped, 10 to 25 mm tall and 10 to 20 mm across; phyllaries 20 to 30, unequal; florets 10 to 15 mm, past the phyllaries at flowering; pappus of whitish bristles in two rows, the inner plumose, the longest 10 to 12 mm."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Hypochoeris radicata (pp. 586-587): perennial."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, H. radicata (p. 587): leaves basal, spread on the ground, oblanceolate to obovate."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, H. radicata (p. 587): one blade, pinnatifid to toothed."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, H. radicata (p. 587): leaves pinnatifid to merely dentate."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, H. radicata (p. 587): pinnatifid."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, H. radicata (p. 587): pinnatifid to dentate."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, H. radicata (p. 587): April to November."
     }
   },
   "provenance": {

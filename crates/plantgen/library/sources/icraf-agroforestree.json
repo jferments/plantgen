@@ -1,0 +1,10 @@
+{
+  "id": "icraf-agroforestree",
+  "title": "Agroforestree Database: species profiles",
+  "authors": "World Agroforestry (ICRAF)",
+  "year": 2009,
+  "url": "https://apps.worldagroforestry.org/treedb2/speciesprofile.php?Spid=118",
+  "licence": "copyrighted text; facts only",
+  "tier": 2,
+  "kind": "text"
+}

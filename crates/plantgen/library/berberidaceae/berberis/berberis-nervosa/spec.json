@@ -74,6 +74,7 @@
         "shape": {
           "template": "flower",
           "petals": 6,
+          "petal_whorls": 2,
           "petal_width": 1.2,
           "point": 0,
           "notch": 0,
@@ -113,6 +114,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1944",
       "note": "Abrams vol. 2 (1944), as Mahonia nervosa, Fig. 1867, p. 217: simple stems 2 dm to 6 dm high with the leaves in a terminal tuft."
+    },
+    "appearance.organs.flower.shape.petal_whorls": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual (1925), Berberidaceae: sepals 6, in 2 circles; petals 6, in 2 circles; stamens as many and opposite them. So six petals, three and three."
     },
     "generator.params": {
       "evidence": "Authored",

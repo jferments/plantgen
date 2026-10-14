@@ -112,7 +112,21 @@
     "pinnae": {"min": 4, "max": 20, "high": 28},
     "leaflets": {"min": 12, "max": 40},
     "terminal_leaflet": false,
-    "leaf_shape": "oblong"
+    "leaf_shape": "oblong",
+    "height_typical_m": {"min": 4, "max": 21, "low": 1},
+    "height_max_m": 21,
+    "woodiness": "woody",
+    "life_span": "perennial",
+    "stipules": true,
+    "spines": "leaf_spines",
+    "bark_texture": "furrowed",
+    "bark_colour": [70, 68, 65],
+    "leaflet_length_m": {"min": 0.0005, "max": 0.0025, "high": 0.006},
+    "inflorescence": "head",
+    "flowering_position": "lateral",
+    "inflorescence_length_m": {"min": 0.005, "max": 0.01},
+    "flower_colour": [245, 240, 215],
+    "fruit_size_m": {"min": 0.07, "max": 0.1}
   },
   "evidence": {
     "traits.height_max_m": {
@@ -190,6 +204,76 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The leaf drawn as a twice-divided compound leaf (spec rework P4), its pinnae and their leaflets counted from its characters by the rules at the flowering plants; before, a fern's frond stood in for it. By eye from photographs: the pinnae standing out nearly square from a short rachis and their tiny leaflets from them, each leaflet about a third as wide as long, as Brenan's sizes give."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "brenan-1959-ftea-mimosoideae",
+      "note": "Brenan's Flora of Tropical East Africa account of Mimosoideae (1959, p. 117), as Acacia tortilis: tree 4-21 m high, rarely (probably not in East Africa) a bush 1 m; crown flat or spreading; bark grey to black, fissured; stipules spiny, some short, more or less hooked and to about 5 mm, mixed with long straight whitish ones to about 8(-10) cm; leaf rachis 2 cm or less; pinnae 2-10 pairs, 2-17 mm long; leaflets 6-19 pairs per pinna, usually very small, 0.5-2.5(-6) mm long; flowers cream or whitish, in axillary heads 5-10 mm across on peduncles 4-24 mm; pods contorted or spirally twisted, lengthwise-veined; seeds olive- to red-brown, about 7 mm."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "brenan-1959-ftea-mimosoideae",
+      "note": "Brenan's Flora of Tropical East Africa account of Mimosoideae (1959, p. 117), as Acacia tortilis: tree 4-21 m high, rarely (probably not in East Africa) a bush 1 m; crown flat or spreading; bark grey to black, fissured; stipules spiny, some short, more or less hooked and to about 5 mm, mixed with long straight whitish ones to about 8(-10) cm; leaf rachis 2 cm or less; pinnae 2-10 pairs, 2-17 mm long; leaflets 6-19 pairs per pinna, usually very small, 0.5-2.5(-6) mm long; flowers cream or whitish, in axillary heads 5-10 mm across on peduncles 4-24 mm; pods contorted or spirally twisted, lengthwise-veined; seeds olive- to red-brown, about 7 mm."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "brenan-1959-ftea-mimosoideae",
+      "note": "Brenan's Flora of Tropical East Africa account of Mimosoideae (1959, p. 117), as Acacia tortilis: tree 4-21 m high, rarely (probably not in East Africa) a bush 1 m; crown flat or spreading; bark grey to black, fissured; stipules spiny, some short, more or less hooked and to about 5 mm, mixed with long straight whitish ones to about 8(-10) cm; leaf rachis 2 cm or less; pinnae 2-10 pairs, 2-17 mm long; leaflets 6-19 pairs per pinna, usually very small, 0.5-2.5(-6) mm long; flowers cream or whitish, in axillary heads 5-10 mm across on peduncles 4-24 mm; pods contorted or spirally twisted, lengthwise-veined; seeds olive- to red-brown, about 7 mm."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "brenan-1959-ftea-mimosoideae",
+      "note": "Brenan's Flora of Tropical East Africa account of Mimosoideae (1959, p. 117), as Acacia tortilis: tree 4-21 m high, rarely (probably not in East Africa) a bush 1 m; crown flat or spreading; bark grey to black, fissured; stipules spiny, some short, more or less hooked and to about 5 mm, mixed with long straight whitish ones to about 8(-10) cm; leaf rachis 2 cm or less; pinnae 2-10 pairs, 2-17 mm long; leaflets 6-19 pairs per pinna, usually very small, 0.5-2.5(-6) mm long; flowers cream or whitish, in axillary heads 5-10 mm across on peduncles 4-24 mm; pods contorted or spirally twisted, lengthwise-veined; seeds olive- to red-brown, about 7 mm."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "brenan-1959-ftea-mimosoideae",
+      "note": "Brenan's Flora of Tropical East Africa account of Mimosoideae (1959, p. 117), as Acacia tortilis: tree 4-21 m high, rarely (probably not in East Africa) a bush 1 m; crown flat or spreading; bark grey to black, fissured; stipules spiny, some short, more or less hooked and to about 5 mm, mixed with long straight whitish ones to about 8(-10) cm; leaf rachis 2 cm or less; pinnae 2-10 pairs, 2-17 mm long; leaflets 6-19 pairs per pinna, usually very small, 0.5-2.5(-6) mm long; flowers cream or whitish, in axillary heads 5-10 mm across on peduncles 4-24 mm; pods contorted or spirally twisted, lengthwise-veined; seeds olive- to red-brown, about 7 mm."
+    },
+    "traits.spines": {
+      "evidence": "SourceInferred",
+      "source": "brenan-1959-ftea-mimosoideae",
+      "note": "Brenan's Flora of Tropical East Africa account of Mimosoideae (1959, p. 117), as Acacia tortilis: tree 4-21 m high, rarely (probably not in East Africa) a bush 1 m; crown flat or spreading; bark grey to black, fissured; stipules spiny, some short, more or less hooked and to about 5 mm, mixed with long straight whitish ones to about 8(-10) cm; leaf rachis 2 cm or less; pinnae 2-10 pairs, 2-17 mm long; leaflets 6-19 pairs per pinna, usually very small, 0.5-2.5(-6) mm long; flowers cream or whitish, in axillary heads 5-10 mm across on peduncles 4-24 mm; pods contorted or spirally twisted, lengthwise-veined; seeds olive- to red-brown, about 7 mm. The spines are the stipules, which the vocabulary files under leaf_spines; two kinds mixed, short hooked and long straight white."
+    },
+    "traits.bark_texture": {
+      "evidence": "SourceInferred",
+      "source": "brenan-1959-ftea-mimosoideae",
+      "note": "Brenan's Flora of Tropical East Africa account of Mimosoideae (1959, p. 117), as Acacia tortilis: tree 4-21 m high, rarely (probably not in East Africa) a bush 1 m; crown flat or spreading; bark grey to black, fissured; stipules spiny, some short, more or less hooked and to about 5 mm, mixed with long straight whitish ones to about 8(-10) cm; leaf rachis 2 cm or less; pinnae 2-10 pairs, 2-17 mm long; leaflets 6-19 pairs per pinna, usually very small, 0.5-2.5(-6) mm long; flowers cream or whitish, in axillary heads 5-10 mm across on peduncles 4-24 mm; pods contorted or spirally twisted, lengthwise-veined; seeds olive- to red-brown, about 7 mm."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "brenan-1959-ftea-mimosoideae",
+      "note": "Brenan's Flora of Tropical East Africa account of Mimosoideae (1959, p. 117), as Acacia tortilis: tree 4-21 m high, rarely (probably not in East Africa) a bush 1 m; crown flat or spreading; bark grey to black, fissured; stipules spiny, some short, more or less hooked and to about 5 mm, mixed with long straight whitish ones to about 8(-10) cm; leaf rachis 2 cm or less; pinnae 2-10 pairs, 2-17 mm long; leaflets 6-19 pairs per pinna, usually very small, 0.5-2.5(-6) mm long; flowers cream or whitish, in axillary heads 5-10 mm across on peduncles 4-24 mm; pods contorted or spirally twisted, lengthwise-veined; seeds olive- to red-brown, about 7 mm. Grey to black as a dark grey RGB."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "brenan-1959-ftea-mimosoideae",
+      "note": "Brenan's Flora of Tropical East Africa account of Mimosoideae (1959, p. 117), as Acacia tortilis: tree 4-21 m high, rarely (probably not in East Africa) a bush 1 m; crown flat or spreading; bark grey to black, fissured; stipules spiny, some short, more or less hooked and to about 5 mm, mixed with long straight whitish ones to about 8(-10) cm; leaf rachis 2 cm or less; pinnae 2-10 pairs, 2-17 mm long; leaflets 6-19 pairs per pinna, usually very small, 0.5-2.5(-6) mm long; flowers cream or whitish, in axillary heads 5-10 mm across on peduncles 4-24 mm; pods contorted or spirally twisted, lengthwise-veined; seeds olive- to red-brown, about 7 mm."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "brenan-1959-ftea-mimosoideae",
+      "note": "Brenan's Flora of Tropical East Africa account of Mimosoideae (1959, p. 117), as Acacia tortilis: tree 4-21 m high, rarely (probably not in East Africa) a bush 1 m; crown flat or spreading; bark grey to black, fissured; stipules spiny, some short, more or less hooked and to about 5 mm, mixed with long straight whitish ones to about 8(-10) cm; leaf rachis 2 cm or less; pinnae 2-10 pairs, 2-17 mm long; leaflets 6-19 pairs per pinna, usually very small, 0.5-2.5(-6) mm long; flowers cream or whitish, in axillary heads 5-10 mm across on peduncles 4-24 mm; pods contorted or spirally twisted, lengthwise-veined; seeds olive- to red-brown, about 7 mm."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "brenan-1959-ftea-mimosoideae",
+      "note": "Brenan's Flora of Tropical East Africa account of Mimosoideae (1959, p. 117), as Acacia tortilis: tree 4-21 m high, rarely (probably not in East Africa) a bush 1 m; crown flat or spreading; bark grey to black, fissured; stipules spiny, some short, more or less hooked and to about 5 mm, mixed with long straight whitish ones to about 8(-10) cm; leaf rachis 2 cm or less; pinnae 2-10 pairs, 2-17 mm long; leaflets 6-19 pairs per pinna, usually very small, 0.5-2.5(-6) mm long; flowers cream or whitish, in axillary heads 5-10 mm across on peduncles 4-24 mm; pods contorted or spirally twisted, lengthwise-veined; seeds olive- to red-brown, about 7 mm."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "brenan-1959-ftea-mimosoideae",
+      "note": "Brenan's Flora of Tropical East Africa account of Mimosoideae (1959, p. 117), as Acacia tortilis: tree 4-21 m high, rarely (probably not in East Africa) a bush 1 m; crown flat or spreading; bark grey to black, fissured; stipules spiny, some short, more or less hooked and to about 5 mm, mixed with long straight whitish ones to about 8(-10) cm; leaf rachis 2 cm or less; pinnae 2-10 pairs, 2-17 mm long; leaflets 6-19 pairs per pinna, usually very small, 0.5-2.5(-6) mm long; flowers cream or whitish, in axillary heads 5-10 mm across on peduncles 4-24 mm; pods contorted or spirally twisted, lengthwise-veined; seeds olive- to red-brown, about 7 mm. A head's diameter, which for a round head is its length."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "brenan-1959-ftea-mimosoideae",
+      "note": "Brenan's Flora of Tropical East Africa account of Mimosoideae (1959, p. 117), as Acacia tortilis: tree 4-21 m high, rarely (probably not in East Africa) a bush 1 m; crown flat or spreading; bark grey to black, fissured; stipules spiny, some short, more or less hooked and to about 5 mm, mixed with long straight whitish ones to about 8(-10) cm; leaf rachis 2 cm or less; pinnae 2-10 pairs, 2-17 mm long; leaflets 6-19 pairs per pinna, usually very small, 0.5-2.5(-6) mm long; flowers cream or whitish, in axillary heads 5-10 mm across on peduncles 4-24 mm; pods contorted or spirally twisted, lengthwise-veined; seeds olive- to red-brown, about 7 mm. 'Cream or whitish' as RGB."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "icraf-agroforestree",
+      "note": "The World Agroforestry (ICRAF) Agroforestree Database's profile of Acacia tortilis, as search results quote it (the page itself was not read): pods spirally twisted or rarely almost straight, 7-10 cm long, 6-10 (to 13) mm broad; flowers white or pale yellowish-white, scented, in heads 0.5-1.1 cm across. Brenan (FTEA 1959) gives pod widths 6-9(-13) mm but no length."
     }
   },
   "provenance": {

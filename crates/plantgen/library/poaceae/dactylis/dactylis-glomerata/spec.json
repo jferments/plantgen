@@ -104,7 +104,10 @@
     "awn_length_m": {"min": 0.0005, "max": 0.0015},
     "upper_glume_length_m": {"min": 0.003, "max": 0.005},
     "lemma_length_m": {"min": 0.004, "max": 0.008},
-    "awn_insertion": "apical"
+    "awn_insertion": "apical",
+    "rhizome_habit": "none",
+    "clonal": false,
+    "flowering_months": [6, 7, 8]
   },
   "evidence": {
     "appearance.organs.panicle": {
@@ -176,6 +179,21 @@
       "evidence": "SourceInferred",
       "source": "kew-grassbase",
       "note": "GrassBase's account of the species: a tufted perennial, its culms 15 to 140 cm long; blades 10 to 45 cm by 2 to 14 mm; a dense, one-sided panicle 2 to 30 cm long; spikelets 5 to 9 mm, of 2 to 5 fertile florets above two unlike glumes; the lemma's awn 0.5 to 1.5 mm."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 184): culms in large tussocks; no rhizomes named (Abrams 1923, Dactylis no. 1: plants in large tussocks)."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 184): a tussock grass, its culms in large tussocks with no rhizomes or stolons named, so it does not spread beyond its tuft."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (Dactylis glomerata, fig. 449): flowers June-August as an escape along roadsides and waste places in the Pacific States."
     }
   },
   "provenance": {

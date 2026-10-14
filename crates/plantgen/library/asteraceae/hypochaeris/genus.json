@@ -6,13 +6,43 @@
     "capitulum_kind": "liguliflorous",
     "ligulate_florets": {"min": 20, "max": 100},
     "receptacle": "paleate",
-    "receptacle_shape": "flat"
+    "receptacle_shape": "flat",
+    "rosette": "basal",
+    "woodiness": "herbaceous",
+    "inflorescence": "solitary",
+    "ligulate_colour": [245, 200, 30],
+    "pappus": "bristles"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "oregonflora",
       "note": "OregonFlora's page for the genus, which gives FNA's account (Bogler, volume 19), as quoted in search results (the page itself was not read): florets 20 to 100 or more, each strap-shaped, as in all of the chicory tribe; receptacles flat, slightly pitted, bearing linear to awl-shaped papery scales (paleae)."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Hypochoeris (p. 586): herbs with a basal tuft of leaves and scapose stems."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Hypochoeris (p. 586): herbs."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Hypochoeris (p. 586): heads borne singly at the ends of the scape's branches."
+    },
+    "traits.ligulate_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Hypochoeris (p. 586): ligules yellow. Word: yellow."
+    },
+    "traits.pappus": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Hypochoeris (p. 586): pappus of one row of plumose bristles, the outer sometimes shorter and not plumose."
     }
   }
 }

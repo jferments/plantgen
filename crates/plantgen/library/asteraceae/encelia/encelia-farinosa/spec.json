@@ -32,7 +32,6 @@
       "internode": 0.05,
       "branch_angle": 40,
       "bud_years": 4,
-      "leaf_size": 0.07,
       "spur_leaf": 0.06,
       "spur_pairs": 3,
       "leaf_angle": 45,
@@ -80,8 +79,7 @@
       },
       "bloom": {
         "shape": {
-          "template": "head",
-          "rays": 11
+          "template": "head"
         },
         "colour": [0.98, 0.82, 0.1],
         "accent": [0.75, 0.5, 0.1]
@@ -116,7 +114,24 @@
       "min": 0.02,
       "max": 0.05
     },
-    "wood_density_basic_kg_m3": 630
+    "wood_density_basic_kg_m3": 630,
+    "woodiness": "semi",
+    "leaf_shape": {"ovate": "often", "lanceolate": "often"},
+    "petiole_length_m": {"min": 0.01, "max": 0.04},
+    "leaf_division": "simple",
+    "leaf_incision": "none",
+    "leaf_margin": {"entire": "usually", "dentate": "rarely"},
+    "inflorescence": {"cyme": "often", "panicle": "often"},
+    "capitulum_kind": "radiate",
+    "phyllary_series": {"min": 3, "max": 4},
+    "involucre_height_m": {"min": 0.0035, "max": 0.007},
+    "ray_florets": {"min": 8, "max": 18},
+    "ray_length_m": {"min": 0.007, "max": 0.015},
+    "ray_colour": [245, 200, 30],
+    "disc_colour": [245, 200, 30],
+    "fruit_size_m": 0.004,
+    "pappus": "absent",
+    "flowering_months": [3, 4, 5, 6]
   },
   "evidence": {
     "traits.height_max_m": {
@@ -184,6 +199,91 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Encelia farinosa (p. 123): woody below, much branched, a rounded bush; 'semi' for woody only in its lower part (woody would also fit)."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. farinosa (p. 123): blades ovate to lanceolate, wedge-shaped at the base, 3-nerved."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. farinosa (p. 123): slender petioles 1-4 cm long."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. farinosa (p. 123): simple blades."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. farinosa (p. 123): blades entire."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. farinosa (p. 123): entire, often wavy, rarely shallowly toothed (repand-dentate)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. farinosa (p. 123): several heads in cymes or panicles on nearly naked branches, nodding in fruit."
+    },
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. farinosa (p. 123): about 8-18 rays."
+    },
+    "traits.phyllary_series": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. farinosa (p. 123): involucre in 3-4 graduated series."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. farinosa (p. 123): involucre 3.5-7 mm high; whole heads 1.8-4 cm wide across the rays."
+    },
+    "traits.ray_florets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. farinosa (p. 123): rays about 8-18."
+    },
+    "traits.ray_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. farinosa (p. 123): rays 7-15 mm long."
+    },
+    "traits.ray_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. farinosa (p. 123): rays yellow. Word: yellow."
+    },
+    "traits.disc_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. farinosa (p. 123): disc yellow; var. phenicodonta, in the south of the range, has disc florets purple above. Word: yellow."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. farinosa (p. 123): achenes about 4 mm long."
+    },
+    "traits.pappus": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. farinosa (p. 123): pappus wanting."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. farinosa (p. 123): March to June."
     }
   },
   "provenance": {

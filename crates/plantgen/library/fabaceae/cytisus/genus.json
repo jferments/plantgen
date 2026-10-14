@@ -2,10 +2,9 @@
   "schema": 1,
   "rank": "genus",
   "name": "Cytisus",
+  "parent": "subfamily/faboideae",
   "traits": {
-    "wood_density_basic_kg_m3": 630,
-    "flower_symmetry": "zygomorphic",
-    "zygomorphy": "papilionaceous"
+    "wood_density_basic_kg_m3": 630
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {
