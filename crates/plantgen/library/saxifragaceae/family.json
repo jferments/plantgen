@@ -9,11 +9,24 @@
       "actinomorphic": "usually",
       "zygomorphic": "sometimes"
     },
+    "zygomorphy": "other",
     "perianth": "sepals_and_petals",
     "hypanthium": true,
     "carpels": 2,
     "woodiness": "herbaceous",
     "leaf_arrangement": "alternate",
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "rarely"
+    },
+    "leaf_incision": {
+      "lobed": "often",
+      "none": "often"
+    },
+    "division_pattern": {
+      "pinnate": "sometimes",
+      "palmate": "usually"
+    },
     "stipules": false,
     "fruit_type": "capsule"
   },
@@ -56,6 +69,26 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 300 Saxifragaceae (in the narrow sense APG also takes): herbs, little or not at all succulent; leaves alternate, without stipules; fruit a capsule with many small seeds."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Saxifragaceae with Escalloniaceae, Penthoraceae, Vahliaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Saxifragaceae with Penthoraceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple usually, compound rarely; the simple blade lobed often, none often; lobes or leaflets pinnate sometimes, palmate usually. Read from the coded leaf form and dissection by script (spec-rework/b1/delta)."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Saxifragaceae with Penthoraceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple usually, compound rarely; the simple blade lobed often, none often; lobes or leaflets pinnate sometimes, palmate usually. Read from the coded leaf form and dissection by script (spec-rework/b1/delta)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Saxifragaceae with Penthoraceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple usually, compound rarely; the simple blade lobed often, none often; lobes or leaflets pinnate sometimes, palmate usually. Read from the coded leaf form and dissection by script (spec-rework/b1/delta)."
     }
   }
 }

@@ -1948,9 +1948,12 @@ impl Ruled<'_> {
                 }
                 // Its trait unstated, a map with an `else` gives that, or
                 // what the map its `else` holds reads.
-                Err(_) if self.rule.contains_key("else") => {
-                    self.rule.get("else").and_then(map_rule).map(reads).unwrap_or_default()
-                }
+                Err(_) if self.rule.contains_key("else") => self
+                    .rule
+                    .get("else")
+                    .and_then(map_rule)
+                    .map(reads)
+                    .unwrap_or_default(),
                 Err(why) => return Err(why),
             }
         } else {
@@ -4403,8 +4406,9 @@ mod tests {
         let a = |traits: Value| {
             let chain = above(&files, "testaceae", "genus").unwrap();
             let own = json!({"id": "one", "traits": traits});
-            inherit("testaceae/genus/one/spec.json", &own, &chain, &programs()).unwrap().spec
-                ["generator"]["params"]["a"]
+            inherit("testaceae/genus/one/spec.json", &own, &chain, &programs())
+                .unwrap()
+                .spec["generator"]["params"]["a"]
                 .clone()
         };
         assert_eq!(a(json!({"flower_symmetry": "actinomorphic"})), json!(0));

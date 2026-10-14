@@ -17,6 +17,7 @@
       "actinomorphic": "usually",
       "zygomorphic": "rarely"
     },
+    "zygomorphy": "other",
     "perianth": "sepals_and_petals",
     "hypanthium": true,
     "ovary_position": {
@@ -33,6 +34,11 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 288 Lythraceae: herbs, rarely shrubby; leaves opposite or whorled, rarely alternate; stipules none or very small; flowers usually regular (Cuphea irregular); sepals joined in a tube with the petals at its top (read as a hypanthium); petals crumpled in bud; ovary superior, of 2 to 6 cells; fruit usually a capsule. APG adds the woody crape myrtle, pomegranate (inferior ovary, a berry-like fruit) and Sonneratia: so woody as often (Library 1.0's family is about a third trees and shrubs), and the inferior ovary and berry as rare (inferred)."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Lythraceae with Punicaceae, Sonneratiaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
     }
   }
 }
