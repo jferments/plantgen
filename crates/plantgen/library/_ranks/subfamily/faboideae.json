@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "rank": "subfamily",
+  "name": "Faboideae",
+  "parent": "family/fabaceae",
+  "traits": {"flower_symmetry": "zygomorphic", "zygomorphy": "papilionaceous"},
+  "evidence": {
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959, p. 155), family 29 Papilionaceae (Fabaceae), today's subfamily Faboideae (Papilionoideae): flowers zygomorphic; the upper petal outside the others in bud as the standard, two lateral wings, the lower two joined by their lower edges into a keel; stamens often 10, joined in one or two bundles. Abrams (vol. 2, 1944, p. 480, as Fabaceae in the narrow sense) and Kearney and Peebles (1942, key to subfamilies, Papilionoideae) say the same: the corolla is papilionaceous (Kearney and Peebles: commonly so; Amorpha has one petal and Parryella none, so a few genera stray)."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959, p. 155), family 29 Papilionaceae (Fabaceae), today's subfamily Faboideae (Papilionoideae): flowers zygomorphic; the upper petal outside the others in bud as the standard, two lateral wings, the lower two joined by their lower edges into a keel; stamens often 10, joined in one or two bundles. Abrams (vol. 2, 1944, p. 480, as Fabaceae in the narrow sense) and Kearney and Peebles (1942, key to subfamilies, Papilionoideae) say the same: the corolla is papilionaceous (Kearney and Peebles: commonly so; Amorpha has one petal and Parryella none, so a few genera stray)."
+    }
+  }
+}

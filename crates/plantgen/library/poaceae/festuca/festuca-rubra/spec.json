@@ -17,7 +17,6 @@
       "tussock_radius": 0.1,
       "tiller_lean": 16,
       "leaves": 3,
-      "leaf_length": 0.28,
       "leaf_spread": 0.3,
       "leaf_angle": 15,
       "arch": 9,
@@ -26,9 +25,9 @@
       "culm_radius": 0.0008,
       "culm_lean": 8,
       "panicle_nod": 10,
-      "blade_area": 0.027,
-      "tip_area": 0.015,
-      "thatch_area": 0.027,
+      "blade_area": 0.014,
+      "tip_area": 0.008,
+      "thatch_area": 0.014,
       "panicle_area": 0.151
     }
   },
@@ -48,13 +47,13 @@
     "variation": 0.2,
     "organs": {
       "blade": {
-        "shape": { "template": "blade", "taper": 0, "aspect": 0.03 }
+        "shape": { "template": "blade", "taper": 0 }
       },
       "blade_tip": {
-        "shape": { "template": "blade", "taper": 1, "aspect": 0.03 }
+        "shape": { "template": "blade", "taper": 1 }
       },
       "thatch": {
-        "shape": { "template": "blade", "taper": 0, "aspect": 0.03 },
+        "shape": { "template": "blade", "taper": 0 },
         "colour": [0.38, 0.31, 0.18],
         "shade": [0.12, 0.1, 0.05]
       },
@@ -110,7 +109,16 @@
     "upper_glume_length_m": {"min": 0.0035, "max": 0.0085, "low": 0.003},
     "lemma_length_m": {"min": 0.004, "max": 0.0095},
     "awns": true,
-    "awn_length_m": {"min": 0.0004, "max": 0.0045, "low": 0.0001}
+    "awn_length_m": {"min": 0.0004, "max": 0.0045, "low": 0.0001},
+    "life_span": "perennial",
+    "rhizome_habit": "short_creeping",
+    "clonal": true,
+    "leaf_length_m": {"min": 0.03, "max": 0.4},
+    "leaf_width_m": {"min": 0.0005, "max": 0.001, "high": 0.002},
+    "awn_insertion": "apical",
+    "awn_form": "straight",
+    "inflorescence_posture": "erect",
+    "flowering_months": [6, 7, 8]
   },
   "evidence": {
     "traits.culm_length_m": {
@@ -177,6 +185,51 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 58, 74-75): F. rubra is in section Eufestuca, whose plants are perennial."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (Festuca no. 20): culms erect from a decumbent or somewhat creeping base; Hitchcock (p. 74-75, no. 29) has them usually loosely tufted, bent or decumbent at the reddish base, occasionally closely tufted."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (Festuca no. 20): culms rise from a somewhat creeping base, so the plant spreads by its own shoots into loose tufts or sod."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "kew-grassbase",
+      "note": "GrassBase's entry (as search results quote it; the page itself was not read): leaf-blades straight, filiform, 3-40 cm long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "kew-grassbase",
+      "note": "GrassBase's entry (as search results quote it; the page itself was not read): leaf-blades 0.5-1(-2) mm wide; Hitchcock (no. 29) has them soft, usually folded or involute."
+    },
+    "traits.awn_insertion": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock's genus description (p. 57): lemmas awned from the tip, rarely from a minutely bifid apex; F. rubra's lemma (p. 75) bears an awn about half its length."
+    },
+    "traits.awn_form": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 75, no. 29): a short awn about half as long as the lemma, no knee or twist named."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 75, no. 29): panicle usually contracted and narrow, its branches mostly erect or ascending."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (Festuca no. 20): flowers June-August."
     }
   },
   "provenance": {

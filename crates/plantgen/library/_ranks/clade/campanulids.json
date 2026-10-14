@@ -2,5 +2,30 @@
   "schema": 1,
   "rank": "clade",
   "name": "campanulids",
-  "parent": "clade/asterids"
+  "parent": "clade/asterids",
+  "rules": {
+    "generator.params.leaf_length": {
+      "rule": "max(leaf_length_m)",
+      "why": "A herb's longest stem leaf is as long as the longest leaf its flora measures; the leaves below and above it are shorter by the shares its program sets. Its card's petiole, where it has one, is part of that length."
+    },
+    "generator.params.basal_length": {
+      "rule": "max(leaf_length_m)",
+      "why": "A herb's longest basal leaf is as long as the longest leaf its flora measures, as the stem's longest is."
+    },
+    "generator.params.leaf_top": {
+      "rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)",
+      "why": "A herb's topmost stem leaf is as short, for the longest, as the shortest leaf its flora measures."
+    },
+    "generator.params.leaf_base": {
+      "rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)",
+      "why": "A herb's lowest stem leaf is as short, for the longest, as the shortest leaf its flora measures; its basal leaves are drawn apart."
+    }
+  },
+  "evidence": {
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen's herb program sizes a herb's leaves from a flora's leaf lengths, a choice of the model's (spec rework E1 and E3): its longest stem and basal leaves as long as the longest leaf the flora gives, its lowest and topmost stem leaves shorter by the shortest's share of it, the card's petiole part of the length. Homed at the campanulids, where it holds for the daisy and carrot families and changes no other built-in species."
+    }
+  }
 }

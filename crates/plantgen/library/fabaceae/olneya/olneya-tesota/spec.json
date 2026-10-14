@@ -44,7 +44,7 @@
       "thorn_angle": 60,
       "blooms": 3,
       "adult_age": 10,
-      "bloom_size": 0.025,
+      "bloom_size": 0.01,
       "bloom_angle": 40,
       "leaf_area": 0.236,
       "thorn_area": 0.059,
@@ -115,22 +115,34 @@
   "tier": "procedural_proxy",
   "traits": {
     "height_max_m": {
-      "min": 4.57,
-      "max": 7.62
+      "min": 9,
+      "max": 10.7
     },
     "wood_density_basic_kg_m3": 920,
     "leaf_division": "compound",
     "division_pattern": "pinnate",
     "division_order": 1,
-    "leaflets": {"min": 6, "max": 16},
+    "leaflets": {"min": 8, "max": 24, "typical": 13},
     "terminal_leaflet": false,
-    "leaf_shape": {"obovate": "usually", "elliptic": "sometimes"}
+    "leaf_shape": {"obovate": "usually", "elliptic": "sometimes"},
+    "height_typical_m": {"min": 5, "max": 8},
+    "woodiness": "woody",
+    "life_span": "perennial",
+    "leaf_habit": "evergreen",
+    "spines": "leaf_spines",
+    "leaflet_length_m": {"min": 0.005, "max": 0.02},
+    "leaf_length_m": {"min": 0.03, "max": 0.1},
+    "inflorescence_length_m": {"min": 0.03, "max": 0.05},
+    "flower_size_m": {"min": 0.008, "max": 0.012},
+    "flower_colour": [175, 130, 200],
+    "fruit_size_m": {"min": 0.04, "max": 0.06},
+    "flowering_months": [5, 6]
   },
   "evidence": {
     "traits.height_max_m": {
       "evidence": "SourceInferred",
-      "source": "jepson-1925-manual",
-      "note": "Jepson (1925), as O. tesota: grows 4.57 m to 7.62 m tall (converted from feet)."
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 466), Olneya: a tree reaching 9 m and a trunk 45 cm across, spiny branches, thin scaly bark; leaflets 8 to 24 (commonly 11 to 15), grey-hairy; pea flowers in short racemes, corolla about 12 mm, purple and white; foliage evergreen except in very cold winters; May and June. Their plate 15 shows a specimen near Gila Bend about 35 feet (10.7 m) high. So the tallest are 9 m by the text and 10.7 m by the plate."
     },
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Olneya tesota (gwddagg_v2.2_species.csv, read): specific gravity 0.92 (wsg_est, the database's hierarchical-model species mean, from 2 records in 2 sources); trunks 0.92, branches 0.77. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
@@ -207,6 +219,76 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The light grid's cells 0.4 m across, as the umbrella thorn's: with its leaves drawn as the compound leaves they are (spec rework P4), which shade twice what the frond did, 0.3 m cells let a seedling's own leaves shade it for decades (seed 2 stood at 0.64 m from its fifth year to past its 25th). A model setting, not a measurement."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 562), Olneya tesota: tree 5-8 m high with a broad crown and grey-hairy branches; spines 5-10 mm long, single or paired beneath the leaves, brown or black-tipped; leaves 3-10 cm long; leaflets 8-25, oblong to wedge-shaped, 5-20 mm long, grey-hairy, rounded at the tip; racemes 3-5 cm; calyx 3-4 mm; corolla 8-10 mm long (given as yellow, see disagreements); pod 4-6 cm long, nearly 1 cm wide, glandular-hairy; May-June."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 562), Olneya tesota: tree 5-8 m high with a broad crown and grey-hairy branches; spines 5-10 mm long, single or paired beneath the leaves, brown or black-tipped; leaves 3-10 cm long; leaflets 8-25, oblong to wedge-shaped, 5-20 mm long, grey-hairy, rounded at the tip; racemes 3-5 cm; calyx 3-4 mm; corolla 8-10 mm long (given as yellow, see disagreements); pod 4-6 cm long, nearly 1 cm wide, glandular-hairy; May-June."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 562), Olneya tesota: tree 5-8 m high with a broad crown and grey-hairy branches; spines 5-10 mm long, single or paired beneath the leaves, brown or black-tipped; leaves 3-10 cm long; leaflets 8-25, oblong to wedge-shaped, 5-20 mm long, grey-hairy, rounded at the tip; racemes 3-5 cm; calyx 3-4 mm; corolla 8-10 mm long (given as yellow, see disagreements); pod 4-6 cm long, nearly 1 cm wide, glandular-hairy; May-June."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 466), Olneya: a tree reaching 9 m and a trunk 45 cm across, spiny branches, thin scaly bark; leaflets 8 to 24 (commonly 11 to 15), grey-hairy; pea flowers in short racemes, corolla about 12 mm, purple and white; foliage evergreen except in very cold winters; May and June. Their plate 15 shows a specimen near Gila Bend about 35 feet (10.7 m) high."
+    },
+    "traits.spines": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 562), Olneya tesota: tree 5-8 m high with a broad crown and grey-hairy branches; spines 5-10 mm long, single or paired beneath the leaves, brown or black-tipped; leaves 3-10 cm long; leaflets 8-25, oblong to wedge-shaped, 5-20 mm long, grey-hairy, rounded at the tip; racemes 3-5 cm; calyx 3-4 mm; corolla 8-10 mm long (given as yellow, see disagreements); pod 4-6 cm long, nearly 1 cm wide, glandular-hairy; May-June. The spines sit where the stipules would be (the genus's stipules are 'obsolete'), in ones or pairs below each leaf, so stipular spines, which the vocabulary files under leaf_spines. Not stated as stipular in so many words: an inference from their place."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 466), Olneya: a tree reaching 9 m and a trunk 45 cm across, spiny branches, thin scaly bark; leaflets 8 to 24 (commonly 11 to 15), grey-hairy; pea flowers in short racemes, corolla about 12 mm, purple and white; foliage evergreen except in very cold winters; May and June. Their plate 15 shows a specimen near Gila Bend about 35 feet (10.7 m) high. Abrams gives 8-25. Typical 13 is the middle of Kearney and Peebles' common 11-15."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 562), Olneya tesota: tree 5-8 m high with a broad crown and grey-hairy branches; spines 5-10 mm long, single or paired beneath the leaves, brown or black-tipped; leaves 3-10 cm long; leaflets 8-25, oblong to wedge-shaped, 5-20 mm long, grey-hairy, rounded at the tip; racemes 3-5 cm; calyx 3-4 mm; corolla 8-10 mm long (given as yellow, see disagreements); pod 4-6 cm long, nearly 1 cm wide, glandular-hairy; May-June."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 562), Olneya tesota: tree 5-8 m high with a broad crown and grey-hairy branches; spines 5-10 mm long, single or paired beneath the leaves, brown or black-tipped; leaves 3-10 cm long; leaflets 8-25, oblong to wedge-shaped, 5-20 mm long, grey-hairy, rounded at the tip; racemes 3-5 cm; calyx 3-4 mm; corolla 8-10 mm long (given as yellow, see disagreements); pod 4-6 cm long, nearly 1 cm wide, glandular-hairy; May-June. The whole leaf's length."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 562), Olneya tesota: tree 5-8 m high with a broad crown and grey-hairy branches; spines 5-10 mm long, single or paired beneath the leaves, brown or black-tipped; leaves 3-10 cm long; leaflets 8-25, oblong to wedge-shaped, 5-20 mm long, grey-hairy, rounded at the tip; racemes 3-5 cm; calyx 3-4 mm; corolla 8-10 mm long (given as yellow, see disagreements); pod 4-6 cm long, nearly 1 cm wide, glandular-hairy; May-June."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 562), Olneya tesota: tree 5-8 m high with a broad crown and grey-hairy branches; spines 5-10 mm long, single or paired beneath the leaves, brown or black-tipped; leaves 3-10 cm long; leaflets 8-25, oblong to wedge-shaped, 5-20 mm long, grey-hairy, rounded at the tip; racemes 3-5 cm; calyx 3-4 mm; corolla 8-10 mm long (given as yellow, see disagreements); pod 4-6 cm long, nearly 1 cm wide, glandular-hairy; May-June. 8-10 mm here, about 12 mm in Kearney and Peebles (p. 466); the pea flower's length."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, p. 466), Olneya: a tree reaching 9 m and a trunk 45 cm across, spiny branches, thin scaly bark; leaflets 8 to 24 (commonly 11 to 15), grey-hairy; pea flowers in short racemes, corolla about 12 mm, purple and white; foliage evergreen except in very cold winters; May and June. Their plate 15 shows a specimen near Gila Bend about 35 feet (10.7 m) high. 'Purple and white' as a pale purple RGB (the wings are the purple part)."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 562), Olneya tesota: tree 5-8 m high with a broad crown and grey-hairy branches; spines 5-10 mm long, single or paired beneath the leaves, brown or black-tipped; leaves 3-10 cm long; leaflets 8-25, oblong to wedge-shaped, 5-20 mm long, grey-hairy, rounded at the tip; racemes 3-5 cm; calyx 3-4 mm; corolla 8-10 mm long (given as yellow, see disagreements); pod 4-6 cm long, nearly 1 cm wide, glandular-hairy; May-June."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 562), Olneya tesota: tree 5-8 m high with a broad crown and grey-hairy branches; spines 5-10 mm long, single or paired beneath the leaves, brown or black-tipped; leaves 3-10 cm long; leaflets 8-25, oblong to wedge-shaped, 5-20 mm long, grey-hairy, rounded at the tip; racemes 3-5 cm; calyx 3-4 mm; corolla 8-10 mm long (given as yellow, see disagreements); pod 4-6 cm long, nearly 1 cm wide, glandular-hairy; May-June. Kearney and Peebles (p. 466) also give May and June."
+    },
+    "generator.params.bloom_size": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Each bloom is one flower, its card as long as the corolla, 8 to 10 mm (Abrams vol. 2, 1944, p. 562), so 1 cm."
     }
   },
   "provenance": {

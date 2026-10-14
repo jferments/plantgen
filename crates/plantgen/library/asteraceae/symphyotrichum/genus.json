@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Symphyotrichum",
+  "traits": {"leaf_arrangement": "alternate", "pappus": "bristles"},
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Aster (p. 310), which then held Symphyotrichum: leaves alternate, entire or toothed."
+    },
+    "traits.pappus": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Aster (p. 310), which then held Symphyotrichum: pappus of nearly equal capillary persistent bristles."
+    }
+  }
+}

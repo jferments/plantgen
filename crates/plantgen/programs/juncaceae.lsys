@@ -7,6 +7,7 @@
 lsystem juncaceae 1 extends grass;
 
 param divergence = 180;  # roll from one blade or culm leaf to the next
+param roll_spread = 40;  # most a blade's roll strays from divergence, either way
 param maturity = 1.5;    # years over which blades and culms reach full size
 param adult_age = 2;     # the first year the plant is adult and flowers
 param thatch_years = 1;  # years dead blades stay on

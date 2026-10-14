@@ -15,5 +15,38 @@
         }
       }
     }
+  },
+  "traits": {"life_span": "perennial", "clonal": true, "woodiness": "woody"},
+  "evidence": {
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "galloway-1925",
+      "note": "Galloway (p. 26-27): the Phyllostachys bamboos live for many years, each clump sending new culms up every season from rhizomes running back to older mother plants."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "galloway-1925",
+      "note": "Galloway (p. 26-27): young plants of a Phyllostachys clump come up at its edges on rhizomes from older mother plants; he counts them among the creeping bamboos, unlike the clump bamboos."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 16 and the Bambuseae, p. 29-31): the culms of bamboos are woody."
+    },
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How the cane program draws a bamboo grove from a flora's sizes, a choice of the model's (spec rework E2): a cane as long as the culms' greatest usual length, and at its foot as thick as the stoutest culms."
+    }
+  },
+  "rules": {
+    "generator.params.cane_length": {
+      "rule": "max(culm_length_m)",
+      "why": "A grove's canes each reach their full length in the weeks after they rise, and the most vigorous the most the flora gives, so a cane's length is its culms' greatest usual length."
+    },
+    "generator.params.cane_radius": {
+      "rule": "stem_diameter_max_m / 2",
+      "why": "A cane is thickest at its foot, as thick as the stoutest culms the flora measures."
+    }
   }
 }
