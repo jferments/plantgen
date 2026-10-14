@@ -14,13 +14,38 @@
       "alternate": "usually",
       "opposite": "rarely",
       "whorled": "rarely"
-    }
+    },
+    "perianth": {
+      "tepals": "usually",
+      "sepals_and_petals": "sometimes"
+    },
+    "stamens": {
+      "min": 3,
+      "max": 6,
+      "typical": 6
+    },
+    "carpels": 3
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson's conspectus of the flowering plants (vol. 1, 2nd ed., 1959): the monocotyledons' leaves are typically parallel-nerved and alternate, and their flowers usually in threes. Net-veined leaves (yams, aroids) and whorled or opposite ones (Trillium, Paris) are the exceptions, which their families state."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) pp. 7, 46, 355: the monocot perianth is two whorls of three like, usually petaloid tepals; a few families (Commelinaceae, Bromeliaceae) set a green calyx apart from a coloured corolla."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) pp. 88, 355: the monocot flower is very constantly P3+3 A3+3 G3, two whorls of three stamens; families that lose a whorl (Iridaceae 3) or more (orchids, gingers 1) state their own."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) pp. 88, 355: three carpels, joined, in the constant monocot plan P3+3 A3+3 G3."
     }
   }
 }
