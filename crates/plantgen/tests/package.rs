@@ -555,7 +555,8 @@ fn a_grass_knows_which_pieces_make_each_leaf() {
             ("blade", "piece"),
             ("blade_tip", "piece"),
             ("thatch", "piece"),
-            ("panicle", "inflorescence")
+            ("panicle", "inflorescence"),
+            ("panicle_male", "inflorescence")
         ]
     );
     let bytes = &built.objects[&manifest.variants[0].keyframes[0].graph];
