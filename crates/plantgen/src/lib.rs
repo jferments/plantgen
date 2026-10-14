@@ -270,4 +270,8 @@ pub mod venation;
 /// `reaction`) turning a limb back toward its line by each year's ring,
 /// so old crowns keep spreading limbs instead of hanging ones (44 to 47
 /// are #79, #86, #88 and #90).
-pub const GENERATOR_REVISION: u32 = 48;
+/// 49: a conifer's foliage and cones live as long as their parameters
+/// say, not one year more (pinidae 7, as 44 did for the other programs),
+/// and a pine's lowest needles as long as its species' longest stated
+/// needle life (Pinus's needle_low).
+pub const GENERATOR_REVISION: u32 = 49;

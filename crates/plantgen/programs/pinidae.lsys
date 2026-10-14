@@ -62,9 +62,15 @@
 # toward the sky half as strongly (upturn), since the wood no longer
 # sags by age against it.
 #
+# Revision 7 (conifer lives): foliage and cones live as long as their
+# parameters say, no longer one year more. What a step makes is born at
+# the step's end, so a rule that ends a part by its age counts the step it
+# is in (`age + dt >=`), as in the other programs (generator revision
+# 44).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem pinidae 6;
+lsystem pinidae 7;
 
 # Height of the leader over time: a Chapman-Richards curve,
 # height = height_max * (1 - exp(-height_rate * age))^height_shape.
@@ -215,14 +221,14 @@ decompose R(o, w) -> ;
 
 # Foliage falls after its shoot's keep years: needle_years on average,
 # needle_low times as long at the crown's foot as at its top (revision 5).
-rule Y(n) : age >= n -> %;
+rule Y(n) : age + dt >= n -> %;
 
 # A well-lit apex of a tree old enough bears a cone, which falls after
 # cone_years.
 decompose Z(l) : t >= adult_age && l >= cone_light && rand() < cone_chance ->
     [ $ /(uniform(-20, 20)) &(cone_pitch + uniform(-15, 15)) cone(cone_length * uniform(0.85, 1.15)) ];
 decompose Z(l) -> ;
-rule cone(s) : age >= cone_years -> ;
+rule cone(s) : age + dt >= cone_years -> ;
 
 # A branch with no living apex dies, and falls dead_years later.
 rule S : sd < ground_gap -> %;
