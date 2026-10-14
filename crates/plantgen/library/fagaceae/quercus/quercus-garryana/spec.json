@@ -43,7 +43,8 @@
       "blooms": 1,
       "bloom_size": 0.045,
       "bloom_angle": 60,
-      "path_half": 15.2
+      "path_half": 15.2,
+      "spur_light": 0.14
     }
   },
   "growth": {
@@ -157,6 +158,11 @@
     "juvenile_period_years": 20
   },
   "evidence": {
+    "generator.params.spur_light": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (leaf life, generator revision 44): a short shoot leafs out in at least 0.14 of the open sky's light (fagaceae's 0.1). Once a leaf stayed one season, not two, more light reached the inner crown and more short shoots lived, so the open crown at 80 years held more leaf per crown area than the Urban Tree Database's open-grown white oaks (5.38 against 1.9 to 5.3 m²/m²); at 0.14 it holds about 5.1 and keeps its reference height and dbh."
+    },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
