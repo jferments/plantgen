@@ -116,6 +116,7 @@ fn run() -> Result<(), Failure> {
         "traits" => traits_command(&args),
         "audit" => audit_command(&args),
         "grow" => grow_command(&args),
+        "stand" => stand_command(&args),
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
         "parts" => parts_command(&args),
@@ -201,6 +202,14 @@ Usage:
       draws every flower, fruit, cone and needle shoot as its part mesh,
       as WorldLab does near the camera. --conditions grows it in a place
       as plantc grow does (the place itself is not drawn).
+  plantc stand <stand.json|JSON>
+      Grow plants together, each making room for the others' crowns, and
+      print each one's size at the end and where its leaves lean. The
+      document gives years, and plants: a list of each plant's species,
+      at_m (metres east and north) and seed. It may also give tile_m (east
+      and north: the stand is a tile that wraps at its edges) and
+      conditions (a place every plant grows in). Seeds default to each
+      spec's first.
   plantc sheet <species|spec.json> --out FILE.png [--seed N] [--size PIXELS]
       Render every keyframe age (columns) in every environment (rows).
   plantc parts <species|spec.json> --out FILE.png [--env ENV] [--seed N]
@@ -2036,6 +2045,126 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
         for line in profile_lines(&times) {
             out!("{line}");
         }
+    }
+    Ok(())
+}
+
+/// One plant of `plantc stand`'s document, ready to grow.
+type StandPlant = (PlantSpec, [f64; 2], Program, Vec<f64>, GrowthSettings);
+
+fn stand_plant(
+    plant: &serde_json::Value,
+    years: f64,
+    conditions: &Conditions,
+) -> Result<StandPlant, Failure> {
+    let id = plant["species"]
+        .as_str()
+        .ok_or("each plant names its species")?;
+    let spec = load_spec(id)?;
+    let at_m = stand_pair(&plant["at_m"], "at_m")?;
+    let seed = match &plant["seed"] {
+        serde_json::Value::Null => spec.variants.seeds[0],
+        seed => seed
+            .as_u64()
+            .ok_or("a plant's seed must be a whole number")?,
+    };
+    let (program, params) = spec
+        .program_in(library())
+        .map_err(|error| error.to_string())?;
+    let params = spec.seeded_params(&program, &params, seed);
+    let settings = GrowthSettings {
+        seed,
+        dt: spec.growth.step,
+        years,
+        keyframes: vec![years],
+        conditions: conditions.clone(),
+        limits: Limits::default(),
+        host: None,
+    };
+    Ok((spec, at_m, program, params, settings))
+}
+
+fn stand_number(value: &serde_json::Value, what: &str) -> Result<f64, String> {
+    value
+        .as_f64()
+        .ok_or_else(|| format!("stand {what} must be a number"))
+}
+
+fn stand_pair(value: &serde_json::Value, what: &str) -> Result<[f64; 2], String> {
+    match value.as_array().map(Vec::as_slice) {
+        Some([a, b]) => Ok([stand_number(a, what)?, stand_number(b, what)?]),
+        _ => Err(format!("stand {what} must be two numbers")),
+    }
+}
+
+/// `plantc stand`: plants grown together (`plantgen::stand`).
+fn stand_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &[])?;
+    let given = options.one_positional("a stand document")?;
+    let text = if given.trim_start().starts_with('{') {
+        given.to_string()
+    } else {
+        fs::read_to_string(given).map_err(|error| format!("cannot read {given}: {error}"))?
+    };
+    let document: serde_json::Value =
+        serde_json::from_str(&text).map_err(|error| format!("invalid stand: {error}"))?;
+    let years = stand_number(&document["years"], "years")?;
+    let tile_m = match &document["tile_m"] {
+        serde_json::Value::Null => None,
+        tile => Some(stand_pair(tile, "tile_m")?),
+    };
+    let open = Conditions::preset(Environment::Open);
+    let conditions = match &document["conditions"] {
+        serde_json::Value::Null => open,
+        place => Conditions::from_json(&place.to_string())?.over(&open),
+    };
+    let plants = document["plants"]
+        .as_array()
+        .ok_or("stand plants must be a list")?;
+    let grown = plants
+        .iter()
+        .map(|plant| stand_plant(plant, years, &conditions))
+        .collect::<Result<Vec<_>, _>>()?;
+    let members: Vec<plantgen::stand::Member<'_>> = grown
+        .iter()
+        .map(
+            |(_, at_m, program, params, settings)| plantgen::stand::Member {
+                program,
+                params,
+                settings,
+                at_m: *at_m,
+            },
+        )
+        .collect();
+    let started = Instant::now();
+    let growths =
+        plantgen::stand::grow_stand(&members, tile_m).map_err(|error| error.to_string())?;
+    out!(
+        "{} plants grown together for {years} years in {:.1} s{}",
+        growths.len(),
+        started.elapsed().as_secs_f64(),
+        tile_m.map_or(String::new(), |[east, north]| format!(
+            ", a tile {east} by {north} m that wraps"
+        ))
+    );
+    for ((spec, at_m, ..), growth) in grown.iter().zip(&growths) {
+        let Some(graph) = growth.keyframes.last() else {
+            continue;
+        };
+        #[allow(clippy::cast_precision_loss)]
+        let count = graph.organs.len().max(1) as f64;
+        let sum = graph
+            .organs
+            .iter()
+            .fold(Vec3::ZERO, |sum, organ| sum + organ.position);
+        out!(
+            "  {} at {:?}: {}; leaves lean {:.2} m east, {:.2} m north",
+            spec.id,
+            at_m,
+            describe(graph, &growth.organ_types),
+            sum.x / count,
+            -sum.z / count
+        );
     }
     Ok(())
 }
