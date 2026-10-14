@@ -290,4 +290,8 @@ pub mod venation;
 /// built-in package's own seed grows the plant it grew before; other
 /// seeds of a dioecious species may now grow males. (46 is the
 /// broadleaf sizes, #88.)
-pub const GENERATOR_REVISION: u32 = 47;
+/// 48: a regular corolla may stand in two like whorls (`petal_whorls`
+/// 2), the inner turned half a petal: tall and dull Oregon grape draw
+/// three petals and three, bleeding heart an outer and an inner pair, and
+/// their stamens stand in whorls of as many (47 is dioecy, #103).
+pub const GENERATOR_REVISION: u32 = 48;
