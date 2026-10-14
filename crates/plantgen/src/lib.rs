@@ -283,4 +283,9 @@ pub mod venation;
 /// desert willow, burrobush, vine maple, osoberry, thimbleberry and jojoba
 /// with leaves no larger than their floras give, desert willow's narrowly
 /// linear. (45 is the unequal corolla, #86.)
-pub const GENERATOR_REVISION: u32 = 46;
+/// 47: flowers and fruit follow the year from the months a species states
+/// them in: rules at the flowering plants set a season's bud, flower,
+/// fruit, ripe and fall days from `flowering_months` and
+/// `fruiting_months`, and 28 species that state both drop their hand-set
+/// days (46 is the floras' sizes, #88).
+pub const GENERATOR_REVISION: u32 = 47;
