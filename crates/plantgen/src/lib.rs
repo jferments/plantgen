@@ -301,4 +301,9 @@ pub mod venation;
 /// per lineage, sedges and rushes as before); cow parsnip's leaves are
 /// three leaflets; broom's flowers stand alone in the leaf axils (48 is
 /// corollas in two whorls, #90).
-pub const GENERATOR_REVISION: u32 = 49;
+/// 50: a conifer's limbs sag under their load, not by their age (pinidae
+/// 7): bend@1 with each species' green wood, and reaction wood (bend@1's
+/// `reaction`) turning a limb back toward its line by each year's ring,
+/// so old crowns keep spreading limbs instead of hanging ones (49 is
+/// #97).
+pub const GENERATOR_REVISION: u32 = 50;

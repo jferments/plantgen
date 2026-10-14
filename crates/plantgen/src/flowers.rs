@@ -453,6 +453,42 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
                 ));
             }
         }
+        // Zygomorphic tepals (a gladiolus's): the two whorls stand
+        // as before, the outer one's first tepal toward the axis, and take
+        // their roles by place as a corolla's petals do.
+        (Perianth::Tepals, Corolla::Bilabiate | Corolla::Unequal) => {
+            let h = f64::from((n / 2).max(1));
+            for inner in [false, true] {
+                for k in 0..(n / 2).max(1) {
+                    let angle = TAU * f64::from(k) / h + if inner { PI / h } else { 0.0 };
+                    let (cup, wide) = if inner {
+                        (form.cup, 0.85)
+                    } else {
+                        (form.cup * 0.85, 1.0)
+                    };
+                    pieces.push(if flower.corolla == Corolla::Bilabiate {
+                        let upper = math::cos(angle) > 1e-9;
+                        let middle = (angle - PI).abs() < 1e-9;
+                        piece(
+                            Term::Tepal,
+                            Some(if upper { "upper lip" } else { "lower lip" }),
+                            angle,
+                            if upper { cup + 15.0 } else { cup - 15.0 },
+                            (1.0, wide * if middle { flower.lip } else { 1.0 }),
+                        )
+                    } else {
+                        let upper = !inner && k == 0;
+                        piece(
+                            Term::Tepal,
+                            Some(if upper { "upper tepal" } else { "tepal" }),
+                            angle,
+                            if upper { cup + 15.0 } else { cup },
+                            (1.0, wide * if upper { flower.banner } else { 1.0 }),
+                        )
+                    });
+                }
+            }
+        }
         (Perianth::Tepals, _) => {
             let h = f64::from((n / 2).max(1));
             for k in 0..(n / 2).max(1) {
@@ -499,7 +535,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
             Corolla::Bilabiate => p.role == Some("lower lip") && (p.angle - psi - PI).abs() < 1e-9,
             Corolla::Labellate => p.role == Some("lip"),
             Corolla::Papilionaceous => false,
-            Corolla::Unequal => p.role == Some("upper petal"),
+            Corolla::Unequal => matches!(p.role, Some("upper petal" | "upper tepal")),
         };
         let spur_length = flower.spur * r;
         spurs.extend(pieces.iter().filter(|p| spurred(p)).map(|p| Rod {
@@ -1608,10 +1644,65 @@ mod tests {
             shape(flower(|f| {
                 f.corolla = Corolla::Unequal;
                 f.petals = 6;
-                f.perianth = Perianth::Tepals;
+                f.perianth = Perianth::Spiral;
             }))
             .unwrap_err()
             .contains("unequal")
+        );
+    }
+
+    #[test]
+    fn zygomorphic_tepals_take_their_roles_by_place() {
+        // A gladiolus's six tepals: three upper, three lower, the middle
+        // lower one the lip.
+        let tepals = |kind| {
+            flower(|f| {
+                f.corolla = kind;
+                f.petals = 6;
+                f.sepals = 0;
+                f.perianth = Perianth::Tepals;
+            })
+        };
+        let shape = |f: Flower| crate::looks::Shape::Flower(f).validate();
+        assert!(shape(tepals(Corolla::Bilabiate)).is_ok());
+        assert!(shape(tepals(Corolla::Unequal)).is_ok());
+        let laid = layout(&tepals(Corolla::Bilabiate), &form(), 1.0, 1.0);
+        let at = |role| -> Vec<f64> {
+            laid.pieces
+                .iter()
+                .filter(|p| p.term == Term::Tepal && p.role == Some(role))
+                .map(|p| degrees_of(p.angle))
+                .collect()
+        };
+        assert_eq!(at("upper lip").len(), 3);
+        assert_eq!(at("lower lip").len(), 3);
+        let lip = laid
+            .pieces
+            .iter()
+            .find(|p| (degrees_of(p.angle) - 180.0).abs() < 1e-9)
+            .unwrap();
+        // Wider than the inner upper tepals beside it, and bent down.
+        let beside = laid
+            .pieces
+            .iter()
+            .find(|p| (degrees_of(p.angle) - 60.0).abs() < 1e-9)
+            .unwrap();
+        assert_eq!(lip.role, Some("lower lip"));
+        assert!(lip.width > beside.width && lip.cup < beside.cup);
+        // Of no named kind: one upper tepal unlike the rest.
+        let laid = layout(&tepals(Corolla::Unequal), &form(), 1.0, 1.0);
+        let upper: Vec<_> = laid
+            .pieces
+            .iter()
+            .filter(|p| p.role == Some("upper tepal"))
+            .collect();
+        assert_eq!(upper.len(), 1);
+        assert!(degrees_of(upper[0].angle).abs() < 1e-9);
+        assert!(
+            laid.pieces
+                .iter()
+                .filter(|p| p.role == Some("tepal"))
+                .all(|p| p.width < upper[0].width)
         );
     }
 

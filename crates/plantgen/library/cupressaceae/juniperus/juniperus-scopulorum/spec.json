@@ -21,9 +21,9 @@
       "whorl": 4,
       "interwhorl": 2,
       "branch_angle": 55,
-      "branch_sag": 0.5,
-      "max_sag": 20,
       "upturn": 0.03,
+      "bend_set": 0.1,
+      "straighten": 0.3,
       "branch_growth": 0.18,
       "side_order": 2,
       "side_chance": 0.8,
@@ -123,6 +123,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (1923), as Sabina scopulorum: a tree often 7 m to 15 m tall. Silvics vol. 1 agrees roughly: 6 to 15 m in the Southwest, 3 to 4 m usual in Canada, largest specimen only 11 m tall."
+    },
+    "generator.params.bend_set": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Conifer sag (M6, bend@1): the share of each year's sag its wood keeps, with `straighten` the share of that bend it straightens each year. Set by eye from renders at 60 to 80 years: with the program's creep (0.5 and 0.02) the Rocky Mountain juniper's thin, slow limbs hang down, so it keeps the milder creep the broadleaf program uses (0.1 and 0.3)."
     },
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Juniperus scopulorum (gwddagg_v2.2_species.csv, read): specific gravity 0.54 (wsg_est, the database's hierarchical-model species mean, from 4 records in 4 sources); trunks 0.53, branches 0.57. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "traits.leaf_length_m": {
