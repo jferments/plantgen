@@ -151,6 +151,14 @@
     "vine": {
       "generator": {"defaults": {"leaf_size": 0.12}},
       "evidence": {"generator.defaults": {"evidence": "Authored", "source": "plantgen-authors", "note": "Where a species states no size for a vine's leaf card, the median of the built-in vines' own values (2026-10-14). The rules of the flowering plants' form, nearer, set it from the species' facts; these yield to a lineage program's values and any file's."}}
+    },
+    "stem_succulent": {
+      "generator": {"defaults": {"radius_max": 0.14375, "flower_size": 0.06}},
+      "evidence": {"generator.defaults": {"evidence": "Authored", "source": "plantgen-authors", "note": "Where a species states no stem diameter or flower size for a stem succulent, the medians of the built-in columnar stem succulents' values (2026-10-14). The rules of the flowering plants' form, nearer, set it from the species' facts; these yield to a lineage program's values and any file's."}}
+    },
+    "rosette_succulent": {
+      "generator": {"defaults": {"leaf_length": 0.36, "stalk_height": 1.4, "trunk_radius": 0.0525, "stalk_radius": 0.02, "flower_size": 0.035, "internode": 0.0006, "branch_length": 0.25, "pup_distance": 0.3}},
+      "evidence": {"generator.defaults": {"evidence": "Authored", "source": "plantgen-authors", "note": "Where a species states no leaf length, height or flower size for a rosette succulent, the medians of the built-in rosette succulents' values (2026-10-14). The rules of the flowering plants' form, nearer, set it from the species' facts; these yield to a lineage program's values and any file's."}}
     }
   }
 }
