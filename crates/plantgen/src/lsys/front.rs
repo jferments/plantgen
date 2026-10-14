@@ -366,8 +366,19 @@ mod tests {
     fn a_birch_grows_narrow_and_an_oak_broad() {
         let birch = Front::grow(0.93, 0.27, 10.0, true, &|_, _| 1.0);
         let oak = Front::grow(-1.0, 0.35, 10.0, true, &|_, _| 1.0);
-        eprintln!("birch {} oak {}", birch.widest(), oak.widest());
-        assert!(birch.widest() < 0.4, "{}", birch.widest());
-        assert!(oak.widest() > 0.8, "{}", oak.widest());
+        // As wide as deep: about 0.24 and 1.05 (the prototype's 0.23 and
+        // 1.11 at a finer resolution).
+        assert!((0.2..0.28).contains(&birch.widest()), "{}", birch.widest());
+        assert!((0.95..1.2).contains(&oak.widest()), "{}", oak.widest());
+        // Under a sky closed below 50° on every side, as in a stand, the
+        // birch grows narrower.
+        let stand = Front::grow(0.93, 0.27, 10.0, false, &|_, direction: Vec3| {
+            if direction.y < math::sin(math::radians(50.0)) {
+                0.15
+            } else {
+                1.0
+            }
+        });
+        assert!(stand.widest() < 0.8 * birch.widest(), "{}", stand.widest());
     }
 }

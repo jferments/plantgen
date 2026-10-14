@@ -273,4 +273,12 @@ pub mod venation;
 /// keep their sizes, their crowns within the module limit and the oak's
 /// leaf area per crown area (43 is the fronds that lie on the ground,
 /// #77).
-pub const GENERATOR_REVISION: u32 = 44;
+/// 50: a broadleaf tree's or shrub's crown narrows among neighbours
+/// (broadleaf 14, sapindaceae 8, `space@4`): its free-space region is
+/// scaled at each height and side as far as a crown front grown from the
+/// lineage's tropisms under the neighbours' shade falls short of the
+/// open-grown one, so stand-grown crowns are narrower and an edge tree's
+/// reaches toward open sky; open-grown plants are unchanged. At a stand's
+/// edge only a point reaching toward the stand's side reaches into the
+/// neighbours' crowns (45 to 49 are #86, #88, #90, #95 and #96).
+pub const GENERATOR_REVISION: u32 = 50;

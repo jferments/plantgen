@@ -3507,6 +3507,49 @@ mod tests {
     }
 
     #[test]
+    fn space_4_narrows_a_crown_among_neighbours_and_toward_their_side() {
+        // base, height, radius, spread, density, influence, kill, angle,
+        // renew, ratio, gravitropism, phototropism, widest, fullness,
+        // lobes, lobe_depth, bumps, bump_size.
+        let shaped = [
+            2.0, 12.0, 4.0, 1.0, 20.0, 1.5, 0.4, 80.0, 1.0, 0.4, 0.0, 0.3, 0.5, 2.0, 0.0, 0.0, 0.0,
+            3.0,
+        ];
+        let edge = Neighbourhood {
+            density: 0.3,
+            relative_height: 1.0,
+            canopy: 0.0,
+            spacing: 4.0,
+            one_sided: true,
+        };
+        let region = |settings: &[f64], around: &Neighbourhood| {
+            let mut state = ToolState::default();
+            let (values, outline) = fronted_settings(settings, &mut state, 5, around).unwrap();
+            let outline = outline.unwrap();
+            move |h: f64, theta: f64| outline.radius(values[0], values[3], h, theta, 0.0)
+        };
+        // In the open, space@2's ellipsoid.
+        let open = region(&shaped, &Neighbourhood::OPEN);
+        assert!((open(0.5, 0.0) - 4.0).abs() < 1e-12);
+        assert!((open(0.5, math::PI) - 4.0).abs() < 1e-12);
+        // At a stand's edge (neighbours on −X), narrower, and narrowest
+        // on the neighbours' side.
+        let at_edge = region(&shaped, &edge);
+        let (toward_open, toward_stand) = (at_edge(0.5, 0.0), at_edge(0.5, math::PI));
+        assert!(
+            toward_open <= 4.0 && toward_stand < toward_open,
+            "{toward_open} {toward_stand}"
+        );
+        // With no widest, the front's own outline: as wide as `ratio`
+        // times the crown's depth in the open.
+        let mut grown = shaped;
+        grown[12] = 0.0;
+        let mut state = ToolState::default();
+        let (values, _) = fronted_settings(&grown, &mut state, 5, &Neighbourhood::OPEN).unwrap();
+        assert!((values[3] - 0.4 * 10.0).abs() < 1e-9, "{}", values[3]);
+    }
+
+    #[test]
     fn a_draw_in_a_tool_setting_is_one_value_for_the_plants_life() {
         let program = Program::compile(
             "lsystem p 1; module A; tool pipe@1 { tip = uniform(0.002, 0.02) }; axiom A;",
