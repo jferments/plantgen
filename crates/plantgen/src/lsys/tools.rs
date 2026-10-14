@@ -35,12 +35,13 @@
 //! machine.
 
 use std::collections::{HashMap, HashSet};
-use std::sync::{Mutex, PoisonError};
+use std::sync::{Arc, Mutex, OnceLock, PoisonError};
 
 use serde::{Deserialize, Serialize};
 
 use super::derive::Clock;
 use super::expr::{ENV_FIELDS, EnvField, EnvValues, NO_ENV, Query, Scope, eval};
+use super::front::Front;
 use super::narrow::{self, CANDIDATES, CONSUMED, LEFT, Narrower, STRIDE};
 use super::program::{Program, SymbolKind, ToolConfig, ToolKind};
 use super::turtle::{NodeKind, OrganInstance, Scene, Segment};
@@ -90,7 +91,8 @@ impl Neighbourhood {
     /// metres below `top` crosses `above / cos θ` metres of it, more where
     /// the point reaches into the neighbours' crowns (farther than half the
     /// spacing from the trunk). At a stand edge only rays passing over the
-    /// −X side cross the full canopy.
+    /// −X side cross the full canopy, and only a point reaching toward that
+    /// side reaches into the neighbours' crowns.
     #[must_use]
     pub fn transmission(&self, point: Vec3, height: f64, direction: Vec3) -> f64 {
         if self.density <= 0.0 {
@@ -102,9 +104,15 @@ impl Neighbourhood {
         let rise = direction.y.max(0.2);
         let path = above / rise;
         let half = self.spacing * 0.5;
-        let radial = math::sqrt(point.x * point.x + point.z * point.z);
+        // How far the point reaches into the neighbours' crowns: past half
+        // the spacing all round, or at an edge only toward the −X side.
+        let reach = if self.one_sided {
+            -point.x
+        } else {
+            math::sqrt(point.x * point.x + point.z * point.z)
+        };
         let lateral = if half > 0.0 {
-            1.0 + (radial - half).max(0.0) / half
+            1.0 + (reach - half).max(0.0) / half
         } else {
             1.0
         };
@@ -157,6 +165,17 @@ pub struct ToolState {
     points: Lattice,
     /// Lattice spacing fixed at the first step, so cells keep their identity.
     lattice: Option<f64>,
+    /// `space@4`'s front and the crown height it was grown for.
+    front: Option<GrownFront>,
+}
+
+/// A `space@4` front as a plant keeps it: grown for a crown `height`
+/// metres tall with tropisms `tropisms` (gravitropism, phototropism).
+#[derive(Debug, Clone)]
+struct GrownFront {
+    tropisms: [f64; 2],
+    height: f64,
+    front: Arc<Front>,
 }
 
 /// The attraction points of the lattice cells a space tool has visited,
@@ -389,7 +408,7 @@ pub fn run(
         )
         .collect();
     let space = match program.tool(ToolKind::Space) {
-        Some(config) if config.version >= 3 => {
+        Some(config) if config.version == 3 => {
             let values = settings(config, globals, clock, seed, &mut stack);
             contact(scene, &anchors, &space_queries, &values)?
         }
@@ -415,6 +434,7 @@ pub fn run(
                 seed,
                 taken,
                 buried,
+                surroundings,
             )?
         }
         None => vec![(0, Vec3::ZERO); scene.queries.len()],
@@ -1581,11 +1601,16 @@ const SALT_LOBES: u64 = 0x6c6f_6265;
 const SALT_SETTINGS: u64 = 0x7365_7474;
 const SALT_BUMPS: u64 = 0x6275_6d70;
 
-/// The outline of a `space@2` envelope and whether its points renew.
+/// The outline of a `space@2` or `space@4` envelope and whether its
+/// points renew.
 struct Outline {
     renew: bool,
     widest: f64,
     fullness: f64,
+    /// `space@4`'s front and the metres one share of the crown's depth
+    /// reaches: its radii in place of the superellipse's, or with `true`
+    /// the shares its superellipse is scaled by.
+    front: Option<(Arc<Front>, f64, bool)>,
     lobes: f64,
     lobe_depth: f64,
     phases: [f64; 2],
@@ -1620,7 +1645,11 @@ impl Outline {
         if !(0.0..=1.0).contains(&h) {
             return -1.0;
         }
-        let profile = self.profile(shape, radius, h);
+        let profile = match &self.front {
+            Some((front, reach, false)) => front.radius(h, theta) * reach,
+            Some((front, _, true)) => self.profile(shape, radius, h) * front.radius(h, theta),
+            None => self.profile(shape, radius, h),
+        };
         let billows = if self.bumps > 0.0 {
             1.0 + self.bumps * noise
         } else {
@@ -1667,10 +1696,22 @@ impl Outline {
             1 => self.widest,
             _ => 0.5,
         };
-        let least = self
-            .profile(shape, radius, low)
-            .min(self.profile(shape, radius, high));
-        let most = self.profile(shape, radius, peak.clamp(low, high));
+        let shaped = (
+            self.profile(shape, radius, low)
+                .min(self.profile(shape, radius, high)),
+            self.profile(shape, radius, peak.clamp(low, high)),
+        );
+        let (least, most) = match &self.front {
+            Some((front, reach, scales)) => {
+                let (least, most) = front.bounds(low, high);
+                if *scales {
+                    (shaped.0 * least, shaped.1 * most)
+                } else {
+                    (least * reach, most * reach)
+                }
+            }
+            None => shaped,
+        };
         let lobes = if self.lobes <= 0.0 || self.lobe_depth <= 0.0 {
             0.0
         } else {
@@ -1718,6 +1759,233 @@ fn lobe_phases(seed: u64) -> [f64; 2] {
     ]
 }
 
+/// `space@4`'s settings as `space@2`'s, and its outline, from the front a
+/// lineage's tropisms grow ([`super::front::Front`]).
+///
+/// With `widest` 0, the region's radius at each height and azimuth is its
+/// front's, as a share of the crown's depth `height − base`, times
+/// `spread`. With `ratio` above zero, the lineage's gravitropism is the one
+/// whose open-grown front is `ratio` times as wide as deep at its widest,
+/// and the front's radii are scaled to make it exactly so, so a plant in
+/// the open keeps the crown its species states and one among neighbours
+/// narrows; otherwise it is `gravitropism` as given.
+///
+/// With `widest` above zero, the region is `space@2`'s superellipse
+/// (`radius`, `widest`, `fullness`) in the open, and among neighbours each
+/// height and azimuth of it is scaled as far as the front grown under
+/// their shade falls short of the open-grown one.
+///
+/// The plant grows its front under its surroundings' sky when the crown
+/// first has depth, and again each time the crown has grown half as tall
+/// again, since a stand shades a small plant otherwise than a large one;
+/// in the open it needs none of its own.
+fn fronted_settings(
+    values: &[f64],
+    state: &mut ToolState,
+    seed: u64,
+    surroundings: &dyn Surroundings,
+) -> Result<(Vec<f64>, Option<Outline>), GrowthError> {
+    let &[
+        base,
+        height,
+        radius,
+        spread,
+        density,
+        influence,
+        kill,
+        angle,
+        renew,
+        ratio,
+        gravitropism,
+        phototropism,
+        widest,
+        fullness,
+        lobes,
+        lobe_depth,
+        bumps,
+        bump_size,
+    ] = values
+    else {
+        return Err(invalid("space", "wrong number of settings".into()));
+    };
+    if values.iter().any(|value| !value.is_finite()) {
+        return Err(invalid("space", "every setting must be finite".into()));
+    }
+    if !(spread > 0.0
+        && ratio >= 0.0
+        && (0.0..1.0).contains(&widest)
+        && fullness > 0.0
+        && (0.0..1.0).contains(&lobe_depth)
+        && (0.0..1.0).contains(&bumps)
+        && bump_size > 0.0)
+    {
+        return Err(invalid(
+            "space",
+            format!(
+                "spread, fullness and bump_size must be positive, ratio not negative, and \
+                 widest, lobe_depth and bumps lie in [0, 1); found {spread}, {fullness}, \
+                 {bump_size}, {ratio}, {widest}, {lobe_depth} and {bumps}"
+            ),
+        ));
+    }
+    let depth = height - base;
+    let shaped = widest > 0.0;
+    let mut extent = radius * spread;
+    let mut front = None;
+    if depth > 0.0 && height > 0.0 && (!shaped || radius > 0.0) {
+        let (grown, scale) = grown_front(
+            state,
+            surroundings,
+            height,
+            ratio,
+            gravitropism,
+            phototropism,
+        );
+        if shaped {
+            // In the open the superellipse alone; among neighbours, scaled.
+            if !surroundings.clear_sky() {
+                let open = open_front(grown.tropisms[0], grown.tropisms[1]);
+                front = Some((Arc::new(grown.front.shaded_by(&open)), 1.0, true));
+            }
+        } else {
+            let reach = depth * scale * spread;
+            extent = grown.front.widest() * reach;
+            front = Some((Arc::clone(&grown.front), reach, false));
+        }
+    }
+    let outline = (depth > 0.0 && extent > 0.0).then(|| Outline {
+        renew: renew > 0.0,
+        widest: if shaped { widest } else { 0.5 },
+        fullness,
+        front,
+        lobes: lobes.max(0.0).round(),
+        lobe_depth,
+        phases: lobe_phases(seed),
+        bumps,
+        bump_size,
+        seed,
+    });
+    Ok((
+        vec![
+            1.0, base, height, extent, density, influence, kill, angle, renew, 0.5, 2.0, lobes,
+            lobe_depth, bumps, bump_size,
+        ],
+        outline,
+    ))
+}
+
+/// The front a plant grows its `space@4` region from, for a crown `height`
+/// metres tall, and the scale on its radii (see [`fronted_settings`]),
+/// kept in `state` until the crown grows half as tall again.
+fn grown_front(
+    state: &mut ToolState,
+    surroundings: &dyn Surroundings,
+    height: f64,
+    ratio: f64,
+    gravitropism: f64,
+    phototropism: f64,
+) -> (GrownFront, f64) {
+    let (gravitropism, scale) = if ratio > 0.0 {
+        let (gravitropism, widest) = tropism_for(ratio, phototropism);
+        (gravitropism, ratio / widest.max(1e-9))
+    } else {
+        (gravitropism, 1.0)
+    };
+    let tropisms = [gravitropism, phototropism];
+    let open = surroundings.clear_sky();
+    if let Some(kept) = &state.front
+        && kept.tropisms.map(f64::to_bits) == tropisms.map(f64::to_bits)
+        && (open || height < 1.5 * kept.height)
+    {
+        return (kept.clone(), scale);
+    }
+    let front = if open {
+        open_front(gravitropism, phototropism)
+    } else {
+        Arc::new(Front::grow(
+            gravitropism,
+            phototropism,
+            height,
+            false,
+            &|point, direction| surroundings.transmission(point, height, direction),
+        ))
+    };
+    let grown = GrownFront {
+        tropisms,
+        height,
+        front,
+    };
+    state.front = Some(grown.clone());
+    (grown, scale)
+}
+
+/// The open-grown front of tropisms `gravitropism` and `phototropism`,
+/// grown once a run for all the plants that share them.
+fn open_front(gravitropism: f64, phototropism: f64) -> Arc<Front> {
+    static FRONTS: OnceLock<Mutex<HashMap<[u64; 2], Arc<Front>>>> = OnceLock::new();
+    let key = [gravitropism.to_bits(), phototropism.to_bits()];
+    let fronts = FRONTS.get_or_init(|| Mutex::new(HashMap::new()));
+    if let Some(front) = fronts
+        .lock()
+        .unwrap_or_else(PoisonError::into_inner)
+        .get(&key)
+    {
+        return Arc::clone(front);
+    }
+    let front = Arc::new(Front::grow(
+        gravitropism,
+        phototropism,
+        1.0,
+        true,
+        &|_, _| 1.0,
+    ));
+    fronts
+        .lock()
+        .unwrap_or_else(PoisonError::into_inner)
+        .insert(key, Arc::clone(&front));
+    front
+}
+
+/// The gravitropism whose open-grown front, with phototropism
+/// `phototropism`, is `ratio` times as wide as deep at its widest, and
+/// that front's widest. The widest falls as gravitropism rises: halving
+/// the quarters from −2 to 2 brackets it (a narrower ratio than 2's front
+/// or a wider one than −2's takes the end), and three steps of false
+/// position within the bracket find it.
+fn tropism_for(ratio: f64, phototropism: f64) -> (f64, f64) {
+    let widest = |gravitropism: f64| open_front(gravitropism, phototropism).widest();
+    let at = |k: u32| -2.0 + 0.25 * f64::from(k);
+    if widest(at(0)) <= ratio {
+        return (at(0), widest(at(0)));
+    }
+    if widest(at(16)) > ratio {
+        return (at(16), widest(at(16)));
+    }
+    // widest(at(first)) > ratio >= widest(at(last)).
+    let (mut first, mut last) = (0, 16);
+    while last - first > 1 {
+        let middle = u32::midpoint(first, last);
+        if widest(at(middle)) > ratio {
+            first = middle;
+        } else {
+            last = middle;
+        }
+    }
+    let (mut low, mut high) = (at(first), at(last));
+    let (mut above, mut below) = (widest(low), widest(high));
+    for _ in 0..3 {
+        let guess = low + (above - ratio) / (above - below).max(1e-12) * (high - low);
+        let found = widest(guess);
+        if found > ratio {
+            (low, above) = (guess, found);
+        } else {
+            (high, below) = (guess, found);
+        }
+    }
+    let gravitropism = low + (above - ratio) / (above - below).max(1e-12) * (high - low);
+    (gravitropism, widest(gravitropism))
+}
+
 /// Space colonization (Runions, Lane and Prusinkiewicz 2007). Attraction
 /// points sit one per cell of a jittered lattice inside the envelope. A point
 /// within `kill` of the plant is consumed for good; otherwise it attracts the
@@ -1737,13 +2005,23 @@ fn colonize(
     seed: u64,
     taken: Option<&(dyn Fn(Vec3) -> bool + Sync)>,
     buried: Option<&(dyn Fn(Vec3) -> bool + Sync)>,
+    surroundings: &dyn Surroundings,
 ) -> Result<Vec<(u32, Vec3)>, GrowthError> {
+    let fronted;
+    let values = if version == 4 {
+        fronted = fronted_settings(values, state, seed, surroundings)?;
+        &fronted.0[..]
+    } else {
+        fronted = (Vec::new(), None);
+        values
+    };
     let (first, later) = values.split_at(values.len().min(8));
     let [shape, base, height, radius, density, influence, kill, angle] = first[..] else {
         return Err(invalid("space", "wrong number of settings".into()));
     };
     let outline = match (version, later) {
         (1, []) => None,
+        (4, [_, _, _, _, _, _, _]) => fronted.1,
         (2, &[renew, widest, fullness, lobes, lobe_depth, bumps, bump_size]) => {
             if !(widest > 0.0
                 && widest < 1.0
@@ -1765,6 +2043,7 @@ fn colonize(
                 renew: renew > 0.0,
                 widest,
                 fullness,
+                front: None,
                 lobes: lobes.max(0.0).round(),
                 lobe_depth,
                 phases: lobe_phases(seed),
@@ -3555,6 +3834,49 @@ mod tests {
         assert!(values[EnvField::Sy as usize] > 0.9, "{values:?}");
         // No point is consumed: the plant stands below the envelope.
         assert!(state.points.cells.iter().all(|cell| !cell.killed));
+    }
+
+    #[test]
+    fn space_4_narrows_a_crown_among_neighbours_and_toward_their_side() {
+        // base, height, radius, spread, density, influence, kill, angle,
+        // renew, ratio, gravitropism, phototropism, widest, fullness,
+        // lobes, lobe_depth, bumps, bump_size.
+        let shaped = [
+            2.0, 12.0, 4.0, 1.0, 20.0, 1.5, 0.4, 80.0, 1.0, 0.4, 0.0, 0.3, 0.5, 2.0, 0.0, 0.0, 0.0,
+            3.0,
+        ];
+        let edge = Neighbourhood {
+            density: 0.3,
+            relative_height: 1.0,
+            canopy: 0.0,
+            spacing: 4.0,
+            one_sided: true,
+        };
+        let region = |settings: &[f64], around: &Neighbourhood| {
+            let mut state = ToolState::default();
+            let (values, outline) = fronted_settings(settings, &mut state, 5, around).unwrap();
+            let outline = outline.unwrap();
+            move |h: f64, theta: f64| outline.radius(values[0], values[3], h, theta, 0.0)
+        };
+        // In the open, space@2's ellipsoid.
+        let open = region(&shaped, &Neighbourhood::OPEN);
+        assert!((open(0.5, 0.0) - 4.0).abs() < 1e-12);
+        assert!((open(0.5, math::PI) - 4.0).abs() < 1e-12);
+        // At a stand's edge (neighbours on −X), narrower, and narrowest
+        // on the neighbours' side.
+        let at_edge = region(&shaped, &edge);
+        let (toward_open, toward_stand) = (at_edge(0.5, 0.0), at_edge(0.5, math::PI));
+        assert!(
+            toward_open <= 4.0 && toward_stand < toward_open,
+            "{toward_open} {toward_stand}"
+        );
+        // With no widest, the front's own outline: as wide as `ratio`
+        // times the crown's depth in the open.
+        let mut grown = shaped;
+        grown[12] = 0.0;
+        let mut state = ToolState::default();
+        let (values, _) = fronted_settings(&grown, &mut state, 5, &Neighbourhood::OPEN).unwrap();
+        assert!((values[3] - 0.4 * 10.0).abs() < 1e-9, "{}", values[3]);
     }
 
     #[test]
