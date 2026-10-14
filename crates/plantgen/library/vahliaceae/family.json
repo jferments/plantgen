@@ -2,5 +2,39 @@
   "schema": 1,
   "rank": "family",
   "name": "Vahliaceae",
-  "parent": "order/vahliales"
+  "parent": "order/vahliales",
+  "traits": {
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "leaf_shape": {
+      "linear": "often",
+      "lanceolate": "often",
+      "ovate": "often"
+    },
+    "stipules": false,
+    "rosette": "none",
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "inferior",
+    "hypanthium": false,
+    "woodiness": "herbaceous",
+    "inflorescence": "cyme",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "flower_merosity": 5,
+    "stamens": 5,
+    "carpels": {
+      "min": 2,
+      "max": 3
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Vahliaceae: leaves opposite; leaves simple; margins entire; veins pinnate; blades linear, lanceolate or ovate; stipules absent; leaf rosettes none; plants hermaphrodite; ovary inferior; floral cup absent; stems herbaceous; flowers in cymes; flowers actinomorphic; perianth sepals and petals; fruit capsule; parts of each whorl 5; stamens 5; carpels 2 to 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

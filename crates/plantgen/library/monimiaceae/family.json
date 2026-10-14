@@ -2,5 +2,67 @@
   "schema": 1,
   "rank": "family",
   "name": "Monimiaceae",
-  "parent": "order/laurales"
+  "parent": "order/laurales",
+  "traits": {
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "serrate": "often"
+    },
+    "leaf_venation": "pinnate",
+    "stipules": false,
+    "sexual_system": {
+      "hermaphrodite": "sometimes",
+      "monoecious": "sometimes",
+      "polygamous": "usually",
+      "dioecious": "sometimes"
+    },
+    "ovary_position": {
+      "superior": "sometimes",
+      "half_inferior": "sometimes",
+      "inferior": "sometimes"
+    },
+    "hypanthium": true,
+    "woodiness": {
+      "woody": "often",
+      "herbaceous": "often"
+    },
+    "inflorescence": {
+      "solitary": "sometimes",
+      "cyme": "usually",
+      "spike": "sometimes",
+      "panicle": "sometimes"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "perianth": {
+      "sepals_and_petals": "often",
+      "spiral": "often",
+      "tepals": "often",
+      "absent": "often"
+    },
+    "fruit_type": {
+      "achene": "usually",
+      "aggregate": "sometimes"
+    },
+    "stamens": {
+      "min": 10,
+      "max": 150
+    },
+    "carpels": {
+      "min": 3,
+      "max": 100,
+      "low": 1
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Monimiaceae with Atherospermataceae, Siparunaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves opposite; leaves simple; margins entire or serrate; veins pinnate; stipules absent; plants usually polygamous, sometimes hermaphrodite, monoecious or dioecious; ovary superior, half inferior or inferior; floral cup present; stems woody or herbaceous; flowers usually in cymes, sometimes solitary, in spikes or in panicles; flowers actinomorphic or zygomorphic; perianth sepals and petals, spiral, tepals or absent; fruit usually achene, sometimes aggregate; stamens 10 to 150; carpels (1-) 3 to 100. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

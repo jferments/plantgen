@@ -2,5 +2,34 @@
   "schema": 1,
   "rank": "family",
   "name": "Ceratophyllaceae",
-  "parent": "order/ceratophyllales"
+  "parent": "order/ceratophyllales",
+  "traits": {
+    "leaf_arrangement": "whorled",
+    "leaf_division": {
+      "simple": "often",
+      "compound": "often"
+    },
+    "stipules": false,
+    "rosette": "none",
+    "sexual_system": "monoecious",
+    "ovary_position": "superior",
+    "woodiness": "herbaceous",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": "achene",
+    "stamens": {
+      "min": 10,
+      "max": 20,
+      "low": 5,
+      "high": 27
+    },
+    "carpels": 1
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Ceratophyllaceae: leaves whorled; leaves simple or compound; stipules absent; leaf rosettes none; plants monoecious; ovary superior; stems herbaceous; flowers actinomorphic; perianth tepals; fruit achene; stamens (5-) 10 to 20 (-27); carpels 1. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

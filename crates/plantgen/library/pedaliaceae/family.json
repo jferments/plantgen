@@ -2,5 +2,46 @@
   "schema": 1,
   "rank": "family",
   "name": "Pedaliaceae",
-  "parent": "order/lamiales"
+  "parent": "order/lamiales",
+  "traits": {
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "alternate": "sometimes"
+    },
+    "leaf_division": "simple",
+    "leaf_venation": "pinnate",
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "superior": "usually",
+      "inferior": "sometimes"
+    },
+    "hypanthium": false,
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "sometimes"
+    },
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "raceme": "sometimes"
+    },
+    "flower_symmetry": "zygomorphic",
+    "zygomorphy": "bilabiate",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "often",
+      "nut": "often"
+    },
+    "flower_merosity": 5,
+    "stamens": 4,
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Pedaliaceae with Martyniaceae, Trapellaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually opposite, sometimes alternate; leaves simple; veins pinnate; stipules absent; plants hermaphrodite; ovary usually superior, sometimes inferior; floral cup absent; stems usually herbaceous, sometimes woody; flowers solitary or in cymes, sometimes in racemes; flowers zygomorphic; irregular flowers bilabiate; perianth sepals and petals; fruit capsule or nut; parts of each whorl 5; stamens 4; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

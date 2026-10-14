@@ -2,5 +2,52 @@
   "schema": 1,
   "rank": "family",
   "name": "Opiliaceae",
-  "parent": "order/santalales"
+  "parent": "order/santalales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": "pinnate",
+    "stipules": false,
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "often"
+    },
+    "ovary_position": {
+      "superior": "sometimes",
+      "half_inferior": "sometimes"
+    },
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "panicle": "often",
+      "raceme": "often",
+      "spike": "often",
+      "umbel": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "sometimes",
+      "tepals": "usually"
+    },
+    "fruit_type": "drupe",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5
+    },
+    "stamens": {
+      "min": 4,
+      "max": 5
+    },
+    "carpels": {
+      "min": 2,
+      "max": 5
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Opiliaceae: leaves alternate; leaves simple; veins pinnate; stipules absent; plants usually hermaphrodite, often dioecious; ovary superior or half inferior; floral cup absent; stems woody; flowers in panicles, in racemes, in spikes or in umbels; flowers actinomorphic; perianth usually tepals, sometimes sepals and petals; fruit drupe; parts of each whorl 4 to 5; stamens 4 to 5; carpels 2 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

@@ -2,5 +2,40 @@
   "schema": 1,
   "rank": "family",
   "name": "Paracryphiaceae",
-  "parent": "order/paracryphiales"
+  "parent": "order/paracryphiales",
+  "traits": {
+    "leaf_arrangement": "whorled",
+    "leaf_division": "simple",
+    "leaf_margin": "serrate",
+    "leaf_venation": "pinnate",
+    "stipules": false,
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "superior",
+    "woodiness": "woody",
+    "inflorescence": "panicle",
+    "perianth": "tepals",
+    "fruit_type": {
+      "capsule": "often",
+      "follicle": "often"
+    },
+    "stamens": {
+      "min": 8,
+      "max": 8,
+      "high": 11
+    },
+    "carpels": {
+      "min": 8,
+      "max": 15
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Paracryphiaceae: leaves whorled; leaves simple; margins serrate; veins pinnate; stipules absent; plants hermaphrodite or polygamous; ovary superior; stems woody; flowers in panicles; perianth tepals; fruit capsule or follicle; stamens 8 (-11); carpels 8 to 15. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

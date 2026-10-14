@@ -2,5 +2,61 @@
   "schema": 1,
   "rank": "family",
   "name": "Crypteroniaceae",
-  "parent": "order/myrtales"
+  "parent": "order/myrtales",
+  "traits": {
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "whorled": "sometimes"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": {
+      "superior": "often",
+      "half_inferior": "often",
+      "inferior": "often"
+    },
+    "hypanthium": true,
+    "woodiness": "woody",
+    "inflorescence": {
+      "raceme": "often",
+      "spike": "often",
+      "panicle": "often",
+      "cyme": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "rarely"
+    },
+    "fruit_type": "capsule",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5,
+      "high": 6
+    },
+    "stamens": {
+      "min": 4,
+      "max": 10
+    },
+    "carpels": {
+      "min": 2,
+      "max": 5
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Crypteroniaceae with Alzateaceae, Rhynchocalycaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually opposite, sometimes whorled; leaves simple; margins entire; veins pinnate; stipules present or absent; plants hermaphrodite or polygamous; ovary superior, half inferior or inferior; floral cup present; stems woody; flowers in racemes, in spikes or in panicles, sometimes in cymes; flowers actinomorphic; perianth usually sepals and petals, rarely tepals; fruit capsule; parts of each whorl 4 to 5 (-6); stamens 4 to 10; carpels 2 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

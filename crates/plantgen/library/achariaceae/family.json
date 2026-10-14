@@ -2,5 +2,66 @@
   "schema": 1,
   "rank": "family",
   "name": "Achariaceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "crenate": "often",
+      "serrate": "often"
+    },
+    "stipules": {
+      "false": "usually",
+      "true": "sometimes"
+    },
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "sexual_system": {
+      "monoecious": "usually",
+      "hermaphrodite": "sometimes",
+      "dioecious": "sometimes"
+    },
+    "ovary_position": {
+      "superior": "usually",
+      "half_inferior": "sometimes"
+    },
+    "woodiness": {
+      "woody": "rarely",
+      "herbaceous": "rarely"
+    },
+    "inflorescence": {
+      "solitary": "often",
+      "raceme": "often",
+      "cyme": "sometimes",
+      "spike": "sometimes",
+      "head": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "spiral": "sometimes",
+      "tepals": "sometimes"
+    },
+    "flower_merosity": {
+      "min": 3,
+      "max": 5
+    },
+    "stamens": {
+      "min": 3,
+      "max": 5
+    },
+    "carpels": {
+      "min": 3,
+      "max": 5
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Achariaceae with Flacourtiaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves simple; margins crenate or serrate; stipules usually absent, sometimes present; leaf rosettes basal or none; plants usually monoecious, sometimes hermaphrodite or dioecious; ovary usually superior, sometimes half inferior; stems woody or herbaceous; flowers solitary or in racemes, sometimes in cymes, in spikes or in heads; flowers actinomorphic; perianth usually sepals and petals, sometimes spiral or tepals; parts of each whorl 3 to 5; stamens 3 to 5; carpels 3 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

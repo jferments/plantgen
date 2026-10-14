@@ -2,5 +2,39 @@
   "schema": 1,
   "rank": "family",
   "name": "Altingiaceae",
-  "parent": "order/saxifragales"
+  "parent": "order/saxifragales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "rarely",
+      "serrate": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": {
+      "pinnate": "often",
+      "palmate": "often"
+    },
+    "stipules": true,
+    "sexual_system": "monoecious",
+    "ovary_position": "inferior",
+    "woodiness": "woody",
+    "perianth": {
+      "tepals": "often",
+      "absent": "often"
+    },
+    "fruit_type": "capsule",
+    "stamens": {
+      "min": 12,
+      "max": 50
+    },
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Altingiaceae: leaves alternate; leaves simple; margins serrate or dentate, rarely entire; veins pinnate or palmate; stipules present; plants monoecious; ovary inferior; stems woody; perianth tepals or absent; fruit capsule; stamens 12 to 50; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

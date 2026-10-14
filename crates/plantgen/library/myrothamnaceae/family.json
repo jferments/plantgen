@@ -2,5 +2,41 @@
   "schema": 1,
   "rank": "family",
   "name": "Myrothamnaceae",
-  "parent": "order/gunnerales"
+  "parent": "order/gunnerales",
+  "traits": {
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_margin": "dentate",
+    "leaf_venation": "palmate",
+    "leaf_shape": {
+      "oblong": "often",
+      "obovate": "often"
+    },
+    "stipules": true,
+    "sexual_system": "dioecious",
+    "ovary_position": "superior",
+    "woodiness": "woody",
+    "inflorescence": {
+      "spike": "often",
+      "catkin": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "absent",
+    "fruit_type": "follicle",
+    "stamens": {
+      "min": 3,
+      "max": 8
+    },
+    "carpels": {
+      "min": 3,
+      "max": 4
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Myrothamnaceae: leaves opposite; leaves simple; margins dentate; veins palmate; blades oblong or obovate; stipules present; plants dioecious; ovary superior; stems woody; flowers in spikes or in catkins; flowers actinomorphic; perianth absent; fruit follicle; stamens 3 to 8; carpels 3 to 4. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

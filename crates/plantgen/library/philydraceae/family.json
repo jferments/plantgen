@@ -2,5 +2,36 @@
   "schema": 1,
   "rank": "family",
   "name": "Philydraceae",
-  "parent": "order/commelinales"
+  "parent": "order/commelinales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "parallel",
+    "leaf_shape": {
+      "linear": "often",
+      "lanceolate": "often"
+    },
+    "stipules": false,
+    "rosette": "basal",
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "woodiness": "herbaceous",
+    "inflorescence": "spike",
+    "flower_symmetry": "zygomorphic",
+    "perianth": "tepals",
+    "fruit_type": {
+      "capsule": "often",
+      "berry": "often"
+    },
+    "stamens": 1,
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Philydraceae: leaves alternate; leaves simple; margins entire; veins parallel; blades linear or lanceolate; stipules absent; leaf rosettes basal; plants hermaphrodite; ovary superior; stems herbaceous; flowers in spikes; flowers zygomorphic; perianth tepals; fruit capsule or berry; stamens 1; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

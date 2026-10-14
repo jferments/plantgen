@@ -2,5 +2,39 @@
   "schema": 1,
   "rank": "family",
   "name": "Nartheciaceae",
-  "parent": "order/dioscoreales"
+  "parent": "order/dioscoreales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": "parallel",
+    "leaf_shape": {
+      "linear": "often",
+      "lanceolate": "often"
+    },
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "raceme": "often",
+      "spike": "often",
+      "panicle": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": "capsule",
+    "flower_merosity": 3,
+    "stamens": 6,
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Nartheciaceae: leaves alternate; leaves simple; veins parallel; blades linear or lanceolate; leaf rosettes basal or none; plants hermaphrodite; ovary superior; stems herbaceous; flowers in racemes, in spikes or in panicles; flowers actinomorphic; perianth tepals; fruit capsule; parts of each whorl 3; stamens 6; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }
