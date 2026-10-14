@@ -434,7 +434,7 @@ mod tests {
     }
 
     #[test]
-    #[allow(clippy::cast_possible_truncation)]
+    #[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss)]
     fn floor_index_is_floor_cast_for_every_kind_of_number() {
         let mut values = vec![
             0.0,
