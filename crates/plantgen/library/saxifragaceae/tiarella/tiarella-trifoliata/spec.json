@@ -17,7 +17,6 @@
       "clump_radius": 0.08,
       "stem_lean": 8,
       "maturity": 1.2,
-      "stem_height": 0.4,
       "stem_radius": 0.0015,
       "wiggle": 2,
       "nodes": 2,
@@ -100,12 +99,21 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_typical_m": {
+      "min": 0.2,
+      "max": 0.6
+    },
     "leaf_division": "compound",
     "division_pattern": "palmate",
     "division_order": 1,
     "leaflets": 3
   },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944), Tiarella trifoliata, Fig. 2276, p. 371: slender flowering branches 2 dm to 6 dm high."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

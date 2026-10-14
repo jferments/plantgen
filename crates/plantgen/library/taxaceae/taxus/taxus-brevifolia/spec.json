@@ -18,7 +18,6 @@
       "cone_pitch": 90,
       "cone_years": 1,
       "cone_area": 1.143,
-      "height_max": 14,
       "height_rate": 0.025,
       "height_shape": 1.2,
       "leader_shade": 0.6,
@@ -103,12 +102,21 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 12.192,
+      "max": 15.24
+    },
     "wood_density_basic_kg_m3": 580,
     "leaf_length_m": {"min": 0.012, "max": 0.016, "low": 0.01, "high": 0.03},
     "leaf_life_years": {"min": 4, "max": 5, "high": 6},
     "seed_length_m": 0.008
   },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "sargent-1922",
+      "note": "Sargent (1922): usually 40 to 50 ft tall, occasionally 70 to 80 ft (converted: 12.192 to 15.24 m, occasionally 21.336 to 24.384 m). Silvics vol. 1 (1990) says it rarely exceeds 15 m, the record tree is 18 m, and trees over 12 m are rare; Abrams vol. 1 gives 10 to 25 m."
+    },
     "generator.params.bend_set": {
       "evidence": "Authored",
       "source": "plantgen-authors",

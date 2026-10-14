@@ -47,6 +47,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its pinnatifid blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate as well as oblanceolate, against the lanceolate to oblong blades Abrams and Ferris give",
     ),
     (
+        "cladium-mariscus-subsp-jamaicense",
+        "culm_length_m",
+        "its panicles stand on lateral branches, and the measure stops at the first lateral axis below an inflorescence, so it reads a branch, not the culm",
+    ),
+    (
+        "cyperus-papyrus",
+        "culm_length_m",
+        "its umbel's rays are lateral axes, and the measure stops at the first lateral axis below an inflorescence, so it reads a ray, not the culm",
+    ),
+    (
         "cyperus-papyrus",
         "leaf_shape",
         "its leaves are the brown sheaths at its culms' foot, drawn as cards tapering from the base, 0.15 as broad as long, so they read deltate or lanceolate against the linear blades Cyperaceae state; papyrus bears no blades",

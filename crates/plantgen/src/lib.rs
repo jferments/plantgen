@@ -319,6 +319,10 @@ pub mod venation;
 /// edge only a point reaching toward the stand's side reaches into the
 /// neighbours' crowns (51 is
 /// #96).
+/// 53: 62 built-in species take their heights, culm lengths and juvenile
+/// periods from floras in place of hand-set `crown_height`, `height_max`,
+/// `stem_height`, `culm_height` and `adult_age`, so the rank rules size
+/// them, and a stated range spreads their heights across seeds.
 /// 54: a conifer's side shoots live as long as their light pays for them
 /// (pinidae 9), not 20 years, so old limbs keep foliage along their
 /// length and open-grown spruces, firs, hemlocks and cedars fill in

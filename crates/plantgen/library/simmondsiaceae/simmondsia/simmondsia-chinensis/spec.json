@@ -25,7 +25,6 @@
       "steer_weight": 0.4,
       "droop": 0.02,
       "wiggle": 10,
-      "crown_height": 1.6,
       "crown_radius": 1.0,
       "crown_rate": 0.22,
       "space_density": 384.0,
@@ -92,6 +91,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_length_m": {
+      "min": 0.02,
+      "max": 0.04
+    },
     "height_max_m": {
       "min": 1,
       "max": 2.5
@@ -101,6 +104,11 @@
     "self_pruning": true
   },
   "evidence": {
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Simmondsia chinensis: leaves 2 cm to 4 cm long."
+    },
     "generator.params.spur_leaf": {
       "evidence": "Authored",
       "source": "plantgen-authors",

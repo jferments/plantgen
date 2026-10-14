@@ -15,7 +15,6 @@
       "vigour_spread": 0.12,
       "lean": 3,
       "seedling": 0.02,
-      "height_max": 2.5,
       "height_rate": 0.016,
       "height_shape": 1.8,
       "radius_min": 0.012,
@@ -156,10 +155,19 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 2,
+      "max": 2.5
+    },
     "central_spine_length_m": {"min": 0.1, "max": 0.12},
     "central_spine_form": {"curved": "usually", "twisted": "often"}
   },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), Ferocactus acanthodes (syn. Echinocactus cylindraceus): globular when young, becoming cylindric and 2 m to 2.5 m tall. Britton and Rose vol. 3 (1922) say sometimes nearly 3 m."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",
