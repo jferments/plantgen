@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Roystonea",
+  "parent": "subfamily/arecoideae",
+  "traits": {
+    "spines": "none",
+    "sexual_system": "monoecious",
+    "clonal": false
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae V 6): unarmed, monoecious palms with pinnate leaves."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "genera-palmarum-2008",
+      "note": "Dransfield et al. (Genera Palmarum, 2nd ed., 2008), under the genus: its stems are solitary; its tubular leaf sheaths form a crownshaft below the leaves."
+    }
+  },
+  "forms": {
+    "palm": {
+      "rules": {
+        "generator.params.crownshaft": {
+          "rule": "0.4 * leaf_length_m",
+          "why": "A crownshaft of leaf sheaths, about four tenths of a frond long (the built-in royal palm's is 2 m under 3.5 m fronds)."
+        }
+      },
+      "evidence": {
+        "rules": {
+          "evidence": "SourceInferred",
+          "source": "genera-palmarum-2008",
+          "note": "Dransfield et al. (Genera Palmarum, 2nd ed., 2008), under the genus: its stems are solitary; its tubular leaf sheaths form a crownshaft below the leaves."
+        }
+      }
+    }
+  }
+}

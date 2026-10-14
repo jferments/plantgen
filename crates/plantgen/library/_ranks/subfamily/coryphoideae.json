@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "rank": "subfamily",
+  "name": "Coryphoideae",
+  "parent": "family/arecaceae",
+  "traits": {
+    "leaf_division": {"simple": "usually", "compound": "rarely"},
+    "leaf_incision": "parted",
+    "division_pattern": {"palmate": "usually", "pinnate": "rarely"}
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Palmae, subfamily III Coryphoideae: leaves usually induplicately palmate, less often pinnate (Phoenix, and Arenga and Caryota of tribe Caryoteae); the fan palms of dry and temperate country are here. A fan palm's blade is one piece cut into segments, so it is counted simple and parted, its pattern palmate."
+    }
+  }
+}

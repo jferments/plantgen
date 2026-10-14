@@ -74,7 +74,7 @@
         }
       },
       "flower": {
-        "shape": { "template": "head", "phyllaries": 130, "floret_length": 0.6 },
+        "shape": { "phyllaries": 130, "floret_length": 0.6 },
         "colour": [0.2, 0.28, 0.12],
         "accent": [0.65, 0.15, 0.5]
       },

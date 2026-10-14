@@ -1610,23 +1610,29 @@ fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tal
             _ => {}
         }
     }
-    for (structure, members) in &leaflets {
-        let leafy = drawn
+    let kind_of = |structure: u32| {
+        drawn
             .structures
-            .get(*structure as usize)
-            .and_then(|s| grown.growth.structure_types.get(usize::from(s.structure)))
+            .get(structure as usize)
+            .map(|s| s.structure)
+    };
+    // Structure types whose leaves are drawn as leaflets (a palm's or a
+    // cycad's frond): any other piece within one is what a dead frond
+    // leaves, hanging or as a boot, not a blade.
+    let feathered: BTreeSet<_> = leaflets.keys().filter_map(|&s| kind_of(s)).collect();
+    for (structure, members) in &leaflets {
+        let leafy = kind_of(*structure)
+            .and_then(|kind| grown.growth.structure_types.get(usize::from(kind)))
             .is_some_and(|kind| kind.term == "leaf");
-        if leafy && !pieces.contains_key(structure) {
+        if leafy {
             frond_sizes(*structure, members, drawn, looks, tally);
         }
     }
     for (structure, members) in pieces {
-        let leafy = drawn
-            .structures
-            .get(structure as usize)
-            .and_then(|s| grown.growth.structure_types.get(usize::from(s.structure)))
+        let leafy = kind_of(structure)
+            .and_then(|kind| grown.growth.structure_types.get(usize::from(kind)))
             .is_some_and(|kind| kind.term == "leaf");
-        if !leafy {
+        if !leafy || kind_of(structure).is_some_and(|kind| feathered.contains(&kind)) {
             continue;
         }
         let id = drawn.structures[structure as usize].id;

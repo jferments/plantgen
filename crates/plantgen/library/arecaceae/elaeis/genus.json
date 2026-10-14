@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Elaeis",
+  "parent": "subfamily/arecoideae",
+  "traits": {
+    "sexual_system": "monoecious",
+    "clonal": false
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae V 8c): monoecious palms."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "genera-palmarum-2008",
+      "note": "Dransfield et al. (Genera Palmarum, 2nd ed., 2008), under the genus: its stems are solitary; its dead leaves stay on the stem (marcescent) rather than falling cleanly."
+    }
+  },
+  "forms": {
+    "palm": {
+      "rules": {
+        "generator.params.skirt": {
+          "rule": "1",
+          "why": "Dead fronds hang on the stem instead of falling."
+        },
+        "generator.params.dead_life": {
+          "rule": "3",
+          "why": "How many years a dead frond hangs, set by eye: the book says only that they stay on, and most such palms shed them within a few years (the California fan palm, whose skirt lasts for decades, sets its own)."
+        },
+        "generator.params.dead_angle": {
+          "rule": "172",
+          "why": "A dead frond hangs close against the stem, as the built-in California fan palm's do."
+        }
+      },
+      "evidence": {
+        "rules": {
+          "evidence": "SourceInferred",
+          "source": "genera-palmarum-2008",
+          "note": "Dransfield et al. (Genera Palmarum, 2nd ed., 2008), under the genus: its stems are solitary; its dead leaves stay on the stem (marcescent) rather than falling cleanly."
+        },
+        "appearance": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "A dead frond drawn as the built-in palms draw theirs: a brown fan for a fan palm, a brown feather frond for a feather palm."
+        }
+      },
+      "appearance": {
+        "organs": {
+          "dead": {
+            "shape": {
+              "template": "frond",
+              "pinnae": 20,
+              "width": 0.25,
+              "divided": 0,
+              "stipe": 0.2
+            },
+            "colour": [0.5, 0.42, 0.3]
+          }
+        }
+      }
+    }
+  }
+}

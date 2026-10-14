@@ -58,7 +58,6 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "compound",
           "leaflet_width": 0.9,
           "teeth": 8,
           "petiole": 0.35,
@@ -80,7 +79,6 @@
       },
       "flower": {
         "shape": {
-          "template": "flower",
           "petal_width": 0.9,
           "point": 0.0,
           "notch": 0.35,

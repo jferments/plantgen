@@ -24,6 +24,8 @@
       "woody": "rarely"
     },
     "leaf_arrangement": "alternate",
+    "leaf_division": {"compound": "usually", "simple": "rarely"},
+    "division_pattern": {"pinnate": "usually", "palmate": "rarely"},
     "fruit_type": "schizocarp",
     "stipules": {"false": "usually", "true": "rarely"},
     "sexual_system": {"hermaphrodite": "usually", "polygamous": "sometimes", "dioecious": "rarely"}
@@ -74,6 +76,16 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 311 Umbelliferae: herbs, very rarely somewhat woody, with furrowed stems; leaves alternate, mostly much divided, sheathing at the base; fruit dry, splitting into two one-seeded halves (mericarps)."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams (vol. 3, 1951, p. 215), Umbelliferae by Mathias and Constance: leaves alternate, compound or rarely simple, the petioles commonly dilated at the base. Hutchinson (1959) says the leaves are mostly much divided."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz (1992), Umbelliferae: compound leaves ternate, pinnate, bipinnate or more compound, palmate rarely; simple blades usually pinnatifid, palmatifid in Sanicula, Astrantia and Eryngium. A ternate leaf's leaflets are drawn along its midrib here, as cow parsnip's are."
     },
     "traits.fruit_type": {
       "evidence": "SourceInferred",

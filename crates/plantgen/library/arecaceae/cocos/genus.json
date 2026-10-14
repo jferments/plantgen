@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Cocos",
+  "parent": "subfamily/arecoideae",
+  "traits": {
+    "sexual_system": "monoecious",
+    "clonal": false
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae V 8a): the coconut, monoecious, insect-pollinated."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "genera-palmarum-2008",
+      "note": "Dransfield et al. (Genera Palmarum, 2nd ed., 2008), under the genus: its stems are solitary."
+    }
+  }
+}
