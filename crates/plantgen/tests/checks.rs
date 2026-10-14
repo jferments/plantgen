@@ -27,16 +27,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
     ),
     (
-        "berberis-aquifolium",
-        "flower_merosity",
-        "its six petals stand in two whorls of three, and a corolla draws one whorl, so its spec draws six there",
-    ),
-    (
-        "berberis-nervosa",
-        "flower_merosity",
-        "its six petals stand in two whorls of three, and a corolla draws one whorl, so its spec draws six there",
-    ),
-    (
         "cyperus-papyrus",
         "leaf_shape",
         "its leaves are the brown sheaths at its culms' foot, drawn as cards tapering from the base, 0.15 as broad as long, so they read deltate or lanceolate against the linear blades Cyperaceae state; papyrus bears no blades",
@@ -45,11 +35,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "deschampsia-cespitosa",
         "awn_form",
         "it states straight or geniculate awns (FNA), which the Poales' rule draws between them, bent 30°, nearest a contorted awn's 40°",
-    ),
-    (
-        "dicentra-formosa",
-        "flower_merosity",
-        "its four petals stand in two pairs, outer and inner, and a corolla draws one whorl, so its spec draws four there",
     ),
     (
         "digitalis-purpurea",
