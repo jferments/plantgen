@@ -179,17 +179,17 @@ const KNOWN: &[(&str, &str, &str)] = &[
     (
         "program:pinidae",
         "cone_maturation_years",
-        "a cone's look ripens it in its first season, so a pine's and a Rocky Mountain juniper's cones, which take two, are drawn ripe a year early",
+        "a cone's look ripens it in its first season, so the three pines' cones, which take two to three, are drawn ripe in one",
     ),
     (
         "program:pinidae",
         "cone_retention_years",
-        "a cone falls at `age >= cone_years`, a step late, so it stays a year past the seasons it ripens and hangs (grand fir's one season reads a year held once ripe); a pine's, drawn ripe in its first season, read a year more again",
+        "western white and ponderosa pines' cones fall as they ripen, but drawn ripe in their first season they read held a year (the late cut fixed by the conifer lives, #96)",
     ),
     (
         "program:pinidae",
         "leaf_life_years",
-        "foliage falls at `age >= n`, a step late, so it lives a year past its keep (shore pine's needle_years 2.5 reads 4, Pacific yew's 4.5 up to 7), and every conifer's lower crown keeps it needle_low times as long as its top (1.56, a redcedar's), so western white pine's reads up to 5 and ponderosa's up to 6, against 2 to 4",
+        "Sitka spruce's needles live 8 to 10 years at the median, but some fall at 5, against the 7 to 10 it states (seen since the conifer lives, #96; not traced)",
     ),
     (
         "program:rosette",

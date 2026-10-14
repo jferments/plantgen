@@ -120,9 +120,10 @@
 //! for each type of organ standing on it at the end ([`MONTHS`]). An organ
 //! with a season shows flowers while it, or any of its units or florets,
 //! is in flower, and ripe fruit once its fruit is half ripened; one
-//! without shows its own look all year. The months drawn pass when they
-//! are the months stated, warn when they differ only by a month at either
-//! end, and are an error otherwise ([`Timing`]).
+//! without shows its own look all year. A plant none of whose looks has a
+//! season draws no year, and its months are not grown. The months drawn
+//! pass when they are the months stated, warn when they differ only by a
+//! month at either end, and are an error otherwise ([`Timing`]).
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Write as _;
@@ -952,7 +953,8 @@ fn leaf_habit(grown: &Grown<'_>, tally: &mut Tally) {
             if oldest >= 1.0 - 1e-9 {
                 "evergreen"
             } else {
-                "deciduous"
+                // Leaves shed every year read as either: no drought is grown.
+                "deciduous|drought_deciduous"
             },
         );
     }
@@ -982,9 +984,19 @@ const UNIT_RANKS: u32 = 16;
 /// flower look in flower (its own, unless that is its fruit), and its own
 /// look in fruit, ripe once half ripened; a cluster's units, or a head's
 /// florets, each in its own stage. One with none shows its own look every
-/// day. Flowers are flowers, heads, umbels, spikes, panicles and
-/// spikelets; fruit is a fruit card that is no cone.
+/// day. A plant none of whose looks has a season draws no year, so its
+/// months are not read. Flowers are flowers, heads, umbels, spikes,
+/// panicles and spikelets; fruit is a fruit card that is no cone.
 fn year(grown: &Grown<'_>, tally: &mut Tally) {
+    if grown
+        .spec
+        .appearance
+        .organs
+        .values()
+        .all(|look| look.season.is_none())
+    {
+        return;
+    }
     let graph = grown.graph;
     let standing: BTreeSet<u16> = graph
         .organs
@@ -3578,9 +3590,9 @@ mod tests {
         let currant = grow("ribes-sanguineum");
         assert_eq!(months(&currant, "flowering_months"), [3, 4]);
         assert_eq!(months(&currant, "fruiting_months"), [7, 8, 9]);
-        // An organ with no season shows its own look all year.
+        // A plant whose looks have no season draws no year.
         let yarrow = grow("achillea-millefolium");
-        assert_eq!(months(&yarrow, "flowering_months").len(), 12);
+        assert!(months(&yarrow, "flowering_months").is_empty());
     }
 
     #[test]
