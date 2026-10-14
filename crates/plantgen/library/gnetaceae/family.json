@@ -2,5 +2,17 @@
   "schema": 1,
   "rank": "family",
   "name": "Gnetaceae",
-  "parent": "order/gnetales"
+  "parent": "order/gnetales",
+  "traits": {
+    "leaf_habit": "evergreen",
+    "leaf_form": "blade",
+    "leaf_division": "simple"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Gnetaceae: mostly vines, some shrubs and a few small trees; evergreen; leaves simple, broad and flat, elliptic and leathery, with a net of veins, like a flowering plant's; opposite and decussate."
+    }
+  }
 }

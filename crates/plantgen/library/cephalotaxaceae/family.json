@@ -2,5 +2,24 @@
   "schema": 1,
   "rank": "family",
   "name": "Cephalotaxaceae",
-  "parent": "order/cupressales"
+  "parent": "order/cupressales",
+  "traits": {
+    "leaf_form": "needle",
+    "leaf_venation": "single",
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": "spiral",
+    "foliage_ranks": "two_ranked",
+    "short_shoots": false,
+    "sexual_system": {
+      "dioecious": "usually",
+      "monoecious": "rarely"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Cephalotaxaceae: evergreen small trees and shrubs; leaves linear, soft rather than pointed, single-veined, set spirally but twisted at the base into two flat ranks; no specialised short shoots; usually dioecious."
+    }
+  }
 }

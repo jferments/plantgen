@@ -2,5 +2,20 @@
   "schema": 1,
   "rank": "family",
   "name": "Schizaeaceae",
-  "parent": "order/schizaeales"
+  "parent": "order/schizaeales",
+  "traits": {
+    "leaf_venation": {
+      "dichotomous": "usually"
+    },
+    "frond_dimorphism": {
+      "hemidimorphic": "usually"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Schizaeaceae, Lygodiaceae and Anemiaceae (one family in the Library): Schizaea's simple or fan-shaped fronds and Anemia's fronds have veins forking in pairs, Lygodium's free or netted; the sporangia are borne singly, not in sori, on fertile segments of the frond (Schizaea), on lobes of the last segments (Lygodium) or on the basal pair of pinnae (Anemia), so part of a frond is fertile and looks unlike the rest. Lygodium climbs by twining fronds."
+    }
+  }
 }

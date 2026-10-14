@@ -2,5 +2,48 @@
   "schema": 1,
   "rank": "family",
   "name": "Araucariaceae",
-  "parent": "order/araucariales"
+  "parent": "order/araucariales",
+  "traits": {
+    "leaf_form": {
+      "blade": "often",
+      "needle": "often"
+    },
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": "spiral",
+    "sexual_system": {
+      "dioecious": "often",
+      "monoecious": "often"
+    },
+    "cone_maturation_years": {
+      "min": 2,
+      "max": 3
+    }
+  },
+  "evidence": {
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Araucariaceae: evergreen trees with whorled main branches; leaves broad and flat with many parallel veins, or linear and mostly soft, set spirally; Agathis usually monoecious and Araucaria dioecious."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Araucariaceae: evergreen trees with whorled main branches; leaves broad and flat with many parallel veins, or linear and mostly soft, set spirally; Agathis usually monoecious and Araucaria dioecious."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Araucariaceae: evergreen trees with whorled main branches; leaves broad and flat with many parallel veins, or linear and mostly soft, set spirally; Agathis usually monoecious and Araucaria dioecious."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Araucariaceae: evergreen trees with whorled main branches; leaves broad and flat with many parallel veins, or linear and mostly soft, set spirally; Agathis usually monoecious and Araucaria dioecious."
+    },
+    "traits.cone_maturation_years": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Araucariaceae: the female cones, mostly large and nearly round, take two to three years to ripen and fall apart when the seeds are ripe (two years in Agathis)."
+    }
+  }
 }
