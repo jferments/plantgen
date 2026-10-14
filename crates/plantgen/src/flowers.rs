@@ -453,7 +453,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
                 ));
             }
         }
-        // Zygomorphic tepals (an iris's or a banana's): the two whorls stand
+        // Zygomorphic tepals (a gladiolus's): the two whorls stand
         // as before, the outer one's first tepal toward the axis, and take
         // their roles by place as a corolla's petals do.
         (Perianth::Tepals, Corolla::Bilabiate | Corolla::Unequal) => {
@@ -1689,7 +1689,7 @@ mod tests {
             .unwrap();
         assert_eq!(lip.role, Some("lower lip"));
         assert!(lip.width > beside.width && lip.cup < beside.cup);
-        // A heliconia's or a canna's: one upper tepal unlike the rest.
+        // Of no named kind: one upper tepal unlike the rest.
         let laid = layout(&tepals(Corolla::Unequal), &form(), 1.0, 1.0);
         let upper: Vec<_> = laid
             .pieces
