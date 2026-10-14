@@ -88,13 +88,18 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "program:grass",
-        "phyllotaxis_pattern",
-        "each blade's roll is jittered ±40° (a culm leaf's ±30°), so the turn from one to the next has a median of about 146°, nearer the golden angle than half a turn",
+        "leaf_length_m",
+        "a culm's leaves are drawn 0.35 to 0.6 as long as its tiller's blades, so where a flora's blades span less than about three-fold (California oatgrass, Roemer's fescue, reed canarygrass) the shortest culm leaves fall below its least",
     ),
     (
         "program:grass",
         "leaf_width_m",
         "since the Poaceae rule sets blade cards from Hitchcock's widths, the median blade measured sits inside the flora's range, but the narrowest run up to half its least width (smaller blades of young tillers, inferred, not traced)",
+    ),
+    (
+        "program:grass",
+        "phyllotaxis_pattern",
+        "a tiller's blades are measured round the vertical, so where a tiller leans out about as far as its blades stand off it (tufted hairgrass, coirón, Roemer's and red fescue: blades 10° to 15° off, tillers leaning up to 22°) the lean turns them all one way and the turns read as a spiral or three ranks (inferred, not traced)",
     ),
     (
         "program:grass",

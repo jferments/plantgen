@@ -108,7 +108,13 @@
     "upper_glume_length_m": {"min": 0.009, "max": 0.014, "low": 0.006, "high": 0.019},
     "lemma_length_m": {"min": 0.009, "max": 0.014, "low": 0.008, "high": 0.016},
     "awns": true,
-    "awn_length_m": {"min": 0.001, "max": 0.03, "high": 0.035}
+    "awn_length_m": {"min": 0.001, "max": 0.03, "high": 0.035},
+    "life_span": "perennial",
+    "rhizome_habit": "none",
+    "clonal": false,
+    "awn_insertion": "apical",
+    "awn_form": "straight",
+    "flowering_months": [6, 7, 8]
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -180,6 +186,36 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 253, no. 12) gives its season symbol as perennial; the genus (p. 246) holds perennials and one annual."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 253, no. 12): culms in loose to dense tufts, without rhizomes (Abrams 1923, no. 12: without rhizomes)."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 253, no. 12): tufted, without rhizomes, so it does not spread beyond its tuft."
+    },
+    "traits.awn_insertion": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock's genus description of Elymus (p. 246): lemmas acute or usually awned from the tip; for E. glaucus (p. 253) the lemmas are awned, the awn one to two times the body's length."
+    },
+    "traits.awn_form": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 253, no. 12): the awn held erect to spreading, with no knee or twist named."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (Elymus no. 12, fig. 600): flowers June-August in open woods and dry hillsides."
     }
   },
   "provenance": {
