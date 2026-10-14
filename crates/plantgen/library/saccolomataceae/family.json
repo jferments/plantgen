@@ -2,5 +2,17 @@
   "schema": 1,
   "rank": "family",
   "name": "Saccolomataceae",
-  "parent": "order/polypodiales"
+  "parent": "order/polypodiales",
+  "traits": {
+    "leaf_division": "compound",
+    "sporangia": "sori",
+    "sorus_position": "submarginal"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Saccolomataceae: terrestrial ferns with short or trunk-like rhizomes; blades pinnate to decompound, veins free; sori at the ends of the veins, with cup- or pouch-shaped indusia."
+    }
+  }
 }

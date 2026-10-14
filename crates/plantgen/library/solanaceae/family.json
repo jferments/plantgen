@@ -27,6 +27,16 @@
     "fruit_type": {
       "berry": "often",
       "capsule": "often"
+    },
+    "rosette": {
+      "basal": "often",
+      "none": "often",
+      "terminal": "rarely"
+    },
+    "life_span": {
+      "annual": "often",
+      "biennial": "often",
+      "perennial": "often"
     }
   },
   "evidence": {
@@ -34,6 +44,16 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 321 Solanaceae (order Solanales): herbaceous or woody; leaves alternate, simple; no stipules; flowers mostly regular; calyx 4- to 6-lobed, persisting; corolla united, usually 5-lobed; stamens on the corolla tube, alternate with its lobes; ovary of two cells, superior (the order's 'ovary superior'); fruit a capsule or a berry. Some (Schizanthus, Salpiglossis) are irregular."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Solanaceae as that work draws it, there coded together with Duckeodendraceae, Goetzeaceae, Nolanaceae: whether the leaves gather in rosettes (character 22), coded often a basal rosette, often no rosette, rarely rosettes at the stem tips. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Solanaceae as that work draws it, there coded together with Duckeodendraceae, Goetzeaceae, Nolanaceae: the herbs' life form (character 21), coded often annual, often biennial, often perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     },
     "traits.zygomorphy": {
       "evidence": "SourceInferred",

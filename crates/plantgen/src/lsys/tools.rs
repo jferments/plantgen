@@ -2887,6 +2887,13 @@ impl Subtrees {
 ///   that sags onto it (plants fitted to their place, PF1). A segment
 ///   that what it follows has already carried that close turns to run
 ///   along the surface.
+/// - With `reaction` above 0, reaction wood: each year's ring turns a
+///   segment back toward the line it grew in, by at most
+///   `reaction · ℓ · Δr / r²` radians (`grown` gives each segment's `Δr`
+///   this step), and the segment keeps that turn. The curvature a ring can
+///   undo goes as its width over the radius squared, so thin, fast-growing
+///   wood holds its line and old, slow wood sags (the form of the
+///   gravitropic models of Fournier and Alméras).
 ///
 /// Segments, organs and query points move with what they follow; the
 /// string does not change.
@@ -2894,17 +2901,32 @@ impl Subtrees {
 /// # Errors
 ///
 /// Fails on settings out of range.
-#[allow(clippy::implicit_hasher, clippy::too_many_lines)]
+#[allow(
+    clippy::implicit_hasher,
+    clippy::too_many_lines,
+    clippy::too_many_arguments
+)]
 pub fn bend(
     scene: &mut Scene,
     radii: &[f64],
+    grown: &[f64],
     organ_area: &[f64],
     values: &[f64],
     rest: &mut HashMap<u64, Vec3, impl std::hash::BuildHasher + Clone + Sync>,
     dt: f64,
     ground_field: &SubstrateField,
 ) -> Result<(), GrowthError> {
-    let [density, modulus, leaf_mass, set, straighten, stem, ground] = values[..] else {
+    let [
+        density,
+        modulus,
+        leaf_mass,
+        set,
+        straighten,
+        stem,
+        ground,
+        reaction,
+    ] = values[..]
+    else {
         return Err(invalid("bend", "wrong number of settings".into()));
     };
     let valid = density >= 0.0
@@ -2917,14 +2939,17 @@ pub fn bend(
         && (0.0..=1.0).contains(&straighten)
         && (0.0..=1.0).contains(&stem)
         && ground >= 0.0
-        && ground.is_finite();
+        && ground.is_finite()
+        && reaction >= 0.0
+        && reaction.is_finite();
     if !valid {
         return Err(invalid(
             "bend",
             format!(
-                "density, modulus, leaf_mass and ground must be finite and not negative \
-                 (modulus above 0), set, straighten and stem between 0 and 1; found {density}, \
-                 {modulus}, {leaf_mass}, {set}, {straighten}, {stem}, {ground}"
+                "density, modulus, leaf_mass, ground and reaction must be finite and not \
+                 negative (modulus above 0), set, straighten and stem between 0 and 1; found \
+                 {density}, {modulus}, {leaf_mass}, {set}, {straighten}, {stem}, {ground}, \
+                 {reaction}"
             ),
         ));
     }
@@ -2987,6 +3012,18 @@ pub fn bend(
             );
         }
         let mut turn = held + sag;
+        // Reaction wood: this year's ring turns the segment back toward
+        // the line it grew in, as far as the ring allows.
+        let mut lift = Vec3::ZERO;
+        let ring = grown.get(which as usize).copied().unwrap_or(0.0);
+        if reaction > 0.0 && ring > 0.0 && radius > 0.0 {
+            let most = reaction * length * ring / (radius * radius);
+            let off = turn.length();
+            if off > 0.0 {
+                lift = turn * (-most.min(off) / off);
+                turn += lift;
+            }
+        }
         let along = before
             .turn(segment.end - segment.start)
             .normalize_or(Vec3::ZERO);
@@ -3000,7 +3037,10 @@ pub fn bend(
         }
         (
             before.after(segment.start, turn),
-            Some((segment.id, held + (sag * set - held * straighten) * dt)),
+            Some((
+                segment.id,
+                held + (sag * set - held * straighten) * dt + lift,
+            )),
         )
     };
 
@@ -3773,10 +3813,11 @@ mod tests {
         let inertia = std::f64::consts::PI * radius.powi(4) / 4.0;
         let expected = mass * 9.81 * lever / (1.0e10 * inertia);
         let mut rest: HashMap<u64, Vec3> = HashMap::new();
-        let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, 1.0, 0.0];
+        let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, 1.0, 0.0, 0.0];
         bend(
             &mut setup.scene,
             &[radius],
+            &[],
             &[0.0; 20],
             &settings,
             &mut rest,
@@ -3809,14 +3850,15 @@ mod tests {
         // hang 0.7 m below the ground; with `ground` 0.02 the ground holds
         // it up, its end 0.02 m above level soil.
         let source = "lsystem p 1; axiom F(0.3) &(90) F(1);";
-        let rubber = [600.0, 1.0e-3, 0.1, 0.3, 0.1, 1.0, 0.0];
-        let rested = [600.0, 1.0e-3, 0.1, 0.3, 0.1, 1.0, 0.02];
+        let rubber = [600.0, 1.0e-3, 0.1, 0.3, 0.1, 1.0, 0.0, 0.0];
+        let rested = [600.0, 1.0e-3, 0.1, 0.3, 0.1, 1.0, 0.02, 0.0];
         let flat = SubstrateField::flat();
         let mut rest: HashMap<u64, Vec3> = HashMap::new();
         let mut free = setup(source);
         bend(
             &mut free.scene,
             &[0.01, 0.01],
+            &[],
             &[0.0; 20],
             &rubber,
             &mut rest,
@@ -3833,6 +3875,7 @@ mod tests {
         bend(
             &mut held.scene,
             &[0.01, 0.01],
+            &[],
             &[0.0; 20],
             &rested,
             &mut rest,
@@ -3850,10 +3893,11 @@ mod tests {
         let mut upright = setup("lsystem p 1; axiom F(1) F(1);");
         let before = upright.scene.segments.clone();
         let mut rest: HashMap<u64, Vec3> = HashMap::new();
-        let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, 1.0, 0.0];
+        let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, 1.0, 0.0, 0.0];
         bend(
             &mut upright.scene,
             &[0.01, 0.01],
+            &[],
             &[0.0; 20],
             &settings,
             &mut rest,
@@ -3866,10 +3910,11 @@ mod tests {
         }
         // A twig as soft as rubber hangs straight down from its start.
         let mut soft = setup("lsystem p 1; axiom &(90) F(1);");
-        let rubber = [600.0, 1.0e-3, 0.1, 0.3, 0.1, 1.0, 0.0];
+        let rubber = [600.0, 1.0e-3, 0.1, 0.3, 0.1, 1.0, 0.0, 0.0];
         bend(
             &mut soft.scene,
             &[0.01],
+            &[],
             &[0.0; 20],
             &rubber,
             &mut rest,
@@ -3918,10 +3963,11 @@ mod tests {
             let mut leaning = setup("lsystem p 1; axiom &(45) F(1);");
             let start = leaning.scene.segments[0].end - leaning.scene.segments[0].start;
             let mut rest: HashMap<u64, Vec3> = HashMap::new();
-            let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, stem, 0.0];
+            let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, stem, 0.0, 0.0];
             bend(
                 &mut leaning.scene,
                 &[0.01],
+                &[],
                 &[0.0; 20],
                 &settings,
                 &mut rest,
@@ -3938,6 +3984,48 @@ mod tests {
         assert!(
             (half - 0.5 * all).abs() < 1.0e-9 * all.max(1.0),
             "{half} {all}"
+        );
+    }
+
+    #[test]
+    fn bend_1_reaction_wood_holds_a_growing_branch_and_lets_a_slow_one_sag() {
+        // A branch 1 m long at 45°, 1 cm thick. Its sag is about 0.008 rad;
+        // with `reaction` 0.0003 a ring 1 mm wide may undo 0.003 rad of it,
+        // one 1 cm wide all of it, and with no ring none.
+        let turn = |ring: f64| {
+            let mut branch = setup("lsystem p 1; axiom &(45) F(1);");
+            let start = branch.scene.segments[0].end - branch.scene.segments[0].start;
+            let mut rest: HashMap<u64, Vec3> = HashMap::new();
+            let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, 1.0, 0.0, 0.0003];
+            bend(
+                &mut branch.scene,
+                &[0.01],
+                &[ring],
+                &[0.0; 20],
+                &settings,
+                &mut rest,
+                1.0,
+                &SubstrateField::flat(),
+            )
+            .unwrap();
+            let bent = branch.scene.segments[0].end - branch.scene.segments[0].start;
+            let kept = rest[&branch.scene.segments[0].id].length();
+            (
+                math::acos((bent.dot(start) / (bent.length() * start.length())).clamp(-1.0, 1.0)),
+                kept,
+            )
+        };
+        let (slow, slow_kept) = turn(0.0);
+        let (some, _) = turn(0.001);
+        let (fast, fast_kept) = turn(0.01);
+        assert!(slow > 0.008, "{slow}");
+        assert!((some - (slow - 0.003)).abs() < 1.0e-9, "{some} {slow}");
+        assert!(fast < 1.0e-9, "{fast}");
+        // The ring's turn is kept: the rest bend now leans up by the sag
+        // less the share `set` kept of it.
+        assert!(
+            (fast_kept - 0.7 * slow).abs() < 1.0e-9,
+            "{fast_kept} {slow} {slow_kept}"
         );
     }
 

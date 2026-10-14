@@ -2,5 +2,17 @@
   "schema": 1,
   "rank": "family",
   "name": "Psilotaceae",
-  "parent": "order/psilotales"
+  "parent": "order/psilotales",
+  "traits": {
+    "leaf_form": "scale",
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": "spiral"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Psilotaceae and Psilotum: often epiphytic, rootless plants with a forking rhizome and green aerial branches that fork in pairs; leaf-like or scale-like appendages set in spirals or seemingly two-ranked; sporangia on short side branches."
+    }
+  }
 }

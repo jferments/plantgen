@@ -127,6 +127,76 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "reiche-1902",
+      "note": "Reiche, Flora de Chile vol. 3 (about 1902), p. 63, as Laretia compacta (Phil.) Reiche: the plant builds conical mounds 1.5 m tall and more. The Chilean environment ministry's species sheet, as quoted in search results, gives cushions about 1 m tall and 1 to 2 m or more across; the project's photo notes (G3-LLARETA.md 1a) 1 to 1.4 m tall beside people. No upper limit is given, so height_max_m is left unset."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "kleier-2015",
+      "note": "Kleier et al. 2015 (PeerJ 3:e843), as the project's notes G3-LLARETA.md and search results quote it (the page was not reachable here): dense, woody cushions; the notes' photo of a broken piece shows fine dark woody branching under a thin living shell. Overrides the family's 'usually herbaceous'; GWDD also lists a wood density for the genus."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "reiche-1902",
+      "note": "Reiche (about 1902), p. 63: leaves light green, hairless, linear, three-angled toward the tip, sometimes resinous, undivided."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "reiche-1902",
+      "note": "Reiche (about 1902), p. 63: leaves linear with no lobing mentioned; the ministry sheet (search results) calls them small and triangular. One horticultural site says finely crenate; not used."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "reiche-1902",
+      "note": "Reiche (about 1902), p. 63 and key p. 62: leaves 4 to 5 mm long on prismatic, very densely leafy branches; leaves of the outer branches less overlapping, longer and spreading almost flat. The ministry sheet, as quoted in search results, gives 3 to 6 mm (the low and high)."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "mma-chile-azorella-compacta",
+      "note": "Chile's environment ministry species sheet (Reglamento de Clasificación de Especies), as quoted in search results (the PDF was blocked): leaves very small, resinous, triangular, about 3 to 6 mm long by 1 to 4 mm wide; old leaves stay inside the cushion."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "reiche-1902",
+      "note": "Reiche (about 1902), p. 63: leaves linear, three-angled (triquetrous) toward the tip. The ministry sheet says triangular; a horticultural site says ovate."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "mma-chile-azorella-compacta",
+      "note": "Ministry sheet as quoted in search results: rosettes at the shoot tips, each giving 1 to 5 flowers; the project notes (G3-LLARETA.md) agree: thousands of short shoots each ending in a small rosette."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "reiche-1902",
+      "note": "Reiche (about 1902), p. 63: umbels terminal, on short peduncles; flowers 4 to 5 per umbel, on short pedicels. A simple umbel; overrides the family's compound one."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "reiche-1902",
+      "note": "Reiche (about 1902), p. 63: umbels terminal, shortly stalked; Laretia's genus line says the flowers come out among the topmost leaves."
+    },
+    "traits.inflorescence_bracts": {
+      "evidence": "SourceInferred",
+      "source": "reiche-1902",
+      "note": "Reiche (about 1902), p. 63: involucre of 4 to 5 thin (membranous) bracteoles; no length given. A horticultural site (search results) gives a short involucre of 5 to 7."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "reiche-1902",
+      "note": "Counted: flowers in one (simple) umbel. Reiche (about 1902), p. 63: 4 to 5 flowers. The ministry sheet (search results) gives 1 to 5 flowers per rosette, the low."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "mma-chile-azorella-compacta",
+      "note": "Ministry sheet as quoted in search results: flowers yellowish-green (amarillo-verdosas); the project's photo notes say cream-yellow. RGB for 'greenish yellow'. Reiche gives no colour for this species (yellow petals for its sister Laretia acaulis). Popular sites saying lavender or pink were not used."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "mma-chile-azorella-compacta",
+      "note": "Ministry sheet as quoted in search results: a dry, round schizocarp 4 to 5 mm, splitting in two one-seeded halves. Reiche (about 1902) says fruits large, fully ripe ones unknown, the halves sometimes unequal."
     }
   },
   "provenance": {
@@ -138,5 +208,21 @@
     ],
     "contributors": ["Project After"],
     "notes": "Procedural proxy (plant forms milestone F7). Calibration against measurements and photographs comes later."
+  },
+  "traits": {
+    "height_typical_m": {"min": 1.0, "max": 1.5},
+    "woodiness": "woody",
+    "leaf_division": "simple",
+    "leaf_incision": "none",
+    "leaf_length_m": {"min": 0.004, "max": 0.005, "low": 0.003, "high": 0.006},
+    "leaf_width_m": {"min": 0.001, "max": 0.004},
+    "leaf_shape": "linear",
+    "rosette": "terminal",
+    "inflorescence": "umbel",
+    "flowering_position": "terminal",
+    "inflorescence_bracts": {"min": 4, "max": 5},
+    "units_per_inflorescence": {"min": 4, "max": 5, "low": 1},
+    "flower_colour": [205, 210, 100],
+    "fruit_size_m": {"min": 0.004, "max": 0.005}
   }
 }

@@ -236,9 +236,11 @@ fn plants_keep_out_of_rock_and_a_wall_at_after_s_cells() {
 
     // A Douglas-fir at a tenth of a metre: a limb that comes near the
     // wall is shed there, so at most a few shoots touch it.
+    // (Its limbs sag under load since pinidae 7, so fewer of the
+    // open-grown fir's reach into the wall: 49.)
     let fir = fitted("pseudotsuga-menziesii", 15.0, Some(0.1));
     assert!(
-        fir.blind.segments_in_solids > 50,
+        fir.blind.segments_in_solids > 40,
         "{}",
         fir.blind.describe()
     );

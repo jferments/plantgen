@@ -2,5 +2,21 @@
   "schema": 1,
   "rank": "family",
   "name": "Dipteridaceae",
-  "parent": "order/gleicheniales"
+  "parent": "order/gleicheniales",
+  "traits": {
+    "rhizome_habit": "long_creeping",
+    "leaf_division": "simple",
+    "leaf_incision": "parted",
+    "division_pattern": "palmate",
+    "sporangia": "sori",
+    "sorus_shape": "round",
+    "indusium": "none"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Dipteridaceae: terrestrial ferns on creeping, bristly or hairy stems; each frond of two fan-shaped halves with a fine net of veins; sori without indusium scattered over the underside (Dipteris). Two fans cut from the stalk's top read here as a palmately parted blade."
+    }
+  }
 }

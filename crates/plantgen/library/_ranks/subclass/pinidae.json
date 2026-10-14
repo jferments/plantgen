@@ -6,6 +6,12 @@
   "generator": {
     "program": "pinidae"
   },
+  "traits": {
+    "leaf_habit": {
+      "evergreen": "usually",
+      "deciduous": "rarely"
+    }
+  },
   "rules": {
     "generator.params.needle_years": {
       "rule": "leaf_life_years",
@@ -49,9 +55,22 @@
       },
       "template": "needles",
       "why": "Needles out all round the shoot, or in two flat ranks."
+    },
+    "generator.params.wood_density": {
+      "rule": "wood_density_basic_kg_m3 * (1 + wood_moisture_green_share)",
+      "why": "Green wood's density, its dry wood and the water it holds, which a limb's weight bends (bend@1)."
+    },
+    "generator.params.wood_modulus": {
+      "rule": "wood_modulus_green_mpa",
+      "why": "Green wood's stiffness, which holds a limb up against its weight (bend@1)."
     }
   },
   "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), the conifer families: Araucariaceae, Cephalotaxaceae, Cupressaceae, Podocarpaceae, Sciadopityaceae and Taxaceae evergreen; Pinaceae mostly evergreen, the larches and golden larch deciduous; Taxodiaceae evergreen but for swamp cypress and dawn redwood, which shed their leafy shoots. Deciduous is the rare state."
+    },
     "generator.program": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -60,7 +79,7 @@
     "rules": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Spec rework E6d: the pinidae program's foliage life, cones and needle bundles and ranks from each taxon's stated characters."
+      "note": "Spec rework E6d: the pinidae program's foliage life, cones and needle bundles and ranks from each taxon's stated characters. Conifer sag (M6): green wood's density and stiffness from the Wood Handbook values the species state."
     }
   }
 }

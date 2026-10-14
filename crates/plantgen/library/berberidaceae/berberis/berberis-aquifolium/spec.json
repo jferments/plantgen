@@ -127,6 +127,7 @@
             "shape": {
               "template": "flower",
               "petals": 6,
+              "petal_whorls": 2,
               "petal_width": 1.4,
               "point": 0.0,
               "notch": 0.0,
@@ -180,6 +181,11 @@
       "evidence": "SourceInferred",
       "source": "usa-npn",
       "note": "USA National Phenology Network observations (Nature's Notebook) at lowland sites west of the Cascades in Washington and Oregon (below 300 m, west of 121.8° W; 2009 to 2026, fetched 2026-10-14): 20 plant-years at 5 sites seen with ripe fruit, by the months they were seen in (Apr 2, May 3, Jun 3, Jul 13, Aug 9, Sep 7, Oct 3, Nov 1, Dec 1); stated as the months with at least a third as many as the busiest, July to September. The Seed Manual (Mahonia chapter, printed p. 708, as M. aquifolium) gives late July to early August at 975 m in Mineral County, Montana, and September and October at 685 m in Jackson County, Oregon."
+    },
+    "appearance.organs.bloom.season.flower_look.shape.petal_whorls": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual (1925), Berberidaceae: sepals 6, in 2 circles; petals 6, in 2 circles; stamens as many and opposite them. So six petals, three and three."
     },
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Berberis aquifolium (gwddagg_v2.2_species.csv, read): specific gravity 0.69 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.69, branches 0.67. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {

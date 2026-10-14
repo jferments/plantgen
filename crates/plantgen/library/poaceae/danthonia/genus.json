@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Danthonia",
+  "traits": {"life_span": "perennial", "rhizome_habit": "none", "clonal": false},
+  "evidence": {
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock's genus description of Danthonia (p. 300-301): tufted, low or moderately tall perennials."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock's genus description of Danthonia (p. 300-301): tufted perennials, no rhizomes named for any species."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock's genus description of Danthonia (p. 300-301): tufted perennials; they make cleistogamous spikelets in the lower sheaths, but do not spread by rhizomes or stolons."
+    }
+  }
+}

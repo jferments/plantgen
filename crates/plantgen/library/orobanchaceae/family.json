@@ -16,13 +16,19 @@
     "woodiness": "herbaceous",
     "stipules": false,
     "leaf_arrangement": "alternate",
+    "fruit_type": "capsule",
+    "rosette": "none",
+    "life_span": {
+      "annual": "often",
+      "biennial": "often",
+      "perennial": "often"
+    },
     "leaf_division": "simple",
     "leaf_incision": {
       "none": "usually",
       "lobed": "often"
     },
-    "division_pattern": "pinnate",
-    "fruit_type": "capsule"
+    "division_pattern": "pinnate"
   },
   "forms": {
     "forb": {
@@ -63,6 +69,16 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 327 Orobanchaceae (broomrapes), with the green half-parasites he keeps in Scrophulariaceae (Castilleja, Pedicularis), which APG joins as Orobanchaceae: herbs; leaves or scales alternate; stipules absent; fruit a capsule opening by two valves."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Orobanchaceae as that work draws it, there coded together with Cyclocheilaceae: whether the leaves gather in rosettes (character 22), coded no rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Orobanchaceae as that work draws it, there coded together with Cyclocheilaceae: the herbs' life form (character 21), coded often annual, often biennial, often perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     },
     "traits.leaf_division": {
       "evidence": "SourceInferred",
