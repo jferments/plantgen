@@ -34,7 +34,6 @@
 //! Every tool is deterministic: the same scene gives the same values on every
 //! machine.
 
-use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 use std::sync::{Mutex, PoisonError};
 
@@ -44,7 +43,7 @@ use super::derive::Clock;
 use super::expr::{ENV_FIELDS, EnvField, EnvValues, NO_ENV, Query, Scope, eval};
 use super::narrow::{self, CANDIDATES, CONSUMED, LEFT, Narrower, STRIDE};
 use super::program::{Program, SymbolKind, ToolConfig, ToolKind};
-use super::turtle::{NodeKind, Scene, Segment};
+use super::turtle::{NodeKind, OrganInstance, Scene, Segment};
 use super::{GrowthError, Limits};
 use crate::conditions::Surroundings;
 use crate::cores::{self, Lease};
@@ -742,15 +741,7 @@ fn light(
     let mut factors = vec![0.0_f64; directions.len() * groups.len()];
     let sweep = |direction: &SkyDirection, row: &mut [f64], beyond: &mut [f64]| {
         // beyond[v] = Σ D over v and every voxel past it along the direction.
-        for y in (0..ny).rev() {
-            for z in 0..nz {
-                for x in 0..nx {
-                    let here = [x, y, z];
-                    let past = next(here, direction.step).map_or(0.0, |voxel| beyond[flat(voxel)]);
-                    beyond[flat(here)] = density[flat(here)] + past;
-                }
-            }
-        }
+        sweep_beyond(&density, beyond, [nx, ny, nz], direction.step);
         let length = extinction * cell * direction.cells_per_layer;
         for (factor, (voxel, own)) in row.iter_mut().zip(&groups) {
             let past = next(*voxel, direction.step).map_or(0.0, |voxel| beyond[flat(voxel)]);
@@ -783,11 +774,63 @@ fn light(
     Ok((light, organs))
 }
 
-/// What the plant grows on: the conditions' substrate, or level soil.
-fn substrate_of(surroundings: &dyn Surroundings) -> Cow<'_, SubstrateField> {
+/// `beyond[v]` = `density[v]` plus `beyond` at the voxel one layer up and
+/// `step` (x, z) over, or nothing past the grid's edge: the leaf area
+/// density summed from each voxel out of the grid along a direction. One
+/// pass, top layer first, in `light`'s voxel order (`(y·nz + z)·nx + x`).
+fn sweep_beyond(density: &[f64], beyond: &mut [f64], [nx, ny, nz]: [usize; 3], step: (i64, i64)) {
+    let layer = nx * nz;
+    let (dx, dz) = step;
+    // The x (or z) whose neighbour `d` over stays inside `0..n`.
+    let inside = |n: usize, d: i64| -> std::ops::Range<usize> {
+        let n = i64::try_from(n).unwrap_or(i64::MAX);
+        let from = usize::try_from((-d).clamp(0, n)).unwrap_or(0);
+        let to = usize::try_from((n - d).clamp(0, n)).unwrap_or(0);
+        from..to.max(from)
+    };
+    let (xs, zs) = (inside(nx, dx), inside(nz, dz));
+    for y in (0..ny).rev() {
+        let here = y * layer;
+        if y + 1 == ny {
+            for v in here..here + layer {
+                beyond[v] = density[v] + 0.0;
+            }
+            continue;
+        }
+        let (row, above) = beyond.split_at_mut(here + layer);
+        let row = &mut row[here..];
+        for z in 0..nz {
+            let line = z * nx;
+            if !zs.contains(&z) || xs.is_empty() {
+                for x in 0..nx {
+                    row[line + x] = density[here + line + x] + 0.0;
+                }
+                continue;
+            }
+            let over = usize::try_from(i64::try_from(z).unwrap_or(0) + dz).unwrap_or(0) * nx;
+            let out = &mut row[line..line + nx];
+            let own = &density[here + line..here + line + nx];
+            for x in (0..xs.start).chain(xs.end..nx) {
+                out[x] = own[x] + 0.0;
+            }
+            // Inside, the voxel over is `x + dx` on the line above: slices
+            // side by side, which the compiler vectorizes.
+            let from = usize::try_from(i64::try_from(xs.start).unwrap_or(0) + dx).unwrap_or(0);
+            let past = &above[over + from..over + from + xs.len()];
+            for ((out, own), past) in out[xs.clone()].iter_mut().zip(&own[xs.clone()]).zip(past) {
+                *out = own + past;
+            }
+        }
+    }
+}
+
+/// What the plant grows on: the conditions' substrate, or level soil
+/// (built once: it is the same grid every step).
+fn substrate_of(surroundings: &dyn Surroundings) -> &SubstrateField {
+    static LEVEL: std::sync::OnceLock<SubstrateField> = std::sync::OnceLock::new();
     surroundings
         .substrate()
-        .map_or_else(|| Cow::Owned(SubstrateField::flat()), Cow::Borrowed)
+        .unwrap_or_else(|| LEVEL.get_or_init(SubstrateField::flat))
 }
 
 /// `substrate@1`'s readings at a module that asks for them: distance,
@@ -804,12 +847,12 @@ fn read_substrate(
     if queries & Query::Substrate.bit() == 0 {
         return;
     }
-    let normal = field.normal(query.position);
-    values[EnvField::Sd as usize] = field.distance(query.position);
+    let (distance, normal, material) = field.reading(query.position);
+    values[EnvField::Sd as usize] = distance;
     values[EnvField::Snx as usize] = normal.x;
     values[EnvField::Sny as usize] = normal.y;
     values[EnvField::Snz as usize] = normal.z;
-    values[EnvField::Smat as usize] = f64::from(field.surface_material(query.position));
+    values[EnvField::Smat as usize] = f64::from(material);
 }
 
 /// `light@2`'s settings: `light@1`'s, and how far past the plant the
@@ -1218,9 +1261,20 @@ const GRID_CELLS: f64 = 256.0;
 
 impl<T: Copy> Grid<T> {
     fn new(cell: f64, points: &[(Vec3, T)]) -> Self {
+        Self::build(cell, points.len(), |at| points[at].0, |at| points[at].1)
+    }
+
+    /// The grid of `count` items, item `at` at `position(at)`.
+    fn build(
+        cell: f64,
+        count: usize,
+        position: impl Fn(usize) -> Vec3,
+        item: impl Fn(usize) -> T,
+    ) -> Self {
         let mut low = [f64::INFINITY; 3];
         let mut high = [f64::NEG_INFINITY; 3];
-        for (point, _) in points {
+        for at in 0..count {
+            let point = position(at);
             for (axis, value) in [point.x, point.y, point.z].into_iter().enumerate() {
                 low[axis] = low[axis].min(value);
                 high[axis] = high[axis].max(value);
@@ -1241,10 +1295,10 @@ impl<T: Copy> Grid<T> {
             starts: vec![0],
             items: Vec::new(),
         };
-        if points.is_empty() {
+        if count == 0 {
             return grid;
         }
-        let keys: Vec<[i64; 3]> = points.iter().map(|(point, _)| grid.key(*point)).collect();
+        let keys: Vec<[i64; 3]> = (0..count).map(|at| grid.key(position(at))).collect();
         for axis in 0..3 {
             let (first, last) = keys.iter().fold((i64::MAX, i64::MIN), |(a, b), key| {
                 (a.min(key[axis]), b.max(key[axis]))
@@ -1268,23 +1322,23 @@ impl<T: Copy> Grid<T> {
         for at in 1..starts.len() {
             starts[at] += starts[at - 1];
         }
+        // Each cell's items in the order given: a counting sort.
         let mut next = starts.clone();
-        let mut slots: Vec<Option<T>> = vec![None; points.len()];
-        for ((_, item), at) in points.iter().zip(&flat) {
-            slots[next[*at] as usize] = Some(*item);
-            next[*at] += 1;
+        let mut items = vec![item(0); count];
+        for (at, cell) in flat.iter().enumerate() {
+            items[next[*cell] as usize] = item(at);
+            next[*cell] += 1;
         }
-        grid.items = slots.into_iter().flatten().collect();
+        grid.items = items;
         grid.starts = starts;
         grid
     }
 
-    #[allow(clippy::cast_possible_truncation)]
     fn key(&self, point: Vec3) -> [i64; 3] {
         [
-            (point.x / self.cell).floor() as i64,
-            (point.y / self.cell).floor() as i64,
-            (point.z / self.cell).floor() as i64,
+            math::floor_index(point.x / self.cell),
+            math::floor_index(point.y / self.cell),
+            math::floor_index(point.z / self.cell),
         ]
     }
 
@@ -1394,7 +1448,7 @@ struct Reach {
 }
 
 impl Reach {
-    fn new<T: Copy>(grid: &Grid<T>, search: &[([i64; 3], f64)]) -> Self {
+    fn new<T: Copy + Sync>(grid: &Grid<T>, search: &[([i64; 3], f64)], threads: usize) -> Self {
         let rings = search
             .iter()
             .flat_map(|(offset, _)| offset.iter().map(|d| d.abs()))
@@ -1406,27 +1460,49 @@ impl Reach {
             .iter()
             .map(|s| usize::try_from(*s).unwrap_or(0))
             .product::<usize>();
-        let mut reach = Self {
-            low,
-            size,
-            marked: vec![false; count],
-        };
+        // The occupied cells, layer by layer.
+        let mut occupied = Vec::new();
         for y in 0..grid.size[1] {
             for z in 0..grid.size[2] {
                 for x in 0..grid.size[0] {
                     let key = [x + grid.low[0], y + grid.low[1], z + grid.low[2]];
-                    if grid.cell_items(key).is_empty() {
-                        continue;
-                    }
-                    for ([dx, dy, dz], _) in search {
-                        if let Some(at) = reach.flat([key[0] + dx, key[1] + dy, key[2] + dz]) {
-                            reach.marked[at] = true;
-                        }
+                    if !grid.cell_items(key).is_empty() {
+                        occupied.push(key);
                     }
                 }
             }
         }
-        reach
+        // Layers of the marks side by side: each marks what the occupied
+        // cells within reach of it reach.
+        let layer = usize::try_from(size[0] * size[2]).unwrap_or(1).max(1);
+        let layers = usize::try_from(size[1]).unwrap_or(0);
+        let per = layers.div_ceil(4 * threads.max(1)).max(1);
+        let mut marked = vec![false; count];
+        let parts: Vec<(i64, &mut [bool])> = (low[1]..)
+            .step_by(per)
+            .zip(marked.chunks_mut(per * layer))
+            .collect();
+        cores::map(parts, threads, &|(first, marks): (i64, &mut [bool])| {
+            let last = first + i64::try_from(marks.len() / layer).unwrap_or(0) - 1;
+            let from = occupied.partition_point(|key| key[1] < first - rings);
+            let to = occupied.partition_point(|key| key[1] <= last + rings);
+            for key in &occupied[from..to] {
+                for ([dx, dy, dz], _) in search {
+                    let [x, y, z] = [key[0] + dx, key[1] + dy, key[2] + dz];
+                    if y < first || y > last {
+                        continue;
+                    }
+                    let [x, y, z] = [x - low[0], y - first, z - low[2]];
+                    if x < 0 || z < 0 || x >= size[0] || z >= size[2] {
+                        continue;
+                    }
+                    if let Ok(at) = usize::try_from((y * size[2] + z) * size[0] + x) {
+                        marks[at] = true;
+                    }
+                }
+            }
+        });
+        Self { low, size, marked }
     }
 
     fn flat(&self, key: [i64; 3]) -> Option<usize> {
@@ -1724,17 +1800,29 @@ fn colonize(
         });
     }
 
-    let plant_points: Vec<(Vec3, Vec3)> = scene
+    // Many points share the work out; the pulls add up in the order the
+    // points lie, layer by layer, however many threads drew them.
+    let large = span((x0, x1)) * span((x0, x1)) * span((y0, y1)) > 100_000;
+    let lease = Lease::take(if large { cores::per_task() } else { 1 });
+    let threads = lease.threads();
+    let mut plant_points: Vec<Vec3> = scene
         .segments
         .iter()
         .flat_map(|segment| [segment.start, segment.end])
         .chain(scene.queries.iter().map(|query| query.position))
-        .map(|point| (point, point))
         .collect();
+    // A segment mostly starts where the one before it ends: one copy of
+    // the point does for the kill test.
+    plant_points.dedup();
     // The plant's points in cells at least `kill` wide, so the 27 round a
     // point hold every part within `kill`; the apices in cells half the
     // influence wide, searched nearest first.
-    let plant = Grid::new(kill.max(0.05), &plant_points);
+    let plant = Grid::build(
+        kill.max(0.05),
+        plant_points.len(),
+        |at| plant_points[at],
+        |at| plant_points[at],
+    );
     let apex_points: Vec<(Vec3, Apex)> = scene
         .queries
         .iter()
@@ -1751,8 +1839,8 @@ fn colonize(
         .collect();
     let apices = Grid::new(0.5 * influence, &apex_points);
     let search = apices.search(influence);
-    let reach = Reach::new(&apices, &search);
-    let plant_reach = Reach::new(&plant, &plant.search(kill));
+    let reach = Reach::new(&apices, &search, threads);
+    let plant_reach = Reach::new(&plant, &plant.search(kill), threads);
     // Passing over points out of reach pays where the plant fills little
     // of its envelope (a sapling under a canopy); in a full crown nearly
     // every point is in reach, and the test only costs.
@@ -1916,11 +2004,6 @@ fn colonize(
         pulls
     };
     let layer_cells = usize::try_from(size[2] * size[0]).unwrap_or(1).max(1);
-    // Many points share the work out; the pulls add up in the order the
-    // points lie, layer by layer, however many threads drew them.
-    let large = span((x0, x1)) * span((x0, x1)) * span((y0, y1)) > 100_000;
-    let lease = Lease::take(if large { cores::per_task() } else { 1 });
-    let threads = lease.threads();
     let mut pulled = None;
     if let Some(narrower) = Narrower::find(large) {
         // The points that may grow anything, narrowed all at once (on a
@@ -2558,9 +2641,15 @@ pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, 
     let mut flow = vec![0.0; count];
     let mut leaf_area = vec![0.0; count];
     let tip_flow = math::pow(tip, exponent);
-    for organ_instance in &scene.organs {
+    // The powers side by side, added up in order.
+    let lease = Lease::take(if count > 20_000 { cores::per_task() } else { 1 });
+    let threads = lease.threads();
+    let organ_flow = in_order(&scene.organs, threads, &|organ_instance: &OrganInstance| {
+        math::pow(organ * organ_instance.size.abs(), exponent)
+    });
+    for (organ_instance, organ_flow) in scene.organs.iter().zip(organ_flow) {
         if let Some(node) = organ_instance.node {
-            flow[node as usize] += math::pow(organ * organ_instance.size.abs(), exponent);
+            flow[node as usize] += organ_flow;
             leaf_area[node as usize] += organ_area[usize::from(organ_instance.symbol)]
                 * organ_instance.size
                 * organ_instance.size;
@@ -2583,18 +2672,14 @@ pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, 
         leaf_area[index] += area_above;
     }
     Ok(Pipes {
-        radii: scene
-            .segments
-            .iter()
-            .map(|segment| {
-                let value = flow[segment.node as usize];
-                if value > 0.0 {
-                    math::pow(value, 1.0 / exponent)
-                } else {
-                    tip
-                }
-            })
-            .collect(),
+        radii: in_order(&scene.segments, threads, &|segment: &Segment| {
+            let value = flow[segment.node as usize];
+            if value > 0.0 {
+                math::pow(value, 1.0 / exponent)
+            } else {
+                tip
+            }
+        }),
         leaf_area: scene
             .segments
             .iter()
@@ -2602,6 +2687,22 @@ pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, 
             .collect(),
         ring_rate: rings,
     })
+}
+
+/// `work` on every item, on up to `threads` threads in chunks, in the
+/// items' order.
+fn in_order<T: Sync, R: Send>(
+    items: &[T],
+    threads: usize,
+    work: &(dyn Fn(&T) -> R + Sync),
+) -> Vec<R> {
+    let size = items.len().div_ceil(threads.max(1)).max(1);
+    cores::map(items.chunks(size).collect(), threads, &|chunk: &[T]| {
+        chunk.iter().map(work).collect::<Vec<R>>()
+    })
+    .into_iter()
+    .flatten()
+    .collect()
 }
 
 /// Standard gravity, m/s².
@@ -2640,12 +2741,14 @@ impl Rigid {
             return *self;
         }
         let axis = turn * (1.0 / angle);
-        let r = |v: Vec3| self.turn(v.rotate_about(axis, angle));
+        // One sine and cosine for the four turns (`Vec3::rotate_about`).
+        let (s, c) = (math::sin(angle), math::cos(angle));
+        let r = |v: Vec3| self.turn(v.turned(axis, s, c));
         Self {
             x: r(Vec3::X),
             y: r(Vec3::Y),
             z: r(Vec3::Z),
-            t: self.turn(pivot - pivot.rotate_about(axis, angle)) + self.t,
+            t: self.turn(pivot - pivot.turned(axis, s, c)) + self.t,
         }
     }
 }
@@ -2697,6 +2800,59 @@ fn held_up(field: &SubstrateField, gap: f64, before: Rigid, segment: &Segment, t
     )
 }
 
+/// A plant's nodes split for work side by side: subtrees of at most a
+/// given size (limbs and their branches), each listed in node order, and
+/// the rest (the stems they hang from), in node order. Parents come before
+/// their children in the node list, so a subtree's nodes need only nodes
+/// before them in its own list or in the rest.
+struct Subtrees {
+    trees: Vec<Vec<u32>>,
+    rest: Vec<u32>,
+    /// Each node's subtree (`u32::MAX` for the rest), and its place in it.
+    tree: Vec<u32>,
+    place: Vec<u32>,
+}
+
+impl Subtrees {
+    fn of(nodes: &[super::turtle::Node], most: usize) -> Self {
+        let count = nodes.len();
+        let mut size = vec![1_usize; count];
+        for index in (0..count).rev() {
+            if let Some(parent) = nodes[index].parent {
+                size[parent as usize] += size[index];
+            }
+        }
+        let mut split = Self {
+            trees: Vec::new(),
+            rest: Vec::new(),
+            tree: vec![u32::MAX; count],
+            place: vec![0; count],
+        };
+        for index in 0..count {
+            let parent = nodes[index].parent.map(|parent| parent as usize);
+            let inherited = parent.map_or(u32::MAX, |parent| split.tree[parent]);
+            let tree = if inherited != u32::MAX {
+                inherited
+            } else if size[index] <= most && parent.is_some() {
+                split.trees.push(Vec::new());
+                u32::try_from(split.trees.len() - 1).unwrap_or(u32::MAX)
+            } else {
+                u32::MAX
+            };
+            let at = u32::try_from(index).unwrap_or(u32::MAX);
+            split.tree[index] = tree;
+            if tree == u32::MAX {
+                split.rest.push(at);
+            } else {
+                let list = &mut split.trees[tree as usize];
+                split.place[index] = u32::try_from(list.len()).unwrap_or(u32::MAX);
+                list.push(at);
+            }
+        }
+        split
+    }
+}
+
 /// Bending under load (`bend@1`, crown form step B): each segment, from
 /// the base up, turns what follows it about its start by the rotation
 /// vector `ω = rest + M⊥ ℓ / (E I)`.
@@ -2733,7 +2889,7 @@ pub fn bend(
     radii: &[f64],
     organ_area: &[f64],
     values: &[f64],
-    rest: &mut HashMap<u64, Vec3, impl std::hash::BuildHasher>,
+    rest: &mut HashMap<u64, Vec3, impl std::hash::BuildHasher + Clone + Sync>,
     dt: f64,
     ground_field: &SubstrateField,
 ) -> Result<(), GrowthError> {
@@ -2789,15 +2945,11 @@ pub fn bend(
         }
     }
 
-    let mut motion = vec![Rigid::IDENTITY; count];
-    let mut seen = HashMap::with_capacity(scene.segments.len());
-    for index in 0..count {
-        let before = scene.nodes[index]
-            .parent
-            .map_or(Rigid::IDENTITY, |parent| motion[parent as usize]);
+    // A segment's turn, from its parent's motion `before`: its own motion
+    // and its rest bend for the next step.
+    let turn_one = |index: usize, before: Rigid| -> (Rigid, Option<(u64, Vec3)>) {
         let NodeKind::Segment(which) = scene.nodes[index].kind else {
-            motion[index] = before;
-            continue;
+            return (before, None);
         };
         let segment = &scene.segments[which as usize];
         let radius = radii[which as usize];
@@ -2835,42 +2987,123 @@ pub fn bend(
         if ground > 0.0 {
             turn = held_up(ground_field, ground, before, segment, turn);
         }
-        motion[index] = before.after(segment.start, turn);
-        seen.insert(segment.id, held + (sag * set - held * straighten) * dt);
-    }
-    rest.clear();
-    rest.extend(seen);
+        (
+            before.after(segment.start, turn),
+            Some((segment.id, held + (sag * set - held * straighten) * dt)),
+        )
+    };
 
-    let mut height = 0.0_f64;
-    for segment in &mut scene.segments {
-        let node = segment.node as usize;
-        let before = scene.nodes[node]
+    // Each node turns with its parent: the stems and the limbs' bases one
+    // after another, then the limbs side by side, each from its base up.
+    let large = count > 20_000;
+    let lease = Lease::take(if large { cores::per_task() } else { 1 });
+    let threads = lease.threads();
+    let limbs = Subtrees::of(
+        &scene.nodes,
+        if threads > 1 {
+            count / (8 * threads)
+        } else {
+            count
+        },
+    );
+    let mut motion = vec![Rigid::IDENTITY; count];
+    let mut seen = HashMap::with_capacity_and_hasher(scene.segments.len(), rest.hasher().clone());
+    for &index in &limbs.rest {
+        let index = index as usize;
+        let before = scene.nodes[index]
             .parent
             .map_or(Rigid::IDENTITY, |parent| motion[parent as usize]);
-        segment.start = before.apply(segment.start);
-        segment.end = motion[node].apply(segment.end);
-        segment.left = motion[node].turn(segment.left);
-        height = height.max(segment.end.y);
+        let (moved, held) = turn_one(index, before);
+        motion[index] = moved;
+        seen.extend(held);
     }
-    for organ in &mut scene.organs {
-        let Some(node) = organ.node else {
-            continue;
-        };
-        let to = motion[node as usize];
-        organ.position = to.apply(organ.position);
-        organ.frame = crate::math::Frame {
-            h: to.turn(organ.frame.h),
-            l: to.turn(organ.frame.l),
-            u: to.turn(organ.frame.u),
+    let bent = {
+        let motion = &motion;
+        let limbs = &limbs;
+        cores::map(limbs.trees.iter().collect(), threads, &|tree: &Vec<u32>| {
+            let mut own: Vec<Rigid> = Vec::with_capacity(tree.len());
+            let mut held = Vec::with_capacity(tree.len());
+            for &index in tree {
+                let index = index as usize;
+                let before = scene.nodes[index].parent.map_or(Rigid::IDENTITY, |parent| {
+                    let parent = parent as usize;
+                    if limbs.tree[parent] == limbs.tree[index] {
+                        own[limbs.place[parent] as usize]
+                    } else {
+                        motion[parent]
+                    }
+                });
+                let (moved, bend) = turn_one(index, before);
+                own.push(moved);
+                held.extend(bend);
+            }
+            (own, held)
+        })
+    };
+    for (tree, (own, held)) in limbs.trees.iter().zip(bent) {
+        for (index, moved) in tree.iter().zip(own) {
+            motion[*index as usize] = moved;
         }
-        .orthonormalized();
-        let reach = organ.position + organ.frame.h * organ.size;
-        height = height.max(organ.position.y).max(reach.y);
+        seen.extend(held);
     }
+    *rest = seen;
+
+    // Everything moves with its node, part by part side by side.
+    let nodes = &scene.nodes;
+    let motion = &motion;
+    let chunk = |len: usize| len.div_ceil(threads).max(1);
+    let size = chunk(scene.segments.len());
+    cores::map(
+        scene.segments.chunks_mut(size).collect(),
+        threads,
+        &|segments: &mut [Segment]| {
+            for segment in segments {
+                let node = segment.node as usize;
+                let before = nodes[node]
+                    .parent
+                    .map_or(Rigid::IDENTITY, |parent| motion[parent as usize]);
+                segment.start = before.apply(segment.start);
+                segment.end = motion[node].apply(segment.end);
+                segment.left = motion[node].turn(segment.left);
+            }
+        },
+    );
+    let size = chunk(scene.organs.len());
+    cores::map(
+        scene.organs.chunks_mut(size).collect(),
+        threads,
+        &|organs: &mut [OrganInstance]| {
+            for organ in organs {
+                let Some(node) = organ.node else {
+                    continue;
+                };
+                let to = motion[node as usize];
+                organ.position = to.apply(organ.position);
+                organ.frame = crate::math::Frame {
+                    h: to.turn(organ.frame.h),
+                    l: to.turn(organ.frame.l),
+                    u: to.turn(organ.frame.u),
+                }
+                .orthonormalized();
+            }
+        },
+    );
+    drop(lease);
     for query in &mut scene.queries {
         let to = motion[query.node as usize];
         query.position = to.apply(query.position);
         query.heading = to.turn(query.heading);
+    }
+    let mut height = 0.0_f64;
+    for segment in &scene.segments {
+        height = height.max(segment.end.y);
+    }
+    for organ in &scene.organs {
+        if organ.node.is_none() {
+            continue;
+        }
+        let reach = organ.position + organ.frame.h * organ.size;
+        height = height.max(organ.position.y).max(reach.y);
     }
     scene.height = height;
     Ok(())
@@ -2921,6 +3154,52 @@ mod tests {
     use crate::lsys::derive::Deriver;
     use crate::lsys::turtle::Interpreter;
     use std::collections::BTreeMap;
+
+    #[test]
+    #[allow(
+        clippy::cast_possible_wrap,
+        clippy::cast_sign_loss,
+        clippy::cast_possible_truncation
+    )]
+    fn the_light_sweep_sums_every_voxel_out_of_the_grid() {
+        // Against the sum taken voxel by voxel, for steps inside, at and
+        // past the grid's width, on uneven grids.
+        for [nx, ny, nz] in [[1, 1, 1], [2, 3, 2], [5, 4, 3], [3, 6, 7]] {
+            #[allow(clippy::cast_precision_loss)]
+            let density: Vec<f64> = (0..nx * ny * nz)
+                .map(|v| ((v * 37 % 11) as f64).mul_add(0.1, 0.3))
+                .collect();
+            for step in [(0, 0), (1, 0), (-1, 1), (2, -3), (-4, 5), (6, 6), (-9, 0)] {
+                let mut beyond = vec![f64::NAN; density.len()];
+                sweep_beyond(&density, &mut beyond, [nx, ny, nz], step);
+                for y in 0..ny {
+                    for z in 0..nz {
+                        for x in 0..nx {
+                            let (mut sum, mut at) = (0.0, [x as i64, y as i64, z as i64]);
+                            loop {
+                                let [cx, cy, cz] = at.map(|value| value as usize);
+                                sum += density[(cy * nz + cz) * nx + cx];
+                                at = [at[0] + step.0, at[1] + 1, at[2] + step.1];
+                                let outside = at[0] < 0
+                                    || at[2] < 0
+                                    || at[0] >= nx as i64
+                                    || at[1] >= ny as i64
+                                    || at[2] >= nz as i64;
+                                if outside {
+                                    break;
+                                }
+                            }
+                            let got = beyond[(y * nz + z) * nx + x];
+                            assert!(
+                                (got - sum).abs() < 1e-12,
+                                "{nx}x{ny}x{nz} step {step:?} at {x},{y},{z}: {got} != {sum}"
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     struct Setup {
         program: Program,

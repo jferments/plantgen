@@ -304,6 +304,7 @@ Usage:
                 [--compress none|quantize|meshopt]
                 [--attributes all|wind|none]
                 [--triangles N[,N,N,N]] [--max-mib N]
+                [--profile static|motion]
       Write one variant at one age as glTF 2.0 binary files that need no
       PlantGen code, one per level of detail (STEM-lod0.glb to
       STEM-lod3.glb), and an index, STEM.json, in DIR (default `exports`);
@@ -335,6 +336,10 @@ Usage:
       meshes and solid organs become cards; past the farthest, down to
       the stems and a few cards. The index records each level's drawing
       and budget. A budgeted export is not checked against a package.
+      --profile motion (or a motion package) also skins every mesh to the
+      plant's bones (JOINTS_0, WEIGHTS_0, _PLANTGEN_ALONG), lets its parts
+      ride their bones' joints, and carries the bones and branches in the
+      PLANTGEN_motion extension, as a motion package holds them.
   plantc sources [list | cite ID]
       List the sources evidence notes cite (library/sources/<id>.json),
       or every value that cites the source ID: the file holding its note,
@@ -1666,6 +1671,40 @@ fn mechanics_command(args: &[String]) -> Result<(), Failure> {
         .collect();
     out!("lowest modes, Hz: {}", modes.join(" "));
     out!("solved in {:.1} ms", took.as_secs_f64() * 1000.0);
+    // What a motion package's record adds: reach, snow, perches,
+    // anchorage and wood through wood.
+    let motion = plantgen::motion::Motion {
+        material,
+        assumed: Vec::new(),
+        settings,
+    };
+    let started = Instant::now();
+    let record = plantgen::motion::record(&found, &motion, graph, &growth.organ_types);
+    let crossings = record.crossings;
+    out!(
+        "anchorage {:.0} kN m overturning (assumed {} N m per kg of stem); {} perches; \
+         snow on {:.1} m2 of wood and {:.1} m2 of foliage",
+        record.anchorage.moment / 1000.0,
+        plantgen::motion::ANCHORAGE_PER_KG,
+        record.perches.len(),
+        record
+            .bones
+            .iter()
+            .map(|bone| bone.snow_area.wood)
+            .sum::<f64>(),
+        record
+            .bones
+            .iter()
+            .map(|bone| bone.snow_area.foliage)
+            .sum::<f64>(),
+    );
+    out!(
+        "wood through wood: {} pairs, {:.1}% of segments, deepest {:.1} cm; record in {:.1} ms",
+        crossings.pairs,
+        crossings.share * 100.0,
+        crossings.deepest * 100.0,
+        started.elapsed().as_secs_f64() * 1000.0
+    );
     let rows = options.number::<usize>("rows")?.unwrap_or(12);
     let mut order: Vec<usize> = (0..found.bones.len()).collect();
     order.sort_by(|&a, &b| {
@@ -1675,7 +1714,7 @@ fn mechanics_command(args: &[String]) -> Result<(), Failure> {
             .then(a.cmp(&b))
     });
     out!(
-        "{:>5} {:>6} {:>5} {:>6} {:>7} {:>6} {:>9} {:>7} {:>7} {:>9} {:>6} {:>6}",
+        "{:>5} {:>6} {:>5} {:>6} {:>7} {:>6} {:>9} {:>7} {:>7} {:>9} {:>6} {:>6} {:>7}",
         "bone",
         "parent",
         "depth",
@@ -1687,12 +1726,13 @@ fn mechanics_command(args: &[String]) -> Result<(), Failure> {
         "f2 Hz",
         "moment Nm",
         "break",
-        "bend°"
+        "bend°",
+        "reach m"
     );
     for &at in order.iter().take(rows) {
         let bone = &found.bones[at];
         out!(
-            "{:>5} {:>6} {:>5} {:>6.2} {:>7.1} {:>6.2} {:>9.2} {:>7.3} {:>7.3} {:>9.1} {:>6} {:>6}",
+            "{:>5} {:>6} {:>5} {:>6.2} {:>7.1} {:>6.2} {:>9.2} {:>7.3} {:>7.3} {:>9.1} {:>6} {:>6} {:>7.2}",
             at,
             bone.parent
                 .map_or_else(|| "-".to_string(), |p| p.to_string()),
@@ -1711,7 +1751,8 @@ fn mechanics_command(args: &[String]) -> Result<(), Failure> {
             bone.bend_limit.map_or_else(
                 || "-".to_string(),
                 |limit| format!("{:.0}", limit.to_degrees())
-            )
+            ),
+            record.bones[at].reach
         );
     }
     Ok(())
@@ -3005,24 +3046,7 @@ fn build_package(spec: &PlantSpec, options: &Options, out: &Path) -> Result<Path
         None => Inputs::on_day_in(spec, library(), &quality, day),
     }
     .map_err(|error| error.to_string())?;
-    let inputs = match options.flags.get("profile").map(String::as_str) {
-        None | Some("static") => inputs,
-        Some("motion") => {
-            let traits = library()
-                .traits_of(&spec.id)
-                .map_err(|error| error.to_string())?;
-            let motion = plantgen::motion::Motion::of(&traits);
-            if motion.assumed.len() > 1 {
-                out!(
-                    "{} does not state {}: generic values stand in",
-                    spec.id,
-                    motion.assumed[..motion.assumed.len() - 1].join(", ")
-                );
-            }
-            inputs.with_motion(motion)
-        }
-        Some(other) => return Err(format!("--profile is static or motion, not `{other}`").into()),
-    };
+    let inputs = profiled(spec, inputs, options)?;
     if let Some(path) = package::existing(out, &spec.id, &inputs.key) {
         out!(
             "{} is already built:\n  key {}\n  {}",
@@ -3063,6 +3087,29 @@ fn build_package(spec: &PlantSpec, options: &Options, out: &Path) -> Result<Path
     Ok(path)
 }
 
+/// `inputs` of `spec` with motion objects built beside the meshes when
+/// `--profile motion` asks, saying which material values are generic.
+fn profiled(spec: &PlantSpec, inputs: Inputs, options: &Options) -> Result<Inputs, Failure> {
+    match options.flags.get("profile").map(String::as_str) {
+        None | Some("static") => Ok(inputs),
+        Some("motion") => {
+            let traits = library()
+                .traits_of(&spec.id)
+                .map_err(|error| error.to_string())?;
+            let motion = plantgen::motion::Motion::of(&traits);
+            if motion.assumed.len() > 1 {
+                out!(
+                    "{} does not state {}: generic values stand in",
+                    spec.id,
+                    motion.assumed[..motion.assumed.len() - 1].join(", ")
+                );
+            }
+            Ok(inputs.with_motion(motion))
+        }
+        Some(other) => Err(format!("--profile is static or motion, not `{other}`").into()),
+    }
+}
+
 #[allow(clippy::too_many_lines)]
 fn export_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
@@ -3081,6 +3128,7 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
             "attributes",
             "triangles",
             "max-mib",
+            "profile",
         ],
     )?;
     match options.flags.get("format").map(String::as_str) {
@@ -3148,7 +3196,7 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
     let started = Instant::now();
     // A package's own inputs, checked against its key; or a spec's.
     let (inputs, manifest) = if package_dir.join(package::MANIFEST).is_file() {
-        for flag in ["quality", "program", "day"] {
+        for flag in ["quality", "program", "day", "profile"] {
             if options.flags.contains_key(flag) {
                 return Err(format!("`--{flag}` is the package's own; {target} is built").into());
             }
@@ -3169,7 +3217,7 @@ fn export_command(args: &[String]) -> Result<(), Failure> {
             None => Inputs::on_day_in(&spec, library(), &quality, day),
         }
         .map_err(|error| error.to_string())?;
-        (inputs, None)
+        (profiled(&spec, inputs, &options)?, None)
     };
     let spec = &inputs.spec;
     let variants = spec.variant_list();

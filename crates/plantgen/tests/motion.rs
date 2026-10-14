@@ -82,6 +82,9 @@ fn motion_packages_hold_bones_branches_and_bindings() {
         let bones = record["bones"].as_array().unwrap();
         assert!(!bones.is_empty());
         assert_eq!(bones[0]["kind"], "trunk");
+        assert!(bones[0]["reach"].as_f64().unwrap() > 0.0);
+        assert!(record["anchorage"]["moment"].as_f64().unwrap() > 0.0);
+        assert!(record["perches"].is_array() && record["crossings"]["pairs"].is_u64());
         assert!(
             record["material"]["assumed"]
                 .as_array()
@@ -106,7 +109,8 @@ fn motion_packages_hold_bones_branches_and_bindings() {
 /// Every built-in species, at its oldest keyframe, on its nearest and its
 /// third level: every wood vertex and card is borne by a segment bound to a
 /// bone, or by the ground (roots, a rosette's leaves); every branch heads
-/// its own chain of bones; and the rig is found in under two seconds.
+/// its own chain of bones; and the rig and its record are found in under
+/// two seconds.
 #[test]
 fn builtin_species_bind_every_vertex_to_a_bone() {
     let species: Vec<&str> = spec::all_species().map(|(id, _)| id).collect();
@@ -149,9 +153,18 @@ fn check_species(id: &str) -> Vec<String> {
     let motion = Motion::of(&Map::new());
     let started = std::time::Instant::now();
     let found = motion.of_graph(graph, &growth.organ_types);
+    let record = motion::record(&found, &motion, graph, &growth.organ_types);
     let took = started.elapsed().as_secs_f64();
     if took > 2.0 {
-        failures.push(format!("{id}: its rig took {took:.1} s"));
+        failures.push(format!("{id}: its rig and record took {took:.1} s"));
+    }
+    if record.anchorage.moment.partial_cmp(&0.0) != Some(std::cmp::Ordering::Greater)
+        || record
+            .bones
+            .iter()
+            .any(|bone| bone.reach.is_nan() || bone.reach < 0.0)
+    {
+        failures.push(format!("{id}: no anchorage, or a bone with no reach"));
     }
     for branch in &found.branches {
         if branch.chain.first() != Some(&branch.bone) {
