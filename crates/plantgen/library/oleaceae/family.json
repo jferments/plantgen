@@ -17,7 +17,11 @@
     "flower_merosity": 4,
     "stamens": 2,
     "ovary_position": "superior",
-    "carpels": 2
+    "carpels": 2,
+    "leaf_habit": {
+      "deciduous": "often",
+      "evergreen": "usually"
+    }
   },
   "forms": {
     "decurrent_tree": {
@@ -38,6 +42,11 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 231 Oleaceae: trees, shrubs or climbers; leaves opposite, very rarely alternate, simple or pinnate; stipules absent; flowers regular; calyx lobed, rarely absent; petals often 4, free or joined, or absent (as in many ashes); stamens usually 2; ovary superior, 2-celled."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Oleaceae: how long the leaves last (character 37), coded usually evergreen, often deciduous. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   }
 }

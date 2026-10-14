@@ -147,5 +147,19 @@
       "source": "barthelemy-caraglio-2007",
       "note": "Barthélémy and Caraglio (2007, read in excerpts) describe the buds of a growth unit grading along it, the most vigorous laterals at its favoured end; the buds farthest from it often never grow. How many grow short shoots is the model's choice: a third as many as may grow long ones, fitted so open-grown crowns hold the leaf area per crown area of the Urban Tree Database's trees (as many as the long ones gave an 80-year Oregon white oak 6.4 m² a m² against valley oaks' 1.9 to 5.3; none halved red alder's leaf area)."
     }
+  },
+  "forms": {
+    "forb": {
+      "generator": {"defaults": {"leaf_length": 0.1}},
+      "evidence": {"generator.defaults": {"evidence": "Authored", "source": "plantgen-authors", "note": "Where a species states no size for a forb's leaf length, the median of the built-in forbs' own values (2026-10-14). The rules of the flowering plants' form, nearer, set it from the species' facts; these yield to a lineage program's values and any file's."}}
+    },
+    "graminoid": {
+      "generator": {"defaults": {"leaf_length": 0.35, "culm_height": 0.7}},
+      "evidence": {"generator.defaults": {"evidence": "Authored", "source": "plantgen-authors", "note": "Where a species states no size for a graminoid's blade and culm, the median of the built-in graminoids' own values (2026-10-14). The rules of the flowering plants' form, nearer, set it from the species' facts; these yield to a lineage program's values and any file's."}}
+    },
+    "vine": {
+      "generator": {"defaults": {"leaf_size": 0.12}},
+      "evidence": {"generator.defaults": {"evidence": "Authored", "source": "plantgen-authors", "note": "Where a species states no size for a vine's leaf card, the median of the built-in vines' own values (2026-10-14). The rules of the flowering plants' form, nearer, set it from the species' facts; these yield to a lineage program's values and any file's."}}
+    }
   }
 }
