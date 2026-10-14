@@ -1007,6 +1007,10 @@ pub struct Flower {
     /// absent. A labellate flower's sepals take the petals' colour.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub calyx: Option<[f32; 3]>,
+    /// The filaments' and the style's colour; the accent, as the anthers
+    /// and ovary are, if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub filament: Option<[f32; 3]>,
     /// How the petals differ by place.
     #[serde(skip_serializing_if = "Corolla::is_regular")]
     pub corolla: Corolla,
@@ -1020,6 +1024,12 @@ pub struct Flower {
     /// width over a petal's.
     #[serde(skip_serializing_if = "is_default_banner")]
     pub banner: f64,
+    /// Degrees an unequal corolla's odd petal or tepal stands above the
+    /// others' cup: 15 more upright; negative bends it out and down, as a
+    /// camas's lowest tepal stands apart once the flower is turned half
+    /// round.
+    #[serde(skip_serializing_if = "is_default_odd_rise")]
+    pub odd_rise: f64,
     /// A bilabiate lower lip's middle petal, or a labellate lip, over a
     /// petal.
     #[serde(skip_serializing_if = "is_default_lip")]
@@ -1083,9 +1093,11 @@ impl Default for Flower {
             sepal_length: SEPAL_LENGTH,
             sepals_fused: 0.0,
             calyx: None,
+            filament: None,
             corolla: Corolla::Regular,
             petal_whorls: 1,
             banner: BANNER,
+            odd_rise: ODD_RISE,
             lip: LIP,
             fused: 0.0,
             throat: THROAT,
@@ -1134,6 +1146,7 @@ impl Flower {
 
 const SEPAL_LENGTH: f64 = 0.5;
 const BANNER: f64 = 1.6;
+const ODD_RISE: f64 = 15.0;
 const LIP: f64 = 1.3;
 const THROAT: f64 = 0.3;
 const STAMEN_LENGTH: f64 = 0.35;
@@ -1162,6 +1175,11 @@ fn is_default_sepal_length(value: &f64) -> bool {
 #[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
 fn is_default_banner(value: &f64) -> bool {
     *value == BANNER
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
+fn is_default_odd_rise(value: &f64) -> bool {
+    *value == ODD_RISE
 }
 
 #[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
@@ -1223,7 +1241,7 @@ pub enum Corolla {
     /// two lateral petals and the lip.
     Labellate,
     /// Petals alike but the one toward the bearing axis, wider (by
-    /// `banner`) and more upright: a zygomorphy of no named kind, as the
+    /// `banner`) and more upright (by `odd_rise`): a zygomorphy of no named kind, as the
     /// banner of a palo verde, which is not a pea flower's; of tepals, the
     /// outer one toward the axis.
     Unequal,
@@ -2083,6 +2101,10 @@ impl Shape {
                 count("sepals", s.sepals, 0, 12)?;
                 check("sepal_length", s.sepal_length, 0.1, 1.5)?;
                 check("sepals_fused", s.sepals_fused, 0.0, 0.95)?;
+                check("odd_rise", s.odd_rise, -90.0, 90.0)?;
+                for channel in s.filament.into_iter().flatten() {
+                    check("filament", f64::from(channel), 0.0, 1.0)?;
+                }
                 for channel in s.calyx.into_iter().flatten() {
                     check("calyx", f64::from(channel), 0.0, 1.0)?;
                 }

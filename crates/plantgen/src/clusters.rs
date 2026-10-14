@@ -1890,6 +1890,7 @@ fn draw_laid(
                             colour,
                         ),
                         accent: shown.accent,
+                        filament: flower.filament.unwrap_or(shown.accent),
                     },
                     part,
                     mesh,

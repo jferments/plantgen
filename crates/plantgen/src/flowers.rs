@@ -424,7 +424,11 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
                     Term::Petal,
                     Some(if upper { "upper petal" } else { "petal" }),
                     TAU * f64::from(k) / nf,
-                    if upper { form.cup + 15.0 } else { form.cup },
+                    if upper {
+                        form.cup + flower.odd_rise
+                    } else {
+                        form.cup
+                    },
                     (1.0, if upper { flower.banner } else { 1.0 }),
                 ));
             }
@@ -482,7 +486,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
                             Term::Tepal,
                             Some(if upper { "upper tepal" } else { "tepal" }),
                             angle,
-                            if upper { cup + 15.0 } else { cup },
+                            if upper { cup + flower.odd_rise } else { cup },
                             (1.0, wide * if upper { flower.banner } else { 1.0 }),
                         )
                     });
@@ -749,6 +753,9 @@ pub struct Colours {
     pub petal: [f32; 3],
     pub calyx: [f32; 3],
     pub accent: [f32; 3],
+    /// The filaments' and the style's; the anthers and ovary stay in the
+    /// accent.
+    pub filament: [f32; 3],
 }
 
 impl Colours {
@@ -881,7 +888,7 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
     }
     for stamen in &laid.stamens {
         let (foot, direction) = frame.rod(&stamen.rod);
-        rod_cone(foot, direction, &stamen.rod, colours.accent, part, mesh);
+        rod_cone(foot, direction, &stamen.rod, colours.filament, part, mesh);
         if fine && stamen.fertile {
             anther(
                 foot + direction * stamen.rod.length,
@@ -927,7 +934,7 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
                 );
             }
             let (foot, direction) = frame.rod(style);
-            rod_cone(foot, direction, style, colours.accent, part, mesh);
+            rod_cone(foot, direction, style, colours.filament, part, mesh);
             if fine {
                 let tip = foot + direction * style.length;
                 let count = (*lobes).max(1);
@@ -943,7 +950,7 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
                         width: style.length * 0.03,
                         ..*style
                     };
-                    rod_cone(tip, out, &lobe, colours.accent, part, mesh);
+                    rod_cone(tip, out, &lobe, colours.filament, part, mesh);
                 }
             }
         }
@@ -1167,7 +1174,7 @@ pub(crate) fn draw_reduced(
                     foot + across,
                     foot + direction * stamen.rod.length,
                 ],
-                colours.accent,
+                colours.filament,
                 mesh,
             );
         }
@@ -1312,6 +1319,7 @@ pub fn triangles(flower: &Flower, form: &FlowerForm, coarse: usize) -> usize {
             petal: [1.0; 3],
             calyx: CALYX,
             accent: [1.0; 3],
+            filament: [1.0; 3],
         },
         Part {
             born: 0.0,

@@ -419,6 +419,7 @@ pub(crate) fn build_coarse(
                             painted,
                         ),
                         accent: look.accent,
+                        filament: flower.filament.unwrap_or(look.accent),
                     },
                     part,
                     mesh,

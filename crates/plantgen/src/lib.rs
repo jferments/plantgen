@@ -350,4 +350,8 @@ pub mod venation;
 /// from `ray_width_m` and `ray_apex`, and herb racemes may crowd their
 /// buds at the tip (`bud_spacing`, `bud_lean`, `bud_stalk`); oxeye daisy
 /// and common camas measured from photographs (57 is succulents, #111).
-pub const GENERATOR_REVISION: u32 = 58;
+/// 59: a flower's filaments and style may take their own colour
+/// (`filament`), and an unequal corolla's odd petal or tepal may bend down
+/// as well as up (`odd_rise`); common camas is zygomorphic, its lowest
+/// tepal set apart (58 is daisy and camas detail, #116).
+pub const GENERATOR_REVISION: u32 = 59;
