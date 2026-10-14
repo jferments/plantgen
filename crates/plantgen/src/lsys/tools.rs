@@ -1448,7 +1448,7 @@ struct Reach {
 }
 
 impl Reach {
-    fn new<T: Copy>(grid: &Grid<T>, search: &[([i64; 3], f64)]) -> Self {
+    fn new<T: Copy + Sync>(grid: &Grid<T>, search: &[([i64; 3], f64)], threads: usize) -> Self {
         let rings = search
             .iter()
             .flat_map(|(offset, _)| offset.iter().map(|d| d.abs()))
@@ -1460,27 +1460,49 @@ impl Reach {
             .iter()
             .map(|s| usize::try_from(*s).unwrap_or(0))
             .product::<usize>();
-        let mut reach = Self {
-            low,
-            size,
-            marked: vec![false; count],
-        };
+        // The occupied cells, layer by layer.
+        let mut occupied = Vec::new();
         for y in 0..grid.size[1] {
             for z in 0..grid.size[2] {
                 for x in 0..grid.size[0] {
                     let key = [x + grid.low[0], y + grid.low[1], z + grid.low[2]];
-                    if grid.cell_items(key).is_empty() {
-                        continue;
-                    }
-                    for ([dx, dy, dz], _) in search {
-                        if let Some(at) = reach.flat([key[0] + dx, key[1] + dy, key[2] + dz]) {
-                            reach.marked[at] = true;
-                        }
+                    if !grid.cell_items(key).is_empty() {
+                        occupied.push(key);
                     }
                 }
             }
         }
-        reach
+        // Layers of the marks side by side: each marks what the occupied
+        // cells within reach of it reach.
+        let layer = usize::try_from(size[0] * size[2]).unwrap_or(1).max(1);
+        let layers = usize::try_from(size[1]).unwrap_or(0);
+        let per = layers.div_ceil(4 * threads.max(1)).max(1);
+        let mut marked = vec![false; count];
+        let parts: Vec<(i64, &mut [bool])> = (low[1]..)
+            .step_by(per)
+            .zip(marked.chunks_mut(per * layer))
+            .collect();
+        cores::map(parts, threads, &|(first, marks): (i64, &mut [bool])| {
+            let last = first + i64::try_from(marks.len() / layer).unwrap_or(0) - 1;
+            let from = occupied.partition_point(|key| key[1] < first - rings);
+            let to = occupied.partition_point(|key| key[1] <= last + rings);
+            for key in &occupied[from..to] {
+                for ([dx, dy, dz], _) in search {
+                    let [x, y, z] = [key[0] + dx, key[1] + dy, key[2] + dz];
+                    if y < first || y > last {
+                        continue;
+                    }
+                    let [x, y, z] = [x - low[0], y - first, z - low[2]];
+                    if x < 0 || z < 0 || x >= size[0] || z >= size[2] {
+                        continue;
+                    }
+                    if let Ok(at) = usize::try_from((y * size[2] + z) * size[0] + x) {
+                        marks[at] = true;
+                    }
+                }
+            }
+        });
+        Self { low, size, marked }
     }
 
     fn flat(&self, key: [i64; 3]) -> Option<usize> {
@@ -1778,6 +1800,11 @@ fn colonize(
         });
     }
 
+    // Many points share the work out; the pulls add up in the order the
+    // points lie, layer by layer, however many threads drew them.
+    let large = span((x0, x1)) * span((x0, x1)) * span((y0, y1)) > 100_000;
+    let lease = Lease::take(if large { cores::per_task() } else { 1 });
+    let threads = lease.threads();
     let mut plant_points: Vec<Vec3> = scene
         .segments
         .iter()
@@ -1812,8 +1839,8 @@ fn colonize(
         .collect();
     let apices = Grid::new(0.5 * influence, &apex_points);
     let search = apices.search(influence);
-    let reach = Reach::new(&apices, &search);
-    let plant_reach = Reach::new(&plant, &plant.search(kill));
+    let reach = Reach::new(&apices, &search, threads);
+    let plant_reach = Reach::new(&plant, &plant.search(kill), threads);
     // Passing over points out of reach pays where the plant fills little
     // of its envelope (a sapling under a canopy); in a full crown nearly
     // every point is in reach, and the test only costs.
@@ -1977,11 +2004,6 @@ fn colonize(
         pulls
     };
     let layer_cells = usize::try_from(size[2] * size[0]).unwrap_or(1).max(1);
-    // Many points share the work out; the pulls add up in the order the
-    // points lie, layer by layer, however many threads drew them.
-    let large = span((x0, x1)) * span((x0, x1)) * span((y0, y1)) > 100_000;
-    let lease = Lease::take(if large { cores::per_task() } else { 1 });
-    let threads = lease.threads();
     let mut pulled = None;
     if let Some(narrower) = Narrower::find(large) {
         // The points that may grow anything, narrowed all at once (on a
@@ -2619,9 +2641,15 @@ pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, 
     let mut flow = vec![0.0; count];
     let mut leaf_area = vec![0.0; count];
     let tip_flow = math::pow(tip, exponent);
-    for organ_instance in &scene.organs {
+    // The powers side by side, added up in order.
+    let lease = Lease::take(if count > 20_000 { cores::per_task() } else { 1 });
+    let threads = lease.threads();
+    let organ_flow = in_order(&scene.organs, threads, &|organ_instance: &OrganInstance| {
+        math::pow(organ * organ_instance.size.abs(), exponent)
+    });
+    for (organ_instance, organ_flow) in scene.organs.iter().zip(organ_flow) {
         if let Some(node) = organ_instance.node {
-            flow[node as usize] += math::pow(organ * organ_instance.size.abs(), exponent);
+            flow[node as usize] += organ_flow;
             leaf_area[node as usize] += organ_area[usize::from(organ_instance.symbol)]
                 * organ_instance.size
                 * organ_instance.size;
@@ -2644,18 +2672,14 @@ pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, 
         leaf_area[index] += area_above;
     }
     Ok(Pipes {
-        radii: scene
-            .segments
-            .iter()
-            .map(|segment| {
-                let value = flow[segment.node as usize];
-                if value > 0.0 {
-                    math::pow(value, 1.0 / exponent)
-                } else {
-                    tip
-                }
-            })
-            .collect(),
+        radii: in_order(&scene.segments, threads, &|segment: &Segment| {
+            let value = flow[segment.node as usize];
+            if value > 0.0 {
+                math::pow(value, 1.0 / exponent)
+            } else {
+                tip
+            }
+        }),
         leaf_area: scene
             .segments
             .iter()
@@ -2663,6 +2687,22 @@ pub fn pipe(scene: &Scene, organ_area: &[f64], values: &[f64]) -> Result<Pipes, 
             .collect(),
         ring_rate: rings,
     })
+}
+
+/// `work` on every item, on up to `threads` threads in chunks, in the
+/// items' order.
+fn in_order<T: Sync, R: Send>(
+    items: &[T],
+    threads: usize,
+    work: &(dyn Fn(&T) -> R + Sync),
+) -> Vec<R> {
+    let size = items.len().div_ceil(threads.max(1)).max(1);
+    cores::map(items.chunks(size).collect(), threads, &|chunk: &[T]| {
+        chunk.iter().map(work).collect::<Vec<R>>()
+    })
+    .into_iter()
+    .flatten()
+    .collect()
 }
 
 /// Standard gravity, m/s².
