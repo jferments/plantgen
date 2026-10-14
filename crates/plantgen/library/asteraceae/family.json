@@ -230,25 +230,9 @@
       "between": true,
       "why": "A cluster of heads draws each head as wide as a lone head is, its involucre and a ray either side, as a share of the cluster's length."
     },
-    "generator.params.leaf_length": {
-      "rule": "max(leaf_length_m)",
-      "why": "A herb's longest stem leaf is as long as the longest leaf its flora measures; the leaves below and above it are shorter by the shares its program sets. Its card's petiole, where it has one, is part of that length."
-    },
-    "generator.params.basal_length": {
-      "rule": "max(leaf_length_m)",
-      "why": "A herb's longest basal leaf is as long as the longest leaf its flora measures, as the stem's longest is."
-    },
     "generator.params.leaf_size": {
       "rule": "max(leaf_length_m)",
       "why": "A shrub's leaf card, its largest leaf's, is as long as the longest leaf its flora measures."
-    },
-    "generator.params.leaf_top": {
-      "rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)",
-      "why": "A herb's topmost stem leaf is as short, for the longest, as the shortest leaf its flora measures."
-    },
-    "generator.params.leaf_base": {
-      "rule": "clamp(min(leaf_length_m) / max(leaf_length_m), 0.05, 1)",
-      "why": "A herb's lowest stem leaf is as short, for the longest, as the shortest leaf its flora measures; its basal leaves are drawn apart."
     },
     "appearance.organs.leaf.shape.width": {
       "template": ["simple", "lobed"],

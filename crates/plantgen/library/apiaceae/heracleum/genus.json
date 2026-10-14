@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Heracleum",
+  "traits": {
+    "woodiness": "herbaceous",
+    "life_span": {"perennial": "often", "biennial": "often"},
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "leaf_margin": "serrate",
+    "inflorescence": "compound_umbel",
+    "flower_symmetry": {"actinomorphic": "usually", "zygomorphic": "often"}
+  },
+  "evidence": {
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), Umbelliferae (text by Mathias and Constance), genus 36 Heracleum, p. 239: tall, stout, leafy-stemmed biennials or perennials; the family description opens with herbs. No woody species in the genus."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), Heracleum, p. 239: the genus is of biennials or perennials; the account of H. lanatum (= H. maximum) does not say which, so the genus's two states stand for it."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), Heracleum, p. 239: leaves compound, ternately or pinnately; leaflets broad; petioles markedly inflated."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), Heracleum, p. 239: leaves ternately or pinnately compound. A ternate leaf (three leaflets, the end one on its own stalk) is written here as pinnate with one pair and an end leaflet, since the vocabulary has no ternate; review if a ternate state is wanted."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), Heracleum, p. 239: leaflets serrate, or cleft or lobed in various ways (the lobes still toothed in H. lanatum, 'coarsely serrate')."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), Heracleum, p. 239: rays many, each ending in an umbellet with numerous narrow entire bractlets, so the umbel is compound; the involucre (bracts under the main umbel) is usually lacking at genus level."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), Heracleum, p. 239: the outer petals of the flowers at the umbel's rim are enlarged (radiant), so those rim flowers are bilaterally symmetric while the inner ones are regular. The qualifiers here describe the share of flowers within one umbel, not variation between plants; decide whether the vocabulary should say this another way (a radiant-umbel character)."
+    }
+  }
+}

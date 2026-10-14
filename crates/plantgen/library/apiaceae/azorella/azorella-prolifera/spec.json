@@ -122,7 +122,21 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "wood_density_basic_kg_m3": 350
+    "wood_density_basic_kg_m3": 350,
+    "woodiness": "semi",
+    "leaf_division": "simple",
+    "leaf_incision": "parted",
+    "division_pattern": "palmate",
+    "division_order": 1,
+    "leaf_lobes": {"min": 3, "max": 3, "high": 5},
+    "spines": "leaf_spines",
+    "inflorescence": "umbel",
+    "flowering_position": "terminal",
+    "units_per_inflorescence": {"min": 15, "max": 40, "high": 60},
+    "flower_colour": [240, 195, 60],
+    "sexual_system": {"dioecious": "often", "polygamous": "often"},
+    "fruit_size_m": 0.006,
+    "flowering_months": [12, 1, 2]
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Azorella prolifera (gwddagg_v2.2_species.csv, read): specific gravity 0.35 (wsg_est, the database's hierarchical-model species mean, from 2 records in 2 sources); trunks 0.36, branches 0.36. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
@@ -190,6 +204,76 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "The genus WCVP v16's accepted name is written in."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "weddell-1857",
+      "note": "Weddell (1857), p. 199: Mulinum species are half-shrubby small bushes with interlaced branches; Gay (1847) says between herbaceous and shrubby, the bare branch bases about as thick as a crow's quill."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "reiche-1902",
+      "note": "Reiche (about 1902), p. 79, as Mulinum spinosum: leaf a sheathing stalk with a blade cut into 3 (rarely 5) spreading linear to awl-shaped divisions, each with one strong vein, stiff and sharp; one blade, not separate leaflets."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "gay-1847",
+      "note": "Gay (Clos), Flora Chilena vol. 3 (1847), p. 89, as Mulinum spinosum: leaves 3- to 5-parted, the lobes spiny and needle-like; Gay's text says two- or three-forked with the side divisions again split in two."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "reiche-1902",
+      "note": "Reiche (about 1902), p. 79: the 3 (-5) divisions spread from the blade's base (divergent), so palmate."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "reiche-1902",
+      "note": "Reiche (about 1902), p. 79: divisions linear and undivided. Gay (1847) notes the side divisions sometimes split again (which gives the 5); not a second order throughout."
+    },
+    "traits.leaf_lobes": {
+      "evidence": "SourceInferred",
+      "source": "reiche-1902",
+      "note": "Reiche (about 1902), p. 79: blade of 3 (-5) divisions. Gay (1847) gives 3 to 5, his variety beta always 3; Weddell (1857) 3 to 5."
+    },
+    "traits.spines": {
+      "evidence": "SourceInferred",
+      "source": "reiche-1902",
+      "note": "Reiche (about 1902), p. 79: leaf divisions stiff and pungent (ending in a sharp point); Gay (1847) spiny needle-like lobes; the plants form convex, impenetrable cushions. Mulinum's genus key separates species with pungent segments."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "reiche-1902",
+      "note": "Reiche (about 1902), p. 78: Mulinum's umbels are simple. (Gay's M. proliferum, the basionym of Azorella prolifera, is an odd form whose umbel carries umbellets in place of flowers; Reiche treats it as an anomaly of M. spinosum.)"
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "reiche-1902",
+      "note": "Reiche (about 1902), p. 79: inflorescences terminal, on stalks of variable length, 1 to 6 cm; Gay (1847): one umbel from each branch tip, sometimes stalkless but mostly on a peduncle 8 to 16 lines (about 1.8 to 3.6 cm)."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "gay-1847",
+      "note": "Counted: flowers in one simple umbel. Gay (1847), p. 89: 15 to 40 flowers, some sessile (15 to 50 pedicels in the text). Reiche (about 1902), p. 80: up to 60, the typical form 15 to 60 (the high); his varieties have about 4 to 15. Weddell (1857): 10 to many."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "gay-1847",
+      "note": "Gay (1847), p. 89: flowers small, reddish yellow ('luteo-rubentibus', 'amarillo rojo'); Reiche gives Mulinum yellow petals. RGB for a warm, red-tinged yellow."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "reiche-1902",
+      "note": "Reiche (about 1902), p. 79: plants dioecious or polygamous; the genus line (p. 78) has the flowers unisexual, plants monoecious or dioecious."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "reiche-1902",
+      "note": "Reiche (about 1902), p. 79: fruits yellowish, ovate-round, about 6 mm long; the genus's fruit strongly flattened with four wings (Gay)."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "reiche-1902",
+      "note": "Reiche (about 1902), p. 79: December to February (southern summer)."
     }
   },
   "provenance": {

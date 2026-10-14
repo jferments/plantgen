@@ -27,6 +27,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
     ),
     (
+        "azorella-compacta",
+        "height_typical_m",
+        "it is grown 200 years, to a dome 0.6 m tall, but Reiche's mounds 1.5 m tall and more, and the ministry's 1 m, are of cushions centuries older (inferred: no source dates them)",
+    ),
+    (
         "berberis-aquifolium",
         "flower_merosity",
         "its six petals stand in two whorls of three, and a corolla draws one whorl, so its spec draws six there",
@@ -50,6 +55,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "encelia-farinosa",
         "shoot_leaves",
         "its most vigorous shoots grow one to three of the four internodes a year they may, two nodes each, so they bear 2 to 6 leaves against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
+    ),
+    (
+        "heracleum-maximum",
+        "inflorescence_bracts",
+        "a cluster draws its bracts only as a spathe, so the umbel's involucre of 5 to 10 narrow bracts, which fall early, is not drawn",
+    ),
+    (
+        "heracleum-maximum",
+        "leaf_length_m",
+        "its stem leaves shrink upward in proportion, so the topmost draw about 15 cm against the 2 to 5 dm Abrams gives, which he measures on the main leaves",
     ),
     (
         "jacobaea-vulgaris",
