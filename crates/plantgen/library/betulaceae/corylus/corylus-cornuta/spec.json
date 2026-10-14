@@ -12,7 +12,6 @@
   "growth_form": "shrub",
   "generator": {
     "params": {
-      "crown_height": 4.0,
       "crown_radius": 2.0,
       "crown_base": 0,
       "crown_rate": 0.22,
@@ -133,6 +132,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 2,
+      "max": 3.5
+    },
     "leaf_length_m": {
       "min": 0.035,
       "max": 0.08
@@ -140,6 +143,11 @@
     "wood_density_basic_kg_m3": 530
   },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Corylus californica: a loose spreading shrub 2 m to 3.5 m high."
+    },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",

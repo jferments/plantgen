@@ -15,7 +15,6 @@
       "cone_chance": 0.25,
       "cone_pitch": 90,
       "cone_area": 1.27,
-      "height_max": 10,
       "height_rate": 0.04,
       "height_shape": 1.2,
       "leader_shade": 0.7,
@@ -106,6 +105,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 7,
+      "max": 15
+    },
     "wood_density_basic_kg_m3": 540,
     "juvenile_period_years": {"min": 10, "max": 20},
     "leaf_form": "scale",
@@ -116,6 +119,11 @@
     "cone_retention_years": {"min": 0, "max": 1, "typical": 0}
   },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Sabina scopulorum: a tree often 7 m to 15 m tall. Silvics vol. 1 agrees roughly: 6 to 15 m in the Southwest, 3 to 4 m usual in Canada, largest specimen only 11 m tall."
+    },
     "generator.params.bend_set": {
       "evidence": "Authored",
       "source": "plantgen-authors",

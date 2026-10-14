@@ -19,7 +19,6 @@
       "clump_radius": 0.35,
       "stem_lean": 25,
       "seedling": 0.01,
-      "height_max": 6,
       "height_rate": 0.02,
       "height_shape": 2.2,
       "radius_min": 0.008,
@@ -148,12 +147,21 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 3,
+      "max": 7
+    },
     "wood_density_basic_kg_m3": 490,
     "ribs": {"min": 12, "max": 17},
     "stem_diameter_max_m": {"min": 0.15, "max": 0.2},
     "areole_spacing_m": {"min": 0.01, "max": 0.015, "high": 0.03}
   },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "britton-rose-1919",
+      "note": "Britton and Rose vol. 2 (1920), as Lemaireocereus thurberi: usually trunkless, with 5 to 20 or more erect stems 3 m to 7 m tall."
+    },
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Stenocereus thurberi (gwddagg_v2.2_species.csv, read): specific gravity 0.49 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.49, branches 0.49. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "traits": {
       "evidence": "SourceInferred",
