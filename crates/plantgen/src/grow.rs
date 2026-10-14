@@ -631,7 +631,9 @@ pub struct Grower<'a> {
     /// What it grows in from the next step on.
     conditions: Conditions,
     neighbourhood: crate::lsys::tools::Neighbourhood,
-    substrate: Option<crate::substrate::SubstrateField>,
+    substrate: Option<std::sync::Arc<crate::substrate::SubstrateField>>,
+    // What wood rests on: the substrate, or level soil without one.
+    ground: std::sync::Arc<crate::substrate::SubstrateField>,
     sun: Option<f64>,
     steps: u32,
     keyframe_steps: Vec<u32>,
@@ -687,6 +689,7 @@ impl<'a> Grower<'a> {
             conditions: settings.conditions.clone(),
             neighbourhood: settings.conditions.neighbourhood(),
             substrate: None,
+            ground: std::sync::Arc::new(crate::substrate::SubstrateField::flat()),
             sun: None,
             steps,
             keyframe_steps,
@@ -763,7 +766,15 @@ impl<'a> Grower<'a> {
     ///
     /// Fails when the conditions' substrate is not a valid grid.
     pub fn set_conditions(&mut self, conditions: Conditions) -> Result<(), GrowthError> {
-        self.substrate = substrate_field(&conditions)?;
+        self.substrate = substrate_field(&conditions)?.map(std::sync::Arc::new);
+        // `rest` and `bend@1` lay wood on the substrate, or on level soil
+        // without one, as substrate@1 reads it.
+        self.ground = self
+            .substrate
+            .clone()
+            .unwrap_or_else(|| std::sync::Arc::new(crate::substrate::SubstrateField::flat()));
+        self.interpreter
+            .set_ground(Some(std::sync::Arc::clone(&self.ground)));
         self.neighbourhood = conditions.neighbourhood();
         self.sun = conditions
             .light
@@ -880,6 +891,7 @@ impl<'a> Grower<'a> {
                 &values,
                 &mut self.rest_bends,
                 settings.dt,
+                &self.ground,
             )?;
         }
         self.segments
@@ -917,7 +929,7 @@ impl<'a> Grower<'a> {
             neighbourhood: &self.neighbourhood,
             envelopes: self.conditions.envelopes(),
             host: settings.host.as_deref(),
-            substrate: self.substrate.as_ref(),
+            substrate: self.substrate.as_deref(),
             sun: self.sun,
         };
         let output = tools::run(

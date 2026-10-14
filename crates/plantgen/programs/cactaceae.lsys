@@ -55,10 +55,14 @@
 # Revision 4: a column's ring of flowers takes the radius at the foot of
 # its newest piece, so a young pup's flowers sit on its body.
 #
+# Revision 5 (plants fitted to their place): a joint that sags to the
+# ground lies on it, `rest_gap` above the substrate (substrate@1's, or
+# level soil), as a prickly pear's pads do, instead of passing into it.
+#
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem cactaceae 4;
+lsystem cactaceae 5;
 
 # The plant.
 param vigour_spread = 0.12;   # an individual grows exp(gauss() * vigour_spread) times as fast
@@ -121,6 +125,7 @@ param leader_lean = 6;        # most degrees a trunk joint tilts from the one be
 param resprout = 0;           # chance a year a trunk joint in the crown sprouts a lateral
 param crown = 0.5;            # share of the plant's height, from the top, that resprouts
 param sag = 0.3;              # how fast joints bend down, radians a metre
+param rest_gap = 0.02;        # a joint that reaches the ground lies this far above it
 param joint_life = 0;         # years a lateral joint lives before it falls; 0 for ever
 param swell = 0;              # an old trunk joint grows (1 + swell) times as thick...
 param swell_years = 15;       # ...over about this many years
@@ -320,10 +325,10 @@ interpret J(len, r, g, v, done, side) ->
        * (1 + swell * (side > 0 ? pow(swell_side, g) : 1) * (1 - exp(-age / swell_years))))
     Jf(len * (1 - exp(-(age + 0.5) / 0.4)), r * (1 - exp(-(age + 0.5) / 0.4)));
 interpret Js(l, r) : pad > 0 ->
-    T(0, -1, 0, sag * l / 4)
+    T(0, -1, 0, sag * l / 4) rest(rest_gap)
     !(r * 0.4) stem(l / 4) !(r * 0.85) stem(l / 4) !(r) stem(l / 4) !(r * 0.92) stem(l / 4);
 interpret Js(l, r) ->
-    T(0, -1, 0, sag * l / 3)
+    T(0, -1, 0, sag * l / 3) rest(rest_gap)
     !(r * (1 - 0.5 * exp(-age / swell_years))) stem(l / 3) !(r) stem(l / 3) !(r) stem(l / 3);
 interpret Jf(l, r) : joint_flowers > 0 && age >= 1 && age < 2 && t >= bloom_age ->
     Fl(0, joint_flowers, joint_flowers, l, r);
