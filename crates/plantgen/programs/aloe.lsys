@@ -2,9 +2,17 @@
 # (growth plan G2.3a). The values are the rosette program's defaults
 # until G2.3a; each species still sets its own where it differs.
 #
+# Revision 2 (succulents): aloes that clump. With bloom_pup 1, a crown
+# that flowers in a year may also send out a pup that year, each with its
+# own chance (bloom and pup_rate, drawn as if apart), where the rosette
+# base lets a flowering crown make no pup. With pup_pups above 0 a pup
+# sends out up to that many pups of its own, so a clump spreads outward
+# as the old crowns are hemmed in. Both are 0 by default, and an aloe
+# that leaves them so grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem aloe 1 extends rosette;
+lsystem aloe 2 extends rosette;
 
 param vigour_spread = 0.15; # a rosette grows exp(gauss() * vigour_spread) times as fast
 param lean = 3;             # most degrees the stem leans at its foot
@@ -50,3 +58,24 @@ param pups = 0;             # most pups a rosette sends out
 param pup_age = 6;          # the rosette's first year of pups
 param pup_rate = 0.3;       # chance a year of a new pup
 param pup_distance = 0.3;   # how far out a pup appears
+param bloom_pup = 0;        # 1: a crown may flower and send out a pup in one year
+param pup_pups = 0;         # most pups a pup sends out in its turn
+
+# A crown that flowers may also make a pup (bloom_pup 1). The chances are
+# set so that flowering (bloom) and a pup (pup_rate) come apart: both,
+# then flowering alone, then a pup alone, then neither.
+rule Y(v, n, p) : bloom_pup > 0 && once == 0 && fork == 0 && age * v >= flower_age
+        && pups > p && age >= pup_age && rand() < bloom * pup_rate ->
+    [ Sm Sk ] [ Pp ] !(trunk_radius) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n + 1, p + 1);
+rule Y(v, n, p) : bloom_pup > 0 && once == 0 && fork == 0 && age * v >= flower_age
+        && rand() < (pups > p && age >= pup_age ? bloom * (1 - pup_rate) / max(1e-9, 1 - bloom * pup_rate) : bloom) ->
+    [ Sm Sk ] !(trunk_radius) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n + 1, p);
+rule Y(v, n, p) : bloom_pup > 0 && once == 0 && fork == 0 && pups > p && age >= pup_age && rand() < pup_rate ->
+    [ Pp ] !(trunk_radius) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n, p + 1);
+rule Y(v, n, p) : bloom_pup > 0 && once == 0 && fork == 0 ->
+    !(trunk_radius) T(0, 1, 0, upturn * trunk_rate * v) F(trunk_rate * v) Lc(0, max(1, round(leaf_rate * v)), age * v) Y(v, n, p);
+
+# A pup that may send out pups of its own (pup_pups above 0).
+decompose Pp : pup_pups > 0 ->
+    /(uniform(0, 360)) &(90) f(pup_distance * uniform(0.6, 1.4)) ^(90)
+    Y(exp(gauss() * vigour_spread), 0, max(0, pups - pup_pups));

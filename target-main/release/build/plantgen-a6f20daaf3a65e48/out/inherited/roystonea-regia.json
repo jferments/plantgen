@@ -1,0 +1,241 @@
+{
+  "allometry": [
+    {
+      "age": 25,
+      "environment": "open",
+      "height": 13,
+      "tolerance": 0.5
+    },
+    {
+      "age": 50,
+      "environment": "open",
+      "height": 24,
+      "tolerance": 0.4
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.62,
+      0.6,
+      0.55
+    ],
+    "foliage": [
+      0.2,
+      0.38,
+      0.16
+    ],
+    "foliage_shade": [
+      0.09,
+      0.171,
+      0.072
+    ],
+    "organs": {
+      "boot": {
+        "colour": [
+          0.48,
+          0.38,
+          0.26
+        ],
+        "shape": {
+          "aspect": 0.24,
+          "taper": 0.2,
+          "template": "blade"
+        }
+      },
+      "leaflet": {
+        "bend": {
+          "cup": 0,
+          "droop": 30,
+          "fold": 8,
+          "twist": 0
+        },
+        "colour": [
+          0.2,
+          0.38,
+          0.16
+        ],
+        "shape": {
+          "aspect": 0.045,
+          "taper": 0.35,
+          "template": "blade"
+        }
+      },
+      "ray": {
+        "bend": {
+          "cup": 0,
+          "droop": 50,
+          "fold": 20,
+          "twist": 0
+        },
+        "shape": {
+          "aspect": 0.08,
+          "taper": 0.5,
+          "template": "blade"
+        }
+      },
+      "sheath": {
+        "colour": [
+          0.3,
+          0.45,
+          0.18
+        ],
+        "shape": {
+          "aspect": 0.1,
+          "taper": 0,
+          "template": "blade"
+        }
+      }
+    },
+    "variation": 0.1
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 13 m at 25 years and 24 m at 50. Wide tolerances.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: bright green fronds, pale grey trunk, and the crownshaft's shining green sheaths, drawn as sixteen upright cards round the trunk's top (Sargent 1922: bright green cylinders of densely imbricated sheaths).",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "SourceInferred",
+      "note": "Sargent (1922, Roystonea regia, pp. 107-108): leaves 10 to 12 ft (3 to 3.7 m) long, frond_length 3.5 m; pinnae 2.5 to 3 ft (0.76 to 0.9 m) long, leaflet_length 0.24 of the frond; the green upper part of the stem, the crownshaft of leaf-stalk sheaths, 8 to 10 ft (2.4 to 3 m), drawn as a 2 m shaft plus the trunk the living fronds stand on; a trunk 80 to 100 ft tall and often 2 ft (0.6 m) through, rising from an abruptly enlarged base (flare 0.6) and enlarged near the middle, tapering to both ends (a belly 0.35 wider at 22 years, so trunk_radius 0.22 m is 0.3 m at its widest); a broad head of gracefully drooping leaves (hang 25 degrees over a frond's life). Closely pinnate: 45 pieces of rachis, so about 90 leaflets a side, linear-lanceolate cards 1.5 inches wide on 2.5 to 3 ft (aspect 0.045). Set by eye: twelve fronds a year living a year and a half, about eighteen in the crown, and leaflets standing 18 degrees above and below their V for the plumed look.",
+      "source": "sargent-1922"
+    },
+    "generator.params.fan_arch": {
+      "evidence": "Authored",
+      "note": "What the palm program's values mean for a palm's stated characters: its frond is its whole leaf; fan or feather from its division pattern, with the petiole, its girth, rachis pieces and frond angles of the built-in fan or feather palms; suckers if it is clonal; the trunk's rise from its usual height less the crown, and its girth from its stated diameter or else its height.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.suckers": {
+      "evidence": "Authored",
+      "note": "What the palm program's values mean for a palm's stated characters: its frond is its whole leaf; fan or feather from its division pattern, with the petiole, its girth, rachis pieces and frond angles of the built-in fan or feather palms; suckers if it is clonal; the trunk's rise from its usual height less the crown, and its girth from its stated diameter or else its height.",
+      "source": "plantgen-authors"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The lineage's own program (growth plan G2.3a), on the palm base: it gives the values its species leave unset, which the palm program gave as defaults until then.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "bulge": 0.35,
+      "bulge_age": 22,
+      "bulge_years": 10,
+      "crownshaft": 2.0,
+      "dead_area": 0.235,
+      "droop": 0.035,
+      "droop_years": 1.6,
+      "fan": 0,
+      "fan_arch": 0,
+      "flare": 0.6,
+      "flare_years": 4,
+      "frond_length": 3.5,
+      "frond_life": 1.5,
+      "fronds_per_year": 12,
+      "hang": 25,
+      "internode": 0.006,
+      "leaflet_angle": 60,
+      "leaflet_area": 0.04,
+      "leaflet_base": 0.5,
+      "leaflet_length": 0.24,
+      "leaflet_lift": 50,
+      "leaflet_peak": 0.35,
+      "leaflet_scatter": 18,
+      "leaflet_tip": 0.25,
+      "lean": 2,
+      "old_angle": 55,
+      "open_years": 0.8,
+      "petiole": 0.1,
+      "petiole_radius": 0.035,
+      "pieces": 45,
+      "ray_area": 0.057,
+      "shaft_cards": 16,
+      "size_years": 8,
+      "stemless_years": 5,
+      "suckers": 0,
+      "trunk_radius": 0.22,
+      "trunk_rate": 0.4,
+      "vigour_spread": 0.06,
+      "young_angle": 6
+    },
+    "program": "arecaceae"
+  },
+  "growth": {
+    "keyframes": [
+      8,
+      25,
+      50
+    ],
+    "step": 1,
+    "years": 50
+  },
+  "growth_form": "palm",
+  "id": "roystonea-regia",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (plant forms milestone F4). Calibration against measurements and photographs comes later.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "royal palm",
+    "family": "Arecaceae",
+    "genus": "Roystonea",
+    "plant_name_id": 180149,
+    "scientific_name": "Roystonea regia",
+    "usda_symbol": "RORE2"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
+  }
+}

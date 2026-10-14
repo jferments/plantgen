@@ -1854,6 +1854,10 @@ fn fill_defaults(
                 if let Some(origin) = origins.get(&from).cloned() {
                     origins.insert(format!("generator.spreads.params.{key}"), origin);
                 }
+                // And its evidence note, which the check asks of every value.
+                if let Some(note) = notes.get(&from).cloned() {
+                    notes.insert(format!("generator.spreads.params.{key}"), note);
+                }
             }
         }
     }
@@ -4645,6 +4649,27 @@ mod tests {
             grow(json!({"id": "one", "growth_form": "forb",
                 "traits": {"leaf": 2, "juvenile": 4}})),
             json!({"a": 6, "b": 8})
+        );
+        // A default a rule sets from a range carries its spread, and the
+        // spread's note, into the parameter it fills.
+        let chain = above(&files, "testaceae", "genus").unwrap();
+        let own = json!({"id": "one", "growth_form": "forb",
+            "traits": {"leaf": {"min": 1.0, "max": 3.0}}});
+        let open = inherit("testaceae/genus/one/spec.json", &own, &chain, &programs).unwrap();
+        let generator = &open.spec["generator"];
+        assert_eq!(generator["params"]["a"], json!(6));
+        assert!(
+            generator["spreads"]["params"]["a"].is_array(),
+            "{generator}"
+        );
+        assert!(
+            generator["spreads"].get("defaults").is_none(),
+            "{generator}"
+        );
+        assert!(
+            open.notes.contains_key("generator.spreads.params.a"),
+            "{:?}",
+            open.notes.keys().collect::<Vec<_>>()
         );
     }
 

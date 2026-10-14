@@ -340,4 +340,9 @@ pub mod venation;
 /// fruit, ripe and fall days from `flowering_months` and
 /// `fruiting_months`, and 28 species that state both drop their hand-set
 /// days (55 is palms, #110).
-pub const GENERATOR_REVISION: u32 = 56;
+/// 57: succulents grow from their facts (column, the value-free cactus
+/// body the cacti now extend, cactaceae 7; Angiosperms' stem- and
+/// rosette-succulent forms), and Aloe vera clumps and hangs its flowers
+/// (aloe 2: pups as it flowers, nodding tubular flowers on a tall
+/// raceme) (56 is flowering and fruiting months, #109).
+pub const GENERATOR_REVISION: u32 = 57;

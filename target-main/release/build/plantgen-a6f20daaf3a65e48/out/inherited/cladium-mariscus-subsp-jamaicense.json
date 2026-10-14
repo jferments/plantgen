@@ -1,0 +1,241 @@
+{
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 1.6,
+      "tolerance": 0.45
+    },
+    {
+      "age": 8,
+      "environment": "open",
+      "height": 2.0,
+      "tolerance": 0.4
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.4,
+      0.35,
+      0.2
+    ],
+    "foliage": [
+      0.33,
+      0.4,
+      0.2
+    ],
+    "foliage_shade": [
+      0.1155,
+      0.14,
+      0.07
+    ],
+    "organs": {
+      "leaf": {
+        "bend": {
+          "cup": 0,
+          "droop": 20,
+          "fold": 25,
+          "twist": 8
+        },
+        "shape": {
+          "aspect": 0.03,
+          "taper": 1,
+          "template": "blade"
+        }
+      },
+      "tuft": {
+        "accent": [
+          0.45,
+          0.3,
+          0.16
+        ],
+        "colour": [
+          0.36,
+          0.22,
+          0.11
+        ],
+        "inflorescence": {
+          "branch": {
+            "flowers": 5,
+            "kind": "head",
+            "size": 0.17
+          },
+          "branches": 10,
+          "kind": "panicle",
+          "peduncle": 0.05,
+          "size": 0.3,
+          "spread": 40,
+          "stalk": [
+            0.4,
+            0.33,
+            0.2
+          ],
+          "taper": 0.4
+        },
+        "shape": {
+          "aspect": 0.45,
+          "florets": 5,
+          "gape": 10,
+          "glumes": 0,
+          "lemma": 0.55,
+          "ranks": 0,
+          "template": "spikelet"
+        }
+      }
+    },
+    "variation": 0.15
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 1.6 m at 3 years and 2 m at 8. Wide tolerances.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: grey-green to tawny leaves, brown panicles.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.tuft": {
+      "evidence": "Authored",
+      "note": "Each tuft at the end of a branch of the panicle, the model's choice after FNA (volume 23), as search results quote it (the page was not read): spikelets in groups of 2 or 3 (up to 6), each with 5 or 6 chestnut-brown scales. Drawn as a small panicle of 10 branches, each ending in a cluster of 5 spikelets of 5 scales. No flora read gives the spikelets' length; they are drawn about 4 mm.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.tuft.shape.ranks": {
+      "evidence": "Authored",
+      "note": "The spikelet card's bracts stand in two ranks (ranks 2) or turn a golden angle each (ranks 0), as floras describe a grass's two-ranked glumes and lemmas or a sedge's spiral scales.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a coarse sedge 1 to 3 m tall that covers the Everglades in vast stands, its stiff, folded, grey-green leaves edged with fine saw teeth, and tall culms with brown, branched panicles. Not fitted to measurements.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.culm_height": {
+      "evidence": "Authored",
+      "note": "How PlantGen's grass and sedge programs draw a culm from a flora's length, a choice of the model's: each year's culms grow to culm_height at maturity, the panicle or spike included, leaning off their tiller, so culm_height is a culm's length, not the plant's height. A flora's culm length is read as the range's middle unless it names a typical length, and taken to include the inflorescence; where a flora measures only to the inflorescence's base, the culms come out short by about its length. Culms are the flowering stems of the grasses, sedges and rushes, all in this order.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.divergence": {
+      "evidence": "SourceInferred",
+      "note": "What the words mean, as accounts of phyllotaxis such as Okabe and colleagues' use them: a spiral or two-ranked shoot bears one leaf at a node, a decussate one a pair and a whorled one three or more. A spiral turns about the golden angle (137.5 degrees) from node to node and two ranks half a turn; pairs and whorls alternate, each standing over the gaps of the one below, half the gap between its own leaves round (90 degrees for pairs). Three ranks turn a third of a turn, as their name says.",
+      "source": "okabe-2019-phyllotaxis"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The tall sedges' program (growth plan G2.3a), named for their family and given by the genera that grow on it, on the sedge base: it gives the values the sedge program gave as defaults until then. Carex and Schoenoplectus grow on the grass base.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Common name (and USDA symbol, where given) as the spec's authors wrote them.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.genus": {
+      "evidence": "SourceInferred",
+      "note": "The genus WCVP v16's accepted name is written in.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted subspecies the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "taxon.scientific_name": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's accepted name for the plant the spec's authors wrote as Cladium jamaicense, which WCVP treats as a synonym.",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "culm_height": 2.25,
+      "culm_lean": 4,
+      "culm_radius": 0.006,
+      "divergence": 120,
+      "flower_age": 3,
+      "flowering": 0.25,
+      "head": 2,
+      "height_spread": 0.15,
+      "leaf_angle": 18,
+      "leaf_area": 0.015,
+      "leaf_length": 1.1,
+      "leaf_spread": 0.2,
+      "leaves": 6,
+      "panicle_length": 0.6,
+      "ray_angle": 35,
+      "ray_length": 0.15,
+      "rays": 8,
+      "shoot_life": 1,
+      "shoots_per_year": 40,
+      "spike_area": 0.89,
+      "spread_years": 4,
+      "stand_radius": 1.5,
+      "tuft_area": 0.091,
+      "tuft_length": 0.08
+    },
+    "program": "cyperaceae"
+  },
+  "growth": {
+    "keyframes": [
+      1,
+      3,
+      8
+    ],
+    "step": 1,
+    "years": 8
+  },
+  "growth_form": "graminoid",
+  "id": "cladium-mariscus-subsp-jamaicense",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (plant forms milestone F6). Calibration against measurements and photographs comes later.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "sawgrass",
+    "family": "Cyperaceae",
+    "genus": "Cladium",
+    "plant_name_id": 233417,
+    "scientific_name": "Cladium mariscus subsp. jamaicense",
+    "usda_symbol": "CLJA"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2
+    ]
+  }
+}

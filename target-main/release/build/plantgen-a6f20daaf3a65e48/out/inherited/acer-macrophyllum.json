@@ -1,0 +1,454 @@
+{
+  "allometry": [
+    {
+      "age": 30,
+      "dbh": 0.504,
+      "environment": "open",
+      "height": 18.3,
+      "tolerance": 0.4
+    },
+    {
+      "age": 50,
+      "dbh": 0.76,
+      "environment": "open",
+      "height": 21.1,
+      "tolerance": 0.4
+    },
+    {
+      "age": 75,
+      "dbh": 1.014,
+      "environment": "open",
+      "height": 23.2,
+      "tolerance": 0.4
+    },
+    {
+      "age": 120,
+      "dbh": 1.372,
+      "environment": "open",
+      "height": 25.5,
+      "tolerance": 0.4
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.13,
+      0.11,
+      0.085
+    ],
+    "bark_pattern": {
+      "contrast": 0.4,
+      "depth": 0.3,
+      "elongation": 3.0,
+      "fissure": 0.25,
+      "kind": "furrowed",
+      "roughness": 0.4,
+      "scale": 0.03,
+      "smooth_below": 0.06,
+      "variation": 0.15
+    },
+    "flare": {
+      "amount": 0.45,
+      "buttresses": 4,
+      "height": 0.7,
+      "ridge": 0.4
+    },
+    "foliage": [
+      0.09,
+      0.2,
+      0.03
+    ],
+    "foliage_shade": [
+      0.06,
+      0.14,
+      0.03
+    ],
+    "moss": {
+      "amount": 0.75,
+      "colour": [
+        0.06,
+        0.12,
+        0.02
+      ],
+      "min_radius": 0.06
+    },
+    "organs": {
+      "bloom": {
+        "accent": [
+          0.42,
+          0.45,
+          0.2
+        ],
+        "colour": [
+          0.55,
+          0.42,
+          0.22
+        ],
+        "inflorescence": {
+          "divergence": 90,
+          "flowers": 10,
+          "kind": "raceme",
+          "pedicel": 0.075,
+          "peduncle": 0.2,
+          "per_node": 2,
+          "size": 0.3,
+          "spread": 30
+        },
+        "season": {
+          "bud": 80,
+          "fall": 330,
+          "flower": 95,
+          "flower_look": {
+            "accent": [
+              0.7,
+              0.65,
+              0.25
+            ],
+            "colour": [
+              0.78,
+              0.8,
+              0.3
+            ],
+            "form": {
+              "flower": {
+                "cup": 35
+              }
+            },
+            "shape": {
+              "carpels": 2,
+              "centre": 0.35,
+              "corolla": "regular",
+              "notch": 0.0,
+              "ovary": "superior",
+              "perianth": "corolla",
+              "petal_width": 0.8,
+              "petals": 5,
+              "point": 0.0,
+              "sepals": 5,
+              "stamen_length": 0.6,
+              "stamens": 8,
+              "template": "flower",
+              "tube": 0
+            },
+            "size": 0.13
+          },
+          "fruit": 125,
+          "ripe": 245,
+          "ripening": 35
+        },
+        "shape": {
+          "aspect": 0.32,
+          "kind": "samara",
+          "template": "fruit"
+        }
+      },
+      "leaf": {
+        "accent": [
+          0.25,
+          0.3,
+          0.06
+        ],
+        "face_up": 0.35,
+        "families": {
+          "plasticity": 0.6
+        },
+        "shape": {
+          "depth": 0.66,
+          "lobe_width": 0.55,
+          "lobes": 5,
+          "petiole": 0.42,
+          "spread": 1.05,
+          "teeth": 2,
+          "template": "palmate"
+        }
+      }
+    },
+    "ridges": {
+      "contrast": 0.3,
+      "depth": 0.04,
+      "spacing": 0.07,
+      "twist": 6
+    },
+    "spreads": {
+      "organs": {
+        "bloom": {
+          "season": {
+            "flower_look": {
+              "shape": {
+                "stamens": [
+                  5,
+                  5,
+                  8,
+                  12,
+                  12
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "variation": 0.25
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "SourceInferred",
+      "note": "USDA Forest Service Urban Tree Database (McPherson, van Doorn and Peper 2016, RDS-2016-0005, public domain): its fitted age-to-dbh and dbh-to-height equations for bigleaf maple in the Pacific Northwest region (Longview, WA; 40 open-grown park and street trees aged 1 to 150 years), evaluated at 30, 50, 75 and 120 years. The same equations give crown diameters of 10.7, 14.4, 17.0 and 18.9 m and leaf areas of 594, 1034, 1483 and 2117 m², which the crown's height (crown_height, height_rate) was fitted to; its width is set wider for trees grown in the open (see generator.params).",
+      "source": "usfs-urban-tree-database-2016"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs. Leaf: five deep, sparsely toothed lobes on a long petiole. Bark: shallow twisting ridges, a buttressed base and moss on the upper side of thick limbs, as on coastal trees. Fruit (plant roadmap P4), as in mid-July: hanging racemes of paired samaras about 4 cm long, green and bristly at the seed. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: hanging racemes of yellow-green flowers in April; samaras green all summer, brown in September and October, falling into the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth when young, then grey-brown and shallowly furrowed into narrow interlacing ridges; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves smaller and more deeply lobed than the large thin shade leaves inside the crown; set from general knowledge of sun and shade leaves and juvenile foliage, not measured. Shade colour (foliage_shade, 2026-10-08) about 0.7 of the sun colour: a leaf's colour moves toward it with the shade it grows in, and most leaves of a dense crown sit in a fifth of the open sky's light or less. With the old shade colour, 0.4 of the sun colour, plantc side renders drew the crown at 0.08 of the sky's brightness, against 0.29 to 0.36 in four photographs of open-grown trees.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.bloom.season.flower_look": {
+      "evidence": "Authored",
+      "note": "Its flowers drawn one by one (spec rework L1b): small fragrant yellow-green flowers about 6 mm across in long hanging racemes. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life. Its flower laid out whorl by whorl (spec rework P5b): five yellow-green petals between five sepals, eight stamens and a pistil of two carpels, from the characters of Sapindaceae and Acer by the rules at the flowering plants.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.bloom.season.flower_look.shape.carpels": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.bloom.season.flower_look.shape.corolla": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.bloom.season.flower_look.shape.ovary": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.bloom.season.flower_look.shape.perianth": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.bloom.season.flower_look.shape.petals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.bloom.season.flower_look.shape.sepals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.bloom.season.flower_look.shape.stamens": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.bloom.season.flower_look.shape.tube": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.spreads.organs.bloom.season.flower_look.shape.stamens": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from photographs of open-grown trees: a broad, dense, rounded crown about as wide as it is tall; a short trunk that leans and divides low into three stems; opposite buds; leaves on long petioles about 0.3 m across, and leaf area per card matched to the drawn leaf. Not fitted to measurements. Growth plan G1 (2026-10-08): grown by the `sapindaceae` program (terminal flowering forks the shoots; shoots rise; space renews where limbs are shed, and limbs that no longer pay their way are shed) to 250 years (typical life 50-200 years, feis-acemac; \"well over 200\" in the San Juan Islands, islandhistories), with keyframes spaced roughly geometrically (and 30 years, the age ivy grows on it). Its architecture follows Scarrone's model: terminal racemes fork the shoots (Acer pseudoplatanus is Scarrone in Legner et al. 2013; see plantgen/forms/G1-ARCHITECTURE.md). Open-grown crowns are about as wide as the tree is tall and trunks 0.6-2 m dbh (feis-acemac); leaf blade 15-30 cm wide on a 15-25 cm petiole (kpu-plantdb), which the 0.4 m card with a 0.42 petiole share matches. Fitted 2026-10-08 against the Urban Tree Database (see allometry) and Joshi's photographs of open-grown trees: the crown's height (crown_height 26, height_rate 0.038) to the database's heights by age; its width (crown_radius 9.5, crown_rate 0.027) between the database's park and street trees, whose crowns start 2 to 6 m up and are a median 0.67 times as wide as tall, and feis-acemac's open-grown trees, \"generally as wide-spreading as they are tall\" with \"branches that often grow low to the ground\" (the 2011 champion spreads 32 m at 27 m tall), so that seeds grow crowns about 0.6 to 1.0 times as wide as tall at 120 years; crown_base 2.5 lets the lower crown reach down toward the ground; space_density 30, space_kill 0.4 and space_reach 1.8 so shoots fill the crown finely enough that it reads as dense from the side (about 10 to 15 % see-through in plantc renders); one leaf pair a year on a short shoot (spur_pairs 1), which also keeps leaf area per crown area near the database's 6 to 7.5 m²/m²; pipe_rings 8e-6 for its dbh by age. Each plant draws its own crown: radius within 30 % and height within 25 % of the envelope's (crown_vary, height_vary). The database's 30 trees over 20 years old scatter about its fitted curves with a standard deviation of 0.15 in log height and in log crown diameter, nearly independently (r = 0.13), which uniform draws within 26 % and 27 % match; crown_vary is a little wider for the broad open-grown forms. Its widest point lies within 0.1 of the crown's depth either way. Billows (crown_bumps 0.2, crown_bump_size 4 m) are set by eye from photographs of open-grown crowns, whose surfaces are mosaics of foliage domes a few metres across; at 0.3, narrow crowns grew overhanging lobes. Short shoots leaf out only in at least 0.15 of the open sky's light (spur_light, broadleaf's 0.1), which trims leaves deep in young crowns. Known gap: crowns of 20 to 50 years still hold 1.3 to 2 times the database's leaf area per crown area (8 to 13 against 3 to 7.6 m²/m²). The database estimates leaf area from photographs, and this tree's leaves are at the top of the species' size range: a 0.4 m card draws 470 cm², against a mean of 280 cm² in feis-acemac.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.adult_age": {
+      "evidence": "SourceInferred",
+      "note": "The juvenile period is the time from germination to the first flowers, cones or seed, which the Woody Plant Seed Manual's tables give as the minimum seed-bearing age (spec rework P6). adult_age is the first year a program measuring it by the plant's age lets the plant flower or bear cones, so it is the juvenile period itself.",
+      "source": "bonner-karrfalt-2008"
+    },
+    "generator.params.bud_base": {
+      "evidence": "SourceInferred",
+      "note": "Barthélémy and Caraglio (2007, read in excerpts): a basitonic shoot branches mostly from its proximal part.",
+      "source": "barthelemy-caraglio-2007"
+    },
+    "generator.params.dioecious": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant bears both sexes, unless its taxa state it dioecious.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.leaves_per_node": {
+      "evidence": "SourceInferred",
+      "note": "What the words mean, as accounts of phyllotaxis such as Okabe and colleagues' use them: a spiral or two-ranked shoot bears one leaf at a node, a decussate one a pair and a whorled one three or more. A spiral turns about the golden angle (137.5 degrees) from node to node and two ranks half a turn; pairs and whorls alternate, each standing over the gaps of the one below, half the gap between its own leaves round (90 degrees for pairs). Three ranks turn a third of a turn, as their name says.",
+      "source": "okabe-2019-phyllotaxis"
+    },
+    "generator.params.long_share": {
+      "evidence": "SourceInferred",
+      "note": "Barthélémy and Caraglio (2007, read in excerpts): the buds that grow are concentrated toward one end of the annual shoot (acrotony, basitony) or in its middle (mesotony). How many is the model's choice: as many as the steps of vigour the shoot grew, so a shoot keeps the buds able to grow long that it had before it was cut into a growth unit, gathered at its tip or its foot, or twice as many reaching into its middle; the rest grow short shoots.",
+      "source": "barthelemy-caraglio-2007"
+    },
+    "generator.params.sex": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant's sex is its own draw, dealt across a package's seeds so that both sexes grow; the typical plant (sex 0.5) is female, so it shows its fruit.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.short_share": {
+      "evidence": "SourceInferred",
+      "note": "Barthélémy and Caraglio (2007, read in excerpts) describe the buds of a growth unit grading along it, the most vigorous laterals at its favoured end; the buds farthest from it often never grow. How many grow short shoots is the model's choice: a third as many as may grow long ones, fitted so open-grown crowns hold the leaf area per crown area of the Urban Tree Database's trees (as many as the long ones gave an 80-year Oregon white oak 6.4 m² a m² against valley oaks' 1.9 to 5.3; none halved red alder's leaf area).",
+      "source": "barthelemy-caraglio-2007"
+    },
+    "generator.params.sprout_light": {
+      "evidence": "Authored",
+      "note": "A choice of the model's (leaf life, generator revision 44): a dormant bud sprouts in at least 0.55 of the open sky's light (sapindaceae's 0.25). Once a leaf stayed one season, not two, more light reached the inner crown, more dormant buds sprouted, and the open crown outgrew the module limit between 120 and 180 years; at 0.55 it peaks at 0.64 to 0.79 million modules (0.86 million before) and keeps its reference heights and dbh.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.unit_nodes": {
+      "evidence": "SourceInferred",
+      "note": "Critchfield (1971, read in full) found a maple's long shoot about as long as its leaf pairs are many, each pair a few centimetres up the stem; so a shoot of the program's longest year's growth carries the taxon's shoot_leaves, and each of the program's internodes is cut into as many nodes as that takes. The internode the program grows by is a step of vigour, not a node. Corner's rules (Corner 1949) tie a twig's leaves to its spacing: the larger the leaves, the fewer and farther apart, so nodes are kept at least a quarter of the leaf card's length apart.",
+      "source": "critchfield-1971"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The program the authors chose to grow this taxon's species (named in each species' spec until G2.3a moved it here).",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "adult_age": 10,
+      "apical_young": 0.75,
+      "bloom_angle": 150,
+      "bloom_area": 0.297,
+      "bloom_size": 0.16,
+      "blooms": 1,
+      "bud_base": 0,
+      "bud_break": 1.6,
+      "crown_base": 2.5,
+      "crown_bump_size": 4,
+      "crown_bumps": 0.2,
+      "crown_height": 26,
+      "crown_radius": 9.5,
+      "crown_rate": 0.027,
+      "crown_vary": 0.3,
+      "dioecious": 0,
+      "extinction": 0.35,
+      "fork_angle": 28,
+      "fork_height": 3.5,
+      "fork_stems": 3,
+      "height_rate": 0.038,
+      "height_vary": 0.25,
+      "leaf_area": 0.29,
+      "leaf_size": 0.5,
+      "lean": 9,
+      "leaves_per_node": 2,
+      "long_share": 0.5,
+      "pipe_organ": 0.006,
+      "pipe_rings": 8e-6,
+      "pipe_tip": 0.003,
+      "sex": 0.5,
+      "short_share": 0.166667,
+      "space_density": 30,
+      "space_kill": 0.4,
+      "space_reach": 1.8,
+      "sprout_light": 0.55,
+      "spur_leaf": 0.4,
+      "spur_light": 0.15,
+      "spur_pairs": 1,
+      "unit_nodes": 2,
+      "widest_vary": 0.1,
+      "wiggle": 7
+    },
+    "program": "sapindaceae"
+  },
+  "growth": {
+    "keyframes": [
+      2,
+      5,
+      10,
+      20,
+      30,
+      50,
+      80,
+      120,
+      180,
+      250
+    ],
+    "step": 1,
+    "years": 250
+  },
+  "growth_form": "decurrent_tree",
+  "id": "acer-macrophyllum",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy for milestone P0. Calibration against measurements and photographs is milestone P4.",
+    "sources": [
+      {
+        "licence": "method citation; no data used",
+        "title": "Runions, Lane and Prusinkiewicz 2007, Modeling trees with a space colonization algorithm (method only)"
+      },
+      {
+        "licence": "method citation; no data used",
+        "title": "Pałubicki et al. 2009, Self-organizing tree models for image synthesis (method only)"
+      },
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      },
+      {
+        "licence": "public domain (US Government work)",
+        "title": "McPherson, van Doorn and Peper 2016, Urban Tree Database (RDS-2016-0005), USDA Forest Service: bigleaf maple, Pacific Northwest region",
+        "url": "https://www.fs.usda.gov/rds/archive/products/RDS-2016-0005/"
+      },
+      {
+        "licence": "public domain (US Government work)",
+        "title": "Fire Effects Information System (FEIS), USDA Forest Service: Acer macrophyllum (feis-acemac)",
+        "url": "https://www.fs.usda.gov/database/feis/plants/tree/acemac/all.html"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "bigleaf maple",
+    "family": "Sapindaceae",
+    "genus": "Acer",
+    "plant_name_id": 2615900,
+    "scientific_name": "Acer macrophyllum",
+    "usda_symbol": "ACMA3"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open",
+      "interior"
+    ],
+    "seeds": [
+      1,
+      2
+    ]
+  }
+}

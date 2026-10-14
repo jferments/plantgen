@@ -1,0 +1,399 @@
+{
+  "allometry": [
+    {
+      "age": 70,
+      "environment": "open",
+      "height": 3.0,
+      "tolerance": 0.5
+    },
+    {
+      "age": 120,
+      "environment": "open",
+      "height": 4.6,
+      "tolerance": 0.4
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.2,
+      0.17,
+      0.13
+    ],
+    "bodies": {
+      "stem": {
+        "areoles": {
+          "felt": [
+            0.05,
+            0.04,
+            0.035
+          ],
+          "felt_radius": 0.004,
+          "spacing": 0.0125
+        },
+        "colour": [
+          0.07,
+          0.13,
+          0.05
+        ],
+        "dome": 0.8,
+        "greying": {
+          "colour": [
+            0.32,
+            0.31,
+            0.3
+          ],
+          "years": 8
+        },
+        "ribs": {
+          "count": [
+            12,
+            17
+          ],
+          "depth": 0.18,
+          "sharpness": 0.4,
+          "spacing": 0.03
+        },
+        "spines": [
+          {
+            "angle": 20,
+            "angle_spread": 10,
+            "colour": [
+              0.12,
+              0.08,
+              0.06
+            ],
+            "count": [
+              7,
+              9
+            ],
+            "length": 0.01,
+            "length_spread": 0.3,
+            "role": "radial",
+            "width": 0.0006
+          },
+          {
+            "angle": 45,
+            "angle_spread": 15,
+            "colour": [
+              0.1,
+              0.07,
+              0.05
+            ],
+            "count": [
+              1,
+              3
+            ],
+            "length": 0.025,
+            "length_spread": 0.35,
+            "role": "central",
+            "tip": [
+              0.05,
+              0.04,
+              0.035
+            ],
+            "width": 0.0009
+          }
+        ],
+        "valley": [
+          0.035,
+          0.07,
+          0.03
+        ]
+      }
+    },
+    "foliage": [
+      0.1,
+      0.17,
+      0.06
+    ],
+    "foliage_shade": [
+      0.045,
+      0.077,
+      0.027
+    ],
+    "organs": {
+      "bud": {
+        "colour": [
+          0.25,
+          0.12,
+          0.1
+        ],
+        "shape": {
+          "aspect": 0.5,
+          "template": "fruit"
+        }
+      },
+      "flower": {
+        "accent": [
+          0.75,
+          0.65,
+          0.4
+        ],
+        "colour": [
+          0.8,
+          0.7,
+          0.72
+        ],
+        "shape": {
+          "carpels": 10,
+          "centre": 0.3,
+          "corolla": "regular",
+          "notch": 0.0,
+          "ovary": "inferior",
+          "perianth": "spiral",
+          "petal_width": 0.6,
+          "petals": 12,
+          "point": 0.0,
+          "sepals": 0,
+          "stamens": 200,
+          "template": "flower",
+          "tube": 0.4
+        }
+      },
+      "fruit": {
+        "colour": [
+          0.5,
+          0.06,
+          0.05
+        ],
+        "shape": {
+          "aspect": 0.9,
+          "template": "fruit"
+        }
+      }
+    },
+    "spreads": {
+      "organs": {
+        "flower": {
+          "shape": {
+            "carpels": [
+              5,
+              6,
+              10,
+              15,
+              15
+            ]
+          }
+        }
+      }
+    },
+    "variation": 0.1
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough stem heights from general knowledge: a few metres by 70 years, about 5 m by 120. Wide tolerances.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: dark green stems with 12 to 19 ribs, areoles 2 cm apart with dark felt, short dark radial spines and one to three longer centrals that grey with age; creamy white to lavender flowers. Its flower laid out whorl by whorl (spec rework P5b): its tepals on a spiral (their count by hand: no flora counts them) on a floral cup above the inferior ovary, and a style with 5 to 15 stigma lobes, from the characters of Cactaceae and Stenocereus by the rules at the flowering plants. Its 200 stamens by hand, the most a flower draws, for the numerous ones every flora gives.",
+      "source": "plantgen-authors"
+    },
+    "appearance.bodies.stem.areoles.spacing": {
+      "evidence": "Authored",
+      "note": "Spec rework E6c: the cacti's ribs, areoles and spines grown from the characters their floras state, in each body look that has ribs or a spine set of that role.",
+      "source": "plantgen-authors"
+    },
+    "appearance.bodies.stem.ribs.count": {
+      "evidence": "Authored",
+      "note": "Spec rework E6c: the cacti's ribs, areoles and spines grown from the characters their floras state, in each body look that has ribs or a spine set of that role.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.carpels": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.corolla": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.ovary": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.perianth": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.sepals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.tube": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.spreads.organs.flower.shape.carpels": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a clump of a dozen or more ribbed columns, 15 to 20 cm thick, that rise from a short base, spread out and curve up into a vase 3 to 7 m tall; new stems come from the base over decades. Pale flowers open near the stem tips, followed by red, spiny fruit. Not fitted to measurements.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.dioecious": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant bears both sexes, unless its taxa state it dioecious.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.height_max": {
+      "evidence": "Authored",
+      "note": "What the conifer and succulent programs' height_max means: the height their Chapman-Richards curve rises toward with age and never reaches, so the tallest the plant grows, the height a flora gives as its greatest (\"trees to 40 m\"). Plants of a usual age stand below it, as the curve says. Where a flora's greatest is a rare record, the plant grows a little tall; a check of the grown plant against its usual height (spec rework M8) will show it.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.radius_max": {
+      "evidence": "Authored",
+      "note": "Spec rework E6c: a column's or barrel's girth from its stated diameter.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.sex": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant's sex is its own draw, dealt across a package's seeds so that both sexes grow; the typical plant (sex 0.5) is female, so it shows its fruit.",
+      "source": "plantgen-authors"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The cacti's own program (growth plan G2.3a): columns, barrels and chains of joints, their ribs, areoles and spines from each species' look.",
+      "source": "plantgen-authors"
+    },
+    "generator.spreads.params.height_max": {
+      "evidence": "Authored",
+      "note": "What the conifer and succulent programs' height_max means: the height their Chapman-Richards curve rises toward with age and never reaches, so the tallest the plant grows, the height a flora gives as its greatest (\"trees to 40 m\"). Plants of a usual age stand below it, as the curve says. Where a flora's greatest is a rare record, the plant grows a little tall; a check of the grown plant against its usual height (spec rework M8) will show it.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "bend": 0.35,
+      "bloom_age": 35,
+      "bud_area": 0.636,
+      "bud_share": 0.25,
+      "bud_size": 0.025,
+      "clump_radius": 0.35,
+      "dioecious": 0,
+      "dome": 0.8,
+      "fill": 0.95,
+      "fill_years": 20,
+      "flower_angle": 40,
+      "flower_area": 0.186,
+      "flower_size": 0.06,
+      "flowers": 6,
+      "fruit_area": 1.143,
+      "fruit_share": 0.3,
+      "fruit_size": 0.05,
+      "height_max": 5,
+      "height_rate": 0.02,
+      "height_shape": 2.2,
+      "lean": 0,
+      "pinch": 0.03,
+      "pinch_depth": 0.1,
+      "radius_height": 0.5,
+      "radius_max": 0.0875,
+      "radius_min": 0.008,
+      "ring_angle": 50,
+      "seedling": 0.01,
+      "sex": 0.5,
+      "stem_lean": 25,
+      "stem_rate": 0.03,
+      "stems": 14,
+      "vigour_spread": 0.12,
+      "wiggle": 0.8
+    },
+    "program": "cactaceae",
+    "spreads": {
+      "params": {
+        "height_max": [
+          3,
+          3.2,
+          5,
+          6.8,
+          7
+        ]
+      }
+    }
+  },
+  "growth": {
+    "keyframes": [
+      8,
+      30,
+      70,
+      120
+    ],
+    "step": 1,
+    "years": 120
+  },
+  "growth_form": "stem_succulent",
+  "id": "stenocereus-thurberi",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (milestone F1). Calibration against measurements and photographs comes later.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "organ pipe cactus",
+    "family": "Cactaceae",
+    "genus": "Stenocereus",
+    "plant_name_id": 2486740,
+    "scientific_name": "Stenocereus thurberi",
+    "usda_symbol": "STTH6"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
+  }
+}
