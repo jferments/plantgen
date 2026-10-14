@@ -1216,14 +1216,16 @@ pub enum Corolla {
     Regular,
     /// A pea flower's banner, two wings and keel (5 petals).
     Papilionaceous,
-    /// Two lips: the petals toward the bearing axis the upper.
+    /// Two lips: the petals toward the bearing axis the upper; or, of
+    /// tepals (an iris's, a banana's), the tepals on that side.
     Bilabiate,
     /// An orchid's lip and column: three sepals coloured like the petals,
     /// two lateral petals and the lip.
     Labellate,
     /// Petals alike but the one toward the bearing axis, wider (by
     /// `banner`) and more upright: a zygomorphy of no named kind, as the
-    /// banner of a palo verde, which is not a pea flower's.
+    /// banner of a palo verde, which is not a pea flower's; of tepals, the
+    /// outer one toward the axis (a heliconia's).
     Unequal,
 }
 
