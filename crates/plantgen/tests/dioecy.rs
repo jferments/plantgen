@@ -174,3 +174,70 @@ fn a_herbs_male_plants_bear_flowers_in_place_of_fruit() {
         "a male herb bears no more flowers: {plants:?}"
     );
 }
+
+/// Each `ids` species, made dioecious here, grown from seeds 1 to 8: its
+/// male plants bear no `fruit` (`organs[0]`), and some female plant does.
+/// Returns the plants, by sex, with their counts of `organs`.
+fn males_bear_no_fruit(id: &str, organs: &[&str]) -> Vec<(bool, Vec<usize>)> {
+    let mut spec = PlantSpec::builtin(id).unwrap();
+    spec.generator.params.insert("dioecious".into(), 1.0);
+    let plants = by_sex(&spec, spec.growth.years, organs);
+    for (female, counts) in &plants {
+        if !female {
+            assert_eq!(counts[0], 0, "{id}: a male bears fruit: {plants:?}");
+        }
+    }
+    assert!(
+        plants
+            .iter()
+            .any(|(female, counts)| *female && counts[0] > 0),
+        "{id}: no female bears fruit: {plants:?}"
+    );
+    plants
+}
+
+/// A mistletoe's male clumps bear no berries. California mistletoe, made
+/// dioecious here.
+#[test]
+fn a_mistletoes_male_clumps_bear_no_berries() {
+    males_bear_no_fruit("phoradendron-californicum", &["fruit"]);
+}
+
+/// A cactus's male plants bear open flowers in its rings where its female
+/// plants bear fruit, and hang no chains of fruit. Saguaro and jumping
+/// cholla, made dioecious here.
+#[test]
+fn a_cactuss_male_plants_bear_flowers_in_place_of_fruit() {
+    for id in ["carnegiea-gigantea", "cylindropuntia-fulgida"] {
+        let plants = males_bear_no_fruit(id, &["fruit", "flower"]);
+        let most = |female: bool| {
+            plants
+                .iter()
+                .filter(|(own, _)| *own == female)
+                .map(|(_, counts)| counts[1])
+                .max()
+                .unwrap()
+        };
+        assert!(most(false) > most(true), "{id}: {plants:?}");
+    }
+}
+
+/// A grass's male plants bear male panicles, its female plants its
+/// panicles. Dewey's sedge, made dioecious here.
+#[test]
+fn a_grasss_male_plants_bear_male_panicles() {
+    let mut spec = PlantSpec::builtin("carex-deweyana").unwrap();
+    spec.generator.params.insert("dioecious".into(), 1.0);
+    let plants = by_sex(&spec, spec.growth.years, &["panicle", "panicle_male"]);
+    for (female, counts) in &plants {
+        assert_eq!(counts[usize::from(*female)], 0, "{plants:?}");
+    }
+    assert!(
+        plants.iter().any(|(female, c)| !female && c[1] > 0),
+        "{plants:?}"
+    );
+    assert!(
+        plants.iter().any(|(female, c)| *female && c[0] > 0),
+        "{plants:?}"
+    );
+}
