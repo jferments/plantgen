@@ -76,6 +76,20 @@ pub fn sqrt(x: f64) -> f64 {
     x.sqrt()
 }
 
+/// `x.floor() as i64`, without a call to the library's `floor` (which
+/// x86-64 without SSE4.1 makes): the same integer for every `x`, NaN and
+/// infinities included.
+#[must_use]
+#[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss)]
+pub fn floor_index(x: f64) -> i64 {
+    let toward_zero = x as i64;
+    if (toward_zero as f64) > x {
+        toward_zero.saturating_sub(1)
+    } else {
+        toward_zero
+    }
+}
+
 #[must_use]
 pub fn radians(degrees: f64) -> f64 {
     degrees * (PI / 180.0)
@@ -207,6 +221,17 @@ impl Vec3 {
         }
     }
 
+    /// [`Self::normalize_or`] with the fallback made only when needed.
+    #[must_use]
+    pub fn normalize_or_else(self, fallback: impl FnOnce() -> Self) -> Self {
+        let length = self.length();
+        if length > 1e-12 && length.is_finite() {
+            self / length
+        } else {
+            fallback()
+        }
+    }
+
     #[must_use]
     pub fn distance(self, other: Self) -> f64 {
         (self - other).length()
@@ -248,7 +273,7 @@ impl Vec3 {
 
     /// [`Vec3::rotate_about`] given the angle's sine `s` and cosine `c`.
     #[must_use]
-    fn turned(self, axis: Self, s: f64, c: f64) -> Self {
+    pub fn turned(self, axis: Self, s: f64, c: f64) -> Self {
         self * c + axis.cross(self) * s + axis * (axis.dot(self) * (1.0 - c))
     }
 
@@ -341,7 +366,7 @@ impl Frame {
     #[must_use]
     pub fn orthonormalized(self) -> Self {
         let h = self.h.normalize_or(Vec3::Y);
-        let l = (self.l - h * h.dot(self.l)).normalize_or(any_perpendicular(h));
+        let l = (self.l - h * h.dot(self.l)).normalize_or_else(|| any_perpendicular(h));
         let u = h.cross(l);
         Self { h, l, u }
     }
@@ -406,5 +431,39 @@ mod tests {
     fn rotation_about_up_turns_heading_toward_left() {
         let rotated = Vec3::X.rotate_about(Vec3::Y, PI / 2.0);
         assert!((rotated - Vec3::new(0.0, 0.0, -1.0)).length() < 1e-12);
+    }
+
+    #[test]
+    #[allow(clippy::cast_possible_truncation, clippy::cast_precision_loss)]
+    fn floor_index_is_floor_cast_for_every_kind_of_number() {
+        let mut values = vec![
+            0.0,
+            -0.0,
+            0.5,
+            -0.5,
+            1.0,
+            -1.0,
+            -1.0 - f64::EPSILON,
+            2.0_f64.powi(53),
+            -(2.0_f64.powi(53)) - 0.5,
+            9.3e18,
+            -9.3e18,
+            f64::MAX,
+            f64::MIN,
+            f64::MIN_POSITIVE,
+            -f64::MIN_POSITIVE,
+            f64::INFINITY,
+            f64::NEG_INFINITY,
+            f64::NAN,
+        ];
+        let mut state = 0x9e37_79b9_7f4a_7c15_u64;
+        for _ in 0..10_000 {
+            state = crate::rng::mix64(state);
+            values.push(f64::from_bits(state));
+            values.push(((state >> 11) as f64 / (1_u64 << 53) as f64 - 0.5) * 2000.0);
+        }
+        for value in values {
+            assert_eq!(floor_index(value), value.floor() as i64, "{value:e}");
+        }
     }
 }

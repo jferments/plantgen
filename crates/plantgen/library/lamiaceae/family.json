@@ -29,13 +29,28 @@
     "fruit_type": {
       "schizocarp": "usually",
       "drupe": "sometimes"
-    }
+    },
+    "flower_symmetry": {
+      "zygomorphic": "usually",
+      "actinomorphic": "rarely"
+    },
+    "zygomorphy": "bilabiate"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 342 Labiatae: herbs, rarely woody, often scented, the stems usually square; leaves opposite or whorled, simple; no stipules; flowers irregular, rarely almost regular; calyx of 5 joined sepals, often two-lipped; corolla a tube of 4 or 5 lobes, often two-lipped; stamens 4 or 2 on the tube; ovary superior, two carpels deeply lobed with the style from between the lobes; fruit 4 nutlets, read here as a schizocarp of four mericarps. APG's Lamiaceae also takes in woody genera Hutchinson kept in Verbenaceae (family 243: Vitex, Callicarpa, teak), with drupes and some palmately compound leaves: so woody is stated as sometimes, compound leaves as rare and the drupe as sometimes (inferred, not traced). The order (Lamiales) states the stipules, the ovary and the two carpels."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Labiatae: flowers regular or irregular as coded, a state the authors qualify keeping its word (spec-rework/b1/delta/mapdelta.py); the corolla rarely almost regular (Mentha), so actinomorphic is rare."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Labiatae: its irregular flowers have a two-lipped corolla, read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy bilabiate."
     }
   }
 }

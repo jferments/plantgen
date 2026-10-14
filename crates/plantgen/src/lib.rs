@@ -273,4 +273,21 @@ pub mod venation;
 /// keep their sizes, their crowns within the module limit and the oak's
 /// leaf area per crown area (43 is the fronds that lie on the ground,
 /// #77).
-pub const GENERATOR_REVISION: u32 = 44;
+/// 45: a flower whose zygomorphy is of no named kind (palo verde,
+/// piggyback plant) draws its upper petal unlike the rest, wider by
+/// `banner` and more upright (an unequal corolla), not a corolla of like
+/// petals (44 is the leaf lives, #79).
+/// 46: nine broadleaf shrubs and trees are drawn within their floras'
+/// sizes: desert willow, burrobush, beaked hazelnut, cascara and creosote
+/// bush no taller than their greatest height (`path_half` refitted), and
+/// desert willow, burrobush, vine maple, osoberry, thimbleberry and jojoba
+/// with leaves no larger than their floras give, desert willow's narrowly
+/// linear. (45 is the unequal corolla, #86.)
+/// 47: the daisy, grass, carrot and pea families' 34 built-in species grow
+/// from their characters (spec rework E1 to E4): head, leaf, blade, culm,
+/// panicle and cane sizes from their floras by rules in their taxa; a
+/// grass holds its blades in two ranks (grass program 6, `roll_spread`
+/// per lineage, sedges and rushes as before); cow parsnip's leaves are
+/// three leaflets; broom's flowers stand alone in the leaf axils (46 is
+/// the nine shrubs and trees within their floras' sizes, #88).
+pub const GENERATOR_REVISION: u32 = 47;

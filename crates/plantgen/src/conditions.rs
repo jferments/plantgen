@@ -2,8 +2,8 @@
 //!
 //! A [`Conditions`] document generalises the synthetic stand a variant
 //! grows in ([`Neighbourhood`]) into sections, each optional and each with
-//! its own `version`: `neighbours` (today's stand, and neighbours' crowns
-//! as `envelopes`), `light`, `climate`, `soil`, `disturbance` and
+//! its own `version`: `neighbours` (today's stand, neighbours' crowns as
+//! `envelopes`, and neighbours like the plant itself as a `layout`), `light`, `climate`, `soil`, `disturbance` and
 //! `interactions`. Only `neighbours` changes how a plant grows today,
 //! through the light tools and space colonization; the others are data that later
 //! tools read, so they change nothing yet, except `substrate`, which
@@ -188,6 +188,89 @@ pub struct Neighbours {
     /// of space colonization lies inside it.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub envelopes: Vec<Envelope>,
+    /// Neighbours like the plant itself, standing round it in a layout.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub layout: Option<Layout>,
+}
+
+/// Neighbours like the plant itself in one of the crown-gap layouts agreed
+/// with After (2026-10-13): after each step the plant's own crown
+/// ([`Crown`]) stands at every neighbour's place, and from the next step on
+/// shades the plant and takes its room as a neighbour's crown would. The
+/// plant grows as the middle one of a stand of its like, each making room
+/// for the others, without growing them.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Layout {
+    pub kind: LayoutKind,
+    /// Distance between neighbouring stems, metres.
+    pub spacing_m: f64,
+}
+
+/// Where a layout's neighbours stand, on a square grid of its spacing.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum LayoutKind {
+    /// At a stand's edge: neighbours on the −X (west) side, the crown free
+    /// toward +X.
+    Edge,
+    /// Inside a stand: neighbours all round.
+    Interior,
+    /// In a row (a hedgerow or a street): neighbours east and west, free
+    /// along Z.
+    Row,
+}
+
+impl Layout {
+    /// The most rings of neighbours round the plant a layout places.
+    pub const RINGS: i32 = 3;
+
+    /// The neighbours' crowns when each is `crown`, the plant's own, as
+    /// envelopes in the plant's frame: every one within
+    /// [`Self::RINGS`] rings that can shade the plant or reach its crown
+    /// ([`Crown::reaches`]), in [`sort_envelopes`]' order.
+    #[must_use]
+    pub fn envelopes(&self, crown: &Crown) -> Vec<Envelope> {
+        let rings = -Self::RINGS..=Self::RINGS;
+        let mut envelopes = Vec::new();
+        for east in rings.clone() {
+            for north in rings.clone() {
+                let placed = match self.kind {
+                    LayoutKind::Edge => east < 0,
+                    LayoutKind::Interior => east != 0 || north != 0,
+                    LayoutKind::Row => east != 0 && north == 0,
+                };
+                let centre = [
+                    f64::from(east) * self.spacing_m,
+                    f64::from(north) * self.spacing_m,
+                ];
+                if placed && crown.reaches(centre, crown.radius_m) {
+                    envelopes.push(crown.envelope(centre));
+                }
+            }
+        }
+        sort_envelopes(&mut envelopes);
+        envelopes
+    }
+
+    fn validate(&self) -> Result<(), String> {
+        within("layout spacing_m", self.spacing_m, 0.25, 100.0)
+    }
+}
+
+/// Put neighbours' crowns in one order, whatever order they were found in:
+/// the shade through them multiplies in it.
+pub fn sort_envelopes(envelopes: &mut [Envelope]) {
+    envelopes.sort_by(|a, b| {
+        let key = |e: &Envelope| [e.centre_m[0], e.centre_m[1], e.base_m, e.top_m, e.radius_m];
+        key(a)
+            .iter()
+            .zip(key(b).iter())
+            .map(|(x, y)| x.total_cmp(y))
+            .find(|order| order.is_ne())
+            .unwrap_or(std::cmp::Ordering::Equal)
+            .then(a.density.total_cmp(&b.density))
+    });
 }
 
 /// One neighbour's crown: an upright cylinder of foliage. North is −Z in
@@ -221,6 +304,10 @@ pub struct Crown {
 }
 
 impl Crown {
+    /// How far past a plant's crown a neighbour's crown can shade it: twice
+    /// the neighbour's height, light from 27° above the horizon and higher.
+    pub const SHADE_REACH: f64 = 2.0;
+
     /// The extinction coefficient of foliage with leaves at every angle
     /// (a spherical leaf angle distribution): the shade per metre of a
     /// crown is this times its leaf area per cubic metre.
@@ -256,6 +343,15 @@ impl Crown {
             radius_m: quantile(radial, 0.9).max(0.05),
             leaf_area_m2: leaves.iter().map(|(_, area)| area).sum(),
         })
+    }
+
+    /// Whether this crown, standing `centre_m` (east, north) from a plant
+    /// whose crown reaches `reach_m` from its axis, can shade that plant or
+    /// reach its crown ([`Self::SHADE_REACH`]).
+    #[must_use]
+    pub fn reaches(&self, centre_m: [f64; 2], reach_m: f64) -> bool {
+        let apart = math::sqrt(centre_m[0] * centre_m[0] + centre_m[1] * centre_m[1]);
+        apart - self.radius_m - reach_m < Self::SHADE_REACH * self.top_m
     }
 
     /// The crown as an envelope centred `centre_m` (east, north) from the
@@ -358,6 +454,7 @@ impl Neighbours {
             spacing: neighbourhood.spacing,
             one_sided: neighbourhood.one_sided,
             envelopes: Vec::new(),
+            layout: None,
         }
     }
 
@@ -700,6 +797,14 @@ impl Conditions {
             .map_or(&[], |neighbours| &neighbours.envelopes)
     }
 
+    /// Its neighbours like itself, if any.
+    #[must_use]
+    pub fn layout(&self) -> Option<Layout> {
+        self.neighbours
+            .as_ref()
+            .and_then(|neighbours| neighbours.layout)
+    }
+
     /// The document with its preset expanded into `neighbours` and left
     /// out, and a substrate preset expanded into its grid, so documents
     /// that grow alike resolve alike.
@@ -709,6 +814,7 @@ impl Conditions {
             preset: None,
             neighbours: Some(Neighbours {
                 envelopes: self.envelopes().to_vec(),
+                layout: self.layout(),
                 ..Neighbours::of(self.neighbourhood())
             }),
             substrate: self.substrate.as_ref().map(Substrate::resolve),
@@ -805,6 +911,9 @@ impl Neighbours {
         )?;
         within("neighbours canopy", self.canopy, 0.0, 150.0)?;
         within("neighbours spacing", self.spacing, 0.0, 100.0)?;
+        if let Some(layout) = &self.layout {
+            layout.validate()?;
+        }
         self.envelopes.iter().try_for_each(Envelope::validate)
     }
 }
@@ -894,7 +1003,7 @@ fn within(what: &str, value: f64, low: f64, high: f64) -> Result<(), String> {
 
 #[cfg(test)]
 mod tests {
-    use super::{Around, Conditions, Envelope, Surroundings};
+    use super::{Around, Conditions, Crown, Envelope, Layout, LayoutKind, Surroundings};
     use crate::lsys::tools::Neighbourhood;
     use crate::math::Vec3;
     use crate::spec::Environment;
@@ -1137,5 +1246,78 @@ mod tests {
             ..crowded.clone()
         };
         assert_ne!(fewer.class(), crowded.class());
+    }
+
+    #[test]
+    fn a_layout_places_its_neighbours_round_the_plant() {
+        let crown = Crown {
+            base_m: 1.0,
+            top_m: 10.0,
+            radius_m: 3.0,
+            leaf_area_m2: 200.0,
+        };
+        let placed = |kind, spacing_m| -> Vec<[f64; 2]> {
+            Layout { kind, spacing_m }
+                .envelopes(&crown)
+                .iter()
+                .map(|envelope| envelope.centre_m)
+                .collect()
+        };
+        // It reaches neighbours whose stems stand within 26 m: at 5 m apart,
+        // all three rings.
+        assert_eq!(placed(LayoutKind::Interior, 5.0).len(), 48);
+        assert_eq!(placed(LayoutKind::Edge, 5.0).len(), 21);
+        assert!(
+            placed(LayoutKind::Edge, 5.0)
+                .iter()
+                .all(|[east, _]| *east < 0.0)
+        );
+        assert_eq!(
+            placed(LayoutKind::Row, 5.0),
+            [
+                [-15.0, 0.0],
+                [-10.0, 0.0],
+                [-5.0, 0.0],
+                [5.0, 0.0],
+                [10.0, 0.0],
+                [15.0, 0.0]
+            ]
+        );
+        // At 20 m only the nearest four reach; at 30 m none does.
+        assert_eq!(
+            placed(LayoutKind::Interior, 20.0),
+            [[-20.0, 0.0], [0.0, -20.0], [0.0, 20.0], [20.0, 0.0]]
+        );
+        assert!(placed(LayoutKind::Interior, 30.0).is_empty());
+    }
+
+    #[test]
+    fn a_layout_is_read_checked_and_part_of_the_class() {
+        let text = |spacing: &str| {
+            format!(
+                r#"{{"schema": 1, "neighbours": {{"version": 1, "density": 0,
+                "relative_height": 0, "canopy": 0, "spacing": 0, "one_sided": false,
+                "layout": {{"kind": "row", "spacing_m": {spacing}}}}}}}"#
+            )
+        };
+        let row = Conditions::from_json(&text("6")).unwrap();
+        assert_eq!(
+            row.layout(),
+            Some(Layout {
+                kind: LayoutKind::Row,
+                spacing_m: 6.0
+            })
+        );
+        assert_eq!(row.resolve().layout(), row.layout());
+        assert!(Conditions::from_json(&text("0.1")).is_err());
+        let open = Conditions {
+            neighbours: row.neighbours.clone().map(|mut neighbours| {
+                neighbours.layout = None;
+                neighbours
+            }),
+            ..row.clone()
+        };
+        assert_ne!(open.class(), row.class());
+        assert_eq!(open.class(), Conditions::preset(Environment::Open).class());
     }
 }

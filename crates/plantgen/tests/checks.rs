@@ -42,6 +42,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its six petals stand in two whorls of three, and a corolla draws one whorl, so its spec draws six there",
     ),
     (
+        "cyperus-papyrus",
+        "leaf_shape",
+        "its leaves are the brown sheaths at its culms' foot, drawn as cards tapering from the base, 0.15 as broad as long, so they read deltate or lanceolate against the linear blades Cyperaceae state; papyrus bears no blades",
+    ),
+    (
+        "deschampsia-cespitosa",
+        "awn_form",
+        "it states straight or geniculate awns (FNA), which the Poales' rule draws between them, bent 30°, nearest a contorted awn's 40°",
+    ),
+    (
         "dicentra-formosa",
         "flower_merosity",
         "its four petals stand in two pairs, outer and inner, and a corolla draws one whorl, so its spec draws four there",
@@ -52,9 +62,19 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its bell is joined 0.8 of its length round a wide mouth, its lobes short (Flora of New Zealand), but the angiosperms draw every bell joined 0.45 and a funnel 0.6, so its corolla is nearest a funnel; a longer bell needs the rule's shapes to allow one",
     ),
     (
+        "echinocereus-engelmannii",
+        "central_spine_form",
+        "its main central is drawn flattened and straight (its lower central, by eye from photographs), against the curved and twisted centrals Britton and Rose describe; a twisted spine is not drawn",
+    ),
+    (
         "encelia-farinosa",
         "shoot_leaves",
         "its most vigorous shoots grow one to three of the four internodes a year they may, two nodes each, so they bear 2 to 6 leaves against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
+    ),
+    (
+        "ferocactus-acanthodes-subsp-acanthodes",
+        "stem_form",
+        "Ferocactus states its stems globose, but Britton and Rose's 'globular to cylindric' allows a column, and its longest stem grows at least three times as long as wide",
     ),
     (
         "heracleum-maximum",
@@ -78,6 +98,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "lysichiton-americanus",
+        "leaf_shape",
+        "its spec draws the blade widest at 0.6 of its length and 0.45 as broad as long by hand, so it reads oblanceolate or obovate against Abrams's oblong-lanceolate",
+    ),
+    (
+        "lysichiton-americanus",
         "units_per_inflorescence",
         "a cluster draws at most 200 units, so the spadix's 350 to 1350 flowers are drawn as 200",
     ),
@@ -97,9 +122,9 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Oxalidaceae's leaves are alternate and redwood sorrel's rise one to a node from its rhizome, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
     ),
     (
-        "parkinsonia-microphylla",
-        "flower_symmetry",
-        "its zygomorphy is `other`, which the angiosperms draw as a corolla of like petals, so its flowers are drawn radial",
+        "phyllostachys-aurea",
+        "leaf_shape",
+        "its sprig leaves are drawn lanceolate, 0.15 as broad as long, as a bamboo's are, against the linear blades Poaceae state for its grasses; the species states no shape of its own",
     ),
     (
         "parkinsonia-microphylla",
@@ -117,7 +142,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a culm's leaves are drawn 0.35 to 0.6 as long as its tiller's blades, so where a flora's blades span less than about three-fold (California oatgrass, Roemer's fescue, reed canarygrass) the shortest culm leaves fall below its least",
     ),
     (
-        "program:grass",
         "leaf_width_m",
         "since the Poaceae rule sets blade cards from Hitchcock's widths, the median blade measured sits inside the flora's range, but the narrowest run up to half its least width (smaller blades of young tillers, inferred, not traced)",
     ),
@@ -152,9 +176,9 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
     ),
     (
-        "tolmiea-menziesii",
-        "flower_symmetry",
-        "its zygomorphy is `other`, which the angiosperms draw as a corolla of like petals, so its flowers are drawn radial",
+        "tillandsia-usneoides",
+        "leaf_shape",
+        "its leaves are drawn as cards tapering from the base, an eighth as broad as long, so they read deltate or lanceolate against the linear leaves Bromeliaceae state",
     ),
     (
         "viola-glabella",

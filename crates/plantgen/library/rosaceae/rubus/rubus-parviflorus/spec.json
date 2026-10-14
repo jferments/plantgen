@@ -38,8 +38,8 @@
       "pipe_rings": 3e-06,
       "space_reach": 1.02,
       "space_kill": 0.252,
-      "leaf_size": 0.3,
-      "spur_leaf": 0.25,
+      "leaf_size": 0.174,
+      "spur_leaf": 0.145,
       "spur_pairs": 1,
       "leaf_angle": 60,
       "blooms": 1,
@@ -150,6 +150,16 @@
     "flowering_position": "terminal"
   },
   "evidence": {
+    "generator.params.spur_leaf": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A short shoot's leaf card, a little smaller than a long shoot's (leaf_size), within Jepson (1925): leaves 7.6 to 17.8 cm wide."
+    },
+    "generator.params.leaf_size": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaf card length, petiole included, sized so every leaf drawn stays within Jepson (1925, as R. parviflorus): leaves 3 to 7 in (7.6 to 17.8 cm) wide (0.3 drew them 25 to 30 cm wide)."
+    },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",

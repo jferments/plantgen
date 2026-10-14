@@ -63,6 +63,7 @@
       "actinomorphic": "often",
       "zygomorphic": "often"
     },
+    "zygomorphy": "other",
     "perianth": {
       "sepals_and_petals": "sometimes",
       "tepals": "usually"
@@ -86,6 +87,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Proteaceae: leaves usually alternate, sometimes opposite or whorled; leaves simple or compound; compound leaves usually pinnate, sometimes palmate; margins entire, crenate, serrate or dentate; veins single, pinnate, palmate or parallel; leaves evergreen; blades linear; stipules absent; leaf rosettes basal, none or terminal; plants usually hermaphrodite, sometimes monoecious, polygamous or dioecious; ovary superior; floral cup usually present, sometimes absent; stems usually woody, sometimes herbaceous; flowers in racemes, in spikes, in heads or in umbels, sometimes solitary; flowers actinomorphic or zygomorphic; perianth usually tepals, sometimes sepals and petals; fruit follicle, drupe, nut or achene; parts of each whorl 4; stamens (3-) 4; carpels 1. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Proteaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
     }
   }
 }
