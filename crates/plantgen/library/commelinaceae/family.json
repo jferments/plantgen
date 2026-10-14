@@ -24,6 +24,15 @@
     "fruit_type": {
       "capsule": "usually",
       "berry": "rarely"
+    },
+    "leaf_habit": "evergreen",
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "life_span": {
+      "annual": "often",
+      "perennial": "often"
     }
   },
   "evidence": {
@@ -31,6 +40,21 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
       "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 358 Commelinaceae: perennial herbs; leaves with a closed papery sheath at the base; flowers usually regular, rarely irregular (Commelina), bisexual, in clusters in the axils or mostly in cymes or panicles at the tips, often blue or white; perianth plainly of two whorls of 3, the outer sepal-like, the inner petal-like; stamens 6 or fewer; ovary always superior, of 3 (rarely 2) cells; fruit a thin capsule, rarely fleshy."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Commelinaceae as that work draws it, there coded together with Cartonemataceae: how long the leaves last (character 37), coded evergreen. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Commelinaceae as that work draws it, there coded together with Cartonemataceae: whether the leaves gather in rosettes (character 22), coded often a basal rosette, often no rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Commelinaceae as that work draws it, there coded together with Cartonemataceae: the herbs' life form (character 21), coded often annual, often perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   }
 }

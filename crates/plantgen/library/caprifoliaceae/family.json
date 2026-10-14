@@ -11,6 +11,10 @@
     "inflorescence": {
       "cyme": "usually",
       "head": "sometimes"
+    },
+    "leaf_habit": {
+      "evergreen": "often",
+      "deciduous": "often"
     }
   },
   "forms": {
@@ -32,6 +36,11 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 48 Caprifoliaceae, 312 Valerianaceae and 313 Dipsacaceae, which APG joins as Caprifoliaceae (Sambucus and Viburnum go to Viburnaceae): leaves opposite, simple or deeply divided; flowers mostly in cymes, in heads in the teasels. The order's file states the opposite leaves, the missing stipules and the inferior ovary."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Caprifoliaceae as that work draws it, there coded together with Carlemanniaceae, Dipsacaceae, Morinaceae, Sambucaceae, Valerianaceae: how long the leaves last (character 37), coded often evergreen, often deciduous. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   }
 }

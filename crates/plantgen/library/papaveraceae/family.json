@@ -13,7 +13,15 @@
     },
     "leaf_arrangement": "alternate",
     "stipules": false,
-    "fruit_type": "capsule"
+    "fruit_type": "capsule",
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "life_span": {
+      "annual": "often",
+      "perennial": "often"
+    }
   },
   "forms": {
     "forb": {
@@ -54,6 +62,16 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 267 Papaveraceae (poppies) and 268 Fumariaceae (bleeding hearts and fumitories), which APG joins as Papaveraceae: annual to perennial herbs, rarely shrubs or small trees; leaves alternate (rarely the floral ones opposite), often much divided; stipules none; fruit a capsule opening by valves or pores, in the fumitories a capsule or a nut."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Papaveraceae as that work draws it, there coded together with Fumariaceae: whether the leaves gather in rosettes (character 22), coded often a basal rosette, often no rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Papaveraceae as that work draws it, there coded together with Fumariaceae: the herbs' life form (character 21), coded often annual, often perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   }
 }

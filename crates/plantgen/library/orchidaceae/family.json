@@ -24,7 +24,16 @@
     "leaf_arrangement": {
       "alternate": "usually",
       "opposite": "rarely"
-    }
+    },
+    "leaf_habit": {
+      "evergreen": "sometimes",
+      "deciduous": "usually"
+    },
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "life_span": "perennial"
   },
   "forms": {
     "forb": {
@@ -60,6 +69,21 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
       "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 405 Orchidaceae: perennial herbs, on the ground, on trees, or living on fungi; leaves undivided, alternate and often in two ranks, rarely opposite, sometimes all reduced to scales, sheathing at the base."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Orchidaceae as that work draws it, there coded together with Apostasiaceae, Cypripediaceae: how long the leaves last (character 37), coded usually deciduous, sometimes evergreen. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Orchidaceae as that work draws it, there coded together with Apostasiaceae, Cypripediaceae: whether the leaves gather in rosettes (character 22), coded often a basal rosette, often no rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Orchidaceae as that work draws it, there coded together with Apostasiaceae, Cypripediaceae: the herbs' life form (character 21), coded perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   }
 }

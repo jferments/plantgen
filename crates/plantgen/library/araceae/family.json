@@ -5,11 +5,28 @@
   "parent": "order/alismatales",
   "traits": {
     "inflorescence": "spadix",
-    "inflorescence_unit": "flower"
+    "inflorescence_unit": "flower",
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "life_span": {
+      "perennial": "usually",
+      "annual": "sometimes"
+    }
   },
   "rules": {
     "appearance.organs.*.inflorescence.spathe": {
-      "map": {"bract_form": {"spathe": {"rule": "clamp(bract_length_m / inflorescence_length_m, 0.2, 3)"}, "petaloid": 0, "leafy": 0, "scale": 0}},
+      "map": {
+        "bract_form": {
+          "spathe": {
+            "rule": "clamp(bract_length_m / inflorescence_length_m, 0.2, 3)"
+          },
+          "petaloid": 0,
+          "leafy": 0,
+          "scale": 0
+        }
+      },
       "why": "An aroid's spathe is drawn as long, against its spadix, as the flora gives the two."
     }
   },
@@ -23,6 +40,16 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams's flora (vol. 1, 1923): the arum family's flowers are small and crowded on a spadix, which a spathe encloses or stands below; the perianth is of four to six scale-like parts or lacking."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Araceae as that work draws it, there coded together with Acoraceae, Lemnaceae: whether the leaves gather in rosettes (character 22), coded often a basal rosette, often no rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Araceae as that work draws it, there coded together with Acoraceae, Lemnaceae: the herbs' life form (character 21), coded usually perennial, sometimes annual. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   },
   "forms": {

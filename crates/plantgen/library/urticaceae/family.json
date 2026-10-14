@@ -20,7 +20,8 @@
     "fruit_type": {
       "achene": "usually",
       "drupe": "sometimes"
-    }
+    },
+    "rosette": "none"
   },
   "forms": {
     "forb": {
@@ -66,6 +67,11 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 71 Urticaceae: herbs, undershrubs or rarely soft-wooded trees, often with stinging hairs; leaves alternate or opposite, simple; stipules present, very rarely absent; flowers very small and of one sex; fruit a dry achene or a fleshy drupe."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Urticaceae as that work draws it, there coded together with Cecropiaceae: whether the leaves gather in rosettes (character 22), coded no rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   }
 }
