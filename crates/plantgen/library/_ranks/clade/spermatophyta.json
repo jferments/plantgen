@@ -4,6 +4,10 @@
   "name": "Spermatophyta",
   "parent": "clade/euphyllophytes",
   "rules": {
+    "generator.params.dioecious": {
+      "map": {"sexual_system": {"hermaphrodite": 0, "monoecious": 0, "polygamous": 0, "dioecious": 1}},
+      "why": "A dioecious species' plants are male or female: a male plant flowers but bears no fruit or seed cones, a female one bears them. Where both sexes sit on every plant, every plant fruits."
+    },
     "generator.params.space_kill": {
       "rule": "2 * pow(leaf_area * spur_leaf * spur_leaf, 1 / 3)",
       "why": "Corner's rules: the smaller its leaves, the slenderer a plant's twigs and the more they branch. A shoot grows no nearer the plant than this, so the twigs filling a crown sit as far apart as the cube root of the area of the leaf card a short shoot bears (one leaf, or a sprig of small ones), and a crown of small leaves branches as finely as its leaves are small."
@@ -78,6 +82,11 @@
     }
   },
   "evidence": {
+    "rules.generator.params.dioecious": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): the sexual system its taxa state most often decides; a species whose taxa state dioecy no more often than another system bears both sexes on every plant until it states its own."
+    },
     "rules.generator.params.space_kill": {
       "evidence": "SourceInferred",
       "source": "corner-1949",

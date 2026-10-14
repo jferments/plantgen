@@ -792,7 +792,9 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
                 if look.inflorescence.is_none() {
                     continue;
                 }
-                if day.is_none() {
+                // A male look copies its bloom's (dioecy), so it is checked
+                // but not counted.
+                if day.is_none() && !look.organ.ends_with(spec::MALE) {
                     checked += 1;
                 }
                 let part = meshes

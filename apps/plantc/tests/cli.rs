@@ -78,7 +78,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let seed_plants = "(clade Spermatophyta: _ranks/clade/spermatophyta.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (107):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (108):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
@@ -98,7 +98,7 @@ fn rules_and_traits_say_where_they_come_from() {
             "\n  appearance.organs.leaf.shape.template  {flowering}\n  generator.defaults.crown_base  (clade angiosperms: _ranks/clade/angiosperms.json, forms.decurrent_tree)\n"
         ),
         format!(
-            "\n  generator.defaults.path_half  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.params.adult_age  {seed_plants}\n  generator.params.apex_death  {seed_plants}\n  generator.params.bud_base  {seed_plants}\n  generator.params.dormant_buds  {seed_plants}\n  generator.params.long_share  {seed_plants}\n  generator.params.shed_ratio  {seed_plants}\n  generator.params.short_share  {seed_plants}\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n  generator.params.space_renew  {seed_plants}\n  generator.params.terminal_bloom  {seed_plants}\n  generator.params.unit_nodes  {seed_plants}\n"
+            "\n  generator.defaults.path_half  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.params.adult_age  {seed_plants}\n  generator.params.apex_death  {seed_plants}\n  generator.params.bud_base  {seed_plants}\n  generator.params.dioecious  {seed_plants}\n  generator.params.dormant_buds  {seed_plants}\n  generator.params.long_share  {seed_plants}\n  generator.params.shed_ratio  {seed_plants}\n  generator.params.short_share  {seed_plants}\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n  generator.params.space_renew  {seed_plants}\n  generator.params.terminal_bloom  {seed_plants}\n  generator.params.unit_nodes  {seed_plants}\n"
         ),
     ] {
         assert!(built_in.contains(&line), "{line} in {built_in}");
@@ -179,7 +179,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
     assert!(
-        rules.starts_with("Rules, by their home (108):\n"),
+        rules.starts_with("Rules, by their home (109):\n"),
         "{rules}"
     );
     assert!(
