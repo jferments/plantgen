@@ -1010,6 +1010,12 @@ pub struct Flower {
     /// How the petals differ by place.
     #[serde(skip_serializing_if = "Corolla::is_regular")]
     pub corolla: Corolla,
+    /// Whorls a regular corolla's petals stand in: 1, or 2 like whorls,
+    /// the inner turned half a petal from the outer (barberries' three
+    /// and three, bleeding heart's outer and inner pair). `petals` counts
+    /// both.
+    #[serde(skip_serializing_if = "is_one_count")]
+    pub petal_whorls: u32,
     /// A papilionaceous banner's, or an unequal corolla's upper petal's,
     /// width over a petal's.
     #[serde(skip_serializing_if = "is_default_banner")]
@@ -1078,6 +1084,7 @@ impl Default for Flower {
             sepals_fused: 0.0,
             calyx: None,
             corolla: Corolla::Regular,
+            petal_whorls: 1,
             banner: BANNER,
             lip: LIP,
             fused: 0.0,
@@ -1106,6 +1113,7 @@ impl Flower {
         self.perianth == Perianth::Corolla
             && self.sepals == 0
             && self.corolla == Corolla::Regular
+            && self.petal_whorls == 1
             && self.fused == 0.0
             && self.spur == 0.0
             && self.stamens == 0
@@ -1134,6 +1142,11 @@ const COLUMN: f64 = 0.45;
 #[allow(clippy::trivially_copy_pass_by_ref)]
 fn is_zero_count(value: &u32) -> bool {
     *value == 0
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref)]
+fn is_one_count(value: &u32) -> bool {
+    *value == 1
 }
 
 #[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
@@ -2080,6 +2093,21 @@ impl Shape {
                 check("column", s.column, 0.1, 1.5)?;
                 check("turn", s.turn, 0.0, 360.0)?;
                 check("open", s.open, 0.0, 1.0)?;
+                if s.petal_whorls == 2
+                    && (s.perianth != Perianth::Corolla
+                        || s.corolla != Corolla::Regular
+                        || s.petals % 2 != 0
+                        || s.petals < 4)
+                {
+                    return Err(format!(
+                        "petals in two whorls are a regular corolla of an even number, \
+                         at least 4: found {} {:?} {:?}",
+                        s.petals, s.perianth, s.corolla
+                    ));
+                }
+                if !(1..=2).contains(&s.petal_whorls) {
+                    return Err(format!("petal_whorls is 1 or 2, found {}", s.petal_whorls));
+                }
                 if s.perianth == Perianth::Tepals && s.petals % 2 != 0 {
                     return Err(format!(
                         "tepals stand in two like whorls: petals must be even, found {}",

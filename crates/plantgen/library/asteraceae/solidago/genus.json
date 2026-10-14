@@ -1,0 +1,51 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Solidago",
+  "traits": {
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "leaf_arrangement": "alternate",
+    "capitulum_kind": "radiate",
+    "pappus": "bristles",
+    "ray_colour": [245, 200, 30],
+    "disc_colour": [245, 200, 30]
+  },
+  "evidence": {
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Solidago (p. 292): perennial herbs from rhizomes or a caudex."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Solidago (p. 292): perennial herbs."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Solidago (p. 292): leaves alternate, entire or toothed."
+    },
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Solidago (p. 292): heads radiate."
+    },
+    "traits.pappus": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Solidago (p. 292): pappus of copious whitish bristles."
+    },
+    "traits.ray_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Solidago (p. 292): heads yellow (in the Pacific States' species). Word: yellow."
+    },
+    "traits.disc_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Solidago (p. 292): heads yellow (in the Pacific States' species). Word: yellow."
+    }
+  }
+}

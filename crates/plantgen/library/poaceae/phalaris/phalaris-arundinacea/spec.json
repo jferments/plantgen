@@ -17,21 +17,18 @@
       "tussock_radius": 0.25,
       "tiller_lean": 6,
       "leaves": 2,
-      "leaf_length": 0.35,
       "leaf_spread": 0.25,
       "leaf_angle": 30,
       "arch": 12,
       "pieces": 6,
       "flowering": 0.7,
-      "culm_height": 1.6,
       "culm_radius": 0.003,
       "culm_leaves": 6,
       "culm_lean": 4,
-      "panicle_length": 0.18,
       "panicle_nod": 10,
-      "blade_area": 0.109,
-      "tip_area": 0.059,
-      "thatch_area": 0.109,
+      "blade_area": 0.271,
+      "tip_area": 0.147,
+      "thatch_area": 0.271,
       "panicle_area": 0.108
     }
   },
@@ -51,13 +48,13 @@
     "variation": 0.2,
     "organs": {
       "blade": {
-        "shape": { "template": "blade", "taper": 0, "aspect": 0.12 }
+        "shape": { "template": "blade", "taper": 0 }
       },
       "blade_tip": {
-        "shape": { "template": "blade", "taper": 1, "aspect": 0.12 }
+        "shape": { "template": "blade", "taper": 1 }
       },
       "thatch": {
-        "shape": { "template": "blade", "taper": 0, "aspect": 0.12 },
+        "shape": { "template": "blade", "taper": 0 },
         "colour": [0.38, 0.31, 0.18],
         "shade": [0.12, 0.1, 0.05]
       },
@@ -76,7 +73,7 @@
             "flowers": 16,
             "pedicel": 0.03,
             "peduncle": 0.1,
-            "size": 0.2,
+            "size": 0.31,
             "spread": 20
           }
         },
@@ -108,7 +105,14 @@
     "spikelet_length_m": {"min": 0.004, "max": 0.006},
     "glumes": 2,
     "upper_glume_length_m": {"min": 0.004, "max": 0.0081},
-    "lemma_length_m": {"min": 0.0025, "max": 0.004}
+    "lemma_length_m": {"min": 0.0025, "max": 0.004},
+    "life_span": "perennial",
+    "rhizome_habit": "long_creeping",
+    "clonal": true,
+    "lower_glume_length_m": {"min": 0.004, "max": 0.005},
+    "leaf_length_m": {"min": 0.1, "max": 0.2},
+    "leaf_width_m": {"min": 0.005, "max": 0.015},
+    "flowering_months": [6, 7, 8, 9]
   },
   "evidence": {
     "traits.culm_length_m": {
@@ -185,6 +189,41 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 534-535, no. 9): perennial, with creeping rhizomes."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 534-535, no. 9): perennial with creeping rhizomes, a lowland hay grass of marshes and river banks (Abrams 1923, no. 3, the same)."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 534-535, no. 9): spreads by creeping rhizomes."
+    },
+    "traits.lower_glume_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 535, no. 9): glumes about 5 mm long, narrow, acute, the keel very narrowly winged; the genus has the glumes equal. Abrams 1923 (no. 3) gives 4 mm."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "kew-grassbase",
+      "note": "GrassBase's entry (as search results quote it; the page itself was not read): leaf-blades 10-20 cm long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "kew-grassbase",
+      "note": "GrassBase's entry (as search results quote it; the page itself was not read): leaf-blades 5-15 mm wide."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (Phalaris no. 3, fig. 254): flowers June-September in swamps and moist places."
     }
   },
   "provenance": {

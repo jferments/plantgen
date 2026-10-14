@@ -2,10 +2,11 @@
   "schema": 1,
   "rank": "genus",
   "name": "Olneya",
+  "parent": "subfamily/faboideae",
   "traits": {
     "wood_density_basic_kg_m3": 820,
-    "flower_symmetry": "zygomorphic",
-    "zygomorphy": "papilionaceous"
+    "inflorescence": "raceme",
+    "flowering_position": "lateral"
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {
@@ -17,6 +18,16 @@
       "evidence": "SourceInferred",
       "source": "jepson-eflora",
       "note": "Jepson eFlora's account of desert ironwood, as search results quote it (the page itself was not read): flower papilionaceous, the wings purple-pink, the banner and keel yellow-white to pink or purple; stamens 10, 9 fused and 1 free."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 562), genus Olneya (one species): grey-hairy spiny trees with pinnate or odd-pinnate leaves and obsolete stipules; racemes axillary; calyx bell-shaped, 5-lobed; standard rounded, reflexed, with two calluses at its base; wings sickle-shaped; keel broadly crescent-shaped; stamens 10, nine joined and one free; pod rather swollen, two-valved, bumpy over the seeds."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 562), genus Olneya (one species): grey-hairy spiny trees with pinnate or odd-pinnate leaves and obsolete stipules; racemes axillary; calyx bell-shaped, 5-lobed; standard rounded, reflexed, with two calluses at its base; wings sickle-shaped; keel broadly crescent-shaped; stamens 10, nine joined and one free; pod rather swollen, two-valved, bumpy over the seeds."
     }
   }
 }

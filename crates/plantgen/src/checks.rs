@@ -2059,7 +2059,12 @@ fn flower_parts(
     tally.add("spur_length_m", organ, part, spur);
     let perianth = match flower.perianth {
         Perianth::Corolla => {
-            tally.count("flower_merosity", organ, part, flower.petals);
+            tally.count(
+                "flower_merosity",
+                organ,
+                part,
+                flower.petals / flower.petal_whorls.max(1),
+            );
             "sepals_and_petals"
         }
         Perianth::Tepals => {

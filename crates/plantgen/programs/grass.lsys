@@ -34,7 +34,13 @@
 # the values their species leave unset, as this program's defaults were
 # until then.
 #
-# Revision 6 (dioecy): in a dioecious species (dioecious 1, from the
+# Revision 6 (spec rework E2): how far a blade's roll strays from its
+# rank is roll_spread, which each lineage gives: a grass's two ranks
+# hold closely, so Poaceae gives a small one, and the other lineages keep
+# the 40 degrees all grew with until then. A culm leaf strays three
+# quarters as far, the 30 degrees it had.
+#
+# Revision 7 (dioecy): in a dioecious species (dioecious 1, from the
 # sexual system its taxa state) a plant whose own draw `sex` is below a
 # half is male, and its culms bear male panicles (`panicle_male`), drawn
 # as its panicles are in flower and gone where they would be in fruit.
@@ -45,7 +51,7 @@
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem grass 6;
+lsystem grass 7;
 
 param tillers;                # living tillers in a mature tussock
 param tiller_rate;            # cohort size: tillers * (1 - exp(-tiller_rate * age))
@@ -56,6 +62,7 @@ param leaf_length;            # mean blade length at maturity
 param leaf_spread;            # blades are leaf_length * (1 ± leaf_spread)
 param leaf_angle;             # mean angle of a blade to its tiller at the base
 param divergence;             # roll from one blade or culm leaf to the next
+param roll_spread;            # most a blade's roll strays from divergence, either way
 param arch;                   # mean degrees a blade bends down at each joint
 param twist;                  # spread of the random roll at each joint
 param pieces;                 # pieces in a blade, its tip included
@@ -120,7 +127,7 @@ decompose Ts(k, m, n) : m == 1 ->
 decompose Ts(k, m, n) -> ;
 
 decompose Lv(j) : j > 0 ->
-    [ /(j * divergence + uniform(-40, 40)) &(leaf_angle * uniform(0.4, 1.6)) $
+    [ /(j * divergence + uniform(-roll_spread, roll_spread)) &(leaf_angle * uniform(0.4, 1.6)) $
       Bl(leaf_length * (1 - exp(-t / maturity)) * uniform(1 - leaf_spread, 1 + leaf_spread),
          arch * uniform(0.5, 1.5)) ]
     Lv(j - 1);
@@ -141,7 +148,7 @@ decompose Fl : t >= adult_age && rand() < flowering ->
          culm_leaves) ];
 decompose Fl -> ;
 decompose Cu(s, j) : j > 0 ->
-    F(s) [ /(j * divergence + uniform(-30, 30)) &(leaf_angle * 1.5) $
+    F(s) [ /(j * divergence + 0.75 * uniform(-roll_spread, roll_spread)) &(leaf_angle * 1.5) $
            Bl(leaf_length * (1 - exp(-t / maturity)) * uniform(0.35, 0.6), arch) ]
     Cu(s, j - 1);
 decompose Cu(s, j) : dioecious >= 0.5 && sex < 0.5 ->
