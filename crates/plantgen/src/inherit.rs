@@ -2119,10 +2119,6 @@ impl Ruled<'_> {
         None
     }
 
-    /// The fields of the rule's card in `spec` that cannot stand beside the
-    /// one it sets ([`REPLACES`]), for it to replace; or why it sets
-    /// nothing, where one was set at least as near as what it reads
-    /// (`depth`).
     /// The fields of the card at `shape` that a `card` chosen in its
     /// place lacks, which go with the card a farther file chose; fails if
     /// a file at least as near as the rule set one by hand.
@@ -2155,6 +2151,10 @@ impl Ruled<'_> {
         Ok(found)
     }
 
+    /// The fields of the rule's card in `spec` that cannot stand beside the
+    /// one it sets ([`REPLACES`]), for it to replace; or why it sets
+    /// nothing, where one was set at least as near as what it reads
+    /// (`depth`).
     fn rivals(
         &self,
         field: Option<Field>,
