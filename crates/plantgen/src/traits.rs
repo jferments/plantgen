@@ -986,9 +986,10 @@ impl Vocabulary {
                 let known = match item.kind.as_str() {
                     "enum" => item.values.iter().flatten().any(|value| value == name),
                     "bool" => name == "true" || name == "false",
+                    "count" => name.parse::<u32>().is_ok(),
                     _ => {
                         return Err(format!(
-                            "a map reads an enum or bool trait; `{key}` is a {}",
+                            "a map reads an enum, bool or count trait; `{key}` is a {}",
                             item.kind
                         ));
                     }

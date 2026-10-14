@@ -1,0 +1,47 @@
+# The marattioid ferns (Marattiaceae), on the palm base (growth plan
+# G2.3a): large terrestrial ferns with short, stout, erect stems and very
+# large fronds, once or more pinnate, that unroll from croziers, with big
+# fleshy stipules at their bases (Mabberley 2017, under Marattiaceae). The
+# palm base draws a crown of pinnate fronds round a trunk; here the trunk
+# stays short and the fronds stand up from it, their pinnae on the
+# leaflet cards. Dead fronds fall; their bases (the stipules) stay as
+# boots on the stem.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem marattiaceae 1 extends palm;
+
+param vigour_spread = 0.1;
+param upturn = 0;
+param frond_seed = 0.12;
+param frond_spread = 0.1;
+param divergence = 137.5;
+param angle_spread = 8;
+param leaflet_area = 0.1;
+param rays = 40;
+param fan_spread = 200;
+param fan_length = 0.5;
+param fan_cup = 15;
+param costa = 0;
+param boots = 1;               # the fleshy stipules stay on the stem
+param boot_life = 10;
+param boot_length = 0.12;
+param boot_area = 0.4;
+param crown_cone = 0;
+param adult_age = 5;
+param cone_area = 0.6;
+param suckers = 0;
+param sucker_age = 5;
+param sucker_rate = 0.3;
+param sucker_distance = 0.4;
+param rest_gap = 0.02;
+param flare = 0;             # the foot's extra girth, a share of trunk_radius
+param flare_years = 1;
+param bulge = 0;             # a belly's extra girth, a share of trunk_radius
+param bulge_age = 0;
+param bulge_years = 1;
+param crownshaft = 0;        # a crownshaft's length; 0 none
+param shaft_cards = 8; param sheath_area = 0.235;
+param leaflet_scatter = 0;   # degrees leaflets stand above and below their V
+param fan_arch = 0;          # degrees a fan's edge rays droop below its middle
+param hang = 0;              # degrees a frond turns down over its life

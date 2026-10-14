@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "rank": "subfamily",
+  "name": "Arecoideae",
+  "parent": "family/arecaceae",
+  "traits": {
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "terminal_leaflet": false
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Palmae, subfamily V Arecoideae: monoecious or dioecious palms, usually with reduplicately paripinnate leaves (pinnate, with no leaflet at the tip), the flowers in triads of a female between two males; the largest subfamily, 14 tribes."
+    }
+  }
+}

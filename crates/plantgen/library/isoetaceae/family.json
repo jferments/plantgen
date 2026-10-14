@@ -8,6 +8,54 @@
     "leaf_shape": "linear",
     "rosette": "basal"
   },
+  "forms": {
+    "fern": {
+      "generator": {
+        "program": "isoetaceae"
+      },
+      "appearance": {
+        "organs": {
+          "basal": {
+            "shape": {
+              "template": "blade",
+              "taper": 1,
+              "aspect": 0.05
+            }
+          },
+          "basal_piece": {
+            "shape": {
+              "template": "blade",
+              "taper": 0,
+              "aspect": 0.05
+            }
+          }
+        }
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The quillworts' own program (growth plan G2.3a), on the herb base: a rosette of quills from a corm-like stem, no strobilus."
+        },
+        "appearance": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "Quills drawn as narrow strap pieces, tapering at the tip."
+        },
+        "rules": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "What the program's basal_length means: one quill's length."
+        }
+      },
+      "rules": {
+        "generator.params.basal_length": {
+          "rule": "leaf_length_m",
+          "why": "A quillwort's leaves are its basal leaves, drawn as long as its flora gives them."
+        }
+      }
+    }
+  },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",

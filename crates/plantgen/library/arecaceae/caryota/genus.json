@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Caryota",
+  "parent": "subfamily/coryphoideae",
+  "traits": {
+    "leaf_division": "compound",
+    "leaf_incision": "none",
+    "division_pattern": "pinnate",
+    "division_order": 2,
+    "architectural_model": "holttum"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae III 6): the only palms with bipinnate leaves, the leaflets fish-tail-like; they flower from the top down and die (Holttum's model)."
+    }
+  }
+}

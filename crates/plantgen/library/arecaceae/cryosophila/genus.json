@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Cryosophila",
+  "parent": "subfamily/coryphoideae",
+  "traits": {
+    "leaf_division": "simple",
+    "leaf_incision": "parted",
+    "division_pattern": "palmate",
+    "clonal": false
+  },
+  "evidence": {
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Palmae, subfamily III Coryphoideae: leaves induplicately palmate in all but Phoenix and the Caryoteae (Arenga, Caryota, Wallichia), which are pinnate. A fan palm's blade is one piece cut into segments: simple, parted, palmate."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Palmae, subfamily III Coryphoideae: leaves induplicately palmate in all but Phoenix and the Caryoteae (Arenga, Caryota, Wallichia), which are pinnate. A fan palm's blade is one piece cut into segments: simple, parted, palmate."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Palmae, subfamily III Coryphoideae: leaves induplicately palmate in all but Phoenix and the Caryoteae (Arenga, Caryota, Wallichia), which are pinnate. A fan palm's blade is one piece cut into segments: simple, parted, palmate."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "genera-palmarum-2008",
+      "note": "Dransfield et al. (Genera Palmarum, 2nd ed., 2008), under the genus: its stems are solitary."
+    }
+  }
+}

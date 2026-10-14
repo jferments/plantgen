@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Eugeissona",
+  "parent": "subfamily/calamoideae",
+  "traits": {
+    "architectural_model": "schoute",
+    "sexual_system": "dioecious"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae I 1): branching from an apex that forks into unequal halves; dioecious; E. tristis forms dense groves."
+    }
+  }
+}

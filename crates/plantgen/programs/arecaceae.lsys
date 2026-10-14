@@ -5,9 +5,13 @@
 # Revision 2: gives rest_gap, for palm revision 5's fronds that lie on
 # the ground.
 #
+# Revision 3: gives palm revision 7's trunk shape, crownshaft, leaflet
+# planes, fan arch and hang, all 0, so a palm draws as before until it
+# states them.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem arecaceae 2 extends palm;
+lsystem arecaceae 3 extends palm;
 
 param vigour_spread = 0.1;   # a palm grows exp(gauss() * vigour_spread) times as fast
 param upturn = 0;            # how strongly a leaning trunk turns back up, radians a metre
@@ -45,3 +49,13 @@ param sucker_age = 5;
 param sucker_rate = 0.3;
 param sucker_distance = 0.4;
 param rest_gap = 0.02;       # a frond that reaches the ground lies this far above it
+param flare = 0;             # the foot's extra girth, a share of trunk_radius
+param flare_years = 1;
+param bulge = 0;             # a belly's extra girth, a share of trunk_radius
+param bulge_age = 0;
+param bulge_years = 1;
+param crownshaft = 0;        # a crownshaft's length; 0 none
+param shaft_cards = 8; param sheath_area = 0.091;
+param leaflet_scatter = 0;   # degrees leaflets stand above and below their V
+param fan_arch = 0;          # degrees a fan's edge rays droop below its middle
+param hang = 0;              # degrees a frond turns down over its life
