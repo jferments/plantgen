@@ -1010,7 +1010,8 @@ pub struct Flower {
     /// How the petals differ by place.
     #[serde(skip_serializing_if = "Corolla::is_regular")]
     pub corolla: Corolla,
-    /// A papilionaceous banner's width over a petal's.
+    /// A papilionaceous banner's, or an unequal corolla's upper petal's,
+    /// width over a petal's.
     #[serde(skip_serializing_if = "is_default_banner")]
     pub banner: f64,
     /// A bilabiate lower lip's middle petal, or a labellate lip, over a
@@ -1207,6 +1208,10 @@ pub enum Corolla {
     /// An orchid's lip and column: three sepals coloured like the petals,
     /// two lateral petals and the lip.
     Labellate,
+    /// Petals alike but the one toward the bearing axis, wider (by
+    /// `banner`) and more upright: a zygomorphy of no named kind, as the
+    /// banner of a palo verde, which is not a pea flower's.
+    Unequal,
 }
 
 impl Corolla {
@@ -2101,6 +2106,10 @@ impl Shape {
                             s.petals
                         ))
                     }
+                    Corolla::Unequal if s.perianth != Perianth::Corolla => Err(
+                        "an unequal corolla is one whorl of petals: perianth sepals_and_petals"
+                            .to_string(),
+                    ),
                     Corolla::Labellate
                         if s.petals != 3 || s.sepals != 3 || s.perianth != Perianth::Corolla =>
                     {

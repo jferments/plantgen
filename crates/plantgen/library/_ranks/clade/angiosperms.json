@@ -64,10 +64,10 @@
       "template": "flower",
       "map": {"flower_symmetry": {
         "actinomorphic": "regular",
-        "zygomorphic": {"map": {"zygomorphy": {"papilionaceous": "papilionaceous", "bilabiate": "bilabiate", "labellate": "labellate", "other": "regular"}}},
-        "asymmetric": {"map": {"zygomorphy": {"papilionaceous": "papilionaceous", "bilabiate": "bilabiate", "labellate": "labellate", "other": "regular"}}}}},
-      "else": {"map": {"zygomorphy": {"papilionaceous": "papilionaceous", "bilabiate": "bilabiate", "labellate": "labellate", "other": "regular"}}},
-      "why": "A zygomorphic flower's parts differ by place as its zygomorphy says; any other, and a regular flower in a family whose zygomorphic flowers are of a kind, is drawn with its petals alike."
+        "zygomorphic": {"map": {"zygomorphy": {"papilionaceous": "papilionaceous", "bilabiate": "bilabiate", "labellate": "labellate", "other": "unequal"}}},
+        "asymmetric": {"map": {"zygomorphy": {"papilionaceous": "papilionaceous", "bilabiate": "bilabiate", "labellate": "labellate", "other": "unequal"}}}}},
+      "else": {"map": {"zygomorphy": {"papilionaceous": "papilionaceous", "bilabiate": "bilabiate", "labellate": "labellate", "other": "unequal"}}},
+      "why": "A zygomorphic flower's parts differ by place as its zygomorphy says, and one of no named kind draws its upper petal unlike the rest, wider and more upright; a regular flower, even in a family whose zygomorphic flowers are of a kind, is drawn with its petals alike."
     },
     "appearance.organs.*.shape.fused": {
       "template": "flower",
