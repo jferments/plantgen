@@ -265,4 +265,9 @@ pub mod venation;
 /// ground; bend@1 can hold bent wood up on the ground too (`ground`),
 /// which no program uses yet (41 is the ground plane, #73; 42 the
 /// conifers' lower crowns, #72).
-pub const GENERATOR_REVISION: u32 = 43;
+/// 48: a conifer's limbs sag under their load, not by their age (pinidae
+/// 6): bend@1 with each species' green wood, and reaction wood (bend@1's
+/// `reaction`) turning a limb back toward its line by each year's ring,
+/// so old crowns keep spreading limbs instead of hanging ones (44 to 47
+/// are #79, #86, #88 and #90).
+pub const GENERATOR_REVISION: u32 = 48;
