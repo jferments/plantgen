@@ -127,9 +127,18 @@
 # sexes (dioecious 0). bloom_male is declared last, so the other organs
 # keep their places.
 #
+# Revision 15 (crown form, item 1): the region narrows among neighbours
+# (space@4). In the open it is the same ellipsoid as before; among
+# neighbours, or at a stand's edge, each height and side of it is scaled
+# as far as the front a crown as wide for its depth grows (Duchemin et al.
+# 2018; the lineage's gravitropism that gives that width in the open, and
+# its phototropism crown_phototropism) falls short under their shade. Less
+# light comes from the side there, more so on a stand's side, so the crown
+# grows narrower, and toward open sky at an edge.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 14;
+lsystem broadleaf 15;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -210,6 +219,7 @@ param apex_death;             # chance a year that a tip with no free space abor
 # The crown grows its own outline (revision 11).
 param room_width;             # free space fills this many times the crown's radius
 param room_height;            # and this many times its height
+param crown_phototropism;     # how far the region's front turns toward its light (revision 14)
 param path_half;              # wood from the base at which a shoot's nodes are half as long; 0: no limit
 param limb_path;              # how many times a limb's wood counts toward path_half (1: as the stem's)
 param leader_rate;            # how far each node of the stem turns back toward upright
@@ -240,18 +250,19 @@ organ thorn leaf as spine area thorn_area;
 organ bloom_male flower area bloom_area;
 
 tool light@1 { cell = light_cell, extinction = extinction, bud = 0.01 };
-tool space@2 {
-    shape = 1,
+tool space@4 {
     base = crown_base * (1 - exp(-crown_rate * (t + 3))),
     height = room_height * crown_height * (1 - exp(-crown_rate * (t + 3))),
     radius = room_width * crown_radius * (1 - exp(-crown_rate * (t + 3))),
+    ratio = room_width * crown_radius / max(room_height * crown_height - crown_base, 0.01),
+    phototropism = crown_phototropism,
+    widest = 0.5,
+    fullness = 2,
     density = space_density,
     influence = space_reach,
     kill = space_kill,
     angle = 80,
-    renew = space_renew,
-    widest = 0.5,
-    fullness = 2
+    renew = space_renew
 };
 tool vigour@1 {
     lambda = apical + (apical_young - apical) * max(0, 1 - t / apical_years),
