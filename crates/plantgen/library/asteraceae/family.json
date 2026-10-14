@@ -230,10 +230,6 @@
       "between": true,
       "why": "A cluster of heads draws each head as wide as a lone head is, its involucre and a ray either side, as a share of the cluster's length."
     },
-    "generator.params.leaf_size": {
-      "rule": "max(leaf_length_m)",
-      "why": "A shrub's leaf card, its largest leaf's, is as long as the longest leaf its flora measures."
-    },
     "appearance.organs.leaf.shape.width": {
       "template": ["simple", "lobed"],
       "rule": "clamp(leaf_width_m / leaf_length_m, 0.02, 2)",

@@ -3432,6 +3432,12 @@ mod tests {
                     ruled += 1;
                     remove(&mut with, path);
                     remove(&mut without, path);
+                    // A default a rule sets fills the parameter it names.
+                    if let Some(name) = path.strip_prefix("generator.defaults.") {
+                        let param = format!("generator.params.{name}");
+                        remove(&mut with, &param);
+                        remove(&mut without, &param);
+                    }
                 }
             }
             // Only ranges a rule reads spread its value.
