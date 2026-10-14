@@ -273,5 +273,5 @@ pub mod venation;
 /// 49: a conifer's foliage and cones live as long as their parameters
 /// say, not one year more (pinidae 7, as 44 did for the other programs),
 /// and a pine's lowest needles as long as its species' longest stated
-/// needle life (Pinus's needle_low).
+/// needle life (Pinus's `needle_low`).
 pub const GENERATOR_REVISION: u32 = 49;
