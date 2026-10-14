@@ -43,7 +43,7 @@ use super::derive::Clock;
 use super::expr::{ENV_FIELDS, EnvField, EnvValues, NO_ENV, Query, Scope, eval};
 use super::narrow::{self, CANDIDATES, CONSUMED, LEFT, Narrower, STRIDE};
 use super::program::{Program, SymbolKind, ToolConfig, ToolKind};
-use super::turtle::{NodeKind, Scene, Segment};
+use super::turtle::{NodeKind, OrganInstance, Scene, Segment};
 use super::{GrowthError, Limits};
 use crate::conditions::Surroundings;
 use crate::cores::{self, Lease};
@@ -2760,6 +2760,59 @@ fn held_up(field: &SubstrateField, gap: f64, before: Rigid, segment: &Segment, t
     )
 }
 
+/// A plant's nodes split for work side by side: subtrees of at most a
+/// given size (limbs and their branches), each listed in node order, and
+/// the rest (the stems they hang from), in node order. Parents come before
+/// their children in the node list, so a subtree's nodes need only nodes
+/// before them in its own list or in the rest.
+struct Subtrees {
+    trees: Vec<Vec<u32>>,
+    rest: Vec<u32>,
+    /// Each node's subtree (`u32::MAX` for the rest), and its place in it.
+    tree: Vec<u32>,
+    place: Vec<u32>,
+}
+
+impl Subtrees {
+    fn of(nodes: &[super::turtle::Node], most: usize) -> Self {
+        let count = nodes.len();
+        let mut size = vec![1_usize; count];
+        for index in (0..count).rev() {
+            if let Some(parent) = nodes[index].parent {
+                size[parent as usize] += size[index];
+            }
+        }
+        let mut split = Self {
+            trees: Vec::new(),
+            rest: Vec::new(),
+            tree: vec![u32::MAX; count],
+            place: vec![0; count],
+        };
+        for index in 0..count {
+            let parent = nodes[index].parent.map(|parent| parent as usize);
+            let inherited = parent.map_or(u32::MAX, |parent| split.tree[parent]);
+            let tree = if inherited != u32::MAX {
+                inherited
+            } else if size[index] <= most && parent.is_some() {
+                split.trees.push(Vec::new());
+                u32::try_from(split.trees.len() - 1).unwrap_or(u32::MAX)
+            } else {
+                u32::MAX
+            };
+            let at = u32::try_from(index).unwrap_or(u32::MAX);
+            split.tree[index] = tree;
+            if tree == u32::MAX {
+                split.rest.push(at);
+            } else {
+                let list = &mut split.trees[tree as usize];
+                split.place[index] = u32::try_from(list.len()).unwrap_or(u32::MAX);
+                list.push(at);
+            }
+        }
+        split
+    }
+}
+
 /// Bending under load (`bend@1`, crown form step B): each segment, from
 /// the base up, turns what follows it about its start by the rotation
 /// vector `ω = rest + M⊥ ℓ / (E I)`.
@@ -2796,7 +2849,7 @@ pub fn bend(
     radii: &[f64],
     organ_area: &[f64],
     values: &[f64],
-    rest: &mut HashMap<u64, Vec3, impl std::hash::BuildHasher + Clone>,
+    rest: &mut HashMap<u64, Vec3, impl std::hash::BuildHasher + Clone + Sync>,
     dt: f64,
     ground_field: &SubstrateField,
 ) -> Result<(), GrowthError> {
@@ -2852,15 +2905,11 @@ pub fn bend(
         }
     }
 
-    let mut motion = vec![Rigid::IDENTITY; count];
-    let mut seen = HashMap::with_capacity_and_hasher(scene.segments.len(), rest.hasher().clone());
-    for index in 0..count {
-        let before = scene.nodes[index]
-            .parent
-            .map_or(Rigid::IDENTITY, |parent| motion[parent as usize]);
+    // A segment's turn, from its parent's motion `before`: its own motion
+    // and its rest bend for the next step.
+    let turn_one = |index: usize, before: Rigid| -> (Rigid, Option<(u64, Vec3)>) {
         let NodeKind::Segment(which) = scene.nodes[index].kind else {
-            motion[index] = before;
-            continue;
+            return (before, None);
         };
         let segment = &scene.segments[which as usize];
         let radius = radii[which as usize];
@@ -2898,41 +2947,123 @@ pub fn bend(
         if ground > 0.0 {
             turn = held_up(ground_field, ground, before, segment, turn);
         }
-        motion[index] = before.after(segment.start, turn);
-        seen.insert(segment.id, held + (sag * set - held * straighten) * dt);
+        (
+            before.after(segment.start, turn),
+            Some((segment.id, held + (sag * set - held * straighten) * dt)),
+        )
+    };
+
+    // Each node turns with its parent: the stems and the limbs' bases one
+    // after another, then the limbs side by side, each from its base up.
+    let large = count > 20_000;
+    let lease = Lease::take(if large { cores::per_task() } else { 1 });
+    let threads = lease.threads();
+    let limbs = Subtrees::of(
+        &scene.nodes,
+        if threads > 1 {
+            count / (8 * threads)
+        } else {
+            count
+        },
+    );
+    let mut motion = vec![Rigid::IDENTITY; count];
+    let mut seen = HashMap::with_capacity_and_hasher(scene.segments.len(), rest.hasher().clone());
+    for &index in &limbs.rest {
+        let index = index as usize;
+        let before = scene.nodes[index]
+            .parent
+            .map_or(Rigid::IDENTITY, |parent| motion[parent as usize]);
+        let (moved, held) = turn_one(index, before);
+        motion[index] = moved;
+        seen.extend(held);
+    }
+    let bent = {
+        let motion = &motion;
+        let limbs = &limbs;
+        cores::map(limbs.trees.iter().collect(), threads, &|tree: &Vec<u32>| {
+            let mut own: Vec<Rigid> = Vec::with_capacity(tree.len());
+            let mut held = Vec::with_capacity(tree.len());
+            for &index in tree {
+                let index = index as usize;
+                let before = scene.nodes[index].parent.map_or(Rigid::IDENTITY, |parent| {
+                    let parent = parent as usize;
+                    if limbs.tree[parent] == limbs.tree[index] {
+                        own[limbs.place[parent] as usize]
+                    } else {
+                        motion[parent]
+                    }
+                });
+                let (moved, bend) = turn_one(index, before);
+                own.push(moved);
+                held.extend(bend);
+            }
+            (own, held)
+        })
+    };
+    for (tree, (own, held)) in limbs.trees.iter().zip(bent) {
+        for (index, moved) in tree.iter().zip(own) {
+            motion[*index as usize] = moved;
+        }
+        seen.extend(held);
     }
     *rest = seen;
 
-    let mut height = 0.0_f64;
-    for segment in &mut scene.segments {
-        let node = segment.node as usize;
-        let before = scene.nodes[node]
-            .parent
-            .map_or(Rigid::IDENTITY, |parent| motion[parent as usize]);
-        segment.start = before.apply(segment.start);
-        segment.end = motion[node].apply(segment.end);
-        segment.left = motion[node].turn(segment.left);
-        height = height.max(segment.end.y);
-    }
-    for organ in &mut scene.organs {
-        let Some(node) = organ.node else {
-            continue;
-        };
-        let to = motion[node as usize];
-        organ.position = to.apply(organ.position);
-        organ.frame = crate::math::Frame {
-            h: to.turn(organ.frame.h),
-            l: to.turn(organ.frame.l),
-            u: to.turn(organ.frame.u),
-        }
-        .orthonormalized();
-        let reach = organ.position + organ.frame.h * organ.size;
-        height = height.max(organ.position.y).max(reach.y);
-    }
+    // Everything moves with its node, part by part side by side.
+    let nodes = &scene.nodes;
+    let motion = &motion;
+    let chunk = |len: usize| len.div_ceil(threads).max(1);
+    let size = chunk(scene.segments.len());
+    cores::map(
+        scene.segments.chunks_mut(size).collect(),
+        threads,
+        &|segments: &mut [Segment]| {
+            for segment in segments {
+                let node = segment.node as usize;
+                let before = nodes[node]
+                    .parent
+                    .map_or(Rigid::IDENTITY, |parent| motion[parent as usize]);
+                segment.start = before.apply(segment.start);
+                segment.end = motion[node].apply(segment.end);
+                segment.left = motion[node].turn(segment.left);
+            }
+        },
+    );
+    let size = chunk(scene.organs.len());
+    cores::map(
+        scene.organs.chunks_mut(size).collect(),
+        threads,
+        &|organs: &mut [OrganInstance]| {
+            for organ in organs {
+                let Some(node) = organ.node else {
+                    continue;
+                };
+                let to = motion[node as usize];
+                organ.position = to.apply(organ.position);
+                organ.frame = crate::math::Frame {
+                    h: to.turn(organ.frame.h),
+                    l: to.turn(organ.frame.l),
+                    u: to.turn(organ.frame.u),
+                }
+                .orthonormalized();
+            }
+        },
+    );
+    drop(lease);
     for query in &mut scene.queries {
         let to = motion[query.node as usize];
         query.position = to.apply(query.position);
         query.heading = to.turn(query.heading);
+    }
+    let mut height = 0.0_f64;
+    for segment in &scene.segments {
+        height = height.max(segment.end.y);
+    }
+    for organ in &scene.organs {
+        if organ.node.is_none() {
+            continue;
+        }
+        let reach = organ.position + organ.frame.h * organ.size;
+        height = height.max(organ.position.y).max(reach.y);
     }
     scene.height = height;
     Ok(())
