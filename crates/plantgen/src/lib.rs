@@ -274,4 +274,8 @@ pub mod venation;
 /// say, not one year more (pinidae 7, as 44 did for the other programs),
 /// and a pine's lowest needles as long as its species' longest stated
 /// needle life (Pinus's `needle_low`).
-pub const GENERATOR_REVISION: u32 = 49;
+/// 51: a conifer's side shoots live as long as their light pays for them
+/// (pinidae 8), not 20 years, so old limbs keep foliage along their length
+/// and open-grown crowns show less sky through them (50 is the crown
+/// front, #102).
+pub const GENERATOR_REVISION: u32 = 51;
