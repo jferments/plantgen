@@ -2,5 +2,64 @@
   "schema": 1,
   "rank": "family",
   "name": "Cunoniaceae",
-  "parent": "order/oxalidales"
+  "parent": "order/oxalidales",
+  "traits": {
+    "leaf_arrangement": {
+      "opposite": "often",
+      "whorled": "often",
+      "alternate": "rarely"
+    },
+    "leaf_division": {
+      "compound": "usually",
+      "simple": "sometimes"
+    },
+    "division_pattern": "pinnate",
+    "stipules": {
+      "true": "usually",
+      "false": "sometimes"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "sometimes",
+      "polygamous": "rarely"
+    },
+    "ovary_position": {
+      "superior": "usually",
+      "half_inferior": "rarely"
+    },
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "raceme": "often",
+      "head": "often",
+      "panicle": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "often",
+      "tepals": "often"
+    },
+    "fruit_type": {
+      "capsule": "usually",
+      "drupe": "rarely",
+      "nut": "rarely",
+      "follicle": "sometimes"
+    },
+    "stamens": {
+      "min": 4,
+      "max": 40
+    },
+    "carpels": {
+      "min": 2,
+      "max": 5
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cunoniaceae with Aphanopetalaceae, Baueraceae, Davidsoniaceae, Eucryphiaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves opposite or whorled, rarely alternate; leaves usually compound, sometimes simple; compound leaves pinnate; stipules usually present, sometimes absent; plants usually hermaphrodite, sometimes dioecious, rarely polygamous; ovary usually superior, rarely half inferior; stems woody; flowers solitary, in cymes, in racemes or in heads, sometimes in panicles; flowers actinomorphic; perianth sepals and petals or tepals; fruit usually capsule, sometimes follicle, rarely drupe or nut; stamens 4 to 40; carpels 2 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

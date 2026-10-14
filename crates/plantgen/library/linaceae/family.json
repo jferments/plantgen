@@ -2,5 +2,55 @@
   "schema": 1,
   "rank": "family",
   "name": "Linaceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "sometimes"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": {
+      "woody": "often",
+      "herbaceous": "often"
+    },
+    "inflorescence": {
+      "cyme": "usually",
+      "raceme": "sometimes",
+      "spike": "sometimes",
+      "panicle": "sometimes"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "sometimes"
+    },
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "often",
+      "drupe": "often",
+      "nut": "often"
+    },
+    "flower_merosity": 5,
+    "stamens": {
+      "min": 5,
+      "max": 15
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Linaceae with Erythroxylaceae, Hugoniaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate or opposite; leaves simple; margins entire; stipules present or absent; plants usually hermaphrodite, sometimes dioecious; ovary superior; floral cup absent; stems woody or herbaceous; flowers usually in cymes, sometimes in racemes, in spikes or in panicles; flowers usually actinomorphic, sometimes zygomorphic; perianth sepals and petals; fruit capsule, drupe or nut; parts of each whorl 5; stamens 5 to 15. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

@@ -2,5 +2,40 @@
   "schema": 1,
   "rank": "family",
   "name": "Metteniusaceae",
-  "parent": "order/metteniusales"
+  "parent": "order/metteniusales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": {
+      "pinnate": "often",
+      "palmate": "often"
+    },
+    "stipules": false,
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "rarely"
+    },
+    "ovary_position": "inferior",
+    "woodiness": "woody",
+    "inflorescence": "cyme",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "drupe",
+    "stamens": {
+      "min": 4,
+      "max": 40
+    },
+    "carpels": {
+      "min": 2,
+      "max": 2,
+      "high": 3
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Alangiaceae, which takes in Metteniusaceae: leaves alternate; leaves simple; veins pinnate or palmate; stipules absent; plants usually hermaphrodite, rarely dioecious; ovary inferior; stems woody; flowers in cymes; flowers actinomorphic; perianth sepals and petals; fruit drupe; stamens 4 to 40; carpels 2 (-3). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

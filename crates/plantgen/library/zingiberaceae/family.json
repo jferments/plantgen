@@ -2,5 +2,29 @@
   "schema": 1,
   "rank": "family",
   "name": "Zingiberaceae",
-  "parent": "order/zingiberales"
+  "parent": "order/zingiberales",
+  "traits": {
+    "woodiness": "herbaceous",
+    "phyllotaxis_pattern": "distichous",
+    "perianth": "sepals_and_petals",
+    "flower_merosity": 3,
+    "flower_symmetry": {
+      "zygomorphic": "usually",
+      "asymmetric": "sometimes"
+    },
+    "stamens": 1,
+    "carpels": 3,
+    "ovary_position": "inferior",
+    "fruit_type": {
+      "capsule": "often",
+      "berry": "often"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 369 Zingiberaceae: perennial herbs, usually aromatic, with creeping tuberous rhizomes; leaves in two ranks, sheathing at the base, the blade large with many close parallel veins running obliquely from the midrib; flowers mostly bisexual, irregular or lopsided; perianth of 6 in two whorls, the outer calyx-like, the inner petal-like; one fertile stamen, often with petal-like staminodes; ovary inferior, of 3 (rarely 2) cells; fruit fleshy and staying shut, or a capsule opening in three."
+    }
+  }
 }

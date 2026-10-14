@@ -2,5 +2,48 @@
   "schema": 1,
   "rank": "family",
   "name": "Cyclanthaceae",
-  "parent": "order/pandanales"
+  "parent": "order/pandanales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": {
+      "simple": "often",
+      "compound": "often"
+    },
+    "division_pattern": "palmate",
+    "leaf_venation": {
+      "single": "usually",
+      "palmate": "rarely"
+    },
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "sexual_system": "monoecious",
+    "ovary_position": {
+      "half_inferior": "often",
+      "inferior": "often"
+    },
+    "woodiness": {
+      "woody": "often",
+      "herbaceous": "often"
+    },
+    "perianth": {
+      "tepals": "often",
+      "absent": "often"
+    },
+    "fruit_type": "berry",
+    "stamens": {
+      "min": 10,
+      "max": 20,
+      "high": 150
+    },
+    "carpels": 4
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cyclanthaceae: leaves alternate; leaves simple or compound; compound leaves palmate; veins usually single, rarely palmate; leaf rosettes basal or none; plants monoecious; ovary half inferior or inferior; stems woody or herbaceous; perianth tepals or absent; fruit berry; stamens 10 to 20 (-150); carpels 4. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

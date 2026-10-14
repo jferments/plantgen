@@ -2,5 +2,35 @@
   "schema": 1,
   "rank": "family",
   "name": "Lophopyxidaceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "crenate": "often",
+      "serrate": "often"
+    },
+    "stipules": true,
+    "sexual_system": "monoecious",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": "panicle",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "samara",
+    "flower_merosity": 5,
+    "stamens": 5,
+    "carpels": {
+      "min": 4,
+      "max": 5
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Lophopyxidaceae: leaves alternate; leaves simple; margins crenate or serrate; stipules present; plants monoecious; ovary superior; floral cup absent; stems woody; flowers in panicles; flowers actinomorphic; perianth sepals and petals; fruit samara; parts of each whorl 5; stamens 5; carpels 4 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

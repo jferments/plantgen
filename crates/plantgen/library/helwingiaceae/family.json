@@ -2,5 +2,45 @@
   "schema": 1,
   "rank": "family",
   "name": "Helwingiaceae",
-  "parent": "order/aquifoliales"
+  "parent": "order/aquifoliales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "serrate",
+    "leaf_venation": "pinnate",
+    "leaf_shape": {
+      "lanceolate": "often",
+      "ovate": "often"
+    },
+    "stipules": true,
+    "sexual_system": "dioecious",
+    "ovary_position": "inferior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": "umbel",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": "drupe",
+    "flower_merosity": {
+      "min": 3,
+      "max": 4,
+      "high": 5
+    },
+    "stamens": {
+      "min": 3,
+      "max": 4,
+      "high": 5
+    },
+    "carpels": {
+      "min": 3,
+      "max": 4
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Helwingiaceae: leaves alternate; leaves simple; margins serrate; veins pinnate; blades lanceolate or ovate; stipules present; plants dioecious; ovary inferior; floral cup absent; stems woody; flowers in umbels; flowers actinomorphic; perianth tepals; fruit drupe; parts of each whorl 3 to 4 (-5); stamens 3 to 4 (-5); carpels 3 to 4. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

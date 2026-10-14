@@ -2,5 +2,35 @@
   "schema": 1,
   "rank": "family",
   "name": "Erythroxylaceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "stipules": true,
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "rarely"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "drupe",
+    "flower_merosity": 5,
+    "stamens": 10,
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Erythroxylaceae: leaves usually alternate, rarely opposite; leaves simple; margins entire; veins pinnate; stipules present; plants usually hermaphrodite, rarely dioecious; ovary superior; floral cup absent; stems woody; flowers actinomorphic; perianth sepals and petals; fruit drupe; parts of each whorl 5; stamens 10; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

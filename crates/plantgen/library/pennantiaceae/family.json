@@ -2,5 +2,47 @@
   "schema": 1,
   "rank": "family",
   "name": "Pennantiaceae",
-  "parent": "order/apiales"
+  "parent": "order/apiales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": "pinnate",
+    "stipules": false,
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "dioecious": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "panicle": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "rarely"
+    },
+    "fruit_type": "drupe",
+    "flower_merosity": 5,
+    "stamens": 5,
+    "carpels": {
+      "min": 2,
+      "max": 3
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Pennantiaceae: leaves alternate; leaves simple; margins entire or dentate; veins pinnate; stipules absent; plants hermaphrodite, dioecious or polygamous; ovary superior; floral cup absent; stems woody; flowers solitary, in cymes or in panicles; flowers actinomorphic; perianth usually sepals and petals, rarely tepals; fruit drupe; parts of each whorl 5; stamens 5; carpels 2 to 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

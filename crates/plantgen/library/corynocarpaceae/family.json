@@ -2,5 +2,35 @@
   "schema": 1,
   "rank": "family",
   "name": "Corynocarpaceae",
-  "parent": "order/cucurbitales"
+  "parent": "order/cucurbitales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": true,
+    "woodiness": "woody",
+    "inflorescence": {
+      "panicle": "often",
+      "raceme": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "drupe",
+    "flower_merosity": 5,
+    "stamens": 5,
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Corynocarpaceae: leaves alternate; leaves simple; margins entire; stipules present or absent; plants hermaphrodite; ovary superior; floral cup present; stems woody; flowers in panicles or in racemes; flowers actinomorphic; perianth sepals and petals; fruit drupe; parts of each whorl 5; stamens 5; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

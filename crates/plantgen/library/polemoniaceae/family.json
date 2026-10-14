@@ -2,5 +2,48 @@
   "schema": 1,
   "rank": "family",
   "name": "Polemoniaceae",
-  "parent": "order/ericales"
+  "parent": "order/ericales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "rarely"
+    },
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often"
+    },
+    "leaf_division": {
+      "simple": "often",
+      "compound": "often"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "perianth": "sepals_and_petals",
+    "flower_merosity": 5,
+    "stamens": 5,
+    "corolla_shape": {
+      "tubular": "usually",
+      "salverform": "sometimes"
+    },
+    "inflorescence": {
+      "corymb": "often",
+      "head": "often"
+    },
+    "ovary_position": "superior",
+    "carpels": {
+      "min": 2,
+      "max": 3,
+      "typical": 3
+    },
+    "fruit_type": "capsule"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 335 Polemoniaceae: annual to perennial herbs, rarely shrubs; leaves alternate or opposite, entire or palmately or pinnately divided; flowers regular, rarely nearly two-lipped, often crowded in corymbs or heads; sepals 5, joined; corolla of 5 united petals, a tube; stamens 5 on the corolla; ovary superior, of 3 (rarely 2) cells; fruit a capsule, rarely staying shut. The phloxes' salver-shaped corolla is from common knowledge, inferred."
+    }
+  }
 }

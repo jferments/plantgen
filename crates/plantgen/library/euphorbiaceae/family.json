@@ -2,5 +2,39 @@
   "schema": 1,
   "rank": "family",
   "name": "Euphorbiaceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "woodiness": {
+      "woody": "often",
+      "herbaceous": "often"
+    },
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "sometimes"
+    },
+    "stipules": true,
+    "sexual_system": {
+      "monoecious": "usually",
+      "dioecious": "sometimes"
+    },
+    "stamens": {
+      "min": 1,
+      "max": 1000
+    },
+    "fruit_type": {
+      "capsule": "usually",
+      "drupe": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 133 Euphorbiaceae: herbs, shrubs or trees, some with milky sap; leaves alternate, rarely opposite, simple or compound, sometimes reduced, mostly with stipules; flowers unisexual, mostly both sexes on one plant; petals mostly absent; stamens from one to a thousand; ovary mostly of three cells; fruit a capsule or a drupe. Hutchinson's family also holds what APG sets apart as Phyllanthaceae and Picrodendraceae; only characters that hold for the narrower family are stated, and the perianth (sepals only in most, none in Euphorbia's cyathium) is left for a value the vocabulary has."
+    }
+  }
 }

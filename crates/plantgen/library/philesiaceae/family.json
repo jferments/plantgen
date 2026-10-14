@@ -2,5 +2,47 @@
   "schema": 1,
   "rank": "family",
   "name": "Philesiaceae",
-  "parent": "order/liliales"
+  "parent": "order/liliales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": {
+      "pinnate": "rarely",
+      "palmate": "rarely"
+    },
+    "leaf_shape": {
+      "linear": "often",
+      "lanceolate": "often",
+      "ovate": "often",
+      "oblong": "sometimes"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "superior": "usually",
+      "inferior": "sometimes"
+    },
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "usually",
+      "panicle": "sometimes",
+      "cyme": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "often",
+      "tepals": "often"
+    },
+    "fruit_type": "berry",
+    "flower_merosity": 3,
+    "stamens": 6,
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Philesiaceae with Petermanniaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves simple; margins entire; veins pinnate or palmate; blades linear, lanceolate or ovate, sometimes oblong; plants hermaphrodite; ovary usually superior, sometimes inferior; stems woody; flowers usually solitary, sometimes in panicles or in cymes; flowers actinomorphic; perianth sepals and petals or tepals; fruit berry; parts of each whorl 3; stamens 6; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

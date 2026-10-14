@@ -2,5 +2,39 @@
   "schema": 1,
   "rank": "family",
   "name": "Elaeagnaceae",
-  "parent": "order/rosales"
+  "parent": "order/rosales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "stipules": false,
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "polygamous": "often",
+      "dioecious": "often"
+    },
+    "ovary_position": "superior",
+    "hypanthium": true,
+    "woodiness": "woody",
+    "perianth": "tepals",
+    "fruit_type": "achene",
+    "stamens": {
+      "min": 4,
+      "max": 8,
+      "low": 2,
+      "high": 12
+    },
+    "carpels": 1
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Elaeagnaceae: leaves usually alternate, rarely opposite; leaves simple; margins entire; veins pinnate; stipules absent; plants hermaphrodite, polygamous or dioecious; ovary superior; floral cup present; stems woody; perianth tepals; fruit achene; stamens (2-) 4 to 8 (-12); carpels 1. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

@@ -2,5 +2,34 @@
   "schema": 1,
   "rank": "family",
   "name": "Caryophyllaceae",
-  "parent": "order/caryophyllales"
+  "parent": "order/caryophyllales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "usually",
+      "semi": "sometimes"
+    },
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "stipules": false,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "stamens": {
+      "min": 1,
+      "max": 10
+    },
+    "ovary_position": "superior",
+    "inflorescence": {
+      "cyme": "usually",
+      "solitary": "sometimes"
+    },
+    "fruit_type": "capsule"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 273 Caryophyllaceae: annual or perennial herbs; leaves opposite, simple, entire, often joined at the base by a line across the stem; stipules absent, or papery where present; flowers regular, mostly bisexual, alone or in cymes; sepals free or joined in a tube; petals as many as the sepals, often small or absent; up to 10 stamens; ovary superior with its ovules on a free central column; fruit a dry capsule opening by valves or teeth at the top. The few species with papery stipules (the sandworts' kin) are read as exceptions to 'stipules absent'. Library 1.0's family is 27% dwarf shrubs, stated as semi-woody sometimes."
+    }
+  }
 }
