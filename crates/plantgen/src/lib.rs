@@ -323,4 +323,9 @@ pub mod venation;
 /// periods from floras in place of hand-set `crown_height`, `height_max`,
 /// `stem_height`, `culm_height` and `adult_age`, so the rank rules size
 /// them, and a stated range spreads their heights across seeds.
-pub const GENERATOR_REVISION: u32 = 53;
+/// 54: a conifer's side shoots live as long as their light pays for them
+/// (pinidae 9), not 20 years, so old limbs keep foliage along their
+/// length and open-grown spruces, firs, hemlocks and cedars fill in
+/// (53 is heights from floras,
+/// #113).
+pub const GENERATOR_REVISION: u32 = 54;

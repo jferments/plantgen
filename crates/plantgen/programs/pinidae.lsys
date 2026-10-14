@@ -74,9 +74,19 @@
 # is in (`age + dt >=`), as in the other programs (generator revision
 # 44).
 #
+# Revision 9 (full crowns): a side shoot lives as long as its light pays
+# for it, as a branch has since revision 5, not side_years 20. A side
+# shoot that died at 20 years took its foliage with it, so old limbs
+# carried foliage only at their ends, and the crown showed the sky
+# through a cage of bare limbs: at 60 years a third to two fifths of a
+# spruce's, fir's, hemlock's or cedar's open-grown outline, and a
+# 200-year Douglas-fir carried less foliage than a 60-year one. Its own shade and its shoots' shortening with the wood
+# from the stem still end it. side_years 0 sets no calendar limit; a
+# species whose branchlets fall sooner (bald cypress) still states one.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem pinidae 8;
+lsystem pinidae 9;
 
 # Height of the leader over time: a Chapman-Richards curve,
 # height = height_max * (1 - exp(-height_rate * age))^height_shape.
@@ -98,7 +108,7 @@ param side_growth = 0.55;      # side shoots grow this fraction as fast
 param side_chance = 0.75;      # chance of a side shoot on each side each year
 param side_angle = 50;         # angle between a branch and its side shoots
 param side_order = 1;          # highest branch order that forms side shoots
-param side_years = 20;         # years a side shoot keeps growing
+param side_years = 0;          # years a side shoot keeps growing; 0 while its light pays
 param min_shoot = 0.025;       # an apex dies once its shoot would be shorter
 param shade_death = 0.1;       # light below which an apex starves
 param shade_years = 3;         # years in a row an apex survives starving
@@ -192,12 +202,12 @@ decompose I(n) -> ;
 interpret N -> &(0.5 * nod * max(0, 1 - age / nod_years));
 
 # An apex dies after shade_years starving in deep shade, once its shoot
-# would be too short, on a side shoot after side_years, or when its
+# would be too short, on a side shoot after side_years if set, or when its
 # drooping branch reaches the ground. Its shoot shortens with the wood
 # between it and the stem (revision 5).
 rule C(o, v, s, w) : sd < ground_gap + 0.05 -> ;
 rule C(o, v, s, w) : light < shade_death && s + 1 >= shade_years -> ;
-rule C(o, v, s, w) : o > 1 && age >= side_years -> ;
+rule C(o, v, s, w) : o > 1 && side_years > 0 && age >= side_years -> ;
 rule C(o, v, s, w) : branch_growth * v * pow(side_growth, o - 1) / (1 + pow(w / branch_reach, 2))
                      * (0.3 + 0.7 * light) < min_shoot -> ;
 rule C(o, v, s, w) -> G(o, branch_growth * v * pow(side_growth, o - 1) / (1 + pow(w / branch_reach, 2))
