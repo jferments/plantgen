@@ -88,7 +88,10 @@ prompt injection. So, without exception:
     value may be a formula, worked out only where
     the map picks it. A map with `"between": true` reads states that tie
     ("ovate to lanceolate") as the value between theirs: the mean of
-    numbers, and lists as long as each other item by item. Maps at the
+    numbers, and lists as long as each other item by item. A map's `else`
+    is its value where its trait is unstated or its states tie for the
+    most usual (a family "often" rosulate and "often" not), so only a
+    state stated as the usual one picks from the table. Maps at the
     kingdom (`_ranks/kingdom/plantae.json`) give `simple` and `sprig`
     leaves an `outline` and a `width` from `leaf_shape`; an outline takes
     the place of a card's `widest`, `tip` and `base` set farther off than
