@@ -515,7 +515,7 @@ fn list() -> Result<(), Failure> {
         let spec = library.spec(id).map_err(|error| error.to_string())?;
         out!(
             "  {id:<width$}  {} ({}), program `{}`{}",
-            spec.taxon.common_name,
+            spec.taxon.name(),
             spec.taxon.scientific_name,
             spec.generator.program,
             if entry.path.is_some() {
@@ -1386,7 +1386,7 @@ fn organs_command(args: &[String]) -> Result<(), Failure> {
     let tallies = organs::census(graph, &organ_types, &structure_types, &looks, &seasons, day);
     out!(
         "{} ({}), {} environment, seed {seed}: {} years, day {day}",
-        spec.taxon.common_name,
+        spec.taxon.name(),
         spec.id,
         environment.name(),
         graph.age
@@ -1627,7 +1627,7 @@ fn mechanics_command(args: &[String]) -> Result<(), Failure> {
     let mark = |key: &str| if given.contains(&key) { " (given)" } else { "" };
     out!(
         "{} ({}), seed {seed}, {:.0} years, {:.1} m",
-        spec.taxon.common_name,
+        spec.taxon.name(),
         spec.id,
         graph.age,
         graph.height
@@ -1796,7 +1796,7 @@ fn validate_command(args: &[String]) -> Result<(), Failure> {
         let report = checks::check(&spec, library, &traits, &seeds)?;
         out!(
             "{} ({}): {} plants, seeds {}, {} environment, {} years",
-            spec.taxon.common_name,
+            spec.taxon.name(),
             spec.id,
             report.seeds.len(),
             report
@@ -2008,7 +2008,7 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
     )?;
     out!(
         "{} ({}), {} environment, seed {seed}: grown in {:.1} s; peak {} modules, {} segments, {} organs",
-        spec.taxon.common_name,
+        spec.taxon.name(),
         spec.id,
         environment.name(),
         started.elapsed().as_secs_f64(),

@@ -39,6 +39,7 @@
       "zygomorphic": "usually",
       "actinomorphic": "sometimes"
     },
+    "zygomorphy": "other",
     "perianth": "sepals_and_petals",
     "fruit_type": {
       "capsule": "usually",
@@ -52,6 +53,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Columelliaceae with Desfontainiaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves opposite; leaves simple; margins entire or dentate; leaves evergreen; stipules usually absent, sometimes present; plants hermaphrodite; ovary usually inferior, sometimes superior; floral cup usually present, sometimes absent; joined corolla usually rotate, sometimes funnelform, tubular or salverform; stems woody; flowers solitary or in cymes; flowers usually zygomorphic, sometimes actinomorphic; perianth sepals and petals; fruit usually capsule, sometimes berry; stamens 2; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Columelliaceae with Desfontainiaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other."
     }
   }
 }

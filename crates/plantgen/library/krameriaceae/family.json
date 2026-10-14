@@ -23,6 +23,7 @@
       "raceme": "often"
     },
     "flower_symmetry": "zygomorphic",
+    "zygomorphy": "other",
     "perianth": "sepals_and_petals",
     "fruit_type": "achene",
     "stamens": {
@@ -37,6 +38,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Krameriaceae: leaves alternate; leaves usually simple, rarely compound; margins entire; stipules absent; plants hermaphrodite; ovary superior; floral cup absent; stems woody or herbaceous; flowers solitary or in racemes; flowers zygomorphic; perianth sepals and petals; fruit achene; stamens (3-) 4; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Krameriaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other."
     }
   }
 }

@@ -30,6 +30,7 @@
     },
     "inflorescence": "panicle",
     "flower_symmetry": "zygomorphic",
+    "zygomorphy": "other",
     "perianth": {
       "sepals_and_petals": "usually",
       "tepals": "sometimes"
@@ -53,6 +54,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Vochysiaceae: leaves opposite or whorled, rarely alternate; leaves simple; leaves evergreen; stipules present or absent; plants hermaphrodite; ovary superior or inferior; floral cup present or absent; stems usually woody, rarely herbaceous; flowers in panicles; flowers zygomorphic; perianth usually sepals and petals, sometimes tepals; fruit capsule or samara; stamens 1 (-4); carpels 1 to 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Vochysiaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other."
     }
   }
 }
