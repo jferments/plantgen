@@ -1,5 +1,5 @@
 # The herbs of Equisetaceae, on the herb base (growth plan G2.3a). It
-# gives the values its species leave unset (19 of herb's parameters), as
+# gives the values its species leave unset (22 of herb's parameters), as
 # the herb program's defaults until then; each species sets the rest.
 #
 # One step is one year. Angles are degrees; lengths are metres.
@@ -23,6 +23,9 @@ param buds_above = 0.75;         # share of the raceme above which are buds
 param fruit_length = 0.06;
 param fruit_angle = 25;
 param bud_size = 0.012;
+param bud_spacing = 1;           # buds spaced as the flowers are
+param bud_lean = 0.6;            # a bud's stalk at 0.6 of flower_angle
+param bud_stalk = 0.5;           # a bud's stalk half a pedicel
 param nod = 30;                  # degrees the bud-tipped end bends over
 param light_cell = 0.05;         # light voxel edge
 param flowering_share = 1;     # every adult stem ends in a raceme

@@ -345,4 +345,9 @@ pub mod venation;
 /// rosette-succulent forms), and Aloe vera clumps and hangs its flowers
 /// (aloe 2: pups as it flowers, nodding tubular flowers on a tall
 /// raceme) (56 is flowering and fruiting months, #109).
-pub const GENERATOR_REVISION: u32 = 57;
+/// 58: finer detail from photographs and floras: a head's rays may end
+/// square (`ray_tip`, a solid leaf's `tip`), a ray's width and tip come
+/// from `ray_width_m` and `ray_apex`, and herb racemes may crowd their
+/// buds at the tip (`bud_spacing`, `bud_lean`, `bud_stalk`); oxeye daisy
+/// and common camas measured from photographs (57 is succulents, #111).
+pub const GENERATOR_REVISION: u32 = 58;

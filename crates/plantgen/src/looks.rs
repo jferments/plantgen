@@ -1268,6 +1268,10 @@ pub struct Head {
     pub rays: u32,
     /// Ray width over the width of its share of the circle.
     pub ray_width: f64,
+    /// A ray's tip: 0 a blunt point, 1 a parallel-sided strap with a
+    /// square end (an oxeye daisy's truncate, toothed rays).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub ray_tip: f64,
     /// Radius of the disc, the receptacle, over the head's.
     pub disc: f64,
     /// What its florets are: rays round a disc of small tubes (`radiate`,
@@ -1316,6 +1320,7 @@ impl Default for Head {
         Self {
             rays: 21,
             ray_width: 0.7,
+            ray_tip: 0.0,
             disc: 0.32,
             kind: HeadKind::Radiate,
             florets: 60,
@@ -2164,6 +2169,7 @@ impl Shape {
             Self::Head(s) => {
                 count("rays", s.rays, 0, 60)?;
                 check("ray_width", s.ray_width, 0.1, 1.2)?;
+                check("ray_tip", s.ray_tip, 0.0, 1.0)?;
                 check("disc", s.disc, 0.1, 1.0)?;
                 if s.kind != HeadKind::Radiate && s.rays > 0 {
                     return Err(format!(

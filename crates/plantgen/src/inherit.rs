@@ -1116,6 +1116,7 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
             &[
                 ("rays", Count),
                 ("ray_width", Number),
+                ("ray_tip", Number),
                 ("disc", Number),
                 ("kind", Word),
                 ("florets", Count),

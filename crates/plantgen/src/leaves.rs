@@ -17,12 +17,13 @@
 //! ```math
 //! w(u) = \begin{cases}
 //!   \beta + (1 - \beta)\,\operatorname{smoothstep}(0, u_w, u) & u < u_w \\
-//!   \left(1 - \frac{u - u_w}{1 - u_w}\right)^{\tau} & u \ge u_w
+//!   \kappa + (1 - \kappa) \left(1 - \frac{u - u_w}{1 - u_w}\right)^{\tau} & u \ge u_w
 //! \end{cases}
 //! ```
 //!
-//! for the base share $`\beta`$, the widest point $`u_w`$ and the taper
-//! $`\tau`$. Across the leaf, at $`x \in [-1, 1]`$ of the half-width, the
+//! for the base share $`\beta`$, the widest point $`u_w`$, the taper
+//! $`\tau`$ and the tip share $`\kappa`$ (0 a point; more a square end,
+//! closed by a fan round the midrib's end). Across the leaf, at $`x \in [-1, 1]`$ of the half-width, the
 //! section's centre lies $`f\,\tfrac W2 w(u)\,g(x)`$ along the face for the
 //! fold $`f`$ (keeled $`g = |x|`$, channelled $`g = x^2`$, flat and
 //! triangular $`g = 0`$), and the leaf is $`t\,W\,w(u)\,(1 - x^2)`$ thick
@@ -39,6 +40,11 @@ use crate::graph::PlantGraph;
 use crate::looks::{Look, within};
 use crate::math::{self, Vec3};
 use crate::mesh::{Mesh, Vertex};
+
+#[allow(clippy::trivially_copy_pass_by_ref)]
+fn is_zero(value: &f64) -> bool {
+    *value == 0.0
+}
 
 /// How a solid leaf is shaped across.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
@@ -120,6 +126,10 @@ pub struct SolidLeaf {
     /// Power of the taper from the widest point to the tip: 1 straight,
     /// less a blunter tip, more a longer point.
     pub taper: f64,
+    /// Width kept at the tip as a share of the widest: 0 a point, more a
+    /// square end (a daisy ray's truncate tip).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub tip: f64,
     /// Degrees the midrib bends toward the leaf's back from base to tip.
     pub arch: f64,
     /// Degrees the section turns about the midrib from base to tip.
@@ -149,6 +159,7 @@ impl SolidLeaf {
         within("solid widest", self.widest, 0.001, 0.999)?;
         within("solid base", self.base, 0.0, 4.0)?;
         within("solid taper", self.taper, 0.05, 10.0)?;
+        within("solid tip", self.tip, 0.0, 1.0)?;
         within("solid arch", self.arch, -180.0, 180.0)?;
         within("solid twist", self.twist, -720.0, 720.0)?;
         within(
@@ -186,6 +197,7 @@ impl Default for SolidLeaf {
             widest: 0.2,
             base: 0.8,
             taper: 1.0,
+            tip: 0.0,
             arch: 0.0,
             twist: 0.0,
             margin: None,
@@ -222,10 +234,12 @@ impl SolidLeaf {
         if u < widest {
             math::lerp(self.base, 1.0, math::smoothstep(0.0, widest, u))
         } else {
-            math::pow(
-                (1.0 - (u - widest) / (1.0 - widest)).max(0.0),
-                self.taper.max(0.05),
-            )
+            let tip = self.tip.clamp(0.0, 1.0);
+            tip + (1.0 - tip)
+                * math::pow(
+                    (1.0 - (u - widest) / (1.0 - widest)).max(0.0),
+                    self.taper.max(0.05),
+                )
         }
     }
 
@@ -355,7 +369,14 @@ impl Leaf {
         let loop_points = 4 * across;
         let half = self.width * 0.5;
         let thick = solid.thickness * self.width;
-        for &(centre, _, side, face, u) in &frames[..stations] {
+        // A square tip keeps a ring at the tip itself, its end closed by a
+        // fan round the midrib's end.
+        let rings = if solid.tip > 0.0 {
+            stations + 1
+        } else {
+            stations
+        };
+        for &(centre, _, side, face, u) in &frames[..rings] {
             let w = solid.width_at(u);
             let ring = |x: f64, top: bool| {
                 let (offset, above, below) = solid.across(x);
@@ -387,7 +408,7 @@ impl Leaf {
         let index = |ring: usize, k: usize| {
             u32::try_from(first + ring * loop_points + k % loop_points).unwrap_or(0)
         };
-        for ring in 0..stations - 1 {
+        for ring in 0..rings - 1 {
             for k in 0..loop_points {
                 let (a, b) = (index(ring, k), index(ring, k + 1));
                 let (c, d) = (index(ring + 1, k), index(ring + 1, k + 1));
@@ -395,7 +416,7 @@ impl Leaf {
             }
         }
         for k in 0..loop_points {
-            let (a, b) = (index(stations - 1, k), index(stations - 1, k + 1));
+            let (a, b) = (index(rings - 1, k), index(rings - 1, k + 1));
             mesh.indices.extend_from_slice(&[a, tip, b]);
         }
         // The base, closed by a fan round its centre.
@@ -579,6 +600,35 @@ mod tests {
             let w = solid.width_at(0.25 + 0.01 * f64::from(k));
             assert!(w <= last + 1e-12, "the taper never widens");
             last = w;
+        }
+    }
+
+    #[test]
+    fn a_square_tip_keeps_its_width_and_closes_its_end() {
+        let pointed = SolidLeaf {
+            widest: 0.65,
+            base: 0.55,
+            taper: 0.2,
+            ..SolidLeaf::default()
+        };
+        let square = SolidLeaf {
+            tip: 0.85,
+            ..pointed.clone()
+        };
+        assert!(pointed.width_at(1.0).abs() < 1e-12);
+        assert!((square.width_at(1.0) - 0.85).abs() < 1e-12);
+        assert!((square.width_at(0.65) - 1.0).abs() < 1e-12);
+        // Each draws a closed solid: every edge shared by two triangles.
+        for solid in [&pointed, &square] {
+            let mut mesh = Mesh::default();
+            leaf().draw(solid, 6, 2, &mut mesh);
+            let mut edges = std::collections::BTreeMap::new();
+            for t in mesh.indices.chunks(3) {
+                for (a, b) in [(t[0], t[1]), (t[1], t[2]), (t[2], t[0])] {
+                    *edges.entry((a.min(b), a.max(b))).or_insert(0) += 1;
+                }
+            }
+            assert!(edges.values().all(|&n| n == 2));
         }
     }
 

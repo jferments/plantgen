@@ -118,7 +118,7 @@
       "between": true,
       "why": "A radiate head's disc is about as wide as its involucre, with a ray's length beyond it on either side: the disc's share of the head's width. A head of disc florets alone is its disc, its florets spreading a little past the involucre's rim. A head of straps opens to about twice its involucre's width, the model's choice from photographs of cat's ears and hawkweeds, so its involucre is half of it."
     },
-    "appearance.organs.*.shape.florets": {
+    "appearance.organs.*.shape.ray_width": {"template": "head", "map": {"capitulum_kind": {"radiate": {"rule": "clamp(ray_florets * ray_width_m / (3.14159 * (0.92 * involucre_diameter_m / (involucre_diameter_m + 2 * ray_length_m) + 1) * (0.5 * involucre_diameter_m + ray_length_m)), 0.1, 1.2)"}}}, "between": true, "why": "A ray is as wide as the flora or photographs measure it: its width, over the head's radius (half the involucre and a ray's length), over its share of the circle through the rays' middles, where the drawing measures it. Above 1 neighbouring rays overlap there."}, "appearance.organs.*.shape.ray_tip": {"template": "head", "map": {"ray_apex": {"acute": 0, "rounded": 0.4, "truncate": 1, "toothed": 1}}, "why": "A ray is drawn with its tip as stated: a blunt point, rounded, or a parallel-sided strap cut square (a toothed tip's small teeth too small to draw)."}, "appearance.organs.*.shape.florets": {
       "template": "head",
       "map": {
         "capitulum_kind": {

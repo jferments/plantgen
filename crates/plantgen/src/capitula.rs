@@ -52,7 +52,8 @@
 //! **Drawing.** The solid draws each phyllary as a kite seen from both
 //! sides in the head's `bracts` colour, the receptacle as a dome in the
 //! accent colour, each ray as a thin solid leaf as a petal is drawn
-//! (`crate::blooms`), an open disc floret as a five-sided tube with five
+//! (`crate::blooms`), its tip a blunt point or, by `ray_tip` toward 1, a
+//! parallel-sided strap with a square end, an open disc floret as a five-sided tube with five
 //! spreading lobes and a bud as a five-sided point, both in the accent
 //! colour, each strap of a ligulate head as a ray is, in the look's
 //! colour, cypselae in the accent darkened and the pappus off-white. A part mesh
@@ -500,14 +501,17 @@ pub(crate) fn draw(
         part,
         mesh,
     );
+    // A ray's outline: from a blunt point (`ray_tip` 0) to a parallel-sided
+    // strap with a square end (1), as an oxeye daisy's.
+    let square = head.ray_tip.clamp(0.0, 1.0);
     let ray = SolidLeaf {
         section: Section::Flat,
         thickness: 0.05,
         fold: 0.0,
-        widest: 0.55,
-        base: 0.35,
-        // Blunt, as a ray's tip is.
-        taper: 0.45,
+        widest: math::lerp(0.55, 0.65, square),
+        base: math::lerp(0.35, 0.55, square),
+        taper: math::lerp(0.45, 0.2, square),
+        tip: 0.85 * square,
         arch: form.curl,
         twist: 0.0,
         margin: None,
@@ -540,13 +544,13 @@ pub(crate) fn draw(
                 part,
                 &[
                     at(0.0, 0.0),
-                    at(0.0, 0.18),
-                    at(0.55, 0.5),
-                    at(0.9, 0.3),
+                    at(0.0, math::lerp(0.18, 0.25, square)),
+                    at(math::lerp(0.55, 0.65, square), 0.5),
+                    at(math::lerp(0.9, 1.0, square), math::lerp(0.3, 0.42, square)),
                     at(1.0, 0.0),
-                    at(0.9, -0.3),
-                    at(0.55, -0.5),
-                    at(0.0, -0.18),
+                    at(math::lerp(0.9, 1.0, square), -math::lerp(0.3, 0.42, square)),
+                    at(math::lerp(0.55, 0.65, square), -0.5),
+                    at(0.0, -math::lerp(0.18, 0.25, square)),
                 ],
                 [colour.map(|c| c * 0.85), colour],
                 mesh,
@@ -794,10 +798,18 @@ pub(crate) fn draw_reduced(
         let half = frame.axis.cross(out).normalize_or(frame.side) * (s.width * r * 0.5);
         let length = s.length * r;
         if part.coarse == 0 {
-            let widest = foot + heading * (length * 0.55);
+            let square = head.ray_tip.clamp(0.0, 1.0);
+            let widest = foot + heading * (length * math::lerp(0.55, 0.65, square));
+            let end = foot + heading * length;
             both(
                 part,
-                &[foot, widest + half, foot + heading * length, widest - half],
+                &[
+                    foot,
+                    widest + half,
+                    end + half * (0.85 * square),
+                    end - half * (0.85 * square),
+                    widest - half,
+                ],
                 colours.rays,
                 mesh,
             );
@@ -937,12 +949,14 @@ impl Painter {
             let reach = start + ray.length * math::cos(math::radians(8.0));
             let u = (along - start) / (reach - start).max(1e-6);
             if (0.0..=1.0).contains(&u) {
+                let square = self.head.ray_tip.clamp(0.0, 1.0);
                 let mut width = math::sin(std::f64::consts::PI / f64::from(count))
                     * self.head.ray_width
-                    * (1.0 - 0.2 * u)
+                    * (1.0 - 0.2 * (1.0 - square) * u)
                     * reach;
                 if u > 0.85 {
-                    width *= math::sqrt((1.0 - ((u - 0.85) / 0.15).powi(2)).max(0.0));
+                    let round = math::sqrt((1.0 - ((u - 0.85) / 0.15).powi(2)).max(0.0));
+                    width *= math::lerp(round, 1.0, 0.85 * square);
                 }
                 if across.abs() < width {
                     let groove = if across.abs() < width * 0.12 {

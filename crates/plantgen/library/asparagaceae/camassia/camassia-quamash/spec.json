@@ -22,15 +22,15 @@
       "nodes": 0,
       "bare": 1.0,
       "raceme": 0.35,
-      "flowers": 14,
+      "flowers": 24,
       "flower_size": 0.05,
-      "pedicel": 0.02,
-      "flower_angle": 55,
+      "pedicel": 0.012,
+      "flower_angle": 50,
       "fruit_below": 0.2,
-      "buds_above": 0.8,
+      "buds_above": 0.55,
       "nod": 5,
-      "fruit_length": 0.02,
-      "bud_size": 0.015,
+      "fruit_length": 0.012,
+      "bud_size": 0.065,
       "basal_leaves": 5,
       "basal_length": 0.35,
       "basal_angle": 30,
@@ -40,8 +40,11 @@
       "basal_area": 0.049,
       "basal_piece_area": 0.091,
       "flower_area": 0.333,
-      "bud_area": 0.51,
-      "fruit_area": 0.763
+      "bud_area": 0.027,
+      "fruit_area": 0.763,
+      "bud_spacing": 0.3,
+      "bud_lean": 0.2,
+      "bud_stalk": 0.3
     }
   },
   "growth": {
@@ -68,20 +71,28 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petal_width": 0.75,
-          "point": 0.7,
+          "petal_width": 0.6,
+          "point": 0.5,
           "notch": 0.0,
-          "centre": 0.12
+          "centre": 0.12,
+          "stamen_length": 0.5
         },
-        "colour": [0.28, 0.27, 0.72],
-        "accent": [0.85, 0.75, 0.25]
+        "colour": [0.22, 0.19, 0.64],
+        "accent": [0.85, 0.55, 0.03]
       },
       "bud": {
-        "shape": { "template": "fruit", "aspect": 0.4 },
-        "colour": [0.25, 0.25, 0.55]
+        "shape": {
+          "template": "flower",
+          "petals": 6,
+          "perianth": "tepals",
+          "petal_width": 0.5,
+          "point": 0.7,
+          "open": 0.0
+        },
+        "colour": [0.15, 0.15, 0.42]
       },
       "fruit": {
-        "shape": { "template": "fruit", "aspect": 0.6 },
+        "shape": { "template": "fruit", "aspect": 0.5 },
         "colour": [0.25, 0.3, 0.12]
       }
     }
@@ -103,6 +114,86 @@
     }
   },
   "evidence": {
+    "generator.params.bud_area": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The area a bud drawn as a closed flower covers on an organ 1 m long, measured on its drawing, so its shade matches what it draws."
+    },
+    "appearance.organs.flower.shape.point": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Tepals acute, narrowing over their outer third to a point (observations 212349274, 52750451, 205778790)."
+    },
+    "appearance.organs.flower.shape.stamen_length": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Six spreading stamens about half the flower's radius long, their anthers bright yellow and conspicuous (observations 212349274, 256854545, 256853681, 116021043)."
+    },
+    "appearance.organs.flower.accent": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Six spreading stamens about half the flower's radius long, their anthers bright yellow and conspicuous (observations 212349274, 256854545, 256853681, 116021043)."
+    },
+    "appearance.organs.flower.colour": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Open flowers pale to deep blue-violet; drawn at the middle of the photographs (observations 212349274, 151395471, 256854545, 205778790), about sRGB (130, 120, 210)."
+    },
+    "appearance.organs.flower.shape.petal_width": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Tepals narrowly elliptic to oblanceolate and acute, about a fifth to a quarter as wide as long (0.15 to 0.25; observations 212349274, 52750451, 205778790), so neighbours stand a little apart in a star."
+    },
+    "appearance.organs.bud": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "A bud is the closed perianth: six tepals folded into a narrow point, darker and greyer blue-violet than the open flowers (observations 256854545, 115789029, 29355728, 116021043)."
+    },
+    "generator.params.fruit_length": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A green capsule below the flowers, drawn no wider than the bud cone above it; a flora's capsule length should replace it."
+    },
+    "generator.params.flower_angle": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Photographs of flowering racemes (observations 151395471, 256853681, 43531696): open flowers on short ascending stalks, about half to one tepal long, held close to the axis so the open part of the raceme is dense."
+    },
+    "generator.params.pedicel": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Photographs of flowering racemes (observations 151395471, 256853681, 43531696): open flowers on short ascending stalks, about half to one tepal long, held close to the axis so the open part of the raceme is dense."
+    },
+    "generator.params.bud_size": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Photographs of flowering racemes (observations 256854545, 115789029, 29355728, 6126457, 116021043): the unopened buds, nearly half the raceme's flowers, stand packed in a tight cone at its tip, each erect and nearly pressed to the axis, narrow and pointed, about four to five times as long as wide and about half a tepal long; the spacing, stalk and angle are set to draw that."
+    },
+    "generator.params.bud_stalk": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Photographs of flowering racemes (observations 256854545, 115789029, 29355728, 6126457, 116021043): the unopened buds, nearly half the raceme's flowers, stand packed in a tight cone at its tip, each erect and nearly pressed to the axis, narrow and pointed, about four to five times as long as wide and about half a tepal long; the spacing, stalk and angle are set to draw that."
+    },
+    "generator.params.bud_lean": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Photographs of flowering racemes (observations 256854545, 115789029, 29355728, 6126457, 116021043): the unopened buds, nearly half the raceme's flowers, stand packed in a tight cone at its tip, each erect and nearly pressed to the axis, narrow and pointed, about four to five times as long as wide and about half a tepal long; the spacing, stalk and angle are set to draw that."
+    },
+    "generator.params.bud_spacing": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Photographs of flowering racemes (observations 256854545, 115789029, 29355728, 6126457, 116021043): the unopened buds, nearly half the raceme's flowers, stand packed in a tight cone at its tip, each erect and nearly pressed to the axis, narrow and pointed, about four to five times as long as wide and about half a tepal long; the spacing, stalk and angle are set to draw that."
+    },
+    "generator.params.buds_above": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Photographs of flowering racemes (observations 256854545, 115789029, 29355728, 6126457, 116021043): the unopened buds, nearly half the raceme's flowers, stand packed in a tight cone at its tip, each erect and nearly pressed to the axis, narrow and pointed, about four to five times as long as wide and about half a tepal long; the spacing, stalk and angle are set to draw that."
+    },
+    "generator.params.flowers": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Buds, flowers and fruit on one raceme, counted on photographs of flowering plants: 15 to 40, about 25 (observations 116021043, 151395471, 256853681, 43531696)."
+    },
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
