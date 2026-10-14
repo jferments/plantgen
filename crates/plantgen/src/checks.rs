@@ -2089,7 +2089,7 @@ fn flower_parts(
     tally.kind(
         "zygomorphy",
         match flower.corolla {
-            Corolla::Regular => "other",
+            Corolla::Regular | Corolla::Unequal => "other",
             Corolla::Papilionaceous => "papilionaceous",
             Corolla::Bilabiate => "bilabiate",
             Corolla::Labellate => "labellate",

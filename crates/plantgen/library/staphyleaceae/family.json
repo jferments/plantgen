@@ -2,5 +2,63 @@
   "schema": 1,
   "rank": "family",
   "name": "Staphyleaceae",
-  "parent": "order/crossosomatales"
+  "parent": "order/crossosomatales",
+  "traits": {
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "alternate": "sometimes"
+    },
+    "leaf_division": {
+      "simple": "sometimes",
+      "compound": "usually"
+    },
+    "division_pattern": "pinnate",
+    "leaf_margin": {
+      "serrate": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": "pinnate",
+    "stipules": {
+      "true": "usually",
+      "false": "sometimes"
+    },
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "monoecious": "often",
+      "dioecious": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": {
+      "superior": "often",
+      "half_inferior": "often"
+    },
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "raceme": "often",
+      "panicle": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "often",
+      "berry": "often",
+      "drupe": "rarely",
+      "follicle": "often"
+    },
+    "flower_merosity": 5,
+    "stamens": 5,
+    "carpels": {
+      "min": 2,
+      "max": 3,
+      "high": 4
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Staphyleaceae with Tapisciaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually opposite, sometimes alternate; leaves usually compound, sometimes simple; compound leaves pinnate; margins serrate or dentate; veins pinnate; stipules usually present, sometimes absent; plants hermaphrodite, monoecious, dioecious or polygamous; ovary superior or half inferior; floral cup absent; stems woody; flowers in racemes or in panicles; flowers actinomorphic; perianth sepals and petals; fruit capsule, berry or follicle, rarely drupe; parts of each whorl 5; stamens 5; carpels 2 to 3 (-4). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

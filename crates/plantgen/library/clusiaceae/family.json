@@ -2,5 +2,65 @@
   "schema": 1,
   "rank": "family",
   "name": "Clusiaceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "sometimes",
+      "opposite": "usually",
+      "whorled": "sometimes"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "monoecious": "often",
+      "polygamous": "often",
+      "dioecious": "often"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": {
+      "woody": "often",
+      "herbaceous": "often"
+    },
+    "inflorescence": {
+      "solitary": "rarely",
+      "cyme": "often",
+      "umbel": "often",
+      "panicle": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "often",
+      "spiral": "often"
+    },
+    "fruit_type": {
+      "capsule": "often",
+      "berry": "often",
+      "drupe": "often"
+    },
+    "stamens": {
+      "min": 5,
+      "max": 100,
+      "low": 3
+    },
+    "carpels": {
+      "min": 3,
+      "max": 5,
+      "low": 1,
+      "high": 13
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Guttiferae: leaves usually opposite, sometimes alternate or whorled; leaves simple; margins entire; veins pinnate; stipules present or absent; plants hermaphrodite, monoecious, polygamous or dioecious; ovary superior; floral cup absent; stems woody or herbaceous; flowers in cymes, in umbels or in panicles, rarely solitary; flowers actinomorphic; perianth sepals and petals or spiral; fruit capsule, berry or drupe; stamens (3-) 5 to 100; carpels (1-) 3 to 5 (-13). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

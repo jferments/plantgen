@@ -317,6 +317,12 @@ pub struct Generator {
     /// Parameter values that replace the program's defaults.
     #[serde(default)]
     pub params: BTreeMap<String, f64>,
+    /// Values for parameters the program leaves valueless, which a rank
+    /// file states for a growth form: inheritance moves each into
+    /// `params` where no file set it and the program gives it no value,
+    /// so an effective spec carries none ([`crate::inherit`]).
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub defaults: BTreeMap<String, f64>,
     /// The spreads of parameters rules pass a range of a character of the
     /// whole plant through to, by path (`params.<name>`;
     /// [`crate::inherit::Spread`]), from which each plant draws its own by

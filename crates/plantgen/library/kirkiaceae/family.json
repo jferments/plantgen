@@ -2,5 +2,31 @@
   "schema": 1,
   "rank": "family",
   "name": "Kirkiaceae",
-  "parent": "order/sapindales"
+  "parent": "order/sapindales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "stipules": false,
+    "sexual_system": {
+      "monoecious": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": "cyme",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "schizocarp",
+    "flower_merosity": 4,
+    "stamens": 4,
+    "carpels": 4
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Kirkiaceae: leaves alternate; leaves compound; compound leaves pinnate; stipules absent; plants monoecious or polygamous; ovary superior; floral cup absent; stems woody; flowers in cymes; perianth sepals and petals; fruit schizocarp; parts of each whorl 4; stamens 4; carpels 4. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

@@ -2,5 +2,51 @@
   "schema": 1,
   "rank": "family",
   "name": "Peridiscaceae",
-  "parent": "order/saxifragales"
+  "parent": "order/saxifragales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "sometimes"
+    },
+    "leaf_margin": {
+      "entire": "usually",
+      "crenate": "sometimes",
+      "serrate": "sometimes"
+    },
+    "leaf_venation": "pinnate",
+    "stipules": true,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "superior": "usually",
+      "half_inferior": "rarely"
+    },
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": "raceme",
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "tepals": "usually",
+      "sepals_and_petals": "sometimes"
+    },
+    "fruit_type": {
+      "drupe": "usually",
+      "capsule": "sometimes"
+    },
+    "stamens": {
+      "min": 30,
+      "max": 100
+    },
+    "carpels": {
+      "min": 3,
+      "max": 4
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Peridiscaceae with Medusandraceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves usually simple, sometimes compound; margins usually entire, sometimes crenate or serrate; veins pinnate; stipules present; plants hermaphrodite; ovary usually superior, rarely half inferior; floral cup absent; stems woody; flowers in racemes; flowers actinomorphic; perianth usually tepals, sometimes sepals and petals; fruit usually drupe, sometimes capsule; stamens 30 to 100; carpels 3 to 4. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

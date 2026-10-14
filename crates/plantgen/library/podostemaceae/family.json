@@ -2,5 +2,45 @@
   "schema": 1,
   "rank": "family",
   "name": "Podostemaceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": {
+      "simple": "often",
+      "compound": "often"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "solitary": "usually",
+      "cyme": "often"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "perianth": {
+      "tepals": "sometimes",
+      "absent": "usually"
+    },
+    "fruit_type": "capsule",
+    "stamens": {
+      "min": 1,
+      "max": 30
+    },
+    "carpels": {
+      "min": 2,
+      "max": 2,
+      "low": 1,
+      "high": 3
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Podostemaceae: leaves alternate; leaves simple or compound; plants hermaphrodite; ovary superior; stems herbaceous; flowers usually solitary, often in cymes; flowers actinomorphic or zygomorphic; perianth usually absent, sometimes tepals; fruit capsule; stamens 1 to 30; carpels (1-) 2 (-3). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

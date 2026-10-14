@@ -2,5 +2,29 @@
   "schema": 1,
   "rank": "family",
   "name": "Burseraceae",
-  "parent": "order/sapindales"
+  "parent": "order/sapindales",
+  "traits": {
+    "woodiness": "woody",
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_division": "compound",
+    "stipules": false,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "flower_merosity": {
+      "min": 3,
+      "max": 5
+    },
+    "ovary_position": "superior",
+    "fruit_type": "drupe"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 211 Burseraceae: trees or shrubs giving resin or oil (frankincense, myrrh); leaves alternate, rarely opposite, compound, rarely of one leaflet; no stipules; flowers small, bisexual or of one sex; sepals and petals 3 to 5; stamens as many or twice as many as the petals; ovary superior, of 2 to 5 cells; fruit a drupe, or opening late. The flowers' regularity is from common knowledge (Hutchinson does not say), inferred."
+    }
+  }
 }

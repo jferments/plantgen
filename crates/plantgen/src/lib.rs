@@ -75,6 +75,7 @@ pub mod shoots;
 pub mod spec;
 pub mod spikelets;
 pub mod spines;
+pub mod stand;
 pub mod substrate;
 pub mod templates;
 pub mod texture;
@@ -257,4 +258,23 @@ pub mod venation;
 /// grow 20 years; sprays are drawn with their own turns; a limb that
 /// reaches the ground is shed there, and a dead branch falls (41 is the
 /// ground plane, #73).
-pub const GENERATOR_REVISION: u32 = 42;
+/// 43: a fern's, a palm's, a tree fern's or a cycad's fronds and a cactus's
+/// joints that sag to the ground lie on it (`rest`, on the conditions'
+/// substrate or level soil) instead of passing into it, so the deer and
+/// sword ferns, Engelmann's prickly pear and saw palmetto stay above the
+/// ground; bend@1 can hold bent wood up on the ground too (`ground`),
+/// which no program uses yet (41 is the ground plane, #73; 42 the
+/// conifers' lower crowns, #72).
+/// 44: leaves, fronds, blooms, fruit, dead fronds and boots, rosette
+/// leaves and stalks, canes and epiphyte colonies live as long as their
+/// parameters say, not one year more: a deciduous tree draws this year's
+/// leaves only. Velvet mesquite (`bud_break`), bigleaf maple
+/// (`sprout_light`) and Oregon white oak (`spur_light`) are refitted to
+/// keep their sizes, their crowns within the module limit and the oak's
+/// leaf area per crown area (43 is the fronds that lie on the ground,
+/// #77).
+/// 45: a flower whose zygomorphy is of no named kind (palo verde,
+/// piggyback plant) draws its upper petal unlike the rest, wider by
+/// `banner` and more upright (an unequal corolla), not a corolla of like
+/// petals (44 is the leaf lives, #79).
+pub const GENERATOR_REVISION: u32 = 45;

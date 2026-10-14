@@ -2,5 +2,81 @@
   "schema": 1,
   "rank": "family",
   "name": "Hydrangeaceae",
-  "parent": "order/cornales"
+  "parent": "order/cornales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often",
+      "whorled": "sometimes"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "serrate": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": {
+      "pinnate": "often",
+      "palmate": "often"
+    },
+    "leaf_habit": {
+      "evergreen": "often",
+      "deciduous": "often"
+    },
+    "stipules": false,
+    "sexual_system": {
+      "hermaphrodite": "sometimes",
+      "polygamous": "rarely"
+    },
+    "ovary_position": {
+      "half_inferior": "often",
+      "inferior": "often",
+      "superior": "sometimes"
+    },
+    "hypanthium": {
+      "true": "often",
+      "false": "often"
+    },
+    "woodiness": {
+      "woody": "often",
+      "herbaceous": "often"
+    },
+    "inflorescence": {
+      "cyme": "often",
+      "head": "often",
+      "corymb": "often",
+      "raceme": "often",
+      "solitary": "sometimes",
+      "panicle": "sometimes"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "usually",
+      "berry": "sometimes"
+    },
+    "flower_merosity": {
+      "min": 4,
+      "max": 10
+    },
+    "stamens": {
+      "min": 4,
+      "max": 100
+    },
+    "carpels": {
+      "min": 3,
+      "max": 5,
+      "low": 2
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Hydrangeaceae with Philadelphaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate or opposite, sometimes whorled; leaves simple; margins entire, serrate or dentate; veins pinnate or palmate; leaves evergreen or deciduous; stipules absent; plants hermaphrodite, rarely polygamous; ovary half inferior or inferior, sometimes superior; floral cup present or absent; stems woody or herbaceous; flowers in cymes, in heads, in corymbs or in racemes, sometimes solitary or in panicles; flowers actinomorphic or zygomorphic; perianth sepals and petals; fruit usually capsule, sometimes berry; parts of each whorl 4 to 10; stamens 4 to 100; carpels (2-) 3 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

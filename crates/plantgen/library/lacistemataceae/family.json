@@ -2,5 +2,35 @@
   "schema": 1,
   "rank": "family",
   "name": "Lacistemataceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "stipules": true,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "woodiness": "woody",
+    "inflorescence": {
+      "raceme": "often",
+      "spike": "often",
+      "catkin": "often"
+    },
+    "perianth": {
+      "tepals": "often",
+      "absent": "often"
+    },
+    "fruit_type": "capsule",
+    "stamens": 1,
+    "carpels": {
+      "min": 2,
+      "max": 3
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Lacistemataceae: leaves alternate; leaves simple; stipules present; plants hermaphrodite; ovary superior; stems woody; flowers in racemes, in spikes or in catkins; perianth tepals or absent; fruit capsule; stamens 1; carpels 2 to 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

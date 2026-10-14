@@ -2,5 +2,36 @@
   "schema": 1,
   "rank": "family",
   "name": "Joinvilleaceae",
-  "parent": "order/poales"
+  "parent": "order/poales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "serrate",
+    "leaf_venation": {
+      "palmate": "rarely",
+      "parallel": "rarely"
+    },
+    "leaf_shape": {
+      "linear": "often",
+      "lanceolate": "often"
+    },
+    "rosette": "none",
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "woodiness": "herbaceous",
+    "inflorescence": "panicle",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": "drupe",
+    "flower_merosity": 3,
+    "stamens": 6,
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Joinvilleaceae: leaves alternate; leaves simple; margins serrate; veins palmate or parallel; blades linear or lanceolate; leaf rosettes none; plants hermaphrodite; ovary superior; stems herbaceous; flowers in panicles; flowers actinomorphic; perianth tepals; fruit drupe; parts of each whorl 3; stamens 6; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

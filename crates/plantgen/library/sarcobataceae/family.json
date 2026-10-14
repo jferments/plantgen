@@ -2,5 +2,37 @@
   "schema": 1,
   "rank": "family",
   "name": "Sarcobataceae",
-  "parent": "order/caryophyllales"
+  "parent": "order/caryophyllales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_shape": "linear",
+    "stipules": false,
+    "sexual_system": {
+      "monoecious": "often",
+      "dioecious": "often"
+    },
+    "ovary_position": "half_inferior",
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "often",
+      "catkin": "often"
+    },
+    "perianth": {
+      "tepals": "often",
+      "absent": "often"
+    },
+    "stamens": {
+      "min": 1,
+      "max": 4
+    },
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Sarcobataceae: leaves alternate; leaves simple; blades linear; stipules absent; plants monoecious or dioecious; ovary half inferior; stems woody; flowers solitary or in catkins; perianth tepals or absent; stamens 1 to 4; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

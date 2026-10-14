@@ -2,5 +2,57 @@
   "schema": 1,
   "rank": "family",
   "name": "Theaceae",
-  "parent": "order/ericales"
+  "parent": "order/ericales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "serrate": "often",
+      "dentate": "sometimes"
+    },
+    "leaf_venation": "pinnate",
+    "leaf_habit": "evergreen",
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "superior": "usually",
+      "half_inferior": "sometimes",
+      "inferior": "rarely"
+    },
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "usually",
+      "raceme": "sometimes",
+      "panicle": "sometimes",
+      "cyme": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "often",
+      "spiral": "often"
+    },
+    "fruit_type": {
+      "capsule": "sometimes",
+      "berry": "sometimes",
+      "drupe": "usually"
+    },
+    "stamens": {
+      "min": 5,
+      "max": 100
+    },
+    "carpels": {
+      "min": 3,
+      "max": 5,
+      "low": 2,
+      "high": 10
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Theaceae with Bonnetiaceae, Sladeniaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves simple; margins entire or serrate, sometimes dentate; veins pinnate; leaves evergreen; stipules absent; plants hermaphrodite; ovary usually superior, sometimes half inferior, rarely inferior; stems woody; flowers usually solitary, sometimes in racemes, in panicles or in cymes; flowers actinomorphic; perianth sepals and petals or spiral; fruit usually drupe, sometimes capsule or berry; stamens 5 to 100; carpels (2-) 3 to 5 (-10). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

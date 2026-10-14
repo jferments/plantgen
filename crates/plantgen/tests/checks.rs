@@ -97,11 +97,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Oxalidaceae's leaves are alternate and redwood sorrel's rise one to a node from its rhizome, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
     ),
     (
-        "parkinsonia-microphylla",
-        "flower_symmetry",
-        "its zygomorphy is `other`, which the angiosperms draw as a corolla of like petals, so its flowers are drawn radial",
-    ),
-    (
         "phyllostachys-aurea",
         "leaf_shape",
         "its sprig leaves are drawn lanceolate, 0.15 as broad as long, as a bamboo's are, against the linear blades Poaceae state for its grasses; the species states no shape of its own",
@@ -150,11 +145,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "tillandsia-usneoides",
         "leaf_shape",
         "its leaves are drawn as cards tapering from the base, an eighth as broad as long, so they read deltate or lanceolate against the linear leaves Bromeliaceae state",
-    ),
-    (
-        "tolmiea-menziesii",
-        "flower_symmetry",
-        "its zygomorphy is `other`, which the angiosperms draw as a corolla of like petals, so its flowers are drawn radial",
     ),
     (
         "viola-glabella",

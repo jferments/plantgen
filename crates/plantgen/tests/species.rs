@@ -219,6 +219,54 @@ fn builtin_species_draw_no_floating_organs() {
     assert!(failures.is_empty(), "{}", failures.join("\n"));
 }
 
+/// Plants fitted to their place (PF1): a fern's fronds, a palm's or a
+/// cycad's and a cactus's joints that sag to the ground lie on it
+/// (`rest`), so no species of those programs, in any variant, ends wood
+/// or an organ more than 0.05 m below the ground at any keyframe.
+#[test]
+fn fronds_and_pads_lie_on_the_ground() {
+    const RESTING: [&str; 5] = [
+        "polypodiidae",
+        "palm",
+        "arecaceae",
+        "cyatheaceae",
+        "cycadaceae",
+    ];
+    let mut checked = 0;
+    let mut failures = Vec::new();
+    for (id, _) in spec::all_species() {
+        let spec = PlantSpec::builtin(id).unwrap();
+        let program = spec.generator.program.as_str();
+        if !RESTING.contains(&program) && program != "cactaceae" {
+            continue;
+        }
+        checked += 1;
+        let oldest = *spec.growth.keyframes.last().unwrap();
+        for variant in spec.variant_list() {
+            let growth = grow_variant(&spec, &variant, oldest, spec.growth.keyframes.clone());
+            for graph in &growth.keyframes {
+                let lowest = graph
+                    .segments
+                    .iter()
+                    .map(|segment| segment.end.y)
+                    .chain(graph.organs.iter().map(|organ| organ.position.y))
+                    .fold(f64::INFINITY, f64::min);
+                if lowest < -0.05 {
+                    failures.push(format!(
+                        "{id} {:?} seed {} at {} years: {lowest:.3} m below the ground",
+                        variant.environment, variant.seed, graph.age
+                    ));
+                }
+            }
+        }
+    }
+    assert!(failures.is_empty(), "{}", failures.join("\n"));
+    assert_eq!(
+        checked, 24,
+        "five ferns, five palms, a tree fern, a cycad and twelve cacti"
+    );
+}
+
 /// Nothing a package draws reaches below the ground its plant stands on
 /// (the level plane of its foot), so a host can stand it on level ground
 /// without leaving it out: no segment, organ, wood vertex or card of any
@@ -229,15 +277,9 @@ fn builtin_species_draw_no_floating_organs() {
 fn builtin_species_stand_above_the_ground() {
     // Wood grown into the ground: segments that end below it, which
     // growth has to stop (ground as an obstacle in growth, the M6
-    // thread): two ferns' fronds and a prickly pear's pads lie under it.
-    // A water lily's frame stands on the water's surface, with its
+    // thread). A water lily's frame stands on the water's surface, with its
     // rhizome on the bottom below (`programs/nymphaeaceae.lsys`).
-    const KNOWN: [&str; 4] = [
-        "blechnum-spicant",
-        "nymphaea-odorata",
-        "opuntia-engelmannii",
-        "polystichum-munitum",
-    ];
+    const KNOWN: [&str; 1] = ["nymphaea-odorata"];
     const BED: f64 = 0.05;
     let species: Vec<&str> = spec::all_species().map(|(id, _)| id).collect();
     let threads = std::thread::available_parallelism().map_or(4, usize::from);

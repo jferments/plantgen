@@ -2,5 +2,41 @@
   "schema": 1,
   "rank": "family",
   "name": "Krameriaceae",
-  "parent": "order/zygophyllales"
+  "parent": "order/zygophyllales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "rarely"
+    },
+    "leaf_margin": "entire",
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": {
+      "woody": "often",
+      "herbaceous": "often"
+    },
+    "inflorescence": {
+      "solitary": "often",
+      "raceme": "often"
+    },
+    "flower_symmetry": "zygomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "achene",
+    "stamens": {
+      "min": 4,
+      "max": 4,
+      "low": 3
+    },
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Krameriaceae: leaves alternate; leaves usually simple, rarely compound; margins entire; stipules absent; plants hermaphrodite; ovary superior; floral cup absent; stems woody or herbaceous; flowers solitary or in racemes; flowers zygomorphic; perianth sepals and petals; fruit achene; stamens (3-) 4; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

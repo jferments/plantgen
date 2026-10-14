@@ -2,5 +2,36 @@
   "schema": 1,
   "rank": "family",
   "name": "Himantandraceae",
-  "parent": "order/magnoliales"
+  "parent": "order/magnoliales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": "solitary",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "stamens": {
+      "min": 15,
+      "max": 35
+    },
+    "carpels": {
+      "min": 7,
+      "max": 10,
+      "low": 6,
+      "high": 28
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Himantandraceae: leaves alternate; leaves simple; margins entire; veins pinnate; stipules absent; plants hermaphrodite; ovary superior; floral cup absent; stems woody; flowers solitary; flowers actinomorphic; perianth sepals and petals; stamens 15 to 35; carpels (6-) 7 to 10 (-28). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

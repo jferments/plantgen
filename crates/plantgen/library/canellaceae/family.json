@@ -2,5 +2,44 @@
   "schema": 1,
   "rank": "family",
   "name": "Canellaceae",
-  "parent": "order/canellales"
+  "parent": "order/canellales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "leaf_habit": "evergreen",
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "raceme": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "often",
+      "spiral": "often"
+    },
+    "fruit_type": "berry",
+    "stamens": {
+      "min": 6,
+      "max": 40
+    },
+    "carpels": {
+      "min": 2,
+      "max": 5,
+      "high": 6
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Canellaceae: leaves alternate; leaves simple; margins entire; veins pinnate; leaves evergreen; stipules absent; plants hermaphrodite; ovary superior; floral cup absent; stems woody; flowers solitary, in cymes or in racemes; flowers actinomorphic; perianth sepals and petals or spiral; fruit berry; stamens 6 to 40; carpels 2 to 5 (-6). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }
