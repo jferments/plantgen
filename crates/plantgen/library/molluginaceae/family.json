@@ -2,5 +2,57 @@
   "schema": 1,
   "rank": "family",
   "name": "Molluginaceae",
-  "parent": "order/caryophyllales"
+  "parent": "order/caryophyllales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "often",
+      "whorled": "often",
+      "opposite": "sometimes"
+    },
+    "leaf_division": "simple",
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "monoecious": "sometimes"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": {
+      "herbaceous": "often",
+      "woody": "often"
+    },
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "rarely"
+    },
+    "fruit_type": "capsule",
+    "flower_merosity": 5,
+    "stamens": {
+      "min": 5,
+      "max": 10,
+      "low": 2,
+      "high": 25
+    },
+    "carpels": {
+      "min": 2,
+      "max": 5,
+      "low": 1,
+      "high": 10
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Molluginaceae with Corbichoniaceae, Kewaceae, Macarthuriaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate or whorled, sometimes opposite; leaves simple; stipules present or absent; plants usually hermaphrodite, sometimes monoecious; ovary superior; floral cup absent; stems herbaceous or woody; flowers solitary or in cymes; flowers actinomorphic; perianth usually sepals and petals, rarely tepals; fruit capsule; parts of each whorl 5; stamens (2-) 5 to 10 (-25); carpels (1-) 2 to 5 (-10). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

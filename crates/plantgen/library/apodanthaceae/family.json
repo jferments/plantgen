@@ -2,5 +2,30 @@
   "schema": 1,
   "rank": "family",
   "name": "Apodanthaceae",
-  "parent": "order/cucurbitales"
+  "parent": "order/cucurbitales",
+  "traits": {
+    "sexual_system": {
+      "monoecious": "usually",
+      "dioecious": "rarely"
+    },
+    "ovary_position": "inferior",
+    "hypanthium": false,
+    "woodiness": "herbaceous",
+    "inflorescence": "solitary",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": "berry",
+    "stamens": {
+      "min": 15,
+      "max": 100
+    },
+    "carpels": 4
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Apodanthaceae: plants usually monoecious, rarely dioecious; ovary inferior; floral cup absent; stems herbaceous; flowers solitary; flowers actinomorphic; perianth tepals; fruit berry; stamens 15 to 100; carpels 4. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

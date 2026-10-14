@@ -2,5 +2,40 @@
   "schema": 1,
   "rank": "family",
   "name": "Boraginaceae",
-  "parent": "order/boraginales"
+  "parent": "order/boraginales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "sometimes"
+    },
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_division": "simple",
+    "stipules": false,
+    "inflorescence": {
+      "scorpioid": "usually",
+      "solitary": "sometimes"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "perianth": "sepals_and_petals",
+    "carpels": 2,
+    "ovary_position": "superior",
+    "fruit_type": {
+      "schizocarp": "usually",
+      "drupe": "sometimes",
+      "capsule": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 338 Boraginaceae (order Boraginales): herbs, often rough with stiff hairs; leaves alternate, very rarely opposite, simple; no stipules; flowers often in coiled (scorpioid) cymes, regular or rarely oblique; corolla united; stamens as many as its lobes; ovary superior, of two carpels, often deeply 4-lobed with the style from between the lobes; fruit of 4 nutlets, read here as a schizocarp. The family as Library 1.0 names it (WCVP) also holds Hutchinson's woody family 242 Ehretiaceae (Cordia, Ehretia, with drupes) and the waterleaf family (Hydrophyllum, Phacelia, with capsules): so woody, the drupe and the capsule are stated as sometimes (inferred, not traced)."
+    }
+  }
 }

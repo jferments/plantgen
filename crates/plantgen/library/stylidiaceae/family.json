@@ -2,5 +2,67 @@
   "schema": 1,
   "rank": "family",
   "name": "Stylidiaceae",
-  "parent": "order/asterales"
+  "parent": "order/asterales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "whorled": "sometimes"
+    },
+    "leaf_division": "simple",
+    "leaf_venation": "parallel",
+    "leaf_shape": "linear",
+    "stipules": false,
+    "rosette": {
+      "basal": "often",
+      "terminal": "often",
+      "none": "usually"
+    },
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "monoecious": "often",
+      "polygamous": "often",
+      "dioecious": "often"
+    },
+    "resupinate": {
+      "true": "often",
+      "false": "often"
+    },
+    "ovary_position": "inferior",
+    "hypanthium": {
+      "true": "usually",
+      "false": "sometimes"
+    },
+    "woodiness": {
+      "herbaceous": "often",
+      "woody": "often"
+    },
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "raceme": "often",
+      "spike": "often",
+      "corymb": "often"
+    },
+    "flower_symmetry": {
+      "zygomorphic": "usually",
+      "actinomorphic": "sometimes",
+      "asymmetric": "sometimes"
+    },
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "flower_merosity": 5,
+    "stamens": {
+      "min": 2,
+      "max": 2,
+      "high": 3
+    },
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Stylidiaceae with Donatiaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually alternate, sometimes whorled; leaves simple; veins parallel; blades linear; stipules absent; leaf rosettes usually none, often basal or terminal; plants hermaphrodite, monoecious, polygamous or dioecious; flowers turned over present or absent; ovary inferior; floral cup usually present, sometimes absent; stems herbaceous or woody; flowers solitary, in cymes, in racemes, in spikes or in corymbs; flowers usually zygomorphic, sometimes actinomorphic or asymmetric; perianth sepals and petals; fruit capsule; parts of each whorl 5; stamens 2 (-3); carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

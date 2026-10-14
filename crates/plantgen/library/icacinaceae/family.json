@@ -2,5 +2,75 @@
   "schema": 1,
   "rank": "family",
   "name": "Icacinaceae",
-  "parent": "order/icacinales"
+  "parent": "order/icacinales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "crenate": "often",
+      "serrate": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": {
+      "pinnate": "usually",
+      "palmate": "sometimes"
+    },
+    "stipules": false,
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "polygamous": "sometimes",
+      "dioecious": "sometimes"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "cyme": "sometimes",
+      "raceme": "usually",
+      "spike": "sometimes",
+      "panicle": "sometimes",
+      "solitary": "sometimes"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "rarely"
+    },
+    "fruit_type": {
+      "drupe": "usually",
+      "samara": "sometimes"
+    },
+    "flower_merosity": {
+      "min": 4,
+      "max": 5,
+      "low": 3,
+      "high": 7
+    },
+    "stamens": {
+      "min": 4,
+      "max": 5,
+      "low": 3,
+      "high": 6
+    },
+    "carpels": {
+      "min": 3,
+      "max": 3,
+      "low": 2,
+      "high": 5
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Icacinaceae with Pennantiaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually alternate, sometimes opposite; leaves simple; margins entire, crenate, serrate or dentate; veins usually pinnate, sometimes palmate; stipules absent; plants usually hermaphrodite, sometimes polygamous or dioecious; ovary superior; floral cup absent; stems woody; flowers usually in racemes, sometimes in cymes, in spikes, in panicles or solitary; flowers usually actinomorphic, rarely zygomorphic; perianth usually sepals and petals, rarely tepals; fruit usually drupe, sometimes samara; parts of each whorl (3-) 4 to 5 (-7); stamens (3-) 4 to 5 (-6); carpels (2-) 3 (-5). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

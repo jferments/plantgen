@@ -2,5 +2,57 @@
   "schema": 1,
   "rank": "family",
   "name": "Vochysiaceae",
-  "parent": "order/myrtales"
+  "parent": "order/myrtales",
+  "traits": {
+    "leaf_arrangement": {
+      "opposite": "often",
+      "whorled": "often",
+      "alternate": "rarely"
+    },
+    "leaf_division": "simple",
+    "leaf_habit": "evergreen",
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "superior": "often",
+      "inferior": "often"
+    },
+    "hypanthium": {
+      "true": "often",
+      "false": "often"
+    },
+    "woodiness": {
+      "woody": "usually",
+      "herbaceous": "rarely"
+    },
+    "inflorescence": "panicle",
+    "flower_symmetry": "zygomorphic",
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "sometimes"
+    },
+    "fruit_type": {
+      "capsule": "often",
+      "samara": "often"
+    },
+    "stamens": {
+      "min": 1,
+      "max": 1,
+      "high": 4
+    },
+    "carpels": {
+      "min": 1,
+      "max": 3
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Vochysiaceae: leaves opposite or whorled, rarely alternate; leaves simple; leaves evergreen; stipules present or absent; plants hermaphrodite; ovary superior or inferior; floral cup present or absent; stems usually woody, rarely herbaceous; flowers in panicles; flowers zygomorphic; perianth usually sepals and petals, sometimes tepals; fruit capsule or samara; stamens 1 (-4); carpels 1 to 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

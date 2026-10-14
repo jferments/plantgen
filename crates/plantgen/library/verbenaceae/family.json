@@ -2,5 +2,37 @@
   "schema": 1,
   "rank": "family",
   "name": "Verbenaceae",
-  "parent": "order/lamiales"
+  "parent": "order/lamiales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "often",
+      "woody": "often"
+    },
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "whorled": "sometimes"
+    },
+    "flower_symmetry": "zygomorphic",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5
+    },
+    "corolla_shape": "tubular",
+    "stamens": {
+      "min": 2,
+      "max": 5,
+      "typical": 4
+    },
+    "fruit_type": {
+      "drupe": "often",
+      "schizocarp": "often"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 243 Verbenaceae: woody or herbaceous, the twigs often square; leaves usually opposite or whorled; no stipules; flowers more or less irregular; calyx 4- or 5-lobed, persisting; corolla united, a tube of 4 or 5 lobes; stamens 4, rarely 2 or 5; ovary superior; fruit a drupe or berry. APG moves Vitex, Callicarpa, teak, Clerodendrum and Premna to Lamiaceae; what stays (Verbena, Lantana, Lippia, Duranta, Petrea) has simple, often toothed or lobed leaves and a drupe or a fruit splitting in nutlets (Verbena's, inferred, not traced), so the division is left unstated. The order (Lamiales) states the stipules, the ovary and the two carpels."
+    }
+  }
 }

@@ -2,5 +2,35 @@
   "schema": 1,
   "rank": "family",
   "name": "Cleomaceae",
-  "parent": "order/brassicales"
+  "parent": "order/brassicales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "compound",
+    "division_pattern": "palmate",
+    "stipules": true,
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "superior",
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "rarely"
+    },
+    "flower_symmetry": "zygomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "pod",
+    "stamens": {
+      "min": 4,
+      "max": 50
+    },
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cleomaceae: leaves alternate; leaves compound; compound leaves palmate; stipules present; plants hermaphrodite or polygamous; ovary superior; stems usually herbaceous, rarely woody; flowers zygomorphic; perianth sepals and petals; fruit pod; stamens 4 to 50; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

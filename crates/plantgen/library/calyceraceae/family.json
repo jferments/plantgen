@@ -2,5 +2,49 @@
   "schema": 1,
   "rank": "family",
   "name": "Calyceraceae",
-  "parent": "order/asterales"
+  "parent": "order/asterales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "stipules": false,
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "monoecious": "sometimes",
+      "polygamous": "sometimes"
+    },
+    "ovary_position": "inferior",
+    "hypanthium": false,
+    "woodiness": "herbaceous",
+    "inflorescence": "head",
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "perianth": "sepals_and_petals",
+    "fruit_type": "achene",
+    "flower_merosity": {
+      "min": 5,
+      "max": 5,
+      "low": 4,
+      "high": 6
+    },
+    "stamens": {
+      "min": 5,
+      "max": 5,
+      "low": 4,
+      "high": 6
+    },
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Calyceraceae: leaves alternate; leaves simple; stipules absent; leaf rosettes basal or none; plants usually hermaphrodite, sometimes monoecious or polygamous; ovary inferior; floral cup absent; stems herbaceous; flowers in heads; flowers actinomorphic or zygomorphic; perianth sepals and petals; fruit achene; parts of each whorl (4-) 5 (-6); stamens (4-) 5 (-6); carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

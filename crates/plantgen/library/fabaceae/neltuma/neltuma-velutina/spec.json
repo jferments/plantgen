@@ -50,7 +50,8 @@
       "leaf_area": 0.041,
       "bloom_area": 0.09,
       "thorn_area": 0.059,
-      "path_half": 3.4
+      "path_half": 3.4,
+      "bud_break": 2
     }
   },
   "growth": {
@@ -147,6 +148,11 @@
     "fruit_colour_ripe": [195, 160, 100]
   },
   "evidence": {
+    "generator.params.bud_break": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (leaf life, generator revision 44): a lateral bud needs vigour 2 (fabales' 1.3) to grow a long shoot. Once a leaf stayed one season, not two, more light reached the inner crown, more buds grew out, and the crown outgrew the module limit between 50 and 60 years; at 2 the open crowns peak at 0.65 to 0.77 million modules (0.87 million before) and keep their reference heights."
+    },
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Neltuma velutina (gwddagg_v2.2_species.csv, read): specific gravity 0.7 (wsg_est, the database's hierarchical-model species mean, from 2 records in 1 source); trunks 0.73, branches 0.67. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",

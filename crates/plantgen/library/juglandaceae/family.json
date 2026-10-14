@@ -2,5 +2,66 @@
   "schema": 1,
   "rank": "family",
   "name": "Juglandaceae",
-  "parent": "order/fagales"
+  "parent": "order/fagales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "leaf_venation": "pinnate",
+    "leaf_habit": "deciduous",
+    "stipules": {
+      "false": "usually",
+      "true": "sometimes"
+    },
+    "sexual_system": {
+      "monoecious": "usually",
+      "dioecious": "rarely",
+      "hermaphrodite": "sometimes",
+      "polygamous": "sometimes"
+    },
+    "ovary_position": {
+      "inferior": "usually",
+      "superior": "sometimes"
+    },
+    "woodiness": {
+      "woody": "usually",
+      "herbaceous": "sometimes"
+    },
+    "inflorescence": {
+      "solitary": "sometimes",
+      "catkin": "usually",
+      "raceme": "sometimes",
+      "spike": "sometimes"
+    },
+    "perianth": {
+      "tepals": "often",
+      "absent": "often"
+    },
+    "fruit_type": {
+      "drupe": "sometimes",
+      "nut": "often",
+      "samara": "often"
+    },
+    "stamens": {
+      "min": 5,
+      "max": 50,
+      "low": 3,
+      "high": 100
+    },
+    "carpels": {
+      "min": 2,
+      "max": 2,
+      "high": 3
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Juglandaceae with Rhoipteleaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually alternate, rarely opposite; leaves compound; compound leaves pinnate; veins pinnate; leaves deciduous; stipules usually absent, sometimes present; plants usually monoecious, sometimes hermaphrodite or polygamous, rarely dioecious; ovary usually inferior, sometimes superior; stems usually woody, sometimes herbaceous; flowers usually in catkins, sometimes solitary, in racemes or in spikes; perianth tepals or absent; fruit nut or samara, sometimes drupe; stamens (3-) 5 to 50 (-100); carpels 2 (-3). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

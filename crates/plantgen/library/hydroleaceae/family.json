@@ -2,5 +2,65 @@
   "schema": 1,
   "rank": "family",
   "name": "Hydroleaceae",
-  "parent": "order/solanales"
+  "parent": "order/solanales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often"
+    },
+    "leaf_division": {
+      "simple": "often",
+      "compound": "often"
+    },
+    "division_pattern": {
+      "pinnate": "usually",
+      "palmate": "rarely"
+    },
+    "leaf_venation": {
+      "pinnate": "usually",
+      "palmate": "rarely"
+    },
+    "stipules": false,
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "superior": "usually",
+      "half_inferior": "sometimes"
+    },
+    "hypanthium": false,
+    "corolla_shape": {
+      "rotate": "often",
+      "campanulate": "often",
+      "funnelform": "often"
+    },
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "sometimes"
+    },
+    "inflorescence": {
+      "solitary": "rarely",
+      "cyme": "usually"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "flower_merosity": 5,
+    "stamens": {
+      "min": 5,
+      "max": 5,
+      "low": 4,
+      "high": 10
+    },
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Hydrophyllaceae, which takes in Hydroleaceae: leaves alternate or opposite; leaves simple or compound; compound leaves usually pinnate, rarely palmate; veins usually pinnate, rarely palmate; stipules absent; leaf rosettes basal or none; plants hermaphrodite; ovary usually superior, sometimes half inferior; floral cup absent; joined corolla rotate, campanulate or funnelform; stems usually herbaceous, sometimes woody; flowers usually in cymes, rarely solitary; flowers actinomorphic; perianth sepals and petals; fruit capsule; parts of each whorl 5; stamens (4-) 5 (-10); carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

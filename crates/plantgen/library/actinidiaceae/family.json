@@ -2,5 +2,55 @@
   "schema": 1,
   "rank": "family",
   "name": "Actinidiaceae",
-  "parent": "order/ericales"
+  "parent": "order/ericales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "serrate": "often"
+    },
+    "leaf_venation": "pinnate",
+    "stipules": true,
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "monoecious": "often",
+      "dioecious": "often"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "berry": "sometimes",
+      "capsule": "usually"
+    },
+    "flower_merosity": {
+      "min": 5,
+      "max": 5,
+      "low": 4,
+      "high": 7
+    },
+    "stamens": {
+      "min": 18,
+      "max": 100,
+      "low": 10
+    },
+    "carpels": {
+      "min": 5,
+      "max": 20
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Actinidiaceae: leaves alternate; leaves simple; margins entire or serrate; veins pinnate; stipules present; plants hermaphrodite, monoecious or dioecious; ovary superior; floral cup absent; stems woody; flowers solitary or in cymes; flowers actinomorphic; perianth sepals and petals; fruit usually capsule, sometimes berry; parts of each whorl (4-) 5 (-7); stamens (10-) 18 to 100; carpels 5 to 20. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

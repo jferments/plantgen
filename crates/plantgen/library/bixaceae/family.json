@@ -2,5 +2,36 @@
   "schema": 1,
   "rank": "family",
   "name": "Bixaceae",
-  "parent": "order/malvales"
+  "parent": "order/malvales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": "palmate",
+    "stipules": true,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "woodiness": "woody",
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "sometimes"
+    },
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "flower_merosity": 5,
+    "stamens": {
+      "min": 50,
+      "max": 150
+    },
+    "carpels": {
+      "min": 2,
+      "max": 4
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Bixaceae with Cochlospermaceae, Diegodendraceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves simple; veins palmate; stipules present; plants hermaphrodite; ovary superior; stems woody; flowers usually actinomorphic, sometimes zygomorphic; perianth sepals and petals; fruit capsule; parts of each whorl 5; stamens 50 to 150; carpels 2 to 4. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

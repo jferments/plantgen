@@ -2,5 +2,47 @@
   "schema": 1,
   "rank": "family",
   "name": "Ruppiaceae",
-  "parent": "order/alismatales"
+  "parent": "order/alismatales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "sometimes",
+      "opposite": "sometimes",
+      "whorled": "usually"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "serrate": "often",
+      "entire": "often"
+    },
+    "leaf_venation": "single",
+    "leaf_shape": "linear",
+    "stipules": false,
+    "rosette": "none",
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "solitary": "rarely",
+      "raceme": "often",
+      "spike": "often",
+      "umbel": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "absent",
+    "fruit_type": "aggregate",
+    "stamens": 2,
+    "carpels": {
+      "min": 4,
+      "max": 4,
+      "low": 2,
+      "high": 16
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Ruppiaceae: leaves usually whorled, sometimes alternate or opposite; leaves simple; margins serrate or entire; veins single; blades linear; stipules absent; leaf rosettes none; plants hermaphrodite; ovary superior; stems herbaceous; flowers in racemes, in spikes or in umbels, rarely solitary; flowers actinomorphic; perianth absent; fruit aggregate; stamens 2; carpels (2-) 4 (-16). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

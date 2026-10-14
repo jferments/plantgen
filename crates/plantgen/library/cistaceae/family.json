@@ -2,5 +2,52 @@
   "schema": 1,
   "rank": "family",
   "name": "Cistaceae",
-  "parent": "order/malvales"
+  "parent": "order/malvales",
+  "traits": {
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "whorled": "sometimes",
+      "alternate": "rarely"
+    },
+    "leaf_division": "simple",
+    "leaf_venation": {
+      "single": "often",
+      "pinnate": "often",
+      "palmate": "often"
+    },
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": {
+      "woody": "often",
+      "herbaceous": "often"
+    },
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "stamens": {
+      "min": 15,
+      "max": 100,
+      "low": 3
+    },
+    "carpels": {
+      "min": 3,
+      "max": 10
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cistaceae: leaves usually opposite, sometimes whorled, rarely alternate; leaves simple; veins single, pinnate or palmate; stipules present or absent; plants hermaphrodite; ovary superior; floral cup absent; stems woody or herbaceous; flowers solitary or in cymes; flowers actinomorphic; perianth sepals and petals; fruit capsule; stamens (3-) 15 to 100; carpels 3 to 10. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }
