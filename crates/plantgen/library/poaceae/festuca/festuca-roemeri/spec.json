@@ -91,10 +91,6 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "culm_length_m": {
-      "min": 0.3,
-      "max": 1
-    },
     "inflorescence": "panicle",
     "florets_per_spikelet": {"min": 4, "max": 6},
     "spikelet_length_m": {"min": 0.009, "max": 0.0135},
@@ -115,11 +111,6 @@
     "flowering_months": [5, 6, 7]
   },
   "evidence": {
-    "traits.culm_length_m": {
-      "evidence": "SourceInferred",
-      "source": "hitchcock-1935",
-      "note": "Hitchcock 1935, as Festuca idahoensis in the broad sense that then included the later-split F. roemeri, sp. 33, pp. 76-77: culms 30 cm to 100 cm tall (Abrams vol. 1, p. 224, gives the same range); no source here treats F. roemeri on its own."
-    },
     "appearance.organs.panicle": {
       "evidence": "Authored",
       "source": "plantgen-authors",

@@ -86,12 +86,6 @@
     }
   ],
   "tier": "procedural_proxy",
-  "traits": {
-    "height_typical_m": {
-      "min": 0.3,
-      "max": 1.2
-    }
-  },
   "evidence": {
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
@@ -236,6 +230,7 @@
   },
   "traits": {
     "height_max_m": 1.0,
+    "height_typical_m": {"min": 0.3, "max": 1.2},
     "life_span": "perennial",
     "woodiness": "herbaceous",
     "leaf_length_m": {"min": 0.07, "max": 0.13},

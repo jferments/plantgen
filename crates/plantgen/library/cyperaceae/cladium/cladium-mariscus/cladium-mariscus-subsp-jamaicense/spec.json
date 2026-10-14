@@ -103,8 +103,9 @@
     }
   ],
   "tier": "procedural_proxy",
-  "traits": {"inflorescence_unit": "spikelet", "scale_arrangement": "spiral"},
   "traits": {
+    "inflorescence_unit": "spikelet",
+    "scale_arrangement": "spiral",
     "culm_length_m": {
       "min": 1.5,
       "max": 3
