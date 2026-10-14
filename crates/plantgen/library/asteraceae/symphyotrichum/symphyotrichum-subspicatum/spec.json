@@ -22,10 +22,7 @@
       "wiggle": 2,
       "nodes": 20,
       "bare": 0.05,
-      "leaf_length": 0.1,
       "leaf_peak": 0.3,
-      "leaf_top": 0.3,
-      "leaf_base": 0.7,
       "leaf_angle": 45,
       "raceme": 0.2,
       "flowers": 14,
@@ -62,7 +59,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.2,
           "widest": 0.45,
           "tip": 0.6,
           "base": 0.3,
@@ -72,7 +68,7 @@
         }
       },
       "flower": {
-        "shape": { "template": "head", "rays": 30, "ray_width": 0.5, "disc": 0.3 },
+        "shape": { "template": "head", "ray_width": 0.5, "disc": 0.3, "involucre": 0.6 },
         "colour": [0.65, 0.55, 0.85],
         "accent": [0.9, 0.75, 0.2]
       },
@@ -136,6 +132,86 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Aster subspicatus (pp. 318-319; syn. A. douglasii): slender, about 1 m high or less, with erect or ascending branches."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Aster subspicatus (pp. 318-319; syn. A. douglasii): perennial (genus: ours mostly perennial herbs)."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Aster subspicatus (pp. 318-319; syn. A. douglasii): a herb."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Aster subspicatus (pp. 318-319; syn. A. douglasii): middle leaves 7-13 cm long, 1-2 cm wide."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Aster subspicatus (pp. 318-319; syn. A. douglasii): middle leaves 1-2 cm wide."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Aster subspicatus (pp. 318-319; syn. A. douglasii): middle leaves lanceolate, the lowest oblanceolate narrowed to a winged petiole-like base."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Aster subspicatus (pp. 318-319; syn. A. douglasii): leaves toothed only."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Aster subspicatus (pp. 318-319; syn. A. douglasii): lowest leaves serrate, middle ones usually serrate above the middle."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Aster subspicatus (pp. 318-319; syn. A. douglasii): inflorescence a cymose panicle with few to many heads 2-3 cm wide."
+    },
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Aster subspicatus (pp. 318-319; syn. A. douglasii): rays 20-30."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Aster subspicatus (pp. 318-319; syn. A. douglasii): involucre 5-6 mm high, loosely overlapping, the phyllaries with green herbaceous tips."
+    },
+    "traits.ray_florets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Aster subspicatus (pp. 318-319; syn. A. douglasii): rays 20-30."
+    },
+    "traits.ray_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Aster subspicatus (pp. 318-319; syn. A. douglasii): rays about 1 cm long."
+    },
+    "traits.ray_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Aster subspicatus (pp. 318-319; syn. A. douglasii): rays violet. Word: violet."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Aster subspicatus (pp. 318-319; syn. A. douglasii): June to October."
+    },
+    "appearance.organs.flower.shape.involucre": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The involucre drawn about 0.6 times as tall as the disc is wide, so its height comes to the flora's 5 to 6 mm (spec rework E1); the daisy family's rule sets it from the involucre's height and width, and no flora read gives this aster's width."
     }
   },
   "provenance": {
@@ -147,5 +223,22 @@
     ],
     "contributors": ["Project After"],
     "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  },
+  "traits": {
+    "height_max_m": 1.0,
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "leaf_length_m": {"min": 0.07, "max": 0.13},
+    "leaf_width_m": {"min": 0.01, "max": 0.02},
+    "leaf_shape": {"lanceolate": "usually", "oblanceolate": "sometimes"},
+    "leaf_incision": "none",
+    "leaf_margin": "serrate",
+    "inflorescence": "panicle",
+    "capitulum_kind": "radiate",
+    "involucre_height_m": {"min": 0.005, "max": 0.006},
+    "ray_florets": {"min": 20, "max": 30},
+    "ray_length_m": 0.01,
+    "ray_colour": [140, 90, 190],
+    "flowering_months": [6, 7, 8, 9, 10]
   }
 }

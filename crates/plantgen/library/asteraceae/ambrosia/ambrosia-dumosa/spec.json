@@ -33,8 +33,7 @@
       "internode": 0.04,
       "branch_angle": 45,
       "bud_years": 5,
-      "leaf_size": 0.05,
-      "spur_leaf": 0.045,
+      "spur_leaf": 0.027,
       "spur_pairs": 3,
       "leaf_angle": 50,
       "fork_stems": 10,
@@ -65,12 +64,14 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "lobed",
-          "width": 0.6,
-          "lobes": 3,
-          "depth": 0.6,
-          "round": 0.6,
-          "petiole": 0.1
+          "template": "compound",
+          "leaflets": 7,
+          "pinnules": 5,
+          "leaflet_width": 0.3,
+          "teeth": 0,
+          "petiole": 0.15,
+          "angle": 60,
+          "pinnule_angle": 50
         }
       }
     }
@@ -91,7 +92,21 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "wood_density_basic_kg_m3": 780
+    "wood_density_basic_kg_m3": 780,
+    "height_typical_m": {"min": 0.2, "max": 0.6},
+    "woodiness": "woody",
+    "life_span": "perennial",
+    "leaf_length_m": {"min": 0.01, "max": 0.03},
+    "leaf_shape": {"oblong": "often", "ovate": "often", "deltate": "sometimes"},
+    "leaf_division": "simple",
+    "leaf_incision": "dissected",
+    "division_pattern": "pinnate",
+    "division_order": {"min": 2, "max": 3},
+    "inflorescence": {"raceme": "usually", "panicle": "sometimes"},
+    "involucre_diameter_m": {"min": 0.003, "max": 0.005},
+    "disc_florets": {"min": 20, "max": 30},
+    "fruit_size_m": {"min": 0.004, "max": 0.006},
+    "flowering_months": [4, 5, 6, 7, 8, 9, 10, 11]
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Ambrosia dumosa (gwddagg_v2.2_species.csv, read): specific gravity 0.78 (wsg_est, the database's hierarchical-model species mean, from 2 records in 2 sources); trunks 0.85, branches 0.68. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
@@ -144,6 +159,86 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Franseria dumosa (p. 151): a shrub 2-6 dm high."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Franseria dumosa (p. 151): a rigidly branched shrub with white bark."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Franseria dumosa (p. 151): a shrub."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Franseria dumosa (p. 151): leaves 1-3 cm long counting the usually short, slender petiole."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Franseria dumosa (p. 151): leaf outline oblong to ovate or deltoid."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Franseria dumosa (p. 151): one blade cut two or three times pinnately into few small obtuse divisions."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Franseria dumosa (p. 151): bi- to tripinnately divided into small ovate or obovate divisions."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Franseria dumosa (p. 151): pinnately divided."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Franseria dumosa (p. 151): bi- to tripinnately divided."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Franseria dumosa (p. 151): terminal racemes or raceme-like panicles, usually 5 cm long or less, staminate and pistillate heads often mixed."
+    },
+    "traits.involucre_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Franseria dumosa (p. 151): staminate heads 3-5 mm thick, the involucre bluntly 6-9-lobed to about the middle."
+    },
+    "traits.disc_florets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Franseria dumosa (p. 151): staminate heads about 20-30-flowered (pistillate heads 2-flowered)."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Franseria dumosa (p. 151): the fruiting bur ovoid or spindle-shaped, 4-6 mm long, 2-beaked, with about 25-40 flat straight spines 2.5-4 mm long."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Franseria dumosa (p. 151): April to November."
+    },
+    "appearance.organs.leaf.shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The blade drawn dissected (spec rework E1), as Abrams and Ferris describe it, twice or thrice pinnately cut into small rounded lobes: a twice-divided card whose segments run together along a winged rachis, the running together from its incision by the rules at the flowering plants. About 3 pairs of primary segments, each cut into 5 lobes, by eye from photographs; before, a three-lobed blade."
+    },
+    "generator.params.spur_leaf": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A short shoot's leaf card nine tenths of the longest leaf's, as the spec drew it before its leaf size came from the flora (spec rework E1); by eye."
     }
   },
   "provenance": {

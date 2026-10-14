@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Ambrosia",
+  "traits": {
+    "sexual_system": "monoecious",
+    "pappus": "absent",
+    "capitulum_kind": "discoid",
+    "leaf_arrangement": {"alternate": "usually", "opposite": "sometimes"}
+  },
+  "evidence": {
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Franseria (p. 150), now merged in Ambrosia; the traits given hold for Ambrosia as now drawn: plants monoecious, heads of one sex, staminate heads in terminal racemes with pistillate heads below them."
+    },
+    "traits.pappus": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Franseria (p. 150), now merged in Ambrosia; the traits given hold for Ambrosia as now drawn: achenes enclosed in the hardened involucre, without pappus."
+    },
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Franseria (p. 150), now merged in Ambrosia; the traits given hold for Ambrosia as now drawn: staminate heads many-flowered with funnel-shaped 5-toothed corollas and no rays; pistillate heads 1(-5)-flowered without corollas. Discoid is the nearest state."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Franseria (p. 150), now merged in Ambrosia; the traits given hold for Ambrosia as now drawn: leaves mostly alternate, toothed to three times pinnatifid."
+    }
+  }
+}

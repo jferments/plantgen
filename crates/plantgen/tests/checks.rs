@@ -52,6 +52,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its most vigorous shoots grow one to three of the four internodes a year they may, two nodes each, so they bear 2 to 6 leaves against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
+        "jacobaea-vulgaris",
+        "leaf_width_m",
+        "its stem leaves shrink upward in proportion, so the topmost, 4 to 5 cm long, draw 1.5 cm wide against the 2 to 6 cm Abrams and Ferris give for the blades, which they measure on the main leaves",
+    ),
+    (
         "larrea-tridentata",
         "leaf_division",
         "each leaf is two leaflets joined at their base, but its sprig cards draw each leaf as one blade",

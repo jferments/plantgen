@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Jacobaea",
+  "traits": {
+    "phyllary_series": 1,
+    "receptacle": "epaleate",
+    "receptacle_shape": {"flat": "often", "convex": "often"},
+    "pappus": "bristles",
+    "leaf_arrangement": "alternate"
+  },
+  "evidence": {
+    "traits.phyllary_series": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Senecio (p. 430), which then held Jacobaea; these hold for Jacobaea as now drawn: involucral bracts about equal, in one series (or seeming two by overlap), often with small bracteoles below."
+    },
+    "traits.receptacle": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Senecio (p. 430), which then held Jacobaea; these hold for Jacobaea as now drawn: receptacle flat or convex, naked."
+    },
+    "traits.receptacle_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Senecio (p. 430), which then held Jacobaea; these hold for Jacobaea as now drawn: receptacle flat or convex."
+    },
+    "traits.pappus": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Senecio (p. 430), which then held Jacobaea; these hold for Jacobaea as now drawn: pappus of many usually white capillary bristles."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Senecio (p. 430), which then held Jacobaea; these hold for Jacobaea as now drawn: leaves alternate (or all basal)."
+    }
+  }
+}
