@@ -14,7 +14,11 @@
       "max": 6,
       "typical": 3
     },
-    "fruit_type": "nut"
+    "fruit_type": "nut",
+    "leaf_habit": {
+      "evergreen": "often",
+      "deciduous": "often"
+    }
   },
   "forms": {
     "decurrent_tree": {
@@ -35,6 +39,11 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 62 Fagaceae: trees; leaves alternate, simple, pinnately veined; stipules present, often soon falling; flowers unisexual on the same tree, the male in erect or catkin-like spikes; calyx 4- to 6-lobed, no petals; ovary inferior, 3- to 6-celled; fruit a nut in a cup or husk (involucre). Hutchinson's Fagaceae held Nothofagus, now its own family."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Fagaceae: how long the leaves last (character 37), coded often evergreen, often deciduous. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   }
 }

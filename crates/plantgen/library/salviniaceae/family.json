@@ -2,5 +2,20 @@
   "schema": 1,
   "rank": "family",
   "name": "Salviniaceae",
-  "parent": "order/salviniales"
+  "parent": "order/salviniales",
+  "traits": {
+    "leaf_division": "simple",
+    "leaf_arrangement": {
+      "whorled": "usually",
+      "alternate": "sometimes"
+    },
+    "leaves_per_whorl": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Salviniaceae: free-floating water ferns whose stems fork; leaves stalkless, in Salvinia in whorls of three, two floating and one submerged and cut into root-like threads, in Azolla alternate and two-ranked. The Library holds more Salvinia than Azolla."
+    }
+  }
 }

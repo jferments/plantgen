@@ -14,7 +14,13 @@
     "fruit_type": {
       "capsule": "usually",
       "berry": "rarely"
-    }
+    },
+    "rosette": {
+      "basal": "usually",
+      "none": "sometimes",
+      "terminal": "sometimes"
+    },
+    "life_span": "perennial"
   },
   "forms": {
     "rosette_succulent": {
@@ -45,6 +51,16 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
       "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 372 Liliaceae, whose asphodels, aloes and day-lilies APG puts in Asphodelaceae: leaves simple, in a basal tuft or rosette; fruit mostly a capsule opening along its cells, rarely a berry."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Asphodelaceae as that work draws it, there coded together with Xeronemataceae: whether the leaves gather in rosettes (character 22), coded usually a basal rosette, sometimes no rosette, sometimes rosettes at the stem tips. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Asphodelaceae as that work draws it, there coded together with Xeronemataceae: the herbs' life form (character 21), coded perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   }
 }

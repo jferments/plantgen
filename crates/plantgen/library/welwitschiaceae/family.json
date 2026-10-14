@@ -2,5 +2,51 @@
   "schema": 1,
   "rank": "family",
   "name": "Welwitschiaceae",
-  "parent": "order/welwitschiales"
+  "parent": "order/welwitschiales",
+  "traits": {
+    "leaf_habit": "evergreen",
+    "leaf_form": "blade",
+    "leaf_division": "simple",
+    "leaf_shape": "linear",
+    "leaf_venation": "parallel",
+    "rosette": "basal",
+    "architectural_model": "corner"
+  },
+  "evidence": {
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Welwitschiaceae: a long-lived woody plant whose short unbranched stem, on a taproot, widens into a disc up to a metre across and bears only two (rarely three) strap-shaped leaves; they grow from their bases all the plant's life and spread over the ground, fraying at the tips; veins nearly parallel."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Welwitschiaceae: a long-lived woody plant whose short unbranched stem, on a taproot, widens into a disc up to a metre across and bears only two (rarely three) strap-shaped leaves; they grow from their bases all the plant's life and spread over the ground, fraying at the tips; veins nearly parallel."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Welwitschiaceae: a long-lived woody plant whose short unbranched stem, on a taproot, widens into a disc up to a metre across and bears only two (rarely three) strap-shaped leaves; they grow from their bases all the plant's life and spread over the ground, fraying at the tips; veins nearly parallel."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Welwitschiaceae: a long-lived woody plant whose short unbranched stem, on a taproot, widens into a disc up to a metre across and bears only two (rarely three) strap-shaped leaves; they grow from their bases all the plant's life and spread over the ground, fraying at the tips; veins nearly parallel."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Welwitschiaceae: a long-lived woody plant whose short unbranched stem, on a taproot, widens into a disc up to a metre across and bears only two (rarely three) strap-shaped leaves; they grow from their bases all the plant's life and spread over the ground, fraying at the tips; veins nearly parallel."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Welwitschiaceae: a long-lived woody plant whose short unbranched stem, on a taproot, widens into a disc up to a metre across and bears only two (rarely three) strap-shaped leaves; they grow from their bases all the plant's life and spread over the ground, fraying at the tips; veins nearly parallel."
+    },
+    "traits.architectural_model": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Welwitschiaceae: the plant follows Corner's model."
+    }
+  }
 }

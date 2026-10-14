@@ -2,5 +2,17 @@
   "schema": 1,
   "rank": "family",
   "name": "Hymenophyllaceae",
-  "parent": "order/hymenophyllales"
+  "parent": "order/hymenophyllales",
+  "traits": {
+    "rhizome_habit": "long_creeping",
+    "sorus_position": "marginal",
+    "sorus_shape": "marginal"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Hymenophyllaceae: the filmy ferns, mostly epiphytic, on slender creeping rhizomes without scales; fronds 5 mm to 60 cm, the blade one cell thick, without stomata; sporangia on receptacles that continue the vein tips at the margin, in tubular or two-lipped indusia."
+    }
+  }
 }
