@@ -2127,17 +2127,27 @@ impl Shape {
                         ))
                     }
                     Corolla::Bilabiate
-                        if !(4..=6).contains(&s.petals) || s.perianth != Perianth::Corolla =>
+                        if !match s.perianth {
+                            Perianth::Corolla => (4..=6).contains(&s.petals),
+                            Perianth::Tepals => (4..=12).contains(&s.petals),
+                            _ => false,
+                        } =>
                     {
                         Err(format!(
-                            "a bilabiate corolla is one whorl of 4 to 6 petals, found {}",
-                            s.petals
+                            "a bilabiate corolla is one whorl of 4 to 6 petals or two whorls \
+                             of 4 to 12 tepals, found {} {:?}",
+                            s.petals, s.perianth
                         ))
                     }
-                    Corolla::Unequal if s.perianth != Perianth::Corolla => Err(
-                        "an unequal corolla is one whorl of petals: perianth sepals_and_petals"
-                            .to_string(),
-                    ),
+                    Corolla::Unequal
+                        if !matches!(s.perianth, Perianth::Corolla | Perianth::Tepals) =>
+                    {
+                        Err(
+                            "an unequal corolla is one whorl of petals or two of tepals: \
+                             perianth sepals_and_petals or tepals"
+                                .to_string(),
+                        )
+                    }
                     Corolla::Labellate
                         if s.petals != 3 || s.sepals != 3 || s.perianth != Perianth::Corolla =>
                     {
