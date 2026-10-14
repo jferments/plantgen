@@ -7,6 +7,9 @@
 //! it names a preset (`flat`, `slope`, `boulders`, `cleft`, `log`, `trunk`,
 //! `wall`), which [`Substrate::resolve`] expands into the grid, or it holds
 //! the grid itself, as a host such as Project After cuts it from its world.
+//! A preset is sized for a cushion or a herb; `scale` grows every length
+//! of it, so `wall` at scale 10 stands 3 m from a tree and 30 m high, in
+//! cells 25 cm wide.
 //!
 //! The grid has one encoding: an `i8` per cell in units of
 //! `distance_scale_m`, saturating at ±127 outside a narrow band round the
@@ -79,6 +82,9 @@ const PRESET_HALF: f64 = 1.6;
 const PRESET_LOW: f64 = -0.4;
 const PRESET_HIGH: f64 = 1.6;
 
+/// The range of a preset's `scale`.
+const SCALES: (f64, f64) = (0.1, 50.0);
+
 /// The `substrate` section of a conditions document.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -90,6 +96,10 @@ pub struct Substrate {
     /// Seed of a preset that places things (`boulders`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub seed: Option<u64>,
+    /// Every length of a preset times this (0.1 to 50; 1 when left out):
+    /// its solids, its grid's reach and its cells.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub scale: Option<f64>,
     /// The grid's corner: the low corner of its first cell, metres in the
     /// plant's frame (the plant stands at the origin; +Y up).
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -125,6 +135,7 @@ impl Substrate {
             version: SUBSTRATE_VERSION,
             preset: Some(preset),
             seed: None,
+            scale: None,
             origin_m: None,
             cell_m: None,
             size: None,
@@ -140,7 +151,7 @@ impl Substrate {
     #[must_use]
     pub fn resolve(&self) -> Self {
         match self.preset {
-            Some(preset) => grid_of(preset, self.seed.unwrap_or(1)),
+            Some(preset) => grid_of(preset, self.seed.unwrap_or(1), self.scale.unwrap_or(1.0)),
             None => self.clone(),
         }
     }
@@ -170,10 +181,18 @@ impl Substrate {
             if grid.iter().any(|given| *given) {
                 return Err("substrate names a preset and also gives a grid".into());
             }
+            if let Some(scale) = self.scale
+                && !(SCALES.0..=SCALES.1).contains(&scale)
+            {
+                return Err(format!(
+                    "substrate scale must be {} to {}, found {scale}",
+                    SCALES.0, SCALES.1
+                ));
+            }
             return Ok(());
         }
-        if self.seed.is_some() {
-            return Err("substrate seed is only for a preset".into());
+        if self.seed.is_some() || self.scale.is_some() {
+            return Err("substrate seed and scale are only for a preset".into());
         }
         if !grid.iter().all(|given| *given) {
             return Err(
@@ -289,7 +308,7 @@ impl SubstrateField {
     /// Never: the flat preset always decodes.
     #[must_use]
     pub fn flat() -> Self {
-        Self::decode(&grid_of(SubstratePreset::Flat, 1)).expect("the flat preset decodes")
+        Self::decode(&grid_of(SubstratePreset::Flat, 1, 1.0)).expect("the flat preset decodes")
     }
 
     fn index(&self, x: usize, y: usize, z: usize) -> usize {
@@ -392,17 +411,18 @@ impl SubstrateField {
     }
 }
 
-/// The grid of a preset.
-fn grid_of(preset: SubstratePreset, seed: u64) -> Substrate {
-    let cell = PRESET_CELL;
+/// The grid of a preset at `stretch` times its size: the same cells,
+/// each `stretch` times as wide, holding `stretch` times the distance.
+fn grid_of(preset: SubstratePreset, seed: u64, stretch: f64) -> Substrate {
     #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-    let count = |extent: f64| (extent / cell).round() as u32;
+    let count = |extent: f64| (extent / PRESET_CELL).round() as u32;
     let size = [
         count(2.0 * PRESET_HALF),
         count(PRESET_HIGH - PRESET_LOW),
         count(2.0 * PRESET_HALF),
     ];
-    let origin = Vec3::new(-PRESET_HALF, PRESET_LOW, -PRESET_HALF);
+    let cell = PRESET_CELL * stretch;
+    let origin = Vec3::new(-PRESET_HALF, PRESET_LOW, -PRESET_HALF) * stretch;
     let scale = cell / 16.0;
     let shapes = shapes_of(preset, seed);
     let [nx, ny, nz] = size.map(|n| n as usize);
@@ -416,7 +436,7 @@ fn grid_of(preset: SubstratePreset, seed: u64) -> Substrate {
                     origin + Vec3::new(x as f64 + 0.5, y as f64 + 0.5, z as f64 + 0.5) * cell;
                 let (d, m) = shapes
                     .iter()
-                    .map(|shape| (shape.distance(centre), shape.material))
+                    .map(|shape| (shape.distance(centre / stretch) * stretch, shape.material))
                     .fold((f64::INFINITY, AIR), |best, next| {
                         if next.0 < best.0 { next } else { best }
                     });
@@ -432,6 +452,7 @@ fn grid_of(preset: SubstratePreset, seed: u64) -> Substrate {
         version: SUBSTRATE_VERSION,
         preset: None,
         seed: None,
+        scale: None,
         origin_m: Some([origin.x, origin.y, origin.z]),
         cell_m: Some(cell),
         size: Some(size),
@@ -676,5 +697,38 @@ mod tests {
         let mut both = Substrate::preset(SubstratePreset::Flat);
         both.cell_m = Some(0.1);
         assert!(both.validate().unwrap_err().contains("also gives a grid"));
+    }
+
+    #[test]
+    fn a_scaled_preset_is_the_same_place_that_many_times_as_large() {
+        let small = Substrate::preset(SubstratePreset::Wall).field().unwrap();
+        let large = Substrate {
+            scale: Some(10.0),
+            ..Substrate::preset(SubstratePreset::Wall)
+        };
+        assert!(large.validate().is_ok());
+        let large = large.field().unwrap();
+        for point in [
+            Vec3::new(0.0, 0.5, -0.2),
+            Vec3::new(0.3, 1.0, -0.6),
+            Vec3::new(-0.4, 0.1, 0.0),
+        ] {
+            let (near, far) = (small.distance(point), large.distance(point * 10.0));
+            assert!(
+                (far - 10.0 * near).abs() < 1e-9,
+                "{point:?}: {near} and {far}"
+            );
+            assert_eq!(small.material_at(point), large.material_at(point * 10.0));
+        }
+        // Left out, the scale is 1: the preset keeps its grid.
+        let unit = Substrate {
+            scale: Some(1.0),
+            ..Substrate::preset(SubstratePreset::Wall)
+        };
+        assert_eq!(unit.field().unwrap(), small);
+        // A grid has no scale.
+        let mut grid = Substrate::preset(SubstratePreset::Flat).resolve();
+        grid.scale = Some(2.0);
+        assert!(grid.validate().unwrap_err().contains("only for a preset"));
     }
 }

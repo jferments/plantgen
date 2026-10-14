@@ -2,5 +2,57 @@
   "schema": 1,
   "rank": "family",
   "name": "Argophyllaceae",
-  "parent": "order/asterales"
+  "parent": "order/asterales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "serrate": "often"
+    },
+    "leaf_venation": "pinnate",
+    "leaf_shape": {
+      "linear": "often",
+      "oblong": "often",
+      "obovate": "often",
+      "ovate": "often",
+      "lanceolate": "often",
+      "oblanceolate": "often"
+    },
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "half_inferior": "often",
+      "inferior": "often"
+    },
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "often",
+      "raceme": "often",
+      "panicle": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "often",
+      "drupe": "often"
+    },
+    "flower_merosity": 5,
+    "stamens": {
+      "min": 5,
+      "max": 8
+    },
+    "carpels": {
+      "min": 2,
+      "max": 6
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Argophyllaceae: leaves alternate; leaves simple; margins entire or serrate; veins pinnate; blades linear, oblong, obovate, ovate, lanceolate or oblanceolate; stipules absent; plants hermaphrodite; ovary half inferior or inferior; floral cup absent; stems woody; flowers solitary, in racemes or in panicles; flowers actinomorphic; perianth sepals and petals; fruit capsule or drupe; parts of each whorl 5; stamens 5 to 8; carpels 2 to 6. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

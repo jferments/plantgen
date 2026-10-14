@@ -2,5 +2,40 @@
   "schema": 1,
   "rank": "family",
   "name": "Cercidiphyllaceae",
-  "parent": "order/saxifragales"
+  "parent": "order/saxifragales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "crenate": "often",
+      "serrate": "often"
+    },
+    "leaf_venation": "palmate",
+    "leaf_habit": "deciduous",
+    "stipules": true,
+    "sexual_system": "dioecious",
+    "ovary_position": "superior",
+    "woodiness": "woody",
+    "inflorescence": {
+      "raceme": "often",
+      "head": "often"
+    },
+    "perianth": "absent",
+    "fruit_type": "follicle",
+    "stamens": {
+      "min": 8,
+      "max": 13
+    },
+    "carpels": 1
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cercidiphyllaceae: leaves alternate or opposite; leaves simple; margins crenate or serrate; veins palmate; leaves deciduous; stipules present; plants dioecious; ovary superior; stems woody; flowers in racemes or in heads; perianth absent; fruit follicle; stamens 8 to 13; carpels 1. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

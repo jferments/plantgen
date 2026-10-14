@@ -2,5 +2,39 @@
   "schema": 1,
   "rank": "family",
   "name": "Thymelaeaceae",
-  "parent": "order/malvales"
+  "parent": "order/malvales",
+  "traits": {
+    "woodiness": {
+      "woody": "usually",
+      "herbaceous": "rarely"
+    },
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often"
+    },
+    "stipules": false,
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "sometimes"
+    },
+    "flower_merosity": {
+      "min": 4,
+      "max": 5
+    },
+    "hypanthium": true,
+    "ovary_position": "superior",
+    "inflorescence": {
+      "spike": "often",
+      "raceme": "often",
+      "head": "often",
+      "solitary": "rarely"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 85 Thymelaeaceae: trees or shrubs, rarely herbs; leaves opposite or alternate, mostly small; no stipules; flowers often in bracted heads, spikes or racemes, rarely alone, bisexual or of one sex, regular or slightly irregular; calyx a tube, sometimes petal-like, its lobes 4 or 5 (read as a hypanthium crowned by the lobes); petals scale-like or none; ovary superior; fruit staying shut (drupes and nuts in Daphne and kin), left unstated. Head-like clusters from 'terminal bracteate heads' (the OCR is broken there; inferred)."
+    }
+  }
 }

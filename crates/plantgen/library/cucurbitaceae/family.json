@@ -2,5 +2,36 @@
   "schema": 1,
   "rank": "family",
   "name": "Cucurbitaceae",
-  "parent": "order/cucurbitales"
+  "parent": "order/cucurbitales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "usually",
+      "semi": "rarely"
+    },
+    "leaf_arrangement": "alternate",
+    "sexual_system": {
+      "monoecious": "usually",
+      "dioecious": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "flower_merosity": 5,
+    "stamens": {
+      "min": 1,
+      "max": 5,
+      "typical": 3
+    },
+    "carpels": 3,
+    "ovary_position": {
+      "inferior": "usually",
+      "superior": "rarely"
+    },
+    "fruit_type": "berry"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 109 Cucurbitaceae: herbs, rarely undershrubs, with watery sap, often rough; stems climbing or trailing, mostly with coiled tendrils; flowers of one sex, on one plant or on two; stamens mostly 3, rarely 1 to 5; ovary inferior, very rarely free, its placentas often 3; ovules numerous. Alternate leaves, 5-merous regular flowers and the berry (the pepo of melons and gourds) are from common knowledge, inferred, not traced; the copy read garbles the sentence on the flowers' symmetry."
+    }
+  }
 }

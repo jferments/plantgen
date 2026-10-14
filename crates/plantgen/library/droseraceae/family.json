@@ -2,5 +2,58 @@
   "schema": 1,
   "rank": "family",
   "name": "Droseraceae",
-  "parent": "order/caryophyllales"
+  "parent": "order/caryophyllales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "whorled": "rarely"
+    },
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "rarely"
+    },
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "rosette": {
+      "basal": "often",
+      "none": "usually"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": {
+      "true": "often",
+      "false": "often"
+    },
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5
+    },
+    "stamens": {
+      "min": 5,
+      "max": 20,
+      "low": 4
+    },
+    "carpels": {
+      "min": 3,
+      "max": 3,
+      "high": 5
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Droseraceae: leaves usually alternate, rarely whorled; leaves usually simple, rarely compound; stipules present or absent; leaf rosettes usually none, often basal; plants hermaphrodite; ovary superior; floral cup present or absent; stems herbaceous; flowers solitary or in cymes; flowers actinomorphic; perianth sepals and petals; fruit capsule; parts of each whorl 4 to 5; stamens (4-) 5 to 20; carpels 3 (-5). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

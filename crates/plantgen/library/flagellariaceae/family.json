@@ -2,5 +2,32 @@
   "schema": 1,
   "rank": "family",
   "name": "Flagellariaceae",
-  "parent": "order/poales"
+  "parent": "order/poales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "parallel",
+    "leaf_shape": "lanceolate",
+    "rosette": "none",
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "inflorescence": "panicle",
+    "perianth": "tepals",
+    "fruit_type": "drupe",
+    "flower_merosity": 3,
+    "stamens": {
+      "min": 6,
+      "max": 6,
+      "low": 3
+    },
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Flagellariaceae: leaves alternate; leaves simple; margins entire; veins parallel; blades lanceolate; leaf rosettes none; plants hermaphrodite; ovary superior; flowers in panicles; perianth tepals; fruit drupe; parts of each whorl 3; stamens (3-) 6; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

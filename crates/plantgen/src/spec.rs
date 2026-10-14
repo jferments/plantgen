@@ -317,6 +317,12 @@ pub struct Generator {
     /// Parameter values that replace the program's defaults.
     #[serde(default)]
     pub params: BTreeMap<String, f64>,
+    /// Values for parameters the program leaves valueless, which a rank
+    /// file states for a growth form: inheritance moves each into
+    /// `params` where no file set it and the program gives it no value,
+    /// so an effective spec carries none ([`crate::inherit`]).
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub defaults: BTreeMap<String, f64>,
     /// The spreads of parameters rules pass a range of a character of the
     /// whole plant through to, by path (`params.<name>`;
     /// [`crate::inherit::Spread`]), from which each plant draws its own by
@@ -426,6 +432,24 @@ pub struct Variant {
     /// conditions document that names one (G3); `None` grows on level soil.
     #[serde(skip)]
     pub substrate: Option<(SubstratePreset, u64)>,
+}
+
+/// Why a spec's variant cannot grow in `conditions`, if it cannot. A
+/// variant keeps a substrate preset and its seed only
+/// ([`Variant::conditions`]): a grid, a scaled place and neighbours' crowns
+/// come from a host growing one plant in its own world
+/// ([`crate::grow::grow_in`]).
+fn unfit_for_a_variant(conditions: &Conditions) -> Option<&'static str> {
+    let substrate = conditions.substrate.as_ref();
+    if substrate.is_some_and(|substrate| substrate.preset.is_none()) {
+        Some("a spec's substrate must name a preset")
+    } else if substrate.is_some_and(|substrate| substrate.scale.is_some())
+        || !conditions.envelopes().is_empty()
+    {
+        Some("a spec's conditions give no substrate scale and no envelopes")
+    } else {
+        None
+    }
 }
 
 impl Variant {
@@ -1015,14 +1039,8 @@ impl PlantSpec {
                     "{at}: interactions.host must be the spec's own host"
                 ));
             }
-            // A spec's variants grow on named substrates; a grid comes from
-            // a host growing a plant in its own world.
-            if conditions
-                .substrate
-                .as_ref()
-                .is_some_and(|substrate| substrate.preset.is_none())
-            {
-                return fail(format!("{at}: a spec's substrate must name a preset"));
+            if let Some(problem) = unfit_for_a_variant(conditions) {
+                return fail(format!("{at}: {problem}"));
             }
         }
         if let Err(message) = self.appearance.validate() {

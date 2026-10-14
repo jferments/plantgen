@@ -2,5 +2,45 @@
   "schema": 1,
   "rank": "family",
   "name": "Nepenthaceae",
-  "parent": "order/caryophyllales"
+  "parent": "order/caryophyllales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "parallel",
+    "leaf_shape": "linear",
+    "stipules": false,
+    "rosette": "none",
+    "sexual_system": "dioecious",
+    "ovary_position": "superior",
+    "woodiness": {
+      "woody": "sometimes",
+      "herbaceous": "usually"
+    },
+    "inflorescence": {
+      "panicle": "often",
+      "cyme": "often",
+      "raceme": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": "capsule",
+    "stamens": {
+      "min": 8,
+      "max": 25,
+      "low": 2
+    },
+    "carpels": {
+      "min": 4,
+      "max": 4,
+      "low": 3
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Nepenthaceae: leaves alternate; leaves simple; margins entire; veins parallel; blades linear; stipules absent; leaf rosettes none; plants dioecious; ovary superior; stems usually herbaceous, sometimes woody; flowers in panicles, in cymes or in racemes; flowers actinomorphic; perianth tepals; fruit capsule; stamens (2-) 8 to 25; carpels (3-) 4. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

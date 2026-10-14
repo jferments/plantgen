@@ -125,10 +125,28 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 1,
+      "max": 4
+    },
+    "leaf_length_m": {
+      "min": 0.008,
+      "max": 0.035
+    },
     "stamens": {"min": 8, "max": 10},
     "carpels": {"min": 4, "max": 5}
   },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Vaccinium parvifolium: grows 1 m to 4 m tall."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Vaccinium parvifolium: leaves 8 mm to 3.5 cm long."
+    },
     "generator.params.path_half": {
       "evidence": "Authored",
       "source": "plantgen-authors",

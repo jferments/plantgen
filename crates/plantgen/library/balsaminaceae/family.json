@@ -2,5 +2,60 @@
   "schema": 1,
   "rank": "family",
   "name": "Balsaminaceae",
-  "parent": "order/ericales"
+  "parent": "order/ericales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often",
+      "whorled": "often"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "crenate": "often",
+      "serrate": "often"
+    },
+    "leaf_venation": "pinnate",
+    "leaf_shape": {
+      "linear": "often",
+      "oblong": "often",
+      "ovate": "often"
+    },
+    "stipules": {
+      "false": "usually",
+      "true": "sometimes"
+    },
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "sexual_system": "hermaphrodite",
+    "resupinate": {
+      "true": "often",
+      "false": "usually"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often"
+    },
+    "flower_symmetry": "zygomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "rarely",
+      "drupe": "rarely"
+    },
+    "flower_merosity": 5,
+    "stamens": 5,
+    "carpels": 5
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Balsaminaceae: leaves alternate, opposite or whorled; leaves simple; margins entire, crenate or serrate; veins pinnate; blades linear, oblong or ovate; stipules usually absent, sometimes present; leaf rosettes basal or none; plants hermaphrodite; flowers turned over usually absent, often present; ovary superior; floral cup absent; stems herbaceous; flowers solitary or in cymes; flowers zygomorphic; perianth sepals and petals; fruit capsule or drupe; parts of each whorl 5; stamens 5; carpels 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

@@ -27,24 +27,9 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
     ),
     (
-        "aquilegia-formosa",
-        "fruit_type",
-        "its fruit look sets no fruit kind, so its follicles are drawn as the ellipsoid of a berry or drupe",
-    ),
-    (
-        "dicentra-formosa",
-        "fruit_type",
-        "its fruit look sets no fruit kind, so its capsules are drawn as the ellipsoid of a berry or drupe",
-    ),
-    (
         "digitalis-purpurea",
         "corolla_shape",
         "its bell is joined 0.8 of its length round a wide mouth, its lobes short (Flora of New Zealand), but the angiosperms draw every bell joined 0.45 and a funnel 0.6, so its corolla is nearest a funnel; a longer bell needs the rule's shapes to allow one",
-    ),
-    (
-        "digitalis-purpurea",
-        "fruit_type",
-        "its fruit look sets no fruit kind, so its capsules are drawn as the ellipsoid of a berry or drupe",
     ),
     (
         "encelia-farinosa",
@@ -55,11 +40,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "larrea-tridentata",
         "leaf_division",
         "each leaf is two leaflets joined at their base, but its sprig cards draw each leaf as one blade",
-    ),
-    (
-        "lupinus-polyphyllus",
-        "fruit_type",
-        "its look in fruit sets no fruit kind, so its pods are drawn as the ellipsoid of a berry or drupe",
     ),
     (
         "lysichiton-americanus",
@@ -115,26 +95,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "program:sapindaceae",
         "crown_outline_fit",
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
-    ),
-    (
-        "sambucus-racemosa",
-        "inflorescence",
-        "its spec draws its pyramidal panicle as a head by hand, against the panicle it states (read since a cluster whose units open by the day is read in flower)",
-    ),
-    (
-        "symphoricarpos-albus",
-        "inflorescence",
-        "its spec draws its few-flowered clusters as an umbel by hand, against the cymes and heads Caprifoliaceae state (read since a cluster whose units open by the day is read in flower)",
-    ),
-    (
-        "tiarella-trifoliata",
-        "fruit_type",
-        "its fruit look sets no fruit kind, so its capsules are drawn as the ellipsoid of a berry or drupe",
-    ),
-    (
-        "tolmiea-menziesii",
-        "fruit_type",
-        "its look in fruit sets no fruit kind, so its capsules are drawn as the ellipsoid of a berry or drupe",
     ),
     (
         "viola-glabella",

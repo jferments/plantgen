@@ -2,5 +2,54 @@
   "schema": 1,
   "rank": "family",
   "name": "Burmanniaceae",
-  "parent": "order/dioscoreales"
+  "parent": "order/dioscoreales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes"
+    },
+    "leaf_division": "simple",
+    "leaf_venation": "parallel",
+    "leaf_shape": {
+      "linear": "often",
+      "lanceolate": "often",
+      "oblanceolate": "often",
+      "oblong": "often",
+      "ovate": "often"
+    },
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "monoecious": "often"
+    },
+    "ovary_position": {
+      "half_inferior": "usually",
+      "inferior": "sometimes"
+    },
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "raceme": "often"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "sometimes"
+    },
+    "perianth": "tepals",
+    "fruit_type": "capsule",
+    "flower_merosity": 3,
+    "stamens": 3,
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Burmanniaceae with Corsiaceae, Thismiaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually alternate, sometimes opposite; leaves simple; veins parallel; blades linear, lanceolate, oblanceolate, oblong or ovate; leaf rosettes basal or none; plants hermaphrodite or monoecious; ovary usually half inferior, sometimes inferior; stems herbaceous; flowers solitary, in cymes or in racemes; flowers usually actinomorphic, sometimes zygomorphic; perianth tepals; fruit capsule; parts of each whorl 3; stamens 3; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

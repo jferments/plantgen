@@ -35,7 +35,8 @@
       "dead_years": 8,
       "pipe_organ": 0.004,
       "pipe_rings": 3e-06,
-      "spray_area": 0.24
+      "spray_area": 0.24,
+      "branch_reach": 3.2
     }
   },
   "growth": {
@@ -154,7 +155,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a small, bushy tree with a rounded crown of upswept branches and fine sprays of overlapping scale leaves. Not fitted to measurements. Cones (plant forms F3): berry-like cones about 6 mm, blue under a pale bloom; set from general knowledge of the species, not measured. Spec rework E6d: `cone_length`, `cone_years` now set by the rules at Pinidae from the stated characters."
+      "note": "Hand-set from general knowledge of the species: a small, bushy tree with a rounded crown of upswept branches and fine sprays of overlapping scale leaves. Not fitted to measurements. Cones (plant forms F3): berry-like cones about 6 mm, blue under a pale bloom; set from general knowledge of the species, not measured. Spec rework E6d: `cone_length`, `cone_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe."
     },
     "allometry": {
       "evidence": "Authored",

@@ -75,6 +75,7 @@ pub mod shoots;
 pub mod spec;
 pub mod spikelets;
 pub mod spines;
+pub mod stand;
 pub mod substrate;
 pub mod templates;
 pub mod texture;
@@ -251,10 +252,31 @@ pub mod venation;
 /// enough to rest on the ground, or rises onto it when no turn clears it;
 /// and a stem's foot ring meets the ground in a flat cut where a leaning
 /// or flared trunk's side would dip into it.
+/// 42: a conifer's lower crown stays full (pinidae 5): a branch's shoot
+/// shortens with its wood from the stem, not its age; foliage lasts longer
+/// low in the crown; dormant buds sprout on lit branch wood; side shoots
+/// grow 20 years; sprays are drawn with their own turns; a limb that
+/// reaches the ground is shed there, and a dead branch falls (41 is the
+/// ground plane, #73).
+/// 43: a fern's, a palm's, a tree fern's or a cycad's fronds and a cactus's
+/// joints that sag to the ground lie on it (`rest`, on the conditions'
+/// substrate or level soil) instead of passing into it, so the deer and
+/// sword ferns, Engelmann's prickly pear and saw palmetto stay above the
+/// ground; bend@1 can hold bent wood up on the ground too (`ground`),
+/// which no program uses yet (41 is the ground plane, #73; 42 the
+/// conifers' lower crowns, #72).
+/// 44: leaves, fronds, blooms, fruit, dead fronds and boots, rosette
+/// leaves and stalks, canes and epiphyte colonies live as long as their
+/// parameters say, not one year more: a deciduous tree draws this year's
+/// leaves only. Velvet mesquite (`bud_break`), bigleaf maple
+/// (`sprout_light`) and Oregon white oak (`spur_light`) are refitted to
+/// keep their sizes, their crowns within the module limit and the oak's
+/// leaf area per crown area (43 is the fronds that lie on the ground,
+/// #77).
 /// 45: a flower whose zygomorphy is of no named kind (palo verde,
 /// piggyback plant) draws its upper petal unlike the rest, wider by
 /// `banner` and more upright (an unequal corolla), not a corolla of like
-/// petals (41 to 44 are #73, #72, #77 and #79 in landing order).
+/// petals (44 is the leaf lives, #79).
 /// 47: a regular corolla may stand in two like whorls (`petal_whorls`
 /// 2), the inner turned half a petal: tall and dull Oregon grape draw
 /// three petals and three, bleeding heart an outer and an inner pair, and

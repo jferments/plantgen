@@ -2,5 +2,29 @@
   "schema": 1,
   "rank": "family",
   "name": "Cynomoriaceae",
-  "parent": "order/saxifragales"
+  "parent": "order/saxifragales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "sexual_system": {
+      "monoecious": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "inferior",
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "spike": "often",
+      "head": "often"
+    },
+    "perianth": "tepals",
+    "fruit_type": "nut",
+    "stamens": 1,
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cynomoriaceae: leaves alternate; plants monoecious or polygamous; ovary inferior; stems herbaceous; flowers in spikes or in heads; perianth tepals; fruit nut; stamens 1; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

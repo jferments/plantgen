@@ -2,5 +2,40 @@
   "schema": 1,
   "rank": "family",
   "name": "Melastomataceae",
-  "parent": "order/myrtales"
+  "parent": "order/myrtales",
+  "traits": {
+    "woodiness": {
+      "woody": "usually",
+      "herbaceous": "sometimes"
+    },
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "whorled": "sometimes"
+    },
+    "leaf_division": "simple",
+    "leaf_venation": {
+      "palmate": "usually",
+      "pinnate": "rarely"
+    },
+    "stipules": false,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "hypanthium": true,
+    "ovary_position": {
+      "inferior": "usually",
+      "half_inferior": "sometimes",
+      "superior": "rarely"
+    },
+    "fruit_type": {
+      "capsule": "often",
+      "berry": "often"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 168 Melastomataceae: herbs, shrubs or trees; leaves simple, opposite or whorled, mostly with 3 to 9 veins running lengthwise from the base (read as palmate venation), rarely pinnately veined; no stipules; flowers regular, mostly showy; calyx a tube, free of the ovary or joined to it; petals free; stamens as many as to twice the petals, the anthers opening by a pore; ovary mostly inferior; fruit a capsule or a berry. The calyx tube is read as a hypanthium."
+    }
+  }
 }

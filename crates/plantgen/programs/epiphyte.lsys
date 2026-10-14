@@ -26,10 +26,15 @@
 # (`tillandsia`, `phoradendron`) give the values, as this program's
 # defaults were until then.
 #
+# Revision 3 (leaf life): colonies live as long as their parameters say,
+# no longer one year more. What a step makes is born at the step's end, so
+# a rule that ends a part by its age counts the step it is in (`age + dt
+# >=`).
+#
 # A colony lives colony_life years. One step is one year. Angles are
 # degrees; lengths are metres.
 
-lsystem epiphyte 2;
+lsystem epiphyte 3;
 
 param colonies;
 param seeds_per_year;
@@ -92,7 +97,7 @@ rule Sd : gd < reach -> steer(gx, gy, gz, 1) f(max(0, gd)) Co;
 rule Sd -> ;
 
 # A colony is drawn afresh each year at its age; last year's drawing goes.
-rule Co : age >= colony_life -> ;
+rule Co : age + dt >= colony_life -> ;
 rule Co -> [ Ch Cz(age) ] Co;
 rule Ch -> %;
 

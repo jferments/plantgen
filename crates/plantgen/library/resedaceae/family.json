@@ -2,5 +2,58 @@
   "schema": 1,
   "rank": "family",
   "name": "Resedaceae",
-  "parent": "order/brassicales"
+  "parent": "order/brassicales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": {
+      "single": "often",
+      "pinnate": "often"
+    },
+    "stipules": true,
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "polygamous": "sometimes"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "rarely"
+    },
+    "inflorescence": {
+      "raceme": "often",
+      "spike": "often"
+    },
+    "flower_symmetry": "zygomorphic",
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "sometimes"
+    },
+    "fruit_type": {
+      "berry": "often",
+      "follicle": "often"
+    },
+    "stamens": {
+      "min": 3,
+      "max": 50
+    },
+    "carpels": {
+      "min": 3,
+      "max": 6,
+      "low": 2,
+      "high": 7
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Resedaceae: leaves alternate; leaves simple; veins single or pinnate; stipules present; leaf rosettes basal or none; plants usually hermaphrodite, sometimes polygamous; ovary superior; floral cup absent; stems usually herbaceous, rarely woody; flowers in racemes or in spikes; flowers zygomorphic; perianth usually sepals and petals, sometimes tepals; fruit berry or follicle; stamens 3 to 50; carpels (2-) 3 to 6 (-7). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

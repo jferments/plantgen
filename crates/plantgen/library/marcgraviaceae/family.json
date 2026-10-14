@@ -2,5 +2,38 @@
   "schema": 1,
   "rank": "family",
   "name": "Marcgraviaceae",
-  "parent": "order/ericales"
+  "parent": "order/ericales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": "pinnate",
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "raceme": "often",
+      "spike": "often",
+      "umbel": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "stamens": {
+      "min": 3,
+      "max": 40
+    },
+    "carpels": {
+      "min": 2,
+      "max": 8
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Marcgraviaceae: leaves alternate; leaves simple; veins pinnate; stipules absent; plants hermaphrodite; ovary superior; floral cup absent; stems woody; flowers in racemes, in spikes or in umbels; flowers actinomorphic; perianth sepals and petals; fruit capsule; stamens 3 to 40; carpels 2 to 8. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

@@ -2,5 +2,32 @@
   "schema": 1,
   "rank": "family",
   "name": "Strelitziaceae",
-  "parent": "order/zingiberales"
+  "parent": "order/zingiberales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": "pinnate",
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "inferior",
+    "woodiness": {
+      "herbaceous": "often",
+      "woody": "often"
+    },
+    "inflorescence": "panicle",
+    "flower_symmetry": "zygomorphic",
+    "perianth": "tepals",
+    "fruit_type": "capsule",
+    "stamens": {
+      "min": 5,
+      "max": 6
+    },
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Strelitziaceae: leaves alternate; leaves simple; veins pinnate; plants hermaphrodite; ovary inferior; stems herbaceous or woody; flowers in panicles; flowers zygomorphic; perianth tepals; fruit capsule; stamens 5 to 6; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

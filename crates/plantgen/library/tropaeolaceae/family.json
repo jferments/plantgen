@@ -2,5 +2,43 @@
   "schema": 1,
   "rank": "family",
   "name": "Tropaeolaceae",
-  "parent": "order/brassicales"
+  "parent": "order/brassicales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes"
+    },
+    "leaf_division": {
+      "simple": "often",
+      "compound": "often"
+    },
+    "division_pattern": "palmate",
+    "leaf_venation": "palmate",
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "rosette": "none",
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": true,
+    "woodiness": "herbaceous",
+    "inflorescence": "solitary",
+    "flower_symmetry": "zygomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "schizocarp": "often",
+      "drupe": "often",
+      "samara": "rarely"
+    },
+    "stamens": 8,
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Tropaeolaceae: leaves usually alternate, sometimes opposite; leaves simple or compound; compound leaves palmate; veins palmate; stipules present or absent; leaf rosettes none; plants hermaphrodite; ovary superior; floral cup present; stems herbaceous; flowers solitary; flowers zygomorphic; perianth sepals and petals; fruit schizocarp or drupe, rarely samara; stamens 8; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

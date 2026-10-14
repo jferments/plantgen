@@ -2,5 +2,24 @@
   "schema": 1,
   "rank": "order",
   "name": "Gentianales",
-  "parent": "clade/lamiids"
+  "parent": "clade/lamiids",
+  "traits": {
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "whorled": "sometimes",
+      "alternate": "rarely"
+    },
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "rarely"
+    },
+    "perianth": "sepals_and_petals"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), orders 50 Loganiales, 51 Apocynales and 52 Rubiales and the gentian family, which APG joins as Gentianales: leaves opposite (whorled in some madders, rarely alternate in the dogbanes), simple or rarely compound; petals united; stamens as many as the corolla lobes, on the corolla."
+    }
+  }
 }

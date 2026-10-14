@@ -2,5 +2,34 @@
   "schema": 1,
   "rank": "family",
   "name": "Zosteraceae",
-  "parent": "order/alismatales"
+  "parent": "order/alismatales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "parallel",
+    "leaf_shape": "linear",
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "sexual_system": {
+      "monoecious": "usually",
+      "dioecious": "rarely"
+    },
+    "ovary_position": "superior",
+    "woodiness": "herbaceous",
+    "inflorescence": "spike",
+    "perianth": "absent",
+    "fruit_type": "achene",
+    "stamens": 1,
+    "carpels": 1
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Zosteraceae: leaves alternate; leaves simple; margins entire; veins parallel; blades linear; leaf rosettes basal or none; plants usually monoecious, rarely dioecious; ovary superior; stems herbaceous; flowers in spikes; perianth absent; fruit achene; stamens 1; carpels 1. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

@@ -143,10 +143,19 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 3.05,
+      "max": 9.14
+    },
     "wood_density_basic_kg_m3": 680,
     "carpels": 3
   },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson (1925), as P. rivularis: grows 3.05 m to 9.14 m tall (converted from feet)."
+    },
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Malus fusca (gwddagg_v2.2_species.csv, read): specific gravity 0.68 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.69, branches 0.64. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",

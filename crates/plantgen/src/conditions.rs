@@ -2,9 +2,10 @@
 //!
 //! A [`Conditions`] document generalises the synthetic stand a variant
 //! grows in ([`Neighbourhood`]) into sections, each optional and each with
-//! its own `version`: `neighbours` (today's stand), `light`, `climate`,
-//! `soil`, `disturbance` and `interactions`. Only `neighbours` changes how
-//! a plant grows today, through `light@1`; the others are data that later
+//! its own `version`: `neighbours` (today's stand, and neighbours' crowns
+//! as `envelopes`), `light`, `climate`, `soil`, `disturbance` and
+//! `interactions`. Only `neighbours` changes how a plant grows today,
+//! through the light tools and space colonization; the others are data that later
 //! tools read, so they change nothing yet, except `substrate`, which
 //! `substrate@1` and `light@2` read (G3), and a `light` section with a
 //! `sun_and_sky` sky, which `light@3` reads. The four environments are named
@@ -27,9 +28,10 @@ use std::fmt;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 
+use crate::graph::PlantGraph;
 use crate::json;
 use crate::lsys::tools::{Host, Neighbourhood};
-use crate::math::Vec3;
+use crate::math::{self, Vec3};
 use crate::spec::{Environment, HostSpec};
 use crate::substrate::{Substrate, SubstrateField};
 
@@ -54,8 +56,13 @@ pub trait Surroundings: Sync {
     }
 
     /// Whether `point` is taken by something else, such as another plant's
-    /// crown in a stand. No released tool reads it yet.
+    /// crown in a stand. Space colonization draws no attraction point there.
     fn occupied(&self, _point: Vec3) -> bool {
+        false
+    }
+
+    /// Whether any point may be taken (`occupied`).
+    fn crowded(&self) -> bool {
         false
     }
 
@@ -91,6 +98,8 @@ impl Surroundings for Neighbourhood {
 #[derive(Debug, Clone, Copy)]
 pub struct Around<'a> {
     pub neighbourhood: &'a Neighbourhood,
+    /// Neighbours' crowns, which shade the plant and take their room.
+    pub envelopes: &'a [Envelope],
     pub host: Option<&'a Host>,
     pub substrate: Option<&'a SubstrateField>,
     /// The latitude of the sun, degrees, when the sky has one.
@@ -99,11 +108,24 @@ pub struct Around<'a> {
 
 impl Surroundings for Around<'_> {
     fn transmission(&self, point: Vec3, height: f64, direction: Vec3) -> f64 {
-        self.neighbourhood.transmission(point, height, direction)
+        self.envelopes.iter().fold(
+            self.neighbourhood.transmission(point, height, direction),
+            |light, envelope| light * envelope.transmission(point, direction),
+        )
     }
 
     fn clear_sky(&self) -> bool {
-        self.neighbourhood.density <= 0.0
+        self.neighbourhood.density <= 0.0 && self.envelopes.is_empty()
+    }
+
+    fn occupied(&self, point: Vec3) -> bool {
+        self.envelopes
+            .iter()
+            .any(|envelope| envelope.contains(point))
+    }
+
+    fn crowded(&self) -> bool {
+        !self.envelopes.is_empty()
     }
 
     fn host(&self) -> Option<&Host> {
@@ -161,13 +183,15 @@ pub struct Neighbours {
     pub spacing: f64,
     /// Neighbours stand only on the −X side.
     pub one_sided: bool,
-    /// Explicit neighbour crowns. Read from `Stand` (`PlantGen` PG4) on;
-    /// until then they must be left empty.
+    /// Neighbours' crowns, besides the stand above: each shades the light
+    /// that passes through it and takes its room, so no attraction point
+    /// of space colonization lies inside it.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub envelopes: Vec<Envelope>,
 }
 
-/// One neighbour's crown: an upright cylinder of foliage.
+/// One neighbour's crown: an upright cylinder of foliage. North is −Z in
+/// the plant's frame and east +X.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Envelope {
@@ -178,6 +202,148 @@ pub struct Envelope {
     pub radius_m: f64,
     /// Shade per metre of this crown, 1/m.
     pub density: f64,
+}
+
+/// A plant's crown as its neighbours see it: an upright cylinder round its
+/// foot holding its leaf area, for plants that grow together in a stand
+/// (`crate::stand`).
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Crown {
+    /// The height below which one twentieth of its leaves stand, and its
+    /// highest leaf, metres.
+    pub base_m: f64,
+    pub top_m: f64,
+    /// The distance from its axis within which nine tenths of its leaves
+    /// stand, metres.
+    pub radius_m: f64,
+    /// Its leaves' one-sided area, m².
+    pub leaf_area_m2: f64,
+}
+
+impl Crown {
+    /// The extinction coefficient of foliage with leaves at every angle
+    /// (a spherical leaf angle distribution): the shade per metre of a
+    /// crown is this times its leaf area per cubic metre.
+    pub const EXTINCTION: f64 = 0.5;
+
+    /// The crown of leaves at `points` (each with its area, m²), relative
+    /// to the plant's foot; `None` when none has any area.
+    #[must_use]
+    pub fn of(points: impl Iterator<Item = (Vec3, f64)>) -> Option<Self> {
+        let leaves: Vec<(Vec3, f64)> = points.filter(|(_, area)| *area > 0.0).collect();
+        if leaves.is_empty() {
+            return None;
+        }
+        let quantile = |mut values: Vec<f64>, share: f64| {
+            #[allow(
+                clippy::cast_precision_loss,
+                clippy::cast_possible_truncation,
+                clippy::cast_sign_loss
+            )]
+            let at = ((values.len() - 1) as f64 * share).round() as usize;
+            *values.select_nth_unstable_by(at, f64::total_cmp).1
+        };
+        let radial = leaves
+            .iter()
+            .map(|(point, _)| math::sqrt(point.x * point.x + point.z * point.z))
+            .collect();
+        let heights: Vec<f64> = leaves.iter().map(|(point, _)| point.y).collect();
+        let top = heights.iter().copied().fold(f64::NEG_INFINITY, f64::max);
+        let base = quantile(heights, 0.05).max(0.0).min(top);
+        Some(Self {
+            base_m: base,
+            top_m: top.max(base + 0.01),
+            radius_m: quantile(radial, 0.9).max(0.05),
+            leaf_area_m2: leaves.iter().map(|(_, area)| area).sum(),
+        })
+    }
+
+    /// The crown as an envelope centred `centre_m` (east, north) from the
+    /// plant it shades, its density from its leaf area.
+    #[must_use]
+    pub fn envelope(&self, centre_m: [f64; 2]) -> Envelope {
+        let volume = math::PI * self.radius_m * self.radius_m * (self.top_m - self.base_m);
+        Envelope {
+            centre_m,
+            base_m: self.base_m,
+            top_m: self.top_m,
+            radius_m: self.radius_m,
+            density: (Self::EXTINCTION * self.leaf_area_m2 / volume).min(10.0),
+        }
+    }
+}
+
+impl Envelope {
+    /// Where its axis stands in the plant's frame, `(x, z)`.
+    fn axis(&self) -> (f64, f64) {
+        (self.centre_m[0], -self.centre_m[1])
+    }
+
+    /// Whether `point` is inside the crown.
+    #[must_use]
+    pub fn contains(&self, point: Vec3) -> bool {
+        let (x, z) = self.axis();
+        let (dx, dz) = (point.x - x, point.z - z);
+        (self.base_m..=self.top_m).contains(&point.y)
+            && dx * dx + dz * dz <= self.radius_m * self.radius_m
+    }
+
+    /// The share of light along `direction` (a unit vector) that reaches
+    /// `point` through the crown: `exp(−density · ℓ)`, where `ℓ` is the
+    /// length of the ray from `point` inside it.
+    #[must_use]
+    pub fn transmission(&self, point: Vec3, direction: Vec3) -> f64 {
+        let (x, z) = self.axis();
+        // The ray's span inside the crown's height, as distances along it.
+        let (mut low, mut high) = if direction.y.abs() < 1e-12 {
+            if (self.base_m..=self.top_m).contains(&point.y) {
+                (0.0, f64::INFINITY)
+            } else {
+                return 1.0;
+            }
+        } else {
+            let a = (self.base_m - point.y) / direction.y;
+            let b = (self.top_m - point.y) / direction.y;
+            (a.min(b).max(0.0), a.max(b))
+        };
+        // And inside its circle, seen from above.
+        let (px, pz) = (point.x - x, point.z - z);
+        let flat = direction.x * direction.x + direction.z * direction.z;
+        let radius_sq = self.radius_m * self.radius_m;
+        if flat < 1e-12 {
+            if px * px + pz * pz > radius_sq {
+                return 1.0;
+            }
+        } else {
+            let half = (px * direction.x + pz * direction.z) / flat;
+            let reach = half * half - (px * px + pz * pz - radius_sq) / flat;
+            if reach < 0.0 {
+                return 1.0;
+            }
+            let root = math::sqrt(reach);
+            low = low.max(-half - root);
+            high = high.min(-half + root);
+        }
+        if high <= low {
+            return 1.0;
+        }
+        math::exp(-self.density * (high - low))
+    }
+
+    fn validate(&self) -> Result<(), String> {
+        for value in self.centre_m {
+            within("envelope centre_m", value, -1000.0, 1000.0)?;
+        }
+        within("envelope base_m", self.base_m, 0.0, 150.0)?;
+        within("envelope top_m", self.top_m, self.base_m, 150.0)?;
+        within("envelope radius_m", self.radius_m, 0.0, 100.0)?;
+        within("envelope density", self.density, 0.0, 10.0)?;
+        if self.top_m > self.base_m && self.radius_m > 0.0 {
+            Ok(())
+        } else {
+            Err("an envelope needs a top above its base and a radius above 0".into())
+        }
+    }
 }
 
 impl Neighbours {
@@ -373,7 +539,93 @@ impl fmt::Display for ClassKey {
     }
 }
 
+/// How much of a grown plant stands where its place leaves no room: in
+/// its substrate's solids or in its neighbours' crowns.
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
+pub struct Intrusion {
+    /// Segments standing, and those whose end is inside a solid or a crown.
+    pub segments: usize,
+    pub segments_in_solids: usize,
+    pub segments_in_crowns: usize,
+    /// Organs standing, and those inside a solid or a crown.
+    pub organs: usize,
+    pub organs_in_solids: usize,
+    pub organs_in_crowns: usize,
+    /// How far the deepest of them is inside a solid, metres.
+    pub deepest_m: f64,
+}
+
+impl Intrusion {
+    /// One line: what stands in the solids and the crowns.
+    #[must_use]
+    pub fn describe(&self) -> String {
+        format!(
+            "{} of {} segments and {} of {} organs in its solids (deepest {:.2} m), \
+             {} segments and {} organs in neighbours' crowns",
+            self.segments_in_solids,
+            self.segments,
+            self.organs_in_solids,
+            self.organs,
+            self.deepest_m,
+            self.segments_in_crowns,
+            self.organs_in_crowns
+        )
+    }
+}
+
 impl Conditions {
+    /// What of `graph` stands in this place's solids and neighbours'
+    /// crowns (segments by their ends, organs by their positions), leaving
+    /// out what is shed by its age.
+    ///
+    /// # Errors
+    ///
+    /// When the substrate is not a valid grid.
+    pub fn intrusion(&self, graph: &PlantGraph) -> Result<Intrusion, String> {
+        let field = self.substrate.as_ref().map(Substrate::field).transpose()?;
+        let standing = |shed: Option<f64>| shed.is_none_or(|shed| shed > graph.age);
+        let mut intrusion = Intrusion::default();
+        let mut check = |point: Vec3, solid: &mut usize, crown: &mut usize| {
+            if let Some(field) = &field {
+                let distance = field.distance(point);
+                if distance < 0.0 {
+                    *solid += 1;
+                    intrusion.deepest_m = intrusion.deepest_m.max(-distance);
+                }
+            }
+            if self
+                .envelopes()
+                .iter()
+                .any(|envelope| envelope.contains(point))
+            {
+                *crown += 1;
+            }
+        };
+        let (mut segments, mut segment_solids, mut segment_crowns) = (0, 0, 0);
+        for segment in graph
+            .segments
+            .iter()
+            .filter(|segment| standing(segment.shed))
+        {
+            segments += 1;
+            check(segment.end, &mut segment_solids, &mut segment_crowns);
+        }
+        let (mut organs, mut organ_solids, mut organ_crowns) = (0, 0, 0);
+        for organ in graph.organs.iter().filter(|organ| standing(organ.shed)) {
+            organs += 1;
+            check(organ.position, &mut organ_solids, &mut organ_crowns);
+        }
+        Ok(Intrusion {
+            segments,
+            segments_in_solids: segment_solids,
+            segments_in_crowns: segment_crowns,
+            organs,
+            organs_in_solids: organ_solids,
+            organs_in_crowns: organ_crowns,
+            ..intrusion
+        })
+    }
+
     /// The conditions of a named stand, nothing else known.
     #[must_use]
     pub fn preset(environment: Environment) -> Self {
@@ -410,6 +662,44 @@ impl Conditions {
         }
     }
 
+    /// This document laid over `base`, as a place a plant grows on in: each
+    /// section it gives replaces `base`'s, and each it leaves out keeps
+    /// `base`'s. A preset or a `neighbours` section replaces both of
+    /// `base`'s, so a place that names no stand keeps the plant's own.
+    #[must_use]
+    pub fn over(&self, base: &Self) -> Self {
+        let (preset, neighbours) = if self.preset.is_some() || self.neighbours.is_some() {
+            (self.preset, self.neighbours.clone())
+        } else {
+            (base.preset, base.neighbours.clone())
+        };
+        Self {
+            schema: CONDITIONS_SCHEMA,
+            preset,
+            neighbours,
+            light: self.light.clone().or_else(|| base.light.clone()),
+            climate: self.climate.clone().or_else(|| base.climate.clone()),
+            soil: self.soil.clone().or_else(|| base.soil.clone()),
+            disturbance: self
+                .disturbance
+                .clone()
+                .or_else(|| base.disturbance.clone()),
+            interactions: self
+                .interactions
+                .clone()
+                .or_else(|| base.interactions.clone()),
+            substrate: self.substrate.clone().or_else(|| base.substrate.clone()),
+        }
+    }
+
+    /// The neighbours' crowns.
+    #[must_use]
+    pub fn envelopes(&self) -> &[Envelope] {
+        self.neighbours
+            .as_ref()
+            .map_or(&[], |neighbours| &neighbours.envelopes)
+    }
+
     /// The document with its preset expanded into `neighbours` and left
     /// out, and a substrate preset expanded into its grid, so documents
     /// that grow alike resolve alike.
@@ -417,7 +707,10 @@ impl Conditions {
     pub fn resolve(&self) -> Self {
         Self {
             preset: None,
-            neighbours: Some(Neighbours::of(self.neighbourhood())),
+            neighbours: Some(Neighbours {
+                envelopes: self.envelopes().to_vec(),
+                ..Neighbours::of(self.neighbourhood())
+            }),
             substrate: self.substrate.as_ref().map(Substrate::resolve),
             ..self.clone()
         }
@@ -512,11 +805,7 @@ impl Neighbours {
         )?;
         within("neighbours canopy", self.canopy, 0.0, 150.0)?;
         within("neighbours spacing", self.spacing, 0.0, 100.0)?;
-        if self.envelopes.is_empty() {
-            Ok(())
-        } else {
-            Err("neighbours envelopes are read from Stand on; leave them empty".to_string())
-        }
+        self.envelopes.iter().try_for_each(Envelope::validate)
     }
 }
 
@@ -605,7 +894,7 @@ fn within(what: &str, value: f64, low: f64, high: f64) -> Result<(), String> {
 
 #[cfg(test)]
 mod tests {
-    use super::{Conditions, Surroundings};
+    use super::{Around, Conditions, Envelope, Surroundings};
     use crate::lsys::tools::Neighbourhood;
     use crate::math::Vec3;
     use crate::spec::Environment;
@@ -701,9 +990,13 @@ mod tests {
         refused(
             r#"{"schema": 1, "neighbours": {"version": 1, "density": 0.1, "relative_height": 1,
                 "canopy": 0, "spacing": 5, "one_sided": false,
-                "envelopes": [{"centre_m": [3, 0], "base_m": 2, "top_m": 10,
+                "envelopes": [{"centre_m": [3, 0], "base_m": 10, "top_m": 10,
                                "radius_m": 2, "density": 0.5}]}}"#,
-            "envelopes are read from Stand on",
+            "an envelope needs a top above its base",
+        );
+        refused(
+            r#"{"schema": 1, "substrate": {"version": 1, "preset": "wall", "scale": 80}}"#,
+            "substrate scale must be 0.1 to 50, found 80",
         );
         refused(
             r#"{"schema": 1, "interactions": {"version": 1, "herbivory": 1.5}}"#,
@@ -739,5 +1032,110 @@ mod tests {
             .unwrap_err()
             .contains("substrate version 2")
         );
+    }
+
+    fn crown() -> Envelope {
+        Envelope {
+            centre_m: [4.0, 0.0],
+            base_m: 2.0,
+            top_m: 10.0,
+            radius_m: 2.0,
+            density: 0.5,
+        }
+    }
+
+    #[test]
+    #[allow(clippy::float_cmp)]
+    fn a_neighbour_s_crown_shades_what_its_light_passes_through() {
+        let crown = crown();
+        let up = Vec3::new(0.0, 1.0, 0.0);
+        // Straight up through its axis: 8 m of crown.
+        let under = Vec3::new(4.0, 0.0, 0.0);
+        assert!((crown.transmission(under, up) - (-0.5_f64 * 8.0).exp()).abs() < 1e-12);
+        // From inside it, only the crown above the point.
+        let within = Vec3::new(4.0, 6.0, 0.0);
+        assert!((crown.transmission(within, up) - (-2.0_f64).exp()).abs() < 1e-12);
+        assert!(crown.contains(within) && !crown.contains(under));
+        // Beside it, above it, or looking away from it: no shade.
+        assert_eq!(crown.transmission(Vec3::new(0.0, 5.0, 0.0), up), 1.0);
+        assert_eq!(crown.transmission(Vec3::new(4.0, 11.0, 0.0), up), 1.0);
+        let west = Vec3::new(-1.0, 1.0, 0.0).normalize_or(up);
+        assert_eq!(crown.transmission(Vec3::new(0.0, 5.0, 0.0), west), 1.0);
+        // Slanting east through it at 45°, along a chord of its circle:
+        // the ray crosses x = 2 to 6 between heights 7 and 11, inside the
+        // crown up to 10 m, 3 m of rise, so 3√2 m of crown.
+        let east = Vec3::new(1.0, 1.0, 0.0).normalize_or(up);
+        let shade = crown.transmission(Vec3::new(0.0, 5.0, 0.0), east);
+        assert!(
+            (shade - (-0.5 * 3.0 * 2.0_f64.sqrt()).exp()).abs() < 1e-9,
+            "{shade}"
+        );
+        // North is −Z.
+        let north = Envelope {
+            centre_m: [0.0, 4.0],
+            ..crown
+        };
+        assert!(north.contains(Vec3::new(0.0, 5.0, -4.0)));
+        assert!(!north.contains(Vec3::new(0.0, 5.0, 4.0)));
+    }
+
+    #[test]
+    fn crowns_round_a_plant_shade_it_and_take_their_room() {
+        let crowns = [crown()];
+        let around = Around {
+            neighbourhood: &Neighbourhood::OPEN,
+            envelopes: &crowns,
+            host: None,
+            substrate: None,
+            sun: None,
+        };
+        let up = Vec3::new(0.0, 1.0, 0.0);
+        assert!(!around.clear_sky() && around.crowded());
+        assert!(around.transmission(Vec3::new(4.5, 1.0, 0.0), 1.0, up) < 0.1);
+        assert!(around.occupied(Vec3::new(4.5, 3.0, 0.0)));
+        assert!(!around.occupied(Vec3::new(0.0, 3.0, 0.0)));
+        let open = Around {
+            envelopes: &[],
+            ..around
+        };
+        assert!(open.clear_sky() && !open.crowded());
+    }
+
+    #[test]
+    fn a_place_laid_over_a_plant_s_conditions_keeps_what_it_leaves_out() {
+        let edge = Conditions::from_json(
+            r#"{"schema": 1, "preset": "edge",
+                "light": {"version": 1, "latitude_deg": 47, "sky": "overcast"}}"#,
+        )
+        .unwrap();
+        let wall = Conditions::from_json(
+            r#"{"schema": 1, "substrate": {"version": 1, "preset": "wall", "scale": 10}}"#,
+        )
+        .unwrap();
+        let placed = wall.over(&edge);
+        assert_eq!(placed.preset, Some(Environment::Edge));
+        assert_eq!(placed.light, edge.light);
+        assert_eq!(placed.substrate, wall.substrate);
+        // A stand of its own replaces the plant's.
+        let crowded = Conditions::from_json(
+            r#"{"schema": 1, "neighbours": {"version": 1, "density": 0,
+                "relative_height": 0, "canopy": 0, "spacing": 0, "one_sided": false,
+                "envelopes": [{"centre_m": [4, 0], "base_m": 2, "top_m": 10,
+                               "radius_m": 2, "density": 0.5}]}}"#,
+        )
+        .unwrap()
+        .over(&edge);
+        assert_eq!(crowded.preset, None);
+        assert_eq!(crowded.envelopes(), &[crown()]);
+        assert_eq!(crowded.neighbourhood(), Neighbourhood::OPEN);
+        // Its crowns are part of its class.
+        let fewer = Conditions {
+            neighbours: crowded.neighbours.clone().map(|mut neighbours| {
+                neighbours.envelopes.clear();
+                neighbours
+            }),
+            ..crowded.clone()
+        };
+        assert_ne!(fewer.class(), crowded.class());
     }
 }
