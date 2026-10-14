@@ -2,5 +2,71 @@
   "schema": 1,
   "rank": "family",
   "name": "Talinaceae",
-  "parent": "order/caryophyllales"
+  "parent": "order/caryophyllales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": {
+      "pinnate": "often",
+      "single": "often"
+    },
+    "leaf_shape": {
+      "linear": "often",
+      "lanceolate": "often",
+      "oblanceolate": "often",
+      "ovate": "often",
+      "obovate": "often"
+    },
+    "stipules": {
+      "true": "usually",
+      "false": "rarely"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "superior": "usually",
+      "half_inferior": "rarely"
+    },
+    "hypanthium": {
+      "true": "often",
+      "false": "often"
+    },
+    "woodiness": {
+      "woody": "often",
+      "herbaceous": "often"
+    },
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "perianth": {
+      "sepals_and_petals": "often",
+      "tepals": "often"
+    },
+    "fruit_type": "capsule",
+    "stamens": {
+      "min": 3,
+      "max": 50
+    },
+    "carpels": {
+      "min": 3,
+      "max": 3,
+      "low": 2,
+      "high": 9
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Portulacaceae, which takes in Talinaceae: leaves alternate or opposite; leaves simple; margins entire; veins pinnate or single; blades linear, lanceolate, oblanceolate, ovate or obovate; stipules usually present, rarely absent; plants hermaphrodite; ovary usually superior, rarely half inferior; floral cup present or absent; stems woody or herbaceous; flowers solitary or in cymes; flowers actinomorphic or zygomorphic; perianth sepals and petals or tepals; fruit capsule; stamens 3 to 50; carpels (2-) 3 (-9). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

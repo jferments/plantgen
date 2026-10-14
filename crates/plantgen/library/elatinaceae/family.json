@@ -2,5 +2,63 @@
   "schema": 1,
   "rank": "family",
   "name": "Elatinaceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "whorled": "rarely"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "crenate": "often",
+      "serrate": "often"
+    },
+    "leaf_venation": "pinnate",
+    "leaf_shape": {
+      "linear": "often",
+      "lanceolate": "often",
+      "oblanceolate": "often",
+      "oblong": "often",
+      "ovate": "often",
+      "obovate": "often"
+    },
+    "stipules": true,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": {
+      "woody": "often",
+      "herbaceous": "often"
+    },
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "flower_merosity": {
+      "min": 2,
+      "max": 5,
+      "high": 6
+    },
+    "stamens": {
+      "min": 2,
+      "max": 10,
+      "high": 12
+    },
+    "carpels": {
+      "min": 2,
+      "max": 5,
+      "high": 6
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Elatinaceae: leaves usually opposite, rarely whorled; leaves simple; margins entire, crenate or serrate; veins pinnate; blades linear, lanceolate, oblanceolate, oblong, ovate or obovate; stipules present; plants hermaphrodite; ovary superior; floral cup absent; stems woody or herbaceous; flowers solitary or in cymes; flowers actinomorphic; perianth sepals and petals; fruit capsule; parts of each whorl 2 to 5 (-6); stamens 2 to 10 (-12); carpels 2 to 5 (-6). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

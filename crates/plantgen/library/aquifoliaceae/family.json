@@ -2,5 +2,68 @@
   "schema": 1,
   "rank": "family",
   "name": "Aquifoliaceae",
-  "parent": "order/aquifoliales"
+  "parent": "order/aquifoliales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely",
+      "whorled": "rarely"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "dentate": "often",
+      "entire": "often",
+      "serrate": "often"
+    },
+    "leaf_venation": "pinnate",
+    "leaf_habit": "evergreen",
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "sexual_system": {
+      "dioecious": "often",
+      "polygamous": "often",
+      "hermaphrodite": "sometimes"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "rarely",
+      "panicle": "often",
+      "cyme": "often",
+      "raceme": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "often",
+      "tepals": "often",
+      "absent": "often"
+    },
+    "fruit_type": "drupe",
+    "flower_merosity": {
+      "min": 4,
+      "max": 4,
+      "high": 8
+    },
+    "stamens": {
+      "min": 4,
+      "max": 8,
+      "high": 12
+    },
+    "carpels": {
+      "min": 4,
+      "max": 6,
+      "low": 2,
+      "high": 24
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Aquifoliaceae with Phellinaceae, Sphenostemonaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually alternate, rarely opposite or whorled; leaves simple; margins dentate, entire or serrate; veins pinnate; leaves evergreen; stipules present or absent; plants dioecious or polygamous, sometimes hermaphrodite; ovary superior; floral cup absent; stems woody; flowers in panicles or in cymes, sometimes in racemes, rarely solitary; flowers actinomorphic; perianth sepals and petals, tepals or absent; fruit drupe; parts of each whorl 4 (-8); stamens 4 to 8 (-12); carpels (2-) 4 to 6 (-24). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

@@ -2,5 +2,46 @@
   "schema": 1,
   "rank": "family",
   "name": "Combretaceae",
-  "parent": "order/myrtales"
+  "parent": "order/myrtales",
+  "traits": {
+    "woodiness": "woody",
+    "leaf_arrangement": {
+      "opposite": "often",
+      "alternate": "often",
+      "whorled": "rarely"
+    },
+    "leaf_division": "simple",
+    "stipules": false,
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "sometimes"
+    },
+    "flower_merosity": {
+      "min": 4,
+      "max": 5
+    },
+    "stamens": {
+      "min": 4,
+      "max": 10
+    },
+    "inflorescence": {
+      "spike": "often",
+      "raceme": "often"
+    },
+    "ovary_position": {
+      "inferior": "usually",
+      "half_inferior": "rarely"
+    },
+    "fruit_type": {
+      "samara": "often",
+      "drupe": "often"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 167 Combretaceae: trees or shrubs, often climbing; leaves opposite, alternate or rarely whorled, simple; no stipules; flowers in spikes or racemes, mostly small; calyx tube joined to the ovary, its limb 4- to 8-lobed; petals 4 or 5 or none; stamens 4 to 10; ovary inferior, rarely half-inferior; fruit often winged (Combretum, read as a samara), rarely opening; Terminalia's drupes (Indian almond) from common knowledge."
+    }
+  }
 }

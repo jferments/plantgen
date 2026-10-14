@@ -2,5 +2,80 @@
   "schema": 1,
   "rank": "family",
   "name": "Aizoaceae",
-  "parent": "order/caryophyllales"
+  "parent": "order/caryophyllales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often",
+      "whorled": "sometimes"
+    },
+    "leaf_division": "simple",
+    "leaf_venation": {
+      "single": "often",
+      "pinnate": "often",
+      "palmate": "often"
+    },
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "monoecious": "rarely",
+      "dioecious": "rarely",
+      "polygamous": "sometimes"
+    },
+    "ovary_position": {
+      "superior": "often",
+      "half_inferior": "often",
+      "inferior": "often"
+    },
+    "hypanthium": {
+      "true": "often",
+      "false": "often"
+    },
+    "woodiness": {
+      "woody": "often",
+      "herbaceous": "often"
+    },
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "head": "often",
+      "raceme": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "tepals": "sometimes",
+      "sepals_and_petals": "usually"
+    },
+    "fruit_type": {
+      "capsule": "often",
+      "berry": "often",
+      "drupe": "sometimes",
+      "samara": "sometimes"
+    },
+    "stamens": {
+      "min": 5,
+      "max": 120,
+      "low": 1
+    },
+    "carpels": {
+      "min": 2,
+      "max": 5,
+      "low": 1,
+      "high": 20
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Aizoaceae with Molluginaceae, Tetragoniaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate or opposite, sometimes whorled; leaves simple; veins single, pinnate or palmate; stipules present or absent; leaf rosettes basal or none; plants usually hermaphrodite, sometimes polygamous, rarely monoecious or dioecious; ovary superior, half inferior or inferior; floral cup present or absent; stems woody or herbaceous; flowers solitary, in cymes or in heads, sometimes in racemes; flowers actinomorphic; perianth usually sepals and petals, sometimes tepals; fruit capsule or berry, sometimes drupe or samara; stamens (1-) 5 to 120; carpels (1-) 2 to 5 (-20). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

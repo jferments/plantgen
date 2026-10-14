@@ -2,5 +2,37 @@
   "schema": 1,
   "rank": "family",
   "name": "Gisekiaceae",
-  "parent": "order/caryophyllales"
+  "parent": "order/caryophyllales",
+  "traits": {
+    "leaf_arrangement": {
+      "whorled": "often",
+      "opposite": "often"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_shape": "linear",
+    "stipules": false,
+    "sexual_system": "dioecious",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "herbaceous",
+    "inflorescence": "cyme",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "stamens": {
+      "min": 5,
+      "max": 15
+    },
+    "carpels": {
+      "min": 3,
+      "max": 5
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Gisekiaceae: leaves whorled or opposite; leaves simple; margins entire; blades linear; stipules absent; plants dioecious; ovary superior; floral cup absent; stems herbaceous; flowers in cymes; flowers actinomorphic; perianth tepals; stamens 5 to 15; carpels 3 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

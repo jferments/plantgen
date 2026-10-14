@@ -2,5 +2,31 @@
   "schema": 1,
   "rank": "family",
   "name": "Gentianaceae",
-  "parent": "order/gentianales"
+  "parent": "order/gentianales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "rarely"
+    },
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "stipules": false,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "flower_merosity": {
+      "min": 4,
+      "max": 12
+    },
+    "ovary_position": "superior",
+    "carpels": 2,
+    "fruit_type": "capsule"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 293 Gentianaceae: annual or perennial herbs, very rarely woody; leaves opposite, entire, often joined at the base; no stipules; flowers regular, mostly showy and bright; corolla united, of 4 to 12 lobes; stamens as many as the lobes, on the corolla; ovary superior, mostly of one cell with two placentas on its wall (two carpels); fruit mostly a capsule. Simple leaves from 'entire', read as undivided."
+    }
+  }
 }

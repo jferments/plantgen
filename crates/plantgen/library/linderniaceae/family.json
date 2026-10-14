@@ -2,5 +2,54 @@
   "schema": 1,
   "rank": "family",
   "name": "Linderniaceae",
-  "parent": "order/lamiales"
+  "parent": "order/lamiales",
+  "traits": {
+    "leaf_arrangement": "opposite",
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "sometimes"
+    },
+    "leaf_margin": {
+      "entire": "often",
+      "crenate": "often",
+      "serrate": "often"
+    },
+    "leaf_venation": {
+      "pinnate": "often",
+      "palmate": "often"
+    },
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "resupinate": {
+      "true": "sometimes",
+      "false": "usually"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "sometimes"
+    },
+    "inflorescence": {
+      "solitary": "often",
+      "raceme": "often",
+      "head": "often"
+    },
+    "flower_symmetry": "zygomorphic",
+    "zygomorphy": "bilabiate",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "stamens": {
+      "min": 2,
+      "max": 4
+    },
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Linderniaceae: leaves opposite; leaves usually simple, sometimes compound; margins entire, crenate or serrate; veins pinnate or palmate; stipules absent; plants hermaphrodite; flowers turned over usually absent, sometimes present; ovary superior; floral cup absent; stems usually herbaceous, sometimes woody; flowers solitary, in racemes or in heads; flowers zygomorphic; irregular flowers bilabiate; perianth sepals and petals; fruit capsule; stamens 2 to 4; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

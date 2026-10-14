@@ -34,9 +34,14 @@
 # (`asparagaceae`, `aloe`, `hechtia`) give the values, as this program's
 # defaults were until then.
 #
+# Revision 3 (leaf life): leaves, dead leaves and flowering stalks live as
+# long as their parameters say, no longer one year more. What a step makes
+# is born at the step's end, so a rule that ends a part by its age counts
+# the step it is in (`age + dt >=`).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem rosette 2;
+lsystem rosette 3;
 
 # The plant.
 param vigour_spread;          # a rosette grows exp(gauss() * vigour_spread) times as fast
@@ -133,16 +138,16 @@ decompose Lc(i, m, c) : m == 1 ->
 decompose Lc(i, m, c) -> ;
 
 # A leaf opens with age, then dies: it falls, or folds down and hangs.
-rule Lv(s, a) : age >= leaf_life && skirt > 0 -> Dv(s);
-rule Lv(s, a) : age >= leaf_life -> ;
-rule Dv(s) : age >= dead_life -> ;
+rule Lv(s, a) : age + dt >= leaf_life && skirt > 0 -> Dv(s);
+rule Lv(s, a) : age + dt >= leaf_life -> ;
+rule Dv(s) : age + dt >= dead_life -> ;
 interpret Lv(s, a) ->
     &(lerp(young_angle, old_angle, 1 - exp(-age / open_years)) + a) blade(s);
 interpret Dv(s) -> &(dead_angle) dead(s);
 
 # The stalk: the bare foot, then the flowering head, as a spike or a
 # panicle of side branches. It stands dry for stalk_life years.
-rule Sm : age >= stalk_life -> %;
+rule Sm : age + dt >= stalk_life -> %;
 decompose Sk ->
     !(stalk_radius) F(stalk_height * (1 - stalk_head))
     Hd(0, stalk_branches > 0 ? stalk_branches : flowers, stalk_height * stalk_head, 1);

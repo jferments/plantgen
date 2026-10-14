@@ -2,5 +2,48 @@
   "schema": 1,
   "rank": "family",
   "name": "Siparunaceae",
-  "parent": "order/laurales"
+  "parent": "order/laurales",
+  "traits": {
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_venation": "pinnate",
+    "leaf_habit": "evergreen",
+    "stipules": false,
+    "sexual_system": {
+      "monoecious": "often",
+      "dioecious": "often"
+    },
+    "ovary_position": "half_inferior",
+    "hypanthium": true,
+    "woodiness": "woody",
+    "inflorescence": {
+      "cyme": "often",
+      "spike": "often",
+      "panicle": "often"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "perianth": {
+      "sepals_and_petals": "often",
+      "tepals": "often"
+    },
+    "fruit_type": "aggregate",
+    "stamens": {
+      "min": 2,
+      "max": 100
+    },
+    "carpels": {
+      "min": 4,
+      "max": 100
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Siparunaceae: leaves opposite; leaves simple; veins pinnate; leaves evergreen; stipules absent; plants monoecious or dioecious; ovary half inferior; floral cup present; stems woody; flowers in cymes, in spikes or in panicles; flowers actinomorphic or zygomorphic; perianth sepals and petals or tepals; fruit aggregate; stamens 2 to 100; carpels 4 to 100. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

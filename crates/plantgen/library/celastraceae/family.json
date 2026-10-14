@@ -2,5 +2,38 @@
   "schema": 1,
   "rank": "family",
   "name": "Celastraceae",
-  "parent": "order/celastrales"
+  "parent": "order/celastrales",
+  "traits": {
+    "woodiness": {
+      "woody": "usually",
+      "herbaceous": "rarely"
+    },
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often"
+    },
+    "leaf_division": "simple",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5,
+      "typical": 5
+    },
+    "stamens": {
+      "min": 4,
+      "max": 5
+    },
+    "inflorescence": {
+      "cyme": "usually"
+    },
+    "ovary_position": "superior"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 180 Celastraceae: trees, shrubs or climbers; leaves alternate or opposite, simple; stipules small and soon falling, or none (so left unstated); flowers mostly in cymes or clusters, small, regular; calyx 4- or 5-lobed, petals 5, rarely none; stamens 4 or 5, alternate with the petals, on or below a fleshy disc; ovary superior; fruit of many kinds (capsules in Euonymus and Celastrus, drupes, berries, samaras), so left unstated. APG's family also takes in the herb Parnassia, hence herbaceous as rare."
+    }
+  }
 }
