@@ -2,5 +2,22 @@
   "schema": 1,
   "rank": "subclass",
   "name": "Gnetidae",
-  "parent": "clade/gymnosperms"
+  "parent": "clade/gymnosperms",
+  "traits": {
+    "leaf_arrangement": "opposite",
+    "phyllotaxis_pattern": {
+      "decussate": "usually"
+    },
+    "sexual_system": {
+      "dioecious": "usually",
+      "monoecious": "rarely"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Ephedraceae, Gnetaceae and Welwitschiaceae: leaves opposite, in decussate pairs (in Ephedra sometimes in whorls of three, and Welwitschia bears a single pair); Ephedra nearly always dioecious, Gnetum mostly so, Welwitschia dioecious. Monoecious is the rare state."
+    }
+  }
 }

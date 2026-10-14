@@ -23,6 +23,10 @@
     "fruit_type": {
       "berry": "often",
       "capsule": "often"
+    },
+    "leaf_habit": {
+      "evergreen": "usually",
+      "deciduous": "rarely"
     }
   },
   "evidence": {
@@ -30,6 +34,11 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 162 Myrtaceae: trees or shrubs; leaves simple, mostly entire, opposite or rarely alternate (eucalypts' adult leaves alternate), dotted with oil glands; no stipules, or tiny ones; flowers mostly regular; calyx tube joined to the ovary; petals 4 or 5; stamens numerous, rarely few, on the rim of the disc lining the calyx tube (read as a hypanthium); ovary inferior; fruit splitting along its cells or staying shut (capsules in eucalypts and bottlebrushes, berries in myrtles and guavas)."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Myrtaceae as that work draws it, there coded together with Heteropyxidaceae, Psiloxylaceae: how long the leaves last (character 37), coded usually evergreen, rarely deciduous. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   }
 }

@@ -2,6 +2,7 @@
   "schema": 1,
   "rank": "kingdom",
   "name": "Plantae",
+  "generator": {"defaults": {"dioecious": 0, "sex": 0.5}},
   "rules": {
     "appearance.organs.leaf.shape.width": {
       "template": ["simple", "sprig"],
@@ -35,6 +36,16 @@
     }
   },
   "evidence": {
+    "generator.defaults.dioecious": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant bears both sexes, unless its taxa state it dioecious."
+    },
+    "generator.defaults.sex": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant's sex is its own draw, dealt across a package's seeds so that both sexes grow; the typical plant (sex 0.5) is female, so it shows its fruit."
+    },
     "rules.appearance.organs.leaf.shape.width": {
       "evidence": "SourceInferred",
       "source": "systematics-association-1962-shapes",

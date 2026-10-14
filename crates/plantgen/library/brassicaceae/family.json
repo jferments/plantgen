@@ -27,13 +27,23 @@
       "max": 6
     },
     "carpels": 2,
-    "fruit_type": "pod"
+    "fruit_type": "pod",
+    "rosette": {
+      "basal": "often",
+      "none": "often",
+      "terminal": "rarely"
+    }
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 269 Cruciferae (APG's Brassicaceae): annual or perennial herbs, rarely somewhat shrubby, with watery sap; leaves alternate, rarely opposite; no stipules; flowers mostly regular, usually in racemes; sepals 4 in two pairs, petals 4 (rarely none), often long-clawed; stamens 6, four long and two short, very rarely more or fewer; ovary of two united carpels split by a false partition; fruit a long or short pod (silique or silicle) that splits in two valves or stays shut. The pod is this vocabulary's `pod`, a dry fruit splitting other than a legume."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cruciferae: whether the leaves gather in rosettes (character 22), coded often a basal rosette, often no rosette, rarely rosettes at the stem tips. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   }
 }

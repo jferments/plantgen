@@ -22,7 +22,8 @@
     "fruit_type": {
       "drupe": "usually",
       "berry": "often"
-    }
+    },
+    "leaf_habit": "evergreen"
   },
   "forms": {
     "palm": {
@@ -43,6 +44,11 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
       "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 393 Palmae: stems often clothed in the bases of old leaves, the leaves in a cluster at the top (scattered in climbing palms), whole or divided pinnately or palmately; flowers small and regular, in an often paniculate inflorescence among or below the leaves, with one to many spathes; perianth double, three sepals and three petals; stamens usually 6, rarely many; ovary superior, of three carpels, free or joined; fruit a berry or drupe. The stems' wood is the palms' own, with no secondary growth; they are counted woody, as the floras call them trees."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Palmae: how long the leaves last (character 37), coded evergreen. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   }
 }
