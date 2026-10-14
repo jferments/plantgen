@@ -34,9 +34,18 @@
 # the values their species leave unset, as this program's defaults were
 # until then.
 #
+# Revision 6 (dioecy): in a dioecious species (dioecious 1, from the
+# sexual system its taxa state) a plant whose own draw `sex` is below a
+# half is male, and its culms bear male panicles (`panicle_male`), drawn
+# as its panicles are in flower and gone where they would be in fruit.
+# The rest are female and bear panicles as before; so does a plant that
+# bears both sexes (dioecious 0). The male panicle's nod is worked out
+# from the culm, with no random draw, so every other draw stays where it
+# was.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem grass 5;
+lsystem grass 6;
 
 param tillers;                # living tillers in a mature tussock
 param tiller_rate;            # cohort size: tillers * (1 - exp(-tiller_rate * age))
@@ -58,6 +67,8 @@ param culm_radius;
 param culm_leaves;            # leaves on a culm
 param culm_lean;              # most a culm leans off its tiller
 param panicle_length;
+param dioecious;              # 1: each plant is male or female; 0: every plant bears both
+param sex;                    # this plant's own draw, 0 to 1: below a half, a dioecious plant is male
 param panicle_nod;            # degrees a panicle tips over
 param thatch_years;           # years dead blades stay on
 param thatch_droop;           # extra degrees a dead blade bends at each joint
@@ -84,6 +95,7 @@ organ blade leaf as piece area blade_area;
 organ blade_tip leaf as piece area tip_area;
 organ thatch leaf as piece area thatch_area;
 organ panicle flower area panicle_area;
+organ panicle_male flower area panicle_area;
 
 structure leaf leaf;          # one leaf: its blade's pieces, later its thatch
 
@@ -132,6 +144,9 @@ decompose Cu(s, j) : j > 0 ->
     F(s) [ /(j * divergence + uniform(-30, 30)) &(leaf_angle * 1.5) $
            Bl(leaf_length * (1 - exp(-t / maturity)) * uniform(0.35, 0.6), arch) ]
     Cu(s, j - 1);
+decompose Cu(s, j) : dioecious >= 0.5 && sex < 0.5 ->
+    F(s) &(panicle_nod * (0.5 + frac(s * 7.31 + j * 0.618)))
+    panicle_male(panicle_length * (1 - exp(-t / maturity)));
 decompose Cu(s, j) -> F(s) &(panicle_nod * uniform(0.5, 1.5))
                       panicle(panicle_length * (1 - exp(-t / maturity)));
 
