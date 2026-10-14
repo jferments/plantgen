@@ -24,7 +24,9 @@
       "woody": "rarely"
     },
     "leaf_arrangement": "alternate",
-    "fruit_type": "schizocarp"
+    "fruit_type": "schizocarp",
+    "stipules": {"false": "usually", "true": "rarely"},
+    "sexual_system": {"hermaphrodite": "usually", "polygamous": "sometimes", "dioecious": "rarely"}
   },
   "forms": {
     "forb": {
@@ -77,6 +79,16 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 311 Umbelliferae: herbs, very rarely somewhat woody, with furrowed stems; leaves alternate, mostly much divided, sheathing at the base; fruit dry, splitting into two one-seeded halves (mericarps)."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA), Umbelliferae: leaves usually without stipules, though some have stipule-like flanges; the Hydrocotyloideae have stipules."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA), Umbelliferae: plants usually with all flowers bisexual (about nine in ten); some andromonoecious or polygamomonoecious; dioecious in Acronema."
     }
   }
 }

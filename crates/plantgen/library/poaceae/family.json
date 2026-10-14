@@ -19,7 +19,8 @@
     "flowering_position": "terminal",
     "inflorescence": {"panicle": "usually", "spike": "sometimes", "raceme": "rarely"},
     "glumes": {"min": 2, "max": 2, "low": 0},
-    "sexual_system": {"hermaphrodite": "usually", "monoecious": "rarely", "dioecious": "rarely"}
+    "sexual_system": {"hermaphrodite": "usually", "monoecious": "rarely", "dioecious": "rarely"},
+    "leaf_margin": "entire"
   },
   "forms": {
     "graminoid": {
@@ -122,6 +123,11 @@
       "evidence": "SourceInferred",
       "source": "hitchcock-1935",
       "note": "Hitchcock's family description (p. 15): flowers perfect, rarely unisexual; his keys name a few monoecious genera (maize's tribe, Tripsaceae, p. 16-17) and dioecious ones (e.g. Buchloe, Distichlis)."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA), Gramineae: the blades' margins nearly always entire."
     }
   },
   "rules": {

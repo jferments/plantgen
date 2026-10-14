@@ -70,15 +70,16 @@ fn list_and_check_name_the_built_in_species() {
 #[allow(clippy::too_many_lines)]
 fn rules_and_traits_say_where_they_come_from() {
     // Clusters, divided leaves and flowers in every look, homed at the
-    // flowering plants, then the juvenile period's and Corner's rules at
-    // the seed plants, then the families'; a rule on a look's card names
-    // the card.
+    // flowering plants, a herb's leaf lengths at the campanulids, then the
+    // juvenile period's and Corner's rules at the seed plants, then the
+    // families'; a rule on a look's card names the card.
     let built_in = stdout(&plantc(&["rules"]));
     let flowering = "(clade angiosperms: _ranks/clade/angiosperms.json)";
     let seed_plants = "(clade Spermatophyta: _ranks/clade/spermatophyta.json)";
+    let campanulids = "(clade campanulids: _ranks/clade/campanulids.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (95):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (110):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
@@ -90,7 +91,7 @@ fn rules_and_traits_say_where_they_come_from() {
             "\n  appearance.organs.*.shape.carpels on `flower` cards  {flowering}\n  appearance.organs.*.shape.confluent on `compound` cards  {flowering}\n"
         ),
         format!(
-            "\n  appearance.organs.*.shape.turn on `flower` cards  {flowering}\n  generator.params.adult_age  {seed_plants}\n  generator.params.apex_death  {seed_plants}\n  generator.params.bud_base  {seed_plants}\n  generator.params.dormant_buds  {seed_plants}\n  generator.params.long_share  {seed_plants}\n  generator.params.shed_ratio  {seed_plants}\n  generator.params.short_share  {seed_plants}\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n  generator.params.space_renew  {seed_plants}\n  generator.params.terminal_bloom  {seed_plants}\n  generator.params.unit_nodes  {seed_plants}\n"
+            "\n  appearance.organs.*.shape.turn on `flower` cards  {flowering}\n  generator.params.basal_length  {campanulids}\n  generator.params.leaf_base  {campanulids}\n  generator.params.leaf_length  {campanulids}\n  generator.params.leaf_top  {campanulids}\n  generator.params.adult_age  {seed_plants}\n  generator.params.apex_death  {seed_plants}\n  generator.params.bud_base  {seed_plants}\n  generator.params.dormant_buds  {seed_plants}\n  generator.params.long_share  {seed_plants}\n  generator.params.shed_ratio  {seed_plants}\n  generator.params.short_share  {seed_plants}\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n  generator.params.space_renew  {seed_plants}\n  generator.params.terminal_bloom  {seed_plants}\n  generator.params.unit_nodes  {seed_plants}\n"
         ),
     ] {
         assert!(built_in.contains(&line), "{line} in {built_in}");
@@ -170,7 +171,10 @@ fn rules_and_traits_say_where_they_come_from() {
     .unwrap();
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
-    assert!(rules.starts_with("Rules, by their home (96):\n"), "{rules}");
+    assert!(
+        rules.starts_with("Rules, by their home (111):\n"),
+        "{rules}"
+    );
     assert!(
         rules.contains(
             "\n  generator.params.leaves_per_node  (family Sapindaceae: sapindaceae/family.json)\n"

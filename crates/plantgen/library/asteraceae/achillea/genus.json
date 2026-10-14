@@ -8,7 +8,6 @@
     "receptacle": "paleate",
     "pappus": "absent",
     "life_span": "perennial",
-    "woodiness": "herbaceous",
     "leaf_arrangement": "alternate",
     "receptacle_shape": {"conic": "often", "convex": "often"},
     "inflorescence": "corymb"
@@ -38,11 +37,6 @@
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",
       "note": "Abrams and Ferris vol. 4, genus Achillea (p. 390): the genus is described as perennial herbs."
-    },
-    "traits.woodiness": {
-      "evidence": "SourceInferred",
-      "source": "abrams-ferris-1960",
-      "note": "Abrams and Ferris vol. 4, genus Achillea (p. 390): perennial herbs."
     },
     "traits.leaf_arrangement": {
       "evidence": "SourceInferred",
