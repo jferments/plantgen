@@ -22,6 +22,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Berberidaceae's leaves are alternate and vanilla leaf's rise one to a node from its rhizome, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
     ),
     (
+        "ambrosia-dumosa",
+        "leaf_shape",
+        "its dissected blade is drawn on a compound card of three pairs of lobed segments (spec rework E1), whose outline reads obovate or orbicular against the deltate, oblong or ovate outline Abrams and Ferris give the whole blade",
+    ),
+    (
         "anaphalis-margaritacea",
         "involucre_height_m",
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
@@ -30,6 +35,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "azorella-compacta",
         "height_typical_m",
         "it is grown 200 years, to a dome 0.6 m tall, but Reiche's mounds 1.5 m tall and more, and the ministry's 1 m, are of cushions centuries older (inferred: no source dates them)",
+    ),
+    (
+        "azorella-compacta",
+        "leaf_shape",
+        "its rosette leaves are drawn by hand on a sprig card 0.4 as broad as long, so they read elliptic against the linear leaves Reiche gives",
     ),
     (
         "berberis-aquifolium",
@@ -42,9 +52,19 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its six petals stand in two whorls of three, and a corolla draws one whorl, so its spec draws six there",
     ),
     (
+        "cirsium-vulgare",
+        "leaf_shape",
+        "its pinnatifid blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate as well as oblanceolate, against the lanceolate to oblong blades Abrams and Ferris give",
+    ),
+    (
         "cyperus-papyrus",
         "leaf_shape",
         "its leaves are the brown sheaths at its culms' foot, drawn as cards tapering from the base, 0.15 as broad as long, so they read deltate or lanceolate against the linear blades Cyperaceae state; papyrus bears no blades",
+    ),
+    (
+        "cytisus-scoparius",
+        "leaf_shape",
+        "its leaflets are drawn by hand on a sprig card widest at the middle, so they read elliptic against the obovate leaflets Abrams gives",
     ),
     (
         "deschampsia-cespitosa",
@@ -97,6 +117,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "each leaf is two leaflets joined at their base, but its sprig cards draw each leaf as one blade",
     ),
     (
+        "leucanthemum-vulgare",
+        "leaf_shape",
+        "its stem leaves are drawn oblanceolate, a basal leaf's outline with less width, but Abrams and Ferris give a shape (spatulate or obovate) only for the basal leaves; the stem leaves they call reduced, sessile and clasping",
+    ),
+    (
         "lysichiton-americanus",
         "leaf_shape",
         "its spec draws the blade widest at 0.6 of its length and 0.45 as broad as long by hand, so it reads oblanceolate or obovate against Abrams's oblong-lanceolate",
@@ -142,6 +167,7 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a culm's leaves are drawn 0.35 to 0.6 as long as its tiller's blades, so where a flora's blades span less than about three-fold (California oatgrass, Roemer's fescue, reed canarygrass) the shortest culm leaves fall below its least",
     ),
     (
+        "program:grass",
         "leaf_width_m",
         "since the Poaceae rule sets blade cards from Hitchcock's widths, the median blade measured sits inside the flora's range, but the narrowest run up to half its least width (smaller blades of young tillers, inferred, not traced)",
     ),
