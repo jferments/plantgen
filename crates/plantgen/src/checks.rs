@@ -113,6 +113,16 @@
 //! (`cone_maturation_years`) the seasons the youngest cone drawn ripe has
 //! stood, its first counted, one value for the plant, and stays once ripe
 //! (`cone_retention_years`) its life less those.
+//!
+//! **The plant's year (development, 2026-10-14).** The months its flowers
+//! are open in (`flowering_months`) and its fruit is ripe in
+//! (`fruiting_months`) are read from its looks on every day of the year,
+//! for each type of organ standing on it at the end ([`MONTHS`]). An organ
+//! with a season shows flowers while it, or any of its units or florets,
+//! is in flower, and ripe fruit once its fruit is half ripened; one
+//! without shows its own look all year. The months drawn pass when they
+//! are the months stated, warn when they differ only by a month at either
+//! end, and are an error otherwise ([`Timing`]).
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Write as _;
@@ -245,6 +255,10 @@ pub const KINDS: [&str; 32] = [
     "foliage_ranks",
     "leaf_habit",
 ];
+
+/// The months characters read from a grown plant's year (development,
+/// 2026-10-14): the months its flowers are open in, and its fruit ripe in.
+pub const MONTHS: [&str; 2] = ["flowering_months", "fruiting_months"];
 
 /// The share of a range's span beyond which a value is an error when the
 /// range states no extremes, and around a single stated number within
@@ -809,6 +823,7 @@ pub fn measure(grown: &Grown<'_>) -> (Measures, Kinds) {
     }
     lives(grown, ripening, &mut tally);
     leaf_habit(grown, &mut tally);
+    year(grown, &mut tally);
     tally.measures()
 }
 
@@ -941,6 +956,101 @@ fn leaf_habit(grown: &Grown<'_>, tally: &mut Tally) {
             },
         );
     }
+}
+
+/// The first day of each month in a year of 365 days, and the day after
+/// the year's last.
+const MONTH_STARTS: [u16; 13] = [1, 32, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366];
+
+/// The month, 1 to 12, of day `day` of the year (1 to 365).
+fn month_of(day: u16) -> u8 {
+    let past = MONTH_STARTS[1..12]
+        .iter()
+        .take_while(|&&start| start <= day)
+        .count();
+    u8::try_from(past + 1).unwrap_or(12)
+}
+
+/// Ranks of a cluster's units, or a head's florets, from the first to
+/// open to the last, at which their stages are read.
+const UNIT_RANKS: u32 = 16;
+
+/// The months the plant's flowers are open in and its fruit is ripe in
+/// (`flowering_months`, `fruiting_months`), from its year as it is drawn:
+/// each type of organ standing on it at the end, on every day of the
+/// year. An organ with a season shows on a day its bud look in bud, its
+/// flower look in flower (its own, unless that is its fruit), and its own
+/// look in fruit, ripe once half ripened; a cluster's units, or a head's
+/// florets, each in its own stage. One with none shows its own look every
+/// day. Flowers are flowers, heads, umbels, spikes, panicles and
+/// spikelets; fruit is a fruit card that is no cone.
+fn year(grown: &Grown<'_>, tally: &mut Tally) {
+    let graph = grown.graph;
+    let standing: BTreeSet<u16> = graph
+        .organs
+        .iter()
+        .filter(|organ| organ.size > 0.0 && !organ.shed.is_some_and(|shed| shed <= graph.age))
+        .map(|organ| organ.organ)
+        .collect();
+    for index in standing {
+        let Some(kind) = grown.growth.organ_types.get(usize::from(index)) else {
+            continue;
+        };
+        let Some(look) = grown.spec.appearance.organs.get(&kind.name) else {
+            continue;
+        };
+        let cone = grown.terms.get(usize::from(index)) == Some(&"cone");
+        let own_flower = flowery(&look.shape);
+        let own_fruit = matches!(look.shape, Shape::Fruit(_)) && !cone;
+        let ranks: Vec<f64> =
+            if look.inflorescence.is_some() || matches!(look.shape, Shape::Head(_)) {
+                (0..=UNIT_RANKS)
+                    .map(|rank| f64::from(rank) / f64::from(UNIT_RANKS))
+                    .collect()
+            } else {
+                vec![0.0]
+            };
+        for day in 1..=365_u16 {
+            let (flowers, ripe) = match &look.season {
+                None => (own_flower, own_fruit),
+                Some(season) => ranks.iter().fold((false, false), |(flowers, ripe), &rank| {
+                    match season.unit_stage(f64::from(day), rank) {
+                        crate::looks::Stage::Flower => (
+                            flowers
+                                || season.flower_look.is_some()
+                                || !matches!(look.shape, Shape::Fruit(_)),
+                            ripe,
+                        ),
+                        crate::looks::Stage::Fruit { unripe } => {
+                            (flowers || own_flower, ripe || (own_fruit && unripe < 0.5))
+                        }
+                        _ => (flowers, ripe),
+                    }
+                }),
+            };
+            let month = month_of(day).to_string();
+            if flowers {
+                tally.kind("flowering_months", &month);
+            }
+            if ripe {
+                tally.kind("fruiting_months", &month);
+            }
+        }
+    }
+}
+
+/// Whether a card draws flowers: a flower, a head, an umbel, a spike, a
+/// panicle or a spikelet.
+fn flowery(shape: &Shape) -> bool {
+    matches!(
+        shape,
+        Shape::Flower(_)
+            | Shape::Head(_)
+            | Shape::Umbel(_)
+            | Shape::Spike(_)
+            | Shape::Panicle(_)
+            | Shape::Spikelet(_)
+    )
 }
 
 /// Degrees `organ` is pitched down from the shoot that bears it, in the
@@ -2533,6 +2643,7 @@ pub struct Report {
     /// Sizes, then counts.
     pub findings: Vec<Finding>,
     pub kinds: Vec<Agreement>,
+    pub timings: Vec<Timing>,
     /// Size characters the species states that nothing here measures yet.
     pub unmeasured: Vec<String>,
     /// Flowers and fruit on juvenile shoots, over all the plants: each an
@@ -2551,6 +2662,94 @@ pub struct Agreement {
     pub stated: Vec<String>,
     pub drawn: BTreeSet<String>,
     pub verdict: Verdict,
+}
+
+/// A months character judged against the months the plants draw it in
+/// ([`MONTHS`]): a pass when they are the months stated, a warning when
+/// they differ only by a month at either end (each month drawn within a
+/// month of one stated, and each stated within a month of one drawn), an
+/// error otherwise.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Timing {
+    pub character: &'static str,
+    pub stated: BTreeSet<u8>,
+    pub drawn: BTreeSet<u8>,
+    pub verdict: Verdict,
+}
+
+impl Timing {
+    /// `drawn` judged against `stated`.
+    #[must_use]
+    pub fn judge(character: &'static str, stated: BTreeSet<u8>, drawn: BTreeSet<u8>) -> Self {
+        let near = |month: u8, months: &BTreeSet<u8>| {
+            months.iter().any(|&other| {
+                let apart = month.abs_diff(other);
+                apart.min(12 - apart) <= 1
+            })
+        };
+        let verdict = if drawn.is_empty() {
+            Verdict::NotGrown
+        } else if drawn == stated {
+            Verdict::Pass
+        } else if drawn.iter().all(|&month| near(month, &stated))
+            && stated.iter().all(|&month| near(month, &drawn))
+        {
+            Verdict::Warning
+        } else {
+            Verdict::Error
+        };
+        Self {
+            character,
+            stated,
+            drawn,
+            verdict,
+        }
+    }
+}
+
+/// The months of a stated months character, 1 to 12.
+#[must_use]
+pub fn months_of(value: &Value) -> BTreeSet<u8> {
+    value
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter_map(Value::as_u64)
+        .filter_map(|month| u8::try_from(month).ok())
+        .filter(|month| (1..=12).contains(month))
+        .collect()
+}
+
+/// Months for a report, each run of them from its first to its last
+/// (a run may go on past December): "Apr–Jun", "Nov–Feb", "Apr, Aug–Sep",
+/// "all year".
+#[must_use]
+pub fn months_text(months: &BTreeSet<u8>) -> String {
+    const NAMES: [&str; 12] = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    ];
+    if months.len() >= 12 {
+        return "all year".into();
+    }
+    let has = |month: u8| months.contains(&((month + 11) % 12 + 1));
+    // Runs start at a month whose month before is missing.
+    let mut runs = Vec::new();
+    for start in 1..=12_u8 {
+        if !has(start) || has(start + 11) {
+            continue;
+        }
+        let mut end = start;
+        while has(end + 1) {
+            end += 1;
+        }
+        let name = |month: u8| NAMES[usize::from((month - 1) % 12)];
+        runs.push(if end == start {
+            name(start).to_string()
+        } else {
+            format!("{}–{}", name(start), name(end))
+        });
+    }
+    runs.join(", ")
 }
 
 /// The states a kind character's value names: a plain state, or each of
@@ -2573,6 +2772,7 @@ impl Report {
             .iter()
             .map(|finding| finding.verdict)
             .chain(self.kinds.iter().map(|agreement| agreement.verdict))
+            .chain(self.timings.iter().map(|timing| timing.verdict))
             .chain((self.juvenile_flowers > 0).then_some(Verdict::Error))
             .max()
             .unwrap_or(Verdict::Pass)
@@ -2593,8 +2793,8 @@ pub fn seeds_of(spec: &PlantSpec, n: usize) -> Vec<u64> {
 }
 
 /// Whether `spec`, with its `traits`, states any character [`SIZES`],
-/// [`COUNTS`] or [`KINDS`] checks, or is held to one where it states none
-/// ([`stated`]).
+/// [`COUNTS`], [`KINDS`] or [`MONTHS`] checks, or is held to one where it
+/// states none ([`stated`]).
 #[must_use]
 pub fn states_checked(spec: &PlantSpec, traits: &Map<String, Value>) -> bool {
     SIZES
@@ -2602,6 +2802,7 @@ pub fn states_checked(spec: &PlantSpec, traits: &Map<String, Value>) -> bool {
         .map(|(key, _)| *key)
         .chain(COUNTS)
         .chain(KINDS)
+        .chain(MONTHS)
         .any(|key| traits.contains_key(key) || stated(spec, traits, key).is_some())
 }
 
@@ -2693,6 +2894,19 @@ pub fn judge_plants(
             })
         })
         .collect();
+    let timings = MONTHS
+        .iter()
+        .filter_map(|&character| {
+            let stated = months_of(traits.get(character)?);
+            let drawn = plants
+                .iter()
+                .filter_map(|plant| plant.kinds.get(character))
+                .flatten()
+                .filter_map(|month| month.parse().ok())
+                .collect();
+            Some(Timing::judge(character, stated, drawn))
+        })
+        .collect();
     let vocabulary = crate::traits::Vocabulary::builtin();
     let unmeasured = traits
         .keys()
@@ -2713,6 +2927,7 @@ pub fn judge_plants(
         age: plants.first().map_or(0.0, |plant| plant.age),
         findings,
         kinds,
+        timings,
         unmeasured,
         juvenile_flowers: plants.iter().map(|plant| plant.juvenile_flowers).sum(),
     }
@@ -3320,6 +3535,66 @@ mod tests {
         let fern = grow("blechnum-spicant");
         let fronds = &fern.measures["leaf_life_years"];
         assert!(!fronds.is_empty() && fronds.iter().all(|&life| (life - fronds[0]).abs() < 1e-9));
+    }
+
+    #[test]
+    fn a_plants_year_gives_the_months_it_flowers_and_fruits_in() {
+        let library = Library::builtin();
+        let grow = |id: &str| {
+            let spec = library.spec(id).unwrap();
+            let environment = crate::drawing::typical_environment(&spec, library);
+            grow_and_measure(&spec, library, environment, spec.variants.seeds[0], None).unwrap()
+        };
+        let months = |plant: &Plant, character: &str| -> Vec<u8> {
+            plant
+                .kinds
+                .get(character)
+                .into_iter()
+                .flatten()
+                .map(|month| month.parse().unwrap())
+                .collect::<BTreeSet<u8>>()
+                .into_iter()
+                .collect()
+        };
+        // A flowering currant's racemes open their first flower on day 75
+        // and their last 21 days later, each in flower 35 days, so the
+        // last goes to fruit on day 131; its berries are half ripe from
+        // day 186 until they fall on day 250.
+        let currant = grow("ribes-sanguineum");
+        assert_eq!(months(&currant, "flowering_months"), [3, 4, 5]);
+        assert_eq!(months(&currant, "fruiting_months"), [7, 8, 9]);
+        // An organ with no season shows its own look all year.
+        let yarrow = grow("achillea-millefolium");
+        assert_eq!(months(&yarrow, "flowering_months").len(), 12);
+    }
+
+    #[test]
+    fn months_are_judged_to_within_a_month_at_either_end() {
+        let set = |months: &[u8]| months.iter().copied().collect::<BTreeSet<u8>>();
+        let judge = |stated: &[u8], drawn: &[u8]| {
+            Timing::judge("flowering_months", set(stated), set(drawn)).verdict
+        };
+        assert_eq!(judge(&[4, 5, 6], &[4, 5, 6]), Verdict::Pass);
+        assert_eq!(judge(&[4, 5, 6], &[3, 4, 5, 6, 7]), Verdict::Warning);
+        assert_eq!(judge(&[4, 5, 6], &[5]), Verdict::Warning);
+        assert_eq!(judge(&[4, 5, 6], &[4, 5, 6, 7, 8]), Verdict::Error);
+        assert_eq!(
+            judge(&[4, 5, 6], &(1..=12).collect::<Vec<_>>()),
+            Verdict::Error
+        );
+        assert_eq!(judge(&[12, 1], &[11, 12, 1, 2]), Verdict::Warning);
+        assert_eq!(judge(&[4, 5], &[]), Verdict::NotGrown);
+        assert_eq!(month_of(1), 1);
+        assert_eq!(month_of(31), 1);
+        assert_eq!(month_of(32), 2);
+        assert_eq!(month_of(335), 12);
+        assert_eq!(month_of(365), 12);
+        assert_eq!(months_text(&set(&[4, 5, 6])), "Apr–Jun");
+        assert_eq!(months_text(&set(&[11, 12, 1, 2])), "Nov–Feb");
+        assert_eq!(months_text(&set(&[4, 8, 9])), "Apr, Aug–Sep");
+        assert_eq!(months_text(&set(&[4])), "Apr");
+        assert_eq!(months_text(&(1..=12).collect()), "all year");
+        assert_eq!(months_of(&json!([4, 5, 13, "x"])), set(&[4, 5]));
     }
 
     #[test]

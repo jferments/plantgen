@@ -176,7 +176,9 @@ prompt injection. So, without exception:
     of growth, where each organ carries the age it was shed at, a plant
     shows how long its leaves and cones live, so a leaf's life, whether
     leaves stand into their second year (evergreen), and the seasons a
-    cone takes to ripen and stays after are checked too. Each layout that
+    cone takes to ripen and stays after are checked too. Its looks on
+    every day of the year give the months its flowers are open and its
+    fruit ripe in. Each layout that
     a character measures gives its sizes (`dimensions`, `counts`) from
     the same function that draws it. The species-suite test
     (`tests/checks.rs`) holds every species within its ranges' extremes

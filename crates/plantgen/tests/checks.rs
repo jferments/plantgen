@@ -191,9 +191,44 @@ fn grows_on(spec: &PlantSpec, program: &str) -> bool {
     false
 }
 
+/// A report's errors: each character, and why it failed.
+fn failures(report: &checks::Report) -> Vec<(&'static str, String)> {
+    let findings = report
+        .findings
+        .iter()
+        .filter(|finding| finding.verdict == Verdict::Error)
+        .map(|finding| (finding.character, finding.reason.clone()));
+    let kinds = report
+        .kinds
+        .iter()
+        .filter(|agreement| agreement.verdict == Verdict::Error)
+        .map(|agreement| {
+            (
+                agreement.character,
+                format!("draws {:?}, states {:?}", agreement.drawn, agreement.stated),
+            )
+        });
+    let timings = report
+        .timings
+        .iter()
+        .filter(|timing| timing.verdict == Verdict::Error)
+        .map(|timing| {
+            (
+                timing.character,
+                format!(
+                    "draws {}, states {}",
+                    checks::months_text(&timing.drawn),
+                    checks::months_text(&timing.stated)
+                ),
+            )
+        });
+    findings.chain(kinds).chain(timings).collect()
+}
+
 /// Every species a check reads, three plants each, has no size or count
-/// past its ranges' extremes and draws no kind it does not state, but the
-/// [`KNOWN`] ones.
+/// past its ranges' extremes, draws no kind it does not state and flowers
+/// and fruits within a month of the months it states, but the [`KNOWN`]
+/// ones.
 #[test]
 fn stated_characters_hold_on_grown_plants() {
     let library = Library::builtin();
@@ -228,26 +263,7 @@ fn stated_characters_hold_on_grown_plants() {
                     let spec = PlantSpec::builtin(id).unwrap();
                     let seeds = checks::seeds_of(&spec, 3);
                     let report = checks::check(&spec, library, &traits, &seeds).unwrap();
-                    let failed = report
-                        .findings
-                        .iter()
-                        .filter(|finding| finding.verdict == Verdict::Error)
-                        .map(|finding| (finding.character, finding.reason.clone()))
-                        .chain(
-                            report
-                                .kinds
-                                .iter()
-                                .filter(|agreement| agreement.verdict == Verdict::Error)
-                                .map(|agreement| {
-                                    (
-                                        agreement.character,
-                                        format!(
-                                            "draws {:?}, states {:?}",
-                                            agreement.drawn, agreement.stated
-                                        ),
-                                    )
-                                }),
-                        );
+                    let failed = failures(&report);
                     for (character, reason) in failed {
                         if known(&spec, character) {
                             failing_known
