@@ -283,8 +283,8 @@ pub mod venation;
 /// desert willow, burrobush, vine maple, osoberry, thimbleberry and jojoba
 /// with leaves no larger than their floras give, desert willow's narrowly
 /// linear. (45 is the unequal corolla, #86.)
-/// 47: a regular corolla may stand in two like whorls (`petal_whorls`
+/// 49: a regular corolla may stand in two like whorls (`petal_whorls`
 /// 2), the inner turned half a petal: tall and dull Oregon grape draw
 /// three petals and three, bleeding heart an outer and an inner pair, and
-/// their stamens stand in whorls of as many.
-pub const GENERATOR_REVISION: u32 = 47;
+/// their stamens stand in whorls of as many (47 is #97, 48 #103).
+pub const GENERATOR_REVISION: u32 = 49;
