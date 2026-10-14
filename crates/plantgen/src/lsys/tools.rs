@@ -44,7 +44,7 @@ use super::derive::Clock;
 use super::expr::{ENV_FIELDS, EnvField, EnvValues, NO_ENV, Query, Scope, eval};
 use super::narrow::{self, CANDIDATES, CONSUMED, LEFT, Narrower, STRIDE};
 use super::program::{Program, SymbolKind, ToolConfig, ToolKind};
-use super::turtle::{NodeKind, Scene};
+use super::turtle::{NodeKind, Scene, Segment};
 use super::{GrowthError, Limits};
 use crate::conditions::Surroundings;
 use crate::cores::{self, Lease};
@@ -2650,6 +2650,53 @@ impl Rigid {
     }
 }
 
+/// The turn a segment takes, of the turn `turn` it would, after the
+/// motion `before` of what it follows, so that its end stays at least
+/// `gap` from the substrate's surface: all of it if that end does, else
+/// the most of it that keeps it there, found by halving. If what it
+/// follows has already carried its end that close, it turns instead to
+/// run along the surface, as the ground lifts wood lying on it.
+fn held_up(field: &SubstrateField, gap: f64, before: Rigid, segment: &Segment, turn: Vec3) -> Vec3 {
+    let end = |turn: Vec3| before.after(segment.start, turn).apply(segment.end);
+    let clear = |share: f64| field.distance(end(turn * share)) >= gap;
+    if clear(1.0) {
+        return turn;
+    }
+    if clear(0.0) {
+        let (mut low, mut high) = (0.0, 1.0);
+        for _ in 0..16 {
+            let middle = f64::midpoint(low, high);
+            if clear(middle) {
+                low = middle;
+            } else {
+                high = middle;
+            }
+        }
+        return turn * low;
+    }
+    let unbent = end(Vec3::ZERO);
+    let heading = before
+        .turn(segment.end - segment.start)
+        .normalize_or(Vec3::ZERO);
+    let normal = field.normal(unbent);
+    let into = heading.dot(normal);
+    if into >= 0.0 {
+        return Vec3::ZERO;
+    }
+    let along = (heading - normal * into).normalize_or(Vec3::ZERO);
+    let axis = heading.cross(along);
+    if axis.length() < 1.0e-12 {
+        return Vec3::ZERO;
+    }
+    let world = axis.normalize_or(Vec3::ZERO) * math::acos(heading.dot(along).clamp(-1.0, 1.0));
+    // Back into the unbent frame, where `turn` is given.
+    Vec3::new(
+        before.x.dot(world),
+        before.y.dot(world),
+        before.z.dot(world),
+    )
+}
+
 /// Bending under load (`bend@1`, crown form step B): each segment, from
 /// the base up, turns what follows it about its start by the rotation
 /// vector `ω = rest + M⊥ ℓ / (E I)`.
@@ -2667,6 +2714,12 @@ impl Rigid {
 /// - Stems' segments (those not on a limb, as `limb` counts them: the
 ///   trunk and the stems a fork divides it into) take the share `stem` of
 ///   their sag (default 1), as reaction wood holds a trunk upright.
+/// - With `ground` above 0, a segment turns at most until its end comes
+///   within `ground` metres of the substrate's surface (`ground_field`,
+///   the conditions' substrate or level soil): the ground holds up wood
+///   that sags onto it (plants fitted to their place, PF1). A segment
+///   that what it follows has already carried that close turns to run
+///   along the surface.
 ///
 /// Segments, organs and query points move with what they follow; the
 /// string does not change.
@@ -2682,8 +2735,9 @@ pub fn bend(
     values: &[f64],
     rest: &mut HashMap<u64, Vec3, impl std::hash::BuildHasher>,
     dt: f64,
+    ground_field: &SubstrateField,
 ) -> Result<(), GrowthError> {
-    let [density, modulus, leaf_mass, set, straighten, stem] = values[..] else {
+    let [density, modulus, leaf_mass, set, straighten, stem, ground] = values[..] else {
         return Err(invalid("bend", "wrong number of settings".into()));
     };
     let valid = density >= 0.0
@@ -2694,14 +2748,16 @@ pub fn bend(
         && leaf_mass.is_finite()
         && (0.0..=1.0).contains(&set)
         && (0.0..=1.0).contains(&straighten)
-        && (0.0..=1.0).contains(&stem);
+        && (0.0..=1.0).contains(&stem)
+        && ground >= 0.0
+        && ground.is_finite();
     if !valid {
         return Err(invalid(
             "bend",
             format!(
-                "density, modulus and leaf_mass must be finite and not negative (modulus above \
-                 0), set, straighten and stem between 0 and 1; found {density}, {modulus}, \
-                 {leaf_mass}, {set}, {straighten}, {stem}"
+                "density, modulus, leaf_mass and ground must be finite and not negative \
+                 (modulus above 0), set, straighten and stem between 0 and 1; found {density}, \
+                 {modulus}, {leaf_mass}, {set}, {straighten}, {stem}, {ground}"
             ),
         ));
     }
@@ -2775,6 +2831,9 @@ pub fn bend(
         let angle = turn.length();
         if angle > limit {
             turn = turn * (limit / angle);
+        }
+        if ground > 0.0 {
+            turn = held_up(ground_field, ground, before, segment, turn);
         }
         motion[index] = before.after(segment.start, turn);
         seen.insert(segment.id, held + (sag * set - held * straighten) * dt);
@@ -3424,7 +3483,7 @@ mod tests {
         let inertia = std::f64::consts::PI * radius.powi(4) / 4.0;
         let expected = mass * 9.81 * lever / (1.0e10 * inertia);
         let mut rest: HashMap<u64, Vec3> = HashMap::new();
-        let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, 1.0];
+        let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, 1.0, 0.0];
         bend(
             &mut setup.scene,
             &[radius],
@@ -3432,6 +3491,7 @@ mod tests {
             &settings,
             &mut rest,
             1.0,
+            &SubstrateField::flat(),
         )
         .unwrap();
         let bent = setup.scene.segments[0].end - setup.scene.segments[0].start;
@@ -3454,11 +3514,53 @@ mod tests {
     }
 
     #[test]
+    fn bend_1_rests_wood_on_the_ground() {
+        // Plants fitted to their place (PF1): a soft branch 0.3 m up would
+        // hang 0.7 m below the ground; with `ground` 0.02 the ground holds
+        // it up, its end 0.02 m above level soil.
+        let source = "lsystem p 1; axiom F(0.3) &(90) F(1);";
+        let rubber = [600.0, 1.0e-3, 0.1, 0.3, 0.1, 1.0, 0.0];
+        let rested = [600.0, 1.0e-3, 0.1, 0.3, 0.1, 1.0, 0.02];
+        let flat = SubstrateField::flat();
+        let mut rest: HashMap<u64, Vec3> = HashMap::new();
+        let mut free = setup(source);
+        bend(
+            &mut free.scene,
+            &[0.01, 0.01],
+            &[0.0; 20],
+            &rubber,
+            &mut rest,
+            1.0,
+            &flat,
+        )
+        .unwrap();
+        assert!(
+            free.scene.segments[1].end.y < -0.5,
+            "{:?}",
+            free.scene.segments[1]
+        );
+        let mut held = setup(source);
+        bend(
+            &mut held.scene,
+            &[0.01, 0.01],
+            &[0.0; 20],
+            &rested,
+            &mut rest,
+            1.0,
+            &flat,
+        )
+        .unwrap();
+        let end = held.scene.segments[1].end;
+        assert!((end.y - 0.02).abs() < 0.01, "{end:?}");
+        assert!(end.y < 0.29, "it still bends down: {end:?}");
+    }
+
+    #[test]
     fn bend_1_leaves_a_stem_upright_and_never_bends_past_hanging() {
         let mut upright = setup("lsystem p 1; axiom F(1) F(1);");
         let before = upright.scene.segments.clone();
         let mut rest: HashMap<u64, Vec3> = HashMap::new();
-        let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, 1.0];
+        let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, 1.0, 0.0];
         bend(
             &mut upright.scene,
             &[0.01, 0.01],
@@ -3466,6 +3568,7 @@ mod tests {
             &settings,
             &mut rest,
             1.0,
+            &SubstrateField::flat(),
         )
         .unwrap();
         for (old, new) in before.iter().zip(&upright.scene.segments) {
@@ -3473,7 +3576,7 @@ mod tests {
         }
         // A twig as soft as rubber hangs straight down from its start.
         let mut soft = setup("lsystem p 1; axiom &(90) F(1);");
-        let rubber = [600.0, 1.0e-3, 0.1, 0.3, 0.1, 1.0];
+        let rubber = [600.0, 1.0e-3, 0.1, 0.3, 0.1, 1.0, 0.0];
         bend(
             &mut soft.scene,
             &[0.01],
@@ -3481,6 +3584,7 @@ mod tests {
             &rubber,
             &mut rest,
             1.0,
+            &SubstrateField::flat(),
         )
         .unwrap();
         let hanging = soft.scene.segments[0].end - soft.scene.segments[0].start;
@@ -3524,7 +3628,7 @@ mod tests {
             let mut leaning = setup("lsystem p 1; axiom &(45) F(1);");
             let start = leaning.scene.segments[0].end - leaning.scene.segments[0].start;
             let mut rest: HashMap<u64, Vec3> = HashMap::new();
-            let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, stem];
+            let settings = [600.0, 10000.0, 0.1, 0.3, 0.1, stem, 0.0];
             bend(
                 &mut leaning.scene,
                 &[0.01],
@@ -3532,6 +3636,7 @@ mod tests {
                 &settings,
                 &mut rest,
                 1.0,
+                &SubstrateField::flat(),
             )
             .unwrap();
             let bent = leaning.scene.segments[0].end - leaning.scene.segments[0].start;

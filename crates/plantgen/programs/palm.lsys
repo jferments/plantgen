@@ -52,9 +52,13 @@
 # values their species leave unset, as this program's defaults were until
 # then.
 #
+# Revision 5 (plants fitted to their place): a frond that sags to the
+# ground lies on it, `rest_gap` above the substrate (substrate@1's, or
+# level soil), instead of passing into it.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem palm 4;
+lsystem palm 5;
 
 # The plant.
 param vigour_spread;          # a palm grows exp(gauss() * vigour_spread) times as fast
@@ -103,6 +107,7 @@ param unroll;                 # share of a year a frond takes to open
 param curl;                   # degrees each coiled piece turns back
 param droop;                  # sag per year of a frond's age
 param droop_years;
+param rest_gap;               # a frond that reaches the ground lies this far above it
 param skirt;                  # 1: dead fronds hang
 param dead_angle;             # angle of a hanging dead frond to the vertical
 param dead_life;              # years a dead frond hangs
@@ -192,7 +197,7 @@ decompose Pc(k, m, s, e) : m > 1 ->
 # The first piece opens the frond, sets its sag and draws the petiole.
 interpret Pc(k, m, s, e) : k == 0 ->
     &(lerp(young_angle, old_angle, 1 - exp(-max(0, age + season - e) / open_years)))
-    T(0, -1, 0, droop * min(max(0, age + season - e), droop_years))
+    T(0, -1, 0, droop * min(max(0, age + season - e), droop_years)) rest(rest_gap)
     !(petiole_radius) F(s * petiole) !(petiole_radius * 0.6) Pp(k, s, e);
 interpret Pc(k, m, s, e) -> Pp(k, s, e);
 
