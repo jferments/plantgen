@@ -43,9 +43,14 @@
 # values, so the broadleaf values a maple leaves unset are given here, as
 # broadleaf's defaults were until then. A maple grows as before.
 #
+# Revision 8 (crown form, item 1): a maple's lobed envelope narrows among
+# neighbours as broadleaf 14's does (space@4), as far as the front of a
+# crown as wide for its height (crown_radius / crown_height) falls short
+# under their shade; in the open it is as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem sapindaceae 7 extends broadleaf;
+lsystem sapindaceae 8 extends broadleaf;
 
 param bud_years = 30;
 param crown_widest = 0.45;      # share of the crown's depth where it is widest
@@ -111,11 +116,12 @@ param height_rate = 0;
 param crown_vary = 0;
 param height_vary = 0;
 param widest_vary = 0;
-tool space@2 {
+tool space@4 {
     height = room_height * crown_height * uniform(1 - height_vary, 1 + height_vary)
         * (1 - exp(-(height_rate > 0 ? height_rate : crown_rate) * (t + 3))),
     radius = room_width * crown_radius * uniform(1 - crown_vary, 1 + crown_vary)
         * (1 - exp(-crown_rate * (t + 3))),
+    ratio = crown_radius / crown_height,
     widest = crown_widest + uniform(-widest_vary, widest_vary),
     fullness = crown_fullness,
     lobes = crown_lobes,
@@ -143,6 +149,7 @@ param space_renew = 1;
 # (revision 6; see above).
 param room_width = 1;
 param room_height = 1;
+param crown_phototropism = 0.3; # the region's front turns this far toward its light
 param light_half = 0;
 param flux = 3;
 
