@@ -1017,6 +1017,17 @@ impl Vocabulary {
                 }
             }
         }
+        for name in crate::inherit::colour_reads(rule) {
+            if self
+                .traits
+                .get(&name)
+                .is_none_or(|item| item.kind != "colour")
+            {
+                return Err(format!(
+                    "a `colour` rule reads colour traits; `{name}` is not one"
+                ));
+            }
+        }
         if let Some(param) = path.strip_prefix("generator.params.")
             && !programs.values().any(|params| params.contains_key(param))
         {

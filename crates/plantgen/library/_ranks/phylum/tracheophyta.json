@@ -9,6 +9,19 @@
     "leaf_bearing": true
   },
   "rules": {
+    "appearance.foliage": {
+      "colour": "leaf_colour",
+      "why": "The plant's leaves are drawn in the colour a grown leaf's upper side is stated in."
+    },
+    "appearance.foliage_shade": {
+      "colour": "leaf_colour",
+      "scale": [0.35, 0.42, 0.55],
+      "why": "In deep shade the stated leaf colour darkens as every look's own colour does."
+    },
+    "appearance.bark": {
+      "colour": "bark_colour",
+      "why": "A grown stem's bark is drawn in the colour it is stated in."
+    },
     "generator.params.leaves_per_node": {
       "map": {"leaf_arrangement": {"alternate": 1, "opposite": 2, "whorled": {"rule": "leaves_per_whorl"}}},
       "why": "A node bears one leaf where the leaves alternate, a pair where they are opposite, and the taxon's count where they are whorled."
@@ -31,6 +44,9 @@
     }
   },
   "evidence": {
+    "rules.appearance.foliage": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
+    "rules.appearance.foliage_shade": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen shades foliage in the colour a source states for the species' leaves, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour darkened by the generator's own shade factors (0.35, 0.42 and 0.55 of red, green and blue, as a look with a colour of its own is shaded, src/looks.rs)."},
+    "rules.appearance.bark": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "openstax-biology-2e",
