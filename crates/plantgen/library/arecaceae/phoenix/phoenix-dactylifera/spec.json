@@ -26,9 +26,9 @@
       "open_years": 1.2,
       "petiole": 0.22,
       "petiole_radius": 0.03,
-      "pieces": 18,
+      "pieces": 38,
       "fan": 0,
-      "leaflet_length": 0.09,
+      "leaflet_length": 0.07,
       "leaflet_peak": 0.4,
       "leaflet_base": 0.5,
       "leaflet_tip": 0.35,
@@ -46,7 +46,9 @@
       "leaflet_area": 0.067,
       "ray_area": 0.235,
       "dead_area": 0.099,
-      "boot_area": 0.333
+      "boot_area": 0.333,
+      "leaflet_scatter": 15,
+      "hang": 20
     }
   },
   "growth": {
@@ -68,7 +70,7 @@
         "shape": {
           "template": "blade",
           "taper": 0.6,
-          "aspect": 0.1
+          "aspect": 0.07
         },
         "colour": [0.33, 0.42, 0.36]
       },
@@ -109,9 +111,9 @@
   "tier": "procedural_proxy",
   "evidence": {
     "generator.params": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a rough trunk 15 to 25 m tall, clothed in old leaf bases, under a crown of stiff, grey-green feather fronds 4 to 6 m long whose leaflets stand in a V, spined at the foot; offshoots at the base make a clump. Not fitted to measurements."
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Date palm (read 2026-10-14): up to 30 m, single or in a clump of stems from one root system; leaves 4 to 6 m long (frond_length 4.8), spined on the petiole, pinnate with about 150 leaflets (38 pieces of rachis, about 76 a side), the leaflets 30 cm long and 2 cm wide (leaflet_length 0.07 of the frond, cards of aspect 0.07); a crown 6 to 10 m across. Set by eye from general knowledge of the species: a rough trunk clothed in old leaf bases, stiff grey-green fronds whose leaflets stand in a V and 15 degrees above and below it, the oldest hanging 20 degrees lower over their life, and offshoots at the base. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",

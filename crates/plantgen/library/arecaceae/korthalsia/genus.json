@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Korthalsia",
+  "parent": "subfamily/calamoideae",
+  "traits": {
+    "architectural_model": "schoute",
+    "sexual_system": "hermaphrodite",
+    "clonal": true
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae I 3a): rattans with bisexual flowers; shoots that flower once branch high in the canopy (Schoute's model), and suckers."
+    }
+  }
+}

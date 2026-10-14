@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Acoelorraphe",
+  "parent": "subfamily/coryphoideae",
+  "traits": {
+    "architectural_model": "tomlinson",
+    "clonal": true,
+    "leaf_division": "simple",
+    "leaf_incision": "parted",
+    "division_pattern": "palmate"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "sargent-1922",
+      "note": "Sargent (1922, Acoelorraphe, p. 105): trees with tall, slender, often clustered stems clothed for years in the sheathing bases of fallen leaves, the leaves nearly round and fan-cut; A. wrightii a tree of numerous stems forming great thickets. Mabberley (2017) places it in subfamily III, tribe Trachycarpeae."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Palmae, subfamily III Coryphoideae: leaves induplicately palmate in all but Phoenix and the Caryoteae (Arenga, Caryota, Wallichia), which are pinnate. A fan palm's blade is one piece cut into segments: simple, parted, palmate."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Palmae, subfamily III Coryphoideae: leaves induplicately palmate in all but Phoenix and the Caryoteae (Arenga, Caryota, Wallichia), which are pinnate. A fan palm's blade is one piece cut into segments: simple, parted, palmate."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Palmae, subfamily III Coryphoideae: leaves induplicately palmate in all but Phoenix and the Caryoteae (Arenga, Caryota, Wallichia), which are pinnate. A fan palm's blade is one piece cut into segments: simple, parted, palmate."
+    }
+  }
+}

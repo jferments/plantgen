@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Verschaffeltia",
+  "parent": "subfamily/arecoideae",
+  "traits": {
+    "spines": "prickles",
+    "sexual_system": "monoecious"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae V 14k): monoecious, with a spiny trunk and stilt roots."
+    }
+  }
+}

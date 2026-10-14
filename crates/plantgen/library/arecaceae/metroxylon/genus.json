@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Metroxylon",
+  "parent": "subfamily/calamoideae",
+  "traits": {
+    "architectural_model": "holttum",
+    "clonal": true
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae I 3c): the sago palms: trunks that flower once and die (Holttum's model), but in most suckers grow from the foot; the fruit takes 3 years to ripen."
+    }
+  }
+}

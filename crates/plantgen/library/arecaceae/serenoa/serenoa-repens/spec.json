@@ -42,7 +42,8 @@
       "sucker_distance": 0.6,
       "leaflet_area": 0.235,
       "ray_area": 0.071,
-      "dead_area": 0.237
+      "dead_area": 0.237,
+      "hang": 0
     }
   },
   "growth": {

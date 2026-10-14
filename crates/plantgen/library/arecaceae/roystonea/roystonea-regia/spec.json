@@ -14,21 +14,21 @@
     "params": {
       "lean": 2,
       "trunk_rate": 0.4,
-      "trunk_radius": 0.3,
+      "trunk_radius": 0.22,
       "stemless_years": 5,
       "internode": 0.006,
-      "fronds_per_year": 15,
-      "frond_life": 1.6,
-      "frond_length": 5.0,
+      "fronds_per_year": 12,
+      "frond_life": 1.5,
+      "frond_length": 3.5,
       "size_years": 8,
       "young_angle": 6,
       "old_angle": 55,
       "open_years": 0.8,
       "petiole": 0.1,
       "petiole_radius": 0.035,
-      "pieces": 18,
+      "pieces": 45,
       "fan": 0,
-      "leaflet_length": 0.17,
+      "leaflet_length": 0.24,
       "leaflet_peak": 0.35,
       "leaflet_base": 0.5,
       "leaflet_tip": 0.25,
@@ -39,7 +39,16 @@
       "leaflet_area": 0.04,
       "ray_area": 0.235,
       "dead_area": 0.235,
-      "vigour_spread": 0.06
+      "vigour_spread": 0.06,
+      "flare": 0.6,
+      "flare_years": 4,
+      "bulge": 0.35,
+      "bulge_age": 22,
+      "bulge_years": 10,
+      "crownshaft": 2.0,
+      "shaft_cards": 16,
+      "leaflet_scatter": 18,
+      "hang": 25
     }
   },
   "growth": {
@@ -57,11 +66,12 @@
     "foliage_shade": [0.09, 0.171, 0.072],
     "variation": 0.1,
     "organs": {
+      "sheath": {"shape": {"template": "blade", "taper": 0, "aspect": 0.1}, "colour": [0.3, 0.45, 0.18]},
       "leaflet": {
         "shape": {
           "template": "blade",
-          "taper": 0.6,
-          "aspect": 0.06
+          "taper": 0.35,
+          "aspect": 0.045
         },
         "colour": [0.2, 0.38, 0.16],
         "bend": {
@@ -94,9 +104,9 @@
   "evidence": {
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Roystonea regia (gwddagg_v2.2_species.csv, read): specific gravity 0.57 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.56, branches 0.56. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a smooth, pale grey trunk 15 to 30 m tall, often swollen, under a shining green crownshaft and about 15 arching feather fronds 3 to 4 m long whose leaflets stand in several ranks, giving a plumed look; old fronds fall cleanly. Not fitted to measurements."
+      "evidence": "SourceInferred",
+      "source": "sargent-1922",
+      "note": "Sargent (1922, Roystonea regia, pp. 107-108): leaves 10 to 12 ft (3 to 3.7 m) long, frond_length 3.5 m; pinnae 2.5 to 3 ft (0.76 to 0.9 m) long, leaflet_length 0.24 of the frond; the green upper part of the stem, the crownshaft of leaf-stalk sheaths, 8 to 10 ft (2.4 to 3 m), drawn as a 2 m shaft plus the trunk the living fronds stand on; a trunk 80 to 100 ft tall and often 2 ft (0.6 m) through, rising from an abruptly enlarged base (flare 0.6) and enlarged near the middle, tapering to both ends (a belly 0.35 wider at 22 years, so trunk_radius 0.22 m is 0.3 m at its widest); a broad head of gracefully drooping leaves (hang 25 degrees over a frond's life). Closely pinnate: 45 pieces of rachis, so about 90 leaflets a side, linear-lanceolate cards 1.5 inches wide on 2.5 to 3 ft (aspect 0.045). Set by eye: twelve fronds a year living a year and a half, about eighteen in the crown, and leaflets standing 18 degrees above and below their V for the plumed look."
     },
     "allometry": {
       "evidence": "Authored",
@@ -106,7 +116,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: bright green fronds, pale grey trunk; the crownshaft is not drawn."
+      "note": "Colours chosen by eye from photographs: bright green fronds, pale grey trunk, and the crownshaft's shining green sheaths, drawn as sixteen upright cards round the trunk's top (Sargent 1922: bright green cylinders of densely imbricated sheaths)."
     },
     "taxon": {
       "evidence": "Authored",

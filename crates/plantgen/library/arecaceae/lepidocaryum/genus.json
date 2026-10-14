@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Lepidocaryum",
+  "parent": "subfamily/calamoideae",
+  "traits": {
+    "leaf_division": "simple",
+    "leaf_incision": "parted",
+    "division_pattern": "palmate",
+    "sexual_system": "dioecious"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Lepidocaryum (read 2026-10-14): small reduplicate leaves, palmate, on petioles about 60 cm; dioecious. Mabberley (2017) places it in subfamily I, subtribe Mauritiinae."
+    }
+  }
+}

@@ -27,13 +27,211 @@
   "forms": {
     "palm": {
       "generator": {
-        "program": "arecaceae"
+        "program": "arecaceae",
+        "defaults": {
+          "lean": 3,
+          "trunk_rate": 0.2,
+          "stemless_years": 6,
+          "internode": 0.004,
+          "fronds_per_year": 12,
+          "frond_life": 2.5,
+          "frond_length": 3,
+          "size_years": 8,
+          "young_angle": 8,
+          "old_angle": 60,
+          "open_years": 1,
+          "petiole": 0.15,
+          "petiole_radius": 0.025,
+          "pieces": 30,
+          "fan": 0,
+          "leaflet_length": 0.15,
+          "leaflet_peak": 0.4,
+          "leaflet_base": 0.5,
+          "leaflet_tip": 0.3,
+          "leaflet_angle": 55,
+          "leaflet_lift": 35,
+          "leaflet_scatter": 10,
+          "rays": 50,
+          "fan_spread": 210,
+          "fan_length": 0.42,
+          "fan_cup": 30,
+          "costa": 0.1,
+          "fan_arch": 35,
+          "droop": 0.015,
+          "droop_years": 2.5,
+          "hang": 25,
+          "boots": 1,
+          "boot_life": 20,
+          "boot_length": 0.25,
+          "suckers": 0,
+          "sucker_age": 5,
+          "sucker_rate": 0.3,
+          "sucker_distance": 0.5,
+          "leaflet_area": 0.05,
+          "ray_area": 0.064,
+          "dead_area": 0.22,
+          "boot_area": 0.35
+        }
+      },
+      "growth": {
+        "years": 60,
+        "step": 1,
+        "keyframes": [10, 30, 60]
+      },
+      "variants": {
+        "environments": ["open"],
+        "seeds": [1]
+      },
+      "appearance": {
+        "bark": [0.55, 0.52, 0.46],
+        "foliage": [0.2, 0.36, 0.15],
+        "foliage_shade": [0.09, 0.162, 0.068],
+        "variation": 0.1,
+        "organs": {
+          "leaflet": {
+            "shape": {
+              "template": "blade",
+              "taper": 0.4,
+              "aspect": 0.06
+            }
+          },
+          "ray": {
+            "shape": {
+              "template": "blade",
+              "taper": 0.5,
+              "aspect": 0.08
+            },
+            "bend": {
+              "fold": 20,
+              "cup": 0,
+              "droop": 50,
+              "twist": 0
+            }
+          },
+          "sheath": {
+            "shape": {
+              "template": "blade",
+              "taper": 0,
+              "aspect": 0.1
+            },
+            "colour": [0.3, 0.45, 0.18]
+          },
+          "boot": {
+            "shape": {
+              "template": "blade",
+              "taper": 0.2,
+              "aspect": 0.4
+            },
+            "colour": [0.48, 0.38, 0.26]
+          }
+        }
+      },
+      "rules": {
+        "generator.params.frond_length": {
+          "rule": "leaf_length_m",
+          "why": "A palm's leaf is its frond, petiole and all, drawn as long as its flora gives it."
+        },
+        "generator.params.fan": {
+          "map": {
+            "division_pattern": {
+              "pinnate": 0,
+              "palmate": 1
+            }
+          },
+          "why": "A fan palm's frond ends in a fan of segments; a feather palm's bears leaflets along its rachis."
+        },
+        "generator.params.petiole": {
+          "map": {
+            "division_pattern": {
+              "pinnate": 0.15,
+              "palmate": 0.5
+            }
+          },
+          "why": "A fan palm's blade stands at the end of a petiole about half the frond's length (the built-in cabbage, saw and fan palms, 0.45 to 0.54); a feather palm's leaflets start a short way up (date and royal palms, 0.1 to 0.22)."
+        },
+        "generator.params.pieces": {
+          "map": {
+            "division_pattern": {
+              "pinnate": 30,
+              "palmate": 4
+            }
+          },
+          "why": "A feather palm's rachis is drawn in many pieces to bear its leaflets; a fan palm's petiole needs few."
+        },
+        "generator.params.old_angle": {
+          "map": {
+            "division_pattern": {
+              "pinnate": 58,
+              "palmate": 72
+            }
+          },
+          "why": "Fan palms' old fronds stand out flatter (the built-in fan palms, 72 to 75 degrees from the vertical) than feather palms' arching ones (55 to 62)."
+        },
+        "generator.params.hang": {
+          "map": {
+            "division_pattern": {
+              "pinnate": 22,
+              "palmate": 30
+            }
+          },
+          "why": "An old fan frond turns further down before it dies than a feather palm's (the built-in species, 35 to 50 against 20 to 25 degrees, short of the most, which hang in a skirt)."
+        },
+        "generator.params.suckers": {
+          "map": {
+            "clonal": {
+              "true": 4,
+              "false": 0
+            }
+          },
+          "why": "A clonal palm (Tomlinson's model: stems from the foot of the first) sends up suckers round its foot; a solitary one sends none."
+        },
+        "generator.params.petiole_radius": {
+          "rule": "0.0085 * leaf_length_m",
+          "why": "A longer frond stands on a stouter petiole and rachis: the built-in palms' are 0.008 to 0.01 of the frond's length in radius (saw palmetto 8 mm on a 1.25 m frond, royal palm 35 mm on 3.5 m)."
+        },
+        "generator.params.trunk_rate": {
+          "rule": "max(0, height_typical_m - 0.4 * leaf_length_m) / 50",
+          "why": "A palm's crown stands about four tenths of a frond's length above its trunk, so its trunk rises to the rest of its usual height over about fifty years."
+        },
+        "generator.params.trunk_radius": {
+          "rule": "0.45 * stem_diameter_max_m",
+          "why": "A trunk's radius, a little under half its greatest stated diameter, since a palm's trunk is widest at its foot or its belly."
+        },
+        "generator.defaults.trunk_radius": {
+          "rule": "clamp(0.007 * height_max_m, 0.01, 0.35)",
+          "why": "Where no diameter is stated, a taller palm stands on a stouter trunk: about 7 mm of radius a metre of greatest height (the built-in royal and date palms, 0.22 to 0.25 m at 25 to 30 m; a 3 m parlour palm about 2 cm)."
+        }
       },
       "evidence": {
         "generator.program": {
           "evidence": "Authored",
           "source": "plantgen-authors",
           "note": "The lineage's own program (growth plan G2.3a), on the palm base: it gives the values its species leave unset, which the palm program gave as defaults until then."
+        },
+        "generator.defaults": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "Values for what species set by hand, near the middle of the five built-in palms' (date, royal, cabbage, saw and California fan palms), leaning to a feather palm's, since most of the family's genera are feather palms (Mabberley 2017, subfamily V Arecoideae the largest): about a dozen fronds a year living two or three years, leaflets a sixth of the frond long, old leaf bases kept as boots. They yield to any file's values."
+        },
+        "growth": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "Grown to sixty years, as the built-in palms are (fifty to sixty)."
+        },
+        "variants": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "One seed in the open, as the other form defaults."
+        },
+        "appearance": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The built-in palms' colours and cards: a grey trunk, mid-green narrow leaflets, segments folded and drooping as the built-in fan palms' are, a green sheath for a crownshaft, a brown boot."
+        },
+        "rules": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "What the palm program's values mean for a palm's stated characters: its frond is its whole leaf; fan or feather from its division pattern, with the petiole, its girth, rachis pieces and frond angles of the built-in fan or feather palms; suckers if it is clonal; the trunk's rise from its usual height less the crown, and its girth from its stated diameter or else its height."
         }
       }
     }

@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Allagoptera",
+  "parent": "subfamily/arecoideae",
+  "traits": {
+    "architectural_model": "schoute"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae V 8a): Schoute's model: the stem forks."
+    }
+  }
+}

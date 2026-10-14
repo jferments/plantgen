@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Geonoma",
+  "parent": "subfamily/arecoideae",
+  "traits": {
+    "sexual_system": "monoecious",
+    "spines": "none"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae V 11): monoecious, unarmed forest palms."
+    }
+  }
+}

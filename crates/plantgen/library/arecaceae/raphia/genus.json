@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Raphia",
+  "parent": "subfamily/calamoideae",
+  "traits": {
+    "architectural_model": "schoute"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae I 2b): solitary or clustered stems that flower once (Schoute's model, as Mabberley gives it), the fruit covered in shining scales."
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Plectocomia",
+  "parent": "subfamily/calamoideae",
+  "traits": {
+    "architectural_model": "holttum"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae I 3e): rattans that flower once and die (Holttum's model)."
+    }
+  }
+}

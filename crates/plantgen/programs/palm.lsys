@@ -61,9 +61,27 @@
 # step makes is born at the step's end, so a rule that ends a part by its
 # age counts the step it is in (`age + dt >=`).
 #
+# Revision 7 (palms from their facts): a trunk's girth follows its
+# life, a crownshaft stands under the crown, feather fronds' leaflets
+# stand in two planes, a fan's segments arch down to its edges, and old
+# fronds hang. Where a segment of trunk forms when its crown is a years
+# old, its radius is trunk_radius times 1 + flare * exp(-a' / flare_years)
+# (a' the years since the stemless ones: the swollen foot of a royal or a
+# fan palm) + bulge * exp(-((a - bulge_age) / bulge_years)^2) (the royal
+# palm's belly, or a bottle palm's). A crownshaft (crownshaft > 0, the
+# royal palm's green column of leaf sheaths) is drawn as shaft_cards
+# sheaths round the trunk's top, crownshaft long, each year's living as
+# long as its fronds, and the fronds rise from its top. A feather frond's
+# leaflets rise leaflet_lift ± leaflet_scatter degrees, the two halves of
+# each piece in turn, so a plumose frond's stand in two planes. A fan's
+# rays droop by up to fan_arch degrees toward its edges, as a costapalmate
+# fan arches over its rib. A frond turns hang degrees further from the
+# vertical over its life, so the oldest hang below the crown. Each at 0
+# draws as revision 6 did.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem palm 6;
+lsystem palm 7;
 
 # The plant.
 param vigour_spread;          # a palm grows exp(gauss() * vigour_spread) times as fast
@@ -74,6 +92,13 @@ param trunk_rate;             # metres a year once established
 param trunk_radius;
 param stemless_years;         # years before the trunk rises at its full rate
 param internode;              # trunk between one frond and the next
+param flare;                  # the foot's extra girth, a share of trunk_radius
+param flare_years;            # years over which the foot's flare narrows to the trunk
+param bulge;                  # a belly's extra girth, a share of trunk_radius
+param bulge_age;              # the crown's age when the belly's widest part forms
+param bulge_years;            # how long the belly lasts, years either side
+param crownshaft;             # a crownshaft's length, metres; 0 none
+param shaft_cards;            # sheaths drawn round it
 # Fronds.
 param fronds_per_year;
 param frond_life;             # years a frond lives
@@ -97,6 +122,7 @@ param leaflet_base;           # the lowest leaflet, as a share of the longest
 param leaflet_tip;            # the topmost leaflet, as a share of the longest
 param leaflet_angle;          # angle of a leaflet to the rachis
 param leaflet_lift;           # degrees the leaflets rise into a V
+param leaflet_scatter;        # degrees the two halves of a piece's leaflets stand above and below it
 param leaflet_area;           # leaf area of a leaflet 1 m long, m²
 # Fan fronds.
 param rays;                   # segments of a fan
@@ -104,6 +130,7 @@ param fan_spread;             # degrees the segments spread over
 param fan_length;             # a segment, as a share of the frond's length
 param fan_cup;                # degrees the fan's segments rise into a shallow cup
 param costa;                  # share of the frond's length along which the rays rise from a rib
+param fan_arch;               # degrees a fan's edge rays droop below its middle
 param ray_area;               # leaf area of a segment 1 m long, m²
 # Unrolling, sagging and dying.
 param season;                 # share of the year at the keyframe
@@ -112,6 +139,7 @@ param unroll;                 # share of a year a frond takes to open
 param curl;                   # degrees each coiled piece turns back
 param droop;                  # sag per year of a frond's age
 param droop_years;
+param hang;                   # degrees a frond turns further from the vertical over its life
 param rest_gap;               # a frond that reaches the ground lies this far above it
 param skirt;                  # 1: dead fronds hang
 param dead_angle;             # angle of a hanging dead frond to the vertical
@@ -136,27 +164,44 @@ module Fr(s, a, e);           # a frond s long at a degrees, emerging at phase e
 module Pc(k, m, s, e);        # pieces k to k + m - 1 of a frond's rachis
 module Pp(k, s, e);           # a drawn piece of a rachis
 module Ln(k, s, e, h);        # a pair of leaflets h of a piece along piece k
-module Lq(z);                 # a pair of leaflets z long
+module Lq(z, w);              # a pair of leaflets z long, raised w (1 or -1) times leaflet_scatter
 module Ry(j, m, s, e);        # rays j to j + m - 1 of a fan
 module Dh(s);                 # a dead frond hanging
 module Bt;                    # a boot
 module Cc(z);                 # the crown's cone, z long
 module Sb(n);                 # the plant's foot: suckers sent out so far
 module Sk(n);                 # a sucker on its runner, the n-th
+module Sh(z, r);              # a sheath of the crownshaft, z long, round a trunk r in radius
+module Sc(z);                 # the crownshaft's core, z long
 
 organ leaflet leaf as leaflet area leaflet_area;
 organ ray leaf as piece area ray_area;
 organ dead leaf as piece area dead_area;
 organ boot leaf as piece area boot_area;
 organ cone cone area cone_area;
+organ sheath leaf as piece area ray_area;
 
 structure frond leaf;         # one frond: its petiole, rachis, leaflets or rays, then its dead frond and boot
 
 axiom [ Sb(0) ] /(uniform(0, 360)) &(uniform(0, lean)) Y(exp(gauss() * vigour_spread), 0);
 
 # The crown: the trunk's growth and this year's fronds.
+# A crownshaft palm's fronds and cone stand on the shaft's core, which
+# lives as long as they do.
+rule Y(v, n) : crownshaft > 0 ->
+    !(trunk_radius
+      * (1 + flare * exp(-max(0, age - stemless_years) / max(flare_years, 0.001))
+         + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0)))
+    T(0, 1, 0, upturn * trunk_rate * v)
+    F(trunk_rate * v * smoothstep(0, stemless_years, age))
+    [ ring(shaft_cards) [ Sh(crownshaft, trunk_radius * 1.05) ] ]
+    [ Sc(crownshaft) Fc(0, max(1, round(fronds_per_year * v)), age * v)
+      [ Cc(age >= adult_age ? crown_cone : 0) ] ] Y(v, n);
 rule Y(v, n) ->
-    !(trunk_radius) T(0, 1, 0, upturn * trunk_rate * v)
+    !(trunk_radius
+      * (1 + flare * exp(-max(0, age - stemless_years) / max(flare_years, 0.001))
+         + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0)))
+    T(0, 1, 0, upturn * trunk_rate * v)
     F(trunk_rate * v * smoothstep(0, stemless_years, age))
     Fc(0, max(1, round(fronds_per_year * v)), age * v)
     [ Cc(age >= adult_age ? crown_cone : 0) ] Y(v, n);
@@ -201,7 +246,8 @@ decompose Pc(k, m, s, e) : m > 1 ->
 
 # The first piece opens the frond, sets its sag and draws the petiole.
 interpret Pc(k, m, s, e) : k == 0 ->
-    &(lerp(young_angle, old_angle, 1 - exp(-max(0, age + season - e) / open_years)))
+    &(lerp(young_angle, old_angle, 1 - exp(-max(0, age + season - e) / open_years))
+      + hang * clamp((age + season - e) / max(frond_life, 0.001), 0, 1))
     T(0, -1, 0, droop * min(max(0, age + season - e), droop_years)) rest(rest_gap)
     !(petiole_radius) F(s * petiole) !(petiole_radius * 0.6) Pp(k, s, e);
 interpret Pc(k, m, s, e) -> Pp(k, s, e);
@@ -221,9 +267,11 @@ interpret Ln(k, s, e, h) ->
        * ((k + h) / pieces < leaflet_peak
           ? lerp(leaflet_base, 1, (k + h) / pieces / leaflet_peak)
           : lerp(1, leaflet_tip, ((k + h) / pieces - leaflet_peak) / (1 - leaflet_peak)))
-       * lerp(0.3, 1, clamp((age + season - e) / unroll, 0, 1)));
-interpret Lq(z) ->
-    [ +(leaflet_angle) ^(leaflet_lift) leaflet(z) ] [ -(leaflet_angle) ^(leaflet_lift) leaflet(z) ];
+       * lerp(0.3, 1, clamp((age + season - e) / unroll, 0, 1)),
+       h > 0 ? -1 : 1);
+interpret Lq(z, w) ->
+    [ +(leaflet_angle) ^(leaflet_lift + leaflet_scatter * w) leaflet(z) ]
+    [ -(leaflet_angle) ^(leaflet_lift + leaflet_scatter * w) leaflet(z) ];
 
 # A fan's ray j of m: each from the fan's centre at the rachis' end, spread
 # across the frond's plane and cupped up a little, longest in the middle;
@@ -231,13 +279,20 @@ interpret Lq(z) ->
 interpret Ry(j, m, s, e) ->
     [ +(fan_spread * clamp((age + season - e) / unroll, 0.15, 1)
         * ((j + 0.5) / max(1, round(rays)) - 0.5))
-      ^(fan_cup) ray(s * fan_length * (0.7 + 0.3 * sin(pi * (j + 0.5) / max(1, round(rays))))) ];
+      ^(fan_cup - fan_arch * 2 * abs((j + 0.5) / max(1, round(rays)) - 0.5)) ray(s * fan_length * (0.7 + 0.3 * sin(pi * (j + 0.5) / max(1, round(rays))))) ];
 
 # The crown's cone, at its centre among the young fronds; a crown bears
 # the newest only.
 decompose Cc(z) : z <= 0 -> ;
 rule Cc(z) : age + dt >= 1 -> ;
 interpret Cc(z) -> cone(z);
+
+# A sheath of the crownshaft: out to the trunk's surface, then up it. A
+# year's sheaths live as long as its fronds.
+rule Sh(z, r) : age + dt >= frond_life -> ;
+interpret Sh(z, r) -> +(90) f(r) -(90) sheath(z);
+rule Sc(z) : age + dt >= frond_life -> ;
+interpret Sc(z) -> !(trunk_radius * 0.97) F(z);
 
 # A sucker: out along a runner at the foot, then up, a palm of its own.
 decompose Sk(n) ->

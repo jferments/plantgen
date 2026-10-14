@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Brahea",
+  "parent": "subfamily/coryphoideae",
+  "traits": {
+    "leaf_division": "simple",
+    "leaf_incision": "parted",
+    "division_pattern": "palmate"
+  },
+  "evidence": {
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Palmae, subfamily III Coryphoideae: leaves induplicately palmate in all but Phoenix and the Caryoteae (Arenga, Caryota, Wallichia), which are pinnate. A fan palm's blade is one piece cut into segments: simple, parted, palmate."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Palmae, subfamily III Coryphoideae: leaves induplicately palmate in all but Phoenix and the Caryoteae (Arenga, Caryota, Wallichia), which are pinnate. A fan palm's blade is one piece cut into segments: simple, parted, palmate."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Palmae, subfamily III Coryphoideae: leaves induplicately palmate in all but Phoenix and the Caryoteae (Arenga, Caryota, Wallichia), which are pinnate. A fan palm's blade is one piece cut into segments: simple, parted, palmate."
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Juania",
+  "parent": "subfamily/ceroxyloideae",
+  "traits": {
+    "sexual_system": "dioecious"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae IV 2): a dioecious palm."
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Elaeis",
+  "parent": "subfamily/arecoideae",
+  "traits": {
+    "sexual_system": "monoecious"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae V 8c): monoecious palms."
+    }
+  }
+}

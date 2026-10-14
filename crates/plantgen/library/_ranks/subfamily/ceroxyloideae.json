@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "subfamily",
+  "name": "Ceroxyloideae",
+  "parent": "family/arecaceae",
+  "traits": {
+    "leaf_division": "compound",
+    "division_pattern": "pinnate"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Palmae, subfamily IV Ceroxyloideae: leaves pinnate with reduplicate leaflets; tribes Cyclospatheae, Ceroxyleae (dioecious) and Phytelepheae (the vegetable-ivory palms, dioecious, their leaves reduplicately paripinnate)."
+    }
+  }
+}

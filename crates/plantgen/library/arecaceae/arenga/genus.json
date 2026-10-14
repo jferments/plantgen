@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Arenga",
+  "parent": "subfamily/coryphoideae",
+  "traits": {
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "leaf_incision": "none"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae III 6): tribe Caryoteae, whose leaves are pinnate (bipinnate in Caryota) with jagged-tipped leaflets; A. pinnata flowers once and dies (Holttum's model), its inflorescences opening from the top down."
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Phoenix",
+  "parent": "subfamily/coryphoideae",
+  "traits": {
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "leaf_incision": "none",
+    "spines": "leaf_spines",
+    "sexual_system": "dioecious",
+    "terminal_leaflet": true
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae III 3): dioecious trees, the only palms with induplicate pinnate leaves, the lowest leaflets turned spines."
+    }
+  }
+}

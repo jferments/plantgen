@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Roystonea",
+  "parent": "subfamily/arecoideae",
+  "traits": {
+    "spines": "none",
+    "sexual_system": "monoecious"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae V 6): unarmed, monoecious palms with pinnate leaves."
+    }
+  }
+}

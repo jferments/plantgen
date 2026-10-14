@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "subfamily",
+  "name": "Nypoideae",
+  "parent": "family/arecaceae",
+  "traits": {
+    "leaf_division": "compound",
+    "division_pattern": "pinnate"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Palmae, subfamily II Nypoideae: the nipa palm alone, a creeping stem that forks in mangrove swamps, with pinnate leaves of reduplicate leaflets."
+    }
+  }
+}
