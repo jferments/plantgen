@@ -14,6 +14,108 @@
     "indusium": "none",
     "sorus_position": "submarginal"
   },
+  "forms": {
+    "fern": {
+      "generator": {
+        "program": "marattiaceae",
+        "defaults": {
+          "lean": 2,
+          "trunk_rate": 0.01,
+          "trunk_radius": 0.15,
+          "stemless_years": 10,
+          "internode": 0.001,
+          "fronds_per_year": 4,
+          "frond_life": 3,
+          "frond_length": 3,
+          "size_years": 8,
+          "young_angle": 15,
+          "old_angle": 45,
+          "open_years": 0.6,
+          "petiole": 0.25,
+          "petiole_radius": 0.02,
+          "pieces": 14,
+          "fan": 0,
+          "leaflet_length": 0.3,
+          "leaflet_peak": 0.4,
+          "leaflet_base": 0.6,
+          "leaflet_tip": 0.3,
+          "leaflet_angle": 70,
+          "leaflet_lift": 6,
+          "season": 0.5,
+          "emerge_spread": 0.3,
+          "unroll": 0.3,
+          "curl": 45,
+          "droop": 0.02,
+          "droop_years": 2,
+          "skirt": 0,
+          "dead_angle": 165,
+          "dead_life": 0,
+          "ray_area": 0.235,
+          "dead_area": 0.109
+        }
+      },
+      "growth": {
+        "years": 30,
+        "step": 1,
+        "keyframes": [5, 15, 30]
+      },
+      "variants": {
+        "environments": ["open"],
+        "seeds": [1]
+      },
+      "appearance": {
+        "bark": [0.3, 0.25, 0.15],
+        "foliage": [0.1, 0.25, 0.07],
+        "foliage_shade": [0.045, 0.11, 0.03],
+        "variation": 0.1,
+        "organs": {
+          "leaflet": {
+            "shape": {
+              "template": "frond",
+              "pinnae": 14,
+              "width": 0.3,
+              "stipe": 0.05
+            }
+          },
+          "boot": {
+            "shape": {
+              "template": "blade",
+              "taper": 0.3,
+              "aspect": 0.8
+            },
+            "colour": [0.32, 0.25, 0.15]
+          }
+        }
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The marattioid ferns' own program (growth plan G2.3a), on the palm base: a short stout stem under a crown of very large pinnate fronds."
+        },
+        "generator.defaults": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "Values for what species set by hand, from the built-in tree fern's (Dicksonia) with a stem that barely rises (trunk_rate 0.01 m a year), few fronds a year that stand up from it (old_angle 45) and longer pinnae; they yield to any file's values. Set by eye from Mabberley's account (2017, under Marattiaceae)."
+        },
+        "growth": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "Grown to thirty years, its crown full by fifteen."
+        },
+        "variants": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "One seed in the open, as the built-in species."
+        },
+        "appearance": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "Each pinna on a frond card of its pinnules, as large marattioid fronds are mostly bipinnate; stipules as brown boots on the stem."
+        }
+      }
+    }
+  },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",

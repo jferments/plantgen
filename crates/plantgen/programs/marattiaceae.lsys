@@ -1,0 +1,37 @@
+# The marattioid ferns (Marattiaceae), on the palm base (growth plan
+# G2.3a): large terrestrial ferns with short, stout, erect stems and very
+# large fronds, once or more pinnate, that unroll from croziers, with big
+# fleshy stipules at their bases (Mabberley 2017, under Marattiaceae). The
+# palm base draws a crown of pinnate fronds round a trunk; here the trunk
+# stays short and the fronds stand up from it, their pinnae on the
+# leaflet cards. Dead fronds fall; their bases (the stipules) stay as
+# boots on the stem.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem marattiaceae 1 extends palm;
+
+param vigour_spread = 0.1;
+param upturn = 0;
+param frond_seed = 0.12;
+param frond_spread = 0.1;
+param divergence = 137.5;
+param angle_spread = 8;
+param leaflet_area = 0.1;
+param rays = 40;
+param fan_spread = 200;
+param fan_length = 0.5;
+param fan_cup = 15;
+param costa = 0;
+param boots = 1;               # the fleshy stipules stay on the stem
+param boot_life = 10;
+param boot_length = 0.12;
+param boot_area = 0.4;
+param crown_cone = 0;
+param adult_age = 5;
+param cone_area = 0.6;
+param suckers = 0;
+param sucker_age = 5;
+param sucker_rate = 0.3;
+param sucker_distance = 0.4;
+param rest_gap = 0.02;

@@ -1,0 +1,66 @@
+# The lycophytes (Lycopodiopsida): clubmosses and spikemosses, on the herb
+# base (growth plan G2.3a). A clump of slender stems, each clothed from
+# foot to tip in small, crowded leaves set in a dense spiral (six to a
+# node here, so the spiral reads as the close-set leaves of a clubmoss
+# shoot), the fertile stems ending in a strobilus: a short cone of
+# sporophylls drawn as the herb's raceme, its parts set close with no
+# stalks, all of them sporophylls (no fruit and no buds). Half an adult
+# clump's stems are fertile. Mabberley (2017): Lycopodiaceae evergreen
+# herbs with forking stems, scale- or needle-like leaves, sporangia in
+# terminal strobili; Selaginellaceae moss-like plants with scale leaves
+# and terminal strobili. The forking of the stems is not drawn: each
+# fork reads as another stem of the clump.
+#
+# It gives every value the herb base leaves unset; a family or species
+# sets its own where it grows otherwise (spikemosses sprawl).
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem lycopodiopsida 1 extends herb;
+
+param stems = 14;              # stems in a mature clump
+param stem_rate = 0.5;
+param clump_radius = 0.25;
+param stem_lean = 12;
+param maturity = 2;
+param adult_age = 3;           # the first year strobili are borne
+param stem_height = 0.15;
+param height_spread = 0.2;
+param young_height = 0.6;
+param stem_radius = 0.0006;
+param wiggle = 4;
+param arch = 0;
+param nodes = 80;
+param leaves_per_node = 6;
+param bare = 0.03;
+param leaf_length = 0.006;
+param leaf_peak = 0.3;
+param leaf_top = 0.8;
+param leaf_base = 0.9;
+param leaf_angle = 35;
+param leaf_area = 0.02;        # a narrow leaf 1 m long
+param basal_leaves = 0;
+param basal_length = 0.01;
+param basal_angle = 30;
+param basal_pieces = 1;
+param basal_arch = 0;
+param basal_area = 0.02;
+param basal_piece_area = 0.02;
+param raceme = 0.2;            # the strobilus, a share of the stem
+param flowering_share = 0.5;
+param scape = 0;
+param flowers = 24;            # sporophylls in a strobilus
+param flower_size = 0.004;
+param pedicel = 0;
+param flower_divergence = 137.5;
+param flower_angle = 25;
+param fruit_below = 0;
+param buds_above = 1;
+param fruit_length = 0.004;
+param fruit_angle = 20;
+param bud_size = 0.003;
+param nod = 0;
+param flower_area = 0.6;
+param bud_area = 0.6;
+param fruit_area = 0.6;
+param light_cell = 0.02;

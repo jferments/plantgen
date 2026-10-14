@@ -16,6 +16,59 @@
       "monoecious": "rarely"
     }
   },
+  "forms": {
+    "shrub": {
+      "generator": {
+        "program": "ephedraceae"
+      },
+      "growth": {
+        "years": 10,
+        "step": 1,
+        "keyframes": [3, 6, 10]
+      },
+      "variants": {
+        "environments": ["open"],
+        "seeds": [1]
+      },
+      "appearance": {
+        "bark": [0.45, 0.4, 0.3],
+        "foliage": [0.3, 0.4, 0.22],
+        "foliage_shade": [0.1, 0.14, 0.075],
+        "variation": 0.15,
+        "organs": {
+          "leaf": {
+            "shape": {
+              "template": "blade",
+              "taper": 1,
+              "aspect": 0.025
+            }
+          }
+        }
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The joint-firs' own program (growth plan G2.3a), on the herb base: jointed green switch stems with whorled branchlets."
+        },
+        "growth": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "A joint-fir is grown to ten years; its clump is full well before."
+        },
+        "variants": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "One seed in the open, as the built-in species."
+        },
+        "appearance": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "Grey-green, glaucous switch stems, the branchlets on narrow leaf cards, until a species states its own."
+        }
+      }
+    }
+  },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",

@@ -1,0 +1,27 @@
+# The zamias and their kin (Zamiaceae), on the palm base (growth plan
+# G2.3a): dioecious cycads, trees to 18 m with stems clothed in old leaf
+# bases or with stems underground, pinnate leaves in a crown, and seeds in
+# determinate cones (Mabberley 2017; Watson and Dallwitz). It gives the
+# values its species leave unset, as Cycadaceae's program does for its
+# own (a cycad's crown, croziers and boots), with a cone at the crown's
+# centre, as every zamia bears one, female or male.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem zamiaceae 1 extends palm;
+
+param vigour_spread = 0.1;
+param upturn = 0;
+param frond_seed = 0.15;
+param frond_spread = 0.08;
+param divergence = 137.5;
+param angle_spread = 6;
+param rays = 40;
+param fan_spread = 200;
+param fan_length = 0.5;
+param fan_cup = 15;
+param costa = 0;
+param skirt = 0;
+param dead_angle = 165;
+param dead_life = 0;
+param rest_gap = 0.02;

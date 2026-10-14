@@ -27,7 +27,7 @@ pub const SPEC_SCHEMA: u32 = 1;
 pub const UNNOTED: &[&str] = &["schema", "id", "tier", "evidence", "provenance"];
 
 /// Built-in plant programs, by name.
-pub const PROGRAMS: [(&str, &str); 79] = [
+pub const PROGRAMS: [(&str, &str); 85] = [
     ("pinidae", include_str!("../programs/pinidae.lsys")),
     ("broadleaf", include_str!("../programs/broadleaf.lsys")),
     ("grass", include_str!("../programs/grass.lsys")),
@@ -83,6 +83,21 @@ pub const PROGRAMS: [(&str, &str); 79] = [
     ("carex", include_str!("../programs/carex.lsys")),
     ("cyatheaceae", include_str!("../programs/cyatheaceae.lsys")),
     ("cycadaceae", include_str!("../programs/cycadaceae.lsys")),
+    ("zamiaceae", include_str!("../programs/zamiaceae.lsys")),
+    (
+        "marattiaceae",
+        include_str!("../programs/marattiaceae.lsys"),
+    ),
+    (
+        "lycopodiopsida",
+        include_str!("../programs/lycopodiopsida.lsys"),
+    ),
+    ("isoetaceae", include_str!("../programs/isoetaceae.lsys")),
+    (
+        "ophioglossaceae",
+        include_str!("../programs/ophioglossaceae.lsys"),
+    ),
+    ("ephedraceae", include_str!("../programs/ephedraceae.lsys")),
     (
         "equisetaceae",
         include_str!("../programs/equisetaceae.lsys"),

@@ -1,0 +1,59 @@
+# The adder's-tongues and moonworts (Ophioglossaceae), on the herb base
+# (growth plan G2.3a). Each year one or a few leaves rise from a fleshy
+# rhizome, not unrolling from a crozier; each is a common stalk bearing a
+# sterile blade part way up and, above it, a long-stalked fertile spike
+# with its sporangia sunk in two rows (Mabberley 2017, under
+# Ophioglossaceae and Ophioglossum). Drawn as a herb stem whose one leaf
+# node is the sterile blade, its raceme the spike: stalkless sporangia
+# half a turn apart, all of one kind.
+#
+# One step is one year. Angles are degrees; lengths are metres.
+
+lsystem ophioglossaceae 1 extends herb;
+
+param stems = 2;
+param stem_rate = 0.4;
+param clump_radius = 0.04;
+param stem_lean = 4;
+param maturity = 2;
+param adult_age = 2;
+param stem_height = 0.2;
+param height_spread = 0.15;
+param young_height = 0.5;
+param stem_radius = 0.0015;
+param wiggle = 2;
+param arch = 0;
+param nodes = 1;               # the sterile blade
+param leaves_per_node = 1;
+param bare = 0.5;              # the common stalk below the blade
+param leaf_length = 0.07;
+param leaf_peak = 0.5;
+param leaf_top = 1;
+param leaf_base = 1;
+param leaf_angle = 30;
+param leaf_area = 0.45;        # an ovate blade 1 m long
+param basal_leaves = 0;
+param basal_length = 0.05;
+param basal_angle = 30;
+param basal_pieces = 1;
+param basal_arch = 0;
+param basal_area = 0.45;
+param basal_piece_area = 0.45;
+param raceme = 0.25;           # the fertile spike
+param flowering_share = 1;
+param scape = 0;
+param flowers = 30;            # sporangia on a spike
+param flower_size = 0.002;
+param pedicel = 0;
+param flower_divergence = 180; # two rows
+param flower_angle = 15;
+param fruit_below = 0;
+param buds_above = 1;
+param fruit_length = 0.002;
+param fruit_angle = 15;
+param bud_size = 0.002;
+param nod = 0;
+param flower_area = 0.6;
+param bud_area = 0.6;
+param fruit_area = 0.6;
+param light_cell = 0.02;

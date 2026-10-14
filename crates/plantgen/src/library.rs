@@ -3239,9 +3239,15 @@ mod tests {
         );
         refused(
             &family(
-                r#""rules": {"generator.params.leaves_per_node": {"map": {"leaflets": {"1": 1}}}}"#,
+                r#""rules": {"generator.params.leaves_per_node": {"map": {"leaf_length_m": {"1": 1}}}}"#,
             ),
-            "a map reads an enum or bool trait; `leaflets` is a count",
+            "a map reads an enum, bool or count trait; `leaf_length_m` is a number",
+        );
+        refused(
+            &family(
+                r#""rules": {"generator.params.leaves_per_node": {"map": {"leaflets": {"two": 2}}}}"#,
+            ),
+            "`two` is not a value of `leaflets`",
         );
         refused(
             &family(r#""rules": {"generator.params.space_densty": {"rule": "leaflets"}}"#),

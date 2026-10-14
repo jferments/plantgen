@@ -3,6 +3,15 @@
   "rank": "family",
   "name": "Selaginellaceae",
   "parent": "order/selaginellales",
+  "generator": {
+    "params": {
+      "stems": 40,
+      "clump_radius": 0.12,
+      "stem_lean": 65,
+      "raceme": 0.1,
+      "leaf_angle": 55
+    }
+  },
   "traits": {
     "leaf_form": "scale"
   },
@@ -11,6 +20,11 @@
       "evidence": "SourceInferred",
       "source": "mabberley-2017",
       "note": "Mabberley's Plant-book (4th ed., 2017), under Selaginellaceae: erect, sprawling, tufted, creeping and rooting or climbing moss-like plants whose stems fork in pairs, sometimes into frond-like sprays; leaves scale-like, either all alike in spirals or of two sizes in four ranks; sporangia in terminal cones."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Spikemosses sprawl, creep and root, or are tufted, many of them moss-like (Mabberley 2017, under Selaginellaceae): a clump is a dense mat of many stems that lean far out from it, their leaves stand out flatter and their strobili are short. The values are set by eye."
     }
   }
 }

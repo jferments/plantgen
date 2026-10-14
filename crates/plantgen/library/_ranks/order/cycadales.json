@@ -8,6 +8,137 @@
     "rosette": "terminal",
     "sexual_system": "dioecious"
   },
+  "forms": {
+    "palm": {
+      "generator": {
+        "defaults": {
+          "lean": 6,
+          "trunk_rate": 0.022,
+          "trunk_radius": 0.15,
+          "stemless_years": 8,
+          "internode": 0.001,
+          "fronds_per_year": 10,
+          "frond_life": 3,
+          "frond_length": 1.25,
+          "size_years": 10,
+          "young_angle": 15,
+          "old_angle": 68,
+          "open_years": 0.8,
+          "petiole": 0.15,
+          "petiole_radius": 0.008,
+          "pieces": 14,
+          "fan": 0,
+          "leaflet_length": 0.13,
+          "leaflet_peak": 0.45,
+          "leaflet_base": 0.15,
+          "leaflet_tip": 0.3,
+          "leaflet_angle": 72,
+          "leaflet_lift": 8,
+          "season": 0.5,
+          "emerge_spread": 0.3,
+          "unroll": 0.25,
+          "curl": 45,
+          "droop": 0.006,
+          "droop_years": 3,
+          "boots": 1,
+          "boot_life": 40,
+          "boot_length": 0.06,
+          "crown_cone": 0.4,
+          "adult_age": 15,
+          "suckers": 0,
+          "sucker_age": 10,
+          "sucker_rate": 0.15,
+          "sucker_distance": 0.3,
+          "leaflet_area": 0.038,
+          "ray_area": 0.235,
+          "dead_area": 0.235,
+          "boot_area": 0.475,
+          "cone_area": 0.42
+        }
+      },
+      "growth": {
+        "years": 60,
+        "step": 1,
+        "keyframes": [10, 30, 60]
+      },
+      "variants": {
+        "environments": ["open"],
+        "seeds": [1]
+      },
+      "appearance": {
+        "bark": [0.36, 0.3, 0.22],
+        "foliage": [0.07, 0.2, 0.07],
+        "foliage_shade": [0.0315, 0.09, 0.0315],
+        "variation": 0.1,
+        "organs": {
+          "leaflet": {
+            "shape": {
+              "template": "blade",
+              "taper": 0.4,
+              "aspect": 0.05
+            }
+          },
+          "boot": {
+            "shape": {
+              "template": "blade",
+              "taper": 0.3,
+              "aspect": 0.6
+            },
+            "colour": [0.38, 0.3, 0.2]
+          },
+          "cone": {
+            "shape": {
+              "template": "fruit",
+              "aspect": 0.32,
+              "cone": 1
+            },
+            "colour": [0.72, 0.55, 0.3]
+          }
+        }
+      },
+      "evidence": {
+        "generator.defaults": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "Values for what species set by hand, from the built-in sago cycad's (Cycas revoluta), without its suckers: a stout trunk that rises slowly after years as a stemless crown, a flush of stiff pinnate leaves a year, boots of old leaf bases and a cone at the crown's centre. They yield to any file's values."
+        },
+        "growth": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "Grown to sixty years, as the built-in cycad is."
+        },
+        "variants": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "One seed in the open, as the built-in species."
+        },
+        "appearance": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The built-in sago cycad's colours and organ cards: narrow leaflets, brown boots, a buff cone."
+        },
+        "rules": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "What the palm program's frond_length and trunk_rate mean for a cycad: one whole leaf, petiole included; metres of trunk a year once the stemless years are over; and the trunk's radius, which Mabberley (2017, under Cycas and Zamiaceae) gives no figure for, set by eye. The crown's rise of about 0.4 frond lengths is that of fronds opening to the built-in sago cycad's 68 degrees from the vertical (cos 68 degrees is 0.37)."
+        }
+      },
+      "rules": {
+        "generator.params.frond_length": {
+          "rule": "leaf_length_m",
+          "why": "A cycad's leaf is its frond, drawn as long as its flora gives it."
+        },
+        "generator.params.trunk_radius": {
+          "rule": "clamp(0.05 + 0.04 * height_max_m, 0.06, 0.25)",
+          "why": "A taller cycad stands on a stouter trunk: about the built-in sago cycad's (0.15 m at 3 m tall) for its height."
+        },
+        "generator.params.trunk_rate": {
+          "rule": "max(0, height_typical_m - 0.4 * leaf_length_m) / 50",
+          "why": "A cycad's crown stands about four tenths of a frond's length above its trunk, so its trunk rises to the rest of its usual height over the fifty years after its stemless ones; a cycad whose stem stays underground, its height all frond, grows none."
+        }
+      }
+    }
+  },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",

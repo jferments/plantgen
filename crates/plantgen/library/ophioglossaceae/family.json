@@ -7,6 +7,67 @@
     "woodiness": "herbaceous",
     "frond_dimorphism": "hemidimorphic"
   },
+  "forms": {
+    "fern": {
+      "generator": {
+        "program": "ophioglossaceae"
+      },
+      "growth": {
+        "years": 6,
+        "step": 1,
+        "keyframes": [2, 4, 6]
+      },
+      "variants": {
+        "environments": ["open"],
+        "seeds": [1]
+      },
+      "appearance": {
+        "bark": [0.4, 0.45, 0.25],
+        "foliage": [0.12, 0.25, 0.08],
+        "foliage_shade": [0.04, 0.085, 0.027],
+        "variation": 0.15,
+        "organs": {
+          "leaf": {
+            "shape": {
+              "template": "blade",
+              "taper": 0.5,
+              "aspect": 0.45
+            }
+          },
+          "flower": {
+            "shape": {
+              "template": "blade",
+              "taper": 0.3,
+              "aspect": 1
+            },
+            "colour": [0.55, 0.5, 0.25]
+          }
+        }
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The adder's-tongues' own program (growth plan G2.3a), on the herb base: a stalk with one sterile blade and a fertile spike above it."
+        },
+        "growth": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "Grown to six years, as the built-in ferns are."
+        },
+        "variants": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "One seed in the open, as the built-in species."
+        },
+        "appearance": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "A fleshy, mid-green ovate blade and a buff spike of sporangia, until a genus or species states its own (moonworts' blades are cut)."
+        }
+      }
+    }
+  },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",

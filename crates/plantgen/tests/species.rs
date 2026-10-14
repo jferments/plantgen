@@ -225,12 +225,14 @@ fn builtin_species_draw_no_floating_organs() {
 /// or an organ more than 0.05 m below the ground at any keyframe.
 #[test]
 fn fronds_and_pads_lie_on_the_ground() {
-    const RESTING: [&str; 5] = [
+    const RESTING: [&str; 7] = [
         "polypodiidae",
         "palm",
         "arecaceae",
         "cyatheaceae",
         "cycadaceae",
+        "zamiaceae",
+        "marattiaceae",
     ];
     let mut checked = 0;
     let mut failures = Vec::new();
