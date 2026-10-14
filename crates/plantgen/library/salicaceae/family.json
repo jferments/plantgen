@@ -15,7 +15,8 @@
       "dioecious": "usually",
       "hermaphrodite": "sometimes"
     },
-    "ovary_position": "superior"
+    "ovary_position": "superior",
+    "leaf_habit": "deciduous"
   },
   "forms": {
     "decurrent_tree": {
@@ -36,6 +37,11 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 57 Salicaceae (the willows and poplars): trees or shrubs; leaves alternate, simple; stipules small or leafy; flowers on separate trees, in catkins, with no perianth; ovary superior; fruit a capsule of many hairy seeds. APG's Salicaceae also holds most of the old Flacourtiaceae, trees and shrubs with alternate simple leaves and flowers with a perianth, often also on separate plants; their catkins, missing perianths and capsules belong to the willows' and poplars' genus files."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Salicaceae as that work draws it, there coded together with Scyphostegiaceae: how long the leaves last (character 37), coded deciduous. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   }
 }

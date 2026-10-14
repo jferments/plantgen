@@ -2,5 +2,73 @@
   "schema": 1,
   "rank": "family",
   "name": "Primulaceae",
-  "parent": "order/ericales"
+  "parent": "order/ericales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "often",
+      "woody": "often"
+    },
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes",
+      "whorled": "rarely"
+    },
+    "stipules": false,
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "zygomorphy": "other",
+    "perianth": "sepals_and_petals",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5,
+      "typical": 5
+    },
+    "corolla_shape": {
+      "rotate": "often",
+      "tubular": "often"
+    },
+    "ovary_position": {
+      "superior": "usually",
+      "half_inferior": "rarely"
+    },
+    "fruit_type": {
+      "capsule": "often",
+      "berry": "often",
+      "drupe": "sometimes"
+    },
+    "rosette": {
+      "basal": "often",
+      "none": "often",
+      "terminal": "sometimes"
+    },
+    "life_span": {
+      "perennial": "usually",
+      "annual": "sometimes",
+      "biennial": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 203 Myrsinaceae, 204 Theophrastaceae and 295 Primulaceae, which APG joins as Primulaceae: the primroses perennial or annual herbs, the myrsines trees and shrubs (Library 1.0's family is half woody); leaves alternate, opposite or whorled in the primroses, alternate in the myrsines; no stipules; flowers regular, very rarely irregular; corolla united, a tube or a flat wheel, usually 5-lobed (4 or 5 in the woody ones); stamens opposite the petals; ovary superior, rarely half-inferior, of one cell with a free central placenta; fruit a capsule in the primroses, a berry or drupe in the myrsines. The wheel-shaped corolla is read from 'corolla rotate or tubular'."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Primulaceae as that work draws it, there coded together with Coridaceae, Theophrastaceae: whether the leaves gather in rosettes (character 22), coded often a basal rosette, often no rosette, sometimes rosettes at the stem tips. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Primulaceae as that work draws it, there coded together with Coridaceae, Theophrastaceae: the herbs' life form (character 21), coded usually perennial, sometimes annual, sometimes biennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Primulaceae with Coridaceae, Theophrastaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    }
+  }
 }

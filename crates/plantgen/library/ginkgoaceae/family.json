@@ -2,5 +2,69 @@
   "schema": 1,
   "rank": "family",
   "name": "Ginkgoaceae",
-  "parent": "order/ginkgoales"
+  "parent": "order/ginkgoales",
+  "traits": {
+    "leaf_habit": "deciduous",
+    "leaf_form": "blade",
+    "leaf_division": "simple",
+    "leaf_venation": "dichotomous",
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": "spiral",
+    "short_shoots": true,
+    "sexual_system": "dioecious",
+    "reproduction": "solitary_seeds",
+    "architectural_model": "massart"
+  },
+  "evidence": {
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Ginkgoaceae: deciduous trees to 30 m; leaves broad, long-stalked and fan-shaped, their many veins forking in pairs, set spirally on long shoots and in clusters on spur shoots that leaf out year after year; dioecious; the ovules are not in cones but in pairs at the ends of stalks on the spur shoots."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Ginkgoaceae: deciduous trees to 30 m; leaves broad, long-stalked and fan-shaped, their many veins forking in pairs, set spirally on long shoots and in clusters on spur shoots that leaf out year after year; dioecious; the ovules are not in cones but in pairs at the ends of stalks on the spur shoots."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Ginkgoaceae: deciduous trees to 30 m; leaves broad, long-stalked and fan-shaped, their many veins forking in pairs, set spirally on long shoots and in clusters on spur shoots that leaf out year after year; dioecious; the ovules are not in cones but in pairs at the ends of stalks on the spur shoots."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Ginkgoaceae: deciduous trees to 30 m; leaves broad, long-stalked and fan-shaped, their many veins forking in pairs, set spirally on long shoots and in clusters on spur shoots that leaf out year after year; dioecious; the ovules are not in cones but in pairs at the ends of stalks on the spur shoots."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Ginkgoaceae: deciduous trees to 30 m; leaves broad, long-stalked and fan-shaped, their many veins forking in pairs, set spirally on long shoots and in clusters on spur shoots that leaf out year after year; dioecious; the ovules are not in cones but in pairs at the ends of stalks on the spur shoots."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Ginkgoaceae: deciduous trees to 30 m; leaves broad, long-stalked and fan-shaped, their many veins forking in pairs, set spirally on long shoots and in clusters on spur shoots that leaf out year after year; dioecious; the ovules are not in cones but in pairs at the ends of stalks on the spur shoots."
+    },
+    "traits.short_shoots": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Ginkgoaceae: deciduous trees to 30 m; leaves broad, long-stalked and fan-shaped, their many veins forking in pairs, set spirally on long shoots and in clusters on spur shoots that leaf out year after year; dioecious; the ovules are not in cones but in pairs at the ends of stalks on the spur shoots."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Ginkgoaceae: deciduous trees to 30 m; leaves broad, long-stalked and fan-shaped, their many veins forking in pairs, set spirally on long shoots and in clusters on spur shoots that leaf out year after year; dioecious; the ovules are not in cones but in pairs at the ends of stalks on the spur shoots."
+    },
+    "traits.reproduction": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Ginkgoaceae: deciduous trees to 30 m; leaves broad, long-stalked and fan-shaped, their many veins forking in pairs, set spirally on long shoots and in clusters on spur shoots that leaf out year after year; dioecious; the ovules are not in cones but in pairs at the ends of stalks on the spur shoots."
+    },
+    "traits.architectural_model": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Ginkgo: G. biloba grows on Massart's model."
+    }
+  }
 }

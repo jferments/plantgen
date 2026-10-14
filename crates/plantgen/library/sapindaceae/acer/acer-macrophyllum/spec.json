@@ -44,7 +44,8 @@
       "blooms": 1,
       "bloom_size": 0.16,
       "bloom_angle": 150,
-      "bloom_area": 0.297
+      "bloom_area": 0.297,
+      "sprout_light": 0.55
     }
   },
   "growth": {
@@ -186,6 +187,11 @@
     "juvenile_period_years": 10
   },
   "evidence": {
+    "generator.params.sprout_light": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (leaf life, generator revision 44): a dormant bud sprouts in at least 0.55 of the open sky's light (sapindaceae's 0.25). Once a leaf stayed one season, not two, more light reached the inner crown, more dormant buds sprouted, and the open crown outgrew the module limit between 120 and 180 years; at 0.55 it peaks at 0.64 to 0.79 million modules (0.86 million before) and keeps its reference heights and dbh."
+    },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",

@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Glyceria",
+  "traits": {"life_span": "perennial"},
+  "evidence": {
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock's genus description of Glyceria (p. 83-84): usually tall aquatic or marsh perennials; every species he keys is perennial."
+    }
+  }
+}

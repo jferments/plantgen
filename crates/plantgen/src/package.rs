@@ -1183,8 +1183,9 @@ fn bake_keyframe(
     let motion = match &inputs.motion {
         Some(motion) => {
             let found = motion.of_graph(graph, organ_types);
-            let record = serde_json::to_vec(&crate::motion::record(&found, motion))
-                .map_err(|error| format_error(error.to_string()))?;
+            let record =
+                serde_json::to_vec(&crate::motion::record(&found, motion, graph, organ_types))
+                    .map_err(|error| format_error(error.to_string()))?;
             let bindings = meshes
                 .iter()
                 .map(|plant| {
@@ -1756,7 +1757,7 @@ pub fn summary(manifest: &Manifest) -> String {
         text,
         "{} ({}, {}), package format {}, generator revision {}",
         manifest.species,
-        spec.taxon.common_name,
+        spec.taxon.name(),
         spec.taxon.scientific_name,
         manifest.format_version,
         manifest.generator_revision

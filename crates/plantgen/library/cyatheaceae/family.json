@@ -3,6 +3,22 @@
   "rank": "family",
   "name": "Cyatheaceae",
   "parent": "order/cyatheales",
+  "traits": {
+    "rhizome_habit": {
+      "erect": "usually",
+      "long_creeping": "rarely"
+    },
+    "leaf_division": "compound",
+    "division_order": {
+      "min": 1,
+      "max": 3
+    },
+    "sporangia": "sori",
+    "sorus_shape": {
+      "round": "usually",
+      "marginal": "rarely"
+    }
+  },
   "forms": {
     "palm": {
       "generator": {
@@ -15,6 +31,13 @@
           "note": "The lineage's own program (growth plan G2.3a), on the palm base: it gives the values its species leave unset, which the palm program gave as defaults until then."
         }
       }
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Cyatheaceae, Dicksoniaceae, Cibotiaceae and Metaxyaceae (the tree ferns, one family in the Library): Cyathea tree ferns to 24 m with leaves to three times pinnate and 5 m long, sori on the underside, round, with or without indusium; Dicksonia and Cibotium trunks or massive rhizomes with two- to three-pinnate blades and sori at the margin; Metaxya, the rare creeper, once pinnate with round sori."
     }
   }
 }

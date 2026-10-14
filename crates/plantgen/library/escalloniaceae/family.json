@@ -2,5 +2,67 @@
   "schema": 1,
   "rank": "family",
   "name": "Escalloniaceae",
-  "parent": "order/escalloniales"
+  "parent": "order/escalloniales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often",
+      "whorled": "often"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "crenate": "sometimes",
+      "serrate": "sometimes",
+      "dentate": "usually"
+    },
+    "leaf_venation": {
+      "pinnate": "usually",
+      "palmate": "sometimes"
+    },
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "superior": "often",
+      "half_inferior": "often",
+      "inferior": "often"
+    },
+    "hypanthium": {
+      "true": "often",
+      "false": "often"
+    },
+    "woodiness": {
+      "woody": "usually",
+      "herbaceous": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "often",
+      "berry": "often",
+      "follicle": "sometimes"
+    },
+    "flower_merosity": {
+      "min": 5,
+      "max": 5,
+      "low": 4,
+      "high": 6
+    },
+    "stamens": {
+      "min": 5,
+      "max": 5,
+      "low": 4,
+      "high": 6
+    },
+    "carpels": {
+      "min": 1,
+      "max": 6
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Escalloniaceae with Eremosynaceae, Tetracarpaeaceae, Tribelaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate, opposite or whorled; leaves simple; margins usually dentate, sometimes crenate or serrate; veins usually pinnate, sometimes palmate; stipules absent; plants hermaphrodite; ovary superior, half inferior or inferior; floral cup present or absent; stems usually woody, sometimes herbaceous; flowers actinomorphic; perianth sepals and petals; fruit capsule or berry, sometimes follicle; parts of each whorl (4-) 5 (-6); stamens (4-) 5 (-6); carpels 1 to 6. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

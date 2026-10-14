@@ -2,5 +2,44 @@
   "schema": 1,
   "rank": "family",
   "name": "Irvingiaceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": "pinnate",
+    "leaf_shape": {
+      "lanceolate": "often",
+      "oblong": "often",
+      "ovate": "often"
+    },
+    "stipules": true,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": "panicle",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "drupe": "often",
+      "samara": "often"
+    },
+    "flower_merosity": 5,
+    "stamens": {
+      "min": 10,
+      "max": 10,
+      "low": 9
+    },
+    "carpels": {
+      "min": 2,
+      "max": 5
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Irvingiaceae: leaves alternate; leaves simple; veins pinnate; blades lanceolate, oblong or ovate; stipules present; plants hermaphrodite; ovary superior; floral cup absent; stems woody; flowers in panicles; flowers actinomorphic; perianth sepals and petals; fruit drupe or samara; parts of each whorl 5; stamens (9-) 10; carpels 2 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

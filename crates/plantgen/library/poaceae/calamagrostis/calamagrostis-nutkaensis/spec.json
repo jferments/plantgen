@@ -115,7 +115,12 @@
     "lemma_length_m": {"min": 0.004, "max": 0.0045, "low": 0.003, "high": 0.005},
     "awns": true,
     "awn_length_m": {"min": 0.001, "max": 0.003},
-    "awn_insertion": "dorsal"
+    "awn_insertion": "dorsal",
+    "rhizome_habit": "short_creeping",
+    "clonal": true,
+    "lower_glume_length_m": {"min": 0.005, "max": 0.007},
+    "awn_form": "geniculate",
+    "flowering_months": [7, 8]
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -197,6 +202,31 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 312-313, no. 11): stout culms with short rhizomes, which herbarium specimens usually lack."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 312-313, no. 11): the culms rise from short rhizomes, so a plant widens its clump by its own shoots."
+    },
+    "traits.lower_glume_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 313, no. 11): glumes 5 to 7 mm long, acuminate (Abrams 1923, no. 8, gives 5-6 mm); the genus has the glumes about equal."
+    },
+    "traits.awn_form": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 313, no. 11): the awn rather stout, slightly bent at a knee (geniculate); Abrams 1923 (no. 8) says the same."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (Calamagrostis no. 8, fig. 356): flowers July-August, along the coast from Alaska to central California."
     }
   },
   "provenance": {

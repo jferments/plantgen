@@ -22,7 +22,11 @@
       "hermaphrodite": "usually",
       "dioecious": "rarely"
     },
-    "fruit_type": "capsule"
+    "fruit_type": "capsule",
+    "life_span": {
+      "annual": "sometimes",
+      "perennial": "usually"
+    }
   },
   "forms": {
     "graminoid": {
@@ -63,6 +67,11 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
       "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 406 Juncaceae: leaves mostly in a basal tuft, cylindrical to flat and grass-like, mostly linear or thread-like, or only a sheath; flowers bisexual, or unisexual on separate plants; fruit a dry capsule opening along its cells."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Juncaceae: the herbs' life form (character 21), coded usually perennial, sometimes annual. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   }
 }

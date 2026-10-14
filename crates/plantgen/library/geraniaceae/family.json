@@ -2,5 +2,50 @@
   "schema": 1,
   "rank": "family",
   "name": "Geraniaceae",
-  "parent": "order/geraniales"
+  "parent": "order/geraniales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "usually",
+      "semi": "sometimes"
+    },
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often"
+    },
+    "leaf_division": {
+      "simple": "often",
+      "compound": "often"
+    },
+    "stipules": true,
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "sometimes"
+    },
+    "zygomorphy": "other",
+    "perianth": "sepals_and_petals",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5,
+      "typical": 5
+    },
+    "stamens": {
+      "min": 8,
+      "max": 15,
+      "typical": 10
+    },
+    "ovary_position": "superior",
+    "fruit_type": "schizocarp"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 330 Geraniaceae: annual herbs or undershrubs, rarely tree-like; leaves alternate or opposite, mostly lobed, cut or compound; stipules often paired; flowers regular or slightly irregular (Pelargonium); sepals 4 or 5, petals 5, rarely 4; stamens two or three times the sepals; ovary of 3 to 5 lobes; fruit lobed, each lobe one-seeded, often beaked (the cranesbill's), read as a schizocarp. The ovary's superior place is the petals' 'hypogynous'."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Geraniaceae with Biebersteiniaceae, Dirachmaceae, Hypseocharitaceae, Ledocarpaceae, Vivianiaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    }
+  }
 }

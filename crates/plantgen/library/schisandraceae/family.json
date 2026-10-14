@@ -2,5 +2,57 @@
   "schema": 1,
   "rank": "family",
   "name": "Schisandraceae",
-  "parent": "order/austrobaileyales"
+  "parent": "order/austrobaileyales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "whorled": "sometimes"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "usually",
+      "dentate": "often"
+    },
+    "leaf_venation": "pinnate",
+    "leaf_habit": {
+      "evergreen": "often",
+      "deciduous": "often"
+    },
+    "stipules": false,
+    "rosette": {
+      "terminal": "often",
+      "none": "often"
+    },
+    "sexual_system": {
+      "monoecious": "often",
+      "dioecious": "often",
+      "hermaphrodite": "sometimes"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "spiral": "often",
+      "tepals": "often"
+    },
+    "fruit_type": {
+      "aggregate": "usually",
+      "follicle": "sometimes"
+    },
+    "stamens": {
+      "min": 4,
+      "max": 80
+    },
+    "carpels": {
+      "min": 12,
+      "max": 300
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Schisandraceae with Illiciaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually alternate, sometimes whorled; leaves simple; margins usually entire, often dentate; veins pinnate; leaves evergreen or deciduous; stipules absent; leaf rosettes terminal or none; plants monoecious or dioecious, sometimes hermaphrodite; ovary superior; floral cup absent; flowers actinomorphic; perianth spiral or tepals; fruit usually aggregate, sometimes follicle; stamens 4 to 80; carpels 12 to 300. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

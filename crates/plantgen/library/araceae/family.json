@@ -5,7 +5,28 @@
   "parent": "order/alismatales",
   "traits": {
     "inflorescence": "spadix",
-    "inflorescence_unit": "flower"
+    "inflorescence_unit": "flower",
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "life_span": {
+      "perennial": "usually",
+      "annual": "sometimes"
+    },
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "sometimes"
+    },
+    "leaf_incision": {
+      "none": "usually",
+      "lobed": "sometimes",
+      "dissected": "sometimes"
+    },
+    "division_pattern": {
+      "palmate": "often",
+      "pinnate": "often"
+    }
   },
   "rules": {
     "appearance.organs.*.inflorescence.spathe": {
@@ -14,6 +35,21 @@
     }
   },
   "evidence": {
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Araceae: leaves simple or compound; the blade's dissection is not coded. The rest is inferred from the genera: most blades are simple and entire (Lysichiton, Calla, Peltandra, Arum, Zantedeschia, Anthurium, Colocasia, Spathiphyllum), some are pinnately lobed or cut (Philodendron, Monstera), and the compound ones are palmate or pedate (Arisaema, Syngonium) or much divided (Amorphophallus, Dracunculus)."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Araceae: leaves simple or compound; the blade's dissection is not coded. The rest is inferred from the genera: most blades are simple and entire (Lysichiton, Calla, Peltandra, Arum, Zantedeschia, Anthurium, Colocasia, Spathiphyllum), some are pinnately lobed or cut (Philodendron, Monstera), and the compound ones are palmate or pedate (Arisaema, Syngonium) or much divided (Amorphophallus, Dracunculus)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Araceae: leaves simple or compound; the blade's dissection is not coded. The rest is inferred from the genera: most blades are simple and entire (Lysichiton, Calla, Peltandra, Arum, Zantedeschia, Anthurium, Colocasia, Spathiphyllum), some are pinnately lobed or cut (Philodendron, Monstera), and the compound ones are palmate or pedate (Arisaema, Syngonium) or much divided (Amorphophallus, Dracunculus)."
+    },
     "rules": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -23,6 +59,16 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams's flora (vol. 1, 1923): the arum family's flowers are small and crowded on a spadix, which a spathe encloses or stands below; the perianth is of four to six scale-like parts or lacking."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Araceae as that work draws it, there coded together with Acoraceae, Lemnaceae: whether the leaves gather in rosettes (character 22), coded often a basal rosette, often no rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Araceae as that work draws it, there coded together with Acoraceae, Lemnaceae: the herbs' life form (character 21), coded usually perennial, sometimes annual. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   },
   "forms": {

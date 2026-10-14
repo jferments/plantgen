@@ -2,5 +2,72 @@
   "schema": 1,
   "rank": "family",
   "name": "Potamogetonaceae",
-  "parent": "order/alismatales"
+  "parent": "order/alismatales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes",
+      "whorled": "rarely"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "usually",
+      "serrate": "sometimes"
+    },
+    "leaf_venation": {
+      "single": "often",
+      "palmate": "often",
+      "parallel": "often"
+    },
+    "leaf_shape": {
+      "linear": "often",
+      "oblong": "often",
+      "ovate": "often"
+    },
+    "stipules": {
+      "true": "rarely",
+      "false": "usually"
+    },
+    "rosette": "none",
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "monoecious": "sometimes",
+      "dioecious": "sometimes"
+    },
+    "ovary_position": "superior",
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "raceme": "usually",
+      "solitary": "sometimes",
+      "spike": "sometimes",
+      "umbel": "sometimes",
+      "cyme": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "tepals": "usually",
+      "absent": "sometimes"
+    },
+    "fruit_type": {
+      "nut": "often",
+      "aggregate": "often",
+      "achene": "often",
+      "follicle": "sometimes"
+    },
+    "flower_merosity": 4,
+    "stamens": 4,
+    "carpels": {
+      "min": 4,
+      "max": 4,
+      "low": 3,
+      "high": 8
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Potamogetonaceae with Ruppiaceae, Zannichelliaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually alternate, sometimes opposite, rarely whorled; leaves simple; margins usually entire, sometimes serrate; veins single, palmate or parallel; blades linear, oblong or ovate; stipules usually absent, rarely present; leaf rosettes none; plants usually hermaphrodite, sometimes monoecious or dioecious; ovary superior; stems herbaceous; flowers usually in racemes, sometimes solitary, in spikes, in umbels or in cymes; flowers actinomorphic; perianth usually tepals, sometimes absent; fruit nut, aggregate or achene, sometimes follicle; parts of each whorl 4; stamens 4; carpels (3-) 4 (-8). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

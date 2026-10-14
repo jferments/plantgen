@@ -2,5 +2,58 @@
   "schema": 1,
   "rank": "family",
   "name": "Gunneraceae",
-  "parent": "order/gunnerales"
+  "parent": "order/gunnerales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "serrate": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": "palmate",
+    "leaf_shape": {
+      "ovate": "often",
+      "obovate": "often"
+    },
+    "stipules": {
+      "true": "usually",
+      "false": "rarely"
+    },
+    "rosette": "basal",
+    "sexual_system": {
+      "monoecious": "often",
+      "dioecious": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "inferior",
+    "hypanthium": false,
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "panicle": "often",
+      "raceme": "often",
+      "spike": "often"
+    },
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "sometimes"
+    },
+    "fruit_type": {
+      "drupe": "often",
+      "nut": "often"
+    },
+    "flower_merosity": 2,
+    "stamens": {
+      "min": 1,
+      "max": 2
+    },
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Gunneraceae: leaves alternate; leaves simple; margins entire, serrate or dentate; veins palmate; blades ovate or obovate; stipules usually present, rarely absent; leaf rosettes basal; plants monoecious, dioecious or polygamous; ovary inferior; floral cup absent; stems herbaceous; flowers in panicles, in racemes or in spikes; perianth usually sepals and petals, sometimes tepals; fruit drupe or nut; parts of each whorl 2; stamens 1 to 2; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

@@ -2,5 +2,15 @@
   "schema": 1,
   "rank": "family",
   "name": "Zamiaceae",
-  "parent": "order/cycadales"
+  "parent": "order/cycadales",
+  "traits": {
+    "leaf_venation": "parallel"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Zamiaceae: the leaflets have many parallel or wavy veins and no midrib (Stangeria aside)."
+    }
+  }
 }

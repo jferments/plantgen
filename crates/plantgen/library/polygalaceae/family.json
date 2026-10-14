@@ -2,5 +2,43 @@
   "schema": 1,
   "rank": "family",
   "name": "Polygalaceae",
-  "parent": "order/fabales"
+  "parent": "order/fabales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "often",
+      "woody": "often"
+    },
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_division": "simple",
+    "stipules": false,
+    "flower_symmetry": "zygomorphic",
+    "zygomorphy": "other",
+    "perianth": "sepals_and_petals",
+    "stamens": {
+      "min": 4,
+      "max": 8,
+      "typical": 8
+    },
+    "ovary_position": "superior",
+    "carpels": 2,
+    "fruit_type": {
+      "capsule": "usually",
+      "drupe": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 100 Polygalaceae: herbs, shrubs, climbers or rarely small trees; leaves alternate, rarely opposite, simple; no stipules; flowers irregular, the two inner of 5 sepals large and petal-like (wings), petals 3 to 5, the lowest a keel; stamens 8, rarely 5 or 4, joined in a sheath; ovary free (superior), of two cells; fruit a capsule or drupe-like."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Polygalaceae with Emblingiaceae, Xanthophyllaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other."
+    }
+  }
 }

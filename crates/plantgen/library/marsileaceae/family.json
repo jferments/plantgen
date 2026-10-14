@@ -2,5 +2,21 @@
   "schema": 1,
   "rank": "family",
   "name": "Marsileaceae",
-  "parent": "order/salviniales"
+  "parent": "order/salviniales",
+  "traits": {
+    "rhizome_habit": "long_creeping",
+    "leaf_venation": "dichotomous",
+    "leaf_division": {
+      "compound": "usually"
+    },
+    "division_pattern": "palmate",
+    "phyllotaxis_pattern": "distichous"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Marsileaceae and Marsilea: small plants of water and mud on creeping rhizomes; fronds unroll from croziers and stand in two rows along the upper side; veins forking in pairs; Marsilea's leaf is a stalk with four clover-like leaflets, floating in deep water and held above it in shallow; sporangia in hard sporocarps at the frond's base. Pilularia's leaves are threads without a blade, the rare state here."
+    }
+  }
 }

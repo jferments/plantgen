@@ -2,5 +2,35 @@
   "schema": 1,
   "rank": "family",
   "name": "Tamaricaceae",
-  "parent": "order/caryophyllales"
+  "parent": "order/caryophyllales",
+  "traits": {
+    "woodiness": "woody",
+    "leaf_arrangement": "alternate",
+    "leaf_form": "scale",
+    "stipules": false,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "flower_merosity": {
+      "min": 4,
+      "max": 6
+    },
+    "stamens": {
+      "min": 5,
+      "max": 10
+    },
+    "inflorescence": {
+      "spike": "often",
+      "raceme": "often",
+      "solitary": "sometimes"
+    },
+    "ovary_position": "superior",
+    "fruit_type": "capsule"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 97 Tamaricaceae: shrubs or trees with slender branches and small, scale-like, alternate leaves; no stipules; flowers very small, regular, usually bisexual, in slender catkin-like spikes or racemes (alone in Reaumuria); sepals 4 to 6, petals as many, free; stamens 5 to 10; ovary superior; fruit a capsule, the seeds tufted with hairs."
+    }
+  }
 }

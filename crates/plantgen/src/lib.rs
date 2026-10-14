@@ -265,13 +265,49 @@ pub mod venation;
 /// ground; bend@1 can hold bent wood up on the ground too (`ground`),
 /// which no program uses yet (41 is the ground plane, #73; 42 the
 /// conifers' lower crowns, #72).
-/// 48: a conifer's limbs sag under their load, not by their age (pinidae
-/// 6): bend@1 with each species' green wood, and reaction wood (bend@1's
+/// 44: leaves, fronds, blooms, fruit, dead fronds and boots, rosette
+/// leaves and stalks, canes and epiphyte colonies live as long as their
+/// parameters say, not one year more: a deciduous tree draws this year's
+/// leaves only. Velvet mesquite (`bud_break`), bigleaf maple
+/// (`sprout_light`) and Oregon white oak (`spur_light`) are refitted to
+/// keep their sizes, their crowns within the module limit and the oak's
+/// leaf area per crown area (43 is the fronds that lie on the ground,
+/// #77).
+/// 45: a flower whose zygomorphy is of no named kind (palo verde,
+/// piggyback plant) draws its upper petal unlike the rest, wider by
+/// `banner` and more upright (an unequal corolla), not a corolla of like
+/// petals (44 is the leaf lives, #79).
+/// 46: nine broadleaf shrubs and trees are drawn within their floras'
+/// sizes: desert willow, burrobush, beaked hazelnut, cascara and creosote
+/// bush no taller than their greatest height (`path_half` refitted), and
+/// desert willow, burrobush, vine maple, osoberry, thimbleberry and jojoba
+/// with leaves no larger than their floras give, desert willow's narrowly
+/// linear. (45 is the unequal corolla, #86.)
+/// 47: a dioecious species' plants are male or female, each by its own
+/// draw from its seed, and only females bear fruit or seed cones: a male
+/// yew bears no arils, a broadleaf's male blooms fall where they would
+/// fruit, a herb's keep flowering and a climber's set no fruit. Every
+/// built-in package's own seed grows the plant it grew before; other
+/// seeds of a dioecious species may now grow males. (46 is the
+/// broadleaf sizes, #88.)
+/// 48: a regular corolla may stand in two like whorls (`petal_whorls`
+/// 2), the inner turned half a petal: tall and dull Oregon grape draw
+/// three petals and three, bleeding heart an outer and an inner pair, and
+/// their stamens stand in whorls of as many (47 is dioecy, #103).
+/// 49: the daisy, grass, carrot and pea families' 34 built-in species grow
+/// from their characters (spec rework E1 to E4): head, leaf, blade, culm,
+/// panicle and cane sizes from their floras by rules in their taxa; a
+/// grass holds its blades in two ranks (grass program 6, `roll_spread`
+/// per lineage, sedges and rushes as before); cow parsnip's leaves are
+/// three leaflets; broom's flowers stand alone in the leaf axils (48 is
+/// corollas in two whorls, #90).
+/// 50: a conifer's limbs sag under their load, not by their age (pinidae
+/// 7): bend@1 with each species' green wood, and reaction wood (bend@1's
 /// `reaction`) turning a limb back toward its line by each year's ring,
-/// so old crowns keep spreading limbs instead of hanging ones (44 to 47
-/// are #79, #86, #88 and #90).
-/// 49: a conifer's foliage and cones live as long as their parameters
-/// say, not one year more (pinidae 7, as 44 did for the other programs),
+/// so old crowns keep spreading limbs instead of hanging ones (49 is
+/// #97).
+/// 51: a conifer's foliage and cones live as long as their parameters
+/// say, not one year more (pinidae 8, as 44 did for the other programs),
 /// and a pine's lowest needles as long as its species' longest stated
-/// needle life (Pinus's `needle_low`).
-pub const GENERATOR_REVISION: u32 = 49;
+/// needle life (Pinus's `needle_low`) (50 is conifer sag, #95).
+pub const GENERATOR_REVISION: u32 = 51;

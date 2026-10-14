@@ -2,5 +2,40 @@
   "schema": 1,
   "rank": "family",
   "name": "Cabombaceae",
-  "parent": "order/nymphaeales"
+  "parent": "order/nymphaeales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often"
+    },
+    "leaf_division": {
+      "simple": "often",
+      "compound": "often"
+    },
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "herbaceous",
+    "inflorescence": "solitary",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "follicle",
+    "flower_merosity": 3,
+    "stamens": {
+      "min": 3,
+      "max": 18
+    },
+    "carpels": {
+      "min": 3,
+      "max": 18,
+      "low": 2
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cabombaceae: leaves alternate or opposite; leaves simple or compound; stipules absent; plants hermaphrodite; ovary superior; floral cup absent; stems herbaceous; flowers solitary; perianth sepals and petals; fruit follicle; parts of each whorl 3; stamens 3 to 18; carpels (2-) 3 to 18. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

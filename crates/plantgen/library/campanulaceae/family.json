@@ -2,5 +2,52 @@
   "schema": 1,
   "rank": "family",
   "name": "Campanulaceae",
-  "parent": "order/asterales"
+  "parent": "order/asterales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "rarely"
+    },
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_division": "simple",
+    "stipules": false,
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "zygomorphy": "bilabiate",
+    "perianth": "sepals_and_petals",
+    "flower_merosity": {
+      "min": 3,
+      "max": 10,
+      "typical": 5
+    },
+    "corolla_shape": {
+      "campanulate": "often",
+      "tubular": "often"
+    },
+    "ovary_position": {
+      "inferior": "usually",
+      "superior": "rarely"
+    },
+    "fruit_type": {
+      "capsule": "usually",
+      "berry": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 315 Campanulaceae and 316 Lobeliaceae, which APG joins as Campanulaceae: herbs, rarely shrubs or small trees, nearly always with milky sap; leaves alternate, rarely opposite, simple; no stipules; bellflowers regular, with a bell- or tube-shaped corolla of 3 to 10 lobes (the lobelias' 5-lobed, two-lipped and turned over: so regular and irregular are both stated as often); ovary inferior, rarely superior; fruit a capsule opening in various ways, or a berry. Five lobes as typical from the lobelias' 5 and the bellflowers' commonest number (inferred)."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Campanulaceae with Sphenocleaceae: its irregular flowers have a two-lipped corolla, read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy bilabiate. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    }
+  }
 }

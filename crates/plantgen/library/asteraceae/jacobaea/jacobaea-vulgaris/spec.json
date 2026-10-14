@@ -21,25 +21,20 @@
       "wiggle": 2,
       "nodes": 18,
       "bare": 0.05,
-      "leaf_length": 0.12,
       "leaf_peak": 0.1,
-      "leaf_top": 0.3,
-      "leaf_base": 1.0,
       "leaf_angle": 45,
       "basal_leaves": 5,
-      "basal_length": 0.18,
       "basal_angle": 60,
       "raceme": 0.18,
       "flowers": 24,
-      "flower_size": 0.02,
       "pedicel": 0.04,
       "flower_angle": 35,
       "fruit_below": 0,
       "buds_above": 0.95,
       "nod": 0,
       "bud_size": 0.008,
-      "leaf_area": 0.276,
-      "basal_area": 0.213,
+      "leaf_area": 0.071,
+      "basal_area": 0.061,
       "basal_piece_area": 0.235,
       "flower_area": 0.537,
       "bud_area": 1.016,
@@ -63,26 +58,36 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "lobed",
-          "width": 0.6,
-          "lobes": 5,
-          "depth": 0.7,
-          "round": 0.3,
-          "petiole": 0.05
+          "template": "compound",
+          "leaflets": 11,
+          "pinnules": 5,
+          "leaflet_width": 0.22,
+          "teeth": 2,
+          "petiole": 0.05,
+          "angle": 34,
+          "pinnule_angle": 50,
+          "largest": 0.6,
+          "lowest": 0.4,
+          "confluent": 0.6
         }
       },
       "basal": {
         "shape": {
-          "template": "lobed",
-          "width": 0.55,
-          "lobes": 5,
-          "depth": 0.6,
-          "round": 0.4,
-          "petiole": 0.15
+          "template": "compound",
+          "leaflets": 11,
+          "pinnules": 5,
+          "leaflet_width": 0.22,
+          "teeth": 2,
+          "petiole": 0.15,
+          "angle": 34,
+          "pinnule_angle": 50,
+          "largest": 0.6,
+          "lowest": 0.4,
+          "confluent": 0.6
         }
       },
       "flower": {
-        "shape": { "template": "head", "rays": 13, "ray_width": 0.8, "disc": 0.45 },
+        "shape": { "template": "head", "ray_width": 0.8 },
         "colour": [0.95, 0.78, 0.1],
         "accent": [0.85, 0.6, 0.05]
       },
@@ -110,7 +115,22 @@
     "leaf_length_m": {
       "min": 0.04,
       "max": 0.2
-    }
+    },
+    "life_span": {"biennial": "usually", "perennial": "sometimes"},
+    "woodiness": "herbaceous",
+    "leaf_width_m": {"min": 0.02, "max": 0.06},
+    "leaf_division": "simple",
+    "leaf_incision": {"cleft": "often", "dissected": "often"},
+    "division_pattern": "pinnate",
+    "division_order": {"min": 2, "max": 3},
+    "inflorescence": "corymb",
+    "capitulum_kind": "radiate",
+    "involucre_height_m": 0.004,
+    "involucre_diameter_m": {"min": 0.007, "max": 0.01},
+    "phyllaries": 13,
+    "ray_florets": 13,
+    "ray_length_m": {"min": 0.004, "max": 0.01},
+    "flowering_months": [7, 8, 9]
   },
   "evidence": {
     "traits.height_typical_m": {
@@ -167,6 +187,91 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Senecio jacobaea (p. 450): biennial or rather short-lived perennial."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, S. jacobaea (p. 450): a biennial or short-lived perennial herb with a taproot."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, S. jacobaea (p. 450): leaves about 4-20 cm long and 2-6 cm wide."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, S. jacobaea (p. 450): one blade, 2-3 times pinnatifid."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, S. jacobaea (p. 450): leaves mostly 2-3 times pinnatifid."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, S. jacobaea (p. 450): pinnatifid."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, S. jacobaea (p. 450): mostly 2-3 times pinnatifid."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, S. jacobaea (p. 450): several to rather many heads in a short broad (flat-topped) array."
+    },
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, S. jacobaea (p. 450): rays commonly about 13."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, S. jacobaea (p. 450): involucre about 4 mm high."
+    },
+    "traits.involucre_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, S. jacobaea (p. 450): the disc about 7-10 mm wide (the disc's width, used for the involucre's)."
+    },
+    "traits.phyllaries": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, S. jacobaea (p. 450): involucral bracts about 13, over 1 mm wide, generally dark-tipped."
+    },
+    "traits.ray_florets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, S. jacobaea (p. 450): rays commonly about 13."
+    },
+    "traits.ray_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, S. jacobaea (p. 450): rays mostly 4-10 mm long."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, S. jacobaea (p. 450): July to September."
+    },
+    "appearance.organs.leaf.shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The blade drawn as a twice-divided leaf (spec rework E1), Abrams and Ferris's bipinnatifid blade of toothed, cut segments: about 5 pairs of primary segments, each cut into about 5 lobes, the end segment largest, by eye from photographs; its pattern from its characters by the rules at the flowering plants. Its segments run together along a winged rachis (confluent 0.6, by eye): the flora's blade is cut, not divided into leaflets, and the rule at the flowering plants that runs them together reads only a dissected one. Before, a five-lobed blade."
+    },
+    "appearance.organs.basal.shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The basal blade drawn as the stem's (spec rework E1), on a longer stalk, by eye from photographs."
     }
   },
   "provenance": {

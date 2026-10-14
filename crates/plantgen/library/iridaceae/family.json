@@ -11,6 +11,7 @@
       "actinomorphic": "usually",
       "zygomorphic": "sometimes"
     },
+    "zygomorphy": "other",
     "perianth": "tepals",
     "ovary_position": "inferior",
     "stamens": 3,
@@ -19,7 +20,16 @@
     "leaf_shape": {
       "linear": "usually"
     },
-    "fruit_type": "capsule"
+    "fruit_type": "capsule",
+    "leaf_habit": {
+      "evergreen": "often",
+      "deciduous": "often"
+    },
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "life_span": "perennial"
   },
   "forms": {
     "forb": {
@@ -65,6 +75,26 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
       "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 386 Iridaceae: leaves mostly narrowly linear, flattened sideways and sheathing (equitant); fruit a capsule opening by valves along its cells."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Iridaceae as that work draws it, there coded together with Geosiridaceae: how long the leaves last (character 37), coded often evergreen, often deciduous. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Iridaceae as that work draws it, there coded together with Geosiridaceae: whether the leaves gather in rosettes (character 22), coded often a basal rosette, often no rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Iridaceae as that work draws it, there coded together with Geosiridaceae: the herbs' life form (character 21), coded perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Iridaceae with Geosiridaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
     }
   }
 }

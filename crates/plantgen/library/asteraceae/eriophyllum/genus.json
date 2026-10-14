@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Eriophyllum",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "phyllary_series": 1,
+    "receptacle": {"epaleate": "usually"},
+    "disc_colour": [245, 200, 30],
+    "pappus": {"scales": "usually", "absent": "rarely"}
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Eriophyllum (p. 224): leaves essentially alternate."
+    },
+    "traits.phyllary_series": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Eriophyllum (p. 224): phyllaries in 1 series, firm, keeled."
+    },
+    "traits.receptacle": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Eriophyllum (p. 224): receptacle naked (a few papery scales in one species)."
+    },
+    "traits.disc_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Eriophyllum (p. 224): disc florets yellow. Word: yellow."
+    },
+    "traits.pappus": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Eriophyllum (p. 224): pappus of papery nerveless scales (paleae), rarely none."
+    }
+  }
+}

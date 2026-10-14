@@ -2,5 +2,57 @@
   "schema": 1,
   "rank": "family",
   "name": "Winteraceae",
-  "parent": "order/canellales"
+  "parent": "order/canellales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "stipules": false,
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "monoecious": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "zygomorphy": "other",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "often",
+      "berry": "often",
+      "follicle": "often",
+      "aggregate": "often"
+    },
+    "stamens": {
+      "min": 15,
+      "max": 100
+    },
+    "carpels": {
+      "min": 3,
+      "max": 20,
+      "low": 1
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Winteraceae: leaves alternate; leaves simple; margins entire; veins pinnate; stipules absent; plants hermaphrodite, monoecious or polygamous; ovary superior; floral cup absent; stems woody; flowers solitary or in cymes; flowers actinomorphic or zygomorphic; perianth sepals and petals; fruit capsule, berry, follicle or aggregate; stamens 15 to 100; carpels (1-) 3 to 20. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Winteraceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    }
+  }
 }

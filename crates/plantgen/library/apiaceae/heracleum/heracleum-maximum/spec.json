@@ -21,13 +21,9 @@
       "wiggle": 2,
       "nodes": 4,
       "bare": 0.2,
-      "leaf_length": 0.45,
       "leaf_peak": 0.2,
-      "leaf_top": 0.4,
-      "leaf_base": 1.0,
       "leaf_angle": 50,
       "basal_leaves": 4,
-      "basal_length": 0.6,
       "basal_angle": 45,
       "raceme": 0.08,
       "flowers": 1,
@@ -62,24 +58,24 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "palmate",
-          "lobes": 3,
-          "depth": 0.7,
-          "lobe_width": 0.8,
-          "teeth": 5,
-          "spread": 1.0,
-          "petiole": 0.35
+          "template": "compound",
+          "leaflet_width": 0.9,
+          "teeth": 8,
+          "petiole": 0.35,
+          "angle": 70,
+          "petiolule": 0.08,
+          "widest": 0.45
         }
       },
       "basal": {
         "shape": {
-          "template": "palmate",
-          "lobes": 3,
-          "depth": 0.7,
-          "lobe_width": 0.8,
-          "teeth": 5,
-          "spread": 1.0,
-          "petiole": 0.45
+          "template": "compound",
+          "leaflet_width": 0.9,
+          "teeth": 8,
+          "petiole": 0.45,
+          "angle": 70,
+          "petiolule": 0.08,
+          "widest": 0.45
         }
       },
       "flower": {
@@ -118,7 +114,16 @@
       "max": 3.0,
       "typical": 1.8
     },
-    "inflorescence_branches": {"min": 15, "max": 30}
+    "inflorescence_branches": {"min": 15, "max": 30},
+    "leaf_length_m": {"min": 0.2, "max": 0.5},
+    "division_order": 1,
+    "leaflets": 3,
+    "terminal_leaflet": true,
+    "leaflet_length_m": {"min": 0.15, "max": 0.4},
+    "inflorescence_bracts": {"min": 5, "max": 10},
+    "flower_colour": [245, 245, 240],
+    "fruit_size_m": {"min": 0.008, "max": 0.012},
+    "flowering_months": [2, 3, 4, 5, 6]
   },
   "evidence": {
     "traits.height_typical_m": {
@@ -180,6 +185,61 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Its compound umbel drawn flower by flower (spec rework L1c): its kind from the carrot family's inflorescence and its rays from its own, by the rules at the flowering plants; about 20 flowers in each umbellet (Illinois Wildflowers gives 8 to 30; no flora gives a count), each about 6 mm across with five white notched petals, on pedicels 1 to 2 cm long (Jepson: 8 to 20 mm), the umbel about 25 cm across (the Flora of North America: 15 to 30 cm). From floras and extension pages as quoted in search results; the pages themselves were not read. The enlarged outer flowers are not drawn. Its flower laid out whorl by whorl (spec rework P5b): five white notched petals with no sepals (by hand: sepals obsolete, Abrams's Illustrated Flora of the Pacific States, 1951, read in full) on the inferior ovary, five stamens and a pistil of two carpels, from the characters of Apiaceae by the rules at the flowering plants."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Heracleum lanatum, p. 239, fig. 3605: leaves 2 to 5 dm long, round to kidney-shaped in outline."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as H. lanatum, p. 239: leaves ternately compound once, the three leaflets lobed in various ways but not divided again."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as H. lanatum, p. 239: leaves ternately compound, that is of three leaflets (divisions), each coarsely serrate and lobed in various ways."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as H. lanatum, p. 239: ternately compound, so one of the three leaflets ends the rachis."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as H. lanatum, p. 239: leaf divisions 15 to 40 cm long (the scan's OCR reads '15^0 cm'; read as 15-40, which agrees with general accounts of leaflets up to 40 cm)."
+    },
+    "traits.inflorescence_bracts": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as H. lanatum, p. 239: involucre bracts 5 to 10, lanceolate with a drawn-out tip, falling early (the genus line says the involucre is usually absent: in this species it is present but deciduous). No bract length given. Peduncles densely villous under the umbel."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), Heracleum, p. 239: flowers usually white (genus line; the species account adds nothing). RGB for 'white', slightly warm."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as H. lanatum, p. 239: fruit obovate to obcordate, 8 to 12 mm long, hairy, strongly flattened on the back with broad thin lateral wings (genus)."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as H. lanatum, p. 239: flowering February to June over its whole range (Alaska to California)."
+    },
+    "appearance.organs.leaf": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Each leaf ternate (Abrams's Illustrated Flora of the Pacific States, vol. 3, 1951, as Heracleum lanatum): three broad, coarsely toothed and lobed leaflets, the end one on a longer stalk; drawn as a compound card of three leaflets about as wide as long, their lobes not drawn. Its kind and leaflet count from the species' characters by the rules at the flowering plants; the leaflets' width, teeth, stalks and angle by eye."
+    },
+    "appearance.organs.basal": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Its basal leaves as its stem leaves (Abrams 1951: ternate, the leaflets broad and lobed), on longer petioles, by eye."
     }
   },
   "provenance": {

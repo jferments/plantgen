@@ -2,5 +2,44 @@
   "schema": 1,
   "rank": "family",
   "name": "Sphaerosepalaceae",
-  "parent": "order/malvales"
+  "parent": "order/malvales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": {
+      "pinnate": "often",
+      "palmate": "often"
+    },
+    "leaf_habit": "deciduous",
+    "stipules": true,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "superior": "often",
+      "half_inferior": "often"
+    },
+    "hypanthium": false,
+    "woodiness": "woody",
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "perianth": "sepals_and_petals",
+    "stamens": {
+      "min": 25,
+      "max": 100
+    },
+    "carpels": {
+      "min": 3,
+      "max": 3,
+      "low": 2,
+      "high": 5
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Sphaerosepalaceae: leaves alternate; leaves simple; veins pinnate or palmate; leaves deciduous; stipules present; plants hermaphrodite; ovary superior or half inferior; floral cup absent; stems woody; flowers actinomorphic or zygomorphic; perianth sepals and petals; stamens 25 to 100; carpels (2-) 3 (-5). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

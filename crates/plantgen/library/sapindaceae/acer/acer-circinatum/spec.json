@@ -39,8 +39,8 @@
       "space_reach": 1.7,
       "space_kill": 0.42,
       "lean": 25,
-      "leaf_size": 0.16,
-      "spur_leaf": 0.15,
+      "leaf_size": 0.088,
+      "spur_leaf": 0.083,
       "spur_pairs": 1,
       "leaf_angle": 55,
       "leaf_area": 0.493,
@@ -143,6 +143,16 @@
     "wood_density_basic_kg_m3": 560
   },
   "evidence": {
+    "generator.params.spur_leaf": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A short shoot's leaf card, a little smaller than a long shoot's (leaf_size), within Abrams vol. 3 (1951): leaves 7 to 12 cm wide."
+    },
+    "generator.params.leaf_size": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaf card length, petiole included, sized so every leaf drawn stays within Abrams vol. 3 (1951, as Acer circinatum): leaves 7 to 12 cm wide (0.16 drew them 17 to 21 cm wide)."
+    },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",

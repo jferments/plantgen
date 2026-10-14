@@ -2,5 +2,60 @@
   "schema": 1,
   "rank": "family",
   "name": "Restionaceae",
-  "parent": "order/poales"
+  "parent": "order/poales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": "parallel",
+    "leaf_habit": {
+      "evergreen": "often",
+      "deciduous": "often"
+    },
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "sexual_system": {
+      "dioecious": "usually",
+      "hermaphrodite": "sometimes",
+      "monoecious": "sometimes",
+      "polygamous": "sometimes"
+    },
+    "ovary_position": "superior",
+    "woodiness": "herbaceous",
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "perianth": {
+      "tepals": "often",
+      "absent": "often"
+    },
+    "fruit_type": {
+      "capsule": "often",
+      "nut": "often",
+      "follicle": "sometimes"
+    },
+    "stamens": {
+      "min": 2,
+      "max": 3,
+      "low": 1
+    },
+    "carpels": {
+      "min": 3,
+      "max": 3,
+      "low": 1
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Restionaceae with Anarthriaceae, Centrolepidaceae, Ecdeiocoleaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves simple; veins parallel; leaves evergreen or deciduous; stipules present or absent; leaf rosettes basal or none; plants usually dioecious, sometimes hermaphrodite, monoecious or polygamous; ovary superior; stems herbaceous; flowers actinomorphic or zygomorphic; perianth tepals or absent; fruit capsule or nut, sometimes follicle; stamens (1-) 2 to 3; carpels (1-) 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

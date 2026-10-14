@@ -2,5 +2,40 @@
   "schema": 1,
   "rank": "family",
   "name": "Nelumbonaceae",
-  "parent": "order/proteales"
+  "parent": "order/proteales",
+  "traits": {
+    "leaf_division": "simple",
+    "leaf_venation": "palmate",
+    "stipules": true,
+    "rosette": "none",
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "superior": "often",
+      "inferior": "often"
+    },
+    "hypanthium": false,
+    "woodiness": "herbaceous",
+    "inflorescence": "solitary",
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "often",
+      "spiral": "often"
+    },
+    "fruit_type": "nut",
+    "stamens": {
+      "min": 200,
+      "max": 400
+    },
+    "carpels": {
+      "min": 12,
+      "max": 40
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Nelumbonaceae: leaves simple; veins palmate; stipules present; leaf rosettes none; plants hermaphrodite; ovary superior or inferior; floral cup absent; stems herbaceous; flowers solitary; flowers actinomorphic; perianth sepals and petals or spiral; fruit nut; stamens 200 to 400; carpels 12 to 40. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

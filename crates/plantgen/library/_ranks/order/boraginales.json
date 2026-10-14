@@ -2,5 +2,21 @@
   "schema": 1,
   "rank": "order",
   "name": "Boraginales",
-  "parent": "clade/lamiids"
+  "parent": "clade/lamiids",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "stipules": false,
+    "ovary_position": "superior",
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), order 81 Boraginales: as in the phlox order, the ovary often deeply lobed with the style from between the lobes, of two carpels with paired ovules; family 338: leaves alternate, very rarely opposite; no stipules."
+    }
+  }
 }

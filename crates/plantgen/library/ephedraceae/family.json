@@ -2,5 +2,25 @@
   "schema": 1,
   "rank": "family",
   "name": "Ephedraceae",
-  "parent": "order/ephedrales"
+  "parent": "order/ephedrales",
+  "traits": {
+    "leaf_form": "scale",
+    "leaf_venation": "single",
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "whorled": "often"
+    },
+    "leaves_per_whorl": 3,
+    "sexual_system": {
+      "dioecious": "usually",
+      "monoecious": "rarely"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Ephedraceae: mostly shrubby switch plants, often rhizomatous, a few vines or small trees, that photosynthesise with their grooved, jointed green stems; the leaves are reduced to small single-veined scales soon shed, opposite or in whorls, usually of three; nearly always dioecious."
+    }
+  }
 }

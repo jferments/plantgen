@@ -59,7 +59,7 @@
     "rules": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "How PlantGen draws the daisy family's heads, a choice of the model's (spec rework P2): a head is laid out from its florets (`crate::capitula`), its phyllaries in rows round its foot, its receptacle domed as its shape says, its disc florets packed in a sunflower spiral and opening from the rim inward, rays round a radiate head, straps filling a ligulate one; an array of heads is a cluster of such heads (spec rework L1). Its size is its involucre's, as floras measure it, plus a ray on either side. The heights the shape words give the receptacle and the pappus lengths of crowns, scales and awns are the model's."
+      "note": "How PlantGen draws the daisy family's heads, a choice of the model's (spec rework P2): a head is laid out from its florets (`crate::capitula`), its phyllaries in rows round its foot, its receptacle domed as its shape says, its disc florets packed in a sunflower spiral and opening from the rim inward, rays round a radiate head, straps filling a ligulate one; an array of heads is a cluster of such heads (spec rework L1). Its size is its involucre's, as floras measure it, plus a ray on either side. The heights the shape words give the receptacle and the pappus lengths of crowns, scales and awns are the model's. A leaf's card is as wide, for its length, as the flora's blades; a head's size, and the share of its cluster it takes, follow from its involucre and rays."
     }
   },
   "rules": {
@@ -99,11 +99,12 @@
             "rule": "involucre_diameter_m / (involucre_diameter_m + 2 * ray_length_m)"
           },
           "discoid": 0.85,
-          "disciform": 0.85
+          "disciform": 0.85,
+          "liguliflorous": 0.5
         }
       },
       "between": true,
-      "why": "A radiate head's disc is about as wide as its involucre, with a ray's length beyond it on either side: the disc's share of the head's width. A head of disc florets alone is its disc, its florets spreading a little past the involucre's rim."
+      "why": "A radiate head's disc is about as wide as its involucre, with a ray's length beyond it on either side: the disc's share of the head's width. A head of disc florets alone is its disc, its florets spreading a little past the involucre's rim. A head of straps opens to about twice its involucre's width, the model's choice from photographs of cat's ears and hawkweeds, so its involucre is half of it."
     },
     "appearance.organs.*.shape.florets": {
       "template": "head",
@@ -168,6 +169,76 @@
         }
       },
       "why": "A fruit in seed carries its pappus: bristles as long as the flora measures them for the disc's radius, which is about the involucre's; a crown, scales and awns, which floras seldom measure, a tenth, a quarter and a half of it."
+    },
+    "generator.params.flower_size": {
+      "map": {
+        "capitulum_kind": {
+          "radiate": {
+            "rule": "involucre_diameter_m + 2 * ray_length_m"
+          },
+          "discoid": {
+            "rule": "involucre_diameter_m / 0.85"
+          },
+          "disciform": {
+            "rule": "involucre_diameter_m / 0.85"
+          },
+          "liguliflorous": {
+            "rule": "involucre_diameter_m / 0.5"
+          }
+        }
+      },
+      "between": true,
+      "why": "A herb's lone head is as wide as its involucre, as floras measure it, with a ray beyond it on either side; a head of disc florets alone spreads a little past its involucre (the disc's share of the head, 0.85), and an open head of straps to twice it. Where a herb's flower is a cluster of heads, its species sets the cluster's length by hand and the cluster's size its heads."
+    },
+    "generator.params.bloom_size": {
+      "map": {
+        "capitulum_kind": {
+          "radiate": {
+            "rule": "involucre_diameter_m + 2 * ray_length_m"
+          },
+          "discoid": {
+            "rule": "involucre_diameter_m / 0.85"
+          },
+          "disciform": {
+            "rule": "involucre_diameter_m / 0.85"
+          },
+          "liguliflorous": {
+            "rule": "involucre_diameter_m / 0.5"
+          }
+        }
+      },
+      "between": true,
+      "why": "A shrub's lone head is as wide as a herb's: its involucre and a ray either side, or its disc a little past its involucre, or its straps twice it."
+    },
+    "appearance.organs.*.inflorescence.size": {
+      "map": {
+        "capitulum_kind": {
+          "radiate": {
+            "rule": "clamp((involucre_diameter_m + 2 * ray_length_m) / flower_size, 0.005, 1)"
+          },
+          "discoid": {
+            "rule": "clamp((involucre_diameter_m / 0.85) / flower_size, 0.005, 1)"
+          },
+          "disciform": {
+            "rule": "clamp((involucre_diameter_m / 0.85) / flower_size, 0.005, 1)"
+          },
+          "liguliflorous": {
+            "rule": "clamp((involucre_diameter_m / 0.5) / flower_size, 0.005, 1)"
+          }
+        }
+      },
+      "between": true,
+      "why": "A cluster of heads draws each head as wide as a lone head is, its involucre and a ray either side, as a share of the cluster's length."
+    },
+    "appearance.organs.leaf.shape.width": {
+      "template": ["simple", "lobed"],
+      "rule": "clamp(leaf_width_m / leaf_length_m, 0.02, 2)",
+      "why": "A blade is as wide for its length as its flora measures it, the middle of each range; it takes the place of the width the kingdom's rule gives the blade's shape word."
+    },
+    "appearance.organs.basal.shape.width": {
+      "template": ["simple", "lobed"],
+      "rule": "clamp(leaf_width_m / leaf_length_m, 0.02, 2)",
+      "why": "A blade is as wide for its length as its flora measures it, the middle of each range; it takes the place of the width the kingdom's rule gives the blade's shape word."
     }
   }
 }
