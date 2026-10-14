@@ -2,5 +2,47 @@
   "schema": 1,
   "rank": "family",
   "name": "Menyanthaceae",
-  "parent": "order/asterales"
+  "parent": "order/asterales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": {
+      "simple": "often",
+      "compound": "often"
+    },
+    "leaf_venation": {
+      "pinnate": "often",
+      "palmate": "often"
+    },
+    "stipules": false,
+    "rosette": "basal",
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "superior": "often",
+      "half_inferior": "often"
+    },
+    "hypanthium": false,
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "head": "often",
+      "panicle": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "often",
+      "berry": "often"
+    },
+    "flower_merosity": 5,
+    "stamens": 5,
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Menyanthaceae: leaves alternate; leaves simple or compound; veins pinnate or palmate; stipules absent; leaf rosettes basal; plants hermaphrodite; ovary superior or half inferior; floral cup absent; stems herbaceous; flowers solitary, in cymes, in heads or in panicles; flowers actinomorphic; perianth sepals and petals; fruit capsule or berry; parts of each whorl 5; stamens 5; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

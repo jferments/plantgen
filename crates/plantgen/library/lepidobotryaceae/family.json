@@ -2,5 +2,33 @@
   "schema": 1,
   "rank": "family",
   "name": "Lepidobotryaceae",
-  "parent": "order/celastrales"
+  "parent": "order/celastrales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": {
+      "compound": "usually",
+      "simple": "rarely"
+    },
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "stipules": true,
+    "sexual_system": "dioecious",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": "raceme",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "flower_merosity": 5,
+    "stamens": 10,
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Lepidobotryaceae: leaves alternate; leaves usually compound, rarely simple; margins entire; veins pinnate; stipules present; plants dioecious; ovary superior; floral cup absent; stems woody; flowers in racemes; flowers actinomorphic; perianth sepals and petals; fruit capsule; parts of each whorl 5; stamens 10; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

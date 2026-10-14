@@ -2,5 +2,62 @@
   "schema": 1,
   "rank": "family",
   "name": "Styracaceae",
-  "parent": "order/ericales"
+  "parent": "order/ericales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "crenate": "often",
+      "serrate": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": "pinnate",
+    "stipules": false,
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "polygamous": "rarely"
+    },
+    "ovary_position": {
+      "superior": "often",
+      "half_inferior": "often",
+      "inferior": "often"
+    },
+    "hypanthium": {
+      "true": "often",
+      "false": "often"
+    },
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "rarely",
+      "cyme": "often",
+      "raceme": "often",
+      "panicle": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "often",
+      "drupe": "rarely",
+      "samara": "often"
+    },
+    "stamens": {
+      "min": 8,
+      "max": 10,
+      "low": 5,
+      "high": 20
+    },
+    "carpels": {
+      "min": 3,
+      "max": 5,
+      "low": 2
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Styracaceae: leaves alternate; leaves simple; margins entire, crenate, serrate or dentate; veins pinnate; stipules absent; plants usually hermaphrodite, rarely polygamous; ovary superior, half inferior or inferior; floral cup present or absent; stems woody; flowers in cymes, in racemes or in panicles, rarely solitary; flowers actinomorphic; perianth sepals and petals; fruit capsule or samara, rarely drupe; stamens (5-) 8 to 10 (-20); carpels (2-) 3 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

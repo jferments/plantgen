@@ -2,5 +2,52 @@
   "schema": 1,
   "rank": "family",
   "name": "Tecophilaeaceae",
-  "parent": "order/asparagales"
+  "parent": "order/asparagales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": {
+      "parallel": "usually",
+      "pinnate": "sometimes",
+      "palmate": "sometimes"
+    },
+    "leaf_shape": {
+      "linear": "often",
+      "lanceolate": "often",
+      "ovate": "often",
+      "orbicular": "often"
+    },
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "half_inferior": "usually",
+      "superior": "rarely",
+      "inferior": "sometimes"
+    },
+    "woodiness": "herbaceous",
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "perianth": "tepals",
+    "fruit_type": "capsule",
+    "flower_merosity": 3,
+    "stamens": {
+      "min": 3,
+      "max": 6,
+      "low": 1
+    },
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Tecophilaeaceae with Cyanastraceae, Lanariaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves simple; margins entire; veins usually parallel, sometimes pinnate or palmate; blades linear, lanceolate, ovate or orbicular; leaf rosettes basal or none; plants hermaphrodite; ovary usually half inferior, sometimes inferior, rarely superior; stems herbaceous; flowers actinomorphic or zygomorphic; perianth tepals; fruit capsule; parts of each whorl 3; stamens (1-) 3 to 6; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

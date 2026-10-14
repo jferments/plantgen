@@ -2,5 +2,58 @@
   "schema": 1,
   "rank": "family",
   "name": "Asteliaceae",
-  "parent": "order/asparagales"
+  "parent": "order/asparagales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "parallel",
+    "leaf_shape": {
+      "linear": "often",
+      "lanceolate": "often",
+      "oblong": "often",
+      "ovate": "often"
+    },
+    "rosette": {
+      "basal": "often",
+      "terminal": "often",
+      "none": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "superior",
+    "woodiness": {
+      "woody": "often",
+      "herbaceous": "often"
+    },
+    "inflorescence": {
+      "raceme": "often",
+      "spike": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": {
+      "berry": "usually",
+      "capsule": "rarely"
+    },
+    "flower_merosity": {
+      "min": 3,
+      "max": 7
+    },
+    "stamens": 6,
+    "carpels": {
+      "min": 3,
+      "max": 3,
+      "high": 4
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Asteliaceae: leaves alternate; leaves simple; margins entire; veins parallel; blades linear, lanceolate, oblong or ovate; leaf rosettes basal, terminal or none; plants hermaphrodite or polygamous; ovary superior; stems woody or herbaceous; flowers in racemes or in spikes; flowers actinomorphic; perianth tepals; fruit usually berry, rarely capsule; parts of each whorl 3 to 7; stamens 6; carpels 3 (-4). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

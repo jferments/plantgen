@@ -2,5 +2,60 @@
   "schema": 1,
   "rank": "family",
   "name": "Thomandersiaceae",
-  "parent": "order/lamiales"
+  "parent": "order/lamiales",
+  "traits": {
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "crenate": "often",
+      "serrate": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": "pinnate",
+    "stipules": {
+      "false": "usually",
+      "true": "often"
+    },
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": {
+      "woody": "often",
+      "herbaceous": "often"
+    },
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "raceme": "often"
+    },
+    "flower_symmetry": {
+      "zygomorphic": "usually",
+      "actinomorphic": "sometimes"
+    },
+    "zygomorphy": "bilabiate",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5
+    },
+    "stamens": {
+      "min": 2,
+      "max": 4,
+      "high": 5
+    },
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Acanthaceae, which takes in Thomandersiaceae: leaves opposite; leaves simple; margins entire, crenate, serrate or dentate; veins pinnate; stipules usually absent, often present; leaf rosettes basal or none; plants hermaphrodite; ovary superior; floral cup absent; stems woody or herbaceous; flowers solitary, in cymes or in racemes; flowers usually zygomorphic, sometimes actinomorphic; irregular flowers bilabiate; perianth sepals and petals; fruit capsule; parts of each whorl 4 to 5; stamens 2 to 4 (-5); carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

@@ -2,5 +2,64 @@
   "schema": 1,
   "rank": "family",
   "name": "Goodeniaceae",
-  "parent": "order/asterales"
+  "parent": "order/asterales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely",
+      "whorled": "rarely"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "serrate": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": "pinnate",
+    "stipules": false,
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "superior": "often",
+      "half_inferior": "often",
+      "inferior": "often"
+    },
+    "hypanthium": false,
+    "woodiness": {
+      "herbaceous": "often",
+      "woody": "often"
+    },
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "raceme": "often",
+      "spike": "often",
+      "head": "often"
+    },
+    "flower_symmetry": {
+      "zygomorphic": "usually",
+      "actinomorphic": "sometimes"
+    },
+    "zygomorphy": "bilabiate",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "often",
+      "drupe": "often",
+      "nut": "often",
+      "achene": "sometimes"
+    },
+    "flower_merosity": 5,
+    "stamens": 5,
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Goodeniaceae with Brunoniaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually alternate, rarely opposite or whorled; leaves simple; margins entire, serrate or dentate; veins pinnate; stipules absent; leaf rosettes basal or none; plants hermaphrodite; ovary superior, half inferior or inferior; floral cup absent; stems herbaceous or woody; flowers solitary, in cymes, in racemes, in spikes or in heads; flowers usually zygomorphic, sometimes actinomorphic; irregular flowers bilabiate; perianth sepals and petals; fruit capsule, drupe or nut, sometimes achene; parts of each whorl 5; stamens 5; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

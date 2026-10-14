@@ -2,5 +2,33 @@
   "schema": 1,
   "rank": "family",
   "name": "Moringaceae",
-  "parent": "order/brassicales"
+  "parent": "order/brassicales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "leaf_habit": "deciduous",
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": true,
+    "woodiness": "woody",
+    "inflorescence": "panicle",
+    "flower_symmetry": "zygomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "flower_merosity": 5,
+    "stamens": 5,
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Moringaceae: leaves alternate; leaves compound; compound leaves pinnate; leaves deciduous; stipules present or absent; plants hermaphrodite; ovary superior; floral cup present; stems woody; flowers in panicles; flowers zygomorphic; perianth sepals and petals; fruit capsule; parts of each whorl 5; stamens 5; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

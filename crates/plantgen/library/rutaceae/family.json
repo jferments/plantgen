@@ -2,5 +2,38 @@
   "schema": 1,
   "rank": "family",
   "name": "Rutaceae",
-  "parent": "order/sapindales"
+  "parent": "order/sapindales",
+  "traits": {
+    "woodiness": {
+      "woody": "usually",
+      "herbaceous": "rarely"
+    },
+    "leaf_division": {
+      "simple": "often",
+      "compound": "often"
+    },
+    "stipules": false,
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "perianth": "sepals_and_petals",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5
+    },
+    "ovary_position": "superior",
+    "fruit_type": {
+      "berry": "often",
+      "drupe": "often",
+      "capsule": "rarely"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 209 Rutaceae: shrubs or trees, very rarely herbs (rue, Dictamnus); leaves simple or compound, mostly dotted with oil glands; no stipules; flowers rarely irregular; sepals 4 or 5, petals mostly free; stamens as many or twice as many as the petals; ovary superior, often of 4 or 5 joined carpels; fruit a berry (the citrus fruit among them), a drupe or a leathery fruit, rarely a capsule."
+    }
+  }
 }

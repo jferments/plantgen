@@ -2,5 +2,36 @@
   "schema": 1,
   "rank": "family",
   "name": "Hypericaceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "often",
+      "woody": "often"
+    },
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "whorled": "sometimes"
+    },
+    "leaf_division": "simple",
+    "stipules": false,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "stamens": {
+      "min": 10,
+      "max": 200
+    },
+    "ovary_position": "superior",
+    "fruit_type": {
+      "capsule": "usually",
+      "berry": "sometimes",
+      "drupe": "rarely"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 158 Hypericaceae: trees to herbs, rarely climbers, with resinous sap; leaves opposite or whorled, simple, often dotted with glands; no stipules; flowers showy, yellow or white, regular, mostly at the shoot tips, alone to in cymose panicles; stamens numerous, often in bundles; ovary of one or 3 to 5 cells, superior (the stamens below it); fruit a capsule or berry, rarely a drupe. The stamens' 10 to 200 reads 'numerous', inferred."
+    }
+  }
 }

@@ -2,5 +2,29 @@
   "schema": 1,
   "rank": "family",
   "name": "Passifloraceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "often",
+      "woody": "often"
+    },
+    "leaf_arrangement": "alternate",
+    "stipules": true,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "flower_merosity": 5,
+    "ovary_position": "superior",
+    "carpels": 3,
+    "fruit_type": {
+      "berry": "often",
+      "capsule": "often"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 107 Passifloraceae: upright trees and shrubs, or herbaceous climbers with tendrils; leaves alternate, entire or lobed, often with glands on the stalk; stipules usually small and falling; sepals 5, petals 5, rarely none; a corona of threads or scales; ovary superior, often on a stalk, of one cell with 3 (rarely 4 or 5) placentas on its wall; fruit a capsule or a berry (the passion fruit). The regular flower is from common knowledge, inferred."
+    }
+  }
 }

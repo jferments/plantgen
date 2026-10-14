@@ -2,5 +2,53 @@
   "schema": 1,
   "rank": "family",
   "name": "Surianaceae",
-  "parent": "order/fabales"
+  "parent": "order/fabales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "rarely"
+    },
+    "leaf_margin": "entire",
+    "leaf_venation": {
+      "single": "often",
+      "pinnate": "often"
+    },
+    "leaf_shape": {
+      "lanceolate": "often",
+      "oblanceolate": "often",
+      "oblong": "often"
+    },
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": {
+      "true": "often",
+      "false": "often"
+    },
+    "woodiness": "woody",
+    "inflorescence": "cyme",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "nut": "often",
+      "aggregate": "often"
+    },
+    "flower_merosity": 5,
+    "stamens": {
+      "min": 5,
+      "max": 10
+    },
+    "carpels": {
+      "min": 1,
+      "max": 5
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Surianaceae: leaves alternate; leaves usually simple, rarely compound; margins entire; veins single or pinnate; blades lanceolate, oblanceolate or oblong; stipules absent; plants hermaphrodite; ovary superior; floral cup present or absent; stems woody; flowers in cymes; flowers actinomorphic; perianth sepals and petals; fruit nut or aggregate; parts of each whorl 5; stamens 5 to 10; carpels 1 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

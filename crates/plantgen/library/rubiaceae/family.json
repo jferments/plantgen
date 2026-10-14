@@ -2,5 +2,51 @@
   "schema": 1,
   "rank": "family",
   "name": "Rubiaceae",
-  "parent": "order/gentianales"
+  "parent": "order/gentianales",
+  "traits": {
+    "woodiness": {
+      "woody": "usually",
+      "herbaceous": "sometimes"
+    },
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "whorled": "sometimes"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "usually",
+      "serrate": "rarely"
+    },
+    "stipules": true,
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "perianth": "sepals_and_petals",
+    "corolla_shape": {
+      "tubular": "usually",
+      "funnelform": "sometimes"
+    },
+    "flower_merosity": {
+      "min": 4,
+      "max": 10
+    },
+    "stamens": {
+      "min": 4,
+      "max": 10
+    },
+    "ovary_position": "inferior",
+    "fruit_type": {
+      "capsule": "often",
+      "berry": "often",
+      "drupe": "often"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 237 Rubiaceae (order Rubiales): trees and shrubs, less often herbs; leaves opposite or in whorls, simple, mostly entire; stipules between or within the leaf stalks, sometimes as leafy as the leaves; flowers mostly regular, rarely slightly irregular; corolla sitting on the ovary, more or less a tube, with 4 to 10 lobes and as many stamens; ovary inferior; fruit a capsule, berry or drupe. The corolla's funnel shape in some is read from 'more or less tubular'. Library 1.0's Rubiaceae are 72% shrubs and trees."
+    }
+  }
 }

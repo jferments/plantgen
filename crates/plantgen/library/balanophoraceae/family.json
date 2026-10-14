@@ -2,5 +2,42 @@
   "schema": 1,
   "rank": "family",
   "name": "Balanophoraceae",
-  "parent": "order/santalales"
+  "parent": "order/santalales",
+  "traits": {
+    "sexual_system": {
+      "monoecious": "often",
+      "dioecious": "often",
+      "polygamous": "sometimes"
+    },
+    "ovary_position": {
+      "superior": "often",
+      "half_inferior": "often",
+      "inferior": "often"
+    },
+    "woodiness": "herbaceous",
+    "perianth": {
+      "tepals": "sometimes",
+      "absent": "usually"
+    },
+    "fruit_type": {
+      "drupe": "often",
+      "nut": "often"
+    },
+    "stamens": {
+      "min": 1,
+      "max": 8
+    },
+    "carpels": {
+      "min": 1,
+      "max": 2,
+      "high": 3
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Balanophoraceae with Cynomoriaceae, which APG and WCVP join to it (their extra states read as sometimes): plants monoecious or dioecious, sometimes polygamous; ovary superior, half inferior or inferior; stems herbaceous; perianth usually absent, sometimes tepals; fruit drupe or nut; stamens 1 to 8; carpels 1 to 2 (-3). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

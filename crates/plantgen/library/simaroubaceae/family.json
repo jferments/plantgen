@@ -2,5 +2,77 @@
   "schema": 1,
   "rank": "family",
   "name": "Simaroubaceae",
-  "parent": "order/sapindales"
+  "parent": "order/sapindales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": {
+      "simple": "rarely",
+      "compound": "usually"
+    },
+    "division_pattern": "pinnate",
+    "leaf_margin": {
+      "entire": "usually",
+      "serrate": "sometimes",
+      "dentate": "sometimes"
+    },
+    "leaf_venation": "pinnate",
+    "stipules": {
+      "false": "usually",
+      "true": "sometimes"
+    },
+    "sexual_system": {
+      "monoecious": "often",
+      "dioecious": "often",
+      "polygamous": "often",
+      "hermaphrodite": "sometimes"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "raceme": "often",
+      "spike": "often",
+      "panicle": "often",
+      "catkin": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "rarely",
+      "absent": "sometimes"
+    },
+    "fruit_type": {
+      "berry": "often",
+      "drupe": "often",
+      "samara": "often",
+      "aggregate": "often",
+      "schizocarp": "often",
+      "capsule": "sometimes"
+    },
+    "flower_merosity": {
+      "min": 3,
+      "max": 5,
+      "high": 8
+    },
+    "stamens": {
+      "min": 10,
+      "max": 10,
+      "low": 3,
+      "high": 16
+    },
+    "carpels": {
+      "min": 1,
+      "max": 5,
+      "high": 8
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Simaroubaceae with Irvingiaceae, Ixonanthaceae, Kirkiaceae, Leitneriaceae, Picramniaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves usually compound, rarely simple; compound leaves pinnate; margins usually entire, sometimes serrate or dentate; veins pinnate; stipules usually absent, sometimes present; plants monoecious, dioecious or polygamous, sometimes hermaphrodite; ovary superior; floral cup absent; stems woody; flowers solitary, in cymes, in racemes, in spikes, in panicles or in catkins; flowers actinomorphic; perianth usually sepals and petals, sometimes absent, rarely tepals; fruit berry, drupe, samara, aggregate or schizocarp, sometimes capsule; parts of each whorl 3 to 5 (-8); stamens (3-) 10 (-16); carpels 1 to 5 (-8). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

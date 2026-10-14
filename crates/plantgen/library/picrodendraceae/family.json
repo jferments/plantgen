@@ -2,5 +2,38 @@
   "schema": 1,
   "rank": "family",
   "name": "Picrodendraceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "compound",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "leaf_habit": "deciduous",
+    "stipules": true,
+    "sexual_system": "dioecious",
+    "ovary_position": "superior",
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "often",
+      "panicle": "often",
+      "catkin": "often"
+    },
+    "perianth": {
+      "absent": "often",
+      "tepals": "often"
+    },
+    "fruit_type": "drupe",
+    "stamens": {
+      "min": 20,
+      "max": 70
+    },
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Picrodendraceae: leaves alternate; leaves compound; margins entire; veins pinnate; leaves deciduous; stipules present; plants dioecious; ovary superior; stems woody; flowers solitary, in panicles or in catkins; perianth absent or tepals; fruit drupe; stamens 20 to 70; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

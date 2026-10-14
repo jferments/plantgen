@@ -2,5 +2,42 @@
   "schema": 1,
   "rank": "family",
   "name": "Montiniaceae",
-  "parent": "order/solanales"
+  "parent": "order/solanales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "stipules": false,
+    "sexual_system": "dioecious",
+    "ovary_position": "inferior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "corymb": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5
+    },
+    "stamens": {
+      "min": 3,
+      "max": 5
+    },
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Montiniaceae: leaves alternate or opposite; leaves simple; margins entire; stipules absent; plants dioecious; ovary inferior; floral cup absent; stems woody; flowers solitary, in cymes or in corymbs; flowers actinomorphic; perianth sepals and petals; fruit capsule; parts of each whorl 4 to 5; stamens 3 to 5; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

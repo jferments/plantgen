@@ -2,5 +2,49 @@
   "schema": 1,
   "rank": "family",
   "name": "Eriocaulaceae",
-  "parent": "order/poales"
+  "parent": "order/poales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "parallel",
+    "leaf_shape": "linear",
+    "rosette": "basal",
+    "sexual_system": {
+      "monoecious": "usually",
+      "dioecious": "rarely"
+    },
+    "ovary_position": "superior",
+    "woodiness": "herbaceous",
+    "inflorescence": "head",
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "zygomorphy": "bilabiate",
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "sometimes"
+    },
+    "fruit_type": "capsule",
+    "flower_merosity": {
+      "min": 2,
+      "max": 3
+    },
+    "stamens": {
+      "min": 2,
+      "max": 6
+    },
+    "carpels": {
+      "min": 2,
+      "max": 3
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Eriocaulaceae: leaves alternate; leaves simple; margins entire; veins parallel; blades linear; leaf rosettes basal; plants usually monoecious, rarely dioecious; ovary superior; stems herbaceous; flowers in heads; flowers actinomorphic or zygomorphic; irregular flowers bilabiate; perianth usually sepals and petals, sometimes tepals; fruit capsule; parts of each whorl 2 to 3; stamens 2 to 6; carpels 2 to 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

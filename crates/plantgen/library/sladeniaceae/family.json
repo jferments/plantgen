@@ -2,5 +2,38 @@
   "schema": 1,
   "rank": "family",
   "name": "Sladeniaceae",
-  "parent": "order/ericales"
+  "parent": "order/ericales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "serrate": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": "pinnate",
+    "leaf_habit": "evergreen",
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": "cyme",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "flower_merosity": 5,
+    "stamens": {
+      "min": 10,
+      "max": 10,
+      "low": 8,
+      "high": 13
+    },
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Sladeniaceae: leaves alternate; leaves simple; margins serrate or dentate; veins pinnate; leaves evergreen; stipules absent; plants hermaphrodite; ovary superior; floral cup absent; stems woody; flowers in cymes; flowers actinomorphic; perianth sepals and petals; parts of each whorl 5; stamens (8-) 10 (-13); carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }
