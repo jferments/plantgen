@@ -319,4 +319,8 @@ pub mod venation;
 /// edge only a point reaching toward the stand's side reaches into the
 /// neighbours' crowns (51 is
 /// #96).
-pub const GENERATOR_REVISION: u32 = 52;
+/// 53: 62 built-in species take their heights, culm lengths and juvenile
+/// periods from floras in place of hand-set `crown_height`, `height_max`,
+/// `stem_height`, `culm_height` and `adult_age`, so the rank rules size
+/// them, and a stated range spreads their heights across seeds.
+pub const GENERATOR_REVISION: u32 = 53;
