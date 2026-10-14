@@ -12,7 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_height": 5,
       "crown_radius": 3,
       "crown_base": 0.5,
       "crown_rate": 0.06,
@@ -108,6 +107,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 2,
+      "max": 8
+    },
     "wood_density_basic_kg_m3": 620,
     "leaf_division": "compound",
     "division_pattern": "pinnate",
@@ -117,6 +120,11 @@
     "terminal_leaflet": false
   },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944), as Cercidium microphyllum: a tree-like shrub or small tree 2 m to 8 m high. Sargent (1922, p. 612) says occasionally a tree 20 to 25 ft, more often a shrub a few feet tall."
+    },
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Parkinsonia microphylla (gwddagg_v2.2_species.csv, read): specific gravity 0.62 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.62, branches 0.59. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",

@@ -19,7 +19,6 @@
       "stem_lean": 15,
       "maturity": 2,
       "adult_age": 3,
-      "stem_height": 0.45,
       "young_height": 0.6,
       "stem_radius": 0.004,
       "wiggle": 2,
@@ -103,7 +102,18 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.2,
+      "max": 0.6
+    }
+  },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944), as Mahonia nervosa, Fig. 1867, p. 217: simple stems 2 dm to 6 dm high with the leaves in a terminal tuft."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

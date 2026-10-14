@@ -17,7 +17,6 @@
       "clump_radius": 0.12,
       "stem_lean": 8,
       "maturity": 1.2,
-      "stem_height": 0.4,
       "stem_radius": 0.002,
       "wiggle": 2,
       "arch": 0.02,
@@ -93,7 +92,18 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.2032,
+      "max": 0.4572
+    }
+  },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson 1925, Dicentra formosa, Fig. 404, p. 405: naked scape-like flowering stems 8 in to 18 in high, a little taller than the leaves (Abrams vol. 2, p. 234, gives the basal leaves as 3 dm to 5 dm long but no scape height)."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

@@ -26,7 +26,6 @@
       "steer_weight": 0.4,
       "droop": 0.02,
       "wiggle": 10,
-      "crown_height": 0.6,
       "crown_radius": 0.5,
       "crown_rate": 0.22,
       "space_density": 600,
@@ -91,9 +90,27 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_length_m": {
+      "min": 0.01,
+      "max": 0.03
+    },
+    "height_max_m": {
+      "min": 0.2,
+      "max": 0.6
+    },
     "wood_density_basic_kg_m3": 780
   },
   "evidence": {
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960), as Franseria dumosa: leaves 1 cm to 3 cm long."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960), as Franseria dumosa: a shrub 2 dm to 6 dm (0.2 m to 0.6 m) high."
+    },
     "generator.params.spur_leaf": {
       "evidence": "Authored",
       "source": "plantgen-authors",

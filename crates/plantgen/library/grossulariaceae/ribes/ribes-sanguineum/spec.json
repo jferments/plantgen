@@ -12,7 +12,6 @@
   "growth_form": "shrub",
   "generator": {
     "params": {
-      "crown_height": 2.5,
       "crown_radius": 1.2,
       "crown_base": 0,
       "crown_rate": 0.22,
@@ -44,7 +43,6 @@
       "spur_pairs": 2,
       "leaf_angle": 50,
       "blooms": 1,
-      "adult_age": 3,
       "bloom_size": 0.05,
       "bloom_angle": 120,
       "leaf_area": 0.518,
@@ -130,6 +128,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "juvenile_period_years": {
+      "min": 3,
+      "max": 5
+    },
     "height_max_m": {
       "min": 1.22,
       "max": 2.74
@@ -140,6 +142,11 @@
     }
   },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual (Ribes chapter, text, read): earliest seed crops come when plants are 3 to 5 years old; this is stated for Sierra gooseberry and prickly and sticky currants, not R. sanguineum, so it is a genus-level value."
+    },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",

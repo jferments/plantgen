@@ -12,7 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_height": 7,
       "crown_radius": 4.5,
       "crown_base": 1,
       "crown_rate": 0.05,
@@ -127,6 +126,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": 15.24,
     "wood_density_basic_kg_m3": 700,
     "inflorescence": "raceme",
     "leaf_division": "compound",
@@ -138,6 +138,11 @@
     "leaf_shape": "oblong"
   },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "sargent-1922",
+      "note": "Sargent's Manual (2nd ed. 1922), as Prosopis juliflora var. velutina: a tree often 50 ft high (15.2 m), with a trunk 2 ft through. Sargent gives no lower bound. Kearney and Peebles (1942, p. 420) say the species reaches 9 m (30 ft) or more along watercourses and is a smaller shrub on grassland. FEIS (Uchytil 1990) says up to 50 ft (15 m) or a many-stemmed bush."
+    },
     "generator.params.bud_break": {
       "evidence": "Authored",
       "source": "plantgen-authors",

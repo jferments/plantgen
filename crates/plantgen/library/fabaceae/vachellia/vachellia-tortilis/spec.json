@@ -11,7 +11,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_height": 8,
       "crown_radius": 6,
       "crown_base": 4.5,
       "crown_rate": 0.045,
@@ -102,6 +101,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 4,
+      "max": 21
+    },
     "wood_density_basic_kg_m3": 780,
     "leaf_division": "compound",
     "division_pattern": "pinnate",
@@ -112,6 +115,11 @@
     "leaf_shape": "oblong"
   },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "brenan-1959-ftea-mimosoideae",
+      "note": "Brenan, Flora of Tropical East Africa, Leguminosae subfamily Mimosoideae (1959), as Acacia tortilis: a tree 4 m to 21 m high; occasionally, probably outside East Africa, a bush 1 m high."
+    },
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Vachellia tortilis (gwddagg_v2.2_species.csv, read): specific gravity 0.78 (wsg_est, the database's hierarchical-model species mean, from 3 records in 3 sources); trunks 0.78, branches 0.69. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",

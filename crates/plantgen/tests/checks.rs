@@ -37,6 +37,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its six petals stand in two whorls of three, and a corolla draws one whorl, so its spec draws six there",
     ),
     (
+        "cladium-mariscus-subsp-jamaicense",
+        "culm_length_m",
+        "its panicles stand on lateral branches, and the measure stops at the first lateral axis below an inflorescence, so it reads a branch, not the culm",
+    ),
+    (
+        "cyperus-papyrus",
+        "culm_length_m",
+        "its umbel's rays are lateral axes, and the measure stops at the first lateral axis below an inflorescence, so it reads a ray, not the culm",
+    ),
+    (
         "cyperus-papyrus",
         "leaf_shape",
         "its leaves are the brown sheaths at its culms' foot, drawn as cards tapering from the base, 0.15 as broad as long, so they read deltate or lanceolate against the linear blades Cyperaceae state; papyrus bears no blades",
@@ -60,11 +70,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "echinocereus-engelmannii",
         "central_spine_form",
         "its main central is drawn flattened and straight (its lower central, by eye from photographs), against the curved and twisted centrals Britton and Rose describe; a twisted spine is not drawn",
-    ),
-    (
-        "encelia-farinosa",
-        "shoot_leaves",
-        "its most vigorous shoots grow one to three of the four internodes a year they may, two nodes each, so they bear 2 to 6 leaves against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
         "ferocactus-acanthodes-subsp-acanthodes",

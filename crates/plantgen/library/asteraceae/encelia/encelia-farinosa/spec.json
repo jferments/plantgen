@@ -26,7 +26,6 @@
       "steer_weight": 0.4,
       "droop": 0.02,
       "wiggle": 10,
-      "crown_height": 1.0,
       "crown_radius": 0.6,
       "crown_rate": 0.22,
       "space_density": 600,

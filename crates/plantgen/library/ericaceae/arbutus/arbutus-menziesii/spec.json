@@ -12,7 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_height": 18,
       "crown_radius": 7,
       "crown_base": 3,
       "crown_rate": 0.035,
@@ -36,7 +35,6 @@
       "fork_stems": 3,
       "fork_angle": 30,
       "blooms": 2,
-      "adult_age": 8,
       "bloom_size": 0.11,
       "bloom_angle": 140,
       "extinction": 0.45,
@@ -147,6 +145,11 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "juvenile_period_years": {
+      "min": 4,
+      "max": 8,
+      "typical": 8
+    },
     "height_max_m": {
       "min": 3.0,
       "max": 40.0
@@ -160,6 +163,11 @@
     "fruit_type": "berry"
   },
   "evidence": {
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "The Woody Plant Seed Manual (Arbutus menziesii chapter, text, read): minimum seed-bearing age 4 years (from root-crown sprouts), more commonly at least 8 years; FEIS repeats this, while the 1974 Seeds of Woody Plants (AH 450) gave 3 to 5 years."
+    },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",

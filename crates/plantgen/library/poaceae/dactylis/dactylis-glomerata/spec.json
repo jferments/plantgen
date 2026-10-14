@@ -22,7 +22,6 @@
       "arch": 11,
       "pieces": 6,
       "flowering": 0.35,
-      "culm_height": 1.0,
       "culm_radius": 0.0015,
       "culm_leaves": 2,
       "culm_lean": 6,
