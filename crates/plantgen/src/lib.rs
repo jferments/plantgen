@@ -265,4 +265,12 @@ pub mod venation;
 /// ground; bend@1 can hold bent wood up on the ground too (`ground`),
 /// which no program uses yet (41 is the ground plane, #73; 42 the
 /// conifers' lower crowns, #72).
-pub const GENERATOR_REVISION: u32 = 43;
+/// 44: leaves, fronds, blooms, fruit, dead fronds and boots, rosette
+/// leaves and stalks, canes and epiphyte colonies live as long as their
+/// parameters say, not one year more: a deciduous tree draws this year's
+/// leaves only. Velvet mesquite (`bud_break`), bigleaf maple
+/// (`sprout_light`) and Oregon white oak (`spur_light`) are refitted to
+/// keep their sizes, their crowns within the module limit and the oak's
+/// leaf area per crown area (43 is the fronds that lie on the ground,
+/// #77).
+pub const GENERATOR_REVISION: u32 = 44;

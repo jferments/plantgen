@@ -47,9 +47,14 @@
 # ground lies on it, `rest_gap` above the substrate (substrate@1's, or
 # level soil), instead of passing into it.
 #
+# Revision 6 (leaf life): fronds live as long as their parameters say, no
+# longer one year more. What a step makes is born at the step's end, so a
+# rule that ends a part by its age counts the step it is in (`age + dt
+# >=`).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem polypodiidae 5;
+lsystem polypodiidae 6;
 
 param vigour_spread = 0.12;   # a fern grows exp(gauss() * vigour_spread) times as fast
 # Fronds.
@@ -120,8 +125,8 @@ decompose Fc(i, m, c) : m == 1 ->
 decompose Fc(i, m, c) -> ;
 
 # A frond dies after frond_life years; its rachis pieces with it.
-rule Pc(k, m, s, e) : age >= frond_life -> ;
-rule frond : age >= frond_life -> ;
+rule Pc(k, m, s, e) : age + dt >= frond_life -> ;
+rule frond : age + dt >= frond_life -> ;
 
 # A frond: it opens from the vertical with age and sags as it ages, then its
 # rachis, piece by piece.
