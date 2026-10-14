@@ -1765,10 +1765,14 @@ fn fill_defaults(
                 {
                     inside.remove(&key);
                     origins.remove(&to);
+                    notes.remove(&to);
                     if let Some(spread) = spread {
                         inside.insert(key.clone(), spread);
                         if let Some(origin) = origins.get(&from).cloned() {
-                            origins.insert(to, origin);
+                            origins.insert(to.clone(), origin);
+                        }
+                        if let Some(note) = notes.get(&from).cloned() {
+                            notes.insert(to, note);
                         }
                     }
                 }
@@ -4449,6 +4453,12 @@ mod tests {
         assert!(
             generator["spreads"].get("defaults").is_none(),
             "{generator}"
+        );
+        let open = inherit("testaceae/genus/one/spec.json", &own, &chain, &programs).unwrap();
+        assert!(
+            open.notes.contains_key("generator.spreads.params.a"),
+            "{:?}",
+            open.notes.keys().collect::<Vec<_>>()
         );
     }
 
