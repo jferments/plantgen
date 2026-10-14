@@ -1992,10 +1992,7 @@ impl Ruled<'_> {
                 && let Some((value, at)) = self.traits.get(name)
             {
                 depth = depth.max(*at);
-                let source = format!("{name} from {}", self.layers[*at].0);
-                if !from.contains(&source) {
-                    from.push(source);
-                }
+                from.push(format!("{name} from {}", self.layers[*at].0));
                 bound_of(name, bound, value)?
             } else if let Some((value, at)) = self.traits.get(key) {
                 depth = depth.max(*at);
@@ -2085,6 +2082,8 @@ impl Ruled<'_> {
         let spread = self.spread(&picks, &typical, &value);
         let set_at = put(spec, origins, notes, (self.at, value, spread), &rivals);
         let file = &self.layers[self.index].0;
+        // A trait read at both its bounds is named once.
+        from.dedup();
         let label = if from.is_empty() {
             format!("{file}: rule")
         } else {
