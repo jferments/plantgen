@@ -38,7 +38,6 @@
       "pipe_rings": 3e-06,
       "space_reach": 1.19,
       "space_kill": 0.294,
-      "leaves_per_node": 1,
       "leaf_size": 0.09,
       "spur_leaf": 0.08,
       "spur_pairs": 1,
@@ -149,7 +148,18 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "leaf_length_m": {
+      "min": 0.0254,
+      "max": 0.0762
+    }
+  },
   "evidence": {
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson (1925), as P. capitatus: leaves 2.5 cm to 7.6 cm long (converted from inches)."
+    },
     "generator.params.path_half": {
       "evidence": "Authored",
       "source": "plantgen-authors",

@@ -56,8 +56,10 @@ pub mod looks;
 pub mod lsys;
 pub mod margins;
 pub mod math;
+pub mod mechanics;
 pub mod mesh;
 pub mod meshopt;
+pub mod motion;
 pub mod niche;
 pub mod occlusion;
 pub mod organs;
@@ -73,6 +75,7 @@ pub mod shoots;
 pub mod spec;
 pub mod spikelets;
 pub mod spines;
+pub mod stand;
 pub mod substrate;
 pub mod templates;
 pub mod texture;
@@ -243,13 +246,25 @@ pub mod venation;
 /// and the wood bends under its load, the stem and a fork's stems held up;
 /// a tip with no free space leafs out. Maples keep their lobed envelope
 /// (sapindaceae revision 6). (39 is redcedar's leaf life, #70.)
+/// 41: nothing drawn reaches below the ground the plant stands on (the
+/// level plane of its foot): a card that would, a leaf drooping into the
+/// soil or a spray at a seedling's foot, turns up about its base just
+/// enough to rest on the ground, or rises onto it when no turn clears it;
+/// and a stem's foot ring meets the ground in a flat cut where a leaning
+/// or flared trunk's side would dip into it.
+/// 42: a conifer's lower crown stays full (pinidae 5): a branch's shoot
+/// shortens with its wood from the stem, not its age; foliage lasts longer
+/// low in the crown; dormant buds sprout on lit branch wood; side shoots
+/// grow 20 years; sprays are drawn with their own turns; a limb that
+/// reaches the ground is shed there, and a dead branch falls (41 is the
+/// ground plane, #73).
 /// 43: a fern's, a palm's, a tree fern's or a cycad's fronds and a cactus's
 /// joints that sag to the ground lie on it (`rest`, on the conditions'
 /// substrate or level soil) instead of passing into it, so the deer and
 /// sword ferns, Engelmann's prickly pear and saw palmetto stay above the
 /// ground; bend@1 can hold bent wood up on the ground too (`ground`),
-/// which no program uses yet (41 is the conifers' lower crowns, #72; 42
-/// the mesh seated on the ground, #73).
+/// which no program uses yet (41 is the ground plane, #73; 42 the
+/// conifers' lower crowns, #72).
 /// 44: leaves, fronds, blooms, fruit, dead fronds and boots, rosette
 /// leaves and stalks, canes and epiphyte colonies live as long as their
 /// parameters say, not one year more: a deciduous tree draws this year's

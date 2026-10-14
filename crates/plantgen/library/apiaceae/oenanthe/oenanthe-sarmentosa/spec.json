@@ -17,7 +17,6 @@
       "clump_radius": 0.3,
       "stem_lean": 40,
       "maturity": 1.0,
-      "stem_height": 0.6,
       "stem_radius": 0.003,
       "wiggle": 3,
       "nodes": 6,
@@ -91,6 +90,11 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_typical_m": {
+      "min": 0.5,
+      "max": 1.5,
+      "typical": 0.6
+    },
     "inflorescence_branches": {"min": 10, "max": 20},
     "leaf_division": "compound",
     "division_pattern": "pinnate",
@@ -101,6 +105,11 @@
     "leaf_shape": "ovate"
   },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Oenanthe sarmentosa: stems 50 cm to 1.5 m tall. The typical value is the one the plant was drawn at before, inside the source's range."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

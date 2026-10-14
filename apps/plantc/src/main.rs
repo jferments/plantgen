@@ -20,7 +20,7 @@ use plantgen::conditions::Conditions;
 use plantgen::export;
 use plantgen::graph::{GraphOrgan, OrganType, PlantGraph};
 use plantgen::ground::{self, GROUND_LOOK_SIZE};
-use plantgen::grow::{Growth, GrowthSettings, grow};
+use plantgen::grow::{Grower, Growth, GrowthSettings, StepTime};
 use plantgen::library::{Library, ProgramHome};
 use plantgen::litter;
 use plantgen::looks::{self, Look, Stage};
@@ -116,6 +116,7 @@ fn run() -> Result<(), Failure> {
         "traits" => traits_command(&args),
         "audit" => audit_command(&args),
         "grow" => grow_command(&args),
+        "stand" => stand_command(&args),
         "render" => render_command(&args),
         "sheet" => sheet_command(&args),
         "parts" => parts_command(&args),
@@ -124,6 +125,7 @@ fn run() -> Result<(), Failure> {
         "lineup" => lineup_command(&args),
         "atlas" => atlas_command(&args),
         "measure" => measure_command(&args),
+        "mechanics" => mechanics_command(&args),
         "validate" => validate_command(&args),
         "ground" => ground_command(&args),
         "build" => build_command(&args),
@@ -178,17 +180,36 @@ Usage:
       farther file it replaces leaves out, such as a rootless species in
       a phylum with roots: often right, but worth a look.
   plantc grow <species|spec.json> [--env ENV] [--seed N] [--years N]
-      Grow one variant and print its size at every keyframe.
+              [--conditions FILE|JSON [--from-age N]] [--digest] [--profile]
+      Grow one variant and print its size at every keyframe. --digest
+      prints the growth's digest; --profile the seconds each year took,
+      by phase (drawing the string, girth and bends, the environment
+      tools, keyframes, rewriting), and the parts standing.
+      --conditions grows it on from --from-age years (0 when left out) in
+      a place: a conditions document, as a file or inline, laid over the
+      variant's, such as a substrate preset at a tree's scale or
+      neighbours' crowns as envelopes; each keyframe then says how much
+      of it stands in the place's solids and crowns.
   plantc render <species|spec.json> --out FILE.png [--env ENV] [--seed N]
                 [--age N] [--view side|three-quarter|top] [--lod 0-3]
                 [--size PIXELS] [--quality draft|standard]
                 [--focus X,Y,Z [--span METRES]] [--parts on]
+                [--conditions FILE|JSON [--from-age N]]
       Render one variant at one age, with a 1.8 m figure for scale, or
       a rod in 10 cm stripes beside a plant lower than 1.5 m. --focus
       frames a close-up of SPAN metres (default 0.5) round a point of
       the plant, metres from its foot with +Y up. --parts on (level 0)
       draws every flower, fruit, cone and needle shoot as its part mesh,
-      as WorldLab does near the camera.
+      as WorldLab does near the camera. --conditions grows it in a place
+      as plantc grow does (the place itself is not drawn).
+  plantc stand <stand.json|JSON>
+      Grow plants together, each making room for the others' crowns, and
+      print each one's size at the end and where its leaves lean. The
+      document gives years, and plants: a list of each plant's species,
+      at_m (metres east and north) and seed. It may also give tile_m (east
+      and north: the stand is a tile that wraps at its edges) and
+      conditions (a place every plant grows in). Seeds default to each
+      spec's first.
   plantc sheet <species|spec.json> --out FILE.png [--seed N] [--size PIXELS]
       Render every keyframe age (columns) in every environment (rows).
   plantc parts <species|spec.json> --out FILE.png [--env ENV] [--seed N]
@@ -217,6 +238,23 @@ Usage:
                 [--view side|three-quarter|top] [--size PIXELS]
       Render a row per species of its first N seeds (default 4) at one
       age (default its oldest keyframe), each row at one scale.
+  plantc mechanics <species|spec.json> [--env ENV] [--seed N] [--years N]
+                   [--bones N] [--piece M] [--frequencies fast|exact]
+                   [--modulus MPA] [--moisture SHARE]
+                   [--leaf-mass KG_M2] [--rows N]
+      Grow a woody species to its oldest keyframe, or N years, and print
+      it as a structure of beams (plant motion S1, S2): its material,
+      mass, sag under its own weight, lowest vibration modes, the
+      branches a host can prune and its heaviest bones (default 512 in
+      all, each at most M metres long, default 2; N rows shown, default
+      12) with their bend limits. Bone frequencies are by Rayleigh's
+      quotient (fast) or subspace iteration (exact, slow). A species
+      that does not state its green stiffness or moisture stops it, unless
+      given; unstated leaf mass leaves the leaves unweighed. --modulus
+      (green modulus of elasticity in static bending, as the Wood Handbook
+      gives it), --moisture (green water over dry mass) and --leaf-mass
+      (fresh leaf mass per area) fill only unstated ones, and the output
+      marks them as given, not the species'.
   plantc measure [<species|spec.json>...] [--generator PROGRAM] [--env ENV]
                  [--seed N] [--years N]
       Grow each species (default every one in the library; --generator
@@ -252,9 +290,12 @@ Usage:
       or with `--looks litter` the 23 canopy species' litters: each look's
       colour above its relief.
   plantc build <species|spec.json> [--out DIR] [--quality draft|standard]
-               [--threads N]
+               [--threads N] [--profile static|motion]
       Build a .afterplant package in DIR (default `plants`) and print its
-      key. A package that is already built is not built again.
+      key. A package that is already built is not built again. With
+      --profile motion it also holds each keyframe's bones and branches
+      and each level's binding to them (plant motion S2), under a key of
+      its own; the static package is unchanged.
   plantc inspect <package.afterplant>
       Check every object of a package and summarise it.
   plantc export <species|spec.json|package.afterplant> [--out DIR]
@@ -377,6 +418,26 @@ impl Options {
                     .map_err(|error| format!("cannot read {path}: {error}"))
             })
             .transpose()
+    }
+
+    /// The place of `--conditions FILE` (or the document itself, given
+    /// inline) and the age of `--from-age` (0 when left out) the plant
+    /// grows on in it from.
+    fn place(&self) -> Result<Option<(Conditions, f64)>, String> {
+        let from_age = self.number::<f64>("from-age")?;
+        let Some(given) = self.flags.get("conditions") else {
+            return match from_age {
+                Some(_) => Err("`--from-age` goes with `--conditions`".into()),
+                None => Ok(None),
+            };
+        };
+        let text = if given.trim_start().starts_with('{') {
+            given.clone()
+        } else {
+            fs::read_to_string(given).map_err(|error| format!("cannot read {given}: {error}"))?
+        };
+        let place = Conditions::from_json(&text)?;
+        Ok(Some((place, from_age.unwrap_or(0.0))))
     }
 
     fn environment(&self, spec: &PlantSpec) -> Result<Environment, String> {
@@ -1132,6 +1193,33 @@ fn grow_variant(
     keyframes: Vec<f64>,
     years: f64,
 ) -> Result<Growth, String> {
+    grow_variant_in(
+        spec,
+        program,
+        environment,
+        seed,
+        keyframes,
+        years,
+        None,
+        false,
+    )
+    .map(|(growth, _)| growth)
+}
+
+/// [`grow_variant`], grown on in a place from an age when `place` gives
+/// one (`--conditions`, `--from-age`), and with the time each step took by
+/// phase when `profile`.
+#[allow(clippy::too_many_arguments)]
+fn grow_variant_in(
+    spec: &PlantSpec,
+    program: Option<&str>,
+    environment: Environment,
+    seed: u64,
+    keyframes: Vec<f64>,
+    years: f64,
+    place: Option<&(Conditions, f64)>,
+    profile: bool,
+) -> Result<(Growth, Vec<StepTime>), String> {
     let (program, params) = match program {
         Some(source) => spec.program_from(source),
         None => spec.program_in(library()),
@@ -1149,7 +1237,80 @@ fn grow_variant(
             .map_err(|error| error.to_string())?,
     };
     let params = spec.seeded_params(&program, &params, seed);
-    grow(&program, &params, &settings).map_err(|error| format!("{}: {error}", spec.id))
+    let failed = |error: plantgen::lsys::GrowthError| format!("{}: {error}", spec.id);
+    let mut grower = Grower::new(&program, &params, &settings).map_err(failed)?;
+    if profile {
+        grower = grower.timed();
+    }
+    match place {
+        Some((place, from_age)) => grower.run_in(place, *from_age, None),
+        None => loop {
+            match grower.step(None) {
+                Ok(true) => {}
+                Ok(false) => break Ok(()),
+                Err(error) => break Err(error),
+            }
+        },
+    }
+    .map_err(failed)?;
+    let times = grower.times().to_vec();
+    Ok((grower.finish(), times))
+}
+
+/// Where a growth's time went: a row per year (its steps summed) with the
+/// parts standing at its end, then the whole run by phase.
+fn profile_lines(times: &[StepTime]) -> Vec<String> {
+    let mut lines = vec![
+        "  profile, seconds: year  segments    organs  interpret     girth     tools      keep    derive     total"
+            .to_string(),
+    ];
+    let mut whole = StepTime::default();
+    let mut index = 0;
+    while index < times.len() {
+        #[allow(clippy::cast_possible_truncation)]
+        let year = times[index].age.floor() as i64;
+        let mut row = StepTime::default();
+        #[allow(clippy::cast_possible_truncation)]
+        while index < times.len() && times[index].age.floor() as i64 == year {
+            let time = &times[index];
+            row.interpret += time.interpret;
+            row.girth += time.girth;
+            row.tools += time.tools;
+            row.keep += time.keep;
+            row.derive += time.derive;
+            row.segments = time.segments;
+            row.organs = time.organs;
+            index += 1;
+        }
+        whole.interpret += row.interpret;
+        whole.girth += row.girth;
+        whole.tools += row.tools;
+        whole.keep += row.keep;
+        whole.derive += row.derive;
+        lines.push(format!(
+            "  {year:>22} {:>9} {:>9} {:>10.3} {:>9.3} {:>9.3} {:>9.3} {:>9.3} {:>9.3}",
+            row.segments,
+            row.organs,
+            row.interpret,
+            row.girth,
+            row.tools,
+            row.keep,
+            row.derive,
+            row.total()
+        ));
+    }
+    let total = whole.total().max(1e-12);
+    let share = |part: f64| 100.0 * part / total;
+    lines.push(format!(
+        "  all steps {:.2} s: interpret {:.0} %, girth {:.0} %, tools {:.0} %, keep {:.0} %, derive {:.0} %",
+        whole.total(),
+        share(whole.interpret),
+        share(whole.girth),
+        share(whole.tools),
+        share(whole.keep),
+        share(whole.derive)
+    ));
+    lines
 }
 
 fn describe(graph: &PlantGraph, types: &[OrganType]) -> String {
@@ -1381,6 +1542,181 @@ fn measure_command(args: &[String]) -> Result<(), Failure> {
     Ok(())
 }
 
+/// `plantc mechanics`: a grown plant as beams and bones (plant motion S1).
+#[allow(clippy::too_many_lines)]
+fn mechanics_command(args: &[String]) -> Result<(), Failure> {
+    use plantgen::mechanics::{self, Material, Settings};
+    let options = Options::parse(
+        args,
+        &[
+            "env",
+            "seed",
+            "years",
+            "bones",
+            "piece",
+            "frequencies",
+            "modulus",
+            "moisture",
+            "leaf-mass",
+            "rows",
+        ],
+    )?;
+    let [id] = options.positional.as_slice() else {
+        return Err("`plantc mechanics` takes one species".into());
+    };
+    let spec = load_spec(id)?;
+    let mut traits = library()
+        .traits_of(&spec.id)
+        .map_err(|error| error.to_string())?;
+    // Fill only what the species leaves unstated, and say so.
+    let mut given = Vec::new();
+    for (flag, key) in [
+        ("modulus", "wood_modulus_green_mpa"),
+        ("moisture", "wood_moisture_green_share"),
+        ("leaf-mass", "leaf_mass_fresh_kg_m2"),
+    ] {
+        if let Some(value) = options.number::<f64>(flag)? {
+            if traits.contains_key(key) {
+                out!("--{flag} ignored: {} states {key}", spec.id);
+            } else {
+                traits.insert(key.to_string(), value.into());
+                given.push(key);
+            }
+        }
+    }
+    let material = Material::of(&traits).map_err(|missing| {
+        format!(
+            "{} does not state {}; give --modulus or --moisture to explore",
+            spec.id,
+            missing.join(", ")
+        )
+    })?;
+    material.validate()?;
+    let environment = options.environment(&spec)?;
+    let seed = options.number("seed")?.unwrap_or(spec.variants.seeds[0]);
+    let years = options.number("years")?.unwrap_or(spec.growth.years);
+    let growth = grow_variant(&spec, None, environment, seed, vec![years], years)?;
+    let Some(graph) = growth.keyframes.last() else {
+        return Err(format!("{} grew nothing", spec.id).into());
+    };
+    let exact = match options.flags.get("frequencies").map(String::as_str) {
+        None | Some("fast") => false,
+        Some("exact") => true,
+        Some(other) => {
+            return Err(format!("--frequencies is fast or exact, not `{other}`").into());
+        }
+    };
+    let settings = Settings {
+        bones: options
+            .number("bones")?
+            .unwrap_or(Settings::default().bones),
+        piece: options
+            .number("piece")?
+            .unwrap_or(Settings::default().piece),
+        exact,
+        ..Settings::default()
+    };
+    let started = Instant::now();
+    let found = mechanics::mechanics(graph, &growth.organ_types, &material, &settings);
+    let took = started.elapsed();
+    let mark = |key: &str| if given.contains(&key) { " (given)" } else { "" };
+    out!(
+        "{} ({}), seed {seed}, {:.0} years, {:.1} m",
+        spec.taxon.common_name,
+        spec.id,
+        graph.age,
+        graph.height
+    );
+    out!(
+        "wood {:.0} kg/m3 green{}, modulus {:.0} MPa{} along the grain, rupture {}, leaves {}{}",
+        material.wood_density,
+        mark("wood_moisture_green_share"),
+        material.modulus / 1.0e6,
+        mark("wood_modulus_green_mpa"),
+        material.rupture.map_or_else(
+            || "unstated".to_string(),
+            |pa| format!("{:.0} MPa", pa / 1.0e6)
+        ),
+        material.leaf_mass.map_or_else(
+            || "unstated (not weighed)".to_string(),
+            |mass| format!("{mass:.3} kg/m2")
+        ),
+        mark("leaf_mass_fresh_kg_m2"),
+    );
+    let beams = &found.beams;
+    out!(
+        "{} beams, {} carried segments, {} axes, {} bones, {} branches; {:.1} kg, of which leaves {:.2} kg; {} organs unweighed",
+        beams.len(),
+        beams.carried,
+        found.axes,
+        found.bones.len(),
+        found.branches.len(),
+        found.mass(),
+        found.leaf_mass(),
+        beams.unweighed
+    );
+    out!(
+        "own weight once more moves an end up to {:.1} mm",
+        found.sag() * 1000.0
+    );
+    let modes: Vec<String> = found
+        .modes
+        .iter()
+        .map(|mode| format!("{:.3}", mode.frequency))
+        .collect();
+    out!("lowest modes, Hz: {}", modes.join(" "));
+    out!("solved in {:.1} ms", took.as_secs_f64() * 1000.0);
+    let rows = options.number::<usize>("rows")?.unwrap_or(12);
+    let mut order: Vec<usize> = (0..found.bones.len()).collect();
+    order.sort_by(|&a, &b| {
+        found.bones[b]
+            .mass_beyond
+            .total_cmp(&found.bones[a].mass_beyond)
+            .then(a.cmp(&b))
+    });
+    out!(
+        "{:>5} {:>6} {:>5} {:>6} {:>7} {:>6} {:>9} {:>7} {:>7} {:>9} {:>6} {:>6}",
+        "bone",
+        "parent",
+        "depth",
+        "length",
+        "foot cm",
+        "kg",
+        "beyond kg",
+        "f1 Hz",
+        "f2 Hz",
+        "moment Nm",
+        "break",
+        "bend°"
+    );
+    for &at in order.iter().take(rows) {
+        let bone = &found.bones[at];
+        out!(
+            "{:>5} {:>6} {:>5} {:>6.2} {:>7.1} {:>6.2} {:>9.2} {:>7.3} {:>7.3} {:>9.1} {:>6} {:>6}",
+            at,
+            bone.parent
+                .map_or_else(|| "-".to_string(), |p| p.to_string()),
+            bone.depth,
+            bone.length,
+            bone.radius[0] * 200.0,
+            bone.mass,
+            bone.mass_beyond,
+            bone.frequencies[0],
+            bone.frequencies[1],
+            bone.weight_moment,
+            bone.breaking_moment.map_or_else(
+                || "-".to_string(),
+                |breaking| format!("{:.0}%", 100.0 * bone.weight_moment / breaking)
+            ),
+            bone.bend_limit.map_or_else(
+                || "-".to_string(),
+                |limit| format!("{:.0}", limit.to_degrees())
+            )
+        );
+    }
+    Ok(())
+}
+
 /// `plantc validate`: stated sizes, counts and kinds against grown plants
 /// (spec rework M8B and M8A).
 #[allow(clippy::too_many_lines)]
@@ -1480,7 +1816,11 @@ fn validate_command(args: &[String]) -> Result<(), Failure> {
                     .kinds
                     .iter()
                     .map(|agreement| {
-                        let drawn: Vec<&str> = agreement.drawn.iter().map(String::as_str).collect();
+                        let drawn: Vec<String> = agreement
+                            .drawn
+                            .iter()
+                            .map(|state| state.replace('|', " or "))
+                            .collect();
                         let reason = match agreement.verdict {
                             checks::Verdict::Error => "draws a state the species does not state",
                             checks::Verdict::NotGrown => "nothing drawn to compare",
@@ -1579,16 +1919,21 @@ fn validate_command(args: &[String]) -> Result<(), Failure> {
 }
 
 fn grow_command(args: &[String]) -> Result<(), Failure> {
-    // `--digest` takes no value.
+    // `--digest` and `--profile` take no value.
     let digest = args.iter().any(|arg| arg == "--digest");
+    let profile = args.iter().any(|arg| arg == "--profile");
     let args: Vec<String> = args
         .iter()
-        .filter(|arg| *arg != "--digest")
+        .filter(|arg| *arg != "--digest" && *arg != "--profile")
         .cloned()
         .collect();
-    let options = Options::parse(&args, &["env", "seed", "years", "program"])?;
+    let options = Options::parse(
+        &args,
+        &["env", "seed", "years", "program", "conditions", "from-age"],
+    )?;
     let spec = load_spec(options.one_positional("a species")?)?;
     let program = options.program()?;
+    let place = options.place()?;
     let environment = options.environment(&spec)?;
     let seed = options.number("seed")?.unwrap_or(spec.variants.seeds[0]);
     let years = options.number("years")?.unwrap_or(spec.growth.years);
@@ -1610,13 +1955,15 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
     keyframes.sort_by(f64::total_cmp);
     keyframes.dedup();
     let started = Instant::now();
-    let growth = grow_variant(
+    let (growth, times) = grow_variant_in(
         &spec,
         program.as_deref(),
         environment,
         seed,
         keyframes,
         years,
+        place.as_ref(),
+        profile,
     )?;
     out!(
         "{} ({}), {} environment, seed {seed}: grown in {:.1} s; peak {} modules, {} segments, {} organs",
@@ -1628,8 +1975,17 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
         growth.stats.peak_segments,
         growth.stats.peak_organs
     );
+    if let Some((place, from_age)) = &place {
+        out!(
+            "  grown on from {from_age} years in a place, class {}",
+            place.over(&Conditions::preset(environment)).class()
+        );
+    }
     for graph in &growth.keyframes {
         out!("  {}", describe(graph, &growth.organ_types));
+        if let Some((place, _)) = &place {
+            out!("      {}", place.intrusion(graph)?.describe());
+        }
     }
     let variant = Variant {
         environment,
@@ -1644,6 +2000,131 @@ fn grow_command(args: &[String]) -> Result<(), Failure> {
     if digest {
         out!("  digest {}", growth.digest());
     }
+    if profile {
+        for line in profile_lines(&times) {
+            out!("{line}");
+        }
+    }
+    Ok(())
+}
+
+/// One plant of `plantc stand`'s document, ready to grow.
+type StandPlant = (PlantSpec, [f64; 2], Program, Vec<f64>, GrowthSettings);
+
+fn stand_plant(
+    plant: &serde_json::Value,
+    years: f64,
+    conditions: &Conditions,
+) -> Result<StandPlant, Failure> {
+    let id = plant["species"]
+        .as_str()
+        .ok_or("each plant names its species")?;
+    let spec = load_spec(id)?;
+    let at_m = stand_pair(&plant["at_m"], "at_m")?;
+    let seed = match &plant["seed"] {
+        serde_json::Value::Null => spec.variants.seeds[0],
+        seed => seed
+            .as_u64()
+            .ok_or("a plant's seed must be a whole number")?,
+    };
+    let (program, params) = spec
+        .program_in(library())
+        .map_err(|error| error.to_string())?;
+    let params = spec.seeded_params(&program, &params, seed);
+    let settings = GrowthSettings {
+        seed,
+        dt: spec.growth.step,
+        years,
+        keyframes: vec![years],
+        conditions: conditions.clone(),
+        limits: Limits::default(),
+        host: None,
+    };
+    Ok((spec, at_m, program, params, settings))
+}
+
+fn stand_number(value: &serde_json::Value, what: &str) -> Result<f64, String> {
+    value
+        .as_f64()
+        .ok_or_else(|| format!("stand {what} must be a number"))
+}
+
+fn stand_pair(value: &serde_json::Value, what: &str) -> Result<[f64; 2], String> {
+    match value.as_array().map(Vec::as_slice) {
+        Some([a, b]) => Ok([stand_number(a, what)?, stand_number(b, what)?]),
+        _ => Err(format!("stand {what} must be two numbers")),
+    }
+}
+
+/// `plantc stand`: plants grown together (`plantgen::stand`).
+fn stand_command(args: &[String]) -> Result<(), Failure> {
+    let options = Options::parse(args, &[])?;
+    let given = options.one_positional("a stand document")?;
+    let text = if given.trim_start().starts_with('{') {
+        given.to_string()
+    } else {
+        fs::read_to_string(given).map_err(|error| format!("cannot read {given}: {error}"))?
+    };
+    let document: serde_json::Value =
+        serde_json::from_str(&text).map_err(|error| format!("invalid stand: {error}"))?;
+    let years = stand_number(&document["years"], "years")?;
+    let tile_m = match &document["tile_m"] {
+        serde_json::Value::Null => None,
+        tile => Some(stand_pair(tile, "tile_m")?),
+    };
+    let open = Conditions::preset(Environment::Open);
+    let conditions = match &document["conditions"] {
+        serde_json::Value::Null => open,
+        place => Conditions::from_json(&place.to_string())?.over(&open),
+    };
+    let plants = document["plants"]
+        .as_array()
+        .ok_or("stand plants must be a list")?;
+    let grown = plants
+        .iter()
+        .map(|plant| stand_plant(plant, years, &conditions))
+        .collect::<Result<Vec<_>, _>>()?;
+    let members: Vec<plantgen::stand::Member<'_>> = grown
+        .iter()
+        .map(
+            |(_, at_m, program, params, settings)| plantgen::stand::Member {
+                program,
+                params,
+                settings,
+                at_m: *at_m,
+            },
+        )
+        .collect();
+    let started = Instant::now();
+    let growths =
+        plantgen::stand::grow_stand(&members, tile_m).map_err(|error| error.to_string())?;
+    out!(
+        "{} plants grown together for {years} years in {:.1} s{}",
+        growths.len(),
+        started.elapsed().as_secs_f64(),
+        tile_m.map_or(String::new(), |[east, north]| format!(
+            ", a tile {east} by {north} m that wraps"
+        ))
+    );
+    for ((spec, at_m, ..), growth) in grown.iter().zip(&growths) {
+        let Some(graph) = growth.keyframes.last() else {
+            continue;
+        };
+        #[allow(clippy::cast_precision_loss)]
+        let count = graph.organs.len().max(1) as f64;
+        let sum = graph
+            .organs
+            .iter()
+            .fold(Vec3::ZERO, |sum, organ| sum + organ.position);
+        out!(
+            "  {} at {:?}: {}; leaves lean {:.2} m east, {:.2} m north",
+            spec.id,
+            at_m,
+            describe(graph, &growth.organ_types),
+            sum.x / count,
+            -sum.z / count
+        );
+    }
     Ok(())
 }
 
@@ -1652,12 +2133,27 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(
         args,
         &[
-            "env", "seed", "age", "view", "lod", "size", "out", "quality", "program", "focus",
-            "span", "alone", "day", "parts",
+            "env",
+            "seed",
+            "age",
+            "view",
+            "lod",
+            "size",
+            "out",
+            "quality",
+            "program",
+            "focus",
+            "span",
+            "alone",
+            "day",
+            "parts",
+            "conditions",
+            "from-age",
         ],
     )?;
     let day = options.day()?;
     let program = options.program()?;
+    let place = options.place()?;
     let spec = load_spec(options.one_positional("a species")?)?;
     let alone = options.flags.contains_key("alone");
     let out = options.flags.get("out").ok_or("missing `--out FILE.png`")?;
@@ -1697,7 +2193,16 @@ fn render_command(args: &[String]) -> Result<(), Failure> {
         }
         None => None,
     };
-    let growth = grow_variant(&spec, program.as_deref(), environment, seed, vec![age], age)?;
+    let (growth, _) = grow_variant_in(
+        &spec,
+        program.as_deref(),
+        environment,
+        seed,
+        vec![age],
+        age,
+        place.as_ref(),
+        false,
+    )?;
     let (mut looks, sizes) = looks_of(&spec, &growth, day);
     let graph = &*drawn(&growth.keyframes[0], &sizes);
     let bodies = bodies_of(&spec, &growth);
@@ -2474,7 +2979,10 @@ fn templates_of(
 }
 
 fn build_command(args: &[String]) -> Result<(), Failure> {
-    let options = Options::parse(args, &["out", "quality", "threads", "program", "day"])?;
+    let options = Options::parse(
+        args,
+        &["out", "quality", "threads", "program", "day", "profile"],
+    )?;
     let spec = load_spec(options.one_positional("a species")?)?;
     let out = PathBuf::from(options.flags.get("out").map_or("plants", String::as_str));
     build_package(&spec, &options, &out)?;
@@ -2497,6 +3005,24 @@ fn build_package(spec: &PlantSpec, options: &Options, out: &Path) -> Result<Path
         None => Inputs::on_day_in(spec, library(), &quality, day),
     }
     .map_err(|error| error.to_string())?;
+    let inputs = match options.flags.get("profile").map(String::as_str) {
+        None | Some("static") => inputs,
+        Some("motion") => {
+            let traits = library()
+                .traits_of(&spec.id)
+                .map_err(|error| error.to_string())?;
+            let motion = plantgen::motion::Motion::of(&traits);
+            if motion.assumed.len() > 1 {
+                out!(
+                    "{} does not state {}: generic values stand in",
+                    spec.id,
+                    motion.assumed[..motion.assumed.len() - 1].join(", ")
+                );
+            }
+            inputs.with_motion(motion)
+        }
+        Some(other) => return Err(format!("--profile is static or motion, not `{other}`").into()),
+    };
     if let Some(path) = package::existing(out, &spec.id, &inputs.key) {
         out!(
             "{} is already built:\n  key {}\n  {}",

@@ -28,8 +28,10 @@
       "spray_base": 0.25,
       "spray_length": 1.0,
       "shade_death": 0.15,
-      "pipe_rings": 8e-06,
-      "spray_area": 0.471
+      "pipe_rings": 1.2e-06,
+      "spray_area": 0.471,
+      "branch_reach": 6.0,
+      "epi_chance": 0
     }
   },
   "growth": {
@@ -91,6 +93,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "wood_density_basic_kg_m3": 420,
+    "wood_modulus_green_mpa": 6900,
+    "wood_rupture_green_mpa": 35,
+    "wood_moisture_green_share": {"min": 0.4, "max": 1.48, "typical": 0.94},
     "juvenile_period_years": {"min": 7, "max": 20},
     "needles_per_fascicle": 3,
     "leaf_length_m": {"min": 0.12, "max": 0.25},
@@ -100,6 +106,10 @@
     "cone_retention_years": 0
   },
   "evidence": {
+    "traits.wood_modulus_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Pine, ponderosa, green: modulus of elasticity 6,900 MPa in static bending (clear wood, centre-loaded, span 14 depths; specific gravity 0.38)."},
+    "traits.wood_rupture_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Pine, ponderosa, green: modulus of rupture 35,000 kPa (clear wood in static bending)."},
+    "traits.wood_moisture_green_share": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 4-1, Pine, ponderosa: average moisture content of green wood, heartwood 40% and sapwood 148% of oven-dry mass; stated as a share, the range between them with its middle typical where both are given."},
+    "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Pinus ponderosa (gwddagg_v2.2_species.csv, read): specific gravity 0.42 (wsg_est, the database's hierarchical-model species mean, from 32 records in 8 sources); trunks 0.41, branches 0.45. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "traits.leaf_life_years": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
@@ -138,7 +148,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a large pine with an open, rounded crown, stout branches and long needles in bundles of three, tufted at the twig ends. Not fitted to measurements. Cones (plant forms F3): 8 to 14 cm, spreading to hanging; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles. Spec rework E6d: `cone_length`, `cone_years`, `cone_pitch`, `needle_years` now set by the rules at Pinidae from the stated characters."
+      "note": "Hand-set from general knowledge of the species: a large pine with an open, rounded crown, stout branches and long needles in bundles of three, tufted at the twig ends. Not fitted to measurements. Cones (plant forms F3): 8 to 14 cm, spreading to hanging; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles. Spec rework E6d: `cone_length`, `cone_years`, `cone_pitch`, `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe, and `pipe_rings` refitted to the dbh references now that the crown holds more foliage; `epi_chance` 0, as pines seldom sprout from dormant buds on their branches (general knowledge, not measured)."
     },
     "allometry": {
       "evidence": "Authored",

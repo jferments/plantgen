@@ -42,7 +42,6 @@
       "spur_leaf": 0.09,
       "spur_pairs": 1,
       "leaf_angle": 45,
-      "leaves_per_node": 1,
       "leaf_years": 3,
       "blooms": 2,
       "adult_age": 3,
@@ -122,9 +121,27 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 0.6,
+      "max": 2.0
+    },
+    "leaf_length_m": {
+      "min": 0.03,
+      "max": 0.1
+    },
     "flowering_position": "both"
   },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Gaultheria Shallon: grows 60 cm to 2 m tall."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Gaultheria Shallon: leaves 3 cm to 10 cm long."
+    },
     "generator.params.path_half": {
       "evidence": "Authored",
       "source": "plantgen-authors",

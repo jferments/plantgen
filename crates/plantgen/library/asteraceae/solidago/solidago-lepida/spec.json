@@ -17,7 +17,6 @@
       "clump_radius": 0.2,
       "stem_lean": 6,
       "maturity": 1.2,
-      "stem_height": 0.86,
       "young_height": 0.45,
       "stem_radius": 0.003,
       "wiggle": 1.5,
@@ -95,10 +94,21 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 1.0,
+      "high": 1.5,
+      "typical": 0.86
+    },
     "inflorescence": "panicle",
     "units_per_inflorescence": {"min": 14, "max": 800}
   },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960), as Solidago canadensis L. subsp.: stems 30 cm to 1 m (to 1.5 m) tall. The typical value is the one the plant was drawn at before, inside the source's range."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

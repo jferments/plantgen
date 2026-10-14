@@ -57,7 +57,19 @@ pub struct Mesh {
     /// Wind hierarchy level: 0 stem, 1 branch, 2 twig, 3 organ.
     pub levels: Vec<u8>,
     pub indices: Vec<u32>,
+    /// The graph segment that bears each vertex, [`NO_SEGMENT`] where none
+    /// does (roots, scenery), for binding it to the plant's bones (plant
+    /// motion S2). Not packaged with the mesh; it may run short of the
+    /// vertices, the rest bearing none.
+    pub segments: Vec<u32>,
 }
+
+/// A vertex or card no graph segment bears.
+pub const NO_SEGMENT: u32 = u32::MAX;
+
+/// A vertex or card the ground bears: roots, and organs at the plant's foot
+/// that no segment bears (a rosette's leaves).
+pub const GROUNDED: u32 = u32::MAX - 1;
 
 /// One vertex, for building a [`Mesh`].
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -69,6 +81,8 @@ pub struct Vertex {
     pub born: f64,
     pub shed: Option<f64>,
     pub level: u8,
+    /// The graph segment that bears it, or [`NO_SEGMENT`].
+    pub segment: u32,
 }
 
 impl Vertex {
@@ -84,7 +98,14 @@ impl Vertex {
             born: 0.0,
             shed: None,
             level: 0,
+            segment: NO_SEGMENT,
         }
+    }
+
+    /// The same vertex, borne by graph segment `segment`.
+    #[must_use]
+    pub fn on(self, segment: u32) -> Self {
+        Self { segment, ..self }
     }
 }
 
@@ -114,7 +135,37 @@ impl Mesh {
                 .push(vertex.shed.map_or(f32::INFINITY, |shed| shed as f32));
         }
         self.levels.push(vertex.level);
+        if vertex.segment != NO_SEGMENT || !self.segments.is_empty() {
+            self.segments.resize(index as usize, NO_SEGMENT);
+            self.segments.push(vertex.segment);
+        }
         index
+    }
+
+    /// Marks the vertices from `first` on as borne by graph segment
+    /// `segment`: for parts drawn whole, an organ or a body.
+    pub fn bear(&mut self, first: usize, segment: u32) {
+        let count = self.positions.len();
+        if segment == NO_SEGMENT && self.segments.is_empty() {
+            return;
+        }
+        self.segments.resize(count, NO_SEGMENT);
+        for at in first.min(count)..count {
+            self.segments[at] = segment;
+        }
+    }
+
+    /// The graph segment that bears vertex `index`, if any.
+    #[must_use]
+    pub fn segment(&self, index: usize) -> Option<u32> {
+        Some(self.bearer(index)).filter(|&segment| segment != NO_SEGMENT && segment != GROUNDED)
+    }
+
+    /// What bears vertex `index`: a graph segment, [`GROUNDED`] or
+    /// [`NO_SEGMENT`].
+    #[must_use]
+    pub fn bearer(&self, index: usize) -> u32 {
+        self.segments.get(index).copied().unwrap_or(NO_SEGMENT)
     }
 }
 
@@ -139,6 +190,9 @@ pub struct Card {
     /// How it bends on the levels that keep a card per organ
     /// ([`crate::bend`]); flat elsewhere. A level's bent cards come first.
     pub bend: Bend,
+    /// The graph segment that bears its organ (the first organ of a
+    /// cluster), or [`NO_SEGMENT`]; not packaged with the mesh.
+    pub segment: u32,
 }
 
 /// Wood and organ cards of one plant at one level of detail, and on the
@@ -214,6 +268,7 @@ impl PlantMesh {
                     born: f64::from(card.born),
                     shed,
                     level: 3,
+                    segment: card.segment,
                 });
             }
             // Counter-clockwise seen from the side the normal points to.
@@ -254,6 +309,7 @@ fn bent_card(card: &Card, base: Vec3, heading: Vec3, left: Vec3, out: &mut Mesh)
             born: f64::from(card.born),
             shed,
             level: 3,
+            segment: card.segment,
         });
         out.indices.push(index);
     }
@@ -474,6 +530,7 @@ pub(crate) fn build_shaded(
     if let Some(roots) = &appearance.roots {
         crate::roots::build(graph, roots, appearance.bark, level <= 1, &mut mesh.wood);
     }
+    grounded(&mut mesh.cards);
     // Only tubes and sticks, the first wood drawn, are shaded.
     let mut shades = shade.apart.unwrap_or_default();
     if apart {
@@ -518,6 +575,8 @@ struct Ring {
     radius: f64,
     born: f64,
     shed: Option<f64>,
+    /// The graph segment it starts (ends, for an axis's last ring).
+    segment: u32,
 }
 
 /// The rings of the axis that starts at segment `start`: the start of every
@@ -558,6 +617,7 @@ fn axis_rings(
                 radius: segment.radius,
                 born: segment.born,
                 shed: segment.shed,
+                segment: u32::try_from(index).unwrap_or(NO_SEGMENT),
             }
         })
         .collect();
@@ -568,6 +628,7 @@ fn axis_rings(
         radius: end_radii[end],
         born: last.born,
         shed: last.shed,
+        segment: u32::try_from(end).unwrap_or(NO_SEGMENT),
     });
     // Keep the ends.
     let cos_bend = math::cos(math::radians(lod.bend));
@@ -841,7 +902,7 @@ pub const STICK_TRIANGLES: usize = 2 * STICK_SIDES as usize;
 
 /// A twig a level drops (see [`twigs`]): its middle, its direction
 /// (pointing up), its length, its mean radius, and its birth and shed ages.
-type Twig = (Vec3, Vec3, f64, f64, f64, Option<f64>);
+type Twig = (Vec3, Vec3, f64, f64, f64, Option<f64>, u32);
 
 /// A cell for gathering the twigs a level drops, in its `min_radius`s,
 /// where the level merges no organs (see [`twigs`]).
@@ -913,6 +974,7 @@ fn twigs(
             f64::midpoint(segment.radius, end_radius),
             segment.born,
             segment.shed,
+            u32::try_from(index).unwrap_or(NO_SEGMENT),
         ));
     }
     let widen = math::PI / (f64::from(STICK_SIDES) * math::sin(math::PI / f64::from(STICK_SIDES)));
@@ -1057,7 +1119,22 @@ fn twigs(
                 .iter()
                 .map(|&i| twigs[i].5)
                 .try_fold(f64::NEG_INFINITY, |s, shed| shed.map(|shed| s.max(shed)));
-            let start = centre + direction * low;
+            // Borne by the segment of the share that covers most.
+            let bearer = share
+                .iter()
+                .max_by(|&&a, &&b| {
+                    (twigs[a].3 * twigs[a].2)
+                        .total_cmp(&(twigs[b].3 * twigs[b].2))
+                        .then(b.cmp(&a))
+                })
+                .map_or(NO_SEGMENT, |&i| twigs[i].6);
+            let mut start = centre + direction * low;
+            // A stick standing in for twigs near the ground stands on it:
+            // its lower end ring (its direction points up) clears it.
+            let reach = radius * widen * (1.0 - direction.y * direction.y).max(0.0).sqrt();
+            if start.y - reach < GROUND {
+                start.y = GROUND + reach;
+            }
             let normal = any_perpendicular(direction);
             let binormal = direction.cross(normal);
             #[allow(clippy::cast_sign_loss, clippy::cast_possible_truncation)]
@@ -1091,6 +1168,7 @@ fn twigs(
                         born,
                         shed,
                         level: 2,
+                        segment: bearer,
                     });
                 }
             }
@@ -1135,6 +1213,7 @@ fn axis_frames(rings: &[Ring]) -> Vec<(Vec3, Vec3, Vec3, f64)> {
     frames
 }
 
+#[allow(clippy::too_many_lines)]
 fn wood(
     graph: &PlantGraph,
     appearance: &Appearance,
@@ -1229,7 +1308,7 @@ fn wood(
                 #[allow(clippy::cast_possible_truncation)]
                 let uv = [(f64::from(side) / f64::from(sides)) as f32, along as f32];
                 out.push(Vertex {
-                    position: current.centre + direction * (radius * widen),
+                    position: footed(root, current.centre, direction * (radius * widen)),
                     normal: surface,
                     uv,
                     color: bark_alpha(
@@ -1249,6 +1328,7 @@ fn wood(
                     born: current.born,
                     shed: current.shed,
                     level,
+                    segment: current.segment,
                 });
             }
             if let Some(previous) = first_ring {
@@ -1265,6 +1345,18 @@ fn wood(
     }
 }
 
+/// The point `out` from `centre` on a ring of an axis, a `stem`'s cut
+/// flat at the ground: a stem's foot meets level ground in a flat cut, so
+/// a ring standing on the ground whose side would dip into it, as a
+/// leaning or flared trunk's foot ring does, keeps that side on it.
+fn footed(stem: bool, centre: Vec3, out: Vec3) -> Vec3 {
+    let mut position = centre + out;
+    if stem && centre.y >= GROUND && position.y < GROUND {
+        position.y = GROUND;
+    }
+    position
+}
+
 /// A card while it is placed, in double precision.
 #[derive(Debug, Clone, Copy)]
 struct Placed {
@@ -1278,6 +1370,7 @@ struct Placed {
     born: f64,
     shed: Option<f64>,
     bend: Bend,
+    segment: u32,
 }
 
 impl Placed {
@@ -1296,7 +1389,162 @@ impl Placed {
             born: self.born as f32,
             shed: self.shed.map_or(f32::INFINITY, |shed| shed as f32),
             bend: self.bend,
+            segment: self.segment,
         }
+    }
+}
+
+/// The ground a plant stands on in its own frame: the level plane of its
+/// foot. No card reaches below it ([`grounded`]).
+pub const GROUND: f64 = 0.0;
+
+/// How far below the [`GROUND`] a keyframe reaches, in metres (0 when
+/// nothing does): its wood as grown (segment ends), its organs where they
+/// stand, and as drawn at one level, its wood mesh (tubes, sticks, solid
+/// leaves and flowers, fleshy bodies and any roots) and its cards.
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
+pub struct Below {
+    pub segments: f64,
+    pub organs: f64,
+    pub wood: f64,
+    pub cards: f64,
+}
+
+impl Below {
+    /// The graph's depths, with no mesh.
+    #[must_use]
+    pub fn graph(graph: &PlantGraph) -> Self {
+        let depth = |y: f64| (GROUND - y).max(0.0);
+        Self {
+            segments: graph
+                .segments
+                .iter()
+                .map(|segment| depth(segment.start.y.min(segment.end.y)))
+                .fold(0.0, f64::max),
+            organs: graph
+                .organs
+                .iter()
+                .map(|organ| depth(organ.position.y))
+                .fold(0.0, f64::max),
+            wood: 0.0,
+            cards: 0.0,
+        }
+    }
+
+    /// The graph's depths, and `mesh`'s, one of its levels.
+    #[must_use]
+    pub fn drawn(graph: &PlantGraph, mesh: &PlantMesh) -> Self {
+        let depth = |y: f32| (GROUND - f64::from(y)).max(0.0);
+        let vector = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
+        Self {
+            wood: mesh
+                .wood
+                .positions
+                .iter()
+                .map(|position| depth(position[1]))
+                .fold(0.0, f64::max),
+            cards: mesh
+                .cards
+                .iter()
+                .map(|card| {
+                    let low = card_low(
+                        card,
+                        vector(card.base),
+                        vector(card.heading),
+                        vector(card.left),
+                    );
+                    (GROUND - low).max(0.0)
+                })
+                .fold(0.0, f64::max),
+            ..Self::graph(graph)
+        }
+    }
+
+    /// The deepest of them.
+    #[must_use]
+    pub fn most(&self) -> f64 {
+        self.segments
+            .max(self.organs)
+            .max(self.wood)
+            .max(self.cards)
+    }
+}
+
+/// The lowest height `card` reaches, drawn as a renderer draws it: its four
+/// corners, or every corner of a bent card's grid ([`crate::bend`]).
+fn card_low(card: &Card, base: Vec3, heading: Vec3, left: Vec3) -> f64 {
+    let half = f64::from(card.width) * 0.5;
+    let length = f64::from(card.length);
+    if card.bend.is_flat() {
+        return base.y + (heading.y * length).min(0.0) - left.y.abs() * half;
+    }
+    (0..crate::bend::VERTICES)
+        .map(|k| {
+            let (x, v) = crate::bend::corner(k);
+            card.bend
+                .position(base, heading, left, half, length, x, v)
+                .y
+        })
+        .fold(f64::INFINITY, f64::min)
+}
+
+/// `cards` kept above the [`GROUND`]: a card that would reach below it, a
+/// leaf drooping into the soil or a spray placed at a seedling's foot, is
+/// turned up about its base by the least angle that lifts it clear, as a
+/// leaf comes to rest on the ground; one that no turn clears (its base at
+/// the ground, or it already points up) is raised until it stands on it.
+/// Cards clear of the ground keep their bytes.
+fn grounded(cards: &mut [Card]) {
+    let vector = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
+    for card in cards.iter_mut() {
+        let (base, heading, left) = (vector(card.base), vector(card.heading), vector(card.left));
+        // No point of a card is farther from its base than its length and
+        // half its width.
+        if base.y - f64::from(card.length) - f64::from(card.width) * 0.5 >= GROUND {
+            continue;
+        }
+        let low = card_low(card, base, heading, left);
+        if low >= GROUND {
+            continue;
+        }
+        // Turn toward up about the level axis across the heading (about
+        // its left when it points straight down).
+        let across = heading.cross(Vec3::Y);
+        let axis = if across.length() > 1.0e-9 {
+            across.normalize_or(left)
+        } else {
+            left.normalize_or(Vec3::X)
+        };
+        let most = math::acos(heading.y.clamp(-1.0, 1.0));
+        let turned = |angle: f64| {
+            (
+                heading.rotate_about(axis, angle),
+                left.rotate_about(axis, angle),
+            )
+        };
+        let clears = |angle: f64| {
+            let (h, l) = turned(angle);
+            card_low(card, base, h, l) >= GROUND
+        };
+        let (heading, left, base) = if most > 1.0e-6 && clears(most) {
+            // The least turn that clears, to well under a millimetre.
+            let (mut short, mut enough) = (0.0, most);
+            for _ in 0..32 {
+                let middle = f64::midpoint(short, enough);
+                if clears(middle) {
+                    enough = middle;
+                } else {
+                    short = middle;
+                }
+            }
+            let (h, l) = turned(enough);
+            (h, l, base)
+        } else {
+            (heading, left, base + Vec3::Y * (GROUND - low))
+        };
+        card.base = base.to_f32();
+        card.heading = heading.to_f32();
+        card.left = left.to_f32();
     }
 }
 
@@ -1675,6 +1923,7 @@ fn organ_card(
         born: organ.born,
         shed: organ.shed,
         bend: shown.bend,
+        segment: organ.segment.unwrap_or(GROUNDED),
     };
     if let Some(cross) = shown.cross().or(across) {
         // A second card across the first keeps organs that stand
@@ -2537,6 +2786,9 @@ fn cluster_cards(
                     born: cluster.born,
                     shed: cluster.shed.is_finite().then_some(cluster.shed),
                     bend: Bend::FLAT,
+                    segment: cluster.organs.first().map_or(NO_SEGMENT, |&first| {
+                        graph.organs[first].segment.unwrap_or(GROUNDED)
+                    }),
                 }
                 .finish(),
             );
@@ -2552,6 +2804,71 @@ mod tests {
     use crate::graph::{GraphOrgan, GraphSegment};
     use crate::looks::{Flower, Needles, OrganLook, Shape};
     use crate::lsys::OrganKind;
+
+    fn card_at(base: [f32; 3], heading: [f32; 3], bend: Bend) -> Card {
+        Card {
+            base,
+            heading,
+            left: [0.0, 0.0, 1.0],
+            length: 0.3,
+            width: 0.1,
+            color: [0.2, 0.5, 0.2],
+            template: 0,
+            born: 0.0,
+            shed: f32::INFINITY,
+            bend,
+            segment: NO_SEGMENT,
+        }
+    }
+
+    fn low_of(card: &Card) -> f64 {
+        let vector = |v: [f32; 3]| Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]));
+        card_low(
+            card,
+            vector(card.base),
+            vector(card.heading),
+            vector(card.left),
+        )
+    }
+
+    /// A leaf drooping into the soil turns up about its base just enough to
+    /// rest on it; a spray standing at the foot is raised onto the ground;
+    /// a card clear of the ground keeps its bytes.
+    #[test]
+    fn cards_stay_above_the_ground() {
+        let s = std::f32::consts::FRAC_1_SQRT_2;
+        let drooping = card_at([0.0, 0.1, 0.0], [s, -s, 0.0], Bend::FLAT);
+        // Face up, so its midrib droops toward the ground.
+        let arching = Card {
+            left: [0.0, 0.0, -1.0],
+            ..card_at(
+                [0.0, 0.05, 0.0],
+                [1.0, 0.0, 0.0],
+                Bend {
+                    droop: 60.0,
+                    ..Bend::FLAT
+                },
+            )
+        };
+        let sunk = card_at([0.0, -0.15, 0.0], [0.0, 1.0, 0.0], Bend::FLAT);
+        let high = card_at([0.0, 0.3, 0.0], [s, -s, 0.0], Bend::FLAT);
+        let mut cards = vec![drooping, arching, sunk, high];
+        assert!(cards[..3].iter().all(|card| low_of(card) < -0.01));
+        grounded(&mut cards);
+        for card in &cards {
+            assert!(low_of(card) > -1.0e-5, "{card:?}");
+        }
+        // Turned, not moved, and only as far as the ground.
+        assert_eq!(cards[0].base, drooping.base);
+        assert!(cards[0].heading[1] > drooping.heading[1]);
+        assert!(low_of(&cards[0]) < 1.0e-3);
+        assert_eq!(cards[1].base, arching.base);
+        assert!(low_of(&cards[1]) < 1.0e-3);
+        // Pointing up already: raised to stand on the ground.
+        assert_eq!(cards[2].heading, sunk.heading);
+        assert!((cards[2].base[1] - 0.0).abs() < 1.0e-5);
+        assert_eq!(cards[3], high);
+    }
 
     /// A plant without bodies at its nearest level.
     fn build_plain(

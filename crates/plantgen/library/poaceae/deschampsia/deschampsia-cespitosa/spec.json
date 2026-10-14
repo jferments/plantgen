@@ -21,14 +21,12 @@
       "leaf_angle": 12,
       "arch": 9,
       "flowering": 0.3,
-      "culm_height": 0.85,
       "culm_radius": 0.001,
       "culm_lean": 8,
-      "panicle_length": 0.22,
       "panicle_nod": 20,
-      "blade_area": 0.041,
-      "tip_area": 0.022,
-      "thatch_area": 0.041,
+      "blade_area": 0.028,
+      "tip_area": 0.015,
+      "thatch_area": 0.028,
       "panicle_area": 0.181
     }
   },
@@ -48,13 +46,13 @@
     "variation": 0.3,
     "organs": {
       "blade": {
-        "shape": { "template": "blade", "taper": 0, "aspect": 0.045 }
+        "shape": { "template": "blade", "taper": 0 }
       },
       "blade_tip": {
-        "shape": { "template": "blade", "taper": 1, "aspect": 0.045 }
+        "shape": { "template": "blade", "taper": 1 }
       },
       "thatch": {
-        "shape": { "template": "blade", "taper": 0, "aspect": 0.045 },
+        "shape": { "template": "blade", "taper": 0 },
         "colour": [0.36, 0.29, 0.16],
         "shade": [0.12, 0.09, 0.05]
       },
@@ -100,6 +98,20 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_width_m": {
+      "min": 0.0015,
+      "max": 0.004
+    },
+    "culm_length_m": {
+      "min": 0.6,
+      "max": 1.2,
+      "typical": 0.85
+    },
+    "inflorescence_length_m": {
+      "min": 0.1,
+      "max": 0.25,
+      "typical": 0.22
+    },
     "inflorescence": "panicle",
     "florets_per_spikelet": {"min": 2, "max": 2, "high": 3},
     "spikelet_length_m": {"min": 0.0025, "max": 0.0076},
@@ -113,6 +125,21 @@
     "awn_form": {"straight": "often", "geniculate": "often"}
   },
   "evidence": {
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935), as Deschampsia caespitosa: blades 1.5 mm to 4 mm wide."
+    },
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935), as Deschampsia caespitosa: culms 60 cm to 1.2 m tall."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935), as Deschampsia caespitosa: panicle 10 cm to 25 cm long."
+    },
     "appearance.organs.panicle": {
       "evidence": "Authored",
       "source": "plantgen-authors",

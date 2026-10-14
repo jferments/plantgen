@@ -3,11 +3,13 @@
   "rank": "genus",
   "name": "Prunus",
   "traits": {
+    "wood_density_basic_kg_m3": 600,
     "ovary_position": "superior",
     "stamens": {"min": 15, "max": 30},
     "carpels": 1
   },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 genus aggregate for Prunus (gwddagg_v2.2_genus.csv, read): specific gravity 0.6 (wsg_est, the hierarchical-model genus mean, from 320 records in 70 sources); trunks 0.61, branches 0.6. A species with its own measurements states its own. Basic density is the specific gravity times 1000 kg/m3."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",

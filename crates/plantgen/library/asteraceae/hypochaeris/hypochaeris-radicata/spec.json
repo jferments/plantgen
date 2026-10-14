@@ -17,7 +17,6 @@
       "clump_radius": 0.03,
       "stem_lean": 12,
       "maturity": 1.0,
-      "stem_height": 0.36,
       "stem_radius": 0.0015,
       "wiggle": 3,
       "nodes": 0,
@@ -84,6 +83,15 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 0.8,
+      "typical": 0.36
+    },
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.3
+    },
     "involucre_diameter_m": {"min": 0.01, "max": 0.02},
     "involucre_height_m": {"min": 0.01, "max": 0.025},
     "phyllaries": {"min": 20, "max": 30},
@@ -91,6 +99,16 @@
     "pappus_length_m": {"min": 0.01, "max": 0.012}
   },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960), as Hypochoeris radicata: stems 30 cm to 80 cm tall. The typical value is the one the plant was drawn at before, inside the source's range."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960), as Hypochoeris radicata: leaves 5 cm to 30 cm long."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

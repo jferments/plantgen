@@ -27,14 +27,54 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
     ),
     (
+        "berberis-aquifolium",
+        "flower_merosity",
+        "its six petals stand in two whorls of three, and a corolla draws one whorl, so its spec draws six there",
+    ),
+    (
+        "berberis-nervosa",
+        "flower_merosity",
+        "its six petals stand in two whorls of three, and a corolla draws one whorl, so its spec draws six there",
+    ),
+    (
+        "dicentra-formosa",
+        "flower_merosity",
+        "its four petals stand in two pairs, outer and inner, and a corolla draws one whorl, so its spec draws four there",
+    ),
+    (
+        "digitalis-purpurea",
+        "corolla_shape",
+        "its bell is joined 0.8 of its length round a wide mouth, its lobes short (Flora of New Zealand), but the angiosperms draw every bell joined 0.45 and a funnel 0.6, so its corolla is nearest a funnel; a longer bell needs the rule's shapes to allow one",
+    ),
+    (
+        "encelia-farinosa",
+        "shoot_leaves",
+        "its most vigorous shoots grow one to three of the four internodes a year they may, two nodes each, so they bear 2 to 6 leaves against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
+    ),
+    (
+        "larrea-tridentata",
+        "leaf_division",
+        "each leaf is two leaflets joined at their base, but its sprig cards draw each leaf as one blade",
+    ),
+    (
         "lysichiton-americanus",
         "units_per_inflorescence",
         "a cluster draws at most 200 units, so the spadix's 350 to 1350 flowers are drawn as 200",
     ),
     (
+        "nymphaea-odorata",
+        "shoot_leaves",
+        "its rhizome is not drawn and each pad's petiole is, as a stem of its own, so each reads as a shoot of one leaf against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
+    ),
+    (
         "oxalis-oregana",
         "leaf_arrangement",
         "Oxalidaceae's leaves are alternate and redwood sorrel's rise one to a node from its rhizome, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
+    ),
+    (
+        "parkinsonia-microphylla",
+        "flower_symmetry",
+        "its zygomorphy is `other`, which the angiosperms draw as a corolla of like petals, so its flowers are drawn radial",
     ),
     (
         "program:broadleaf",
@@ -47,14 +87,39 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "each blade's roll is jittered ±40° (a culm leaf's ±30°), so the turn from one to the next has a median of about 146°, nearer the golden angle than half a turn",
     ),
     (
+        "program:grass",
+        "leaf_width_m",
+        "since the Poaceae rule sets blade cards from Hitchcock's widths, the median blade measured sits inside the flora's range, but the narrowest run up to half its least width (smaller blades of young tillers, inferred, not traced)",
+    ),
+    (
+        "program:grass",
+        "shoot_leaves",
+        "a culm's own leaves are its 1 to 3 culm leaves and a tiller's blades stand at the ground on no stem, against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
+    ),
+    (
         "program:herb",
         "phyllotaxis_pattern",
         "each basal leaf's roll is jittered ±30°, so a fan of two ranks (irises, blue-eyed grass) turns about 140° to 150° from one leaf to the next",
     ),
     (
+        "program:herb",
+        "shoot_leaves",
+        "a stem grows all its nodes' leaves in its one year (2 on foamflower's, 36 on Columbia lily's, 45 on fireweed's), against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
+    ),
+    (
+        "program:rosette",
+        "shoot_leaves",
+        "a rosette's crown adds its year's leaves where they stand (29 to 38 on common sotol's), against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
+    ),
+    (
         "program:sapindaceae",
         "crown_outline_fit",
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
+    ),
+    (
+        "tolmiea-menziesii",
+        "flower_symmetry",
+        "its zygomorphy is `other`, which the angiosperms draw as a corolla of like petals, so its flowers are drawn radial",
     ),
     (
         "viola-glabella",

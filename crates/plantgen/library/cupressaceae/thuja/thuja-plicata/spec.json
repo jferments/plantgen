@@ -27,7 +27,8 @@
       "nod_years": 2,
       "spray_droop": 65,
       "spray_area": 0.25,
-      "pipe_organ": 0.0095
+      "pipe_organ": 0.0095,
+      "branch_reach": 6.0
     }
   },
   "growth": {
@@ -97,6 +98,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "wood_density_basic_kg_m3": 340,
+    "wood_modulus_green_mpa": 6500,
+    "wood_rupture_green_mpa": 36,
+    "wood_moisture_green_share": {"min": 0.58, "max": 2.49, "typical": 1.54},
     "juvenile_period_years": {"min": 10, "max": 30},
     "leaf_length_m": {"min": 0.0015, "max": 0.003},
     "leaf_life_years": {"min": 6.8, "max": 10.6, "typical": 8.9},
@@ -104,6 +109,10 @@
     "cone_posture": "erect"
   },
   "evidence": {
+    "traits.wood_modulus_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Cedar, western red, green: modulus of elasticity 6,500 MPa in static bending (clear wood, centre-loaded, span 14 depths; specific gravity 0.31)."},
+    "traits.wood_rupture_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Cedar, western red, green: modulus of rupture 35,900 kPa (clear wood in static bending)."},
+    "traits.wood_moisture_green_share": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 4-1, Cedar, western red: average moisture content of green wood, heartwood 58% and sapwood 249% of oven-dry mass; stated as a share, the range between them with its middle typical where both are given."},
+    "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Thuja plicata (gwddagg_v2.2_species.csv, read): specific gravity 0.34 (wsg_est, the database's hierarchical-model species mean, from 11 records in 8 sources); trunks 0.32, branches 0.47. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "traits.cone_posture": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
@@ -132,7 +141,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set for a western redcedar: a leader that nods over and straightens, branches that sweep down and turn up at the tips, flat scale-leaved sprays hanging below them, foliage kept about five years. Spray area matched to the drawn sprays. Not fitted to data. Cones (plant forms F3): about 1 cm, upright, in clusters; set from general knowledge of the species, not measured. Spec rework E6d: `cone_length`, `cone_pitch`, `needle_years` now set by the rules at Pinidae from the stated characters."
+      "note": "Hand-set for a western redcedar: a leader that nods over and straightens, branches that sweep down and turn up at the tips, flat scale-leaved sprays hanging below them, foliage kept about five years. Spray area matched to the drawn sprays. Not fitted to data. Cones (plant forms F3): about 1 cm, upright, in clusters; set from general knowledge of the species, not measured. Spec rework E6d: `cone_length`, `cone_pitch`, `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe."
     },
     "allometry": {
       "evidence": "Authored",

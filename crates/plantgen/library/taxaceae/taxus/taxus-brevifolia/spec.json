@@ -30,16 +30,16 @@
       "max_sag": 40,
       "upturn": 0.006,
       "branch_growth": 0.2,
-      "branch_ageing": 0.99,
       "side_chance": 0.85,
       "spray_droop": 30,
       "shade_death": 0.03,
       "shade_years": 8,
       "min_shoot": 0.015,
-      "pipe_rings": 1e-06,
+      "pipe_rings": 1.4e-06,
       "pipe_organ": 0.003,
       "pipe_tip": 0.0015,
-      "spray_area": 0.291
+      "spray_area": 0.291,
+      "branch_reach": 2.6
     }
   },
   "growth": {
@@ -103,11 +103,13 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "wood_density_basic_kg_m3": 580,
     "leaf_length_m": {"min": 0.012, "max": 0.016, "low": 0.01, "high": 0.03},
     "leaf_life_years": {"min": 4, "max": 5, "high": 6},
     "seed_length_m": 0.008
   },
   "evidence": {
+    "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Taxus brevifolia (gwddagg_v2.2_species.csv, read): specific gravity 0.58 (wsg_est, the database's hierarchical-model species mean, from 3 records in 3 sources); trunks 0.58, branches 0.6. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
@@ -126,7 +128,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a small, slow, often crooked understory tree with long, drooping branches and flat sprays of soft, pointed needles. Not fitted to measurements. Cones (plant forms F3): seeds in a red fleshy aril about 8 mm; set from general knowledge of the species, not measured. Spec rework E6d: `needle_years` now set by the rules at Pinidae from the stated characters."
+      "note": "Hand-set from general knowledge of the species: a small, slow, often crooked understory tree with long, drooping branches and flat sprays of soft, pointed needles. Not fitted to measurements. Cones (plant forms F3): seeds in a red fleshy aril about 8 mm; set from general knowledge of the species, not measured. Spec rework E6d: `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe, and `pipe_rings` refitted to the dbh references now that the crown holds more foliage; `branch_ageing` is gone with the calendar ageing it set."
     },
     "allometry": {
       "evidence": "Authored",

@@ -38,7 +38,6 @@
       "pipe_rings": 3e-06,
       "space_reach": 0.68,
       "space_kill": 0.168,
-      "leaves_per_node": 1,
       "leaf_years": 3,
       "leaf_size": 0.12,
       "spur_leaf": 0.1,
@@ -125,9 +124,18 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 0.5,
+      "max": 2
+    },
     "flowering_position": "lateral"
   },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), as Vaccinium ovatum: grows 50 cm to 2 m tall."
+    },
     "generator.params.path_half": {
       "evidence": "Authored",
       "source": "plantgen-authors",

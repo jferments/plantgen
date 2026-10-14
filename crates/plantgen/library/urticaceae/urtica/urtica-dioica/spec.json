@@ -17,7 +17,6 @@
       "clump_radius": 0.4,
       "stem_lean": 6,
       "maturity": 1.2,
-      "stem_height": 1.6,
       "stem_radius": 0.003,
       "wiggle": 2,
       "nodes": 14,
@@ -100,10 +99,29 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_typical_m": {
+      "min": 1.0,
+      "max": 2.0,
+      "typical": 1.6
+    },
+    "leaf_length_m": {
+      "min": 0.03,
+      "max": 0.15
+    },
     "inflorescence": "panicle",
     "inflorescence_posture": "nodding"
   },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Urtica lyallii: stems 1 m to 2 m tall. The typical value is the one the plant was drawn at before, inside the source's range."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Urtica lyallii: leaves 3 cm to 15 cm long."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

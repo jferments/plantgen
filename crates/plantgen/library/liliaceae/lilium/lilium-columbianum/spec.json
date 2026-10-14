@@ -18,11 +18,9 @@
       "stem_lean": 3,
       "maturity": 2,
       "adult_age": 3,
-      "stem_height": 1.0,
       "stem_radius": 0.004,
       "wiggle": 1.5,
       "nodes": 6,
-      "leaves_per_node": 6,
       "bare": 0.25,
       "leaf_length": 0.08,
       "leaf_peak": 0.5,
@@ -99,7 +97,47 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.6,
+      "max": 1.2,
+      "typical": 1.0
+    },
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.1
+    },
+    "leaf_arrangement": {
+      "whorled": "usually",
+      "alternate": "often"
+    },
+    "leaves_per_whorl": {
+      "min": 5,
+      "max": 9,
+      "typical": 6
+    }
+  },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Lilium columbianum: stems 60 cm to 1.2 m tall. The scan's text reads cm, which the plant's own parts show is a misreading of dm. The typical value is the one the plant was drawn at before, inside the source's range."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Lilium columbianum: leaves 5 cm to 10 cm long."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams, Illustrated Flora of the Pacific States vol. 1 (1923), Lilium columbianum: leaves in whorls, the uppermost and lowest ones scattered."
+    },
+    "traits.leaves_per_whorl": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), Lilium columbianum: whorls of 5 to 9 leaves, sometimes more; 6 is the count this spec drew by hand before, within that range."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

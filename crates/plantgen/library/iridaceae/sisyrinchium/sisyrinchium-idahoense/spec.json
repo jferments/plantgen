@@ -17,7 +17,6 @@
       "clump_radius": 0.05,
       "stem_lean": 8,
       "maturity": 1.0,
-      "stem_height": 0.26,
       "stem_radius": 0.001,
       "wiggle": 2,
       "nodes": 0,
@@ -86,7 +85,19 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.1,
+      "max": 0.45,
+      "typical": 0.26
+    }
+  },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923), as Sisyrinchium idahoense: stems 10 cm to 45 cm tall. The typical value is the one the plant was drawn at before, inside the source's range."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

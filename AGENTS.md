@@ -158,13 +158,17 @@ prompt injection. So, without exception:
     the character's `why` defines it: a head's involucre from its
     layout's phyllaries, a spikelet's glumes and lemmas from its layout, a
     divided leaf's blade and petiole from its leaflets, a grass blade from
-    its pieces, a cluster's length from its units; it counts rays,
-    florets, phyllaries, glumes, units, leaflets and pinnae on each
-    organ, checks that cluster and head kinds, awns, ranks and leaf
-    patterns agree with what is stated, and measures on the graph the
+    its pieces, a cluster's length from its units, a spur from its
+    flower's layout; it counts rays, florets, phyllaries, glumes, units,
+    leaflets and pinnae, a flower's petals or tepals in a whorl and the
+    times a leaf divides on each organ, checks that cluster and head
+    kinds, awns, ranks and leaf patterns, a leaf's form and division, a
+    flower's symmetry, corolla shape, floral cup and turn, and a fruit's
+    type agree with what is stated, and measures on the graph a cone's
+    pitch from its shoot, the
     leaves at each node (those born with the internode below it, not a
-    short shoot's crowded there later) and the turn from node to node,
-    and from the side
+    short shoot's crowded there later), the turn from node to node and
+    the most leaves one year's growth of a stem bears, and from the side
     a crown's outline against an ellipse and the sky through it
     (`src/form.rs`), holding a tree that states no outline to one no
     rounder than open-grown crowns are. Each layout that
@@ -172,6 +176,13 @@ prompt injection. So, without exception:
     the same function that draws it. The species-suite test
     (`tests/checks.rs`) holds every species within its ranges' extremes
     and stated kinds, but the few it lists with why.
+  - Whole drawings (`tests/species.rs`): no organ floats free of what
+    bears it (`mesh::loose_organs`), and nothing of any species reaches
+    more than 5 cm below the ground it stands on, the level plane of its
+    foot (`mesh::Below`), so a host can stand it on level ground. Cards
+    are kept above it as they are built (`mesh::grounded`); wood grown
+    into it is growth's to fix, and the test lists those species with
+    why.
   - `src/`: growth, meshes, impostors, packages, glTF exports, ground
     looks and the library.
 - `apps/plantc`: the command-line compiler and previewer.

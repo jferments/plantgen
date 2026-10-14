@@ -38,7 +38,6 @@
       "pipe_rings": 3e-06,
       "space_reach": 1.02,
       "space_kill": 0.252,
-      "leaves_per_node": 1,
       "leaf_size": 0.3,
       "spur_leaf": 0.25,
       "spur_pairs": 1,
@@ -143,10 +142,19 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 0.91,
+      "max": 1.83
+    },
     "carpels": 30,
     "flowering_position": "terminal"
   },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson (1925), as R. parviflorus: grows 91 cm to 1.83 m tall (converted from feet)."
+    },
     "generator.params.path_half": {
       "evidence": "Authored",
       "source": "plantgen-authors",

@@ -267,6 +267,60 @@ fn fronds_and_pads_lie_on_the_ground() {
     );
 }
 
+/// Nothing a package draws reaches below the ground its plant stands on
+/// (the level plane of its foot), so a host can stand it on level ground
+/// without leaving it out: no segment, organ, wood vertex or card of any
+/// built-in species, at any keyframe of its first variant and any level,
+/// ends more than 5 cm below it. Roots are left out: they are drawn to
+/// meet the ground, and surface roots run half sunk in it.
+#[test]
+fn builtin_species_stand_above_the_ground() {
+    // Wood grown into the ground: segments that end below it, which
+    // growth has to stop (ground as an obstacle in growth, the M6
+    // thread). A water lily's frame stands on the water's surface, with its
+    // rhizome on the bottom below (`programs/nymphaeaceae.lsys`).
+    const KNOWN: [&str; 1] = ["nymphaea-odorata"];
+    const BED: f64 = 0.05;
+    let species: Vec<&str> = spec::all_species().map(|(id, _)| id).collect();
+    let threads = std::thread::available_parallelism().map_or(4, usize::from);
+    let failures: Vec<String> = std::thread::scope(|scope| {
+        let workers: Vec<_> = species
+            .chunks(species.len().div_ceil(threads))
+            .map(|chunk| {
+                scope.spawn(move || {
+                    let mut failures = Vec::new();
+                    for &id in chunk {
+                        let mut spec = PlantSpec::builtin(id).unwrap();
+                        spec.appearance.roots = None;
+                        let inputs = package::Inputs::new(&spec, &plantgen::quality::STANDARD).unwrap();
+                        let years = spec.growth.keyframes.iter().copied().fold(0.0, f64::max);
+                        let variant = &spec.variant_list()[0];
+                        let growth = grow_variant(&spec, variant, years, spec.growth.keyframes.clone());
+                        for graph in &growth.keyframes {
+                            for (level, mesh) in package::keyframe_meshes(graph, &inputs).iter().enumerate() {
+                                let below = plantgen::mesh::Below::drawn(graph, mesh);
+                                if below.most() > BED && !KNOWN.contains(&id) {
+                                    failures.push(format!(
+                                        "{id}: at {} years, level {level}, {:.3} m below the ground ({below:?})",
+                                        graph.age,
+                                        below.most(),
+                                    ));
+                                }
+                            }
+                        }
+                    }
+                    failures
+                })
+            })
+            .collect();
+        workers
+            .into_iter()
+            .flat_map(|worker| worker.join().unwrap())
+            .collect()
+    });
+    assert!(failures.is_empty(), "{}", failures.join("\n"));
+}
+
 /// Grasses and herbs renew their shoots every year: at every keyframe
 /// each stem, culm, leaf and flower grew that year, so nothing lives on
 /// from the year before but a grass's thatch, the dead blades of last
@@ -541,6 +595,127 @@ fn conifers_bear_cones_once_old() {
             "{id}: cone sizes {:?}",
             &old[..old.len().min(5)]
         );
+    }
+    assert_eq!(
+        checked, 11,
+        "the ten conifers of the forest and the bald cypress"
+    );
+}
+
+/// Conifer form (pinidae revision 5): open-grown conifers hold the leaf
+/// area per crown area of the USDA Urban Tree Database's open-grown trees
+/// of their species (`usfs-urban-tree-database-2016`, leaf area over the
+/// area of the mean crown diameter, between its 10th and 90th percentiles
+/// for the ages), and those that are not pines keep foliage on the inner
+/// half of their lower branches at their oldest keyframe: a branch's
+/// shoots die by light, not by age, and its side shoots and dormant buds
+/// refoliate it.
+#[test]
+fn open_conifers_keep_their_lower_crowns() {
+    // Species, age, the database's 10th and 90th percentiles, its trees.
+    for (id, age, low, high) in [
+        // Longview, WA: 8 trees 60 to 300 years old.
+        ("pseudotsuga-menziesii", 60.0, 3.6, 16.5),
+        // Longview, as Pinus contorta: 20 trees 20 to 35.
+        ("pinus-contorta-var-contorta", 30.0, 3.6, 6.8),
+    ] {
+        let spec = PlantSpec::builtin(id).unwrap();
+        let variant = *spec
+            .variant_list()
+            .iter()
+            .find(|variant| variant.environment == spec::Environment::Open)
+            .unwrap();
+        let growth = grow_variant(&spec, &variant, age, vec![age]);
+        let graph = &growth.keyframes[0];
+        let radius = graph.crown_radius();
+        let index = graph.leaf_area(&growth.organ_types) / (std::f64::consts::PI * radius * radius);
+        assert!(
+            (low..=high).contains(&index),
+            "{id} at {age} years: {index:.2} m² of leaf per m² of crown, the database {low} to {high}"
+        );
+    }
+    let mut checked = 0;
+    for (id, _) in spec::all_species() {
+        let spec = PlantSpec::builtin(id).unwrap();
+        if spec.generator.program != "pinidae" || id.starts_with("pinus-") {
+            continue;
+        }
+        let Some(variant) = spec
+            .variant_list()
+            .into_iter()
+            .find(|variant| variant.environment == spec::Environment::Open)
+        else {
+            continue;
+        };
+        checked += 1;
+        let oldest = *spec.growth.keyframes.last().unwrap();
+        let growth = grow_variant(&spec, &variant, oldest, vec![oldest]);
+        let graph = &growth.keyframes[0];
+        let radius = graph.crown_radius();
+        let spray = growth
+            .organ_types
+            .iter()
+            .position(|organ| organ.name == "spray")
+            .unwrap_or_else(|| panic!("{id}: no spray organ"));
+        let lower: Vec<_> = graph
+            .organs
+            .iter()
+            .filter(|organ| {
+                usize::from(organ.organ) == spray && organ.position.y < 0.5 * graph.height
+            })
+            .collect();
+        let area = |organs: &[&plantgen::graph::GraphOrgan]| {
+            organs
+                .iter()
+                .map(|organ| organ.size * organ.size)
+                .sum::<f64>()
+        };
+        let inner: Vec<_> = lower
+            .iter()
+            .copied()
+            .filter(|organ| organ.position.x.hypot(organ.position.z) < 0.5 * radius)
+            .collect();
+        let share = area(&inner) / area(&lower);
+        assert!(
+            share >= 0.12,
+            "{id} at {oldest} years: {share:.2} of the lower crown's foliage on the inner half of its branches"
+        );
+    }
+    assert_eq!(checked, 7, "the open-grown conifers that are not pines");
+}
+
+/// Conifer form (pinidae revision 5): no conifer's wood or foliage passes
+/// into the ground. A limb that sags to within `ground_gap` of it is shed
+/// from there out, so in every variant at every keyframe no segment ends,
+/// and no organ sits, more than 5 cm below the foot's plane.
+#[test]
+fn conifers_keep_above_the_ground() {
+    let mut checked = 0;
+    for (id, _) in spec::all_species() {
+        let spec = PlantSpec::builtin(id).unwrap();
+        if spec.generator.program != "pinidae" {
+            continue;
+        }
+        checked += 1;
+        let oldest = *spec.growth.keyframes.last().unwrap();
+        for variant in spec.variant_list() {
+            let growth = grow_variant(&spec, &variant, oldest, spec.growth.keyframes.clone());
+            for graph in &growth.keyframes {
+                let lowest = graph
+                    .segments
+                    .iter()
+                    .map(|segment| segment.end.y)
+                    .chain(graph.organs.iter().map(|organ| organ.position.y))
+                    .fold(f64::INFINITY, f64::min);
+                assert!(
+                    lowest >= -0.05,
+                    "{id} {:?} seed {} at {} years: wood or foliage {lowest:.3} m below the ground",
+                    variant.environment,
+                    variant.seed,
+                    graph.age
+                );
+            }
+        }
     }
     assert_eq!(
         checked, 11,
