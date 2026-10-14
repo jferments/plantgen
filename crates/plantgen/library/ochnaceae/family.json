@@ -2,5 +2,72 @@
   "schema": 1,
   "rank": "family",
   "name": "Ochnaceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes",
+      "whorled": "sometimes"
+    },
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "rarely"
+    },
+    "division_pattern": "pinnate",
+    "leaf_margin": {
+      "entire": "often",
+      "serrate": "often",
+      "dentate": "often",
+      "crenate": "sometimes"
+    },
+    "leaf_venation": "pinnate",
+    "leaf_habit": "evergreen",
+    "stipules": {
+      "true": "usually",
+      "false": "sometimes"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "polygamous": "sometimes"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": {
+      "woody": "usually",
+      "herbaceous": "rarely"
+    },
+    "inflorescence": {
+      "cyme": "often",
+      "raceme": "often",
+      "umbel": "often",
+      "panicle": "often",
+      "solitary": "sometimes"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "sometimes"
+    },
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "often",
+      "berry": "often",
+      "drupe": "often",
+      "follicle": "sometimes"
+    },
+    "stamens": {
+      "min": 5,
+      "max": 100
+    },
+    "carpels": {
+      "min": 2,
+      "max": 15
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Ochnaceae with Medusagynaceae, Quiinaceae, Strasburgeriaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually alternate, sometimes opposite or whorled; leaves usually simple, rarely compound; compound leaves pinnate; margins entire, serrate or dentate, sometimes crenate; veins pinnate; leaves evergreen; stipules usually present, sometimes absent; plants usually hermaphrodite, sometimes polygamous; ovary superior; floral cup absent; stems usually woody, rarely herbaceous; flowers in cymes, in racemes, in umbels or in panicles, sometimes solitary; flowers usually actinomorphic, sometimes zygomorphic; perianth sepals and petals; fruit capsule, berry or drupe, sometimes follicle; stamens 5 to 100; carpels 2 to 15. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

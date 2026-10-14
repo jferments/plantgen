@@ -2,5 +2,34 @@
   "schema": 1,
   "rank": "family",
   "name": "Griseliniaceae",
-  "parent": "order/apiales"
+  "parent": "order/apiales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "stipules": false,
+    "sexual_system": "dioecious",
+    "ovary_position": "inferior",
+    "hypanthium": true,
+    "woodiness": "woody",
+    "inflorescence": {
+      "raceme": "often",
+      "panicle": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "sometimes"
+    },
+    "fruit_type": "berry",
+    "flower_merosity": 5,
+    "stamens": 5,
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Griseliniaceae: leaves alternate; leaves simple; stipules absent; plants dioecious; ovary inferior; floral cup present; stems woody; flowers in racemes or in panicles; flowers actinomorphic; perianth usually sepals and petals, sometimes tepals; fruit berry; parts of each whorl 5; stamens 5; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

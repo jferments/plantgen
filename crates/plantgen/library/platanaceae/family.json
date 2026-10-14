@@ -2,5 +2,48 @@
   "schema": 1,
   "rank": "family",
   "name": "Platanaceae",
-  "parent": "order/proteales"
+  "parent": "order/proteales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "dentate",
+    "leaf_venation": {
+      "palmate": "usually",
+      "pinnate": "sometimes"
+    },
+    "leaf_habit": "deciduous",
+    "stipules": true,
+    "sexual_system": "monoecious",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": "head",
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "often",
+      "tepals": "often"
+    },
+    "fruit_type": {
+      "achene": "often",
+      "nut": "often"
+    },
+    "stamens": {
+      "min": 3,
+      "max": 4,
+      "high": 7
+    },
+    "carpels": {
+      "min": 5,
+      "max": 8,
+      "low": 3,
+      "high": 9
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Platanaceae: leaves alternate; leaves simple; margins dentate; veins usually palmate, sometimes pinnate; leaves deciduous; stipules present; plants monoecious; ovary superior; floral cup absent; stems woody; flowers in heads; flowers actinomorphic; perianth sepals and petals or tepals; fruit achene or nut; stamens 3 to 4 (-7); carpels (3-) 5 to 8 (-9). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

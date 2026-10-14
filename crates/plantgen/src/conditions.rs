@@ -204,6 +204,75 @@ pub struct Envelope {
     pub density: f64,
 }
 
+/// A plant's crown as its neighbours see it: an upright cylinder round its
+/// foot holding its leaf area, for plants that grow together in a stand
+/// (`crate::stand`).
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Crown {
+    /// The height below which one twentieth of its leaves stand, and its
+    /// highest leaf, metres.
+    pub base_m: f64,
+    pub top_m: f64,
+    /// The distance from its axis within which nine tenths of its leaves
+    /// stand, metres.
+    pub radius_m: f64,
+    /// Its leaves' one-sided area, m².
+    pub leaf_area_m2: f64,
+}
+
+impl Crown {
+    /// The extinction coefficient of foliage with leaves at every angle
+    /// (a spherical leaf angle distribution): the shade per metre of a
+    /// crown is this times its leaf area per cubic metre.
+    pub const EXTINCTION: f64 = 0.5;
+
+    /// The crown of leaves at `points` (each with its area, m²), relative
+    /// to the plant's foot; `None` when none has any area.
+    #[must_use]
+    pub fn of(points: impl Iterator<Item = (Vec3, f64)>) -> Option<Self> {
+        let leaves: Vec<(Vec3, f64)> = points.filter(|(_, area)| *area > 0.0).collect();
+        if leaves.is_empty() {
+            return None;
+        }
+        let quantile = |mut values: Vec<f64>, share: f64| {
+            #[allow(
+                clippy::cast_precision_loss,
+                clippy::cast_possible_truncation,
+                clippy::cast_sign_loss
+            )]
+            let at = ((values.len() - 1) as f64 * share).round() as usize;
+            *values.select_nth_unstable_by(at, f64::total_cmp).1
+        };
+        let radial = leaves
+            .iter()
+            .map(|(point, _)| math::sqrt(point.x * point.x + point.z * point.z))
+            .collect();
+        let heights: Vec<f64> = leaves.iter().map(|(point, _)| point.y).collect();
+        let top = heights.iter().copied().fold(f64::NEG_INFINITY, f64::max);
+        let base = quantile(heights, 0.05).max(0.0).min(top);
+        Some(Self {
+            base_m: base,
+            top_m: top.max(base + 0.01),
+            radius_m: quantile(radial, 0.9).max(0.05),
+            leaf_area_m2: leaves.iter().map(|(_, area)| area).sum(),
+        })
+    }
+
+    /// The crown as an envelope centred `centre_m` (east, north) from the
+    /// plant it shades, its density from its leaf area.
+    #[must_use]
+    pub fn envelope(&self, centre_m: [f64; 2]) -> Envelope {
+        let volume = math::PI * self.radius_m * self.radius_m * (self.top_m - self.base_m);
+        Envelope {
+            centre_m,
+            base_m: self.base_m,
+            top_m: self.top_m,
+            radius_m: self.radius_m,
+            density: (Self::EXTINCTION * self.leaf_area_m2 / volume).min(10.0),
+        }
+    }
+}
+
 impl Envelope {
     /// Where its axis stands in the plant's frame, `(x, z)`.
     fn axis(&self) -> (f64, f64) {

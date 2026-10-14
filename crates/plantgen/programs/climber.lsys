@@ -45,9 +45,14 @@
 # that extend it (`hedera`, `vitaceae`) give the values their species
 # leave unset, as this program's defaults were until then.
 #
+# Revision 5 (leaf life): leaves and fruit live as long as their
+# parameters say, no longer one year more. What a step makes is born at
+# the step's end, so a rule that ends a part by its age counts the step it
+# is in (`age + dt >=`).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem climber 4;
+lsystem climber 5;
 
 param vigour_spread;
 param shoots;                 # stems from the foot
@@ -138,8 +143,8 @@ decompose Mb(o, w) -> ;
 
 # Leaves fall after leaf_years, fruit after a year; a side shoot with no
 # living tip falls.
-rule leaf(s) : age >= leaf_years -> ;
-rule fruit(s) : age >= 1 -> ;
+rule leaf(s) : age + dt >= leaf_years -> ;
+rule fruit(s) : age + dt >= 1 -> ;
 rule S : age > 1 && ntip == 0 -> %;
 
 # An old node leafs again.

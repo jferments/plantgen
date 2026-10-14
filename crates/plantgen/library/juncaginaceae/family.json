@@ -2,5 +2,51 @@
   "schema": 1,
   "rank": "family",
   "name": "Juncaginaceae",
-  "parent": "order/alismatales"
+  "parent": "order/alismatales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": "parallel",
+    "leaf_shape": "linear",
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "rosette": "basal",
+    "sexual_system": {
+      "dioecious": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "superior",
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "raceme": "often",
+      "spike": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "tepals": "often",
+      "absent": "often"
+    },
+    "fruit_type": {
+      "follicle": "often",
+      "achene": "often",
+      "schizocarp": "often"
+    },
+    "stamens": {
+      "min": 3,
+      "max": 8
+    },
+    "carpels": {
+      "min": 1,
+      "max": 6
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Juncaginaceae: leaves alternate; leaves simple; veins parallel; blades linear; stipules present or absent; leaf rosettes basal; plants dioecious or polygamous; ovary superior; stems herbaceous; flowers in racemes or in spikes; flowers actinomorphic; perianth tepals or absent; fruit follicle, achene or schizocarp; stamens 3 to 8; carpels 1 to 6. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

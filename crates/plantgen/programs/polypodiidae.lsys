@@ -43,9 +43,18 @@
 # Revision 4 (spec rework E6a): a new crown may start as old as its
 # parent (crown_start); by default it starts as a sporeling, as before.
 #
+# Revision 5 (plants fitted to their place): a frond that sags to the
+# ground lies on it, `rest_gap` above the substrate (substrate@1's, or
+# level soil), instead of passing into it.
+#
+# Revision 6 (leaf life): fronds live as long as their parameters say, no
+# longer one year more. What a step makes is born at the step's end, so a
+# rule that ends a part by its age counts the step it is in (`age + dt
+# >=`).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem polypodiidae 4;
+lsystem polypodiidae 6;
 
 param vigour_spread = 0.12;   # a fern grows exp(gauss() * vigour_spread) times as fast
 # Fronds.
@@ -77,6 +86,7 @@ param unroll = 0.25;          # share of a year a frond takes to unroll
 param curl = 40;              # degrees each coiled piece turns back
 param droop = 0.02;           # sag per year of a frond's age
 param droop_years = 2;        # sag stops growing after this many years
+param rest_gap = 0.02;        # a frond that reaches the ground lies this far above it
 # The rhizome.
 param crowns = 0;             # most new crowns a fern sends out
 param crown_age = 3;          # the first year of new crowns
@@ -115,8 +125,8 @@ decompose Fc(i, m, c) : m == 1 ->
 decompose Fc(i, m, c) -> ;
 
 # A frond dies after frond_life years; its rachis pieces with it.
-rule Pc(k, m, s, e) : age >= frond_life -> ;
-rule frond : age >= frond_life -> ;
+rule Pc(k, m, s, e) : age + dt >= frond_life -> ;
+rule frond : age + dt >= frond_life -> ;
 
 # A frond: it opens from the vertical with age and sags as it ages, then its
 # rachis, piece by piece.
@@ -129,7 +139,7 @@ decompose Pc(k, m, s, e) : m > 1 ->
 # share coils back, and its pinnae are folded small.
 interpret Pc(k, m, s, e) : k == 0 ->
     &(lerp(young_angle, old_angle, 1 - exp(-max(0, age + season - e) / open_years)))
-    T(0, -1, 0, droop * min(max(0, age + season - e), droop_years))
+    T(0, -1, 0, droop * min(max(0, age + season - e), droop_years)) rest(rest_gap)
     Pp(k, s, e);
 interpret Pc(k, m, s, e) -> Pp(k, s, e);
 

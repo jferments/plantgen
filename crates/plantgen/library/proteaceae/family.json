@@ -2,5 +2,90 @@
   "schema": 1,
   "rank": "family",
   "name": "Proteaceae",
-  "parent": "order/proteales"
+  "parent": "order/proteales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes",
+      "whorled": "sometimes"
+    },
+    "leaf_division": {
+      "simple": "often",
+      "compound": "often"
+    },
+    "division_pattern": {
+      "pinnate": "usually",
+      "palmate": "sometimes"
+    },
+    "leaf_margin": {
+      "entire": "often",
+      "crenate": "often",
+      "serrate": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": {
+      "single": "often",
+      "pinnate": "often",
+      "palmate": "often",
+      "parallel": "often"
+    },
+    "leaf_habit": "evergreen",
+    "leaf_shape": "linear",
+    "stipules": false,
+    "rosette": {
+      "basal": "often",
+      "none": "often",
+      "terminal": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "monoecious": "sometimes",
+      "polygamous": "sometimes",
+      "dioecious": "sometimes"
+    },
+    "ovary_position": "superior",
+    "hypanthium": {
+      "true": "usually",
+      "false": "sometimes"
+    },
+    "woodiness": {
+      "woody": "usually",
+      "herbaceous": "sometimes"
+    },
+    "inflorescence": {
+      "solitary": "sometimes",
+      "raceme": "often",
+      "spike": "often",
+      "head": "often",
+      "umbel": "often"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "perianth": {
+      "sepals_and_petals": "sometimes",
+      "tepals": "usually"
+    },
+    "fruit_type": {
+      "follicle": "often",
+      "drupe": "often",
+      "nut": "often",
+      "achene": "often"
+    },
+    "flower_merosity": 4,
+    "stamens": {
+      "min": 4,
+      "max": 4,
+      "low": 3
+    },
+    "carpels": 1
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Proteaceae: leaves usually alternate, sometimes opposite or whorled; leaves simple or compound; compound leaves usually pinnate, sometimes palmate; margins entire, crenate, serrate or dentate; veins single, pinnate, palmate or parallel; leaves evergreen; blades linear; stipules absent; leaf rosettes basal, none or terminal; plants usually hermaphrodite, sometimes monoecious, polygamous or dioecious; ovary superior; floral cup usually present, sometimes absent; stems usually woody, sometimes herbaceous; flowers in racemes, in spikes, in heads or in umbels, sometimes solitary; flowers actinomorphic or zygomorphic; perianth usually tepals, sometimes sepals and petals; fruit follicle, drupe, nut or achene; parts of each whorl 4; stamens (3-) 4; carpels 1. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

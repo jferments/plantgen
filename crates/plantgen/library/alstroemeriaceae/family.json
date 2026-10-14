@@ -2,5 +2,46 @@
   "schema": 1,
   "rank": "family",
   "name": "Alstroemeriaceae",
-  "parent": "order/liliales"
+  "parent": "order/liliales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "parallel",
+    "leaf_shape": {
+      "linear": "often",
+      "lanceolate": "often"
+    },
+    "rosette": "none",
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "inferior",
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "solitary": "rarely",
+      "cyme": "often",
+      "umbel": "often"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "perianth": {
+      "sepals_and_petals": "often",
+      "tepals": "often"
+    },
+    "fruit_type": {
+      "capsule": "usually",
+      "berry": "sometimes"
+    },
+    "flower_merosity": 3,
+    "stamens": 6,
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Alstroemeriaceae: leaves alternate; leaves simple; margins entire; veins parallel; blades linear or lanceolate; leaf rosettes none; plants hermaphrodite; ovary inferior; stems herbaceous; flowers in cymes or in umbels, rarely solitary; flowers actinomorphic or zygomorphic; perianth sepals and petals or tepals; fruit usually capsule, sometimes berry; parts of each whorl 3; stamens 6; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

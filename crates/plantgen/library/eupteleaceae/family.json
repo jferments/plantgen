@@ -2,5 +2,40 @@
   "schema": 1,
   "rank": "family",
   "name": "Eupteleaceae",
-  "parent": "order/ranunculales"
+  "parent": "order/ranunculales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "serrate": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": "pinnate",
+    "leaf_habit": "deciduous",
+    "stipules": false,
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "superior",
+    "woodiness": "woody",
+    "perianth": "absent",
+    "fruit_type": "samara",
+    "stamens": {
+      "min": 7,
+      "max": 20,
+      "high": 50
+    },
+    "carpels": {
+      "min": 6,
+      "max": 18
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Eupteleaceae: leaves alternate; leaves simple; margins serrate or dentate; veins pinnate; leaves deciduous; stipules absent; plants hermaphrodite or polygamous; ovary superior; stems woody; perianth absent; fruit samara; stamens 7 to 20 (-50); carpels 6 to 18. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

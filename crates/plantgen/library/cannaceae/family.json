@@ -2,5 +2,40 @@
   "schema": 1,
   "rank": "family",
   "name": "Cannaceae",
-  "parent": "order/zingiberales"
+  "parent": "order/zingiberales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "leaf_shape": {
+      "linear": "often",
+      "lanceolate": "often",
+      "oblanceolate": "often"
+    },
+    "rosette": "none",
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "inferior",
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "spike": "often",
+      "panicle": "often"
+    },
+    "flower_symmetry": "asymmetric",
+    "perianth": {
+      "sepals_and_petals": "often",
+      "tepals": "often"
+    },
+    "fruit_type": "capsule",
+    "flower_merosity": 3,
+    "stamens": 1,
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cannaceae: leaves alternate; leaves simple; margins entire; veins pinnate; blades linear, lanceolate or oblanceolate; leaf rosettes none; plants hermaphrodite; ovary inferior; stems herbaceous; flowers in spikes or in panicles; flowers asymmetric; perianth sepals and petals or tepals; fruit capsule; parts of each whorl 3; stamens 1; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

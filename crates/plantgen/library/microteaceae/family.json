@@ -2,5 +2,60 @@
   "schema": 1,
   "rank": "family",
   "name": "Microteaceae",
-  "parent": "order/caryophyllales"
+  "parent": "order/caryophyllales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "stipules": {
+      "true": "rarely",
+      "false": "usually"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "sometimes"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "sometimes"
+    },
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "raceme": "often",
+      "spike": "often",
+      "panicle": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": {
+      "capsule": "often",
+      "berry": "often",
+      "samara": "often",
+      "nut": "often",
+      "aggregate": "often",
+      "schizocarp": "often",
+      "drupe": "often"
+    },
+    "stamens": {
+      "min": 4,
+      "max": 50
+    },
+    "carpels": {
+      "min": 4,
+      "max": 12,
+      "low": 1,
+      "high": 16
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Phytolaccaceae, which takes in Microteaceae: leaves alternate; leaves simple; margins entire; veins pinnate; stipules usually absent, rarely present; plants usually hermaphrodite, sometimes dioecious; ovary superior; floral cup absent; stems usually herbaceous, sometimes woody; flowers solitary, in cymes, in racemes, in spikes or in panicles; flowers actinomorphic; perianth tepals; fruit capsule, berry, samara, nut, aggregate, schizocarp or drupe; stamens 4 to 50; carpels (1-) 4 to 12 (-16). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

@@ -2,5 +2,49 @@
   "schema": 1,
   "rank": "family",
   "name": "Gelsemiaceae",
-  "parent": "order/gentianales"
+  "parent": "order/gentianales",
+  "traits": {
+    "leaf_arrangement": {
+      "opposite": "often",
+      "whorled": "often"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "dentate": "often",
+      "entire": "often"
+    },
+    "leaf_venation": "pinnate",
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "corolla_shape": "funnelform",
+    "woodiness": "woody",
+    "inflorescence": {
+      "panicle": "often",
+      "cyme": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5
+    },
+    "stamens": {
+      "min": 4,
+      "max": 5
+    },
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Gelsemiaceae: leaves opposite or whorled; leaves simple; margins dentate or entire; veins pinnate; stipules present or absent; plants hermaphrodite; ovary superior; floral cup absent; joined corolla funnelform; stems woody; flowers in panicles or in cymes; flowers actinomorphic; perianth sepals and petals; fruit capsule; parts of each whorl 4 to 5; stamens 4 to 5; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

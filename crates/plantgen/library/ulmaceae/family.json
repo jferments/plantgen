@@ -2,5 +2,65 @@
   "schema": 1,
   "rank": "family",
   "name": "Ulmaceae",
-  "parent": "order/rosales"
+  "parent": "order/rosales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": {
+      "pinnate": "often",
+      "palmate": "often"
+    },
+    "leaf_habit": {
+      "evergreen": "often",
+      "deciduous": "often"
+    },
+    "stipules": true,
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "monoecious": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "superior",
+    "hypanthium": {
+      "true": "often",
+      "false": "often"
+    },
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "perianth": "tepals",
+    "fruit_type": {
+      "samara": "often",
+      "nut": "often",
+      "drupe": "often"
+    },
+    "stamens": {
+      "min": 4,
+      "max": 8,
+      "low": 2,
+      "high": 15
+    },
+    "carpels": {
+      "min": 2,
+      "max": 2,
+      "high": 3
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Ulmaceae: leaves alternate; leaves simple; margins entire or dentate; veins pinnate or palmate; leaves evergreen or deciduous; stipules present; plants hermaphrodite, monoecious or polygamous; ovary superior; floral cup present or absent; stems woody; flowers solitary or in cymes; flowers actinomorphic or zygomorphic; perianth tepals; fruit samara, nut or drupe; stamens (2-) 4 to 8 (-15); carpels 2 (-3). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

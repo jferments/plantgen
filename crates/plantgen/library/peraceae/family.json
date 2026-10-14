@@ -2,5 +2,43 @@
   "schema": 1,
   "rank": "family",
   "name": "Peraceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "sexual_system": {
+      "monoecious": "often",
+      "dioecious": "often"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": "head",
+    "perianth": {
+      "tepals": "sometimes",
+      "absent": "sometimes"
+    },
+    "fruit_type": "capsule",
+    "stamens": {
+      "min": 2,
+      "max": 5
+    },
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Peraceae: leaves usually alternate, rarely opposite; leaves simple; margins entire; veins pinnate; stipules present or absent; plants monoecious or dioecious; ovary superior; floral cup absent; stems woody; flowers in heads; perianth tepals or absent; fruit capsule; stamens 2 to 5; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

@@ -2,5 +2,33 @@
   "schema": 1,
   "rank": "family",
   "name": "Stilbaceae",
-  "parent": "order/lamiales"
+  "parent": "order/lamiales",
+  "traits": {
+    "leaf_arrangement": "whorled",
+    "leaf_division": "simple",
+    "leaf_shape": "linear",
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "corolla_shape": "funnelform",
+    "woodiness": "woody",
+    "inflorescence": {
+      "spike": "often",
+      "head": "often"
+    },
+    "flower_symmetry": "zygomorphic",
+    "zygomorphy": "bilabiate",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "stamens": 4,
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Stilbaceae: leaves whorled; leaves simple; blades linear; stipules absent; plants hermaphrodite; ovary superior; floral cup absent; joined corolla funnelform; stems woody; flowers in spikes or in heads; flowers zygomorphic; irregular flowers bilabiate; perianth sepals and petals; fruit capsule; stamens 4; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

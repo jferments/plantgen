@@ -2,5 +2,34 @@
   "schema": 1,
   "rank": "family",
   "name": "Crassulaceae",
-  "parent": "order/saxifragales"
+  "parent": "order/saxifragales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "usually",
+      "semi": "sometimes"
+    },
+    "leaf_arrangement": {
+      "opposite": "often",
+      "alternate": "often"
+    },
+    "stipules": false,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "inflorescence": {
+      "cyme": "usually"
+    },
+    "flower_merosity": {
+      "min": 4,
+      "max": 5
+    },
+    "ovary_position": "superior",
+    "fruit_type": "follicle"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 298 Crassulaceae: herbs or undershrubs, usually succulent; leaves opposite or alternate, without stipules; flowers regular, bisexual, usually in cymes; sepals often 4 or 5, petals as many, free or joined; stamens as many or twice as many as the petals; carpels superior, as many as the petals, free or joined at the base; fruit of follicles opening on the inner side. Library 1.0 draws 86% of the family as succulents; their habit is the growth form's, not stated here."
+    }
+  }
 }

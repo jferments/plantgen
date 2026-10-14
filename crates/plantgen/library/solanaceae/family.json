@@ -2,5 +2,37 @@
   "schema": 1,
   "rank": "family",
   "name": "Solanaceae",
-  "parent": "order/solanales"
+  "parent": "order/solanales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "often",
+      "woody": "often"
+    },
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "stipules": false,
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "sometimes"
+    },
+    "perianth": "sepals_and_petals",
+    "flower_merosity": {
+      "min": 4,
+      "max": 6,
+      "typical": 5
+    },
+    "carpels": 2,
+    "ovary_position": "superior",
+    "fruit_type": {
+      "berry": "often",
+      "capsule": "often"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 321 Solanaceae (order Solanales): herbaceous or woody; leaves alternate, simple; no stipules; flowers mostly regular; calyx 4- to 6-lobed, persisting; corolla united, usually 5-lobed; stamens on the corolla tube, alternate with its lobes; ovary of two cells, superior (the order's 'ovary superior'); fruit a capsule or a berry. Some (Schizanthus, Salpiglossis) are irregular."
+    }
+  }
 }

@@ -2,5 +2,48 @@
   "schema": 1,
   "rank": "family",
   "name": "Hypoxidaceae",
-  "parent": "order/asparagales"
+  "parent": "order/asparagales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": {
+      "parallel": "often",
+      "pinnate": "often"
+    },
+    "leaf_shape": {
+      "linear": "often",
+      "lanceolate": "often"
+    },
+    "rosette": "basal",
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "inferior",
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "solitary": "often",
+      "raceme": "often",
+      "spike": "often",
+      "head": "often",
+      "umbel": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": {
+      "capsule": "often",
+      "berry": "often"
+    },
+    "flower_merosity": 3,
+    "stamens": {
+      "min": 3,
+      "max": 6
+    },
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Hypoxidaceae: leaves alternate; leaves simple; margins entire; veins parallel or pinnate; blades linear or lanceolate; leaf rosettes basal; plants hermaphrodite; ovary inferior; stems herbaceous; flowers solitary, in racemes, in spikes, in heads or in umbels; flowers actinomorphic; perianth tepals; fruit capsule or berry; parts of each whorl 3; stamens 3 to 6; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

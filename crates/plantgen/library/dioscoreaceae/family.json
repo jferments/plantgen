@@ -2,5 +2,60 @@
   "schema": 1,
   "rank": "family",
   "name": "Dioscoreaceae",
-  "parent": "order/dioscoreales"
+  "parent": "order/dioscoreales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "sometimes"
+    },
+    "division_pattern": "palmate",
+    "leaf_venation": {
+      "palmate": "usually",
+      "pinnate": "sometimes",
+      "parallel": "sometimes"
+    },
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "sexual_system": {
+      "dioecious": "usually",
+      "monoecious": "sometimes",
+      "hermaphrodite": "rarely"
+    },
+    "ovary_position": "inferior",
+    "woodiness": {
+      "woody": "often",
+      "herbaceous": "often"
+    },
+    "inflorescence": {
+      "panicle": "often",
+      "raceme": "often",
+      "spike": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": {
+      "capsule": "usually",
+      "berry": "rarely",
+      "samara": "rarely"
+    },
+    "flower_merosity": 3,
+    "stamens": {
+      "min": 3,
+      "max": 6
+    },
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Dioscoreaceae with Trichopodaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually alternate, rarely opposite; leaves usually simple, sometimes compound; compound leaves palmate; veins usually palmate, sometimes pinnate or parallel; stipules present or absent; plants usually dioecious, sometimes monoecious, rarely hermaphrodite; ovary inferior; stems woody or herbaceous; flowers in panicles, in racemes or in spikes; flowers actinomorphic; perianth tepals; fruit usually capsule, rarely berry or samara; parts of each whorl 3; stamens 3 to 6; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

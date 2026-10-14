@@ -2,5 +2,55 @@
   "schema": 1,
   "rank": "family",
   "name": "Stemonuraceae",
-  "parent": "order/aquifoliales"
+  "parent": "order/aquifoliales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "crenate": "often",
+      "serrate": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": {
+      "pinnate": "usually",
+      "palmate": "rarely"
+    },
+    "leaf_habit": "evergreen",
+    "stipules": false,
+    "sexual_system": {
+      "monoecious": "often",
+      "polygamous": "often",
+      "dioecious": "often"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "cyme": "often",
+      "raceme": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "drupe",
+    "flower_merosity": {
+      "min": 5,
+      "max": 5,
+      "low": 4,
+      "high": 7
+    },
+    "stamens": {
+      "min": 4,
+      "max": 5,
+      "high": 7
+    },
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Stemonuraceae: leaves alternate; leaves simple; margins entire, crenate, serrate or dentate; veins usually pinnate, rarely palmate; leaves evergreen; stipules absent; plants monoecious, polygamous or dioecious; ovary superior; floral cup absent; stems woody; flowers in cymes or in racemes; flowers actinomorphic; perianth sepals and petals; fruit drupe; parts of each whorl (4-) 5 (-7); stamens 4 to 5 (-7); carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

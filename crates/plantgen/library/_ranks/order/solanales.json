@@ -2,5 +2,22 @@
   "schema": 1,
   "rank": "order",
   "name": "Solanales",
-  "parent": "clade/lamiids"
+  "parent": "clade/lamiids",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "stipules": false,
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "perianth": "sepals_and_petals",
+    "ovary_position": "superior"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), order 77 Solanales (Solanaceae, Convolvulaceae and kin): mostly herbs or twiners; leaves alternate; no stipules; corolla regular (a few nightshades irregular); stamens as many as the corolla lobes and alternate with them; ovary superior, often of two cells."
+    }
+  }
 }

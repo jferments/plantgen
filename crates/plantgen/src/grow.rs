@@ -19,7 +19,7 @@ use std::hash::{BuildHasherDefault, Hasher};
 
 use serde::{Deserialize, Serialize};
 
-use crate::conditions::{Around, Conditions};
+use crate::conditions::{Around, Conditions, Crown};
 use crate::graph::{
     GraphOrgan, GraphSegment, GraphStructure, OrganType, PlantGraph, StructureType,
 };
@@ -631,7 +631,9 @@ pub struct Grower<'a> {
     /// What it grows in from the next step on.
     conditions: Conditions,
     neighbourhood: crate::lsys::tools::Neighbourhood,
-    substrate: Option<crate::substrate::SubstrateField>,
+    substrate: Option<std::sync::Arc<crate::substrate::SubstrateField>>,
+    // What wood rests on: the substrate, or level soil without one.
+    ground: std::sync::Arc<crate::substrate::SubstrateField>,
     sun: Option<f64>,
     steps: u32,
     keyframe_steps: Vec<u32>,
@@ -657,6 +659,10 @@ pub struct Grower<'a> {
     step: u32,
     over: bool,
     times: Option<Vec<StepTime>>,
+    /// Whether to keep the crown after each step ([`Self::with_crown`]).
+    keep_crown: bool,
+    /// The crown as it stood at the last step, when kept and leafy.
+    crown: Option<Crown>,
 }
 
 impl<'a> Grower<'a> {
@@ -683,6 +689,7 @@ impl<'a> Grower<'a> {
             conditions: settings.conditions.clone(),
             neighbourhood: settings.conditions.neighbourhood(),
             substrate: None,
+            ground: std::sync::Arc::new(crate::substrate::SubstrateField::flat()),
             sun: None,
             steps,
             keyframe_steps,
@@ -707,6 +714,8 @@ impl<'a> Grower<'a> {
             step: 0,
             over: false,
             times: None,
+            keep_crown: false,
+            crown: None,
         };
         grower.keyframes.reserve(grower.keyframe_steps.len());
         grower.set_conditions(settings.conditions.clone())?;
@@ -718,6 +727,30 @@ impl<'a> Grower<'a> {
     pub fn timed(mut self) -> Self {
         self.times.get_or_insert_with(Vec::new);
         self
+    }
+
+    /// Keep the crown as it stands after each step ([`Self::crown`]).
+    #[must_use]
+    pub fn with_crown(mut self) -> Self {
+        self.keep_crown = true;
+        self
+    }
+
+    /// The crown as it stood at the last step, when kept
+    /// ([`Self::with_crown`]) and it has leaves.
+    #[must_use]
+    pub fn crown(&self) -> Option<Crown> {
+        self.crown
+    }
+
+    /// Grow among `envelopes` from the next step on, besides its
+    /// conditions' own stand: neighbours' crowns.
+    pub fn set_envelopes(&mut self, envelopes: Vec<crate::conditions::Envelope>) {
+        let neighbourhood = self.neighbourhood;
+        self.conditions
+            .neighbours
+            .get_or_insert_with(|| crate::conditions::Neighbours::of(neighbourhood))
+            .envelopes = envelopes;
     }
 
     /// The steps timed so far, in order (none unless [`Self::timed`]).
@@ -733,7 +766,15 @@ impl<'a> Grower<'a> {
     ///
     /// Fails when the conditions' substrate is not a valid grid.
     pub fn set_conditions(&mut self, conditions: Conditions) -> Result<(), GrowthError> {
-        self.substrate = substrate_field(&conditions)?;
+        self.substrate = substrate_field(&conditions)?.map(std::sync::Arc::new);
+        // `rest` and `bend@1` lay wood on the substrate, or on level soil
+        // without one, as substrate@1 reads it.
+        self.ground = self
+            .substrate
+            .clone()
+            .unwrap_or_else(|| std::sync::Arc::new(crate::substrate::SubstrateField::flat()));
+        self.interpreter
+            .set_ground(Some(std::sync::Arc::clone(&self.ground)));
         self.neighbourhood = conditions.neighbourhood();
         self.sun = conditions
             .light
@@ -828,6 +869,13 @@ impl<'a> Grower<'a> {
         self.stats.peak_organs = self.stats.peak_organs.max(scene.organs.len());
         time.segments = scene.segments.len();
         time.organs = scene.organs.len();
+        if self.keep_crown {
+            let area = &self.organ_area;
+            self.crown = Crown::of(scene.organs.iter().map(|organ| {
+                let leaf = area[usize::from(organ.symbol)] * organ.size * organ.size;
+                (organ.position, leaf)
+            }));
+        }
 
         let pipes = match pipe_settings(program, params, clock, &mut self.stack) {
             Some(values) => Some(tools::pipe(&scene, &self.organ_area, &values)?),
@@ -843,6 +891,7 @@ impl<'a> Grower<'a> {
                 &values,
                 &mut self.rest_bends,
                 settings.dt,
+                &self.ground,
             )?;
         }
         self.segments
@@ -880,7 +929,7 @@ impl<'a> Grower<'a> {
             neighbourhood: &self.neighbourhood,
             envelopes: self.conditions.envelopes(),
             host: settings.host.as_deref(),
-            substrate: self.substrate.as_ref(),
+            substrate: self.substrate.as_deref(),
             sun: self.sun,
         };
         let output = tools::run(
