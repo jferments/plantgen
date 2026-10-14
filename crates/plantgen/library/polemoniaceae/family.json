@@ -20,6 +20,7 @@
       "actinomorphic": "usually",
       "zygomorphic": "rarely"
     },
+    "zygomorphy": "bilabiate",
     "perianth": "sepals_and_petals",
     "flower_merosity": 5,
     "stamens": 5,
@@ -44,6 +45,11 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 335 Polemoniaceae: annual to perennial herbs, rarely shrubs; leaves alternate or opposite, entire or palmately or pinnately divided; flowers regular, rarely nearly two-lipped, often crowded in corymbs or heads; sepals 5, joined; corolla of 5 united petals, a tube; stamens 5 on the corolla; ovary superior, of 3 (rarely 2) cells; fruit a capsule, rarely staying shut. The phloxes' salver-shaped corolla is from common knowledge, inferred."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Polemoniaceae with Cobaeaceae: its irregular flowers have a two-lipped corolla, read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy bilabiate. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
     }
   }
 }

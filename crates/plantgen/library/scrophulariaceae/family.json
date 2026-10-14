@@ -17,6 +17,7 @@
       "zygomorphic": "usually",
       "actinomorphic": "sometimes"
     },
+    "zygomorphy": "bilabiate",
     "flower_merosity": {
       "min": 4,
       "max": 5
@@ -37,6 +38,11 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 324 Scrophulariaceae (its core: Verbascum, Scrophularia, Nemesia, Sutera), 227 Buddleiaceae, 339 Myoporaceae and 340 Selaginaceae, which APG joins as Scrophulariaceae (Hutchinson's figwort family also held what APG puts in Plantaginaceae and Orobanchaceae): herbs or shrubs, rarely small trees; leaves alternate, opposite or whorled; no stipules; flowers mostly irregular, the butterfly bushes' regular; corolla united, a tube of 4 or 5 lobes, often two-lipped; stamens 4 (two long, two short) or 2, rarely 5; ovary superior, of two cells; fruit a capsule, the myoporums' a drupe. The order (Lamiales) states the stipules, the ovary and the two carpels."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Scrophulariaceae with Buddlejaceae, Ellisiophyllaceae, Linderniaceae, Myoporaceae, Orobanchaceae: its irregular flowers have a two-lipped corolla, read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy bilabiate."
     }
   }
 }

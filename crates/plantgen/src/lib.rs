@@ -277,8 +277,14 @@ pub mod venation;
 /// piggyback plant) draws its upper petal unlike the rest, wider by
 /// `banner` and more upright (an unequal corolla), not a corolla of like
 /// petals (44 is the leaf lives, #79).
+/// 46: nine broadleaf shrubs and trees are drawn within their floras'
+/// sizes: desert willow, burrobush, beaked hazelnut, cascara and creosote
+/// bush no taller than their greatest height (`path_half` refitted), and
+/// desert willow, burrobush, vine maple, osoberry, thimbleberry and jojoba
+/// with leaves no larger than their floras give, desert willow's narrowly
+/// linear. (45 is the unequal corolla, #86.)
 /// 47: a regular corolla may stand in two like whorls (`petal_whorls`
 /// 2), the inner turned half a petal: tall and dull Oregon grape draw
 /// three petals and three, bleeding heart an outer and an inner pair, and
-/// their stamens stand in whorls of as many. (46 is #88.)
+/// their stamens stand in whorls of as many.
 pub const GENERATOR_REVISION: u32 = 47;
