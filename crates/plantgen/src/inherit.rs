@@ -1758,30 +1758,27 @@ fn fill_defaults(
             if let Value::Object(all) = generator
                 .entry("spreads")
                 .or_insert_with(|| Value::Object(Map::new()))
-            {
-                if let Value::Object(inside) = all
+                && let Value::Object(inside) = all
                     .entry("params")
                     .or_insert_with(|| Value::Object(Map::new()))
-                {
-                    inside.remove(&key);
-                    origins.remove(&to);
-                    if let Some(spread) = spread {
-                        inside.insert(key.clone(), spread);
-                        if let Some(origin) = origins.get(&from).cloned() {
-                            origins.insert(to, origin);
-                        }
+            {
+                inside.remove(&key);
+                origins.remove(&to);
+                if let Some(spread) = spread {
+                    inside.insert(key.clone(), spread);
+                    if let Some(origin) = origins.get(&from).cloned() {
+                        origins.insert(to, origin);
                     }
                 }
             }
         }
     }
-    if let Some(Value::Object(all)) = generator.get_mut("spreads") {
-        if all
+    if let Some(Value::Object(all)) = generator.get_mut("spreads")
+        && all
             .get("params")
             .is_some_and(|inside| inside.as_object().is_some_and(Map::is_empty))
-        {
-            all.remove("params");
-        }
+    {
+        all.remove("params");
     }
     if generator
         .get("spreads")
