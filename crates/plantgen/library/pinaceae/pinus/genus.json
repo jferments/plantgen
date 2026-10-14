@@ -6,11 +6,22 @@
     "foliage_ranks": "all_round",
     "cone_maturation_years": {"min": 2, "max": 3, "typical": 2}
   },
+  "rules": {
+    "generator.params.needle_low": {
+      "rule": "max(leaf_life_years) / min(leaf_life_years)",
+      "why": "A pine's needles live longest at the crown's foot and shortest at its top, as in other conifers, but within the years its flora gives them: the longest at the foot, the shortest at the top."
+    }
+  },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams (vol. 1, 1923, p. 52), Pinus: needles in sheathed bundles of two to five on dwarf shoots, standing out all round the twig; seed cones ripen in their second season, sometimes their third."
+    },
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Conifer lives (M6): the ratio of the longest to the shortest needle life a species states, in place of the Pinidae program's 1.56 (a western redcedar's, Harlow et al. 2005), which kept western white and ponderosa pines' lowest needles up to 5 and 6 years against their stated 2 to 3 and 3 to 4."
     }
   }
 }
