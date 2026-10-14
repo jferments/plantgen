@@ -2,5 +2,32 @@
   "schema": 1,
   "rank": "family",
   "name": "Polypodiaceae",
-  "parent": "order/polypodiales"
+  "parent": "order/polypodiales",
+  "traits": {
+    "leaf_division": {
+      "compound": "usually",
+      "simple": "sometimes"
+    },
+    "sporangia": "sori",
+    "sorus_shape": {
+      "round": "usually",
+      "linear": "rarely"
+    },
+    "indusium": {
+      "none": "often",
+      "kidney": "often",
+      "shield": "sometimes"
+    },
+    "frond_dimorphism": {
+      "monomorphic": "usually",
+      "dimorphic": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Polypodiaceae and the families the Library joins to it (Dryopteridaceae, Tectariaceae, Lomariopsidaceae, Davalliaceae, Oleandraceae; most of its species are Dryopteris, Polystichum and Tectaria): Polypodiaceae proper mostly epiphytes on creeping, scaly rhizomes, fronds simple, lobed or pinnate, sometimes dimorphic, sori mostly round, no indusium; Dryopteridaceae terrestrial on erect, creeping or climbing stems, fronds once pinnate (rarely simple) to decompound, sori round with a round or shield-shaped indusium or none; Tectariaceae simple to bipinnate, indusium kidney-shaped, peltate or none; Lomariopsidaceae once pinnate, indusium round to kidney-shaped or none, fertile fronds sometimes unlike the sterile; Davalliaceae one to four times pinnate, pouch-shaped indusia; Oleandra simple, kidney-shaped indusia."
+    }
+  }
 }

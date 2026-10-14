@@ -3,6 +3,11 @@
   "rank": "family",
   "name": "Cycadaceae",
   "parent": "order/cycadales",
+  "traits": {
+    "leaf_venation": "single",
+    "vernation": "involute",
+    "architectural_model": "corner"
+  },
   "forms": {
     "palm": {
       "generator": {
@@ -15,6 +20,23 @@
           "note": "The lineage's own program (growth plan G2.3a), on the palm base: it gives the values its species leave unset, which the palm program gave as defaults until then."
         }
       }
+    }
+  },
+  "evidence": {
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Cycadaceae: each leaflet has a strong midrib and no side veins."
+    },
+    "traits.vernation": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Cycadaceae and Cycas: the leaflets are rolled inward in bud; Cycas grows on Corner's model (one unbranched stem with a crown of leaves)."
+    },
+    "traits.architectural_model": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Cycadaceae and Cycas: the leaflets are rolled inward in bud; Cycas grows on Corner's model (one unbranched stem with a crown of leaves)."
     }
   }
 }

@@ -2,5 +2,23 @@
   "schema": 1,
   "rank": "family",
   "name": "Marattiaceae",
-  "parent": "order/marattiales"
+  "parent": "order/marattiales",
+  "traits": {
+    "rhizome_habit": "erect",
+    "leaf_division": {
+      "compound": "usually",
+      "simple": "rarely"
+    },
+    "stipules": true,
+    "sporangia": "sori",
+    "indusium": "none",
+    "sorus_position": "submarginal"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Marattiaceae: large, scaly terrestrial ferns with short, stout, erect stems; fronds often very large, simple or once or more pinnate, with big fleshy stipules at the base and swollen joints along stalk and rachis; sori just inside the margin on the underside, of free or fused sporangia, without indusium."
+    }
+  }
 }
