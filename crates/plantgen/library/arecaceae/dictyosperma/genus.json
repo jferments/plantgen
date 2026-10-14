@@ -2,5 +2,32 @@
   "schema": 1,
   "rank": "genus",
   "name": "Dictyosperma",
-  "parent": "subfamily/arecoideae"
+  "parent": "subfamily/arecoideae",
+  "traits": {
+    "clonal": false
+  },
+  "evidence": {
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "genera-palmarum-2008",
+      "note": "Dransfield et al. (Genera Palmarum, 2nd ed., 2008), under the genus: its stems are solitary; its tubular leaf sheaths form a crownshaft below the leaves."
+    }
+  },
+  "forms": {
+    "palm": {
+      "rules": {
+        "generator.params.crownshaft": {
+          "rule": "0.4 * leaf_length_m",
+          "why": "A crownshaft of leaf sheaths, about four tenths of a frond long (the built-in royal palm's is 2 m under 3.5 m fronds)."
+        }
+      },
+      "evidence": {
+        "rules": {
+          "evidence": "SourceInferred",
+          "source": "genera-palmarum-2008",
+          "note": "Dransfield et al. (Genera Palmarum, 2nd ed., 2008), under the genus: its stems are solitary; its tubular leaf sheaths form a crownshaft below the leaves."
+        }
+      }
+    }
+  }
 }

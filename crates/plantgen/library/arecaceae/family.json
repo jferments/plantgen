@@ -44,33 +44,11 @@
           "petiole_radius": 0.025,
           "pieces": 30,
           "fan": 0,
-          "leaflet_length": 0.15,
-          "leaflet_peak": 0.4,
-          "leaflet_base": 0.5,
-          "leaflet_tip": 0.3,
-          "leaflet_angle": 55,
-          "leaflet_lift": 35,
-          "leaflet_scatter": 10,
-          "rays": 50,
-          "fan_spread": 210,
-          "fan_length": 0.42,
-          "fan_cup": 30,
-          "costa": 0.1,
-          "fan_arch": 35,
           "droop": 0.015,
           "droop_years": 2.5,
-          "hang": 25,
-          "boots": 1,
-          "boot_life": 20,
-          "boot_length": 0.25,
-          "suckers": 0,
-          "sucker_age": 5,
-          "sucker_rate": 0.3,
-          "sucker_distance": 0.5,
-          "leaflet_area": 0.05,
-          "ray_area": 0.064,
-          "dead_area": 0.22,
-          "boot_area": 0.35
+          "leaflet_area": 0.045,
+          "ray_area": 0.057,
+          "dead_area": 0.22
         }
       },
       "growth": {
@@ -120,7 +98,7 @@
             "shape": {
               "template": "blade",
               "taper": 0.2,
-              "aspect": 0.4
+              "aspect": 0.24
             },
             "colour": [0.48, 0.38, 0.26]
           }
@@ -176,6 +154,24 @@
           },
           "why": "An old fan frond turns further down before it dies than a feather palm's (the built-in species, 35 to 50 against 20 to 25 degrees, short of the most, which hang in a skirt)."
         },
+        "generator.params.fan_arch": {
+          "map": {
+            "division_pattern": {
+              "pinnate": 0,
+              "palmate": 30
+            }
+          },
+          "why": "A fan's edge segments droop below its middle, as the built-in cabbage and California fan palms' do (30 to 35 degrees)."
+        },
+        "generator.params.leaflet_scatter": {
+          "map": {
+            "division_pattern": {
+              "pinnate": 10,
+              "palmate": 0
+            }
+          },
+          "why": "A feather palm's leaflets stand a little above and below the rachis's V, not in two flat planes (the built-in date and royal palms, 15 to 18 degrees; less for most)."
+        },
         "generator.params.suckers": {
           "map": {
             "clonal": {
@@ -211,7 +207,7 @@
         "generator.defaults": {
           "evidence": "Authored",
           "source": "plantgen-authors",
-          "note": "Values for what species set by hand, near the middle of the five built-in palms' (date, royal, cabbage, saw and California fan palms), leaning to a feather palm's, since most of the family's genera are feather palms (Mabberley 2017, subfamily V Arecoideae the largest): about a dozen fronds a year living two or three years, leaflets a sixth of the frond long, old leaf bases kept as boots. They yield to any file's values."
+          "note": "Values the palm program leaves to its species, near the middle of the five built-in palms' (date, royal, cabbage, saw and California fan palms), leaning to a feather palm's, since most of the family's genera are feather palms (Mabberley 2017, subfamily V Arecoideae the largest): about a dozen fronds a year, each living two or three years and opening over a year. They yield to any file's values."
         },
         "growth": {
           "evidence": "Authored",

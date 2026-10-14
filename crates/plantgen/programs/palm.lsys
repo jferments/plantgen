@@ -99,6 +99,7 @@ param bulge_age;              # the crown's age when the belly's widest part for
 param bulge_years;            # how long the belly lasts, years either side
 param crownshaft;             # a crownshaft's length, metres; 0 none
 param shaft_cards;            # sheaths drawn round it
+param sheath_area;            # leaf area of a sheath 1 m long, m²
 # Fronds.
 param fronds_per_year;
 param frond_life;             # years a frond lives
@@ -179,7 +180,7 @@ organ ray leaf as piece area ray_area;
 organ dead leaf as piece area dead_area;
 organ boot leaf as piece area boot_area;
 organ cone cone area cone_area;
-organ sheath leaf as piece area ray_area;
+organ sheath leaf as piece area sheath_area;
 
 structure frond leaf;         # one frond: its petiole, rachis, leaflets or rays, then its dead frond and boot
 
@@ -194,7 +195,9 @@ rule Y(v, n) : crownshaft > 0 ->
          + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0)))
     T(0, 1, 0, upturn * trunk_rate * v)
     F(trunk_rate * v * smoothstep(0, stemless_years, age))
-    [ ring(shaft_cards) [ Sh(crownshaft, trunk_radius * 1.05) ] ]
+    [ ring(shaft_cards) [ Sh(crownshaft, trunk_radius
+          * (1 + flare * exp(-max(0, age - stemless_years) / max(flare_years, 0.001))
+             + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0))) ] ]
     [ Sc(crownshaft) Fc(0, max(1, round(fronds_per_year * v)), age * v)
       [ Cc(age >= adult_age ? crown_cone : 0) ] ] Y(v, n);
 rule Y(v, n) ->

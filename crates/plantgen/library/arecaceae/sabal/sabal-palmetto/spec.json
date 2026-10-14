@@ -16,7 +16,7 @@
       "trunk_rate": 0.1,
       "trunk_radius": 0.2,
       "stemless_years": 12,
-      "internode": 0.002,
+      "internode": 0.001,
       "fronds_per_year": 18,
       "frond_life": 2.5,
       "frond_length": 3.6,
@@ -38,7 +38,7 @@
       "boots": 1,
       "boot_life": 25,
       "boot_length": 0.3,
-      "leaflet_area": 0.235,
+      "leaflet_area": 0.045,
       "ray_area": 0.057,
       "dead_area": 0.205,
       "boot_area": 0.374,
@@ -120,7 +120,7 @@
     "generator.params": {
       "evidence": "SourceInferred",
       "source": "sargent-1922",
-      "note": "Sargent (1922, Sabal palmetto, p. 102): leaves 5 to 6 ft (1.5 to 1.8 m) long and 7 to 8 ft broad on petioles 6 to 7 ft (1.8 to 2.1 m), so a frond 3.6 m long, 0.54 of it petiole; the rachis runs nearly to the leaf's middle (costa 0.18 of the frond, segments 0.38, spread over 200 degrees so the blade is broader than long); the crown's leaves at first upright, then spreading nearly at right angles to the stem, and finally pendulous (old_angle 75, hang 35). FEIS (Sabal palmetto): a stem 30 to 60 cm through, uniform from base to crown, the leaves on a prominently arching midrib (fan_arch 35 degrees at the fan's edges). Set by eye: eighteen fronds a year living two and a half years, about 45 in the crown. Other values set by hand from general knowledge of the species, not fitted to measurements."
+      "note": "Sargent (1922, Sabal palmetto, p. 102): leaves 5 to 6 ft (1.5 to 1.8 m) long and 7 to 8 ft broad on petioles 6 to 7 ft (1.8 to 2.1 m), so a frond 3.6 m long, 0.54 of it petiole; the rachis runs nearly to the leaf's middle (costa 0.18 of the frond, segments 0.38, spread over 200 degrees so the blade is broader than long); the crown's leaves at first upright, then spreading nearly at right angles to the stem, and finally pendulous (old_angle 75, hang 35). FEIS (Sabal palmetto): a stem 30 to 60 cm through, uniform from base to crown, the leaves on a prominently arching midrib (fan_arch 35 degrees at the fan's edges). Set by eye: eighteen fronds a year living two and a half years, about 45 in the crown. Other values set by hand from general knowledge of the species, not fitted to measurements. The trunk's rise is set by eye, mostly as metres a year, with only a millimetre added for each frond, so a 30-year palm stands about 5 to 7 m to its crown's top."
     },
     "allometry": {
       "evidence": "Authored",

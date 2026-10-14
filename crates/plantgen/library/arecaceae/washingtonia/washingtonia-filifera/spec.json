@@ -38,7 +38,7 @@
       "skirt": 1,
       "dead_angle": 172,
       "dead_life": 60,
-      "leaflet_area": 0.235,
+      "leaflet_area": 0.045,
       "ray_area": 0.064,
       "dead_area": 0.218,
       "vigour_spread": 0.06,

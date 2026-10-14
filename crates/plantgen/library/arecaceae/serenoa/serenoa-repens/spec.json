@@ -40,10 +40,11 @@
       "sucker_age": 4,
       "sucker_rate": 0.4,
       "sucker_distance": 0.6,
-      "leaflet_area": 0.235,
+      "leaflet_area": 0.045,
       "ray_area": 0.071,
       "dead_area": 0.237,
-      "hang": 0
+      "hang": 0,
+      "fan_arch": 0
     }
   },
   "growth": {

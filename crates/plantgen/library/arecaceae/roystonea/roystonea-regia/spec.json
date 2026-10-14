@@ -37,7 +37,7 @@
       "droop": 0.035,
       "droop_years": 1.6,
       "leaflet_area": 0.04,
-      "ray_area": 0.235,
+      "ray_area": 0.057,
       "dead_area": 0.235,
       "vigour_spread": 0.06,
       "flare": 0.6,

@@ -2,5 +2,15 @@
   "schema": 1,
   "rank": "genus",
   "name": "Podococcus",
-  "parent": "subfamily/arecoideae"
+  "parent": "subfamily/arecoideae",
+  "traits": {
+    "clonal": true
+  },
+  "evidence": {
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "genera-palmarum-2008",
+      "note": "Dransfield et al. (Genera Palmarum, 2nd ed., 2008), under the genus: it grows in clusters of stems."
+    }
+  }
 }
