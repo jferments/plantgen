@@ -27,7 +27,20 @@
       "generator": {
         "program": "poaceae"
       },
+      "appearance": {
+        "organs": {
+          "blade": {"shape": {"template": "blade", "taper": 0}},
+          "blade_tip": {"shape": {"template": "blade", "taper": 1}},
+          "thatch": {"shape": {"template": "blade", "taper": 0}},
+          "panicle": {"shape": {"template": "spikelet"}, "inflorescence": {}}
+        }
+      },
       "evidence": {
+        "appearance.organs": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "How the grass program's organs are drawn, shared by every built-in grass (visual forms Skill 1, 2026-10-14): a leaf as pieces of an untapered blade card that ends in a tapered tip piece, dead leaves likewise, and the flowering head as a cluster of spikelets, as the family's inflorescence_unit states. The rules fill in the cluster and the spikelet from the characters."
+        },
         "generator.program": {
           "evidence": "Authored",
           "source": "plantgen-authors",

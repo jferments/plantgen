@@ -1515,21 +1515,83 @@ pub fn chain<'a>(
 /// program writes it as a number.
 pub type Params = BTreeMap<String, Option<f64>>;
 
-/// The parameters of each program, by name: its own and those of the
-/// programs it extends.
-pub type Programs = BTreeMap<String, Params>;
+/// The organ types a program declares, its own and those of the programs
+/// it extends, each with its name and kind (`organ <name> <kind> …;`).
+pub type Organs = Vec<(String, String)>;
 
-/// The parameters each program declares, with those of the programs it
-/// extends, read from the programs' text (`name`, `source`): a `param`
-/// statement at the start of a line names one and its default, and the
+/// What the rules need of each program, by name: its parameters and its
+/// organ types, its own and those of the programs it extends.
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct Programs {
+    params: BTreeMap<String, Params>,
+    organs: BTreeMap<String, Organs>,
+}
+
+impl Programs {
+    /// The program's parameters.
+    #[must_use]
+    pub fn get(&self, program: &str) -> Option<&Params> {
+        self.params.get(program)
+    }
+
+    /// The program's organ types, each with its kind; none for a program
+    /// not known.
+    #[must_use]
+    pub fn organs(&self, program: &str) -> &[(String, String)] {
+        self.organs.get(program).map_or(&[], Vec::as_slice)
+    }
+
+    /// Each program's name and parameters, by name.
+    pub fn iter(&self) -> std::collections::btree_map::Iter<'_, String, Params> {
+        self.params.iter()
+    }
+
+    /// Each program's parameters.
+    pub fn values(&self) -> std::collections::btree_map::Values<'_, String, Params> {
+        self.params.values()
+    }
+
+    #[must_use]
+    pub fn len(&self) -> usize {
+        self.params.len()
+    }
+
+    #[must_use]
+    pub fn is_empty(&self) -> bool {
+        self.params.is_empty()
+    }
+}
+
+impl<'a> IntoIterator for &'a Programs {
+    type Item = (&'a String, &'a Params);
+    type IntoIter = std::collections::btree_map::Iter<'a, String, Params>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.params.iter()
+    }
+}
+
+impl std::ops::Index<&str> for Programs {
+    type Output = Params;
+
+    fn index(&self, program: &str) -> &Params {
+        &self.params[program]
+    }
+}
+
+/// The parameters and organ types each program declares, with those of
+/// the programs it extends, read from the programs' text (`name`,
+/// `source`): a `param` statement at the start of a line names one and its
+/// default, an `organ` statement an organ type and its kind, and the
 /// header `lsystem <name> <revision> extends <parent>;` names the parent,
 /// whose defaults the program's own replace. The library's tests hold this
 /// to the compiled programs.
 #[must_use]
 pub fn program_params<'a>(sources: impl IntoIterator<Item = (&'a str, &'a str)>) -> Programs {
-    let mut own: BTreeMap<&str, (Params, Option<String>)> = BTreeMap::new();
+    let mut own: BTreeMap<&str, (Params, Organs, Option<String>)> = BTreeMap::new();
     for (name, source) in sources {
         let mut params = Params::new();
+        let mut organs = Organs::new();
         let mut parent = None;
         let mut header = true;
         for line in source.lines() {
@@ -1556,26 +1618,36 @@ pub fn program_params<'a>(sources: impl IntoIterator<Item = (&'a str, &'a str)>)
                 };
                 params.insert((*param).to_string(), default);
             }
-        }
-        own.insert(name, (params, parent));
-    }
-    own.keys()
-        .map(|name| {
-            let mut params = Params::new();
-            let mut next = Some(*name);
-            // As deep as `extends` chains may go, so a loop ends.
-            for _ in 0..8 {
-                let Some((own_params, parent)) = next.and_then(|at| own.get(at)) else {
-                    break;
-                };
-                for (param, default) in own_params {
-                    params.entry(param.clone()).or_insert(*default);
-                }
-                next = parent.as_deref();
+            if words[0] == "organ"
+                && let [_, organ, kind, ..] = words[..]
+            {
+                organs.push((organ.to_string(), kind.to_string()));
             }
-            ((*name).to_string(), params)
-        })
-        .collect()
+        }
+        own.insert(name, (params, organs, parent));
+    }
+    let mut programs = Programs::default();
+    for name in own.keys() {
+        let mut params = Params::new();
+        let mut organs = Organs::new();
+        let mut next = Some(*name);
+        // As deep as `extends` chains may go, so a loop ends.
+        for _ in 0..8 {
+            let Some((own_params, own_organs, parent)) = next.and_then(|at| own.get(at)) else {
+                break;
+            };
+            for (param, default) in own_params {
+                params.entry(param.clone()).or_insert(*default);
+            }
+            // A program's organ types follow those of the program it
+            // extends, in the compiled program's order.
+            organs.splice(0..0, own_organs.iter().cloned());
+            next = parent.as_deref();
+        }
+        programs.params.insert((*name).to_string(), params);
+        programs.organs.insert((*name).to_string(), organs);
+    }
+    programs
 }
 
 /// A species' spec as it inherits it.
@@ -1869,6 +1941,84 @@ fn fill_defaults(
     });
 }
 
+/// The end of a male plant's organ's name (`bloom_male`), as
+/// `crate::spec::MALE` writes it.
+pub const MALE: &str = "_male";
+
+/// Give each organ type the species' program declares that has no look of
+/// its own its kind's look from the merged `appearance.defaults`, with its
+/// origin and note, and drop the defaults (LANGUAGE.md 5.2): the rules then
+/// reach every organ the plant draws. A look filled in stands farthest of
+/// all, as a default parameter does, so any rule may set what it holds. A
+/// male plant's organ takes none: it stands for the organ it is the male
+/// of.
+fn fill_looks(
+    spec: &mut Map<String, Value>,
+    programs: &Programs,
+    origins: &mut BTreeMap<String, Origin>,
+    notes: &mut BTreeMap<String, (Origin, Value)>,
+) {
+    let program = spec
+        .get("generator")
+        .and_then(|generator| generator.get("program"))
+        .and_then(Value::as_str)
+        .map(str::to_string);
+    let Some(Value::Object(appearance)) = spec.get_mut("appearance") else {
+        return;
+    };
+    let Some(Value::Object(defaults)) = appearance.remove("defaults") else {
+        return;
+    };
+    let organs = program.as_deref().map(|program| programs.organs(program));
+    for (organ, kind) in organs.unwrap_or_default() {
+        let Some(look) = defaults.get(kind) else {
+            continue;
+        };
+        if organ.ends_with(MALE) {
+            continue;
+        }
+        let Value::Object(looks) = appearance
+            .entry("organs")
+            .or_insert_with(|| Value::Object(Map::new()))
+        else {
+            continue;
+        };
+        if looks.contains_key(organ) {
+            continue;
+        }
+        looks.insert(organ.clone(), look.clone());
+        let from = format!("appearance.defaults.{kind}");
+        let to = format!("appearance.organs.{organ}");
+        let moved = |path: &str| format!("{to}{}", &path[from.len()..]);
+        let taken: Vec<(String, Origin)> = origins
+            .iter()
+            .filter(|(path, _)| within(path, &from))
+            .map(|(path, (label, _))| (moved(path), (label.clone(), 0)))
+            .collect();
+        origins.extend(taken);
+        // Its notes: those inside the kind's default, else the nearest on
+        // the defaults holding it.
+        let inside: Vec<(String, (Origin, Value))> = notes
+            .iter()
+            .filter(|(path, _)| within(path, &from))
+            .map(|(path, note)| (moved(path), note.clone()))
+            .collect();
+        let holding = notes
+            .iter()
+            .filter(|(path, _)| {
+                within(&from, path) && *path != &from && within(path, "appearance.defaults")
+            })
+            .max_by_key(|(path, _)| path.len())
+            .map(|(_, note)| note.clone());
+        if let Some(note) = holding {
+            notes.insert(to.clone(), note);
+        }
+        notes.extend(inside);
+    }
+    forget(origins, "appearance.defaults");
+    notes.retain(|path, _| !within(path, "appearance.defaults"));
+}
+
 /// The parts a species merges, from the top down, each with its file's
 /// label: each rank file's shared part and its part for the species'
 /// growth form, then the species' own. The growth form is the nearest one
@@ -1946,6 +2096,7 @@ impl Ruled<'_> {
     ) -> BTreeMap<String, (String, Option<String>)> {
         let mut filled = BTreeMap::new();
         fill_defaults(spec, programs, origins, notes, &mut filled);
+        fill_looks(spec, programs, origins, notes);
         let program = spec
             .get("generator")
             .and_then(|generator| generator.get("program"))

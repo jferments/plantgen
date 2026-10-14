@@ -32,7 +32,7 @@
       "buds_above": 1,
       "nod": 0,
       "leaf_area": 0.067,
-      "basal_area": 0.235,
+      "basal_area": 0.053,
       "basal_piece_area": 0.235,
       "flower_area": 0.153,
       "bud_area": 0.89,
@@ -101,6 +101,7 @@
     "fruit_size_m": {"min": 0.0005, "max": 0.001}
   },
   "evidence": {
+    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `basal` look draws on an organ 1 m long (visual forms Skill 1, 2026-10-14; plantc atlas), so it shades with what it shows: the look now takes its card from the taxa's characters, where before it drew the generic card (0.235)."},
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",

@@ -12,6 +12,7 @@
   "growth_form": "shrub",
   "generator": {
     "params": {
+      "bloom_area": 0.458,
       "crown_base": 0,
       "fork_height": 0.03,
       "max_shoot": 4,
@@ -104,6 +105,7 @@
     "self_pruning": true
   },
   "evidence": {
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (visual forms Skill 1, 2026-10-14; plantc atlas), so it shades with what it shows: the look now takes its card from the taxa's characters, where before it drew the generic card (-)."},
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",

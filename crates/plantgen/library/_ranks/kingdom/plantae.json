@@ -3,6 +3,15 @@
   "rank": "kingdom",
   "name": "Plantae",
   "generator": {"defaults": {"dioecious": 0, "sex": 0.5}},
+  "appearance": {
+    "defaults": {
+      "foliage": {"shape": {"template": "needles"}},
+      "leaf": {"shape": {"template": "simple"}},
+      "flower": {"shape": {"template": "flower"}},
+      "fruit": {"shape": {"template": "fruit"}},
+      "cone": {"shape": {"template": "fruit", "aspect": 0.5, "cone": 1}}
+    }
+  },
   "rules": {
     "appearance.organs.leaf.shape.width": {
       "template": ["simple", "sprig"],
@@ -36,6 +45,7 @@
     }
   },
   "evidence": {
+    "appearance.defaults": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws an organ its taxa say nothing about, a choice of the model's (visual forms Skill 1, 2026-10-14): each organ kind on the card the generator gives it by default, so that every organ a program grows has a look and every rule on the taxa's characters reaches it."},
     "generator.defaults.dioecious": {
       "evidence": "Authored",
       "source": "plantgen-authors",
