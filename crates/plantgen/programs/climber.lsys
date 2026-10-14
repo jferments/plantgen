@@ -50,9 +50,14 @@
 # the step's end, so a rule that ends a part by its age counts the step it
 # is in (`age + dt >=`).
 #
+# Revision 6 (dioecy): in a dioecious species (dioecious 1, from the
+# sexual system its taxa state) a plant whose own draw `sex` is below a
+# half is male and bears no fruit. The rest are female and fruit as
+# before; so does a plant that bears both sexes (dioecious 0).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem climber 5;
+lsystem climber 6;
 
 param vigour_spread;
 param shoots;                 # stems from the foot
@@ -79,6 +84,8 @@ param renew;                  # chance a year that an old node leafs again
 param adult_age;              # the first year the plant is adult and fruits
 param fruiting;               # chance of a fruit cluster at a free node
 param fruit_size;
+param dioecious;              # 1: each plant is male or female; 0: every plant bears both
+param sex;                    # this plant's own draw, 0 to 1: below a half, a dioecious plant is male
 param leaf_area;
 param fruit_area;
 param pipe_tip;
@@ -137,7 +144,7 @@ module Mb(o, w);              # what a node may carry besides its leaf
 module Lb;                    # a node's bud, which may leaf again
 decompose Mb(o, w) : o < max_order && rand() < branch_chance ->
     [ /(uniform(0, 360)) &(branch_angle) S A(o + 1, 0, w > 1 ? 1 : 0) ];
-decompose Mb(o, w) : w > 0 && rand() < fruiting ->
+decompose Mb(o, w) : w > 0 && rand() < fruiting && (dioecious < 0.5 || sex >= 0.5) ->
     [ &(150) fruit(fruit_size * uniform(0.8, 1.2)) ];
 decompose Mb(o, w) -> ;
 

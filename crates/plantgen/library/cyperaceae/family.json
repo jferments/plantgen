@@ -20,7 +20,16 @@
     "leaf_shape": {
       "linear": "usually"
     },
-    "fruit_type": "achene"
+    "fruit_type": "achene",
+    "rosette": {
+      "basal": "usually",
+      "none": "sometimes"
+    },
+    "life_span": {
+      "annual": "often",
+      "biennial": "often",
+      "perennial": "often"
+    }
   },
   "evidence": {
     "traits.leaf_arrangement": {
@@ -62,6 +71,16 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
       "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 410 Cyperaceae: herbs, rarely almost shrubby; leaves in a basal tuft or low on the stem, with a narrow grass-like blade; flowers tiny, each in the axil of a glume, the glumes in two ranks or spiral on small spikes (spikelets); fruit an indehiscent nutlet. The sedges' nutlet is the vocabulary's achene: one seed in a dry fruit that does not open."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cyperaceae: whether the leaves gather in rosettes (character 22), coded usually a basal rosette, sometimes no rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cyperaceae: the herbs' life form (character 21), coded often annual, often biennial, often perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   }
 }
