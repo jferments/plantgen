@@ -1261,9 +1261,20 @@ const GRID_CELLS: f64 = 256.0;
 
 impl<T: Copy> Grid<T> {
     fn new(cell: f64, points: &[(Vec3, T)]) -> Self {
+        Self::build(cell, points.len(), |at| points[at].0, |at| points[at].1)
+    }
+
+    /// The grid of `count` items, item `at` at `position(at)`.
+    fn build(
+        cell: f64,
+        count: usize,
+        position: impl Fn(usize) -> Vec3,
+        item: impl Fn(usize) -> T,
+    ) -> Self {
         let mut low = [f64::INFINITY; 3];
         let mut high = [f64::NEG_INFINITY; 3];
-        for (point, _) in points {
+        for at in 0..count {
+            let point = position(at);
             for (axis, value) in [point.x, point.y, point.z].into_iter().enumerate() {
                 low[axis] = low[axis].min(value);
                 high[axis] = high[axis].max(value);
@@ -1284,10 +1295,10 @@ impl<T: Copy> Grid<T> {
             starts: vec![0],
             items: Vec::new(),
         };
-        if points.is_empty() {
+        if count == 0 {
             return grid;
         }
-        let keys: Vec<[i64; 3]> = points.iter().map(|(point, _)| grid.key(*point)).collect();
+        let keys: Vec<[i64; 3]> = (0..count).map(|at| grid.key(position(at))).collect();
         for axis in 0..3 {
             let (first, last) = keys.iter().fold((i64::MAX, i64::MIN), |(a, b), key| {
                 (a.min(key[axis]), b.max(key[axis]))
@@ -1311,23 +1322,23 @@ impl<T: Copy> Grid<T> {
         for at in 1..starts.len() {
             starts[at] += starts[at - 1];
         }
+        // Each cell's items in the order given: a counting sort.
         let mut next = starts.clone();
-        let mut slots: Vec<Option<T>> = vec![None; points.len()];
-        for ((_, item), at) in points.iter().zip(&flat) {
-            slots[next[*at] as usize] = Some(*item);
-            next[*at] += 1;
+        let mut items = vec![item(0); count];
+        for (at, cell) in flat.iter().enumerate() {
+            items[next[*cell] as usize] = item(at);
+            next[*cell] += 1;
         }
-        grid.items = slots.into_iter().flatten().collect();
+        grid.items = items;
         grid.starts = starts;
         grid
     }
 
-    #[allow(clippy::cast_possible_truncation)]
     fn key(&self, point: Vec3) -> [i64; 3] {
         [
-            (point.x / self.cell).floor() as i64,
-            (point.y / self.cell).floor() as i64,
-            (point.z / self.cell).floor() as i64,
+            math::floor_index(point.x / self.cell),
+            math::floor_index(point.y / self.cell),
+            math::floor_index(point.z / self.cell),
         ]
     }
 
@@ -1767,17 +1778,24 @@ fn colonize(
         });
     }
 
-    let plant_points: Vec<(Vec3, Vec3)> = scene
+    let mut plant_points: Vec<Vec3> = scene
         .segments
         .iter()
         .flat_map(|segment| [segment.start, segment.end])
         .chain(scene.queries.iter().map(|query| query.position))
-        .map(|point| (point, point))
         .collect();
+    // A segment mostly starts where the one before it ends: one copy of
+    // the point does for the kill test.
+    plant_points.dedup();
     // The plant's points in cells at least `kill` wide, so the 27 round a
     // point hold every part within `kill`; the apices in cells half the
     // influence wide, searched nearest first.
-    let plant = Grid::new(kill.max(0.05), &plant_points);
+    let plant = Grid::build(
+        kill.max(0.05),
+        plant_points.len(),
+        |at| plant_points[at],
+        |at| plant_points[at],
+    );
     let apex_points: Vec<(Vec3, Apex)> = scene
         .queries
         .iter()
