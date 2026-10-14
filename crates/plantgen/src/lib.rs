@@ -273,4 +273,8 @@ pub mod venation;
 /// keep their sizes, their crowns within the module limit and the oak's
 /// leaf area per crown area (43 is the fronds that lie on the ground,
 /// #77).
-pub const GENERATOR_REVISION: u32 = 44;
+/// 45: a flower whose zygomorphy is of no named kind (palo verde,
+/// piggyback plant) draws its upper petal unlike the rest, wider by
+/// `banner` and more upright (an unequal corolla), not a corolla of like
+/// petals (44 is the leaf lives, #79).
+pub const GENERATOR_REVISION: u32 = 45;
