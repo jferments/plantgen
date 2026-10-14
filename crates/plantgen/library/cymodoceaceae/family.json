@@ -2,5 +2,33 @@
   "schema": 1,
   "rank": "family",
   "name": "Cymodoceaceae",
-  "parent": "order/alismatales"
+  "parent": "order/alismatales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often"
+    },
+    "leaf_division": "simple",
+    "leaf_venation": "parallel",
+    "leaf_shape": "linear",
+    "rosette": "none",
+    "sexual_system": "dioecious",
+    "ovary_position": "superior",
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often"
+    },
+    "perianth": "absent",
+    "fruit_type": "nut",
+    "stamens": 2,
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cymodoceaceae: leaves alternate or opposite; leaves simple; veins parallel; blades linear; leaf rosettes none; plants dioecious; ovary superior; stems herbaceous; flowers solitary or in cymes; perianth absent; fruit nut; stamens 2; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

@@ -2,5 +2,48 @@
   "schema": 1,
   "rank": "family",
   "name": "Anisophylleaceae",
-  "parent": "order/cucurbitales"
+  "parent": "order/cucurbitales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": "palmate",
+    "stipules": false,
+    "sexual_system": {
+      "monoecious": "usually",
+      "hermaphrodite": "rarely"
+    },
+    "ovary_position": "inferior",
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "rarely",
+      "panicle": "often",
+      "raceme": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "rarely",
+      "samara": "rarely",
+      "drupe": "usually"
+    },
+    "flower_merosity": {
+      "min": 3,
+      "max": 4,
+      "low": 2,
+      "high": 5
+    },
+    "stamens": 8,
+    "carpels": {
+      "min": 4,
+      "max": 4,
+      "low": 3
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Anisophylleaceae: leaves alternate; leaves simple; veins palmate; stipules absent; plants usually monoecious, rarely hermaphrodite; ovary inferior; stems woody; flowers in panicles or in racemes, rarely solitary; flowers actinomorphic; perianth sepals and petals; fruit usually drupe, rarely capsule or samara; parts of each whorl (2-) 3 to 4 (-5); stamens 8; carpels (3-) 4. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

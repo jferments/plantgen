@@ -2,5 +2,47 @@
   "schema": 1,
   "rank": "family",
   "name": "Lauraceae",
-  "parent": "order/laurales"
+  "parent": "order/laurales",
+  "traits": {
+    "woodiness": "woody",
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "stipules": false,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "flower_merosity": 3,
+    "carpels": 1,
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "polygamous": "sometimes",
+      "dioecious": "sometimes"
+    },
+    "inflorescence": {
+      "cyme": "often",
+      "raceme": "often"
+    },
+    "ovary_position": {
+      "superior": "usually",
+      "inferior": "rarely"
+    },
+    "fruit_type": {
+      "berry": "often",
+      "drupe": "often"
+    },
+    "leaf_habit": "evergreen"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 15 Lauraceae: trees or shrubs (very rarely the twining parasite Cassytha), every part with aromatic oil glands; leaves alternate, rarely opposite, leathery and evergreen; no stipules; flowers small, greenish or yellowish, usually in cymes or racemes, bisexual, polygamous or dioecious, regular; perianth lobes usually 6 (two whorls of 3, read as tepals); stamens in up to four whorls; ovary of one carpel, superior, rarely inferior; fruit a berry or drupe."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Lauraceae as that work draws it, there coded together with Cassythaceae: how long the leaves last (character 37), coded evergreen. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    }
+  }
 }

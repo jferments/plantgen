@@ -2,5 +2,31 @@
   "schema": 1,
   "rank": "family",
   "name": "Degeneriaceae",
-  "parent": "order/magnoliales"
+  "parent": "order/magnoliales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": "solitary",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "stamens": {
+      "min": 20,
+      "max": 30
+    },
+    "carpels": 1
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Degeneriaceae: leaves alternate; leaves simple; margins entire; veins pinnate; stipules absent; plants hermaphrodite; ovary superior; floral cup absent; stems woody; flowers solitary; flowers actinomorphic; perianth sepals and petals; stamens 20 to 30; carpels 1. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

@@ -2,5 +2,40 @@
   "schema": 1,
   "rank": "family",
   "name": "Myristicaceae",
-  "parent": "order/magnoliales"
+  "parent": "order/magnoliales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "leaf_habit": "evergreen",
+    "stipules": false,
+    "sexual_system": {
+      "monoecious": "often",
+      "dioecious": "often"
+    },
+    "ovary_position": "superior",
+    "woodiness": "woody",
+    "inflorescence": {
+      "cyme": "often",
+      "raceme": "often",
+      "head": "often"
+    },
+    "perianth": "tepals",
+    "fruit_type": "legume",
+    "flower_merosity": 3,
+    "stamens": {
+      "min": 3,
+      "max": 30,
+      "low": 2
+    },
+    "carpels": 1
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Myristicaceae: leaves alternate; leaves simple; margins entire; veins pinnate; leaves evergreen; stipules absent; plants monoecious or dioecious; ovary superior; stems woody; flowers in cymes, in racemes or in heads; perianth tepals; fruit legume; parts of each whorl 3; stamens (2-) 3 to 30; carpels 1. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

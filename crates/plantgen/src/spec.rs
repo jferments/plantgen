@@ -236,6 +236,9 @@ pub struct Taxon {
     /// Vascular Plants (`Pinus contorta var. contorta`), which the taxon's
     /// id writes as an id (`pinus-contorta-var-contorta`).
     pub scientific_name: String,
+    /// Its English name, where it has one; a species drafted from facts
+    /// may have none ([`Taxon::name`]).
+    #[serde(default, skip_serializing_if = "String::is_empty")]
     pub common_name: String,
     /// USDA PLANTS symbol, for example `PSME`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -256,6 +259,19 @@ pub struct Taxon {
     /// subspecies or variety where the taxon is one.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub plant_name_id: Option<u64>,
+}
+
+impl Taxon {
+    /// The name to show it by: its common name, or its scientific name
+    /// where it has none.
+    #[must_use]
+    pub fn name(&self) -> &str {
+        if self.common_name.is_empty() {
+            &self.scientific_name
+        } else {
+            &self.common_name
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -317,6 +333,12 @@ pub struct Generator {
     /// Parameter values that replace the program's defaults.
     #[serde(default)]
     pub params: BTreeMap<String, f64>,
+    /// Values for parameters the program leaves valueless, which a rank
+    /// file states for a growth form: inheritance moves each into
+    /// `params` where no file set it and the program gives it no value,
+    /// so an effective spec carries none ([`crate::inherit`]).
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub defaults: BTreeMap<String, f64>,
     /// The spreads of parameters rules pass a range of a character of the
     /// whole plant through to, by path (`params.<name>`;
     /// [`crate::inherit::Spread`]), from which each plant draws its own by
@@ -523,9 +545,10 @@ impl Appearance {
     #[must_use]
     pub fn looks<'a>(&self, organs: impl IntoIterator<Item = (&'a str, OrganKind)>) -> Vec<Look> {
         let organs: Vec<(&str, OrganKind)> = organs.into_iter().collect();
+        let own = self.with_male(&organs);
         let mut looks = looks::resolve(
             organs.iter().copied(),
-            &self.organs,
+            &own,
             self.foliage,
             self.foliage_shade,
         );
@@ -550,9 +573,10 @@ impl Appearance {
         day: Option<f64>,
     ) -> (Vec<Look>, Vec<f64>) {
         let organs: Vec<(&str, OrganKind)> = organs.into_iter().collect();
+        let own = self.with_male(&organs);
         let (mut looks, sizes) = looks::resolve_on(
             organs.iter().copied(),
-            &self.organs,
+            &own,
             self.foliage,
             self.foliage_shade,
             day,
@@ -591,7 +615,18 @@ impl Appearance {
             return;
         }
         let varieties: Vec<Vec<Look>> = (0..looks::VARIETIES)
-            .map(|variety| resolve(&looks::variety(&self.organs, &self.spreads, variety)))
+            .map(|variety| {
+                let mut drawn = looks::variety(&self.organs, &self.spreads, variety);
+                for (male, of) in
+                    &self.males(looks.iter().take(types).map(|look| look.organ.as_str()))
+                {
+                    if let Some(look) = drawn.get(of) {
+                        let look = male_look(look);
+                        drawn.insert(male.clone(), look);
+                    }
+                }
+                resolve(&drawn)
+            })
             .collect();
         for (index, look) in looks.iter_mut().enumerate().take(types) {
             if varied.contains_key(&look.organ) && look.draws_solid() {
@@ -606,6 +641,39 @@ impl Appearance {
                 }
             }
         }
+    }
+
+    /// Its looks by organ name, with a look for each of `organs` that is a
+    /// male plant's ([`MALE`]) and has none of its own: the look of the
+    /// organ it stands for, as [`male_look`] draws it.
+    fn with_male(
+        &self,
+        organs: &[(&str, OrganKind)],
+    ) -> std::borrow::Cow<'_, BTreeMap<String, OrganLook>> {
+        let males = self.males(organs.iter().map(|(name, _)| *name));
+        if males.is_empty() {
+            return std::borrow::Cow::Borrowed(&self.organs);
+        }
+        let mut own = self.organs.clone();
+        for (male, of) in males {
+            if let Some(look) = self.organs.get(&of) {
+                own.insert(male, male_look(look));
+            }
+        }
+        std::borrow::Cow::Owned(own)
+    }
+
+    /// The male plant's organs among `organs` that have no look of their
+    /// own, each with the organ it stands for (`bloom` for `bloom_male`).
+    fn males<'a>(&self, organs: impl IntoIterator<Item = &'a str>) -> Vec<(String, String)> {
+        organs
+            .into_iter()
+            .filter(|name| !self.organs.contains_key(*name))
+            .filter_map(|name| {
+                let of = name.strip_suffix(MALE)?;
+                Some((name.to_string(), of.to_string()))
+            })
+            .collect()
     }
 
     /// Whether any organ has a season ([`looks::Season`]): then the day a
@@ -740,6 +808,29 @@ pub struct HostSpec {
     pub age: f64,
     pub environment: Environment,
     pub seed: u64,
+}
+
+/// The program parameter that holds each plant's own draw from 0 to 1 for
+/// its sex ([`PlantSpec::seeded_params`]).
+pub const SEX: &str = "sex";
+
+/// The suffix of a program's organ that a dioecious species' male plants
+/// bear in place of the organ it names (`bloom_male` for `bloom`): unless
+/// the species gives it a look, it is drawn as that organ is on a male
+/// plant ([`male_look`]).
+pub const MALE: &str = "_male";
+
+/// How a male plant draws an organ whose look is `look` on a plant that
+/// fruits: as it is in bud and flower, and fallen where it would set
+/// fruit. A look with no season is drawn as it is.
+#[must_use]
+pub fn male_look(look: &OrganLook) -> OrganLook {
+    let mut male = look.clone();
+    if let Some(season) = &mut male.season {
+        season.fall = season.fruit;
+        season.ripe = season.ripe.min(season.fruit);
+    }
+    male
 }
 
 impl PlantSpec {
@@ -1148,22 +1239,36 @@ impl PlantSpec {
     /// three draw from the middles of a range's thirds; another seed draws
     /// by its hash. A seed grows the same plant on every machine and in
     /// every environment.
+    ///
+    /// A program's `sex` ([`SEX`]) is each plant's own draw from 0 to 1,
+    /// dealt the same way: in a dioecious species the plants below a half
+    /// are male, the rest female, so a package's seeds grow both, and the
+    /// typical plant (one seed, or none) is female. A plant of a species
+    /// that is not dioecious draws no sex and keeps its value.
     #[must_use]
     pub fn seeded_params(&self, program: &Program, params: &[f64], seed: u64) -> Vec<f64> {
-        let Some(serde_json::Value::Object(spreads)) = self.generator.spreads.get("params") else {
-            return params.to_vec();
+        let share = |name: &str| match self.variants.seeds.iter().position(|own| *own == seed) {
+            Some(index) => crate::rng::dealt(index, self.variants.seeds.len(), name),
+            None => crate::rng::unit(crate::rng::mix64(seed ^ crate::rng::hash_str(name))),
         };
         let mut drawn = self.generator.params.clone();
         let mut any = false;
-        for (name, spread) in crate::inherit::Spread::all(spreads) {
-            if let Some(value) = drawn.get_mut(&name) {
-                let share = match self.variants.seeds.iter().position(|own| *own == seed) {
-                    Some(index) => crate::rng::dealt(index, self.variants.seeds.len(), &name),
-                    None => crate::rng::unit(crate::rng::mix64(seed ^ crate::rng::hash_str(&name))),
-                };
-                *value = spread.at(share);
-                any = true;
+        if let Some(serde_json::Value::Object(spreads)) = self.generator.spreads.get("params") {
+            for (name, spread) in crate::inherit::Spread::all(spreads) {
+                if let Some(value) = drawn.get_mut(&name) {
+                    *value = spread.at(share(&name));
+                    any = true;
+                }
             }
+        }
+        let dioecious = program
+            .params
+            .iter()
+            .position(|param| param.name == "dioecious")
+            .is_some_and(|at| params[at] >= 0.5);
+        if dioecious && program.params.iter().any(|param| param.name == SEX) {
+            drawn.insert(SEX.to_string(), share(SEX));
+            any = true;
         }
         if !any {
             return params.to_vec();

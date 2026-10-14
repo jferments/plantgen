@@ -2,5 +2,36 @@
   "schema": 1,
   "rank": "family",
   "name": "Sphenocleaceae",
-  "parent": "order/solanales"
+  "parent": "order/solanales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": "pinnate",
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "half_inferior": "often",
+      "inferior": "often"
+    },
+    "hypanthium": false,
+    "corolla_shape": {
+      "campanulate": "often",
+      "urceolate": "often"
+    },
+    "woodiness": "herbaceous",
+    "inflorescence": "spike",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "flower_merosity": 5,
+    "stamens": 5,
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Sphenocleaceae: leaves alternate; leaves simple; veins pinnate; stipules absent; plants hermaphrodite; ovary half inferior or inferior; floral cup absent; joined corolla campanulate or urceolate; stems herbaceous; flowers in spikes; flowers actinomorphic; perianth sepals and petals; fruit capsule; parts of each whorl 5; stamens 5; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

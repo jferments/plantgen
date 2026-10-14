@@ -2,5 +2,65 @@
   "schema": 1,
   "rank": "family",
   "name": "Dilleniaceae",
-  "parent": "order/dilleniales"
+  "parent": "order/dilleniales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "serrate": "often"
+    },
+    "leaf_venation": {
+      "single": "often",
+      "pinnate": "often",
+      "palmate": "often"
+    },
+    "leaf_habit": "deciduous",
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "rosette": {
+      "basal": "sometimes",
+      "none": "usually"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": {
+      "woody": "usually",
+      "herbaceous": "rarely"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "often",
+      "follicle": "often",
+      "achene": "often",
+      "aggregate": "often"
+    },
+    "stamens": {
+      "min": 1,
+      "max": 150
+    },
+    "carpels": {
+      "min": 2,
+      "max": 7,
+      "low": 1,
+      "high": 20
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Dilleniaceae: leaves usually alternate, rarely opposite; leaves simple; margins entire or serrate; veins single, pinnate or palmate; leaves deciduous; stipules present or absent; leaf rosettes usually none, sometimes basal; plants hermaphrodite; ovary superior; floral cup absent; stems usually woody, rarely herbaceous; flowers actinomorphic or zygomorphic; perianth sepals and petals; fruit capsule, follicle, achene or aggregate; stamens 1 to 150; carpels (1-) 2 to 7 (-20). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

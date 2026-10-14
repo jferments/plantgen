@@ -2,5 +2,54 @@
   "schema": 1,
   "rank": "family",
   "name": "Haemodoraceae",
-  "parent": "order/commelinales"
+  "parent": "order/commelinales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "parallel",
+    "leaf_shape": "linear",
+    "rosette": "basal",
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "superior": "often",
+      "half_inferior": "often",
+      "inferior": "often"
+    },
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "solitary": "often",
+      "panicle": "often",
+      "cyme": "often",
+      "raceme": "often"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "zygomorphy": "other",
+    "perianth": "tepals",
+    "fruit_type": {
+      "capsule": "usually",
+      "nut": "rarely"
+    },
+    "flower_merosity": 3,
+    "stamens": {
+      "min": 3,
+      "max": 6
+    },
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Haemodoraceae: leaves alternate; leaves simple; margins entire; veins parallel; blades linear; leaf rosettes basal; plants hermaphrodite; ovary superior, half inferior or inferior; stems herbaceous; flowers solitary, in panicles, in cymes or in racemes; flowers actinomorphic or zygomorphic; perianth tepals; fruit usually capsule, rarely nut; parts of each whorl 3; stamens 3 to 6; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Haemodoraceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    }
+  }
 }

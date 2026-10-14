@@ -2,5 +2,43 @@
   "schema": 1,
   "rank": "family",
   "name": "Costaceae",
-  "parent": "order/zingiberales"
+  "parent": "order/zingiberales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "leaf_shape": {
+      "lanceolate": "often",
+      "oblanceolate": "often",
+      "oblong": "often",
+      "ovate": "often"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "inferior",
+    "woodiness": "herbaceous",
+    "flower_symmetry": "zygomorphic",
+    "zygomorphy": "labellate",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "often",
+      "nut": "often",
+      "achene": "often"
+    },
+    "flower_merosity": 3,
+    "stamens": 1,
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Costaceae: leaves alternate; leaves simple; margins entire; veins pinnate; blades lanceolate, oblanceolate, oblong or ovate; plants hermaphrodite; ovary inferior; stems herbaceous; flowers zygomorphic; perianth sepals and petals; fruit capsule, nut or achene; parts of each whorl 3; stamens 1; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Costaceae: flowers very irregular, the corolla's median member largest, the stamens reduced to one fertile and the rest joined in a showy lip. That lip below two smaller petals is drawn as an orchid's lip is: zygomorphy labellate."
+    }
+  }
 }

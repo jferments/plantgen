@@ -26,10 +26,20 @@
 # (`tillandsia`, `phoradendron`) give the values, as this program's
 # defaults were until then.
 #
+# Revision 3 (leaf life): colonies live as long as their parameters say,
+# no longer one year more. What a step makes is born at the step's end, so
+# a rule that ends a part by its age counts the step it is in (`age + dt
+# >=`).
+#
+# Revision 4 (dioecy): in a dioecious species (dioecious 1, from the
+# sexual system its taxa state) a plant whose own draw `sex` is below a
+# half is male, and its clumps bear no fruit. The rest are female and
+# fruit as before; so does a plant that bears both sexes (dioecious 0).
+#
 # A colony lives colony_life years. One step is one year. Angles are
 # degrees; lengths are metres.
 
-lsystem epiphyte 2;
+lsystem epiphyte 4;
 
 param colonies;
 param seeds_per_year;
@@ -55,6 +65,8 @@ param clump_radius;
 param stem_radius;
 param fork_angle;
 param fruit_age;
+param dioecious;              # 1: each plant is male or female; 0: every plant bears both
+param sex;                    # this plant's own draw, 0 to 1: below a half, a dioecious plant is male
 param fruit_size;
 param scale_area;
 param fruit_area;
@@ -92,7 +104,7 @@ rule Sd : gd < reach -> steer(gx, gy, gz, 1) f(max(0, gd)) Co;
 rule Sd -> ;
 
 # A colony is drawn afresh each year at its age; last year's drawing goes.
-rule Co : age >= colony_life -> ;
+rule Co : age + dt >= colony_life -> ;
 rule Co -> [ Ch Cz(age) ] Co;
 rule Ch -> %;
 
@@ -116,7 +128,7 @@ decompose Cs(j, m, a) ->
       St(forks, clump_radius * (1 - exp(-(a + 1) / size_years)) / max(1, forks), a) ];
 decompose St(q, l, a) : q > 0 ->
     F(l) [ +(fork_angle) St(q - 1, l * 0.85, a) ] [ -(fork_angle) St(q - 1, l * 0.85, a) ];
-decompose St(q, l, a) : a >= fruit_age -> F(l) Ft;
+decompose St(q, l, a) : a >= fruit_age && (dioecious < 0.5 || sex >= 0.5) -> F(l) Ft;
 decompose St(q, l, a) -> F(l);
 decompose Ft ->
     [ &(40) fruit(fruit_size) ] [ /(120) &(40) fruit(fruit_size) ] [ /(240) &(40) fruit(fruit_size) ];

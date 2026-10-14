@@ -2,5 +2,55 @@
   "schema": 1,
   "rank": "family",
   "name": "Crassulaceae",
-  "parent": "order/saxifragales"
+  "parent": "order/saxifragales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "usually",
+      "semi": "sometimes"
+    },
+    "leaf_arrangement": {
+      "opposite": "often",
+      "alternate": "often"
+    },
+    "stipules": false,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "inflorescence": {
+      "cyme": "usually"
+    },
+    "flower_merosity": {
+      "min": 4,
+      "max": 5
+    },
+    "ovary_position": "superior",
+    "fruit_type": "follicle",
+    "leaf_habit": "evergreen",
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "life_span": "perennial"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 298 Crassulaceae: herbs or undershrubs, usually succulent; leaves opposite or alternate, without stipules; flowers regular, bisexual, usually in cymes; sepals often 4 or 5, petals as many, free or joined; stamens as many or twice as many as the petals; carpels superior, as many as the petals, free or joined at the base; fruit of follicles opening on the inner side. Library 1.0 draws 86% of the family as succulents; their habit is the growth form's, not stated here."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Crassulaceae: how long the leaves last (character 37), coded evergreen. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Crassulaceae: whether the leaves gather in rosettes (character 22), coded often a basal rosette, often no rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Crassulaceae: the herbs' life form (character 21), coded perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    }
+  }
 }

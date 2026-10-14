@@ -2,5 +2,38 @@
   "schema": 1,
   "rank": "family",
   "name": "Calycanthaceae",
-  "parent": "order/laurales"
+  "parent": "order/laurales",
+  "traits": {
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": true,
+    "woodiness": "woody",
+    "inflorescence": "solitary",
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "spiral": "usually",
+      "tepals": "sometimes"
+    },
+    "fruit_type": "achene",
+    "stamens": {
+      "min": 5,
+      "max": 30
+    },
+    "carpels": {
+      "min": 5,
+      "max": 45
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Calycanthaceae with Idiospermaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves opposite; leaves simple; margins entire; veins pinnate; stipules absent; plants hermaphrodite; ovary superior; floral cup present; stems woody; flowers solitary; flowers actinomorphic; perianth usually spiral, sometimes tepals; fruit achene; stamens 5 to 30; carpels 5 to 45. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

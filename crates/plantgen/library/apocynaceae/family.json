@@ -2,5 +2,54 @@
   "schema": 1,
   "rank": "family",
   "name": "Apocynaceae",
-  "parent": "order/gentianales"
+  "parent": "order/gentianales",
+  "traits": {
+    "woodiness": {
+      "woody": "usually",
+      "herbaceous": "sometimes"
+    },
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "whorled": "sometimes",
+      "alternate": "rarely"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "stipules": false,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5,
+      "typical": 5
+    },
+    "stamens": {
+      "min": 4,
+      "max": 5,
+      "typical": 5
+    },
+    "carpels": 2,
+    "ovary_position": "superior",
+    "inflorescence": {
+      "cyme": "usually"
+    },
+    "fruit_type": {
+      "follicle": "usually",
+      "berry": "sometimes",
+      "drupe": "sometimes"
+    },
+    "leaf_habit": "evergreen"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 233 Apocynaceae, 234 Periplocaceae and 235 Asclepiadaceae (orders Apocynales), which APG joins as Apocynaceae: trees, shrubs, climbers and twiners, less often herbs; leaves opposite or whorled, rarely alternate, simple, entire; no stipules; flowers regular, bisexual, the calyx lobes 5 (rarely 4), the corolla united; stamens 5 (rarely 4) on the corolla tube; two carpels, often free or parting in fruit; ovary superior; the milkweeds' flowers mostly in cymes; fruit a pair of follicles in most, a berry or drupe in some. The follicle is read as usual from the milkweeds and from the order's 'carpels 2, often free, or becoming free in fruit'."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Apocynaceae as that work draws it, there coded together with Asclepiadaceae, Plocospermataceae: how long the leaves last (character 37), coded evergreen. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    }
+  }
 }

@@ -2,5 +2,30 @@
   "schema": 1,
   "rank": "family",
   "name": "Marantaceae",
-  "parent": "order/zingiberales"
+  "parent": "order/zingiberales",
+  "traits": {
+    "woodiness": "herbaceous",
+    "phyllotaxis_pattern": "distichous",
+    "perianth": "sepals_and_petals",
+    "flower_merosity": 3,
+    "flower_symmetry": "asymmetric",
+    "stamens": 1,
+    "carpels": 3,
+    "inflorescence": {
+      "spike": "often",
+      "panicle": "often"
+    },
+    "ovary_position": "inferior",
+    "fruit_type": {
+      "capsule": "often",
+      "berry": "often"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 371 Marantaceae: perennial herbs; leaves in two ranks, with an open sheath, a stalk thickened as a hinge below the blade, and a blade with many close parallel veins running obliquely from the midrib; flowers bisexual, lopsided, in a bracted spike or panicle; perianth mostly of calyx and corolla, the inner three unequal; one fertile stamen with a one-celled anther, the rest petal-like staminodes; ovary inferior, of 3 to 1 cells; fruit fleshy or a capsule."
+    }
+  }
 }

@@ -21,10 +21,7 @@
       "wiggle": 2,
       "nodes": 22,
       "bare": 0.05,
-      "leaf_length": 0.08,
       "leaf_peak": 0.3,
-      "leaf_top": 0.4,
-      "leaf_base": 0.6,
       "leaf_angle": 45,
       "raceme": 0.06,
       "flowers": 1,
@@ -34,7 +31,7 @@
       "fruit_below": 0,
       "buds_above": 1,
       "nod": 0,
-      "leaf_area": 0.092,
+      "leaf_area": 0.067,
       "basal_area": 0.235,
       "basal_piece_area": 0.235,
       "flower_area": 0.153,
@@ -60,7 +57,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.15,
           "widest": 0.4,
           "tip": 0.6,
           "base": 0.3,
@@ -98,7 +94,12 @@
     },
     "inflorescence": "corymb",
     "involucre_diameter_m": {"min": 0.006, "max": 0.008, "high": 0.01},
-    "involucre_height_m": {"min": 0.005, "max": 0.007}
+    "involucre_height_m": {"min": 0.005, "max": 0.007},
+    "leaf_length_m": {"min": 0.05, "max": 0.15},
+    "leaf_shape": {"linear": "often", "lanceolate": "often", "oblanceolate": "rarely"},
+    "petiole_length_m": 0,
+    "flowering_months": [7, 8, 9, 10],
+    "fruit_size_m": {"min": 0.0005, "max": 0.001}
   },
   "evidence": {
     "traits.height_typical_m": {
@@ -175,6 +176,31 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "FNA's account of the species (Nesom, volume 19), as search results quote copies of its text (the pages themselves were not read): involucres 5 to 7 mm tall and 6 to 8 mm across, rarely 10."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Anaphalis margaritacea (p. 485): leaves 5-15 cm long, 2-20 mm wide."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, A. margaritacea (p. 485): leaves linear to lance-linear, the lowest oblanceolate."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, A. margaritacea (p. 485): leaves sessile and more or less clasping."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA's account of the species, as search results quote copies of it (the page itself was not read): flowering July to October, sporadically longer. Abrams' months are lost in the scan's OCR."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "FNA's account of the species, as search results quote copies of it (the page itself was not read): cypselae 0.5-1 mm. Abrams (p. 485): achenes small, oblong-obovoid."
     }
   },
   "provenance": {

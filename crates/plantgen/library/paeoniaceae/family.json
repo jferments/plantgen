@@ -2,5 +2,51 @@
   "schema": 1,
   "rank": "family",
   "name": "Paeoniaceae",
-  "parent": "order/saxifragales"
+  "parent": "order/saxifragales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": {
+      "compound": "usually",
+      "simple": "sometimes"
+    },
+    "division_pattern": "pinnate",
+    "leaf_venation": "palmate",
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": {
+      "false": "usually",
+      "true": "sometimes"
+    },
+    "woodiness": {
+      "woody": "sometimes",
+      "herbaceous": "usually"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "sometimes",
+      "zygomorphic": "sometimes"
+    },
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "sometimes"
+    },
+    "fruit_type": "follicle",
+    "stamens": {
+      "min": 50,
+      "max": 150
+    },
+    "carpels": {
+      "min": 3,
+      "max": 5,
+      "low": 2,
+      "high": 15
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Paeoniaceae with Glaucidiaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves usually compound, sometimes simple; compound leaves pinnate; veins palmate; stipules absent; plants hermaphrodite; ovary superior; floral cup usually absent, sometimes present; stems usually herbaceous, sometimes woody; flowers actinomorphic or zygomorphic; perianth usually sepals and petals, sometimes tepals; fruit follicle; stamens 50 to 150; carpels (2-) 3 to 5 (-15). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

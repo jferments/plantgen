@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Oenanthe",
+  "traits": {
+    "woodiness": "herbaceous",
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "inflorescence": "compound_umbel",
+    "flower_colour": [245, 245, 240]
+  },
+  "evidence": {
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), genus 24 Oenanthe, p. 238: mostly aquatic, hairless herbs with fleshy (succulent) stems."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), Oenanthe, p. 238: leaves pinnate or pinnately decompound."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), Oenanthe, p. 238: leaves pinnate or pinnately decompound."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), Umbelliferae key, pp. 216-217: Oenanthe keys out under 'leaves variously compound; umbels irregularly or perfectly compound'; the genus has involucres usually present and involucels of many bractlets, i.e. umbellets on rays."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951), Oenanthe, p. 238: flowers white (no qualifier); sepals rather prominent and persistent. RGB for 'white'."
+    }
+  }
+}

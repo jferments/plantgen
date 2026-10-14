@@ -2,5 +2,52 @@
   "schema": 1,
   "rank": "family",
   "name": "Saururaceae",
-  "parent": "order/piperales"
+  "parent": "order/piperales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": {
+      "pinnate": "often",
+      "palmate": "often"
+    },
+    "leaf_shape": {
+      "oblong": "often",
+      "ovate": "often"
+    },
+    "stipules": true,
+    "rosette": "none",
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "superior": "usually",
+      "inferior": "rarely"
+    },
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "raceme": "often",
+      "spike": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "absent",
+    "fruit_type": {
+      "capsule": "often",
+      "follicle": "often"
+    },
+    "stamens": {
+      "min": 3,
+      "max": 8
+    },
+    "carpels": {
+      "min": 3,
+      "max": 4,
+      "high": 5
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Saururaceae: leaves alternate; leaves simple; margins entire; veins pinnate or palmate; blades oblong or ovate; stipules present; leaf rosettes none; plants hermaphrodite; ovary usually superior, rarely inferior; stems herbaceous; flowers in racemes or in spikes; flowers actinomorphic; perianth absent; fruit capsule or follicle; stamens 3 to 8; carpels 3 to 4 (-5). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

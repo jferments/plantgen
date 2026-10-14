@@ -2,5 +2,36 @@
   "schema": 1,
   "rank": "family",
   "name": "Cytinaceae",
-  "parent": "order/malvales"
+  "parent": "order/malvales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "sometimes",
+      "opposite": "sometimes",
+      "whorled": "usually"
+    },
+    "sexual_system": {
+      "monoecious": "often",
+      "dioecious": "often"
+    },
+    "ovary_position": "inferior",
+    "woodiness": "herbaceous",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": "berry",
+    "stamens": {
+      "min": 15,
+      "max": 100
+    },
+    "carpels": {
+      "min": 4,
+      "max": 8
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cytinaceae: leaves usually whorled, sometimes alternate or opposite; plants monoecious or dioecious; ovary inferior; stems herbaceous; flowers actinomorphic; perianth tepals; fruit berry; stamens 15 to 100; carpels 4 to 8. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

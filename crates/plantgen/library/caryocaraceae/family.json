@@ -2,5 +2,50 @@
   "schema": 1,
   "rank": "family",
   "name": "Caryocaraceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "rarely",
+      "opposite": "rarely"
+    },
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "leaf_margin": {
+      "entire": "often",
+      "serrate": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": "palmate",
+    "leaf_habit": "evergreen",
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": {
+      "true": "often",
+      "false": "often"
+    },
+    "woodiness": "woody",
+    "inflorescence": "raceme",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "drupe",
+    "stamens": {
+      "min": 50,
+      "max": 200
+    },
+    "carpels": {
+      "min": 4,
+      "max": 20
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Caryocaraceae: leaves alternate or opposite; leaves compound; compound leaves pinnate; margins entire, serrate or dentate; veins palmate; leaves evergreen; stipules present or absent; plants hermaphrodite; ovary superior; floral cup present or absent; stems woody; flowers in racemes; flowers actinomorphic; perianth sepals and petals; fruit drupe; stamens 50 to 200; carpels 4 to 20. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

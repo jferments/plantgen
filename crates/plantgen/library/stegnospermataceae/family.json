@@ -2,5 +2,40 @@
   "schema": 1,
   "rank": "family",
   "name": "Stegnospermataceae",
-  "parent": "order/caryophyllales"
+  "parent": "order/caryophyllales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "leaf_shape": {
+      "oblong": "often",
+      "ovate": "often",
+      "obovate": "often"
+    },
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "cyme": "often",
+      "panicle": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "flower_merosity": 5,
+    "stamens": 10,
+    "carpels": {
+      "min": 3,
+      "max": 5
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Stegnospermataceae: leaves alternate; leaves simple; margins entire; veins pinnate; blades oblong, ovate or obovate; stipules absent; plants hermaphrodite; floral cup absent; stems woody; flowers in cymes or in panicles; flowers actinomorphic; perianth sepals and petals; fruit capsule; parts of each whorl 5; stamens 10; carpels 3 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

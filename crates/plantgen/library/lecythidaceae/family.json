@@ -2,5 +2,59 @@
   "schema": 1,
   "rank": "family",
   "name": "Lecythidaceae",
-  "parent": "order/ericales"
+  "parent": "order/ericales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": "pinnate",
+    "stipules": {
+      "false": "usually",
+      "true": "sometimes"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "half_inferior": "often",
+      "inferior": "often",
+      "superior": "sometimes"
+    },
+    "hypanthium": {
+      "false": "usually",
+      "true": "sometimes"
+    },
+    "woodiness": {
+      "woody": "usually",
+      "herbaceous": "sometimes"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often",
+      "asymmetric": "sometimes"
+    },
+    "zygomorphy": "bilabiate",
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "sometimes"
+    },
+    "fruit_type": {
+      "capsule": "often",
+      "berry": "often",
+      "drupe": "sometimes"
+    },
+    "stamens": {
+      "min": 40,
+      "max": 1000
+    },
+    "carpels": {
+      "min": 2,
+      "max": 6,
+      "high": 10
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Lecythidaceae with Asteranthaceae, Barringtoniaceae, Foetidiaceae, Napoleonaeaceae, Scytopetalaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves simple; veins pinnate; stipules usually absent, sometimes present; plants hermaphrodite; ovary half inferior or inferior, sometimes superior; floral cup usually absent, sometimes present; stems usually woody, sometimes herbaceous; flowers actinomorphic or zygomorphic, sometimes asymmetric; irregular flowers bilabiate; perianth usually sepals and petals, sometimes tepals; fruit capsule or berry, sometimes drupe; stamens 40 to 1000; carpels 2 to 6 (-10). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

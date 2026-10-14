@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Encelia",
+  "traits": {
+    "life_span": "perennial",
+    "leaf_arrangement": "alternate",
+    "receptacle": "paleate",
+    "receptacle_shape": "flat",
+    "pappus": {"absent": "often", "awns": "often"}
+  },
+  "evidence": {
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Encelia (p. 122): perennial herbs or shrubs."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Encelia (p. 122): leaves alternate."
+    },
+    "traits.receptacle": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Encelia (p. 122): receptacle with soft papery folded bracts that wrap the achenes and fall with them."
+    },
+    "traits.receptacle_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Encelia (p. 122): receptacle flattish."
+    },
+    "traits.pappus": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, genus Encelia (p. 122): pappus none or of 1-2 slender awns (E. farinosa has none)."
+    }
+  }
+}

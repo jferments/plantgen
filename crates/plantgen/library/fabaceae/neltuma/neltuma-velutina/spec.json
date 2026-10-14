@@ -50,7 +50,8 @@
       "leaf_area": 0.041,
       "bloom_area": 0.09,
       "thorn_area": 0.059,
-      "path_half": 3.4
+      "path_half": 3.4,
+      "bud_break": 2
     }
   },
   "growth": {
@@ -134,9 +135,24 @@
     "pinnae": {"min": 2, "max": 4, "typical": 2},
     "leaflets": {"min": 26, "max": 60, "typical": 34},
     "terminal_leaflet": false,
-    "leaf_shape": "oblong"
+    "leaf_shape": "oblong",
+    "height_max_m": 9,
+    "woodiness": "woody",
+    "life_span": "perennial",
+    "spines": "thorns",
+    "leaflet_length_m": {"min": 0.004, "max": 0.015},
+    "inflorescence_length_m": {"min": 0.05, "max": 0.15},
+    "flower_colour": [215, 210, 110],
+    "flowering_months": [4, 5, 6, 7, 8],
+    "fruit_size_m": {"min": 0.07, "max": 0.18},
+    "fruit_colour_ripe": [195, 160, 100]
   },
   "evidence": {
+    "generator.params.bud_break": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (leaf life, generator revision 44): a lateral bud needs vigour 2 (fabales' 1.3) to grow a long shoot. Once a leaf stayed one season, not two, more light reached the inner crown, more buds grew out, and the crown outgrew the module limit between 50 and 60 years; at 2 the open crowns peak at 0.65 to 0.77 million modules (0.87 million before) and keep their reference heights."
+    },
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Neltuma velutina (gwddagg_v2.2_species.csv, read): specific gravity 0.7 (wsg_est, the database's hierarchical-model species mean, from 2 records in 1 source); trunks 0.73, branches 0.67. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",
@@ -257,6 +273,56 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The leaf drawn as a twice-divided compound leaf (spec rework P4), its pinnae and their leaflets counted from its characters by the rules at the flowering plants; before, a fern's frond stood in for it. By eye from photographs: the pinnae forking 30 degrees either side of the petiole's line, the leaflets standing out 75 degrees from theirs, a quarter as wide as long (Arizona sources give leaflets 4 to 13 mm long and about 2 mm wide)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, pp. 419-420), Prosopis juliflora var. velutina (P. velutina Wooton): genus usually armed with straight spines, leaves of 2 to 4 pinnae with many narrow leaflets, flowers small, greenish yellow, somewhat fragrant, in cylindric spikes, pods indehiscent, flattened but somewhat swollen; the species with pods much over 4 cm, leaflets commonly far more than 9 pairs; var. velutina with hairy foliage and leaflets under 15 mm; a large shrub or small tree along watercourses reaching 9 m or more with a trunk nearly 1 m across, a smaller shrub on grassland; April to August. The flora says 9 m 'or more'."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, pp. 419-420), Prosopis juliflora var. velutina (P. velutina Wooton): genus usually armed with straight spines, leaves of 2 to 4 pinnae with many narrow leaflets, flowers small, greenish yellow, somewhat fragrant, in cylindric spikes, pods indehiscent, flattened but somewhat swollen; the species with pods much over 4 cm, leaflets commonly far more than 9 pairs; var. velutina with hairy foliage and leaflets under 15 mm; a large shrub or small tree along watercourses reaching 9 m or more with a trunk nearly 1 m across, a smaller shrub on grassland; April to August."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, pp. 419-420), Prosopis juliflora var. velutina (P. velutina Wooton): genus usually armed with straight spines, leaves of 2 to 4 pinnae with many narrow leaflets, flowers small, greenish yellow, somewhat fragrant, in cylindric spikes, pods indehiscent, flattened but somewhat swollen; the species with pods much over 4 cm, leaflets commonly far more than 9 pairs; var. velutina with hairy foliage and leaflets under 15 mm; a large shrub or small tree along watercourses reaching 9 m or more with a trunk nearly 1 m across, a smaller shrub on grassland; April to August."
+    },
+    "traits.spines": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, pp. 475-478), genus Prosopis: trees or shrubs often armed with axillary spines or spiny stipules; leaves twice pinnate with 1 or 2 pairs of pinnae; flowers greenish, regular, in cylindric or globose axillary stalked spikes; petals 5; stamens 10, free, exserted; pod linear, leathery, not splitting, usually pulpy. He keeps velvet mesquite as P. chilensis subsp. velutina (p. 478): leaflets smaller than honey mesquite's (whose are 12-15 mm) and clearly hairy; armed with axillary spines (honey mesquite). The spines are axillary, so taken as shoot thorns; the genus as Abrams knew it also has spiny stipules in other species (screwbean), so this is the honey/velvet mesquite group's state, inferred from 'axillary'."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, pp. 419-420), Prosopis juliflora var. velutina (P. velutina Wooton): genus usually armed with straight spines, leaves of 2 to 4 pinnae with many narrow leaflets, flowers small, greenish yellow, somewhat fragrant, in cylindric spikes, pods indehiscent, flattened but somewhat swollen; the species with pods much over 4 cm, leaflets commonly far more than 9 pairs; var. velutina with hairy foliage and leaflets under 15 mm; a large shrub or small tree along watercourses reaching 9 m or more with a trunk nearly 1 m across, a smaller shrub on grassland; April to August. Search results quoting SEINet's account (the page itself was not read) give 4-13 mm."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "jepson-eflora",
+      "note": "Jepson eFlora's account of the species, as quoted in search results (the page itself was not read): a spike-like raceme 5 to 15 cm long (the source already cited for the species' inflorescence)."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, pp. 419-420), Prosopis juliflora var. velutina (P. velutina Wooton): genus usually armed with straight spines, leaves of 2 to 4 pinnae with many narrow leaflets, flowers small, greenish yellow, somewhat fragrant, in cylindric spikes, pods indehiscent, flattened but somewhat swollen; the species with pods much over 4 cm, leaflets commonly far more than 9 pairs; var. velutina with hairy foliage and leaflets under 15 mm; a large shrub or small tree along watercourses reaching 9 m or more with a trunk nearly 1 m across, a smaller shrub on grassland; April to August. 'Greenish yellow' as RGB."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "kearney-peebles-1942",
+      "note": "Kearney and Peebles (1942, pp. 419-420), Prosopis juliflora var. velutina (P. velutina Wooton): genus usually armed with straight spines, leaves of 2 to 4 pinnae with many narrow leaflets, flowers small, greenish yellow, somewhat fragrant, in cylindric spikes, pods indehiscent, flattened but somewhat swollen; the species with pods much over 4 cm, leaflets commonly far more than 9 pairs; var. velutina with hairy foliage and leaflets under 15 mm; a large shrub or small tree along watercourses reaching 9 m or more with a trunk nearly 1 m across, a smaller shrub on grassland; April to August."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "vicflora",
+      "note": "VicFlora's account of Prosopis velutina, as search results quote it (the page itself was not read): pods 7-18 cm long, 6-12 mm wide, partly constricted, yellowish-brown. Kearney and Peebles only say much more than 4 cm."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "vicflora",
+      "note": "VicFlora, as search results quote it (the page itself was not read): pods yellowish-brown. As RGB."
     }
   },
   "provenance": {
