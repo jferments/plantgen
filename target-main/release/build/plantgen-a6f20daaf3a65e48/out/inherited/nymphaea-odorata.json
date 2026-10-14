@@ -1,0 +1,254 @@
+{
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.18,
+      "tolerance": 0.5
+    },
+    {
+      "age": 10,
+      "environment": "open",
+      "height": 0.2,
+      "tolerance": 0.5
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.35,
+      0.2,
+      0.15
+    ],
+    "foliage": [
+      0.12,
+      0.3,
+      0.08
+    ],
+    "foliage_shade": [
+      0.042,
+      0.105,
+      0.028
+    ],
+    "organs": {
+      "flower": {
+        "accent": [
+          0.95,
+          0.8,
+          0.15
+        ],
+        "colour": [
+          0.97,
+          0.96,
+          0.92
+        ],
+        "form": {
+          "flower": {
+            "cup": 35,
+            "curl": 0,
+            "levels": 2
+          }
+        },
+        "shape": {
+          "centre": 0.25,
+          "notch": 0,
+          "perianth": "spiral",
+          "petal_width": 0.9,
+          "petals": 34,
+          "point": 0.6,
+          "sepals": 0,
+          "stamen_length": 0.25,
+          "stamens": 78,
+          "template": "flower"
+        }
+      },
+      "pad": {
+        "bend": {
+          "cup": 0.03,
+          "droop": 0,
+          "fold": 0,
+          "twist": 0
+        },
+        "face_up": 1.0,
+        "shape": {
+          "base": 1.0,
+          "petiole": 0.0,
+          "teeth": 0,
+          "template": "simple",
+          "tip": 1.0,
+          "widest": 0.5,
+          "width": 0.95
+        }
+      }
+    },
+    "spreads": {
+      "organs": {
+        "flower": {
+          "shape": {
+            "petals": [
+              21,
+              22,
+              34,
+              46,
+              47
+            ],
+            "stamens": [
+              35,
+              39,
+              78,
+              116,
+              120
+            ]
+          }
+        }
+      }
+    },
+    "variation": 0.15
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species, measured from the water's surface (the plant's origin) to the tops of its flowers: about 18 cm at 3 years and 20 cm at 10. Wide tolerances.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: green pads, white flowers with a yellow centre.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape": {
+      "evidence": "SourceInferred",
+      "note": "Its flower laid out whorl by whorl (spec rework P5): a spiral of tepals and stamens from the characters by the rules at the flowering plants (as search results quote them; the pages themselves were not read).",
+      "source": "fna-online"
+    },
+    "appearance.organs.flower.shape.perianth": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.petals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.sepals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.stamens": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.spreads.organs.flower.shape.petals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.spreads.organs.flower.shape.stamens": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a water lily of ponds and slow water across eastern North America, rooted in the mud a metre or so down by a creeping rhizome, with round, notched, floating pads 15 to 30 cm across on long petioles and fragrant white many-petalled flowers held just above the water. Not fitted to measurements.",
+      "source": "plantgen-authors"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The water lilies' own program (growth plan G2.3a), renamed from `aquatic` and homed here: leaves on long petioles floating on the water from a rhizome below it.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "flower_area": 0.314,
+      "flower_rise": 0.06,
+      "flower_size": 0.13,
+      "flowers_per_year": 4,
+      "leaf_lean": 55,
+      "leaves_per_year": 14,
+      "pad_seed": 0.3,
+      "pad_size": 0.25,
+      "petiole_radius": 0.004,
+      "rhizome_rate": 0.12,
+      "size_years": 3,
+      "slack": 1.12,
+      "water_depth": 1.0
+    },
+    "program": "nymphaeaceae"
+  },
+  "growth": {
+    "keyframes": [
+      1,
+      3,
+      10
+    ],
+    "step": 1,
+    "years": 10
+  },
+  "growth_form": "forb",
+  "id": "nymphaea-odorata",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (plant forms milestone F6). Calibration against measurements and photographs comes later.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "American white water lily",
+    "family": "Nymphaeaceae",
+    "genus": "Nymphaea",
+    "plant_name_id": 2384378,
+    "scientific_name": "Nymphaea odorata",
+    "usda_symbol": "NYOD"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2
+    ]
+  }
+}

@@ -1,0 +1,414 @@
+{
+  "allometry": [
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 0.17,
+      "tolerance": 0.5
+    },
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 0.28,
+      "tolerance": 0.4
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.2,
+      0.17,
+      0.13
+    ],
+    "bodies": {
+      "stem": {
+        "areoles": {
+          "felt": [
+            0.6,
+            0.55,
+            0.45
+          ],
+          "felt_radius": 0.002,
+          "spacing": 0.012
+        },
+        "colour": [
+          0.1,
+          0.17,
+          0.07
+        ],
+        "dome": 0.9,
+        "greying": {
+          "colour": [
+            0.5,
+            0.48,
+            0.45
+          ],
+          "years": 10
+        },
+        "ribs": {
+          "count": [
+            11,
+            14
+          ],
+          "depth": 0.18,
+          "sharpness": 0.5,
+          "spacing": 0.02
+        },
+        "spines": [
+          {
+            "angle": 20,
+            "angle_spread": 10,
+            "colour": [
+              0.75,
+              0.7,
+              0.55
+            ],
+            "count": [
+              10,
+              10
+            ],
+            "length": 0.008,
+            "length_spread": 0.3,
+            "role": "radial",
+            "width": 0.0005
+          },
+          {
+            "angle": 45,
+            "angle_spread": 15,
+            "arc": 300,
+            "colour": [
+              0.55,
+              0.45,
+              0.3
+            ],
+            "count": [
+              4,
+              5
+            ],
+            "length": 0.056,
+            "length_spread": 0.35,
+            "role": "central",
+            "tip": [
+              0.3,
+              0.2,
+              0.15
+            ],
+            "width": 0.0009
+          },
+          {
+            "aim": 180,
+            "angle": 30,
+            "angle_spread": 10,
+            "arc": 0,
+            "colour": [
+              0.65,
+              0.6,
+              0.5
+            ],
+            "count": [
+              1,
+              1
+            ],
+            "flat": 0.5,
+            "length": 0.056,
+            "length_spread": 0.25,
+            "role": "main",
+            "width": 0.0013
+          }
+        ],
+        "valley": [
+          0.05,
+          0.085,
+          0.035
+        ]
+      }
+    },
+    "foliage": [
+      0.1,
+      0.17,
+      0.06
+    ],
+    "foliage_shade": [
+      0.045,
+      0.077,
+      0.027
+    ],
+    "organs": {
+      "bud": {
+        "colour": [
+          0.45,
+          0.1,
+          0.25
+        ],
+        "shape": {
+          "aspect": 0.5,
+          "template": "fruit"
+        }
+      },
+      "flower": {
+        "accent": [
+          0.15,
+          0.3,
+          0.08
+        ],
+        "colour": [
+          0.6,
+          0.06,
+          0.4
+        ],
+        "shape": {
+          "carpels": 12,
+          "centre": 0.2,
+          "corolla": "regular",
+          "notch": 0.0,
+          "ovary": "inferior",
+          "perianth": "spiral",
+          "petal_width": 0.7,
+          "petals": 12,
+          "point": 0.0,
+          "sepals": 0,
+          "stamens": 200,
+          "template": "flower",
+          "tube": 0.4
+        }
+      },
+      "fruit": {
+        "colour": [
+          0.6,
+          0.1,
+          0.1
+        ],
+        "shape": {
+          "aspect": 0.8,
+          "template": "fruit"
+        }
+      }
+    },
+    "spreads": {
+      "organs": {
+        "flower": {
+          "shape": {
+            "carpels": [
+              10,
+              10,
+              12,
+              13,
+              13
+            ]
+          }
+        }
+      }
+    },
+    "variation": 0.1
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough stem heights from general knowledge: 15 to 20 cm by 15 years, about 30 cm by 30. Wide tolerances.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: 10 to 13 ribs hidden under dense spines, pale radials, two to six coloured centrals and a flattened lower central pointing down, all greying with age. Its flower laid out whorl by whorl (spec rework P5b): its tepals on a spiral (their count by hand: no flora counts them) on a floral cup above the inferior ovary, and a style with a dozen stigma lobes, from the characters of its own and Cactaceae's by the rules at the flowering plants. Its 200 stamens by hand, the most a flower draws, for the numerous ones every flora gives.",
+      "source": "plantgen-authors"
+    },
+    "appearance.bodies.stem.ribs.count": {
+      "evidence": "Authored",
+      "note": "Spec rework E6c: the cacti's ribs, areoles and spines grown from the characters their floras state, in each body look that has ribs or a spine set of that role.",
+      "source": "plantgen-authors"
+    },
+    "appearance.bodies.stem.spines.central.length": {
+      "evidence": "Authored",
+      "note": "Spec rework E6c: the cacti's ribs, areoles and spines grown from the characters their floras state, in each body look that has ribs or a spine set of that role.",
+      "source": "plantgen-authors"
+    },
+    "appearance.bodies.stem.spines.main.length": {
+      "evidence": "Authored",
+      "note": "Spec rework E6c: the cacti's ribs, areoles and spines grown from the characters their floras state, in each body look that has ribs or a spine set of that role.",
+      "source": "plantgen-authors"
+    },
+    "appearance.bodies.stem.spines.radial.count": {
+      "evidence": "Authored",
+      "note": "Spec rework E6c: the cacti's ribs, areoles and spines grown from the characters their floras state, in each body look that has ribs or a spine set of that role.",
+      "source": "plantgen-authors"
+    },
+    "appearance.bodies.stem.spines.radial.length": {
+      "evidence": "Authored",
+      "note": "Spec rework E6c: the cacti's ribs, areoles and spines grown from the characters their floras state, in each body look that has ribs or a spine set of that role.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.carpels": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.corolla": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.ovary": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.perianth": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.sepals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.tube": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.spreads.organs.flower.shape.carpels": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: an open clump of 5 to 60 cylindrical stems 10 to 45 cm tall and 4 to 9 cm thick, from the base, the outer ones leaning out and turning up. Magenta flowers burst from the sides near the stem tips in spring, followed by red, spiny fruit. Not fitted to measurements.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.dioecious": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant bears both sexes, unless its taxa state it dioecious.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.radius_max": {
+      "evidence": "Authored",
+      "note": "Spec rework E6c: a column's or barrel's girth from its stated diameter.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.sex": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant's sex is its own draw, dealt across a package's seeds so that both sexes grow; the typical plant (sex 0.5) is female, so it shows its fruit.",
+      "source": "plantgen-authors"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The cacti's own program (growth plan G2.3a): columns, barrels and chains of joints, their ribs, areoles and spines from each species' look.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "bend": 1.5,
+      "bloom_age": 6,
+      "bud_area": 0.636,
+      "bud_share": 0.2,
+      "bud_size": 0.02,
+      "clump_radius": 0.22,
+      "dioecious": 0,
+      "dome": 0.9,
+      "fill": 0.95,
+      "fill_years": 8,
+      "flower_angle": 55,
+      "flower_area": 0.215,
+      "flower_size": 0.07,
+      "flowers": 3,
+      "fruit_area": 1.016,
+      "fruit_share": 0.2,
+      "fruit_size": 0.03,
+      "height_max": 0.35,
+      "height_rate": 0.06,
+      "height_shape": 1.5,
+      "lean": 5,
+      "pinch": 0.02,
+      "pinch_depth": 0.06,
+      "radius_height": 0.08,
+      "radius_max": 0.0275,
+      "radius_min": 0.008,
+      "ring_angle": 85,
+      "seedling": 0.01,
+      "sex": 0.5,
+      "stem_lean": 25,
+      "stem_rate": 0.06,
+      "stems": 20,
+      "vigour_spread": 0.12,
+      "wiggle": 1.2
+    },
+    "program": "cactaceae"
+  },
+  "growth": {
+    "keyframes": [
+      3,
+      8,
+      15,
+      30
+    ],
+    "step": 1,
+    "years": 30
+  },
+  "growth_form": "stem_succulent",
+  "id": "echinocereus-engelmannii",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (milestone F1). Calibration against measurements and photographs comes later.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "Engelmann's hedgehog cactus",
+    "family": "Cactaceae",
+    "genus": "Echinocereus",
+    "plant_name_id": 2782588,
+    "scientific_name": "Echinocereus engelmannii",
+    "usda_symbol": "ECEN"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
+  }
+}

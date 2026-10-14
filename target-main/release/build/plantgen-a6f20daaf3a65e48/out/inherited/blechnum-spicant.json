@@ -1,0 +1,209 @@
+{
+  "allometry": [
+    {
+      "age": 8,
+      "environment": "open",
+      "height": 0.35,
+      "tolerance": 0.35
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.15,
+      0.1,
+      0.05
+    ],
+    "foliage": [
+      0.035,
+      0.1,
+      0.03
+    ],
+    "foliage_shade": [
+      0.01,
+      0.032,
+      0.01
+    ],
+    "organs": {
+      "pinna": {
+        "shape": {
+          "base": 0.9,
+          "petiole": 0.0,
+          "teeth": 0,
+          "template": "simple",
+          "tip": 0.2,
+          "widest": 0.4,
+          "width": 0.307438
+        }
+      }
+    },
+    "variation": 0.2
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 0.35 m tall at 8 years in the open. Replace with measured data before calling this species calibrated.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: dark glossy green fronds.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.pinna.shape.width": {
+      "evidence": "Authored",
+      "note": "What the fern program's parameters and the frond card mean: frond_length is the whole frond, stipe included, and stipe the share of it without pinnae; frond_life is a frond's years; the program draws the frond's first division as pinnae, so the pinna card shows the divisions below it. Floras measure a fern's blade and stipe apart, so the frond is their sum.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a small evergreen fern: a flat rosette of narrow, ladder-like, once-divided fronds with rounded pinnae. Not fitted to measurements.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.crown_start": {
+      "evidence": "Authored",
+      "note": "What the program's crown_start means: a new crown's age as a share of its parent's. Floras give a fern's fronds' sizes for the plant, not for a seedling, and describe tufted and creeping ferns as clumps or colonies of crowns of like fronds (Abrams 1923, under the sword, deer and wood ferns and bracken).",
+      "source": "plantgen-authors"
+    },
+    "generator.params.frond_length": {
+      "evidence": "Authored",
+      "note": "What the fern program's parameters and the frond card mean: frond_length is the whole frond, stipe included, and stipe the share of it without pinnae; frond_life is a frond's years; the program draws the frond's first division as pinnae, so the pinna card shows the divisions below it. Floras measure a fern's blade and stipe apart, so the frond is their sum.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.pieces": {
+      "evidence": "Authored",
+      "note": "What the fern program's parameters and the frond card mean: frond_length is the whole frond, stipe included, and stipe the share of it without pinnae; frond_life is a frond's years; the program draws the frond's first division as pinnae, so the pinna card shows the divisions below it. Floras measure a fern's blade and stipe apart, so the frond is their sum.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.pinna_length": {
+      "evidence": "Authored",
+      "note": "What the fern program's parameters and the frond card mean: frond_length is the whole frond, stipe included, and stipe the share of it without pinnae; frond_life is a frond's years; the program draws the frond's first division as pinnae, so the pinna card shows the divisions below it. Floras measure a fern's blade and stipe apart, so the frond is their sum.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.stipe": {
+      "evidence": "Authored",
+      "note": "What the fern program's parameters and the frond card mean: frond_length is the whole frond, stipe included, and stipe the share of it without pinnae; frond_life is a frond's years; the program draws the frond's first division as pinnae, so the pinna card shows the divisions below it. Floras measure a fern's blade and stipe apart, so the frond is their sum.",
+      "source": "plantgen-authors"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The leptosporangiate ferns' own program (growth plan G2.3a): fronds that uncoil from croziers in crowns on a rhizome. Tree ferns (Cyatheaceae) grow on palm instead.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Common name (and USDA symbol, where given) as the spec's authors wrote them.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.genus": {
+      "evidence": "SourceInferred",
+      "note": "The genus WCVP v16's accepted name is written in.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "taxon.scientific_name": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's accepted name for the plant the spec's authors wrote as Struthiopteris spicant, which WCVP treats as a synonym.",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "angle_spread": 8,
+      "crown_age": 4,
+      "crown_rate": 0.15,
+      "crown_start": 1,
+      "crowns": 1,
+      "curl": 45,
+      "droop": 0.03,
+      "droop_years": 2,
+      "emerge_spread": 0.3,
+      "frond_length": 0.625,
+      "frond_life": 2.5,
+      "frond_radius": 0.0015,
+      "frond_seed": 0.2,
+      "fronds_per_year": 10,
+      "old_angle": 58,
+      "open_years": 0.6,
+      "pieces": 37,
+      "pinna_angle": 82,
+      "pinna_area": 0.216,
+      "pinna_base": 0.2,
+      "pinna_length": 0.044,
+      "pinna_lift": 5,
+      "pinna_peak": 0.5,
+      "pinna_tip": 0.3,
+      "rhizome": 0.08,
+      "season": 0.5,
+      "size_years": 3,
+      "stipe": 0.256,
+      "unroll": 0.3,
+      "young_angle": 30
+    },
+    "program": "polypodiidae"
+  },
+  "growth": {
+    "keyframes": [
+      2,
+      4,
+      8
+    ],
+    "step": 1,
+    "years": 8
+  },
+  "growth_form": "fern",
+  "id": "blechnum-spicant",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "deer fern",
+    "family": "Aspleniaceae",
+    "genus": "Blechnum",
+    "plant_name_id": 3175779,
+    "scientific_name": "Blechnum spicant",
+    "usda_symbol": "BLSP"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  }
+}

@@ -1,0 +1,383 @@
+{
+  "allometry": [
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 3.0,
+      "tolerance": 0.5
+    },
+    {
+      "age": 60,
+      "environment": "open",
+      "height": 5.0,
+      "tolerance": 0.45
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.48,
+      0.56,
+      0.3
+    ],
+    "bark_pattern": {
+      "kind": "smooth",
+      "scale": 0.05,
+      "smooth_below": 0.0,
+      "variation": 0.12
+    },
+    "foliage": [
+      0.33,
+      0.42,
+      0.2
+    ],
+    "foliage_shade": [
+      0.1155,
+      0.147,
+      0.07
+    ],
+    "organs": {
+      "bloom": {
+        "colour": [
+          0.95,
+          0.85,
+          0.2
+        ],
+        "shape": {
+          "carpels": 1,
+          "corolla": "unequal",
+          "ovary": "superior",
+          "perianth": "corolla",
+          "petals": 5,
+          "sepals": 5,
+          "stamens": 10,
+          "template": "flower"
+        }
+      },
+      "leaf": {
+        "shape": {
+          "angle": 22,
+          "base": 0.6,
+          "leaflet_width": 0.6,
+          "leaflets": 2,
+          "pattern": "pinnate",
+          "petiole": 0.2,
+          "pinnule_angle": 60,
+          "pinnules": 12,
+          "teeth": 0,
+          "template": "compound",
+          "tip": 0.2,
+          "widest": 0.4
+        }
+      },
+      "thorn": {
+        "colour": [
+          0.5,
+          0.56,
+          0.3
+        ],
+        "form": "thorn",
+        "shape": {
+          "aspect": 0.12,
+          "taper": 1,
+          "template": "blade"
+        }
+      }
+    },
+    "spreads": {
+      "organs": {
+        "leaf": {
+          "shape": {
+            "pinnules": [
+              4,
+              8,
+              12,
+              16,
+              18
+            ]
+          }
+        }
+      }
+    },
+    "variation": 0.15
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 3 m at 20 years and 5 m at 60. Wide tolerances.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: yellow-green bark and twigs, sparse grey-green leaflets, pale yellow flowers. Bark pattern (plant roadmap P4, `bark_pattern`): smooth yellow-green bark that photosynthesises; set from general knowledge of the species, not measured. Its flower laid out whorl by whorl (spec rework P5b): five pale yellow petals between five sepals, ten stamens and one pistil, from the characters of Fabaceae and Parkinsonia by the rules at the flowering plants.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.bloom.shape.carpels": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.bloom.shape.corolla": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.bloom.shape.ovary": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.bloom.shape.perianth": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.bloom.shape.petals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.bloom.shape.sepals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.bloom.shape.stamens": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.bloom.shape.template": {
+      "evidence": "Authored",
+      "note": "How PlantGen chooses an organ's card from the characters (species-spec pilot, 2026-10-14): only where no file at least as near chose one by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.leaf": {
+      "evidence": "Authored",
+      "note": "The leaf drawn as a twice-divided compound leaf (spec rework P4): its one pair of pinnae and their leaflets counted from its characters by the rules at the flowering plants; before, a fern's frond stood in for it. By eye from photographs: the pinnae forking narrowly, about 22 degrees either side; the leaflets ovate and blunt, about 0.6 as wide as long.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.leaf.shape.leaflets": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.leaf.shape.pattern": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.leaf.shape.pinnules": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.leaf.shape.template": {
+      "evidence": "Authored",
+      "note": "How PlantGen chooses an organ's card from the characters (species-spec pilot, 2026-10-14): only where no file at least as near chose one by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.spreads.organs.leaf.shape.pinnules": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a small, much-branched tree 3 to 6 m tall, its yellow-green bark doing most of the photosynthesis, its twigs ending in thorns, with tiny pinnate leaves dropped in drought and pale yellow flowers in spring. Not fitted to measurements.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.bud_base": {
+      "evidence": "SourceInferred",
+      "note": "Barthélémy and Caraglio (2007, read in excerpts): a basitonic shoot branches mostly from its proximal part.",
+      "source": "barthelemy-caraglio-2007"
+    },
+    "generator.params.bud_years": {
+      "evidence": "SourceInferred",
+      "note": "Short shoots leaf out for up to 40 years while they have light, fitted with the seed plants' shoot spacing so that leaf area per crown area rises with age as the Urban Tree Database's city trees of Parkinsonia (P. aculeata and P. florida, Glendale, Arizona) does, rather than falling once the crown has filled.",
+      "source": "usfs-urban-tree-database-2016"
+    },
+    "generator.params.crown_height": {
+      "evidence": "Authored",
+      "note": "What the broadleaf program's crown_height means: the top of the space the crown may fill, which rises with age at crown_rate toward it and never passes it, so the tallest the plant grows, the height a flora gives as its greatest. Where that greatest is a rare record, the plant grows a little tall; a check of the grown plant against its usual height (spec rework M8) will show it.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.dioecious": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): the sexual system its taxa state most often decides; a species whose taxa state dioecy no more often than another system bears both sexes on every plant until it states its own.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.long_share": {
+      "evidence": "SourceInferred",
+      "note": "Barthélémy and Caraglio (2007, read in excerpts): the buds that grow are concentrated toward one end of the annual shoot (acrotony, basitony) or in its middle (mesotony). How many is the model's choice: as many as the steps of vigour the shoot grew, so a shoot keeps the buds able to grow long that it had before it was cut into a growth unit, gathered at its tip or its foot, or twice as many reaching into its middle; the rest grow short shoots.",
+      "source": "barthelemy-caraglio-2007"
+    },
+    "generator.params.path_half": {
+      "evidence": "Authored",
+      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.sex": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant's sex is its own draw, dealt across a package's seeds so that both sexes grow; the typical plant (sex 0.5) is female, so it shows its fruit.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.short_share": {
+      "evidence": "SourceInferred",
+      "note": "Barthélémy and Caraglio (2007, read in excerpts) describe the buds of a growth unit grading along it, the most vigorous laterals at its favoured end; the buds farthest from it often never grow. How many grow short shoots is the model's choice: a third as many as may grow long ones, fitted so open-grown crowns hold the leaf area per crown area of the Urban Tree Database's trees (as many as the long ones gave an 80-year Oregon white oak 6.4 m² a m² against valley oaks' 1.9 to 5.3; none halved red alder's leaf area).",
+      "source": "barthelemy-caraglio-2007"
+    },
+    "generator.params.space_density": {
+      "evidence": "Authored",
+      "note": "A choice of the model's: free space sampled as finely as shoots may be spaced (space colonization, Runions, Lane and Prusinkiewicz 2007).",
+      "source": "plantgen-authors"
+    },
+    "generator.params.space_kill": {
+      "evidence": "SourceInferred",
+      "note": "Corner's rules of axial conformity and ramification (Corner 1949), measured across species by Westoby and Wright (2003, Oecologia 135: 621-628): thicker twigs bear larger leaves and branch less. The spacing goes as the cube root of the short shoot's leaf card's area, so that crowns hold about as much leaf per volume whatever the card's size; its constant, 2, is fitted to the Urban Tree Database's desert genera (usfs-urban-tree-database-2016: Chilopsis, Parkinsonia, Prosopis and Vachellia farnesiana, irrigated city trees) by leaf area per crown area.",
+      "source": "corner-1949"
+    },
+    "generator.params.spur_leaf": {
+      "evidence": "Authored",
+      "note": "A short shoot's leaf card draws a cluster of its small leaves, a branchlet's worth, 0.2 m long, so that the crown keeps within the module limit; the seed plants' rules space the shoots from the card's area.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.spur_pairs": {
+      "evidence": "Authored",
+      "note": "Two pairs of leaves a year on each short shoot, a sparser crown than the Urban Tree Database's irrigated blue and Mexican palo verdes (Parkinsonia florida and P. aculeata, 1.6 to 1.8 leaf per crown area at 10 to 25 years): the foothill palo verde does most of its photosynthesis in its green bark and drops its tiny leaves in drought, so its branches show through.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.unit_nodes": {
+      "evidence": "SourceInferred",
+      "note": "Critchfield (1971, read in full) found a maple's long shoot about as long as its leaf pairs are many, each pair a few centimetres up the stem; so a shoot of the program's longest year's growth carries the taxon's shoot_leaves, and each of the program's internodes is cut into as many nodes as that takes. The internode the program grows by is a step of vigour, not a node. Corner's rules (Corner 1949) tie a twig's leaves to its spacing: the larger the leaves, the fewer and farther apart, so nodes are kept at least a quarter of the leaf card's length apart.",
+      "source": "critchfield-1971"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The order's woody program (growth plan G2.3a), on the broadleaf base: Fabaceae's own program grows its herbs, so its trees and shrubs take the order's, which gives the values its species leave unset, as the broadleaf program's defaults until then.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "adult_age": 6,
+      "apical": 0.5,
+      "apical_years": 10,
+      "apical_young": 0.6,
+      "bloom_angle": 40,
+      "bloom_size": 0.03,
+      "blooms": 3,
+      "branch_angle": 40,
+      "bud_base": 0,
+      "bud_years": 40,
+      "crown_base": 0.5,
+      "crown_height": 8,
+      "crown_radius": 3,
+      "crown_rate": 0.06,
+      "dioecious": 0,
+      "droop": 0.01,
+      "fork_angle": 35,
+      "fork_height": 0.4,
+      "fork_stems": 4,
+      "internode": 0.15,
+      "leaf_angle": 50,
+      "leaf_area": 0.109,
+      "leaf_size": 0.1,
+      "lean": 10,
+      "leaves_per_node": 1,
+      "light_cell": 0.25,
+      "long_share": 0.25,
+      "max_shoot": 3,
+      "path_half": 3.36,
+      "pipe_organ": 0.004,
+      "pipe_rings": 6e-6,
+      "pipe_tip": 0.0025,
+      "sex": 0.5,
+      "short_share": 0.0833333,
+      "space_density": 28.6698,
+      "space_kill": 0.326732,
+      "space_reach": 1.2,
+      "spur_leaf": 0.2,
+      "spur_pairs": 2,
+      "thorn_angle": 50,
+      "thorn_area": 0.059,
+      "thorn_length": 0.03,
+      "thorns": 1,
+      "unit_nodes": 4,
+      "wiggle": 14
+    },
+    "program": "fabales"
+  },
+  "growth": {
+    "keyframes": [
+      5,
+      20,
+      60
+    ],
+    "step": 1,
+    "years": 60
+  },
+  "growth_form": "decurrent_tree",
+  "id": "parkinsonia-microphylla",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (plant forms milestone F5). Calibration against measurements and photographs comes later.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "foothill palo verde",
+    "family": "Fabaceae",
+    "genus": "Parkinsonia",
+    "plant_name_id": 2531007,
+    "scientific_name": "Parkinsonia microphylla",
+    "usda_symbol": "PAMI5"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3
+    ]
+  }
+}

@@ -1,0 +1,309 @@
+{
+  "allometry": [
+    {
+      "age": 6,
+      "environment": "open",
+      "height": 0.5,
+      "tolerance": 0.4
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.25,
+      0.2,
+      0.12
+    ],
+    "foliage": [
+      0.03,
+      0.09,
+      0.03
+    ],
+    "foliage_shade": [
+      0.01,
+      0.03,
+      0.01
+    ],
+    "organs": {
+      "bud": {
+        "colour": [
+          0.7,
+          0.6,
+          0.12
+        ],
+        "shape": {
+          "aspect": 0.9,
+          "template": "fruit"
+        }
+      },
+      "flower": {
+        "accent": [
+          0.7,
+          0.5,
+          0.05
+        ],
+        "colour": [
+          0.85,
+          0.7,
+          0.12
+        ],
+        "shape": {
+          "carpels": 1,
+          "centre": 0.3,
+          "corolla": "regular",
+          "notch": 0,
+          "ovary": "superior",
+          "perianth": "corolla",
+          "petal_whorls": 2,
+          "petal_width": 1.2,
+          "petals": 6,
+          "point": 0,
+          "sepals": 6,
+          "stamens": 6,
+          "template": "flower",
+          "tube": 0
+        }
+      },
+      "fruit": {
+        "colour": [
+          0.15,
+          0.2,
+          0.4
+        ],
+        "shape": {
+          "aspect": 1.0,
+          "kind": "berry",
+          "template": "fruit"
+        }
+      },
+      "leaf": {
+        "shape": {
+          "leaflet_width": 0.45,
+          "leaflets": 13,
+          "petiole": 0.12,
+          "teeth": 7,
+          "template": "compound"
+        }
+      }
+    },
+    "variation": 0.2
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 0.5 m tall at 6 years in the open. Replace with measured data before calling this species calibrated.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: dark, slightly glossy green leaflets; yellow flowers; blue berries. Its flower laid out whorl by whorl (spec rework P5b): six yellow petals and six sepals by hand (both in two whorls of three, as Jepson's Manual of 1925 gives the family), six stamens and one pistil, from the characters of Berberidaceae by the rules at the flowering plants.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.carpels": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.corolla": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.ovary": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.perianth": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.petal_whorls": {
+      "evidence": "SourceInferred",
+      "note": "Jepson's Manual (1925), Berberidaceae: sepals 6, in 2 circles; petals 6, in 2 circles; stamens as many and opposite them. So six petals, three and three.",
+      "source": "jepson-1925-manual"
+    },
+    "appearance.organs.flower.shape.stamens": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.tube": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.fruit.shape.kind": {
+      "evidence": "Authored",
+      "note": "How PlantGen lays out an inflorescence, a choice of the model's (spec rework L1): the inflorescence characters set the cluster of any look a taxon draws as one (`\"inflorescence\": {}`), its kind, how many units it bears on each axis, its primary branches and how it holds itself. Sizes, stalks and spacing stay set by hand until programs size their organs from characters.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a low evergreen shrub of a few short stems, each topped by a rosette of long pinnate leaves with holly-like, spiny leaflets and upright racemes of yellow flowers. Not fitted to measurements.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.dioecious": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant bears both sexes, unless its taxa state it dioecious.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.leaves_per_node": {
+      "evidence": "SourceInferred",
+      "note": "What the words mean, as accounts of phyllotaxis such as Okabe and colleagues' use them: a spiral or two-ranked shoot bears one leaf at a node, a decussate one a pair and a whorled one three or more. A spiral turns about the golden angle (137.5 degrees) from node to node and two ranks half a turn; pairs and whorls alternate, each standing over the gaps of the one below, half the gap between its own leaves round (90 degrees for pairs). Three ranks turn a third of a turn, as their name says.",
+      "source": "okabe-2019-phyllotaxis"
+    },
+    "generator.params.sex": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant's sex is its own draw, dealt across a package's seeds so that both sexes grow; the typical plant (sex 0.5) is female, so it shows its fruit.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.stem_height": {
+      "evidence": "Authored",
+      "note": "What the herb program's stem height means: each year's stems reach it at maturity, give or take height_spread, their flowers included, so a mature herb stands about as tall as a flora's usual height for the plant, read as the range's middle unless it names a typical height.",
+      "source": "plantgen-authors"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "Its family's herb program, though it grows as a low shrub: Berberis spans two forms, so the species names its own (growth plan G2.3a).",
+      "source": "plantgen-authors"
+    },
+    "generator.spreads.params.stem_height": {
+      "evidence": "Authored",
+      "note": "What the herb program's stem height means: each year's stems reach it at maturity, give or take height_spread, their flowers included, so a mature herb stands about as tall as a flora's usual height for the plant, read as the range's middle unless it names a typical height.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Common name (and USDA symbol, where given) as the spec's authors wrote them.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.genus": {
+      "evidence": "SourceInferred",
+      "note": "The genus WCVP v16's accepted name is written in.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "taxon.scientific_name": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's accepted name for the plant the spec's authors wrote as Mahonia nervosa, which WCVP treats as a synonym.",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "adult_age": 3,
+      "bare": 0.75,
+      "basal_area": 0.235,
+      "basal_piece_area": 0.235,
+      "bud_area": 1.143,
+      "bud_size": 0.008,
+      "buds_above": 0.9,
+      "clump_radius": 0.12,
+      "dioecious": 0,
+      "flower_angle": 50,
+      "flower_area": 0.657,
+      "flower_size": 0.012,
+      "flowers": 20,
+      "fruit_area": 1.27,
+      "fruit_below": 0,
+      "leaf_angle": 60,
+      "leaf_area": 0.228,
+      "leaf_base": 0.9,
+      "leaf_length": 0.35,
+      "leaf_peak": 0.5,
+      "leaf_top": 0.9,
+      "leaves_per_node": 1,
+      "maturity": 2,
+      "nod": 10,
+      "nodes": 3,
+      "pedicel": 0.01,
+      "raceme": 0.2,
+      "sex": 0.5,
+      "stem_height": 0.4,
+      "stem_lean": 15,
+      "stem_radius": 0.004,
+      "stem_rate": 0.4,
+      "stems": 4,
+      "wiggle": 2,
+      "young_height": 0.6
+    },
+    "program": "berberidaceae",
+    "spreads": {
+      "params": {
+        "stem_height": [
+          0.2,
+          0.22,
+          0.4,
+          0.58,
+          0.6
+        ]
+      }
+    }
+  },
+  "growth": {
+    "keyframes": [
+      2,
+      4,
+      8
+    ],
+    "step": 1,
+    "years": 8
+  },
+  "growth_form": "shrub",
+  "id": "berberis-nervosa",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "dull Oregon grape",
+    "family": "Berberidaceae",
+    "genus": "Berberis",
+    "plant_name_id": 2674193,
+    "scientific_name": "Berberis nervosa",
+    "usda_symbol": "MANE2"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  }
+}

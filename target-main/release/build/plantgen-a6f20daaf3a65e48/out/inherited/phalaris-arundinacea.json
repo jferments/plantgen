@@ -1,0 +1,311 @@
+{
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 1.7,
+      "tolerance": 0.35
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.35,
+      0.36,
+      0.2
+    ],
+    "foliage": [
+      0.08,
+      0.16,
+      0.04
+    ],
+    "foliage_shade": [
+      0.025,
+      0.05,
+      0.012
+    ],
+    "organs": {
+      "blade": {
+        "shape": {
+          "aspect": 0.297553,
+          "taper": 0,
+          "template": "blade"
+        }
+      },
+      "blade_tip": {
+        "shape": {
+          "aspect": 0.297553,
+          "taper": 1,
+          "template": "blade"
+        }
+      },
+      "panicle": {
+        "accent": [
+          0.45,
+          0.3,
+          0.35
+        ],
+        "colour": [
+          0.5,
+          0.42,
+          0.38
+        ],
+        "inflorescence": {
+          "branch": {
+            "flowers": 16,
+            "kind": "raceme",
+            "pedicel": 0.03,
+            "peduncle": 0.1,
+            "size": 0.31,
+            "spread": 20
+          },
+          "branches": 30,
+          "kind": "panicle",
+          "peduncle": 0.05,
+          "per_node": 3,
+          "size": 0.18,
+          "spread": 30,
+          "stalk": [
+            0.45,
+            0.38,
+            0.35
+          ],
+          "taper": 0.4
+        },
+        "shape": {
+          "florets": 1,
+          "glume": 1.21,
+          "glumes": 2,
+          "lemma": 0.65,
+          "lower": 0.743802,
+          "ranks": 2,
+          "template": "spikelet"
+        }
+      },
+      "thatch": {
+        "colour": [
+          0.38,
+          0.31,
+          0.18
+        ],
+        "shade": [
+          0.12,
+          0.1,
+          0.05
+        ],
+        "shape": {
+          "aspect": 0.297553,
+          "taper": 0,
+          "template": "blade"
+        }
+      }
+    },
+    "variation": 0.2
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 1.7 m tall at 4 years in the open. Replace with measured data before calling this species calibrated.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: bright green blades; purplish then straw panicles.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.blade.shape.aspect": {
+      "evidence": "Authored",
+      "note": "How PlantGen's grass program draws a grass from a flora's sizes, a choice of the model's until grasses are built from their spikelets (spec rework M6): its mean blade length is the blade length a flora gives, read as the range's middle unless it names a typical length, and its panicle the inflorescence's length. The program builds a blade from `pieces` pieces, each 12% shorter than the one before, so the first is 0.12 / (1 - 0.88^pieces) of the blade; the blade card narrows 12% along a piece, so one width over length serves every piece and the tip.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.blade_tip.shape.aspect": {
+      "evidence": "Authored",
+      "note": "How PlantGen's grass program draws a grass from a flora's sizes, a choice of the model's until grasses are built from their spikelets (spec rework M6): its mean blade length is the blade length a flora gives, read as the range's middle unless it names a typical length, and its panicle the inflorescence's length. The program builds a blade from `pieces` pieces, each 12% shorter than the one before, so the first is 0.12 / (1 - 0.88^pieces) of the blade; the blade card narrows 12% along a piece, so one width over length serves every piece and the tip.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.panicle": {
+      "evidence": "Authored",
+      "note": "The panicle's layout, the model's choice after FNA (volume 24), as search results quote it (the page was not read): elongate and dense, its branches to 5 cm, appressed but spreading at flowering. Drawn as 30 short branches in threes, spreading as in flower, each with about 16 spikelets; the two tiny sterile florets are left out. Colours by eye: pinkish straw.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.panicle.inflorescence.kind": {
+      "evidence": "Authored",
+      "note": "How PlantGen lays out an inflorescence, a choice of the model's (spec rework L1): the inflorescence characters set the cluster of any look a taxon draws as one (`\"inflorescence\": {}`), its kind, how many units it bears on each axis, its primary branches and how it holds itself. Sizes, stalks and spacing stay set by hand until programs size their organs from characters.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.panicle.shape.florets": {
+      "evidence": "Authored",
+      "note": "How PlantGen's spikelet card (spec rework P3) draws a flora's spikelet, a choice of the model's: its fertile florets one lemma each up the rachilla, at most 40 so that a spikelet's solid stays small. A flora's count is read as the range's middle unless it names a typical one.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.panicle.shape.glume": {
+      "evidence": "Authored",
+      "note": "The spikelet card's lengths are shares of the height its florets reach, so a glume's share is its length over the spikelet's: traits.json measures a spikelet from its base to the tip of its last floret, awns left out. Where floras measure a spikelet to the tips of glumes longer than its florets, the share comes out near 1 and the glumes level with the florets; a species can set the glume by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.panicle.shape.glumes": {
+      "evidence": "Authored",
+      "note": "The spikelet card draws as many glumes as floras count at a spikelet's foot, a lone glume as the upper one.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.panicle.shape.lemma": {
+      "evidence": "Authored",
+      "note": "The spikelet card's lemmas, each a share of the height its florets reach, as floras measure a fertile floret's lemma and the spikelet (to the tip of its last floret); the florets are spaced so that the top one's tip reaches that height, so long lemmas overlap.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.panicle.shape.lower": {
+      "evidence": "Authored",
+      "note": "The spikelet card's lower glume is a share of its upper one, as floras measure the two.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.panicle.shape.ranks": {
+      "evidence": "Authored",
+      "note": "The spikelet card's bracts stand in two ranks (ranks 2) or turn a golden angle each (ranks 0), as floras describe a grass's two-ranked glumes and lemmas or a sedge's spiral scales.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.thatch.shape.aspect": {
+      "evidence": "Authored",
+      "note": "How PlantGen's grass program draws a grass from a flora's sizes, a choice of the model's until grasses are built from their spikelets (spec rework M6): its mean blade length is the blade length a flora gives, read as the range's middle unless it names a typical length, and its panicle the inflorescence's length. The program builds a blade from `pieces` pieces, each 12% shorter than the one before, so the first is 0.12 / (1 - 0.88^pieces) of the blade; the blade card narrows 12% along a piece, so one width over length serves every piece and the tip.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: an invasive, tall, leafy grass that forms dense stands of reed-like stems with broad, flat blades and compact panicles that spread open in flower. Not fitted to measurements.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.culm_height": {
+      "evidence": "Authored",
+      "note": "How PlantGen's grass and sedge programs draw a culm from a flora's length, a choice of the model's: each year's culms grow to culm_height at maturity, the panicle or spike included, leaning off their tiller, so culm_height is a culm's length, not the plant's height. A flora's culm length is read as the range's middle unless it names a typical length, and taken to include the inflorescence; where a flora measures only to the inflorescence's base, the culms come out short by about its length. Culms are the flowering stems of the grasses, sedges and rushes, all in this order.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.dioecious": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): the sexual system its taxa state most often decides; a species whose taxa state dioecy no more often than another system bears both sexes on every plant until it states its own.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.divergence": {
+      "evidence": "SourceInferred",
+      "note": "What the words mean, as accounts of phyllotaxis such as Okabe and colleagues' use them: a spiral or two-ranked shoot bears one leaf at a node, a decussate one a pair and a whorled one three or more. A spiral turns about the golden angle (137.5 degrees) from node to node and two ranks half a turn; pairs and whorls alternate, each standing over the gaps of the one below, half the gap between its own leaves round (90 degrees for pairs). Three ranks turn a third of a turn, as their name says.",
+      "source": "okabe-2019-phyllotaxis"
+    },
+    "generator.params.leaf_length": {
+      "evidence": "Authored",
+      "note": "How PlantGen's grass program draws a grass from a flora's sizes, a choice of the model's until grasses are built from their spikelets (spec rework M6): its mean blade length is the blade length a flora gives, read as the range's middle unless it names a typical length, and its panicle the inflorescence's length. The program builds a blade from `pieces` pieces, each 12% shorter than the one before, so the first is 0.12 / (1 - 0.88^pieces) of the blade; the blade card narrows 12% along a piece, so one width over length serves every piece and the tip.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.panicle_length": {
+      "evidence": "Authored",
+      "note": "How PlantGen's grass program draws a grass from a flora's sizes, a choice of the model's until grasses are built from their spikelets (spec rework M6): its mean blade length is the blade length a flora gives, read as the range's middle unless it names a typical length, and its panicle the inflorescence's length. The program builds a blade from `pieces` pieces, each 12% shorter than the one before, so the first is 0.12 / (1 - 0.88^pieces) of the blade; the blade card narrows 12% along a piece, so one width over length serves every piece and the tip.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.sex": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant's sex is its own draw, dealt across a package's seeds so that both sexes grow; the typical plant (sex 0.5) is female, so it shows its fruit.",
+      "source": "plantgen-authors"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The lineage's own program (growth plan G2.3a), on the grass base: it gives the values its species leave unset, which the grass program gave as defaults until then.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "arch": 12,
+      "blade_area": 0.271,
+      "culm_height": 1.05,
+      "culm_lean": 4,
+      "culm_leaves": 6,
+      "culm_radius": 0.003,
+      "dioecious": 0,
+      "divergence": 180,
+      "flowering": 0.7,
+      "leaf_angle": 30,
+      "leaf_length": 0.15,
+      "leaf_spread": 0.25,
+      "leaves": 2,
+      "panicle_area": 0.108,
+      "panicle_length": 0.115,
+      "panicle_nod": 10,
+      "pieces": 6,
+      "sex": 0.5,
+      "thatch_area": 0.271,
+      "tiller_lean": 6,
+      "tiller_rate": 0.6,
+      "tillers": 30,
+      "tip_area": 0.147,
+      "tussock_radius": 0.25
+    },
+    "program": "poaceae"
+  },
+  "growth": {
+    "keyframes": [
+      1,
+      2,
+      4
+    ],
+    "step": 1,
+    "years": 6
+  },
+  "growth_form": "graminoid",
+  "id": "phalaris-arundinacea",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "reed canarygrass",
+    "family": "Poaceae",
+    "genus": "Phalaris",
+    "plant_name_id": 433393,
+    "scientific_name": "Phalaris arundinacea",
+    "usda_symbol": "PHAR3"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  }
+}
