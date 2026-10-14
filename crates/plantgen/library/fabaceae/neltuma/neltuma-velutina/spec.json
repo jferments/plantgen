@@ -12,7 +12,6 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_height": 7,
       "crown_radius": 4.5,
       "crown_base": 1,
       "crown_rate": 0.05,

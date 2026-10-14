@@ -288,7 +288,7 @@ pub struct ToolSpec {
 /// The first random call site of tool settings, far above any rule's.
 pub const TOOL_SITES: u32 = 1 << 24;
 
-pub const TOOLS: [ToolSpec; 11] = [
+pub const TOOLS: [ToolSpec; 12] = [
     ToolSpec {
         kind: ToolKind::Light,
         name: "light",
@@ -375,6 +375,35 @@ pub const TOOLS: [ToolSpec; 11] = [
         version: 3,
         keys: &[("radius", 0.01)],
     },
+    // Crown form, item 1: the region grown as a front from the lineage's
+    // tropisms under the plant's sky, or `space@2`'s outline (`widest`
+    // above 0) narrowed where that front falls short among neighbours
+    // (`super::front`, `super::tools`).
+    ToolSpec {
+        kind: ToolKind::Space,
+        name: "space",
+        version: 4,
+        keys: &[
+            ("base", 0.0),
+            ("height", 4.0),
+            ("radius", 0.0),
+            ("spread", 1.0),
+            ("density", 20.0),
+            ("influence", 1.5),
+            ("kill", 0.4),
+            ("angle", 90.0),
+            ("renew", 1.0),
+            ("ratio", 0.0),
+            ("gravitropism", 0.0),
+            ("phototropism", 0.3),
+            ("widest", 0.0),
+            ("fullness", 2.0),
+            ("lobes", 0.0),
+            ("lobe_depth", 0.0),
+            ("bumps", 0.0),
+            ("bump_size", 3.0),
+        ],
+    },
     // With `saturation` (crown form B), a tip's light gathers as a leaf's
     // photosynthesis does: half of full light's at `saturation`.
     ToolSpec {
@@ -427,6 +456,7 @@ pub const TOOLS: [ToolSpec; 11] = [
             ("straighten", 0.1),
             ("stem", 1.0),
             ("ground", 0.0),
+            ("reaction", 0.0),
         ],
     },
 ];

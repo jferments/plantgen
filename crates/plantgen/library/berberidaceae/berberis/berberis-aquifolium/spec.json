@@ -13,7 +13,6 @@
   "generator": {
     "program": "ranunculales",
     "params": {
-      "crown_height": 1.8,
       "crown_radius": 0.8,
       "crown_base": 0,
       "crown_rate": 0.22,
@@ -172,9 +171,18 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 0.8,
+      "max": 2
+    },
     "wood_density_basic_kg_m3": 690
   },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944), as Mahonia Aquifolium: stems erect, 8 dm to 20 dm (0.8 m to 2 m) high, sometimes dwarfed."
+    },
     "appearance.organs.bloom.season.flower_look.shape.petal_whorls": {
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",

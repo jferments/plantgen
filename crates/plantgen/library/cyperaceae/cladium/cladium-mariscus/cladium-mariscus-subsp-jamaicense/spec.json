@@ -22,7 +22,6 @@
       "leaf_angle": 18,
       "flowering": 0.25,
       "flower_age": 3,
-      "culm_height": 1.6,
       "height_spread": 0.15,
       "culm_radius": 0.006,
       "culm_lean": 4,
@@ -104,8 +103,20 @@
     }
   ],
   "tier": "procedural_proxy",
-  "traits": {"inflorescence_unit": "spikelet", "scale_arrangement": "spiral"},
+  "traits": {
+    "inflorescence_unit": "spikelet",
+    "scale_arrangement": "spiral",
+    "culm_length_m": {
+      "min": 1.5,
+      "max": 3
+    }
+  },
   "evidence": {
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "small-1913",
+      "note": "Small 1913 (2nd ed.), as Cladium effusum (saw-grass, now C. jamaicense), p. 191: stout stems 1.5 m to 3 m high."
+    },
     "appearance.organs.tuft": {
       "evidence": "Authored",
       "source": "plantgen-authors",
