@@ -1,10 +1,13 @@
 # Cycads (Cycadaceae), on the palm base (growth plan G2.3a). It gives the
-# values its species leave unset (14 of palm's parameters), as the palm
+# values its species leave unset (15 of palm's parameters), as the palm
 # program's defaults until then; each species sets the rest.
+#
+# Revision 2: gives rest_gap, for palm revision 5's fronds that lie on
+# the ground.
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem cycadaceae 1 extends palm;
+lsystem cycadaceae 2 extends palm;
 
 param vigour_spread = 0.1; # a palm grows exp(gauss() * vigour_spread) times as fast
 param upturn = 0;          # how strongly a leaning trunk turns back up, radians a metre
@@ -20,3 +23,4 @@ param costa = 0;           # share of the frond's length along which the rays ri
 param skirt = 0;           # 1: dead fronds hang
 param dead_angle = 165;    # angle of a hanging dead frond to the vertical
 param dead_life = 0;       # years a dead frond hangs
+param rest_gap = 0.02;       # a frond that reaches the ground lies this far above it
