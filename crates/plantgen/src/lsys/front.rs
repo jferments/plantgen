@@ -149,7 +149,8 @@ impl Front {
 
     /// How far this front falls short of `open`, the same lineage's
     /// open-grown one, at each height and azimuth: the share of its radius
-    /// this one reaches there (1 where the open one has none), at most 1.5.
+    /// this one reaches there (1 where the open one has none), at most 1:
+    /// shade never grows a crown past its open-grown outline.
     #[must_use]
     pub fn shaded_by(&self, open: &Self) -> Self {
         let halves = self
@@ -160,7 +161,7 @@ impl Front {
                 let mut share = [1.0; ROWS + 1];
                 for row in 0..=ROWS {
                     if there[row] > 1e-6 {
-                        share[row] = (here[row] / there[row]).min(1.5);
+                        share[row] = (here[row] / there[row]).min(1.0);
                     }
                 }
                 share
