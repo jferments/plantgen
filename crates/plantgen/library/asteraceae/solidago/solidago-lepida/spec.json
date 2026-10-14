@@ -56,7 +56,6 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "simple",
           "widest": 0.5,
           "tip": 0.6,
           "base": 0.2,
@@ -66,7 +65,7 @@
         }
       },
       "flower": {
-        "shape": { "template": "head", "ray_width": 1.0, "disc": 0.5, "involucre": 1.2 },
+        "shape": { "ray_width": 1.0, "disc": 0.5, "involucre": 1.2 },
         "inflorescence": {
           "branches": 12,
           "flowers": 18,

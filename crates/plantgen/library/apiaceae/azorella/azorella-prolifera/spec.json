@@ -72,7 +72,6 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "palmate",
           "lobes": 3,
           "depth": 0.85,
           "lobe_width": 0.2,
