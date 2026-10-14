@@ -15,15 +15,12 @@
       "cone_chance": 0.12,
       "cone_length": 0.09,
       "cone_area": 0.524,
-      "height_max": 60,
       "height_rate": 0.02,
       "height_shape": 1.5,
       "whorl": 5,
       "interwhorl": 2,
       "branch_angle": 72,
-      "branch_sag": 0.8,
-      "max_sag": 30,
-      "upturn": 0.01,
+      "upturn": 0.005,
       "spray_droop": 10,
       "shade_death": 0.07,
       "shade_years": 4,
@@ -92,6 +89,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "height_max_m": {
+      "min": 43,
+      "max": 61
+    },
     "wood_density_basic_kg_m3": 370,
     "wood_modulus_green_mpa": 8600,
     "wood_rupture_green_mpa": 40,
@@ -102,6 +103,11 @@
     "leaf_life_years": {"min": 7, "max": 10, "typical": 8}
   },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "silvics-1990-conifers",
+      "note": "Silvics vol. 1 (1990), Grand Fir chapter (Foiles, Graham and Olson): mature trees on optimum coastal Washington sites reach 43 to 61 m, occasionally 76 m; normally 35 to 46 m in northern Idaho, 30 to 40 m on eastern Oregon pumice, 15 to 21 m on exposed Inland Empire ridges; an Olympic Peninsula tree measured 70.4 m."
+    },
     "traits.wood_modulus_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Fir, grand, green: modulus of elasticity 8,600 MPa in static bending (clear wood, centre-loaded, span 14 depths; specific gravity 0.35)."},
     "traits.wood_rupture_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, Fir, grand, green: modulus of rupture 40,000 kPa (clear wood in static bending)."},
     "traits.wood_moisture_green_share": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 4-1, Fir, grand: average moisture content of green wood, heartwood 91% and sapwood 136% of oven-dry mass; stated as a share, the range between them with its middle typical where both are given."},

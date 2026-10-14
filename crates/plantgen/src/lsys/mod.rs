@@ -16,6 +16,7 @@ pub mod ast;
 pub mod chain;
 pub mod derive;
 pub mod expr;
+pub mod front;
 #[cfg(feature = "gpu")]
 pub mod gpu;
 pub mod lexer;

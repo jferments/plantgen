@@ -22,19 +22,39 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Berberidaceae's leaves are alternate and vanilla leaf's rise one to a node from its rhizome, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
     ),
     (
+        "ambrosia-dumosa",
+        "leaf_shape",
+        "its dissected blade is drawn on a compound card of three pairs of lobed segments (spec rework E1), whose outline reads obovate or orbicular against the deltate, oblong or ovate outline Abrams and Ferris give the whole blade",
+    ),
+    (
         "anaphalis-margaritacea",
         "involucre_height_m",
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
     ),
     (
-        "berberis-aquifolium",
-        "flower_merosity",
-        "its six petals stand in two whorls of three, and a corolla draws one whorl, so its spec draws six there",
+        "azorella-compacta",
+        "height_typical_m",
+        "it is grown 200 years, to a dome 0.6 m tall, but Reiche's mounds 1.5 m tall and more, and the ministry's 1 m, are of cushions centuries older (inferred: no source dates them)",
     ),
     (
-        "berberis-nervosa",
-        "flower_merosity",
-        "its six petals stand in two whorls of three, and a corolla draws one whorl, so its spec draws six there",
+        "azorella-compacta",
+        "leaf_shape",
+        "its rosette leaves are drawn by hand on a sprig card 0.4 as broad as long, so they read elliptic against the linear leaves Reiche gives",
+    ),
+    (
+        "cirsium-vulgare",
+        "leaf_shape",
+        "its pinnatifid blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate as well as oblanceolate, against the lanceolate to oblong blades Abrams and Ferris give",
+    ),
+    (
+        "cladium-mariscus-subsp-jamaicense",
+        "culm_length_m",
+        "its panicles stand on lateral branches, and the measure stops at the first lateral axis below an inflorescence, so it reads a branch, not the culm",
+    ),
+    (
+        "cyperus-papyrus",
+        "culm_length_m",
+        "its umbel's rays are lateral axes, and the measure stops at the first lateral axis below an inflorescence, so it reads a ray, not the culm",
     ),
     (
         "cyperus-papyrus",
@@ -42,14 +62,14 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its leaves are the brown sheaths at its culms' foot, drawn as cards tapering from the base, 0.15 as broad as long, so they read deltate or lanceolate against the linear blades Cyperaceae state; papyrus bears no blades",
     ),
     (
+        "cytisus-scoparius",
+        "leaf_shape",
+        "its leaflets are drawn by hand on a sprig card widest at the middle, so they read elliptic against the obovate leaflets Abrams gives",
+    ),
+    (
         "deschampsia-cespitosa",
         "awn_form",
         "it states straight or geniculate awns (FNA), which the Poales' rule draws between them, bent 30°, nearest a contorted awn's 40°",
-    ),
-    (
-        "dicentra-formosa",
-        "flower_merosity",
-        "its four petals stand in two pairs, outer and inner, and a corolla draws one whorl, so its spec draws four there",
     ),
     (
         "digitalis-purpurea",
@@ -72,9 +92,29 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Ferocactus states its stems globose, but Britton and Rose's 'globular to cylindric' allows a column, and its longest stem grows at least three times as long as wide",
     ),
     (
+        "heracleum-maximum",
+        "inflorescence_bracts",
+        "a cluster draws its bracts only as a spathe, so the umbel's involucre of 5 to 10 narrow bracts, which fall early, is not drawn",
+    ),
+    (
+        "heracleum-maximum",
+        "leaf_length_m",
+        "its stem leaves shrink upward in proportion, so the topmost draw about 15 cm against the 2 to 5 dm Abrams gives, which he measures on the main leaves",
+    ),
+    (
+        "jacobaea-vulgaris",
+        "leaf_width_m",
+        "its stem leaves shrink upward in proportion, so the topmost, 4 to 5 cm long, draw 1.5 cm wide against the 2 to 6 cm Abrams and Ferris give for the blades, which they measure on the main leaves",
+    ),
+    (
         "larrea-tridentata",
         "leaf_division",
         "each leaf is two leaflets joined at their base, but its sprig cards draw each leaf as one blade",
+    ),
+    (
+        "leucanthemum-vulgare",
+        "leaf_shape",
+        "its stem leaves are drawn oblanceolate, a basal leaf's outline with less width, but Abrams and Ferris give a shape (spatulate or obovate) only for the basal leaves; the stem leaves they call reduced, sessile and clasping",
     ),
     (
         "lysichiton-americanus",
@@ -92,6 +132,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its rhizome is not drawn and each pad's petiole is, as a stem of its own, so each reads as a shoot of one leaf against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
+        "olneya-tesota",
+        "leaf_length_m",
+        "a short shoot's leaf card draws a cluster of its small leaves, a branchlet's worth, 0.26 m long, so the crown keeps within the module limit, against Abrams's leaves 3 to 10 cm",
+    ),
+    (
         "oxalis-oregana",
         "leaf_arrangement",
         "Oxalidaceae's leaves are alternate and redwood sorrel's rise one to a node from its rhizome, but the measure finds three or more leaves at most of its nodes (seen since B1 stated the family's arrangement)",
@@ -102,9 +147,19 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its sprig leaves are drawn lanceolate, 0.15 as broad as long, as a bamboo's are, against the linear blades Poaceae state for its grasses; the species states no shape of its own",
     ),
     (
+        "parkinsonia-microphylla",
+        "leaf_length_m",
+        "a short shoot's leaf card draws a cluster of its small leaves, a branchlet's worth, so the crown keeps within the module limit, against Abrams's pinnae 1 to 3 cm",
+    ),
+    (
         "program:broadleaf",
         "crown_outline_fit",
         "its crowns still fill the envelope of the space tool (an ellipsoid), so from the side they fit an ellipse at about 0.90 to 0.95 against open-grown trees' 0.82 to 0.84; crown form step B grows the shape from light and space with no outline",
+    ),
+    (
+        "program:grass",
+        "leaf_length_m",
+        "a culm's leaves are drawn 0.35 to 0.6 as long as its tiller's blades, so where a flora's blades span less than about three-fold (California oatgrass, Roemer's fescue, reed canarygrass) the shortest culm leaves fall below its least",
     ),
     (
         "program:grass",
@@ -114,7 +169,7 @@ const KNOWN: &[(&str, &str, &str)] = &[
     (
         "program:grass",
         "phyllotaxis_pattern",
-        "each blade's roll is jittered ±40° (a culm leaf's ±30°), so the turn from one to the next has a median of about 146°, nearer the golden angle than half a turn",
+        "a tiller's blades are measured round the vertical, so where a tiller leans out about as far as its blades stand off it (tufted hairgrass, coirón, Roemer's and red fescue: blades 10° to 15° off, tillers leaning up to 22°) the lean turns them all one way and the turns read as a spiral or three ranks (inferred, not traced)",
     ),
     (
         "program:grass",

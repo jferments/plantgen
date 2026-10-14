@@ -1703,12 +1703,13 @@ fn fill_defaults(
     let Some(Value::Object(defaults)) = generator.remove("defaults") else {
         return;
     };
-    // The spreads of the defaults a rule set from a range go with them.
-    let mut spreads = match generator.get_mut("spreads") {
-        Some(Value::Object(spreads)) => match spreads.remove("defaults") {
-            Some(Value::Object(inside)) => inside,
-            _ => Map::new(),
-        },
+    // A default's spread (from a rule reading a range) goes with it.
+    let mut spreads = match generator
+        .get_mut("spreads")
+        .and_then(Value::as_object_mut)
+        .and_then(|spreads| spreads.remove("defaults"))
+    {
+        Some(Value::Object(spreads)) => spreads,
         _ => Map::new(),
     };
     let params = generator
@@ -1750,48 +1751,28 @@ fn fill_defaults(
             if let Some(note) = note {
                 notes.insert(to, note);
             }
-            let (from, to) = (
-                format!("generator.spreads.defaults.{key}"),
-                format!("generator.spreads.params.{key}"),
-            );
-            let spread = spreads.remove(&key);
-            if let Value::Object(all) = generator
-                .entry("spreads")
-                .or_insert_with(|| Value::Object(Map::new()))
-            {
-                if let Value::Object(inside) = all
-                    .entry("params")
-                    .or_insert_with(|| Value::Object(Map::new()))
-                {
-                    inside.remove(&key);
-                    origins.remove(&to);
-                    notes.remove(&to);
-                    if let Some(spread) = spread {
-                        inside.insert(key.clone(), spread);
-                        if let Some(origin) = origins.get(&from).cloned() {
-                            origins.insert(to.clone(), origin);
-                        }
-                        if let Some(note) = notes.get(&from).cloned() {
-                            notes.insert(to, note);
-                        }
+            if let Some(spread) = spreads.remove(&key) {
+                let section = generator
+                    .entry("spreads")
+                    .or_insert_with(|| Value::Object(Map::new()));
+                if let Value::Object(section) = section {
+                    if let Value::Object(params) = section
+                        .entry("params")
+                        .or_insert_with(|| Value::Object(Map::new()))
+                    {
+                        params.insert(key.clone(), spread);
                     }
+                }
+                let from = format!("generator.spreads.defaults.{key}");
+                if let Some(origin) = origins.get(&from).cloned() {
+                    origins.insert(format!("generator.spreads.params.{key}"), origin);
+                }
+                // And its evidence note, which the check asks of every value.
+                if let Some(note) = notes.get(&from).cloned() {
+                    notes.insert(format!("generator.spreads.params.{key}"), note);
                 }
             }
         }
-    }
-    if let Some(Value::Object(all)) = generator.get_mut("spreads") {
-        if all
-            .get("params")
-            .is_some_and(|inside| inside.as_object().is_some_and(Map::is_empty))
-        {
-            all.remove("params");
-        }
-    }
-    if generator
-        .get("spreads")
-        .is_some_and(|all| all.as_object().is_some_and(Map::is_empty))
-    {
-        generator.remove("spreads");
     }
     forget(origins, "generator.defaults");
     forget(origins, "generator.spreads.defaults");
@@ -4436,15 +4417,13 @@ mod tests {
                 "traits": {"leaf": 2, "juvenile": 4}})),
             json!({"a": 6, "b": 8})
         );
-        // A default a rule sets from a range carries its spread into the
-        // parameter it fills.
+        // A default a rule sets from a range carries its spread, and the
+        // spread's note, into the parameter it fills.
         let chain = above(&files, "testaceae", "genus").unwrap();
         let own = json!({"id": "one", "growth_form": "forb",
             "traits": {"leaf": {"min": 1.0, "max": 3.0}}});
-        let generator = inherit("testaceae/genus/one/spec.json", &own, &chain, &programs)
-            .unwrap()
-            .spec["generator"]
-            .clone();
+        let open = inherit("testaceae/genus/one/spec.json", &own, &chain, &programs).unwrap();
+        let generator = &open.spec["generator"];
         assert_eq!(generator["params"]["a"], json!(6));
         assert!(
             generator["spreads"]["params"]["a"].is_array(),
@@ -4454,7 +4433,6 @@ mod tests {
             generator["spreads"].get("defaults").is_none(),
             "{generator}"
         );
-        let open = inherit("testaceae/genus/one/spec.json", &own, &chain, &programs).unwrap();
         assert!(
             open.notes.contains_key("generator.spreads.params.a"),
             "{:?}",

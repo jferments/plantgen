@@ -21,14 +21,10 @@
       "wiggle": 3,
       "nodes": 10,
       "bare": 0.05,
-      "leaf_length": 0.05,
       "leaf_peak": 0.2,
-      "leaf_top": 0.4,
-      "leaf_base": 1.0,
       "leaf_angle": 45,
       "raceme": 0.08,
       "flowers": 1,
-      "flower_size": 0.035,
       "pedicel": 0.03,
       "flower_angle": 0,
       "fruit_below": 0,
@@ -68,7 +64,7 @@
         }
       },
       "flower": {
-        "shape": { "template": "head", "rays": 11, "ray_width": 0.9, "disc": 0.4 },
+        "shape": { "template": "head", "ray_width": 0.9 },
         "colour": [0.95, 0.8, 0.1],
         "accent": [0.9, 0.65, 0.05]
       }
@@ -93,7 +89,27 @@
     "leaf_length_m": {
       "min": 0.02,
       "max": 0.06
-    }
+    },
+    "height_max_m": 1.0,
+    "life_span": "perennial",
+    "woodiness": "semi",
+    "leaf_shape": {"oblanceolate": "often", "spatulate": "often", "lanceolate": "often", "obovate": "sometimes"},
+    "leaf_division": "simple",
+    "leaf_incision": {"cleft": "often", "lobed": "often", "none": "sometimes"},
+    "division_pattern": "pinnate",
+    "division_order": {"min": 1, "max": 1, "high": 3},
+    "leaf_margin": {"entire": "often", "serrate": "sometimes"},
+    "inflorescence": {"solitary": "often", "corymb": "often"},
+    "capitulum_kind": {"radiate": "usually", "discoid": "rarely"},
+    "involucre_height_m": {"min": 0.008, "max": 0.01, "low": 0.005, "high": 0.012},
+    "involucre_diameter_m": {"min": 0.01, "max": 0.012},
+    "phyllaries": {"min": 8, "max": 12},
+    "ray_florets": {"min": 8, "max": 12},
+    "ray_length_m": {"min": 0.01, "max": 0.02, "low": 0.006},
+    "ray_colour": [245, 200, 30],
+    "pappus": {"scales": "usually", "crown": "rarely"},
+    "fruit_size_m": {"min": 0.003, "max": 0.004, "low": 0.002, "high": 0.005},
+    "flowering_months": [5, 6, 7]
   },
   "evidence": {
     "traits.height_typical_m": {
@@ -150,6 +166,106 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Eriophyllum lanatum (pp. 225-226): stems (1)2-6 dm; var. grandiflorum 3-10 dm, and the generic key gives the perennials 1-10(15) dm."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. lanatum (p. 225): perennial."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. lanatum (p. 225): erect or sprawling from a woody base; the key calls it shrubby only at the base."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. lanatum (p. 225): lower leaves spatulate or oblanceolate, stem leaves oblong-lanceolate to obovate, uppermost narrow."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. lanatum (p. 225): one blade, entire to pinnatifid."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. lanatum (p. 225): lower leaves entire or lobed, stem leaves pinnatifid, uppermost usually entire; var. achillaeoides pinnately to tripinnately divided."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. lanatum (p. 225): pinnatifid."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. lanatum (pp. 225-226): once pinnatifid in the type; up to three times in var. achillaeoides."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, varieties of E. lanatum (p. 226): segments and narrow leaves entire; several varieties coarsely serrate or toothed."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. lanatum (p. 225): heads solitary or loosely corymbose on peduncles 5-10 cm long."
+    },
+    "traits.capitulum_kind": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. lanatum (pp. 225-226): rayed; rays lacking only in var. aphanactis."
+    },
+    "traits.involucre_height_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. lanatum (pp. 225-226): involucre hemispheric, 8-10 mm high; 5-12 mm across the varieties."
+    },
+    "traits.involucre_diameter_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. lanatum (p. 225): involucre 10-12 mm broad; heads 1.5-3 cm across with rays (key)."
+    },
+    "traits.phyllaries": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. lanatum (p. 225): phyllaries 8-12, keeled, free with overlapping margins."
+    },
+    "traits.ray_florets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. lanatum (p. 225): ray florets 8-12."
+    },
+    "traits.ray_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. lanatum (pp. 225-226): rays 10-20 mm; 6-10 mm in several varieties."
+    },
+    "traits.ray_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. lanatum (p. 225): rays yellow. Word: yellow."
+    },
+    "traits.pappus": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. lanatum (pp. 225-226): pappus of 4-10 blunt erose scales; in var. arachnoideum reduced to a crown of teeth."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. lanatum (pp. 225-226): achenes 3-4 mm long; 2-5 mm across the varieties."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, E. lanatum (p. 225): May to July."
     }
   },
   "provenance": {

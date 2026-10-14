@@ -7,6 +7,7 @@
 lsystem poaceae 1 extends grass;
 
 param twist = 6;         # spread of the random roll at each joint
+param roll_spread = 10;  # most a blade's roll strays from divergence: a grass's two ranks hold closely
 param pieces = 6;        # pieces in a blade, its tip included
 param maturity = 1.5;    # years over which blades and culms reach full size
 param adult_age = 2;     # the first year the plant is adult and flowers

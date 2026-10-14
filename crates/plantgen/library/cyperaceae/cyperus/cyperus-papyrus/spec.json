@@ -21,7 +21,6 @@
       "leaf_angle": 20,
       "flowering": 0.95,
       "flower_age": 1,
-      "culm_height": 2.9,
       "height_spread": 0.15,
       "culm_radius": 0.018,
       "culm_lean": 6,
@@ -89,7 +88,18 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "culm_length_m": {
+      "min": 2.4384,
+      "max": 4.572
+    }
+  },
   "evidence": {
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "clarke-1902-fta-8",
+      "note": "C. B. Clarke in Flora of Tropical Africa vol. 8 (1901-1902), Cyperus Papyrus, species 116, p. 374: stems mostly single, 8 ft to 15 ft high."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

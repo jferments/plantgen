@@ -15,9 +15,7 @@
       "canes": 200,
       "cane_rate": 10,
       "cane_lean": 8,
-      "cane_length": 5.6,
       "cane_growth": 2.5,
-      "cane_radius": 0.022,
       "sag": 0.006,
       "node_rate": 4,
       "thorns": 0,
@@ -132,6 +130,46 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 31): P. aurea is frequent in cultivation, the plant 3 to 5 m tall, its branches yellowish and its lower internodes very short. GrassBase (as search results quote it; the page itself was not read) gives culms 200 to 800 cm, so the greatest is 8 m."
+    },
+    "traits.stem_diameter_max_m": {
+      "evidence": "SourceInferred",
+      "source": "kew-grassbase",
+      "note": "GrassBase's entry (as search results quote it; the page itself was not read): culms erect, 200-800 cm long, 20-30 mm in diameter, woody, internodes hollow, 8-10 cm long."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "kew-grassbase",
+      "note": "GrassBase's entry (as search results quote it; the page itself was not read): rhizomes elongated, leptomorph (running). See disagreements: Bureau 1904 found it only slightly running in Paris."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "kew-grassbase",
+      "note": "GrassBase's entry (as search results quote it; the page itself was not read): leaf-blades lanceolate, 5-8 cm long, 5-11 mm wide (AusGrass, also as search results quote it, gives 5-15 cm by 5-22 mm)."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "kew-grassbase",
+      "note": "GrassBase's entry (as search results quote it; the page itself was not read): leaf-blades 5-11 mm wide."
+    },
+    "traits.spikelet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "kew-grassbase",
+      "note": "GrassBase's entry (as search results quote it; the page itself was not read): spikelets sessile, lanceolate, 18-25 mm long."
+    },
+    "traits.florets_per_spikelet": {
+      "evidence": "SourceInferred",
+      "source": "kew-grassbase",
+      "note": "GrassBase's entry (as search results quote it; the page itself was not read): spikelets of 2 fertile florets with a barren rachilla extension."
+    },
+    "traits.lemma_length_m": {
+      "evidence": "SourceInferred",
+      "source": "kew-grassbase",
+      "note": "GrassBase's entry (as search results quote it; the page itself was not read): fertile lemma ovate, about 15 mm long."
     }
   },
   "provenance": {
@@ -143,5 +181,15 @@
     ],
     "contributors": ["Project After"],
     "notes": "Procedural proxy (plant forms milestone F6). Calibration against measurements and photographs comes later."
+  },
+  "traits": {
+    "culm_length_m": {"min": 3, "max": 5, "high": 8},
+    "stem_diameter_max_m": 0.03,
+    "rhizome_habit": "long_creeping",
+    "leaf_length_m": {"min": 0.05, "max": 0.08},
+    "leaf_width_m": {"min": 0.005, "max": 0.011},
+    "spikelet_length_m": {"min": 0.018, "max": 0.025},
+    "florets_per_spikelet": 2,
+    "lemma_length_m": 0.015
   }
 }

@@ -46,7 +46,7 @@
 # fruit from its joints, one more fruit each year.
 #
 # Revision 1 (growth plan G2.3a, big families): the cacti's program
-# (`cactaceae` revision 5) as a starting base with no values. Each parameter
+# (`cactaceae` revision 6, with its dioecy) as a starting base with no values. Each parameter
 # given as a number is `param name;`, and the lineages that extend it give
 # the values: `cactaceae` the cacti's, and the flowering plants' form
 # default for stem succulents the rest.
@@ -139,6 +139,8 @@ param chain_max;              # most fruit in a chain
 param flower_area;
 param bud_area;
 param fruit_area;
+param dioecious;              # 1: each plant is male or female; 0: every plant bears both
+param sex;                    # this plant's own draw, 0 to 1: below a half, a dioecious plant is male
 
 module Y(k, v, b);                      # the crown: k stems so far, vigour, arm propensity
 module Ss(k, m, v, b);                  # stems k to k + m - 1 sprouting this year
@@ -279,7 +281,7 @@ interpret Ri(k, m, r, d) : m == 1 ->
     [ /(k * 360 / flowers + uniform(-12, 12)) f(-d * (1 - cos(rad(ring_angle))))
       &(90) f(r * sin(rad(ring_angle))) ^(90 - flower_angle * uniform(0.8, 1.2)) Fo ];
 interpret Fo : rand(1) < bud_share -> bud(bud_size * uniform(0.8, 1.2));
-interpret Fo : rand(1) < bud_share + fruit_share -> fruit(fruit_size * uniform(0.85, 1.15));
+interpret Fo : rand(1) < bud_share + fruit_share && (dioecious < 0.5 || sex >= 0.5) -> fruit(fruit_size * uniform(0.85, 1.15));
 interpret Fo -> flower(flower_size * uniform(0.85, 1.15));
 
 # A joint in its second year sprouts its daughters (a trunk joint also
@@ -369,7 +371,7 @@ interpret Fl(k, m, n, l, r) : m == 1 ->
 
 # A chain of fruit hangs from its joint and grows one more fruit at its
 # end each year, as the last one flowers again.
-decompose Cb(n) : n > 0 -> [ &(150 + uniform(-15, 15)) /(uniform(0, 360)) Cf Ch(1) ];
+decompose Cb(n) : n > 0 && (dioecious < 0.5 || sex >= 0.5) -> [ &(150 + uniform(-15, 15)) /(uniform(0, 360)) Cf Ch(1) ];
 decompose Cb(n) -> ;
 rule Ch(n) : n < chain_max -> Cf Ch(n + 1);
 interpret Cf ->

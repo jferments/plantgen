@@ -17,14 +17,20 @@
 # ground lies on it, `rest_gap` above the substrate (substrate@1's, or
 # level soil), as a prickly pear's pads do, instead of passing into it.
 #
-# Revision 6 (growth plan G2.3a, big families): the body moves to the
+# Revision 6 (dioecy): in a dioecious species (dioecious 1, from the
+# sexual system its taxa state) a plant whose own draw `sex` is below a
+# half is male: its rings bear open flowers where a female's bear fruit,
+# and its joints hang no chains of fruit. The rest are female and fruit as
+# before; so does a plant that bears both sexes (dioecious 0).
+#
+# Revision 7 (growth plan G2.3a, big families): the body moves to the
 # column base, which the succulent spurges and stapeliads share; this
 # program keeps the cacti's values. It grows every plant as before.
 #
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem cactaceae 6 extends column;
+lsystem cactaceae 7 extends column;
 
 param vigour_spread = 0.12;   # an individual grows exp(gauss() * vigour_spread) times as fast
 param lean = 3;               # most degrees a lone stem leans at its foot, in a random direction

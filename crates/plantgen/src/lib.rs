@@ -283,4 +283,49 @@ pub mod venation;
 /// desert willow, burrobush, vine maple, osoberry, thimbleberry and jojoba
 /// with leaves no larger than their floras give, desert willow's narrowly
 /// linear. (45 is the unequal corolla, #86.)
-pub const GENERATOR_REVISION: u32 = 46;
+/// 47: a dioecious species' plants are male or female, each by its own
+/// draw from its seed, and only females bear fruit or seed cones: a male
+/// yew bears no arils, a broadleaf's male blooms fall where they would
+/// fruit, a herb's keep flowering and a climber's set no fruit. Every
+/// built-in package's own seed grows the plant it grew before; other
+/// seeds of a dioecious species may now grow males. (46 is the
+/// broadleaf sizes, #88.)
+/// 48: a regular corolla may stand in two like whorls (`petal_whorls`
+/// 2), the inner turned half a petal: tall and dull Oregon grape draw
+/// three petals and three, bleeding heart an outer and an inner pair, and
+/// their stamens stand in whorls of as many (47 is dioecy, #103).
+/// 49: the daisy, grass, carrot and pea families' 34 built-in species grow
+/// from their characters (spec rework E1 to E4): head, leaf, blade, culm,
+/// panicle and cane sizes from their floras by rules in their taxa; a
+/// grass holds its blades in two ranks (grass program 6, `roll_spread`
+/// per lineage, sedges and rushes as before); cow parsnip's leaves are
+/// three leaflets; broom's flowers stand alone in the leaf axils (48 is
+/// corollas in two whorls, #90).
+/// 50: a conifer's limbs sag under their load, not by their age (pinidae
+/// 7): bend@1 with each species' green wood, and reaction wood (bend@1's
+/// `reaction`) turning a limb back toward its line by each year's ring,
+/// so old crowns keep spreading limbs instead of hanging ones (49 is
+/// #97).
+/// 51: a conifer's foliage and cones live as long as their parameters
+/// say, not one year more (pinidae 8, as 44 did for the other programs),
+/// and a pine's lowest needles as long as its species' longest stated
+/// needle life (Pinus's `needle_low`) (50 is conifer sag, #95).
+/// 52: a broadleaf tree's or shrub's crown narrows among neighbours
+/// (broadleaf 15, sapindaceae 8, `space@4`): its free-space region is
+/// scaled at each height and side as far as a crown front grown from the
+/// lineage's tropisms under the neighbours' shade falls short of the
+/// open-grown one, so stand-grown crowns are narrower and an edge tree's
+/// reaches toward open sky; open-grown plants are unchanged. At a stand's
+/// edge only a point reaching toward the stand's side reaches into the
+/// neighbours' crowns (51 is
+/// #96).
+/// 53: 62 built-in species take their heights, culm lengths and juvenile
+/// periods from floras in place of hand-set `crown_height`, `height_max`,
+/// `stem_height`, `culm_height` and `adult_age`, so the rank rules size
+/// them, and a stated range spreads their heights across seeds.
+/// 54: a conifer's side shoots live as long as their light pays for them
+/// (pinidae 9), not 20 years, so old limbs keep foliage along their
+/// length and open-grown spruces, firs, hemlocks and cedars fill in
+/// (53 is heights from floras,
+/// #113).
+pub const GENERATOR_REVISION: u32 = 54;
