@@ -101,12 +101,7 @@
         "colour": [0.62, 0.05, 0.06],
         "accent": [0.55, 0.6, 0.38],
         "season": {
-          "bud": 120,
-          "flower": 140,
-          "fruit": 175,
-          "ripe": 185,
           "ripening": 25,
-          "fall": 250,
           "flower_look": {
             "shape": {
               "template": "flower",
@@ -150,7 +145,9 @@
       "max": 1.83
     },
     "carpels": 30,
-    "flowering_position": "terminal"
+    "flowering_position": "terminal",
+    "flowering_months": [5, 6],
+    "fruiting_months": [6, 7]
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -167,6 +164,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Leaf card length, petiole included, sized so every leaf drawn stays within Jepson (1925, as R. parviflorus): leaves 3 to 7 in (7.6 to 17.8 cm) wide (0.3 drew them 25 to 30 cm wide)."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "gbif-inaturalist",
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 305 records annotated as flowering (Feb 1, Apr 27, May 193, Jun 68, Jul 9, Aug 1, Sep 2, Oct 2, Nov 2); stated as the months holding at least a tenth of them, May and June. The Seed Manual (Rubus chapter, printed p. 988) gives May and June for the Pacific Northwest."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "Seed Manual, Rubus chapter (printed p. 988): ripe in June and July in the Pacific Northwest."
     },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
@@ -191,7 +198,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: bright green leaves; white flowers; red berries later; shredding tan bark. Fruit (plant roadmap P4), as in mid-July: soft red thimbleberries, wider than long, some still pale. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: white flowers in May to July; berries red in July and August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): shreddy bark peeling on old canes; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: bright green leaves; white flowers; red berries later; shredding tan bark. Fruit (plant roadmap P4), as in mid-July: soft red thimbleberries, wider than long, some still pale. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: white flowers in May to July; berries red in July and August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): shreddy bark peeling on old canes; set from general knowledge of the species, not measured."
     },
     "taxon": {
       "evidence": "Authored",

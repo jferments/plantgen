@@ -1,0 +1,279 @@
+{
+  "allometry": [
+    {
+      "age": 30,
+      "dbh": 0.25,
+      "environment": "interior",
+      "height": 15,
+      "tolerance": 0.4
+    },
+    {
+      "age": 60,
+      "dbh": 0.45,
+      "environment": "interior",
+      "height": 27,
+      "tolerance": 0.4
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.16,
+      0.075,
+      0.045
+    ],
+    "bark_pattern": {
+      "contrast": 0.45,
+      "depth": 0.3,
+      "elongation": 15.0,
+      "fissure": 0.35,
+      "kind": "fibrous",
+      "roughness": 0.4,
+      "scale": 0.03,
+      "smooth_below": 0.02,
+      "variation": 0.25
+    },
+    "flare": {
+      "amount": 0.9,
+      "buttresses": 6,
+      "height": 1.2,
+      "ridge": 0.7
+    },
+    "foliage": [
+      0.06,
+      0.14,
+      0.03
+    ],
+    "foliage_shade": [
+      0.02,
+      0.05,
+      0.015
+    ],
+    "organs": {
+      "cone": {
+        "colour": [
+          0.5,
+          0.35,
+          0.2
+        ],
+        "shape": {
+          "aspect": 0.55,
+          "cone": 1,
+          "template": "fruit"
+        }
+      },
+      "spray": {
+        "shape": {
+          "template": "scales"
+        }
+      }
+    },
+    "ridges": {
+      "contrast": 0.35,
+      "depth": 0.035,
+      "spacing": 0.06,
+      "twist": 4
+    },
+    "variation": 0.2
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights and diameters for redcedar in a mixed western Washington stand, from general forestry knowledge: slower in height than Douglas-fir. Replace with a published site-index table before calling this species calibrated.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: yellow-green foliage, red-brown fibrous bark in twisting strips, a fluted, buttressed base. Bark pattern (plant roadmap P4, `bark_pattern`): stringy grey to reddish-brown bark in long fibrous strips; set from general knowledge of the species, not measured.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set for a western redcedar: a leader that nods over and straightens, branches that sweep down and turn up at the tips, flat scale-leaved sprays hanging below them, foliage kept about five years. Spray area matched to the drawn sprays. Not fitted to data. Cones (plant forms F3): about 1 cm, upright, in clusters; set from general knowledge of the species, not measured. Spec rework E6d: `cone_length`, `cone_pitch`, `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.adult_age": {
+      "evidence": "SourceInferred",
+      "note": "The juvenile period is the time from germination to the first flowers, cones or seed, which the Woody Plant Seed Manual's tables give as the minimum seed-bearing age (spec rework P6). adult_age is the first year a program measuring it by the plant's age lets the plant flower or bear cones, so it is the juvenile period itself.",
+      "source": "bonner-karrfalt-2008"
+    },
+    "generator.params.cone_length": {
+      "evidence": "Authored",
+      "note": "Spec rework E6d: the pinidae program's foliage life, cones and needle bundles and ranks from each taxon's stated characters. Conifer sag (M6): green wood's density and stiffness from the Wood Handbook values the species state.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.cone_pitch": {
+      "evidence": "Authored",
+      "note": "Spec rework E6d: the pinidae program's foliage life, cones and needle bundles and ranks from each taxon's stated characters. Conifer sag (M6): green wood's density and stiffness from the Wood Handbook values the species state.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.dioecious": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): the sexual system its taxa state most often decides; a species whose taxa state dioecy no more often than another system bears both sexes on every plant until it states its own.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.height_max": {
+      "evidence": "Authored",
+      "note": "What the conifer and succulent programs' height_max means: the height their Chapman-Richards curve rises toward with age and never reaches, so the tallest the plant grows, the height a flora gives as its greatest (\"trees to 40 m\"). Plants of a usual age stand below it, as the curve says. Where a flora's greatest is a rare record, the plant grows a little tall; a check of the grown plant against its usual height (spec rework M8) will show it.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.needle_years": {
+      "evidence": "Authored",
+      "note": "Spec rework E6d: the pinidae program's foliage life, cones and needle bundles and ranks from each taxon's stated characters. Conifer sag (M6): green wood's density and stiffness from the Wood Handbook values the species state.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.sex": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant's sex is its own draw, dealt across a package's seeds so that both sexes grow; the typical plant (sex 0.5) is female, so it shows its fruit.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.wood_density": {
+      "evidence": "Authored",
+      "note": "Spec rework E6d: the pinidae program's foliage life, cones and needle bundles and ranks from each taxon's stated characters. Conifer sag (M6): green wood's density and stiffness from the Wood Handbook values the species state.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.wood_modulus": {
+      "evidence": "Authored",
+      "note": "Spec rework E6d: the pinidae program's foliage life, cones and needle bundles and ranks from each taxon's stated characters. Conifer sag (M6): green wood's density and stiffness from the Wood Handbook values the species state.",
+      "source": "plantgen-authors"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The conifers' own program (growth plan G2.3a), renamed from `conifer` and homed here: a leader laying down whorls of branches each year, with sprays of foliage and cones.",
+      "source": "plantgen-authors"
+    },
+    "generator.spreads.params.adult_age": {
+      "evidence": "SourceInferred",
+      "note": "The juvenile period is the time from germination to the first flowers, cones or seed, which the Woody Plant Seed Manual's tables give as the minimum seed-bearing age (spec rework P6). adult_age is the first year a program measuring it by the plant's age lets the plant flower or bear cones, so it is the juvenile period itself.",
+      "source": "bonner-karrfalt-2008"
+    },
+    "generator.spreads.params.height_max": {
+      "evidence": "Authored",
+      "note": "What the conifer and succulent programs' height_max means: the height their Chapman-Richards curve rises toward with age and never reaches, so the tallest the plant grows, the height a flora gives as its greatest (\"trees to 40 m\"). Plants of a usual age stand below it, as the curve says. Where a flora's greatest is a rare record, the plant grows a little tall; a check of the grown plant against its usual height (spec rework M8) will show it.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "adult_age": 20,
+      "branch_angle": 72,
+      "branch_reach": 6.0,
+      "cone_area": 0.72,
+      "cone_chance": 0.15,
+      "cone_length": 0.011,
+      "cone_pitch": -60,
+      "cone_years": 1,
+      "dioecious": 0,
+      "height_max": 65,
+      "height_rate": 0.016,
+      "height_shape": 1.4,
+      "needle_years": 8.9,
+      "nod": 45,
+      "nod_years": 2,
+      "pipe_organ": 0.0095,
+      "sex": 0.5,
+      "spray_area": 0.25,
+      "spray_droop": 65,
+      "upturn": 0.0125,
+      "whorl": 5,
+      "wood_density": 863.6,
+      "wood_modulus": 6500
+    },
+    "program": "pinidae",
+    "spreads": {
+      "params": {
+        "adult_age": [
+          10,
+          11,
+          20,
+          29,
+          30
+        ],
+        "height_max": [
+          60,
+          60.5,
+          65,
+          69.5,
+          70
+        ]
+      }
+    }
+  },
+  "growth": {
+    "keyframes": [
+      5,
+      15,
+      30,
+      60
+    ],
+    "step": 1,
+    "years": 60
+  },
+  "growth_form": "scale_leaved_tree",
+  "id": "thuja-plicata",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy for milestone P1. Calibration against yield tables and photographs is milestone P4.",
+    "sources": [
+      {
+        "licence": "method citation; no data used",
+        "title": "Pałubicki et al. 2009, Self-organizing tree models for image synthesis (method only: light, vigour and shedding)"
+      },
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "western redcedar",
+    "family": "Cupressaceae",
+    "genus": "Thuja",
+    "plant_name_id": 378546,
+    "scientific_name": "Thuja plicata",
+    "usda_symbol": "THPL"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open",
+      "interior"
+    ],
+    "seeds": [
+      1,
+      2
+    ]
+  }
+}

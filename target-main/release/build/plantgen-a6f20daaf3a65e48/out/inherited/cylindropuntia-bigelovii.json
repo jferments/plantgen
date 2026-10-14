@@ -1,0 +1,360 @@
+{
+  "allometry": [
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 1.2,
+      "tolerance": 0.5
+    },
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 1.4,
+      "tolerance": 0.4
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.2,
+      0.17,
+      0.13
+    ],
+    "bodies": {
+      "stem": {
+        "areoles": {
+          "felt": [
+            0.6,
+            0.55,
+            0.35
+          ],
+          "felt_radius": 0.002,
+          "spacing": 0.012
+        },
+        "base": 0.8,
+        "colour": [
+          0.15,
+          0.22,
+          0.09
+        ],
+        "cork": {
+          "colour": [
+            0.08,
+            0.07,
+            0.06
+          ],
+          "height": 0.8,
+          "rate": 0.06,
+          "spines": 0.6,
+          "start": 6
+        },
+        "dome": 1.0,
+        "greying": {
+          "colour": [
+            0.12,
+            0.1,
+            0.08
+          ],
+          "years": 6
+        },
+        "spines": [
+          {
+            "angle": 50,
+            "angle_spread": 25,
+            "colour": [
+              0.85,
+              0.8,
+              0.6
+            ],
+            "count": [
+              8,
+              12
+            ],
+            "length": 0.025,
+            "length_spread": 0.3,
+            "role": "radial",
+            "tip": [
+              0.75,
+              0.7,
+              0.55
+            ],
+            "width": 0.0008
+          },
+          {
+            "angle": 55,
+            "angle_spread": 20,
+            "colour": [
+              0.8,
+              0.74,
+              0.5
+            ],
+            "count": [
+              10,
+              20
+            ],
+            "length": 0.003,
+            "length_spread": 0.3,
+            "role": "glochid",
+            "width": 0.00012
+          }
+        ],
+        "tubercles": {
+          "height": 0.15,
+          "point": 0.8,
+          "stretch": 1.3,
+          "width": 0.6
+        },
+        "valley": [
+          0.08,
+          0.12,
+          0.05
+        ]
+      }
+    },
+    "foliage": [
+      0.1,
+      0.17,
+      0.06
+    ],
+    "foliage_shade": [
+      0.045,
+      0.077,
+      0.027
+    ],
+    "organs": {
+      "bud": {
+        "colour": [
+          0.3,
+          0.35,
+          0.1
+        ],
+        "shape": {
+          "aspect": 0.5,
+          "template": "fruit"
+        }
+      },
+      "flower": {
+        "accent": [
+          0.5,
+          0.45,
+          0.2
+        ],
+        "colour": [
+          0.55,
+          0.6,
+          0.25
+        ],
+        "shape": {
+          "centre": 0.3,
+          "corolla": "regular",
+          "notch": 0.0,
+          "ovary": "inferior",
+          "perianth": "spiral",
+          "petal_width": 0.8,
+          "petals": 8,
+          "point": 0.0,
+          "sepals": 0,
+          "stamens": 200,
+          "template": "flower",
+          "tube": 0.4
+        }
+      },
+      "fruit": {
+        "colour": [
+          0.6,
+          0.55,
+          0.15
+        ],
+        "shape": {
+          "aspect": 0.7,
+          "template": "fruit"
+        }
+      }
+    },
+    "variation": 0.1
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge: about a metre within 15 years. Wide tolerances.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: joints hidden under dense, barbed, straw-yellow spines in papery sheaths that shine silver in back light, darkening to near black on the old trunk. Its flower laid out whorl by whorl (spec rework P5b): its tepals on a spiral (their count by hand: no flora counts them) on a floral cup above the inferior ovary, from the characters of Cactaceae by the rules at the flowering plants. Its 200 stamens by hand, the most a flower draws, for the numerous ones every flora gives.",
+      "source": "plantgen-authors"
+    },
+    "appearance.bodies.stem.spines.glochid": {
+      "evidence": "SourceInferred",
+      "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, pp. 42 and 57 to 67): the areoles bear glochids above the spines, here not described for the species; the genus's are usually numerous, so drawn pale yellow like its spines. Their count, length and angle are set by eye like a prickly pear's, smaller, as no flora measures them.",
+      "source": "britton-rose-1919"
+    },
+    "appearance.organs.flower.shape.corolla": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.ovary": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.perianth": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.sepals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.tube": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a trunk of joints 1 to 1.5 m tall with short branches of easily detached joints crowded at its top; lower branches fall away, so the trunk below is bare and dark. Joints 5 to 15 cm long and 3 to 6 cm thick. Pale green to yellow flowers at the joint tips in spring. Not fitted to measurements.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.dioecious": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant bears both sexes, unless its taxa state it dioecious.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.joint_length": {
+      "evidence": "Authored",
+      "note": "Spec rework E6c: the joints of chollas and prickly pears from their stated form and size.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.joints": {
+      "evidence": "Authored",
+      "note": "Spec rework E6c: the joints of chollas and prickly pears from their stated form and size.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.sex": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant's sex is its own draw, dealt across a package's seeds so that both sexes grow; the typical plant (sex 0.5) is female, so it shows its fruit.",
+      "source": "plantgen-authors"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The cacti's own program (growth plan G2.3a): columns, barrels and chains of joints, their ribs, areoles and spines from each species' look.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "bloom_age": 6,
+      "branch_angle": 55,
+      "bud_area": 0.636,
+      "bud_rate": 0.7,
+      "bud_share": 0.2,
+      "bud_size": 0.015,
+      "crown": 0.45,
+      "daughters_high": 2,
+      "daughters_low": 0.5,
+      "dioecious": 0,
+      "flower_angle": 30,
+      "flower_area": 0.274,
+      "flower_size": 0.04,
+      "fruit_area": 0.89,
+      "fruit_share": 0.4,
+      "fruit_size": 0.03,
+      "generations": 4,
+      "joint_flowers": 1,
+      "joint_length": 0.1,
+      "joint_life": 8,
+      "joint_radius": 0.025,
+      "joint_spread": 0.3,
+      "joints": 1,
+      "leader_lean": 6,
+      "lean": 4,
+      "resprout": 0.5,
+      "sag": 0.15,
+      "sex": 0.5,
+      "swell": 1.0,
+      "swell_years": 12,
+      "trunk_joints": 12,
+      "twist": 0,
+      "vigour_spread": 0.12
+    },
+    "program": "cactaceae"
+  },
+  "growth": {
+    "keyframes": [
+      3,
+      8,
+      15,
+      30
+    ],
+    "step": 1,
+    "years": 30
+  },
+  "growth_form": "stem_succulent",
+  "id": "cylindropuntia-bigelovii",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (milestone F1). Calibration against measurements and photographs comes later.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "teddy bear cholla",
+    "family": "Cactaceae",
+    "genus": "Cylindropuntia",
+    "plant_name_id": 2750365,
+    "scientific_name": "Cylindropuntia bigelovii",
+    "usda_symbol": "CYBI9"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
+  }
+}

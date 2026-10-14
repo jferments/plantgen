@@ -1,0 +1,377 @@
+{
+  "allometry": [
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 1.6,
+      "tolerance": 0.5
+    },
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 2.2,
+      "tolerance": 0.4
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.2,
+      0.17,
+      0.13
+    ],
+    "bodies": {
+      "stem": {
+        "areoles": {
+          "felt": [
+            0.55,
+            0.5,
+            0.35
+          ],
+          "felt_radius": 0.002,
+          "spacing": 0.014
+        },
+        "base": 0.8,
+        "colour": [
+          0.1,
+          0.17,
+          0.07
+        ],
+        "cork": {
+          "colour": [
+            0.12,
+            0.1,
+            0.08
+          ],
+          "height": 0.9,
+          "rate": 0.05,
+          "spines": 0.4,
+          "start": 8
+        },
+        "dome": 1.0,
+        "greying": {
+          "colour": [
+            0.25,
+            0.22,
+            0.18
+          ],
+          "years": 6
+        },
+        "spines": [
+          {
+            "angle": 45,
+            "angle_spread": 25,
+            "colour": [
+              0.75,
+              0.68,
+              0.45
+            ],
+            "count": [
+              2,
+              12
+            ],
+            "length": 0.028,
+            "length_spread": 0.35,
+            "role": "radial",
+            "tip": [
+              0.7,
+              0.65,
+              0.5
+            ],
+            "width": 0.0006
+          },
+          {
+            "angle": 55,
+            "angle_spread": 20,
+            "colour": [
+              0.82,
+              0.78,
+              0.58
+            ],
+            "count": [
+              10,
+              20
+            ],
+            "length": 0.003,
+            "length_spread": 0.3,
+            "role": "glochid",
+            "width": 0.00012
+          }
+        ],
+        "tubercles": {
+          "height": 0.18,
+          "point": 0.9,
+          "stretch": 1.5,
+          "width": 0.6
+        },
+        "valley": [
+          0.05,
+          0.09,
+          0.035
+        ]
+      }
+    },
+    "foliage": [
+      0.1,
+      0.17,
+      0.06
+    ],
+    "foliage_shade": [
+      0.045,
+      0.077,
+      0.027
+    ],
+    "organs": {
+      "bud": {
+        "colour": [
+          0.3,
+          0.3,
+          0.12
+        ],
+        "shape": {
+          "aspect": 0.5,
+          "template": "fruit"
+        }
+      },
+      "flower": {
+        "accent": [
+          0.6,
+          0.5,
+          0.3
+        ],
+        "colour": [
+          0.65,
+          0.3,
+          0.45
+        ],
+        "shape": {
+          "centre": 0.25,
+          "corolla": "regular",
+          "notch": 0.0,
+          "ovary": "inferior",
+          "perianth": "spiral",
+          "petal_width": 0.8,
+          "petals": 8,
+          "point": 0.0,
+          "sepals": 0,
+          "stamens": 200,
+          "template": "flower",
+          "tube": 0.4
+        }
+      },
+      "fruit": {
+        "colour": [
+          0.12,
+          0.22,
+          0.06
+        ],
+        "shape": {
+          "aspect": 0.75,
+          "template": "fruit"
+        }
+      }
+    },
+    "variation": 0.1
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge: one and a half to two metres within 15 to 30 years. Wide tolerances.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: green tuberculate joints, yellowish sheathed spines that grey with age, a dark trunk; green, smooth hanging fruit. Its flower laid out whorl by whorl (spec rework P5b): its tepals on a spiral (their count by hand: no flora counts them) on a floral cup above the inferior ovary, from the characters of Cactaceae by the rules at the flowering plants. Its 200 stamens by hand, the most a flower draws, for the numerous ones every flora gives.",
+      "source": "plantgen-authors"
+    },
+    "appearance.bodies.stem.spines.glochid": {
+      "evidence": "SourceInferred",
+      "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, pp. 42 and 57 to 67): the areoles bear glochids above the spines, here small, whitish to light yellow. Their count, length and angle are set by eye like a prickly pear's, smaller, as no flora measures them.",
+      "source": "britton-rose-1919"
+    },
+    "appearance.bodies.stem.spines.radial.count": {
+      "evidence": "Authored",
+      "note": "Spec rework E6c: the cacti's ribs, areoles and spines grown from the characters their floras state, in each body look that has ribs or a spine set of that role.",
+      "source": "plantgen-authors"
+    },
+    "appearance.bodies.stem.spines.radial.length": {
+      "evidence": "Authored",
+      "note": "Spec rework E6c: the cacti's ribs, areoles and spines grown from the characters their floras state, in each body look that has ribs or a spine set of that role.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.corolla": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.ovary": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.perianth": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.sepals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.tube": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a small tree 1.5 to 4 m tall with a short trunk and drooping branches of joints 5 to 20 cm long that break off at a touch. Pink flowers at the joint tips grow green fruit, and fruit flowers again on old fruit, so chains of up to a dozen or more fruit hang from the branches. Not fitted to measurements.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.dioecious": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant bears both sexes, unless its taxa state it dioecious.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.joint_length": {
+      "evidence": "Authored",
+      "note": "Spec rework E6c: the joints of chollas and prickly pears from their stated form and size.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.joint_radius": {
+      "evidence": "Authored",
+      "note": "Spec rework E6c: the joints of chollas and prickly pears from their stated form and size.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.joints": {
+      "evidence": "Authored",
+      "note": "Spec rework E6c: the joints of chollas and prickly pears from their stated form and size.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.sex": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant's sex is its own draw, dealt across a package's seeds so that both sexes grow; the typical plant (sex 0.5) is female, so it shows its fruit.",
+      "source": "plantgen-authors"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The cacti's own program (growth plan G2.3a): columns, barrels and chains of joints, their ribs, areoles and spines from each species' look.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "bloom_age": 6,
+      "branch_angle": 50,
+      "bud_area": 0.636,
+      "bud_rate": 0.55,
+      "bud_share": 0.2,
+      "bud_size": 0.015,
+      "chain_max": 7,
+      "chains": 0.5,
+      "crown": 0.6,
+      "daughters_high": 2.2,
+      "daughters_low": 0.6,
+      "dioecious": 0,
+      "flower_angle": 30,
+      "flower_area": 0.264,
+      "flower_size": 0.035,
+      "fruit_area": 0.954,
+      "fruit_share": 0.3,
+      "fruit_size": 0.04,
+      "generations": 10,
+      "joint_flowers": 1,
+      "joint_length": 0.15,
+      "joint_life": 0,
+      "joint_radius": 0.02,
+      "joint_spread": 0.3,
+      "joints": 1,
+      "leader_lean": 8,
+      "lean": 4,
+      "resprout": 0.15,
+      "sag": 0.8,
+      "sex": 0.5,
+      "swell": 1.5,
+      "swell_years": 12,
+      "trunk_joints": 15,
+      "twist": 0,
+      "vigour_spread": 0.12
+    },
+    "program": "cactaceae"
+  },
+  "growth": {
+    "keyframes": [
+      3,
+      8,
+      15,
+      30
+    ],
+    "step": 1,
+    "years": 30
+  },
+  "growth_form": "stem_succulent",
+  "id": "cylindropuntia-fulgida",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (milestone F1). Calibration against measurements and photographs comes later.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "chain-fruit cholla",
+    "family": "Cactaceae",
+    "genus": "Cylindropuntia",
+    "plant_name_id": 2750396,
+    "scientific_name": "Cylindropuntia fulgida",
+    "usda_symbol": "CYFU10"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
+  }
+}

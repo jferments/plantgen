@@ -89,12 +89,7 @@
         "colour": [0.12, 0.06, 0.16],
         "accent": [0.45, 0.4, 0.22],
         "season": {
-          "bud": 120,
-          "flower": 135,
-          "fruit": 175,
-          "ripe": 215,
           "ripening": 30,
-          "fall": 320,
           "opening": 14,
           "flower_look": {
             "shape": {
@@ -128,9 +123,21 @@
       "min": 0.03,
       "max": 0.1
     },
-    "flowering_position": "both"
+    "flowering_position": "both",
+    "flowering_months": [5, 6, 7],
+    "fruiting_months": [7, 8, 9, 10, 11]
   },
   "evidence": {
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "gbif-inaturalist",
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 275 records annotated as flowering (Jan 3, Feb 1, Apr 23, May 100, Jun 86, Jul 37, Aug 2, Sep 5, Oct 6, Nov 9, Dec 3); stated as the months holding at least a tenth of them, May to July. FEIS (Gaultheria shallon) gives May to July for western Oregon and southwestern Washington."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usa-npn",
+      "note": "USA National Phenology Network observations (Nature's Notebook) at lowland sites west of the Cascades in Washington and Oregon (below 300 m, west of 121.8° W; 2009 to 2026, fetched 2026-10-14): 49 plant-years at 19 sites seen with ripe fruit, by the months they were seen in (Feb 2, Mar 2, May 2, Jul 16, Aug 20, Sep 20, Oct 11, Nov 8, Dec 4); stated as the months with at least a third as many as the busiest, July to November. FEIS (Gaultheria shallon): ripe from August to October, and the fruit may stay on the stem until December."
+    },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
@@ -159,7 +166,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: dark glossy green leaves; reddish-brown stems; white to pink flowers. Fruit (plant roadmap P4), as in mid-July: racemes of young berries crowned by the calyx, green going dark purple from August. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: pinkish urn-shaped flowers in May and June; berries green, dark purple from August, eaten into November. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
+      "note": "Colours chosen by eye: dark glossy green leaves; reddish-brown stems; white to pink flowers. Fruit (plant roadmap P4), as in mid-July: racemes of young berries crowned by the calyx, green going dark purple from August. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: pinkish urn-shaped flowers in May and June; berries green, dark purple from August, eaten into November. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     },
     "taxon": {
       "evidence": "Authored",
@@ -199,7 +206,7 @@
     "appearance.organs.bloom.season.opening": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit, a convention (no source gives a raceme's opening time)."
+      "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit as they were set by hand before 2026-10-14, a convention (no source gives a raceme's opening time)."
     },
     "traits.flowering_position": {
       "evidence": "SourceInferred",

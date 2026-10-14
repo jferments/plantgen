@@ -95,12 +95,7 @@
         "colour": [0.42, 0.3, 0.16],
         "accent": [0.33, 0.38, 0.16],
         "season": {
-          "bud": 95,
-          "flower": 110,
-          "fruit": 140,
-          "ripe": 220,
           "ripening": 30,
-          "fall": 320,
           "flower_look": {
             "shape": {
               "template": "spike",
@@ -146,9 +141,21 @@
     "wood_modulus_green_mpa": 8100,
     "wood_rupture_green_mpa": 44,
     "wood_moisture_green_share": {"min": 0.72, "max": 0.89, "typical": 0.8},
-    "juvenile_period_years": 15
+    "juvenile_period_years": 15,
+    "flowering_months": [4, 5, 6],
+    "fruiting_months": [8, 9, 10, 11]
   },
   "evidence": {
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "Seed Manual, Betula chapter (printed p. 305): April to June in the middle of the species' range; it has no Pacific Northwest row, and iNaturalist records in the Puget Sound lowlands have no flowering annotations."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "Seed Manual, Betula chapter (printed p. 305): ripe in August and September in the middle of the range, and shed from August into the spring; FEIS (Betula papyrifera) says nearly all of it is shed from September to November. So ripe catkins are on the tree from August to November."
+    },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "silvics-1990-hardwoods",
@@ -191,7 +198,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: green leaves; white bark peeling in papery strips. Fruit (plant roadmap P4), as in mid-July: slender hanging fruiting catkins 3 to 5 cm long, green going brown. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: catkins in April and May; the fruiting catkins green in summer, brown in August and September, breaking up in the autumn. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): white bark peeling in papery strips round the stem from orange-brown inner bark, with dark horizontal lenticels; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves somewhat smaller and narrower than shade leaves; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
+      "note": "Colours chosen by eye: green leaves; white bark peeling in papery strips. Fruit (plant roadmap P4), as in mid-July: slender hanging fruiting catkins 3 to 5 cm long, green going brown. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: catkins in April and May; the fruiting catkins green in summer, brown in August and September, breaking up in the autumn. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): white bark peeling in papery strips round the stem from orange-brown inner bark, with dark horizontal lenticels; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): sun leaves somewhat smaller and narrower than shade leaves; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
     },
     "taxon": {
       "evidence": "Authored",

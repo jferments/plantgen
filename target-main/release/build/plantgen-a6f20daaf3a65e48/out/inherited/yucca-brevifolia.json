@@ -1,0 +1,301 @@
+{
+  "allometry": [
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 1.2,
+      "tolerance": 0.5
+    },
+    {
+      "age": 50,
+      "environment": "open",
+      "height": 2.7,
+      "tolerance": 0.5
+    },
+    {
+      "age": 90,
+      "environment": "open",
+      "height": 4.6,
+      "tolerance": 0.5
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.18,
+      0.15,
+      0.11
+    ],
+    "foliage": [
+      0.13,
+      0.18,
+      0.12
+    ],
+    "foliage_shade": [
+      0.0585,
+      0.081,
+      0.054
+    ],
+    "organs": {
+      "blade": {
+        "colour": [
+          0.13,
+          0.18,
+          0.12
+        ],
+        "shape": {
+          "aspect": 0.035,
+          "taper": 1,
+          "template": "blade"
+        },
+        "solid": {
+          "arch": 4,
+          "base": 0.8,
+          "fold": 0.35,
+          "section": "keeled",
+          "spine": {
+            "colour": [
+              0.3,
+              0.22,
+              0.12
+            ],
+            "length": 0.008,
+            "width": 0.002
+          },
+          "taper": 1.0,
+          "teeth": {
+            "colour": [
+              0.4,
+              0.38,
+              0.25
+            ],
+            "hook": 30,
+            "length": 0.0015,
+            "spacing": 0.006,
+            "start": 0.05
+          },
+          "thickness": 0.4,
+          "widest": 0.15
+        }
+      },
+      "dead": {
+        "colour": [
+          0.32,
+          0.27,
+          0.18
+        ],
+        "shade": [
+          0.16,
+          0.135,
+          0.09
+        ],
+        "shape": {
+          "aspect": 0.035,
+          "taper": 1,
+          "template": "blade"
+        }
+      },
+      "flower": {
+        "accent": [
+          0.6,
+          0.62,
+          0.4
+        ],
+        "colour": [
+          0.82,
+          0.8,
+          0.65
+        ],
+        "shape": {
+          "carpels": 3,
+          "centre": 0.25,
+          "corolla": "regular",
+          "notch": 0.0,
+          "ovary": "superior",
+          "perianth": "tepals",
+          "petal_width": 0.5,
+          "petals": 6,
+          "point": 0.3,
+          "sepals": 0,
+          "stamens": 6,
+          "template": "flower"
+        }
+      }
+    },
+    "variation": 0.1
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge: slow, a few centimetres a year; about 1 m at 20 years, 2.5 to 3 m at 50, 4 to 5 m at 90. Wide tolerances.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: bluish green leaves, grey-brown dead leaves on the branches, creamy flower clusters. Its flower laid out whorl by whorl (spec rework P5b): six greenish-white tepals in two whorls, six stamens and a superior pistil of three carpels, from the characters of Asparagaceae by the rules at the flowering plants.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.carpels": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.corolla": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.ovary": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.perianth": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.petals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.sepals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.stamens": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a tree 3 to 12 m tall whose trunk and branches carry dense rosettes of stiff, dagger-like, finely toothed leaves 15 to 35 cm long; a branch tip that flowers, or is damaged, stops and two or three branches grow from below it, so old trees branch every 0.6 to 0.9 m of growth (FEIS); dead leaves cling to the branches as a shaggy skirt; flowering is irregular, in good years only. Not fitted to measurements.",
+      "source": "plantgen-authors"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The rosette succulents' program in this family (agaves, yuccas, sotols; growth plan G2.3a), on the rosette base: it gives the values the rosette program gave as defaults until then.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "angle_spread": 10,
+      "bloom": 0.05,
+      "branch_angle": 45,
+      "branch_length": 0.12,
+      "dead_angle": 150,
+      "dead_area": 0.0175,
+      "dead_life": 40,
+      "flower_age": 25,
+      "flower_angle": 60,
+      "flower_area": 0.23,
+      "flower_size": 0.04,
+      "flowers": 9,
+      "fork": 1,
+      "fork_angle": 45,
+      "forks_high": 3,
+      "forks_low": 2,
+      "internode": 0.0005,
+      "leaf_area": 0.0175,
+      "leaf_length": 0.3,
+      "leaf_life": 6,
+      "leaf_rate": 22,
+      "leaf_seed": 0.3,
+      "leaf_spread": 0.15,
+      "lean": 5,
+      "old_angle": 60,
+      "open_years": 2,
+      "size_years": 10,
+      "skirt": 1,
+      "stalk_branches": 6,
+      "stalk_head": 0.8,
+      "stalk_height": 0.35,
+      "stalk_life": 2,
+      "stalk_radius": 0.02,
+      "trunk_radius": 0.09,
+      "trunk_rate": 0.02,
+      "upturn": 0.5,
+      "vigour_spread": 0.15,
+      "young_angle": 15
+    },
+    "program": "asparagaceae"
+  },
+  "growth": {
+    "keyframes": [
+      20,
+      50,
+      90,
+      120
+    ],
+    "step": 1,
+    "years": 120
+  },
+  "growth_form": "rosette_succulent",
+  "id": "yucca-brevifolia",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (milestone F2). Calibration against measurements and photographs comes later.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "Joshua tree",
+    "family": "Asparagaceae",
+    "genus": "Yucca",
+    "plant_name_id": 291788,
+    "scientific_name": "Yucca brevifolia",
+    "usda_symbol": "YUBR"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3,
+      4
+    ]
+  }
+}

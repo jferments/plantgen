@@ -98,12 +98,7 @@
         "colour": [0.6, 0.15, 0.1],
         "accent": [0.4, 0.5, 0.15],
         "season": {
-          "bud": 95,
-          "flower": 110,
-          "fruit": 140,
-          "ripe": 175,
           "ripening": 40,
-          "fall": 300,
           "flower_look": {
             "shape": {
               "template": "flower",
@@ -140,7 +135,9 @@
       "min": 10,
       "max": 15
     },
-    "wood_density_basic_kg_m3": 560
+    "wood_density_basic_kg_m3": 560,
+    "flowering_months": [4, 5],
+    "fruiting_months": [7, 8, 9, 10, 11, 12]
   },
   "evidence": {
     "generator.params.spur_leaf": {
@@ -152,6 +149,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Leaf card length, petiole included, sized so every leaf drawn stays within Abrams vol. 3 (1951, as Acer circinatum): leaves 7 to 12 cm wide (0.16 drew them 17 to 21 cm wide)."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "gbif-inaturalist",
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 62 records annotated as flowering (Apr 31, May 31); stated as the months holding at least a tenth of them, April and May. FEIS (Acer circinatum) gives April to June."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usa-npn",
+      "note": "USA National Phenology Network observations (Nature's Notebook) at lowland sites west of the Cascades in Washington and Oregon (below 300 m, west of 121.8° W; 2009 to 2026, fetched 2026-10-14): 290 plant-years at 48 sites seen with ripe fruit, by the months they were seen in (Jan 25, Feb 10, Mar 3, Apr 1, May 15, Jun 39, Jul 81, Aug 119, Sep 152, Oct 137, Nov 107, Dec 54); stated as the months with at least a third as many as the busiest, July to December. FEIS (Acer circinatum): ripe in September or October, the seed then shed through November; so ripe samaras are on the plant from September to November."
     },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
@@ -172,7 +179,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: bright green leaves, red and orange in autumn; smooth greenish-brown bark. Fruit (plant roadmap P4), as in mid-July: samara pairs with wings spread almost straight apart, red and green. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: small red-and-white flowers in April and May; samaras red-winged from July, brown in the autumn. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth green to reddish-brown bark; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): in sun smaller, more deeply cut leaves; in the forest's shade larger, thinner and shallowly lobed ones; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
+      "note": "Colours chosen by eye: bright green leaves, red and orange in autumn; smooth greenish-brown bark. Fruit (plant roadmap P4), as in mid-July: samara pairs with wings spread almost straight apart, red and green. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: small red-and-white flowers in April and May; samaras red-winged from July, brown in the autumn. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth green to reddish-brown bark; set from general knowledge of the species, not measured. Leaf families (plant roadmap P4, `families`): in sun smaller, more deeply cut leaves; in the forest's shade larger, thinner and shallowly lobed ones; set from general knowledge of sun and shade leaves and juvenile foliage, not measured."
     },
     "taxon": {
       "evidence": "Authored",

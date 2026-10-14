@@ -89,12 +89,7 @@
         "colour": [0.75, 0.13, 0.07],
         "accent": [0.6, 0.48, 0.28],
         "season": {
-          "bud": 95,
-          "flower": 110,
-          "fruit": 135,
-          "ripe": 170,
           "ripening": 30,
-          "fall": 245,
           "flower_look": {
             "shape": {
               "template": "flower",
@@ -133,9 +128,21 @@
       "max": 0.035
     },
     "stamens": {"min": 8, "max": 10},
-    "carpels": {"min": 4, "max": 5}
+    "carpels": {"min": 4, "max": 5},
+    "flowering_months": [3, 4, 5],
+    "fruiting_months": [6, 7, 8, 9, 10]
   },
   "evidence": {
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "gbif-inaturalist",
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 32 records annotated as flowering (Feb 1, Mar 4, Apr 19, May 5, Jun 1, Jul 1, Aug 1); stated as the months holding at least a tenth of them, March to May. FEIS (Vaccinium parvifolium) gives April to June for the Northwest."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usa-npn",
+      "note": "USA National Phenology Network observations (Nature's Notebook) at lowland sites west of the Cascades in Washington and Oregon (below 300 m, west of 121.8° W; 2009 to 2026, fetched 2026-10-14): 41 plant-years at 17 sites seen with ripe fruit, by the months they were seen in (Feb 4, Jun 9, Jul 20, Aug 21, Sep 11, Oct 7, Nov 2); stated as the months with at least a third as many as the busiest, June to October. FEIS (Vaccinium parvifolium): ripe from July to September in British Columbia, Oregon and Washington."
+    },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
@@ -164,7 +171,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: bright green twigs and leaves; red berries. Fruit (plant roadmap P4), as in mid-July: single red berries about 1 cm across, crowned by the calyx, a quarter still pale. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: greenish-pink bells in April and May; berries red from late June into August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
+      "note": "Colours chosen by eye: bright green twigs and leaves; red berries. Fruit (plant roadmap P4), as in mid-July: single red berries about 1 cm across, crowned by the calyx, a quarter still pale. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: greenish-pink bells in April and May; berries red from late June into August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     },
     "taxon": {
       "evidence": "Authored",

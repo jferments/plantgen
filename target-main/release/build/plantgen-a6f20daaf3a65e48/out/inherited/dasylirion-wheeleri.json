@@ -1,0 +1,277 @@
+{
+  "allometry": [
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 3.4,
+      "tolerance": 0.6
+    },
+    {
+      "age": 40,
+      "environment": "open",
+      "height": 3.4,
+      "tolerance": 0.7
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.18,
+      0.15,
+      0.11
+    ],
+    "foliage": [
+      0.14,
+      0.19,
+      0.13
+    ],
+    "foliage_shade": [
+      0.063,
+      0.0855,
+      0.0585
+    ],
+    "organs": {
+      "blade": {
+        "colour": [
+          0.14,
+          0.19,
+          0.13
+        ],
+        "shape": {
+          "aspect": 0.03,
+          "taper": 1,
+          "template": "blade"
+        },
+        "solid": {
+          "arch": 28,
+          "base": 1.6,
+          "section": "flat",
+          "taper": 1.0,
+          "teeth": {
+            "colour": [
+              0.45,
+              0.38,
+              0.18
+            ],
+            "hook": 40,
+            "length": 0.004,
+            "spacing": 0.02,
+            "start": 0.08
+          },
+          "thickness": 0.15,
+          "widest": 0.08
+        }
+      },
+      "dead": {
+        "colour": [
+          0.38,
+          0.33,
+          0.22
+        ],
+        "shade": [
+          0.19,
+          0.165,
+          0.11
+        ],
+        "shape": {
+          "aspect": 0.03,
+          "taper": 1,
+          "template": "blade"
+        }
+      },
+      "flower": {
+        "accent": [
+          0.6,
+          0.55,
+          0.35
+        ],
+        "colour": [
+          0.8,
+          0.75,
+          0.55
+        ],
+        "shape": {
+          "carpels": 3,
+          "centre": 0.25,
+          "corolla": "regular",
+          "notch": 0.0,
+          "ovary": "superior",
+          "perianth": "tepals",
+          "petal_width": 0.5,
+          "petals": 6,
+          "point": 0.3,
+          "sepals": 0,
+          "stamens": 6,
+          "template": "flower"
+        }
+      }
+    },
+    "variation": 0.1
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge, with the flowering spike a mature sotol sends up most years: about 3 to 3.5 m at 30 and 40 years. Wide tolerances: a plant between spikes is only its leaves' height, about 1 m. Young plants flower from about 12 years, some later, so no reference is set before 30.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: blue-green leaves with yellowish prickles, a straw-coloured skirt, a cream flowering spike. Its flower laid out whorl by whorl (spec rework P5b): six small tepals in two whorls, six stamens and a superior pistil of three carpels (the plants are male or female; one flower is drawn for both), from the characters of Asparagaceae by the rules at the flowering plants.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.carpels": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.corolla": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.ovary": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.perianth": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.petals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.sepals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.stamens": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a dense, nearly stemless rosette of a hundred or more narrow blue-green leaves 50 cm to 1 m long, spoon-shaped at the base and armed with curved prickles along both edges; old leaves hang as a skirt; a narrow flowering spike 2 to 5 m tall rises most years once the plant is mature. Not fitted to measurements.",
+      "source": "plantgen-authors"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The rosette succulents' program in this family (agaves, yuccas, sotols; growth plan G2.3a), on the rosette base: it gives the values the rosette program gave as defaults until then.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "angle_spread": 10,
+      "bloom": 0.9,
+      "dead_angle": 150,
+      "dead_area": 0.015,
+      "dead_life": 8,
+      "flower_age": 12,
+      "flower_angle": 45,
+      "flower_area": 0.23,
+      "flower_size": 0.03,
+      "flowers": 60,
+      "internode": 0.0002,
+      "leaf_area": 0.015,
+      "leaf_length": 0.75,
+      "leaf_life": 4,
+      "leaf_rate": 40,
+      "leaf_seed": 0.15,
+      "leaf_spread": 0.15,
+      "lean": 4,
+      "old_angle": 58,
+      "open_years": 1.5,
+      "size_years": 8,
+      "skirt": 1,
+      "stalk_branches": 0,
+      "stalk_head": 0.6,
+      "stalk_height": 3.2,
+      "stalk_life": 2,
+      "stalk_radius": 0.025,
+      "trunk_radius": 0.09,
+      "trunk_rate": 0.004,
+      "vigour_spread": 0.15,
+      "young_angle": 8
+    },
+    "program": "asparagaceae"
+  },
+  "growth": {
+    "keyframes": [
+      5,
+      15,
+      30,
+      40
+    ],
+    "step": 1,
+    "years": 40
+  },
+  "growth_form": "rosette_succulent",
+  "id": "dasylirion-wheeleri",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (milestone F2). Calibration against measurements and photographs comes later.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "common sotol",
+    "family": "Asparagaceae",
+    "genus": "Dasylirion",
+    "plant_name_id": 303995,
+    "scientific_name": "Dasylirion wheeleri",
+    "usda_symbol": "DAWH"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3
+    ]
+  }
+}

@@ -335,9 +335,14 @@ pub mod venation;
 /// royal, cabbage, date, California fan and saw palms are refitted, and
 /// a drafted palm's frond, petiole and trunk come from its leaf length,
 /// heights and stem diameter (54 is full conifer crowns, #107).
+/// 56: flowers and fruit follow the year from the months a species states
+/// them in: rules at the flowering plants set a season's bud, flower,
+/// fruit, ripe and fall days from `flowering_months` and
+/// `fruiting_months`, and 28 species that state both drop their hand-set
+/// days (55 is palms, #110).
 /// 57: succulents grow from their facts (column, the value-free cactus
 /// body the cacti now extend, cactaceae 7; Angiosperms' stem- and
 /// rosette-succulent forms), and Aloe vera clumps and hangs its flowers
 /// (aloe 2: pups as it flowers, nodding tubular flowers on a tall
-/// raceme) (56 is phenology, #109).
+/// raceme) (56 is flowering and fruiting months, #109).
 pub const GENERATOR_REVISION: u32 = 57;

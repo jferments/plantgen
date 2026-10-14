@@ -86,12 +86,7 @@
         "colour": [0.04, 0.03, 0.05],
         "accent": [0.4, 0.48, 0.18],
         "season": {
-          "bud": 115,
-          "flower": 130,
-          "fruit": 170,
-          "ripe": 180,
           "ripening": 30,
-          "fall": 260,
           "flower_look": {
             "shape": {
               "template": "fruit",
@@ -127,9 +122,21 @@
     "leaf_width_m": {
       "min": 0.02,
       "max": 0.06
-    }
+    },
+    "flowering_months": [4, 5, 6],
+    "fruiting_months": [7, 8]
   },
   "evidence": {
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "gbif-inaturalist",
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 148 records annotated as flowering (Mar 4, Apr 63, May 44, Jun 18, Jul 10, Aug 6, Oct 2, Nov 1); stated as the months holding at least a tenth of them, April to June. The Seed Manual (Lonicera chapter, printed p. 685) gives April to August for the western United States."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "Seed Manual, Lonicera chapter (printed p. 685): ripe in July and August in the northern Rocky Mountains; it has no Pacific Northwest row."
+    },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",
@@ -163,7 +170,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: bright green leaves; yellow flowers with red bracts. Fruit (plant roadmap P4), as in mid-July: twin glossy black berries. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: paired yellow tubular flowers in May to July; twin black berries in July and August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
+      "note": "Colours chosen by eye: bright green leaves; yellow flowers with red bracts. Fruit (plant roadmap P4), as in mid-July: twin glossy black berries. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: paired yellow tubular flowers in May to July; twin black berries in July and August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     },
     "taxon": {
       "evidence": "Authored",

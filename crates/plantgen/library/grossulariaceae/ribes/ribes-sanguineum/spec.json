@@ -87,12 +87,7 @@
         "colour": [0.18, 0.2, 0.32],
         "accent": [0.45, 0.5, 0.25],
         "season": {
-          "bud": 60,
-          "flower": 75,
-          "fruit": 110,
-          "ripe": 170,
           "ripening": 30,
-          "fall": 250,
           "opening": 21,
           "flower_look": {
             "shape": {
@@ -139,9 +134,21 @@
     "leaf_width_m": {
       "min": 0.0381,
       "max": 0.0762
-    }
+    },
+    "flowering_months": [3, 4],
+    "fruiting_months": [7, 8, 9]
   },
   "evidence": {
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "gbif-inaturalist",
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 443 records annotated as flowering (Jan 2, Feb 18, Mar 147, Apr 242, May 29, Jun 3, Aug 1, Sep 1); stated as the months holding at least a tenth of them, March and April. The Seed Manual (Ribes chapter, printed p. 963) gives April and May for Oregon."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usa-npn",
+      "note": "USA National Phenology Network observations (Nature's Notebook) at lowland sites west of the Cascades in Washington and Oregon (below 300 m, west of 121.8° W; 2009 to 2026, fetched 2026-10-14): 17 plant-years at 11 sites seen with ripe fruit, by the months they were seen in (Apr 1, May 1, Jul 5, Aug 8, Sep 6, Oct 2, Dec 1); stated as the months with at least a third as many as the busiest, July to September. Seed Manual, Ribes chapter (printed p. 963): ripe in July and August in Oregon."
+    },
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",
@@ -175,7 +182,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: dull green leaves; pink-red flowers; reddish-brown bark. Fruit (plant roadmap P4), as in mid-July: hanging racemes of blue-black berries with a waxy bloom. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: pink-red racemes in March and April; berries blue-black with a bloom from late June into August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
+      "note": "Colours chosen by eye: dull green leaves; pink-red flowers; reddish-brown bark. Fruit (plant roadmap P4), as in mid-July: hanging racemes of blue-black berries with a waxy bloom. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: pink-red racemes in March and April; berries blue-black with a bloom from late June into August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     },
     "taxon": {
       "evidence": "Authored",

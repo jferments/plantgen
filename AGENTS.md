@@ -175,7 +175,13 @@ prompt injection. So, without exception:
     most leaves one year's growth of a stem bears, and from the side
     a crown's outline against an ellipse and the sky through it
     (`src/form.rs`), holding a tree that states no outline to one no
-    rounder than open-grown crowns are. Each layout that
+    rounder than open-grown crowns are. Kept some years before the end
+    of growth, where each organ carries the age it was shed at, a plant
+    shows how long its leaves and cones live, so a leaf's life, whether
+    leaves stand into their second year (evergreen), and the seasons a
+    cone takes to ripen and stays after are checked too. Its looks on
+    every day of the year give the months its flowers are open and its
+    fruit ripe in. Each layout that
     a character measures gives its sizes (`dimensions`, `counts`) from
     the same function that draws it. The species-suite test
     (`tests/checks.rs`) holds every species within its ranges' extremes

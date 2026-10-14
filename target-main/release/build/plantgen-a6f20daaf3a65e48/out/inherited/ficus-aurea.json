@@ -1,0 +1,271 @@
+{
+  "allometry": [
+    {
+      "age": 25,
+      "environment": "open",
+      "height": 9.0,
+      "tolerance": 0.5
+    },
+    {
+      "age": 80,
+      "environment": "open",
+      "height": 14.0,
+      "tolerance": 0.45
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.55,
+      0.53,
+      0.48
+    ],
+    "bark_pattern": {
+      "kind": "smooth",
+      "scale": 0.1,
+      "smooth_below": 0.0,
+      "variation": 0.15
+    },
+    "flare": {
+      "amount": 0.6,
+      "buttresses": 7,
+      "height": 1.2,
+      "ridge": 0.7
+    },
+    "foliage": [
+      0.1,
+      0.24,
+      0.07
+    ],
+    "foliage_shade": [
+      0.035,
+      0.084,
+      0.0245
+    ],
+    "organs": {
+      "leaf": {
+        "shape": {
+          "angle": 50,
+          "base": 0.6,
+          "leaves": 7,
+          "petiole": 0.06,
+          "stalk": 0.1,
+          "teeth": 0,
+          "template": "sprig",
+          "tip": 0.5,
+          "widest": 0.5,
+          "width": 0.45
+        }
+      }
+    },
+    "roots": {
+      "aerial": 24,
+      "aerial_radius": 0.08,
+      "aerial_reach": 0.6,
+      "mature_age": 40,
+      "surface": 10,
+      "surface_length": 3.0,
+      "surface_radius": 0.12
+    },
+    "variation": 0.15
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 9 m at 25 years and 14 m at 80; this proxy grows from the ground. Wide tolerances.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: dark glossy leaves, smooth pale grey bark. Bark pattern (plant roadmap P4, `bark_pattern`): smooth light grey bark; set from general knowledge of the species, not measured.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: an evergreen fig of southern Florida, 10 to 20 m tall, that often starts as a seedling high in another tree and sends roots down round it; its broad crown drops aerial roots that thicken into pillars where they reach the ground, over a buttressed base and long surface roots; leathery, glossy oval leaves. Not fitted to measurements.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.bud_base": {
+      "evidence": "SourceInferred",
+      "note": "Barthélémy and Caraglio (2007, read in excerpts): a basitonic shoot branches mostly from its proximal part.",
+      "source": "barthelemy-caraglio-2007"
+    },
+    "generator.params.crown_height": {
+      "evidence": "Authored",
+      "note": "What the broadleaf program's crown_height means: the top of the space the crown may fill, which rises with age at crown_rate toward it and never passes it, so the tallest the plant grows, the height a flora gives as its greatest. Where that greatest is a rare record, the plant grows a little tall; a check of the grown plant against its usual height (spec rework M8) will show it.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.dioecious": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant bears both sexes, unless its taxa state it dioecious.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.leaves_per_node": {
+      "evidence": "SourceInferred",
+      "note": "What the words mean, as accounts of phyllotaxis such as Okabe and colleagues' use them: a spiral or two-ranked shoot bears one leaf at a node, a decussate one a pair and a whorled one three or more. A spiral turns about the golden angle (137.5 degrees) from node to node and two ranks half a turn; pairs and whorls alternate, each standing over the gaps of the one below, half the gap between its own leaves round (90 degrees for pairs). Three ranks turn a third of a turn, as their name says.",
+      "source": "okabe-2019-phyllotaxis"
+    },
+    "generator.params.long_share": {
+      "evidence": "SourceInferred",
+      "note": "Barthélémy and Caraglio (2007, read in excerpts): the buds that grow are concentrated toward one end of the annual shoot (acrotony, basitony) or in its middle (mesotony). How many is the model's choice: as many as the steps of vigour the shoot grew, so a shoot keeps the buds able to grow long that it had before it was cut into a growth unit, gathered at its tip or its foot, or twice as many reaching into its middle; the rest grow short shoots.",
+      "source": "barthelemy-caraglio-2007"
+    },
+    "generator.params.path_half": {
+      "evidence": "Authored",
+      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.sex": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant's sex is its own draw, dealt across a package's seeds so that both sexes grow; the typical plant (sex 0.5) is female, so it shows its fruit.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.short_share": {
+      "evidence": "SourceInferred",
+      "note": "Barthélémy and Caraglio (2007, read in excerpts) describe the buds of a growth unit grading along it, the most vigorous laterals at its favoured end; the buds farthest from it often never grow. How many grow short shoots is the model's choice: a third as many as may grow long ones, fitted so open-grown crowns hold the leaf area per crown area of the Urban Tree Database's trees (as many as the long ones gave an 80-year Oregon white oak 6.4 m² a m² against valley oaks' 1.9 to 5.3; none halved red alder's leaf area).",
+      "source": "barthelemy-caraglio-2007"
+    },
+    "generator.params.space_kill": {
+      "evidence": "SourceInferred",
+      "note": "Corner's rules of axial conformity and ramification (Corner 1949), measured across species by Westoby and Wright (2003, Oecologia 135: 621-628): thicker twigs bear larger leaves and branch less. The spacing goes as the cube root of the short shoot's leaf card's area, so that crowns hold about as much leaf per volume whatever the card's size; its constant, 2, is fitted to the Urban Tree Database's desert genera (usfs-urban-tree-database-2016: Chilopsis, Parkinsonia, Prosopis and Vachellia farnesiana, irrigated city trees) by leaf area per crown area.",
+      "source": "corner-1949"
+    },
+    "generator.params.unit_nodes": {
+      "evidence": "SourceInferred",
+      "note": "Critchfield (1971, read in full) found a maple's long shoot about as long as its leaf pairs are many, each pair a few centimetres up the stem; so a shoot of the program's longest year's growth carries the taxon's shoot_leaves, and each of the program's internodes is cut into as many nodes as that takes. The internode the program grows by is a step of vigour, not a node. Corner's rules (Corner 1949) tie a twig's leaves to its spacing: the larger the leaves, the fewer and farther apart, so nodes are kept at least a quarter of the leaf card's length apart.",
+      "source": "critchfield-1971"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The lineage's own program (growth plan G2.3a), on the broadleaf base: it gives the values its species leave unset, which the broadleaf program gave as defaults until then.",
+      "source": "plantgen-authors"
+    },
+    "generator.spreads.params.crown_height": {
+      "evidence": "Authored",
+      "note": "What the broadleaf program's crown_height means: the top of the space the crown may fill, which rises with age at crown_rate toward it and never passes it, so the tallest the plant grows, the height a flora gives as its greatest. Where that greatest is a rare record, the plant grows a little tall; a check of the grown plant against its usual height (spec rework M8) will show it.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "apical": 0.5,
+      "apical_years": 15,
+      "apical_young": 0.62,
+      "branch_angle": 55,
+      "bud_base": 0,
+      "crown_base": 2.5,
+      "crown_height": 16.764,
+      "crown_radius": 8,
+      "crown_rate": 0.05,
+      "dioecious": 0,
+      "droop": 0.01,
+      "fork_angle": 40,
+      "fork_height": 2.0,
+      "fork_stems": 4,
+      "internode": 0.25,
+      "leaf_angle": 50,
+      "leaf_size": 0.3,
+      "leaf_years": 2,
+      "lean": 8,
+      "leaves_per_node": 1,
+      "long_share": 0.333333,
+      "max_shoot": 3,
+      "path_half": 16.1,
+      "pipe_organ": 0.007,
+      "pipe_rings": 0.00002,
+      "pipe_tip": 0.004,
+      "sex": 0.5,
+      "short_share": 0.111111,
+      "space_density": 6,
+      "space_kill": 0.588792,
+      "spur_leaf": 0.27,
+      "spur_pairs": 2,
+      "unit_nodes": 3,
+      "wiggle": 10
+    },
+    "program": "moraceae",
+    "spreads": {
+      "params": {
+        "crown_height": [
+          15.24,
+          15.3924,
+          16.764,
+          18.1356,
+          18.288
+        ]
+      }
+    }
+  },
+  "growth": {
+    "keyframes": [
+      5,
+      25,
+      80
+    ],
+    "step": 1,
+    "years": 80
+  },
+  "growth_form": "decurrent_tree",
+  "id": "ficus-aurea",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (plant forms milestone F6). Calibration against measurements and photographs comes later.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "Florida strangler fig",
+    "family": "Moraceae",
+    "genus": "Ficus",
+    "plant_name_id": 2809576,
+    "scientific_name": "Ficus aurea",
+    "usda_symbol": "FIAU"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3
+    ]
+  }
+}

@@ -1,0 +1,344 @@
+{
+  "allometry": [
+    {
+      "age": 6,
+      "environment": "open",
+      "height": 0.45,
+      "tolerance": 0.5
+    },
+    {
+      "age": 20,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.45
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.6,
+      0.58,
+      0.53
+    ],
+    "foliage": [
+      0.48,
+      0.5,
+      0.42
+    ],
+    "foliage_shade": [
+      0.168,
+      0.175,
+      0.147
+    ],
+    "organs": {
+      "leaf": {
+        "shape": {
+          "angle": 60,
+          "confluent": 0.75,
+          "leaflet_width": 0.3,
+          "leaflets": 7,
+          "outline": [
+            [
+              0,
+              0.15
+            ],
+            [
+              0.02,
+              0.53
+            ],
+            [
+              0.05,
+              0.715
+            ],
+            [
+              0.1,
+              0.855
+            ],
+            [
+              0.2,
+              0.965
+            ],
+            [
+              0.3,
+              0.995
+            ],
+            [
+              0.4,
+              0.985
+            ],
+            [
+              0.5,
+              0.96
+            ],
+            [
+              0.6,
+              0.92
+            ],
+            [
+              0.7,
+              0.85
+            ],
+            [
+              0.8,
+              0.76
+            ],
+            [
+              0.9,
+              0.59
+            ],
+            [
+              0.95,
+              0.46
+            ],
+            [
+              0.98,
+              0.34
+            ],
+            [
+              1,
+              0
+            ]
+          ],
+          "pattern": "pinnate",
+          "petiole": 0.15,
+          "pinnule_angle": 50,
+          "pinnules": 5,
+          "teeth": 0,
+          "template": "compound"
+        }
+      }
+    },
+    "variation": 0.15
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough heights from general knowledge of the species: about 45 cm at 6 years and 60 cm at 20. Wide tolerances.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye from photographs: pale grey-white stems and leaves.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.leaf.shape": {
+      "evidence": "Authored",
+      "note": "The blade drawn dissected (spec rework E1), as Abrams and Ferris describe it, twice or thrice pinnately cut into small rounded lobes: a twice-divided card whose segments run together along a winged rachis, the running together from its incision by the rules at the flowering plants. About 3 pairs of primary segments, each cut into 5 lobes, by eye from photographs; before, a three-lobed blade.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.leaf.shape.confluent": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.leaf.shape.outline": {
+      "evidence": "Authored",
+      "note": "Outlines drawn to the Systematics Association chart's definitions: lanceolate and ovate widest below the middle, oblanceolate and obovate above it, elliptic and orbicular at it, linear and oblong with their sides parallel, spatulate a broad rounded tip on a long narrow base. The curves are the model's, each the half-width as a share of the widest at 15 places from the base (u 0) to the tip (1), the same places for every word, so two words that tie draw the outline halfway between theirs. An ellipse for elliptic and orbicular, a rounded rectangle (a superellipse of power 4) for oblong. A compound leaf's word is its leaflets' (spec rework P4).",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.leaf.shape.pattern": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a low, rounded, grey-white shrub 30 to 60 cm tall, densely branched, with small, finely lobed leaves dropped in drought; the commonest shrub of the creosote flats. Not fitted to measurements.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.bloom_size": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the daisy family's heads, a choice of the model's (spec rework P2): a head is laid out from its florets (`crate::capitula`), its phyllaries in rows round its foot, its receptacle domed as its shape says, its disc florets packed in a sunflower spiral and opening from the rim inward, rays round a radiate head, straps filling a ligulate one; an array of heads is a cluster of such heads (spec rework L1). Its size is its involucre's, as floras measure it, plus a ray on either side. The heights the shape words give the receptacle and the pappus lengths of crowns, scales and awns are the model's. A leaf's card is as wide, for its length, as the flora's blades; a head's size, and the share of its cluster it takes, follow from its involucre and rays.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.bud_base": {
+      "evidence": "SourceInferred",
+      "note": "Barthélémy and Caraglio (2007, read in excerpts): a basitonic shoot branches mostly from its proximal part.",
+      "source": "barthelemy-caraglio-2007"
+    },
+    "generator.params.crown_height": {
+      "evidence": "Authored",
+      "note": "What the broadleaf program's crown_height means: the top of the space the crown may fill, which rises with age at crown_rate toward it and never passes it, so the tallest the plant grows, the height a flora gives as its greatest. Where that greatest is a rare record, the plant grows a little tall; a check of the grown plant against its usual height (spec rework M8) will show it.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.dioecious": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): the sexual system its taxa state most often decides; a species whose taxa state dioecy no more often than another system bears both sexes on every plant until it states its own.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.leaf_size": {
+      "evidence": "Authored",
+      "note": "Leaf card length, petiole included, sized so every leaf drawn stays within Abrams and Ferris vol. 4 (1960, as Franseria dumosa): leaves 1 to 3 cm long (0.05 drew them 4 to 4.5 cm).",
+      "source": "plantgen-authors"
+    },
+    "generator.params.long_share": {
+      "evidence": "SourceInferred",
+      "note": "Barthélémy and Caraglio (2007, read in excerpts): the buds that grow are concentrated toward one end of the annual shoot (acrotony, basitony) or in its middle (mesotony). How many is the model's choice: as many as the steps of vigour the shoot grew, so a shoot keeps the buds able to grow long that it had before it was cut into a growth unit, gathered at its tip or its foot, or twice as many reaching into its middle; the rest grow short shoots.",
+      "source": "barthelemy-caraglio-2007"
+    },
+    "generator.params.path_half": {
+      "evidence": "Authored",
+      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long. Fitted so the tallest of five plants (seeds 1 to 5) stays within Abrams and Ferris vol. 4 (1960, as Franseria dumosa): 20 to 60 cm tall. Fitted to the oldest reference size at 0.285, plants reached 65 cm.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.sex": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant's sex is its own draw, dealt across a package's seeds so that both sexes grow; the typical plant (sex 0.5) is female, so it shows its fruit.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.short_share": {
+      "evidence": "SourceInferred",
+      "note": "Barthélémy and Caraglio (2007, read in excerpts) describe the buds of a growth unit grading along it, the most vigorous laterals at its favoured end; the buds farthest from it often never grow. How many grow short shoots is the model's choice: a third as many as may grow long ones, fitted so open-grown crowns hold the leaf area per crown area of the Urban Tree Database's trees (as many as the long ones gave an 80-year Oregon white oak 6.4 m² a m² against valley oaks' 1.9 to 5.3; none halved red alder's leaf area).",
+      "source": "barthelemy-caraglio-2007"
+    },
+    "generator.params.spur_leaf": {
+      "evidence": "Authored",
+      "note": "A short shoot's leaf card, a little smaller than a long shoot's (leaf_size), within Abrams and Ferris vol. 4 (1960): leaves 1 to 3 cm long.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.unit_nodes": {
+      "evidence": "SourceInferred",
+      "note": "Critchfield (1971, read in full) found a maple's long shoot about as long as its leaf pairs are many, each pair a few centimetres up the stem; so a shoot of the program's longest year's growth carries the taxon's shoot_leaves, and each of the program's internodes is cut into as many nodes as that takes. The internode the program grows by is a step of vigour, not a node. Corner's rules (Corner 1949) tie a twig's leaves to its spacing: the larger the leaves, the fewer and farther apart, so nodes are kept at least a quarter of the leaf card's length apart.",
+      "source": "critchfield-1971"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The order's woody program (growth plan G2.3a), on the broadleaf base: Asteraceae's own program grows its herbs, so its trees and shrubs take the order's, which gives the values its species leave unset, as the broadleaf program's defaults until then.",
+      "source": "plantgen-authors"
+    },
+    "generator.spreads.params.crown_height": {
+      "evidence": "Authored",
+      "note": "What the broadleaf program's crown_height means: the top of the space the crown may fill, which rises with age at crown_rate toward it and never passes it, so the tallest the plant grows, the height a flora gives as its greatest. Where that greatest is a rare record, the plant grows a little tall; a check of the grown plant against its usual height (spec rework M8) will show it.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "apical": 0.5,
+      "apical_years": 4,
+      "apical_young": 0.56,
+      "bloom_size": 0.00470588,
+      "branch_angle": 45,
+      "bud_base": 0,
+      "bud_break": 1.2,
+      "bud_years": 5,
+      "crown_base": 0,
+      "crown_height": 0.4,
+      "crown_radius": 0.5,
+      "crown_rate": 0.22,
+      "dioecious": 0,
+      "droop": 0.02,
+      "flux": 4,
+      "fork_angle": 45,
+      "fork_height": 0.03,
+      "fork_stems": 10,
+      "internode": 0.04,
+      "leaf_angle": 50,
+      "leaf_area": 0.263,
+      "leaf_size": 0.03,
+      "leaves_per_node": 1,
+      "long_share": 0.333333,
+      "max_shoot": 4,
+      "path_half": 0.255,
+      "pipe_organ": 0.0015,
+      "pipe_rings": 1e-6,
+      "pipe_tip": 0.0008,
+      "sex": 0.5,
+      "shade_death": 0.03,
+      "short_share": 0.111111,
+      "space_density": 600,
+      "space_kill": 0.063,
+      "space_reach": 0.255,
+      "spur_leaf": 0.027,
+      "spur_light": 0.08,
+      "spur_pairs": 3,
+      "steer_weight": 0.4,
+      "unit_nodes": 3,
+      "wiggle": 10
+    },
+    "program": "asterales",
+    "spreads": {
+      "params": {
+        "crown_height": [
+          0.2,
+          0.22,
+          0.4,
+          0.58,
+          0.6
+        ]
+      }
+    }
+  },
+  "growth": {
+    "keyframes": [
+      2,
+      6,
+      20
+    ],
+    "step": 1,
+    "years": 20
+  },
+  "growth_form": "shrub",
+  "id": "ambrosia-dumosa",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (plant forms milestone F5). Calibration against measurements and photographs comes later.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "white bursage",
+    "family": "Asteraceae",
+    "genus": "Ambrosia",
+    "plant_name_id": 3119493,
+    "scientific_name": "Ambrosia dumosa",
+    "usda_symbol": "AMDU2"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3
+    ]
+  }
+}

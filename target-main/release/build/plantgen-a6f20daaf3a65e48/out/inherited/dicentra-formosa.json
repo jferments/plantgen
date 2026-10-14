@@ -1,0 +1,290 @@
+{
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.4,
+      "tolerance": 0.35
+    }
+  ],
+  "appearance": {
+    "bark": [
+      0.35,
+      0.3,
+      0.3
+    ],
+    "foliage": [
+      0.08,
+      0.15,
+      0.09
+    ],
+    "foliage_shade": [
+      0.025,
+      0.045,
+      0.028
+    ],
+    "organs": {
+      "basal": {
+        "shape": {
+          "divided": 1.0,
+          "pinnae": 9,
+          "stipe": 0.3,
+          "template": "frond",
+          "width": 0.6
+        }
+      },
+      "bud": {
+        "colour": [
+          0.8,
+          0.45,
+          0.6
+        ],
+        "shape": {
+          "aspect": 0.6,
+          "template": "fruit"
+        }
+      },
+      "flower": {
+        "accent": [
+          0.95,
+          0.8,
+          0.85
+        ],
+        "colour": [
+          0.85,
+          0.4,
+          0.6
+        ],
+        "shape": {
+          "carpels": 2,
+          "centre": 0.2,
+          "notch": 0.0,
+          "ovary": "superior",
+          "perianth": "corolla",
+          "petal_whorls": 2,
+          "petal_width": 1.2,
+          "petals": 4,
+          "point": 0.0,
+          "sepals": 2,
+          "stamens": 6,
+          "template": "flower"
+        }
+      },
+      "fruit": {
+        "colour": [
+          0.3,
+          0.35,
+          0.2
+        ],
+        "shape": {
+          "aspect": 0.3,
+          "kind": "capsule",
+          "template": "fruit"
+        }
+      }
+    },
+    "variation": 0.2
+  },
+  "evidence": {
+    "allometry": {
+      "evidence": "Authored",
+      "note": "Rough sizes from general knowledge of the species: 0.4 m tall at 4 years in the open. Replace with measured data before calling this species calibrated.",
+      "source": "plantgen-authors"
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "note": "Colours chosen by eye: blue-green leaves; pink flowers. Its flower laid out whorl by whorl (spec rework P5b): four pink petals by hand (in two pairs; the drawing has no joined heart-shaped corolla) above two sepals, six stamens and a pistil of two carpels, from the characters of Papaveraceae and Dicentra by the rules at the flowering plants.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.carpels": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.ovary": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.perianth": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.petal_whorls": {
+      "evidence": "SourceInferred",
+      "note": "Jepson's Manual (1925), Fumariaceae (in Papaveraceae here): sepals 2, small and scale-like, and petals 4 in 2 dissimilar pairs. So four petals, an outer and an inner pair (drawn alike).",
+      "source": "jepson-1925-manual"
+    },
+    "appearance.organs.flower.shape.sepals": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.flower.shape.stamens": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand.",
+      "source": "plantgen-authors"
+    },
+    "appearance.organs.fruit.shape.kind": {
+      "evidence": "Authored",
+      "note": "How PlantGen lays out an inflorescence, a choice of the model's (spec rework L1): the inflorescence characters set the cluster of any look a taxon draws as one (`\"inflorescence\": {}`), its kind, how many units it bears on each axis, its primary branches and how it holds itself. Sizes, stalks and spacing stay set by hand until programs size their organs from characters.",
+      "source": "plantgen-authors"
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "note": "Hand-set from general knowledge of the species: a delicate herb with lacy, fern-like, blue-green leaves and arching stems hung with pink, heart-shaped flowers. Not fitted to measurements.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.dioecious": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant bears both sexes, unless its taxa state it dioecious.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.leaves_per_node": {
+      "evidence": "SourceInferred",
+      "note": "What the words mean, as accounts of phyllotaxis such as Okabe and colleagues' use them: a spiral or two-ranked shoot bears one leaf at a node, a decussate one a pair and a whorled one three or more. A spiral turns about the golden angle (137.5 degrees) from node to node and two ranks half a turn; pairs and whorls alternate, each standing over the gaps of the one below, half the gap between its own leaves round (90 degrees for pairs). Three ranks turn a third of a turn, as their name says.",
+      "source": "okabe-2019-phyllotaxis"
+    },
+    "generator.params.sex": {
+      "evidence": "Authored",
+      "note": "How PlantGen draws the sexes, a choice of the model's (dioecy, 2026-10-14): a plant's sex is its own draw, dealt across a package's seeds so that both sexes grow; the typical plant (sex 0.5) is female, so it shows its fruit.",
+      "source": "plantgen-authors"
+    },
+    "generator.params.stem_height": {
+      "evidence": "Authored",
+      "note": "What the herb program's stem height means: each year's stems reach it at maturity, give or take height_spread, their flowers included, so a mature herb stands about as tall as a flora's usual height for the plant, read as the range's middle unless it names a typical height.",
+      "source": "plantgen-authors"
+    },
+    "generator.program": {
+      "evidence": "Authored",
+      "note": "The lineage's own program (growth plan G2.3a), on the herb base: it gives the values its species leave unset, which the herb program gave as defaults until then.",
+      "source": "plantgen-authors"
+    },
+    "generator.spreads.params.stem_height": {
+      "evidence": "Authored",
+      "note": "What the herb program's stem height means: each year's stems reach it at maturity, give or take height_spread, their flowers included, so a mature herb stands about as tall as a flora's usual height for the plant, read as the range's middle unless it names a typical height.",
+      "source": "plantgen-authors"
+    },
+    "growth": {
+      "evidence": "Authored",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "note": "The growth form the spec's authors chose from the plant's habit.",
+      "source": "plantgen-authors"
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in.",
+      "source": "plantgen-authors"
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's family for the accepted name.",
+      "source": "wcvp-v16"
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name).",
+      "source": "wcvp-v16"
+    },
+    "variants": {
+      "evidence": "Authored",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact.",
+      "source": "plantgen-authors"
+    }
+  },
+  "generator": {
+    "params": {
+      "arch": 0.02,
+      "bare": 1.0,
+      "basal_angle": 25,
+      "basal_area": 0.171,
+      "basal_leaves": 3,
+      "basal_length": 0.3,
+      "basal_piece_area": 0.235,
+      "bud_area": 0.763,
+      "bud_size": 0.01,
+      "buds_above": 0.9,
+      "clump_radius": 0.12,
+      "dioecious": 0,
+      "flower_angle": 120,
+      "flower_area": 0.533,
+      "flower_size": 0.02,
+      "flowers": 8,
+      "fruit_area": 0.383,
+      "fruit_below": 0.1,
+      "fruit_length": 0.03,
+      "leaf_area": 0.235,
+      "leaves_per_node": 1,
+      "maturity": 1.2,
+      "nod": 10,
+      "nodes": 0,
+      "pedicel": 0.01,
+      "raceme": 0.35,
+      "sex": 0.5,
+      "stem_height": 0.3302,
+      "stem_lean": 8,
+      "stem_radius": 0.002,
+      "stem_rate": 0.5,
+      "stems": 6,
+      "wiggle": 2
+    },
+    "program": "papaveraceae",
+    "spreads": {
+      "params": {
+        "stem_height": [
+          0.2032,
+          0.2159,
+          0.3302,
+          0.4445,
+          0.4572
+        ]
+      }
+    }
+  },
+  "growth": {
+    "keyframes": [
+      2,
+      4,
+      6
+    ],
+    "step": 1,
+    "years": 6
+  },
+  "growth_form": "forb",
+  "id": "dicentra-formosa",
+  "provenance": {
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4.",
+    "sources": [
+      {
+        "licence": "project contribution under the repository's terms",
+        "title": "Project After contributors: hand-set species values"
+      }
+    ]
+  },
+  "schema": 1,
+  "taxon": {
+    "common_name": "Pacific bleeding heart",
+    "family": "Papaveraceae",
+    "genus": "Dicentra",
+    "plant_name_id": 2765608,
+    "scientific_name": "Dicentra formosa",
+    "usda_symbol": "DIFO"
+  },
+  "tier": "procedural_proxy",
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  }
+}
