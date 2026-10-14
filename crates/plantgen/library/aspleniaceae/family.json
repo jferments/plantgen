@@ -2,5 +2,32 @@
   "schema": 1,
   "rank": "family",
   "name": "Aspleniaceae",
-  "parent": "order/polypodiales"
+  "parent": "order/polypodiales",
+  "traits": {
+    "leaf_division": {
+      "compound": "usually",
+      "simple": "rarely"
+    },
+    "sporangia": "sori",
+    "sorus_shape": {
+      "linear": "usually",
+      "round": "often"
+    },
+    "indusium": {
+      "flap": "usually",
+      "kidney": "sometimes",
+      "none": "sometimes"
+    },
+    "frond_dimorphism": {
+      "monomorphic": "usually",
+      "dimorphic": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Aspleniaceae and the families the Library joins to it (Thelypteridaceae, Blechnaceae, Athyriaceae, Woodsiaceae, Cystopteridaceae, Onocleaceae, Diplaziopsidaceae): Asplenium, the largest, fronds mostly alike, simple to many times pinnate, sori single, long and narrow along a vein, the indusium a flap fixed along the vein's side; Blechnaceae and Athyriaceae sori long, beside the midrib or along one side of a vein, with flaps; Thelypteridaceae sori round to oblong, indusium present or not; Woodsia and Cystopteris round sori with basal or hood-like indusia; Blechnum and Onoclea fronds dimorphic. Linear sori are the usual state, as Asplenium, Blechnum and the lady ferns hold most of the Library's species."
+    }
+  }
 }

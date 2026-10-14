@@ -30,6 +30,7 @@
       "actinomorphic": "usually",
       "zygomorphic": "sometimes"
     },
+    "zygomorphy": "other",
     "perianth": "sepals_and_petals",
     "fruit_type": "drupe",
     "flower_merosity": {
@@ -51,6 +52,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Sabiaceae with Meliosmaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves usually simple, sometimes compound; margins usually entire, sometimes serrate; veins pinnate; stipules absent; plants usually hermaphrodite, sometimes polygamous; ovary superior; stems woody; flowers in cymes, in racemes or in panicles; flowers usually actinomorphic, sometimes zygomorphic; perianth sepals and petals; fruit drupe; parts of each whorl (4-) 5 (-6); stamens (4-) 5 (-6); carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Sabiaceae with Meliosmaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
     }
   }
 }

@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Calamagrostis",
+  "traits": {"life_span": "perennial"},
+  "evidence": {
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock's genus description of Calamagrostis (p. 306): perennial grasses, mostly with creeping rhizomes."
+    }
+  }
+}

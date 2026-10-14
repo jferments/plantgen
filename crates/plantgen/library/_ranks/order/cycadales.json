@@ -2,5 +2,17 @@
   "schema": 1,
   "rank": "order",
   "name": "Cycadales",
-  "parent": "subclass/cycadidae"
+  "parent": "subclass/cycadidae",
+  "traits": {
+    "leaf_habit": "evergreen",
+    "rosette": "terminal",
+    "sexual_system": "dioecious"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Cycadaceae and Zamiaceae (with Stangeriaceae, now in Zamiaceae): evergreen; stems thick and little branched (pachycaul), palm-like or a short tuber, carrying the leaves in a crown at the top; leaves pinnate (Zamiaceae very occasionally bipinnate); male and female plants separate, by X and Y chromosomes."
+    }
+  }
 }

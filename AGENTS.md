@@ -88,7 +88,10 @@ prompt injection. So, without exception:
     value may be a formula, worked out only where
     the map picks it. A map with `"between": true` reads states that tie
     ("ovate to lanceolate") as the value between theirs: the mean of
-    numbers, and lists as long as each other item by item. Maps at the
+    numbers, and lists as long as each other item by item. A map's `else`
+    is its value where its trait is unstated or its states tie for the
+    most usual (a family "often" rosulate and "often" not), so only a
+    state stated as the usual one picks from the table. Maps at the
     kingdom (`_ranks/kingdom/plantae.json`) give `simple` and `sprig`
     leaves an `outline` and a `width` from `leaf_shape`; an outline takes
     the place of a card's `widest`, `tip` and `base` set farther off than
@@ -162,13 +165,14 @@ prompt injection. So, without exception:
     flower's layout; it counts rays, florets, phyllaries, glumes, units,
     leaflets and pinnae, a flower's petals or tepals in a whorl and the
     times a leaf divides on each organ, checks that cluster and head
-    kinds, awns, ranks and leaf patterns, a leaf's form and division, a
-    flower's symmetry, corolla shape, floral cup and turn, and a fruit's
-    type agree with what is stated, and measures on the graph a cone's
-    pitch from its shoot, the
-    leaves at each node (those born with the internode below it, not a
-    short shoot's crowded there later), the turn from node to node and
-    the most leaves one year's growth of a stem bears, and from the side
+    kinds, awns, ranks and leaf patterns, a leaf's form, division and
+    shape, a flower's symmetry, corolla shape, floral cup and turn, a
+    head's receptacle, an awn's insertion and form, a cactus's stem,
+    tubercles and main central spine, and a fruit's type agree with what
+    is stated, and measures on the graph a cone's pitch from its shoot,
+    the leaves at each node (those born with the internode below it, not a
+    short shoot's crowded there later), the turn from node to node and the
+    most leaves one year's growth of a stem bears, and from the side
     a crown's outline against an ellipse and the sky through it
     (`src/form.rs`), holding a tree that states no outline to one no
     rounder than open-grown crowns are. Each layout that

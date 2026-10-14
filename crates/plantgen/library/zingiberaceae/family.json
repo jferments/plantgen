@@ -12,19 +12,46 @@
       "zygomorphic": "usually",
       "asymmetric": "sometimes"
     },
+    "zygomorphy": "labellate",
     "stamens": 1,
     "carpels": 3,
     "ovary_position": "inferior",
     "fruit_type": {
       "capsule": "often",
       "berry": "often"
-    }
+    },
+    "leaf_habit": "evergreen",
+    "rosette": {
+      "none": "usually",
+      "basal": "sometimes"
+    },
+    "life_span": "perennial"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
       "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 369 Zingiberaceae: perennial herbs, usually aromatic, with creeping tuberous rhizomes; leaves in two ranks, sheathing at the base, the blade large with many close parallel veins running obliquely from the midrib; flowers mostly bisexual, irregular or lopsided; perianth of 6 in two whorls, the outer calyx-like, the inner petal-like; one fertile stamen, often with petal-like staminodes; ovary inferior, of 3 (rarely 2) cells; fruit fleshy and staying shut, or a capsule opening in three."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Zingiberaceae as that work draws it, there coded together with Costaceae: how long the leaves last (character 37), coded evergreen. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Zingiberaceae as that work draws it, there coded together with Costaceae: whether the leaves gather in rosettes (character 22), coded usually no rosette, sometimes a basal rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Zingiberaceae as that work draws it, there coded together with Costaceae: the herbs' life form (character 21), coded perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Zingiberaceae with Costaceae: flowers very irregular, the corolla's median member largest, the stamens reduced to one fertile and the rest joined in a showy lip. That lip below two smaller petals is drawn as an orchid's lip is: zygomorphy labellate."
     }
   }
 }

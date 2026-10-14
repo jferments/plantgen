@@ -2,8 +2,8 @@
 # year, with a few smaller branches between whorls. Branch shoots carry
 # sprays of foliage and fork into flat side shoots. An apex dies in deep
 # shade or once it grows too slowly to keep up; a branch with no living
-# apex dies and falls a few years later. Branches sag as they age while
-# their shoots turn toward the sky. In a closed stand that lifts the crown
+# apex dies and falls a few years later. Branches sag under their own
+# weight and their foliage's while their shoots turn toward the sky. In a closed stand that lifts the crown
 # and leaves a clear stem; in the open the crown reaches the ground.
 #
 # The newest leader shoot may nod over and straighten as it stiffens, as
@@ -48,9 +48,29 @@
 # (`spray(size, roll, pitch, level)`), a third of the modules they took,
 # so the fuller crown fits the module limit.
 #
+# Revision 6 (dioecy): in a dioecious species (dioecious 1, from the
+# sexual system its taxa state) a plant whose own draw `sex` is below a
+# half is male and bears no seed cones (its pollen cones are too small to
+# draw); the rest are female and bear them as before. A plant that bears
+# both sexes (dioecious 0) grows as before.
+#
+# Revision 7 (conifer sag): branches sag under load (bend@1), not by
+# age. A limb bends by its weight and its foliage's over its stiffness
+# (green wood's density and modulus, from the Wood Handbook values a
+# species states), keeps bend_set of each year's sag and straightens
+# straighten of it a year, and each year's ring turns it back toward the
+# line it grew in by up to reaction · length · ring width / radius²
+# (reaction wood). So thin, fast-growing wood holds its line and old,
+# slow limbs sag, and a crown keeps its form from 60 to 200 years where
+# sag by age drew old crowns as columns of hanging limbs. The ground
+# holds up a limb that sags onto it (bend@1's ground), until it is shed
+# within ground_gap of it. Shoots turn
+# toward the sky half as strongly (upturn), since the wood no longer
+# sags by age against it.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem pinidae 5;
+lsystem pinidae 7;
 
 # Height of the leader over time: a Chapman-Richards curve,
 # height = height_max * (1 - exp(-height_rate * age))^height_shape.
@@ -65,9 +85,7 @@ param whorl = 5;               # branches per annual whorl
 param interwhorl = 2;          # smaller branches along each year's leader shoot
 param interwhorl_vigour = 0.5; # their growth relative to whorl branches
 param branch_angle = 64;       # angle between the leader and a new branch
-param branch_sag = 0.8;        # degrees a branch bends down per year of age
-param max_sag = 25;            # the most it bends down
-param upturn = 0.015;          # how strongly shoots bend toward the sky
+param upturn = 0.0075;         # how strongly shoots bend toward the sky
 param branch_growth = 0.3;     # yearly shoot of a first-order branch in full light
 param branch_reach = 6;        # wood from the stem at which a branch's yearly shoot is half as long
 param side_growth = 0.55;      # side shoots grow this fraction as fast
@@ -102,13 +120,21 @@ param cone_length = 0.08;
 param cone_pitch = 100;        # degrees down from the shoot; negative stands it up
 param cone_years = 2;          # years a cone stays on the tree
 param cone_area = 0.55;        # area a cone 1 m long draws, m² (its template's)
+param dioecious;               # 1: each plant is male or female; 0: every plant bears both
+param sex;                     # this plant's own draw, 0 to 1: below a half, a dioecious plant is male
+param wood_density = 800;      # kg/m³ of green wood
+param wood_modulus = 8500;     # modulus of elasticity of green wood, MPa
+param leaf_mass = 0.3;         # kg per m² of foliage spray
+param bend_set = 0.5;          # share of each year's sag the wood keeps
+param straighten = 0.02;       # share of its kept bend the wood straightens each year
+param stem_bend = 0;           # share of its sag the stem takes: reaction wood holds it up
+param reaction = 0.1;          # how far a year's ring turns a limb back up (bend@1)
 
 module A queries light;                 # the leader's apex
 module N;                               # nods a young leader shoot over
 module C(order, vigour, starved, wood) queries light, position, substrate;  # a branch apex, wood metres from the stem
 module S queries vigour, substrate;     # the base of a living branch
 module K;                               # the base of a dead branch
-module D;                               # bends a branch down as it ages
 module W(n);                            # whorl branches still to be formed
 module I(n);                            # interwhorl branches still to be formed
 module G(order, length, keep, wood);    # this year's shoot, its foliage kept keep years, wood metres from the stem
@@ -126,6 +152,16 @@ tool light@1 { cell = 0.4, extinction = 0.35, bud = 0.01 };
 tool vigour@1 { lambda = 0.7, alpha = 2 };
 tool pipe@1 { exponent = 2.4, tip = pipe_tip, organ = pipe_organ, rings = pipe_rings };
 tool substrate@1 {};
+tool bend@1 {
+    density = wood_density,
+    modulus = wood_modulus,
+    leaf_mass = leaf_mass,
+    set = bend_set,
+    straighten = straighten,
+    stem = stem_bend,
+    ground = 0.02,
+    reaction = reaction
+};
 
 axiom !(0.003) A;
 
@@ -137,17 +173,14 @@ rule A -> G(0, (richards(t + dt, height_max, height_rate, height_shape)
 
 decompose W(n) : n > 0 ->
     [ /(360 * n / whorl + uniform(-20, 20)) &(branch_angle + uniform(-8, 8))
-      D T(0, 1, 0, upturn) S C(1, 1, 0, 0) ]
+      T(0, 1, 0, upturn) S C(1, 1, 0, 0) ]
     W(n - 1);
 decompose W(n) -> ;
 decompose I(n) : n > 0 ->
     [ /(uniform(0, 360)) &(branch_angle + uniform(-8, 8))
-      D T(0, 1, 0, upturn) S C(1, interwhorl_vigour, 0, 0) ]
+      T(0, 1, 0, upturn) S C(1, interwhorl_vigour, 0, 0) ]
     I(n - 1);
 decompose I(n) -> ;
-
-# Branches sag as they age.
-interpret D -> &(min(branch_sag * age, max_sag));
 
 # A leader shoot nods over in two bends, which straighten over nod_years.
 interpret N -> &(0.5 * nod * max(0, 1 - age / nod_years));
@@ -193,8 +226,9 @@ decompose R(o, w) -> ;
 rule Y(n) : age >= n -> %;
 
 # A well-lit apex of a tree old enough bears a cone, which falls after
-# cone_years.
-decompose Z(l) : t >= adult_age && l >= cone_light && rand() < cone_chance ->
+# cone_years; on a dioecious species, only a female tree does.
+decompose Z(l) : t >= adult_age && l >= cone_light && rand() < cone_chance
+                 && (dioecious < 0.5 || sex >= 0.5) ->
     [ $ /(uniform(-20, 20)) &(cone_pitch + uniform(-15, 15)) cone(cone_length * uniform(0.85, 1.15)) ];
 decompose Z(l) -> ;
 rule cone(s) : age >= cone_years -> ;

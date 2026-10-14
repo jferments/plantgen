@@ -2,5 +2,16 @@
   "schema": 1,
   "rank": "family",
   "name": "Ophioglossaceae",
-  "parent": "order/ophioglossales"
+  "parent": "order/ophioglossales",
+  "traits": {
+    "woodiness": "herbaceous",
+    "frond_dimorphism": "hemidimorphic"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Ophioglossaceae: small terrestrial herbs, a few tropical epiphytes, with fleshy rhizome and stalks; one or a few leaves a year that do not unroll from a crozier, each a fleshy sterile blade, often entire (lobed in Botrychium), and a long-stalked fertile spike or panicle with the sporangia sunk in it, not in sori. A leaf part sterile and part fertile is hemidimorphic here."
+    }
+  }
 }

@@ -16,6 +16,7 @@
       "actinomorphic": "often",
       "zygomorphic": "often"
     },
+    "zygomorphy": "other",
     "inflorescence": {
       "cyme": "usually"
     },
@@ -27,6 +28,11 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 110 Begoniaceae: undershrubs or herbs, mostly succulent, the stems jointed; leaves alternate, simple, often lopsided; stipules free, falling; flowers on one plant in two sexes, regular or irregular, mostly in cymes in the leaf axils, showy; the male with 2 (rarely 5) sepals and 0 to 5 petals and many stamens. The inferior ovary and the winged capsule are from common knowledge (the account is cut short in the copy read), inferred, not traced."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Begoniaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
     }
   }
 }

@@ -55,9 +55,15 @@
 # bare stalk below its raceme. With flowering_share 1 and scape 0, as its
 # lineages give them, a herb grows as before.
 #
+# Revision 8 (dioecy): in a dioecious species (dioecious 1, from the
+# sexual system its taxa state) a plant whose own draw `sex` is below a
+# half is male: its racemes bear open flowers where a female's bear
+# fruit. The rest are female and fruit as before; so does a plant that
+# bears both sexes (dioecious 0).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem herb 7;
+lsystem herb 8;
 
 # The clump.
 param stems;                  # stems in a mature clump
@@ -102,6 +108,8 @@ param pedicel;                # flower stalk length
 param flower_divergence;           # roll from one flower of the raceme to the next
 param flower_angle;           # angle of a flower stalk to the stem
 param fruit_below;            # share of the raceme, from the bottom, in fruit
+param dioecious;              # 1: each plant is male or female; 0: every plant bears both
+param sex;                    # this plant's own draw, 0 to 1: below a half, a dioecious plant is male
 param buds_above;             # share of the raceme above which are buds
 param fruit_length;
 param fruit_angle;
@@ -196,10 +204,11 @@ decompose Lf(s) ->
     ring(leaves_per_node) [ &(leaf_angle * uniform(0.85, 1.15)) $ leaf(s * uniform(0.9, 1.1)) ];
 
 # The raceme: fruit, then open flowers, then buds, the buds' part bending
-# over toward its tip.
+# over toward its tip. A male plant's fruit are open flowers.
 decompose Rc(i, m, h, r) : m > 1 ->
     Rc(i, floor(m / 2), h, r) Rc(i + floor(m / 2), m - floor(m / 2), h, r);
-decompose Rc(i, m, h, r) : m == 1 && (i + 0.5) / flowers < fruit_below ->
+decompose Rc(i, m, h, r) : m == 1 && (i + 0.5) / flowers < fruit_below
+                          && (dioecious < 0.5 || sex >= 0.5) ->
     !(stem_radius * 0.5) F(h * r / flowers)
     [ &(fruit_angle * uniform(0.8, 1.2)) fruit(fruit_length * uniform(0.85, 1.1)) ]
     /(flower_divergence);

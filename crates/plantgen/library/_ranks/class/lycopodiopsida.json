@@ -5,13 +5,19 @@
   "parent": "phylum/tracheophyta",
   "traits": {
     "reproduction": "spores",
-    "sporangia": {"cones": "usually"}
+    "sporangia": {"cones": "usually"},
+    "woodiness": "herbaceous"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "openstax-biology-2e",
       "note": "Club mosses are seedless vascular plants that spread by spores; their sporangia sit on sporophylls gathered into cones, strobili (Biology 2e, 25.4)."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), the lycophyte families Lycopodiaceae (evergreen herbs), Selaginellaceae (moss-like plants) and Isoetaceae (quillworts, rosettes on a corm-like stem): none has wood. A few Selaginella species are called woody (dendroid) there, too few to state."
     }
   }
 }

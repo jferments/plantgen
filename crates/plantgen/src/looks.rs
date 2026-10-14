@@ -1010,6 +1010,12 @@ pub struct Flower {
     /// How the petals differ by place.
     #[serde(skip_serializing_if = "Corolla::is_regular")]
     pub corolla: Corolla,
+    /// Whorls a regular corolla's petals stand in: 1, or 2 like whorls,
+    /// the inner turned half a petal from the outer (barberries' three
+    /// and three, bleeding heart's outer and inner pair). `petals` counts
+    /// both.
+    #[serde(skip_serializing_if = "is_one_count")]
+    pub petal_whorls: u32,
     /// A papilionaceous banner's, or an unequal corolla's upper petal's,
     /// width over a petal's.
     #[serde(skip_serializing_if = "is_default_banner")]
@@ -1078,6 +1084,7 @@ impl Default for Flower {
             sepals_fused: 0.0,
             calyx: None,
             corolla: Corolla::Regular,
+            petal_whorls: 1,
             banner: BANNER,
             lip: LIP,
             fused: 0.0,
@@ -1106,6 +1113,7 @@ impl Flower {
         self.perianth == Perianth::Corolla
             && self.sepals == 0
             && self.corolla == Corolla::Regular
+            && self.petal_whorls == 1
             && self.fused == 0.0
             && self.spur == 0.0
             && self.stamens == 0
@@ -1134,6 +1142,11 @@ const COLUMN: f64 = 0.45;
 #[allow(clippy::trivially_copy_pass_by_ref)]
 fn is_zero_count(value: &u32) -> bool {
     *value == 0
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref)]
+fn is_one_count(value: &u32) -> bool {
+    *value == 1
 }
 
 #[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
@@ -1203,14 +1216,16 @@ pub enum Corolla {
     Regular,
     /// A pea flower's banner, two wings and keel (5 petals).
     Papilionaceous,
-    /// Two lips: the petals toward the bearing axis the upper.
+    /// Two lips: the petals toward the bearing axis the upper; or, of
+    /// tepals (a gladiolus's), the tepals on that side.
     Bilabiate,
     /// An orchid's lip and column: three sepals coloured like the petals,
     /// two lateral petals and the lip.
     Labellate,
     /// Petals alike but the one toward the bearing axis, wider (by
     /// `banner`) and more upright: a zygomorphy of no named kind, as the
-    /// banner of a palo verde, which is not a pea flower's.
+    /// banner of a palo verde, which is not a pea flower's; of tepals, the
+    /// outer one toward the axis.
     Unequal,
 }
 
@@ -2080,6 +2095,21 @@ impl Shape {
                 check("column", s.column, 0.1, 1.5)?;
                 check("turn", s.turn, 0.0, 360.0)?;
                 check("open", s.open, 0.0, 1.0)?;
+                if s.petal_whorls == 2
+                    && (s.perianth != Perianth::Corolla
+                        || s.corolla != Corolla::Regular
+                        || s.petals % 2 != 0
+                        || s.petals < 4)
+                {
+                    return Err(format!(
+                        "petals in two whorls are a regular corolla of an even number, \
+                         at least 4: found {} {:?} {:?}",
+                        s.petals, s.perianth, s.corolla
+                    ));
+                }
+                if !(1..=2).contains(&s.petal_whorls) {
+                    return Err(format!("petal_whorls is 1 or 2, found {}", s.petal_whorls));
+                }
                 if s.perianth == Perianth::Tepals && s.petals % 2 != 0 {
                     return Err(format!(
                         "tepals stand in two like whorls: petals must be even, found {}",
@@ -2099,17 +2129,27 @@ impl Shape {
                         ))
                     }
                     Corolla::Bilabiate
-                        if !(4..=6).contains(&s.petals) || s.perianth != Perianth::Corolla =>
+                        if !match s.perianth {
+                            Perianth::Corolla => (4..=6).contains(&s.petals),
+                            Perianth::Tepals => (4..=12).contains(&s.petals),
+                            _ => false,
+                        } =>
                     {
                         Err(format!(
-                            "a bilabiate corolla is one whorl of 4 to 6 petals, found {}",
-                            s.petals
+                            "a bilabiate corolla is one whorl of 4 to 6 petals or two whorls \
+                             of 4 to 12 tepals, found {} {:?}",
+                            s.petals, s.perianth
                         ))
                     }
-                    Corolla::Unequal if s.perianth != Perianth::Corolla => Err(
-                        "an unequal corolla is one whorl of petals: perianth sepals_and_petals"
-                            .to_string(),
-                    ),
+                    Corolla::Unequal
+                        if !matches!(s.perianth, Perianth::Corolla | Perianth::Tepals) =>
+                    {
+                        Err(
+                            "an unequal corolla is one whorl of petals or two of tepals: \
+                             perianth sepals_and_petals or tepals"
+                                .to_string(),
+                        )
+                    }
                     Corolla::Labellate
                         if s.petals != 3 || s.sepals != 3 || s.perianth != Perianth::Corolla =>
                     {

@@ -28,13 +28,22 @@
       "polygamous": "often"
     },
     "ovary_position": "superior",
-    "fruit_type": "drupe"
+    "fruit_type": "drupe",
+    "leaf_habit": {
+      "evergreen": "often",
+      "deciduous": "often"
+    }
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 218 Anacardiaceae: trees or shrubs, often with resinous bark; leaves alternate, very rarely opposite, simple or compound; no stipules (very rarely obscure ones); flowers bisexual or unisexual, mostly regular; petals 3 to 7, or none; stamens often twice the petals; ovary superior, mostly of one cell with one ovule; fruit mostly a drupe (mango, pistachio, sumac). The flowers bisexual or of one sex with bisexual ones on the same plant are read as hermaphrodite or polygamous."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Anacardiaceae as that work draws it, there coded together with Blepharocaryaceae, Julianiaceae, Pistaciaceae, Podoaceae: how long the leaves last (character 37), coded often evergreen, often deciduous. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     }
   }
 }

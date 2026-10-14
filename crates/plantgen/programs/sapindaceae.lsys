@@ -44,7 +44,7 @@
 # broadleaf's defaults were until then. A maple grows as before.
 #
 # Revision 8 (crown form, item 1): a maple's lobed envelope narrows among
-# neighbours as broadleaf 14's does (space@4), as far as the front of a
+# neighbours as broadleaf 15's does (space@4), as far as the front of a
 # crown as wide for its height (crown_radius / crown_height) falls short
 # under their shade; in the open it is as before.
 #

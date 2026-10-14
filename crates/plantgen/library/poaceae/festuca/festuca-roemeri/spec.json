@@ -17,20 +17,17 @@
       "tussock_radius": 0.08,
       "tiller_lean": 12,
       "leaves": 4,
-      "leaf_length": 0.3,
       "leaf_spread": 0.3,
       "leaf_angle": 10,
       "arch": 7,
       "pieces": 6,
       "flowering": 0.35,
-      "culm_height": 0.65,
       "culm_radius": 0.0008,
       "culm_lean": 6,
-      "panicle_length": 0.12,
       "panicle_nod": 10,
-      "blade_area": 0.027,
-      "tip_area": 0.015,
-      "thatch_area": 0.027,
+      "blade_area": 0.014,
+      "tip_area": 0.007,
+      "thatch_area": 0.014,
       "panicle_area": 0.121
     }
   },
@@ -50,13 +47,13 @@
     "variation": 0.2,
     "organs": {
       "blade": {
-        "shape": { "template": "blade", "taper": 0, "aspect": 0.03 }
+        "shape": { "template": "blade", "taper": 0 }
       },
       "blade_tip": {
-        "shape": { "template": "blade", "taper": 1, "aspect": 0.03 }
+        "shape": { "template": "blade", "taper": 1 }
       },
       "thatch": {
-        "shape": { "template": "blade", "taper": 0, "aspect": 0.03 },
+        "shape": { "template": "blade", "taper": 0 },
         "colour": [0.38, 0.31, 0.18],
         "shade": [0.12, 0.1, 0.05]
       },
@@ -103,7 +100,15 @@
     "lemma_length_m": {"min": 0.005, "max": 0.007, "high": 0.0082},
     "awns": true,
     "awn_length_m": {"min": 0.003, "max": 0.005, "low": 0.002},
-    "awn_insertion": "apical"
+    "awn_insertion": "apical",
+    "life_span": "perennial",
+    "rhizome_habit": "none",
+    "clonal": false,
+    "culm_length_m": {"min": 0.5, "max": 0.9, "low": 0.35, "high": 1.0},
+    "leaf_width_m": {"min": 0.0005, "max": 0.001, "high": 0.0012},
+    "inflorescence_length_m": {"min": 0.08, "max": 0.2, "low": 0.07, "high": 0.25},
+    "leaf_length_m": {"min": 0.15, "max": 0.3},
+    "flowering_months": [5, 6, 7]
   },
   "evidence": {
     "appearance.organs.panicle": {
@@ -160,6 +165,46 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 58, 76-77) puts F. idahoensis, in which F. roemeri was then included, in section Eufestuca, plants perennial."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 76, no. 33, F. idahoensis in the broad sense, which then held F. roemeri): culms usually densely tufted in large bunches, no rhizomes named."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (p. 76, no. 33, F. idahoensis in the broad sense): a dense bunchgrass with no rhizomes or stolons named."
+    },
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "kew-grassbase",
+      "note": "GrassBase's entry for F. roemeri (as search results quote it; the page itself was not read): culms erect, (35-)50-90(-100) cm long; Hitchcock's F. idahoensis in the broad sense is 30-100 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "kew-grassbase",
+      "note": "GrassBase's entry for F. roemeri (as search results quote it; the page itself was not read): leaf-blades conduplicate (folded), 0.5-1(-1.2) mm wide."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "kew-grassbase",
+      "note": "GrassBase's entry for F. roemeri (as search results quote it; the page itself was not read): panicle open or contracted, (7-)8-20(-25) cm long; Hitchcock's F. idahoensis in the broad sense is 10-20 cm."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (Festuca no. 23, F. idahoensis, which then included the coastal plants now F. roemeri): blades numerous, mostly basal, 15-30 cm long, sometimes shorter. Read as F. idahoensis in the broad sense."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (Festuca no. 23, F. idahoensis in the broad sense): flowers May-July in open woods and rocky slopes."
     }
   },
   "provenance": {

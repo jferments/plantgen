@@ -12,7 +12,12 @@
       "inferior": "usually",
       "half_inferior": "rarely"
     },
-    "fruit_type": "capsule"
+    "fruit_type": "capsule",
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "zygomorphy": "other"
   },
   "forms": {
     "forb": {
@@ -33,6 +38,16 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 260 Aristolochiaceae: leaves simple, mostly entire, without stipules; flowers with an often enlarged, petal-like calyx, its limb 3-lobed or one-sided, and no petals; ovary inferior or rarely half inferior; fruit a capsule, rarely not opening. APG's family holds Asarum too, whose calyx is three-lobed in the same way. Hutchinson calls the leaves alternate; Asarum's crowd near the rhizome's tip, often seeming paired, so the arrangement is left to the genera."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Aristolochiaceae with Hydnoraceae, Lactoridaceae: flowers regular or irregular as coded, a state the authors qualify keeping its word (spec-rework/b1/delta/mapdelta.py)."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Aristolochiaceae with Hydnoraceae, Lactoridaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
     }
   }
 }

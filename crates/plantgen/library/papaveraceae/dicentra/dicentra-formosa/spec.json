@@ -66,6 +66,7 @@
         "shape": {
           "template": "flower",
           "petals": 4,
+          "petal_whorls": 2,
           "petal_width": 1.2,
           "point": 0.0,
           "notch": 0.0,
@@ -94,6 +95,11 @@
   ],
   "tier": "procedural_proxy",
   "evidence": {
+    "appearance.organs.flower.shape.petal_whorls": {
+      "evidence": "SourceInferred",
+      "source": "jepson-1925-manual",
+      "note": "Jepson's Manual (1925), Fumariaceae (in Papaveraceae here): sepals 2, small and scale-like, and petals 4 in 2 dissimilar pairs. So four petals, an outer and an inner pair (drawn alike)."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",

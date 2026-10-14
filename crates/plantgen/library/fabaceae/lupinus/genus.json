@@ -2,15 +2,38 @@
   "schema": 1,
   "rank": "genus",
   "name": "Lupinus",
+  "parent": "subfamily/faboideae",
   "traits": {
-    "flower_symmetry": "zygomorphic",
-    "zygomorphy": "papilionaceous"
+    "inflorescence": "raceme",
+    "leaf_division": {"compound": "usually", "simple": "rarely"},
+    "division_pattern": "palmate",
+    "stipules": true
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "The legume family's description in Watson and Dallwitz's DELTA, on its Hamburg mirror, as search results quote it (the page itself was not read): in the subfamily Papilionoideae, to which Lupinus belongs, a papilionaceous corolla of five petals (a standard or banner, two wings, and the two lowest petals joined as the keel), five sepals, usually 10 stamens (fused in one tube in Lupinus), one carpel and a superior ovary. VicFlora and the Flora of New Zealand on Lupinus polyphyllus, as search results quote it (the page itself was not read): corolla 12 to 20 mm; calyx 2-lipped."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 483), genus Lupinus: annual to perennial herbs or shrubs 5-240 cm tall; leaves alternate, palmately compound or rarely of one leaflet, stipulate, with usually 5-17 leaflets (rarely 3 or 4); flowers 5-20 mm long, in racemes; calyx two-lipped; stamens 10, all joined, the anthers alternately long and short; pod flattened."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 483), genus Lupinus: annual to perennial herbs or shrubs 5-240 cm tall; leaves alternate, palmately compound or rarely of one leaflet, stipulate, with usually 5-17 leaflets (rarely 3 or 4); flowers 5-20 mm long, in racemes; calyx two-lipped; stamens 10, all joined, the anthers alternately long and short; pod flattened."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 483), genus Lupinus: annual to perennial herbs or shrubs 5-240 cm tall; leaves alternate, palmately compound or rarely of one leaflet, stipulate, with usually 5-17 leaflets (rarely 3 or 4); flowers 5-20 mm long, in racemes; calyx two-lipped; stamens 10, all joined, the anthers alternately long and short; pod flattened."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams (vol. 2, 1944, p. 483), genus Lupinus: annual to perennial herbs or shrubs 5-240 cm tall; leaves alternate, palmately compound or rarely of one leaflet, stipulate, with usually 5-17 leaflets (rarely 3 or 4); flowers 5-20 mm long, in racemes; calyx two-lipped; stamens 10, all joined, the anthers alternately long and short; pod flattened."
     }
   }
 }

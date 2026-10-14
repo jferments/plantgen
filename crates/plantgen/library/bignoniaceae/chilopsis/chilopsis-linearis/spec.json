@@ -23,8 +23,8 @@
       "apical": 0.52,
       "apical_years": 8,
       "bud_years": 40,
-      "leaf_size": 0.16,
-      "spur_leaf": 0.2,
+      "leaf_size": 0.13,
+      "spur_leaf": 0.11,
       "spur_pairs": 2,
       "leaf_angle": 40,
       "lean": 12,
@@ -41,9 +41,9 @@
       "adult_age": 3,
       "bloom_size": 0.04,
       "bloom_angle": 50,
-      "leaf_area": 0.061,
+      "leaf_area": 0.022,
       "bloom_area": 0.308,
-      "path_half": 2.73
+      "path_half": 2.35
     }
   },
   "growth": {
@@ -75,7 +75,7 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.1,
+          "width": 0.035,
           "widest": 0.5,
           "tip": 0.6,
           "base": 0.6,
@@ -117,11 +117,26 @@
     "wood_density_basic_kg_m3": 490
   },
   "evidence": {
+    "generator.params.leaf_area": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaf area of a leaf card 1 m long, as plantc atlas measures the narrow leaf drawn (width 0.035)."
+    },
+    "appearance.organs.leaf.shape.width": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The leaf's width over its blade's length: Abrams and Ferris vol. 4 (1960) gives leaves 5 to 15 cm long and 2 to 6 mm wide, narrowly linear; 0.1 drew them 2 cm wide."
+    },
+    "generator.params.leaf_size": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaf card length, petiole included, sized so every leaf drawn stays within Abrams and Ferris vol. 4 (1960): leaves 5 to 15 cm long, 2 to 6 mm wide (0.16, with short shoots' 0.2, drew them up to 19.6 cm)."
+    },
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Chilopsis linearis (gwddagg_v2.2_species.csv, read): specific gravity 0.49 (wsg_est, the database's hierarchical-model species mean, from 3 records in 3 sources); trunks 0.49, branches 0.5. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region."
+      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long. Fitted so the tallest of five plants (seeds 1 to 5) stays within Abrams and Ferris vol. 4 (1960): 2 to 6 m tall. Fitted to the oldest reference size at 2.73, plants reached 6.55 m."
     },
     "generator.params": {
       "evidence": "Authored",
@@ -136,7 +151,7 @@
     "generator.params.spur_leaf": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "A short shoot's leaf card: one of the long, narrow leaves, 0.2 m long. The seed plants' rules space the shoots from its area."
+      "note": "A short shoot's leaf card: one of the long, narrow leaves, 0.11 m long, within Abrams and Ferris vol. 4 (1960): 5 to 15 cm. The seed plants' rules space the shoots from its area."
     },
     "generator.params.spur_pairs": {
       "evidence": "SourceInferred",

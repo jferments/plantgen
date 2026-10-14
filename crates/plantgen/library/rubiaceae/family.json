@@ -22,6 +22,7 @@
       "actinomorphic": "usually",
       "zygomorphic": "rarely"
     },
+    "zygomorphy": "other",
     "perianth": "sepals_and_petals",
     "corolla_shape": {
       "tubular": "usually",
@@ -42,11 +43,38 @@
       "drupe": "often"
     }
   },
+  "forms": {
+    "shrub": {
+      "appearance": {
+        "organs": {
+          "leaf": {},
+          "bloom": {
+            "inflorescence": {}
+          }
+        }
+      }
+    },
+    "decurrent_tree": {
+      "appearance": {
+        "organs": {
+          "leaf": {},
+          "bloom": {
+            "inflorescence": {}
+          }
+        }
+      }
+    }
+  },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 237 Rubiaceae (order Rubiales): trees and shrubs, less often herbs; leaves opposite or in whorls, simple, mostly entire; stipules between or within the leaf stalks, sometimes as leafy as the leaves; flowers mostly regular, rarely slightly irregular; corolla sitting on the ovary, more or less a tube, with 4 to 10 lobes and as many stamens; ovary inferior; fruit a capsule, berry or drupe. The corolla's funnel shape in some is read from 'more or less tubular'. Library 1.0's Rubiaceae are 72% shrubs and trees."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Rubiaceae with Dialypetalanthaceae, Henriqueziaceae, Naucleaceae, Theligonaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
     }
   }
 }

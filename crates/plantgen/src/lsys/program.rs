@@ -456,6 +456,7 @@ pub const TOOLS: [ToolSpec; 12] = [
             ("straighten", 0.1),
             ("stem", 1.0),
             ("ground", 0.0),
+            ("reaction", 0.0),
         ],
     },
 ];

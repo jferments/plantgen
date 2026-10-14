@@ -28,9 +28,9 @@
       "interwhorl": 3,
       "interwhorl_vigour": 0.6,
       "branch_angle": 75,
-      "branch_sag": 0.6,
-      "max_sag": 25,
       "upturn": 0.008,
+      "bend_set": 0.1,
+      "straighten": 0.3,
       "branch_growth": 0.28,
       "side_growth": 0.6,
       "side_chance": 0.85,
@@ -134,6 +134,11 @@
     "wood_moisture_green_share": {"min": 1.21, "max": 1.71, "typical": 1.46}
   },
   "evidence": {
+    "generator.params.bend_set": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Conifer sag (M6, bend@1): the share of each year's sag its wood keeps, with `straighten` the share of that bend it straightens each year. Set by eye from renders at 60 to 80 years: with the program's creep (0.5 and 0.02) the bald cypress's thin, slow limbs hang down, so it keeps the milder creep the broadleaf program uses (0.1 and 0.3)."
+    },
     "generator.params.side_years": {
       "evidence": "Authored",
       "source": "plantgen-authors",
