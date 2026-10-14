@@ -335,4 +335,9 @@ pub mod venation;
 /// royal, cabbage, date, California fan and saw palms are refitted, and
 /// a drafted palm's frond, petiole and trunk come from its leaf length,
 /// heights and stem diameter (54 is full conifer crowns, #107).
-pub const GENERATOR_REVISION: u32 = 55;
+/// 56: flowers and fruit follow the year from the months a species states
+/// them in: rules at the flowering plants set a season's bud, flower,
+/// fruit, ripe and fall days from `flowering_months` and
+/// `fruiting_months`, and 28 species that state both drop their hand-set
+/// days (55 is palms, #110).
+pub const GENERATOR_REVISION: u32 = 56;

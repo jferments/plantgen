@@ -97,12 +97,7 @@
         "colour": [0.22, 0.07, 0.2],
         "accent": [0.55, 0.15, 0.15],
         "season": {
-          "bud": 95,
-          "flower": 110,
-          "fruit": 135,
-          "ripe": 175,
           "ripening": 25,
-          "fall": 235,
           "opening": 8,
           "flower_look": {
             "shape": {
@@ -140,9 +135,21 @@
     "height_max_m": {
       "min": 0.91,
       "max": 3.66
-    }
+    },
+    "flowering_months": [4, 5],
+    "fruiting_months": [8]
   },
   "evidence": {
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "gbif-inaturalist",
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 100 records annotated as flowering (Apr 57, May 38, Jun 4, Jul 1); stated as the months holding at least a tenth of them, April and May. The Seed Manual (Amelanchier chapter, printed p. 246) gives April at 520 m and May at 1,310 m in Oregon (var. semiintegrifolia)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "Seed Manual, Amelanchier chapter (printed p. 246): ripe in August at 520 m in Oregon (var. semiintegrifolia, the Pacific serviceberry). FEIS gives July to September across the range."
+    },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",
@@ -166,7 +173,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: blue-green rounded leaves; white flowers; smooth grey bark. Fruit (plant roadmap P4), as in mid-July: racemes of purple berries crowned by the calyx, a third still red. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: white flowers in April and May; berries purple in late June and July. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth grey bark; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: blue-green rounded leaves; white flowers; smooth grey bark. Fruit (plant roadmap P4), as in mid-July: racemes of purple berries crowned by the calyx, a third still red. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: white flowers in April and May; berries purple in late June and July. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth grey bark; set from general knowledge of the species, not measured."
     },
     "taxon": {
       "evidence": "Authored",
@@ -206,7 +213,7 @@
     "appearance.organs.bloom.season.opening": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit, a convention (no source gives a raceme's opening time)."
+      "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit as they were set by hand before 2026-10-14, a convention (no source gives a raceme's opening time)."
     }
   },
   "provenance": {

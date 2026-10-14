@@ -525,7 +525,7 @@ fn fruiting_species_have_a_year() {
     // blooms are fruit has a season, so its stage (bud, flower, unripe,
     // ripe, gone) follows the day a package is grown for, never one time
     // of year. Each stage comes round in the year, and on the forest's
-    // default day each still bears its fruit.
+    // default day each bears its flowers or its fruit.
     use plantgen::looks::{Shape, Stage};
     let mut checked = 0;
     for (id, _) in spec::all_species() {
@@ -545,7 +545,7 @@ fn fruiting_species_have_a_year() {
         assert!(season.flower_look.is_some(), "{id}: no flower look");
         let day = plantgen::package::DEFAULT_DAY;
         assert!(
-            matches!(season.stage(day), Stage::Fruit { .. }),
+            matches!(season.stage(day), Stage::Flower | Stage::Fruit { .. }),
             "{id}: {:?} on day {day}",
             season.stage(day)
         );

@@ -92,12 +92,7 @@
         "colour": [0.92, 0.92, 0.9],
         "accent": [0.45, 0.55, 0.25],
         "season": {
-          "bud": 115,
-          "flower": 135,
-          "fruit": 170,
-          "ripe": 205,
           "ripening": 35,
-          "fall": 310,
           "flower_look": {
             "shape": {
               "template": "flower",
@@ -142,9 +137,21 @@
     "leaf_length_m": {
       "min": 0.03,
       "max": 0.1
-    }
+    },
+    "flowering_months": [5, 6, 7, 8],
+    "fruiting_months": [7, 8, 9, 10, 11]
   },
   "evidence": {
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "gbif-inaturalist",
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 78 records annotated as flowering (Apr 4, May 39, Jun 15, Jul 5, Aug 11, Sep 1, Oct 3); stated as the months holding at least a tenth of them, May to August. The Seed Manual (Cornus chapter, printed p. 430) gives April to August for the western subspecies (ssp. occidentalis)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "bonner-karrfalt-2008",
+      "note": "Seed Manual, Cornus chapter (printed p. 430): ripe from July to November for the western subspecies (ssp. occidentalis, southern British Columbia to northern Idaho and south to California)."
+    },
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
@@ -178,7 +185,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: mid-green leaves; red stems; white flower clusters. Fruit (plant roadmap P4), as in mid-July: flat-topped clusters of berries, green turning white. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: flat white clusters in May and June; berries green, white from late July, eaten into November. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth red stems with lenticels; set from general knowledge of the species, not measured."
+      "note": "Colours chosen by eye: mid-green leaves; red stems; white flower clusters. Fruit (plant roadmap P4), as in mid-July: flat-topped clusters of berries, green turning white. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: flat white clusters in May and June; berries green, white from late July, eaten into November. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate. Bark pattern (plant roadmap P4, `bark_pattern`): smooth red stems with lenticels; set from general knowledge of the species, not measured."
     },
     "taxon": {
       "evidence": "Authored",

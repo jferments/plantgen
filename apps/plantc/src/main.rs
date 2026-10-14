@@ -264,7 +264,8 @@ Usage:
       over dbh, the median leaf card length, and from the side its
       outline's fit to an ellipse (1 an ellipse) and the share of its
       outline the sky shows through.
-  plantc validate [<species>...] [--seeds N] [--group sizes|counts|kinds]
+  plantc validate [<species>...] [--seeds N]
+                  [--group sizes|counts|kinds|months]
       Check each species (default every one that states a character a
       check reads) against
       its characters (spec rework M8B): grow N plants (default 5) from its
@@ -279,8 +280,11 @@ Usage:
       leaflets, pinnae) are counted on each organ that holds them and
       judged the same way (M8A); kinds (cluster and head kinds, awns, a
       spikelet's ranks, a divided leaf's pattern and its end) pass when
-      every state the plants draw is one the species states. --group
-      shows one of the three. Exits non-zero on any error.
+      every state the plants draw is one the species states; the months
+      its flowers are open and its fruit ripe in are read from its looks
+      on every day of the year, passing when they are the months stated
+      and warning a month off at an end. --group shows one of the four.
+      Exits non-zero on any error.
   plantc atlas <species|spec.json> --out FILE.png
       Draw the species' organ card textures (leaves, needles, flowers) in
       their colours, one per organ, side by side.
@@ -1758,17 +1762,17 @@ fn mechanics_command(args: &[String]) -> Result<(), Failure> {
     Ok(())
 }
 
-/// `plantc validate`: stated sizes, counts and kinds against grown plants
-/// (spec rework M8B and M8A).
+/// `plantc validate`: stated sizes, counts, kinds and months against grown
+/// plants (spec rework M8B and M8A).
 #[allow(clippy::too_many_lines)]
 fn validate_command(args: &[String]) -> Result<(), Failure> {
     let options = Options::parse(args, &["seeds", "group"])?;
     let count = options.number::<usize>("seeds")?.unwrap_or(5).max(1);
     let group = options.flags.get("group").cloned();
     if let Some(group) = &group
-        && !matches!(group.as_str(), "sizes" | "counts" | "kinds")
+        && !matches!(group.as_str(), "sizes" | "counts" | "kinds" | "months")
     {
-        return Err(format!("--group is sizes, counts or kinds, not {group}").into());
+        return Err(format!("--group is sizes, counts, kinds or months, not {group}").into());
     }
     let library = library();
     let ids: Vec<String> = if options.positional.is_empty() {
@@ -1832,7 +1836,7 @@ fn validate_command(args: &[String]) -> Result<(), Failure> {
             ]
         };
         let is_count = |finding: &&checks::Finding| checks::COUNTS.contains(&finding.character);
-        let sections: [(&str, Vec<[String; 5]>); 3] = [
+        let sections: [(&str, Vec<[String; 5]>); 4] = [
             (
                 "sizes",
                 report
@@ -1873,6 +1877,32 @@ fn validate_command(args: &[String]) -> Result<(), Failure> {
                             agreement.stated.join(" or "),
                             drawn.join(", "),
                             agreement.verdict.word().to_string(),
+                            reason,
+                        ]
+                    })
+                    .collect(),
+            ),
+            (
+                "months",
+                report
+                    .timings
+                    .iter()
+                    .map(|timing| {
+                        let reason = match timing.verdict {
+                            checks::Verdict::Warning => "a month off at an end",
+                            checks::Verdict::Error if timing.strays() => {
+                                "drawn in months the species does not state"
+                            }
+                            checks::Verdict::Error => "not drawn in months the species states",
+                            checks::Verdict::NotGrown => "nothing drawn to compare",
+                            checks::Verdict::Pass => "",
+                        }
+                        .to_string();
+                        [
+                            timing.character.to_string(),
+                            checks::months_text(&timing.stated),
+                            checks::months_text(&timing.drawn),
+                            timing.verdict.word().to_string(),
                             reason,
                         ]
                     })
@@ -1932,6 +1962,13 @@ fn validate_command(args: &[String]) -> Result<(), Failure> {
                     .iter()
                     .filter(|_| group.as_deref().is_none_or(|group| group == "kinds"))
                     .map(|agreement| agreement.verdict),
+            )
+            .chain(
+                report
+                    .timings
+                    .iter()
+                    .filter(|_| group.as_deref().is_none_or(|group| group == "months"))
+                    .map(|timing| timing.verdict),
             );
         for verdict in verdicts {
             let slot = match verdict {

@@ -120,12 +120,7 @@
           0.15
         ],
         "season": {
-          "bud": 60,
-          "flower": 80,
-          "fruit": 130,
-          "ripe": 185,
           "ripening": 30,
-          "fall": 290,
           "opening": 17,
           "flower_look": {
             "shape": {
@@ -175,9 +170,21 @@
       "min": 0.8,
       "max": 2
     },
-    "wood_density_basic_kg_m3": 690
+    "wood_density_basic_kg_m3": 690,
+    "flowering_months": [3, 4],
+    "fruiting_months": [7, 8, 9]
   },
   "evidence": {
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "gbif-inaturalist",
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 219 records annotated as flowering (Jan 1, Feb 10, Mar 52, Apr 145, May 11); stated as the months holding at least a tenth of them, March and April. The Seed Manual (Mahonia chapter, printed p. 708, as M. aquifolium) gives March to May at 685 m in Jackson County, Oregon."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usa-npn",
+      "note": "USA National Phenology Network observations (Nature's Notebook) at lowland sites west of the Cascades in Washington and Oregon (below 300 m, west of 121.8° W; 2009 to 2026, fetched 2026-10-14): 20 plant-years at 5 sites seen with ripe fruit, by the months they were seen in (Apr 2, May 3, Jun 3, Jul 13, Aug 9, Sep 7, Oct 3, Nov 1, Dec 1); stated as the months with at least a third as many as the busiest, July to September. The Seed Manual (Mahonia chapter, printed p. 708, as M. aquifolium) gives late July to early August at 975 m in Mineral County, Montana, and September and October at 685 m in Jackson County, Oregon."
+    },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1944",
@@ -207,7 +214,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: glossy dark green leaflets; yellow flower clusters; grey-tan stems. Fruit (plant roadmap P4), as in mid-July: grape-like racemes of berries, green turning powdery blue. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: yellow racemes in March to May; berries blue with a bloom in July and August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
+      "note": "Colours chosen by eye: glossy dark green leaflets; yellow flower clusters; grey-tan stems. Fruit (plant roadmap P4), as in mid-July: grape-like racemes of berries, green turning powdery blue. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: yellow racemes in March to May; berries blue with a bloom in July and August. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     },
     "taxon": {
       "evidence": "Authored",
@@ -262,7 +269,7 @@
     "appearance.organs.bloom.season.opening": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit, a convention (no source gives a raceme's opening time)."
+      "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit as they were set by hand before 2026-10-14, a convention (no source gives a raceme's opening time)."
     }
   },
   "provenance": {

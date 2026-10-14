@@ -85,12 +85,7 @@
         "colour": [0.8, 0.18, 0.08],
         "accent": [0.4, 0.5, 0.18],
         "season": {
-          "bud": 125,
-          "flower": 140,
-          "fruit": 180,
-          "ripe": 225,
           "ripening": 35,
-          "fall": 430,
           "flower_look": {
             "shape": {
               "template": "flower",
@@ -119,7 +114,21 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "flowering_months": [5, 6],
+    "fruiting_months": [9, 10, 11, 12, 1, 2]
+  },
   "evidence": {
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "gbif-inaturalist",
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 81 records annotated as flowering (Apr 1, May 52, Jun 21, Jul 6, Nov 1); stated as the months holding at least a tenth of them, May and June. FEIS (Rosa nutkana) gives May to July."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS (Rosa nutkana): hips ripen in early fall and stay on the plant through the winter (the Seed Manual says the same of roses); so ripe hips are on the plant from September to February."
+    },
     "generator.params.path_half": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -138,7 +147,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: mid-green leaflets; pink flowers; reddish-brown stems. Fruit (plant roadmap P4), as in mid-July: round hips about 2 cm across with the sepals still on, green turning red. Its year (appearance.organs.bloom.season) is authored from general knowledge of the species in the south Puget Sound lowlands: pink roses in May to July; hips green, red from August, hanging through the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
+      "note": "Colours chosen by eye: mid-green leaflets; pink flowers; reddish-brown stems. Fruit (plant roadmap P4), as in mid-July: round hips about 2 cm across with the sepals still on, green turning red. Its year (appearance.organs.bloom.season) takes its days of bud, flower, fruit, ripe and fall from the months it flowers and fruits in, by the rules at the flowering plants (development, 2026-10-14); until then they were authored from general knowledge of the species in the south Puget Sound lowlands: pink roses in May to July; hips green, red from August, hanging through the winter. The forest's packages show day 196 (mid-July) until the phenology of plant roadmap P5 sets the day from the date and the local climate."
     },
     "taxon": {
       "evidence": "Authored",

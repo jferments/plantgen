@@ -1,0 +1,10 @@
+{
+  "id": "usa-npn",
+  "title": "USA National Phenology Network: Nature's Notebook plant phenology observations (National Phenology Database, individual phenometrics)",
+  "authors": "USA National Phenology Network and its observers",
+  "year": 2026,
+  "url": "https://doi.org/10.5066/F78S4N1V",
+  "licence": "free to use with attribution (USA-NPN data use and attribution policy); counts of records only",
+  "tier": 3,
+  "kind": "observations"
+}
