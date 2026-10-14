@@ -1757,7 +1757,7 @@ pub fn summary(manifest: &Manifest) -> String {
         text,
         "{} ({}, {}), package format {}, generator revision {}",
         manifest.species,
-        spec.taxon.common_name,
+        spec.taxon.name(),
         spec.taxon.scientific_name,
         manifest.format_version,
         manifest.generator_revision

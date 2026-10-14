@@ -12,6 +12,18 @@
       "woody": "rarely"
     },
     "leaf_arrangement": "alternate",
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "sometimes"
+    },
+    "leaf_incision": {
+      "dissected": "usually",
+      "none": "sometimes"
+    },
+    "division_pattern": {
+      "pinnate": "usually",
+      "palmate": "sometimes"
+    },
     "stipules": false,
     "fruit_type": "capsule",
     "rosette": {
@@ -21,7 +33,12 @@
     "life_span": {
       "annual": "often",
       "perennial": "often"
-    }
+    },
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "zygomorphy": "other"
   },
   "forms": {
     "forb": {
@@ -72,6 +89,31 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Papaveraceae as that work draws it, there coded together with Fumariaceae: the herbs' life form (character 21), coded often annual, often perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Papaveraceae with Fumariaceae: flowers regular or irregular as coded, a state the authors qualify keeping its word (spec-rework/b1/delta/mapdelta.py)."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Papaveraceae with Fumariaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Papaveraceae with Fumariaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple usually, compound sometimes; the simple blade dissected usually, none sometimes; lobes or leaflets pinnate usually, palmate sometimes. Read from the coded leaf form and dissection by script (spec-rework/b1/delta)."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Papaveraceae with Fumariaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple usually, compound sometimes; the simple blade dissected usually, none sometimes; lobes or leaflets pinnate usually, palmate sometimes. Read from the coded leaf form and dissection by script (spec-rework/b1/delta)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Papaveraceae with Fumariaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple usually, compound sometimes; the simple blade dissected usually, none sometimes; lobes or leaflets pinnate usually, palmate sometimes. Read from the coded leaf form and dissection by script (spec-rework/b1/delta)."
     }
   }
 }

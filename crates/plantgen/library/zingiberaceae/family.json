@@ -12,6 +12,7 @@
       "zygomorphic": "usually",
       "asymmetric": "sometimes"
     },
+    "zygomorphy": "labellate",
     "stamens": 1,
     "carpels": 3,
     "ovary_position": "inferior",
@@ -46,6 +47,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Zingiberaceae as that work draws it, there coded together with Costaceae: the herbs' life form (character 21), coded perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Zingiberaceae with Costaceae: flowers very irregular, the corolla's median member largest, the stamens reduced to one fertile and the rest joined in a showy lip. That lip below two smaller petals is drawn as an orchid's lip is: zygomorphy labellate."
     }
   }
 }

@@ -4,6 +4,12 @@
   "name": "Plantaginaceae",
   "parent": "order/lamiales",
   "traits": {
+    "leaf_division": "simple",
+    "leaf_incision": {
+      "none": "usually",
+      "lobed": "sometimes"
+    },
+    "division_pattern": "pinnate",
     "flower_symmetry": {
       "zygomorphic": "usually",
       "actinomorphic": "sometimes"
@@ -77,6 +83,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Plantaginaceae as that work draws it, there coded together with Globulariaceae, Hippuridaceae: the herbs' life form (character 21), coded often annual, often biennial, often perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Plantaginaceae with Globulariaceae and Hippuridaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple; the simple blade none usually, lobed sometimes; lobes or leaflets pinnate. Read from the coded leaf form and dissection by script (spec-rework/b1/delta). Watson and Dallwitz's Plantaginaceae is Plantago alone; APG's family also takes in Veronica, Penstemon, Antirrhinum and their kin from the old Scrophulariaceae, whose leaves are simple and mostly unlobed (toothed or entire), so the reading stands for them (inferred, not traced)."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Plantaginaceae with Globulariaceae and Hippuridaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple; the simple blade none usually, lobed sometimes; lobes or leaflets pinnate. Read from the coded leaf form and dissection by script (spec-rework/b1/delta). Watson and Dallwitz's Plantaginaceae is Plantago alone; APG's family also takes in Veronica, Penstemon, Antirrhinum and their kin from the old Scrophulariaceae, whose leaves are simple and mostly unlobed (toothed or entire), so the reading stands for them (inferred, not traced)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Plantaginaceae with Globulariaceae and Hippuridaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple; the simple blade none usually, lobed sometimes; lobes or leaflets pinnate. Read from the coded leaf form and dissection by script (spec-rework/b1/delta). Watson and Dallwitz's Plantaginaceae is Plantago alone; APG's family also takes in Veronica, Penstemon, Antirrhinum and their kin from the old Scrophulariaceae, whose leaves are simple and mostly unlobed (toothed or entire), so the reading stands for them (inferred, not traced)."
     }
   }
 }

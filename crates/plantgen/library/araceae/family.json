@@ -13,24 +13,43 @@
     "life_span": {
       "perennial": "usually",
       "annual": "sometimes"
+    },
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "sometimes"
+    },
+    "leaf_incision": {
+      "none": "usually",
+      "lobed": "sometimes",
+      "dissected": "sometimes"
+    },
+    "division_pattern": {
+      "palmate": "often",
+      "pinnate": "often"
     }
   },
   "rules": {
     "appearance.organs.*.inflorescence.spathe": {
-      "map": {
-        "bract_form": {
-          "spathe": {
-            "rule": "clamp(bract_length_m / inflorescence_length_m, 0.2, 3)"
-          },
-          "petaloid": 0,
-          "leafy": 0,
-          "scale": 0
-        }
-      },
+      "map": {"bract_form": {"spathe": {"rule": "clamp(bract_length_m / inflorescence_length_m, 0.2, 3)"}, "petaloid": 0, "leafy": 0, "scale": 0}},
       "why": "An aroid's spathe is drawn as long, against its spadix, as the flora gives the two."
     }
   },
   "evidence": {
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Araceae: leaves simple or compound; the blade's dissection is not coded. The rest is inferred from the genera: most blades are simple and entire (Lysichiton, Calla, Peltandra, Arum, Zantedeschia, Anthurium, Colocasia, Spathiphyllum), some are pinnately lobed or cut (Philodendron, Monstera), and the compound ones are palmate or pedate (Arisaema, Syngonium) or much divided (Amorphophallus, Dracunculus)."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Araceae: leaves simple or compound; the blade's dissection is not coded. The rest is inferred from the genera: most blades are simple and entire (Lysichiton, Calla, Peltandra, Arum, Zantedeschia, Anthurium, Colocasia, Spathiphyllum), some are pinnately lobed or cut (Philodendron, Monstera), and the compound ones are palmate or pedate (Arisaema, Syngonium) or much divided (Amorphophallus, Dracunculus)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Araceae: leaves simple or compound; the blade's dissection is not coded. The rest is inferred from the genera: most blades are simple and entire (Lysichiton, Calla, Peltandra, Arum, Zantedeschia, Anthurium, Colocasia, Spathiphyllum), some are pinnately lobed or cut (Philodendron, Monstera), and the compound ones are palmate or pedate (Arisaema, Syngonium) or much divided (Amorphophallus, Dracunculus)."
+    },
     "rules": {
       "evidence": "Authored",
       "source": "plantgen-authors",

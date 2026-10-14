@@ -33,8 +33,8 @@
       "internode": 0.04,
       "branch_angle": 45,
       "bud_years": 5,
-      "leaf_size": 0.05,
-      "spur_leaf": 0.045,
+      "leaf_size": 0.03,
+      "spur_leaf": 0.027,
       "spur_pairs": 3,
       "leaf_angle": 50,
       "fork_stems": 10,
@@ -45,7 +45,7 @@
       "space_reach": 0.255,
       "space_kill": 0.063,
       "leaf_area": 0.263,
-      "path_half": 0.285
+      "path_half": 0.255
     }
   },
   "growth": {
@@ -94,11 +94,21 @@
     "wood_density_basic_kg_m3": 780
   },
   "evidence": {
+    "generator.params.spur_leaf": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A short shoot's leaf card, a little smaller than a long shoot's (leaf_size), within Abrams and Ferris vol. 4 (1960): leaves 1 to 3 cm long."
+    },
+    "generator.params.leaf_size": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaf card length, petiole included, sized so every leaf drawn stays within Abrams and Ferris vol. 4 (1960, as Franseria dumosa): leaves 1 to 3 cm long (0.05 drew them 4 to 4.5 cm)."
+    },
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Ambrosia dumosa (gwddagg_v2.2_species.csv, read): specific gravity 0.78 (wsg_est, the database's hierarchical-model species mean, from 2 records in 2 sources); trunks 0.85, branches 0.68. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long, fitted so the plant grows to the height of its oldest reference size, with the crown's width left to grow inside the loose region."
+      "note": "A choice of the model's (crown form step B, broadleaf revision 11): the wood from the base at which a shoot's nodes are half as long. Fitted so the tallest of five plants (seeds 1 to 5) stays within Abrams and Ferris vol. 4 (1960, as Franseria dumosa): 20 to 60 cm tall. Fitted to the oldest reference size at 0.285, plants reached 65 cm."
     },
     "generator.params": {
       "evidence": "Authored",

@@ -15,7 +15,12 @@
     "leaf_habit": {
       "evergreen": "often",
       "deciduous": "often"
-    }
+    },
+    "flower_symmetry": {
+      "zygomorphic": "usually",
+      "actinomorphic": "rarely"
+    },
+    "zygomorphy": "other"
   },
   "forms": {
     "shrub": {
@@ -41,6 +46,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Caprifoliaceae as that work draws it, there coded together with Carlemanniaceae, Dipsacaceae, Morinaceae, Sambucaceae, Valerianaceae: how long the leaves last (character 37), coded often evergreen, often deciduous. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Caprifoliaceae with Carlemanniaceae, Dipsacaceae, Morinaceae, Sambucaceae, Valerianaceae: flowers regular or irregular as coded, a state the authors qualify keeping its word (spec-rework/b1/delta/mapdelta.py)."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Caprifoliaceae with Carlemanniaceae, Dipsacaceae, Morinaceae, Sambucaceae, Valerianaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other."
     }
   }
 }

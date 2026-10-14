@@ -35,7 +35,12 @@
       "annual": "often",
       "biennial": "often",
       "perennial": "often"
-    }
+    },
+    "flower_symmetry": {
+      "zygomorphic": "usually",
+      "actinomorphic": "rarely"
+    },
+    "zygomorphy": "bilabiate"
   },
   "evidence": {
     "traits": {
@@ -52,6 +57,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Labiatae: the herbs' life form (character 21), coded often annual, often biennial, often perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Labiatae: flowers regular or irregular as coded, a state the authors qualify keeping its word (spec-rework/b1/delta/mapdelta.py); the corolla rarely almost regular (Mentha), so actinomorphic is rare."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Labiatae: its irregular flowers have a two-lipped corolla, read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy bilabiate."
     }
   }
 }

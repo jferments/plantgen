@@ -12,10 +12,9 @@
 //! crowns the step before left, so a stand grows the same however many
 //! threads grow it and in whatever order its plants are listed.
 
-use crate::conditions::{Crown, Envelope};
+use crate::conditions::{Crown, Envelope, sort_envelopes};
 use crate::grow::{Grower, Growth, GrowthSettings};
 use crate::lsys::{GrowthError, Program};
-use crate::math;
 
 /// One plant of a stand.
 #[derive(Debug, Clone, Copy)]
@@ -29,18 +28,14 @@ pub struct Member<'a> {
     pub at_m: [f64; 2],
 }
 
-/// How far past a plant's crown a neighbour's crown can shade it: twice
-/// the neighbour's height, light from 27° above the horizon and higher.
-const SHADE_REACH: f64 = 2.0;
-
 /// Grow `members` together. With `tile_m` (east, north) the stand is a
 /// tile that wraps at its edges, its plants' feet anywhere in it.
 ///
 /// # Errors
 ///
-/// When there are no members, their steps differ in length, the tile is
-/// not positive, a foot stands outside the tile, or a member's growth
-/// fails.
+/// When there are no members, their steps differ in length, one has a
+/// layout (`crate::conditions::Layout`), the tile is not positive, a foot
+/// stands outside the tile, or a member's growth fails.
 pub fn grow_stand(
     members: &[Member<'_>],
     tile_m: Option<[f64; 2]>,
@@ -101,6 +96,11 @@ fn check(members: &[Member<'_>], tile_m: Option<[f64; 2]>) -> Result<(), GrowthE
         return fail(format!("a stand's tile must be positive, found {tile:?}"));
     }
     for member in members {
+        if member.settings.conditions.layout().is_some() {
+            return fail(
+                "a stand's plants are their own neighbours; none may have a layout".into(),
+            );
+        }
         let [east, north] = member.at_m;
         if !(east.is_finite() && north.is_finite()) {
             return fail(format!("a plant stands at {:?}", member.at_m));
@@ -156,22 +156,11 @@ fn neighbours(
                 member.at_m[0] + east * width - here[0],
                 member.at_m[1] + north * depth - here[1],
             ];
-            let apart = math::sqrt(centre[0] * centre[0] + centre[1] * centre[1]);
-            if apart - crown.radius_m - reach < SHADE_REACH * crown.top_m {
+            if crown.reaches(centre, reach) {
                 envelopes.push(crown.envelope(centre));
             }
         }
     }
-    // In one order whatever the members' order: shade multiplies in it.
-    envelopes.sort_by(|a, b| {
-        let key = |e: &Envelope| [e.centre_m[0], e.centre_m[1], e.base_m, e.top_m, e.radius_m];
-        key(a)
-            .iter()
-            .zip(key(b).iter())
-            .map(|(x, y)| x.total_cmp(y))
-            .find(|order| order.is_ne())
-            .unwrap_or(std::cmp::Ordering::Equal)
-            .then(a.density.total_cmp(&b.density))
-    });
+    sort_envelopes(&mut envelopes);
     envelopes
 }

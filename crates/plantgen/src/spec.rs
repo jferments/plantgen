@@ -236,6 +236,9 @@ pub struct Taxon {
     /// Vascular Plants (`Pinus contorta var. contorta`), which the taxon's
     /// id writes as an id (`pinus-contorta-var-contorta`).
     pub scientific_name: String,
+    /// Its English name, where it has one; a species drafted from facts
+    /// may have none ([`Taxon::name`]).
+    #[serde(default, skip_serializing_if = "String::is_empty")]
     pub common_name: String,
     /// USDA PLANTS symbol, for example `PSME`.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -256,6 +259,19 @@ pub struct Taxon {
     /// subspecies or variety where the taxon is one.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub plant_name_id: Option<u64>,
+}
+
+impl Taxon {
+    /// The name to show it by: its common name, or its scientific name
+    /// where it has none.
+    #[must_use]
+    pub fn name(&self) -> &str {
+        if self.common_name.is_empty() {
+            &self.scientific_name
+        } else {
+            &self.common_name
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]

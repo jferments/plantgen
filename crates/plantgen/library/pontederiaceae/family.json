@@ -42,6 +42,7 @@
       "actinomorphic": "often",
       "zygomorphic": "often"
     },
+    "zygomorphy": "other",
     "perianth": "tepals",
     "fruit_type": {
       "capsule": "often",
@@ -59,6 +60,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Pontederiaceae: leaves usually alternate, sometimes whorled; leaves simple; margins entire; veins palmate, parallel or pinnate; blades linear, lanceolate or ovate, rarely orbicular; stipules present or absent; leaf rosettes basal or none; plants hermaphrodite; ovary superior; stems herbaceous; flowers solitary, in racemes, in spikes or in panicles; flowers actinomorphic or zygomorphic; perianth tepals; fruit capsule or nut; parts of each whorl 3; stamens 1 to 6; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Pontederiaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
     }
   }
 }

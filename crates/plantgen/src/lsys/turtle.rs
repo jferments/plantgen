@@ -859,7 +859,8 @@ fn stitch(pieces: &[Piece], limits: &Limits) -> Option<Scene> {
     if segments > limits.max_segments || organs > limits.max_segments {
         return None;
     }
-    let (offsets, starts) = place(pieces, &sizes);
+    let handed = handed(pieces, &sizes);
+    let (offsets, starts) = place(pieces, &handed);
     let mut scene = Scene {
         segments: Vec::with_capacity(segments),
         organs: Vec::with_capacity(organs),
@@ -879,7 +880,7 @@ fn stitch(pieces: &[Piece], limits: &Limits) -> Option<Scene> {
             .get(child)
             .map_or_else(|| count(&piece.scene), |next| next.at.map(|at| at as usize));
         let number =
-            |kind: usize, index: u32| renumber(pieces, &sizes, &offsets, &starts, id, kind, index);
+            |kind: usize, index: u32| renumber(&handed, &offsets, &starts, id, kind, index);
         for segment in &piece.scene.segments[at[SEGMENT]..until[SEGMENT]] {
             scene.segments.push(Segment {
                 node: number(NODE, segment.node),
@@ -931,23 +932,18 @@ fn stitch(pieces: &[Piece], limits: &Limits) -> Option<Scene> {
 /// node and segment its branch begins on and the structure open there,
 /// renumbered. A child's id is greater than its parent's, so parents come
 /// first.
-fn place(pieces: &[Piece], sizes: &[[usize; KINDS]]) -> (Vec<[usize; KINDS]>, Starts) {
+fn place(pieces: &[Piece], handed: &[[Handed; KINDS]]) -> (Vec<[usize; KINDS]>, Starts) {
     let mut offsets = vec![[0_usize; KINDS]; pieces.len()];
     // Where each piece's branch begins, renumbered.
     let mut starts: Starts = vec![[None; 3]; pieces.len()];
     for id in 0..pieces.len() {
-        let mut before = [0_usize; KINDS];
-        for child in &pieces[id].children {
+        for (order, child) in pieces[id].children.iter().enumerate() {
             for kind in 0..KINDS {
                 offsets[child.id][kind] =
-                    offsets[id][kind] + child.at[kind] as usize + before[kind];
-            }
-            let size = sizes[child.id];
-            for kind in 0..KINDS {
-                before[kind] += size[kind];
+                    offsets[id][kind] + child.at[kind] as usize + handed[id][kind].before[order];
             }
             let number = |kind: usize, index: Option<u32>| {
-                index.map(|index| renumber(pieces, sizes, &offsets, &starts, id, kind, index))
+                index.map(|index| renumber(handed, &offsets, &starts, id, kind, index))
             };
             starts[child.id] = [
                 number(NODE, child.node),
@@ -986,8 +982,7 @@ fn count(scene: &Scene) -> [usize; KINDS] {
 /// `id`: its piece's offset, its own index, and every branch the piece
 /// handed on before drawing it; [`START`] is where the piece begins.
 fn renumber(
-    pieces: &[Piece],
-    sizes: &[[usize; KINDS]],
+    handed: &[[Handed; KINDS]],
     offsets: &[[usize; KINDS]],
     starts: &Starts,
     id: usize,
@@ -1003,13 +998,41 @@ fn renumber(
         };
         return start.unwrap_or(START);
     }
-    let before: usize = pieces[id]
-        .children
-        .iter()
-        .take_while(|child| child.at[kind] <= index)
-        .map(|child| sizes[child.id][kind])
-        .sum();
+    // The children handed on at or before the part, found by bisection:
+    // they were handed on in order, as the piece grew.
+    let handed = &handed[id][kind];
+    let before = handed.before[handed.at.partition_point(|at| *at <= index)];
     index_u32(offsets[id][kind] + index as usize + before)
+}
+
+/// One piece's children for one kind of part: where each was handed on,
+/// in order, and the parts of the children before each (`before[k]` for
+/// the first `k`, so one more than `at`).
+struct Handed {
+    at: Vec<u32>,
+    before: Vec<usize>,
+}
+
+/// Every piece's [`Handed`], by kind.
+fn handed(pieces: &[Piece], sizes: &[[usize; KINDS]]) -> Vec<[Handed; KINDS]> {
+    pieces
+        .iter()
+        .map(|piece| {
+            std::array::from_fn(|kind| {
+                let mut before = Vec::with_capacity(piece.children.len() + 1);
+                let mut sum = 0;
+                before.push(sum);
+                for child in &piece.children {
+                    sum += sizes[child.id][kind];
+                    before.push(sum);
+                }
+                Handed {
+                    at: piece.children.iter().map(|child| child.at[kind]).collect(),
+                    before,
+                }
+            })
+        })
+        .collect()
 }
 
 fn add_node(scene: &mut Scene, state: &mut State, kind: NodeKind) -> u32 {

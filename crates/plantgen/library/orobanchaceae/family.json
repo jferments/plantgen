@@ -22,7 +22,13 @@
       "annual": "often",
       "biennial": "often",
       "perennial": "often"
-    }
+    },
+    "leaf_division": "simple",
+    "leaf_incision": {
+      "none": "usually",
+      "lobed": "often"
+    },
+    "division_pattern": "pinnate"
   },
   "forms": {
     "forb": {
@@ -73,6 +79,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Orobanchaceae as that work draws it, there coded together with Cyclocheilaceae: the herbs' life form (character 21), coded often annual, often biennial, often perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plantgen-authors",
+      "note": "APG's Orobanchaceae is mostly the half-parasites that the floras kept in Scrophulariaceae (Pedicularis, Castilleja, Euphrasia, Rhinanthus, Melampyrum) with the old broomrapes, whose leaves are scales. Watson and Dallwitz (DELTA data, family Orobanchaceae, the broomrapes alone): leaves simple and entire. Pedicularis, the largest genus, has pinnately lobed to divided leaves, and Castilleja's are entire or lobed: so leaves simple, unlobed usually and lobed often, the lobes pinnate (inferred from the genera, not traced)."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "plantgen-authors",
+      "note": "APG's Orobanchaceae is mostly the half-parasites that the floras kept in Scrophulariaceae (Pedicularis, Castilleja, Euphrasia, Rhinanthus, Melampyrum) with the old broomrapes, whose leaves are scales. Watson and Dallwitz (DELTA data, family Orobanchaceae, the broomrapes alone): leaves simple and entire. Pedicularis, the largest genus, has pinnately lobed to divided leaves, and Castilleja's are entire or lobed: so leaves simple, unlobed usually and lobed often, the lobes pinnate (inferred from the genera, not traced)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plantgen-authors",
+      "note": "APG's Orobanchaceae is mostly the half-parasites that the floras kept in Scrophulariaceae (Pedicularis, Castilleja, Euphrasia, Rhinanthus, Melampyrum) with the old broomrapes, whose leaves are scales. Watson and Dallwitz (DELTA data, family Orobanchaceae, the broomrapes alone): leaves simple and entire. Pedicularis, the largest genus, has pinnately lobed to divided leaves, and Castilleja's are entire or lobed: so leaves simple, unlobed usually and lobed often, the lobes pinnate (inferred from the genera, not traced)."
     }
   }
 }

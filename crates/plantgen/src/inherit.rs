@@ -615,8 +615,8 @@ fn check_rule(path: &str, rule: &Value) -> Result<(), String> {
 
 /// Checks a `map` rule's shape: one trait and its table, whose values are
 /// formulas (`{"rule": formula}`), maps on another trait (`{"map": ...}`,
-/// with their own `else`) or plain values, each plain value (and `else`)
-/// passing `plain`.
+/// with their own `else`) or plain values, as its `else` is, each plain
+/// value passing `plain`.
 fn check_map(
     rule: &Map<String, Value>,
     plain: &dyn Fn(&Value) -> Result<(), String>,
@@ -628,10 +628,7 @@ fn check_map(
         Some((_, Value::Object(table))) if map.len() == 1 => table,
         _ => return Err("a `map` names one trait, then its values' spec values".into()),
     };
-    if let Some(value) = rule.get("else") {
-        plain(value)?;
-    }
-    for value in table.values() {
+    for value in table.values().chain(rule.get("else")) {
         if let Some(formula) = map_formula(value) {
             Formula::parse(formula)?;
         } else if let Some(inner) = map_rule(value) {
@@ -1974,8 +1971,14 @@ impl Ruled<'_> {
                         Err(why) => return Err(why),
                     }
                 }
-                // Its trait unstated, a map with an `else` gives that.
-                Err(_) if self.rule.contains_key("else") => Vec::new(),
+                // Its trait unstated, a map with an `else` gives that, or
+                // what the map its `else` holds reads.
+                Err(_) if self.rule.contains_key("else") => self
+                    .rule
+                    .get("else")
+                    .and_then(map_rule)
+                    .map(reads)
+                    .unwrap_or_default(),
                 Err(why) => return Err(why),
             }
         } else {
@@ -2346,7 +2349,13 @@ fn reads(rule: &Map<String, Value>) -> Vec<String> {
         .values()
         .filter_map(map_formula)
         .flat_map(names)
-        .chain(table.values().filter_map(map_rule).flat_map(reads))
+        .chain(
+            table
+                .values()
+                .chain(rule.get("else"))
+                .filter_map(map_rule)
+                .flat_map(reads),
+        )
         .collect();
     read.extend(more.into_iter().filter(|name| name != key));
     read
@@ -2392,8 +2401,8 @@ fn map_formula(value: &Value) -> Option<&str> {
     }
 }
 
-/// A map's value that is a map on another trait, `{"map": ...}` with its
-/// own `else`, worked out only when the outer map picks it.
+/// A map's value (or `else`) that is a map on another trait, `{"map":
+/// ...}` with its own `else`, worked out only when the outer map picks it.
 fn map_rule(value: &Value) -> Option<&Map<String, Value>> {
     match value {
         Value::Object(entry) if entry.contains_key("map") => Some(entry),
@@ -2534,10 +2543,13 @@ fn evaluate(rule: &Map<String, Value>, inputs: &BTreeMap<String, Value>) -> Resu
     }
     if let Some((key, table)) = map_of(rule) {
         let Some(value) = inputs.get(key) else {
-            return rule
-                .get("else")
-                .cloned()
-                .ok_or_else(|| format!("no `{key}` to read"));
+            return match rule.get("else") {
+                Some(otherwise) => match map_rule(otherwise) {
+                    Some(inner) => evaluate(inner, inputs),
+                    None => Ok(otherwise.clone()),
+                },
+                None => Err(format!("no `{key}` to read")),
+            };
         };
         let name = state(value);
         let picked = table
@@ -4493,6 +4505,55 @@ mod tests {
         );
         let bare = grow(json!({"id": "one"}));
         assert_eq!(shape(&bare)["template"], "simple");
+    }
+
+    /// A map's `else` may map another trait: a regular flower draws its
+    /// petals alike in a family whose zygomorphic flowers are two-lipped,
+    /// and a flower of unstated symmetry draws as its zygomorphy says.
+    #[test]
+    fn an_else_may_map_another_trait() {
+        let note = |text: &str| json!({"evidence": "Authored", "note": text});
+        let lips = json!({"map": {"zygomorphy": {"bilabiate": 2, "other": 1}}});
+        let files = ranks(&[
+            (
+                "_ranks/clade/top.json",
+                json!({"schema": 1, "rank": "clade", "name": "Top",
+                    "generator": {"program": "broadleaf"},
+                    "rules": {"generator.params.a": {
+                        "map": {"flower_symmetry": {"actinomorphic": 0, "zygomorphic": lips}},
+                        "else": lips}},
+                    "evidence": {"rules": note("Lips.")}}),
+            ),
+            (
+                "testaceae/family.json",
+                json!({"schema": 1, "rank": "family", "name": "Testaceae",
+                    "parent": "clade/top", "traits": {"zygomorphy": "bilabiate"},
+                    "evidence": {"traits": note("Two lips.")}}),
+            ),
+        ]);
+        let a = |traits: Value| {
+            let chain = above(&files, "testaceae", "genus").unwrap();
+            let own = json!({"id": "one", "traits": traits});
+            inherit("testaceae/genus/one/spec.json", &own, &chain, &programs())
+                .unwrap()
+                .spec["generator"]["params"]["a"]
+                .clone()
+        };
+        assert_eq!(a(json!({"flower_symmetry": "actinomorphic"})), json!(0));
+        assert_eq!(a(json!({"flower_symmetry": "zygomorphic"})), json!(2));
+        assert_eq!(a(json!({})), json!(2));
+        assert_eq!(
+            a(json!({"flower_symmetry": "zygomorphic", "zygomorphy": "other"})),
+            json!(1)
+        );
+        assert!(
+            super::check_rule(
+                "generator.params.a",
+                &json!({"map": {"x": {"y": 1}}, "else": {"map": {"z": {"w": 1}}, "why": "no"}})
+            )
+            .unwrap_err()
+            .contains("not a map's")
+        );
     }
 
     /// A rule choosing a card names its organ and maps to cards.
