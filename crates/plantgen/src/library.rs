@@ -3189,12 +3189,10 @@ mod tests {
         assert_eq!(arrangement("alnus-rubra"), (Some(1.0), Some(120.0)));
         // Creosote bush: pairs, which broadleaf crosses at 90 degrees.
         assert_eq!(arrangement("larrea-tridentata"), (Some(2.0), None));
-        // A daisy family's tie sets nothing.
-        let yarrow = library.inherited("achillea-millefolium").unwrap();
+        // A daisy family's tie sets nothing where the genus says nothing.
+        let daisy = library.inherited("leucanthemum-vulgare").unwrap();
         assert_eq!(
-            yarrow.rules["generator.params.leaves_per_node"]
-                .1
-                .as_deref(),
+            daisy.rules["generator.params.leaves_per_node"].1.as_deref(),
             Some(
                 "`leaf_arrangement` has no one most usual state: alternate and opposite are each often"
             )

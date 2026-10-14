@@ -26,9 +26,9 @@
       "culm_leaves": 2,
       "culm_lean": 6,
       "panicle_nod": 10,
-      "blade_area": 0.098,
-      "tip_area": 0.054,
-      "thatch_area": 0.098,
+      "blade_area": 0.203,
+      "tip_area": 0.11,
+      "thatch_area": 0.203,
       "panicle_area": 0.152
     }
   },
