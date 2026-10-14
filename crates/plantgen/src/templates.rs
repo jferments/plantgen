@@ -722,10 +722,16 @@ fn lobe_flank(share: f64, round: f64) -> f64 {
     1.0 - math::pow((pointed + (rounded - pointed) * round).max(0.0), 0.7)
 }
 
+/// A pinnately lobed leaf's outline over its lobes' tips, at `t` along
+/// its blade: its half-width as a share of its widest.
+pub(crate) fn lobed_envelope(t: f64) -> f64 {
+    blade_profile(t, 0.55, 0.35, 0.3)
+}
+
 /// A pinnately lobed leaf's half-width at `t` along its blade of `length`
 /// card units, with the lobes of its side's `margin` if given.
 fn lobed_width(s: &Lobed, length: f64, t: f64, margin: Option<&Margin>) -> f64 {
-    let envelope = blade_profile(t, 0.55, 0.35, 0.3);
+    let envelope = lobed_envelope(t);
     let mut sinus = 1.0;
     if let Some(margin) = margin
         && (LOBES.0..LOBES.1).contains(&t)
@@ -1665,13 +1671,20 @@ fn sprig(
     best
 }
 
-/// A piece of a grass or sedge blade, or its tapering tip: lighter along
-/// the midrib, with fine parallel veins.
-fn blade(s: &Blade, x: f64, y: f64) -> Paint {
+/// A grass or sedge blade card's half-width at `y` along it, from its foot
+/// (0) to its end (1).
+pub(crate) fn blade_half_width(s: &Blade, y: f64) -> f64 {
     let mut width = s.aspect * 0.5 * (1.0 - 0.12 * y);
     if s.taper > 0.0 && y > 1.0 - s.taper {
         width *= math::pow(((1.0 - y) / s.taper).max(0.0), 0.85);
     }
+    width
+}
+
+/// A piece of a grass or sedge blade, or its tapering tip: lighter along
+/// the midrib, with fine parallel veins.
+fn blade(s: &Blade, x: f64, y: f64) -> Paint {
+    let width = blade_half_width(s, y);
     if x.abs() >= width {
         return Paint::EMPTY;
     }
@@ -1680,6 +1693,16 @@ fn blade(s: &Blade, x: f64, y: f64) -> Paint {
         0.86 + 0.24 * (1.0 - across) + 0.04 * math::cos(across * 6.0 * PI),
         0.0,
     )
+}
+
+/// A frond card's pinna `k` on its `left` side or its right: where it
+/// leaves the rachis, a share of the blade from its foot, and how far its
+/// tip reaches out from the rachis, in card units.
+pub(crate) fn frond_pinna(s: &Frond, k: u32, left: bool) -> (f64, f64) {
+    let offset = if left { 0.3 } else { 0.0 };
+    let tk = (f64::from(k) + 0.5 + offset) / (f64::from(s.pinnae) + 0.3);
+    let reach = s.width * 0.5 * math::pow(math::sin(PI * math::pow(tk, 0.75)), 0.7);
+    (tk, reach)
 }
 
 /// A fern frond: a bare stipe, then a rachis with pinnae along both sides
@@ -1702,10 +1725,8 @@ fn frond(s: &Frond, x: f64, y: f64, fine: f64) -> Paint {
     let spacing = length / count;
     let side = if x < 0.0 { -1.0 } else { 1.0 };
     for k in 0..s.pinnae {
-        let offset = if side < 0.0 { 0.3 } else { 0.0 };
-        let tk = (f64::from(k) + 0.5 + offset) / (count + 0.3);
+        let (tk, reach) = frond_pinna(s, k, side < 0.0);
         let angle = math::radians(74.0 - 32.0 * tk);
-        let reach = s.width * 0.5 * math::pow(math::sin(PI * math::pow(tk, 0.75)), 0.7);
         let pinna = reach / math::sin(angle);
         if pinna < 0.004 {
             continue;

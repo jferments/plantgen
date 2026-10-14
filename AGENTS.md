@@ -162,13 +162,14 @@ prompt injection. So, without exception:
     flower's layout; it counts rays, florets, phyllaries, glumes, units,
     leaflets and pinnae, a flower's petals or tepals in a whorl and the
     times a leaf divides on each organ, checks that cluster and head
-    kinds, awns, ranks and leaf patterns, a leaf's form and division, a
-    flower's symmetry, corolla shape, floral cup and turn, and a fruit's
-    type agree with what is stated, and measures on the graph a cone's
-    pitch from its shoot, the
-    leaves at each node (those born with the internode below it, not a
-    short shoot's crowded there later), the turn from node to node and
-    the most leaves one year's growth of a stem bears, and from the side
+    kinds, awns, ranks and leaf patterns, a leaf's form, division and
+    shape, a flower's symmetry, corolla shape, floral cup and turn, a
+    head's receptacle, an awn's insertion and form, a cactus's stem,
+    tubercles and main central spine, and a fruit's type agree with what
+    is stated, and measures on the graph a cone's pitch from its shoot,
+    the leaves at each node (those born with the internode below it, not a
+    short shoot's crowded there later), the turn from node to node and the
+    most leaves one year's growth of a stem bears, and from the side
     a crown's outline against an ellipse and the sky through it
     (`src/form.rs`), holding a tree that states no outline to one no
     rounder than open-grown crowns are. Each layout that
