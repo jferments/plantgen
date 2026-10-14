@@ -2,5 +2,40 @@
   "schema": 1,
   "rank": "family",
   "name": "Stachyuraceae",
-  "parent": "order/crossosomatales"
+  "parent": "order/crossosomatales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "serrate",
+    "leaf_venation": "pinnate",
+    "leaf_habit": {
+      "evergreen": "often",
+      "deciduous": "often"
+    },
+    "stipules": true,
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "raceme": "often",
+      "spike": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "berry",
+    "flower_merosity": 4,
+    "stamens": 8,
+    "carpels": 4
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Stachyuraceae: leaves alternate; leaves simple; margins serrate; veins pinnate; leaves evergreen or deciduous; stipules present; plants hermaphrodite or polygamous; ovary superior; floral cup absent; stems woody; flowers in racemes or in spikes; flowers actinomorphic; perianth sepals and petals; fruit berry; parts of each whorl 4; stamens 8; carpels 4. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

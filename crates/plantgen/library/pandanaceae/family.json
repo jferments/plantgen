@@ -2,5 +2,49 @@
   "schema": 1,
   "rank": "family",
   "name": "Pandanaceae",
-  "parent": "order/pandanales"
+  "parent": "order/pandanales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": "parallel",
+    "leaf_shape": {
+      "linear": "often",
+      "lanceolate": "often"
+    },
+    "sexual_system": {
+      "dioecious": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "superior",
+    "woodiness": "woody",
+    "inflorescence": {
+      "panicle": "often",
+      "raceme": "often",
+      "head": "often"
+    },
+    "perianth": {
+      "tepals": "often",
+      "absent": "often"
+    },
+    "fruit_type": {
+      "berry": "usually",
+      "aggregate": "rarely"
+    },
+    "stamens": {
+      "min": 10,
+      "max": 100
+    },
+    "carpels": {
+      "min": 80,
+      "max": 80,
+      "low": 1
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Pandanaceae: leaves alternate; leaves simple; veins parallel; blades linear or lanceolate; plants dioecious or polygamous; ovary superior; stems woody; flowers in panicles, in racemes or in heads; perianth tepals or absent; fruit usually berry, rarely aggregate; stamens 10 to 100; carpels (1-) 80. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

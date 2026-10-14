@@ -2,5 +2,68 @@
   "schema": 1,
   "rank": "family",
   "name": "Hamamelidaceae",
-  "parent": "order/saxifragales"
+  "parent": "order/saxifragales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": {
+      "palmate": "often",
+      "pinnate": "often"
+    },
+    "leaf_habit": {
+      "evergreen": "often",
+      "deciduous": "often"
+    },
+    "stipules": {
+      "true": "usually",
+      "false": "sometimes"
+    },
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "monoecious": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": {
+      "superior": "often",
+      "half_inferior": "often",
+      "inferior": "often"
+    },
+    "hypanthium": {
+      "true": "often",
+      "false": "often"
+    },
+    "woodiness": "woody",
+    "inflorescence": {
+      "spike": "usually",
+      "head": "sometimes",
+      "raceme": "sometimes",
+      "panicle": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "often",
+      "absent": "rarely"
+    },
+    "fruit_type": "capsule",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5
+    },
+    "stamens": {
+      "min": 4,
+      "max": 32
+    },
+    "carpels": {
+      "min": 2,
+      "max": 3
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Hamamelidaceae with Altingiaceae, Rhodoleiaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves simple; veins palmate or pinnate; leaves evergreen or deciduous; stipules usually present, sometimes absent; plants hermaphrodite, monoecious or polygamous; ovary superior, half inferior or inferior; floral cup present or absent; stems woody; flowers usually in spikes, sometimes in heads, in racemes or in panicles; flowers actinomorphic; perianth usually sepals and petals, often tepals, rarely absent; fruit capsule; parts of each whorl 4 to 5; stamens 4 to 32; carpels 2 to 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

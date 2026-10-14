@@ -2,5 +2,44 @@
   "schema": 1,
   "rank": "family",
   "name": "Hernandiaceae",
-  "parent": "order/laurales"
+  "parent": "order/laurales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": {
+      "simple": "often",
+      "compound": "often"
+    },
+    "division_pattern": "palmate",
+    "leaf_venation": "palmate",
+    "stipules": false,
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "monoecious": "often",
+      "polygamous": "sometimes"
+    },
+    "ovary_position": "inferior",
+    "woodiness": "woody",
+    "inflorescence": {
+      "cyme": "usually",
+      "panicle": "sometimes",
+      "corymb": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "often",
+      "tepals": "often"
+    },
+    "stamens": {
+      "min": 3,
+      "max": 5
+    },
+    "carpels": 1
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Hernandiaceae with Gyrocarpaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves simple or compound; compound leaves palmate; veins palmate; stipules absent; plants hermaphrodite or monoecious, sometimes polygamous; ovary inferior; stems woody; flowers usually in cymes, sometimes in panicles or in corymbs; flowers actinomorphic; perianth sepals and petals or tepals; stamens 3 to 5; carpels 1. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

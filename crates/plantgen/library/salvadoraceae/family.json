@@ -2,5 +2,43 @@
   "schema": 1,
   "rank": "family",
   "name": "Salvadoraceae",
-  "parent": "order/brassicales"
+  "parent": "order/brassicales",
+  "traits": {
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "stipules": {
+      "true": "often",
+      "false": "usually"
+    },
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "dioecious": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": "panicle",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "berry": "often",
+      "drupe": "often"
+    },
+    "flower_merosity": 4,
+    "stamens": {
+      "min": 4,
+      "max": 4,
+      "high": 5
+    },
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Salvadoraceae: leaves opposite; leaves simple; margins entire; stipules usually absent, often present; plants hermaphrodite, dioecious or polygamous; ovary superior; floral cup absent; stems woody; flowers in panicles; flowers actinomorphic; perianth sepals and petals; fruit berry or drupe; parts of each whorl 4; stamens 4 (-5); carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

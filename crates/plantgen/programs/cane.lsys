@@ -31,9 +31,14 @@
 # (`fouquieria`, `phyllostachys`) give the values, as this program's
 # defaults were until then.
 #
+# Revision 4 (leaf life): canes live as long as their parameters say, no
+# longer one year more. What a step makes is born at the step's end, so a
+# rule that ends a part by its age counts the step it is in (`age + dt
+# >=`).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem cane 3;
+lsystem cane 4;
 
 param vigour_spread;
 param canes;                  # canes in a mature clump
@@ -99,7 +104,7 @@ rule Ca(v, p) ->
     Ca(v, p);
 
 # A cane dies after its life, with everything on it.
-rule Cb : cane_life > 0 && age >= cane_life -> %;
+rule Cb : cane_life > 0 && age + dt >= cane_life -> %;
 
 decompose G(g, r, u) -> !(r) Nd(0, max(1, round(g * node_rate)), g, u);
 decompose Nd(i, m, g, u) : m > 1 ->

@@ -2,5 +2,62 @@
   "schema": 1,
   "rank": "family",
   "name": "Buxaceae",
-  "parent": "order/buxales"
+  "parent": "order/buxales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": {
+      "pinnate": "usually",
+      "palmate": "sometimes"
+    },
+    "leaf_habit": "evergreen",
+    "stipules": false,
+    "sexual_system": {
+      "monoecious": "usually",
+      "dioecious": "sometimes",
+      "polygamous": "rarely"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": {
+      "woody": "usually",
+      "herbaceous": "sometimes"
+    },
+    "inflorescence": {
+      "solitary": "sometimes",
+      "raceme": "often",
+      "spike": "often",
+      "head": "often",
+      "panicle": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "sometimes",
+      "tepals": "usually",
+      "absent": "sometimes"
+    },
+    "fruit_type": {
+      "capsule": "often",
+      "drupe": "often"
+    },
+    "stamens": {
+      "min": 4,
+      "max": 6
+    },
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Buxaceae with Didymelaceae, Stylocerataceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate or opposite; leaves simple; margins entire or dentate; veins usually pinnate, sometimes palmate; leaves evergreen; stipules absent; plants usually monoecious, sometimes dioecious, rarely polygamous; ovary superior; floral cup absent; stems usually woody, sometimes herbaceous; flowers in racemes, in spikes or in heads, sometimes solitary or in panicles; flowers actinomorphic; perianth usually tepals, sometimes sepals and petals or absent; fruit capsule or drupe; stamens 4 to 6; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

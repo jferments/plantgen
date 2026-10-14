@@ -2,5 +2,39 @@
   "schema": 1,
   "rank": "family",
   "name": "Daphniphyllaceae",
-  "parent": "order/saxifragales"
+  "parent": "order/saxifragales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "stipules": false,
+    "sexual_system": "dioecious",
+    "ovary_position": "inferior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": "raceme",
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "tepals": "usually",
+      "absent": "rarely"
+    },
+    "fruit_type": "drupe",
+    "stamens": {
+      "min": 5,
+      "max": 12
+    },
+    "carpels": {
+      "min": 2,
+      "max": 2,
+      "high": 4
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Daphniphyllaceae: leaves alternate; leaves simple; margins entire; veins pinnate; stipules absent; plants dioecious; ovary inferior; floral cup absent; stems woody; flowers in racemes; flowers actinomorphic; perianth usually tepals, rarely absent; fruit drupe; stamens 5 to 12; carpels 2 (-4). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

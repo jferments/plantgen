@@ -2,5 +2,50 @@
   "schema": 1,
   "rank": "family",
   "name": "Crossosomataceae",
-  "parent": "order/crossosomatales"
+  "parent": "order/crossosomatales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "dentate": "often",
+      "entire": "often"
+    },
+    "leaf_venation": "pinnate",
+    "leaf_habit": "deciduous",
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "superior",
+    "hypanthium": true,
+    "woodiness": "woody",
+    "inflorescence": "solitary",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "follicle",
+    "stamens": {
+      "min": 20,
+      "max": 50,
+      "high": 100
+    },
+    "carpels": {
+      "min": 1,
+      "max": 5,
+      "high": 9
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Crossosomataceae: leaves usually alternate, rarely opposite; leaves simple; margins dentate or entire; veins pinnate; leaves deciduous; stipules present or absent; plants hermaphrodite or polygamous; ovary superior; floral cup present; stems woody; flowers solitary; flowers actinomorphic; perianth sepals and petals; fruit follicle; stamens 20 to 50 (-100); carpels 1 to 5 (-9). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

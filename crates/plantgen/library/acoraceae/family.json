@@ -2,5 +2,37 @@
   "schema": 1,
   "rank": "family",
   "name": "Acoraceae",
-  "parent": "order/acorales"
+  "parent": "order/acorales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "parallel",
+    "rosette": "basal",
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "woodiness": "herbaceous",
+    "inflorescence": "spike",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": {
+      "capsule": "often",
+      "berry": "often"
+    },
+    "flower_merosity": 3,
+    "stamens": 6,
+    "carpels": {
+      "min": 3,
+      "max": 3,
+      "low": 2,
+      "high": 4
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Acoraceae: leaves alternate; leaves simple; margins entire; veins parallel; leaf rosettes basal; plants hermaphrodite; ovary superior; stems herbaceous; flowers in spikes; flowers actinomorphic; perianth tepals; fruit capsule or berry; parts of each whorl 3; stamens 6; carpels (2-) 3 (-4). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

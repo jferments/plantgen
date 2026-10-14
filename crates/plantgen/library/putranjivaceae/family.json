@@ -2,5 +2,46 @@
   "schema": 1,
   "rank": "family",
   "name": "Putranjivaceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": "pinnate",
+    "leaf_habit": "evergreen",
+    "stipules": true,
+    "sexual_system": {
+      "hermaphrodite": "rarely",
+      "monoecious": "often",
+      "dioecious": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": "drupe",
+    "stamens": {
+      "min": 2,
+      "max": 50
+    },
+    "carpels": {
+      "min": 1,
+      "max": 6
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Putranjivaceae: leaves usually alternate, rarely opposite; leaves simple; margins entire or dentate; veins pinnate; leaves evergreen; stipules present; plants monoecious, dioecious or polygamous, rarely hermaphrodite; ovary superior; floral cup absent; stems woody; flowers actinomorphic; perianth tepals; fruit drupe; stamens 2 to 50; carpels 1 to 6. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

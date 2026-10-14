@@ -2,5 +2,38 @@
   "schema": 1,
   "rank": "family",
   "name": "Misodendraceae",
-  "parent": "order/santalales"
+  "parent": "order/santalales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "stipules": false,
+    "sexual_system": "dioecious",
+    "ovary_position": "half_inferior",
+    "woodiness": "woody",
+    "inflorescence": {
+      "raceme": "often",
+      "spike": "often",
+      "catkin": "often"
+    },
+    "perianth": {
+      "tepals": "often",
+      "absent": "often"
+    },
+    "fruit_type": {
+      "achene": "often",
+      "nut": "often"
+    },
+    "stamens": {
+      "min": 2,
+      "max": 3
+    },
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Misodendraceae: leaves alternate; leaves simple; stipules absent; plants dioecious; ovary half inferior; stems woody; flowers in racemes, in spikes or in catkins; perianth tepals or absent; fruit achene or nut; stamens 2 to 3; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

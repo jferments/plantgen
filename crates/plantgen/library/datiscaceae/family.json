@@ -2,5 +2,51 @@
   "schema": 1,
   "rank": "family",
   "name": "Datiscaceae",
-  "parent": "order/cucurbitales"
+  "parent": "order/cucurbitales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": {
+      "compound": "usually",
+      "simple": "sometimes"
+    },
+    "division_pattern": "pinnate",
+    "leaf_margin": {
+      "dentate": "usually",
+      "entire": "sometimes"
+    },
+    "leaf_venation": {
+      "pinnate": "usually",
+      "palmate": "sometimes"
+    },
+    "stipules": false,
+    "sexual_system": {
+      "dioecious": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "inferior",
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "sometimes"
+    },
+    "perianth": {
+      "tepals": "usually",
+      "sepals_and_petals": "sometimes"
+    },
+    "fruit_type": "capsule",
+    "stamens": {
+      "min": 3,
+      "max": 25
+    },
+    "carpels": {
+      "min": 3,
+      "max": 5
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Datiscaceae with Tetramelaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves usually compound, sometimes simple; compound leaves pinnate; margins usually dentate, sometimes entire; veins usually pinnate, sometimes palmate; stipules absent; plants dioecious or polygamous; ovary inferior; stems usually herbaceous, sometimes woody; perianth usually tepals, sometimes sepals and petals; fruit capsule; stamens 3 to 25; carpels 3 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

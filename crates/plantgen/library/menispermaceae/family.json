@@ -2,5 +2,63 @@
   "schema": 1,
   "rank": "family",
   "name": "Menispermaceae",
-  "parent": "order/ranunculales"
+  "parent": "order/ranunculales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "rarely"
+    },
+    "leaf_venation": {
+      "pinnate": "often",
+      "palmate": "often"
+    },
+    "stipules": false,
+    "sexual_system": {
+      "dioecious": "usually",
+      "monoecious": "sometimes"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": {
+      "woody": "usually",
+      "herbaceous": "rarely"
+    },
+    "inflorescence": {
+      "solitary": "rarely",
+      "panicle": "often",
+      "cyme": "often"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "rarely"
+    },
+    "fruit_type": {
+      "nut": "sometimes",
+      "aggregate": "usually"
+    },
+    "flower_merosity": 3,
+    "stamens": {
+      "min": 6,
+      "max": 6,
+      "low": 1,
+      "high": 40
+    },
+    "carpels": {
+      "min": 3,
+      "max": 30,
+      "low": 1
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Menispermaceae: leaves alternate; leaves usually simple, rarely compound; veins pinnate or palmate; stipules absent; plants usually dioecious, sometimes monoecious; ovary superior; floral cup absent; stems usually woody, rarely herbaceous; flowers in panicles or in cymes, rarely solitary; flowers usually actinomorphic, rarely zygomorphic; perianth usually sepals and petals, rarely tepals; fruit usually aggregate, sometimes nut; parts of each whorl 3; stamens (1-) 6 (-40); carpels (1-) 3 to 30. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

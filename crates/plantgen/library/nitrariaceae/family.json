@@ -2,5 +2,54 @@
   "schema": 1,
   "rank": "family",
   "name": "Nitrariaceae",
-  "parent": "order/sapindales"
+  "parent": "order/sapindales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": {
+      "single": "often",
+      "palmate": "often",
+      "pinnate": "sometimes"
+    },
+    "leaf_habit": "deciduous",
+    "stipules": {
+      "true": "usually",
+      "false": "sometimes"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": true,
+    "woodiness": {
+      "woody": "usually",
+      "herbaceous": "sometimes"
+    },
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "drupe": "usually",
+      "capsule": "sometimes",
+      "berry": "sometimes"
+    },
+    "flower_merosity": 5,
+    "stamens": {
+      "min": 15,
+      "max": 15,
+      "low": 10
+    },
+    "carpels": {
+      "min": 2,
+      "max": 6
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Nitrariaceae with Peganaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves simple; veins single or palmate, sometimes pinnate; leaves deciduous; stipules usually present, sometimes absent; plants hermaphrodite; ovary superior; floral cup present; stems usually woody, sometimes herbaceous; flowers solitary or in cymes; flowers actinomorphic; perianth sepals and petals; fruit usually drupe, sometimes capsule or berry; parts of each whorl 5; stamens (10-) 15; carpels 2 to 6. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

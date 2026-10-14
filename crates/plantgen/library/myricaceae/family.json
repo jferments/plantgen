@@ -2,5 +2,50 @@
   "schema": 1,
   "rank": "family",
   "name": "Myricaceae",
-  "parent": "order/fagales"
+  "parent": "order/fagales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "serrate": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": "pinnate",
+    "leaf_habit": {
+      "evergreen": "often",
+      "deciduous": "often"
+    },
+    "stipules": {
+      "true": "sometimes",
+      "false": "usually"
+    },
+    "sexual_system": {
+      "monoecious": "often",
+      "polygamous": "often",
+      "dioecious": "often"
+    },
+    "ovary_position": {
+      "superior": "usually",
+      "half_inferior": "sometimes"
+    },
+    "woodiness": "woody",
+    "inflorescence": "spike",
+    "perianth": "absent",
+    "fruit_type": "drupe",
+    "stamens": {
+      "min": 4,
+      "max": 4,
+      "low": 2,
+      "high": 6
+    },
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Myricaceae: leaves alternate; leaves simple; margins entire, serrate or dentate; veins pinnate; leaves evergreen or deciduous; stipules usually absent, sometimes present; plants monoecious, polygamous or dioecious; ovary usually superior, sometimes half inferior; stems woody; flowers in spikes; perianth absent; fruit drupe; stamens (2-) 4 (-6); carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

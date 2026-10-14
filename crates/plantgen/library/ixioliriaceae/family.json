@@ -2,5 +2,33 @@
   "schema": 1,
   "rank": "family",
   "name": "Ixioliriaceae",
-  "parent": "order/asparagales"
+  "parent": "order/asparagales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "parallel",
+    "leaf_shape": {
+      "linear": "often",
+      "lanceolate": "often"
+    },
+    "rosette": "basal",
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "inferior",
+    "woodiness": "herbaceous",
+    "inflorescence": "panicle",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": "capsule",
+    "flower_merosity": 3,
+    "stamens": 6,
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Ixioliriaceae: leaves alternate; leaves simple; margins entire; veins parallel; blades linear or lanceolate; leaf rosettes basal; plants hermaphrodite; ovary inferior; stems herbaceous; flowers in panicles; flowers actinomorphic; perianth tepals; fruit capsule; parts of each whorl 3; stamens 6; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

@@ -2,5 +2,44 @@
   "schema": 1,
   "rank": "family",
   "name": "Penaeaceae",
-  "parent": "order/myrtales"
+  "parent": "order/myrtales",
+  "traits": {
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_venation": "pinnate",
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "polygamous": "sometimes"
+    },
+    "ovary_position": {
+      "superior": "usually",
+      "half_inferior": "sometimes",
+      "inferior": "sometimes"
+    },
+    "hypanthium": true,
+    "woodiness": "woody",
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "tepals": "usually",
+      "sepals_and_petals": "sometimes"
+    },
+    "fruit_type": {
+      "capsule": "usually",
+      "drupe": "sometimes"
+    },
+    "flower_merosity": 4,
+    "stamens": 4,
+    "carpels": 4
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Penaeaceae with Crypteroniaceae, Oliniaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves opposite; leaves simple; veins pinnate; stipules present or absent; plants usually hermaphrodite, sometimes polygamous; ovary usually superior, sometimes half inferior or inferior; floral cup present; stems woody; flowers actinomorphic; perianth usually tepals, sometimes sepals and petals; fruit usually capsule, sometimes drupe; parts of each whorl 4; stamens 4; carpels 4. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

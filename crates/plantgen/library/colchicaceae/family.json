@@ -2,5 +2,45 @@
   "schema": 1,
   "rank": "family",
   "name": "Colchicaceae",
-  "parent": "order/liliales"
+  "parent": "order/liliales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "parallel",
+    "leaf_shape": {
+      "linear": "often",
+      "lanceolate": "often"
+    },
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "raceme": "often",
+      "umbel": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": "capsule",
+    "flower_merosity": 3,
+    "stamens": 6,
+    "carpels": {
+      "min": 3,
+      "max": 3,
+      "high": 4
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Colchicaceae: leaves alternate; leaves simple; margins entire; veins parallel; blades linear or lanceolate; leaf rosettes basal or none; plants hermaphrodite; ovary superior; stems herbaceous; flowers solitary, in cymes, in racemes or in umbels; flowers actinomorphic; perianth tepals; fruit capsule; parts of each whorl 3; stamens 6; carpels 3 (-4). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

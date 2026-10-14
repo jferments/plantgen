@@ -2,5 +2,37 @@
   "schema": 1,
   "rank": "family",
   "name": "Amaranthaceae",
-  "parent": "order/caryophyllales"
+  "parent": "order/caryophyllales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "usually",
+      "semi": "sometimes",
+      "woody": "sometimes"
+    },
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes"
+    },
+    "leaf_division": "simple",
+    "stipules": false,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "inflorescence": {
+      "spike": "often",
+      "head": "often",
+      "raceme": "sometimes"
+    },
+    "ovary_position": "superior",
+    "fruit_type": {
+      "achene": "usually",
+      "capsule": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 283 Chenopodiaceae and 284 Amaranthaceae, which APG joins as Amaranthaceae: annual or perennial herbs, some undershrubs and shrubs (saltbushes, Salsola); leaves alternate, sometimes opposite, simple; no stipules; flowers small, regular, often green, in spikes, heads or racemes among dry bracts; a calyx of 3 to 5 lobes, often dry, and no petals, read here as one whorl of tepals; ovary superior, of one cell with one ovule; fruit a one-seeded nut that stays shut (read as an achene) or opens by a lid."
+    }
+  }
 }

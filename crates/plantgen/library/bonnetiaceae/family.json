@@ -2,5 +2,43 @@
   "schema": 1,
   "rank": "family",
   "name": "Bonnetiaceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "leaf_shape": {
+      "oblanceolate": "often",
+      "obovate": "often"
+    },
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "often",
+      "raceme": "often",
+      "panicle": "often"
+    },
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "flower_merosity": 5,
+    "stamens": {
+      "min": 40,
+      "max": 100
+    },
+    "carpels": {
+      "min": 3,
+      "max": 5
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Bonnetiaceae: leaves alternate; leaves simple; margins entire; veins pinnate; blades oblanceolate or obovate; stipules absent; plants hermaphrodite; ovary superior; floral cup absent; stems woody; flowers solitary, in racemes or in panicles; perianth sepals and petals; fruit capsule; parts of each whorl 5; stamens 40 to 100; carpels 3 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }
