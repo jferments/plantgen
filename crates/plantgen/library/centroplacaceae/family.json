@@ -2,5 +2,50 @@
   "schema": 1,
   "rank": "family",
   "name": "Centroplacaceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "serrate": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": "pinnate",
+    "stipules": true,
+    "sexual_system": {
+      "monoecious": "often",
+      "dioecious": "often"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "panicle": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "sometimes",
+      "drupe": "usually"
+    },
+    "flower_merosity": 5,
+    "stamens": {
+      "min": 5,
+      "max": 15
+    },
+    "carpels": {
+      "min": 2,
+      "max": 5
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Pandaceae, which takes in Centroplacaceae: leaves alternate; leaves simple; margins entire, serrate or dentate; veins pinnate; stipules present; plants monoecious or dioecious; ovary superior; floral cup absent; stems woody; flowers solitary, in cymes or in panicles; flowers actinomorphic; perianth sepals and petals; fruit usually drupe, sometimes capsule; parts of each whorl 5; stamens 5 to 15; carpels 2 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

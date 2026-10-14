@@ -2,5 +2,60 @@
   "schema": 1,
   "rank": "family",
   "name": "Stemonaceae",
-  "parent": "order/pandanales"
+  "parent": "order/pandanales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often",
+      "whorled": "often"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": {
+      "palmate": "usually",
+      "pinnate": "sometimes"
+    },
+    "rosette": {
+      "none": "usually",
+      "basal": "sometimes"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "monoecious": "sometimes",
+      "polygamous": "sometimes"
+    },
+    "ovary_position": {
+      "superior": "usually",
+      "half_inferior": "rarely",
+      "inferior": "sometimes"
+    },
+    "woodiness": {
+      "herbaceous": "often",
+      "woody": "often"
+    },
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "raceme": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": {
+      "capsule": "usually",
+      "berry": "sometimes"
+    },
+    "flower_merosity": {
+      "min": 2,
+      "max": 4
+    },
+    "stamens": 4,
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Stemonaceae with Pentastemonaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate, opposite or whorled; leaves simple; margins entire; veins usually palmate, sometimes pinnate; leaf rosettes usually none, sometimes basal; plants usually hermaphrodite, sometimes monoecious or polygamous; ovary usually superior, sometimes inferior, rarely half inferior; stems herbaceous or woody; flowers solitary, in cymes or in racemes; flowers actinomorphic; perianth tepals; fruit usually capsule, sometimes berry; parts of each whorl 2 to 4; stamens 4; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

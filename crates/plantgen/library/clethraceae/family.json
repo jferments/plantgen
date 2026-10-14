@@ -2,5 +2,48 @@
   "schema": 1,
   "rank": "family",
   "name": "Clethraceae",
-  "parent": "order/ericales"
+  "parent": "order/ericales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "serrate": "often",
+      "dentate": "often",
+      "entire": "often"
+    },
+    "leaf_venation": "pinnate",
+    "leaf_habit": {
+      "evergreen": "often",
+      "deciduous": "often"
+    },
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "raceme": "often",
+      "panicle": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "flower_merosity": {
+      "min": 5,
+      "max": 5,
+      "high": 6
+    },
+    "stamens": {
+      "min": 2,
+      "max": 10
+    },
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Clethraceae: leaves alternate; leaves simple; margins serrate, dentate or entire; veins pinnate; leaves evergreen or deciduous; stipules absent; plants hermaphrodite; ovary superior; floral cup absent; stems woody; flowers in racemes or in panicles; flowers actinomorphic; perianth sepals and petals; fruit capsule; parts of each whorl 5 (-6); stamens 2 to 10; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

@@ -2,5 +2,54 @@
   "schema": 1,
   "rank": "family",
   "name": "Magnoliaceae",
-  "parent": "order/magnoliales"
+  "parent": "order/magnoliales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": {
+      "pinnate": "often",
+      "palmate": "often"
+    },
+    "leaf_habit": {
+      "evergreen": "often",
+      "deciduous": "often"
+    },
+    "stipules": true,
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "monoecious": "rarely"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": "solitary",
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "rarely",
+      "spiral": "sometimes",
+      "tepals": "usually"
+    },
+    "fruit_type": {
+      "follicle": "often",
+      "samara": "rarely",
+      "aggregate": "often"
+    },
+    "stamens": {
+      "min": 50,
+      "max": 200,
+      "low": 8
+    },
+    "carpels": {
+      "min": 20,
+      "max": 200,
+      "low": 2
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Magnoliaceae: leaves alternate; leaves simple; veins pinnate or palmate; leaves evergreen or deciduous; stipules present; plants usually hermaphrodite, rarely monoecious; ovary superior; floral cup absent; stems woody; flowers solitary; flowers actinomorphic; perianth usually tepals, sometimes spiral, rarely sepals and petals; fruit follicle or aggregate, rarely samara; stamens (8-) 50 to 200; carpels (2-) 20 to 200. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

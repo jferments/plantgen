@@ -2,5 +2,52 @@
   "schema": 1,
   "rank": "family",
   "name": "Dichapetalaceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "stipules": true,
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "monoecious": "often"
+    },
+    "ovary_position": {
+      "superior": "often",
+      "half_inferior": "often",
+      "inferior": "often"
+    },
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": "cyme",
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "zygomorphy": "other",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "drupe",
+    "stamens": {
+      "min": 3,
+      "max": 5
+    },
+    "carpels": {
+      "min": 2,
+      "max": 3,
+      "high": 4
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Dichapetalaceae: leaves alternate; leaves simple; margins entire; veins pinnate; stipules present; plants hermaphrodite or monoecious; ovary superior, half inferior or inferior; floral cup absent; stems woody; flowers in cymes; flowers actinomorphic or zygomorphic; perianth sepals and petals; fruit drupe; stamens 3 to 5; carpels 2 to 3 (-4). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Dichapetalaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    }
+  }
 }

@@ -2,5 +2,50 @@
   "schema": 1,
   "rank": "family",
   "name": "Picramniaceae",
-  "parent": "order/picramniales"
+  "parent": "order/picramniales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "leaf_venation": "pinnate",
+    "stipules": false,
+    "sexual_system": "dioecious",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "raceme": "often",
+      "panicle": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "sometimes"
+    },
+    "fruit_type": {
+      "berry": "rarely",
+      "samara": "rarely"
+    },
+    "flower_merosity": {
+      "min": 3,
+      "max": 5,
+      "high": 6
+    },
+    "stamens": {
+      "min": 3,
+      "max": 5,
+      "high": 6
+    },
+    "carpels": {
+      "min": 2,
+      "max": 3
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Picramniaceae: leaves alternate; leaves compound; compound leaves pinnate; veins pinnate; stipules absent; plants dioecious; ovary superior; floral cup absent; stems woody; flowers in racemes or in panicles; flowers actinomorphic; perianth usually sepals and petals, sometimes tepals; fruit berry or samara; parts of each whorl 3 to 5 (-6); stamens 3 to 5 (-6); carpels 2 to 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

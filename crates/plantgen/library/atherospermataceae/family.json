@@ -2,5 +2,53 @@
   "schema": 1,
   "rank": "family",
   "name": "Atherospermataceae",
-  "parent": "order/laurales"
+  "parent": "order/laurales",
+  "traits": {
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "stipules": false,
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "monoecious": "often",
+      "dioecious": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": {
+      "superior": "sometimes",
+      "half_inferior": "sometimes",
+      "inferior": "sometimes"
+    },
+    "hypanthium": true,
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "often",
+      "zygomorphic": "often"
+    },
+    "perianth": {
+      "sepals_and_petals": "often",
+      "tepals": "often",
+      "absent": "often"
+    },
+    "fruit_type": "achene",
+    "stamens": {
+      "min": 6,
+      "max": 100,
+      "low": 4
+    },
+    "carpels": {
+      "min": 3,
+      "max": 100
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Atherospermataceae: leaves opposite; leaves simple; stipules absent; plants hermaphrodite, monoecious, dioecious or polygamous; ovary superior, half inferior or inferior; floral cup present; stems woody; flowers solitary or in cymes; flowers actinomorphic or zygomorphic; perianth sepals and petals, tepals or absent; fruit achene; stamens (4-) 6 to 100; carpels 3 to 100. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

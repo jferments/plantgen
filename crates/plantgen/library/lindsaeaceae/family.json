@@ -2,5 +2,21 @@
   "schema": 1,
   "rank": "family",
   "name": "Lindsaeaceae",
-  "parent": "order/polypodiales"
+  "parent": "order/polypodiales",
+  "traits": {
+    "leaf_division": "compound",
+    "sporangia": "sori",
+    "sorus_position": {
+      "marginal": "often",
+      "submarginal": "often"
+    },
+    "indusium": "flap"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Lindsaeaceae: mostly terrestrial ferns; blades one to three times pinnate or more divided, mostly hairless, veins mostly free; sori at or near the margin, the indusium opening toward the margin."
+    }
+  }
 }

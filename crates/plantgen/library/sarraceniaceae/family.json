@@ -2,5 +2,42 @@
   "schema": 1,
   "rank": "family",
   "name": "Sarraceniaceae",
-  "parent": "order/ericales"
+  "parent": "order/ericales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "stipules": false,
+    "rosette": "basal",
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "solitary": "usually",
+      "raceme": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "sometimes"
+    },
+    "fruit_type": "capsule",
+    "flower_merosity": 5,
+    "stamens": {
+      "min": 50,
+      "max": 100,
+      "low": 10
+    },
+    "carpels": {
+      "min": 3,
+      "max": 5
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Sarraceniaceae: leaves alternate; leaves simple; stipules absent; leaf rosettes basal; plants hermaphrodite; ovary superior; floral cup absent; stems herbaceous; flowers usually solitary, sometimes in racemes; flowers actinomorphic; perianth usually sepals and petals, sometimes tepals; fruit capsule; parts of each whorl 5; stamens (10-) 50 to 100; carpels 3 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

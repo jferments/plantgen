@@ -2,5 +2,52 @@
   "schema": 1,
   "rank": "family",
   "name": "Chrysobalanaceae",
-  "parent": "order/malpighiales"
+  "parent": "order/malpighiales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": "pinnate",
+    "stipules": true,
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "superior",
+    "hypanthium": true,
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "raceme": "often"
+    },
+    "flower_symmetry": "zygomorphic",
+    "zygomorphy": "other",
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "rarely"
+    },
+    "fruit_type": "drupe",
+    "stamens": {
+      "min": 8,
+      "max": 30,
+      "low": 2,
+      "high": 300
+    },
+    "carpels": {
+      "min": 1,
+      "max": 3
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Chrysobalanaceae: leaves alternate; leaves simple; veins pinnate; stipules present; plants hermaphrodite or polygamous; ovary superior; floral cup present; stems woody; flowers solitary, in cymes or in racemes; flowers zygomorphic; perianth usually sepals and petals, rarely tepals; fruit drupe; stamens (2-) 8 to 30 (-300); carpels 1 to 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Chrysobalanaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other."
+    }
+  }
 }

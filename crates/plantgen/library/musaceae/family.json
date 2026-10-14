@@ -2,5 +2,37 @@
   "schema": 1,
   "rank": "family",
   "name": "Musaceae",
-  "parent": "order/zingiberales"
+  "parent": "order/zingiberales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": "pinnate",
+    "leaf_shape": {
+      "lanceolate": "often",
+      "oblong": "often",
+      "ovate": "often"
+    },
+    "sexual_system": {
+      "monoecious": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "inferior",
+    "woodiness": "herbaceous",
+    "flower_symmetry": "zygomorphic",
+    "zygomorphy": "bilabiate",
+    "perianth": "tepals",
+    "fruit_type": "berry",
+    "stamens": {
+      "min": 5,
+      "max": 6
+    },
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Musaceae: leaves alternate; leaves simple; veins pinnate; blades lanceolate, oblong or ovate; plants monoecious or polygamous; ovary inferior; stems herbaceous; flowers zygomorphic; irregular flowers bilabiate; perianth tepals; fruit berry; stamens 5 to 6; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

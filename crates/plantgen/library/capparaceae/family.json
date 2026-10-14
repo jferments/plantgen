@@ -2,5 +2,37 @@
   "schema": 1,
   "rank": "family",
   "name": "Capparaceae",
-  "parent": "order/brassicales"
+  "parent": "order/brassicales",
+  "traits": {
+    "woodiness": {
+      "woody": "usually",
+      "herbaceous": "rarely"
+    },
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_division": {
+      "simple": "often",
+      "compound": "often"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "perianth": "sepals_and_petals",
+    "flower_merosity": 4,
+    "ovary_position": "superior",
+    "fruit_type": {
+      "berry": "often",
+      "capsule": "often"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 93 Capparidaceae: trees, shrubs or more rarely herbs, sometimes climbing; leaves alternate, rarely opposite, simple or palmately of 3 to 7 leaflets; stipules minute or spiny where present; flowers mostly bisexual, regular or rarely irregular; sepals usually 4, petals 4 to many or none; stamens few to many; ovary superior, usually on a stalk (gynophore); fruit a capsule or a berry. Hutchinson's family also holds the herbaceous Cleome and kin that APG sets apart as Cleomaceae; Capparaceae itself is mostly woody (Library 1.0: 85% shrubs and trees)."
+    }
+  }
 }

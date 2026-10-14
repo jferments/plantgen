@@ -2,5 +2,46 @@
   "schema": 1,
   "rank": "family",
   "name": "Triuridaceae",
-  "parent": "order/pandanales"
+  "parent": "order/pandanales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_venation": "single",
+    "rosette": "none",
+    "sexual_system": {
+      "monoecious": "often",
+      "dioecious": "often",
+      "polygamous": "often",
+      "hermaphrodite": "rarely"
+    },
+    "ovary_position": "superior",
+    "woodiness": "herbaceous",
+    "inflorescence": {
+      "raceme": "usually",
+      "cyme": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": {
+      "follicle": "often",
+      "achene": "often"
+    },
+    "stamens": {
+      "min": 3,
+      "max": 3,
+      "low": 2,
+      "high": 6
+    },
+    "carpels": {
+      "min": 6,
+      "max": 50
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Triuridaceae with Lacandoniaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves simple; veins single; leaf rosettes none; plants monoecious, dioecious or polygamous, rarely hermaphrodite; ovary superior; stems herbaceous; flowers usually in racemes, sometimes in cymes; flowers actinomorphic; perianth tepals; fruit follicle or achene; stamens (2-) 3 (-6); carpels 6 to 50. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

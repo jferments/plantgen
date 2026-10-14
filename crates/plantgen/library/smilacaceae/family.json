@@ -2,5 +2,64 @@
   "schema": 1,
   "rank": "family",
   "name": "Smilacaceae",
-  "parent": "order/liliales"
+  "parent": "order/liliales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes",
+      "whorled": "sometimes"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": {
+      "single": "often",
+      "palmate": "often"
+    },
+    "leaf_habit": "evergreen",
+    "leaf_shape": {
+      "lanceolate": "often",
+      "ovate": "often"
+    },
+    "stipules": {
+      "true": "rarely",
+      "false": "usually"
+    },
+    "rosette": "none",
+    "sexual_system": {
+      "dioecious": "usually",
+      "hermaphrodite": "sometimes"
+    },
+    "ovary_position": "superior",
+    "woodiness": {
+      "woody": "often",
+      "herbaceous": "often"
+    },
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "raceme": "often",
+      "spike": "often",
+      "umbel": "often",
+      "panicle": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": "berry",
+    "flower_merosity": 3,
+    "stamens": {
+      "min": 3,
+      "max": 18
+    },
+    "carpels": {
+      "min": 1,
+      "max": 3
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Smilacaceae with Ripogonaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually alternate, sometimes opposite or whorled; leaves simple; margins entire; veins single or palmate; leaves evergreen; blades lanceolate or ovate; stipules usually absent, rarely present; leaf rosettes none; plants usually dioecious, sometimes hermaphrodite; ovary superior; stems woody or herbaceous; flowers solitary, in cymes, in racemes, in spikes or in umbels, sometimes in panicles; flowers actinomorphic; perianth tepals; fruit berry; parts of each whorl 3; stamens 3 to 18; carpels 1 to 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

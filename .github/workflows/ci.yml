@@ -1,7 +1,8 @@
-# PlantGen's CI. It runs on its own runner registration, `plantgen-ci`, inside
-# Project After's CI machine (jferments/ci-infrastructure,
-# docs/plantgen-runner.md), with less CPU weight than After's lanes and its own
-# Cargo target, so it never queues behind, slows or invalidates After's jobs.
+# PlantGen's CI. It runs on its own two runner registrations, `plantgen-ci` and
+# `plantgen-ci-2` (label `plantgen-ci`), inside Project After's CI machine
+# (jferments/ci-infrastructure, docs/plantgen-runner.md): a third of the busy
+# CPU against After's lanes, all of it when After is idle, and each runner its
+# own Cargo target, so it never queues behind, slows or invalidates After's jobs.
 # Drafts run nothing: CI starts when a PR is marked ready.
 name: CI
 
@@ -30,6 +31,7 @@ jobs:
     runs-on: [self-hosted, linux, x64, plantgen-ci]
     timeout-minutes: 60
     env:
+      # Per runner, so up to 40 GiB for both.
       CARGO_TARGET_BUDGET_GIB: "20"
       CARGO_INCREMENTAL: "0"
       CARGO_TERM_COLOR: never

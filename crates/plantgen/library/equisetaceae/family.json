@@ -3,6 +3,11 @@
   "rank": "family",
   "name": "Equisetaceae",
   "parent": "order/equisetales",
+  "traits": {
+    "woodiness": "herbaceous",
+    "rhizome_habit": "long_creeping",
+    "leaf_arrangement": "whorled"
+  },
   "forms": {
     "fern": {
       "generator": {
@@ -15,6 +20,13 @@
           "note": "The lineage's own program (growth plan G2.3a), on the herb base: it gives the values its species leave unset, which the herb program gave as defaults until then."
         }
       }
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Equisetaceae and Equisetum: rhizomatous herbs with hollow, jointed aerial stems, sometimes unbranched, stiffened with silica and without secondary thickening; leaves a whorl of teeth joined into a sheath, mostly without chlorophyll, the stems doing the photosynthesis; sporangia in terminal cones."
     }
   }
 }

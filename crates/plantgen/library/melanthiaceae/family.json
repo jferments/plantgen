@@ -4,6 +4,8 @@
   "name": "Melanthiaceae",
   "parent": "order/liliales",
   "traits": {
+    "leaf_division": "simple",
+    "leaf_incision": "none",
     "ovary_position": "superior",
     "perianth": {
       "tepals": "usually",
@@ -14,7 +16,12 @@
     "fruit_type": {
       "capsule": "usually",
       "berry": "sometimes"
-    }
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "zygomorphy": "other"
   },
   "forms": {
     "forb": {
@@ -55,6 +62,26 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
       "note": "Hutchinson (vol. 2, 2nd ed., 1959), families 372 Liliaceae (its false hellebores, death camases and bear grass) and 374 Trilliaceae (Trillium and Paris), which APG joins as Melanthiaceae: perianth of six parts in two whorls, alike in most, the outer green and sepal-like and the inner petal-like in Trillium and Paris; stamens as many as the perianth's parts, usually 6; ovary superior, of 3 carpels; fruit a capsule, or a berry in Paris and many trilliums."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Melanthiaceae with Trilliaceae: flowers regular or irregular as coded, a state the authors qualify keeping its word (spec-rework/b1/delta/mapdelta.py)."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Melanthiaceae with Trilliaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Melanthiaceae with Trilliaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple; the simple blade none. Read from the coded leaf form and dissection by script (spec-rework/b1/delta)."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Melanthiaceae with Trilliaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple; the simple blade none. Read from the coded leaf form and dissection by script (spec-rework/b1/delta)."
     }
   }
 }

@@ -2,5 +2,65 @@
   "schema": 1,
   "rank": "family",
   "name": "Boraginaceae",
-  "parent": "order/boraginales"
+  "parent": "order/boraginales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "usually",
+      "woody": "sometimes"
+    },
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_division": "simple",
+    "stipules": false,
+    "inflorescence": {
+      "scorpioid": "usually",
+      "solitary": "sometimes"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "zygomorphy": "other",
+    "perianth": "sepals_and_petals",
+    "carpels": 2,
+    "ovary_position": "superior",
+    "fruit_type": {
+      "schizocarp": "usually",
+      "drupe": "sometimes",
+      "capsule": "sometimes"
+    },
+    "rosette": {
+      "basal": "often",
+      "none": "often"
+    },
+    "life_span": {
+      "annual": "often",
+      "biennial": "often",
+      "perennial": "often"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 338 Boraginaceae (order Boraginales): herbs, often rough with stiff hairs; leaves alternate, very rarely opposite, simple; no stipules; flowers often in coiled (scorpioid) cymes, regular or rarely oblique; corolla united; stamens as many as its lobes; ovary superior, of two carpels, often deeply 4-lobed with the style from between the lobes; fruit of 4 nutlets, read here as a schizocarp. The family as Library 1.0 names it (WCVP) also holds Hutchinson's woody family 242 Ehretiaceae (Cordia, Ehretia, with drupes) and the waterleaf family (Hydrophyllum, Phacelia, with capsules): so woody, the drupe and the capsule are stated as sometimes (inferred, not traced)."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Boraginaceae as that work draws it, there coded together with Ehretiaceae, Hoplestigmataceae, Hydrophyllaceae, Lennoaceae, Wellstediaceae: whether the leaves gather in rosettes (character 22), coded often a basal rosette, often no rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Boraginaceae as that work draws it, there coded together with Ehretiaceae, Hoplestigmataceae, Hydrophyllaceae, Lennoaceae, Wellstediaceae: the herbs' life form (character 21), coded often annual, often biennial, often perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Boraginaceae with Ehretiaceae, Hoplestigmataceae, Hydrophyllaceae, Lennoaceae, Wellstediaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    }
+  }
 }

@@ -2,5 +2,33 @@
   "schema": 1,
   "rank": "family",
   "name": "Meliaceae",
-  "parent": "order/sapindales"
+  "parent": "order/sapindales",
+  "traits": {
+    "woodiness": "woody",
+    "leaf_arrangement": "alternate",
+    "leaf_division": {
+      "compound": "usually",
+      "simple": "rarely"
+    },
+    "stipules": false,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "stamens": {
+      "min": 8,
+      "max": 10
+    },
+    "ovary_position": "superior",
+    "fruit_type": {
+      "berry": "often",
+      "capsule": "often",
+      "drupe": "rarely"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 213 Meliaceae: trees or shrubs, mostly with hard scented wood (mahogany, cedrela), very rarely nearly herbaceous; leaves alternate, mostly pinnate; no stipules; flowers regular, mostly bisexual; stamens mostly 8 or 10, their filaments mostly joined in a tube; ovary superior, often of 3 to 5 cells; fruit a berry or capsule, rarely a drupe, the seeds sometimes winged (mahogany)."
+    }
+  }
 }

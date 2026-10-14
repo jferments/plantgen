@@ -2,5 +2,52 @@
   "schema": 1,
   "rank": "family",
   "name": "Lardizabalaceae",
-  "parent": "order/ranunculales"
+  "parent": "order/ranunculales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": {
+      "compound": "usually",
+      "simple": "sometimes"
+    },
+    "division_pattern": {
+      "pinnate": "rarely",
+      "palmate": "usually"
+    },
+    "leaf_venation": {
+      "pinnate": "sometimes",
+      "palmate": "usually"
+    },
+    "stipules": false,
+    "sexual_system": {
+      "monoecious": "often",
+      "dioecious": "often",
+      "polygamous": "rarely"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": "raceme",
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "sepals_and_petals": "often",
+      "tepals": "often"
+    },
+    "fruit_type": {
+      "follicle": "often",
+      "aggregate": "often"
+    },
+    "flower_merosity": 3,
+    "stamens": 6,
+    "carpels": {
+      "min": 3,
+      "max": 15
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Lardizabalaceae with Sargentodoxaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves usually compound, sometimes simple; compound leaves usually palmate, rarely pinnate; veins usually palmate, sometimes pinnate; stipules absent; plants monoecious or dioecious, rarely polygamous; ovary superior; floral cup absent; stems woody; flowers in racemes; flowers actinomorphic; perianth sepals and petals or tepals; fruit follicle or aggregate; parts of each whorl 3; stamens 6; carpels 3 to 15. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

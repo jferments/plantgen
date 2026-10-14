@@ -6,6 +6,12 @@
   "generator": {
     "program": "pinidae"
   },
+  "traits": {
+    "leaf_habit": {
+      "evergreen": "usually",
+      "deciduous": "rarely"
+    }
+  },
   "rules": {
     "generator.params.needle_years": {
       "rule": "leaf_life_years",
@@ -60,6 +66,11 @@
     }
   },
   "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-2008",
+      "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), the conifer families: Araucariaceae, Cephalotaxaceae, Cupressaceae, Podocarpaceae, Sciadopityaceae and Taxaceae evergreen; Pinaceae mostly evergreen, the larches and golden larch deciduous; Taxodiaceae evergreen but for swamp cypress and dawn redwood, which shed their leafy shoots. Deciduous is the rare state."
+    },
     "generator.program": {
       "evidence": "Authored",
       "source": "plantgen-authors",

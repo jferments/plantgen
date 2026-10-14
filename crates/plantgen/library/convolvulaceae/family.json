@@ -2,5 +2,39 @@
   "schema": 1,
   "rank": "family",
   "name": "Convolvulaceae",
-  "parent": "order/solanales"
+  "parent": "order/solanales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "often",
+      "woody": "often"
+    },
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "stipules": false,
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "flower_merosity": 5,
+    "stamens": 5,
+    "corolla_shape": {
+      "funnelform": "usually"
+    },
+    "ovary_position": "superior",
+    "fruit_type": {
+      "capsule": "usually",
+      "berry": "sometimes"
+    },
+    "rosette": "none"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 322 Convolvulaceae (order Solanales): herbaceous or woody, often climbing, the sap usually milky; leaves alternate, simple; no stipules; flowers regular, bisexual; sepals usually free; corolla united, 5-lobed, pleated in bud; stamens 5, low on the corolla tube; ovary of 1 to 4 cells, superior (the order's); fruit a capsule, or fleshy and staying shut. The funnel-shaped corolla of the bindweeds and morning glories is from common knowledge, inferred, not traced."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Convolvulaceae as that work draws it, there coded together with Cuscutaceae, Humbertiaceae: whether the leaves gather in rosettes (character 22), coded no rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    }
+  }
 }

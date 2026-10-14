@@ -2,5 +2,40 @@
   "schema": 1,
   "rank": "family",
   "name": "Kewaceae",
-  "parent": "order/caryophyllales"
+  "parent": "order/caryophyllales",
+  "traits": {
+    "leaf_arrangement": {
+      "whorled": "often",
+      "alternate": "often",
+      "opposite": "often"
+    },
+    "leaf_division": "simple",
+    "leaf_venation": "single",
+    "leaf_shape": "linear",
+    "stipules": true,
+    "rosette": "terminal",
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "herbaceous",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": "capsule",
+    "stamens": {
+      "min": 5,
+      "max": 15,
+      "high": 20
+    },
+    "carpels": {
+      "min": 3,
+      "max": 5
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Kewaceae: leaves whorled, alternate or opposite; leaves simple; veins single; blades linear; stipules present; leaf rosettes terminal; plants hermaphrodite; ovary superior; floral cup absent; stems herbaceous; flowers actinomorphic; perianth tepals; fruit capsule; stamens 5 to 15 (-20); carpels 3 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

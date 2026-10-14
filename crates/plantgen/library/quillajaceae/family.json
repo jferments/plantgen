@@ -2,5 +2,44 @@
   "schema": 1,
   "rank": "family",
   "name": "Quillajaceae",
-  "parent": "order/fabales"
+  "parent": "order/fabales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "serrate": "often"
+    },
+    "leaf_venation": "pinnate",
+    "leaf_habit": "evergreen",
+    "leaf_shape": {
+      "oblong": "often",
+      "ovate": "often"
+    },
+    "stipules": true,
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "superior",
+    "woodiness": "woody",
+    "inflorescence": "corymb",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "follicle",
+    "flower_merosity": 5,
+    "stamens": 10,
+    "carpels": {
+      "min": 5,
+      "max": 5,
+      "high": 7
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Quillajaceae: leaves alternate; leaves simple; margins entire or serrate; veins pinnate; leaves evergreen; blades oblong or ovate; stipules present; plants hermaphrodite or polygamous; ovary superior; stems woody; flowers in corymbs; flowers actinomorphic; perianth sepals and petals; fruit follicle; parts of each whorl 5; stamens 10; carpels 5 (-7). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

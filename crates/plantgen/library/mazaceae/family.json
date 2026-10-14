@@ -2,5 +2,76 @@
   "schema": 1,
   "rank": "family",
   "name": "Mazaceae",
-  "parent": "order/lamiales"
+  "parent": "order/lamiales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often",
+      "whorled": "often"
+    },
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "rarely"
+    },
+    "leaf_margin": {
+      "entire": "often",
+      "crenate": "often",
+      "serrate": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": {
+      "pinnate": "often",
+      "palmate": "often"
+    },
+    "stipules": false,
+    "rosette": {
+      "basal": "often",
+      "none": "often",
+      "terminal": "sometimes"
+    },
+    "sexual_system": "hermaphrodite",
+    "resupinate": {
+      "true": "rarely",
+      "false": "usually"
+    },
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": {
+      "woody": "often",
+      "herbaceous": "often"
+    },
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "raceme": "often",
+      "spike": "often",
+      "head": "often",
+      "panicle": "often"
+    },
+    "flower_symmetry": "zygomorphic",
+    "zygomorphy": "bilabiate",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "usually",
+      "berry": "rarely"
+    },
+    "stamens": {
+      "min": 4,
+      "max": 4,
+      "low": 2,
+      "high": 5
+    },
+    "carpels": {
+      "min": 2,
+      "max": 2,
+      "high": 3
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Scrophulariaceae, which takes in Mazaceae: leaves alternate, opposite or whorled; leaves usually simple, rarely compound; margins entire, crenate, serrate or dentate; veins pinnate or palmate; stipules absent; leaf rosettes basal or none, sometimes terminal; plants hermaphrodite; flowers turned over usually absent, rarely present; ovary superior; floral cup absent; stems woody or herbaceous; flowers solitary, in cymes, in racemes, in spikes, in heads or in panicles; flowers zygomorphic; irregular flowers bilabiate; perianth sepals and petals; fruit usually capsule, rarely berry; stamens (2-) 4 (-5); carpels 2 (-3). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

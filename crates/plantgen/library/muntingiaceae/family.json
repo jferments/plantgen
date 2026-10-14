@@ -2,5 +2,39 @@
   "schema": 1,
   "rank": "family",
   "name": "Muntingiaceae",
-  "parent": "order/malvales"
+  "parent": "order/malvales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": "serrate",
+    "leaf_venation": "palmate",
+    "stipules": true,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "superior": "rarely",
+      "half_inferior": "rarely",
+      "inferior": "rarely"
+    },
+    "hypanthium": false,
+    "woodiness": "woody",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "berry",
+    "stamens": {
+      "min": 15,
+      "max": 100,
+      "low": 11
+    },
+    "carpels": {
+      "min": 5,
+      "max": 7
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Muntingiaceae: leaves alternate; leaves simple; margins serrate; veins palmate; stipules present; plants hermaphrodite; ovary superior, half inferior or inferior; floral cup absent; stems woody; flowers actinomorphic; perianth sepals and petals; fruit berry; stamens (11-) 15 to 100; carpels 5 to 7. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

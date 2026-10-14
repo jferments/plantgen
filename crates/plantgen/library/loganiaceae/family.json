@@ -2,5 +2,94 @@
   "schema": 1,
   "rank": "family",
   "name": "Loganiaceae",
-  "parent": "order/gentianales"
+  "parent": "order/gentianales",
+  "traits": {
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "whorled": "sometimes"
+    },
+    "leaf_division": "simple",
+    "leaf_venation": {
+      "single": "often",
+      "pinnate": "often",
+      "palmate": "sometimes"
+    },
+    "leaf_shape": {
+      "linear": "often",
+      "lanceolate": "often",
+      "oblong": "often",
+      "ovate": "often"
+    },
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "sometimes",
+      "monoecious": "sometimes",
+      "polygamous": "sometimes"
+    },
+    "ovary_position": {
+      "superior": "usually",
+      "half_inferior": "sometimes"
+    },
+    "corolla_shape": {
+      "campanulate": "often",
+      "salverform": "often",
+      "rotate": "often",
+      "tubular": "sometimes",
+      "funnelform": "sometimes",
+      "urceolate": "sometimes"
+    },
+    "woodiness": {
+      "herbaceous": "often",
+      "woody": "often"
+    },
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often",
+      "panicle": "often",
+      "raceme": "sometimes",
+      "umbel": "sometimes",
+      "spike": "sometimes",
+      "corymb": "sometimes"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "sometimes"
+    },
+    "zygomorphy": "other",
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "sometimes"
+    },
+    "fruit_type": {
+      "capsule": "often",
+      "follicle": "often",
+      "berry": "sometimes",
+      "drupe": "sometimes"
+    },
+    "flower_merosity": {
+      "min": 4,
+      "max": 5
+    },
+    "stamens": {
+      "min": 4,
+      "max": 5
+    },
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Loganiaceae with Antoniaceae, Gelsemiaceae, Geniostomaceae, Mitreolaceae, Polypremaceae, Retziaceae, Spigeliaceae, Strychnaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually opposite, sometimes whorled; leaves simple; veins single or pinnate, sometimes palmate; blades linear, lanceolate, oblong or ovate; stipules present or absent; plants usually hermaphrodite, sometimes dioecious, monoecious or polygamous; ovary usually superior, sometimes half inferior; joined corolla campanulate, salverform or rotate, sometimes tubular, funnelform or urceolate; stems herbaceous or woody; flowers solitary, in cymes or in panicles, sometimes in racemes, in umbels, in spikes or in corymbs; flowers usually actinomorphic, sometimes zygomorphic; perianth usually sepals and petals, sometimes tepals; fruit capsule or follicle, sometimes berry or drupe; parts of each whorl 4 to 5; stamens 4 to 5; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Loganiaceae with Antoniaceae, Gelsemiaceae, Geniostomaceae, Mitreolaceae, Polypremaceae, Retziaceae, Spigeliaceae, Strychnaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    }
+  }
 }

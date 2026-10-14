@@ -417,6 +417,31 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
                 ));
             }
         }
+        (Perianth::Corolla, Corolla::Unequal) => {
+            for k in 0..n {
+                let upper = k == 0;
+                pieces.push(piece(
+                    Term::Petal,
+                    Some(if upper { "upper petal" } else { "petal" }),
+                    TAU * f64::from(k) / nf,
+                    if upper { form.cup + 15.0 } else { form.cup },
+                    (1.0, if upper { flower.banner } else { 1.0 }),
+                ));
+            }
+        }
+        (Perianth::Corolla, Corolla::Regular) if flower.petal_whorls == 2 => {
+            // Two like whorls, as tepals stand, the inner turned half a
+            // petal and a little narrower and more upright.
+            let h = f64::from((n / 2).max(1));
+            for k in 0..(n / 2).max(1) {
+                let angle = TAU * f64::from(k) / h;
+                pieces.push(piece(Term::Petal, None, angle, form.cup * 0.85, (1.0, 1.0)));
+            }
+            for k in 0..(n / 2).max(1) {
+                let angle = TAU * f64::from(k) / h + PI / h;
+                pieces.push(piece(Term::Petal, None, angle, form.cup, (1.0, 0.85)));
+            }
+        }
         (Perianth::Corolla, _) => {
             for k in 0..n {
                 pieces.push(piece(
@@ -466,7 +491,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
     }
 
     // Spurs: every petal's of a regular corolla, a lower lip's middle
-    // petal's, a lip's.
+    // petal's, a lip's, an unequal corolla's upper petal's.
     let mut spurs = Vec::new();
     if flower.spur > 0.0 {
         let spurred = |p: &Piece| match flower.corolla {
@@ -474,6 +499,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
             Corolla::Bilabiate => p.role == Some("lower lip") && (p.angle - psi - PI).abs() < 1e-9,
             Corolla::Labellate => p.role == Some("lip"),
             Corolla::Papilionaceous => false,
+            Corolla::Unequal => p.role == Some("upper petal"),
         };
         let spur_length = flower.spur * r;
         spurs.extend(pieces.iter().filter(|p| spurred(p)).map(|p| Rod {
@@ -493,7 +519,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
     if shown && !hidden {
         let total = flower.stamens + flower.staminodes;
         let whorl = match flower.perianth {
-            Perianth::Corolla => n,
+            Perianth::Corolla => (n / flower.petal_whorls.max(1)).max(1),
             Perianth::Tepals => (n / 2).max(1),
             Perianth::Spiral | Perianth::Absent => n.min(6),
         };
@@ -1544,6 +1570,86 @@ mod tests {
             "the lower lip's middle petal spurred"
         );
         assert!((degrees_of(violet.spurs[0].angle) - 180.0).abs() < 1e-9);
+    }
+
+    #[test]
+    fn an_unequal_corolla_stands_its_upper_petal_apart() {
+        let laid = layout(&flower(|f| f.corolla = Corolla::Unequal), &form(), 1.0, 1.0);
+        let petals: Vec<_> = laid
+            .pieces
+            .iter()
+            .filter(|p| p.term == Term::Petal)
+            .collect();
+        assert_eq!(petals.len(), 5);
+        let upper: Vec<_> = petals
+            .iter()
+            .filter(|p| p.role == Some("upper petal"))
+            .collect();
+        assert_eq!(upper.len(), 1);
+        assert!(
+            degrees_of(upper[0].angle).abs() < 1e-9,
+            "the upper petal is adaxial"
+        );
+        let others: Vec<_> = petals.iter().filter(|p| p.role == Some("petal")).collect();
+        assert!(
+            others
+                .iter()
+                .all(|p| p.width < upper[0].width && p.cup < upper[0].cup)
+        );
+        assert!(
+            others
+                .iter()
+                .all(|p| (p.width - others[0].width).abs() < 1e-12),
+            "the rest alike"
+        );
+        assert!(flower(|f| f.corolla = Corolla::Unequal).is_zygomorphic());
+        let shape = |f: Flower| crate::looks::Shape::Flower(f).validate();
+        assert!(
+            shape(flower(|f| {
+                f.corolla = Corolla::Unequal;
+                f.petals = 6;
+                f.perianth = Perianth::Tepals;
+            }))
+            .unwrap_err()
+            .contains("unequal")
+        );
+    }
+
+    #[test]
+    fn petals_in_two_whorls_stand_three_and_three() {
+        // A barberry's six petals: three outer, three inner between them.
+        let barberry = flower(|f| {
+            f.petals = 6;
+            f.petal_whorls = 2;
+            f.stamens = 6;
+        });
+        let laid = layout(&barberry, &form(), 1.0, 0.0);
+        let petals: Vec<_> = laid
+            .pieces
+            .iter()
+            .filter(|p| p.term == Term::Petal)
+            .collect();
+        assert_eq!(petals.len(), 6);
+        let (outer, inner) = petals.split_at(3);
+        for (k, p) in (0_u32..).zip(outer) {
+            assert!((degrees_of(p.angle) - 120.0 * f64::from(k)).abs() < 1e-9);
+        }
+        for (k, p) in (0_u32..).zip(inner) {
+            assert!((degrees_of(p.angle) - 60.0 - 120.0 * f64::from(k)).abs() < 1e-9);
+            assert!(p.width < outer[0].width && p.cup > outer[0].cup);
+        }
+        // Its stamens stand in whorls of three, one before each petal.
+        assert_eq!(laid.stamens.len(), 6);
+        let shape = |f: Flower| crate::looks::Shape::Flower(f).validate();
+        assert!(shape(barberry).is_ok());
+        assert!(
+            shape(flower(|f| {
+                f.petals = 5;
+                f.petal_whorls = 2;
+            }))
+            .unwrap_err()
+            .contains("two whorls")
+        );
     }
 
     #[test]
