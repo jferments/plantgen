@@ -277,4 +277,17 @@ pub mod venation;
 /// piggyback plant) draws its upper petal unlike the rest, wider by
 /// `banner` and more upright (an unequal corolla), not a corolla of like
 /// petals (44 is the leaf lives, #79).
-pub const GENERATOR_REVISION: u32 = 45;
+/// 46: nine broadleaf shrubs and trees are drawn within their floras'
+/// sizes: desert willow, burrobush, beaked hazelnut, cascara and creosote
+/// bush no taller than their greatest height (`path_half` refitted), and
+/// desert willow, burrobush, vine maple, osoberry, thimbleberry and jojoba
+/// with leaves no larger than their floras give, desert willow's narrowly
+/// linear. (45 is the unequal corolla, #86.)
+/// 48: a dioecious species' plants are male or female, each by its own
+/// draw from its seed, and only females bear fruit or seed cones: a male
+/// yew bears no arils, a broadleaf's male blooms fall where they would
+/// fruit, a herb's keep flowering and a climber's set no fruit. Every
+/// built-in package's own seed grows the plant it grew before; other
+/// seeds of a dioecious species may now grow males. (47 is the daisy,
+/// grass, carrot and pea families, #97.)
+pub const GENERATOR_REVISION: u32 = 48;

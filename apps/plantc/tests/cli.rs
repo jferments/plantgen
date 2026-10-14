@@ -78,7 +78,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let seed_plants = "(clade Spermatophyta: _ranks/clade/spermatophyta.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (108):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (110):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
@@ -179,7 +179,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
     assert!(
-        rules.starts_with("Rules, by their home (109):\n"),
+        rules.starts_with("Rules, by their home (111):\n"),
         "{rules}"
     );
     assert!(

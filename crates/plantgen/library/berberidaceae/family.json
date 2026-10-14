@@ -12,6 +12,18 @@
     "stamens": 6,
     "carpels": 1,
     "leaf_arrangement": "alternate",
+    "leaf_division": {
+      "simple": "often",
+      "compound": "often"
+    },
+    "leaf_incision": {
+      "lobed": "often",
+      "none": "often"
+    },
+    "division_pattern": {
+      "palmate": "often",
+      "pinnate": "often"
+    },
     "stipules": false,
     "fruit_type": {
       "berry": "usually",
@@ -52,6 +64,21 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 257 Nandinaceae and 251 Podophyllaceae (his Berberidaceae page is not in this scan), which APG joins with the barberries as Berberidaceae: leaves alternate or basal, simple, lobed or compound; stipules absent; fruit a berry, or a follicle."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Berberidaceae with Leonticaceae, Nandinaceae and Podophyllaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple often, compound often; the simple blade lobed often, none often; lobes or leaflets palmate often, pinnate often. Read from the coded leaf form and dissection by script (spec-rework/b1/delta)."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Berberidaceae with Leonticaceae, Nandinaceae and Podophyllaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple often, compound often; the simple blade lobed often, none often; lobes or leaflets palmate often, pinnate often. Read from the coded leaf form and dissection by script (spec-rework/b1/delta)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Berberidaceae with Leonticaceae, Nandinaceae and Podophyllaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple often, compound often; the simple blade lobed often, none often; lobes or leaflets palmate often, pinnate often. Read from the coded leaf form and dissection by script (spec-rework/b1/delta)."
     }
   }
 }

@@ -631,6 +631,11 @@ pub struct Grower<'a> {
     /// What it grows in from the next step on.
     conditions: Conditions,
     neighbourhood: crate::lsys::tools::Neighbourhood,
+    /// The neighbours' crowns the tools read: the conditions' own, those
+    /// a stand sets ([`Self::set_envelopes`]), or with a layout those and
+    /// its own crown at its neighbours' places.
+    envelopes: Vec<crate::conditions::Envelope>,
+    layout: Option<crate::conditions::Layout>,
     substrate: Option<std::sync::Arc<crate::substrate::SubstrateField>>,
     // What wood rests on: the substrate, or level soil without one.
     ground: std::sync::Arc<crate::substrate::SubstrateField>,
@@ -688,6 +693,8 @@ impl<'a> Grower<'a> {
             settings,
             conditions: settings.conditions.clone(),
             neighbourhood: settings.conditions.neighbourhood(),
+            envelopes: Vec::new(),
+            layout: None,
             substrate: None,
             ground: std::sync::Arc::new(crate::substrate::SubstrateField::flat()),
             sun: None,
@@ -743,14 +750,10 @@ impl<'a> Grower<'a> {
         self.crown
     }
 
-    /// Grow among `envelopes` from the next step on, besides its
-    /// conditions' own stand: neighbours' crowns.
+    /// Grow among `envelopes` from the next step on, in place of its
+    /// conditions' own neighbours' crowns, besides their stand.
     pub fn set_envelopes(&mut self, envelopes: Vec<crate::conditions::Envelope>) {
-        let neighbourhood = self.neighbourhood;
-        self.conditions
-            .neighbours
-            .get_or_insert_with(|| crate::conditions::Neighbours::of(neighbourhood))
-            .envelopes = envelopes;
+        self.envelopes = envelopes;
     }
 
     /// The steps timed so far, in order (none unless [`Self::timed`]).
@@ -776,6 +779,8 @@ impl<'a> Grower<'a> {
         self.interpreter
             .set_ground(Some(std::sync::Arc::clone(&self.ground)));
         self.neighbourhood = conditions.neighbourhood();
+        self.envelopes = conditions.envelopes().to_vec();
+        self.layout = conditions.layout();
         self.sun = conditions
             .light
             .as_ref()
@@ -857,6 +862,13 @@ impl<'a> Grower<'a> {
             t: f64::from(step) * settings.dt,
             dt: settings.dt,
         };
+        if let Some(layout) = self.layout {
+            // Its neighbours' crowns are its own as the last step left it.
+            self.envelopes = self.conditions.envelopes().to_vec();
+            if let Some(crown) = &self.crown {
+                self.envelopes.extend(layout.envelopes(crown));
+            }
+        }
         let mut timer = self.times.is_some().then(Timer::start);
         let mut time = StepTime {
             age: clock.t,
@@ -869,7 +881,7 @@ impl<'a> Grower<'a> {
         self.stats.peak_organs = self.stats.peak_organs.max(scene.organs.len());
         time.segments = scene.segments.len();
         time.organs = scene.organs.len();
-        if self.keep_crown {
+        if self.keep_crown || self.layout.is_some() {
             let area = &self.organ_area;
             self.crown = Crown::of(scene.organs.iter().map(|organ| {
                 let leaf = area[usize::from(organ.symbol)] * organ.size * organ.size;
@@ -927,7 +939,7 @@ impl<'a> Grower<'a> {
         }
         let around = Around {
             neighbourhood: &self.neighbourhood,
-            envelopes: self.conditions.envelopes(),
+            envelopes: &self.envelopes,
             host: settings.host.as_deref(),
             substrate: self.substrate.as_deref(),
             sun: self.sun,

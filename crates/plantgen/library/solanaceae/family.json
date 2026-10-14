@@ -15,6 +15,7 @@
       "actinomorphic": "usually",
       "zygomorphic": "sometimes"
     },
+    "zygomorphy": "other",
     "perianth": "sepals_and_petals",
     "flower_merosity": {
       "min": 4,
@@ -33,6 +34,11 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 321 Solanaceae (order Solanales): herbaceous or woody; leaves alternate, simple; no stipules; flowers mostly regular; calyx 4- to 6-lobed, persisting; corolla united, usually 5-lobed; stamens on the corolla tube, alternate with its lobes; ovary of two cells, superior (the order's 'ovary superior'); fruit a capsule or a berry. Some (Schizanthus, Salpiglossis) are irregular."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Solanaceae with Duckeodendraceae, Goetzeaceae, Nolanaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
     }
   }
 }
