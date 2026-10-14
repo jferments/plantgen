@@ -34,6 +34,7 @@ param twin_angle = 25;      # angle of each twin shoot from the old axis
 param apex_death = 0;       # chance a year that a tip with no free space aborts
 param room_width = 1.6;     # free space fills this many times the crown's radius
 param room_height = 1.3;    # and this many times its height
+param crown_phototropism = 0.3; # the region's front turns this far toward its light
 param limb_path = 1;        # how many times a limb's wood counts toward path_half (1: as the stem's)
 param leader_rate = 0.3;    # how far each node of the stem turns back toward upright
 param set_point = 50;       # a limb's held angle from straight up

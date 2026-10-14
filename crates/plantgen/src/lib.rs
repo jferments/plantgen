@@ -310,4 +310,13 @@ pub mod venation;
 /// say, not one year more (pinidae 8, as 44 did for the other programs),
 /// and a pine's lowest needles as long as its species' longest stated
 /// needle life (Pinus's `needle_low`) (50 is conifer sag, #95).
-pub const GENERATOR_REVISION: u32 = 51;
+/// 52: a broadleaf tree's or shrub's crown narrows among neighbours
+/// (broadleaf 15, sapindaceae 8, `space@4`): its free-space region is
+/// scaled at each height and side as far as a crown front grown from the
+/// lineage's tropisms under the neighbours' shade falls short of the
+/// open-grown one, so stand-grown crowns are narrower and an edge tree's
+/// reaches toward open sky; open-grown plants are unchanged. At a stand's
+/// edge only a point reaching toward the stand's side reaches into the
+/// neighbours' crowns (51 is
+/// #96).
+pub const GENERATOR_REVISION: u32 = 52;
