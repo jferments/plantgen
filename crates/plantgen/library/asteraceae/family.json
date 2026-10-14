@@ -43,6 +43,10 @@
     }
   },
   "evidence": {
+    "rules.appearance.organs.flower.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
+    "rules.appearance.organs.bloom.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
+    "rules.appearance.organs.flower.accent": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
+    "rules.appearance.organs.bloom.accent": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
     "traits.inflorescence_unit": {
       "evidence": "SourceInferred",
       "source": "vicflora",
@@ -75,6 +79,24 @@
     }
   },
   "rules": {
+    "appearance.organs.flower.colour": {
+      "map": {"capitulum_kind": {"radiate": {"colour": ["ray_colour", "flower_colour"]}, "discoid": {"colour": ["disc_colour", "flower_colour"]}, "disciform": {"colour": ["disc_colour", "flower_colour"]}, "liguliflorous": {"colour": ["ligulate_colour", "flower_colour"]}}},
+      "else": {"colour": "flower_colour"},
+      "why": "A head's rays (or straps) are drawn in the look's colour and its disc in the accent: a radiate head's rays in the rays' stated colour, a discoid head's florets in theirs, a head of straps in the straps'; where the kind's own colour is not stated, the flower's. The disc takes the disc florets' colour."
+    },
+    "appearance.organs.bloom.colour": {
+      "map": {"capitulum_kind": {"radiate": {"colour": ["ray_colour", "flower_colour"]}, "discoid": {"colour": ["disc_colour", "flower_colour"]}, "disciform": {"colour": ["disc_colour", "flower_colour"]}, "liguliflorous": {"colour": ["ligulate_colour", "flower_colour"]}}},
+      "else": {"colour": "flower_colour"},
+      "why": "A head's rays (or straps) are drawn in the look's colour and its disc in the accent: a radiate head's rays in the rays' stated colour, a discoid head's florets in theirs, a head of straps in the straps'; where the kind's own colour is not stated, the flower's. The disc takes the disc florets' colour."
+    },
+    "appearance.organs.flower.accent": {
+      "map": {"capitulum_kind": {"radiate": {"colour": ["disc_colour"]}, "discoid": {"colour": ["disc_colour", "flower_colour"]}, "disciform": {"colour": ["disc_colour", "flower_colour"]}, "liguliflorous": {"colour": ["ligulate_colour", "flower_colour"]}}},
+      "why": "A head's rays (or straps) are drawn in the look's colour and its disc in the accent: a radiate head's rays in the rays' stated colour, a discoid head's florets in theirs, a head of straps in the straps'; where the kind's own colour is not stated, the flower's. The disc takes the disc florets' colour."
+    },
+    "appearance.organs.bloom.accent": {
+      "map": {"capitulum_kind": {"radiate": {"colour": ["disc_colour"]}, "discoid": {"colour": ["disc_colour", "flower_colour"]}, "disciform": {"colour": ["disc_colour", "flower_colour"]}, "liguliflorous": {"colour": ["ligulate_colour", "flower_colour"]}}},
+      "why": "A head's rays (or straps) are drawn in the look's colour and its disc in the accent: a radiate head's rays in the rays' stated colour, a discoid head's florets in theirs, a head of straps in the straps'; where the kind's own colour is not stated, the flower's. The disc takes the disc florets' colour."
+    },
     "appearance.organs.*.shape.kind": {
       "template": "head",
       "map": {
