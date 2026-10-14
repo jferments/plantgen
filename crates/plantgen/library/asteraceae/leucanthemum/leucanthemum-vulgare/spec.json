@@ -58,7 +58,6 @@
     "organs": {
       "leaf": {
         "shape": {
-          "template": "simple",
           "width": 0.3,
           "widest": 0.6,
           "tip": 0.3,
@@ -81,7 +80,7 @@
         }
       },
       "flower": {
-        "shape": { "template": "head", "ray_width": 0.75 },
+        "shape": { "ray_width": 0.75 },
         "colour": [0.95, 0.95, 0.92],
         "accent": [0.9, 0.72, 0.12]
       }

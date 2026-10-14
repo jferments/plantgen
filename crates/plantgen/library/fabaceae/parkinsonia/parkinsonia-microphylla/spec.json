@@ -73,7 +73,7 @@
     "variation": 0.15,
     "organs": {
       "leaf": {
-        "shape": { "template": "compound", "leaflet_width": 0.6, "teeth": 0, "petiole": 0.2, "angle": 22, "pinnule_angle": 60, "widest": 0.4, "tip": 0.2, "base": 0.6 }
+        "shape": { "leaflet_width": 0.6, "teeth": 0, "petiole": 0.2, "angle": 22, "pinnule_angle": 60, "widest": 0.4, "tip": 0.2, "base": 0.6 }
       },
       "thorn": {
         "shape": {
@@ -85,9 +85,6 @@
         "form": "thorn"
       },
       "bloom": {
-        "shape": {
-          "template": "flower"
-        },
         "colour": [0.95, 0.85, 0.2]
       }
     }

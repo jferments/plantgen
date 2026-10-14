@@ -58,11 +58,10 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": { "template": "compound", "teeth": 4, "petiole": 0.15, "angle": 55, "pinnule_angle": 55 }
+        "shape": { "teeth": 4, "petiole": 0.15, "angle": 55, "pinnule_angle": 55 }
       },
       "flower": {
         "shape": {
-          "template": "flower",
           "petal_width": 0.9,
           "point": 0.0,
           "notch": 0.2,

@@ -59,7 +59,7 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": { "template": "compound", "leaflet_width": 0.16, "teeth": 0, "spread": 300, "lowest": 0.6, "widest": 0.6, "tip": 0.5, "base": 0 },
+        "shape": { "leaflet_width": 0.16, "teeth": 0, "spread": 300, "lowest": 0.6, "widest": 0.6, "tip": 0.5, "base": 0 },
         "face_up": 0.5
       },
       "basal": {

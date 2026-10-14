@@ -87,7 +87,7 @@
         }
       },
       "flower": {
-        "shape": { "template": "head", "ray_width": 0.8 },
+        "shape": { "ray_width": 0.8 },
         "colour": [0.95, 0.78, 0.1],
         "accent": [0.85, 0.6, 0.05]
       },
