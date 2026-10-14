@@ -2,5 +2,38 @@
   "schema": 1,
   "rank": "family",
   "name": "Garryaceae",
-  "parent": "order/garryales"
+  "parent": "order/garryales",
+  "traits": {
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_margin": "entire",
+    "leaf_venation": "pinnate",
+    "leaf_habit": "evergreen",
+    "stipules": false,
+    "sexual_system": "dioecious",
+    "ovary_position": "inferior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": "catkin",
+    "flower_symmetry": "actinomorphic",
+    "perianth": {
+      "tepals": "often",
+      "absent": "often"
+    },
+    "fruit_type": "berry",
+    "flower_merosity": 4,
+    "stamens": 4,
+    "carpels": {
+      "min": 2,
+      "max": 2,
+      "high": 3
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Garryaceae: leaves opposite; leaves simple; margins entire; veins pinnate; leaves evergreen; stipules absent; plants dioecious; ovary inferior; floral cup absent; stems woody; flowers in catkins; flowers actinomorphic; perianth tepals or absent; fruit berry; parts of each whorl 4; stamens 4; carpels 2 (-3). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

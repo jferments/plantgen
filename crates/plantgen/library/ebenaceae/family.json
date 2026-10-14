@@ -2,5 +2,32 @@
   "schema": 1,
   "rank": "family",
   "name": "Ebenaceae",
-  "parent": "order/ericales"
+  "parent": "order/ericales",
+  "traits": {
+    "woodiness": "woody",
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_margin": "entire",
+    "stipules": false,
+    "sexual_system": {
+      "dioecious": "usually",
+      "hermaphrodite": "rarely"
+    },
+    "perianth": "sepals_and_petals",
+    "flower_merosity": {
+      "min": 3,
+      "max": 7
+    },
+    "ovary_position": "superior",
+    "fruit_type": "berry"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 206 Ebenaceae: trees or shrubs, the wood often hard and black (ebony); leaves alternate, rarely opposite, entire; no stipules; flowers mostly of one sex, often on separate plants (persimmons); calyx 3- to 6-lobed, persisting and often growing in fruit; corolla 3- to 7-lobed; stamens 2 to 4 times the corolla lobes; ovary superior; fruit a more or less juicy berry."
+    }
+  }
 }

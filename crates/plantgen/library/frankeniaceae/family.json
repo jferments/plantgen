@@ -2,5 +2,50 @@
   "schema": 1,
   "rank": "family",
   "name": "Frankeniaceae",
-  "parent": "order/caryophyllales"
+  "parent": "order/caryophyllales",
+  "traits": {
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_habit": "evergreen",
+    "leaf_shape": "linear",
+    "stipules": {
+      "true": "sometimes",
+      "false": "usually"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "polygamous": "rarely"
+    },
+    "ovary_position": "superior",
+    "woodiness": {
+      "woody": "often",
+      "herbaceous": "often"
+    },
+    "inflorescence": {
+      "solitary": "often",
+      "cyme": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "capsule",
+    "stamens": {
+      "min": 6,
+      "max": 6,
+      "low": 4,
+      "high": 24
+    },
+    "carpels": {
+      "min": 3,
+      "max": 3,
+      "low": 2,
+      "high": 4
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Frankeniaceae: leaves opposite; leaves simple; leaves evergreen; blades linear; stipules usually absent, sometimes present; plants usually hermaphrodite, rarely polygamous; ovary superior; stems woody or herbaceous; flowers solitary or in cymes; flowers actinomorphic; perianth sepals and petals; fruit capsule; stamens (4-) 6 (-24); carpels (2-) 3 (-4). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

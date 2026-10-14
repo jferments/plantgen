@@ -2,5 +2,32 @@
   "schema": 1,
   "rank": "family",
   "name": "Koeberliniaceae",
-  "parent": "order/brassicales"
+  "parent": "order/brassicales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_habit": "deciduous",
+    "stipules": false,
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "superior",
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": "raceme",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "berry",
+    "flower_merosity": 4,
+    "stamens": 8,
+    "carpels": {
+      "min": 2,
+      "max": 5
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Koeberliniaceae: leaves alternate; leaves simple; leaves deciduous; stipules absent; plants hermaphrodite; ovary superior; floral cup absent; stems woody; flowers in racemes; flowers actinomorphic; perianth sepals and petals; fruit berry; parts of each whorl 4; stamens 8; carpels 2 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

@@ -113,7 +113,8 @@
     "flower_merosity": 5,
     "perianth": "sepals_and_petals",
     "spur_length_m": {"min": 0.013, "max": 0.021},
-    "carpels": 5
+    "carpels": 5,
+    "fruit_type": "follicle"
   },
   "evidence": {
     "generator.params": {
@@ -175,6 +176,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The stem leaves drawn once ternate, by eye: smaller and less divided than the basal ones, three leaflets from one point (spec rework P4)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "The Flora of North America's account of Aquilegia formosa, on the SEINet and NEON portals, as search results quote it (the page itself was not read): follicles 5 (the genus 5 to 10), against the achenes most of the buttercup family bear."
     },
     "traits.spur_length_m": {
       "evidence": "SourceInferred",

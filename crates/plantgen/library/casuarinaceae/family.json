@@ -2,5 +2,35 @@
   "schema": 1,
   "rank": "family",
   "name": "Casuarinaceae",
-  "parent": "order/fagales"
+  "parent": "order/fagales",
+  "traits": {
+    "leaf_arrangement": "whorled",
+    "leaf_division": "simple",
+    "stipules": false,
+    "sexual_system": {
+      "monoecious": "often",
+      "dioecious": "often"
+    },
+    "ovary_position": "superior",
+    "woodiness": "woody",
+    "inflorescence": {
+      "catkin": "often",
+      "spike": "often",
+      "head": "often"
+    },
+    "perianth": "absent",
+    "fruit_type": {
+      "nut": "often",
+      "samara": "often"
+    },
+    "stamens": 1,
+    "carpels": 2
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Casuarinaceae: leaves whorled; leaves simple; stipules absent; plants monoecious or dioecious; ovary superior; stems woody; flowers in catkins, in spikes or in heads; perianth absent; fruit nut or samara; stamens 1; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

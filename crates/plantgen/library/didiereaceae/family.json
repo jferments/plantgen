@@ -2,5 +2,36 @@
   "schema": 1,
   "rank": "family",
   "name": "Didiereaceae",
-  "parent": "order/caryophyllales"
+  "parent": "order/caryophyllales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "stipules": false,
+    "sexual_system": {
+      "dioecious": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "superior",
+    "woodiness": "woody",
+    "inflorescence": "cyme",
+    "perianth": "sepals_and_petals",
+    "stamens": {
+      "min": 8,
+      "max": 8,
+      "high": 10
+    },
+    "carpels": {
+      "min": 3,
+      "max": 3,
+      "low": 2,
+      "high": 4
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Didiereaceae: leaves alternate; leaves simple; stipules absent; plants dioecious or polygamous; ovary superior; stems woody; flowers in cymes; perianth sepals and petals; stamens 8 (-10); carpels (2-) 3 (-4). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

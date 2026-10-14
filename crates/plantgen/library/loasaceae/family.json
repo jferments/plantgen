@@ -2,5 +2,57 @@
   "schema": 1,
   "rank": "family",
   "name": "Loasaceae",
-  "parent": "order/cornales"
+  "parent": "order/cornales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often"
+    },
+    "leaf_division": {
+      "simple": "often",
+      "compound": "often"
+    },
+    "division_pattern": "pinnate",
+    "leaf_venation": {
+      "pinnate": "often",
+      "palmate": "often"
+    },
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": {
+      "half_inferior": "often",
+      "inferior": "often"
+    },
+    "hypanthium": true,
+    "woodiness": {
+      "woody": "sometimes",
+      "herbaceous": "usually"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "usually",
+      "achene": "sometimes",
+      "nut": "sometimes"
+    },
+    "stamens": {
+      "min": 5,
+      "max": 100
+    },
+    "carpels": {
+      "min": 1,
+      "max": 5,
+      "high": 7
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Loasaceae: leaves alternate or opposite; leaves simple or compound; compound leaves pinnate; veins pinnate or palmate; stipules present or absent; plants hermaphrodite; ovary half inferior or inferior; floral cup present; stems usually herbaceous, sometimes woody; flowers actinomorphic; perianth sepals and petals; fruit usually capsule, sometimes achene or nut; stamens 5 to 100; carpels 1 to 5 (-7). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

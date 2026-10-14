@@ -52,9 +52,18 @@
 # values their species leave unset, as this program's defaults were until
 # then.
 #
+# Revision 5 (plants fitted to their place): a frond that sags to the
+# ground lies on it, `rest_gap` above the substrate (substrate@1's, or
+# level soil), instead of passing into it.
+#
+# Revision 6 (leaf life): fronds, dead fronds, boots and the crown's cone
+# live as long as their parameters say, no longer one year more. What a
+# step makes is born at the step's end, so a rule that ends a part by its
+# age counts the step it is in (`age + dt >=`).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem palm 4;
+lsystem palm 6;
 
 # The plant.
 param vigour_spread;          # a palm grows exp(gauss() * vigour_spread) times as fast
@@ -103,6 +112,7 @@ param unroll;                 # share of a year a frond takes to open
 param curl;                   # degrees each coiled piece turns back
 param droop;                  # sag per year of a frond's age
 param droop_years;
+param rest_gap;               # a frond that reaches the ground lies this far above it
 param skirt;                  # 1: dead fronds hang
 param dead_angle;             # angle of a hanging dead frond to the vertical
 param dead_life;              # years a dead frond hangs
@@ -167,12 +177,12 @@ decompose Fc(i, m, c) -> ;
 
 # A frond dies after frond_life years: it hangs, or falls and leaves its
 # boot, or falls. The first piece stands for the frond; the others go.
-rule Pc(k, m, s, e) : age >= frond_life && k == 0 && skirt > 0 -> Dh(s);
-rule Pc(k, m, s, e) : age >= frond_life && k == 0 && boots > 0 -> Bt;
-rule Pc(k, m, s, e) : age >= frond_life -> ;
-rule Dh(s) : age >= dead_life && boots > 0 -> Bt;
-rule Dh(s) : age >= dead_life -> ;
-rule Bt : age >= boot_life -> ;
+rule Pc(k, m, s, e) : age + dt >= frond_life && k == 0 && skirt > 0 -> Dh(s);
+rule Pc(k, m, s, e) : age + dt >= frond_life && k == 0 && boots > 0 -> Bt;
+rule Pc(k, m, s, e) : age + dt >= frond_life -> ;
+rule Dh(s) : age + dt >= dead_life && boots > 0 -> Bt;
+rule Dh(s) : age + dt >= dead_life -> ;
+rule Bt : age + dt >= boot_life -> ;
 # The frond holds its dead frond and boot until they go: a generous bound,
 # since what is gone leaves nothing within it.
 rule frond : age >= frond_life + dead_life + boot_life + 4 * dt -> ;
@@ -185,14 +195,14 @@ decompose Fr(s, a, e) : fan > 0 -> frond Pc(0, max(1, round(pieces)), s, e) Ry(0
 decompose Fr(s, a, e) -> frond Pc(0, max(1, round(pieces)), s, e);
 decompose Ry(j, m, s, e) : m > 1 ->
     Ry(j, floor(m / 2), s, e) Ry(j + floor(m / 2), m - floor(m / 2), s, e);
-rule Ry(j, m, s, e) : age >= frond_life -> ;
+rule Ry(j, m, s, e) : age + dt >= frond_life -> ;
 decompose Pc(k, m, s, e) : m > 1 ->
     Pc(k, floor(m / 2), s, e) Pc(k + floor(m / 2), m - floor(m / 2), s, e);
 
 # The first piece opens the frond, sets its sag and draws the petiole.
 interpret Pc(k, m, s, e) : k == 0 ->
     &(lerp(young_angle, old_angle, 1 - exp(-max(0, age + season - e) / open_years)))
-    T(0, -1, 0, droop * min(max(0, age + season - e), droop_years))
+    T(0, -1, 0, droop * min(max(0, age + season - e), droop_years)) rest(rest_gap)
     !(petiole_radius) F(s * petiole) !(petiole_radius * 0.6) Pp(k, s, e);
 interpret Pc(k, m, s, e) -> Pp(k, s, e);
 
@@ -226,7 +236,7 @@ interpret Ry(j, m, s, e) ->
 # The crown's cone, at its centre among the young fronds; a crown bears
 # the newest only.
 decompose Cc(z) : z <= 0 -> ;
-rule Cc(z) : age >= 1 -> ;
+rule Cc(z) : age + dt >= 1 -> ;
 interpret Cc(z) -> cone(z);
 
 # A sucker: out along a runner at the foot, then up, a palm of its own.

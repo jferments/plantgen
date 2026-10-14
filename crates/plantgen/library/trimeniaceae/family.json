@@ -2,5 +2,41 @@
   "schema": 1,
   "rank": "family",
   "name": "Trimeniaceae",
-  "parent": "order/austrobaileyales"
+  "parent": "order/austrobaileyales",
+  "traits": {
+    "leaf_arrangement": "opposite",
+    "leaf_division": "simple",
+    "leaf_margin": "dentate",
+    "leaf_venation": "pinnate",
+    "stipules": false,
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": "superior",
+    "woodiness": "woody",
+    "inflorescence": {
+      "cyme": "often",
+      "raceme": "often",
+      "panicle": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": "drupe",
+    "stamens": {
+      "min": 7,
+      "max": 23
+    },
+    "carpels": {
+      "min": 1,
+      "max": 2
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Trimeniaceae: leaves opposite; leaves simple; margins dentate; veins pinnate; stipules absent; plants hermaphrodite or polygamous; ovary superior; stems woody; flowers in cymes, in racemes or in panicles; flowers actinomorphic; perianth tepals; fruit drupe; stamens 7 to 23; carpels 1 to 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

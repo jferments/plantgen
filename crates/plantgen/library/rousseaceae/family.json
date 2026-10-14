@@ -2,5 +2,66 @@
   "schema": 1,
   "rank": "family",
   "name": "Rousseaceae",
-  "parent": "order/asterales"
+  "parent": "order/asterales",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "dentate": "often",
+      "serrate": "often"
+    },
+    "leaf_venation": "pinnate",
+    "leaf_habit": "evergreen",
+    "leaf_shape": {
+      "ovate": "often",
+      "lanceolate": "often"
+    },
+    "stipules": false,
+    "sexual_system": {
+      "hermaphrodite": "often",
+      "polygamous": "often"
+    },
+    "ovary_position": {
+      "superior": "usually",
+      "half_inferior": "rarely"
+    },
+    "hypanthium": false,
+    "woodiness": "woody",
+    "inflorescence": {
+      "solitary": "often",
+      "panicle": "often",
+      "corymb": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": {
+      "capsule": "often",
+      "berry": "often"
+    },
+    "flower_merosity": {
+      "min": 5,
+      "max": 5,
+      "high": 6
+    },
+    "stamens": {
+      "min": 5,
+      "max": 5,
+      "high": 6
+    },
+    "carpels": {
+      "min": 5,
+      "max": 5,
+      "high": 7
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Rousseaceae: leaves usually alternate, rarely opposite; leaves simple; margins dentate or serrate; veins pinnate; leaves evergreen; blades ovate or lanceolate; stipules absent; plants hermaphrodite or polygamous; ovary usually superior, rarely half inferior; floral cup absent; stems woody; flowers solitary, in panicles or in corymbs; flowers actinomorphic; perianth sepals and petals; fruit capsule or berry; parts of each whorl 5 (-6); stamens 5 (-6); carpels 5 (-7). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

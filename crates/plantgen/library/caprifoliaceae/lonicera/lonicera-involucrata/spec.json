@@ -116,7 +116,36 @@
     }
   ],
   "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 1,
+      "max": 3
+    },
+    "leaf_length_m": {
+      "min": 0.03,
+      "max": 0.1
+    },
+    "leaf_width_m": {
+      "min": 0.02,
+      "max": 0.06
+    }
+  },
   "evidence": {
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960), as Lonicera involucrata: grows 1 m to 3 m tall."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960), as Lonicera involucrata: leaves 3 cm to 10 cm long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4 (1960), as Lonicera involucrata: leaves 2 cm to 6 cm wide."
+    },
     "generator.params.path_half": {
       "evidence": "Authored",
       "source": "plantgen-authors",

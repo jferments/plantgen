@@ -2,5 +2,35 @@
   "schema": 1,
   "rank": "family",
   "name": "Commelinaceae",
-  "parent": "order/commelinales"
+  "parent": "order/commelinales",
+  "traits": {
+    "woodiness": "herbaceous",
+    "perianth": "sepals_and_petals",
+    "flower_merosity": 3,
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "inflorescence": {
+      "cyme": "usually",
+      "panicle": "sometimes"
+    },
+    "ovary_position": "superior",
+    "carpels": {
+      "min": 2,
+      "max": 3,
+      "typical": 3
+    },
+    "fruit_type": {
+      "capsule": "usually",
+      "berry": "rarely"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-monocots",
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 358 Commelinaceae: perennial herbs; leaves with a closed papery sheath at the base; flowers usually regular, rarely irregular (Commelina), bisexual, in clusters in the axils or mostly in cymes or panicles at the tips, often blue or white; perianth plainly of two whorls of 3, the outer sepal-like, the inner petal-like; stamens 6 or fewer; ovary always superior, of 3 (rarely 2) cells; fruit a thin capsule, rarely fleshy."
+    }
+  }
 }

@@ -2,5 +2,38 @@
   "schema": 1,
   "rank": "family",
   "name": "Velloziaceae",
-  "parent": "order/pandanales"
+  "parent": "order/pandanales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "dentate": "often"
+    },
+    "leaf_venation": "parallel",
+    "leaf_shape": "linear",
+    "rosette": {
+      "basal": "often",
+      "terminal": "often"
+    },
+    "sexual_system": "hermaphrodite",
+    "ovary_position": "inferior",
+    "woodiness": "herbaceous",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "tepals",
+    "fruit_type": "capsule",
+    "flower_merosity": 3,
+    "stamens": {
+      "min": 6,
+      "max": 66
+    },
+    "carpels": 3
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Velloziaceae: leaves alternate; leaves simple; margins entire or dentate; veins parallel; blades linear; leaf rosettes basal or terminal; plants hermaphrodite; ovary inferior; stems herbaceous; flowers actinomorphic; perianth tepals; fruit capsule; parts of each whorl 3; stamens 6 to 66; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }

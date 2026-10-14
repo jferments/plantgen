@@ -2,5 +2,41 @@
   "schema": 1,
   "rank": "family",
   "name": "Gesneriaceae",
-  "parent": "order/lamiales"
+  "parent": "order/lamiales",
+  "traits": {
+    "woodiness": {
+      "herbaceous": "often",
+      "woody": "often"
+    },
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "alternate": "rarely"
+    },
+    "flower_symmetry": {
+      "zygomorphic": "usually",
+      "actinomorphic": "rarely"
+    },
+    "perianth": "sepals_and_petals",
+    "stamens": {
+      "min": 2,
+      "max": 4,
+      "typical": 4
+    },
+    "ovary_position": {
+      "superior": "often",
+      "half_inferior": "sometimes",
+      "inferior": "sometimes"
+    },
+    "fruit_type": {
+      "capsule": "usually",
+      "berry": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "hutchinson-1959-dicots",
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 326 Gesneriaceae: herbs, shrubs or rarely trees; leaves in a basal rosette or opposite, the two of a pair often unequal; flowers usually irregular, often large and showy; corolla united with an oblique limb, often two-lipped; stamens 4 or 2, often with a staminode; ovary superior to inferior, of one cell with two placentas on its wall; fruit a capsule, rarely a berry. Library 1.0's family is 58% shrubs and 27% herbs. The order (Lamiales) states the stipules and the two carpels."
+    }
+  }
 }

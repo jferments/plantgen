@@ -2,5 +2,45 @@
   "schema": 1,
   "rank": "family",
   "name": "Pentaphragmataceae",
-  "parent": "order/asterales"
+  "parent": "order/asterales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "often",
+      "dentate": "often"
+    },
+    "stipules": false,
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "polygamous": "rarely"
+    },
+    "ovary_position": "inferior",
+    "hypanthium": {
+      "true": "often",
+      "false": "often"
+    },
+    "woodiness": "herbaceous",
+    "inflorescence": "cyme",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "sepals_and_petals",
+    "fruit_type": "berry",
+    "flower_merosity": 5,
+    "stamens": {
+      "min": 5,
+      "max": 5,
+      "low": 4
+    },
+    "carpels": {
+      "min": 2,
+      "max": 3
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Pentaphragmataceae: leaves alternate; leaves simple; margins entire or dentate; stipules absent; plants usually hermaphrodite, rarely polygamous; ovary inferior; floral cup present or absent; stems herbaceous; flowers in cymes; flowers actinomorphic; perianth sepals and petals; fruit berry; parts of each whorl 5; stamens (4-) 5; carpels 2 to 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    }
+  }
 }
