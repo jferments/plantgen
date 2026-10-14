@@ -6,6 +6,20 @@
   "traits": {
     "leaf_venation": "parallel"
   },
+  "forms": {
+    "palm": {
+      "generator": {
+        "program": "zamiaceae"
+      },
+      "evidence": {
+        "generator.program": {
+          "evidence": "Authored",
+          "source": "plantgen-authors",
+          "note": "The zamias' own program (growth plan G2.3a), on the palm base: it gives the values its species leave unset, as Cycadaceae's program does."
+        }
+      }
+    }
+  },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",

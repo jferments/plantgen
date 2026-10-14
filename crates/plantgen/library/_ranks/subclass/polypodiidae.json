@@ -18,6 +18,22 @@
     "generator.params.crown_start": {
       "map": {"rhizome_habit": {"none": 0, "erect": 1, "ascending": 1, "short_creeping": 1, "long_creeping": 1}},
       "why": "A crown a fern's rhizome branches into is part of the same plant and fed by it, so its first fronds are as large as the crown it came from; only a fern with no rhizome starts each crown from a spore."
+    },
+    "appearance.organs.pinna.shape.template": {
+      "map": {"division_order": {"1": "simple", "2": "frond", "3": "frond", "4": "frond", "5": "frond"}}, "else": "frond",
+      "why": "A once-pinnate frond's pinnae are whole blades, drawn on a simple card along the rachis; a frond divided again (a range read at its middle, to the nearest whole number) draws each pinna on a frond card of its own pinnules. A fern whose taxa do not say is drawn divided again, as most leptosporangiate ferns are."
+    }
+  },
+  "forms": {
+    "fern": {
+      "growth": {"years": 6, "step": 1, "keyframes": [2, 4, 6]},
+      "variants": {"environments": ["open"], "seeds": [1]},
+      "appearance": {"bark": [0.2, 0.16, 0.08], "foliage": [0.07, 0.17, 0.04], "foliage_shade": [0.022, 0.052, 0.012], "variation": 0.2, "organs": {"pinna": {}}},
+      "evidence": {
+        "growth": {"evidence": "Authored", "source": "plantgen-authors", "note": "A fern is grown to the age most built-in ferns of the subclass are (6 years; their fronds are full size by 3 to 4)."},
+        "variants": {"evidence": "Authored", "source": "plantgen-authors", "note": "One seed in the open, as the built-in species."},
+        "appearance": {"evidence": "Authored", "source": "plantgen-authors", "note": "The built-in leptosporangiate ferns' median rhizome and frond colours (2026-10-14), until a family or species states its own; every fern draws its pinnae, on the card the rule above chooses."}
+      }
     }
   },
   "evidence": {

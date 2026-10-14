@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "subfamily",
+  "name": "Calamoideae",
+  "parent": "family/arecaceae",
+  "traits": {
+    "leaf_division": "compound",
+    "division_pattern": {"pinnate": "usually", "palmate": "rarely"}
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under Palmae, subfamily I Calamoideae: erect or climbing palms, sometimes suckering, with reduplicate leaves that are pinnate (some entire-pinnate) or rarely palmate, and fruit covered in overlapping reflexed scales; mostly Asian. Its tribes Eugeissoneae and Calameae have pinnate leaves."
+    }
+  }
+}

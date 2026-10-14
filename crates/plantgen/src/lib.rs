@@ -328,4 +328,11 @@ pub mod venation;
 /// length and open-grown spruces, firs, hemlocks and cedars fill in
 /// (53 is heights from floras,
 /// #113).
-pub const GENERATOR_REVISION: u32 = 54;
+/// 55: palms grow from their facts (palm 7, arecaceae, Arecaceae's palm
+/// form): a crownshaft of leaf sheaths on the trunk's girth, trunks that
+/// flare at the foot and may swell mid-way, arched fans with hanging
+/// segment tips, old fronds turning down and skirts of dead fronds; the
+/// royal, cabbage, date, California fan and saw palms are refitted, and
+/// a drafted palm's frond, petiole and trunk come from its leaf length,
+/// heights and stem diameter (54 is full conifer crowns, #107).
+pub const GENERATOR_REVISION: u32 = 55;

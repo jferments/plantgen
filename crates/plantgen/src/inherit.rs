@@ -2439,11 +2439,15 @@ fn map_rule(value: &Value) -> Option<&Map<String, Value>> {
     }
 }
 
-/// The state a map looks up for a trait's value: a word as itself, any
-/// other value as JSON writes it.
+/// The state a map looks up for a trait's value: a word as itself, a
+/// count as its nearest whole number (a range is read at its middle, so 2
+/// to 3 pinnate reads 3), any other value as JSON writes it.
 fn state(value: &Value) -> String {
     match value {
         Value::String(name) => name.clone(),
+        Value::Number(number) => number
+            .as_f64()
+            .map_or_else(|| number.to_string(), |count| format!("{}", count.round())),
         other => other.to_string(),
     }
 }
@@ -4288,6 +4292,46 @@ mod tests {
             uncounted.rules["generator.params.divergence"].1.as_deref(),
             Some("no `phyllotaxis_pattern` to read")
         );
+    }
+
+    #[test]
+    fn a_map_on_a_count_reads_its_nearest_whole_number() {
+        let files = ranks(&[
+            (
+                "_ranks/phylum/tracheophyta.json",
+                json!({"schema": 1, "rank": "phylum", "name": "Tracheophyta"}),
+            ),
+            (
+                "testaceae/family.json",
+                json!({"schema": 1, "rank": "family", "name": "Testaceae",
+                    "parent": "phylum/tracheophyta", "generator": {"program": "herb"},
+                    "rules": {"generator.params.leaves_per_node": {
+                        "map": {"leaflets": {"1": 1, "2": 2, "3": 3}}, "else": 5}}}),
+            ),
+        ]);
+        let chain = above(&files, "testaceae", "plain").unwrap();
+        let per_node = |traits: Value| {
+            inherit(
+                "testaceae/plain/plain-one/spec.json",
+                &json!({"id": "plain-one", "traits": traits}),
+                &chain,
+                &programs(),
+            )
+            .unwrap()
+            .spec["generator"]["params"]["leaves_per_node"]
+                .clone()
+        };
+        assert_eq!(per_node(json!({"leaflets": 1})), json!(1));
+        // 2 to 3 reads at its middle, 2.5, the nearest whole number 3.
+        assert_eq!(
+            per_node(json!({"leaflets": {"min": 2, "max": 3}})),
+            json!(3)
+        );
+        assert_eq!(
+            per_node(json!({"leaflets": {"min": 1, "max": 3, "typical": 2}})),
+            json!(2)
+        );
+        assert_eq!(per_node(json!({})), json!(5));
     }
 
     /// A clade's defaults for a growth form fill the parameters a program

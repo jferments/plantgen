@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Nypa",
+  "parent": "subfamily/nypoideae",
+  "traits": {
+    "architectural_model": "schoute",
+    "clonal": true
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae II): the nipa palm of mangrove swamps: a creeping rhizome whose apices truly fork (Schoute's model), fronds to 10 m tall."
+    }
+  }
+}

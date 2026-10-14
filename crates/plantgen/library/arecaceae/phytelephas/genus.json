@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Phytelephas",
+  "parent": "subfamily/ceroxyloideae",
+  "traits": {
+    "sexual_system": "dioecious",
+    "spines": "none"
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae IV 3): dioecious, unarmed, short-stemmed palms."
+    }
+  }
+}

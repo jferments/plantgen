@@ -1,0 +1,16 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Calamus",
+  "parent": "subfamily/calamoideae",
+  "traits": {
+    "spines": {"prickles": "usually"}
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "mabberley-2017",
+      "note": "Mabberley's Plant-book (4th ed., 2017), under the genus (Palmae I 3f): usually spiny climbers with long internodes, the rattans, climbing on the backward-pointing spines of their leaves' tips, their stems up to 170 m or more; a few small, C. minutus only 50 cm tall."
+    }
+  }
+}

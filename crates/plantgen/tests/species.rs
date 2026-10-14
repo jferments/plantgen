@@ -225,12 +225,14 @@ fn builtin_species_draw_no_floating_organs() {
 /// or an organ more than 0.05 m below the ground at any keyframe.
 #[test]
 fn fronds_and_pads_lie_on_the_ground() {
-    const RESTING: [&str; 5] = [
+    const RESTING: [&str; 7] = [
         "polypodiidae",
         "palm",
         "arecaceae",
         "cyatheaceae",
         "cycadaceae",
+        "zamiaceae",
+        "marattiaceae",
     ];
     let mut checked = 0;
     let mut failures = Vec::new();
@@ -401,6 +403,7 @@ fn by_id(graph: &PlantGraph) -> HashMap<u64, usize> {
 fn growth_history_is_consistent_between_keyframes() {
     for (id, _) in spec::all_species() {
         let spec = PlantSpec::builtin(id).unwrap();
+        let palm = ["palm", "arecaceae"].contains(&spec.generator.program.as_str());
         let variant = spec.variant_list()[0];
         let ages = vec![4.0, 8.0, 12.0, 16.0];
         let growth = grow_variant(&spec, &variant, 16.0, ages.clone());
@@ -433,9 +436,11 @@ fn growth_history_is_consistent_between_keyframes() {
                     // The pipe model and annual rings: no branch is thicker
                     // than the wood it grows from. A fleshy body is not
                     // wood: a cactus pad can be wider than the pad it
-                    // grows from.
+                    // grows from. Nor is a palm's stem, which lays down no
+                    // rings and may swell above its foot (a royal palm's
+                    // belly).
                     assert!(
-                        segment.body > 0 || segment.radius <= parent.radius * (1.0 + 1e-9),
+                        segment.body > 0 || palm || segment.radius <= parent.radius * (1.0 + 1e-9),
                         "{id} at {}: segment {index} is thicker than its parent",
                         graph.age
                     );
