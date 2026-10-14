@@ -52,6 +52,9 @@ pub struct Job {
     /// What decides the picture, recorded in its sidecar so a later run
     /// can skip it when nothing changed.
     pub key: String,
+    /// Draw the plant alone on a transparent background: no ground and no
+    /// scale, as a cut-out for a web page or a sprite sheet.
+    pub clear: bool,
 }
 
 /// Metres between tiles' plants.
@@ -245,6 +248,7 @@ struct Current {
     facts: Vec<Facts>,
     /// Times the sheet is drawn larger, per side.
     supersample: u32,
+    clear: bool,
     target: Handle<Image>,
     entities: Vec<Entity>,
     frames: u32,
@@ -401,6 +405,7 @@ fn stage_next(
                 index,
                 rect: tile.rect,
                 supersample: k,
+                clear: job.clear,
             },
         ));
     }
@@ -411,6 +416,7 @@ fn stage_next(
         facts: scenes.into_iter().map(|scene| scene.facts).collect(),
         sheet,
         supersample: k,
+        clear: job.clear,
         target,
         entities,
         frames: 0,
@@ -468,12 +474,17 @@ fn captured(event: On<ScreenshotCaptured>, mut stage: ResMut<Stage>, jobs: Res<J
         return;
     };
     let k = current.supersample;
-    let rgba = downsample(
+    let mut rgba = downsample(
         &to_rgba8(data, image.texture_descriptor.format),
         width,
         height,
         k,
     );
+    if current.clear && k == 1 {
+        // Multisampling blends an edge with the clear background, whose
+        // colour is black: straighten the colour by its coverage.
+        unpremultiply(&mut rgba);
+    }
     let (width, height) = (width / k, height / k);
     if shows_only_background(&rgba) && current.tries < RETRIES {
         // Not drawn yet: read it back again after a few more frames.
@@ -557,23 +568,57 @@ fn downsample(rgba: &[u8], width: u32, height: u32, k: u32) -> Vec<u8> {
     for y in 0..oh {
         for x in 0..ow {
             let mut sum = [0.0_f32; 4];
+            let mut weighted = [0.0_f32; 3];
             for dy in 0..k {
                 for dx in 0..k {
                     let at = ((y * k + dy) * w + x * k + dx) * 4;
+                    let alpha = f32::from(rgba[at + 3]) / 255.0;
                     for c in 0..3 {
-                        sum[c] += decode[usize::from(rgba[at + c])];
+                        let linear = decode[usize::from(rgba[at + c])];
+                        sum[c] += linear;
+                        weighted[c] += linear * alpha;
                     }
                     sum[3] += f32::from(rgba[at + 3]);
                 }
             }
-            for channel in &sum[..3] {
-                out.push(plantgen::raster::to_u8(plantgen::raster::srgb(channel / n)));
+            // Where some samples are clear background (a cut-out's edge),
+            // only the drawn ones give the colour.
+            let covered = sum[3] / 255.0;
+            let colour = if sum[3] >= n * 255.0 {
+                [sum[0] / n, sum[1] / n, sum[2] / n]
+            } else if covered > 0.0 {
+                weighted.map(|c| c / covered)
+            } else {
+                [0.0; 3]
+            };
+            for channel in colour {
+                out.push(plantgen::raster::to_u8(plantgen::raster::srgb(channel)));
             }
             #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
             out.push((sum[3] / n).round() as u8);
         }
     }
     out
+}
+
+/// Straighten a picture's colours where they were blended with a clear,
+/// black background in linear light: each partly covered pixel's colour
+/// over its coverage.
+fn unpremultiply(rgba: &mut [u8]) {
+    for pixel in rgba.as_chunks_mut::<4>().0 {
+        let alpha = f32::from(pixel[3]) / 255.0;
+        if alpha > 0.0 && alpha < 1.0 {
+            for channel in &mut pixel[..3] {
+                let c = f32::from(*channel) / 255.0;
+                let linear = if c <= 0.04045 {
+                    c / 12.92
+                } else {
+                    ((c + 0.055) / 1.055).powf(2.4)
+                } / alpha;
+                *channel = plantgen::raster::to_u8(plantgen::raster::srgb(linear.min(1.0)));
+            }
+        }
+    }
 }
 
 /// Whether every pixel is the background's: nothing drawn yet.
@@ -746,6 +791,8 @@ struct Placement {
     index: usize,
     rect: [u32; 4],
     supersample: u32,
+    /// A transparent background, without the ground and scale.
+    clear: bool,
 }
 
 impl Placement {
@@ -836,6 +883,11 @@ fn spawn_scene(
     };
     let ev100 = exposure(&scene.light);
     let [r, g, b] = plantlab_scene::BACKGROUND;
+    let background = if place.clear {
+        Color::NONE
+    } else {
+        Color::linear_rgb(r, g, b)
+    };
     entities.push(
         commands
             .spawn((
@@ -844,7 +896,7 @@ fn spawn_scene(
                     // A clear clears the whole image, viewport or not: only
                     // the first tile's camera clears it.
                     clear_color: if place.index == 0 {
-                        ClearColorConfig::Custom(Color::linear_rgb(r, g, b))
+                        ClearColorConfig::Custom(background)
                     } else {
                         ClearColorConfig::None
                     },
@@ -872,12 +924,18 @@ fn spawn_scene(
         &scene.light,
         &mut assets.images,
     );
+    // A cut-out's ground and scale go on layer 0, which no camera shows.
+    let backdrop = if place.clear {
+        RenderLayers::layer(0)
+    } else {
+        layer.clone()
+    };
     entities.extend(spawn_plant(
         commands,
         scene,
         assets,
         offset,
-        (&layer, &layer),
+        (&layer, &backdrop),
     ));
     entities
 }
@@ -1055,6 +1113,7 @@ mod tests {
             name: "fern".into(),
             sheet: plantlab_scene::single(shot, 128, 128),
             key: "test".into(),
+            clear: false,
         }];
         run(jobs, out.clone(), None).expect("renders");
         let png = std::fs::read(out.join("fern.png")).expect("the picture");
