@@ -25,8 +25,8 @@
     },
     "appearance.organs.*.shape.width": {
       "template": "simple",
-      "rule": "clamp(4 * leaf_length_m / (leaflets * leaf_width_m), 0.05, 1)",
-      "why": "A once-divided frond's pinnae stand side by side along its blade, each as broad as the gap from one pinna to the next, and as long as half the blade is wide."
+      "rule": "clamp(first(4 * leaf_length_m / (leaflets * leaf_width_m), 1 / (2 * pieces * pinna_length)), 0.05, 1)",
+      "why": "A once-divided frond's pinnae stand side by side along its blade, each as broad as the gap from one pinna to the next, and as long as half the blade is wide; where no flora measures the blade, as broad as that gap is on the frond the program draws, a pinna every half piece of its rachis, for its longest pinna's length."
     },
     "generator.params.frond_life": {
       "map": {
@@ -54,7 +54,7 @@
     "rules": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "What the fern program's parameters and the frond card mean: frond_length is the whole frond, stipe included, and stipe the share of it without pinnae; frond_life is a frond's years; the program draws the frond's first division as pinnae, so the pinna card shows the divisions below it. Floras measure a fern's blade and stipe apart, so the frond is their sum."
+      "note": "What the fern program's parameters and the frond card mean: frond_length is the whole frond, stipe included, and stipe the share of it without pinnae; frond_life is a frond's years; the program draws the frond's first division as pinnae, so the pinna card shows the divisions below it. Floras measure a fern's blade and stipe apart, so the frond is their sum. A pinna's width where no flora measures the blade is the gap between pinnae on the frond the program draws (one every half piece of its rachis) for its longest pinna's length, a choice of the model's (visual forms ferns, 2026-10-15): before, it was the simple card's default, and once-pinnate fronds drew broad overlapping ovals."
     }
   }
 }
