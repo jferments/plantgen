@@ -113,8 +113,8 @@
     "life_span": "perennial",
     "rhizome_habit": "short_creeping",
     "clonal": true,
-    "leaf_length_m": {"min": 0.03, "max": 0.4},
-    "leaf_width_m": {"min": 0.0005, "max": 0.001, "high": 0.002},
+    "leaf_length_m": {"min": 0.05, "max": 0.15},
+    "leaf_width_m": {"min": 0.001, "max": 0.002},
     "awn_insertion": "apical",
     "awn_form": "straight",
     "inflorescence_posture": "erect",
@@ -203,13 +203,13 @@
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
-      "source": "kew-grassbase",
-      "note": "GrassBase's entry (as search results quote it; the page itself was not read): leaf-blades straight, filiform, 3-40 cm long."
+      "source": "usfs-feis",
+      "note": "FEIS's red fescue review (Walsh 1995, read 2026-10-15): blades 2 to 6 inches (5-15 cm) long, leaves mostly basal. It replaces GrassBase's 3-40 cm, which was seen only as quoted in search results."
     },
     "traits.leaf_width_m": {
       "evidence": "SourceInferred",
-      "source": "kew-grassbase",
-      "note": "GrassBase's entry (as search results quote it; the page itself was not read): leaf-blades 0.5-1(-2) mm wide; Hitchcock (no. 29) has them soft, usually folded or involute."
+      "source": "usfs-feis",
+      "note": "FEIS's red fescue review (Walsh 1995, read 2026-10-15): blades 0.04 to 0.09 inch (1-2 mm) wide. It replaces GrassBase's 0.5-1(-2) mm, seen only as quoted in search results; Hitchcock (no. 29) has the blades soft, usually folded or involute."
     },
     "traits.awn_insertion": {
       "evidence": "SourceInferred",

@@ -92,6 +92,11 @@
     "indusium": "shield"
   },
   "evidence": {
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's western swordfern review (Zouhar 2015, read 2026-10-15): frond size varies with place and site, from about 8 to 98 inches (20-250 cm) long; fronds over 3 feet (1 m) typify the fern where it dominates the understory. The stated 25 cm to 1 m is the common part of that range."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",

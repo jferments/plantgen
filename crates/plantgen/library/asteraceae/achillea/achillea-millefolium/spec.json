@@ -80,7 +80,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "height_typical_m": {"min": 0.06, "max": 0.65},
+    "height_typical_m": {"min": 0.3, "max": 1.0},
     "leaf_division": "simple",
     "leaf_incision": "dissected",
     "division_pattern": "pinnate",
@@ -102,6 +102,11 @@
     "rhizome_habit": {"short_creeping": "often", "long_creeping": "often"}
   },
   "evidence": {
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's common yarrow review (Aleksoff 1999, read 2026-10-15): a perennial forb 11 to 40 inches (30-100 cm) in height with extensive rhizomes."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
