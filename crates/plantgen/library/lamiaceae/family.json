@@ -4,6 +4,10 @@
   "name": "Lamiaceae",
   "parent": "order/lamiales",
   "traits": {
+    "perianth": "sepals_and_petals",
+    "carpels": 2,
+    "ovary_position": "superior",
+    "hypanthium": false,
     "woodiness": {
       "herbaceous": "usually",
       "woody": "sometimes"
@@ -48,6 +52,10 @@
     }
   },
   "evidence": {
+    "traits.perianth": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 416: perianth biseriate, a 5-lobed fused calyx and a fused 4- or 5-lobed corolla (formula K (5) C (5))."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 416: gynoecium of 2 carpels, divided by false septa into 4 locules (formula G (2))."},
+    "traits.ovary_position": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 416: flowers hypogynous, ovary superior and often deeply 4-lobed with a gynobasic style."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 416: Simpson states the hypanthium is absent and the flowers hypogynous."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

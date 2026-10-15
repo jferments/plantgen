@@ -4,6 +4,7 @@
   "name": "Oleaceae",
   "parent": "order/lamiales",
   "traits": {
+    "hypanthium": false,
     "woodiness": "woody",
     "leaf_arrangement": {
       "opposite": "usually",
@@ -53,6 +54,7 @@
     }
   },
   "evidence": {
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 416, 505: Simpson calls the flowers hypogynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

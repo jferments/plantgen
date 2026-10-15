@@ -4,6 +4,9 @@
   "name": "Solanaceae",
   "parent": "order/solanales",
   "traits": {
+    "stamens": {"min": 5, "max": 5, "low": 2},
+    "corolla_shape": {"tubular": "often", "rotate": "often", "salverform": "often"},
+    "hypanthium": false,
     "woodiness": {
       "herbaceous": "often",
       "woody": "often"
@@ -48,6 +51,9 @@
     "sexual_system": "hermaphrodite"
   },
   "evidence": {
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 428: stamens 5, rarely 4 or 2 plus 2 staminodes, on the corolla tube."},
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 428: perianth usually tubular, rotate or salverform, no order given (Floral Diagrams p. 315-317: long tubes or trumpets; Solanum short with reflexed lobes)."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 428: Simpson states the hypanthium is absent."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

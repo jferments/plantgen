@@ -4,6 +4,8 @@
   "name": "Plantaginaceae",
   "parent": "order/lamiales",
   "traits": {
+    "flower_merosity": {"min": 4, "max": 5, "low": 3},
+    "hypanthium": false,
     "leaf_division": "simple",
     "leaf_incision": {
       "none": "usually",
@@ -65,6 +67,8 @@
     }
   },
   "evidence": {
+    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 421: calyx and corolla of 3 to 5 lobes; Floral Diagrams p. 328 general formula: 4 to 5 (Veronica and Plantago 4, Penstemon 5)."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 421, 505: Simpson calls the flowers hypogynous or epigynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "ffpa-2014",

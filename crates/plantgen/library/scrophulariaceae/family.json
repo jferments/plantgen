@@ -4,6 +4,10 @@
   "name": "Scrophulariaceae",
   "parent": "order/lamiales",
   "traits": {
+    "perianth": "sepals_and_petals",
+    "carpels": {"min": 2, "max": 2, "high": 3},
+    "ovary_position": "superior",
+    "hypanthium": false,
     "woodiness": {
       "herbaceous": "often",
       "woody": "often"
@@ -41,6 +45,10 @@
     }
   },
   "evidence": {
+    "traits.perianth": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 424: perianth dichlamydeous, a fused 4-5 (2) lobed calyx and a fused corolla."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 424: ovary of 2, rarely 3, carpels (Floral Diagrams p. 328: G2)."},
+    "traits.ovary_position": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 424: flowers hypogynous with a superior ovary."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 424, 505: Simpson calls the flowers hypogynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

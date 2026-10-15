@@ -4,6 +4,8 @@
   "name": "Polygalaceae",
   "parent": "order/fabales",
   "traits": {
+    "flower_merosity": {"min": 3, "max": 5},
+    "hypanthium": {"false": "usually", "true": "sometimes"},
     "woodiness": {
       "herbaceous": "often",
       "woody": "often"
@@ -36,6 +38,8 @@
     }
   },
   "evidence": {
+    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 321, 325: 5 sepals; petals 5, or 3 where the two lateral petals are lost."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 321: flowers hypogynous to perigynous, a hypanthium present in some."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

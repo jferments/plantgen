@@ -4,6 +4,12 @@
   "name": "Araceae",
   "parent": "order/alismatales",
   "traits": {
+    "perianth": {"tepals": "often", "absent": "often"},
+    "flower_merosity": {"min": 2, "max": 3},
+    "stamens": {"min": 4, "max": 8, "low": 1, "high": 12},
+    "carpels": {"min": 3, "max": 3, "low": 1, "high": 50},
+    "ovary_position": "superior",
+    "hypanthium": false,
     "inflorescence": "spadix",
     "inflorescence_unit": "flower",
     "rosette": {
@@ -41,6 +47,12 @@
     }
   },
   "evidence": {
+    "traits.perianth": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 213: perianth of 2+2 or 3+3 (rarely 4+4) tepals, or absent (Floral Diagrams p. 96: none or 6)."},
+    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 213: tepals in whorls of 2 or 3."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 213: stamens 4, 6 or 8, rarely 1 to 12."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 213: ovary of 3, rarely 1 to about 50, carpels."},
+    "traits.ovary_position": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 213: flowers hypogynous with a superior ovary."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 213: Simpson states the hypanthium is absent."},
     "traits.leaf_division": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

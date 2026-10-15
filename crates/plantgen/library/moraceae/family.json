@@ -4,6 +4,9 @@
   "name": "Moraceae",
   "parent": "order/rosales",
   "traits": {
+    "stamens": {"min": 1, "max": 6},
+    "ovary_position": {"superior": "often", "inferior": "often"},
+    "hypanthium": false,
     "woodiness": {
       "woody": "usually",
       "herbaceous": "rarely"
@@ -57,6 +60,9 @@
     }
   },
   "evidence": {
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 329: stamens 1 to 6, usually as many as and opposite the perianth parts."},
+    "traits.ovary_position": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 329: flowers hypogynous or epigynous, ovary superior or inferior; no frequency given."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 329, 505: Simpson calls the flowers hypogynous or epigynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

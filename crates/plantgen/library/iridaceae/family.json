@@ -4,6 +4,7 @@
   "name": "Iridaceae",
   "parent": "order/asparagales",
   "traits": {
+    "hypanthium": {"true": "often", "false": "often"},
     "leaf_arrangement": "alternate",
     "phyllotaxis_pattern": "distichous",
     "flower_merosity": 3,
@@ -52,6 +53,7 @@
     }
   },
   "evidence": {
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 229: a hypanthium present or absent; the tepals often form a prominent tube in Ixioideae."},
     "traits.leaf_arrangement": {
       "evidence": "SourceInferred",
       "source": "fna-26-iridaceae",

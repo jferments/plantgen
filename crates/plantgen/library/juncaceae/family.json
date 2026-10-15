@@ -4,6 +4,7 @@
   "name": "Juncaceae",
   "parent": "order/poales",
   "traits": {
+    "hypanthium": false,
     "flower_merosity": 3,
     "flower_symmetry": "actinomorphic",
     "perianth": "tepals",
@@ -57,6 +58,7 @@
     }
   },
   "evidence": {
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 261: Simpson states the hypanthium is absent; flowers hypogynous with 3+3 free, scarious tepals."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "kew-powo",

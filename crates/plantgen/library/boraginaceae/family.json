@@ -4,6 +4,10 @@
   "name": "Boraginaceae",
   "parent": "order/boraginales",
   "traits": {
+    "flower_merosity": 5,
+    "stamens": {"min": 5, "max": 5, "low": 4, "high": 6},
+    "corolla_shape": {"rotate": "often", "salverform": "often", "funnelform": "often", "campanulate": "often"},
+    "hypanthium": false,
     "woodiness": {
       "herbaceous": "usually",
       "woody": "sometimes"
@@ -44,6 +48,10 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 400: calyx and corolla both 5-merous (Floral Diagrams p. 315: rarely 4 or up to 8)."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 400, 404: stamens 5, rarely 4 to 6, on the corolla tube alternating with the lobes."},
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 400: corolla sympetalous and rotate, salverform, funnel-shaped (infundibular) or campanulate; no order of frequency given, so each is 'often'."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 400, 404: flowers hypogynous; his family formula ends 'hypanthium absent'."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

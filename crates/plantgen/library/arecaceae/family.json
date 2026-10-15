@@ -4,6 +4,8 @@
   "name": "Arecaceae",
   "parent": "order/arecales",
   "traits": {
+    "flower_merosity": {"min": 3, "max": 3, "low": 2},
+    "hypanthium": false,
     "woodiness": "woody",
     "leaf_venation": "parallel",
     "rosette": {
@@ -241,6 +243,8 @@
     }
   },
   "evidence": {
+    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 238, 241: perianth 3+3, rarely 2+2, none or many (Floral Diagrams p. 112: basic pattern trimerous)."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 238, 505: Simpson calls the flowers hypogynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",

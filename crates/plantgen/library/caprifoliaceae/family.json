@@ -4,6 +4,13 @@
   "name": "Caprifoliaceae",
   "parent": "order/dipsacales",
   "traits": {
+    "perianth": "sepals_and_petals",
+    "flower_merosity": {"min": 4, "max": 5, "typical": 5},
+    "stamens": {"min": 1, "max": 5, "typical": 4},
+    "carpels": {"min": 2, "max": 3, "high": 8},
+    "ovary_position": "inferior",
+    "corolla_shape": "tubular",
+    "hypanthium": false,
     "leaf_division": {
       "simple": "usually",
       "compound": "rarely"
@@ -44,6 +51,13 @@
     }
   },
   "evidence": {
+    "traits.perianth": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 334, 336: Ronse De Craene (Caprifoliaceae incl. Dipsacaceae, Valerianaceae): calyx and 5-lobed corolla, the calyx often a rim, teeth, bristles or absent (general formula K0-5 or many, C5)."},
+    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 334, 336: corolla 5-lobed; most Dipsaceae 4-lobed by fusion of the two posterior petals. Simpson pp. 435, 438 agrees (5, rarely 4)."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 334, 336: stamens 1 to 5, rarely 5, mostly 4 (Dipsacus), 3 in Valeriana, down to 1 (Centranthus); Simpson p. 435 gives 5 for Lonicera and kin."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 334: Ronse De Craene general formula: inferior ovary of 2 to 3, rarely 5 to 8, carpels; Simpson p. 435 gives 2 to 5 (to 8) for Caprifoliaceae s.s."},
+    "traits.ovary_position": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 334: inferior ovary throughout the family; Simpson pp. 435, 438, 439 agree for all three segregates."},
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 334: Ronse De Craene lists a tubular corolla among the family's defining features."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 435, 505: flowers epigynous, rarely epihypogynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

@@ -4,6 +4,8 @@
   "name": "Lauraceae",
   "parent": "order/laurales",
   "traits": {
+    "stamens": {"min": 3, "max": 12, "high": 30},
+    "hypanthium": true,
     "woodiness": "woody",
     "leaf_arrangement": {
       "alternate": "usually",
@@ -41,6 +43,8 @@
     "life_span": "perennial"
   },
   "evidence": {
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 196, 198: stamens 3 to 12 or more, often with an inner whorl of staminodes (Floral Diagrams p. 77 general formula 3 to 30)."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 196, 198: flowers perigynous or epiperigynous with a hypanthium present; formula ends 'hypanthium present'."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

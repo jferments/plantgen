@@ -4,6 +4,7 @@
   "name": "Orchidaceae",
   "parent": "order/asparagales",
   "traits": {
+    "hypanthium": false,
     "flower_merosity": 3,
     "flower_symmetry": "zygomorphic",
     "perianth": "sepals_and_petals",
@@ -63,6 +64,7 @@
     }
   },
   "evidence": {
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 232, 505: Simpson calls the flowers epigynous (perianth on top of the inferior ovary). Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "reed-plant-families",

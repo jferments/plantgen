@@ -4,6 +4,8 @@
   "name": "Acanthaceae",
   "parent": "order/lamiales",
   "traits": {
+    "corolla_shape": "tubular",
+    "hypanthium": false,
     "flower_merosity": 5,
     "flower_symmetry": {
       "zygomorphic": "usually",
@@ -53,6 +55,8 @@
     }
   },
   "evidence": {
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 331: flowers mostly monosymmetric with a long petal tube and an elaborate lower lip; Simpson p. 414 calls the corolla usually bilabiate."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 412: Simpson states the hypanthium is absent; flowers hypogynous."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "ffpa-2014",

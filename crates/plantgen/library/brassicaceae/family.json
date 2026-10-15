@@ -4,6 +4,9 @@
   "name": "Brassicaceae",
   "parent": "order/brassicales",
   "traits": {
+    "ovary_position": "superior",
+    "corolla_shape": "rotate",
+    "hypanthium": false,
     "woodiness": {
       "herbaceous": "usually",
       "semi": "rarely"
@@ -44,6 +47,9 @@
     }
   },
   "evidence": {
+    "traits.ovary_position": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 350, 352: gynoecium of 2 carpels with a superior ovary (formula G (2), superior)."},
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 350: 4 free, often clawed petals set as a cross (cruciate perianth). Free petals: rotate by PlantGen's free-petal rule; the book names no other corolla form."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 350, 505: Simpson calls the flowers hypogynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

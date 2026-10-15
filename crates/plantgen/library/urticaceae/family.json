@@ -4,6 +4,9 @@
   "name": "Urticaceae",
   "parent": "order/rosales",
   "traits": {
+    "flower_merosity": {"min": 4, "max": 5, "high": 6},
+    "stamens": {"min": 4, "max": 5, "low": 1, "high": 6},
+    "hypanthium": false,
     "perianth": "tepals",
     "ovary_position": "superior",
     "carpels": 1,
@@ -52,6 +55,9 @@
     }
   },
   "evidence": {
+    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 329, 333: a single calyx-like perianth whorl, mostly 4- to 5-merous (1 to 6; absent in some female flowers). The rare 1-part flowers are left out because merosity starts at 2."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 329, 333: stamens 4 to 5 (1 to 6), as many as and opposite the sepals."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 329, 505: Simpson calls the flowers hypogynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "kew-powo",

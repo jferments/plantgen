@@ -4,6 +4,10 @@
   "name": "Fagaceae",
   "parent": "order/fagales",
   "traits": {
+    "flower_merosity": {"min": 3, "max": 3, "low": 2, "high": 5},
+    "stamens": {"min": 6, "max": 12, "low": 4, "high": 90},
+    "ovary_position": "inferior",
+    "hypanthium": false,
     "leaf_division": "simple",
     "leaf_venation": "pinnate",
     "stipules": true,
@@ -47,6 +51,10 @@
     }
   },
   "evidence": {
+    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 282, 284: perianth 5- to 6-merous in two whorls, e.g. Castanea K3+3 (3 per whorl); Quercus 4- to 5-merous. Simpson p. 337: 6, rarely 4 to 9, tepals."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 337: stamens 6 to 12, rarely 4 to 90."},
+    "traits.ovary_position": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 337: female flowers epigynous with an inferior ovary (Floral Diagrams p. 282 also inferior)."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 337, 505: Simpson calls the female flowers epigynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

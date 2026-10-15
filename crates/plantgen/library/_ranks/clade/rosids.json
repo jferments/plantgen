@@ -2,5 +2,19 @@
   "schema": 1,
   "rank": "clade",
   "name": "rosids",
-  "parent": "clade/superrosids"
+  "parent": "clade/superrosids",
+  "traits": {
+    "stamens": {
+      "min": 5,
+      "max": 10,
+      "typical": 10
+    }
+  },
+  "evidence": {
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) pp. 8-9, 360: the rosid flower is basically K5 C5 A5+5, two whorls of stamens (ten in a five-merous flower, eight in a four-merous one); families with one whorl or many stamens state their own."
+    }
+  }
 }

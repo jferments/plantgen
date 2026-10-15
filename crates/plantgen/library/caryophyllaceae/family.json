@@ -4,6 +4,10 @@
   "name": "Caryophyllaceae",
   "parent": "order/caryophyllales",
   "traits": {
+    "flower_merosity": {"min": 4, "max": 5, "typical": 5},
+    "carpels": {"min": 2, "max": 5, "high": 10},
+    "corolla_shape": "rotate",
+    "hypanthium": {"false": "usually", "true": "rarely"},
     "woodiness": {
       "herbaceous": "usually",
       "semi": "sometimes"
@@ -31,6 +35,10 @@
     }
   },
   "evidence": {
+    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 374, 378: 5, rarely 4, sepals and petals; usually pentamerous."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 374, 378: ovary of 2 to 5 or more carpels (Floral Diagrams p. 179 general formula: 2 to 5, rarely to 10)."},
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 374: corolla of 5 free, often clawed petals. Free petals: rotate by PlantGen's free-petal rule; the book names no other corolla form. (The claws sit inside the calyx tube, so the spread limbs can read as salverform.)"},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 374, 378: hypanthium absent, rarely present; formula 'hypanthium usually absent'."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

@@ -4,6 +4,9 @@
   "name": "Malvaceae",
   "parent": "order/malvales",
   "traits": {
+    "stamens": {"min": 5, "max": 200},
+    "carpels": {"min": 2, "max": 50, "typical": 5, "low": 1},
+    "hypanthium": {"false": "usually", "true": "rarely"},
     "leaf_arrangement": "alternate",
     "leaf_venation": {
       "palmate": "usually",
@@ -48,6 +51,9 @@
     }
   },
   "evidence": {
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 355, 359: stamens 5 to many, filaments usually joined into a tube round the ovary or in 5 to 15 bundles. Book writes ∞ (numerous); 200 is our stand-in for the upper bound and 20 for 'numerous' with no stated lower bound."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 355, 359: carpels 2 to many, rarely 1; typical 5 is from Floral Diagrams p. 220 (general formula G (2-3) 5 to many). Book writes ∞; 50 is our stand-in for the upper bound."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 355, 505: flowers hypogynous, rarely perigynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

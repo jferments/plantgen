@@ -4,6 +4,9 @@
   "name": "Myrtaceae",
   "parent": "order/myrtales",
   "traits": {
+    "stamens": {"min": 20, "max": 200, "low": 4},
+    "carpels": {"min": 2, "max": 5, "high": 16},
+    "corolla_shape": "rotate",
     "woodiness": "woody",
     "leaf_arrangement": {
       "opposite": "usually",
@@ -34,6 +37,9 @@
     }
   },
   "evidence": {
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 347: stamens many, centripetal, free or joined in 4-5 groups (Floral Diagrams p. 212: 4 to many). Book writes ∞ (numerous); 200 is our stand-in for the upper bound and 20 for 'numerous' with no stated lower bound."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 347: carpels 2 to 5, up to 16."},
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 347: 4 to 5 petals, perianth parts free or (Eucalyptus) joined into a lid. Free petals: rotate by PlantGen's free-petal rule; the book names no other corolla form. Petals fall early (Floral Diagrams p. 212)."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

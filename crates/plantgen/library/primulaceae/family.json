@@ -4,6 +4,8 @@
   "name": "Primulaceae",
   "parent": "order/ericales",
   "traits": {
+    "stamens": {"min": 4, "max": 5, "typical": 5, "low": 3, "high": 9},
+    "carpels": 5,
     "woodiness": {
       "herbaceous": "often",
       "woody": "often"
@@ -59,6 +61,8 @@
     }
   },
   "evidence": {
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 394: Simpson (Primulaceae s.s.): stamens 5, rarely 3 to 9, as many as and opposite the corolla lobes; Floral Diagrams p. 307 (Myrsinaceae, part of APG's Primulaceae) gives 4 to 5, rarely 3."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 394: ovary usually of 5 carpels with one locule and free-central placentation (Floral Diagrams p. 305-307 agrees, G5)."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

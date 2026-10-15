@@ -4,6 +4,9 @@
   "name": "Crassulaceae",
   "parent": "order/saxifragales",
   "traits": {
+    "stamens": {"min": 5, "max": 10, "low": 3},
+    "carpels": {"min": 5, "max": 5, "low": 3, "high": 6},
+    "hypanthium": {"false": "often", "true": "often"},
     "woodiness": {
       "herbaceous": "usually",
       "semi": "sometimes"
@@ -36,6 +39,9 @@
     }
   },
   "evidence": {
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 297, 299: stamens once or twice the petal number (5 or 5+5, rarely from 3 to more than 6 per whorl)."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 299: gynoecium of 5 free carpels, rarely 3 to 6 or more."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 297, 505: flowers hypogynous or slightly perigynous, so a small floral cup in some. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

@@ -4,6 +4,8 @@
   "name": "Rubiaceae",
   "parent": "order/gentianales",
   "traits": {
+    "carpels": {"min": 2, "max": 2, "high": 5},
+    "hypanthium": false,
     "woodiness": {
       "woody": "usually",
       "herbaceous": "sometimes"
@@ -76,6 +78,8 @@
     }
   },
   "evidence": {
+    "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 412: Simpson's formula: ovary of 2 carpels, rarely 3 to 5 or more (Floral Diagrams p. 318 gives 2 to 5, rarely up to 9)."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 412, 505: Simpson calls the flowers usually epigynous (perianth on top of the inferior ovary). Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
