@@ -29,7 +29,13 @@
       "basal": "often",
       "none": "often"
     },
-    "life_span": "perennial"
+    "life_span": "perennial",
+    "leaf_venation": "parallel",
+    "inflorescence": {
+      "panicle": "often",
+      "solitary": "often",
+      "spike": "often"
+    }
   },
   "forms": {
     "forb": {
@@ -95,6 +101,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Iridaceae with Geosiridaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 229, 231, 232, family Iridaceae: leaf venation parallel; read as \"parallel\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 229, 231, 232, family Iridaceae: inflorescence spike, solitary flower, or spike/panicle of rhipidia clusters, usually; read as {\"panicle\": \"often\", \"solitary\": \"often\", \"spike\": \"often\"}."
     }
   }
 }

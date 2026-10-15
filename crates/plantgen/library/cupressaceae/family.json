@@ -21,6 +21,9 @@
     "sexual_system": {
       "monoecious": "often",
       "dioecious": "often"
+    },
+    "leaf_habit": {
+      "evergreen": "usually"
     }
   },
   "evidence": {
@@ -28,6 +31,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-2008",
       "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Cupressaceae and Taxodiaceae (Taxodiaceae now in Cupressaceae, as the Library has it): mature leaves mostly small, scale-like and single-veined, sometimes linear like the juvenile ones, in Juniperus needle-like or both on one plant; in Cupressaceae opposite and decussate or in whorls of three or four, in Taxodiaceae mostly spiral (alternate) and opposite only in Metasequoia; monoecious or dioecious, junipers usually dioecious. Taxodiaceae's spiral leaves are the rare state, as the redwoods and swamp cypresses are few beside the cypresses and junipers."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 153, 155, 156, family Cupressaceae: leaf habit evergreen, usually; read as {\"evergreen\": \"usually\"}."
     }
   }
 }

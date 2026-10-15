@@ -27,6 +27,19 @@
     "fruit_type": {
       "capsule": "usually",
       "berry": "rarely"
+    },
+    "leaf_division": "simple",
+    "leaf_margin": {
+      "entire": "usually"
+    },
+    "stipules": {
+      "false": "usually"
+    },
+    "inflorescence": {
+      "cyme": "often",
+      "panicle": "often",
+      "raceme": "often",
+      "solitary": "often"
     }
   },
   "evidence": {
@@ -39,6 +52,26 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Lythraceae with Punicaceae, Sonneratiaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 343, 344, 345, family Lythraceae: leaf division simple; read as \"simple\"."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 343, 344, 345, family Lythraceae: leaf margin entire, usually; read as {\"entire\": \"usually\"}."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 343, 344, 345, family Lythraceae: stipules false (absent, vestigial or soon falling), usually; read as {\"false\": \"usually\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 343, 344, 345, family Lythraceae: inflorescence raceme, panicle, fascicle, dichasium or solitary flowers, usually; read as {\"cyme\": \"often\", \"panicle\": \"often\", \"raceme\": \"often\", \"solitary\": \"often\"}."
     }
   }
 }

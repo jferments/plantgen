@@ -41,13 +41,25 @@
       "min": 3,
       "max": 4,
       "high": 5
-    }
+    },
+    "phyllotaxis_pattern": "spiral",
+    "life_span": "perennial"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Saururaceae: leaves alternate; leaves simple; margins entire; veins pinnate or palmate; blades oblong or ovate; stipules present; leaf rosettes none; plants hermaphrodite; ovary usually superior, rarely inferior; stems herbaceous; flowers in racemes or in spikes; flowers actinomorphic; perianth absent; fruit capsule or follicle; stamens 3 to 8; carpels 3 to 4 (-5). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 206, 207, family Saururaceae: phyllotaxis pattern spiral; read as \"spiral\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 206, 207, family Saururaceae: life span perennial; read as \"perennial\"."
     }
   }
 }

@@ -31,7 +31,14 @@
       "berry": "often",
       "drupe": "often"
     },
-    "leaf_habit": "evergreen"
+    "leaf_habit": "evergreen",
+    "leaf_division": "simple",
+    "leaf_venation": "pinnate",
+    "leaf_incision": {
+      "lobed": "often",
+      "none": "often"
+    },
+    "life_span": "perennial"
   },
   "evidence": {
     "traits": {
@@ -43,6 +50,26 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Lauraceae as that work draws it, there coded together with Cassythaceae: how long the leaves last (character 37), coded evergreen. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 196, 197, 198, family Lauraceae: leaf division simple; read as \"simple\"."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 196, 197, 198, family Lauraceae: leaf venation pinnate; read as \"pinnate\"."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 196, 197, 198, family Lauraceae: leaf incision none or lobed, usually; read as {\"lobed\": \"often\", \"none\": \"often\"}."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 196, 197, 198, family Lauraceae: life span perennial; read as \"perennial\"."
     }
   }
 }

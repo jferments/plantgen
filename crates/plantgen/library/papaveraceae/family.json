@@ -38,7 +38,12 @@
       "actinomorphic": "often",
       "zygomorphic": "often"
     },
-    "zygomorphy": "other"
+    "zygomorphy": "other",
+    "inflorescence": {
+      "cyme": "often",
+      "solitary": "often"
+    },
+    "sexual_system": "hermaphrodite"
   },
   "forms": {
     "forb": {
@@ -114,6 +119,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Papaveraceae with Fumariaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple usually, compound sometimes; the simple blade dissected usually, none sometimes; lobes or leaflets pinnate usually, palmate sometimes. Read from the coded leaf form and dissection by script (spec-rework/b1/delta)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 288, family Papaveraceae: inflorescence solitary flower or cyme; read as {\"cyme\": \"often\", \"solitary\": \"often\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 288, family Papaveraceae: sexual system hermaphrodite; read as \"hermaphrodite\"."
     }
   }
 }

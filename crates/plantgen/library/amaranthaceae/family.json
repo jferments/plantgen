@@ -30,6 +30,19 @@
     "rosette": {
       "basal": "rarely",
       "none": "usually"
+    },
+    "leaf_margin": {
+      "entire": "usually"
+    },
+    "sexual_system": {
+      "dioecious": "often",
+      "hermaphrodite": "often",
+      "monoecious": "often",
+      "polygamous": "often"
+    },
+    "life_span": {
+      "annual": "often",
+      "perennial": "often"
     }
   },
   "evidence": {
@@ -42,6 +55,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Amaranthaceae as that work draws it, there coded together with Chenopodiaceae, Dysphaniaceae: whether the leaves gather in rosettes (character 22), coded usually no rosette, rarely a basal rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 371, family Amaranthaceae: leaf margin entire, usually; read as {\"entire\": \"usually\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 371, family Amaranthaceae: sexual system hermaphrodite, dioecious, monoecious or polygamous; read as {\"dioecious\": \"often\", \"hermaphrodite\": \"often\", \"monoecious\": \"often\", \"polygamous\": \"often\"}."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 371, family Amaranthaceae: life span annual or perennial; read as {\"annual\": \"often\", \"perennial\": \"often\"}."
     }
   }
 }

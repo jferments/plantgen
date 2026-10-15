@@ -18,7 +18,19 @@
     "leaf_habit": {
       "evergreen": "often",
       "deciduous": "often"
-    }
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually"
+    },
+    "leaf_arrangement": {
+      "alternate": "usually"
+    },
+    "inflorescence": {
+      "catkin": "often",
+      "head": "often",
+      "spike": "often"
+    },
+    "flower_symmetry": "actinomorphic"
   },
   "forms": {
     "decurrent_tree": {
@@ -44,6 +56,26 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Fagaceae: how long the leaves last (character 37), coded often evergreen, often deciduous. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 337, 339, family Fagaceae: phyllotaxis pattern spiral, usually; read as {\"spiral\": \"usually\"}."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 337, 339, family Fagaceae: leaf arrangement alternate (spiral; rarely opposite or whorled), usually; read as {\"alternate\": \"usually\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 337, 339, family Fagaceae: inflorescence catkin, spike or head (male, of reduced dichasia), usually; read as {\"catkin\": \"often\", \"head\": \"often\", \"spike\": \"often\"}."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 337, 339, family Fagaceae: flower symmetry actinomorphic; read as \"actinomorphic\"."
     }
   }
 }

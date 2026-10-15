@@ -38,7 +38,8 @@
       "max": 3,
       "typical": 3
     },
-    "fruit_type": "capsule"
+    "fruit_type": "capsule",
+    "stipules": false
   },
   "evidence": {
     "traits": {
@@ -50,6 +51,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Polemoniaceae with Cobaeaceae: its irregular flowers have a two-lipped corolla, read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy bilabiate. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 393, 396, family Polemoniaceae: stipules false; read as false."
     }
   }
 }

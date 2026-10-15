@@ -26,6 +26,14 @@
       "max": 3,
       "low": 2,
       "high": 4
+    },
+    "phyllotaxis_pattern": "distichous",
+    "leaf_form": "blade",
+    "stipules": false,
+    "bract_form": "spathe",
+    "life_span": "perennial",
+    "rhizome_habit": {
+      "short_creeping": "usually"
     }
   },
   "evidence": {
@@ -33,6 +41,36 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Acoraceae: leaves alternate; leaves simple; margins entire; veins parallel; leaf rosettes basal; plants hermaphrodite; ovary superior; stems herbaceous; flowers in spikes; flowers actinomorphic; perianth tepals; fruit capsule or berry; parts of each whorl 3; stamens 6; carpels (2-) 3 (-4). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 211, family Acoraceae: phyllotaxis pattern distichous; read as \"distichous\"."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 211, family Acoraceae: leaf form blade (ensiform, unifacial, sword-like); read as \"blade\"."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 211, family Acoraceae: stipules false; read as false."
+    },
+    "traits.bract_form": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 211, family Acoraceae: bract form spathe (long, linear, leaf-like, continuing the peduncle); read as \"spathe\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 211, family Acoraceae: life span perennial; read as \"perennial\"."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 211, family Acoraceae: rhizome habit short_creeping (rhizomatous stems), usually; read as {\"short_creeping\": \"usually\"}."
     }
   }
 }

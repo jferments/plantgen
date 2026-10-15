@@ -22,6 +22,26 @@
     "stipules": {
       "false": "usually",
       "true": "rarely"
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "decussate": "sometimes"
+    },
+    "leaf_division": {
+      "compound": "often",
+      "simple": "often"
+    },
+    "inflorescence": {
+      "cyme": "often",
+      "panicle": "often",
+      "raceme": "often",
+      "corymb": "sometimes",
+      "umbel": "sometimes"
+    },
+    "fruit_type": {
+      "capsule": "often",
+      "nut": "often",
+      "schizocarp": "often"
     }
   },
   "generator": {
@@ -57,6 +77,26 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Sapindaceae with Aceraceae, Hippocastanaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 362-364, family Sapindaceae: leaves usually spiral, but opposite in Hippocastanoideae (Acer, Aesculus), whose pairs cross. Read as {\"spiral\": \"usually\", \"decussate\": \"sometimes\"}."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 362, 363, 364, family Sapindaceae: leaf division simple, palmate, trifoliolate, pinnate or bipinnate; read as {\"compound\": \"often\", \"simple\": \"often\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 362, 363, 364, family Sapindaceae: inflorescence cyme, thyrse or raceme, sometimes umbel- or corymb-like, usually; read as {\"cyme\": \"often\", \"panicle\": \"often\", \"raceme\": \"often\", \"corymb\": \"sometimes\", \"umbel\": \"sometimes\"}."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 362, 363, 364, family Sapindaceae: fruit type fleshy or dry; schizocarp, capsule, nut and others; read as {\"capsule\": \"often\", \"nut\": \"often\", \"schizocarp\": \"often\"}."
     }
   }
 }

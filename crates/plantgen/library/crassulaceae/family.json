@@ -29,7 +29,11 @@
       "basal": "often",
       "none": "often"
     },
-    "life_span": "perennial"
+    "life_span": "perennial",
+    "leaf_division": "simple",
+    "sexual_system": {
+      "hermaphrodite": "usually"
+    }
   },
   "evidence": {
     "traits": {
@@ -51,6 +55,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Crassulaceae: the herbs' life form (character 21), coded perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 299, 300, family Crassulaceae: leaf division simple; read as \"simple\"."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 299, 300, family Crassulaceae: sexual system hermaphrodite, usually; read as {\"hermaphrodite\": \"usually\"}."
     }
   }
 }

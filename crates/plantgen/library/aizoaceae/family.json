@@ -69,13 +69,25 @@
       "max": 5,
       "low": 1,
       "high": 20
-    }
+    },
+    "leaf_incision": "none",
+    "flowering_position": "both"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Aizoaceae with Molluginaceae, Tetragoniaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate or opposite, sometimes whorled; leaves simple; veins single, pinnate or palmate; stipules present or absent; leaf rosettes basal or none; plants usually hermaphrodite, sometimes polygamous, rarely monoecious or dioecious; ovary superior, half inferior or inferior; floral cup present or absent; stems woody or herbaceous; flowers solitary, in cymes or in heads, sometimes in racemes; flowers actinomorphic; perianth usually sepals and petals, sometimes tepals; fruit capsule or berry, sometimes drupe or samara; stamens (1-) 5 to 120; carpels (1-) 2 to 5 (-20). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 371, 372, family Aizoaceae: leaf incision none; read as \"none\"."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 371, 372, family Aizoaceae: flowering position both; read as \"both\"."
     }
   }
 }

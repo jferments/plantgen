@@ -14,7 +14,10 @@
     "division_pattern": {"pinnate": "usually", "palmate": "rarely"},
     "fruit_type": {
       "cypsela": "usually"
-    }
+    },
+    "stipules": false,
+    "inflorescence": {"corymb": "often", "head": "often", "panicle": "often"},
+    "receptacle": {"epaleate": "often", "paleate": "often"}
   },
   "forms": {
     "forb": {
@@ -76,7 +79,10 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "How PlantGen draws the daisy family's heads, a choice of the model's (spec rework P2): a head is laid out from its florets (`crate::capitula`), its phyllaries in rows round its foot, its receptacle domed as its shape says, its disc florets packed in a sunflower spiral and opening from the rim inward, rays round a radiate head, straps filling a ligulate one; an array of heads is a cluster of such heads (spec rework L1). Its size is its involucre's, as floras measure it, plus a ray on either side. The heights the shape words give the receptacle and the pappus lengths of crowns, scales and awns are the model's. A leaf's card is as wide, for its length, as the flora's blades; a head's size, and the share of its cluster it takes, follow from its involucre and rays."
-    }
+    },
+    "traits.stipules": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 440, 441, 442, 443, 444, family Asteraceae: stipules false; read as false."},
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 440, 441, 442, 443, 444, family Asteraceae: inflorescence heads in corymbs, panicles, glomerules etc. (secondary inflorescence), often; read as {\"corymb\": \"often\", \"head\": \"often\", \"panicle\": \"often\"}. Also Ingrouille, Diversity and Evolution of Land Plants (1992) p. 170, 171, 172, 173: head."},
+    "traits.receptacle": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 440, 441, 442, 443, 444, family Asteraceae: receptacle paleate or epaleate, often; read as {\"epaleate\": \"often\", \"paleate\": \"often\"}."}
   },
   "rules": {
     "appearance.organs.flower.colour": {

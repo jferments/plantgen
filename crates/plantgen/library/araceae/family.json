@@ -26,7 +26,13 @@
     "division_pattern": {
       "palmate": "often",
       "pinnate": "often"
-    }
+    },
+    "phyllotaxis_pattern": {"spiral": "usually"},
+    "bract_form": {"spathe": "usually"},
+    "flower_symmetry": "actinomorphic",
+    "sexual_system": {"monoecious": "often"},
+    "fruit_type": {"multiple": "usually"},
+    "rhizome_habit": {"short_creeping": "often"}
   },
   "rules": {
     "appearance.organs.*.inflorescence.spathe": {
@@ -69,7 +75,13 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Araceae as that work draws it, there coded together with Acoraceae, Lemnaceae: the herbs' life form (character 21), coded usually perennial, sometimes annual. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
-    }
+    },
+    "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 213, 214, 215, family Araceae: phyllotaxis pattern spiral (or distichous), usually; read as {\"spiral\": \"usually\"}."},
+    "traits.bract_form": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 213, 214, 215, family Araceae: bract form spathe (prominent, often coloured), usually; read as {\"spathe\": \"usually\"}."},
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 213, 214, 215, family Araceae: flower symmetry actinomorphic; read as \"actinomorphic\"."},
+    "traits.sexual_system": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 213, 214, 215, family Araceae: sexual system monoecious (female flowers proximal, male distal), often; read as {\"monoecious\": \"often\"}."},
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 213, 214, 215, family Araceae: fruit type multiple (of berries; sometimes dry utricles), usually; read as {\"multiple\": \"usually\"}."},
+    "traits.rhizome_habit": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 213, 214, 215, family Araceae: rhizome habit short_creeping (rhizomes, corms, tubers or reduced), often; read as {\"short_creeping\": \"often\"}."}
   },
   "forms": {
     "forb": {

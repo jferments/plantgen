@@ -24,13 +24,37 @@
     },
     "carpels": 1,
     "ovary_position": "superior",
-    "fruit_type": "berry"
+    "fruit_type": "berry",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_division": "simple",
+    "bract_form": "scale",
+    "flower_symmetry": "actinomorphic"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 264 Piperaceae: herbs or shrubs, upright or climbing; leaves usually alternate, entire, rarely opposite or whorled, stalked; stipules joined to the stalk, or none; flowers minute, in dense spikes (sometimes the spikes in umbels), with no perianth; stamens 2 to 6; ovary superior, of one cell with one ovule; fruit a small berry. One carpel is read from the one-celled, one-ovuled ovary (inferred)."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 203, family Piperaceae: phyllotaxis pattern spiral; read as \"spiral\"."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 203, family Piperaceae: leaf division simple; read as \"simple\"."
+    },
+    "traits.bract_form": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 205, 206, family Piperaceae: bract form scale; each tiny flower subtended by a small bract; read as \"scale\"."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 203, family Piperaceae: flower symmetry actinomorphic (each with a peltate bract); read as \"actinomorphic\"."
     }
   }
 }

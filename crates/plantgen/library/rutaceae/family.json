@@ -28,6 +28,13 @@
       "berry": "often",
       "drupe": "often",
       "capsule": "rarely"
+    },
+    "inflorescence": {
+      "cyme": "often",
+      "raceme": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually"
     }
   },
   "evidence": {
@@ -40,6 +47,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Rutaceae with Cneoraceae, Ptaeroxylaceae, Rhabdodendraceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 359, family Rutaceae: inflorescence cyme or raceme (rarely solitary), usually; read as {\"cyme\": \"often\", \"raceme\": \"often\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 361, 362, family Rutaceae: sexual system hermaphrodite, usually; read as {\"hermaphrodite\": \"usually\"}."
     }
   }
 }

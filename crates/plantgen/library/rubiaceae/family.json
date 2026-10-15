@@ -41,6 +41,16 @@
       "capsule": "often",
       "berry": "often",
       "drupe": "often"
+    },
+    "phyllotaxis_pattern": {
+      "decussate": "often"
+    },
+    "inflorescence": {
+      "cyme": "usually",
+      "solitary": "rarely"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually"
     }
   },
   "forms": {
@@ -75,6 +85,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Rubiaceae with Dialypetalanthaceae, Henriqueziaceae, Naucleaceae, Theligonaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 409, 411, 412, family Rubiaceae: phyllotaxis pattern decussate, often; read as {\"decussate\": \"often\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 409, 411, 412, family Rubiaceae: inflorescence cyme, rarely solitary, usually; read as {\"cyme\": \"usually\", \"solitary\": \"rarely\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 409, 411, 412, family Rubiaceae: sexual system hermaphrodite, usually; read as {\"hermaphrodite\": \"usually\"}."
     }
   }
 }

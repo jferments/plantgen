@@ -8,13 +8,19 @@
     "leaf_division": "compound",
     "sporangia": "sori",
     "sorus_shape": "round",
-    "indusium": "none"
+    "indusium": "none",
+    "reproduction": "spores"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "mabberley-2017",
       "note": "Mabberley's Plant-book (4th ed., 2017), under Gleicheniaceae: terrestrial ferns of open ground, often forming thickets, on creeping, forking rhizomes; the rachis pinnate to bipinnate or forking again and again, growing on without end, to 7 m; sori round, of a few sporangia, on the underside, without indusium."
+    },
+    "traits.reproduction": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 109, 112, 113, family Gleicheniaceae: reproduction spores; read as \"spores\"."
     }
   }
 }

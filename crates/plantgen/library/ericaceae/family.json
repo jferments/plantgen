@@ -53,7 +53,13 @@
     "leaf_habit": {
       "evergreen": "often",
       "deciduous": "often"
-    }
+    },
+    "leaf_venation": "pinnate",
+    "sexual_system": {
+      "dioecious": "often",
+      "hermaphrodite": "often"
+    },
+    "life_span": "perennial"
   },
   "forms": {
     "decurrent_tree": {
@@ -121,6 +127,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Ericaceae as that work draws it, there coded together with Empetraceae, Epacridaceae, Monotropaceae, Pyrolaceae: how long the leaves last (character 37), coded often evergreen, often deciduous. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 389, 390, family Ericaceae: leaf venation pinnate (broad-leaved taxa); read as \"pinnate\"."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 389, 390, family Ericaceae: sexual system hermaphrodite or dioecious; read as {\"dioecious\": \"often\", \"hermaphrodite\": \"often\"}."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 389, 390, family Ericaceae: life span perennial; read as \"perennial\"."
     }
   }
 }

@@ -21,6 +21,21 @@
     "leaf_habit": {
       "deciduous": "often",
       "evergreen": "usually"
+    },
+    "leaf_division": {
+      "compound": "often",
+      "simple": "often"
+    },
+    "stipules": false,
+    "inflorescence": {
+      "cyme": "often",
+      "solitary": "often"
+    },
+    "fruit_type": {
+      "berry": "often",
+      "capsule": "often",
+      "drupe": "often",
+      "samara": "often"
     }
   },
   "forms": {
@@ -47,6 +62,26 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Oleaceae: how long the leaves last (character 37), coded usually evergreen, often deciduous. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 416, 419, family Oleaceae: leaf division simple, pinnate, unifoliolate or ternate, usually; read as {\"compound\": \"often\", \"simple\": \"often\"}."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 416, 419, family Oleaceae: stipules false; read as false."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 416, 419, family Oleaceae: inflorescence cyme or solitary flowers, usually; read as {\"cyme\": \"often\", \"solitary\": \"often\"}."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 416, 419, family Oleaceae: fruit type berry, capsule, drupe or samara, usually; read as {\"berry\": \"often\", \"capsule\": \"often\", \"drupe\": \"often\", \"samara\": \"often\"}."
     }
   }
 }

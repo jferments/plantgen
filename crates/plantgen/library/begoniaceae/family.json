@@ -21,7 +21,14 @@
       "cyme": "usually"
     },
     "ovary_position": "inferior",
-    "fruit_type": "capsule"
+    "fruit_type": "capsule",
+    "phyllotaxis_pattern": {
+      "distichous": "often",
+      "spiral": "often"
+    },
+    "leaf_venation": {
+      "palmate": "usually"
+    }
   },
   "evidence": {
     "traits": {
@@ -33,6 +40,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Begoniaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 333, 334, 335, family Begoniaceae: phyllotaxis pattern spiral or distichous, usually; read as {\"distichous\": \"often\", \"spiral\": \"often\"}."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 333, 334, 335, family Begoniaceae: leaf venation palmate, usually; read as {\"palmate\": \"usually\"}."
     }
   }
 }

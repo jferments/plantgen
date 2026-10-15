@@ -17,7 +17,8 @@
     "cone_maturation_years": {
       "min": 2,
       "max": 3
-    }
+    },
+    "leaf_habit": "evergreen"
   },
   "evidence": {
     "traits.leaf_form": {
@@ -44,6 +45,11 @@
       "evidence": "SourceInferred",
       "source": "mabberley-2017",
       "note": "Mabberley's Plant-book (4th ed., 2017), under Araucariaceae: the female cones, mostly large and nearly round, take two to three years to ripen and fall apart when the seeds are ripe (two years in Agathis)."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 153, 154, family Araucariaceae: leaf habit evergreen; read as \"evergreen\"."
     }
   }
 }

@@ -27,13 +27,25 @@
       "min": 2,
       "max": 2,
       "high": 3
-    }
+    },
+    "phyllotaxis_pattern": "decussate",
+    "inflorescence_posture": "pendent"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Garryaceae: leaves opposite; leaves simple; margins entire; veins pinnate; leaves evergreen; stipules absent; plants dioecious; ovary inferior; floral cup absent; stems woody; flowers in catkins; flowers actinomorphic; perianth tepals or absent; fruit berry; parts of each whorl 4; stamens 4; carpels 2 (-3). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 400, 401, family Garryaceae: phyllotaxis pattern decussate; read as \"decussate\"."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 400, 401, family Garryaceae: inflorescence posture pendent; read as \"pendent\"."
     }
   }
 }

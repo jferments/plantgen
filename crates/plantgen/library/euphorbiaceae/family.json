@@ -28,6 +28,12 @@
     "fruit_type": {
       "capsule": "usually",
       "drupe": "sometimes"
+    },
+    "inflorescence": {
+      "cyme": "usually"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually"
     }
   },
   "evidence": {
@@ -35,6 +41,16 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 133 Euphorbiaceae: herbs, shrubs or trees, some with milky sap; leaves alternate, rarely opposite, simple or compound, sometimes reduced, mostly with stipules; flowers unisexual, mostly both sexes on one plant; petals mostly absent; stamens from one to a thousand; ovary mostly of three cells; fruit a capsule or a drupe. Hutchinson's family also holds what APG sets apart as Phyllanthaceae and Picrodendraceae; only characters that hold for the narrower family are stated, and the perianth (sepals only in most, none in Euphorbia's cyathium) is left for a value the vocabulary has."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 307, 309, 310, family Euphorbiaceae: inflorescence cyme, usually; read as {\"cyme\": \"usually\"}."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 307, 309, 310, family Euphorbiaceae: flower symmetry actinomorphic, usually; read as {\"actinomorphic\": \"usually\"}."
     }
   }
 }

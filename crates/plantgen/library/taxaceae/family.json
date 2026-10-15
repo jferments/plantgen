@@ -6,13 +6,28 @@
   "traits": {
     "sexual_system": "dioecious",
     "leaf_form": "needle",
-    "foliage_ranks": "two_ranked"
+    "foliage_ranks": "two_ranked",
+    "phyllotaxis_pattern": {
+      "spiral": "often",
+      "decussate": "often"
+    },
+    "leaf_habit": "evergreen"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams (vol. 1, 1923, p. 50), Taxaceae: evergreen trees or shrubs with linear leaves set in a spiral that mostly look two-ranked, the flattened leaf base twisting them into one plane; the sexes on separate plants."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 158, family Taxaceae: phyllotaxis pattern spiral, often twisted so it looks 2-ranked, to decussate, usually; read as {\"spiral\": \"often\", \"decussate\": \"often\"}."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 158, family Taxaceae: leaf habit evergreen; read as \"evergreen\"."
     }
   }
 }

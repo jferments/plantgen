@@ -57,13 +57,28 @@
     "carpels": {
       "min": 2,
       "max": 3
-    }
+    },
+    "phyllotaxis_pattern": {
+      "distichous": "rarely",
+      "spiral": "usually"
+    },
+    "leaf_incision": "lobed"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Hamamelidaceae with Altingiaceae, Rhodoleiaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves simple; veins palmate or pinnate; leaves evergreen or deciduous; stipules usually present, sometimes absent; plants hermaphrodite, monoecious or polygamous; ovary superior, half inferior or inferior; floral cup present or absent; stems woody; flowers usually in spikes, sometimes in heads, in racemes or in panicles; flowers actinomorphic; perianth usually sepals and petals, often tepals, rarely absent; fruit capsule; parts of each whorl 4 to 5; stamens 4 to 32; carpels 2 to 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 299, family Hamamelidaceae: phyllotaxis pattern spiral [rarely distichous], usually; read as {\"distichous\": \"rarely\", \"spiral\": \"usually\"}."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 299, family Hamamelidaceae: leaf incision unlobed to palmately lobed; read as \"lobed\"."
     }
   }
 }

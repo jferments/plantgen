@@ -23,13 +23,49 @@
       "low": 5,
       "high": 27
     },
-    "carpels": 1
+    "carpels": 1,
+    "leaf_margin": "serrate",
+    "leaf_incision": "dissected",
+    "inflorescence": "solitary",
+    "flowering_position": "lateral",
+    "life_span": "perennial",
+    "anchorage": "none"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Ceratophyllaceae: leaves whorled; leaves simple or compound; stipules absent; leaf rosettes none; plants monoecious; ovary superior; stems herbaceous; flowers actinomorphic; perianth tepals; fruit achene; stamens (5-) 10 to 20 (-27); carpels 1. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 272, family Ceratophyllaceae: leaf margin serrate (serrulate); read as \"serrate\"."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 272, family Ceratophyllaceae: leaf incision dissected, dichotomously forked; read as \"dissected\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 272, family Ceratophyllaceae: inflorescence solitary; read as \"solitary\"."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 272, family Ceratophyllaceae: flowering position lateral (axillary); read as \"lateral\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 272, family Ceratophyllaceae: life span perennial; read as \"perennial\"."
+    },
+    "traits.anchorage": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 272, family Ceratophyllaceae: anchorage none; anchored by rootlike branches; read as \"none\"."
     }
   }
 }

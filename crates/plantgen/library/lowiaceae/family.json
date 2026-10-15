@@ -2,5 +2,17 @@
   "schema": 1,
   "rank": "family",
   "name": "Lowiaceae",
-  "parent": "order/zingiberales"
+  "parent": "order/zingiberales",
+  "traits": {
+    "phyllotaxis_pattern": {
+      "distichous": "usually"
+    }
+  },
+  "evidence": {
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 50, family Lowiaceae: phyllotaxis pattern distichous, usually; read as {\"distichous\": \"usually\"}."
+    }
+  }
 }

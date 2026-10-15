@@ -52,6 +52,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its panicles stand on lateral branches, and the measure stops at the first lateral axis below an inflorescence, so it reads a branch, not the culm",
     ),
     (
+        "cornus-sericea",
+        "inflorescence",
+        "Cornaceae's flowers are in cymes (Simpson 2019), and red-osier dogwood's flat-topped clusters are cymes, but its look draws them as an umbel",
+    ),
+    (
         "cyperus-papyrus",
         "culm_length_m",
         "its umbel's rays are lateral axes, and the measure stops at the first lateral axis below an inflorescence, so it reads a ray, not the culm",
@@ -87,9 +92,19 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its most vigorous shoots grow one to three of the four internodes a year they may, two nodes each, so they bear 2 to 6 leaves against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
+        "equisetum-telmateia",
+        "leaf_form",
+        "horsetails' leaves are small scales joined in a sheath at each node (Simpson 2019), but its whorled branches are drawn on blade cards",
+    ),
+    (
         "ferocactus-acanthodes-subsp-acanthodes",
         "stem_form",
         "Ferocactus states its stems globose, but Britton and Rose's 'globular to cylindric' allows a column, and its longest stem grows at least three times as long as wide",
+    ),
+    (
+        "frangula-purshiana",
+        "inflorescence",
+        "Rhamnaceae's flowers are in cymes or panicles (Simpson 2019), but cascara's axillary clusters are drawn as an umbel",
     ),
     (
         "heracleum-maximum",
@@ -215,6 +230,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "tillandsia-usneoides",
         "leaf_shape",
         "its leaves are drawn as cards tapering from the base, an eighth as broad as long, so they read deltate or lanceolate against the linear leaves Bromeliaceae state",
+    ),
+    (
+        "tillandsia-usneoides",
+        "phyllotaxis_pattern",
+        "Bromeliaceae's leaves are spiral (Simpson 2019), but Spanish moss's program sets its leaves in crossing pairs",
+    ),
+    (
+        "typha-latifolia",
+        "fruit_type",
+        "Typhaceae's fruit is a tiny achene on a hairy stalk (Simpson 2019), but its fruiting spike is drawn with the berry card",
     ),
     (
         "viola-glabella",

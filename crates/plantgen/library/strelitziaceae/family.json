@@ -22,7 +22,16 @@
       "min": 5,
       "max": 6
     },
-    "carpels": 3
+    "carpels": 3,
+    "phyllotaxis_pattern": {
+      "distichous": "usually"
+    },
+    "bract_form": "spathe",
+    "flowering_position": {
+      "both": "often",
+      "terminal": "often"
+    },
+    "life_span": "perennial"
   },
   "evidence": {
     "traits": {
@@ -34,6 +43,26 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Strelitziaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 50, family Strelitziaceae: phyllotaxis pattern distichous, usually; read as {\"distichous\": \"usually\"}."
+    },
+    "traits.bract_form": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 249, 251, 252, family Strelitziaceae: bract form spathe (large spathe-like bract under each cyme); read as \"spathe\"."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 249, 251, 252, family Strelitziaceae: flowering position both (terminal or axillary); read as {\"both\": \"often\", \"terminal\": \"often\"}."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 249, 251, 252, family Strelitziaceae: life span perennial; read as \"perennial\"."
     }
   }
 }

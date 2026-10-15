@@ -29,13 +29,19 @@
     "fruit_type": {
       "capsule": "often",
       "berry": "often"
-    }
+    },
+    "inflorescence": "cyme"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 168 Melastomataceae: herbs, shrubs or trees; leaves simple, opposite or whorled, mostly with 3 to 9 veins running lengthwise from the base (read as palmate venation), rarely pinnately veined; no stipules; flowers regular, mostly showy; calyx a tube, free of the ovary or joined to it; petals free; stamens as many as to twice the petals, the anthers opening by a pore; ovary mostly inferior; fruit a capsule or a berry. The calyx tube is read as a hypanthium."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 345, 346, 347, family Melastomataceae: inflorescence cyme; read as \"cyme\"."
     }
   }
 }

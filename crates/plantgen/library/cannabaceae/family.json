@@ -2,5 +2,17 @@
   "schema": 1,
   "rank": "family",
   "name": "Cannabaceae",
-  "parent": "order/rosales"
+  "parent": "order/rosales",
+  "traits": {
+    "fruit_type": {
+      "achene": "usually"
+    }
+  },
+  "evidence": {
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 327, family Cannabaceae: fruit type achene (per cladogram), usually; read as {\"achene\": \"usually\"}."
+    }
+  }
 }

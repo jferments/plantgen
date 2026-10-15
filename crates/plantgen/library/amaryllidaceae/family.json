@@ -25,13 +25,54 @@
     "fruit_type": {
       "capsule": "usually",
       "berry": "rarely"
-    }
+    },
+    "phyllotaxis_pattern": {
+      "distichous": "often",
+      "spiral": "often"
+    },
+    "leaf_division": "simple",
+    "bract_form": {
+      "spathe": "usually"
+    },
+    "flowering_position": "terminal",
+    "sexual_system": "hermaphrodite",
+    "life_span": "perennial"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
       "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 385 Amaryllidaceae, which takes in the onions (tribe Allieae) and Agapanthus as APG does: herbs from a coated bulb, very rarely a rhizome; leaves few, from the base, more or less linear, with parallel veins; flowers showy, bisexual, regular, one to many in an umbel atop a leafless stalk, within two or more papery bracts; perianth of 6 petal-like parts in two whorls of 3, often with a corona; stamens 6, rarely more; ovary superior (onions) or inferior (daffodils), of three cells; fruit a capsule, or fleshy and staying shut."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 229, family Amaryllidaceae: phyllotaxis pattern spiral or distichous, usually; read as {\"distichous\": \"often\", \"spiral\": \"often\"}."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 229, family Amaryllidaceae: leaf division simple, undivided; read as \"simple\"."
+    },
+    "traits.bract_form": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 228, family Amaryllidaceae: bract form spathe subtending flowers, usually; read as {\"spathe\": \"usually\"}."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 229, family Amaryllidaceae: flowering position terminal on a leafless scape; read as \"terminal\"."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 229, family Amaryllidaceae: sexual system hermaphrodite; read as \"hermaphrodite\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 229, family Amaryllidaceae: life span perennial; read as \"perennial\"."
     }
   }
 }

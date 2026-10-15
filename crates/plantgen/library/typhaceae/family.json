@@ -12,7 +12,17 @@
       "linear": "usually"
     },
     "sexual_system": "monoecious",
-    "inflorescence": "spike"
+    "inflorescence": "spike",
+    "leaf_venation": "parallel",
+    "flowering_position": "terminal",
+    "fruit_type": "achene",
+    "life_span": "perennial",
+    "rhizome_habit": {
+      "long_creeping": "usually"
+    },
+    "clonal": {
+      "true": "usually"
+    }
   },
   "forms": {
     "graminoid": {
@@ -63,6 +73,36 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
       "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 384 Typhaceae: marsh or lake herbs from creeping rhizomes; leaves mostly from the base, long and linear; flowers unisexual, very many, crowded on a terminal spike (his spadix), the male above the female on the same plant. APG adds the bur-reeds (Sparganium), also herbs of wet ground with linear leaves and unisexual flowers on one plant, in heads."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 269, 270, family Typhaceae: leaf venation parallel; read as \"parallel\"."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 269, 270, family Typhaceae: flowering position terminal; read as \"terminal\"."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 269, 270, family Typhaceae: fruit type achene (dehiscent, with stalk and style elongating after flowering); read as \"achene\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 269, 270, family Typhaceae: life span perennial; read as \"perennial\"."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 269, 270, family Typhaceae: rhizome habit long_creeping (rhizomatous), usually; read as {\"long_creeping\": \"usually\"}."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 269, 270, family Typhaceae: clonal true, usually; read as {\"true\": \"usually\"}."
     }
   }
 }

@@ -14,7 +14,19 @@
     "fruit_type": {
       "capsule": "usually",
       "berry": "sometimes"
-    }
+    },
+    "leaf_arrangement": {
+      "alternate": "usually"
+    },
+    "leaf_venation": {
+      "parallel": "usually"
+    },
+    "inflorescence": {
+      "raceme": "often",
+      "solitary": "often"
+    },
+    "sexual_system": "hermaphrodite",
+    "life_span": "perennial"
   },
   "forms": {
     "forb": {
@@ -45,6 +57,31 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
       "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 372 Liliaceae, of which APG keeps the lilies, tulips, fritillaries and their kin: leaves simple; fruit a capsule opening along or between its cells, or a fleshy berry (the berries in Clintonia and Streptopus)."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 218, 221, 222, family Liliaceae: leaf arrangement alternate (spiral), usually; read as {\"alternate\": \"usually\"}."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 218, 221, 222, family Liliaceae: leaf venation parallel (rarely net-veined), usually; read as {\"parallel\": \"usually\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 218, 221, 222, family Liliaceae: inflorescence terminal raceme or solitary (rarely umbel), usually; read as {\"raceme\": \"often\", \"solitary\": \"often\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 218, 221, 222, family Liliaceae: sexual system hermaphrodite; read as \"hermaphrodite\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 218, 221, 222, family Liliaceae: life span perennial; read as \"perennial\"."
     }
   }
 }

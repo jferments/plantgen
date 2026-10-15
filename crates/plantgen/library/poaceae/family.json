@@ -20,7 +20,10 @@
     "inflorescence": {"panicle": "usually", "spike": "sometimes", "raceme": "rarely"},
     "glumes": {"min": 2, "max": 2, "low": 0},
     "sexual_system": {"hermaphrodite": "usually", "monoecious": "rarely", "dioecious": "rarely"},
-    "leaf_margin": "entire"
+    "leaf_margin": "entire",
+    "life_span": {"annual": "often", "perennial": "often"},
+    "rhizome_habit": {"long_creeping": "often"},
+    "clonal": {"true": "usually"}
   },
   "forms": {
     "graminoid": {
@@ -142,7 +145,10 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA), Gramineae: the blades' margins nearly always entire."
-    }
+    },
+    "traits.life_span": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 262, 264, family Poaceae: life span perennial or annual; read as {\"annual\": \"often\", \"perennial\": \"often\"}."},
+    "traits.rhizome_habit": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 262, 264, family Poaceae: rhizome habit long_creeping (rhizomes or stolons in perennials), often; read as {\"long_creeping\": \"often\"}."},
+    "traits.clonal": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 267, 268, family Poaceae: clonal true, usually; read as {\"true\": \"usually\"}."}
   },
   "rules": {
     "appearance.organs.panicle.colour": {

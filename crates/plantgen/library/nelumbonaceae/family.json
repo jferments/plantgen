@@ -29,13 +29,31 @@
     "carpels": {
       "min": 12,
       "max": 40
-    }
+    },
+    "leaf_arrangement": "alternate",
+    "life_span": "perennial",
+    "rhizome_habit": "long_creeping"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Nelumbonaceae: leaves simple; veins palmate; stipules present; leaf rosettes none; plants hermaphrodite; ovary superior or inferior; floral cup absent; stems herbaceous; flowers solitary; flowers actinomorphic; perianth sepals and petals or spiral; fruit nut; stamens 200 to 400; carpels 12 to 40. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 291, 293, family Nelumbonaceae: leaf arrangement alternate, spiral; read as \"alternate\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 291, 293, family Nelumbonaceae: life span perennial; read as \"perennial\"."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 291, 293, family Nelumbonaceae: rhizome habit long_creeping; read as \"long_creeping\"."
     }
   }
 }

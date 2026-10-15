@@ -49,13 +49,19 @@
       "min": 3,
       "max": 6
     },
-    "carpels": 3
+    "carpels": 3,
+    "life_span": "perennial"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Dioscoreaceae with Trichopodaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually alternate, rarely opposite; leaves usually simple, sometimes compound; compound leaves palmate; veins usually palmate, sometimes pinnate or parallel; stipules present or absent; plants usually dioecious, sometimes monoecious, rarely hermaphrodite; ovary inferior; stems woody or herbaceous; flowers in panicles, in racemes or in spikes; flowers actinomorphic; perianth tepals; fruit usually capsule, rarely berry or samara; parts of each whorl 3; stamens 3 to 6; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 217, 218, family Dioscoreaceae: life span perennial; read as \"perennial\"."
     }
   }
 }

@@ -6,7 +6,10 @@
   "traits": {
     "leaf_form": "blade",
     "leaf_shape": "linear",
-    "rosette": "basal"
+    "rosette": "basal",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_venation": "single",
+    "life_span": "perennial"
   },
   "forms": {
     "fern": {
@@ -61,6 +64,21 @@
       "evidence": "SourceInferred",
       "source": "mabberley-2017",
       "note": "Mabberley's Plant-book (4th ed., 2017), under Isoetaceae and Isoetes: rosette plants, most of them aquatic, a few terrestrial and deciduous; leaves more or less linear, flat to round in section, tapering to the tip and spoon-shaped at the base, rising from a corm-like stem; the sporangia sit in the bases of the leaves, not in cones."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 88, 89, 90, family Isoetaceae: phyllotaxis pattern spiral; read as \"spiral\"."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 88, 89, 90, family Isoetaceae: leaf venation single midrib; read as \"single\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 88, 89, 90, family Isoetaceae: life span perennial; read as \"perennial\"."
     }
   }
 }

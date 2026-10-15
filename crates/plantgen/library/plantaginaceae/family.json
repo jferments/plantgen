@@ -37,6 +37,17 @@
       "annual": "often",
       "biennial": "often",
       "perennial": "often"
+    },
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often",
+      "whorled": "often"
+    },
+    "inflorescence": {
+      "head": "often",
+      "panicle": "often",
+      "raceme": "often",
+      "solitary": "often"
     }
   },
   "forms": {
@@ -98,6 +109,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Plantaginaceae with Globulariaceae and Hippuridaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple; the simple blade none usually, lobed sometimes; lobes or leaflets pinnate. Read from the coded leaf form and dissection by script (spec-rework/b1/delta). Watson and Dallwitz's Plantaginaceae is Plantago alone; APG's family also takes in Veronica, Penstemon, Antirrhinum and their kin from the old Scrophulariaceae, whose leaves are simple and mostly unlobed (toothed or entire), so the reading stands for them (inferred, not traced)."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 421, 423, 424, family Plantaginaceae: leaf arrangement spiral, opposite or whorled; read as {\"alternate\": \"often\", \"opposite\": \"often\", \"whorled\": \"often\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 421, 423, 424, family Plantaginaceae: inflorescence head, raceme, thyrse or solitary; read as {\"head\": \"often\", \"panicle\": \"often\", \"raceme\": \"often\", \"solitary\": \"often\"}."
     }
   }
 }

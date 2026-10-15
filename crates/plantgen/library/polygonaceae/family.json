@@ -24,7 +24,11 @@
     "rosette": {
       "basal": "often",
       "none": "usually"
-    }
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually"
+    },
+    "leaf_division": "simple"
   },
   "evidence": {
     "traits": {
@@ -36,6 +40,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Polygonaceae: whether the leaves gather in rosettes (character 22), coded usually no rosette, often a basal rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 381, 383, family Polygonaceae: phyllotaxis pattern spiral, usually; read as {\"spiral\": \"usually\"}."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 381, 383, family Polygonaceae: leaf division simple; read as \"simple\"."
     }
   }
 }

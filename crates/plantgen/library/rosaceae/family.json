@@ -28,7 +28,19 @@
       "basal": "often",
       "none": "often"
     },
-    "life_span": "perennial"
+    "life_span": "perennial",
+    "phyllotaxis_pattern": {
+      "spiral": "usually"
+    },
+    "stipules": {
+      "true": "usually"
+    },
+    "fruit_type": {
+      "aggregate": "often",
+      "drupe": "often",
+      "pome": "often",
+      "follicle": "sometimes"
+    }
   },
   "forms": {
     "decurrent_tree": {
@@ -86,6 +98,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Rosaceae as that work draws it, there coded together with Guamatelaceae, Quillajaceae, Stylobasiaceae: the herbs' life form (character 21), coded perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 325, 327, 328, family Rosaceae: phyllotaxis pattern spiral (rarely opposite), usually; read as {\"spiral\": \"usually\"}."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 325, 327, 328, family Rosaceae: stipules true, often fused to petiole base, usually; read as {\"true\": \"usually\"}."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "diversity-evolution-land-plants",
+      "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type follicle (Spiraeoideae), usually. Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type drupe (Prunoideae). Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type aggregate (Rosoideae), often. Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type pome (Maloideae). Read together as {\"aggregate\": \"often\", \"drupe\": \"often\", \"pome\": \"often\", \"follicle\": \"sometimes\"}."
     }
   }
 }

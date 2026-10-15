@@ -29,6 +29,14 @@
       "min": 3,
       "max": 18,
       "low": 2
+    },
+    "leaf_incision": {
+      "dissected": "often",
+      "none": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "rhizome_habit": {
+      "long_creeping": "usually"
     }
   },
   "evidence": {
@@ -36,6 +44,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cabombaceae: leaves alternate or opposite; leaves simple or compound; stipules absent; plants hermaphrodite; ovary superior; floral cup absent; stems herbaceous; flowers solitary; perianth sepals and petals; fruit follicle; parts of each whorl 3; stamens 3 to 18; carpels (2-) 3 to 18. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 193, family Cabombaceae: leaf incision none or dissected (undivided floating leaves; submersed leaves divided into many segments), usually; read as {\"dissected\": \"often\", \"none\": \"often\"}."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 193, family Cabombaceae: flower symmetry actinomorphic; read as \"actinomorphic\"."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 193, family Cabombaceae: rhizome habit long_creeping (rhizomes give rise to elongate leafy shoots), usually; read as {\"long_creeping\": \"usually\"}."
     }
   }
 }
