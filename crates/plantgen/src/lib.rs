@@ -368,4 +368,10 @@ pub mod venation;
 /// (`filament`), and an unequal corolla's odd petal or tepal may bend down
 /// as well as up (`odd_rise`); common camas is zygomorphic, its lowest
 /// tepal set apart (60 is daisy and camas detail, #116).
-pub const GENERATOR_REVISION: u32 = 61;
+/// 62: flowers take their clades' and families' flower plans from Simpson
+/// (2019) and Ronse De Craene (2010): the monocots' tepals, stamens and
+/// carpels, the rosids' two whorls of stamens, the euasterids' five on the
+/// tube and two carpels, and 56 families' stamens, carpels, perianth,
+/// merosity, ovary, floral cup and corolla shape; willows and poplars
+/// draw no perianth (61 is camas filaments and odd tepal, #119).
+pub const GENERATOR_REVISION: u32 = 62;
