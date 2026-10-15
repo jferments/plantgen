@@ -823,6 +823,7 @@ mod tests {
 
     fn look(shape: Shape) -> Look {
         Look {
+            insertion: crate::looks::Insertion::Marginal,
             organ: "bloom".to_string(),
             form: Form::default_for(&shape),
             bend: crate::bend::Bend::FLAT,

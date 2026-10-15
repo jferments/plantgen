@@ -57,6 +57,10 @@ pub struct OrganLook {
     /// trees.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub face_up: f64,
+    /// Where a leaf's petiole meets its blade ([`Insertion`]): at the
+    /// blade's base in its plane, one card as before, unless set.
+    #[serde(default, skip_serializing_if = "Insertion::is_marginal")]
+    pub insertion: Insertion,
     /// Draw the organ as a solid leaf on the nearest levels of detail
     /// (`crate::leaves`); its card stands for it farther away.
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -77,6 +81,48 @@ pub struct OrganLook {
     /// juvenile leaves on a young plant. Without them every leaf is alike.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub families: Option<Families>,
+}
+
+/// Where a leaf's petiole meets its blade (Kaplan, ch. 18: epeltate and
+/// peltate blades). A blade that is not `marginal` is drawn on a petiole
+/// of its own, a stalk from the node to where it meets the blade, and its
+/// card, the petiole left off it, turns flat to the sky about that point:
+/// peltate blades, and latently peltate ones, are held near horizontal on
+/// their petioles.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Insertion {
+    /// At the blade's basal margin, the blade going on from the petiole
+    /// in its plane: one card, the petiole painted on it.
+    #[default]
+    Marginal,
+    /// At the blade's basal margin, the blade held flat across the
+    /// petiole's tip (latently peltate: sagittate aroids, a digitate leaf
+    /// whose leaflets leave a gap toward the stem).
+    Latent,
+    /// Under the blade, inside its outline, like an umbrella (manifestly
+    /// peltate): at the middle of an undivided blade, at the centre of a
+    /// palmate one's lobes or leaflets (nasturtium, mayapple, a digitate
+    /// leaf whose leaflets close a ring round the petiole's tip).
+    Peltate,
+}
+
+impl Insertion {
+    #[must_use]
+    pub fn is_marginal(&self) -> bool {
+        *self == Self::Marginal
+    }
+}
+
+/// A leaf drawn on a petiole of its own ([`Insertion`]), in lengths of its
+/// card from the card's foot: where the petiole meets the blade, and the
+/// point of the blade that sits on the petiole's tip.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Stalk {
+    /// The petiole's length: the share of the card it was painted on.
+    pub petiole: f64,
+    /// The point of the blade, on its midline, on the petiole's tip.
+    pub attach: f64,
 }
 
 /// How an organ type's leaves differ with the light they grew in and the
@@ -1872,6 +1918,29 @@ impl Shape {
         }
     }
 
+    /// For a leaf on a petiole, in lengths of its drawing from its foot:
+    /// where the petiole meets the blade, and where it would meet it under
+    /// the blade were the blade peltate (the centre of a palmate blade's
+    /// lobes or leaflets, the middle of any other). `None` for shapes
+    /// without a petiole.
+    #[must_use]
+    pub fn junction(&self) -> Option<(f64, f64)> {
+        let middle = |p: f64| (p, p + 0.5 * (1.0 - p));
+        match self {
+            Self::Simple(s) => Some(middle(s.petiole)),
+            Self::Lobed(s) => Some(middle(s.petiole)),
+            Self::Palmate(s) => {
+                let (junction, _) = s.junction();
+                Some((junction, junction))
+            }
+            Self::Compound(c) => Some(match c.pattern.unwrap_or_default() {
+                Pattern::Palmate => (c.petiole, c.petiole),
+                Pattern::Pinnate => middle(c.petiole),
+            }),
+            _ => None,
+        }
+    }
+
     /// Width of a second card that crosses the first, relative to it, for
     /// organs that stand out all round their axis and would vanish seen
     /// edge on: needles, spikes, panicles and fruit. `None` for flat
@@ -2544,6 +2613,8 @@ pub struct Look {
     pub shade: [f32; 3],
     pub accent: [f32; 3],
     pub face_up: f64,
+    /// Where its petiole meets its blade, for a leaf.
+    pub insertion: Insertion,
     pub solid: Option<crate::leaves::SolidLeaf>,
     pub bend: crate::bend::Bend,
     pub form: crate::blooms::Form,
@@ -2676,6 +2747,26 @@ impl Look {
             (cluster.card.foot, cluster.card.length)
         })
     }
+
+    /// The petiole its leaf is drawn on, apart from its card, where its
+    /// [`Insertion`] is not marginal; `None` for a leaf drawn on one card,
+    /// as every other organ is.
+    #[must_use]
+    pub fn stalk(&self) -> Option<Stalk> {
+        if self.insertion.is_marginal() || self.inflorescence.is_some() || self.solid.is_some() {
+            return None;
+        }
+        let (junction, peltate_at) = self.shape.junction()?;
+        let attach = match self.insertion {
+            Insertion::Peltate => peltate_at,
+            _ => junction,
+        };
+        let (_, along) = crate::templates::drawn_share(&self.shape);
+        Some(Stalk {
+            petiole: junction * along,
+            attach: attach * along,
+        })
+    }
 }
 
 /// One look per organ type, in the program's declaration order. `organs`
@@ -2706,6 +2797,7 @@ pub fn resolve<'a>(
                     shade,
                     accent: look.accent.unwrap_or(colour),
                     face_up: look.face_up,
+                    insertion: look.insertion,
                     solid: look.solid.clone(),
                     bend: look
                         .bend
@@ -2739,6 +2831,7 @@ pub fn resolve<'a>(
                 shade: foliage_shade,
                 accent: foliage,
                 face_up: 0.0,
+                insertion: Insertion::Marginal,
                 solid: None,
                 forms: Forms::default(),
                 inflorescence: None,
@@ -3059,6 +3152,8 @@ fn in_stage(look: &Look, stage: &StageLook) -> Look {
         shade: [colour[0] * 0.35, colour[1] * 0.42, colour[2] * 0.55],
         accent: stage.accent.unwrap_or(colour),
         face_up: look.face_up,
+        // A stage's look is a flower or a fruit, on no petiole.
+        insertion: Insertion::Marginal,
         solid: None,
         bend: crate::bend::Bend::default_for(&stage.shape),
         form: crate::blooms::Form::default_for(&stage.shape),
@@ -3347,6 +3442,20 @@ impl OrganLook {
         if let Some(form) = &self.form {
             form.validate(&self.shape)?;
         }
+        if !self.insertion.is_marginal() {
+            if self.shape.junction().is_none() {
+                return Err(format!(
+                    "an insertion is a leaf's, on a petiole; a {} has none",
+                    self.shape.name()
+                ));
+            }
+            if self.inflorescence.is_some() || self.solid.is_some() {
+                return Err(
+                    "an insertion is for a leaf drawn on a card, not a cluster or a solid leaf"
+                        .to_string(),
+                );
+            }
+        }
         within("face_up", self.face_up, 0.0, 1.0)
     }
 }
@@ -3355,6 +3464,31 @@ impl OrganLook {
 #[allow(clippy::float_cmp)]
 mod tests {
     use super::*;
+
+    /// Only a leaf on a petiole, drawn on a card, has an insertion.
+    #[test]
+    fn an_insertion_is_a_leafs() {
+        let parse = |text: &str| serde_json::from_str::<OrganLook>(text).unwrap().validate();
+        assert!(parse(r#"{"shape": {"template": "simple"}, "insertion": "peltate"}"#).is_ok());
+        assert!(parse(r#"{"shape": {"template": "compound"}, "insertion": "latent"}"#).is_ok());
+        let flower = parse(r#"{"shape": {"template": "flower"}, "insertion": "peltate"}"#);
+        assert!(flower.unwrap_err().contains("a flower has none"));
+        assert!(
+            serde_json::from_str::<OrganLook>(
+                r#"{"shape": {"template": "simple"}, "insertion": "sideways"}"#
+            )
+            .is_err()
+        );
+        // Left unset it is marginal, and so not written.
+        let marginal =
+            serde_json::from_str::<OrganLook>(r#"{"shape": {"template": "simple"}}"#).unwrap();
+        assert_eq!(marginal.insertion, Insertion::Marginal);
+        assert!(
+            !serde_json::to_string(&marginal)
+                .unwrap()
+                .contains("insertion")
+        );
+    }
 
     #[test]
     fn sun_leaves_are_smaller_narrower_and_deeper_than_shade_leaves() {
@@ -3452,6 +3586,7 @@ mod tests {
         let organs = BTreeMap::from([(
             "leaf".to_string(),
             OrganLook {
+                insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Lobed(Lobed::default()),
                 colour: None,
                 shade: None,
@@ -3704,6 +3839,7 @@ mod tests {
         organs.insert(
             "bloom".to_string(),
             OrganLook {
+                insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Head(Head::default()),
                 colour: Some([0.6, 0.2, 0.7]),
                 shade: None,
@@ -3793,6 +3929,7 @@ mod tests {
     fn an_organ_looks_as_it_is_on_the_day() {
         let types = [("leaf", OrganKind::Leaf), ("bloom", OrganKind::Flower)];
         let fruit = |season: Option<Season>| OrganLook {
+            insertion: crate::looks::Insertion::Marginal,
             shape: Shape::Fruit(Fruit::default()),
             colour: Some([0.6, 0.05, 0.06]),
             shade: None,
@@ -3880,6 +4017,7 @@ mod tests {
         organs.insert(
             "bloom".to_string(),
             OrganLook {
+                insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Head(Head::default()),
                 colour: Some([0.95, 0.95, 0.9]),
                 shade: None,
@@ -3995,6 +4133,7 @@ mod tests {
     /// A cherry's umbel of six (or `kind` of `flowers`), with `season`.
     fn clustered(kind: ClusterKind, flowers: u32, season: Season) -> OrganLook {
         OrganLook {
+            insertion: crate::looks::Insertion::Marginal,
             shape: Shape::Fruit(Fruit::default()),
             colour: Some([0.6, 0.05, 0.06]),
             shade: None,

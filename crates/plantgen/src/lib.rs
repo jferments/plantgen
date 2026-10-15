@@ -411,4 +411,13 @@ pub mod venation;
 /// 84 families from Watson and Dallwitz), a clump as before otherwise;
 /// every built-in sets its own and grows as before (68 is flowers in
 /// clusters, #127).
-pub const GENERATOR_REVISION: u32 = 69;
+/// 70: leaves on petioles of their own: a leaf whose blade is latently
+/// or manifestly peltate (`insertion`, from `leaf_peltation`; Kaplan) is
+/// drawn as a petiole stalk with its blade level on the tip, a peltate
+/// one centred there; a palmate leaf whose spread is unset opens as far
+/// as its leaflets need; a flora's measured leaf and leaflet widths come
+/// before shape words; rosette leaves take the species' leaf rules;
+/// large-leaved lupine's leaves are peltate rings, and 8 built-ins'
+/// rosette leaves take their species' shapes (69 is one stem from a bulb,
+/// #129).
+pub const GENERATOR_REVISION: u32 = 70;
