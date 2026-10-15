@@ -1727,7 +1727,8 @@ impl ClusterKind {
 
 /// An organ drawn as one cluster of units (spec rework L1), as a spec gives
 /// it: every key may be left out for its default, which may depend on the
-/// kind (`crate::clusters::Cluster::of`), so `{}` is a raceme of 12.
+/// kind and on the other keys (`crate::clusters::Cluster::of`), so `{}`
+/// is a raceme of 12.
 /// Lengths are shares of the axis that bears them: the organ's, or a
 /// branch's.
 #[derive(Debug, Clone, PartialEq, Default, Serialize, Deserialize)]
@@ -1738,8 +1739,10 @@ pub struct Inflorescence {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub kind: Option<ClusterKind>,
     /// Units on each axis that bears them: the main axis, or each branch
-    /// of a compound cluster; a cyme's units in all. 1 to 200; 12 unless
-    /// set, or for a branch its cluster's.
+    /// of a compound cluster; a cyme's units in all. 1 to 200. Unless set
+    /// (or, for a branch, set on its cluster), a raceme, spike, catkin or
+    /// corymb holds as many as stand half a unit's `size` apart above its
+    /// peduncle (12 with neither set), and other kinds 12.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub flowers: Option<u32>,
     /// Branches the axis bears in place of units, making a compound
@@ -1761,7 +1764,8 @@ pub struct Inflorescence {
     /// Degrees a pedicel or branch leans from its axis, 0 to 90; 35.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub spread: Option<f64>,
-    /// A unit's stalk, 0 to 1: 0.15, or 0 where the axis bears branches.
+    /// A unit's stalk, 0 to 1: as long as the unit (`size`) in a raceme,
+    /// else 0.15, and 0 where the axis bears branches.
     /// Spikes, catkins and heads are sessile; umbels and corymbs reach the
     /// top whatever it is.
     #[serde(skip_serializing_if = "Option::is_none")]

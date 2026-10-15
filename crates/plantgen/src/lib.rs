@@ -400,9 +400,15 @@ pub mod venation;
 /// bleeding heart, monkeyflower, foamflower, paintbrush, Oregon grape,
 /// tiger lily) draw them so, the lily's green-gold from photographs (66
 /// is drawn areas, #124).
-/// 68: a forb drafted from facts sends up one stem where its taxa say it
+/// 68: flowers in clusters: a flower or bloom whose taxa state a cluster
+/// kind and its length is drawn as that cluster, as long as the
+/// inflorescence, its flowers as wide as the flower and on stalks as long
+/// as the pedicel; a species' own cluster stands; desert ironwood's and
+/// the umbrella thorn's blooms become clusters (67 is closed buds,
+/// #126).
+/// 69: a forb drafted from facts sends up one stem where its taxa say it
 /// lasts as a bulb or a corm (the new character `perennation`, stated for
 /// 84 families from Watson and Dallwitz), a clump as before otherwise;
-/// every built-in sets its own and grows as before (67 is closed buds,
-/// #126).
-pub const GENERATOR_REVISION: u32 = 68;
+/// every built-in sets its own and grows as before (68 is flowers in
+/// clusters, #127).
+pub const GENERATOR_REVISION: u32 = 69;

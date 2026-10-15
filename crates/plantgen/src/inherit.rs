@@ -553,16 +553,19 @@ fn check_rule(path: &str, rule: &Value) -> Result<(), String> {
     };
     if let Some(key) = rule.keys().find(|key| {
         ![
-            "rule", "map", "colour", "scale", "between", "why", "template", "else",
+            "rule", "map", "colour", "scale", "between", "why", "template", "else", "needs",
         ]
         .contains(&key.as_str())
     }) {
         return Err(format!(
-            "`{key}` is not a rule's: `rule`, `map` (and `between`, `else`) or `colour`, `why`, and in a look's `shape` its `template`"
+            "`{key}` is not a rule's: `rule`, `map` (and `between`, `else`) or `colour`, `why`, `needs`, and in a look's `shape` its `template`"
         ));
     }
     if !rule.get("why").is_none_or(Value::is_string) {
         return Err("`why` is a line of text".into());
+    }
+    if needs(rule).is_none() {
+        return Err("`needs` is a list of characters the rule needs stated".into());
     }
     match rule.get("between") {
         None => {}
@@ -2353,6 +2356,9 @@ impl Ruled<'_> {
         // needs only the names on the way it takes (`a ? b : c` reads one
         // of `b` and `c`), so a name it cannot read fails it only if the
         // formula then has no number.
+        for name in needs(self.rule).unwrap_or_default() {
+            read(name)?;
+        }
         let mut picks = Vec::new();
         let mut unread = Vec::new();
         let names = if let Some((key, table)) = map_of(self.rule) {
@@ -2379,8 +2385,15 @@ impl Ruled<'_> {
                 Err(_) if self.rule.contains_key("else") => self
                     .rule
                     .get("else")
-                    .and_then(|otherwise| map_rule(otherwise).or_else(|| map_colour(otherwise)))
-                    .map(reads)
+                    .map(
+                        |otherwise| match map_rule(otherwise).or_else(|| map_colour(otherwise)) {
+                            Some(inner) => reads(inner),
+                            None => map_formula(otherwise)
+                                .and_then(|formula| Formula::parse(formula).ok())
+                                .map(|formula| formula.names().into_iter().collect())
+                                .unwrap_or_default(),
+                        },
+                    )
                     .unwrap_or_default(),
                 Err(why) => return Err(why),
             }
@@ -2412,6 +2425,16 @@ impl Ruled<'_> {
             }
         })?;
         fits(field, &value)?;
+        // A rule setting a whole object (a look's `inflorescence`) yields
+        // where a file already set anything inside it.
+        if value.is_object()
+            && let Some((label, _)) = origins
+                .iter()
+                .find(|(path, _)| within(path, self.at))
+                .map(|(_, origin)| origin)
+        {
+            return Err(format!("set by hand in {label}"));
+        }
         if let (Some(shape), Some(card)) = (self.at.strip_suffix(".template"), value.as_str())
             && shape_field(self.at) == Some("template")
         {
@@ -2675,13 +2698,22 @@ fn fits(field: Option<Field>, value: &Value) -> Result<(), String> {
 /// rule sets runs after it. Rules caught in a loop of such reads come
 /// last, each with the paths it waits on.
 fn order(rules: &Rules) -> Vec<(&str, Vec<String>)> {
-    // A rule reading a parameter waits on the rule setting it, and one on
-    // a card's field on the rule choosing that organ's card.
+    // A rule reading a parameter waits on the rule setting it, one on a
+    // card's field on the rule choosing that organ's card, and one inside
+    // a cluster on the rule making that organ's look a cluster.
     let waits = |path: &str, rule: &Map<String, Value>| -> Vec<String> {
         let cards = rules.keys().filter(|card| {
             shape_field(card) == Some("template")
                 && shape_field(path).is_some_and(|field| field != "template")
                 && (path.starts_with(EVERY) || organ_of(card) == organ_of(path))
+        });
+        let clusters = rules.keys().filter(|cluster| {
+            inflorescence_field(path).is_some()
+                && cluster
+                    .strip_prefix("appearance.organs.")
+                    .and_then(|rest| rest.strip_suffix(".inflorescence"))
+                    .is_some_and(|organ| !organ.contains('.') && organ != "*")
+                && (path.starts_with(EVERY) || organ_of(cluster) == organ_of(path))
         });
         reads(rule)
             .into_iter()
@@ -2693,6 +2725,7 @@ fn order(rules: &Rules) -> Vec<(&str, Vec<String>)> {
             })
             .filter(|path| rules.contains_key(path))
             .chain(cards.cloned())
+            .chain(clusters.cloned())
             .collect()
     };
     let mut done: BTreeSet<&str> = BTreeSet::new();
@@ -2755,6 +2788,7 @@ fn reads(rule: &Map<String, Value>) -> Vec<String> {
     let mut read = vec![key.clone()];
     let more: BTreeSet<String> = table
         .values()
+        .chain(rule.get("else"))
         .filter_map(map_formula)
         .flat_map(names)
         .chain(
@@ -2820,6 +2854,17 @@ fn colour_names(rule: &Map<String, Value>) -> Option<Vec<&str>> {
         Value::String(name) => Some(vec![name.as_str()]),
         Value::Array(names) => names.iter().map(Value::as_str).collect(),
         _ => None,
+    }
+}
+
+/// The characters a rule needs stated to set anything (`"needs":
+/// [names]`), whether or not it reads them: a cluster is drawn only where
+/// its length is known. `None` where `needs` is not a list of names.
+fn needs(rule: &Map<String, Value>) -> Option<Vec<&str>> {
+    match rule.get("needs") {
+        None => Some(Vec::new()),
+        Some(Value::Array(names)) => names.iter().map(Value::as_str).collect(),
+        Some(_) => None,
     }
 }
 
@@ -3074,7 +3119,10 @@ fn evaluate(rule: &Map<String, Value>, inputs: &BTreeMap<String, Value>) -> Resu
             return match rule.get("else") {
                 Some(otherwise) => match map_rule(otherwise).or_else(|| map_colour(otherwise)) {
                     Some(inner) => evaluate(inner, inputs),
-                    None => Ok(otherwise.clone()),
+                    None => match map_formula(otherwise) {
+                        Some(formula) => calculate(formula),
+                        None => Ok(otherwise.clone()),
+                    },
                 },
                 None => Err(format!("no `{key}` to read")),
             };
@@ -4375,6 +4423,52 @@ mod tests {
         assert_eq!(params["flower_area"], json!(0.6));
         assert_eq!(params["stems"], json!(3));
         assert!(!grown.origins.contains_key("generator.params.leaf_area"));
+    }
+
+    /// A rule may make an organ's look a cluster, and the rules inside a
+    /// cluster run after it; a map's `else` may be a formula.
+    #[test]
+    fn a_rule_makes_a_cluster_that_the_cluster_rules_fill() {
+        let files = ranks(&[(
+            "testaceae/family.json",
+            json!({"schema": 1, "rank": "family", "name": "Testaceae",
+                "generator": {"program": "broadleaf"},
+                "rules": {
+                    "appearance.organs.*.inflorescence.kind": {
+                        "map": {"inflorescence": {"raceme": "raceme", "spike": "spike"}}},
+                    "appearance.organs.flower.inflorescence": {
+                        "map": {"inflorescence": {"raceme": {}, "spike": {}}}},
+                    "generator.params.a": {
+                        "map": {"inflorescence": {"raceme": {"rule": "inflorescence_length_m"}}},
+                        "else": {"rule": "flower_size_m"}}}}),
+        )]);
+        let chain = above(&files, "testaceae", "plain").unwrap();
+        let grown = |traits: Value| {
+            let own = json!({"id": "plain-one", "traits": traits,
+                "appearance": {"organs": {"flower": {"shape": {"template": "flower"}}}}});
+            inherit(
+                "testaceae/plain/plain-one/spec.json",
+                &own,
+                &chain,
+                &programs(),
+            )
+            .unwrap()
+        };
+        let raceme = grown(json!({"inflorescence": "raceme",
+            "inflorescence_length_m": 0.3, "flower_size_m": 0.01}));
+        assert_eq!(
+            raceme.spec["appearance"]["organs"]["flower"]["inflorescence"],
+            json!({"kind": "raceme"})
+        );
+        assert_eq!(raceme.spec["generator"]["params"]["a"], json!(0.3));
+        // A solitary flower stays one, and the `else` formula is worked out.
+        let single = grown(json!({"flower_size_m": 0.01}));
+        assert!(
+            single.spec["appearance"]["organs"]["flower"]
+                .get("inflorescence")
+                .is_none()
+        );
+        assert_eq!(single.spec["generator"]["params"]["a"], json!(0.01));
     }
 
     /// A family's rules for its heads set a card's fields where the species
