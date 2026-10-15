@@ -1952,6 +1952,7 @@ mod tests {
                         petal: [0.9; 3],
                         calyx: CALYX,
                         accent: [0.9, 0.7, 0.1],
+                        filament: [0.9, 0.7, 0.1],
                     },
                     Part {
                         born: 1.0,

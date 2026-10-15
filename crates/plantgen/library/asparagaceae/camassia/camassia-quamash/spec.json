@@ -39,7 +39,7 @@
       "leaf_area": 0.235,
       "basal_area": 0.049,
       "basal_piece_area": 0.091,
-      "flower_area": 0.333,
+      "flower_area": 0.24,
       "bud_area": 0.027,
       "fruit_area": 0.763,
       "bud_spacing": 0.3,
@@ -120,6 +120,11 @@
     "zygomorphy": "other"
   },
   "evidence": {
+    "generator.params.flower_area": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The area an open flower covers on an organ 1 m long, measured on its drawing (narrow tepals, the lowest bent down), so its shade matches what it draws."
+    },
     "appearance.organs.flower.shape.filament": {
       "evidence": "Measured",
       "source": "inaturalist-photos-2026-10",
