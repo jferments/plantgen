@@ -124,7 +124,12 @@
       "max": 0.06
     },
     "flowering_months": [4, 5, 6],
-    "fruiting_months": [7, 8]
+    "fruiting_months": [7, 8],
+    "flower_symmetry": "actinomorphic",
+    "flower_size_m": {"min": 0.012, "max": 0.015},
+    "bract_form": "leafy",
+    "bract_length_m": {"min": 0.007, "max": 0.012},
+    "fruit_size_m": {"min": 0.007, "max": 0.008}
   },
   "evidence": {
     "traits.flowering_months": {
@@ -135,7 +140,7 @@
     "traits.fruiting_months": {
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",
-      "note": "Seed Manual, Lonicera chapter (printed p. 685): ripe in July and August in the northern Rocky Mountains; it has no Pacific Northwest row."
+      "note": "Seed Manual, Lonicera chapter (printed p. 685): ripe in July and August in the northern Rocky Mountains; it has no Pacific Northwest row. Idžojtić, Dendrology (2019) p. 390: fruit ripe May-July. Not combined: Dendrology's months are for the tree grown in Europe, the spec's for its own range."
     },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
@@ -206,7 +211,12 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Its flowers drawn one by one (spec rework L1b): yellow tubular flowers 12 to 18 mm long, in pairs that open together, drawn as closed tubes with their lobes at the tip. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
-    }
+    },
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 390, Lonicera involucrata: flower symmetry nearly actinomorphic."},
+    "traits.flower_size_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 390, Lonicera involucrata: flower size 12-15 mm long."},
+    "traits.bract_form": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 390, Lonicera involucrata: bract form leafy, reddish-/greenish-purple involucre."},
+    "traits.bract_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 390, Lonicera involucrata: bract length 7-12 mm."},
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 390, Lonicera involucrata: fruit size 7-8 mm."}
   },
   "provenance": {
     "sources": [

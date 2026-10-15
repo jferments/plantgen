@@ -115,7 +115,8 @@
       "max": 24.384
     },
     "wood_density_basic_kg_m3": 830,
-    "stamens": 8
+    "stamens": 8,
+    "architectural_model": {"attims": "usually"}
   },
   "evidence": {
     "traits.height_max_m": {
@@ -178,7 +179,8 @@
       "evidence": "SourceInferred",
       "source": "little-skolmen-1989",
       "note": "Little and Skolmen's Common Forest Trees of Hawaii, as quoted in search results; the page itself was not read: sepals 4, narrow, pale yellow, almost 13 mm long, leathery and persistent; petals 4, narrow, about 10 mm, whitish, woolly inside; a two-celled ovary mostly inferior but conical at its apex. The New York Botanical Garden's account (as quoted in search results; the page itself was not read) gives 8 stamens round the style."
-    }
+    },
+    "traits.architectural_model": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 478, Rhizophora mangle: architectural model attims."}
   },
   "provenance": {
     "sources": [

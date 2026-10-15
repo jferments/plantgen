@@ -137,7 +137,9 @@
       "max": 3.66
     },
     "flowering_months": [4, 5],
-    "fruiting_months": [8]
+    "fruiting_months": [8],
+    "inflorescence": "raceme",
+    "fruit_type": "pome"
   },
   "evidence": {
     "traits.flowering_months": {
@@ -148,7 +150,7 @@
     "traits.fruiting_months": {
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",
-      "note": "Seed Manual, Amelanchier chapter (printed p. 246): ripe in August at 520 m in Oregon (var. semiintegrifolia, the Pacific serviceberry). FEIS gives July to September across the range."
+      "note": "Seed Manual, Amelanchier chapter (printed p. 246): ripe in August at 520 m in Oregon (var. semiintegrifolia, the Pacific serviceberry). FEIS gives July to September across the range. Idžojtić, Dendrology (2019) p. 68: fruit ripe June-July. Not combined: Dendrology's months are for the tree grown in Europe, the spec's for its own range."
     },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
@@ -214,7 +216,9 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit as they were set by hand before 2026-10-14, a convention (no source gives a raceme's opening time)."
-    }
+    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 68, Amelanchier alnifolia: inflorescence raceme, erect, 2-4(-6) cm, 5-11(-15) flowers."},
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 68, Amelanchier alnifolia: fruit type pome, dark purple-black, 1-1.5 cm."}
   },
   "provenance": {
     "sources": [

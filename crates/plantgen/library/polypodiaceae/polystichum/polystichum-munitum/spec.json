@@ -79,7 +79,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "rhizome_habit": "ascending",
+    "rhizome_habit": {"ascending": "usually", "erect": "often"},
     "leaf_habit": "evergreen",
     "division_order": 1,
     "leaf_shape": "lanceolate",
@@ -88,7 +88,8 @@
     "leaf_width_m": {"min": 0.05, "max": 0.25},
     "petiole_length_m": {"min": 0.05, "max": 0.6},
     "sorus_position": {"medial": "usually", "submarginal": "often"},
-    "sori_rows": {"min": 1, "max": 1, "high": 3}
+    "sori_rows": {"min": 1, "max": 1, "high": 3},
+    "indusium": "shield"
   },
   "evidence": {
     "traits": {
@@ -140,7 +141,9 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.indusium": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 460, 461, Polystichum munitum: indusium shield, ciliate."},
+    "traits.rhizome_habit": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "The spec's value is from its `traits` note (abrams-1923). Hoshizaki and Moran, Fern Grower's Manual (2001) p. 460-461: rhizome ascending to erect. The spec stated \"ascending\". Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."}
   },
   "provenance": {
     "sources": [
