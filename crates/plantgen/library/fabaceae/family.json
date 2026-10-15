@@ -18,7 +18,10 @@
     "stipules": {"true": "usually", "false": "rarely"},
     "leaf_arrangement": {"alternate": "usually", "opposite": "rarely", "whorled": "rarely"},
     "division_pattern": {"pinnate": "usually", "palmate": "sometimes"},
-    "sexual_system": {"hermaphrodite": "usually", "monoecious": "sometimes", "polygamous": "sometimes"}
+    "sexual_system": {"hermaphrodite": "usually", "monoecious": "sometimes", "polygamous": "sometimes"},
+    "phyllotaxis_pattern": {"spiral": "usually"},
+    "flower_symmetry": {"actinomorphic": "often", "zygomorphic": "often"},
+    "zygomorphy": "papilionaceous"
   },
   "forms": {
     "decurrent_tree": {
@@ -99,7 +102,10 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "How the herb program draws a palmate leaf from a flora's petiole and leaflet lengths, a choice of the model's (spec rework E4): its card is the petiole and a leaflet end to end, so the leaf is as long as both and the petiole's share is its length over theirs."
-    }
+    },
+    "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 320, 321, family Fabaceae: phyllotaxis pattern spiral, usually; read as {\"spiral\": \"usually\"}."},
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 320, 321, family Fabaceae: flower symmetry actinomorphic or zygomorphic; read as {\"actinomorphic\": \"often\", \"zygomorphic\": \"often\"}."},
+    "traits.zygomorphy": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 150, 151, 152, family Fabaceae: zygomorphy papilionaceous; read as \"papilionaceous\"."}
   },
   "rules": {
     "generator.params.leaf_length": {

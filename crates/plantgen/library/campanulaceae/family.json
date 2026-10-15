@@ -39,6 +39,14 @@
     "fruit_type": {
       "capsule": "usually",
       "berry": "sometimes"
+    },
+    "inflorescence": {
+      "cyme": "often",
+      "raceme": "often"
+    },
+    "sexual_system": {
+      "dioecious": "rarely",
+      "hermaphrodite": "usually"
     }
   },
   "evidence": {
@@ -54,6 +62,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Campanulaceae with Sphenocleaceae: its irregular flowers have a two-lipped corolla, read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy bilabiate. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 445, 447, family Campanulaceae: inflorescence raceme or cyme, rarely borne on the leaf, usually; read as {\"cyme\": \"often\", \"raceme\": \"often\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 445, 447, family Campanulaceae: sexual system hermaphrodite [dioecious], usually; read as {\"dioecious\": \"rarely\", \"hermaphrodite\": \"usually\"}."
     }
   }
 }

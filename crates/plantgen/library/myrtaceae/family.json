@@ -30,6 +30,10 @@
     "leaf_habit": {
       "evergreen": "usually",
       "deciduous": "rarely"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "rarely"
     }
   },
   "evidence": {
@@ -45,6 +49,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Myrtaceae as that work draws it, there coded together with Heteropyxidaceae, Psiloxylaceae: how long the leaves last (character 37), coded usually evergreen, rarely deciduous. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 347, 348, family Myrtaceae: sexual system hermaphrodite (dioecious in Psiloxylon), usually. Read together as {\"hermaphrodite\": \"usually\", \"dioecious\": \"rarely\"}."
     }
   }
 }

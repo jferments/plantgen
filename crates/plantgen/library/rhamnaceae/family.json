@@ -27,7 +27,17 @@
     "fruit_type": {
       "drupe": "usually",
       "capsule": "sometimes"
-    }
+    },
+    "leaf_venation": {
+      "palmate": "often",
+      "pinnate": "often"
+    },
+    "inflorescence": {
+      "cyme": "often",
+      "panicle": "often",
+      "solitary": "rarely"
+    },
+    "sexual_system": "hermaphrodite"
   },
   "forms": {
     "decurrent_tree": {
@@ -73,6 +83,21 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 201 Rhamnaceae: trees or shrubs, very rarely herbs, sometimes climbing; leaves simple, alternate or opposite; stipules mostly present; fruit of several kinds, often a drupe."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 325, 326, family Rhamnaceae: leaf venation pinnate or palmate; read as {\"palmate\": \"often\", \"pinnate\": \"often\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 325, 326, family Rhamnaceae: inflorescence cyme, thyrse, fascicle, rarely solitary, usually; read as {\"cyme\": \"often\", \"panicle\": \"often\", \"solitary\": \"rarely\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 325, 326, family Rhamnaceae: sexual system unisexual or bisexual flowers; read as \"hermaphrodite\"."
     }
   }
 }

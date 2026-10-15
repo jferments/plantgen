@@ -23,6 +23,18 @@
     "fruit_type": {
       "drupe": "usually",
       "berry": "sometimes"
+    },
+    "leaf_incision": {
+      "none": "usually"
+    },
+    "stipules": {
+      "false": "usually"
+    },
+    "inflorescence": {
+      "cyme": "usually"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually"
     }
   },
   "forms": {
@@ -76,6 +88,26 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 43 Cornaceae: trees, shrubs or rarely perennial herbs; leaves opposite or alternate, simple; stipules absent; fruit a drupe or berry."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 384, family Cornaceae: leaf incision none (rarely pinnatifid), usually; read as {\"none\": \"usually\"}."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 384, family Cornaceae: stipules false, usually; read as {\"false\": \"usually\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 384, family Cornaceae: inflorescence cyme (or head of cymes, rarely raceme), usually; read as {\"cyme\": \"usually\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 385, 386, family Cornaceae: sexual system hermaphrodite, usually; read as {\"hermaphrodite\": \"usually\"}."
     }
   }
 }

@@ -15,7 +15,8 @@
     },
     "carpels": 2,
     "leaf_arrangement": "opposite",
-    "fruit_type": "samara"
+    "fruit_type": "samara",
+    "phyllotaxis_pattern": "decussate"
   },
   "evidence": {
     "traits.wood_modulus_green_mpa": {"evidence": "SourceInferred", "source": "wood-handbook-2021", "note": "Wood Handbook 2021 (FPL-GTR-282), table 5-3a, green: the range of the 5 Acer species it tests (bigleaf, black, red, silver, sugar), median typical. A species with its own row states its own."},
@@ -36,6 +37,7 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 219 Aceraceae (maples, which APG puts in Sapindaceae): trees or shrubs with scaled buds; leaves opposite, simple, palmately lobed or pinnate; fruit a two-winged samara whose halves separate."
-    }
+    },
+    "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 362-364: maples' leaves are opposite (Sapindaceae subfamily Hippocastanoideae, with Aesculus), each pair crossing the one below, where most of the family's leaves are spiral."}
   }
 }

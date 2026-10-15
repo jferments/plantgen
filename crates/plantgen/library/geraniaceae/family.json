@@ -34,7 +34,14 @@
       "typical": 10
     },
     "ovary_position": "superior",
-    "fruit_type": "schizocarp"
+    "fruit_type": "schizocarp",
+    "leaf_incision": {
+      "lobed": "often",
+      "parted": "often"
+    },
+    "inflorescence": {
+      "cyme": "usually"
+    }
   },
   "evidence": {
     "traits": {
@@ -46,6 +53,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Geraniaceae with Biebersteiniaceae, Dirachmaceae, Hypseocharitaceae, Ledocarpaceae, Vivianiaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 342, family Geraniaceae: leaf incision lobed to parted (simple leaves, pinnately or palmately), usually; read as {\"lobed\": \"often\", \"parted\": \"often\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 342, family Geraniaceae: inflorescence cyme (or solitary axillary flower), usually; read as {\"cyme\": \"usually\"}."
     }
   }
 }

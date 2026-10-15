@@ -27,6 +27,22 @@
     "fruit_type": {
       "drupe": "often",
       "schizocarp": "often"
+    },
+    "leaf_division": {
+      "simple": "usually"
+    },
+    "leaf_margin": {
+      "serrate": "usually"
+    },
+    "stipules": false,
+    "inflorescence": {
+      "cyme": "often",
+      "head": "often",
+      "panicle": "often",
+      "raceme": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually"
     }
   },
   "evidence": {
@@ -39,6 +55,31 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Verbenaceae with Avicenniaceae, Dicrastylidaceae, Phrymataceae, Stilbaceae, Symphoremataceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 424, 425, 426, family Verbenaceae: leaf division simple, usually; read as {\"simple\": \"usually\"}."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 424, 425, 426, family Verbenaceae: leaf margin serrate, usually; read as {\"serrate\": \"usually\"}."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 424, 425, 426, family Verbenaceae: stipules false; read as false."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 424, 425, 426, family Verbenaceae: inflorescence cyme, panicle, raceme or head; read as {\"cyme\": \"often\", \"head\": \"often\", \"panicle\": \"often\", \"raceme\": \"often\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 424, 425, 426, family Verbenaceae: sexual system hermaphrodite (rarely dioecious), usually; read as {\"hermaphrodite\": \"usually\"}."
     }
   }
 }

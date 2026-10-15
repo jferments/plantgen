@@ -23,7 +23,15 @@
     },
     "ovary_position": "superior",
     "carpels": 2,
-    "fruit_type": "capsule"
+    "fruit_type": "capsule",
+    "inflorescence": {
+      "cyme": "often",
+      "raceme": "often",
+      "solitary": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually"
+    }
   },
   "evidence": {
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 409: stamens 4 to 5, up to 12, as many as the corolla lobes."},
@@ -33,6 +41,16 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 293 Gentianaceae: annual or perennial herbs, very rarely woody; leaves opposite, entire, often joined at the base; no stipules; flowers regular, mostly showy and bright; corolla united, of 4 to 12 lobes; stamens as many as the lobes, on the corolla; ovary superior, mostly of one cell with two placentas on its wall (two carpels); fruit mostly a capsule. Simple leaves from 'entire', read as undivided."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 409, 410, family Gentianaceae: inflorescence cyme, raceme or solitary, usually; read as {\"cyme\": \"often\", \"raceme\": \"often\", \"solitary\": \"often\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 409, 410, family Gentianaceae: sexual system hermaphrodite, usually; read as {\"hermaphrodite\": \"usually\"}."
     }
   }
 }

@@ -5,7 +5,12 @@
   "parent": "order/ophioglossales",
   "traits": {
     "woodiness": "herbaceous",
-    "frond_dimorphism": "hemidimorphic"
+    "frond_dimorphism": "hemidimorphic",
+    "vernation": "flat",
+    "life_span": "perennial",
+    "rhizome_habit": "erect",
+    "indusium": "none",
+    "reproduction": "spores"
   },
   "forms": {
     "fern": {
@@ -73,6 +78,11 @@
       "evidence": "SourceInferred",
       "source": "mabberley-2017",
       "note": "Mabberley's Plant-book (4th ed., 2017), under Ophioglossaceae: small terrestrial herbs, a few tropical epiphytes, with fleshy rhizome and stalks; one or a few leaves a year that do not unroll from a crozier, each a fleshy sterile blade, often entire (lobed in Botrychium), and a long-stalked fertile spike or panicle with the sporangia sunk in it, not in sori. A leaf part sterile and part fertile is hemidimorphic here."
-    }
+    },
+    "traits.vernation": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 98, family Ophioglossaceae: vernation flat (not circinate); read as \"flat\"."},
+    "traits.life_span": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 98, family Ophioglossaceae: life span perennial; read as \"perennial\"."},
+    "traits.rhizome_habit": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 98, family Ophioglossaceae: rhizome habit erect (subterranean); read as \"erect\"."},
+    "traits.indusium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 98, family Ophioglossaceae: indusium none (sori lacking); read as \"none\"."},
+    "traits.reproduction": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 98, family Ophioglossaceae: reproduction spores; read as \"spores\"."}
   }
 }

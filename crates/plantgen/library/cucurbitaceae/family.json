@@ -25,13 +25,45 @@
       "inferior": "usually",
       "superior": "rarely"
     },
-    "fruit_type": "berry"
+    "fruit_type": "berry",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_division": "simple",
+    "leaf_venation": "palmate",
+    "leaf_incision": {
+      "lobed": "often"
+    },
+    "stipules": false
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 109 Cucurbitaceae: herbs, rarely undershrubs, with watery sap, often rough; stems climbing or trailing, mostly with coiled tendrils; flowers of one sex, on one plant or on two; stamens mostly 3, rarely 1 to 5; ovary inferior, very rarely free, its placentas often 3; ovules numerous. Alternate leaves, 5-merous regular flowers and the berry (the pepo of melons and gourds) are from common knowledge, inferred, not traced; the copy read garbles the sentence on the flowers' symmetry."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 335, 336, family Cucurbitaceae: phyllotaxis pattern spiral; read as \"spiral\"."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 335, 336, family Cucurbitaceae: leaf division simple; read as \"simple\"."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 335, 336, family Cucurbitaceae: leaf venation palmate; read as \"palmate\"."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 335, 336, family Cucurbitaceae: leaf incision lobed, palmately, often; read as {\"lobed\": \"often\"}."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 335, 336, family Cucurbitaceae: stipules false; read as false."
     }
   }
 }

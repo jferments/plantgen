@@ -33,7 +33,17 @@
       "basal": "often",
       "none": "often"
     },
-    "life_span": "perennial"
+    "life_span": "perennial",
+    "inflorescence": {
+      "catkin": "often",
+      "head": "often",
+      "raceme": "often",
+      "spike": "often"
+    },
+    "sexual_system": {
+      "dioecious": "often",
+      "monoecious": "often"
+    }
   },
   "forms": {
     "decurrent_tree": {
@@ -72,6 +82,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Moraceae: the herbs' life form (character 21), coded perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 327, 329, 330, family Moraceae: inflorescence axillary spike (catkin-like in Morus), raceme, head or enclosed syconium (Ficus); read as {\"catkin\": \"often\", \"head\": \"often\", \"raceme\": \"often\", \"spike\": \"often\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 327, 329, 330, family Moraceae: sexual system monoecious or dioecious; read as {\"dioecious\": \"often\", \"monoecious\": \"often\"}."
     }
   }
 }

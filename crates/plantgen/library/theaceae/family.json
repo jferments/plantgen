@@ -46,6 +46,9 @@
       "max": 5,
       "low": 2,
       "high": 10
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually"
     }
   },
   "evidence": {
@@ -53,6 +56,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Theaceae with Bonnetiaceae, Sladeniaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves simple; margins entire or serrate, sometimes dentate; veins pinnate; leaves evergreen; stipules absent; plants hermaphrodite; ovary usually superior, sometimes half inferior, rarely inferior; stems woody; flowers usually solitary, sometimes in racemes, in panicles or in cymes; flowers actinomorphic; perianth sepals and petals or spiral; fruit usually drupe, sometimes capsule or berry; stamens 5 to 100; carpels (2-) 3 to 5 (-10). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 399, 400, family Theaceae: phyllotaxis pattern spiral, usually; read as {\"spiral\": \"usually\"}."
     }
   }
 }

@@ -17,7 +17,16 @@
       "actinomorphic": "often",
       "zygomorphic": "often"
     },
-    "zygomorphy": "other"
+    "zygomorphy": "other",
+    "phyllotaxis_pattern": {
+      "spiral": "often"
+    },
+    "inflorescence": {
+      "solitary": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually"
+    }
   },
   "forms": {
     "forb": {
@@ -48,6 +57,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Aristolochiaceae with Hydnoraceae, Lactoridaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 203, 204, family Aristolochiaceae: phyllotaxis pattern spiral (or distichous), often; read as {\"spiral\": \"often\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 203, 204, family Aristolochiaceae: inflorescence solitary (or terminal/lateral racemes or cymes), often; read as {\"solitary\": \"often\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 203, 204, family Aristolochiaceae: sexual system hermaphrodite (gynomonoecious in Lactoris), usually. Read together as {\"hermaphrodite\": \"usually\"}."
     }
   }
 }

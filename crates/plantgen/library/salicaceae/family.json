@@ -19,7 +19,17 @@
       "hermaphrodite": "sometimes"
     },
     "ovary_position": "superior",
-    "leaf_habit": "deciduous"
+    "leaf_habit": "deciduous",
+    "phyllotaxis_pattern": {
+      "spiral": "usually"
+    },
+    "leaf_margin": {
+      "serrate": "often"
+    },
+    "inflorescence": "catkin",
+    "fruit_type": {
+      "capsule": "usually"
+    }
   },
   "forms": {
     "decurrent_tree": {
@@ -48,6 +58,26 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Salicaceae as that work draws it, there coded together with Scyphostegiaceae: how long the leaves last (character 37), coded deciduous. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 315, 316, family Salicaceae: phyllotaxis pattern spiral (rarely opposite), usually; read as {\"spiral\": \"usually\"}."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 315, 316, family Salicaceae: leaf margin serrate (salicoid teeth tipped by pigmented gland or stout hair), often; read as {\"serrate\": \"often\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "diversity-evolution-land-plants",
+      "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 182, family Salicaceae: inflorescence catkin; read as \"catkin\"."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 315, 316, family Salicaceae: fruit type capsule (3 [2-6] valves; or berry, drupe, rarely samara), usually; read as {\"capsule\": \"usually\"}."
     }
   }
 }

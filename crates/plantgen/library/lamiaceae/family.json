@@ -44,7 +44,12 @@
       "zygomorphic": "usually",
       "actinomorphic": "rarely"
     },
-    "zygomorphy": "bilabiate"
+    "zygomorphy": "bilabiate",
+    "stipules": false,
+    "inflorescence": {
+      "cyme": "often",
+      "solitary": "often"
+    }
   },
   "evidence": {
     "traits.perianth": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 416: perianth biseriate, a 5-lobed fused calyx and a fused 4- or 5-lobed corolla (formula K (5) C (5))."},
@@ -75,6 +80,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Labiatae: its irregular flowers have a two-lipped corolla, read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy bilabiate."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 416, 417, 418, family Lamiaceae: stipules false; read as false."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 416, 417, 418, family Lamiaceae: inflorescence lateral cymes grouped into verticillasters or thyrses, or flowers solitary in leaf axils, usually; read as {\"cyme\": \"often\", \"solitary\": \"often\"}."
     }
   }
 }

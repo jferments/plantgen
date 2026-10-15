@@ -17,7 +17,18 @@
     "hypanthium": true,
     "ovary_position": "inferior",
     "spines": "areoles",
-    "life_span": "perennial"
+    "life_span": "perennial",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_division": "simple",
+    "inflorescence": {
+      "solitary": "usually"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually"
+    },
+    "fruit_type": {
+      "berry": "usually"
+    }
   },
   "rules": {
     "appearance.bodies.stem.ribs.count": {
@@ -85,6 +96,31 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cactaceae: the herbs' life form (character 21), coded perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 374, 375, 376, family Cactaceae: phyllotaxis pattern spiral; read as \"spiral\"."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 374, 375, 376, family Cactaceae: leaf division simple; read as \"simple\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 374, 375, 376, family Cactaceae: inflorescence solitary flowers in the axils (rarely terminal cymes), usually; read as {\"solitary\": \"usually\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 374, 375, 376, family Cactaceae: sexual system hermaphrodite (rarely unisexual), usually; read as {\"hermaphrodite\": \"usually\"}."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 374, 375, 376, family Cactaceae: fruit type berry (rarely dry and indehiscent), usually; read as {\"berry\": \"usually\"}."
     }
   }
 }

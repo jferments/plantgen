@@ -38,13 +38,62 @@
       "min": 80,
       "max": 80,
       "low": 1
-    }
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "often",
+      "tristichous": "often"
+    },
+    "leaf_margin": {
+      "spiny": "usually"
+    },
+    "bract_form": "spathe",
+    "flowering_position": {
+      "terminal": "usually"
+    },
+    "life_span": "perennial",
+    "rosette": "terminal",
+    "axis_growth": "sympodial"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Pandanaceae: leaves alternate; leaves simple; veins parallel; blades linear or lanceolate; plants dioecious or polygamous; ovary superior; stems woody; flowers in panicles, in racemes or in heads; perianth tepals or absent; fruit usually berry, rarely aggregate; stamens 10 to 100; carpels (1-) 80. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 218, 219, family Pandanaceae: phyllotaxis pattern tristichous or 4-ranked, appearing spiral through stem twisting; read as {\"spiral\": \"often\", \"tristichous\": \"often\"}."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 218, 219, family Pandanaceae: leaf margin spiny, prickles also on upper midrib, usually; read as {\"spiny\": \"usually\"}."
+    },
+    "traits.bract_form": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 218, 219, family Pandanaceae: bract form spathe; read as \"spathe\"."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 218, 219, family Pandanaceae: flowering position terminal (rarely axillary), usually; read as {\"terminal\": \"usually\"}."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 218, 219, family Pandanaceae: life span perennial; read as \"perennial\"."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 218, 219, family Pandanaceae: rosette terminal, leaves crowded at branch tips; read as \"terminal\"."
+    },
+    "traits.axis_growth": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 218, 219, family Pandanaceae: axis growth sympodial; read as \"sympodial\"."
     }
   }
 }

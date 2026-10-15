@@ -31,7 +31,19 @@
       "palmate": "usually"
     },
     "stipules": false,
-    "fruit_type": "capsule"
+    "fruit_type": "capsule",
+    "phyllotaxis_pattern": {
+      "spiral": "usually"
+    },
+    "inflorescence": {
+      "cyme": "often",
+      "raceme": "often",
+      "solitary": "often"
+    },
+    "life_span": "perennial",
+    "rosette": {
+      "basal": "often"
+    }
   },
   "forms": {
     "forb": {
@@ -95,6 +107,26 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Saxifragaceae with Penthoraceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple usually, compound rarely; the simple blade lobed often, none often; lobes or leaflets pinnate sometimes, palmate usually. Read from the coded leaf form and dissection by script (spec-rework/b1/delta)."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 301, 303, family Saxifragaceae: phyllotaxis pattern spiral, usually; read as {\"spiral\": \"usually\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 301, 303, family Saxifragaceae: inflorescence cyme, raceme or solitary, usually; read as {\"cyme\": \"often\", \"raceme\": \"often\", \"solitary\": \"often\"}."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 301, 303, family Saxifragaceae: life span perennial; read as \"perennial\"."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 301, 303, family Saxifragaceae: rosette basal, often; read as {\"basal\": \"often\"}."
     }
   }
 }

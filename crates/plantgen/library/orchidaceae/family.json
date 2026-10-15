@@ -34,7 +34,20 @@
       "basal": "often",
       "none": "often"
     },
-    "life_span": "perennial"
+    "life_span": "perennial",
+    "leaf_venation": "parallel",
+    "inflorescence": {
+      "panicle": "often",
+      "raceme": "often",
+      "solitary": "often",
+      "spike": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually"
+    },
+    "fruit_type": {
+      "capsule": "usually"
+    }
   },
   "forms": {
     "forb": {
@@ -86,6 +99,26 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Orchidaceae as that work draws it, there coded together with Apostasiaceae, Cypripediaceae: the herbs' life form (character 21), coded perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 232, 233, 234, family Orchidaceae: leaf venation parallel; read as \"parallel\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 232, 233, 234, family Orchidaceae: inflorescence raceme, panicle, spike or solitary; read as {\"panicle\": \"often\", \"raceme\": \"often\", \"solitary\": \"often\", \"spike\": \"often\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 232, 233, 234, family Orchidaceae: sexual system hermaphrodite (rarely unisexual flowers), usually; read as {\"hermaphrodite\": \"usually\"}."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 232, 233, 234, family Orchidaceae: fruit type capsule (loculicidal) (rarely berry), usually; read as {\"capsule\": \"usually\"}."
     }
   }
 }

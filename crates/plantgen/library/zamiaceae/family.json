@@ -4,7 +4,22 @@
   "name": "Zamiaceae",
   "parent": "order/cycadales",
   "traits": {
-    "leaf_venation": "parallel"
+    "leaf_venation": "parallel",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_division": "compound",
+    "vernation": "circinate",
+    "stipules": {
+      "true": "often",
+      "false": "often"
+    },
+    "sexual_system": "dioecious",
+    "division_pattern": {
+      "pinnate": "usually"
+    },
+    "reproduction": "cones",
+    "branching": {
+      "unbranched": "usually"
+    }
   },
   "forms": {
     "palm": {
@@ -25,6 +40,46 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-2008",
       "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Zamiaceae: the leaflets have many parallel or wavy veins and no midrib (Stangeria aside)."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 145, 146, family Zamiaceae: phyllotaxis pattern spiral; read as \"spiral\"."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 145, 146, family Zamiaceae: leaf division compound; read as \"compound\"."
+    },
+    "traits.vernation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 145, 146, family Zamiaceae: vernation circinate; read as \"circinate\"."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 145, 146, family Zamiaceae: stipules present or absent, sometimes; read as {\"true\": \"often\", \"false\": \"often\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 145, 146, family Zamiaceae: sexual system dioecious; read as \"dioecious\"."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 145, 146, family Zamiaceae: division pattern pinnate (bipinnate in Bowenia), usually. Read together as {\"pinnate\": \"usually\"}."
+    },
+    "traits.reproduction": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 145, 146, family Zamiaceae: reproduction cones; read as \"cones\"."
+    },
+    "traits.branching": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 145, 146, family Zamiaceae: branching unbranched or irregularly branched, usually; read as {\"unbranched\": \"usually\"}."
     }
   }
 }

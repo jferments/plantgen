@@ -19,7 +19,19 @@
     },
     "leaf_arrangement": "opposite",
     "leaf_division": "simple",
-    "stipules": false
+    "stipules": false,
+    "leaf_margin": {
+      "serrate": "usually"
+    },
+    "inflorescence": {
+      "raceme": "often",
+      "solitary": "often",
+      "spike": "often"
+    },
+    "life_span": {
+      "annual": "often",
+      "perennial": "often"
+    }
   },
   "forms": {
     "forb": {
@@ -60,6 +72,21 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 246 Phrymaceae (Phryma alone), with the monkeyflowers he keeps in Scrophulariaceae, which APG joins as Phrymaceae: herbs; leaves opposite, simple; stipules absent."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 421, 422, family Phrymaceae: leaf margin serrate (toothed), usually; read as {\"serrate\": \"usually\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 421, 422, family Phrymaceae: inflorescence spike, raceme or solitary axillary flowers; read as {\"raceme\": \"often\", \"solitary\": \"often\", \"spike\": \"often\"}."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 421, 422, family Phrymaceae: life span annual or perennial; read as {\"annual\": \"often\", \"perennial\": \"often\"}."
     }
   }
 }

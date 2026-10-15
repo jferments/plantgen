@@ -27,7 +27,14 @@
       "zygomorphic": "usually",
       "actinomorphic": "rarely"
     },
-    "zygomorphy": "other"
+    "zygomorphy": "other",
+    "leaf_arrangement": "opposite",
+    "stipules": {
+      "false": "usually"
+    },
+    "fruit_type": {
+      "berry": "often"
+    }
   },
   "forms": {
     "shrub": {
@@ -70,6 +77,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Caprifoliaceae with Carlemanniaceae, Dipsacaceae, Morinaceae, Sambucaceae, Valerianaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 435, 437, family Caprifoliaceae: leaf arrangement opposite; read as \"opposite\"."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 435, 437, family Caprifoliaceae: stipules false (or reduced), usually; read as {\"false\": \"usually\"}."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 435, 437, family Caprifoliaceae: fruit type berry (or capsule, drupe), often; read as {\"berry\": \"often\"}."
     }
   }
 }

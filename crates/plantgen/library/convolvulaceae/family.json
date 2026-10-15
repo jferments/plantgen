@@ -25,7 +25,16 @@
       "capsule": "usually",
       "berry": "sometimes"
     },
-    "rosette": "none"
+    "rosette": "none",
+    "phyllotaxis_pattern": {
+      "spiral": "usually"
+    },
+    "inflorescence": {
+      "cyme": "often",
+      "head": "often",
+      "solitary": "often"
+    },
+    "sexual_system": "hermaphrodite"
   },
   "evidence": {
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 428: ovary of 2, rarely 3 to 5, carpels."},
@@ -39,6 +48,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Convolvulaceae as that work draws it, there coded together with Cuscutaceae, Humbertiaceae: whether the leaves gather in rosettes (character 22), coded no rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 427, 428, family Convolvulaceae: phyllotaxis pattern spiral, usually; read as {\"spiral\": \"usually\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 427, 428, family Convolvulaceae: inflorescence head, dichasium or solitary flowers, usually; read as {\"cyme\": \"often\", \"head\": \"often\", \"solitary\": \"often\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 427, 428, family Convolvulaceae: sexual system hermaphrodite; read as \"hermaphrodite\"."
     }
   }
 }
