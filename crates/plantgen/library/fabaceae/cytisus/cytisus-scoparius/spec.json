@@ -133,7 +133,7 @@
     "inflorescence": "solitary",
     "units_per_inflorescence": {"min": 1, "max": 3},
     "flowering_position": "lateral",
-    "flower_size_m": {"min": 0.018, "max": 0.02},
+    "flower_size_m": {"min": 0.018, "max": 0.025},
     "flower_colour": [255, 205, 0],
     "flowering_months": [4, 5, 6],
     "fruit_size_m": {"min": 0.015, "max": 0.06},
@@ -270,7 +270,7 @@
     "traits.flower_size_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1944",
-      "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: shrub 1-2 m high with angled, bare or sparsely leafy broom-like branches; leaves of 1 to 3 leaflets on petioles 2-10 mm long; leaflets 4-8 mm long, obovate, acute or with a small point; flowers bright yellow, alone or 2 or 3 together in the leaf axils, about 2 cm long (18-20 mm in the key); pedicels 6-10 mm; pod hairy on the edges only; April to June. This is the pea flower's length (banner to keel), the measure floras give, not a width across."
+      "note": "Abrams (vol. 2, 1944, p. 519), Cytisus scoparius: shrub 1-2 m high with angled, bare or sparsely leafy broom-like branches; leaves of 1 to 3 leaflets on petioles 2-10 mm long; leaflets 4-8 mm long, obovate, acute or with a small point; flowers bright yellow, alone or 2 or 3 together in the leaf axils, about 2 cm long (18-20 mm in the key); pedicels 6-10 mm; pod hairy on the edges only; April to June. This is the pea flower's length (banner to keel), the measure floras give, not a width across. Idžojtić, Dendrology (2019) p. 223-224: flowers 2.5 cm. The spec stated {\"min\": 0.018, \"max\": 0.02}. Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."
     },
     "traits.flower_colour": {
       "evidence": "SourceInferred",

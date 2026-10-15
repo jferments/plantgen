@@ -76,12 +76,12 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "rhizome_habit": "short_creeping",
+    "rhizome_habit": {"short_creeping": "usually", "erect": "often"},
     "leaf_habit": "evergreen",
     "leaf_division": "compound",
     "division_pattern": "pinnate",
     "division_order": 1,
-    "leaf_shape": {"linear": "usually", "oblanceolate": "often"},
+    "leaf_shape": {"linear": "usually", "oblanceolate": "often", "lanceolate": "sometimes", "elliptic": "sometimes"},
     "leaflets": {"min": 60, "max": 160},
     "leaf_length_m": {"min": 0.13, "max": 0.8},
     "leaf_width_m": {"min": 0.02, "max": 0.09},
@@ -153,7 +153,9 @@
     },
     "traits.leaf_margin": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 146, 147, Blechnum spicant: leaf margin entire."},
     "traits.rosette": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 221, 222, Blechnum spicant: rosette terminal; or clustered."},
-    "traits.frond_dimorphism": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 221, 222, Blechnum spicant: frond dimorphism dimorphic."}
+    "traits.frond_dimorphism": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 221, 222, Blechnum spicant: frond dimorphism dimorphic."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "The spec's value is from its `traits` note (abrams-1923). Hoshizaki and Moran, Fern Grower's Manual (2001) p. 221-222: blades lanceolate to narrowly elliptic. The spec stated {\"linear\": \"usually\", \"oblanceolate\": \"often\"}. Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."},
+    "traits.rhizome_habit": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "The spec's value is from its `traits` note (abrams-1923). Hoshizaki and Moran, Fern Grower's Manual (2001) p. 221-222: rhizome erect, sometimes branched. The spec stated \"short_creeping\". Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."}
   },
   "provenance": {
     "sources": [

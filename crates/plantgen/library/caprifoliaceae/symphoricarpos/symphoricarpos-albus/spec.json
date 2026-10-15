@@ -136,7 +136,7 @@
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "gbif-inaturalist",
-      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 63 records annotated as flowering (May 7, Jun 35, Jul 15, Aug 4, Sep 2); stated as the months holding at least a tenth of them, May to July. FEIS (Symphoricarpos albus) gives May to August across the range, most in June and July."
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 63 records annotated as flowering (May 7, Jun 35, Jul 15, Aug 4, Sep 2); stated as the months holding at least a tenth of them, May to July. FEIS (Symphoricarpos albus) gives May to August across the range, most in June and July. Idžojtić, Dendrology (2019) p. 655: flowers June to October. Not combined: Dendrology's months are for the tree grown in Europe, the spec's for its own range."
     },
     "traits.fruiting_months": {
       "evidence": "SourceInferred",

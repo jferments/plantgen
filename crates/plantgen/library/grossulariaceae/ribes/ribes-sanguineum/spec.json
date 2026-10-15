@@ -143,12 +143,12 @@
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "gbif-inaturalist",
-      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 443 records annotated as flowering (Jan 2, Feb 18, Mar 147, Apr 242, May 29, Jun 3, Aug 1, Sep 1); stated as the months holding at least a tenth of them, March and April. The Seed Manual (Ribes chapter, printed p. 963) gives April and May for Oregon."
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 443 records annotated as flowering (Jan 2, Feb 18, Mar 147, Apr 242, May 29, Jun 3, Aug 1, Sep 1); stated as the months holding at least a tenth of them, March and April. The Seed Manual (Ribes chapter, printed p. 963) gives April and May for Oregon. Idžojtić, Dendrology (2019) p. 569: flowers April-May. Not combined: Dendrology's months are for the tree grown in Europe, the spec's for its own range."
     },
     "traits.fruiting_months": {
       "evidence": "SourceInferred",
       "source": "usa-npn",
-      "note": "USA National Phenology Network observations (Nature's Notebook) at lowland sites west of the Cascades in Washington and Oregon (below 300 m, west of 121.8° W; 2009 to 2026, fetched 2026-10-14): 17 plant-years at 11 sites seen with ripe fruit, by the months they were seen in (Apr 1, May 1, Jul 5, Aug 8, Sep 6, Oct 2, Dec 1); stated as the months with at least a third as many as the busiest, July to September. Seed Manual, Ribes chapter (printed p. 963): ripe in July and August in Oregon."
+      "note": "USA National Phenology Network observations (Nature's Notebook) at lowland sites west of the Cascades in Washington and Oregon (below 300 m, west of 121.8° W; 2009 to 2026, fetched 2026-10-14): 17 plant-years at 11 sites seen with ripe fruit, by the months they were seen in (Apr 1, May 1, Jul 5, Aug 8, Sep 6, Oct 2, Dec 1); stated as the months with at least a third as many as the busiest, July to September. Seed Manual, Ribes chapter (printed p. 963): ripe in July and August in Oregon. Idžojtić, Dendrology (2019) p. 569: fruit ripe July-August. Not combined: Dendrology's months are for the tree grown in Europe, the spec's for its own range."
     },
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",

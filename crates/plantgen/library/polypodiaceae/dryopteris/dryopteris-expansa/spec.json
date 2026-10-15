@@ -75,7 +75,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "rhizome_habit": {"ascending": "usually", "short_creeping": "sometimes"},
+    "rhizome_habit": {"ascending": "usually", "erect": "often", "short_creeping": "sometimes"},
     "division_order": {"min": 2, "max": 3, "typical": 3},
     "leaf_shape": {"deltate": "usually", "ovate": "often"},
     "leaf_length_m": {"min": 0.15, "max": 0.9},
@@ -135,7 +135,8 @@
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
-    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 308, Dryopteris expansa: leaf habit deciduous."}
+    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 308, Dryopteris expansa: leaf habit deciduous."},
+    "traits.rhizome_habit": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "The spec's value is from its `traits` note (abrams-1923). Hoshizaki and Moran, Fern Grower's Manual (2001) p. 308: rhizome ascending or erect. The spec stated {\"ascending\": \"usually\", \"short_creeping\": \"sometimes\"}. Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."}
   },
   "provenance": {
     "sources": [

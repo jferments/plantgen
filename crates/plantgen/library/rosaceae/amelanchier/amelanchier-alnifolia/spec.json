@@ -150,7 +150,7 @@
     "traits.fruiting_months": {
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",
-      "note": "Seed Manual, Amelanchier chapter (printed p. 246): ripe in August at 520 m in Oregon (var. semiintegrifolia, the Pacific serviceberry). FEIS gives July to September across the range."
+      "note": "Seed Manual, Amelanchier chapter (printed p. 246): ripe in August at 520 m in Oregon (var. semiintegrifolia, the Pacific serviceberry). FEIS gives July to September across the range. Idžojtić, Dendrology (2019) p. 68: fruit ripe June-July. Not combined: Dendrology's months are for the tree grown in Europe, the spec's for its own range."
     },
     "traits.height_max_m": {
       "evidence": "SourceInferred",
