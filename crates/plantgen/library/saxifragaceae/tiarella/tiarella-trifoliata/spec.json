@@ -36,6 +36,7 @@
       "flower_angle": 60,
       "fruit_below": 0.2,
       "buds_above": 0.85,
+      "bud_spacing": 0.6,
       "nod": 10,
       "bud_size": 0.004,
       "fruit_length": 0.006,
@@ -174,7 +175,8 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The leaves drawn with their three leaflets from one point (spec rework P4), set from its characters by the rules at the flowering plants; before, two stood opposite below the third. By eye: the side leaflets 150 degrees apart and 0.85 as long as the end one, each on a stalk an eighth of its length; their lobes are drawn as coarse teeth."
-    }
+    },
+    "generator.params.bud_spacing": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "The buds at the tip of each raceme draw closer together than the open flowers below, a little over half their spacing by eye (flowering photographs, observations 131615837, 145510589, 79728292, 6174508, 319707091, 118591082, 3882940, 84147132): a bud's internode as a share of a flower's, judged by eye."}
   },
   "provenance": {
     "sources": [

@@ -2,5 +2,17 @@
   "schema": 1,
   "rank": "family",
   "name": "Haloragaceae",
-  "parent": "order/saxifragales"
+  "parent": "order/saxifragales",
+  "traits": {
+    "inflorescence": {
+      "cyme": "usually"
+    }
+  },
+  "evidence": {
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 198, family Haloragaceae: inflorescence cyme (dichasial partial inflorescences), usually; read as {\"cyme\": \"usually\"}."
+    }
+  }
 }

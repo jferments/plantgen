@@ -406,12 +406,16 @@ pub mod venation;
 /// as the pedicel; a species' own cluster stands; desert ironwood's and
 /// the umbrella thorn's blooms become clusters (67 is closed buds,
 /// #126).
-/// 72: broadleaf limbs arch outward as they lengthen and an umbrella's
+/// 69: a forb drafted from facts sends up one stem where its taxa say it
+/// lasts as a bulb or a corm (the new character `perennation`, stated for
+/// 84 families from Watson and Dallwitz), a clump as before otherwise;
+/// every built-in sets its own and grows as before (68 is flowers in
+/// clusters, #127).
+/// 70: broadleaf limbs arch outward as they lengthen and an umbrella's
 /// axes level out at its top (`broadleaf` revision 16, `limb_arch`,
 /// `flat_top`), a self-pruning tree stands on a clear trunk
 /// (`bole_clear`), and a crown's region takes its widest point and
 /// fullness from its `crown_form`; Garry oak spreads, umbrella thorn is
 /// flat-topped, Pacific madrone leans on a clear stem and the baobab
-/// swells, from photographs (provisional: 69 to 71 are visual forms'
-/// stacked branches).
-pub const GENERATOR_REVISION: u32 = 72;
+/// swells, from photographs (69 is one stem from a bulb, #129).
+pub const GENERATOR_REVISION: u32 = 70;

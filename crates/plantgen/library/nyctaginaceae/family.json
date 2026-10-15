@@ -45,7 +45,10 @@
       "low": 1,
       "high": 30
     },
-    "carpels": 1
+    "carpels": 1,
+    "bract_form": {
+      "petaloid": "often"
+    }
   },
   "evidence": {
     "traits": {
@@ -62,6 +65,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add dioecious (sometimes): Simpson, Plant Systematics (2019) p. 378: hermaphrodite or dioecious."
+      },
+    "traits.bract_form": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 187, family Nyctaginaceae: bract form large involucral bracts, often petaloid, enclosing the flowers, often; read as {\"petaloid\": \"often\"}."
     }
   }
 }

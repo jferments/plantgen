@@ -36,7 +36,8 @@
       "panicle": "often",
       "solitary": "often",
       "spike": "often"
-    }
+    },
+    "perennation": {"rhizome": "often", "corm": "often", "bulb": "rarely"}
   },
   "forms": {
     "forb": {
@@ -113,6 +114,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 229, 231, 232, family Iridaceae: inflorescence spike, solitary flower, or spike/panicle of rhipidia clusters, usually; read as {\"panicle\": \"often\", \"solitary\": \"often\", \"spike\": \"often\"}."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Iridaceae: how its perennial herbs last from year to year (character 25), coded often a rhizome, often a corm, rarely a bulb. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

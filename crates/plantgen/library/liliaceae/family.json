@@ -33,7 +33,8 @@
       "solitary": "often"
     },
     "sexual_system": "hermaphrodite",
-    "life_span": "perennial"
+    "life_span": "perennial",
+    "perennation": {"bulb": "often", "corm": "often", "rhizome": "often", "tuber": "often"}
   },
   "forms": {
     "forb": {
@@ -90,6 +91,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 218, 221, 222, family Liliaceae: life span perennial; read as \"perennial\"."
     },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Liliaceae, with the parts of Liliaceae it codes as families of their own (Calochortaceae, Eriospermaceae, Hemerocallidaceae), whose further states read as sometimes: how its perennial herbs last from year to year (character 25), coded often a bulb, often a corm, often a rhizome, often tubers; with them, often a bulb, often a corm, often a rhizome, often tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."},
     "traits.flower_symmetry": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",

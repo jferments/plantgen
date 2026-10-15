@@ -21,13 +21,29 @@
       "max": 7
     },
     "ovary_position": "superior",
-    "fruit_type": "berry"
+    "fruit_type": "berry",
+    "inflorescence": {
+      "cyme": "usually"
+    },
+    "flowering_position": {
+      "lateral": "usually"
+    }
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 206 Ebenaceae: trees or shrubs, the wood often hard and black (ebony); leaves alternate, rarely opposite, entire; no stipules; flowers mostly of one sex, often on separate plants (persimmons); calyx 3- to 6-lobed, persisting and often growing in fruit; corolla 3- to 7-lobed; stamens 2 to 4 times the corolla lobes; ovary superior; fruit a more or less juicy berry."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 302, 303, family Ebenaceae: inflorescence cyme, axillary, usually; read as {\"cyme\": \"usually\"}."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 302, 303, family Ebenaceae: flowering position lateral, usually; read as {\"lateral\": \"usually\"}."
     }
   }
 }

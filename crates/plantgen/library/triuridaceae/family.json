@@ -35,6 +35,9 @@
     "carpels": {
       "min": 6,
       "max": 50
+    },
+    "flowering_position": {
+      "terminal": "usually"
     }
   },
   "evidence": {
@@ -42,6 +45,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Triuridaceae with Lacandoniaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves simple; veins single; leaf rosettes none; plants monoecious, dioecious or polygamous, rarely hermaphrodite; ovary superior; stems herbaceous; flowers usually in racemes, sometimes in cymes; flowers actinomorphic; perianth tepals; fruit follicle or achene; stamens (2-) 3 (-6); carpels 6 to 50. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 109, 110, family Triuridaceae: flowering position terminal, usually; read as {\"terminal\": \"usually\"}."
     }
   }
 }
