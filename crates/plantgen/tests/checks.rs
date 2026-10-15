@@ -142,11 +142,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its stem leaves shrink upward in proportion, so the topmost, 4 to 5 cm long, draw 1.5 cm wide against the 2 to 6 cm Abrams and Ferris give for the blades, which they measure on the main leaves",
     ),
     (
-        "larrea-tridentata",
-        "leaf_division",
-        "each leaf is two leaflets joined at their base, but its sprig cards draw each leaf as one blade",
-    ),
-    (
         "leucanthemum-vulgare",
         "leaf_shape",
         "its stem leaves are drawn oblanceolate, a basal leaf's outline with less width, but Abrams and Ferris give a shape (spatulate or obovate) only for the basal leaves; the stem leaves they call reduced, sessile and clasping",

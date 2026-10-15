@@ -22,7 +22,8 @@
     },
     "fruit_type": {
       "achene": "usually",
-      "drupe": "sometimes"
+      "drupe": "sometimes",
+      "nut": "sometimes"
     },
     "rosette": "none",
     "leaf_arrangement": {
@@ -86,7 +87,7 @@
     "traits.fruit_type": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
-      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 71 Urticaceae: herbs, undershrubs or rarely soft-wooded trees, often with stinging hairs; leaves alternate or opposite, simple; stipules present, very rarely absent; flowers very small and of one sex; fruit a dry achene or a fleshy drupe."
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 71 Urticaceae: herbs, undershrubs or rarely soft-wooded trees, often with stinging hairs; leaves alternate or opposite, simple; stipules present, very rarely absent; flowers very small and of one sex; fruit a dry achene or a fleshy drupe. The books add nut (sometimes): Simpson, Plant Systematics (2019) p. 332, 333: achene, nut or drupe."
     },
     "traits.rosette": {
       "evidence": "SourceInferred",

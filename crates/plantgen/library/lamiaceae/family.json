@@ -32,7 +32,8 @@
     },
     "fruit_type": {
       "schizocarp": "usually",
-      "drupe": "sometimes"
+      "drupe": "sometimes",
+      "berry": "sometimes"
     },
     "rosette": "none",
     "life_span": {
@@ -90,6 +91,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 416, 417, 418, family Lamiaceae: inflorescence lateral cymes grouped into verticillasters or thyrses, or flowers solitary in leaf axils, usually; read as {\"cyme\": \"often\", \"solitary\": \"often\"}."
-    }
+    },
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add berry (sometimes): Simpson, Plant Systematics (2019) p. 416, 417, 418: schizocarp of usually 4 (1-3) nutlets, or drupe or berry."}
   }
 }
