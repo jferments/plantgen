@@ -176,7 +176,7 @@
     "radial_spines": {"min": 12, "max": 20},
     "radial_spine_length_m": 0.05,
     "central_spines": 4,
-    "central_spine_length_m": {"min": 0.038, "max": 0.05},
+    "central_spine_length_m": {"min": 0.08, "max": 0.1},
     "central_spine_form": "hooked"
   },
   "evidence": {
@@ -207,8 +207,8 @@
     },
     "traits.central_spine_length_m": {
       "evidence": "SourceInferred",
-      "source": "usfs-feis",
-      "note": "FEIS's review of Ferocactus wislizeni (Matthews 1994): the larger central spines 3.8 to 5 cm long."
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001), Ferocactus wislizeni: central spines 4, in a cross, 8 to 10 cm long, the lowest flattened, stoutest and often hooked. FEIS (Matthews 1994) gives 3.8 to 5 cm for the larger centrals; photographs show hooks as long as the radials or longer, as Anderson has it."
     },
     "generator.params": {
       "evidence": "Authored",
