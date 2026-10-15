@@ -2960,6 +2960,42 @@ mod tests {
 
     use super::*;
     use crate::looks::{self, OrganLook};
+
+    /// A leaf drawn on a petiole of its own leaves the petiole off its
+    /// card; its blade stays as it was drawn.
+    #[test]
+    fn a_leaf_on_its_own_petiole_leaves_the_petiole_off_its_card() {
+        let shape = Shape::Simple(crate::looks::Simple {
+            petiole: 0.4,
+            ..crate::looks::Simple::default()
+        });
+        let drawn = |insertion| {
+            let own = OrganLook {
+                insertion,
+                ..serde_json::from_value::<OrganLook>(
+                    serde_json::json!({"shape": {"template": "simple"}}),
+                )
+                .unwrap()
+            };
+            let own = OrganLook {
+                shape: shape.clone(),
+                ..own
+            };
+            let looks = looks::resolve(
+                [("leaf", crate::lsys::OrganKind::Leaf)],
+                &BTreeMap::from([("leaf".to_string(), own)]),
+                [0.2, 0.5, 0.2],
+                [0.1, 0.2, 0.1],
+            );
+            let look = looks[0].clone();
+            let petiole = draw_look(&look, None, 0.0, 0.2, None).cover;
+            let blade = draw_look(&look, None, 0.0, 0.7, None).cover;
+            (petiole, blade)
+        };
+        assert_eq!(drawn(looks::Insertion::Marginal), (1.0, 1.0));
+        assert_eq!(drawn(looks::Insertion::Latent), (0.0, 1.0));
+        assert_eq!(drawn(looks::Insertion::Peltate), (0.0, 1.0));
+    }
     use crate::lsys::OrganKind;
 
     fn looks_of(shapes: &[Shape]) -> Vec<Look> {

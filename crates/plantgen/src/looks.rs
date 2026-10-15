@@ -3465,6 +3465,31 @@ impl OrganLook {
 mod tests {
     use super::*;
 
+    /// Only a leaf on a petiole, drawn on a card, has an insertion.
+    #[test]
+    fn an_insertion_is_a_leafs() {
+        let parse = |text: &str| serde_json::from_str::<OrganLook>(text).unwrap().validate();
+        assert!(parse(r#"{"shape": {"template": "simple"}, "insertion": "peltate"}"#).is_ok());
+        assert!(parse(r#"{"shape": {"template": "compound"}, "insertion": "latent"}"#).is_ok());
+        let flower = parse(r#"{"shape": {"template": "flower"}, "insertion": "peltate"}"#);
+        assert!(flower.unwrap_err().contains("a flower has none"));
+        assert!(
+            serde_json::from_str::<OrganLook>(
+                r#"{"shape": {"template": "simple"}, "insertion": "sideways"}"#
+            )
+            .is_err()
+        );
+        // Left unset it is marginal, and so not written.
+        let marginal =
+            serde_json::from_str::<OrganLook>(r#"{"shape": {"template": "simple"}}"#).unwrap();
+        assert_eq!(marginal.insertion, Insertion::Marginal);
+        assert!(
+            !serde_json::to_string(&marginal)
+                .unwrap()
+                .contains("insertion")
+        );
+    }
+
     #[test]
     fn sun_leaves_are_smaller_narrower_and_deeper_than_shade_leaves() {
         let shapes = [

@@ -3674,6 +3674,89 @@ mod tests {
         Vec3::new(f64::from(v[0]), f64::from(v[1]), f64::from(v[2]))
     }
 
+    /// A peltate leaf's blade sits level on the tip of its own petiole,
+    /// the point where the petiole meets it there; a latent one meets it
+    /// at its foot; a marginal one stays one card on the organ, as before.
+    #[test]
+    fn a_peltate_blade_sits_level_on_its_petiole() {
+        use crate::looks::{Compound, Insertion, Pattern, Simple};
+        let heading = Vec3::new(0.0, 0.9, 0.44).normalize_or(Vec3::Y);
+        let shapes = [
+            Shape::Compound(Compound {
+                pattern: Some(Pattern::Palmate),
+                leaflets: 11,
+                petiole: 0.6,
+                leaflet_width: 0.2,
+                ..Compound::default()
+            }),
+            Shape::Simple(Simple {
+                petiole: 0.4,
+                ..Simple::default()
+            }),
+        ];
+        for shape in shapes {
+            for insertion in [Insertion::Latent, Insertion::Peltate] {
+                let mut appearance = appearance();
+                appearance.organs.insert(
+                    "leaf".into(),
+                    OrganLook {
+                        insertion,
+                        ..look(shape.clone(), 0.0)
+                    },
+                );
+                let looks = appearance.looks([("leaf", OrganKind::Leaf)]);
+                let stalk = looks[0].stalk().unwrap();
+                let graph = PlantGraph {
+                    age: 1.0,
+                    height: 1.0,
+                    segments: Vec::new(),
+                    organs: vec![organ(heading, Vec3::X)],
+                    structures: Vec::new(),
+                };
+                let mesh = build_plain(&graph, &looks, &appearance, &lod(0.0, 0.0, 0.0));
+                let [card] = mesh.cards[..] else {
+                    panic!("{} cards", mesh.cards.len());
+                };
+                // Level: its face turned to the sky.
+                let face = vector(card.heading).cross(vector(card.left));
+                assert!(face.y.abs() > 0.999, "{face:?}");
+                // The blade's point on the petiole's tip.
+                let at = card
+                    .bend
+                    .point(
+                        vector(card.base),
+                        vector(card.heading),
+                        vector(card.left),
+                        0.5 * f64::from(card.width),
+                        f64::from(card.length),
+                        0.0,
+                        stalk.attach,
+                    )
+                    .0;
+                let tip = graph.organs[0].position + heading * (stalk.petiole * 0.2);
+                assert!((at - tip).length() < 1e-5, "{insertion:?}: {at:?} {tip:?}");
+                if insertion == Insertion::Latent {
+                    assert_eq!(stalk.attach, stalk.petiole);
+                } else {
+                    assert!(stalk.attach >= stalk.petiole);
+                }
+                // The petiole is drawn, from the organ to the blade.
+                assert!(!mesh.wood.positions.is_empty());
+                assert!(loose_organs(&graph, &looks, 1e-5).is_empty());
+            }
+        }
+        // A marginal leaf is one card standing on its organ, as before.
+        let cards = one_organ(look(shapes_simple(), 0.0), heading, Vec3::X);
+        assert_eq!(vector(cards[0].base), organ(heading, Vec3::X).position);
+    }
+
+    fn shapes_simple() -> Shape {
+        Shape::Simple(crate::looks::Simple {
+            petiole: 0.4,
+            ..crate::looks::Simple::default()
+        })
+    }
+
     /// A strap of three blade pieces, the turtle pitching down between
     /// them: each piece's card, bent by its look, ends where the next one
     /// starts, and the last ends where the program's line ends.
