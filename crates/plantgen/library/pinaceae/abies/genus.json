@@ -6,9 +6,11 @@
     "leaf_life_years": {"min": 8, "max": 10},
     "cone_maturation_years": 1,
     "cone_posture": "erect",
-    "cone_retention_years": 0
+    "cone_retention_years": 0,
+    "architectural_model": "massart"
   },
   "evidence": {
+    "traits.architectural_model": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 485 names Abies among the trees of Massart's model: an erect monopodial trunk with rhythmic, regular tiers of horizontal branches."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",

@@ -79,7 +79,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let campanulids = "(clade campanulids: _ranks/clade/campanulids.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (295):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (296):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
@@ -104,7 +104,7 @@ fn rules_and_traits_say_where_they_come_from() {
             "\n  appearance.organs.leaf.shape.template  {flowering}\n  generator.params.bloom_size  {flowering}\n  generator.params.flower_size  {flowering}\n  generator.defaults.crown_base  (clade angiosperms: _ranks/clade/angiosperms.json, forms.decurrent_tree)\n"
         ),
         format!(
-            "\n  generator.defaults.path_half  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.flower_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.radius_max  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.leaf_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.defaults.leaf_years  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.params.basal_length  {campanulids}\n  generator.params.leaf_base  {campanulids}\n  generator.params.leaf_length  {campanulids}\n  generator.params.leaf_top  {campanulids}\n  generator.params.adult_age  {seed_plants}\n  generator.params.apex_death  {seed_plants}\n  generator.params.bole_clear  {seed_plants}\n  generator.params.bud_base  {seed_plants}\n  generator.params.crown_fullness  {seed_plants}\n  generator.params.crown_widest  {seed_plants}\n  generator.params.dioecious  {seed_plants}\n  generator.params.dormant_buds  {seed_plants}\n  generator.params.flat_top  {seed_plants}\n  generator.params.limb_arch  {seed_plants}\n  generator.params.long_share  {seed_plants}\n  generator.params.room_height  {seed_plants}\n  generator.params.shed_ratio  {seed_plants}\n  generator.params.short_share  {seed_plants}\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n  generator.params.space_renew  {seed_plants}\n  generator.params.terminal_bloom  {seed_plants}\n  generator.params.unit_nodes  {seed_plants}\n"
+            "\n  generator.defaults.path_half  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.flower_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.radius_max  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.leaf_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.defaults.leaf_years  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.params.basal_length  {campanulids}\n  generator.params.leaf_base  {campanulids}\n  generator.params.leaf_length  {campanulids}\n  generator.params.leaf_top  {campanulids}\n  generator.params.adult_age  {seed_plants}\n  generator.params.apex_death  {seed_plants}\n  generator.params.apex_whorl  {seed_plants}\n  generator.params.bole_clear  {seed_plants}\n  generator.params.bud_base  {seed_plants}\n  generator.params.crown_fullness  {seed_plants}\n  generator.params.crown_widest  {seed_plants}\n  generator.params.dioecious  {seed_plants}\n  generator.params.dormant_buds  {seed_plants}\n  generator.params.flat_top  {seed_plants}\n  generator.params.limb_arch  {seed_plants}\n  generator.params.long_share  {seed_plants}\n  generator.params.room_height  {seed_plants}\n  generator.params.shed_ratio  {seed_plants}\n  generator.params.short_share  {seed_plants}\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n  generator.params.space_renew  {seed_plants}\n  generator.params.terminal_bloom  {seed_plants}\n  generator.params.unit_nodes  {seed_plants}\n"
         ),
     ] {
         assert!(built_in.contains(&line), "{line} in {built_in}");
@@ -185,7 +185,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
     assert!(
-        rules.starts_with("Rules, by their home (296):\n"),
+        rules.starts_with("Rules, by their home (297):\n"),
         "{rules}"
     );
     assert!(
