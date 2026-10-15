@@ -1254,9 +1254,47 @@ impl PlantSpec {
     /// Fails if the program does not compile or a parameter is unknown.
     pub fn program_from(&self, source: &str) -> Result<(Program, Vec<f64>), SpecError> {
         let program = Program::compile(source)?;
-        let params = program.resolve_params(&self.generator.params)?;
+        let drawn = self.drawn_areas(&program);
+        let params = if drawn.is_empty() {
+            program.resolve_params(&self.generator.params)?
+        } else {
+            let mut given = self.generator.params.clone();
+            given.extend(drawn);
+            program.resolve_params(&given)?
+        };
         self.check_names(&program)?;
         Ok((program, params))
+    }
+
+    /// The shading area of each organ whose area is a program parameter
+    /// this spec leaves unset: the area its look draws on an organ 1 m long
+    /// (LANGUAGE.md 5.2, areas from looks), so the light model shades with
+    /// what the plant shows; where organs share a parameter, the first's.
+    fn drawn_areas(&self, program: &Program) -> BTreeMap<String, f64> {
+        let names = program.organ_area_params();
+        let unset: Vec<(usize, &str)> = names
+            .iter()
+            .enumerate()
+            .filter_map(|(index, name)| {
+                name.filter(|name| !self.generator.params.contains_key(*name))
+                    .map(|name| (index, name))
+            })
+            .collect();
+        if unset.is_empty() {
+            return BTreeMap::new();
+        }
+        let looks = self.appearance.looks(program.organs());
+        let templates = crate::templates::Templates::for_looks(&looks);
+        let mut drawn = BTreeMap::new();
+        for (index, name) in unset {
+            if let (Some(look), Some(template)) = (looks.get(index), templates.templates.get(index))
+            {
+                drawn
+                    .entry(name.to_string())
+                    .or_insert_with(|| crate::templates::drawn_area(look, template));
+            }
+        }
+        drawn
     }
 
     /// The parameters the plant grown from `seed` grows with (spec rework
@@ -1303,6 +1341,14 @@ impl PlantSpec {
         }
         if !any {
             return params.to_vec();
+        }
+        // The areas its looks give stay as `params` has them.
+        for name in program.organ_area_params().into_iter().flatten() {
+            if !drawn.contains_key(name)
+                && let Some(at) = program.params.iter().position(|param| param.name == name)
+            {
+                drawn.insert(name.to_string(), params[at]);
+            }
         }
         program
             .resolve_params(&drawn)
@@ -1449,6 +1495,36 @@ mod tests {
         for key in UNNOTED {
             assert!(good.get(*key).is_some(), "{key}");
         }
+    }
+
+    /// An organ whose area parameter the spec leaves unset shades with the
+    /// area its look draws; one the spec sets keeps its own.
+    #[test]
+    fn an_unset_organ_area_is_what_its_look_draws() {
+        let mut spec = PlantSpec::builtin("leucanthemum-vulgare").unwrap();
+        let (program, own) = spec.program().unwrap();
+        let at = |name: &str| {
+            program
+                .params
+                .iter()
+                .position(|param| param.name == name)
+                .unwrap()
+        };
+        assert!((own[at("leaf_area")] - spec.generator.params["leaf_area"]).abs() < 1e-12);
+        spec.generator.params.remove("leaf_area");
+        let (program, params) = spec.program().unwrap();
+        let looks = spec.appearance.looks(program.organs());
+        let templates = crate::templates::Templates::for_looks(&looks);
+        let leaf = program
+            .organs()
+            .position(|(name, _)| name == "leaf")
+            .unwrap();
+        let drawn = crate::templates::drawn_area(&looks[leaf], &templates.templates[leaf]);
+        assert!((params[at("leaf_area")] - drawn).abs() < 1e-12);
+        assert!(drawn > 0.0);
+        // A seed's own parameters keep it.
+        let seeded = spec.seeded_params(&program, &params, 7);
+        assert!((seeded[at("leaf_area")] - drawn).abs() < 1e-12);
     }
 
     #[test]
