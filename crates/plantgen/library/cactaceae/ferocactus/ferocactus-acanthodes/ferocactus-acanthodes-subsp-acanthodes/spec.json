@@ -94,7 +94,9 @@
           "count": [18, 30],
           "spacing": 0.045,
           "depth": 0.14,
-          "sharpness": 0.7
+          "sharpness": 0.7,
+          "fibonacci": 0.5,
+          "lean": 30
         },
         "tubercles": {
           "height": 0.03,
@@ -183,6 +185,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Rough heights from general knowledge: about a metre by 60 years, 1.5 to 2 m by 110. Wide tolerances."
+    },
+    "appearance.bodies.stem.ribs.fibonacci": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986), pp. 123-124: Ferocactus rib counts cluster on Fibonacci numbers; in F. acanthodes 51% of plants had one, 21 the commonest. Half the stems here keep to the Fibonacci number in the count."
+    },
+    "appearance.bodies.stem.ribs.lean": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986), pp. 121 and 125: tubercle rows lean about 30 degrees from vertical, so a Fibonacci-ribbed Ferocactus winds slowly round the stem, left-handed in about half the plants and right-handed in the rest; other stems stand straight."
     },
     "appearance.bodies.stem.areoles.apex_wool": {
       "evidence": "SourceInferred",

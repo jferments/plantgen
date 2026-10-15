@@ -123,6 +123,14 @@ pub struct Ribs {
     pub sharpness: f64,
     /// How far the ribs spiral round the axis, degrees per metre.
     pub twist: f64,
+    /// The share of stems whose rib count keeps to the Fibonacci number
+    /// (8, 13, 21, 34) nearest the fitted one within `count`, as the ranks
+    /// of a spiral of areoles do in *Ferocactus*.
+    pub fibonacci: f64,
+    /// How far the ribs lean from the axis, degrees, winding left on half
+    /// the stems and right on the rest. With `fibonacci`, only the stems
+    /// keeping to a Fibonacci number lean; the others stand straight.
+    pub lean: f64,
 }
 
 impl Default for Ribs {
@@ -133,6 +141,8 @@ impl Default for Ribs {
             depth: 0.12,
             sharpness: 0.3,
             twist: 0.0,
+            fibonacci: 0.0,
+            lean: 0.0,
         }
     }
 }
@@ -394,6 +404,8 @@ impl BodyLook {
             within("ribs depth", ribs.depth, 0.0, 0.6)?;
             within("ribs sharpness", ribs.sharpness, 0.0, 1.0)?;
             within("ribs twist", ribs.twist, -720.0, 720.0)?;
+            within("ribs fibonacci", ribs.fibonacci, 0.0, 1.0)?;
+            within("ribs lean", ribs.lean, 0.0, 60.0)?;
         }
         if let Some(tubercles) = &self.tubercles {
             within("tubercles height", tubercles.height, 0.0, 2.0)?;
@@ -1666,16 +1678,40 @@ pub fn build_between(
     }
 }
 
-/// The ribs round an axis of `look` whose widest radius is `widest`: as
-/// many as fit at the ribs' spacing, within their count (0 without ribs).
-fn rib_count(look: &BodyLook, widest: f64) -> u32 {
-    look.ribs.as_ref().map_or(0, |ribs| {
+/// The ribs round `axis` of `look` whose widest radius is `widest`: as
+/// many as fit at the ribs' spacing, within their count (0 without ribs),
+/// and their twist, radians per metre.
+fn rib_plan(look: &BodyLook, axis: &Axis, widest: f64) -> (u32, f64) {
+    look.ribs.as_ref().map_or((0, 0.0), |ribs| {
         // A small whole number of ribs.
         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
         let fitted = (2.0 * PI * widest / ribs.spacing).round() as u32;
-        fitted.clamp(ribs.count[0], ribs.count[1]).max(3)
+        let fitted = fitted.clamp(ribs.count[0], ribs.count[1]).max(3);
+        // The Fibonacci number nearest the fitted count, within `count`.
+        let fibonacci = FIBONACCI
+            .iter()
+            .copied()
+            .filter(|n| (ribs.count[0]..=ribs.count[1]).contains(n))
+            .min_by_key(|n| n.abs_diff(fitted))
+            .filter(|_| unit(mix64(axis.id ^ 0xF1B0)) < ribs.fibonacci);
+        let count = fibonacci.unwrap_or(fitted);
+        let leans = ribs.fibonacci == 0.0 || fibonacci.is_some();
+        let lean = if leans && ribs.lean > 0.0 && widest > 0.0 {
+            let hand = if unit(mix64(axis.id ^ 0x7A15)) < 0.5 {
+                -1.0
+            } else {
+                1.0
+            };
+            hand * math::tan(math::radians(ribs.lean)) / widest
+        } else {
+            0.0
+        };
+        (count, math::radians(ribs.twist) + lean)
     })
 }
+
+/// The rib counts a spiral of areoles falls into.
+const FIBONACCI: [u32; 8] = [3, 5, 8, 13, 21, 34, 55, 89];
 
 /// One body axis as it is drawn, for the checks (spec rework E6c): a
 /// column, a barrel's stem, an arm or a joint (a tree cholla's trunk
@@ -1735,7 +1771,7 @@ pub fn measure(graph: &PlantGraph, looks: &[BodyLook]) -> Vec<Measured> {
                 tip: !bearing,
                 length: line.length,
                 widest,
-                ribs: rib_count(look, widest),
+                ribs: rib_plan(look, axis, widest).0,
             })
         })
         .collect()
@@ -1746,6 +1782,8 @@ struct Layout {
     /// Ribs round the axis, and whether the level folds them.
     ribs: u32,
     folded: bool,
+    /// The ribs' twist, radians per metre.
+    twist: f64,
     /// Width of a tubercle's foot; 0 for none at this level.
     bump_width: f64,
     /// Vertices round a ring, and the longest step between rings.
@@ -1785,7 +1823,7 @@ impl Body<'_> {
             / f64::from(u32::try_from(line.stations.len()).unwrap_or(1).max(1));
 
         // Ribs round this axis, and whether this level folds them.
-        let ribs = rib_count(look, widest);
+        let (ribs, twist) = rib_plan(look, self.axis, widest);
         let per_rib = if ribs > 0 && detail.per_rib > 0 {
             let per = detail.per_rib.min(detail.max_sides / ribs);
             if per >= 2 { per - per % 2 } else { 0 }
@@ -1823,6 +1861,7 @@ impl Body<'_> {
         Layout {
             ribs,
             folded,
+            twist,
             bump_width,
             sides,
             step,
@@ -1843,6 +1882,7 @@ impl Body<'_> {
         let Layout {
             ribs,
             folded,
+            twist,
             bump_width,
             sides,
             step,
@@ -1853,9 +1893,11 @@ impl Body<'_> {
             .as_ref()
             .filter(|_| detail.per_tubercle > 0.0 && spacing > 0.0);
 
-        let (ribs_depth, sharpness, twist) = look.ribs.as_ref().map_or((0.0, 0.0, 0.0), |ribs| {
-            (ribs.depth, ribs.sharpness, math::radians(ribs.twist))
-        });
+        let (ribs_depth, sharpness) = look
+            .ribs
+            .as_ref()
+            .map_or((0.0, 0.0), |ribs| (ribs.depth, ribs.sharpness));
+
         let mut surface = Surface {
             line,
             flatten: look.flatten,
@@ -2274,6 +2316,45 @@ mod tests {
         }
         // Twelve ribs of six sides each.
         assert_eq!(wood.vertex_count() % (12 * 6 + 1), 0);
+    }
+
+    #[test]
+    fn fibonacci_ribs_lean_either_way_and_the_rest_stand_straight() {
+        let look = BodyLook {
+            ribs: Some(Ribs {
+                count: [20, 28],
+                spacing: 0.065,
+                fibonacci: 0.5,
+                lean: 30.0,
+                ..Ribs::default()
+            }),
+            ..BodyLook::default()
+        };
+        let (mut fibonacci, mut left, mut right) = (0, 0, 0);
+        for id in 0..400_u64 {
+            let axis = Axis {
+                body: 1,
+                segments: Vec::new(),
+                id: mix64(id),
+            };
+            let (ribs, twist) = rib_plan(&look, &axis, 0.3);
+            if ribs == 21 {
+                fibonacci += 1;
+                let expected = math::tan(math::radians(30.0)) / 0.3;
+                assert!((twist.abs() - expected).abs() < 1e-9, "{twist}");
+                if twist < 0.0 { left += 1 } else { right += 1 }
+            } else {
+                assert_eq!((ribs, twist), (28, 0.0));
+            }
+        }
+        assert!(
+            (150..250).contains(&fibonacci),
+            "{fibonacci} of 400 keep to 21"
+        );
+        assert!(
+            left > fibonacci / 3 && right > fibonacci / 3,
+            "{left} left, {right} right"
+        );
     }
 
     #[test]
