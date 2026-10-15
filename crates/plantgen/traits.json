@@ -842,6 +842,14 @@
       "optional": true,
       "why": "whether a herb's flowering stem bears leaves: none, a leafless scape from the leaves at its foot; a few, much smaller than those at the foot; or many along it"
     },
+    "leaf_faces": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["bifacial", "unifacial"],
+      "optional": true,
+      "why": "whether a blade has an upper and a lower face, or is unifacial, its one face all round: a sword leaf flattened edgewise to the stem (irises) or a round one (onions, rushes)"
+    },
     "leaf_peltation": {
       "group": "leaves",
       "organ": "leaf",

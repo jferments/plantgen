@@ -57,6 +57,12 @@ pub struct OrganLook {
     /// trees.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub face_up: f64,
+    /// Degrees a card that lies along its organ turns about its own
+    /// length before it turns to the sky, from -180 to 180: 90 sets a
+    /// sword leaf's blade edgewise to the stem, its faces in the plane of
+    /// its fan, as unifacial leaves are borne (Kaplan; irises).
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub roll: f64,
     /// Where a leaf's petiole meets its blade ([`Insertion`]): at the
     /// blade's base in its plane, one card as before, unless set.
     #[serde(default, skip_serializing_if = "Insertion::is_marginal")]
@@ -2613,6 +2619,8 @@ pub struct Look {
     pub shade: [f32; 3],
     pub accent: [f32; 3],
     pub face_up: f64,
+    /// Degrees its card turns about its own length ([`OrganLook::roll`]).
+    pub roll: f64,
     /// Where its petiole meets its blade, for a leaf.
     pub insertion: Insertion,
     pub solid: Option<crate::leaves::SolidLeaf>,
@@ -2797,6 +2805,7 @@ pub fn resolve<'a>(
                     shade,
                     accent: look.accent.unwrap_or(colour),
                     face_up: look.face_up,
+                    roll: look.roll,
                     insertion: look.insertion,
                     solid: look.solid.clone(),
                     bend: look
@@ -2831,6 +2840,7 @@ pub fn resolve<'a>(
                 shade: foliage_shade,
                 accent: foliage,
                 face_up: 0.0,
+                roll: 0.0,
                 insertion: Insertion::Marginal,
                 solid: None,
                 forms: Forms::default(),
@@ -3152,6 +3162,7 @@ fn in_stage(look: &Look, stage: &StageLook) -> Look {
         shade: [colour[0] * 0.35, colour[1] * 0.42, colour[2] * 0.55],
         accent: stage.accent.unwrap_or(colour),
         face_up: look.face_up,
+        roll: 0.0,
         // A stage's look is a flower or a fruit, on no petiole.
         insertion: Insertion::Marginal,
         solid: None,
@@ -3456,6 +3467,7 @@ impl OrganLook {
                 );
             }
         }
+        within("roll", self.roll, -180.0, 180.0)?;
         within("face_up", self.face_up, 0.0, 1.0)
     }
 }
@@ -3586,6 +3598,7 @@ mod tests {
         let organs = BTreeMap::from([(
             "leaf".to_string(),
             OrganLook {
+                roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Lobed(Lobed::default()),
                 colour: None,
@@ -3839,6 +3852,7 @@ mod tests {
         organs.insert(
             "bloom".to_string(),
             OrganLook {
+                roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Head(Head::default()),
                 colour: Some([0.6, 0.2, 0.7]),
@@ -3929,6 +3943,7 @@ mod tests {
     fn an_organ_looks_as_it_is_on_the_day() {
         let types = [("leaf", OrganKind::Leaf), ("bloom", OrganKind::Flower)];
         let fruit = |season: Option<Season>| OrganLook {
+            roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             shape: Shape::Fruit(Fruit::default()),
             colour: Some([0.6, 0.05, 0.06]),
@@ -4017,6 +4032,7 @@ mod tests {
         organs.insert(
             "bloom".to_string(),
             OrganLook {
+                roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Head(Head::default()),
                 colour: Some([0.95, 0.95, 0.9]),
@@ -4133,6 +4149,7 @@ mod tests {
     /// A cherry's umbel of six (or `kind` of `flowers`), with `season`.
     fn clustered(kind: ClusterKind, flowers: u32, season: Season) -> OrganLook {
         OrganLook {
+            roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             shape: Shape::Fruit(Fruit::default()),
             colour: Some([0.6, 0.05, 0.06]),
