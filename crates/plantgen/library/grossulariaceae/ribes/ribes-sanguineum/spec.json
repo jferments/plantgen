@@ -136,7 +136,8 @@
       "max": 0.0762
     },
     "flowering_months": [3, 4],
-    "fruiting_months": [7, 8, 9]
+    "fruiting_months": [7, 8, 9],
+    "inflorescence": "raceme"
   },
   "evidence": {
     "traits.flowering_months": {
@@ -223,7 +224,8 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Days from the first flower of a cluster opening to its last: about three weeks for a raceme, as described."
-    }
+    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 569, Ribes sanguineum: inflorescence raceme."}
   },
   "provenance": {
     "sources": [

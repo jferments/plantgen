@@ -113,7 +113,8 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 329, Equisetum telmateia: leaf habit deciduous."}
   },
   "provenance": {
     "sources": [
@@ -124,5 +125,8 @@
     ],
     "contributors": ["Project After"],
     "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
+  },
+  "traits": {
+    "leaf_habit": "deciduous"
   }
 }

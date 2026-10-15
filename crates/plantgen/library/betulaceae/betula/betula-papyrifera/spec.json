@@ -143,7 +143,9 @@
     "wood_moisture_green_share": {"min": 0.72, "max": 0.89, "typical": 0.8},
     "juvenile_period_years": 15,
     "flowering_months": [4, 5, 6],
-    "fruiting_months": [8, 9, 10, 11]
+    "fruiting_months": [8, 9, 10, 11],
+    "leaf_shape": {"ovate": "usually"},
+    "leaf_venation": "pinnate"
   },
   "evidence": {
     "traits.flowering_months": {
@@ -229,7 +231,9 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 338, Betula papyrifera: leaf shape ovate."},
+    "traits.leaf_venation": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 338, Betula papyrifera: leaf venation pinnate."}
   },
   "provenance": {
     "sources": [

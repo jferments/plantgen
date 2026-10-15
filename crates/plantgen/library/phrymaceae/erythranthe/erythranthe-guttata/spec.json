@@ -110,7 +110,8 @@
     "leaf_length_m": {
       "min": 0.015,
       "max": 0.09
-    }
+    },
+    "zygomorphy": "bilabiate"
   },
   "evidence": {
     "traits.height_typical_m": {
@@ -167,7 +168,8 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.zygomorphy": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 422, Erythranthe guttata: zygomorphy bilabiate, open throat."}
   },
   "provenance": {
     "sources": [

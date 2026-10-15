@@ -83,7 +83,8 @@
     "culm_length_m": {
       "min": 1.5,
       "max": 3.0
-    }
+    },
+    "clonal": true
   },
   "evidence": {
     "traits.culm_length_m": {
@@ -135,7 +136,8 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.clonal": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 270, Typha latifolia: clonal true."}
   },
   "provenance": {
     "sources": [

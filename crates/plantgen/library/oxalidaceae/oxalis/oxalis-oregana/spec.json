@@ -89,7 +89,8 @@
     "leaf_division": "compound",
     "division_pattern": "palmate",
     "division_order": 1,
-    "leaflets": 3
+    "leaflets": 3,
+    "life_span": "perennial"
   },
   "evidence": {
     "generator.params": {
@@ -146,7 +147,8 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The leaf drawn as a palmately compound leaf of three leaflets (spec rework P4), set from its characters by the rules at the flowering plants; before, one broad blade stood in for it. By eye: the leaflets spread evenly round the stalk's tip, each widest near its broad, flat-topped tip (an obcordate leaflet's notch is not drawn) and about as wide as long. The card now holds a stub of the stalk, so the leaf is drawn 6 cm long where its blade was 4.5 cm: each leaflet about 3.5 cm."
-    }
+    },
+    "traits.life_span": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 319, Oxalis oregana: life span perennial."}
   },
   "provenance": {
     "sources": [

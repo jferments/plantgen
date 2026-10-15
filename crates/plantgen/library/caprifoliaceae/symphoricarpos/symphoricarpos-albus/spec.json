@@ -124,7 +124,13 @@
     },
     "wood_density_basic_kg_m3": 630,
     "flowering_months": [5, 6, 7],
-    "fruiting_months": [8, 9, 10, 11, 12, 1, 2]
+    "fruiting_months": [8, 9, 10, 11, 12, 1, 2],
+    "leaf_arrangement": "opposite",
+    "leaf_shape": {"elliptic": "usually"},
+    "flower_size_m": {"min": 0.005, "max": 0.006},
+    "units_per_inflorescence": {"min": 3, "max": 9, "high": 16},
+    "fruit_type": "drupe",
+    "fruit_size_m": {"min": 0.01, "max": 0.015}
   },
   "evidence": {
     "traits.flowering_months": {
@@ -202,7 +208,13 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Its flowers drawn one by one (spec rework L1b): small pink to white bell-shaped flowers 4 to 7 mm long, drawn as closed bells. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life."
-    }
+    },
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 437, Symphoricarpos albus: leaf arrangement opposite."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 437, Symphoricarpos albus: leaf shape elliptic."},
+    "traits.flower_size_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 655, Symphoricarpos albus: flower size 5-6 mm."},
+    "traits.units_per_inflorescence": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 655, Symphoricarpos albus: units per inflorescence 3-9(-16)."},
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 655, Symphoricarpos albus: fruit type drupe."},
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 655, Symphoricarpos albus: fruit size 1-1.5 cm."}
   },
   "provenance": {
     "sources": [

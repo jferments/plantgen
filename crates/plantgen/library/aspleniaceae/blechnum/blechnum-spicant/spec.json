@@ -85,7 +85,10 @@
     "leaflets": {"min": 60, "max": 160},
     "leaf_length_m": {"min": 0.13, "max": 0.8},
     "leaf_width_m": {"min": 0.02, "max": 0.09},
-    "petiole_length_m": {"min": 0.02, "max": 0.3}
+    "petiole_length_m": {"min": 0.02, "max": 0.3},
+    "leaf_margin": {"entire": "usually"},
+    "rosette": "terminal",
+    "frond_dimorphism": "dimorphic"
   },
   "evidence": {
     "traits": {
@@ -147,7 +150,10 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "The genus WCVP v16's accepted name is written in."
-    }
+    },
+    "traits.leaf_margin": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 146, 147, Blechnum spicant: leaf margin entire."},
+    "traits.rosette": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 221, 222, Blechnum spicant: rosette terminal; or clustered."},
+    "traits.frond_dimorphism": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 221, 222, Blechnum spicant: frond dimorphism dimorphic."}
   },
   "provenance": {
     "sources": [

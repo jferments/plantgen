@@ -139,7 +139,13 @@
       "max": 0.1
     },
     "flowering_months": [5, 6, 7, 8],
-    "fruiting_months": [7, 8, 9, 10, 11]
+    "fruiting_months": [7, 8, 9, 10, 11],
+    "inflorescence": "corymb",
+    "leaf_arrangement": "opposite",
+    "leaf_shape": {"elliptic": "often", "ovate": "often"},
+    "flower_size_m": {"min": 0.007, "max": 0.008},
+    "fruit_type": "drupe",
+    "fruit_size_m": {"min": 0.006, "max": 0.008}
   },
   "evidence": {
     "traits.flowering_months": {
@@ -221,7 +227,13 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Its flowers drawn one by one (spec rework L1b): creamy white flowers 6 to 8 mm across with four pointed petals and four conspicuous stamens, in flat-topped clusters that open together. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life. Its flower laid out whorl by whorl (spec rework P5b): four dull white petals between four small sepals on the inferior ovary, four stamens and a pistil of two carpels, from the characters of Cornaceae by the rules at the flowering plants."
-    }
+    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 386, Cornus sericea: inflorescence corymb."},
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 386, Cornus sericea: leaf arrangement opposite."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 386, Cornus sericea: leaf shape ovate to elliptic, acuminate, with arcuate veins (photo)."},
+    "traits.flower_size_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 196, Cornus sericea: flower size 7-8 mm."},
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 196, Cornus sericea: fruit type drupe."},
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 196, Cornus sericea: fruit size 6-8 mm."}
   },
   "provenance": {
     "sources": [

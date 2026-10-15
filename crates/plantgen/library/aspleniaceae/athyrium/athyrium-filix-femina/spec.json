@@ -80,7 +80,13 @@
   "traits": {
     "rhizome_habit": {"erect": "usually", "ascending": "often"},
     "division_order": {"min": 2, "max": 3, "typical": 3},
-    "leaf_shape": "lanceolate"
+    "leaf_shape": "lanceolate",
+    "reproduction": "spores",
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "clonal": {"true": "usually"},
+    "leaf_habit": "deciduous",
+    "indusium": {"flap": "usually"}
   },
   "evidence": {
     "traits": {
@@ -132,7 +138,13 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.reproduction": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 143, 144, 145, Athyrium filix-femina: reproduction spores."},
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 143, 144, 145, Athyrium filix-femina: leaf division compound."},
+    "traits.division_pattern": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 143, 144, 145, Athyrium filix-femina: division pattern pinnate."},
+    "traits.clonal": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 207, 209, 210, Athyrium filix-femina: clonal true (clumps)."},
+    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 207, 209, 210, Athyrium filix-femina: leaf habit deciduous."},
+    "traits.indusium": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 207, 209, 210, Athyrium filix-femina: indusium flap (elongated or hooked)."}
   },
   "provenance": {
     "sources": [
