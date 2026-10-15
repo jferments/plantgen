@@ -837,10 +837,10 @@
       "group": "leaves",
       "organ": "leaf",
       "type": "enum",
-      "values": ["none", "few", "many"],
+      "values": ["like_basal", "reduced", "none"],
       "when": {"woodiness": ["herbaceous"]},
       "optional": true,
-      "why": "whether a herb's flowering stem bears leaves: none, a leafless scape from the leaves at its foot; a few, much smaller than those at the foot; or many along it"
+      "why": "the leaves of a herb's flowering stem, as floras describe them: like those at its foot, reduced (fewer and smaller up the stem), or none, a leafless scape from the leaves at its foot"
     },
     "leaf_faces": {
       "group": "leaves",
