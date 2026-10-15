@@ -4,6 +4,8 @@
   "name": "Gesneriaceae",
   "parent": "order/lamiales",
   "traits": {
+    "flower_merosity": 5,
+    "carpels": 2,
     "woodiness": {
       "herbaceous": "often",
       "woody": "often"
@@ -38,6 +40,8 @@
     }
   },
   "evidence": {
+    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 362: Weak: Ronse De Craene says Gesneriaceae floral diagrams cannot be told apart from Scrophulariaceae and Plantaginaceae, all on the 5-merous 2:3 (bilabiate) plan; p. 324 notes Gesneriaceae have the most polysymmetric 5-stamened flowers in Lamiales."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 362: Weak: same passage; the euasterid general formula has 2 median carpels (K5 [C(5) A5] G(2))."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

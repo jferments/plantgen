@@ -4,6 +4,7 @@
   "name": "Fabaceae",
   "parent": "order/fabales",
   "traits": {
+    "hypanthium": {"false": "usually", "true": "sometimes"},
     "flower_merosity": 5,
     "perianth": "sepals_and_petals",
     "ovary_position": "superior",
@@ -58,6 +59,7 @@
     }
   },
   "evidence": {
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 320, 321: Simpson describes the flowers as hypogynous or perigynous and his family formula ends 'hypanthium sometimes present' (e.g. Cercis, the mimosoid clade)."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",

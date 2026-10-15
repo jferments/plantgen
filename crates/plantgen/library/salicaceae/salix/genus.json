@@ -2,8 +2,9 @@
   "schema": 1,
   "rank": "genus",
   "name": "Salix",
-  "traits": {"epicormic": true},
+  "traits": {"epicormic": true, "perianth": "absent"},
   "evidence": {
+    "traits.perianth": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 257: Salix and Populus are the extreme of the family's floral reduction, their flowers in catkins with no perianth (nectar glands in its place in Salix)."},
     "traits.epicormic": {
       "evidence": "SourceInferred",
       "source": "meier-2012-epicormic",

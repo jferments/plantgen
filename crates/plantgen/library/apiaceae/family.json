@@ -4,6 +4,7 @@
   "name": "Apiaceae",
   "parent": "order/apiales",
   "traits": {
+    "corolla_shape": "rotate",
     "inflorescence": {
       "compound_umbel": "usually",
       "umbel": "sometimes",
@@ -57,6 +58,7 @@
     }
   },
   "evidence": {
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 431: 5 free valvate petals (Floral Diagrams p. 341: clawed petals with inflexed tips, the tube never forming). Free petals: rotate by PlantGen's free-petal rule; the book names no other corolla form."},
     "traits.inflorescence": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

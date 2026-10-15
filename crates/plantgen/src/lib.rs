@@ -379,8 +379,14 @@ pub mod venation;
 /// `anther_attachment`) and colour its ovary (`pistil`); common camas's
 /// anthers are versatile and its ovary a pale green bead (62 is camas
 /// detail 3, #120).
-/// 64: a herb's raceme may set each flower, bud and fruit in the axil of a
+/// 64: flowers take their clades' and families' flower plans from Simpson
+/// (2019) and Ronse De Craene (2010): the monocots' tepals, stamens and
+/// carpels, the rosids' two whorls of stamens, the euasterids' five on the
+/// tube and two carpels, and 56 families' stamens, carpels, perianth,
+/// merosity, ovary, floral cup and corolla shape; willows and poplars
+/// draw no perianth (63 is camas anthers and ovary, #121).
+/// 65: a herb's raceme may set each flower, bud and fruit in the axil of a
 /// floral bract (`herb` revision 9, `bract_length`, absent by default);
 /// common camas's bracts are narrow, pale and papery, a little longer
-/// than the flower stalks (63 is camas detail 4, #121).
-pub const GENERATOR_REVISION: u32 = 64;
+/// than the flower stalks (64 is flower plans, #118).
+pub const GENERATOR_REVISION: u32 = 65;

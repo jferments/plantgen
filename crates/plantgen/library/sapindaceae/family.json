@@ -4,6 +4,8 @@
   "name": "Sapindaceae",
   "parent": "order/sapindales",
   "traits": {
+    "stamens": {"min": 5, "max": 8, "low": 4, "high": 10},
+    "corolla_shape": "rotate",
     "flower_merosity": 5,
     "flower_symmetry": {
       "actinomorphic": "usually",
@@ -28,6 +30,8 @@
     "program": "sapindaceae"
   },
   "evidence": {
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 362: Simpson's formula: stamens 5 to 8, rarely 4 to 10 or more (description: 4 to many)."},
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 362: 4 to 5 free petals, often with a scale at the base. Free petals: rotate by PlantGen's free-petal rule; the book names no other corolla form."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",

@@ -4,6 +4,10 @@
   "name": "Melastomataceae",
   "parent": "order/myrtales",
   "traits": {
+    "flower_merosity": {"min": 4, "max": 5, "low": 3, "high": 10},
+    "stamens": {"min": 8, "max": 10},
+    "carpels": {"min": 3, "max": 5, "low": 2, "high": 15},
+    "corolla_shape": "rotate",
     "woodiness": {
       "woody": "usually",
       "herbaceous": "sometimes"
@@ -32,6 +36,10 @@
     }
   },
   "evidence": {
+    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 345, 347: 4 to 5 sepals and petals, rarely 3 to 10."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 345, 347: stamens usually 8 or 10 in two whorls, often of two forms (formula 4+4 or 5+5)."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 345, 347: carpels 3 to 5, rarely 2 to 15."},
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 345: corolla of 4 to 5 free convolute petals. Free petals: rotate by PlantGen's free-petal rule; the book names no other corolla form."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

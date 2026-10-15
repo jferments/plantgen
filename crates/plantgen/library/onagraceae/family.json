@@ -4,6 +4,7 @@
   "name": "Onagraceae",
   "parent": "order/myrtales",
   "traits": {
+    "corolla_shape": "rotate",
     "flower_merosity": 4,
     "perianth": "sepals_and_petals",
     "hypanthium": {
@@ -52,6 +53,7 @@
     }
   },
   "evidence": {
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 347: usually 4 free petals, valvate or imbricate, on the hypanthium rim. Free petals: rotate by PlantGen's free-petal rule; the book names no other corolla form."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "ffpa-2014",
