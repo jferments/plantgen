@@ -104,7 +104,8 @@
         "areoles": {
           "spacing": 0.025,
           "felt_radius": 0.005,
-          "felt": [0.35, 0.3, 0.22]
+          "felt": [0.35, 0.3, 0.22],
+          "apex_wool": 0.01
         },
         "spines": [
           {
@@ -182,6 +183,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Rough heights from general knowledge: about a metre by 60 years, 1.5 to 2 m by 110. Wide tolerances."
+    },
+    "appearance.bodies.stem.areoles.apex_wool": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986), ch. 5: the young areoles' trichomes crowd at the apex into a woolly mat, in barrel cacti more than 4 cm thick. 1 cm here, less than that, because in photographs this species' apex shows mostly spines over its wool (thickness by eye)."
     },
     "appearance": {
       "evidence": "Authored",

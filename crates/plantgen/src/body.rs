@@ -176,6 +176,12 @@ pub struct Areoles {
     pub felt_radius: f64,
     /// The felt's colour.
     pub felt: [f32; 3],
+    /// Thickness, metres, of the woolly cap the young areoles' felt
+    /// makes over the apex: thickest at the tip and thinning out over the
+    /// dome as the areoles separate, filling the ribs' valleys there. 0
+    /// for none; barrel cacti's can exceed 4 cm (Gibson and Nobel 1986,
+    /// ch. 5).
+    pub apex_wool: f64,
 }
 
 impl Default for Areoles {
@@ -184,6 +190,7 @@ impl Default for Areoles {
             spacing: 0.02,
             felt_radius: 0.003,
             felt: [0.55, 0.5, 0.42],
+            apex_wool: 0.0,
         }
     }
 }
@@ -399,6 +406,7 @@ impl BodyLook {
             within("areoles spacing", areoles.spacing, 0.001, 0.5)?;
         }
         within("areoles felt_radius", areoles.felt_radius, 0.0, 0.05)?;
+        within("areoles apex_wool", areoles.apex_wool, 0.0, 0.1)?;
         colour_ok("areoles felt", areoles.felt)?;
         if self.spines.len() > MAX_SPINE_SETS {
             return Err(format!(
@@ -1187,6 +1195,8 @@ struct Surface<'a> {
     bump_stretch: f64,
     /// Metres added to the radius: the spines' reach on far levels.
     swell: f64,
+    /// Thickness of the woolly cap over the apex, metres.
+    wool: f64,
 }
 
 impl Surface<'_> {
@@ -1240,6 +1250,12 @@ impl Surface<'_> {
             valley = valley.max(1.0 - bump);
         }
         let swell = self.swell * self.line.cap(s);
+        if self.wool > 0.0 {
+            // The cap fills the valleys and rounds over the crests.
+            let wool = apex_wool(self.line, s);
+            radius += (crest - radius) * wool + self.wool * wool;
+            valley *= 1.0 - wool;
+        }
         (radius + swell, valley)
     }
 
@@ -1447,6 +1463,16 @@ fn rib_sites(line: &Centreline, surface: &Surface<'_>, spacing: f64, id: u64) ->
         }
     }
     sites
+}
+
+/// How much of the woolly cap lies at `s`: 1 at the tip, falling to 0
+/// halfway down the dome.
+fn apex_wool(line: &Centreline, s: f64) -> f64 {
+    if line.dome <= 0.0 || s <= line.length - line.dome {
+        return 0.0;
+    }
+    let x = ((s - (line.length - line.dome)) / line.dome).min(1.0);
+    math::smoothstep(0.5, 1.0, x)
 }
 
 /// Least share of an areole's spacing at the apex.
@@ -1845,6 +1871,7 @@ impl Body<'_> {
             bump_point: tubercles.map_or(1.0, |tubercles| tubercles.point),
             bump_stretch: tubercles.map_or(1.0, |tubercles| tubercles.stretch),
             swell: 0.0,
+            wool: look.areoles.apex_wool,
         };
 
         // Areoles: placed on the plain surface, those inside another
@@ -1954,6 +1981,9 @@ impl Body<'_> {
                 }
                 if cover > 0.0 {
                     colour = mix(colour, tint, cover);
+                }
+                if surface.wool > 0.0 {
+                    colour = mix(colour, look.areoles.felt, apex_wool(self.line, s));
                 }
                 #[allow(clippy::cast_possible_truncation)]
                 let uv = [(f64::from(side) / f64::from(sides)) as f32, s as f32];
@@ -2099,6 +2129,7 @@ impl Surface<'_> {
             bump_point: 1.0,
             bump_stretch: 1.0,
             swell: 0.0,
+            wool: 0.0,
         }
     }
 }
@@ -2243,6 +2274,56 @@ mod tests {
         }
         // Twelve ribs of six sides each.
         assert_eq!(wood.vertex_count() % (12 * 6 + 1), 0);
+    }
+
+    #[test]
+    fn areoles_crowd_over_the_dome_and_wool_caps_the_apex() {
+        let graph = column(1.0, 0.2, 2);
+        let look = ribbed();
+        let near = mesh(&graph, &look, 0);
+        // Young areoles reach the top of the dome (one radius long),
+        // closer together than the spacing below it.
+        let highest = near
+            .tufts
+            .iter()
+            .map(|tuft| f64::from(tuft.position[1]))
+            .fold(0.0, f64::max);
+        assert!(highest > 0.97, "highest areole at {highest}");
+        let on_dome = near
+            .tufts
+            .iter()
+            .filter(|tuft| tuft.position[1] > 0.8)
+            .count();
+        #[allow(clippy::cast_precision_loss)]
+        let even = 12.0 * 0.2 * (std::f64::consts::PI / 2.0) / look.areoles.spacing;
+        #[allow(clippy::cast_precision_loss)]
+        let crowded = on_dome as f64;
+        assert!(
+            crowded > even,
+            "{crowded} areoles on the dome, {even} at even spacing"
+        );
+        // A woolly cap rounds the ribs over the apex and takes the felt's
+        // colour; without it the tip keeps the skin's.
+        let woolly = BodyLook {
+            areoles: Areoles {
+                apex_wool: 0.02,
+                ..look.areoles.clone()
+            },
+            ..look.clone()
+        };
+        let capped = mesh(&graph, &woolly, 0);
+        let tip = |out: &PlantMesh| {
+            out.wood
+                .positions
+                .iter()
+                .zip(&out.wood.colors)
+                .filter(|(position, _)| position[1] > 0.99)
+                .map(|(_, colour)| colour[0])
+                .fold(0.0_f32, f32::max)
+        };
+        assert!((tip(&capped) - woolly.areoles.felt[0]).abs() < 0.02);
+        assert!((tip(&near) - woolly.areoles.felt[0]).abs() > 0.1);
+        woolly.validate().unwrap();
     }
 
     #[test]
