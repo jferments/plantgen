@@ -23,7 +23,8 @@
       "basal": "sometimes",
       "terminal": "sometimes"
     },
-    "life_span": "perennial"
+    "life_span": "perennial",
+    "perennation": {"rhizome": "usually", "bulb": "sometimes", "corm": "sometimes", "tuber": "sometimes"}
   },
   "forms": {
     "forb": {
@@ -76,6 +77,7 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Asparagaceae as that work draws it, there coded together with Agavaceae, Dracaenaceae, Hostaceae, Nolinaceae: the herbs' life form (character 21), coded perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Asparagaceae, with the parts of Asparagaceae it codes as families of their own (Agavaceae, Alliaceae, Aphyllanthaceae, Eriospermaceae, Herreriaceae, Hostaceae, Hyacinthaceae), whose further states read as sometimes: how its perennial herbs last from year to year (character 25), coded usually a rhizome; with them, usually a rhizome, sometimes a bulb, sometimes a corm, sometimes tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

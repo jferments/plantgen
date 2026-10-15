@@ -22,13 +22,15 @@
     "fruit_type": "follicle",
     "flower_merosity": 3,
     "stamens": 9,
-    "carpels": 6
+    "carpels": 6,
+    "perennation": "rhizome"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Butomaceae: leaves alternate; leaves simple; margins entire; veins parallel; blades linear; leaf rosettes basal; plants hermaphrodite; ovary superior; stems herbaceous; flowers in umbels; flowers actinomorphic; perianth usually tepals, often sepals and petals; fruit follicle; parts of each whorl 3; stamens 9; carpels 6. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Butomaceae: how its perennial herbs last from year to year (character 25), coded usually a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

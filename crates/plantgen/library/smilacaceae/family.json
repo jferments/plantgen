@@ -53,13 +53,15 @@
     "carpels": {
       "min": 1,
       "max": 3
-    }
+    },
+    "perennation": {"rhizome": "often", "tuber": "often"}
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Smilacaceae with Ripogonaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually alternate, sometimes opposite or whorled; leaves simple; margins entire; veins single or palmate; leaves evergreen; blades lanceolate or ovate; stipules usually absent, rarely present; leaf rosettes none; plants usually dioecious, sometimes hermaphrodite; ovary superior; stems woody or herbaceous; flowers solitary, in cymes, in racemes, in spikes or in umbels, sometimes in panicles; flowers actinomorphic; perianth tepals; fruit berry; parts of each whorl 3; stamens 3 to 18; carpels 1 to 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Smilacaceae: how its perennial herbs last from year to year (character 25), coded often a rhizome, often tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

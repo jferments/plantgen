@@ -34,13 +34,15 @@
       "min": 3,
       "max": 3,
       "high": 4
-    }
+    },
+    "perennation": {"corm": "usually", "rhizome": "rarely"}
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Colchicaceae: leaves alternate; leaves simple; margins entire; veins parallel; blades linear or lanceolate; leaf rosettes basal or none; plants hermaphrodite; ovary superior; stems herbaceous; flowers solitary, in cymes, in racemes or in umbels; flowers actinomorphic; perianth tepals; fruit capsule; parts of each whorl 3; stamens 6; carpels 3 (-4). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Colchicaceae: how its perennial herbs last from year to year (character 25), coded usually a corm, rarely a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

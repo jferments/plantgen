@@ -32,13 +32,15 @@
       "max": 5,
       "low": 4,
       "high": 8
-    }
+    },
+    "perennation": "rhizome"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Penthoraceae: leaves alternate; leaves simple; margins serrate; veins pinnate; blades lanceolate; stipules absent; plants hermaphrodite; ovary half inferior; floral cup present; stems herbaceous; flowers in cymes; flowers actinomorphic; perianth usually tepals, sometimes sepals and petals; fruit follicle; parts of each whorl 5 (-8); stamens 10; carpels (4-) 5 (-8). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Penthoraceae: how its perennial herbs last from year to year (character 25), coded usually a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

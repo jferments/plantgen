@@ -34,7 +34,8 @@
     "inflorescence": {
       "panicle": "often",
       "raceme": "often"
-    }
+    },
+    "perennation": {"rhizome": "often", "pseudobulb": "often", "tuber": "sometimes"}
   },
   "forms": {
     "rosette_succulent": {
@@ -97,6 +98,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 229, 230, family Asphodelaceae: inflorescence raceme or panicle; read as {\"panicle\": \"often\", \"raceme\": \"often\"}."
     },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Asphodelaceae, with the parts of Asphodelaceae it codes as families of their own (Phormiaceae), whose further states read as sometimes: how its perennial herbs last from year to year (character 25), coded often a rhizome, often pseudobulbs; with them, often a rhizome, often pseudobulbs, sometimes tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."},
     "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add zygomorphic (sometimes): Simpson, Plant Systematics (2019) p. 229, 230: actinomorphic or zygomorphic."}
   }
 }
