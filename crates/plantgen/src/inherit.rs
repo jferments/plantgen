@@ -2379,8 +2379,15 @@ impl Ruled<'_> {
                 Err(_) if self.rule.contains_key("else") => self
                     .rule
                     .get("else")
-                    .and_then(|otherwise| map_rule(otherwise).or_else(|| map_colour(otherwise)))
-                    .map(reads)
+                    .map(
+                        |otherwise| match map_rule(otherwise).or_else(|| map_colour(otherwise)) {
+                            Some(inner) => reads(inner),
+                            None => map_formula(otherwise)
+                                .and_then(|formula| Formula::parse(formula).ok())
+                                .map(|formula| formula.names().into_iter().collect())
+                                .unwrap_or_default(),
+                        },
+                    )
                     .unwrap_or_default(),
                 Err(why) => return Err(why),
             }
@@ -2675,13 +2682,22 @@ fn fits(field: Option<Field>, value: &Value) -> Result<(), String> {
 /// rule sets runs after it. Rules caught in a loop of such reads come
 /// last, each with the paths it waits on.
 fn order(rules: &Rules) -> Vec<(&str, Vec<String>)> {
-    // A rule reading a parameter waits on the rule setting it, and one on
-    // a card's field on the rule choosing that organ's card.
+    // A rule reading a parameter waits on the rule setting it, one on a
+    // card's field on the rule choosing that organ's card, and one inside
+    // a cluster on the rule making that organ's look a cluster.
     let waits = |path: &str, rule: &Map<String, Value>| -> Vec<String> {
         let cards = rules.keys().filter(|card| {
             shape_field(card) == Some("template")
                 && shape_field(path).is_some_and(|field| field != "template")
                 && (path.starts_with(EVERY) || organ_of(card) == organ_of(path))
+        });
+        let clusters = rules.keys().filter(|cluster| {
+            inflorescence_field(path).is_some()
+                && cluster
+                    .strip_prefix("appearance.organs.")
+                    .and_then(|rest| rest.strip_suffix(".inflorescence"))
+                    .is_some_and(|organ| !organ.contains('.') && organ != "*")
+                && (path.starts_with(EVERY) || organ_of(cluster) == organ_of(path))
         });
         reads(rule)
             .into_iter()
@@ -2693,6 +2709,7 @@ fn order(rules: &Rules) -> Vec<(&str, Vec<String>)> {
             })
             .filter(|path| rules.contains_key(path))
             .chain(cards.cloned())
+            .chain(clusters.cloned())
             .collect()
     };
     let mut done: BTreeSet<&str> = BTreeSet::new();
@@ -2755,6 +2772,7 @@ fn reads(rule: &Map<String, Value>) -> Vec<String> {
     let mut read = vec![key.clone()];
     let more: BTreeSet<String> = table
         .values()
+        .chain(rule.get("else"))
         .filter_map(map_formula)
         .flat_map(names)
         .chain(
@@ -3074,7 +3092,10 @@ fn evaluate(rule: &Map<String, Value>, inputs: &BTreeMap<String, Value>) -> Resu
             return match rule.get("else") {
                 Some(otherwise) => match map_rule(otherwise).or_else(|| map_colour(otherwise)) {
                     Some(inner) => evaluate(inner, inputs),
-                    None => Ok(otherwise.clone()),
+                    None => match map_formula(otherwise) {
+                        Some(formula) => calculate(formula),
+                        None => Ok(otherwise.clone()),
+                    },
                 },
                 None => Err(format!("no `{key}` to read")),
             };
