@@ -2123,6 +2123,11 @@ fn reproductive(
         }
         return;
     }
+    // A flower drawn closed with no season is its bud (a herb's `bud`,
+    // its flower closed): not yet the flower its characters describe.
+    if phase.is_none() && matches!(&look.shape, Shape::Flower(flower) if flower.open <= 0.0) {
+        return;
+    }
     unit_sizes(&look.shape, organ.size, term, phase, (organ.id, 0), tally);
     if in_stage(phase, Stage::Open) && !grown.clustered(organ) {
         // A flower, head or spikelet borne alone.
