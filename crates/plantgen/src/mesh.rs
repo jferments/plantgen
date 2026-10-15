@@ -517,6 +517,9 @@ pub(crate) fn build_shaded(
         |look: &Look, organ: &GraphOrgan| organ_color(look, variation, organ.light, organ.id);
     leaves::build(graph, looks, level, &colour, &mut mesh.wood);
     blooms::build(graph, looks, &blooms, &colour, &mut mesh.wood);
+    if level <= 1 {
+        petioles(graph, looks, &mut mesh.wood);
+    }
     mesh.cards = cards(graph, looks, &solid, appearance.variation, lod);
     // Bent cards first, so a renderer draws them as one range.
     let (mut bent, flat): (Vec<Card>, Vec<Card>) =
@@ -1587,6 +1590,9 @@ fn face_up(heading: Vec3, left: Vec3, amount: f64) -> (Vec3, Vec3) {
 /// organ, or is centred there when it faces along it, and is its length
 /// times the organ's.
 pub(crate) fn place(organ: &GraphOrgan, look: &Look) -> (Vec3, Vec3, Vec3, f64) {
+    if let Some(stalk) = look.stalk() {
+        return on_stalk(organ, look, stalk, 1.0);
+    }
     if let Some(cluster) = &look.inflorescence {
         let foot = cluster.card.foot * organ.size;
         let length = cluster.card.length * organ.size;
@@ -1625,6 +1631,62 @@ pub(crate) fn place(organ: &GraphOrgan, look: &Look) -> (Vec3, Vec3, Vec3, f64) 
     }
 }
 
+/// Where the card of a leaf drawn on a petiole of its own goes
+/// ([`crate::looks::Insertion`]), `share` as long as its organ (a sun,
+/// shade or juvenile leaf's): turned level about the point of its blade
+/// that sits on the petiole's tip, as bent, so that point stays there.
+/// The petiole runs along the organ from its position ([`petioles`]).
+fn on_stalk(
+    organ: &GraphOrgan,
+    look: &Look,
+    stalk: crate::looks::Stalk,
+    share: f64,
+) -> (Vec3, Vec3, Vec3, f64) {
+    let tip = organ.position + organ.heading * (stalk.petiole * organ.size);
+    let (heading, left) = face_up(organ.heading, organ.left, 1.0);
+    let length = organ.size * share;
+    let half = 0.5 * look.aspect() * length;
+    let (attach, _) = look
+        .bend
+        .point(Vec3::ZERO, heading, left, half, length, 0.0, stalk.attach);
+    (tip - attach, heading, left, length)
+}
+
+/// The petioles of leaves drawn on petioles of their own
+/// ([`crate::looks::Insertion`]), into `mesh` as wood each organ's segment
+/// bears: a slender stalk along the organ to where its blade sits, in the
+/// accent colour its card painted the petiole in, a hundredth as thick as
+/// it is long and at least half a millimetre.
+pub(crate) fn petioles(graph: &PlantGraph, looks: &[Look], mesh: &mut Mesh) {
+    for organ in &graph.organs {
+        let Some(look) = looks.get(usize::from(organ.organ)) else {
+            continue;
+        };
+        let Some(stalk) = look.stalk() else {
+            continue;
+        };
+        let length = stalk.petiole * organ.size;
+        if length <= 0.0 {
+            continue;
+        }
+        let first = mesh.positions.len();
+        crate::fruit::stalk_between(
+            organ.position,
+            organ.heading.normalize_or(Vec3::Y),
+            length,
+            (0.005 * length).max(0.0005),
+            look.accent,
+            crate::blooms::Part {
+                born: organ.born,
+                shed: organ.shed,
+                coarse: 0,
+            },
+            mesh,
+        );
+        mesh.bear(first, organ.segment.unwrap_or(GROUNDED));
+    }
+}
+
 /// `graph` with the pieces of every strap turned so their drawn cards
 /// span them, or `None` when no organ changes. A program draws an arching
 /// strap (a grass blade, a basal leaf) as a chain of pieces, each standing
@@ -1653,7 +1715,10 @@ fn seated(graph: &PlantGraph, looks: &[Look]) -> Option<PlantGraph> {
     };
     let along = |index: usize| {
         looks.get(index).is_some_and(|look| {
-            look.inflorescence.is_none() && look.solid.is_none() && look.mount() == Mount::Along
+            look.inflorescence.is_none()
+                && look.solid.is_none()
+                && look.stalk().is_none()
+                && look.mount() == Mount::Along
         })
     };
     let candidates = || {
@@ -1737,7 +1802,11 @@ pub fn loose_organs(graph: &PlantGraph, looks: &[Look], tolerance: f64) -> Vec<(
         let Some(look) = looks.get(index) else {
             continue;
         };
-        if look.inflorescence.is_some() || look.solid.is_some() || look.mount() != Mount::Along {
+        if look.inflorescence.is_some()
+            || look.solid.is_some()
+            || look.stalk().is_some()
+            || look.mount() != Mount::Along
+        {
             continue;
         }
         let (form, share) = look.forms.of(index, shown);
@@ -1761,7 +1830,11 @@ pub fn loose_organs(graph: &PlantGraph, looks: &[Look], tolerance: f64) -> Vec<(
         .organs
         .iter()
         .map(|shown| match looks.get(usize::from(shown.organ)) {
-            Some(look) if look.inflorescence.is_none() && look.mount() == Mount::Along => {
+            Some(look)
+                if look.inflorescence.is_none()
+                    && look.stalk().is_none()
+                    && look.mount() == Mount::Along =>
+            {
                 place(shown, look).0
             }
             _ => shown.position,
@@ -1851,7 +1924,7 @@ pub fn loose_organs(graph: &PlantGraph, looks: &[Look], tolerance: f64) -> Vec<(
 /// traced from its organ's position, at its organ's size.
 fn traced(organ: &GraphOrgan, look: &Look) -> (Vec3, Vec3, Vec3, f64) {
     let (base, heading, left, length) = place(organ, look);
-    if look.inflorescence.is_some() {
+    if look.inflorescence.is_some() || look.stalk().is_some() {
         (base, heading, left, length)
     } else {
         (organ.position, heading, left, organ.size)
@@ -1911,13 +1984,19 @@ fn organ_card(
     let (Some(shown), Ok(template)) = (looks.get(drawn), u8::try_from(drawn)) else {
         return;
     };
-    let (base, heading, left, length) = place(organ, look);
+    let (base, heading, left, length) = match look.stalk() {
+        Some(stalk) => on_stalk(organ, shown, stalk, share),
+        None => {
+            let (base, heading, left, length) = place(organ, look);
+            (base, heading, left, length * share)
+        }
+    };
     let card = Placed {
         base,
         heading,
         left,
-        length: length * share,
-        width: length * share * shown.aspect() * widen,
+        length,
+        width: length * shown.aspect() * widen,
         color: organ_color(look, variation, organ.light, organ.id),
         template,
         born: organ.born,
@@ -3576,6 +3655,7 @@ mod tests {
 
     fn look(shape: Shape, face_up: f64) -> OrganLook {
         OrganLook {
+            insertion: crate::looks::Insertion::Marginal,
             shape,
             colour: None,
             shade: None,

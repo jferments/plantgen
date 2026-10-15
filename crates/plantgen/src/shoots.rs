@@ -318,6 +318,7 @@ mod tests {
     fn look(s: &Needles) -> Look {
         let shape = Shape::Needles(s.clone());
         Look {
+            insertion: crate::looks::Insertion::Marginal,
             organ: "spray".to_string(),
             form: crate::blooms::Form::default_for(&shape),
             bend: crate::bend::Bend::FLAT,

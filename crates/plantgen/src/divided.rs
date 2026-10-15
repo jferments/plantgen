@@ -128,7 +128,17 @@ impl Form {
             confluent,
             angle,
             pinnule_angle: c.pinnule_angle.unwrap_or(angle),
-            spread: c.spread.unwrap_or(180.0),
+            spread: c.spread.unwrap_or_else(|| {
+                open_enough(pattern, c.leaflets, pinnules, c.leaflet_width, |t| {
+                    crate::templates::outline_profile(
+                        c.outline.as_deref(),
+                        t,
+                        widest,
+                        blade_base,
+                        tip,
+                    )
+                })
+            }),
             largest: c.largest.unwrap_or(1.0),
             lowest: c.lowest.unwrap_or(0.82),
             terminal_size: c.terminal_size.unwrap_or(0.98),
@@ -152,6 +162,32 @@ impl Form {
             1.0 - (1.0 - lowest) * (u - largest) / (1.0 - largest)
         }
     }
+}
+
+/// How far a palmate leaf whose spread its look leaves unset opens,
+/// degrees between its outermost leaflets: as far as its `count` leaflets,
+/// each `width` as wide as long at its widest and as wide along it as
+/// `profile` says (1 at the widest), need to stand half their width apart
+/// where they come nearest, seen from the petiole's tip; at least 180, as
+/// every such leaf opened before, and at most 340. Thirteen narrow
+/// leaflets need more than a half circle, three broad ones less. A
+/// twice-divided leaf's divisions, and a pinnate leaf, open 180.
+#[must_use]
+pub fn open_enough(
+    pattern: Pattern,
+    count: u32,
+    pinnules: u32,
+    width: f64,
+    profile: impl Fn(f64) -> f64,
+) -> f64 {
+    if pattern != Pattern::Palmate || pinnules > 0 || count < 2 {
+        return 180.0;
+    }
+    let angle = ALONG
+        .iter()
+        .map(|&t| 2.0 * math::atan2(0.5 * width * profile(t), t))
+        .fold(0.0, f64::max);
+    (f64::from(count - 1) * angle.to_degrees() * 1.5).clamp(180.0, 340.0)
 }
 
 /// The longest lateral leaflet of a pinnate group of `count` along a

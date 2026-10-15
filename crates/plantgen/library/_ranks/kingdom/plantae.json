@@ -15,15 +15,31 @@
   "rules": {
     "appearance.organs.leaf.shape.width": {
       "template": ["simple", "sprig"],
-      "map": {"leaf_shape": {"linear": 0.08, "lanceolate": 0.25, "oblanceolate": 0.25, "elliptic": 0.57, "oblong": 0.4, "ovate": 0.6, "obovate": 0.6, "orbicular": 0.95, "spatulate": 0.35}},
+      "map": {"leaf_shape": {"linear": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 2), 0.08)"}, "lanceolate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 2), 0.25)"}, "oblanceolate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 2), 0.25)"}, "elliptic": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 2), 0.57)"}, "oblong": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 2), 0.4)"}, "ovate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 2), 0.6)"}, "obovate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 2), 0.6)"}, "orbicular": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 2), 0.95)"}, "spatulate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 2), 0.35)"}}},
+      "else": {"rule": "clamp(leaf_width_m / leaf_length_m, 0.02, 2)"},
       "between": true,
-      "why": "A blade's shape word says how broad it is for its length; between two words, between their breadths."
+      "why": "A blade is as broad for its length as its flora measures it, the middle of each range; where it gives no measures, as its shape word says; between two words, between their breadths."
+    },
+    "appearance.organs.basal.shape.width": {
+      "template": ["simple", "sprig"],
+      "map": {"leaf_shape": {"linear": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 2), 0.08)"}, "lanceolate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 2), 0.25)"}, "oblanceolate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 2), 0.25)"}, "elliptic": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 2), 0.57)"}, "oblong": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 2), 0.4)"}, "ovate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 2), 0.6)"}, "obovate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 2), 0.6)"}, "orbicular": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 2), 0.95)"}, "spatulate": {"rule": "first(clamp(leaf_width_m / leaf_length_m, 0.02, 2), 0.35)"}}},
+      "else": {"rule": "clamp(leaf_width_m / leaf_length_m, 0.02, 2)"},
+      "between": true,
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: a blade is as broad for its length as its flora measures it, the middle of each range; where it gives no measures, as its shape word says; between two words, between their breadths."
     },
     "appearance.organs.leaf.shape.leaflet_width": {
       "template": "compound",
-      "map": {"leaf_shape": {"linear": 0.08, "lanceolate": 0.25, "oblanceolate": 0.25, "elliptic": 0.57, "oblong": 0.4, "ovate": 0.6, "obovate": 0.6, "orbicular": 0.95, "spatulate": 0.35}},
+      "map": {"leaf_shape": {"linear": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.02, 2), 0.08)"}, "lanceolate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.02, 2), 0.25)"}, "oblanceolate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.02, 2), 0.25)"}, "elliptic": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.02, 2), 0.57)"}, "oblong": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.02, 2), 0.4)"}, "ovate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.02, 2), 0.6)"}, "obovate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.02, 2), 0.6)"}, "orbicular": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.02, 2), 0.95)"}, "spatulate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.02, 2), 0.35)"}}},
+      "else": {"rule": "clamp(leaflet_width_m / leaflet_length_m, 0.02, 2)"},
       "between": true,
-      "why": "A compound leaf's shape word is its leaflets': it says how broad each is for its length, as a simple blade's does."
+      "why": "A leaflet is as broad for its length as its flora measures it, the middle of each range; where it gives no measures, as the compound leaf's shape word, which is its leaflets', says."
+    },
+    "appearance.organs.basal.shape.leaflet_width": {
+      "template": "compound",
+      "map": {"leaf_shape": {"linear": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.02, 2), 0.08)"}, "lanceolate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.02, 2), 0.25)"}, "oblanceolate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.02, 2), 0.25)"}, "elliptic": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.02, 2), 0.57)"}, "oblong": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.02, 2), 0.4)"}, "ovate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.02, 2), 0.6)"}, "obovate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.02, 2), 0.6)"}, "orbicular": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.02, 2), 0.95)"}, "spatulate": {"rule": "first(clamp(leaflet_width_m / leaflet_length_m, 0.02, 2), 0.35)"}}},
+      "else": {"rule": "clamp(leaflet_width_m / leaflet_length_m, 0.02, 2)"},
+      "between": true,
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: a leaflet is as broad for its length as its flora measures it, the middle of each range; where it gives no measures, as the compound leaf's shape word, which is its leaflets', says."
     },
     "appearance.organs.leaf.shape.outline": {
       "template": ["simple", "sprig", "compound"],
@@ -42,6 +58,42 @@
       },
       "between": true,
       "why": "A blade's shape word says where it is widest and how its sides run; between two words, the outline between theirs. Cordate, reniform and deltate blades have bases a width along the blade cannot draw, and wait for a card that can."
+    },
+    "appearance.organs.basal.shape.outline": {
+      "template": ["simple", "sprig", "compound"],
+      "map": {
+        "leaf_shape": {
+          "linear": [[0, 0.35], [0.02, 0.61], [0.05, 0.9], [0.1, 0.98], [0.2, 1], [0.3, 1], [0.4, 1], [0.5, 1], [0.6, 1], [0.7, 1], [0.8, 0.92], [0.9, 0.7], [0.95, 0.4], [0.98, 0.15], [1, 0]],
+          "lanceolate": [[0, 0.2], [0.02, 0.31], [0.05, 0.48], [0.1, 0.7], [0.2, 0.91], [0.3, 1], [0.4, 0.96], [0.5, 0.85], [0.6, 0.74], [0.7, 0.58], [0.8, 0.4], [0.9, 0.21], [0.95, 0.1], [0.98, 0.04], [1, 0]],
+          "oblanceolate": [[0, 0.05], [0.02, 0.08], [0.05, 0.13], [0.1, 0.2], [0.2, 0.35], [0.3, 0.49], [0.4, 0.63], [0.5, 0.77], [0.6, 0.93], [0.7, 1], [0.8, 0.93], [0.9, 0.75], [0.95, 0.44], [0.98, 0.17], [1, 0]],
+          "elliptic": [[0, 0], [0.02, 0.28], [0.05, 0.44], [0.1, 0.6], [0.2, 0.8], [0.3, 0.92], [0.4, 0.98], [0.5, 1], [0.6, 0.98], [0.7, 0.92], [0.8, 0.8], [0.9, 0.6], [0.95, 0.44], [0.98, 0.28], [1, 0]],
+          "oblong": [[0, 0], [0.02, 0.62], [0.05, 0.77], [0.1, 0.88], [0.2, 0.97], [0.3, 0.99], [0.4, 1], [0.5, 1], [0.6, 1], [0.7, 0.99], [0.8, 0.97], [0.9, 0.88], [0.95, 0.77], [0.98, 0.62], [1, 0]],
+          "ovate": [[0, 0.3], [0.02, 0.44], [0.05, 0.66], [0.1, 0.83], [0.2, 0.96], [0.3, 1], [0.4, 0.97], [0.5, 0.92], [0.6, 0.84], [0.7, 0.71], [0.8, 0.55], [0.9, 0.3], [0.95, 0.15], [0.98, 0.06], [1, 0]],
+          "obovate": [[0, 0], [0.02, 0.05], [0.05, 0.14], [0.1, 0.28], [0.2, 0.5], [0.3, 0.67], [0.4, 0.8], [0.5, 0.9], [0.6, 0.98], [0.7, 1], [0.8, 0.94], [0.9, 0.8], [0.95, 0.48], [0.98, 0.18], [1, 0]],
+          "orbicular": [[0, 0], [0.02, 0.28], [0.05, 0.44], [0.1, 0.6], [0.2, 0.8], [0.3, 0.92], [0.4, 0.98], [0.5, 1], [0.6, 0.98], [0.7, 0.92], [0.8, 0.8], [0.9, 0.6], [0.95, 0.44], [0.98, 0.28], [1, 0]],
+          "spatulate": [[0, 0.08], [0.02, 0.09], [0.05, 0.1], [0.1, 0.11], [0.2, 0.13], [0.3, 0.16], [0.4, 0.21], [0.5, 0.34], [0.6, 0.53], [0.7, 0.81], [0.8, 1], [0.9, 0.95], [0.95, 0.74], [0.98, 0.43], [1, 0]]
+        }
+      },
+      "between": true,
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: a blade's shape word says where it is widest and how its sides run; between two words, the outline between theirs. Cordate, reniform and deltate blades have bases a width along the blade cannot draw, and wait for a card that can."
+    },
+    "appearance.organs.leaf.insertion": {
+      "map": {"leaf_peltation": {"epeltate": "marginal", "latent": "latent", "manifest": "peltate"}},
+      "why": "A peltate blade is drawn on its own petiole, held flat across the petiole's tip, centred on it where the petiole meets the blade underneath; an epeltate one goes on from its petiole in one card."
+    },
+    "appearance.organs.basal.insertion": {
+      "map": {"leaf_peltation": {"epeltate": "marginal", "latent": "latent", "manifest": "peltate"}},
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: a peltate blade is drawn on its own petiole, held flat across the petiole's tip, centred on it where the petiole meets the blade underneath."
+    },
+    "appearance.organs.leaf.shape.spread": {
+      "template": "compound",
+      "map": {"leaf_peltation": {"manifest": {"rule": "360 * (leaflets - 1) / leaflets"}}},
+      "why": "A manifestly peltate digitate leaf's leaflets close a ring round the petiole's tip, a cross leaflet filling the side toward the stem: evenly spaced all round."
+    },
+    "appearance.organs.basal.shape.spread": {
+      "template": "compound",
+      "map": {"leaf_peltation": {"manifest": {"rule": "360 * (leaflets - 1) / leaflets"}}},
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: a manifestly peltate digitate leaf's leaflets close a ring round the petiole's tip, evenly spaced all round."
     }
   },
   "evidence": {
@@ -59,17 +111,52 @@
     "rules.appearance.organs.leaf.shape.width": {
       "evidence": "SourceInferred",
       "source": "systematics-association-1962-shapes",
-      "note": "Each word's width over length lies inside the band the Systematics Association's chart of plane shapes gives it, the value in the band the model's choice: lanceolate and oblanceolate 3:1 to 6:1 (0.25); elliptic, ovate and obovate 3:2 to 2:1 (0.57, 0.6, 0.6); orbicular about 1:1 (0.95); linear longer than 6:1, its sides parallel (0.08). The chart gives oblong and spatulate by their sides, not a band: 0.4 and 0.35 are the model's. A flora's two words (\"ovate to lanceolate\") read as the forms between them, so the width is their middle."
+      "note": "Each word's width over length lies inside the band the Systematics Association's chart of plane shapes gives it, the value in the band the model's choice: lanceolate and oblanceolate 3:1 to 6:1 (0.25); elliptic, ovate and obovate 3:2 to 2:1 (0.57, 0.6, 0.6); orbicular about 1:1 (0.95); linear longer than 6:1, its sides parallel (0.08). The chart gives oblong and spatulate by their sides, not a band: 0.4 and 0.35 are the model's. A flora's two words (\"ovate to lanceolate\") read as the forms between them, so the width is their middle. Where a flora measures the blade (or leaflet), its width over its length, the middle of each range, comes first (visual forms leaf blades, 2026-10-15), as Asteraceae has done since its family rule."
     },
     "rules.appearance.organs.leaf.shape.leaflet_width": {
       "evidence": "SourceInferred",
       "source": "systematics-association-1962-shapes",
-      "note": "A compound leaf's shape word describes its leaflets, so a leaflet's width follows the same chart as a blade's. Each word's width over length lies inside the band the Systematics Association's chart of plane shapes gives it, the value in the band the model's choice: lanceolate and oblanceolate 3:1 to 6:1 (0.25); elliptic, ovate and obovate 3:2 to 2:1 (0.57, 0.6, 0.6); orbicular about 1:1 (0.95); linear longer than 6:1, its sides parallel (0.08). The chart gives oblong and spatulate by their sides, not a band: 0.4 and 0.35 are the model's. A flora's two words (\"ovate to lanceolate\") read as the forms between them, so the width is their middle."
+      "note": "A compound leaf's shape word describes its leaflets, so a leaflet's width follows the same chart as a blade's. Each word's width over length lies inside the band the Systematics Association's chart of plane shapes gives it, the value in the band the model's choice: lanceolate and oblanceolate 3:1 to 6:1 (0.25); elliptic, ovate and obovate 3:2 to 2:1 (0.57, 0.6, 0.6); orbicular about 1:1 (0.95); linear longer than 6:1, its sides parallel (0.08). The chart gives oblong and spatulate by their sides, not a band: 0.4 and 0.35 are the model's. A flora's two words (\"ovate to lanceolate\") read as the forms between them, so the width is their middle. Where a flora measures the blade (or leaflet), its width over its length, the middle of each range, comes first (visual forms leaf blades, 2026-10-15), as Asteraceae has done since its family rule."
     },
     "rules.appearance.organs.leaf.shape.outline": {
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Outlines drawn to the Systematics Association chart's definitions: lanceolate and ovate widest below the middle, oblanceolate and obovate above it, elliptic and orbicular at it, linear and oblong with their sides parallel, spatulate a broad rounded tip on a long narrow base. The curves are the model's, each the half-width as a share of the widest at 15 places from the base (u 0) to the tip (1), the same places for every word, so two words that tie draw the outline halfway between theirs. An ellipse for elliptic and orbicular, a rounded rectangle (a superellipse of power 4) for oblong. A compound leaf's word is its leaflets' (spec rework P4)."
+    },
+    "rules.appearance.organs.basal.shape.width": {
+      "evidence": "SourceInferred",
+      "source": "systematics-association-1962-shapes",
+      "note": "Each word's width over length lies inside the band the Systematics Association's chart of plane shapes gives it, the value in the band the model's choice: lanceolate and oblanceolate 3:1 to 6:1 (0.25); elliptic, ovate and obovate 3:2 to 2:1 (0.57, 0.6, 0.6); orbicular about 1:1 (0.95); linear longer than 6:1, its sides parallel (0.08). The chart gives oblong and spatulate by their sides, not a band: 0.4 and 0.35 are the model's. A flora's two words (\"ovate to lanceolate\") read as the forms between them, so the width is their middle. Where a flora measures the blade (or leaflet), its width over its length, the middle of each range, comes first (visual forms leaf blades, 2026-10-15), as Asteraceae has done since its family rule."
+    },
+    "rules.appearance.organs.basal.shape.leaflet_width": {
+      "evidence": "SourceInferred",
+      "source": "systematics-association-1962-shapes",
+      "note": "A compound leaf's shape word describes its leaflets, so a leaflet's width follows the same chart as a blade's. Each word's width over length lies inside the band the Systematics Association's chart of plane shapes gives it, the value in the band the model's choice: lanceolate and oblanceolate 3:1 to 6:1 (0.25); elliptic, ovate and obovate 3:2 to 2:1 (0.57, 0.6, 0.6); orbicular about 1:1 (0.95); linear longer than 6:1, its sides parallel (0.08). The chart gives oblong and spatulate by their sides, not a band: 0.4 and 0.35 are the model's. A flora's two words (\"ovate to lanceolate\") read as the forms between them, so the width is their middle. Where a flora measures the blade (or leaflet), its width over its length, the middle of each range, comes first (visual forms leaf blades, 2026-10-15), as Asteraceae has done since its family rule."
+    },
+    "rules.appearance.organs.basal.shape.outline": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Outlines drawn to the Systematics Association chart's definitions: lanceolate and ovate widest below the middle, oblanceolate and obovate above it, elliptic and orbicular at it, linear and oblong with their sides parallel, spatulate a broad rounded tip on a long narrow base. The curves are the model's, each the half-width as a share of the widest at 15 places from the base (u 0) to the tip (1), the same places for every word, so two words that tie draw the outline halfway between theirs. An ellipse for elliptic and orbicular, a rounded rectangle (a superellipse of power 4) for oblong. A compound leaf's word is its leaflets' (spec rework P4)."
+    },
+    "rules.appearance.organs.leaf.insertion": {
+      "evidence": "SourceInferred",
+      "source": "kaplan-2022",
+      "note": "Kaplan (2022, pp. 426 and 442-444, Fig. 17.15): most blades are epeltate, the petiole meeting the blade at its basal margin; a peltate blade has the petiole joined on its underside, inside its outline, like an umbrella, and is held near horizontal on the petiole; a latently peltate blade is held so but the petiole still meets its margin. Many digitate leaves are peltate in organisation: with only lateral pairs beside the terminal leaflet the ring of leaflets is open toward the stem (latent), and an extra cross leaflet opposite the terminal one closes it (manifest), as in Lupinus polyphyllus. How PlantGen draws it, a choice of the model's (visual forms leaf blades, 2026-10-15): a blade that is not epeltate on a petiole of its own, its card turned level about where it meets the petiole."
+    },
+    "rules.appearance.organs.basal.insertion": {
+      "evidence": "SourceInferred",
+      "source": "kaplan-2022",
+      "note": "Kaplan (2022, pp. 426 and 442-444, Fig. 17.15): most blades are epeltate, the petiole meeting the blade at its basal margin; a peltate blade has the petiole joined on its underside, inside its outline, like an umbrella, and is held near horizontal on the petiole; a latently peltate blade is held so but the petiole still meets its margin. Many digitate leaves are peltate in organisation: with only lateral pairs beside the terminal leaflet the ring of leaflets is open toward the stem (latent), and an extra cross leaflet opposite the terminal one closes it (manifest), as in Lupinus polyphyllus. How PlantGen draws it, a choice of the model's (visual forms leaf blades, 2026-10-15): a blade that is not epeltate on a petiole of its own, its card turned level about where it meets the petiole."
+    },
+    "rules.appearance.organs.leaf.shape.spread": {
+      "evidence": "SourceInferred",
+      "source": "kaplan-2022",
+      "note": "Kaplan (2022, pp. 426 and 442-444, Fig. 17.15): most blades are epeltate, the petiole meeting the blade at its basal margin; a peltate blade has the petiole joined on its underside, inside its outline, like an umbrella, and is held near horizontal on the petiole; a latently peltate blade is held so but the petiole still meets its margin. Many digitate leaves are peltate in organisation: with only lateral pairs beside the terminal leaflet the ring of leaflets is open toward the stem (latent), and an extra cross leaflet opposite the terminal one closes it (manifest), as in Lupinus polyphyllus. Evenly spaced all round is the model's choice: the cross leaflet takes the place a leaflet would on the stem's side."
+    },
+    "rules.appearance.organs.basal.shape.spread": {
+      "evidence": "SourceInferred",
+      "source": "kaplan-2022",
+      "note": "Kaplan (2022, pp. 426 and 442-444, Fig. 17.15): most blades are epeltate, the petiole meeting the blade at its basal margin; a peltate blade has the petiole joined on its underside, inside its outline, like an umbrella, and is held near horizontal on the petiole; a latently peltate blade is held so but the petiole still meets its margin. Many digitate leaves are peltate in organisation: with only lateral pairs beside the terminal leaflet the ring of leaflets is open toward the stem (latent), and an extra cross leaflet opposite the terminal one closes it (manifest), as in Lupinus polyphyllus. Evenly spaced all round is the model's choice: the cross leaflet takes the place a leaflet would on the stem's side."
     }
   }
 }

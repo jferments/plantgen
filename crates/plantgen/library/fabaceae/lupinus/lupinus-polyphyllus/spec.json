@@ -59,11 +59,11 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": { "leaflet_width": 0.16, "teeth": 0, "spread": 300, "lowest": 0.6, "widest": 0.6, "tip": 0.5, "base": 0 },
+        "shape": { "leaflet_width": 0.16, "teeth": 0, "lowest": 0.6, "widest": 0.6, "tip": 0.5, "base": 0 },
         "face_up": 0.5
       },
       "basal": {
-        "shape": { "template": "compound", "leaflet_width": 0.16, "teeth": 0, "spread": 300, "lowest": 0.6, "widest": 0.6, "tip": 0.5, "base": 0 },
+        "shape": { "template": "compound", "leaflet_width": 0.16, "teeth": 0, "lowest": 0.6, "widest": 0.6, "tip": 0.5, "base": 0 },
         "face_up": 0.4
       },
       "flower": {
@@ -129,6 +129,7 @@
     "leaflet_length_m": {"min": 0.07, "max": 0.15},
     "leaflet_width_m": {"min": 0.015, "max": 0.03},
     "leaf_shape": "oblanceolate",
+    "leaf_peltation": "manifest",
     "inflorescence_length_m": {"min": 0.15, "max": 0.6},
     "flower_size_m": {"min": 0.012, "max": 0.014},
     "flower_colour": [90, 80, 185],
@@ -210,12 +211,12 @@
     "appearance.organs.leaf.shape": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "The leaf drawn as a palmately compound leaf (spec rework P4), its leaflets counted and set from its characters by the rules at the flowering plants; before, a palmately lobed blade stood in for it. By eye from photographs: the leaflets fanned nearly all the way round the petiole's tip (300 degrees), the outer ones 0.6 as long as the middle one, each oblanceolate, tapering to its foot, and about a sixth as wide as long."
+      "note": "The leaf drawn as a palmately compound leaf (spec rework P4), its leaflets counted and set from its characters by the rules at the flowering plants; before, a palmately lobed blade stood in for it. By eye from photographs: the outer leaflets 0.6 as long as the middle one, each oblanceolate, tapering to its foot, and about a sixth as wide as long."
     },
     "appearance.organs.basal.shape": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "The leaf drawn as a palmately compound leaf (spec rework P4), its leaflets counted and set from its characters by the rules at the flowering plants; before, a palmately lobed blade stood in for it. By eye from photographs: the leaflets fanned nearly all the way round the petiole's tip (300 degrees), the outer ones 0.6 as long as the middle one, each oblanceolate, tapering to its foot, and about a sixth as wide as long."
+      "note": "The leaf drawn as a palmately compound leaf (spec rework P4), its leaflets counted and set from its characters by the rules at the flowering plants; before, a palmately lobed blade stood in for it. By eye from photographs: the outer leaflets 0.6 as long as the middle one, each oblanceolate, tapering to its foot, and about a sixth as wide as long."
     },
     "appearance.organs.flower.season.flower_look.shape": {
       "evidence": "SourceInferred",
@@ -251,6 +252,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1944",
       "note": "Abrams (vol. 2, 1944, p. 515), Lupinus polyphyllus: erect, mostly unbranched, hollow-stemmed, 5-15 dm tall; leaves few, long-stalked, petioles 15-30 cm; leaflets 10-17, oblanceolate, 7-15 cm long, 15-30 mm wide; peduncles 3-8 cm; racemes 15-60 cm; flowers 12-14 mm long, loosely whorled, on pedicels 10-16 mm; petals blue, purple, reddish or yellowish; pods dark brown, loosely hairy, 25-40 mm long, 7-9 mm wide; May to August."
+    },
+    "traits.leaf_peltation": {
+      "evidence": "SourceInferred",
+      "source": "kaplan-2022",
+      "note": "Kaplan (2022, pp. 442-444, Fig. 17.15): Lupinus polyphyllus has a manifestly peltate digitate leaf, about 11 to 13 narrow leaflets in a full ring at the tip of a long petiole, a cross leaflet over the petiole closing it; its leaflets ring the petiole's tip, held level on it."
     },
     "traits.leaf_shape": {
       "evidence": "SourceInferred",

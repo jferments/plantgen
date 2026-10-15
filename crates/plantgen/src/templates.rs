@@ -106,7 +106,7 @@ pub fn fill_share(look: &Look) -> f64 {
     let shape = &look.shape;
     let key = match &look.inflorescence {
         Some(cluster) => format!("{shape:?} {cluster:?}"),
-        None => format!("{shape:?}"),
+        None => format!("{shape:?} {:?}", look.insertion),
     };
     let shares = SHARES.get_or_init(Default::default);
     if let Some(&share) = shares.lock().ok().as_ref().and_then(|s| s.get(&key)) {
@@ -487,7 +487,15 @@ fn draw_look(
             let (across, along) = drawn_share(&look.shape);
             card.paint(&look.shape, x / across, y / along)
         }
-        None => draw(&look.shape, (look.colour, look.accent), x, y, grew),
+        None => {
+            let paint = draw(&look.shape, (look.colour, look.accent), x, y, grew);
+            // A leaf drawn on a petiole of its own leaves the petiole,
+            // painted in full accent below its blade, off its card.
+            match look.stalk() {
+                Some(stalk) if y < stalk.petiole + 0.01 && paint.accent >= 0.99 => Paint::EMPTY,
+                _ => paint,
+            }
+        }
     }
 }
 
@@ -2961,6 +2969,7 @@ mod tests {
             organs.insert(
                 name.clone(),
                 OrganLook {
+                    insertion: crate::looks::Insertion::Marginal,
                     shape: shape.clone(),
                     colour: Some([0.2, 0.4, 0.1]),
                     shade: None,
