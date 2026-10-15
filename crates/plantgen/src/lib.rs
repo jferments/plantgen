@@ -358,4 +358,10 @@ pub mod venation;
 /// spikelets', a fruit its ripe colour, the foliage and its shade the
 /// leaves' and the bark its own; 3 built-ins take a colour they left
 /// unstated (58 is default looks, #115).
-pub const GENERATOR_REVISION: u32 = 59;
+/// 60: finer detail from photographs and floras: a head's rays may end
+/// square (`ray_tip`, a solid leaf's `tip`), a ray's width and tip come
+/// from `ray_width_m` and `ray_apex`, and herb racemes may crowd their
+/// buds at the tip (`bud_spacing`, `bud_lean`, `bud_stalk`); oxeye daisy
+/// and common camas measured from photographs (59 is organs take the
+/// colours their characters state, #117).
+pub const GENERATOR_REVISION: u32 = 60;

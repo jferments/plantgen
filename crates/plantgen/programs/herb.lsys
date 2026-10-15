@@ -114,6 +114,9 @@ param buds_above;             # share of the raceme above which are buds
 param fruit_length;
 param fruit_angle;
 param bud_size;
+param bud_spacing;            # a bud's internode as a share of a flower's: below 1 the buds crowd toward the tip
+param bud_lean;               # a bud's stalk angle as a share of flower_angle: near 0 the buds stand pressed to the axis
+param bud_stalk;              # a bud's stalk as a share of pedicel
 param nod;                    # degrees the bud-tipped end bends over
 param flower_area;
 param bud_area;
@@ -218,8 +221,8 @@ decompose Rc(i, m, h, r) : m == 1 && (i + 0.5) / flowers < buds_above ->
       flower(flower_size * uniform(0.9, 1.1)) ]
     /(flower_divergence);
 decompose Rc(i, m, h, r) : m == 1 ->
-    &(nod / max(1, flowers * (1 - buds_above))) !(stem_radius * 0.5) F(h * r / flowers)
-    [ &(flower_angle * 0.6) !(stem_radius * 0.2) F(pedicel * 0.5)
+    &(nod / max(1, flowers * (1 - buds_above))) !(stem_radius * 0.5) F(h * r / flowers * bud_spacing)
+    [ &(flower_angle * bud_lean) !(stem_radius * 0.2) F(pedicel * bud_stalk)
       bud(bud_size * lerp(1, 0.5, ((i + 0.5) / flowers - buds_above) / max(0.01, 1 - buds_above))) ]
     /(flower_divergence);
 decompose Rc(i, m, h, r) -> ;

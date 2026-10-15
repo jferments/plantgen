@@ -1,5 +1,5 @@
 # The herbs of Berberidaceae, on the herb base (growth plan G2.3a). It
-# gives the values its species leave unset (14 of herb's parameters), as
+# gives the values its species leave unset (17 of herb's parameters), as
 # the herb program's defaults until then; each species sets the rest.
 #
 # One step is one year. Angles are degrees; lengths are metres.
@@ -19,6 +19,9 @@ param flower_divergence = 137.5; # roll from one flower of the raceme to the nex
 param fruit_length = 0.06;
 param fruit_angle = 25;
 param bud_size = 0.012;
+param bud_spacing = 1;           # buds spaced as the flowers are
+param bud_lean = 0.6;            # a bud's stalk at 0.6 of flower_angle
+param bud_stalk = 0.5;           # a bud's stalk half a pedicel
 param light_cell = 0.05;         # light voxel edge
 param flowering_share = 1;     # every adult stem ends in a raceme
 param scape = 0;               # a flowering stem keeps its leaves

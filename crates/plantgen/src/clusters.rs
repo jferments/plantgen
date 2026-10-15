@@ -885,6 +885,7 @@ impl Sheet {
             widest: SHEET_WIDEST,
             base: SHEET_BASE,
             taper: SHEET_TAPER,
+            tip: 0.0,
             // The face toward the units, so a forward arch bends against
             // the leaf's own.
             arch: -self.hood,

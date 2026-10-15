@@ -532,6 +532,7 @@ impl One {
             widest: 0.62,
             base: 0.2,
             taper: 0.45,
+            tip: 0.0,
             arch: 6.0,
             twist: 12.0,
             margin: None,

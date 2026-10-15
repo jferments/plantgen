@@ -843,6 +843,7 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
             widest: 0.55,
             base: piece.base,
             taper: piece.taper,
+            tip: 0.0,
             arch: piece.curl,
             twist: 0.0,
             margin: None,

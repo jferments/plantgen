@@ -1113,6 +1113,23 @@
       "range": [0.0005, 0.2],
       "why": "a ray's strap (lamina), its length"
     },
+    "ray_width_m": {
+      "group": "flowers",
+      "organ": "ray_floret",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0002, 0.05],
+      "optional": true,
+      "why": "a ray's strap (lamina), its width where widest"
+    },
+    "ray_apex": {
+      "group": "flowers",
+      "organ": "ray_floret",
+      "type": "enum",
+      "values": ["acute", "rounded", "truncate", "toothed"],
+      "optional": true,
+      "why": "a ray's tip: narrowing to a point, rounded, cut square, or square with two or three small teeth"
+    },
     "ray_colour": {
       "group": "flowers",
       "organ": "ray_floret",

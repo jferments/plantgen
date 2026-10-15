@@ -596,6 +596,7 @@ fn draw_flower(
         widest: 0.55,
         base: 0.35,
         taper: if petals.pointed >= 0.5 { 1.3 } else { 0.45 },
+        tip: 0.0,
         arch: form.curl,
         twist: 0.0,
         margin: None,

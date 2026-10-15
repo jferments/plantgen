@@ -58,12 +58,10 @@
     "organs": {
       "leaf": {
         "shape": {
-          "width": 0.3,
-          "widest": 0.6,
-          "tip": 0.3,
-          "base": 0.2,
-          "teeth": 6,
-          "tooth_depth": 0.08,
+          "width": 0.25,
+          "outline": [[0, 0.75], [0.08, 0.6], [0.3, 0.75], [0.7, 1], [0.92, 0.75], [1, 0]],
+          "teeth": 9,
+          "tooth_depth": 0.05,
           "petiole": 0
         }
       },
@@ -80,9 +78,9 @@
         }
       },
       "flower": {
-        "shape": { "ray_width": 0.75 },
+        "shape": { "template": "head" },
         "colour": [0.95, 0.95, 0.92],
-        "accent": [0.9, 0.72, 0.12]
+        "accent": [0.87, 0.48, 0.01]
       }
     }
   },
@@ -113,9 +111,36 @@
     "ray_colour": [250, 250, 245],
     "disc_colour": [245, 200, 30],
     "fruit_size_m": 0.002,
-    "flowering_months": [6, 7, 8, 9]
+    "flowering_months": [6, 7, 8, 9],
+    "ray_width_m": {"min": 0.003, "max": 0.005, "low": 0.002, "high": 0.006},
+    "ray_apex": "toothed"
   },
   "evidence": {
+    "appearance.organs.flower.shape.template": {
+      "evidence": "SourceInferred",
+      "source": "fna-19-leucanthemum",
+      "note": "FNA's account of the genus: each flowering stem bears a head of white rays round a disc of yellow florets, drawn on a head card whatever the family's characters say."
+    },
+    "appearance.organs.leaf.shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-ferris-1960",
+      "note": "Abrams and Ferris vol. 4, Chrysanthemum leucanthemum (p. 394): stem leaves sessile, clasping, incised, reduced upward. Photographs (iNaturalist observations 170263172, 290839324) show them oblong to oblanceolate, about a quarter as wide as long, with a broad clasping foot and many small rounded teeth on both edges; drawn so, the foot narrowing a little above the clasp."
+    },
+    "appearance.organs.flower.accent": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "The disc deep golden yellow, toward orange, not pale: about sRGB (240, 185, 20) on the face-on heads (observations 119225591, 198086066, 77287435, 12714687), the centre greener while its inner florets are in bud."
+    },
+    "traits.ray_apex": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "The same eight heads: every ray's tip cut square to rounded, with two or three small teeth (observations 119225591, 198086066, 77287435, 12714687 show them best)."
+    },
+    "traits.ray_width_m": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Rays measured on eight face-on heads (observations 119225591, 116604189, 14371808, 165636587, 198086066, 77287435, 181526174, 12714687): each about a quarter as wide as long (0.17 to 0.30, median 0.24), parallel-sided from near the foot almost to the tip; times FNA's 12 to 20 mm rays, 3 to 5 mm wide, 2 to 6 at the extremes (our arithmetic). Neighbouring rays touch or overlap near the disc and part toward their tips."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
