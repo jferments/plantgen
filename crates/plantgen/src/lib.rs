@@ -400,4 +400,12 @@ pub mod venation;
 /// bleeding heart, monkeyflower, foamflower, paintbrush, Oregon grape,
 /// tiger lily) draw them so, the lily's green-gold from photographs (66
 /// is drawn areas, #124).
-pub const GENERATOR_REVISION: u32 = 67;
+/// 72: broadleaf limbs arch outward as they lengthen and an umbrella's
+/// axes level out at its top (`broadleaf` revision 16, `limb_arch`,
+/// `flat_top`), a self-pruning tree stands on a clear trunk
+/// (`bole_clear`), and a crown's region takes its widest point and
+/// fullness from its `crown_form`; Garry oak spreads, umbrella thorn is
+/// flat-topped, Pacific madrone leans on a clear stem and the baobab
+/// swells, from photographs (provisional: 68 to 71 are visual forms'
+/// stacked branches).
+pub const GENERATOR_REVISION: u32 = 72;
