@@ -1380,13 +1380,29 @@ impl Hull {
 }
 
 /// Areoles along each rib's crest, `spacing` apart along the skin, the
-/// ribs offset from each other by the golden section. None where the
-/// crests crowd closer than half the spacing, near the apex and a closed
-/// base.
+/// ribs offset from each other by the golden section. Over the dome the
+/// areoles are young and their internodes not yet stretched, so they
+/// crowd toward the apex: the spacing shrinks with the crest's radius
+/// there, to [`APEX_CROWDING`] of it at the tip (Gibson and Nobel 1986;
+/// Kaplan's apical pit, where areoles form and pass over the shoulder).
+/// Where the crests crowd closer than half that spacing only every
+/// second, fourth, ... rib carries on, as ribs merge toward the apex; none
+/// near a closed base.
 fn rib_sites(line: &Centreline, surface: &Surface<'_>, spacing: f64, id: u64) -> Vec<Site> {
     let samples = even_samples(line.length, spacing * 0.25, 40_000);
     let meridian = line.meridian(&samples);
-    let total = meridian.last().copied().unwrap_or(0.0);
+    let crowding = |s: f64| apex_crowding(line, s);
+    // Distance along the skin in local spacings: rows fall at whole steps.
+    let mut warped = Vec::with_capacity(samples.len());
+    let mut total = 0.0;
+    for i in 0..samples.len() {
+        if i > 0 {
+            let middle = f64::midpoint(samples[i], samples[i - 1]);
+            total += (meridian[i] - meridian[i - 1]) / crowding(middle);
+        }
+        warped.push(total);
+    }
+    let meridian = warped;
     let ribs = surface.ribs.max(1);
     let mut sites = Vec::new();
     for rib in 0..ribs {
@@ -1405,8 +1421,19 @@ fn rib_sites(line: &Centreline, surface: &Surface<'_>, spacing: f64, id: u64) ->
             }
             let s = invert(&meridian, &samples, along);
             let crowd = 2.0 * PI * line.crest(s) / f64::from(ribs);
-            if crowd < 0.45 * spacing {
-                continue;
+            let local = spacing * crowding(s);
+            if crowd < 0.45 * local {
+                // Ribs merge toward the apex: every `keep`-th carries on.
+                let near_tip = s > line.length - line.dome;
+                #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                let keep = if near_tip && crowd > 0.0 {
+                    (0.45 * local / crowd).log2().ceil().exp2() as u32
+                } else {
+                    u32::MAX
+                };
+                if keep == u32::MAX || keep >= ribs || rib % keep != 0 {
+                    continue;
+                }
             }
             let t = surface.phase + surface.twist * s + 2.0 * PI * f64::from(rib) / f64::from(ribs);
             sites.push(Site {
@@ -1420,6 +1447,19 @@ fn rib_sites(line: &Centreline, surface: &Surface<'_>, spacing: f64, id: u64) ->
         }
     }
     sites
+}
+
+/// Least share of an areole's spacing at the apex.
+const APEX_CROWDING: f64 = 0.35;
+
+/// Share of the spacing between areoles at `s`: 1 below the dome, falling
+/// with the crest's radius over it to [`APEX_CROWDING`] at the tip.
+fn apex_crowding(line: &Centreline, s: f64) -> f64 {
+    if line.dome <= 0.0 || s <= line.length - line.dome {
+        return 1.0;
+    }
+    let x = ((s - (line.length - line.dome)) / line.dome).min(1.0);
+    APEX_CROWDING.max(math::sqrt((1.0 - x * x).max(0.0)))
 }
 
 /// Areoles on a golden-angle spiral from the apex down, each with
