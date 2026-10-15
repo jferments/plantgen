@@ -37,7 +37,8 @@
     },
     "flowering_position": "terminal",
     "sexual_system": "hermaphrodite",
-    "life_span": "perennial"
+    "life_span": "perennial",
+    "perennation": {"bulb": "usually", "rhizome": "rarely", "corm": "sometimes"}
   },
   "evidence": {
     "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 229, 227: Amaryllidaceae s.s. have a short to long hypanthial tube (formula 'hypanthium present', p. 229); Alliaceae, which APG includes, are hypogynous with the hypanthium absent (p. 227)."},
@@ -75,6 +76,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 229, family Amaryllidaceae: life span perennial; read as \"perennial\"."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Amaryllidaceae, with the parts of Amaryllidaceae it codes as families of their own (Alliaceae), whose further states read as sometimes: how its perennial herbs last from year to year (character 25), coded usually a bulb, rarely a rhizome; with them, usually a bulb, sometimes a corm, rarely a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

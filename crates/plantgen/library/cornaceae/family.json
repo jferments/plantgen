@@ -35,7 +35,8 @@
     },
     "sexual_system": {
       "hermaphrodite": "usually"
-    }
+    },
+    "perennation": "rhizome"
   },
   "forms": {
     "decurrent_tree": {
@@ -108,6 +109,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 385, 386, family Cornaceae: sexual system hermaphrodite, usually; read as {\"hermaphrodite\": \"usually\"}."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cornaceae: how its perennial herbs last from year to year (character 25), coded usually a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

@@ -58,7 +58,8 @@
       "panicle": "often",
       "solitary": "often",
       "umbel": "often"
-    }
+    },
+    "perennation": {"rhizome": "often", "tuber": "often"}
   },
   "evidence": {
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 394: Simpson (Primulaceae s.s.): stamens 5, rarely 3 to 9, as many as and opposite the corolla lobes; Floral Diagrams p. 307 (Myrsinaceae, part of APG's Primulaceae) gives 4 to 5, rarely 3."},
@@ -92,6 +93,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 393, 394, family Primulaceae: inflorescence head, panicle, umbel or solitary (scapose); read as {\"head\": \"often\", \"panicle\": \"often\", \"solitary\": \"often\", \"umbel\": \"often\"}."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Primulaceae: how its perennial herbs last from year to year (character 25), coded often a rhizome, often tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

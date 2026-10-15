@@ -394,4 +394,9 @@ pub mod venation;
 /// its program's default, so a species drafted from facts shades with what
 /// it shows; every built-in sets its own and grows as before (65 is floral
 /// bracts, #123).
-pub const GENERATOR_REVISION: u32 = 66;
+/// 68: a forb drafted from facts sends up one stem where its taxa say it
+/// lasts as a bulb or a corm (the new character `perennation`, stated for
+/// 85 families from Watson and Dallwitz), a clump as before otherwise;
+/// every built-in sets its own and grows as before (67 is closed buds,
+/// #126).
+pub const GENERATOR_REVISION: u32 = 68;

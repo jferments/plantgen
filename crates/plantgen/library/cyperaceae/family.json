@@ -34,7 +34,8 @@
     "sexual_system": {
       "monoecious": "often",
       "hermaphrodite": "sometimes"
-    }
+    },
+    "perennation": {"rhizome": "often", "tuber": "often"}
   },
   "evidence": {
     "traits.leaf_arrangement": {
@@ -96,6 +97,7 @@
       "evidence": "SourceInferred",
       "source": "diversity-evolution-land-plants",
       "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 186, family Cyperaceae: sexual system hermaphrodite (e.g. Scirpus), sometimes. Ingrouille, Diversity and Evolution of Land Plants (1992) p. 186, family Cyperaceae: sexual system monoecious (e.g. Carex), often. Read together as {\"monoecious\": \"often\", \"hermaphrodite\": \"sometimes\"}."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cyperaceae: how its perennial herbs last from year to year (character 25), coded often a rhizome, often tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

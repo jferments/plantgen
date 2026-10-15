@@ -33,7 +33,8 @@
       "raceme": "often",
       "solitary": "often",
       "spike": "often"
-    }
+    },
+    "perennation": {"rhizome": "usually", "tuber": "rarely"}
   },
   "forms": {
     "forb": {
@@ -104,6 +105,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 416, 420, family Orobanchaceae: inflorescence raceme, spike or solitary, usually; read as {\"raceme\": \"often\", \"solitary\": \"often\", \"spike\": \"often\"}."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Orobanchaceae: how its perennial herbs last from year to year (character 25), coded usually a rhizome, rarely tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

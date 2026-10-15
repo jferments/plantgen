@@ -30,7 +30,8 @@
     "leaf_division": "simple",
     "leaf_venation": "pinnate",
     "sexual_system": "hermaphrodite",
-    "axis_growth": "sympodial"
+    "axis_growth": "sympodial",
+    "perennation": {"rhizome": "usually", "tuber": "rarely"}
   },
   "evidence": {
     "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 252, 505: Simpson calls the flowers epigynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
@@ -78,6 +79,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 249, 252, family Zingiberaceae: axis growth sympodial; read as \"sympodial\"."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Zingiberaceae: how its perennial herbs last from year to year (character 25), coded usually a rhizome, rarely tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

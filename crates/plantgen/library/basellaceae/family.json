@@ -37,13 +37,15 @@
     },
     "flower_merosity": 5,
     "stamens": 5,
-    "carpels": 3
+    "carpels": 3,
+    "perennation": {"rhizome": "often", "tuber": "often"}
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Basellaceae: leaves opposite or alternate; leaves simple; veins pinnate or palmate; stipules absent; leaf rosettes basal or none; plants usually hermaphrodite, sometimes monoecious; ovary superior; floral cup present; stems herbaceous; flowers in racemes, in spikes or in panicles; flowers actinomorphic; perianth sepals and petals or tepals; parts of each whorl 5; stamens 5; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Basellaceae: how its perennial herbs last from year to year (character 25), coded often a rhizome, often tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

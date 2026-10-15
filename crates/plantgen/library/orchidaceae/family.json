@@ -47,7 +47,8 @@
     },
     "fruit_type": {
       "capsule": "usually"
-    }
+    },
+    "perennation": {"corm": "often", "rhizome": "often", "tuber": "often", "pseudobulb": "often"}
   },
   "forms": {
     "forb": {
@@ -119,6 +120,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 232, 233, 234, family Orchidaceae: fruit type capsule (loculicidal) (rarely berry), usually; read as {\"capsule\": \"usually\"}."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Orchidaceae, with the parts of Orchidaceae it codes as families of their own (Cypripediaceae), whose further states read as sometimes: how its perennial herbs last from year to year (character 25), coded often a corm, often a rhizome, often tubers, often pseudobulbs; with them, often a corm, often a rhizome, often tubers, often pseudobulbs. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

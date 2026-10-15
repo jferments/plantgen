@@ -26,7 +26,8 @@
       "berry": "often"
     },
     "stamens": 1,
-    "carpels": 3
+    "carpels": 3,
+    "perennation": {"rhizome": "often", "corm": "often"}
   },
   "evidence": {
     "traits": {
@@ -38,6 +39,7 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Philydraceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Philydraceae: how its perennial herbs last from year to year (character 25), coded often a rhizome, often a corm. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

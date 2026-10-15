@@ -330,6 +330,13 @@
       "values": ["none", "erect", "ascending", "short_creeping", "long_creeping"],
       "why": "how a plant's rhizome grows, where it has one: upright or rising under a crown, creeping a little so the plant forms a clump, or running far underground so it forms a colony"
     },
+    "perennation": {
+      "group": "form",
+      "organ": "plant",
+      "type": "enum",
+      "values": ["bulb", "corm", "rhizome", "tuber", "pseudobulb"],
+      "why": "what a perennial herb lasts the bad season in underground (or, for a pseudobulb, a swollen stem above it): a bulb or a corm sends up one flowering stem of its own, a rhizome or tubers a clump of them"
+    },
     "habit_notes": {
       "group": "form",
       "organ": "plant",
