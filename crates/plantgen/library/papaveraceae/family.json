@@ -14,14 +14,15 @@
       "herbaceous": "usually",
       "woody": "rarely"
     },
-    "leaf_arrangement": "alternate",
+    "leaf_arrangement": {"alternate": "usually", "opposite": "sometimes"},
     "leaf_division": {
       "simple": "usually",
       "compound": "sometimes"
     },
     "leaf_incision": {
       "dissected": "usually",
-      "none": "sometimes"
+      "none": "sometimes",
+      "lobed": "sometimes"
     },
     "division_pattern": {
       "pinnate": "usually",
@@ -79,7 +80,7 @@
     "traits.leaf_arrangement": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
-      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 267 Papaveraceae (poppies) and 268 Fumariaceae (bleeding hearts and fumitories), which APG joins as Papaveraceae: annual to perennial herbs, rarely shrubs or small trees; leaves alternate (rarely the floral ones opposite), often much divided; stipules none; fruit a capsule opening by valves or pores, in the fumitories a capsule or a nut."
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 267 Papaveraceae (poppies) and 268 Fumariaceae (bleeding hearts and fumitories), which APG joins as Papaveraceae: annual to perennial herbs, rarely shrubs or small trees; leaves alternate (rarely the floral ones opposite), often much divided; stipules none; fruit a capsule opening by valves or pores, in the fumitories a capsule or a nut. The books add opposite (sometimes): Simpson, Plant Systematics (2019) p. 288: alternate (spiral) to nearly opposite."
     },
     "traits.stipules": {
       "evidence": "SourceInferred",
@@ -119,7 +120,7 @@
     "traits.leaf_incision": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
-      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Papaveraceae with Fumariaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple usually, compound sometimes; the simple blade dissected usually, none sometimes; lobes or leaflets pinnate usually, palmate sometimes. Read from the coded leaf form and dissection by script (spec-rework/b1/delta)."
+      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Papaveraceae with Fumariaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple usually, compound sometimes; the simple blade dissected usually, none sometimes; lobes or leaflets pinnate usually, palmate sometimes. Read from the coded leaf form and dissection by script (spec-rework/b1/delta). The books add lobed (sometimes): Simpson, Plant Systematics (2019) p. 288: lobed, divided or dissected."
     },
     "traits.division_pattern": {
       "evidence": "SourceInferred",

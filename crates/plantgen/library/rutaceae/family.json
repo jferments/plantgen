@@ -30,7 +30,8 @@
     "fruit_type": {
       "berry": "often",
       "drupe": "often",
-      "capsule": "rarely"
+      "capsule": "rarely",
+      "schizocarp": "sometimes"
     },
     "inflorescence": {
       "cyme": "often",
@@ -63,6 +64,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 361, 362, family Rutaceae: sexual system hermaphrodite, usually; read as {\"hermaphrodite\": \"usually\"}."
-    }
+    },
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add schizocarp (sometimes): Simpson, Plant Systematics (2019) p. 359: schizocarp, berry, drupe or hesperidium."}
   }
 }

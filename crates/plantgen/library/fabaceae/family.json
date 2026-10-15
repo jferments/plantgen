@@ -105,7 +105,8 @@
     },
     "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 320, 321, family Fabaceae: phyllotaxis pattern spiral, usually; read as {\"spiral\": \"usually\"}."},
     "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 320, 321, family Fabaceae: flower symmetry actinomorphic or zygomorphic; read as {\"actinomorphic\": \"often\", \"zygomorphic\": \"often\"}."},
-    "traits.zygomorphy": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 150, 151, 152, family Fabaceae: zygomorphy papilionaceous; read as \"papilionaceous\"."}
+    "traits.zygomorphy": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 150, 151, 152, family Fabaceae: zygomorphy papilionaceous; read as \"papilionaceous\"."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Rare extremes noted only; the count's source is the family's `traits` note. The books give the family low 5: Simpson, Plant Systematics (2019) p. 320, 321: 5 or 10-∞. Left out of the range on the owner's go (2026-10-15): they belong to some of its genera, and a family's rare ends would reach every species that inherits its count."}
   },
   "rules": {
     "generator.params.leaf_length": {

@@ -6,7 +6,7 @@
   "traits": {
     "hypanthium": false,
     "flower_merosity": 3,
-    "flower_symmetry": "actinomorphic",
+    "flower_symmetry": {"actinomorphic": "usually", "zygomorphic": "sometimes"},
     "perianth": "tepals",
     "ovary_position": "superior",
     "stamens": 6,
@@ -98,6 +98,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 229, 230, family Asphodelaceae: inflorescence raceme or panicle; read as {\"panicle\": \"often\", \"raceme\": \"often\"}."
     },
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add zygomorphic (sometimes): Simpson, Plant Systematics (2019) p. 229, 230: actinomorphic or zygomorphic."},
     "traits.flowering_position": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 100, 101, family Asphodelaceae: flowering position terminal; read as \"terminal\"."}
   }
 }

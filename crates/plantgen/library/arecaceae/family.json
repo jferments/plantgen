@@ -20,7 +20,7 @@
     },
     "carpels": 3,
     "ovary_position": "superior",
-    "inflorescence": "panicle",
+    "inflorescence": {"panicle": "usually", "spike": "sometimes"},
     "fruit_type": {
       "drupe": "usually",
       "berry": "often"
@@ -30,7 +30,7 @@
     "leaf_division": {"compound": "usually"},
     "bract_form": {"spathe": "usually"},
     "flowering_position": "lateral",
-    "sexual_system": {"monoecious": "often"},
+    "sexual_system": {"monoecious": "often", "hermaphrodite": "sometimes"},
     "life_span": "perennial",
     "branching": {"unbranched": "usually"}
   },
@@ -259,8 +259,9 @@
     "traits.leaf_division": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 238, 239, 240, family Arecaceae: leaf division compound (pinnate, bipinnate, costapalmate or palmate; some simple), usually; read as {\"compound\": \"usually\"}."},
     "traits.bract_form": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 238, 239, 240, family Arecaceae: bract form spathe, 1-many, plus large prophyll, usually; read as {\"spathe\": \"usually\"}."},
     "traits.flowering_position": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 238, 239, 240, family Arecaceae: flowering position lateral (infra-, inter- or suprafoliar); read as \"lateral\"."},
-    "traits.sexual_system": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 179, 181, family Arecaceae: sexual system monoecious, often; read as {\"monoecious\": \"often\"}."},
+    "traits.sexual_system": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 179, 181, family Arecaceae: sexual system monoecious, often; read as {\"monoecious\": \"often\"}. The books add hermaphrodite (sometimes): Simpson, Plant Systematics (2019) p. 238, 239, 240: hermaphrodite."},
     "traits.life_span": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 238, 239, 240, family Arecaceae: life span perennial; read as \"perennial\"."},
-    "traits.branching": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 238, 239, 240, family Arecaceae: branching unbranched (dichotomous in Hyphaene; clustered stems in some), usually. Simpson, Plant Systematics (2019) p. 478, 479, 480, family Arecaceae: branching unbranched (Corner and Holttum palms), usually. Read together as {\"unbranched\": \"usually\"}."}
+    "traits.branching": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 238, 239, 240, family Arecaceae: branching unbranched (dichotomous in Hyphaene; clustered stems in some), usually. Simpson, Plant Systematics (2019) p. 478, 479, 480, family Arecaceae: branching unbranched (Corner and Holttum palms), usually. Read together as {\"unbranched\": \"usually\"}."},
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add spike (sometimes): Ingrouille, Diversity and Evolution of Land Plants (1992) p. 179, 181: spike."}
   }
 }

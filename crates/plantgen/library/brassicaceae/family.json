@@ -17,7 +17,8 @@
     },
     "stipules": false,
     "inflorescence": {
-      "raceme": "usually"
+      "raceme": "usually",
+      "solitary": "rarely"
     },
     "flower_symmetry": {
       "actinomorphic": "usually",
@@ -37,7 +38,8 @@
       "terminal": "rarely"
     },
     "leaf_division": {
-      "simple": "usually"
+      "simple": "usually",
+      "compound": "rarely"
     },
     "leaf_incision": {
       "lobed": "often"
@@ -63,7 +65,7 @@
     "traits.leaf_division": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 350, 352, 353, family Brassicaceae: leaf division simple, usually; read as {\"simple\": \"usually\"}."
+      "note": "Simpson, Plant Systematics (2019) p. 350, 352, 353, family Brassicaceae: leaf division simple, usually; read as {\"simple\": \"usually\"}. The books add compound (rarely): Simpson, Plant Systematics (2019) p. 350, 352, 353: compound."
     },
     "traits.leaf_incision": {
       "evidence": "SourceInferred",
@@ -74,6 +76,8 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 350, 352, 353, family Brassicaceae: sexual system hermaphrodite, usually; read as {\"hermaphrodite\": \"usually\"}."
-    }
+    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add solitary (rarely): Simpson, Plant Systematics (2019) p. 350, 352, 353: solitary, axillary."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Rare extremes noted only; the count's source is the family's `traits` note. The books give the family low 2: Simpson, Plant Systematics (2019) p. 350, 352, 353: 2, 4 or up to 16. Left out of the range on the owner's go (2026-10-15): they belong to some of its genera, and a family's rare ends would reach every species that inherits its count."}
   }
 }

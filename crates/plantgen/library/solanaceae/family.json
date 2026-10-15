@@ -12,7 +12,7 @@
       "woody": "often"
     },
     "leaf_arrangement": "alternate",
-    "leaf_division": "simple",
+    "leaf_division": {"simple": "usually", "compound": "sometimes"},
     "stipules": false,
     "flower_symmetry": {
       "actinomorphic": "usually",
@@ -29,7 +29,8 @@
     "ovary_position": "superior",
     "fruit_type": {
       "berry": "often",
-      "capsule": "often"
+      "capsule": "often",
+      "drupe": "sometimes"
     },
     "rosette": {
       "basal": "often",
@@ -88,6 +89,8 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 428, 429, family Solanaceae: sexual system hermaphrodite; read as \"hermaphrodite\"."
-    }
+    },
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add drupe (sometimes): Simpson, Plant Systematics (2019) p. 428, 429: berry, drupe or capsule."},
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add compound (sometimes): Simpson, Plant Systematics (2019) p. 428, 429: simple, pinnate or ternate."}
   }
 }
