@@ -108,7 +108,8 @@
     "leaf_life_years": {"min": 6.8, "max": 10.6, "typical": 8.9},
     "cone_length_m": {"min": 0.01, "max": 0.015},
     "cone_posture": "erect",
-    "seed_length_m": {"min": 0.004, "max": 0.005}
+    "seed_length_m": {"min": 0.004, "max": 0.005},
+    "pollen_cone_length_m": {"min": 0.003, "max": 0.004}
   },
   "evidence": {
     "traits.height_max_m": {
@@ -190,7 +191,8 @@
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
-    "traits.seed_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 674, Thuja plicata: seed length 4-5 mm."}
+    "traits.seed_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 674, Thuja plicata: seed length 4-5 mm."},
+    "traits.pollen_cone_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 674: pollen cones 3-4 mm."}
   },
   "provenance": {
     "sources": [
