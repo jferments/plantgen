@@ -418,5 +418,6 @@ pub mod venation;
 /// as its leaflets need; a flora's measured leaf and leaflet widths come
 /// before shape words; rosette leaves take the species' leaf rules;
 /// large-leaved lupine's leaves are peltate rings, and 8 built-ins'
-/// rosette leaves take their species' shapes (69 is flowers in clusters).
+/// rosette leaves take their species' shapes (69 is one stem from a bulb,
+/// #129).
 pub const GENERATOR_REVISION: u32 = 70;
