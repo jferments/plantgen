@@ -2033,7 +2033,10 @@ fn fill_looks(
                     .iter()
                     .filter(|(path, _)| within(path, "appearance.organs.flower"))
                     .map(|(path, origin)| {
-                        (format!("{to}{}", &path["appearance.organs.flower".len()..]), origin.clone())
+                        (
+                            format!("{to}{}", &path["appearance.organs.flower".len()..]),
+                            origin.clone(),
+                        )
                     })
                     .collect();
                 origins.extend(taken);
