@@ -138,7 +138,9 @@ pub enum OrganKind {
 }
 
 impl OrganKind {
-    fn from_name(name: &str) -> Option<Self> {
+    /// The kind an `organ` declaration names.
+    #[must_use]
+    pub fn from_name(name: &str) -> Option<Self> {
         Some(match name {
             "foliage" => Self::Foliage,
             "leaf" => Self::Leaf,

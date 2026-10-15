@@ -3430,12 +3430,16 @@ mod tests {
                 crate::inherit::inherit(&entry.file(), &own, &above, library.program_params())
                     .unwrap();
             let full = library.inherited(&entry.id).unwrap();
-            // The paths rules set with the characters and not without them.
+            // The paths rules set with the characters: a rule may set its
+            // path without them too (from its map's `else`), to another
+            // value, now that every organ the program draws has a look.
             let mut with = full.spec.clone();
             let mut without = bare.spec;
             for (path, (_, outcome)) in &full.rules {
-                if outcome.is_none() && bare.rules[path].1.is_some() {
-                    ruled += 1;
+                if outcome.is_none() {
+                    if bare.rules[path].1.is_some() {
+                        ruled += 1;
+                    }
                     remove(&mut with, path);
                     remove(&mut without, path);
                     // A default a rule sets fills the parameter it names.

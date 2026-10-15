@@ -345,13 +345,21 @@ pub mod venation;
 /// rosette-succulent forms), and Aloe vera clumps and hangs its flowers
 /// (aloe 2: pups as it flowers, nodding tubular flowers on a tall
 /// raceme) (56 is flowering and fruiting months, #109).
-/// 58: finer detail from photographs and floras: a head's rays may end
+/// 58: every organ a program draws has a look: one its looks do not list
+/// takes its kind's from `appearance.defaults`, stated at the kingdom, so
+/// the rules on its taxa's characters reach it (a species drafted from
+/// facts draws its family's heads, spikelets, flowers, leaf cards and
+/// fruit), and grasses draw blade leaves and spikelet clusters from
+/// Poaceae's graminoid looks; 21 built-ins take a fruit kind or basal leaf
+/// width they left unstated (57 is succulents, #111).
+/// 60: finer detail from photographs and floras: a head's rays may end
 /// square (`ray_tip`, a solid leaf's `tip`), a ray's width and tip come
 /// from `ray_width_m` and `ray_apex`, and herb racemes may crowd their
 /// buds at the tip (`bud_spacing`, `bud_lean`, `bud_stalk`); oxeye daisy
-/// and common camas measured from photographs (57 is succulents, #111).
-/// 59: a flower's filaments and style may take their own colour
+/// and common camas measured from photographs (59 is organs take the
+/// colours their characters state, #117).
+/// 61: a flower's filaments and style may take their own colour
 /// (`filament`), and an unequal corolla's odd petal or tepal may bend down
 /// as well as up (`odd_rise`); common camas is zygomorphic, its lowest
-/// tepal set apart (58 is daisy and camas detail, #116).
-pub const GENERATOR_REVISION: u32 = 59;
+/// tepal set apart (60 is daisy and camas detail, #116).
+pub const GENERATOR_REVISION: u32 = 61;
