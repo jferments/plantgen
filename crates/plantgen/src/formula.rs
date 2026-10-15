@@ -8,7 +8,8 @@
 //! and `step`, which behave as they do in a program, and `month_start`,
 //! the day of the year a month begins on in a year of 365 days (1 for
 //! January, 335 for December; a month past 12 is one of the next year, 13
-//! the day after the year's last). With one argument, a
+//! the day after the year's last), and `first(a, b)`, `a` where it can be
+//! worked out (every name it reads is stated) and else `b`. With one argument, a
 //! name, `min` and `max` read the bounds of what it names instead: a rule
 //! reading `min(ribs)` and `max(ribs)` of ribs stated as 12 to 24 reads 12
 //! and 24, as the names `ribs.min` and `ribs.max` ([`bound`]). It draws
@@ -70,9 +71,10 @@ enum Func {
     Smoothstep,
     Step,
     MonthStart,
+    First,
 }
 
-const FUNCS: [(Func, &str, usize); 18] = [
+const FUNCS: [(Func, &str, usize); 19] = [
     (Func::Min, "min", 2),
     (Func::Max, "max", 2),
     (Func::Clamp, "clamp", 3),
@@ -91,6 +93,7 @@ const FUNCS: [(Func, &str, usize); 18] = [
     (Func::Smoothstep, "smoothstep", 3),
     (Func::Step, "step", 2),
     (Func::MonthStart, "month_start", 1),
+    (Func::First, "first", 2),
 ];
 
 /// The day of the year each month begins on, in a year of 365 days.
@@ -437,6 +440,12 @@ fn eval(node: &Node, value: &dyn Fn(&str) -> Option<f64>) -> Option<f64> {
                 Op::Or => flag(truthy(left) || truthy(right)),
             }
         }
+        // The first argument where it can be worked out, else the second:
+        // a stated number, else what stands for it.
+        Node::Call(Func::First, args) => match args.first().and_then(|arg| eval(arg, value)) {
+            Some(first) => first,
+            None => eval(args.get(1)?, value)?,
+        },
         Node::Call(func, args) => {
             let mut a = [0.0; 3];
             for (slot, arg) in a.iter_mut().zip(args) {
@@ -450,6 +459,7 @@ fn eval(node: &Node, value: &dyn Fn(&str) -> Option<f64>) -> Option<f64> {
 fn apply(func: Func, a: [f64; 3]) -> f64 {
     match func {
         Func::Min => a[0].min(a[1]),
+        Func::First => a[0],
         Func::Max => a[0].max(a[1]),
         Func::Clamp => a[0].max(a[1]).min(a[2]),
         Func::Abs => a[0].abs(),
@@ -532,6 +542,10 @@ mod tests {
         assert_eq!(value("month_start(3)"), Some(60.0));
         assert_eq!(value("month_start(12)"), Some(335.0));
         assert_eq!(value("month_start(13)"), Some(366.0));
+        // The first argument that can be worked out.
+        assert_eq!(value("first(leaflets, 2)"), Some(7.0));
+        assert_eq!(value("first(unstated_m, 2)"), Some(2.0));
+        assert_eq!(value("first(unstated_m, unstated_m)"), None);
         assert_eq!(value("month_start(14)"), Some(397.0));
         // A name with no value, or a result that is no number, gives none.
         assert_eq!(value("leaf_width_m * 2"), None);

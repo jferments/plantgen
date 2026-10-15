@@ -1017,6 +1017,19 @@ impl Vocabulary {
                 }
             }
         }
+        for name in rule
+            .get("needs")
+            .and_then(Value::as_array)
+            .into_iter()
+            .flatten()
+            .filter_map(Value::as_str)
+        {
+            if !self.traits.contains_key(name) {
+                return Err(format!(
+                    "it needs `{name}`, which is not a trait in traits.json"
+                ));
+            }
+        }
         for name in crate::inherit::colour_reads(rule) {
             if self
                 .traits

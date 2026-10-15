@@ -137,7 +137,8 @@
     },
     "wood_density_basic_kg_m3": 530,
     "flowering_months": [1, 2, 3],
-    "fruiting_months": [8, 9, 10, 11]
+    "fruiting_months": [8, 9, 10, 11],
+    "fruit_type": "nut"
   },
   "evidence": {
     "traits.flowering_months": {
@@ -210,7 +211,8 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 338, Corylus cornuta: fruit type nut."}
   },
   "provenance": {
     "sources": [

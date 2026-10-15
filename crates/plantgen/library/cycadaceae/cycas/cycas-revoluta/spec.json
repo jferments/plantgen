@@ -113,7 +113,9 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "wood_density_basic_kg_m3": 280
+    "wood_density_basic_kg_m3": 280,
+    "vernation": "circinate",
+    "sexual_system": "dioecious"
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Cycas revoluta (gwddagg_v2.2_species.csv, read): specific gravity 0.28 (wsg_est, the database's hierarchical-model species mean, from 3 records in 1 source); trunks 0.28, branches 0.37. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
@@ -161,7 +163,9 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.vernation": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 142, 144, Cycas revoluta: vernation circinate."},
+    "traits.sexual_system": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 218, Cycas revoluta: sexual system dioecious."}
   },
   "provenance": {
     "sources": [
