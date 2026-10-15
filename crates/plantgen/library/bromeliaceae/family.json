@@ -19,7 +19,23 @@
     "sexual_system": {
       "hermaphrodite": "usually",
       "dioecious": "rarely"
-    }
+    },
+    "phyllotaxis_pattern": "spiral",
+    "leaf_margin": {
+      "entire": "often",
+      "serrate": "often"
+    },
+    "inflorescence": {
+      "head": "often",
+      "raceme": "often",
+      "spike": "often"
+    },
+    "fruit_type": {
+      "berry": "often",
+      "capsule": "often",
+      "multiple": "often"
+    },
+    "life_span": "perennial"
   },
   "forms": {
     "epiphyte": {
@@ -72,6 +88,31 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
       "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 365 Bromeliaceae: mostly short-stemmed epiphytes or rock plants; leaves usually in a dense cluster, long and strap-shaped; flowers bisexual or rarely unisexual. Spanish moss, whose leaves stand singly along hanging stems, states its own form."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 257, 258, family Bromeliaceae: phyllotaxis pattern spiral; read as \"spiral\"."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 257, 258, family Bromeliaceae: leaf margin entire or serrate-spinose; read as {\"entire\": \"often\", \"serrate\": \"often\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 257, 258, family Bromeliaceae: inflorescence spike, raceme or head; terminal and bracteate; read as {\"head\": \"often\", \"raceme\": \"often\", \"spike\": \"often\"}."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 257, 258, family Bromeliaceae: fruit type capsule (septicidal) or berry; a multiple fruit (sorosis) in Ananas, usually; read as {\"berry\": \"often\", \"capsule\": \"often\", \"multiple\": \"often\"}."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 257, 258, family Bromeliaceae: life span perennial; read as \"perennial\"."
     }
   }
 }

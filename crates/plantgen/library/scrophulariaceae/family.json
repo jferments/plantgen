@@ -35,6 +35,13 @@
     "fruit_type": {
       "capsule": "usually",
       "drupe": "sometimes"
+    },
+    "leaf_division": "simple",
+    "stipules": false,
+    "inflorescence": {
+      "panicle": "often",
+      "raceme": "often",
+      "spike": "often"
     }
   },
   "evidence": {
@@ -51,6 +58,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Scrophulariaceae with Buddlejaceae, Ellisiophyllaceae, Linderniaceae, Myoporaceae, Orobanchaceae: its irregular flowers have a two-lipped corolla, read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy bilabiate."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 424, 425, family Scrophulariaceae: leaf division simple; read as \"simple\"."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 424, 425, family Scrophulariaceae: stipules false; read as false."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 424, 425, family Scrophulariaceae: inflorescence spike, raceme or thyrse; read as {\"panicle\": \"often\", \"raceme\": \"often\", \"spike\": \"often\"}."
     }
   }
 }

@@ -6,7 +6,14 @@
   "traits": {
     "woodiness": "herbaceous",
     "rhizome_habit": "long_creeping",
-    "leaf_arrangement": "whorled"
+    "leaf_arrangement": "whorled",
+    "leaf_form": "scale",
+    "life_span": "perennial",
+    "sporangia": "cones",
+    "reproduction": "spores",
+    "clonal": {
+      "true": "usually"
+    }
   },
   "forms": {
     "fern": {
@@ -27,6 +34,31 @@
       "evidence": "SourceInferred",
       "source": "mabberley-2017",
       "note": "Mabberley's Plant-book (4th ed., 2017), under Equisetaceae and Equisetum: rhizomatous herbs with hollow, jointed aerial stems, sometimes unbranched, stiffened with silica and without secondary thickening; leaves a whorl of teeth joined into a sheath, mostly without chlorophyll, the stems doing the photosynthesis; sporangia in terminal cones."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 96, family Equisetaceae: leaf form scale; read as \"scale\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 96, family Equisetaceae: life span perennial; read as \"perennial\"."
+    },
+    "traits.sporangia": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 96, family Equisetaceae: sporangia cones; read as \"cones\"."
+    },
+    "traits.reproduction": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 96, family Equisetaceae: reproduction spores; read as \"spores\"."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 96, family Equisetaceae: clonal true (extensive colonies), often; read as {\"true\": \"usually\"}."
     }
   }
 }

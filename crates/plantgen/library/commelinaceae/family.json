@@ -37,7 +37,11 @@
     "life_span": {
       "annual": "often",
       "perennial": "often"
-    }
+    },
+    "phyllotaxis_pattern": "spiral",
+    "leaf_arrangement": "alternate",
+    "leaf_division": "simple",
+    "vernation": "involute"
   },
   "evidence": {
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 241: stamens usually 3+3, sometimes 3 fertile and 3 staminodes, rarely 1 fertile."},
@@ -67,6 +71,26 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Commelinaceae with Cartonemataceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 241, 242, 243, family Commelinaceae: phyllotaxis pattern spiral; read as \"spiral\"."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 241, 242, 243, family Commelinaceae: leaf arrangement alternate (spiral); read as \"alternate\"."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 241, 242, 243, family Commelinaceae: leaf division simple (undivided); read as \"simple\"."
+    },
+    "traits.vernation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 241, 242, 243, family Commelinaceae: vernation involute (each blade half rolled adaxially toward midrib when young); read as \"involute\"."
     }
   }
 }

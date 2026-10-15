@@ -49,6 +49,13 @@
       "annual": "often",
       "biennial": "often",
       "perennial": "often"
+    },
+    "inflorescence": {
+      "cyme": "often",
+      "solitary": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually"
     }
   },
   "forms": {
@@ -125,6 +132,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Ranunculaceae with Hydrastidaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple often, compound often; the simple blade dissected often, none often, lobed sometimes; lobes or leaflets palmate often, pinnate often. Read from the coded leaf form and dissection by script (spec-rework/b1/delta). The simple leaves are mostly palmately lobed or divided (Ranunculus, Aconitum, Delphinium), the compound ones ternate or pinnate (Clematis, Thalictrum)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 291, 292, family Ranunculaceae: inflorescence cyme or solitary; read as {\"cyme\": \"often\", \"solitary\": \"often\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 291, 292, family Ranunculaceae: sexual system hermaphrodite (rarely unisexual), usually; read as {\"hermaphrodite\": \"usually\"}."
     }
   }
 }

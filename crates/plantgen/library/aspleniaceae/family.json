@@ -21,6 +21,13 @@
     "frond_dimorphism": {
       "monomorphic": "usually",
       "dimorphic": "sometimes"
+    },
+    "leaf_venation": {
+      "pinnate": "usually"
+    },
+    "life_span": "perennial",
+    "rhizome_habit": {
+      "short_creeping": "often"
     }
   },
   "evidence": {
@@ -28,6 +35,21 @@
       "evidence": "SourceInferred",
       "source": "mabberley-2017",
       "note": "Mabberley's Plant-book (4th ed., 2017), under Aspleniaceae and the families the Library joins to it (Thelypteridaceae, Blechnaceae, Athyriaceae, Woodsiaceae, Cystopteridaceae, Onocleaceae, Diplaziopsidaceae): Asplenium, the largest, fronds mostly alike, simple to many times pinnate, sori single, long and narrow along a vein, the indusium a flap fixed along the vein's side; Blechnaceae and Athyriaceae sori long, beside the midrib or along one side of a vein, with flaps; Thelypteridaceae sori round to oblong, indusium present or not; Woodsia and Cystopteris round sori with basal or hood-like indusia; Blechnum and Onoclea fronds dimorphic. Linear sori are the usual state, as Asplenium, Blechnum and the lady ferns hold most of the Library's species."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 118, 120, family Aspleniaceae: leaf venation pinnate (or forking, free), usually; read as {\"pinnate\": \"usually\"}."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 118, 120, family Aspleniaceae: life span perennial; read as \"perennial\"."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 118, 120, family Aspleniaceae: rhizome habit short_creeping (creeping, climbing, ascending or suberect), often; read as {\"short_creeping\": \"often\"}."
     }
   }
 }

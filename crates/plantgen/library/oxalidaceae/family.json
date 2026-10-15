@@ -18,7 +18,9 @@
     "leaf_arrangement": "alternate",
     "leaf_division": "compound",
     "stipules": false,
-    "fruit_type": "capsule"
+    "fruit_type": "capsule",
+    "phyllotaxis_pattern": "spiral",
+    "inflorescence": "cyme"
   },
   "forms": {
     "forb": {
@@ -64,6 +66,16 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 332 Oxalidaceae: herbs or undershrubs; leaves alternate or basal, digitately or pinnately compound, rarely simple by loss of leaflets, the leaflets often folding at night; stipules absent; fruit a capsule."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 318, family Oxalidaceae: phyllotaxis pattern spiral; read as \"spiral\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 318, family Oxalidaceae: inflorescence cyme; read as \"cyme\"."
     }
   }
 }

@@ -6,7 +6,16 @@
   "traits": {
     "leaf_venation": "single",
     "vernation": "involute",
-    "architectural_model": "corner"
+    "architectural_model": "corner",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_division": "compound",
+    "leaf_habit": "evergreen",
+    "sexual_system": "dioecious",
+    "life_span": "perennial",
+    "division_pattern": "pinnate",
+    "branching": {
+      "unbranched": "usually"
+    }
   },
   "forms": {
     "palm": {
@@ -37,6 +46,41 @@
       "evidence": "SourceInferred",
       "source": "mabberley-2017",
       "note": "Mabberley's Plant-book (4th ed., 2017), under Cycadaceae and Cycas: the leaflets are rolled inward in bud; Cycas grows on Corner's model (one unbranched stem with a crown of leaves)."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 143, 144, family Cycadaceae: phyllotaxis pattern spiral; read as \"spiral\"."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 143, 144, family Cycadaceae: leaf division compound; read as \"compound\"."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 143, 144, family Cycadaceae: leaf habit evergreen; read as \"evergreen\"."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 143, 144, family Cycadaceae: sexual system dioecious; read as \"dioecious\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 143, 144, family Cycadaceae: life span perennial; read as \"perennial\"."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 143, 144, family Cycadaceae: division pattern pinnate; read as \"pinnate\"."
+    },
+    "traits.branching": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 143, 144, family Cycadaceae: branching unbranched (sometimes forks dichotomously), usually; read as {\"unbranched\": \"usually\"}."
     }
   }
 }

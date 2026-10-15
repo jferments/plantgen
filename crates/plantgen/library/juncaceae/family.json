@@ -27,6 +27,20 @@
     "life_span": {
       "annual": "sometimes",
       "perennial": "usually"
+    },
+    "phyllotaxis_pattern": {
+      "tristichous": "usually"
+    },
+    "leaf_venation": "parallel",
+    "inflorescence": {
+      "cyme": "often",
+      "solitary": "often"
+    },
+    "rosette": {
+      "basal": "usually"
+    },
+    "rhizome_habit": {
+      "short_creeping": "usually"
     }
   },
   "forms": {
@@ -74,6 +88,31 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Juncaceae: the herbs' life form (character 21), coded usually perennial, sometimes annual. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 261, 263, family Juncaceae: phyllotaxis pattern tristichous (rarely distichous), usually; read as {\"tristichous\": \"usually\"}."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 261, 263, family Juncaceae: leaf venation parallel; read as \"parallel\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 261, 263, family Juncaceae: inflorescence solitary or cyme (or compound of cymes, glomerules or heads); read as {\"cyme\": \"often\", \"solitary\": \"often\"}."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 261, 263, family Juncaceae: rosette basal (leaves mostly basal), usually; read as {\"basal\": \"usually\"}."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 261, 263, family Juncaceae: rhizome habit short_creeping (perennials rhizomatous), usually; read as {\"short_creeping\": \"usually\"}."
     }
   }
 }

@@ -31,7 +31,8 @@
       "max": 4,
       "low": 3
     },
-    "carpels": 2
+    "carpels": 2,
+    "phyllotaxis_pattern": "spiral"
   },
   "evidence": {
     "traits": {
@@ -43,6 +44,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Krameriaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 305, 306, family Krameriaceae: phyllotaxis pattern spiral; read as \"spiral\"."
     }
   }
 }

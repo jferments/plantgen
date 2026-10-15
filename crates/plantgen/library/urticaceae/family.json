@@ -24,7 +24,21 @@
       "achene": "usually",
       "drupe": "sometimes"
     },
-    "rosette": "none"
+    "rosette": "none",
+    "leaf_arrangement": {
+      "alternate": "often",
+      "opposite": "often"
+    },
+    "leaf_venation": {
+      "palmate": "often",
+      "pinnate": "often"
+    },
+    "inflorescence": {
+      "cyme": "often",
+      "head": "often",
+      "solitary": "often",
+      "spike": "often"
+    }
   },
   "forms": {
     "forb": {
@@ -78,6 +92,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Urticaceae as that work draws it, there coded together with Cecropiaceae: whether the leaves gather in rosettes (character 22), coded no rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 329, family Urticaceae: leaf arrangement alternate (spiral) or opposite; read as {\"alternate\": \"often\", \"opposite\": \"often\"}."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 329, family Urticaceae: leaf venation pinnate, palmate or unequally ternate; read as {\"palmate\": \"often\", \"pinnate\": \"often\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 329, family Urticaceae: inflorescence axillary cyme, globose head, spike or solitary; read as {\"cyme\": \"often\", \"head\": \"often\", \"solitary\": \"often\", \"spike\": \"often\"}."
     }
   }
 }

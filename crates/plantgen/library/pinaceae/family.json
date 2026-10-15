@@ -5,13 +5,40 @@
   "parent": "order/pinales",
   "traits": {
     "sexual_system": "monoecious",
-    "leaf_form": "needle"
+    "leaf_form": "needle",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_division": "simple",
+    "leaf_habit": {
+      "evergreen": "usually",
+      "deciduous": "rarely"
+    },
+    "reproduction": "cones"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams (vol. 1, 1923, p. 52), Pinaceae: resinous trees whose linear or needle-like leaves are set in spirals; pollen and seed cones on the same tree; the seed cone woody, ripening in its first or second season."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 150, family Pinaceae: phyllotaxis pattern spiral; read as \"spiral\"."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 150, family Pinaceae: leaf division simple; read as \"simple\"."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 150, family Pinaceae: leaf habit evergreen (deciduous in Larix and Pseudolarix), usually. Read together as {\"evergreen\": \"usually\", \"deciduous\": \"rarely\"}."
+    },
+    "traits.reproduction": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 151, 152, 153, family Pinaceae: reproduction cones; read as \"cones\"."
     }
   }
 }

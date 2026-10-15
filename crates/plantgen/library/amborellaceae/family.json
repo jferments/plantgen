@@ -2,5 +2,15 @@
   "schema": 1,
   "rank": "family",
   "name": "Amborellaceae",
-  "parent": "order/amborellales"
+  "parent": "order/amborellales",
+  "traits": {
+    "leaf_habit": "evergreen"
+  },
+  "evidence": {
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 193, family Amborellaceae: leaf habit evergreen; read as \"evergreen\"."
+    }
+  }
 }

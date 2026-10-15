@@ -36,7 +36,11 @@
     "leaf_habit": {
       "evergreen": "often",
       "deciduous": "often"
-    }
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually"
+    },
+    "inflorescence": "panicle"
   },
   "evidence": {
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 359: stamens 5 to 10, rarely 1 or many. Book writes ∞ (numerous); 200 is our stand-in for the upper bound and 20 for 'numerous' with no stated lower bound."},
@@ -52,6 +56,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Anacardiaceae as that work draws it, there coded together with Blepharocaryaceae, Julianiaceae, Pistaciaceae, Podoaceae: how long the leaves last (character 37), coded often evergreen, often deciduous. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 359, 360, family Anacardiaceae: phyllotaxis pattern spiral (rarely opposite or whorled), usually; read as {\"spiral\": \"usually\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 359, 360, family Anacardiaceae: inflorescence panicle (thyrse), terminal or axillary; read as \"panicle\"."
     }
   }
 }

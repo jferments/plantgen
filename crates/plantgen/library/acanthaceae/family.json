@@ -31,7 +31,14 @@
       "annual": "often",
       "biennial": "often",
       "perennial": "often"
-    }
+    },
+    "leaf_division": "simple",
+    "inflorescence": {
+      "cyme": "often",
+      "raceme": "often",
+      "solitary": "often"
+    },
+    "sexual_system": "hermaphrodite"
   },
   "forms": {
     "decurrent_tree": {
@@ -79,6 +86,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Acanthaceae as that work draws it, there coded together with Mendonciaceae, Nelsoniaceae, Thunbergiaceae: the herbs' life form (character 21), coded often annual, often biennial, often perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 412, 414, family Acanthaceae: leaf division simple; read as \"simple\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 412, 414, family Acanthaceae: inflorescence cyme, raceme or solitary, usually; read as {\"cyme\": \"often\", \"raceme\": \"often\", \"solitary\": \"often\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 412, 414, family Acanthaceae: sexual system hermaphrodite; read as \"hermaphrodite\"."
     }
   }
 }

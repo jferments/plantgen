@@ -21,7 +21,20 @@
       "none": "sometimes",
       "terminal": "sometimes"
     },
-    "life_span": "perennial"
+    "life_span": "perennial",
+    "phyllotaxis_pattern": {
+      "distichous": "often",
+      "spiral": "often"
+    },
+    "leaf_venation": "parallel",
+    "leaf_margin": {
+      "entire": "often",
+      "spiny": "often"
+    },
+    "inflorescence": {
+      "panicle": "often",
+      "raceme": "often"
+    }
   },
   "forms": {
     "rosette_succulent": {
@@ -63,6 +76,26 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Asphodelaceae as that work draws it, there coded together with Xeronemataceae: the herbs' life form (character 21), coded perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 229, 230, family Asphodelaceae: phyllotaxis pattern spiral to distichous, usually; read as {\"distichous\": \"often\", \"spiral\": \"often\"}."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 229, 230, family Asphodelaceae: leaf venation parallel; read as \"parallel\"."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 229, 230, family Asphodelaceae: leaf margin entire to toothed or spiny, often; read as {\"entire\": \"often\", \"spiny\": \"often\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 229, 230, family Asphodelaceae: inflorescence raceme or panicle; read as {\"panicle\": \"often\", \"raceme\": \"often\"}."
     }
   }
 }

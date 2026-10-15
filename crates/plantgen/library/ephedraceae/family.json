@@ -14,7 +14,8 @@
     "sexual_system": {
       "dioecious": "usually",
       "monoecious": "rarely"
-    }
+    },
+    "rhizome_habit": {"long_creeping": "often"}
   },
   "forms": {
     "shrub": {
@@ -74,6 +75,7 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-2008",
       "note": "Watson and Dallwitz, The Families of Gymnosperms (DELTA, 2008 onwards, version of 5 August 2019), Ephedraceae: mostly shrubby switch plants, often rhizomatous, a few vines or small trees, that photosynthesise with their grooved, jointed green stems; the leaves are reduced to small single-veined scales soon shed, opposite or in whorls, usually of three; nearly always dioecious."
-    }
+    },
+    "traits.rhizome_habit": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 159, 160, 161, family Ephedraceae: rhizome habit long_creeping (underground stems), often; read as {\"long_creeping\": \"often\"}."}
   }
 }

@@ -47,13 +47,27 @@
       "min": 1,
       "max": 2
     },
-    "carpels": 2
+    "carpels": 2,
+    "phyllotaxis_pattern": "spiral",
+    "life_span": {
+      "perennial": "usually"
+    }
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Gunneraceae: leaves alternate; leaves simple; margins entire, serrate or dentate; veins palmate; blades ovate or obovate; stipules usually present, rarely absent; leaf rosettes basal; plants monoecious, dioecious or polygamous; ovary inferior; floral cup absent; stems herbaceous; flowers in panicles, in racemes or in spikes; perianth usually sepals and petals, sometimes tepals; fruit drupe or nut; parts of each whorl 2; stamens 1 to 2; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 296, 297, family Gunneraceae: phyllotaxis pattern spiral; read as \"spiral\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 296, 297, family Gunneraceae: life span perennial (annual in G. herteri), usually; read as {\"perennial\": \"usually\"}."
     }
   }
 }

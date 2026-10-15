@@ -35,6 +35,15 @@
       "basal": "often",
       "none": "often",
       "terminal": "rarely"
+    },
+    "leaf_division": {
+      "simple": "usually"
+    },
+    "leaf_incision": {
+      "lobed": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually"
     }
   },
   "evidence": {
@@ -50,6 +59,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cruciferae: whether the leaves gather in rosettes (character 22), coded often a basal rosette, often no rosette, rarely rosettes at the stem tips. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 350, 352, 353, family Brassicaceae: leaf division simple, usually; read as {\"simple\": \"usually\"}."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 350, 352, 353, family Brassicaceae: leaf incision lobed to divided, often; read as {\"lobed\": \"often\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 350, 352, 353, family Brassicaceae: sexual system hermaphrodite, usually; read as {\"hermaphrodite\": \"usually\"}."
     }
   }
 }

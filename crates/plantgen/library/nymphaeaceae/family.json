@@ -7,7 +7,17 @@
     "perianth": "spiral",
     "woodiness": "herbaceous",
     "leaf_division": "simple",
-    "inflorescence": "solitary"
+    "inflorescence": "solitary",
+    "leaf_arrangement": "alternate",
+    "flower_symmetry": "actinomorphic",
+    "fruit_type": "berry",
+    "life_span": {
+      "annual": "often",
+      "perennial": "often"
+    },
+    "rhizome_habit": {
+      "short_creeping": "usually"
+    }
   },
   "generator": {
     "program": "nymphaeaceae"
@@ -37,6 +47,31 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 250 Nymphaeaceae (in a wide sense that also takes in the lotuses and the water-shields, which APG keeps apart): aquatic herbs with peltate or heart-shaped leaves, often floating, on long stalks; flowers single, large and showy."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 193, 194, 195, family Nymphaeaceae: leaf arrangement alternate (spiral); read as \"alternate\"."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 193, 194, 195, family Nymphaeaceae: flower symmetry actinomorphic; read as \"actinomorphic\"."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 193, 194, 195, family Nymphaeaceae: fruit type berry; read as \"berry\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 193, 194, 195, family Nymphaeaceae: life span annual or perennial, usually; read as {\"annual\": \"often\", \"perennial\": \"often\"}."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 193, 194, 195, family Nymphaeaceae: rhizome habit short_creeping (rhizomes or tubers), usually; read as {\"short_creeping\": \"usually\"}."
     }
   }
 }

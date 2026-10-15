@@ -29,7 +29,8 @@
     "division_pattern": {"pinnate": "usually", "palmate": "rarely"},
     "fruit_type": "schizocarp",
     "stipules": {"false": "usually", "true": "rarely"},
-    "sexual_system": {"hermaphrodite": "usually", "polygamous": "sometimes", "dioecious": "rarely"}
+    "sexual_system": {"hermaphrodite": "usually", "polygamous": "sometimes", "dioecious": "rarely"},
+    "phyllotaxis_pattern": "spiral"
   },
   "forms": {
     "forb": {
@@ -103,6 +104,7 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA), Umbelliferae: plants usually with all flowers bisexual (about nine in ten); some andromonoecious or polygamomonoecious; dioecious in Acronema."
-    }
+    },
+    "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 431, 432, family Apiaceae: phyllotaxis pattern spiral; read as \"spiral\"."}
   }
 }

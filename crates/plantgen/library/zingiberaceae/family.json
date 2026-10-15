@@ -26,7 +26,11 @@
       "none": "usually",
       "basal": "sometimes"
     },
-    "life_span": "perennial"
+    "life_span": "perennial",
+    "leaf_division": "simple",
+    "leaf_venation": "pinnate",
+    "sexual_system": "hermaphrodite",
+    "axis_growth": "sympodial"
   },
   "evidence": {
     "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 252, 505: Simpson calls the flowers epigynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
@@ -54,6 +58,26 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Zingiberaceae with Costaceae: flowers very irregular, the corolla's median member largest, the stamens reduced to one fertile and the rest joined in a showy lip. That lip below two smaller petals is drawn as an orchid's lip is: zygomorphy labellate."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 249, 252, family Zingiberaceae: leaf division simple; read as \"simple\"."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 249, 252, family Zingiberaceae: leaf venation penni-parallel; read as \"pinnate\"."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 249, 252, family Zingiberaceae: sexual system hermaphrodite; read as \"hermaphrodite\"."
+    },
+    "traits.axis_growth": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 249, 252, family Zingiberaceae: axis growth sympodial; read as \"sympodial\"."
     }
   }
 }

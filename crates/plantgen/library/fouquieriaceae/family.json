@@ -17,7 +17,17 @@
     "carpels": 3,
     "woodiness": "woody",
     "leaf_division": "simple",
-    "fruit_type": "capsule"
+    "fruit_type": "capsule",
+    "leaf_arrangement": "alternate",
+    "leaf_habit": "drought_deciduous",
+    "inflorescence": {
+      "panicle": "often",
+      "raceme": "often",
+      "spike": "often"
+    },
+    "flowering_position": "terminal",
+    "spines": "leaf_spines",
+    "short_shoots": true
   },
   "forms": {
     "shrub": {
@@ -53,6 +63,36 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 98 Fouquieriaceae: spiny trees or shrubs with soft wood; leaves in clusters or single, small, fleshy; fruit a capsule with winged seeds."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 390, family Fouquieriaceae: leaf arrangement alternate (spiral); read as \"alternate\"."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 390, family Fouquieriaceae: leaf habit drought_deciduous (short-shoot leaves); read as \"drought_deciduous\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 390, family Fouquieriaceae: inflorescence terminal spike, raceme or panicle; read as {\"panicle\": \"often\", \"raceme\": \"often\", \"spike\": \"often\"}."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 390, family Fouquieriaceae: flowering position terminal; read as \"terminal\"."
+    },
+    "traits.spines": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 390, family Fouquieriaceae: spines leaf_spines (petiolar spines on long shoots) (long shoots); read as \"leaf_spines\"."
+    },
+    "traits.short_shoots": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 390, family Fouquieriaceae: short shoots true; read as true."
     }
   }
 }

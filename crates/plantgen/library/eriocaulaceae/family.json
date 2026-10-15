@@ -38,6 +38,16 @@
     "carpels": {
       "min": 2,
       "max": 3
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually"
+    },
+    "life_span": {
+      "annual": "often",
+      "perennial": "often"
+    },
+    "rhizome_habit": {
+      "short_creeping": "usually"
     }
   },
   "evidence": {
@@ -45,6 +55,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Eriocaulaceae: leaves alternate; leaves simple; margins entire; veins parallel; blades linear; leaf rosettes basal; plants usually monoecious, rarely dioecious; ovary superior; stems herbaceous; flowers in heads; flowers actinomorphic or zygomorphic; irregular flowers bilabiate; perianth usually sepals and petals, sometimes tepals; fruit capsule; parts of each whorl 2 to 3; stamens 2 to 6; carpels 2 to 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 261, 262, family Eriocaulaceae: phyllotaxis pattern spiral (rarely distichous), usually; read as {\"spiral\": \"usually\"}."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 261, 262, family Eriocaulaceae: life span perennial or annual; read as {\"annual\": \"often\", \"perennial\": \"often\"}."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 261, 262, family Eriocaulaceae: rhizome habit short_creeping (rhizomatous; basal shoots often tufted), usually; read as {\"short_creeping\": \"usually\"}."
     }
   }
 }

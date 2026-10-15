@@ -14,7 +14,15 @@
     "fruit_type": {
       "nut": "usually",
       "samara": "often"
-    }
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually"
+    },
+    "leaf_margin": {
+      "serrate": "usually"
+    },
+    "leaf_habit": "deciduous",
+    "inflorescence_posture": "pendent"
   },
   "forms": {
     "decurrent_tree": {
@@ -72,6 +80,26 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 61 Betulaceae (birches and alders) and 63 Corylaceae (hazels and hornbeams), which APG joins as Betulaceae: leaves alternate, simple, pinnately veined with prominent nerves, mostly toothed; stipules present, often falling early; flowers monoecious, the male in catkins; fruit a small nut, bare or winged in the birches and alders, held in a leafy husk in the hazels."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 335, family Betulaceae: phyllotaxis pattern spiral, usually; read as {\"spiral\": \"usually\"}."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 335, family Betulaceae: leaf margin serrate, toothed, usually; read as {\"serrate\": \"usually\"}."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 335, family Betulaceae: leaf habit deciduous; read as \"deciduous\"."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 335, family Betulaceae: inflorescence posture pendent (male catkins); read as \"pendent\"."
     }
   }
 }

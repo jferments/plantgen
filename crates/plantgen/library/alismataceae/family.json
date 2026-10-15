@@ -34,6 +34,13 @@
     "carpels": {
       "min": 3,
       "max": 100
+    },
+    "phyllotaxis_pattern": "spiral",
+    "inflorescence": {
+      "raceme": "often"
+    },
+    "life_span": {
+      "perennial": "usually"
     }
   },
   "evidence": {
@@ -41,6 +48,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Alismataceae with Limnocharitaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves simple; veins pinnate, palmate or parallel; leaf rosettes basal; plants hermaphrodite, monoecious or polygamous, rarely dioecious; ovary superior; stems herbaceous; flowers actinomorphic; perianth sepals and petals; fruit follicle or achene; parts of each whorl 3; stamens 3 to 100; carpels 3 to 100. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 213, 215, 216, family Alismataceae: phyllotaxis pattern spiral; read as \"spiral\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 213, 215, 216, family Alismataceae: inflorescence raceme (scapose raceme or panicle, flowers whorled), often; read as {\"raceme\": \"often\"}."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 213, 215, 216, family Alismataceae: life span perennial (rarely annual), usually; read as {\"perennial\": \"usually\"}."
     }
   }
 }

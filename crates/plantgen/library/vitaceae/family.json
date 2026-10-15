@@ -17,7 +17,27 @@
       "hermaphrodite": "usually",
       "polygamous": "often"
     },
-    "fruit_type": "berry"
+    "fruit_type": "berry",
+    "leaf_division": {
+      "compound": "often",
+      "simple": "often"
+    },
+    "leaf_venation": {
+      "palmate": "often"
+    },
+    "leaf_incision": {
+      "lobed": "often"
+    },
+    "stipules": true,
+    "inflorescence": {
+      "corymb": "often",
+      "cyme": "often",
+      "panicle": "often"
+    },
+    "flowering_position": {
+      "terminal": "usually"
+    },
+    "flower_symmetry": "actinomorphic"
   },
   "forms": {
     "vine": {
@@ -58,6 +78,41 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 202 Vitaceae: mostly shrubs climbing by tendrils, or small trees; leaves alternate (the lower ones sometimes opposite), simple or compound; flowers bisexual or of separate sexes on the same plant; fruit a berry, often juicy."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 301, 304, family Vitaceae: leaf division simple or compound (palmate, pinnate); read as {\"compound\": \"often\", \"simple\": \"often\"}."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 301, 304, family Vitaceae: leaf venation palmate (simple leaves), often; read as {\"palmate\": \"often\"}."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 301, 304, family Vitaceae: leaf incision palmately lobed (simple leaves), often; read as {\"lobed\": \"often\"}."
+    },
+    "traits.stipules": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 301, 304, family Vitaceae: stipules true, caducous; read as true."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 301, 304, family Vitaceae: inflorescence cyme, corymb or panicle; read as {\"corymb\": \"often\", \"cyme\": \"often\", \"panicle\": \"often\"}."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 301, 304, family Vitaceae: flowering position terminal on shoots, appearing opposite leaves (rarely axillary), usually; read as {\"terminal\": \"usually\"}."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 301, 304, family Vitaceae: flower symmetry actinomorphic; read as \"actinomorphic\"."
     }
   }
 }

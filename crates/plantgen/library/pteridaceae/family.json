@@ -19,13 +19,19 @@
     "indusium": {
       "margin": "usually",
       "none": "often"
-    }
+    },
+    "rhizome_habit": "erect"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "mabberley-2017",
       "note": "Mabberley's Plant-book (4th ed., 2017), under Pteridaceae: terrestrial ferns, mostly small, a few aquatic (Ceratopteris); fronds mostly pinnate, simple in the vittarioids; sporangia in lines along the veins without indusium, or at the margin under the margin turned back as a false indusium (maidenhairs, brakes, lip ferns)."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 122, 124, family Pteridaceae: rhizome habit creeping to erect, with scales or hairs; read as \"erect\"."
     }
   }
 }

@@ -17,6 +17,15 @@
     "sorus_shape": {
       "round": "usually",
       "marginal": "rarely"
+    },
+    "leaf_venation": {
+      "pinnate": "usually"
+    },
+    "division_pattern": {
+      "pinnate": "usually"
+    },
+    "branching": {
+      "unbranched": "usually"
     }
   },
   "forms": {
@@ -38,6 +47,21 @@
       "evidence": "SourceInferred",
       "source": "mabberley-2017",
       "note": "Mabberley's Plant-book (4th ed., 2017), under Cyatheaceae, Dicksoniaceae, Cibotiaceae and Metaxyaceae (the tree ferns, one family in the Library): Cyathea tree ferns to 24 m with leaves to three times pinnate and 5 m long, sori on the underside, round, with or without indusium; Dicksonia and Cibotium trunks or massive rhizomes with two- to three-pinnate blades and sori at the margin; Metaxya, the rare creeper, once pinnate with round sori."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 118, 119, family Cyatheaceae: leaf venation pinnate (veins free, simple or forked), usually; read as {\"pinnate\": \"usually\"}."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 118, 119, family Cyatheaceae: division pattern pinnate, usually; read as {\"pinnate\": \"usually\"}."
+    },
+    "traits.branching": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 118, 119, family Cyatheaceae: branching unbranched, usually; read as {\"unbranched\": \"usually\"}."
     }
   }
 }

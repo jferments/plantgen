@@ -16,6 +16,13 @@
     "fruit_type": {
       "aggregate": "usually",
       "berry": "sometimes"
+    },
+    "phyllotaxis_pattern": {
+      "distichous": "usually"
+    },
+    "inflorescence": {
+      "cyme": "often",
+      "solitary": "often"
     }
   },
   "evidence": {
@@ -23,6 +30,16 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 10 Annonaceae: trees, shrubs or climbers with aromatic wood and leaves; leaves alternate, entire; no stipules; sepals usually 3; petals often 6 in two whorls of 3; stamens numerous, spirally set; carpels numerous or few, free, rarely joined into one ovary, each often stalked in fruit, dry or fleshy (the custard apple's fused into one fleshy mass): read as an aggregate fruit, sometimes a berry. Simple leaves from 'entire' (inferred)."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 198, family Annonaceae: phyllotaxis pattern distichous, usually; read as {\"distichous\": \"usually\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 198, family Annonaceae: inflorescence solitary or cyme; read as {\"cyme\": \"often\", \"solitary\": \"often\"}."
     }
   }
 }
