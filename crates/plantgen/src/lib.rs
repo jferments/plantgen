@@ -394,6 +394,12 @@ pub mod venation;
 /// its program's default, so a species drafted from facts shades with what
 /// it shows; every built-in sets its own and grows as before (65 is floral
 /// bracts, #123).
+/// 67: a bud without a look of its own is its flower closed, as a lone
+/// flower's bud is in its season, and the flower's rules reach it; the
+/// eight herbs whose buds were unsourced ovoids (foxglove, columbine,
+/// bleeding heart, monkeyflower, foamflower, paintbrush, Oregon grape,
+/// tiger lily) draw them so, the lily's green-gold from photographs (66
+/// is drawn areas, #124).
 /// 68: a forb drafted from facts sends up one stem where its taxa say it
 /// lasts as a bulb or a corm (the new character `perennation`, stated for
 /// 84 families from Watson and Dallwitz), a clump as before otherwise;

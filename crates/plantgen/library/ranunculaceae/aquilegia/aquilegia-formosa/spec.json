@@ -43,7 +43,7 @@
       "basal_area": 0.313,
       "basal_piece_area": 0.235,
       "flower_area": 0.329,
-      "bud_area": 0.636,
+      "bud_area": 0.16,
       "fruit_area": 0.51
     }
   },
@@ -84,10 +84,6 @@
         "accent": [0.95, 0.8, 0.2],
         "form": {"flower": {"cup": 60, "curl": 5}}
       },
-      "bud": {
-        "shape": { "template": "fruit", "aspect": 0.5 },
-        "colour": [0.7, 0.2, 0.1]
-      },
       "fruit": {
         "shape": { "template": "fruit", "aspect": 0.4 },
         "colour": [0.3, 0.35, 0.2]
@@ -120,6 +116,11 @@
     "fruit_type": "follicle"
   },
   "evidence": {
+    "generator.params.bud_area": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The leaf area its `bud` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows: the bud is now its flower closed, where before it drew the fruit ovoid."
+    },
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1944",
