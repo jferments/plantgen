@@ -33,6 +33,7 @@
       "flower_angle": 50,
       "fruit_below": 0.1,
       "buds_above": 0.85,
+      "bud_spacing": 0.6,
       "nod": 5,
       "bud_size": 0.012,
       "fruit_length": 0.015,
@@ -168,7 +169,8 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "generator.params.bud_spacing": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "The few buds above the open flowers sit closer together among the upper bracts, about half to two thirds of the open flowers' spacing by eye (flowering photographs, observations 168612748, 191564139, 129627718, 15834623, 14057275, 338105599, 194561474, 260128512): a bud's internode as a share of a flower's, judged by eye."}
   },
   "provenance": {
     "sources": [
