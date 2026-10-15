@@ -36,6 +36,11 @@
       },
       "why": "Degrees down from its shoot: a negative pitch stands a cone up."
     },
+    "appearance.organs.cone.shape.aspect": {
+      "rule": "clamp(cone_width_m / cone_length_m, 0.1, 1.5)",
+      "template": "fruit",
+      "why": "A seed cone is drawn as wide across, closed, as it is stated, for its stated length."
+    },
     "appearance.organs.*.shape.bundle": {
       "rule": "needles_per_fascicle",
       "template": "needles",

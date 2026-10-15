@@ -50,7 +50,8 @@
     "inflorescence": {
       "cyme": "often",
       "solitary": "often"
-    }
+    },
+    "stem_cross_section": {"square": "usually"}
   },
   "evidence": {
     "traits.perianth": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 416: perianth biseriate, a 5-lobed fused calyx and a fused 4- or 5-lobed corolla (formula K (5) C (5))."},
@@ -92,6 +93,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 416, 417, 418, family Lamiaceae: inflorescence lateral cymes grouped into verticillasters or thyrses, or flowers solitary in leaf axils, usually; read as {\"cyme\": \"often\", \"solitary\": \"often\"}."
     },
-    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add berry (sometimes): Simpson, Plant Systematics (2019) p. 416, 417, 418: schizocarp of usually 4 (1-3) nutlets, or drupe or berry."}
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add berry (sometimes): Simpson, Plant Systematics (2019) p. 416, 417, 418: schizocarp of usually 4 (1-3) nutlets, or drupe or berry."},
+    "traits.stem_cross_section": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 416, 417, 418, family Lamiaceae: stems four-sided (square), at least when young; Ronse De Craene, Floral Diagrams (2010) agrees (square); read as {\"square\": \"usually\"}."}
   }
 }

@@ -104,7 +104,9 @@
     "leaf_life_years": {"min": 3, "max": 4},
     "cone_length_m": {"min": 0.07, "max": 0.15, "low": 0.05},
     "cone_posture": "deflexed",
-    "cone_retention_years": 0
+    "cone_retention_years": 0,
+    "cone_width_m": {"min": 0.04, "max": 0.07},
+    "pollen_cone_length_m": {"min": 0.02, "max": 0.03}
   },
   "evidence": {
     "traits.height_max_m": {
@@ -195,7 +197,9 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.cone_width_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 476: seed cones 4-7 cm across closed, 6-10 cm open."},
+    "traits.pollen_cone_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 476: pollen cones 2-3 cm."}
   },
   "provenance": {
     "sources": [
