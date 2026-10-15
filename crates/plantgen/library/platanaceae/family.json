@@ -37,13 +37,33 @@
       "max": 8,
       "low": 3,
       "high": 9
-    }
+    },
+    "leaf_incision": {
+      "lobed": "usually"
+    },
+    "flowering_position": "terminal",
+    "inflorescence_posture": "pendent"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Platanaceae: leaves alternate; leaves simple; margins dentate; veins usually palmate, sometimes pinnate; leaves deciduous; stipules present; plants monoecious; ovary superior; floral cup absent; stems woody; flowers in heads; flowers actinomorphic; perianth sepals and petals or tepals; fruit achene or nut; stamens 3 to 4 (-7); carpels (3-) 5 to 8 (-9). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 291, 293, 294, family Platanaceae: leaf incision lobed, palmately, usually; read as {\"lobed\": \"usually\"}."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 291, 293, 294, family Platanaceae: flowering position terminal; read as \"terminal\"."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 291, 293, 294, family Platanaceae: inflorescence posture pendent; read as \"pendent\"."
     }
   }
 }

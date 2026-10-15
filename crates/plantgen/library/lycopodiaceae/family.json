@@ -9,13 +9,33 @@
       "scale": "often",
       "needle": "often"
     },
-    "leaf_venation": "single"
+    "leaf_venation": "single",
+    "phyllotaxis_pattern": {
+      "spiral": "usually"
+    },
+    "leaf_division": "simple",
+    "life_span": "perennial"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "mabberley-2017",
       "note": "Mabberley's Plant-book (4th ed., 2017), under Lycopodiaceae: evergreen herbs, sometimes epiphytic, with stems forking in pairs; leaves scale- or needle-like, each with a single vascular strand; sporangia in terminal cones or in the axils of the leaves (Huperzia), the spores all alike."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 87, family Lycopodiaceae: phyllotaxis pattern spiral, usually; read as {\"spiral\": \"usually\"}."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 87, family Lycopodiaceae: leaf division simple, sessile; read as \"simple\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 87, family Lycopodiaceae: life span perennial; read as \"perennial\"."
     }
   }
 }

@@ -46,6 +46,13 @@
       "min": 1,
       "max": 5,
       "high": 7
+    },
+    "leaf_incision": {
+      "lobed": "often"
+    },
+    "inflorescence": {
+      "panicle": "often",
+      "solitary": "often"
     }
   },
   "evidence": {
@@ -53,6 +60,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Loasaceae: leaves alternate or opposite; leaves simple or compound; compound leaves pinnate; veins pinnate or palmate; stipules present or absent; plants hermaphrodite; ovary half inferior or inferior; floral cup present; stems usually herbaceous, sometimes woody; flowers actinomorphic; perianth sepals and petals; fruit usually capsule, sometimes achene or nut; stamens 5 to 100; carpels 1 to 5 (-7). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 385, 387, family Loasaceae: leaf incision lobed, often; read as {\"lobed\": \"often\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 385, 387, family Loasaceae: inflorescence thyrse or solitary flowers; read as {\"panicle\": \"often\", \"solitary\": \"often\"}."
     }
   }
 }

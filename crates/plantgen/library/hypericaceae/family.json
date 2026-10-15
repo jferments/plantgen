@@ -29,7 +29,14 @@
       "capsule": "usually",
       "berry": "sometimes",
       "drupe": "rarely"
-    }
+    },
+    "leaf_margin": "entire",
+    "inflorescence": {
+      "corymb": "often",
+      "cyme": "often",
+      "solitary": "often"
+    },
+    "sexual_system": "hermaphrodite"
   },
   "evidence": {
     "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 312: 4 to 5 sepals and petals."},
@@ -40,6 +47,21 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 158 Hypericaceae: trees to herbs, rarely climbers, with resinous sap; leaves opposite or whorled, simple, often dotted with glands; no stipules; flowers showy, yellow or white, regular, mostly at the shoot tips, alone to in cymose panicles; stamens numerous, often in bundles; ovary of one or 3 to 5 cells, superior (the stamens below it); fruit a capsule or berry, rarely a drupe. The stamens' 10 to 200 reads 'numerous', inferred."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 309, 311, 312, family Hypericaceae: leaf margin entire; read as \"entire\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 309, 311, 312, family Hypericaceae: inflorescence cyme, corymb or solitary; terminal or axillary; read as {\"corymb\": \"often\", \"cyme\": \"often\", \"solitary\": \"often\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 309, 311, 312, family Hypericaceae: sexual system hermaphrodite; read as \"hermaphrodite\"."
     }
   }
 }

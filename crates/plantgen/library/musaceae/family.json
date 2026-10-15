@@ -26,13 +26,45 @@
       "min": 5,
       "max": 6
     },
-    "carpels": 3
+    "carpels": 3,
+    "phyllotaxis_pattern": {
+      "spiral": "usually"
+    },
+    "flowering_position": "terminal",
+    "life_span": "perennial",
+    "rosette": "basal",
+    "axis_growth": "sympodial"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Musaceae: leaves alternate; leaves simple; veins pinnate; blades lanceolate, oblong or ovate; plants monoecious or polygamous; ovary inferior; stems herbaceous; flowers zygomorphic; irregular flowers bilabiate; perianth tepals; fruit berry; stamens 5 to 6; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 50, family Musaceae: phyllotaxis pattern spiral, usually; read as {\"spiral\": \"usually\"}."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 247, 249, 251, family Musaceae: flowering position terminal; read as \"terminal\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 247, 249, 251, family Musaceae: life span perennial; read as \"perennial\"."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 247, 249, 251, family Musaceae: rosette basal; read as \"basal\"."
+    },
+    "traits.axis_growth": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 247, 249, 251, family Musaceae: axis growth sympodial; read as \"sympodial\"."
     }
   }
 }

@@ -9,13 +9,19 @@
       "whorled": "usually",
       "alternate": "sometimes"
     },
-    "leaves_per_whorl": 3
+    "leaves_per_whorl": 3,
+    "leaf_margin": "entire"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "mabberley-2017",
       "note": "Mabberley's Plant-book (4th ed., 2017), under Salviniaceae: free-floating water ferns whose stems fork; leaves stalkless, in Salvinia in whorls of three, two floating and one submerged and cut into root-like threads, in Azolla alternate and two-ranked. The Library holds more Salvinia than Azolla."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 115, 117, family Salviniaceae: leaf margin entire; read as \"entire\"."
     }
   }
 }

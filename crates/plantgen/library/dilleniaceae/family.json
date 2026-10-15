@@ -54,13 +54,25 @@
       "max": 7,
       "low": 1,
       "high": 20
-    }
+    },
+    "phyllotaxis_pattern": "spiral",
+    "vernation": "conduplicate"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Dilleniaceae: leaves usually alternate, rarely opposite; leaves simple; margins entire or serrate; veins single, pinnate or palmate; leaves deciduous; stipules present or absent; leaf rosettes usually none, sometimes basal; plants hermaphrodite; ovary superior; floral cup absent; stems usually woody, rarely herbaceous; flowers actinomorphic or zygomorphic; perianth sepals and petals; fruit capsule, follicle, achene or aggregate; stamens 1 to 150; carpels (1-) 2 to 7 (-20). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 297, family Dilleniaceae: phyllotaxis pattern spiral; read as \"spiral\"."
+    },
+    "traits.vernation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 297, family Dilleniaceae: vernation conduplicate; read as \"conduplicate\"."
     }
   }
 }

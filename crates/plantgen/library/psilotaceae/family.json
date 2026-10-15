@@ -6,13 +6,31 @@
   "traits": {
     "leaf_form": "scale",
     "leaf_arrangement": "alternate",
-    "phyllotaxis_pattern": "spiral"
+    "phyllotaxis_pattern": "spiral",
+    "life_span": "perennial",
+    "rhizome_habit": "long_creeping",
+    "anchorage": "rhizoids"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "mabberley-2017",
       "note": "Mabberley's Plant-book (4th ed., 2017), under Psilotaceae and Psilotum: often epiphytic, rootless plants with a forking rhizome and green aerial branches that fork in pairs; leaf-like or scale-like appendages set in spirals or seemingly two-ranked; sporangia on short side branches."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 99, 100, family Psilotaceae: life span perennial; read as \"perennial\"."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 99, 100, family Psilotaceae: rhizome habit long_creeping (horizontal rhizome); read as \"long_creeping\"."
+    },
+    "traits.anchorage": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 99, 100, family Psilotaceae: anchorage rhizoids (roots absent); read as \"rhizoids\"."
     }
   }
 }

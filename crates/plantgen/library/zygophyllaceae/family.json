@@ -18,7 +18,16 @@
       "alternate": "often"
     },
     "leaf_division": "compound",
-    "stipules": true
+    "stipules": true,
+    "inflorescence": {
+      "cyme": "often",
+      "raceme": "often",
+      "solitary": "often"
+    },
+    "fruit_type": {
+      "capsule": "often",
+      "schizocarp": "often"
+    }
   },
   "forms": {
     "shrub": {
@@ -54,6 +63,16 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 132 Zygophyllaceae: shrubs or herbs woody at the base, rarely trees, often jointed at the nodes; leaves opposite or alternate, of two leaflets or pinnate, rarely of three; stipules paired and persistent, often spiny; fruit of many kinds but never a berry."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 305, 306, family Zygophyllaceae: inflorescence cyme, raceme or solitary; read as {\"cyme\": \"often\", \"raceme\": \"often\", \"solitary\": \"often\"}."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 305, 306, family Zygophyllaceae: fruit type capsule or schizocarp, often lobed (rarely drupe or berry), usually; read as {\"capsule\": \"often\", \"schizocarp\": \"often\"}."
     }
   }
 }

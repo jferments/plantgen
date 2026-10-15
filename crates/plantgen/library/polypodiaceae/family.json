@@ -21,13 +21,25 @@
     "frond_dimorphism": {
       "monomorphic": "usually",
       "dimorphic": "sometimes"
-    }
+    },
+    "life_span": "perennial",
+    "rhizome_habit": "short_creeping"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "mabberley-2017",
       "note": "Mabberley's Plant-book (4th ed., 2017), under Polypodiaceae and the families the Library joins to it (Dryopteridaceae, Tectariaceae, Lomariopsidaceae, Davalliaceae, Oleandraceae; most of its species are Dryopteris, Polystichum and Tectaria): Polypodiaceae proper mostly epiphytes on creeping, scaly rhizomes, fronds simple, lobed or pinnate, sometimes dimorphic, sori mostly round, no indusium; Dryopteridaceae terrestrial on erect, creeping or climbing stems, fronds once pinnate (rarely simple) to decompound, sori round with a round or shield-shaped indusium or none; Tectariaceae simple to bipinnate, indusium kidney-shaped, peltate or none; Lomariopsidaceae once pinnate, indusium round to kidney-shaped or none, fertile fronds sometimes unlike the sterile; Davalliaceae one to four times pinnate, pouch-shaped indusia; Oleandra simple, kidney-shaped indusia."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 122, 123, family Polypodiaceae: life span perennial; read as \"perennial\"."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 122, 123, family Polypodiaceae: rhizome habit long to short creeping, scaly; read as \"short_creeping\"."
     }
   }
 }

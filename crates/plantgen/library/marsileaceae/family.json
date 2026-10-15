@@ -10,13 +10,25 @@
       "compound": "usually"
     },
     "division_pattern": "palmate",
-    "phyllotaxis_pattern": "distichous"
+    "phyllotaxis_pattern": "distichous",
+    "vernation": "circinate",
+    "reproduction": "spores"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "mabberley-2017",
       "note": "Mabberley's Plant-book (4th ed., 2017), under Marsileaceae and Marsilea: small plants of water and mud on creeping rhizomes; fronds unroll from croziers and stand in two rows along the upper side; veins forking in pairs; Marsilea's leaf is a stalk with four clover-like leaflets, floating in deep water and held above it in shallow; sporangia in hard sporocarps at the frond's base. Pilularia's leaves are threads without a blade, the rare state here."
+    },
+    "traits.vernation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 115, 116, family Marsileaceae: vernation circinate; read as \"circinate\"."
+    },
+    "traits.reproduction": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 115, 116, family Marsileaceae: reproduction spores (heterosporous); read as \"spores\"."
     }
   }
 }

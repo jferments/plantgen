@@ -42,13 +42,19 @@
     "carpels": {
       "min": 3,
       "max": 100
-    }
+    },
+    "leaf_margin": "serrate"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Atherospermataceae: leaves opposite; leaves simple; stipules absent; plants hermaphrodite, monoecious, dioecious or polygamous; ovary superior, half inferior or inferior; floral cup present; stems woody; flowers solitary or in cymes; flowers actinomorphic or zygomorphic; perianth sepals and petals, tepals or absent; fruit achene; stamens (4-) 6 to 100; carpels 3 to 100. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 196, family Atherospermataceae: leaf margin serrate; read as \"serrate\"."
     }
   }
 }

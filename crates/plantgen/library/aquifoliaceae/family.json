@@ -57,13 +57,27 @@
       "max": 6,
       "low": 2,
       "high": 24
-    }
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually"
+    },
+    "flowering_position": "lateral"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Aquifoliaceae with Phellinaceae, Sphenostemonaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually alternate, rarely opposite or whorled; leaves simple; margins dentate, entire or serrate; veins pinnate; leaves evergreen; stipules present or absent; plants dioecious or polygamous, sometimes hermaphrodite; ovary superior; floral cup absent; stems woody; flowers in panicles or in cymes, sometimes in racemes, rarely solitary; flowers actinomorphic; perianth sepals and petals, tepals or absent; fruit drupe; parts of each whorl 4 (-8); stamens 4 to 8 (-12); carpels (2-) 4 to 6 (-24). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 428, 430, 431, family Aquifoliaceae: phyllotaxis pattern spiral (rarely opposite), usually; read as {\"spiral\": \"usually\"}."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 428, 430, 431, family Aquifoliaceae: flowering position lateral; read as \"lateral\"."
     }
   }
 }

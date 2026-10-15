@@ -28,7 +28,12 @@
     "fruit_type": {
       "berry": "usually",
       "follicle": "sometimes"
-    }
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually"
+    },
+    "sexual_system": "hermaphrodite",
+    "life_span": "perennial"
   },
   "forms": {
     "forb": {
@@ -79,6 +84,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Berberidaceae with Leonticaceae, Nandinaceae and Podophyllaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple often, compound often; the simple blade lobed often, none often; lobes or leaflets palmate often, pinnate often. Read from the coded leaf form and dissection by script (spec-rework/b1/delta)."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 288, family Berberidaceae: phyllotaxis pattern spiral, usually; read as {\"spiral\": \"usually\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 288, family Berberidaceae: sexual system hermaphrodite; read as \"hermaphrodite\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 288, family Berberidaceae: life span perennial; read as \"perennial\"."
     }
   }
 }

@@ -11,13 +11,19 @@
       "hemidimorphic": "often",
       "dimorphic": "often",
       "monomorphic": "sometimes"
-    }
+    },
+    "indusium": "none"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "mabberley-2017",
       "note": "Mabberley's Plant-book (4th ed., 2017), under Osmundaceae: stems erect, wrapped in old frond bases and coarse roots; fronds once or twice pinnate or pinnatifid, with stipules at the stalk's base; sporangia not in sori, on the underside of the fronds, or on fertile fronds or pinnae of their own, sometimes a panicle at the frond's tip. Part-fertile fronds (royal fern) and separate fertile fronds (cinnamon fern) are both common; Leptopteris's fronds are alike."
+    },
+    "traits.indusium": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 107, family Osmundaceae: indusium none, sori absent; read as \"none\"."
     }
   }
 }

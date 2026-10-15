@@ -3197,11 +3197,12 @@ mod tests {
                 "`leaf_arrangement` has no one most usual state: alternate and opposite are each often"
             )
         );
-        // Maples: their genus's opposite leaves, in pairs.
-        assert_eq!(arrangement("acer-macrophyllum"), (Some(2.0), None));
-        // Nor does a family that states no arrangement yet: a cycad keeps
-        // its program's.
-        assert_eq!(arrangement("cycas-revoluta"), (None, None));
+        // Maples: their genus's opposite leaves, in pairs crossing at a
+        // quarter turn, though most of their family's leaves are spiral.
+        assert_eq!(arrangement("acer-macrophyllum"), (Some(2.0), Some(90.0)));
+        // A family that states its pattern but no arrangement: a cycad's
+        // spiral crown.
+        assert_eq!(arrangement("cycas-revoluta"), (None, Some(137.5)));
     }
 
     #[test]

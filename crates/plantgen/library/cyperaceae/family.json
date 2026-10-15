@@ -29,6 +29,11 @@
       "annual": "often",
       "biennial": "often",
       "perennial": "often"
+    },
+    "leaf_venation": "parallel",
+    "sexual_system": {
+      "monoecious": "often",
+      "hermaphrodite": "sometimes"
     }
   },
   "evidence": {
@@ -81,6 +86,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cyperaceae: the herbs' life form (character 21), coded often annual, often biennial, often perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 257, family Cyperaceae: leaf venation parallel; read as \"parallel\"."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "diversity-evolution-land-plants",
+      "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 186, family Cyperaceae: sexual system hermaphrodite (e.g. Scirpus), sometimes. Ingrouille, Diversity and Evolution of Land Plants (1992) p. 186, family Cyperaceae: sexual system monoecious (e.g. Carex), often. Read together as {\"monoecious\": \"often\", \"hermaphrodite\": \"sometimes\"}."
     }
   }
 }

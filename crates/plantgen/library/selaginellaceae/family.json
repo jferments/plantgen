@@ -13,7 +13,12 @@
     }
   },
   "traits": {
-    "leaf_form": "scale"
+    "leaf_form": "scale",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_division": "simple",
+    "life_span": "perennial",
+    "sporangia": "cones",
+    "reproduction": "spores"
   },
   "evidence": {
     "traits": {
@@ -25,6 +30,31 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Spikemosses sprawl, creep and root, or are tufted, many of them moss-like (Mabberley 2017, under Selaginellaceae): a clump is a dense mat of many stems that lean far out from it, their leaves stand out flatter and their strobili are short. The values are set by eye."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 87, 90, family Selaginellaceae: phyllotaxis pattern spiral; read as \"spiral\"."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 87, 90, family Selaginellaceae: leaf division simple, sessile, small; read as \"simple\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 87, 90, family Selaginellaceae: life span perennial; read as \"perennial\"."
+    },
+    "traits.sporangia": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 87, 90, family Selaginellaceae: sporangia cones (terminal strobili, sporophylls in 4 rows); read as \"cones\"."
+    },
+    "traits.reproduction": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 91, family Selaginellaceae: reproduction spores; read as \"spores\"."
     }
   }
 }

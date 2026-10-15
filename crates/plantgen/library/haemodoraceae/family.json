@@ -38,7 +38,9 @@
       "min": 3,
       "max": 6
     },
-    "carpels": 3
+    "carpels": 3,
+    "phyllotaxis_pattern": "distichous",
+    "life_span": "perennial"
   },
   "evidence": {
     "traits": {
@@ -50,6 +52,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Haemodoraceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 243, 244, 245, family Haemodoraceae: phyllotaxis pattern distichous; read as \"distichous\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 243, 244, 245, family Haemodoraceae: life span perennial; read as \"perennial\"."
     }
   }
 }

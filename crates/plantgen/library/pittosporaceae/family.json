@@ -40,6 +40,9 @@
       "min": 2,
       "max": 2,
       "high": 5
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually"
     }
   },
   "evidence": {
@@ -47,6 +50,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Pittosporaceae: leaves usually alternate, sometimes whorled; leaves simple; margins usually entire, sometimes serrate; veins pinnate; leaves evergreen; stipules absent; plants usually hermaphrodite, rarely polygamous; ovary superior; floral cup absent; stems woody; flowers solitary, in cymes or in corymbs; flowers actinomorphic; perianth sepals and petals; fruit capsule or berry; parts of each whorl 5; stamens 5; carpels 2 (-5). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 435, 436, family Pittosporaceae: phyllotaxis pattern spiral (sometimes whorled at shoot tips), usually; read as {\"spiral\": \"usually\"}."
     }
   }
 }

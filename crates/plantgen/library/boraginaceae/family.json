@@ -43,7 +43,9 @@
       "annual": "often",
       "biennial": "often",
       "perennial": "often"
-    }
+    },
+    "phyllotaxis_pattern": "spiral",
+    "leaf_margin": "entire"
   },
   "evidence": {
     "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 400: calyx and corolla both 5-merous (Floral Diagrams p. 315: rarely 4 or up to 8)."},
@@ -69,6 +71,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Boraginaceae with Ehretiaceae, Hoplestigmataceae, Hydrophyllaceae, Lennoaceae, Wellstediaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 400, family Boraginaceae: phyllotaxis pattern spiral; read as \"spiral\"."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 400, family Boraginaceae: leaf margin entire; read as \"entire\"."
     }
   }
 }

@@ -20,6 +20,20 @@
     "fruit_type": {
       "capsule": "usually",
       "schizocarp": "often"
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually"
+    },
+    "leaf_division": {
+      "compound": "often",
+      "simple": "often"
+    },
+    "inflorescence": {
+      "cyme": "often",
+      "solitary": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually"
     }
   },
   "forms": {
@@ -44,6 +58,26 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 117 Sterculiaceae, 119 Bombacaceae (the baobab) and 120 Malvaceae, which APG joins with the lindens as Malvaceae: leaves alternate, simple or digitate, mostly palmately veined; stipules present, often falling early; flowers regular; sepals (3-)5, joined, valvate, often with an epicalyx; petals 5; stamens many, often in a column; ovary superior; fruit a capsule, or splitting into its carpels (cocci)."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 355, 356, 357, 358, 359, family Malvaceae: phyllotaxis pattern spiral, usually; read as {\"spiral\": \"usually\"}."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 355, 356, 357, 358, 359, family Malvaceae: leaf division simple or palmately compound; read as {\"compound\": \"often\", \"simple\": \"often\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 355, 356, 357, 358, 359, family Malvaceae: inflorescence solitary, paired or cyme-like; read as {\"cyme\": \"often\", \"solitary\": \"often\"}."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 355, 356, 357, 358, 359, family Malvaceae: sexual system hermaphrodite (rarely monoecious or polygamous), usually; read as {\"hermaphrodite\": \"usually\"}."
     }
   }
 }

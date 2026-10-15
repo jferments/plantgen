@@ -29,13 +29,41 @@
     "fruit_type": "capsule",
     "flower_merosity": 3,
     "stamens": 1,
-    "carpels": 3
+    "carpels": 3,
+    "phyllotaxis_pattern": {
+      "distichous": "usually"
+    },
+    "life_span": "perennial",
+    "rhizome_habit": {
+      "short_creeping": "usually"
+    },
+    "axis_growth": "sympodial"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cannaceae: leaves alternate; leaves simple; margins entire; veins pinnate; blades linear, lanceolate or oblanceolate; leaf rosettes none; plants hermaphrodite; ovary inferior; stems herbaceous; flowers in spikes or in panicles; flowers asymmetric; perianth sepals and petals or tepals; fruit capsule; parts of each whorl 3; stamens 1; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 50, family Cannaceae: phyllotaxis pattern distichous, usually; read as {\"distichous\": \"usually\"}."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 248, 249, 252, family Cannaceae: life span perennial; read as \"perennial\"."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 255, 256, family Cannaceae: rhizome habit short_creeping, starchy (Canna edulis), usually. Read together as {\"short_creeping\": \"usually\"}."
+    },
+    "traits.axis_growth": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 248, 249, 252, family Cannaceae: axis growth sympodial; read as \"sympodial\"."
     }
   }
 }

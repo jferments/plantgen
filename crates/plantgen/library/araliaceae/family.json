@@ -34,7 +34,17 @@
       "raceme": "sometimes"
     },
     "rosette": "none",
-    "life_span": "perennial"
+    "life_span": "perennial",
+    "phyllotaxis_pattern": {
+      "spiral": "usually"
+    },
+    "leaf_division": {
+      "compound": "often",
+      "simple": "often"
+    },
+    "flowering_position": {
+      "terminal": "usually"
+    }
   },
   "forms": {
     "vine": {
@@ -70,6 +80,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Araliaceae: the herbs' life form (character 21), coded perennial. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 431, family Araliaceae: phyllotaxis pattern spiral (rarely opposite or whorled), usually; read as {\"spiral\": \"usually\"}."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 431, family Araliaceae: leaf division palmate, pinnate or simple (often lobed); read as {\"compound\": \"often\", \"simple\": \"often\"}."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 431, family Araliaceae: flowering position terminal, usually; read as {\"terminal\": \"usually\"}."
     }
   }
 }
