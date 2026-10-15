@@ -944,6 +944,14 @@
       "range": [0.0005, 1.5],
       "why": "an open flower across"
     },
+    "pedicel_length_m": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "number",
+      "unit": "m",
+      "range": [0, 1.5],
+      "why": "a flower's own stalk in a cluster, from the axis that bears it to the flower"
+    },
     "flower_merosity": {
       "group": "flowers",
       "organ": "flower",

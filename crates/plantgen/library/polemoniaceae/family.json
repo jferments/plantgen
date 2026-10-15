@@ -10,7 +10,8 @@
     },
     "leaf_arrangement": {
       "alternate": "often",
-      "opposite": "often"
+      "opposite": "often",
+      "whorled": "sometimes"
     },
     "leaf_division": {
       "simple": "often",
@@ -26,11 +27,14 @@
     "stamens": 5,
     "corolla_shape": {
       "tubular": "usually",
-      "salverform": "sometimes"
+      "salverform": "sometimes",
+      "rotate": "sometimes"
     },
     "inflorescence": {
       "corymb": "often",
-      "head": "often"
+      "head": "often",
+      "solitary": "sometimes",
+      "cyme": "sometimes"
     },
     "ovary_position": "superior",
     "carpels": {
@@ -56,6 +60,21 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 393, 396, family Polemoniaceae: stipules false; read as false."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add rotate (sometimes): Simpson, Plant Systematics (2019) p. 393, 396: rotate, salverform or bilabiate."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add solitary (sometimes), cyme (sometimes): Simpson, Plant Systematics (2019) p. 393, 396: head, cyme or solitary."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add whorled (sometimes): Simpson, Plant Systematics (2019) p. 393, 396: alternate, opposite or whorled."
     }
   }
 }

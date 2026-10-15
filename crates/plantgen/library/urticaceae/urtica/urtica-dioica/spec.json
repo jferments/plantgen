@@ -38,7 +38,7 @@
       "leaf_area": 0.195,
       "basal_area": 0.235,
       "basal_piece_area": 0.235,
-      "flower_area": 0.173,
+      "flower_area": 0.138,
       "fruit_area": 0.89,
       "bud_area": 0.052
     }
@@ -118,6 +118,7 @@
       "source": "plantgen-authors",
       "note": "The leaf area its `bud` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows: the bud is now its flower closed, where before it drew the fruit ovoid."
     },
+    "generator.params.flower_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The area its `flower` look draws on an organ 1 m long (visual forms Skill 4, 2026-10-15; plantc atlas), so it shades with what it shows: the flowers of its panicle's branches now stand on stalks as long as they are, where before every cluster's stood on stalks 0.15 of their branch (0.173)."},
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",

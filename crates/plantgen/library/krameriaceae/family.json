@@ -25,7 +25,10 @@
     "flower_symmetry": "zygomorphic",
     "zygomorphy": "other",
     "perianth": "sepals_and_petals",
-    "fruit_type": "achene",
+    "fruit_type": {
+      "nut": "usually",
+      "capsule": "rarely"
+    },
     "stamens": {
       "min": 4,
       "max": 4,
@@ -49,6 +52,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 305, 306, family Krameriaceae: phyllotaxis pattern spiral; read as \"spiral\"."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson (2019) p. 305-306: a dry, one-seeded, prickly nut, sometimes a capsule. Watson and Dallwitz's DELTA gave achene; both are dry and do not open, and the round prickly fruit reads as a nut. Jay 2026-10-15 ~06:32Z: \"go with your recommendations on disagreements\"."
     }
   }
 }

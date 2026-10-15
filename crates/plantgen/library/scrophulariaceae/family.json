@@ -34,7 +34,8 @@
     },
     "fruit_type": {
       "capsule": "usually",
-      "drupe": "sometimes"
+      "drupe": "sometimes",
+      "berry": "sometimes"
     },
     "leaf_division": "simple",
     "stipules": false,
@@ -73,6 +74,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 424, 425, family Scrophulariaceae: inflorescence spike, raceme or thyrse; read as {\"panicle\": \"often\", \"raceme\": \"often\", \"spike\": \"often\"}."
-    }
+    },
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add berry (sometimes): Simpson, Plant Systematics (2019) p. 424, 425: capsule, drupe or berry."}
   }
 }

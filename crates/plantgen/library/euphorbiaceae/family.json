@@ -15,7 +15,8 @@
     },
     "leaf_arrangement": {
       "alternate": "usually",
-      "opposite": "rarely"
+      "opposite": "rarely",
+      "whorled": "sometimes"
     },
     "leaf_division": {
       "simple": "usually",
@@ -32,13 +33,17 @@
     },
     "fruit_type": {
       "capsule": "usually",
-      "drupe": "sometimes"
+      "drupe": "sometimes",
+      "schizocarp": "sometimes",
+      "berry": "sometimes",
+      "samara": "sometimes"
     },
     "inflorescence": {
       "cyme": "usually"
     },
     "flower_symmetry": {
-      "actinomorphic": "usually"
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
     }
   },
   "evidence": {
@@ -60,7 +65,9 @@
     "traits.flower_symmetry": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 307, 309, 310, family Euphorbiaceae: flower symmetry actinomorphic, usually; read as {\"actinomorphic\": \"usually\"}."
-    }
+      "note": "Simpson, Plant Systematics (2019) p. 307, 309, 310, family Euphorbiaceae: flower symmetry actinomorphic, usually; read as {\"actinomorphic\": \"usually\"}. The books add zygomorphic (rarely): Simpson, Plant Systematics (2019) p. 307, 309, 310: zygomorphic."
+    },
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add schizocarp (sometimes), berry (sometimes), samara (sometimes): Simpson, Plant Systematics (2019) p. 307, 309, 310: schizocarp, drupe, berry or samara."},
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add whorled (sometimes): Simpson, Plant Systematics (2019) p. 307, 309, 310: spiral, opposite or whorled."}
   }
 }

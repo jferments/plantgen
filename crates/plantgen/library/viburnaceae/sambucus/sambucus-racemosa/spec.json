@@ -140,7 +140,8 @@
     },
     "inflorescence": "panicle",
     "flowering_months": [4, 5],
-    "fruiting_months": [6, 7]
+    "fruiting_months": [6, 7],
+    "fruit_type": "drupe"
   },
   "evidence": {
     "traits.flowering_months": {
@@ -222,7 +223,8 @@
       "evidence": "SourceInferred",
       "source": "jepson-eflora",
       "note": "Jepson eFlora's account of the species, as quoted in search results (the page itself was not read): inflorescence a terminal panicle of cymes, generally more or less dome-shaped, 4 to 12 cm across, its central axis generally dominant. Its cluster is drawn as a panicle of nine cymes, its lower branches longest, so it stands broad and dome-shaped (Abrams vol. 4: \"commonly broadly ovoid and dense\")."
-    }
+    },
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 613, Sambucus racemosa: fruit type drupe."}
   },
   "provenance": {
     "sources": [

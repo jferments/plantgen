@@ -104,7 +104,9 @@
     "wood_moisture_green_share": {"min": 0.41, "max": 1.42, "typical": 0.91},
     "juvenile_period_years": {"min": 20, "max": 40},
     "leaf_length_m": {"min": 0.015, "max": 0.025},
-    "cone_length_m": {"min": 0.06, "max": 0.1}
+    "cone_length_m": {"min": 0.05, "max": 0.1},
+    "sexual_system": "monoecious",
+    "cone_posture": "pendent"
   },
   "evidence": {
     "traits.height_max_m": {
@@ -124,7 +126,7 @@
     "traits.cone_length_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
-      "note": "Abrams (vol. 1, 1923, p. 62): needles 15 to 25 mm, sharp, spreading from all sides of the twig; seed cones narrowly oblong-oval, 6 to 10 cm, their thin toothed scales twice as long as the bracts."
+      "note": "Abrams (vol. 1, 1923, p. 62): needles 15 to 25 mm, sharp, spreading from all sides of the twig; seed cones narrowly oblong-oval, 6 to 10 cm, their thin toothed scales twice as long as the bracts. Idžojtić, Dendrology (2019) p. 462: seed cones 5-9 cm. The spec stated {\"min\": 0.06, \"max\": 0.1}. Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."
     },
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",
@@ -175,7 +177,9 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.sexual_system": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 462, Picea sitchensis: sexual system monoecious."},
+    "traits.cone_posture": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 462, Picea sitchensis: cone posture pendent."}
   },
   "provenance": {
     "sources": [

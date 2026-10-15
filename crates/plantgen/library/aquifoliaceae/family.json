@@ -13,7 +13,8 @@
     "leaf_margin": {
       "dentate": "often",
       "entire": "often",
-      "serrate": "often"
+      "serrate": "often",
+      "spiny": "rarely"
     },
     "leaf_venation": "pinnate",
     "leaf_habit": "evergreen",
@@ -78,6 +79,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 428, 430, 431, family Aquifoliaceae: flowering position lateral; read as \"lateral\"."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add spiny (rarely): Simpson, Plant Systematics (2019) p. 428, 430, 431: spiny."
     }
   }
 }

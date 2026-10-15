@@ -26,7 +26,8 @@
     "ovary_position": "inferior",
     "fruit_type": {
       "berry": "usually",
-      "drupe": "often"
+      "drupe": "often",
+      "schizocarp": "sometimes"
     },
     "inflorescence": {
       "umbel": "usually",
@@ -95,6 +96,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 431, family Araliaceae: flowering position terminal, usually; read as {\"terminal\": \"usually\"}."
-    }
+    },
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add schizocarp (sometimes): Simpson, Plant Systematics (2019) p. 431: drupe, berry or schizocarp."}
   }
 }

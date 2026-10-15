@@ -400,12 +400,18 @@ pub mod venation;
 /// bleeding heart, monkeyflower, foamflower, paintbrush, Oregon grape,
 /// tiger lily) draw them so, the lily's green-gold from photographs (66
 /// is drawn areas, #124).
+/// 68: flowers in clusters: a flower or bloom whose taxa state a cluster
+/// kind and its length is drawn as that cluster, as long as the
+/// inflorescence, its flowers as wide as the flower and on stalks as long
+/// as the pedicel; a species' own cluster stands; desert ironwood's and
+/// the umbrella thorn's blooms become clusters (67 is closed buds,
+/// #126).
 /// 72: broadleaf limbs arch outward as they lengthen and an umbrella's
 /// axes level out at its top (`broadleaf` revision 16, `limb_arch`,
 /// `flat_top`), a self-pruning tree stands on a clear trunk
 /// (`bole_clear`), and a crown's region takes its widest point and
 /// fullness from its `crown_form`; Garry oak spreads, umbrella thorn is
 /// flat-topped, Pacific madrone leans on a clear stem and the baobab
-/// swells, from photographs (provisional: 68 to 71 are visual forms'
+/// swells, from photographs (provisional: 69 to 71 are visual forms'
 /// stacked branches).
 pub const GENERATOR_REVISION: u32 = 72;
