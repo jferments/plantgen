@@ -223,21 +223,22 @@ decompose Rc(i, m, h, r) : m > 1 ->
     Rc(i, floor(m / 2), h, r) Rc(i + floor(m / 2), m - floor(m / 2), h, r);
 decompose Rc(i, m, h, r) : m == 1 && (i + 0.5) / flowers < fruit_below
                           && (dioecious < 0.5 || sex >= 0.5) ->
-    !(stem_radius * 0.5) F(h * r / flowers) Br(fruit_angle)
-    [ &(fruit_angle * uniform(0.8, 1.2)) fruit(fruit_length * uniform(0.85, 1.1)) ]
+    !(stem_radius * 0.5) F(h * r / flowers)
+    [ &(fruit_angle * uniform(0.8, 1.2)) fruit(fruit_length * uniform(0.85, 1.1)) ] Br(fruit_angle)
     /(flower_divergence);
 decompose Rc(i, m, h, r) : m == 1 && (i + 0.5) / flowers < buds_above ->
-    !(stem_radius * 0.5) F(h * r / flowers) Br(flower_angle)
+    !(stem_radius * 0.5) F(h * r / flowers)
     [ &(flower_angle * uniform(0.8, 1.2)) !(stem_radius * 0.2) F(pedicel)
-      flower(flower_size * uniform(0.9, 1.1)) ]
+      flower(flower_size * uniform(0.9, 1.1)) ] Br(flower_angle)
     /(flower_divergence);
 decompose Rc(i, m, h, r) : m == 1 ->
-    &(nod / max(1, flowers * (1 - buds_above))) !(stem_radius * 0.5) F(h * r / flowers * bud_spacing) Br(flower_angle * bud_lean)
+    &(nod / max(1, flowers * (1 - buds_above))) !(stem_radius * 0.5) F(h * r / flowers * bud_spacing)
     [ &(flower_angle * bud_lean) !(stem_radius * 0.2) F(pedicel * bud_stalk)
       bud(bud_size * lerp(1, 0.5, ((i + 0.5) / flowers - buds_above) / max(0.01, 1 - buds_above))) ]
-    /(flower_divergence);
+    Br(flower_angle * bud_lean) /(flower_divergence);
 decompose Rc(i, m, h, r) -> ;
-# A floral bract beside the stalk that follows it, on the same side.
+# A floral bract beside the stalk before it, on the same side. It comes
+# after the stalk so the stalk's own draws are as they were.
 decompose Br(a) : bract_length > 0 ->
     [ &(a * bract_lean * uniform(0.85, 1.15)) $ bract(bract_length * uniform(0.85, 1.15)) ];
 decompose Br(a) -> ;
