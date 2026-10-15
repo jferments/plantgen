@@ -3,6 +3,14 @@
   "rank": "clade",
   "name": "campanulids",
   "parent": "clade/asterids",
+  "traits": {
+    "stamens": {
+      "min": 4,
+      "max": 5,
+      "typical": 5
+    },
+    "carpels": 2
+  },
   "rules": {
     "generator.params.leaf_length": {
       "rule": "max(leaf_length_m)",
@@ -26,6 +34,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "How PlantGen's herb program sizes a herb's leaves from a flora's leaf lengths, a choice of the model's (spec rework E1 and E3): its longest stem and basal leaves as long as the longest leaf the flora gives, its lowest and topmost stem leaves shorter by the shortest's share of it, the card's petiole part of the length. Homed at the campanulids, where it holds for the daisy and carrot families and changes no other built-in species."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) pp. 34, 362: the euasterids (the campanulids among them) are K5 [C(5) A5] G(2), one whorl of five stamens alternating with the corolla's lobes; four where the flower is four-merous."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) pp. 34, 361-363: two joined carpels in the euasterid plan K5 [C(5) A5] G(2), below the perianth in the campanulids."
     }
   }
 }

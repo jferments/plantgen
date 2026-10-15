@@ -4,6 +4,10 @@
   "name": "Amaranthaceae",
   "parent": "order/caryophyllales",
   "traits": {
+    "flower_merosity": {"min": 3, "max": 5, "typical": 5, "high": 8},
+    "stamens": {"min": 3, "max": 5, "typical": 5, "low": 1, "high": 9},
+    "carpels": {"min": 2, "max": 3, "low": 1, "high": 6},
+    "hypanthium": false,
     "woodiness": {
       "herbaceous": "usually",
       "semi": "sometimes",
@@ -33,6 +37,10 @@
     }
   },
   "evidence": {
+    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 181: Ronse De Craene (Amaranthaceae incl. Chenopodiaceae): tepals mostly 3 to 5, rarely 1 or none; Simpson p. 371 gives 3-5 for Amaranthaceae s.s. and 5 (1, 6-8) for Chenopodiaceae. The rare 1-tepal flowers are left out because merosity starts at 2."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 181: stamens as many as the tepals and opposite them, rarely fewer; general formula 5, rarely 1 or up to 8-9."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 181, 182: ovary of 2 to 3 carpels, unilocular (general formula up to 6). Simpson p. 371 calls Amaranthaceae s.s. unicarpellous and Chenopodiaceae 2-3 (rarely 5)."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 371, 505: Simpson calls both Amaranthaceae s.s. and Chenopodiaceae hypogynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

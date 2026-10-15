@@ -4,6 +4,10 @@
   "name": "Anacardiaceae",
   "parent": "order/sapindales",
   "traits": {
+    "stamens": {"min": 5, "max": 10, "low": 1, "high": 200},
+    "carpels": {"min": 1, "max": 5, "typical": 3, "high": 12},
+    "corolla_shape": "rotate",
+    "hypanthium": false,
     "woodiness": "woody",
     "leaf_arrangement": {
       "alternate": "usually",
@@ -35,6 +39,10 @@
     }
   },
   "evidence": {
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 359: stamens 5 to 10, rarely 1 or many. Book writes ∞ (numerous); 200 is our stand-in for the upper bound and 20 for 'numerous' with no stated lower bound."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 359: carpels 1 to 3 or 5, rarely 12; typical 3 follows Floral Diagrams p. 232 (general formula G (1) 3-13)."},
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 359: usually 5 free petals. Free petals: rotate by PlantGen's free-petal rule; the book names no other corolla form."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 359, 505: Simpson calls the flowers usually hypogynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

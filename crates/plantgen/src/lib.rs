@@ -379,4 +379,10 @@ pub mod venation;
 /// `anther_attachment`) and colour its ovary (`pistil`); common camas's
 /// anthers are versatile and its ovary a pale green bead (62 is camas
 /// detail 3, #120).
-pub const GENERATOR_REVISION: u32 = 63;
+/// 64: flowers take their clades' and families' flower plans from Simpson
+/// (2019) and Ronse De Craene (2010): the monocots' tepals, stamens and
+/// carpels, the rosids' two whorls of stamens, the euasterids' five on the
+/// tube and two carpels, and 56 families' stamens, carpels, perianth,
+/// merosity, ovary, floral cup and corolla shape; willows and poplars
+/// draw no perianth (63 is camas anthers and ovary, #121).
+pub const GENERATOR_REVISION: u32 = 64;

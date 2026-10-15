@@ -2,5 +2,25 @@
   "schema": 1,
   "rank": "clade",
   "name": "lamiids",
-  "parent": "clade/asterids"
+  "parent": "clade/asterids",
+  "traits": {
+    "stamens": {
+      "min": 4,
+      "max": 5,
+      "typical": 5
+    },
+    "carpels": 2
+  },
+  "evidence": {
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) pp. 34, 362: the euasterids (the lamiids among them) are K5 [C(5) A5] G(2), one whorl of five stamens borne on the corolla tube, alternating with its lobes; four where the flower is four-merous. Families with two lips and four or two stamens state their own."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) pp. 34, 361-363: two joined carpels in the euasterid plan K5 [C(5) A5] G(2)."
+    }
+  }
 }

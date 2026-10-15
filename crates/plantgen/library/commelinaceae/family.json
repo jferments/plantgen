@@ -4,6 +4,9 @@
   "name": "Commelinaceae",
   "parent": "order/commelinales",
   "traits": {
+    "stamens": {"min": 3, "max": 6, "typical": 6, "low": 1},
+    "corolla_shape": "rotate",
+    "hypanthium": false,
     "woodiness": "herbaceous",
     "perianth": "sepals_and_petals",
     "flower_merosity": 3,
@@ -37,6 +40,9 @@
     }
   },
   "evidence": {
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 241: stamens usually 3+3, sometimes 3 fertile and 3 staminodes, rarely 1 fertile."},
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 241: 3 free or basally joined, short-lived petals. Free petals: rotate by PlantGen's free-petal rule; the book names no other corolla form."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 241, 505: Simpson calls the flowers hypogynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",

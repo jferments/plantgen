@@ -4,6 +4,9 @@
   "name": "Celastraceae",
   "parent": "order/celastrales",
   "traits": {
+    "carpels": {"min": 2, "max": 5, "typical": 3, "high": 10},
+    "corolla_shape": "rotate",
+    "hypanthium": {"false": "usually", "true": "sometimes"},
     "woodiness": {
       "woody": "usually",
       "herbaceous": "rarely"
@@ -30,6 +33,9 @@
     "ovary_position": "superior"
   },
   "evidence": {
+    "traits.carpels": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 262, 264: general formula 2 to 5, up to 10 carpels; Celastrales tend to tricarpellate gynoecia."},
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 262, 264: 4-5 free, large petals (general formula C (3) 4-5 (6), not fused). Free petals: rotate by PlantGen's free-petal rule; the book names no other corolla form."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 262: Ronse De Craene (Celastrales): a short hypanthium is occasionally present, linked with a half-inferior ovary."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

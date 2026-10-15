@@ -4,6 +4,7 @@
   "name": "Zingiberaceae",
   "parent": "order/zingiberales",
   "traits": {
+    "hypanthium": false,
     "woodiness": "herbaceous",
     "phyllotaxis_pattern": "distichous",
     "perianth": "sepals_and_petals",
@@ -28,6 +29,7 @@
     "life_span": "perennial"
   },
   "evidence": {
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 252, 505: Simpson calls the flowers epigynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
