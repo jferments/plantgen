@@ -1540,6 +1540,9 @@ pub type Organs = Vec<(String, String)>;
 pub struct Programs {
     params: BTreeMap<String, Params>,
     organs: BTreeMap<String, Organs>,
+    /// The parameters that are an organ's whole shading area
+    /// (`organ leaf leaf area leaf_area;`).
+    areas: BTreeMap<String, BTreeSet<String>>,
 }
 
 impl Programs {
@@ -1554,6 +1557,12 @@ impl Programs {
     #[must_use]
     pub fn organs(&self, program: &str) -> &[(String, String)] {
         self.organs.get(program).map_or(&[], Vec::as_slice)
+    }
+
+    /// The program's parameters that are an organ's whole shading area,
+    /// which its look gives where the species does not (LANGUAGE.md 5.2).
+    pub fn area_params(&self, program: &str) -> impl Iterator<Item = &String> {
+        self.areas.get(program).into_iter().flatten()
     }
 
     /// Each program's name and parameters, by name.
@@ -1603,10 +1612,14 @@ impl std::ops::Index<&str> for Programs {
 /// to the compiled programs.
 #[must_use]
 pub fn program_params<'a>(sources: impl IntoIterator<Item = (&'a str, &'a str)>) -> Programs {
-    let mut own: BTreeMap<&str, (Params, Organs, Option<String>)> = BTreeMap::new();
+    /// One program's own declarations: its parameters, organ types, area
+    /// parameters and the program it extends.
+    type Declared = (Params, Organs, BTreeSet<String>, Option<String>);
+    let mut own: BTreeMap<&str, Declared> = BTreeMap::new();
     for (name, source) in sources {
         let mut params = Params::new();
         let mut organs = Organs::new();
+        let mut areas = BTreeSet::new();
         let mut parent = None;
         let mut header = true;
         for line in source.lines() {
@@ -1637,20 +1650,28 @@ pub fn program_params<'a>(sources: impl IntoIterator<Item = (&'a str, &'a str)>)
                 && let [_, organ, kind, ..] = words[..]
             {
                 organs.push((organ.to_string(), kind.to_string()));
+                if let [.., "area", area] = words[..]
+                    && area.starts_with(|c: char| c.is_ascii_alphabetic() || c == '_')
+                {
+                    areas.insert(area.to_string());
+                }
             }
         }
-        own.insert(name, (params, organs, parent));
+        own.insert(name, (params, organs, areas, parent));
     }
     let mut programs = Programs::default();
     for name in own.keys() {
         let mut params = Params::new();
         let mut organs = Organs::new();
+        let mut areas = BTreeSet::new();
         let mut next = Some(*name);
         // As deep as `extends` chains may go, so a loop ends.
         for _ in 0..8 {
-            let Some((own_params, own_organs, parent)) = next.and_then(|at| own.get(at)) else {
+            let Some((own_params, own_organs, own_areas, parent)) = next.and_then(|at| own.get(at))
+            else {
                 break;
             };
+            areas.extend(own_areas.iter().cloned());
             for (param, default) in own_params {
                 params.entry(param.clone()).or_insert(*default);
             }
@@ -1661,6 +1682,7 @@ pub fn program_params<'a>(sources: impl IntoIterator<Item = (&'a str, &'a str)>)
         }
         programs.params.insert((*name).to_string(), params);
         programs.organs.insert((*name).to_string(), organs);
+        programs.areas.insert((*name).to_string(), areas);
     }
     programs
 }
@@ -1960,10 +1982,34 @@ fn fill_defaults(
 /// `crate::spec::MALE` writes it.
 pub const MALE: &str = "_male";
 
+/// The organ type of a program's buds (`herb`, `column`).
+pub const BUD: &str = "bud";
+
+/// The species' `flower` look closed (`open` 0), without its season,
+/// cluster or juvenile forms: a bud is the flower before it opens. `None`
+/// when the flower look draws no flower.
+fn closed_flower(looks: &Map<String, Value>) -> Option<Value> {
+    let flower = looks.get("flower")?;
+    if flower.pointer("/shape/template").and_then(Value::as_str) != Some("flower") {
+        return None;
+    }
+    let mut closed = flower.clone();
+    let look = closed.as_object_mut()?;
+    for part in ["season", "inflorescence", "families"] {
+        look.remove(part);
+    }
+    look.get_mut("shape")?
+        .as_object_mut()?
+        .insert("open".into(), Value::from(0.0));
+    Some(closed)
+}
+
 /// Give each organ type the species' program declares that has no look of
 /// its own its kind's look from the merged `appearance.defaults`, with its
 /// origin and note, and drop the defaults (LANGUAGE.md 5.2): the rules then
-/// reach every organ the plant draws. A look filled in stands farthest of
+/// reach every organ the plant draws. A `bud` without a look of its own
+/// takes its flower's look, closed ([`closed_flower`]), as a lone flower's
+/// bud does in its season (spec rework P5). A look filled in stands farthest of
 /// all, as a default parameter does, so any rule may set what it holds. A
 /// male plant's organ takes none: it stands for the organ it is the male
 /// of.
@@ -2001,6 +2047,24 @@ fn fill_looks(
         if looks.contains_key(organ) {
             continue;
         }
+        if organ == BUD {
+            if let Some(closed) = closed_flower(looks) {
+                looks.insert(organ.clone(), closed);
+                let to = format!("appearance.organs.{BUD}");
+                let taken: Vec<(String, Origin)> = origins
+                    .iter()
+                    .filter(|(path, _)| within(path, "appearance.organs.flower"))
+                    .map(|(path, origin)| {
+                        (
+                            format!("{to}{}", &path["appearance.organs.flower".len()..]),
+                            origin.clone(),
+                        )
+                    })
+                    .collect();
+                origins.extend(taken);
+                continue;
+            }
+        }
         looks.insert(organ.clone(), look.clone());
         let from = format!("appearance.defaults.{kind}");
         let to = format!("appearance.organs.{organ}");
@@ -2032,6 +2096,54 @@ fn fill_looks(
     }
     forget(origins, "appearance.defaults");
     notes.retain(|path, _| !within(path, "appearance.defaults"));
+}
+
+/// Drop each organ area parameter of the species' program that neither
+/// its own spec nor a rule set, a rank file's or a form's default: the
+/// organ shades with what its look draws instead (LANGUAGE.md 5.2, areas
+/// from looks, [`crate::spec::PlantSpec::program_in`]).
+fn drop_areas(
+    layers: &[(String, &Part)],
+    programs: &Programs,
+    spec: &mut Map<String, Value>,
+    origins: &mut BTreeMap<String, Origin>,
+    notes: &mut BTreeMap<String, (Origin, Value)>,
+) {
+    let Some((own, _)) = layers.last() else {
+        return;
+    };
+    let Some(program) = spec
+        .get("generator")
+        .and_then(|generator| generator.get("program"))
+        .and_then(Value::as_str)
+        .map(str::to_string)
+    else {
+        return;
+    };
+    for name in programs.area_params(&program) {
+        for path in [
+            format!("generator.params.{name}"),
+            format!("generator.spreads.params.{name}"),
+        ] {
+            let Some((label, _)) = origins.get(&path) else {
+                continue;
+            };
+            if label == own || label.contains(": rule") {
+                continue;
+            }
+            remove(spec, &path);
+            forget(origins, &path);
+            notes.retain(|note, _| !within(note, &path));
+        }
+    }
+    // A section left empty goes too.
+    if let Some(Value::Object(generator)) = spec.get_mut("generator")
+        && generator
+            .get("params")
+            .is_some_and(|params| params.as_object().is_some_and(Map::is_empty))
+    {
+        generator.remove("params");
+    }
 }
 
 /// The parts a species merges, from the top down, each with its file's
@@ -2163,6 +2275,7 @@ impl Ruled<'_> {
             };
             outcomes.insert(path.to_string(), (layers[*index].0.clone(), outcome));
         }
+        drop_areas(layers, programs, spec, origins, notes);
         // A spread a rule replaced leaves no empty objects behind.
         for section in ["appearance", "generator"] {
             if let Some(Value::Object(inside)) = spec.get_mut(section) {
@@ -4222,6 +4335,46 @@ mod tests {
             let error = super::check_rule("appearance.foliage", &rule).unwrap_err();
             assert!(error.contains(wanted), "{rule}: {error}");
         }
+    }
+
+    /// An organ area parameter a rank file's form gives is dropped, so
+    /// the organ shades with what its look draws; one the species gives,
+    /// or a rule, stays.
+    #[test]
+    fn organ_areas_only_a_species_or_a_rule_sets_stay() {
+        let programs = program_params([(
+            "herb",
+            "lsystem herb 1;\nparam leaf_area = 0.2;\nparam fruit_area = 0.5;\nparam flower_area;\norgan leaf leaf area leaf_area;\norgan fruit fruit area fruit_area;\norgan flower flower area flower_area;\norgan bud fruit area 0.3 * fruit_area;",
+        )]);
+        assert_eq!(
+            programs.area_params("herb").collect::<Vec<_>>(),
+            ["flower_area", "fruit_area", "leaf_area"]
+        );
+        let files = ranks(&[(
+            "testaceae/family.json",
+            json!({"schema": 1, "rank": "family", "name": "Testaceae",
+                "forms": {"forb": {
+                    "generator": {"program": "herb",
+                        "params": {"leaf_area": 0.1, "fruit_area": 0.4, "stems": 3}},
+                    "evidence": {"generator": {"evidence": "Authored",
+                        "source": "plantgen-authors", "note": "A test."}}}},
+                "rules": {"generator.params.flower_area": {"rule": "0.6"}}}),
+        )]);
+        let chain = above(&files, "testaceae", "plain").unwrap();
+        let grown = inherit(
+            "testaceae/plain/plain-one/spec.json",
+            &json!({"id": "plain-one", "growth_form": "forb",
+                "generator": {"params": {"fruit_area": 0.45}}}),
+            &chain,
+            &programs,
+        )
+        .unwrap();
+        let params = &grown.spec["generator"]["params"];
+        assert!(params.get("leaf_area").is_none());
+        assert_eq!(params["fruit_area"], json!(0.45));
+        assert_eq!(params["flower_area"], json!(0.6));
+        assert_eq!(params["stems"], json!(3));
+        assert!(!grown.origins.contains_key("generator.params.leaf_area"));
     }
 
     /// A family's rules for its heads set a card's fields where the species
