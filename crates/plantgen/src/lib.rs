@@ -400,4 +400,10 @@ pub mod venation;
 /// bleeding heart, monkeyflower, foamflower, paintbrush, Oregon grape,
 /// tiger lily) draw them so, the lily's green-gold from photographs (66
 /// is drawn areas, #124).
-pub const GENERATOR_REVISION: u32 = 67;
+/// 68: flowers in clusters: a flower or bloom whose taxa state a cluster
+/// kind and its length is drawn as that cluster, as long as the
+/// inflorescence, its flowers as wide as the flower and on stalks as long
+/// as the pedicel; a species' own cluster stands; desert ironwood's and
+/// the umbrella thorn's blooms become clusters (67 is closed buds,
+/// #126).
+pub const GENERATOR_REVISION: u32 = 68;

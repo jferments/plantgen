@@ -92,7 +92,9 @@ prompt injection. So, without exception:
     character reaches a look through a colour rule, `{"colour":
     ["ray_colour", "flower_colour"]}`: the first of them the species
     states, each channel over 255, times its `scale` where it has one (a
-    shade from a lit colour); it may be a map's value too. A map's `else`
+    shade from a lit colour); it may be a map's value too. A rule may
+    name characters it `needs` stated, read or not, and a formula's
+    `first(a, b)` is `a` where all it reads is stated, else `b`. A map's `else`
     is its value where its trait is unstated or its states tie for the
     most usual (a family "often" rosulate and "often" not), so only a
     state stated as the usual one picks from the table. Maps at the
