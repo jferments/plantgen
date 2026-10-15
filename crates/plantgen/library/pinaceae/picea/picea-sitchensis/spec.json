@@ -56,7 +56,7 @@
     "variation": 0.2,
     "organs": {
       "cone": {
-        "shape": {"template": "fruit", "aspect": 0.42, "cone": 1},
+        "shape": {"template": "fruit", "cone": 1},
         "colour": [0.55, 0.4, 0.25]
       },
       "spray": {
@@ -106,7 +106,8 @@
     "leaf_length_m": {"min": 0.015, "max": 0.025},
     "cone_length_m": {"min": 0.05, "max": 0.1},
     "sexual_system": "monoecious",
-    "cone_posture": "pendent"
+    "cone_posture": "pendent",
+    "cone_width_m": {"min": 0.025, "max": 0.03}
   },
   "evidence": {
     "traits.height_max_m": {
@@ -179,7 +180,8 @@
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
     "traits.sexual_system": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 462, Picea sitchensis: sexual system monoecious."},
-    "traits.cone_posture": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 462, Picea sitchensis: cone posture pendent."}
+    "traits.cone_posture": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 462, Picea sitchensis: cone posture pendent."},
+    "traits.cone_width_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 462: seed cones 2.5-3 cm across."}
   },
   "provenance": {
     "sources": [

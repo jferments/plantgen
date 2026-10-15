@@ -161,7 +161,9 @@
     "traits.inflorescence": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453, Phoenix dactylifera: inflorescence panicle."},
     "traits.inflorescence_posture": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453, Phoenix dactylifera: inflorescence posture erect, becoming nodding."},
     "traits.bract_form": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453, Phoenix dactylifera: bract form spathe."},
-    "traits.flowering_position": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453, Phoenix dactylifera: flowering position lateral."}
+    "traits.flowering_position": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453, Phoenix dactylifera: flowering position lateral."},
+    "traits.petal_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453: petals 7-10 mm in the male flowers, 4-5 mm in the female."},
+    "traits.peduncle_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453: peduncle 50-70 cm."}
   },
   "provenance": {
     "sources": [
@@ -180,6 +182,8 @@
     "inflorescence": "panicle",
     "inflorescence_posture": {"erect": "often", "nodding": "often"},
     "bract_form": "spathe",
-    "flowering_position": "lateral"
+    "flowering_position": "lateral",
+    "petal_length_m": {"min": 0.004, "max": 0.01},
+    "peduncle_length_m": {"min": 0.5, "max": 0.7}
   }
 }
