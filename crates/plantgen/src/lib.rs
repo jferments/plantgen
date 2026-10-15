@@ -389,4 +389,9 @@ pub mod venation;
 /// floral bract (`herb` revision 9, `bract_length`, absent by default);
 /// common camas's bracts are narrow, pale and papery, a little longer
 /// than the flower stalks (64 is flower plans, #118).
-pub const GENERATOR_REVISION: u32 = 65;
+/// 66: an organ whose area parameter its species' own spec does not set
+/// shades with the area its look draws, not a rank file's, a form's or
+/// its program's default, so a species drafted from facts shades with what
+/// it shows; every built-in sets its own and grows as before (65 is floral
+/// bracts, #123).
+pub const GENERATOR_REVISION: u32 = 66;

@@ -527,6 +527,27 @@ impl Program {
         })
     }
 
+    /// Each organ type's shading-area parameter, in declaration order: the
+    /// program parameter its declaration's area is alone (`organ leaf leaf
+    /// area leaf_area;`), or `None` where the area is a number or an
+    /// expression.
+    #[must_use]
+    pub fn organ_area_params(&self) -> Vec<Option<&str>> {
+        self.symbols
+            .iter()
+            .filter_map(|symbol| match &symbol.kind {
+                SymbolKind::Organ { area, .. } => Some(match &*area.0 {
+                    [Op::Global(index)] => self
+                        .params
+                        .get(usize::from(*index))
+                        .map(|param| param.name.as_str()),
+                    _ => None,
+                }),
+                _ => None,
+            })
+            .collect()
+    }
+
     /// What each organ type is where its declaration says (`as term`),
     /// in declaration order; `None` where it does not (see
     /// [`crate::organs`]).
