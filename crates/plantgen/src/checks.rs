@@ -3258,13 +3258,26 @@ mod tests {
         let rules = &kingdom["rules"];
         let widths = &rules["appearance.organs.leaf.shape.width"]["map"]["leaf_shape"];
         let outlines = &rules["appearance.organs.leaf.shape.outline"]["map"]["leaf_shape"];
+        // A word's width, or the width its formula falls back to where a
+        // flora measures no blade: `first(measured, word's)`.
+        let width = |value: &Value| {
+            value.as_f64().unwrap_or_else(|| {
+                let rule = value["rule"].as_str().unwrap();
+                rule.trim_end_matches(')')
+                    .rsplit(", ")
+                    .next()
+                    .unwrap()
+                    .parse()
+                    .unwrap()
+            })
+        };
         let read: Vec<(String, String)> = outlines
             .as_object()
             .unwrap()
             .iter()
             .map(|(word, points)| {
                 let simple = Simple {
-                    width: widths[word].as_f64().unwrap(),
+                    width: width(&widths[word]),
                     outline: Some(serde_json::from_value(points.clone()).unwrap()),
                     ..Simple::default()
                 };
