@@ -987,6 +987,12 @@ pub struct Flower {
     pub petal_width: f64,
     /// 0 for round petal tips, 1 for pointed ones.
     pub point: f64,
+    /// The power of a petal's taper from its widest to its tip, where
+    /// `point` alone does not say it: 0.45 a round tip, 1.3 straight sides
+    /// to a point (as `point` gives below and from 0.5), between them an
+    /// elliptic petal with an acute tip.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub taper: Option<f64>,
     /// Depth of a notch in each petal tip, 0 to 1; a lip's lobes.
     pub notch: f64,
     /// Radius of the centre, in the accent colour, over the flower's.
@@ -1057,6 +1063,9 @@ pub struct Flower {
     /// Their length over the flower's radius.
     #[serde(skip_serializing_if = "is_default_stamen_length")]
     pub stamen_length: f64,
+    /// An anther's length over its stamen's.
+    #[serde(skip_serializing_if = "is_default_anther")]
+    pub anther: f64,
     /// Sterile stamens, drawn without anthers.
     #[serde(skip_serializing_if = "is_zero_count")]
     pub staminodes: u32,
@@ -1086,6 +1095,7 @@ impl Default for Flower {
             petals: 5,
             petal_width: 1.0,
             point: 0.0,
+            taper: None,
             notch: 0.0,
             centre: 0.18,
             perianth: Perianth::Corolla,
@@ -1106,6 +1116,7 @@ impl Default for Flower {
             tube: 0.0,
             stamens: 0,
             stamen_length: STAMEN_LENGTH,
+            anther: crate::flowers::ANTHER,
             staminodes: 0,
             carpels: 0,
             ovary: Ovary::Superior,
@@ -1175,6 +1186,11 @@ fn is_default_sepal_length(value: &f64) -> bool {
 #[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
 fn is_default_banner(value: &f64) -> bool {
     *value == BANNER
+}
+
+#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
+fn is_default_anther(value: &f64) -> bool {
+    *value == crate::flowers::ANTHER
 }
 
 #[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
@@ -2096,6 +2112,10 @@ impl Shape {
                 }
                 check("petal_width", s.petal_width, 0.1, 1.5)?;
                 check("point", s.point, 0.0, 1.0)?;
+                if let Some(taper) = s.taper {
+                    check("taper", taper, 0.2, 3.0)?;
+                }
+                check("anther", s.anther, 0.05, 0.6)?;
                 check("notch", s.notch, 0.0, 0.8)?;
                 check("centre", s.centre, 0.0, 0.8)?;
                 count("sepals", s.sepals, 0, 12)?;

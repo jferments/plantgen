@@ -43,6 +43,9 @@ use crate::looks::{Corolla, Flower, Ovary, Perianth};
 use crate::math::{self, Vec3, any_perpendicular};
 use crate::mesh::Mesh;
 
+/// An anther's length over its stamen's, where the flower does not say.
+pub const ANTHER: f64 = 0.16;
+
 /// The golden angle, in degrees: a spiral perianth's and stamens' step.
 const GOLDEN: f64 = 137.507_764;
 /// The cup a closed flower's petals take, in degrees: over the centre.
@@ -149,6 +152,8 @@ pub struct Rod {
 pub struct Stamen {
     pub rod: Rod,
     pub fertile: bool,
+    /// Its anther's length, along the filament's tip.
+    pub anther: f64,
 }
 
 /// A flower's centre.
@@ -220,7 +225,9 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
     let rise = |cup: f64| cup + (CLOSED - cup) * (1.0 - open);
     let grown = 0.5 + 0.5 * open;
     let curl = form.curl * open;
-    let taper = if flower.point >= 0.5 { 1.3 } else { 0.45 };
+    let taper = flower
+        .taper
+        .unwrap_or(if flower.point >= 0.5 { 1.3 } else { 0.45 });
     let psi = math::radians(flower.turn) + if flower.is_zygomorphic() { 0.0 } else { spin };
 
     // The seat: where the perianth stands.
@@ -596,6 +603,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
                     width: length * 0.03,
                 },
                 fertile,
+                anther: flower.anther * filament,
             });
         }
     }
@@ -893,7 +901,7 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
             anther(
                 foot + direction * stamen.rod.length,
                 direction,
-                stamen.rod.length,
+                stamen.anther,
                 colours.accent,
                 part,
                 mesh,
@@ -987,7 +995,7 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
             anther(
                 foot + direction * column.length,
                 direction,
-                column.length * 1.5,
+                column.length * 1.5 * ANTHER,
                 colours.accent,
                 part,
                 mesh,
@@ -1280,10 +1288,11 @@ fn rod_cone(foot: Vec3, direction: Vec3, rod: &Rod, colour: [f32; 3], part: Part
 
 /// An anther at a filament's `tip`: a small three-sided double pyramid
 /// along `direction`, sized to a filament `length` long.
+/// An anther `length` long, centred on a filament's `tip`.
 fn anther(tip: Vec3, direction: Vec3, length: f64, colour: [f32; 3], part: Part, mesh: &mut Mesh) {
     let side = any_perpendicular(direction);
     let other = direction.cross(side);
-    let (half, wide) = (length * 0.08, length * 0.035);
+    let (half, wide) = (length * 0.5, length * 0.218_75);
     let leaf = part.leaf(tip, direction, side, 0.0, 0.0, colour);
     let first = u32::try_from(mesh.positions.len()).unwrap_or(0);
     mesh.push(leaf.vertex(tip - direction * half, colour));
