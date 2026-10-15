@@ -33,6 +33,7 @@
       "flower_angle": 30,
       "fruit_below": 0,
       "buds_above": 0.85,
+      "bud_spacing": 0.35,
       "nod": 0,
       "bud_size": 0.02,
       "leaf_area": 0.216,
@@ -144,7 +145,8 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "generator.params.bud_spacing": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "The bracts and buds above the open flowers pack into a dense head at the top of the spike, about a third of the open flowers' spacing apart by eye (flowering photographs, observations 338448297, 5589350, 1585541, 217223222, 269885666, 208431319, 211316657, 397951847): a bud's internode as a share of a flower's, judged by eye."}
   },
   "provenance": {
     "sources": [
