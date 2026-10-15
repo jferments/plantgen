@@ -61,9 +61,15 @@
 # fruit. The rest are female and fruit as before; so does a plant that
 # bears both sexes (dioecious 0).
 #
+# Revision 9: a flower, bud or fruit of the raceme may stand in the
+# axil of a floral bract, a narrow leaf bract_length long from the axis
+# beside its stalk, at bract_lean times the stalk's angle (camas's pale
+# papery bracts). With bract_length 0, as every program gives it unless
+# it says otherwise, no bract is drawn and a herb grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem herb 8;
+lsystem herb 9;
 
 # The clump.
 param stems;                  # stems in a mature clump
@@ -118,6 +124,9 @@ param bud_spacing;            # a bud's internode as a share of a flower's: belo
 param bud_lean;               # a bud's stalk angle as a share of flower_angle: near 0 the buds stand pressed to the axis
 param bud_stalk;              # a bud's stalk as a share of pedicel
 param nod;                    # degrees the bud-tipped end bends over
+param bract_length = 0;       # a floral bract's length below each stalk of the raceme; 0: none
+param bract_lean = 1.1;       # a bract's angle to the axis as a share of its stalk's
+param bract_area = 0.235;     # leaf area of a bract 1 m long, m² (the default leaf card's)
 param flower_area;
 param bud_area;
 param fruit_area;
@@ -133,6 +142,7 @@ module St(h, r);              # a stem h tall with a raceme r long
 module Nd(i, m, h, r);        # leaf nodes i to i + m - 1 of a stem
 module Rc(i, m, h, r);        # raceme nodes i to i + m - 1
 module Lf(s);                 # the leaves at one node
+module Br(a);                 # a floral bract, a degrees from the axis
 
 organ leaf leaf area leaf_area;
 organ basal leaf as piece area basal_area;
@@ -140,6 +150,7 @@ organ basal_piece leaf as piece area basal_piece_area;
 organ flower flower area flower_area;
 organ bud fruit as flower area bud_area;
 organ fruit fruit area fruit_area;
+organ bract leaf as inflorescence_bract area bract_area;
 
 structure basal_leaf leaf;    # one basal leaf: its pieces and tip
 
@@ -213,19 +224,24 @@ decompose Rc(i, m, h, r) : m > 1 ->
 decompose Rc(i, m, h, r) : m == 1 && (i + 0.5) / flowers < fruit_below
                           && (dioecious < 0.5 || sex >= 0.5) ->
     !(stem_radius * 0.5) F(h * r / flowers)
-    [ &(fruit_angle * uniform(0.8, 1.2)) fruit(fruit_length * uniform(0.85, 1.1)) ]
+    [ &(fruit_angle * uniform(0.8, 1.2)) fruit(fruit_length * uniform(0.85, 1.1)) ] Br(fruit_angle)
     /(flower_divergence);
 decompose Rc(i, m, h, r) : m == 1 && (i + 0.5) / flowers < buds_above ->
     !(stem_radius * 0.5) F(h * r / flowers)
     [ &(flower_angle * uniform(0.8, 1.2)) !(stem_radius * 0.2) F(pedicel)
-      flower(flower_size * uniform(0.9, 1.1)) ]
+      flower(flower_size * uniform(0.9, 1.1)) ] Br(flower_angle)
     /(flower_divergence);
 decompose Rc(i, m, h, r) : m == 1 ->
     &(nod / max(1, flowers * (1 - buds_above))) !(stem_radius * 0.5) F(h * r / flowers * bud_spacing)
     [ &(flower_angle * bud_lean) !(stem_radius * 0.2) F(pedicel * bud_stalk)
       bud(bud_size * lerp(1, 0.5, ((i + 0.5) / flowers - buds_above) / max(0.01, 1 - buds_above))) ]
-    /(flower_divergence);
+    Br(flower_angle * bud_lean) /(flower_divergence);
 decompose Rc(i, m, h, r) -> ;
+# A floral bract beside the stalk before it, on the same side. It comes
+# after the stalk so the stalk's own draws are as they were.
+decompose Br(a) : bract_length > 0 ->
+    [ &(a * bract_lean * uniform(0.85, 1.15)) $ bract(bract_length * uniform(0.85, 1.15)) ];
+decompose Br(a) -> ;
 
 # Last year's stems are gone.
 rule Sm -> %;

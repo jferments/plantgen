@@ -385,4 +385,8 @@ pub mod venation;
 /// tube and two carpels, and 56 families' stamens, carpels, perianth,
 /// merosity, ovary, floral cup and corolla shape; willows and poplars
 /// draw no perianth (63 is camas anthers and ovary, #121).
-pub const GENERATOR_REVISION: u32 = 64;
+/// 65: a herb's raceme may set each flower, bud and fruit in the axil of a
+/// floral bract (`herb` revision 9, `bract_length`, absent by default);
+/// common camas's bracts are narrow, pale and papery, a little longer
+/// than the flower stalks (64 is flower plans, #118).
+pub const GENERATOR_REVISION: u32 = 65;
