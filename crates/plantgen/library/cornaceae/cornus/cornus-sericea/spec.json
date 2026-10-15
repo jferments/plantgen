@@ -145,7 +145,8 @@
     "leaf_shape": {"elliptic": "often", "ovate": "often"},
     "flower_size_m": {"min": 0.007, "max": 0.008},
     "fruit_type": "drupe",
-    "fruit_size_m": {"min": 0.006, "max": 0.008}
+    "fruit_size_m": {"min": 0.006, "max": 0.008},
+    "petal_length_m": {"min": 0.0025, "max": 0.0035}
   },
   "evidence": {
     "traits.flowering_months": {
@@ -233,7 +234,8 @@
     "traits.leaf_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 386, Cornus sericea: leaf shape ovate to elliptic, acuminate, with arcuate veins (photo)."},
     "traits.flower_size_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 196, Cornus sericea: flower size 7-8 mm."},
     "traits.fruit_type": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 196, Cornus sericea: fruit type drupe."},
-    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 196, Cornus sericea: fruit size 6-8 mm."}
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 196, Cornus sericea: fruit size 6-8 mm."},
+    "traits.petal_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 196: petals 2.5-3.5 mm long, 1.5-2 mm wide, reflexing."}
   },
   "provenance": {
     "sources": [

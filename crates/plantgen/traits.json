@@ -478,6 +478,13 @@
       "when": {"spines": ["areoles"]},
       "why": "what a cactus's stem is built as: a column or a barrel growing on at its tip, or a chain of joints, cylindrical (a cholla's) or flattened into pads (a prickly pear's)"
     },
+    "stem_cross_section": {
+      "group": "form",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["terete", "angled", "trigonous", "square", "winged", "flattened"],
+      "why": "a stem's or culm's shape in cross-section: round, ridged or angled, three-angled (a sedge's culm), four-angled (a mint's), winged, or flattened"
+    },
     "ribs": {
       "group": "stem_and_bark",
       "organ": "stem",
@@ -908,6 +915,15 @@
       "range": [0.001, 10],
       "why": "an inflorescence from its lowest unit or branch to its tip"
     },
+    "peduncle_length_m": {
+      "group": "flowers",
+      "organ": "inflorescence",
+      "type": "number",
+      "unit": "m",
+      "range": [0, 3],
+      "optional": true,
+      "why": "the bare stalk an inflorescence stands on, from where it leaves its shoot to its lowest unit or branch"
+    },
     "inflorescence_bracts": {
       "group": "flowers",
       "organ": "inflorescence",
@@ -943,6 +959,24 @@
       "unit": "m",
       "range": [0.0005, 1.5],
       "why": "an open flower across"
+    },
+    "petal_length_m": {
+      "group": "flowers",
+      "organ": "petal",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0003, 0.5],
+      "optional": true,
+      "why": "a petal from its base to its tip, claw included"
+    },
+    "sepal_length_m": {
+      "group": "flowers",
+      "organ": "sepal",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0002, 0.3],
+      "optional": true,
+      "why": "a sepal from its base to its tip, or a joined calyx's lobe with its tube"
     },
     "pedicel_length_m": {
       "group": "flowers",
@@ -1315,6 +1349,14 @@
       "type": "months",
       "why": "the months its fruit is ripe in"
     },
+    "fruit_posture": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "enum",
+      "values": ["erect", "spreading", "deflexed", "pendent"],
+      "optional": true,
+      "why": "how a ripe fruit or fruit cluster holds itself on its stalk: standing up, out to the side, bent down, or hanging (a lime's or an ash's keys), as cone_posture is for a seed cone"
+    },
     "cone_length_m": {
       "group": "fruit_and_cones",
       "organ": "cone",
@@ -1322,6 +1364,23 @@
       "unit": "m",
       "range": [0.002, 0.7],
       "why": "a ripe cone"
+    },
+    "cone_width_m": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 0.4],
+      "why": "a ripe seed cone across at its widest, closed"
+    },
+    "pollen_cone_length_m": {
+      "group": "fruit_and_cones",
+      "organ": "cone",
+      "type": "number",
+      "unit": "m",
+      "range": [0.001, 0.6],
+      "optional": true,
+      "why": "a pollen (microsporangiate) cone when it sheds its pollen; cone_length_m is the seed cone's"
     },
     "cone_posture": {
       "group": "fruit_and_cones",

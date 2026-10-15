@@ -34,7 +34,8 @@
       "capsule": "often",
       "berry": "often"
     },
-    "inflorescence": "cyme"
+    "inflorescence": "cyme",
+    "stem_cross_section": {"square": "often"}
   },
   "evidence": {
     "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 345, 347: 4 to 5 sepals and petals, rarely 3 to 10."},
@@ -50,6 +51,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 345, 346, 347, family Melastomataceae: inflorescence cyme; read as \"cyme\"."
-    }
+    },
+    "traits.stem_cross_section": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 345, 346, 347, family Melastomataceae: stems 4-angled; read as {\"square\": \"often\"}."}
   }
 }

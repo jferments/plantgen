@@ -34,7 +34,8 @@
     "sexual_system": {
       "monoecious": "often",
       "hermaphrodite": "sometimes"
-    }
+    },
+    "stem_cross_section": {"trigonous": "usually"}
   },
   "evidence": {
     "traits.leaf_arrangement": {
@@ -96,6 +97,7 @@
       "evidence": "SourceInferred",
       "source": "diversity-evolution-land-plants",
       "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 186, family Cyperaceae: sexual system hermaphrodite (e.g. Scirpus), sometimes. Ingrouille, Diversity and Evolution of Land Plants (1992) p. 186, family Cyperaceae: sexual system monoecious (e.g. Carex), often. Read together as {\"monoecious\": \"often\", \"hermaphrodite\": \"sometimes\"}."
-    }
+    },
+    "traits.stem_cross_section": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 259, 260, 261, family Cyperaceae: stems 3-sided, with solid pith; read as {\"trigonous\": \"usually\"}."}
   }
 }

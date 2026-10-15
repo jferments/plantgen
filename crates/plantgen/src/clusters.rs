@@ -986,17 +986,7 @@ impl Layout {
     /// centre, a fruit's or spikelet's its tip.
     #[must_use]
     pub fn length(&self, unit: Unit) -> f64 {
-        let low = self
-            .units
-            .iter()
-            .map(|p| p.attach.y)
-            .chain(
-                self.stalks
-                    .iter()
-                    .filter(|stalk| !stalk.axis)
-                    .map(|stalk| stalk.from.y),
-            )
-            .fold(f64::INFINITY, f64::min);
+        let low = self.lowest();
         let high = self
             .units
             .iter()
@@ -1012,6 +1002,30 @@ impl Layout {
         } else {
             0.0
         }
+    }
+
+    /// The cluster's peduncle as `peduncle_length_m` measures it, a share
+    /// of its organ: from the organ's base to where its lowest unit's
+    /// pedicel or lowest branch leaves an axis; 0 for a cluster with none.
+    #[must_use]
+    pub fn peduncle(&self) -> f64 {
+        let low = self.lowest();
+        if low.is_finite() { low.max(0.0) } else { 0.0 }
+    }
+
+    /// The share of its organ where its lowest unit or branch leaves an
+    /// axis; infinite for a cluster with none.
+    fn lowest(&self) -> f64 {
+        self.units
+            .iter()
+            .map(|p| p.attach.y)
+            .chain(
+                self.stalks
+                    .iter()
+                    .filter(|stalk| !stalk.axis)
+                    .map(|stalk| stalk.from.y),
+            )
+            .fold(f64::INFINITY, f64::min)
     }
 }
 
@@ -2601,6 +2615,32 @@ mod tests {
                     assert!((a.length - b.length).abs() < 1e-12, "{kind}");
                 }
             }
+        }
+    }
+
+    #[test]
+    fn a_longer_peduncle_raises_a_clusters_lowest_unit() {
+        let at = |peduncle| {
+            let spec = Inflorescence {
+                kind: Some(ClusterKind::Raceme),
+                flowers: Some(10),
+                size: Some(0.1),
+                spread: Some(30.0),
+                pedicel: Some(0.1),
+                peduncle: Some(peduncle),
+                ..Inflorescence::default()
+            };
+            layout(&Cluster::of(&spec), Unit::Flower, 0.0, 5)
+        };
+        let (short, long) = (at(0.1), at(0.5));
+        assert!(
+            long.peduncle() > short.peduncle() + 0.2,
+            "{} {}",
+            short.peduncle(),
+            long.peduncle()
+        );
+        for cluster in [&short, &long] {
+            assert!(cluster.peduncle() + cluster.length(Unit::Flower) <= 1.0 + 1e-9);
         }
     }
 
