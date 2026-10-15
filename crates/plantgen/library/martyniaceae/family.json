@@ -24,13 +24,15 @@
       "min": 2,
       "max": 4
     },
-    "carpels": 2
+    "carpels": 2,
+    "perennation": "tuber"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Martyniaceae: leaves alternate or opposite; leaves simple; stipules absent; plants hermaphrodite; ovary superior; floral cup absent; stems herbaceous; flowers in racemes; flowers zygomorphic; irregular flowers bilabiate; perianth sepals and petals; fruit capsule; parts of each whorl 5; stamens 2 to 4; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Martyniaceae: how its perennial herbs last from year to year (character 25), coded usually tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

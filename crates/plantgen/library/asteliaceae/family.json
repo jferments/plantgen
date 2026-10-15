@@ -47,13 +47,15 @@
       "min": 3,
       "max": 3,
       "high": 4
-    }
+    },
+    "perennation": {"rhizome": "often", "tuber": "often"}
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Asteliaceae: leaves alternate; leaves simple; margins entire; veins parallel; blades linear, lanceolate, oblong or ovate; leaf rosettes basal, terminal or none; plants hermaphrodite or polygamous; ovary superior; stems woody or herbaceous; flowers in racemes or in spikes; flowers actinomorphic; perianth tepals; fruit usually berry, rarely capsule; parts of each whorl 3 to 7; stamens 6; carpels 3 (-4). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Asteliaceae: how its perennial herbs last from year to year (character 25), coded often a rhizome, often tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

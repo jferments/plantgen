@@ -406,4 +406,9 @@ pub mod venation;
 /// as the pedicel; a species' own cluster stands; desert ironwood's and
 /// the umbrella thorn's blooms become clusters (67 is closed buds,
 /// #126).
-pub const GENERATOR_REVISION: u32 = 68;
+/// 69: a forb drafted from facts sends up one stem where its taxa say it
+/// lasts as a bulb or a corm (the new character `perennation`, stated for
+/// 84 families from Watson and Dallwitz), a clump as before otherwise;
+/// every built-in sets its own and grows as before (68 is flowers in
+/// clusters, #127).
+pub const GENERATOR_REVISION: u32 = 69;

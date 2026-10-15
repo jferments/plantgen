@@ -57,7 +57,8 @@
     },
     "sexual_system": {
       "hermaphrodite": "usually"
-    }
+    },
+    "perennation": {"rhizome": "often", "tuber": "often"}
   },
   "forms": {
     "forb": {
@@ -143,6 +144,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 291, 292, family Ranunculaceae: sexual system hermaphrodite (rarely unisexual), usually; read as {\"hermaphrodite\": \"usually\"}."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Ranunculaceae, with the parts of Ranunculaceae it codes as families of their own (Glaucidiaceae, Hydrastidaceae), whose further states read as sometimes: how its perennial herbs last from year to year (character 25), coded often a rhizome, often tubers; with them, often a rhizome, often tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

@@ -19,13 +19,15 @@
     "fruit_type": {
       "capsule": "often",
       "berry": "often"
-    }
+    },
+    "perennation": "rhizome"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
       "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 371 Marantaceae: perennial herbs; leaves in two ranks, with an open sheath, a stalk thickened as a hinge below the blade, and a blade with many close parallel veins running obliquely from the midrib; flowers bisexual, lopsided, in a bracted spike or panicle; perianth mostly of calyx and corolla, the inner three unequal; one fertile stamen with a one-celled anther, the rest petal-like staminodes; ovary inferior, of 3 to 1 cells; fruit fleshy or a capsule."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Marantaceae: how its perennial herbs last from year to year (character 25), coded usually a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

@@ -44,7 +44,8 @@
     },
     "inflorescence": {
       "cyme": "usually"
-    }
+    },
+    "perennation": {"corm": "often", "rhizome": "often", "tuber": "often"}
   },
   "evidence": {
     "traits": {
@@ -67,6 +68,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 342, family Geraniaceae: inflorescence cyme (or solitary axillary flower), usually; read as {\"cyme\": \"usually\"}."
     },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Geraniaceae: how its perennial herbs last from year to year (character 25), coded often a corm, often a rhizome, often tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."},
     "traits.fruit_type": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",

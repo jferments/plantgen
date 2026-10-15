@@ -18,13 +18,15 @@
     "perianth": "tepals",
     "fruit_type": "nut",
     "stamens": 1,
-    "carpels": 2
+    "carpels": 2,
+    "perennation": "rhizome"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cynomoriaceae: leaves alternate; plants monoecious or polygamous; ovary inferior; stems herbaceous; flowers in spikes or in heads; perianth tepals; fruit nut; stamens 1; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cynomoriaceae: how its perennial herbs last from year to year (character 25), coded usually a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

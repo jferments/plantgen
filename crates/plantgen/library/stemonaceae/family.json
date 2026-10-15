@@ -49,13 +49,15 @@
       "max": 4
     },
     "stamens": 4,
-    "carpels": 2
+    "carpels": 2,
+    "perennation": {"rhizome": "often", "tuber": "often"}
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Stemonaceae with Pentastemonaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate, opposite or whorled; leaves simple; margins entire; veins usually palmate, sometimes pinnate; leaf rosettes usually none, sometimes basal; plants usually hermaphrodite, sometimes monoecious or polygamous; ovary usually superior, sometimes inferior, rarely half inferior; stems herbaceous or woody; flowers solitary, in cymes or in racemes; flowers actinomorphic; perianth tepals; fruit usually capsule, sometimes berry; parts of each whorl 2 to 4; stamens 4; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Stemonaceae: how its perennial herbs last from year to year (character 25), coded often a rhizome, often tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

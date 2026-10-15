@@ -21,7 +21,8 @@
       "actinomorphic": "usually",
       "zygomorphic": "rarely"
     },
-    "zygomorphy": "other"
+    "zygomorphy": "other",
+    "perennation": {"rhizome": "usually", "tuber": "sometimes", "corm": "rarely"}
   },
   "forms": {
     "forb": {
@@ -82,6 +83,7 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Melanthiaceae with Trilliaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple; the simple blade none. Read from the coded leaf form and dissection by script (spec-rework/b1/delta)."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Melanthiaceae, with the parts of Melanthiaceae it codes as families of their own (Trilliaceae), whose further states read as sometimes: how its perennial herbs last from year to year (character 25), coded usually a rhizome, sometimes tubers, rarely a corm; with them, usually a rhizome, sometimes tubers, rarely a corm. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

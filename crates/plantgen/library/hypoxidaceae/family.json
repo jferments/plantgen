@@ -37,13 +37,15 @@
       "min": 3,
       "max": 6
     },
-    "carpels": 3
+    "carpels": 3,
+    "perennation": {"corm": "often", "rhizome": "often"}
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Hypoxidaceae: leaves alternate; leaves simple; margins entire; veins parallel or pinnate; blades linear or lanceolate; leaf rosettes basal; plants hermaphrodite; ovary inferior; stems herbaceous; flowers solitary, in racemes, in spikes, in heads or in umbels; flowers actinomorphic; perianth tepals; fruit capsule or berry; parts of each whorl 3; stamens 3 to 6; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Hypoxidaceae: how its perennial herbs last from year to year (character 25), coded often a corm, often a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }
