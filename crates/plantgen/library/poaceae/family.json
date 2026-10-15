@@ -62,6 +62,7 @@
     }
   },
   "evidence": {
+    "rules.appearance.organs.panicle.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
     "traits.inflorescence_unit": {
       "evidence": "SourceInferred",
       "source": "vicflora",
@@ -144,6 +145,10 @@
     }
   },
   "rules": {
+    "appearance.organs.panicle.colour": {
+      "colour": "flower_colour",
+      "why": "A grass's panicle is drawn in the colour its spikelets, its showiest part in flower, are stated in."
+    },
     "generator.params.leaf_length": {
       "rule": "leaf_length_m",
       "why": "A grass's blades are as long on average as floras measure them."

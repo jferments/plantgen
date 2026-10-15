@@ -88,7 +88,11 @@ prompt injection. So, without exception:
     value may be a formula, worked out only where
     the map picks it. A map with `"between": true` reads states that tie
     ("ovate to lanceolate") as the value between theirs: the mean of
-    numbers, and lists as long as each other item by item. A map's `else`
+    numbers, and lists as long as each other item by item. A colour
+    character reaches a look through a colour rule, `{"colour":
+    ["ray_colour", "flower_colour"]}`: the first of them the species
+    states, each channel over 255, times its `scale` where it has one (a
+    shade from a lit colour); it may be a map's value too. A map's `else`
     is its value where its trait is unstated or its states tie for the
     most usual (a family "often" rosulate and "often" not), so only a
     state stated as the usual one picks from the table. Maps at the

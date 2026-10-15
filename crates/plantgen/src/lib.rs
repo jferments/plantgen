@@ -352,6 +352,12 @@ pub mod venation;
 /// fruit), and grasses draw blade leaves and spikelet clusters from
 /// Poaceae's graminoid looks; 21 built-ins take a fruit kind or basal leaf
 /// width they left unstated (57 is succulents, #111).
+/// 59: organs take the colours their species' characters state, through
+/// colour rules: a flower or bloom its `flower_colour`, a head its rays',
+/// straps' or disc's and its disc the accent, a grass's panicle its
+/// spikelets', a fruit its ripe colour, the foliage and its shade the
+/// leaves' and the bark its own; 3 built-ins take a colour they left
+/// unstated (58 is default looks, #115).
 /// 60: finer detail from photographs and floras: a head's rays may end
 /// square (`ray_tip`, a solid leaf's `tip`), a ray's width and tip come
 /// from `ray_width_m` and `ray_apex`, and herb racemes may crowd their

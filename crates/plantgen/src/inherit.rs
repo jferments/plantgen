@@ -551,12 +551,14 @@ fn check_rule(path: &str, rule: &Value) -> Result<(), String> {
         Value::Object(rule) => rule,
         _ => return Err("a rule is an object".into()),
     };
-    if let Some(key) = rule
-        .keys()
-        .find(|key| !["rule", "map", "between", "why", "template", "else"].contains(&key.as_str()))
-    {
+    if let Some(key) = rule.keys().find(|key| {
+        ![
+            "rule", "map", "colour", "scale", "between", "why", "template", "else",
+        ]
+        .contains(&key.as_str())
+    }) {
         return Err(format!(
-            "`{key}` is not a rule's: `rule` or `map` (and `between`, `else`), `why`, and in a look's `shape` its `template`"
+            "`{key}` is not a rule's: `rule`, `map` (and `between`, `else`) or `colour`, `why`, and in a look's `shape` its `template`"
         ));
     }
     if !rule.get("why").is_none_or(Value::is_string) {
@@ -604,16 +606,23 @@ fn check_rule(path: &str, rule: &Value) -> Result<(), String> {
         }
         (None, None) => {}
     }
-    match (rule.get("rule"), rule.get("map")) {
-        (Some(Value::String(formula)), None) => Formula::parse(formula).map(|_| ()),
-        (Some(Value::Array(formulas)), None) if !formulas.is_empty() => {
+    if rule.contains_key("scale") && !rule.contains_key("colour") {
+        return Err("only a `colour` rule has a `scale`".into());
+    }
+    match (rule.get("rule"), rule.get("map"), rule.get("colour")) {
+        (Some(Value::String(formula)), None, None) => Formula::parse(formula).map(|_| ()),
+        (Some(Value::Array(formulas)), None, None) if !formulas.is_empty() => {
             formulas.iter().try_for_each(|formula| match formula {
                 Value::String(formula) => Formula::parse(formula).map(|_| ()),
                 _ => Err("a list `rule` is formulas, one for each item".into()),
             })
         }
-        (None, Some(Value::Object(_))) => check_map(rule, &|_| Ok(())),
-        _ => Err("a rule has a `rule` (a formula, or a list of them) or a `map`, not both".into()),
+        (None, Some(Value::Object(_)), None) => check_map(rule, &|_| Ok(())),
+        (None, None, Some(_)) => check_colour(rule),
+        _ => Err(
+            "a rule has a `rule` (a formula, or a list of them), a `map` or a `colour`, one of them"
+                .into(),
+        ),
     }
 }
 
@@ -635,6 +644,8 @@ fn check_map(
     for value in table.values().chain(rule.get("else")) {
         if let Some(formula) = map_formula(value) {
             Formula::parse(formula)?;
+        } else if let Some(colour) = map_colour(value) {
+            check_colour(colour)?;
         } else if let Some(inner) = map_rule(value) {
             if let Some(key) = inner
                 .keys()
@@ -2252,7 +2263,7 @@ impl Ruled<'_> {
                 Err(_) if self.rule.contains_key("else") => self
                     .rule
                     .get("else")
-                    .and_then(map_rule)
+                    .and_then(|otherwise| map_rule(otherwise).or_else(|| map_colour(otherwise)))
                     .map(reads)
                     .unwrap_or_default(),
                 Err(why) => return Err(why),
@@ -2607,6 +2618,9 @@ fn reads(rule: &Map<String, Value>) -> Vec<String> {
             .map(|formula| formula.names())
             .unwrap_or_default()
     };
+    if let Some(colours) = colour_names(rule) {
+        return colours.into_iter().map(str::to_string).collect();
+    }
     match rule.get("rule") {
         Some(Value::String(formula)) => return names(formula).into_iter().collect(),
         Some(Value::Array(formulas)) => {
@@ -2631,7 +2645,7 @@ fn reads(rule: &Map<String, Value>) -> Vec<String> {
             table
                 .values()
                 .chain(rule.get("else"))
-                .filter_map(map_rule)
+                .filter_map(|value| map_rule(value).or_else(|| map_colour(value)))
                 .flat_map(reads),
         )
         .collect();
@@ -2647,7 +2661,10 @@ fn picked_reads(
 ) -> Result<Vec<String>, String> {
     let mut names = Vec::new();
     for pick in picks {
-        if let Some(inner) = table.get(&state(pick)).and_then(map_rule) {
+        if let Some(inner) = table
+            .get(&state(pick))
+            .and_then(|value| map_rule(value).or_else(|| map_colour(value)))
+        {
             names.extend(reads(inner).into_iter().filter(|name| name != key));
             continue;
         }
@@ -2677,6 +2694,115 @@ fn map_formula(value: &Value) -> Option<&str> {
         Value::Object(entry) if entry.len() == 1 => entry.get("rule")?.as_str(),
         _ => None,
     }
+}
+
+/// The colour characters a colour rule (`{"colour": name}` or
+/// `{"colour": [names]}`) reads, in order: it sets the first of them the
+/// species states (LANGUAGE.md 5.2).
+fn colour_names(rule: &Map<String, Value>) -> Option<Vec<&str>> {
+    match rule.get("colour")? {
+        Value::String(name) => Some(vec![name.as_str()]),
+        Value::Array(names) => names.iter().map(Value::as_str).collect(),
+        _ => None,
+    }
+}
+
+/// A map's value that is a colour rule, `{"colour": …}`.
+fn map_colour(value: &Value) -> Option<&Map<String, Value>> {
+    match value {
+        Value::Object(entry)
+            if entry.contains_key("colour")
+                && entry.keys().all(|key| key == "colour" || key == "scale") =>
+        {
+            Some(entry)
+        }
+        _ => None,
+    }
+}
+
+fn check_colour(rule: &Map<String, Value>) -> Result<(), String> {
+    match colour_names(rule) {
+        Some(names) if !names.is_empty() => {}
+        _ => {
+            return Err(
+                "a `colour` rule names a colour character, or a list of them, of which it takes the first stated"
+                    .into(),
+            );
+        }
+    }
+    match rule.get("scale") {
+        None => Ok(()),
+        Some(scale) if colour_scale(scale).is_some() => Ok(()),
+        Some(_) => Err("a colour's `scale` is three numbers 0 to 1, one for each channel".into()),
+    }
+}
+
+/// A colour rule's `scale`, three numbers 0 to 1 its channels are
+/// multiplied by (a shade's darker colour from a lit one).
+fn colour_scale(scale: &Value) -> Option<[f64; 3]> {
+    let channels: Vec<f64> = scale
+        .as_array()?
+        .iter()
+        .map(Value::as_f64)
+        .collect::<Option<_>>()?;
+    let channels: [f64; 3] = channels.try_into().ok()?;
+    channels
+        .iter()
+        .all(|channel| (0.0..=1.0).contains(channel))
+        .then_some(channels)
+}
+
+/// Every colour character a rule reads, in its `colour` or in a map's
+/// values (so the vocabulary can hold them to colour characters).
+#[must_use]
+pub fn colour_reads(rule: &Map<String, Value>) -> Vec<String> {
+    let mut names: Vec<String> = colour_names(rule)
+        .unwrap_or_default()
+        .into_iter()
+        .map(str::to_string)
+        .collect();
+    if let Some((_, table)) = map_of(rule) {
+        for value in table.values().chain(rule.get("else")) {
+            if let Some(colour) = map_colour(value) {
+                names.extend(colour_reads(colour));
+            } else if let Some(inner) = map_rule(value) {
+                names.extend(colour_reads(inner));
+            }
+        }
+    }
+    names
+}
+
+/// The colour of the first of `names` the species states, its channels
+/// (0 to 255) on the looks' 0 to 1 scale, each times its `scale`.
+fn colour_of(
+    names: &[&str],
+    scale: [f64; 3],
+    inputs: &BTreeMap<String, Value>,
+) -> Result<Value, String> {
+    for name in names {
+        if let Some(Value::Array(channels)) = inputs.get(*name) {
+            return channels
+                .iter()
+                .zip(scale)
+                .map(|(channel, by)| {
+                    channel
+                        .as_f64()
+                        .and_then(|c| written(plain(c / 255.0 * by)))
+                })
+                .collect::<Option<Vec<_>>>()
+                .map(Value::Array)
+                .ok_or_else(|| format!("`{name}` is no colour"));
+        }
+    }
+    Err(format!(
+        "no {} to read",
+        names
+            .iter()
+            .map(|name| format!("`{name}`"))
+            .collect::<Vec<_>>()
+            .join(" or ")
+    ))
 }
 
 /// A map's value (or `else`) that is a map on another trait, `{"map":
@@ -2812,6 +2938,10 @@ fn evaluate(rule: &Map<String, Value>, inputs: &BTreeMap<String, Value>) -> Resu
             .and_then(written)
             .ok_or_else(|| NO_NUMBER.to_string())
     };
+    if let Some(names) = colour_names(rule) {
+        let scale = rule.get("scale").and_then(colour_scale).unwrap_or([1.0; 3]);
+        return colour_of(&names, scale, inputs);
+    }
     match rule.get("rule") {
         Some(Value::String(formula)) => return calculate(formula),
         Some(Value::Array(formulas)) => {
@@ -2826,7 +2956,7 @@ fn evaluate(rule: &Map<String, Value>, inputs: &BTreeMap<String, Value>) -> Resu
     if let Some((key, table)) = map_of(rule) {
         let Some(value) = inputs.get(key) else {
             return match rule.get("else") {
-                Some(otherwise) => match map_rule(otherwise) {
+                Some(otherwise) => match map_rule(otherwise).or_else(|| map_colour(otherwise)) {
                     Some(inner) => evaluate(inner, inputs),
                     None => Ok(otherwise.clone()),
                 },
@@ -2837,7 +2967,7 @@ fn evaluate(rule: &Map<String, Value>, inputs: &BTreeMap<String, Value>) -> Resu
         let picked = table
             .get(&name)
             .ok_or_else(|| format!("its map holds nothing for `{key}` {name}"))?;
-        if let Some(inner) = map_rule(picked) {
+        if let Some(inner) = map_rule(picked).or_else(|| map_colour(picked)) {
             return evaluate(inner, inputs);
         }
         return match map_formula(picked) {
@@ -3487,7 +3617,7 @@ mod tests {
         refused(
             "testaceae/family.json",
             &family(json!({"rules": {"generator.params.a": {"rule": "1", "map": {}}}})),
-            "not both",
+            "one of them",
         );
         refused(
             "testaceae/family.json",
@@ -4010,6 +4140,85 @@ mod tests {
             serde_json::from_str::<Value>(&alone).unwrap()["generator"]["params"]["a"],
             10.0
         );
+    }
+
+    /// A colour rule sets the first of its colour characters a species
+    /// states, on the looks' 0 to 1 scale, as a rule or as a map's value,
+    /// and its `scale` darkens it.
+    #[test]
+    fn rules_set_colours_from_colour_characters() {
+        let family = "testaceae/family.json";
+        let files = ranks(&[(
+            family,
+            json!({"schema": 1, "rank": "family", "name": "Testaceae",
+                "generator": {"program": "broadleaf"},
+                "rules": {
+                    "appearance.organs.flower.colour": {
+                        "map": {"capitulum_kind": {
+                            "radiate": {"colour": ["ray_colour", "flower_colour"]}}},
+                        "else": {"colour": "flower_colour"}},
+                    "appearance.foliage_shade": {
+                        "colour": "leaf_colour", "scale": [0.5, 0.5, 1]},
+                    "appearance.bark": {"colour": "bark_colour"}}}),
+        )]);
+        let chain = above(&files, "testaceae", "plain").unwrap();
+        let grown = |traits: Value| {
+            let own = json!({"id": "plain-one", "traits": traits,
+                "appearance": {"organs": {"flower": {"shape": {"template": "flower"}}}}});
+            inherit(
+                "testaceae/plain/plain-one/spec.json",
+                &own,
+                &chain,
+                &programs(),
+            )
+            .unwrap()
+        };
+        let colour = |grown: &super::Inherited| {
+            grown.spec["appearance"]["organs"]["flower"]["colour"].clone()
+        };
+
+        // A radiate head takes its rays' colour, and the foliage's shade
+        // is the leaves' colour scaled; an unstated bark sets nothing.
+        let rayed = grown(json!({"capitulum_kind": "radiate",
+            "ray_colour": [255, 255, 255], "flower_colour": [255, 0, 0],
+            "leaf_colour": [102, 204, 51]}));
+        assert_eq!(colour(&rayed), json!([1, 1, 1]));
+        assert_eq!(
+            rayed.spec["appearance"]["foliage_shade"],
+            json!([0.2, 0.4, 0.2])
+        );
+        assert!(rayed.spec["appearance"].get("bark").is_none());
+        assert_eq!(
+            rayed.rules["appearance.bark"].1.as_deref(),
+            Some("no `bark_colour` to read")
+        );
+        // Without the rays' colour, the flower's; without a head kind, the
+        // `else`'s.
+        let unrayed = grown(json!({"capitulum_kind": "radiate", "flower_colour": [255, 0, 0]}));
+        assert_eq!(colour(&unrayed), json!([1, 0, 0]));
+        let plain = grown(json!({"flower_colour": [0, 0, 255]}));
+        assert_eq!(colour(&plain), json!([0, 0, 1]));
+
+        // A colour rule names colour characters, a `scale` three shares,
+        // and only a colour rule has one.
+        for (rule, wanted) in [
+            (
+                json!({"colour": []}),
+                "a `colour` rule names a colour character",
+            ),
+            (
+                json!({"colour": "leaf_colour", "scale": [2, 1, 1]}),
+                "three numbers 0 to 1",
+            ),
+            (
+                json!({"rule": "1", "scale": [1, 1, 1]}),
+                "only a `colour` rule has a `scale`",
+            ),
+            (json!({"rule": "1", "colour": "leaf_colour"}), "one of them"),
+        ] {
+            let error = super::check_rule("appearance.foliage", &rule).unwrap_err();
+            assert!(error.contains(wanted), "{rule}: {error}");
+        }
     }
 
     /// A family's rules for its heads set a card's fields where the species
