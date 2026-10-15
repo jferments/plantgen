@@ -35,7 +35,7 @@
       "buds_above": 1,
       "nod": 0,
       "leaf_area": 0.374,
-      "basal_area": 0.235,
+      "basal_area": 0.406,
       "basal_piece_area": 0.235,
       "flower_area": 0.175,
       "bud_area": 0.05,
@@ -119,6 +119,7 @@
       "source": "plantgen-authors",
       "note": "The leaf area its `bud` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows: the bud is now its flower closed, where before it drew the fruit ovoid."
     },
+    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The area its `basal` look draws on an organ 1 m long (visual forms leaf blades, 2026-10-15; plantc atlas), so it shades with what it shows: its rosette leaves now take the species' leaf rules and draw its broad blade, as wide for its length as its flora measures, where before they drew the generic simple card (0.235)."},
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",

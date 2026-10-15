@@ -833,6 +833,14 @@
       "optional": true,
       "why": "the pinnae of a twice-divided leaf: its primary divisions, each bearing leaflets of its own (a mesquite's one or two pairs)"
     },
+    "leaf_peltation": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["epeltate", "latent", "manifest"],
+      "optional": true,
+      "why": "where the petiole meets the blade: at its basal margin, the blade going on in its plane; at the margin, the blade held flat across the petiole's tip (latently peltate); or under the blade, inside its outline, like an umbrella (manifestly peltate)"
+    },
     "terminal_leaflet": {
       "group": "leaves",
       "organ": "leaf",

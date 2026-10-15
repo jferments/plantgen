@@ -128,7 +128,17 @@ impl Form {
             confluent,
             angle,
             pinnule_angle: c.pinnule_angle.unwrap_or(angle),
-            spread: c.spread.unwrap_or(180.0),
+            spread: c.spread.unwrap_or_else(|| {
+                open_enough(pattern, c.leaflets, pinnules, c.leaflet_width, |t| {
+                    crate::templates::outline_profile(
+                        c.outline.as_deref(),
+                        t,
+                        widest,
+                        blade_base,
+                        tip,
+                    )
+                })
+            }),
             largest: c.largest.unwrap_or(1.0),
             lowest: c.lowest.unwrap_or(0.82),
             terminal_size: c.terminal_size.unwrap_or(0.98),
@@ -152,6 +162,65 @@ impl Form {
             1.0 - (1.0 - lowest) * (u - largest) / (1.0 - largest)
         }
     }
+}
+
+/// How far a palmate leaf whose spread its look leaves unset opens,
+/// degrees between its outermost leaflets: as far as its `count` leaflets,
+/// each `width` as wide as long at its widest, where `profile` (its
+/// half-width along it, 1 at the widest) is greatest, need to stand half
+/// their width apart there, seen from the petiole's tip; at least 180, as
+/// every such leaf opened before, and at most 340. Thirteen narrow
+/// leaflets need more than a half circle, three broad ones less. A
+/// twice-divided leaf's divisions, and a pinnate leaf, open 180.
+#[must_use]
+pub fn open_enough(
+    pattern: Pattern,
+    count: u32,
+    pinnules: u32,
+    width: f64,
+    profile: impl Fn(f64) -> f64,
+) -> f64 {
+    if pattern != Pattern::Palmate || pinnules > 0 || count < 2 {
+        return 180.0;
+    }
+    // Where it is widest: toward their feet all leaflets converge on the
+    // petiole's tip.
+    let widest = ALONG
+        .iter()
+        .copied()
+        .fold((0.5, 0.0), |best: (f64, f64), t| {
+            let w = profile(t);
+            if w > best.1 { (t, w) } else { best }
+        })
+        .0;
+    let angle = 2.0 * math::atan2(0.5 * width, widest);
+    (f64::from(count - 1) * angle.to_degrees() * 1.5).clamp(180.0, 340.0)
+}
+
+/// How crowded a once-divided palmate leaf's leaflets are where they are
+/// widest: the angle each spans there, seen from the petiole's tip, over
+/// the angle between neighbours. Above 1 they overlap, and the leaf reads
+/// as one scalloped blade, not as leaflets. `None` for other leaves.
+#[must_use]
+pub fn crowding(c: &Compound) -> Option<f64> {
+    let form = Form::of(c);
+    if form.pattern != Pattern::Palmate || form.pinnules > 0 || form.leaflets < 2 {
+        return None;
+    }
+    let profile = |t: f64| {
+        crate::templates::outline_profile(c.outline.as_deref(), t, form.widest, form.base, form.tip)
+    };
+    let widest = ALONG
+        .iter()
+        .copied()
+        .fold((0.5, 0.0), |best: (f64, f64), t| {
+            let w = profile(t);
+            if w > best.1 { (t, w) } else { best }
+        })
+        .0;
+    let span = 2.0 * math::atan2(0.5 * form.width, widest);
+    let apart = form.spread.to_radians() / f64::from(form.leaflets - 1);
+    Some(span / apart.max(1e-9))
 }
 
 /// The longest lateral leaflet of a pinnate group of `count` along a
@@ -552,6 +621,46 @@ impl Layout {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A palmate leaf whose spread is unset opens as far as its leaflets
+    /// need to stand apart: thirteen narrow ones nearly all the way round,
+    /// three broad ones the half circle every such leaf opened before.
+    #[test]
+    fn a_palmate_leaf_opens_as_far_as_its_leaflets_need() {
+        let narrow = Form::of(&compound(|c| {
+            c.pattern = Some(Pattern::Palmate);
+            c.leaflets = 13;
+            c.leaflet_width = 0.2;
+            c.widest = Some(0.7);
+        }));
+        assert!(
+            narrow.spread > 280.0 && narrow.spread <= 340.0,
+            "{}",
+            narrow.spread
+        );
+        let few = Form::of(&compound(|c| {
+            c.pattern = Some(Pattern::Palmate);
+            c.leaflets = 3;
+        }));
+        assert_eq!(few.spread, 180.0);
+        let set = Form::of(&compound(|c| {
+            c.pattern = Some(Pattern::Palmate);
+            c.leaflets = 13;
+            c.spread = Some(200.0);
+        }));
+        assert_eq!(set.spread, 200.0);
+        // Neighbours no longer overlap where they are widest.
+        let laid = layout(&compound(|c| {
+            c.pattern = Some(Pattern::Palmate);
+            c.leaflets = 13;
+            c.leaflet_width = 0.2;
+            c.widest = Some(0.7);
+        }));
+        let gap = narrow.spread.to_radians() / 12.0;
+        let half = 2.0 * math::atan2(0.5 * 0.2, 0.7);
+        assert!(gap > half, "{gap} {half}");
+        assert_eq!(laid.leaflets.len(), 13);
+    }
 
     fn compound(edit: impl FnOnce(&mut Compound)) -> Compound {
         let mut c = Compound::default();

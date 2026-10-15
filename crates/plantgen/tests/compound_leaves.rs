@@ -203,3 +203,35 @@ fn a_compound_leaf_is_counted_once() {
     assert!(fell > 0, "no compound leaf fell");
     assert!(failures.is_empty(), "{}", failures.join("\n"));
 }
+
+/// No built-in palmate leaf, opened as far as its other values say
+/// (its spread left to [`divided::open_enough`]), crowds its leaflets into
+/// one another where they are widest (visual forms leaf blades): thirteen
+/// leaflets in a half circle drew a scalloped fan, not a lupine's leaf. A
+/// spread set by hand from photographs stands, touching leaflets and all.
+#[test]
+fn builtin_palmate_leaflets_open_apart() {
+    let library = plantgen::library::Library::builtin();
+    let mut crowded = Vec::new();
+    let mut checked = 0;
+    for entry in library.species() {
+        let spec = PlantSpec::builtin(&entry.id).unwrap();
+        for (organ, look) in &spec.appearance.organs {
+            let Shape::Compound(compound) = &look.shape else {
+                continue;
+            };
+            let opened = plantgen::looks::Compound {
+                spread: None,
+                ..compound.clone()
+            };
+            if let Some(crowding) = divided::crowding(&opened) {
+                checked += 1;
+                if crowding > 1.0 {
+                    crowded.push(format!("{} `{organ}`: {crowding:.2}", entry.id));
+                }
+            }
+        }
+    }
+    assert!(checked >= 5, "only {checked} palmate leaves");
+    assert!(crowded.is_empty(), "leaflets overlap: {crowded:?}");
+}

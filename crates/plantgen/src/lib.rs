@@ -411,11 +411,20 @@ pub mod venation;
 /// 84 families from Watson and Dallwitz), a clump as before otherwise;
 /// every built-in sets its own and grows as before (68 is flowers in
 /// clusters, #127).
-/// 70: broadleaf limbs arch outward as they lengthen and an umbrella's
+/// 70: leaves on petioles of their own: a leaf whose blade is latently
+/// or manifestly peltate (`insertion`, from `leaf_peltation`; Kaplan) is
+/// drawn as a petiole stalk with its blade level on the tip, a peltate
+/// one centred there; a palmate leaf whose spread is unset opens as far
+/// as its leaflets need; a flora's measured leaf and leaflet widths come
+/// before shape words; rosette leaves take the species' leaf rules;
+/// large-leaved lupine's leaves are peltate rings, and 8 built-ins'
+/// rosette leaves take their species' shapes (69 is one stem from a bulb,
+/// #129).
+/// 71: broadleaf limbs arch outward as they lengthen and an umbrella's
 /// axes level out at its top (`broadleaf` revision 16, `limb_arch`,
 /// `flat_top`), a self-pruning tree stands on a clear trunk
 /// (`bole_clear`), and a crown's region takes its widest point and
 /// fullness from its `crown_form`; Garry oak spreads, umbrella thorn is
 /// flat-topped, Pacific madrone leans on a clear stem and the baobab
-/// swells, from photographs (69 is one stem from a bulb, #129).
-pub const GENERATOR_REVISION: u32 = 70;
+/// swells, from photographs (70 is leaves on petioles, #134).
+pub const GENERATOR_REVISION: u32 = 71;

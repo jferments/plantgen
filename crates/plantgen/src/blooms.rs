@@ -1009,6 +1009,7 @@ mod tests {
             &std::collections::BTreeMap::from([(
                 "thorn".to_string(),
                 crate::looks::OrganLook {
+                    insertion: crate::looks::Insertion::Marginal,
                     shape: Shape::Blade(crate::looks::Blade {
                         taper: 1.0,
                         aspect: 0.12,
