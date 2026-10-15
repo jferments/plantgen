@@ -373,4 +373,10 @@ pub mod venation;
 /// scape from its bulb, its tepals elliptic, its anthers long, its spent
 /// flowers withered round the young capsule (61 is camas zygomorphy,
 /// #119).
-pub const GENERATOR_REVISION: u32 = 62;
+/// 63: on the nearest level every petal takes all its stations and both
+/// samples across, however short, and anthers are short bars; a flower
+/// may turn its anthers across their filaments (`anther_tilt`, from
+/// `anther_attachment`) and colour its ovary (`pistil`); common camas's
+/// anthers are versatile and its ovary a pale green bead (62 is camas
+/// detail 3, #120).
+pub const GENERATOR_REVISION: u32 = 63;

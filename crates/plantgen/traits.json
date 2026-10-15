@@ -1017,6 +1017,14 @@
       "range": [0, 2000],
       "why": "the stamens in one flower"
     },
+    "anther_attachment": {
+      "group": "flowers",
+      "organ": "stamen",
+      "type": "enum",
+      "values": ["basifixed", "dorsifixed", "versatile"],
+      "optional": true,
+      "why": "where the filament joins the anther: at its base, so the anther stands along the filament; on its back; or at one point on its back, so the anther swings free across the filament's tip"
+    },
     "staminodes": {
       "group": "flowers",
       "organ": "staminode",

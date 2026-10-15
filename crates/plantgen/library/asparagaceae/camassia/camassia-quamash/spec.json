@@ -75,16 +75,17 @@
           "point": 0.5,
           "taper": 0.6,
           "notch": 0.0,
-          "centre": 0.12,
+          "centre": 0.18,
           "stamen_length": 0.5,
           "anther": 0.3,
           "banner": 1.0,
           "odd_rise": -40,
           "turn": 180,
-          "filament": [0.3, 0.27, 0.66]
+          "filament": [0.3, 0.27, 0.66],
+          "pistil": [0.5, 0.72, 0.22]
         },
         "colour": [0.22, 0.19, 0.64],
-        "accent": [0.85, 0.55, 0.03]
+        "accent": [0.87, 0.75, 0.12]
       },
       "bud": {
         "shape": {
@@ -126,9 +127,25 @@
       "typical": 0.5
     },
     "flower_symmetry": {"zygomorphic": "usually", "actinomorphic": "sometimes"},
-    "zygomorphy": "other"
+    "zygomorphy": "other",
+    "anther_attachment": "versatile"
   },
   "evidence": {
+    "appearance.organs.flower.shape.centre": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "The ovary a pale yellow-green bead at the flower's centre, about a sixth of the flower across (observations 212349274, 205778790, 224881574)."
+    },
+    "appearance.organs.flower.shape.pistil": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "The ovary a pale yellow-green bead at the flower's centre, about a sixth of the flower across (observations 212349274, 205778790, 224881574): about sRGB (190, 220, 130)."
+    },
+    "traits.anther_attachment": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "The anthers lie across the filaments' tips, like a T, not along them (observations 212349274, 115789029, 116021043, 256853681): versatile, as Simpson's Plant Systematics defines the word (the anther joined at one point on its back and swinging free)."
+    },
     "generator.params.fruit_area": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -227,7 +244,7 @@
     "appearance.organs.flower.accent": {
       "evidence": "Measured",
       "source": "inaturalist-photos-2026-10",
-      "note": "Six spreading stamens about half the flower's radius long, their anthers bright yellow and conspicuous (observations 212349274, 256854545, 256853681, 116021043)."
+      "note": "The anthers long bars of pale lemon yellow, about sRGB (240, 225, 95) (observations 212349274, 115789029, 116021043, 256853681)."
     },
     "appearance.organs.flower.colour": {
       "evidence": "Measured",

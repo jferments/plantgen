@@ -79,7 +79,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let campanulids = "(clade campanulids: _ranks/clade/campanulids.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (271):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (272):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
@@ -88,7 +88,7 @@ fn rules_and_traits_say_where_they_come_from() {
             "\n  appearance.organs.*.inflorescence.kind  {flowering}\n  appearance.organs.*.season.bud  {flowering}\n"
         ),
         format!(
-            "\n  appearance.organs.*.season.ripe  {flowering}\n  appearance.organs.*.shape.belly on `flower` cards  {flowering}\n"
+            "\n  appearance.organs.*.season.ripe  {flowering}\n  appearance.organs.*.shape.anther_tilt on `flower` cards  {flowering}\n  appearance.organs.*.shape.belly on `flower` cards  {flowering}\n"
         ),
         format!(
             "\n  appearance.organs.*.shape.carpels on `flower` cards  {flowering}\n  appearance.organs.*.shape.confluent on `compound` cards  {flowering}\n"
@@ -185,7 +185,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
     assert!(
-        rules.starts_with("Rules, by their home (272):\n"),
+        rules.starts_with("Rules, by their home (273):\n"),
         "{rules}"
     );
     assert!(
