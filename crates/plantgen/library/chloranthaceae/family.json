@@ -35,13 +35,21 @@
       "max": 3,
       "high": 5
     },
-    "carpels": 1
+    "carpels": 1,
+    "flower_symmetry": {
+      "zygomorphic": "usually"
+    }
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Chloranthaceae: leaves opposite; leaves simple; margins serrate; stipules present; plants hermaphrodite or dioecious; ovary superior or half inferior; stems woody or herbaceous; flowers in spikes, in heads or in panicles; perianth tepals or absent; fruit drupe; stamens 1 to 3 (-5); carpels 1. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 26, family Chloranthaceae: flower symmetry zygomorphic by reduction, usually; read as {\"zygomorphic\": \"usually\"}."
     }
   }
 }

@@ -41,7 +41,11 @@
       "low": 2,
       "high": 15
     },
-    "perennation": "tuber"
+    "perennation": "tuber",
+    "inflorescence": {
+      "solitary": "usually"
+    },
+    "bract_form": "leafy"
   },
   "evidence": {
     "traits": {
@@ -49,6 +53,16 @@
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Paeoniaceae with Glaucidiaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves usually compound, sometimes simple; compound leaves pinnate; veins palmate; stipules absent; plants hermaphrodite; ovary superior; floral cup usually absent, sometimes present; stems usually herbaceous, sometimes woody; flowers actinomorphic or zygomorphic; perianth usually sepals and petals, sometimes tepals; fruit follicle; stamens 50 to 150; carpels (2-) 3 to 5 (-15). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
     },
-    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Paeoniaceae: how its perennial herbs last from year to year (character 25), coded usually tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Paeoniaceae: how its perennial herbs last from year to year (character 25), coded usually tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."},
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 196, 197, 198, family Paeoniaceae: inflorescence solitary, terminal on branches, often a smaller flower just below, usually; read as {\"solitary\": \"usually\"}."
+    },
+    "traits.bract_form": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 196, 197, 198, family Paeoniaceae: bract form leafy, pressed against the flower; read as \"leafy\"."
+    }
   }
 }

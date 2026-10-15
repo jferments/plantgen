@@ -17,7 +17,8 @@
     },
     "stipules": false,
     "inflorescence": {"corymb": "often", "head": "often", "panicle": "often"},
-    "receptacle": {"epaleate": "often", "paleate": "often"}
+    "receptacle": {"epaleate": "often", "paleate": "often"},
+    "sexual_system": {"hermaphrodite": "usually"}
   },
   "forms": {
     "forb": {
@@ -82,7 +83,8 @@
     },
     "traits.stipules": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 440, 441, 442, 443, 444, family Asteraceae: stipules false; read as false."},
     "traits.inflorescence": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 440, 441, 442, 443, 444, family Asteraceae: inflorescence heads in corymbs, panicles, glomerules etc. (secondary inflorescence), often; read as {\"corymb\": \"often\", \"head\": \"often\", \"panicle\": \"often\"}. Also Ingrouille, Diversity and Evolution of Land Plants (1992) p. 170, 171, 172, 173: head."},
-    "traits.receptacle": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 440, 441, 442, 443, 444, family Asteraceae: receptacle paleate or epaleate, often; read as {\"epaleate\": \"often\", \"paleate\": \"often\"}."}
+    "traits.receptacle": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 440, 441, 442, 443, 444, family Asteraceae: receptacle paleate or epaleate, often; read as {\"epaleate\": \"often\", \"paleate\": \"often\"}."},
+    "traits.sexual_system": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 346, 347, family Asteraceae: sexual system florets mostly bisexual; outer florets pistillate or sterile, usually; read as {\"hermaphrodite\": \"usually\"}."}
   },
   "rules": {
     "appearance.organs.flower.colour": {

@@ -56,7 +56,11 @@
       "high": 20
     },
     "phyllotaxis_pattern": "spiral",
-    "vernation": "conduplicate"
+    "vernation": "conduplicate",
+    "inflorescence": {
+      "cyme": "often",
+      "solitary": "often"
+    }
   },
   "evidence": {
     "traits": {
@@ -73,6 +77,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 297, family Dilleniaceae: vernation conduplicate; read as \"conduplicate\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 159, 160, 161, 162, family Dilleniaceae: inflorescence solitary terminal or various cymes, usually; read as {\"cyme\": \"often\", \"solitary\": \"often\"}."
     }
   }
 }
