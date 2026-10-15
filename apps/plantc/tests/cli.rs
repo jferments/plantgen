@@ -79,7 +79,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let campanulids = "(clade campanulids: _ranks/clade/campanulids.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (297):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (312):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
@@ -109,6 +109,13 @@ fn rules_and_traits_say_where_they_come_from() {
     ] {
         assert!(built_in.contains(&line), "{line} in {built_in}");
     }
+    // A monocot's strap leaves and scape, from its characters.
+    assert!(
+        built_in.contains(
+            "\n  generator.params.basal_pieces  (clade monocots: _ranks/clade/monocots.json)\n  generator.params.scape  (clade monocots: _ranks/clade/monocots.json)\n"
+        ),
+        "{built_in}"
+    );
     // A flower head laid out from its characters, in every look that
     // draws one.
     assert!(
@@ -185,7 +192,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
     assert!(
-        rules.starts_with("Rules, by their home (298):\n"),
+        rules.starts_with("Rules, by their home (313):\n"),
         "{rules}"
     );
     assert!(
