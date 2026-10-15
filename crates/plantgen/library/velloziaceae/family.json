@@ -27,13 +27,27 @@
       "min": 6,
       "max": 66
     },
-    "carpels": 3
+    "carpels": 3,
+    "inflorescence": {
+      "solitary": "often"
+    },
+    "flowering_position": "terminal"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Velloziaceae: leaves alternate; leaves simple; margins entire or dentate; veins parallel; blades linear; leaf rosettes basal or terminal; plants hermaphrodite; ovary inferior; stems herbaceous; flowers actinomorphic; perianth tepals; fruit capsule; parts of each whorl 3; stamens 6 to 66; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 110, 111, family Velloziaceae: inflorescence solitary (or few flowers, terminal), often; read as {\"solitary\": \"often\"}."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 110, 111, family Velloziaceae: flowering position terminal; read as \"terminal\"."
     }
   }
 }

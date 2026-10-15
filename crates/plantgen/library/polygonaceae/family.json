@@ -31,7 +31,9 @@
     "phyllotaxis_pattern": {
       "spiral": "usually"
     },
-    "leaf_division": "simple"
+    "leaf_division": "simple",
+    "inflorescence": {"cyme": "usually"},
+    "sexual_system": {"hermaphrodite": "usually"}
   },
   "evidence": {
     "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 381: tepals usually 3+3 (three per whorl) or 5 in a quincunx, rarely 2+2."},
@@ -56,6 +58,8 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 381, 383, family Polygonaceae: leaf division simple; read as \"simple\"."
-    }
+    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 170, 171, 172, 173, 174, family Polygonaceae: inflorescence cyme; clusters of dichasial or monochasial cymes subtended by a saccate bract, usually; read as {\"cyme\": \"usually\"}."},
+    "traits.sexual_system": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 170, 171, 172, 173, 174, family Polygonaceae: sexual system hermaphrodite, usually; read as {\"hermaphrodite\": \"usually\"}."}
   }
 }

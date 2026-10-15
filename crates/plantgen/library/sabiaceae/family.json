@@ -45,7 +45,10 @@
       "low": 4,
       "high": 6
     },
-    "carpels": 2
+    "carpels": 2,
+    "flowering_position": {
+      "terminal": "usually"
+    }
   },
   "evidence": {
     "traits": {
@@ -57,6 +60,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Sabiaceae with Meliosmaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 140, 141, 142, family Sabiaceae: flowering position terminal, usually; read as {\"terminal\": \"usually\"}."
     }
   }
 }

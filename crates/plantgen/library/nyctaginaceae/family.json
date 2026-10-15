@@ -41,13 +41,21 @@
       "low": 1,
       "high": 30
     },
-    "carpels": 1
+    "carpels": 1,
+    "bract_form": {
+      "petaloid": "often"
+    }
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Nyctaginaceae: leaves usually opposite, sometimes alternate; leaves simple; veins pinnate; stipules absent; plants usually hermaphrodite, sometimes monoecious or polygamous; ovary superior; floral cup absent; stems woody or herbaceous; flowers solitary, in cymes, in panicles, in spikes or in umbels; flowers actinomorphic; perianth tepals; fruit achene or nut; stamens (1-) 5 (-30); carpels 1. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.bract_form": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 187, family Nyctaginaceae: bract form large involucral bracts, often petaloid, enclosing the flowers, often; read as {\"petaloid\": \"often\"}."
     }
   }
 }

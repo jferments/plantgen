@@ -17,7 +17,11 @@
       "false": "usually",
       "true": "sometimes"
     },
-    "fruit_type": "berry"
+    "fruit_type": "berry",
+    "inflorescence": "raceme",
+    "sexual_system": {
+      "hermaphrodite": "usually"
+    }
   },
   "forms": {
     "shrub": {
@@ -58,6 +62,16 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 34 Grossulariaceae (currants and gooseberries): shrubs, often spiny; leaves often clustered, simple, pleated or rolled in bud; stipules absent or joined to the leaf stalk; fruit a pulpy berry crowned by the persistent calyx."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 200, 201, family Grossulariaceae: inflorescence raceme; read as \"raceme\"."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 200, 201, family Grossulariaceae: sexual system hermaphrodite (rarely unisexual, with staminodes in pistillate flowers), usually; read as {\"hermaphrodite\": \"usually\"}."
     }
   }
 }

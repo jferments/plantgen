@@ -34,7 +34,8 @@
     "inflorescence": {
       "panicle": "often",
       "raceme": "often"
-    }
+    },
+    "flowering_position": "terminal"
   },
   "forms": {
     "rosette_succulent": {
@@ -96,6 +97,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 229, 230, family Asphodelaceae: inflorescence raceme or panicle; read as {\"panicle\": \"often\", \"raceme\": \"often\"}."
-    }
+    },
+    "traits.flowering_position": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 100, 101, family Asphodelaceae: flowering position terminal; read as \"terminal\"."}
   }
 }

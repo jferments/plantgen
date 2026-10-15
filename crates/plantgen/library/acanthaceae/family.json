@@ -38,7 +38,9 @@
       "raceme": "often",
       "solitary": "often"
     },
-    "sexual_system": "hermaphrodite"
+    "sexual_system": "hermaphrodite",
+    "bract_form": {"petaloid": "usually"},
+    "flowering_position": {"terminal": "usually"}
   },
   "forms": {
     "decurrent_tree": {
@@ -101,6 +103,8 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 412, 414, family Acanthaceae: sexual system hermaphrodite; read as \"hermaphrodite\"."
-    }
+    },
+    "traits.bract_form": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 330, family Acanthaceae: bract form petaloid (showy), usually; read as {\"petaloid\": \"usually\"}."},
+    "traits.flowering_position": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 330, family Acanthaceae: flowering position terminal, usually; read as {\"terminal\": \"usually\"}."}
   }
 }

@@ -43,7 +43,8 @@
       "drupe": "often",
       "pome": "often",
       "follicle": "sometimes"
-    }
+    },
+    "inflorescence": {"cyme": "often", "raceme": "often"}
   },
   "forms": {
     "decurrent_tree": {
@@ -119,6 +120,7 @@
       "evidence": "SourceInferred",
       "source": "diversity-evolution-land-plants",
       "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type follicle (Spiraeoideae), usually. Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type drupe (Prunoideae). Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type aggregate (Rosoideae), often. Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type pome (Maloideae). Read together as {\"aggregate\": \"often\", \"drupe\": \"often\", \"pome\": \"often\", \"follicle\": \"sometimes\"}."
-    }
+    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 285, 286, 287, 288, family Rosaceae: inflorescence cyme or raceme, usually; read as {\"cyme\": \"often\", \"raceme\": \"often\"}."}
   }
 }

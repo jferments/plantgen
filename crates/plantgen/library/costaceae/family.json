@@ -27,7 +27,8 @@
     },
     "flower_merosity": 3,
     "stamens": 1,
-    "carpels": 3
+    "carpels": 3,
+    "inflorescence": "raceme"
   },
   "evidence": {
     "traits": {
@@ -39,6 +40,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Costaceae: flowers very irregular, the corolla's median member largest, the stamens reduced to one fertile and the rest joined in a showy lip. That lip below two smaller petals is drawn as an orchid's lip is: zygomorphy labellate."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 124, 125, family Costaceae: inflorescence raceme, terminal; read as \"raceme\"."
     }
   }
 }
