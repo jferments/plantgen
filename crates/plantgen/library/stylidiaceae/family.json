@@ -57,7 +57,8 @@
       "max": 2,
       "high": 3
     },
-    "carpels": 2
+    "carpels": 2,
+    "perennation": {"rhizome": "often", "tuber": "often"}
   },
   "evidence": {
     "traits": {
@@ -69,6 +70,7 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Stylidiaceae with Donatiaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Stylidiaceae: how its perennial herbs last from year to year (character 25), coded often a rhizome, often tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

@@ -21,13 +21,15 @@
       "max": 6,
       "low": 3
     },
-    "carpels": 3
+    "carpels": 3,
+    "perennation": "rhizome"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Flagellariaceae: leaves alternate; leaves simple; margins entire; veins parallel; blades lanceolate; leaf rosettes none; plants hermaphrodite; ovary superior; flowers in panicles; perianth tepals; fruit drupe; parts of each whorl 3; stamens (3-) 6; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Flagellariaceae: how its perennial herbs last from year to year (character 25), coded usually a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

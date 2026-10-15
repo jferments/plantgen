@@ -28,6 +28,7 @@
     "flower_merosity": 3,
     "stamens": 1,
     "carpels": 3,
+    "perennation": "rhizome",
     "inflorescence": "raceme"
   },
   "evidence": {
@@ -41,6 +42,7 @@
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Costaceae: flowers very irregular, the corolla's median member largest, the stamens reduced to one fertile and the rest joined in a showy lip. That lip below two smaller petals is drawn as an orchid's lip is: zygomorphy labellate."
     },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Costaceae: how its perennial herbs last from year to year (character 25), coded usually a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."},
     "traits.inflorescence": {
       "evidence": "SourceInferred",
       "source": "floral-diagrams",

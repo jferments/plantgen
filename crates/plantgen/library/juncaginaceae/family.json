@@ -40,13 +40,15 @@
     "carpels": {
       "min": 1,
       "max": 6
-    }
+    },
+    "perennation": {"rhizome": "often", "tuber": "often", "bulb": "rarely"}
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Juncaginaceae: leaves alternate; leaves simple; veins parallel; blades linear; stipules present or absent; leaf rosettes basal; plants dioecious or polygamous; ovary superior; stems herbaceous; flowers in racemes or in spikes; flowers actinomorphic; perianth tepals or absent; fruit follicle, achene or schizocarp; stamens 3 to 8; carpels 1 to 6. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
-    }
+    },
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Juncaginaceae: how its perennial herbs last from year to year (character 25), coded often a rhizome, often tubers, rarely a bulb. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }
