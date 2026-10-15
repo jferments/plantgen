@@ -121,6 +121,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 232, 233, 234, family Orchidaceae: fruit type capsule (loculicidal) (rarely berry), usually; read as {\"capsule\": \"usually\"}."
     },
-    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add actinomorphic (rarely): Ingrouille, Diversity and Evolution of Land Plants (1992) p. 176: actinomorphic."}
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add actinomorphic (rarely): Ingrouille, Diversity and Evolution of Land Plants (1992) p. 176: actinomorphic."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Rare extremes noted only; the count's source is the family's `traits` note. The books give the family high 3: Simpson, Plant Systematics (2019) p. 235, 236: 1-3. Left out of the range on the owner's go (2026-10-15): they belong to some of its genera, and a family's rare ends would reach every species that inherits its count."}
   }
 }

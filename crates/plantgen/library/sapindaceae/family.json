@@ -103,6 +103,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 362, 363, 364, family Sapindaceae: fruit type fleshy or dry; schizocarp, capsule, nut and others; read as {\"capsule\": \"often\", \"nut\": \"often\", \"schizocarp\": \"often\"}."
     },
-    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add true (sometimes): Simpson, Plant Systematics (2019) p. 362, 363, 364: true."}
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add true (sometimes): Simpson, Plant Systematics (2019) p. 362, 363, 364: true."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Rare extremes noted only; the count's source is the family's `traits` note. The books give the family low 2: Simpson, Plant Systematics (2019) p. 362, 363, 364: 2-3 [-6], fused. Left out of the range on the owner's go (2026-10-15): they belong to some of its genera, and a family's rare ends would reach every species that inherits its count."}
   }
 }

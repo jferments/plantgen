@@ -62,6 +62,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 321, 324, family Polygalaceae: inflorescence spike, raceme or panicle; read as {\"panicle\": \"often\", \"raceme\": \"often\", \"spike\": \"often\"}."
     },
-    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add nut (sometimes), samara (sometimes): Simpson, Plant Systematics (2019) p. 321, 324: capsule, nut, samara or drupe."}
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add nut (sometimes), samara (sometimes): Simpson, Plant Systematics (2019) p. 321, 324: capsule, nut, samara or drupe."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Rare extremes noted only; the count's source is the family's `traits` note. The books give the family high 5: Simpson, Plant Systematics (2019) p. 321, 324: 2-5 [-8]. Left out of the range on the owner's go (2026-10-15): they belong to some of its genera, and a family's rare ends would reach every species that inherits its count."}
   }
 }
