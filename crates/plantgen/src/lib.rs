@@ -432,5 +432,8 @@ pub mod venation;
 /// genus follows Rauh's model; the rule at the seed plants sets it from
 /// `architectural_model`, which Pinus (Rauh) and Abies (Massart) now
 /// state from Simpson; lodgepole, western white and ponderosa pines grow
-/// clumped, upturned branch ends (71 is broadleaf limbs, #133).
+/// clumped, upturned branch ends; a self-pruning conifer keeps living
+/// branches only on the top `crown_ratio` of its height (rule on
+/// `self_pruning`), so ponderosa pine, self-pruning by FEIS, stands on a
+/// clear bole (71 is broadleaf limbs, #133).
 pub const GENERATOR_REVISION: u32 = 72;
