@@ -66,7 +66,9 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "wood_density_basic_kg_m3": 640
+    "wood_density_basic_kg_m3": 640,
+    "leaf_form": {"scale": "usually"},
+    "fruit_type": "berry"
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Phoradendron californicum (gwddagg_v2.2_species.csv, read): specific gravity 0.64 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.64, branches 0.62. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
@@ -119,7 +121,9 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.leaf_form": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 366, Phoradendron californicum: leaf form scale."},
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 366, Phoradendron californicum: fruit type berry."}
   },
   "provenance": {
     "sources": [

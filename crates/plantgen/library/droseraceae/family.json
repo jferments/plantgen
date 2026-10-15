@@ -28,8 +28,8 @@
     },
     "woodiness": "herbaceous",
     "inflorescence": {
-      "solitary": "often",
-      "cyme": "often"
+      "scorpioid": "usually",
+      "solitary": "rarely"
     },
     "flower_symmetry": "actinomorphic",
     "perianth": "sepals_and_petals",
@@ -66,6 +66,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 378, family Droseraceae: flowering position terminal; read as \"terminal\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson (2019) p. 378: scorpioid, circinately coiled one-sided cymes; flowers single in Aldrovanda. Watson and Dallwitz's DELTA gave solitary or in cymes. Jay 2026-10-15 ~06:32Z: \"go with your recommendations on disagreements\"."
     }
   }
 }

@@ -51,7 +51,8 @@
     "flower_symmetry": "actinomorphic",
     "perianth": {
       "tepals": "sometimes",
-      "sepals_and_petals": "usually"
+      "sepals_and_petals": "usually",
+      "absent": "sometimes"
     },
     "fruit_type": {
       "capsule": "often",
@@ -88,6 +89,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 371, 372, family Aizoaceae: flowering position both; read as \"both\"."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add absent (sometimes): Simpson, Plant Systematics (2019) p. 371, 372: tepals (uniseriate calyx; corolla absent)."
     }
   }
 }

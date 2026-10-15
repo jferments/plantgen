@@ -39,8 +39,8 @@
     },
     "traits.vernation": {
       "evidence": "SourceInferred",
-      "source": "mabberley-2017",
-      "note": "Mabberley's Plant-book (4th ed., 2017), under Cycadaceae and Cycas: the leaflets are rolled inward in bud; Cycas grows on Corner's model (one unbranched stem with a crown of leaves)."
+      "source": "plant-systematics-simpson",
+      "note": "Kept: Mabberley (2017) has the leaflets rolled inward in bud; Simpson (2019) p. 143-144 calls them circinate, coiled when young, and also involute. Each leaflet uncoils while the rachis stays straight, and PlantGen's circinate coils the whole leaf, so involute draws nearer. Jay 2026-10-15 ~06:32Z: \"go with your recommendations on disagreements\"."
     },
     "traits.architectural_model": {
       "evidence": "SourceInferred",

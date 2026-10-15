@@ -65,6 +65,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 200, 202, 203, family Winteraceae: leaf habit evergreen; read as \"evergreen\"."
-    }
+    },
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Rare extremes noted only; the count's source is the family's `traits` note. The books give the family low 3: Simpson, Plant Systematics (2019) p. 200, 202, 203: 3-∞. Left out of the range on the owner's go (2026-10-15): they belong to some of its genera, and a family's rare ends would reach every species that inherits its count."}
   }
 }

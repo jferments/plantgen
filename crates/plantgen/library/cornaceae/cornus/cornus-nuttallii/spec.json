@@ -136,7 +136,11 @@
     "wood_density_basic_kg_m3": 600,
     "juvenile_period_years": {"min": 6, "max": 10},
     "flowering_months": [4, 5],
-    "fruiting_months": [9, 10]
+    "fruiting_months": [9, 10],
+    "inflorescence": "head",
+    "inflorescence_bracts": {"min": 6, "max": 6, "low": 4, "high": 7},
+    "bract_length_m": {"min": 0.04, "max": 0.06},
+    "fruit_size_m": {"min": 0.01, "max": 0.012}
   },
   "evidence": {
     "traits.flowering_months": {
@@ -214,7 +218,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 194, Cornus nuttallii: inflorescence head, 2 cm."},
+    "traits.inflorescence_bracts": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 194, Cornus nuttallii: inflorescence bracts (4-)6(-7)."},
+    "traits.bract_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 194, Cornus nuttallii: bract length 4-6 cm long, 3-6 cm wide."},
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 194, Cornus nuttallii: fruit size 10-12 mm long."}
   },
   "provenance": {
     "sources": [

@@ -107,7 +107,8 @@
     "leaf_length_m": {
       "min": 0.015,
       "max": 0.09
-    }
+    },
+    "zygomorphy": "bilabiate"
   },
   "evidence": {
     "generator.params.bud_area": {
@@ -170,7 +171,8 @@
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
-    "generator.params.bud_spacing": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "The few buds above the open flowers sit closer together among the upper bracts, about half to two thirds of the open flowers' spacing by eye (flowering photographs, observations 168612748, 191564139, 129627718, 15834623, 14057275, 338105599, 194561474, 260128512): a bud's internode as a share of a flower's, judged by eye."}
+    "generator.params.bud_spacing": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "The few buds above the open flowers sit closer together among the upper bracts, about half to two thirds of the open flowers' spacing by eye (flowering photographs, observations 168612748, 191564139, 129627718, 15834623, 14057275, 338105599, 194561474, 260128512): a bud's internode as a share of a flower's, judged by eye."},
+    "traits.zygomorphy": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 422, Erythranthe guttata: zygomorphy bilabiate, open throat."}
   },
   "provenance": {
     "sources": [

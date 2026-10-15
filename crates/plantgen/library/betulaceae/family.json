@@ -22,7 +22,10 @@
       "serrate": "usually"
     },
     "leaf_habit": "deciduous",
-    "inflorescence_posture": "pendent"
+    "inflorescence_posture": {
+      "pendent": "usually",
+      "erect": "sometimes"
+    }
   },
   "forms": {
     "decurrent_tree": {
@@ -99,7 +102,7 @@
     "traits.inflorescence_posture": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 335, family Betulaceae: inflorescence posture pendent (male catkins); read as \"pendent\"."
+      "note": "Simpson, Plant Systematics (2019) p. 335, family Betulaceae: inflorescence posture pendent (male catkins); read as \"pendent\". The books add erect (sometimes): Simpson, Plant Systematics (2019) p. 337, 338: pendent to erect."
     }
   }
 }

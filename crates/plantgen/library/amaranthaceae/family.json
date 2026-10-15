@@ -29,7 +29,8 @@
     "ovary_position": "superior",
     "fruit_type": {
       "achene": "usually",
-      "capsule": "sometimes"
+      "capsule": "sometimes",
+      "berry": "sometimes"
     },
     "rosette": {
       "basal": "rarely",
@@ -78,6 +79,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 371, family Amaranthaceae: life span annual or perennial; read as {\"annual\": \"often\", \"perennial\": \"often\"}."
-    }
+    },
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add berry (sometimes): Simpson, Plant Systematics (2019) p. 371: capsule (irregularly dehiscent) or berry."}
   }
 }

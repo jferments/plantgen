@@ -25,7 +25,11 @@
       "inferior": "usually",
       "superior": "rarely"
     },
-    "fruit_type": "berry",
+    "fruit_type": {
+      "berry": "usually",
+      "capsule": "sometimes",
+      "samara": "sometimes"
+    },
     "phyllotaxis_pattern": "spiral",
     "leaf_division": "simple",
     "leaf_venation": "palmate",
@@ -64,6 +68,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 335, 336, family Cucurbitaceae: stipules false; read as false."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add capsule (sometimes), samara (sometimes): Simpson, Plant Systematics (2019) p. 335, 336: berry (pepo), capsule or samara."
     }
   }
 }

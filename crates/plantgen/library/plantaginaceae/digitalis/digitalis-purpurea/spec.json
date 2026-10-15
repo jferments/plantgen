@@ -124,7 +124,8 @@
     },
     "flower_merosity": 5,
     "flower_symmetry": "zygomorphic",
-    "corolla_shape": "campanulate"
+    "corolla_shape": "campanulate",
+    "inflorescence": {"raceme": "usually"}
   },
   "evidence": {
     "generator.params.bud_area": {
@@ -192,7 +193,8 @@
       "source": "flora-nz-iv-1988",
       "note": "Its flower laid out whorl by whorl (spec rework P5): a two-lipped bell from the characters by the rules at the flowering plants. By hand: the tube joined for most of the petals' length and a little swollen, since the Flora of New Zealand gives the lobes short and the tube inflated above its base; the sepals much shorter than the corolla, as King's American Dispensatory has them (as search results quote them; the pages themselves were not read)."
     },
-    "generator.params.bud_spacing": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "The unopened top of the spike is a tight, tapering spire: each bud stands about half as far above the last as the open flowers below stand apart (about 0.4 to 0.5 by eye) (flowering photographs, observations 252093108, 979487, 257991668, 25171109, 53676158, 226970571, 20158574, 393214346): a bud's internode as a share of a flower's, judged by eye."}
+    "generator.params.bud_spacing": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "The unopened top of the spike is a tight, tapering spire: each bud stands about half as far above the last as the open flowers below stand apart (about 0.4 to 0.5 by eye) (flowering photographs, observations 252093108, 979487, 257991668, 25171109, 53676158, 226970571, 20158574, 393214346): a bud's internode as a share of a flower's, judged by eye."},
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 423, Digitalis purpurea: inflorescence raceme, one-sided, pendent flowers."}
   },
   "provenance": {
     "sources": [

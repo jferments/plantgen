@@ -4,7 +4,7 @@
   "name": "Isoetaceae",
   "parent": "order/isoetales",
   "traits": {
-    "leaf_form": "blade",
+    "leaf_form": "needle",
     "leaf_shape": "linear",
     "rosette": "basal",
     "phyllotaxis_pattern": "spiral",
@@ -79,6 +79,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 88, 89, 90, family Isoetaceae: life span perennial; read as \"perennial\"."
+    },
+    "traits.leaf_form": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson (2019) p. 88-90: leaves with a widened sheathing base and a linear to needle-like tip, flat to round in section. Mabberley (2017) has them linear, flat to round; a quill is drawn nearer as a needle than as a flat blade. Jay 2026-10-15 ~06:32Z: \"go with your recommendations on disagreements\"."
     }
   }
 }

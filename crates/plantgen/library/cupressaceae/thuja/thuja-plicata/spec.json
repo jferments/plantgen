@@ -106,8 +106,9 @@
     "juvenile_period_years": {"min": 10, "max": 30},
     "leaf_length_m": {"min": 0.0015, "max": 0.003},
     "leaf_life_years": {"min": 6.8, "max": 10.6, "typical": 8.9},
-    "cone_length_m": {"min": 0.01, "max": 0.012},
-    "cone_posture": "erect"
+    "cone_length_m": {"min": 0.01, "max": 0.015},
+    "cone_posture": "erect",
+    "seed_length_m": {"min": 0.004, "max": 0.005}
   },
   "evidence": {
     "traits.height_max_m": {
@@ -137,7 +138,7 @@
     "traits.cone_length_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
-      "note": "Abrams (vol. 1, 1923, p. 71), as Thuya plicata: scale leaves about 3 mm (FEIS: 1.5 to 3 mm), twice that on leading shoots; the branchlets usually fall in their third year, taking their leaves; seed cones 10 to 12 mm, clustered near the branch ends and strongly bent back."
+      "note": "Abrams (vol. 1, 1923, p. 71), as Thuya plicata: scale leaves about 3 mm (FEIS: 1.5 to 3 mm), twice that on leading shoots; the branchlets usually fall in their third year, taking their leaves; seed cones 10 to 12 mm, clustered near the branch ends and strongly bent back. Idžojtić, Dendrology (2019) p. 674: seed cones 10-15 mm. The spec stated {\"min\": 0.01, \"max\": 0.012}. Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."
     },
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",
@@ -188,7 +189,8 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.seed_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 674, Thuja plicata: seed length 4-5 mm."}
   },
   "provenance": {
     "sources": [
