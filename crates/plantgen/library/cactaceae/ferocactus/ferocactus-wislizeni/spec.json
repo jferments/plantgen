@@ -29,10 +29,10 @@
       "bend": 0.6,
       "dome": 0.55,
       "bloom_age": 25,
-      "flowers": 16,
+      "flowers": 20,
       "ring_angle": 30,
       "flower_angle": 25,
-      "flower_size": 0.06,
+      "flower_size": 0.045,
       "bud_share": 0.15,
       "fruit_share": 0.5,
       "bud_size": 0.03,
@@ -221,6 +221,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Rough heights from general knowledge: about half a metre by 30 years, a metre by 60. Wide tolerances."
+    },
+    "generator.params.flowers": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986), ch. 5: most cacti flower in a ring near the stem tip, one flower to an areole made about a year before, with a few areoles in the ring left unused; 20 here, for the 21 to 28 ribs, flowers and fruit together."
+    },
+    "generator.params.flower_size": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001), Ferocactus wislizeni: flowers 4 to 5 cm long and wide; 4.5 cm here."
     },
     "appearance.bodies.stem.ribs.fibonacci": {
       "evidence": "SourceInferred",

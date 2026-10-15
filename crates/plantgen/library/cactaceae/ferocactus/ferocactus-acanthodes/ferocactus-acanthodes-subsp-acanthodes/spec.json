@@ -29,14 +29,14 @@
       "bend": 0.3,
       "dome": 0.6,
       "bloom_age": 25,
-      "flowers": 12,
+      "flowers": 18,
       "ring_angle": 25,
       "flower_angle": 25,
       "flower_size": 0.05,
       "bud_share": 0.2,
       "fruit_share": 0.35,
       "bud_size": 0.025,
-      "fruit_size": 0.035,
+      "fruit_size": 0.03,
       "flower_area": 0.186,
       "bud_area": 0.636,
       "fruit_area": 0.89
@@ -185,6 +185,16 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Rough heights from general knowledge: about a metre by 60 years, 1.5 to 2 m by 110. Wide tolerances."
+    },
+    "generator.params.flowers": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986), ch. 5: most cacti flower in a ring near the stem tip, one flower to an areole made about a year before, with a few areoles in the ring left unused; 18 here, for 18 to 30 ribs, flowers and fruit together."
+    },
+    "generator.params.fruit_size": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001), Ferocactus cylindraceus: fruit globose, yellow, to 3 cm long; 3 cm here."
     },
     "appearance.bodies.stem.ribs.fibonacci": {
       "evidence": "SourceInferred",
