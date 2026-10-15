@@ -833,6 +833,15 @@
       "optional": true,
       "why": "the pinnae of a twice-divided leaf: its primary divisions, each bearing leaflets of its own (a mesquite's one or two pairs)"
     },
+    "cauline_leaves": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["none", "few", "many"],
+      "when": {"woodiness": ["herbaceous"]},
+      "optional": true,
+      "why": "whether a herb's flowering stem bears leaves: none, a leafless scape from the leaves at its foot; a few, much smaller than those at the foot; or many along it"
+    },
     "leaf_peltation": {
       "group": "leaves",
       "organ": "leaf",
