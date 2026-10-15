@@ -1678,11 +1678,17 @@ fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tal
     }
 }
 
+/// Degrees past which a frond's rachis has turned further than any
+/// unrolled frond arches and sags (at most from up to down, 180), so it
+/// is still coiled.
+const COILED: f64 = 200.0;
+
 /// A leaf drawn as a structure whose axis is its own segments and whose
 /// leaflets stand on them (a fern's frond: its stipe and rachis, and its
 /// pinnae): the stipe is the axis below the lowest leaflet, the blade the
 /// rest, and the blade's width twice the farthest a leaflet reaches out
-/// from the axis.
+/// from the axis. A frond still in its crozier, its rachis turning through
+/// more than [`COILED`] degrees, has no outline yet.
 fn frond_sizes(
     structure: u32,
     leaflets: &[&GraphOrgan],
@@ -1695,11 +1701,22 @@ fn frond_sizes(
     let mut first = true;
     // How far up the rachis each of its segments starts.
     let mut starts: BTreeMap<u32, f64> = BTreeMap::new();
+    // How far the rachis turns, degrees, segment to segment.
+    let mut turned = 0.0;
+    let mut heading = None;
     for (index, segment) in (0_u32..).zip(&drawn.segments) {
         if segment.within != Some(structure) {
             continue;
         }
         let length = (segment.end - segment.start).length();
+        let along = (segment.end - segment.start)
+            .normalize_or(heading.unwrap_or(segment.end - segment.start));
+        if let Some(before) = heading
+            && along != before
+        {
+            turned += along.dot(before).clamp(-1.0, 1.0).acos().to_degrees();
+        }
+        heading = Some(along);
         starts.insert(index, stipe + blade);
         // The rachis is drawn base first: bare pieces up to the first
         // that bears a leaflet are the stipe.
@@ -1733,6 +1750,7 @@ fn frond_sizes(
         }
     }
     if blade > 0.0
+        && turned <= COILED
         && let Some(words) = outline_shape(&outline, width / blade)
     {
         tally.kind("leaf_shape", &words);
