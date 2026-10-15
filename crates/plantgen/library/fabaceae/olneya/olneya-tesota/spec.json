@@ -48,7 +48,7 @@
       "bloom_angle": 40,
       "leaf_area": 0.236,
       "thorn_area": 0.059,
-      "bloom_area": 0.189,
+      "bloom_area": 0.141,
       "path_half": 5.6
     }
   },
@@ -282,7 +282,7 @@
       "source": "abrams-1944",
       "note": "Abrams (vol. 2, 1944, p. 562), Olneya tesota: tree 5-8 m high with a broad crown and grey-hairy branches; spines 5-10 mm long, single or paired beneath the leaves, brown or black-tipped; leaves 3-10 cm long; leaflets 8-25, oblong to wedge-shaped, 5-20 mm long, grey-hairy, rounded at the tip; racemes 3-5 cm; calyx 3-4 mm; corolla 8-10 mm long (given as yellow, see disagreements); pod 4-6 cm long, nearly 1 cm wide, glandular-hairy; May-June. Kearney and Peebles (p. 466) also give May and June."
     },
-    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The area its `bloom` look draws on an organ 1 m long (visual forms Skill 4, 2026-10-15; plantc atlas), so it shades with what it shows: the bloom is now a raceme of its flowers, where before it drew one flower (0.259)."},
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The area its `bloom` look draws on an organ 1 m long (visual forms Skill 4, 2026-10-15; plantc atlas), so it shades with what it shows: the bloom is now a raceme of its flowers, 7 on stalks as long as they are by the cluster rules, where before it drew one flower (0.259)."},
     "generator.params.bloom_size": {
       "evidence": "SourceInferred",
       "source": "abrams-1944",
