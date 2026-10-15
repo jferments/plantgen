@@ -25,7 +25,11 @@
       "inferior": "usually",
       "superior": "rarely"
     },
-    "fruit_type": "berry",
+    "fruit_type": {
+      "berry": "usually",
+      "capsule": "sometimes",
+      "samara": "sometimes"
+    },
     "phyllotaxis_pattern": "spiral",
     "leaf_division": "simple",
     "leaf_venation": "palmate",
@@ -66,6 +70,11 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 335, 336, family Cucurbitaceae: stipules false; read as false."
     },
-    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cucurbitaceae: how its perennial herbs last from year to year (character 25), coded usually tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cucurbitaceae: how its perennial herbs last from year to year (character 25), coded usually tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."},
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add capsule (sometimes), samara (sometimes): Simpson, Plant Systematics (2019) p. 335, 336: berry (pepo), capsule or samara."
+    }
   }
 }

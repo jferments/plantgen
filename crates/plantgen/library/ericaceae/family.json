@@ -18,12 +18,13 @@
       "max": 5,
       "typical": 5
     },
-    "flower_symmetry": "actinomorphic",
+    "flower_symmetry": {"actinomorphic": "usually", "zygomorphic": "rarely"},
     "perianth": "sepals_and_petals",
     "corolla_shape": {
       "urceolate": "usually",
       "campanulate": "sometimes",
-      "funnelform": "sometimes"
+      "funnelform": "sometimes",
+      "tubular": "sometimes"
     },
     "ovary_position": {
       "superior": "usually",
@@ -42,7 +43,8 @@
     "woodiness": "woody",
     "leaf_arrangement": {
       "alternate": "usually",
-      "opposite": "rarely"
+      "opposite": "rarely",
+      "whorled": "sometimes"
     },
     "leaf_division": "simple",
     "stipules": false,
@@ -108,7 +110,7 @@
     "traits.leaf_arrangement": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
-      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 152 Ericaceae and 157 Vacciniaceae (blueberries and huckleberries), which APG joins as Ericaceae: shrubs or undershrubs, rarely trees; leaves mostly alternate, simple, mostly evergreen; stipules absent; fruit a capsule, berry or drupe."
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 152 Ericaceae and 157 Vacciniaceae (blueberries and huckleberries), which APG joins as Ericaceae: shrubs or undershrubs, rarely trees; leaves mostly alternate, simple, mostly evergreen; stipules absent; fruit a capsule, berry or drupe. The books add whorled (sometimes): Simpson, Plant Systematics (2019) p. 389, 390: spiral, opposite or whorled."
     },
     "traits.leaf_division": {
       "evidence": "SourceInferred",
@@ -144,6 +146,8 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 389, 390, family Ericaceae: life span perennial; read as \"perennial\"."
-    }
+    },
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add tubular (sometimes): Simpson, Plant Systematics (2019) p. 389, 390: urceolate, tubular or campanulate."},
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add zygomorphic (rarely): Simpson, Plant Systematics (2019) p. 391: zygomorphic."}
   }
 }

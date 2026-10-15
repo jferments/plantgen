@@ -36,10 +36,11 @@
       "palmate": "often",
       "pinnate": "often"
     },
-    "stipules": false,
+    "stipules": {"false": "usually", "true": "sometimes"},
     "fruit_type": {
       "achene": "usually",
-      "follicle": "often"
+      "follicle": "often",
+      "berry": "sometimes"
     },
     "rosette": {
       "basal": "often",
@@ -97,12 +98,12 @@
     "traits.stipules": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
-      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 249 Ranunculaceae (buttercups, anemones, Clematis) and 248 Helleboraceae (hellebores, columbines, larkspurs), which APG joins as Ranunculaceae: mostly perennial or annual herbs with basal and alternate leaves, a few shrubs or climbers (Clematis) with opposite leaves; stipules absent or only sheathing bases of the leaf stalk; fruit a cluster of dry achenes in the first, follicles in the second."
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 249 Ranunculaceae (buttercups, anemones, Clematis) and 248 Helleboraceae (hellebores, columbines, larkspurs), which APG joins as Ranunculaceae: mostly perennial or annual herbs with basal and alternate leaves, a few shrubs or climbers (Clematis) with opposite leaves; stipules absent or only sheathing bases of the leaf stalk; fruit a cluster of dry achenes in the first, follicles in the second. The books add true (sometimes): Simpson, Plant Systematics (2019) p. 291, 292: present or absent."
     },
     "traits.fruit_type": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
-      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 249 Ranunculaceae (buttercups, anemones, Clematis) and 248 Helleboraceae (hellebores, columbines, larkspurs), which APG joins as Ranunculaceae: mostly perennial or annual herbs with basal and alternate leaves, a few shrubs or climbers (Clematis) with opposite leaves; stipules absent or only sheathing bases of the leaf stalk; fruit a cluster of dry achenes in the first, follicles in the second."
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 249 Ranunculaceae (buttercups, anemones, Clematis) and 248 Helleboraceae (hellebores, columbines, larkspurs), which APG joins as Ranunculaceae: mostly perennial or annual herbs with basal and alternate leaves, a few shrubs or climbers (Clematis) with opposite leaves; stipules absent or only sheathing bases of the leaf stalk; fruit a cluster of dry achenes in the first, follicles in the second. The books add berry (sometimes): Simpson, Plant Systematics (2019) p. 291, 292: aggregate of follicles, achenes or berries."
     },
     "traits.rosette": {
       "evidence": "SourceInferred",

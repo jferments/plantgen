@@ -42,7 +42,8 @@
     "fruit_type": {
       "capsule": "often",
       "berry": "often",
-      "drupe": "often"
+      "drupe": "often",
+      "schizocarp": "sometimes"
     },
     "phyllotaxis_pattern": {
       "decussate": "often"
@@ -104,6 +105,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 409, 411, 412, family Rubiaceae: sexual system hermaphrodite, usually; read as {\"hermaphrodite\": \"usually\"}."
-    }
+    },
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add schizocarp (sometimes): Simpson, Plant Systematics (2019) p. 409, 411, 412: berry, capsule, drupe or schizocarp."}
   }
 }

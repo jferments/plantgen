@@ -28,8 +28,8 @@
     },
     "woodiness": "herbaceous",
     "inflorescence": {
-      "solitary": "often",
-      "cyme": "often"
+      "scorpioid": "usually",
+      "solitary": "rarely"
     },
     "flower_symmetry": "actinomorphic",
     "perianth": "sepals_and_petals",
@@ -68,6 +68,11 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 378, family Droseraceae: flowering position terminal; read as \"terminal\"."
     },
-    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Droseraceae: how its perennial herbs last from year to year (character 25), coded often a rhizome, often tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Droseraceae: how its perennial herbs last from year to year (character 25), coded often a rhizome, often tubers. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."},
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson (2019) p. 378: scorpioid, circinately coiled one-sided cymes; flowers single in Aldrovanda. Watson and Dallwitz's DELTA gave solitary or in cymes. Jay 2026-10-15 ~06:32Z: \"go with your recommendations on disagreements\"."
+    }
   }
 }

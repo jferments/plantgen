@@ -19,7 +19,8 @@
     "woodiness": "herbaceous",
     "inflorescence": {
       "spike": "often",
-      "panicle": "often"
+      "panicle": "often",
+      "raceme": "sometimes"
     },
     "flower_symmetry": "asymmetric",
     "perianth": {
@@ -31,7 +32,8 @@
     "stamens": 1,
     "carpels": 3,
     "phyllotaxis_pattern": {
-      "distichous": "usually"
+      "distichous": "usually",
+      "spiral": "rarely"
     },
     "life_span": "perennial",
     "rhizome_habit": {
@@ -49,7 +51,7 @@
     "traits.phyllotaxis_pattern": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 50, family Cannaceae: phyllotaxis pattern distichous, usually; read as {\"distichous\": \"usually\"}."
+      "note": "Simpson, Plant Systematics (2019) p. 50, family Cannaceae: phyllotaxis pattern distichous, usually; read as {\"distichous\": \"usually\"}. The books add spiral (rarely): Simpson, Plant Systematics (2019) p. 248, 249, 252: spiral."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",
@@ -66,6 +68,11 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 248, 249, 252, family Cannaceae: axis growth sympodial; read as \"sympodial\"."
     },
-    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cannaceae: how its perennial herbs last from year to year (character 25), coded usually a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cannaceae: how its perennial herbs last from year to year (character 25), coded usually a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."},
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add raceme (sometimes): Simpson, Plant Systematics (2019) p. 255, 256: bracteate thyrse, a spike or raceme of 2-flowered cymes, or reduced to a raceme."
+    }
   }
 }

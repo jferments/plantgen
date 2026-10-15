@@ -6,7 +6,7 @@
   "traits": {
     "hypanthium": false,
     "flower_merosity": 3,
-    "flower_symmetry": "zygomorphic",
+    "flower_symmetry": {"zygomorphic": "usually", "actinomorphic": "rarely"},
     "perianth": "sepals_and_petals",
     "zygomorphy": "labellate",
     "resupinate": {
@@ -24,7 +24,8 @@
     "leaf_division": "simple",
     "leaf_arrangement": {
       "alternate": "usually",
-      "opposite": "rarely"
+      "opposite": "rarely",
+      "whorled": "sometimes"
     },
     "leaf_habit": {
       "evergreen": "sometimes",
@@ -84,7 +85,7 @@
     "traits.leaf_arrangement": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
-      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 405 Orchidaceae: perennial herbs, on the ground, on trees, or living on fungi; leaves undivided, alternate and often in two ranks, rarely opposite, sometimes all reduced to scales, sheathing at the base."
+      "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 405 Orchidaceae: perennial herbs, on the ground, on trees, or living on fungi; leaves undivided, alternate and often in two ranks, rarely opposite, sometimes all reduced to scales, sheathing at the base. The books add whorled (sometimes): Simpson, Plant Systematics (2019) p. 232, 233, 234: spiral, distichous or whorled."
     },
     "traits.leaf_habit": {
       "evidence": "SourceInferred",
@@ -121,6 +122,8 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 232, 233, 234, family Orchidaceae: fruit type capsule (loculicidal) (rarely berry), usually; read as {\"capsule\": \"usually\"}."
     },
-    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Orchidaceae, with the parts of Orchidaceae it codes as families of their own (Cypripediaceae), whose further states read as sometimes: how its perennial herbs last from year to year (character 25), coded often a corm, often a rhizome, often tubers, often pseudobulbs; with them, often a corm, often a rhizome, often tubers, often pseudobulbs. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Orchidaceae, with the parts of Orchidaceae it codes as families of their own (Cypripediaceae), whose further states read as sometimes: how its perennial herbs last from year to year (character 25), coded often a corm, often a rhizome, often tubers, often pseudobulbs; with them, often a corm, often a rhizome, often tubers, often pseudobulbs. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."},
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add actinomorphic (rarely): Ingrouille, Diversity and Evolution of Land Plants (1992) p. 176: actinomorphic."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Rare extremes noted only; the count's source is the family's `traits` note. The books give the family high 3: Simpson, Plant Systematics (2019) p. 235, 236: 1-3. Left out of the range on the owner's go (2026-10-15): they belong to some of its genera, and a family's rare ends would reach every species that inherits its count."}
   }
 }

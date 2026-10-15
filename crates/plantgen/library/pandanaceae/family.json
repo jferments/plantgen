@@ -20,7 +20,8 @@
     "inflorescence": {
       "panicle": "often",
       "raceme": "often",
-      "head": "often"
+      "head": "often",
+      "spike": "sometimes"
     },
     "perianth": {
       "tepals": "often",
@@ -28,7 +29,9 @@
     },
     "fruit_type": {
       "berry": "usually",
-      "aggregate": "rarely"
+      "aggregate": "rarely",
+      "drupe": "sometimes",
+      "multiple": "sometimes"
     },
     "stamens": {
       "min": 10,
@@ -96,6 +99,16 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 218, 219, family Pandanaceae: axis growth sympodial; read as \"sympodial\"."
     },
-    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Pandanaceae: how its perennial herbs last from year to year (character 25), coded usually a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Pandanaceae: how its perennial herbs last from year to year (character 25), coded usually a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."},
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add drupe (sometimes), multiple (sometimes): Simpson, Plant Systematics (2019) p. 218, 219: berry or drupe, multiple in some."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add spike (sometimes): Simpson, Plant Systematics (2019) p. 218, 219: panicle, spike, raceme or pseudo-umbel of spikes or spadices."
+    }
   }
 }

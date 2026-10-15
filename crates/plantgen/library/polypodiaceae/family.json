@@ -11,7 +11,8 @@
     "sporangia": "sori",
     "sorus_shape": {
       "round": "usually",
-      "linear": "rarely"
+      "linear": "rarely",
+      "oblong": "sometimes"
     },
     "indusium": {
       "none": "often",
@@ -40,6 +41,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 122, 123, family Polypodiaceae: rhizome habit long to short creeping, scaly; read as \"short_creeping\"."
+    },
+    "traits.sorus_shape": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add oblong (sometimes): Simpson, Plant Systematics (2019) p. 122, 123: round, oblong or elliptic."
     }
   }
 }

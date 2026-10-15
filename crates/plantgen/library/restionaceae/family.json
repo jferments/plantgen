@@ -38,7 +38,8 @@
     "fruit_type": {
       "capsule": "often",
       "nut": "often",
-      "follicle": "sometimes"
+      "follicle": "sometimes",
+      "achene": "sometimes"
     },
     "stamens": {
       "min": 2,
@@ -84,6 +85,11 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 265, 268, 269, family Restionaceae: rhizome habit short_creeping (rhizomatous or stoloniferous), usually; read as {\"short_creeping\": \"usually\"}."
     },
-    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Restionaceae, with the parts of Restionaceae it codes as families of their own (Anarthriaceae), whose further states read as sometimes: how its perennial herbs last from year to year (character 25), coded usually a rhizome; with them, usually a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Restionaceae, with the parts of Restionaceae it codes as families of their own (Anarthriaceae), whose further states read as sometimes: how its perennial herbs last from year to year (character 25), coded usually a rhizome; with them, usually a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."},
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add achene (sometimes): Simpson, Plant Systematics (2019) p. 265, 268, 269: achene, nut or capsule."
+    }
   }
 }

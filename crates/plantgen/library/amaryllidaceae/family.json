@@ -7,7 +7,7 @@
     "hypanthium": {"true": "often", "false": "often"},
     "woodiness": "herbaceous",
     "leaf_venation": "parallel",
-    "flower_symmetry": "actinomorphic",
+    "flower_symmetry": {"actinomorphic": "usually", "zygomorphic": "sometimes"},
     "perianth": "tepals",
     "flower_merosity": 3,
     "stamens": {
@@ -77,6 +77,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 229, family Amaryllidaceae: life span perennial; read as \"perennial\"."
     },
-    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Amaryllidaceae, with the parts of Amaryllidaceae it codes as families of their own (Alliaceae), whose further states read as sometimes: how its perennial herbs last from year to year (character 25), coded usually a bulb, rarely a rhizome; with them, usually a bulb, sometimes a corm, rarely a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Amaryllidaceae, with the parts of Amaryllidaceae it codes as families of their own (Alliaceae), whose further states read as sometimes: how its perennial herbs last from year to year (character 25), coded usually a bulb, rarely a rhizome; with them, usually a bulb, sometimes a corm, rarely a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."},
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add zygomorphic (sometimes): Simpson, Plant Systematics (2019) p. 229: actinomorphic or zygomorphic."}
   }
 }

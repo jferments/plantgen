@@ -14,7 +14,8 @@
     "leaf_venation": "palmate",
     "leaf_shape": {
       "ovate": "often",
-      "obovate": "often"
+      "obovate": "often",
+      "orbicular": "sometimes"
     },
     "stipules": {
       "true": "usually",
@@ -68,6 +69,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 296, 297, family Gunneraceae: life span perennial (annual in G. herteri), usually; read as {\"perennial\": \"usually\"}."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add orbicular (sometimes): Simpson, Plant Systematics (2019) p. 296, 297: orbicular to ovate."
     }
   }
 }

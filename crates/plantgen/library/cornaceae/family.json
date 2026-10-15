@@ -31,7 +31,8 @@
       "false": "usually"
     },
     "inflorescence": {
-      "cyme": "usually"
+      "cyme": "usually",
+      "head": "sometimes"
     },
     "sexual_system": {
       "hermaphrodite": "usually"
@@ -103,13 +104,16 @@
     "traits.inflorescence": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 384, family Cornaceae: inflorescence cyme (or head of cymes, rarely raceme), usually; read as {\"cyme\": \"usually\"}."
+      "note": "Simpson, Plant Systematics (2019) p. 384, family Cornaceae: inflorescence cyme (or head of cymes, rarely raceme), usually; read as {\"cyme\": \"usually\"}. The books add head (sometimes): Simpson, Plant Systematics (2019) p. 385, 386: cyme, sometimes condensed into heads."
     },
     "traits.sexual_system": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 385, 386, family Cornaceae: sexual system hermaphrodite, usually; read as {\"hermaphrodite\": \"usually\"}."
     },
-    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cornaceae: how its perennial herbs last from year to year (character 25), coded usually a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
+    "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cornaceae: how its perennial herbs last from year to year (character 25), coded usually a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."},
+    "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Rare extremes noted only; the count's source is the family's `traits` note. The books give the family high 4: Simpson, Plant Systematics (2019) p. 385, 386: 2-4 [-9]. Left out of the range on the owner's go (2026-10-15): they belong to some of its genera, and a family's rare ends would reach every species that inherits its count."},
+    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Rare extremes noted only; the count's source is the family's `traits` note. The books give the family high 5: Simpson, Plant Systematics (2019) p. 385, 386: 4-5. Left out of the range on the owner's go (2026-10-15): they belong to some of its genera, and a family's rare ends would reach every species that inherits its count."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Rare extremes noted only; the count's source is the family's `traits` note. The books give the family high 5: Simpson, Plant Systematics (2019) p. 385, 386: 4-5 [10], alternating with petals, free. Left out of the range on the owner's go (2026-10-15): they belong to some of its genera, and a family's rare ends would reach every species that inherits its count."}
   }
 }
