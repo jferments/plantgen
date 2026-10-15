@@ -335,7 +335,8 @@
       "organ": "plant",
       "type": "enum",
       "values": ["bulb", "corm", "rhizome", "tuber", "pseudobulb"],
-      "why": "what a perennial herb lasts the bad season in underground (or, for a pseudobulb, a swollen stem above it): a bulb or a corm sends up one flowering stem of its own, a rhizome or tubers a clump of them"
+      "when": {"life_span": ["perennial"]},
+      "why": "what a perennial herb lasts the bad season in underground (or, for a pseudobulb, a swollen stem above it): a bulb or a corm usually sends up one flowering stem of its own, a rhizome or tubers a clump of them; how a rhizome grows is `rhizome_habit`, so a plant that perennates in a rhizome has one other than none"
     },
     "habit_notes": {
       "group": "form",
