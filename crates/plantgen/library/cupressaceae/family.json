@@ -23,7 +23,8 @@
       "dioecious": "often"
     },
     "leaf_habit": {
-      "evergreen": "usually"
+      "evergreen": "usually",
+      "deciduous": "rarely"
     }
   },
   "evidence": {
@@ -35,7 +36,7 @@
     "traits.leaf_habit": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 153, 155, 156, family Cupressaceae: leaf habit evergreen, usually; read as {\"evergreen\": \"usually\"}."
+      "note": "Simpson, Plant Systematics (2019) p. 153, 155, 156, family Cupressaceae: leaves usually evergreen; Taxodium sheds whole branch systems and Metasequoia sheds its leaves with the branchlets, so deciduous rarely."
     }
   }
 }
