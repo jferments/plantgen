@@ -44,7 +44,9 @@
       "fruit_area": 0.028,
       "bud_spacing": 0.3,
       "bud_lean": 0.2,
-      "bud_stalk": 0.3
+      "bud_stalk": 0.3,
+      "bract_length": 0.02,
+      "bract_area": 0.04
     }
   },
   "growth": {
@@ -108,6 +110,14 @@
           "open": 0.0
         },
         "colour": [0.18, 0.15, 0.16]
+      },
+      "bract": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.08
+        },
+        "colour": [0.78, 0.8, 0.66]
       }
     }
   },
@@ -131,6 +141,16 @@
     "anther_attachment": "versatile"
   },
   "evidence": {
+    "appearance.organs.bract.colour": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "The floral bracts whitish green and translucent, paler than the stalks (observations 205778790, 256854545)."
+    },
+    "generator.params.bract_length": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Each flower, bud and fruit stands in the axil of a narrow pale papery bract, whitish green and translucent, tapering to a fine point and lying along the stalk's lower side, a little longer than the stalk: about 2.5 cm beside a 2.2 cm stalk, 1.5-2 mm wide (observations 205778790, 256854545); its fine tips show between the closed buds."
+    },
     "appearance.organs.flower.shape.centre": {
       "evidence": "Measured",
       "source": "inaturalist-photos-2026-10",
