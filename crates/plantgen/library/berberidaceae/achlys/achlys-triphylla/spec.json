@@ -39,7 +39,7 @@
       "basal_area": 0.235,
       "basal_piece_area": 0.235,
       "flower_area": 0.037,
-      "bud_area": 0.89,
+      "bud_area": 0.0,
       "fruit_area": 0.89
     }
   },
@@ -96,6 +96,11 @@
     "leaflets": 3
   },
   "evidence": {
+    "generator.params.bud_area": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The leaf area its `bud` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows: the bud is now its flower closed, where before it drew the fruit ovoid."
+    },
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1944",

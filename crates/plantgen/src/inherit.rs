@@ -1960,10 +1960,34 @@ fn fill_defaults(
 /// `crate::spec::MALE` writes it.
 pub const MALE: &str = "_male";
 
+/// The organ type of a program's buds (`herb`, `column`).
+pub const BUD: &str = "bud";
+
+/// The species' `flower` look closed (`open` 0), without its season,
+/// cluster or juvenile forms: a bud is the flower before it opens. `None`
+/// when the flower look draws no flower.
+fn closed_flower(looks: &Map<String, Value>) -> Option<Value> {
+    let flower = looks.get("flower")?;
+    if flower.pointer("/shape/template").and_then(Value::as_str) != Some("flower") {
+        return None;
+    }
+    let mut closed = flower.clone();
+    let look = closed.as_object_mut()?;
+    for part in ["season", "inflorescence", "families"] {
+        look.remove(part);
+    }
+    look.get_mut("shape")?
+        .as_object_mut()?
+        .insert("open".into(), Value::from(0.0));
+    Some(closed)
+}
+
 /// Give each organ type the species' program declares that has no look of
 /// its own its kind's look from the merged `appearance.defaults`, with its
 /// origin and note, and drop the defaults (LANGUAGE.md 5.2): the rules then
-/// reach every organ the plant draws. A look filled in stands farthest of
+/// reach every organ the plant draws. A `bud` without a look of its own
+/// takes its flower's look, closed ([`closed_flower`]), as a lone flower's
+/// bud does in its season (spec rework P5). A look filled in stands farthest of
 /// all, as a default parameter does, so any rule may set what it holds. A
 /// male plant's organ takes none: it stands for the organ it is the male
 /// of.
@@ -2000,6 +2024,21 @@ fn fill_looks(
         };
         if looks.contains_key(organ) {
             continue;
+        }
+        if organ == BUD {
+            if let Some(closed) = closed_flower(looks) {
+                looks.insert(organ.clone(), closed);
+                let to = format!("appearance.organs.{BUD}");
+                let taken: Vec<(String, Origin)> = origins
+                    .iter()
+                    .filter(|(path, _)| within(path, "appearance.organs.flower"))
+                    .map(|(path, origin)| {
+                        (format!("{to}{}", &path["appearance.organs.flower".len()..]), origin.clone())
+                    })
+                    .collect();
+                origins.extend(taken);
+                continue;
+            }
         }
         looks.insert(organ.clone(), look.clone());
         let from = format!("appearance.defaults.{kind}");
