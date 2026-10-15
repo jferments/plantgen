@@ -22,11 +22,13 @@
     "hypanthium": true,
     "ovary_position": {
       "superior": "usually",
-      "inferior": "rarely"
+      "inferior": "rarely",
+      "half_inferior": "sometimes"
     },
     "fruit_type": {
       "capsule": "usually",
-      "berry": "rarely"
+      "berry": "rarely",
+      "drupe": "sometimes"
     },
     "leaf_division": "simple",
     "leaf_margin": {
@@ -72,6 +74,16 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 343, 344, 345, family Lythraceae: inflorescence raceme, panicle, fascicle, dichasium or solitary flowers, usually; read as {\"cyme\": \"often\", \"panicle\": \"often\", \"raceme\": \"often\", \"solitary\": \"often\"}."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add drupe (sometimes): Simpson, Plant Systematics (2019) p. 343, 344, 345: capsule, berry or drupe-like."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add half_inferior (sometimes): Simpson, Plant Systematics (2019) p. 343, 344, 345: superior, half-inferior or inferior."
     }
   }
 }

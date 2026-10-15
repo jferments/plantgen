@@ -14,7 +14,8 @@
     "sexual_system": {
       "hermaphrodite": "usually",
       "monoecious": "sometimes",
-      "polygamous": "sometimes"
+      "polygamous": "sometimes",
+      "dioecious": "sometimes"
     },
     "ovary_position": "superior",
     "hypanthium": false,
@@ -30,7 +31,10 @@
       "umbel": "often"
     },
     "flower_symmetry": "actinomorphic",
-    "perianth": "tepals",
+    "perianth": {
+      "tepals": "usually",
+      "absent": "sometimes"
+    },
     "fruit_type": {
       "achene": "often",
       "nut": "often"
@@ -48,6 +52,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Nyctaginaceae: leaves usually opposite, sometimes alternate; leaves simple; veins pinnate; stipules absent; plants usually hermaphrodite, sometimes monoecious or polygamous; ovary superior; floral cup absent; stems woody or herbaceous; flowers solitary, in cymes, in panicles, in spikes or in umbels; flowers actinomorphic; perianth tepals; fruit achene or nut; stamens (1-) 5 (-30); carpels 1. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add absent (sometimes): Simpson, Plant Systematics (2019) p. 378: tepals; a single petaloid calyx, corolla absent."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add dioecious (sometimes): Simpson, Plant Systematics (2019) p. 378: hermaphrodite or dioecious."
     }
   }
 }

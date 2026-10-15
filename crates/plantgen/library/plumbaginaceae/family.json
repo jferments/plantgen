@@ -33,13 +33,15 @@
     "inflorescence": {
       "panicle": "often",
       "head": "often",
-      "raceme": "often"
+      "raceme": "often",
+      "spike": "rarely"
     },
     "flower_symmetry": "actinomorphic",
     "perianth": "sepals_and_petals",
     "fruit_type": {
       "capsule": "often",
-      "nut": "often"
+      "nut": "often",
+      "achene": "sometimes"
     },
     "flower_merosity": 5,
     "stamens": 5,
@@ -56,6 +58,16 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 381, 382, family Plumbaginaceae: phyllotaxis pattern spiral; read as \"spiral\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add spike (rarely): Simpson, Plant Systematics (2019) p. 381, 382: spike."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Watson and Dallwitz's DELTA: capsule or nut. Simpson (2019) p. 381-382 adds an achene, often; a one-seeded dry fruit that may open by a lid. Jay 2026-10-15 ~06:32Z: \"go with your recommendations on disagreements\"."
     }
   }
 }

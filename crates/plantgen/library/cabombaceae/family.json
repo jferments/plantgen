@@ -6,7 +6,8 @@
   "traits": {
     "leaf_arrangement": {
       "alternate": "often",
-      "opposite": "often"
+      "opposite": "often",
+      "whorled": "sometimes"
     },
     "leaf_division": {
       "simple": "often",
@@ -59,6 +60,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 193, family Cabombaceae: rhizome habit long_creeping (rhizomes give rise to elongate leafy shoots), usually; read as {\"long_creeping\": \"usually\"}."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add whorled (sometimes): Simpson, Plant Systematics (2019) p. 193: alternate, opposite or whorled."
     }
   }
 }

@@ -34,7 +34,10 @@
       "typical": 10
     },
     "ovary_position": "superior",
-    "fruit_type": "schizocarp",
+    "fruit_type": {
+      "schizocarp": "usually",
+      "capsule": "sometimes"
+    },
     "leaf_incision": {
       "lobed": "often",
       "parted": "often"
@@ -63,6 +66,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 342, family Geraniaceae: inflorescence cyme (or solitary axillary flower), usually; read as {\"cyme\": \"usually\"}."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add capsule (sometimes): Simpson, Plant Systematics (2019) p. 343: loculicidal capsule or schizocarp of mericarps, splitting from a persistent beak formed by an enlarged style."
     }
   }
 }

@@ -24,7 +24,8 @@
     "sexual_system": "hermaphrodite",
     "ovary_position": {
       "half_inferior": "often",
-      "inferior": "often"
+      "inferior": "often",
+      "superior": "sometimes"
     },
     "hypanthium": true,
     "woodiness": {
@@ -70,6 +71,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 385, 387, family Loasaceae: inflorescence thyrse or solitary flowers; read as {\"panicle\": \"often\", \"solitary\": \"often\"}."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add superior (sometimes): Simpson, Plant Systematics (2019) p. 385, 387: superior or inferior."
     }
   }
 }

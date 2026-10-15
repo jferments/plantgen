@@ -13,7 +13,8 @@
     "hypanthium": true,
     "ovary_position": {
       "superior": "usually",
-      "inferior": "sometimes"
+      "inferior": "sometimes",
+      "half_inferior": "sometimes"
     },
     "leaf_arrangement": {
       "alternate": "usually",
@@ -42,7 +43,8 @@
       "aggregate": "often",
       "drupe": "often",
       "pome": "often",
-      "follicle": "sometimes"
+      "follicle": "sometimes",
+      "capsule": "sometimes"
     }
   },
   "forms": {
@@ -118,7 +120,8 @@
     "traits.fruit_type": {
       "evidence": "SourceInferred",
       "source": "diversity-evolution-land-plants",
-      "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type follicle (Spiraeoideae), usually. Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type drupe (Prunoideae). Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type aggregate (Rosoideae), often. Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type pome (Maloideae). Read together as {\"aggregate\": \"often\", \"drupe\": \"often\", \"pome\": \"often\", \"follicle\": \"sometimes\"}."
-    }
+      "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type follicle (Spiraeoideae), usually. Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type drupe (Prunoideae). Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type aggregate (Rosoideae), often. Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type pome (Maloideae). Read together as {\"aggregate\": \"often\", \"drupe\": \"often\", \"pome\": \"often\", \"follicle\": \"sometimes\"}. The books add capsule (sometimes): Simpson, Plant Systematics (2019) p. 325, 327, 328: drupe, pome, hip, follicetum, achenecetum or capsule."
+    },
+    "traits.ovary_position": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add half_inferior (sometimes): Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164: superior, half_inferior or inferior."}
   }
 }

@@ -5,7 +5,10 @@
   "parent": "order/poales",
   "traits": {
     "flower_merosity": 3,
-    "flower_symmetry": "actinomorphic",
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "sometimes"
+    },
     "perianth": "sepals_and_petals",
     "stamens": 6,
     "carpels": 3,
@@ -113,6 +116,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 257, 258, family Bromeliaceae: life span perennial; read as \"perennial\"."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add zygomorphic (sometimes): Simpson, Plant Systematics (2019) p. 257, 258: actinomorphic or slightly zygomorphic."
     }
   }
 }
