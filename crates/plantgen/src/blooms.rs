@@ -420,6 +420,7 @@ pub(crate) fn build_coarse(
                         ),
                         accent: look.accent,
                         filament: flower.filament.unwrap_or(look.accent),
+                        ovary: flower.pistil.unwrap_or(look.accent),
                     },
                     part,
                     mesh,
