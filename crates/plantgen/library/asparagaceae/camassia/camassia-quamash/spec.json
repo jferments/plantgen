@@ -36,7 +36,7 @@
       "basal_angle": 18,
       "basal_pieces": 4,
       "basal_arch": 7,
-      "leaf_area": 0.235,
+      "leaf_area": 0.036,
       "basal_area": 0.049,
       "basal_piece_area": 0.091,
       "flower_area": 0.24,
@@ -151,6 +151,7 @@
       "source": "inaturalist-photos-2026-10",
       "note": "Each flower, bud and fruit stands in the axil of a narrow pale papery bract, whitish green and translucent, tapering to a fine point and lying along the stalk's lower side, a little longer than the stalk: about 2.5 cm beside a 2.2 cm stalk, 1.5-2 mm wide (observations 205778790, 256854545); its fine tips show between the closed buds."
     },
+    "generator.params.leaf_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The area its `leaf` look draws on an organ 1 m long (visual forms Skill 5, 2026-10-15; plantc atlas), so it shades with what it shows: its stem leaves now take the monocots' strap rule and draw a linear blade, where before they drew the generic simple card (0.235)."},
     "appearance.organs.flower.shape.centre": {
       "evidence": "Measured",
       "source": "inaturalist-photos-2026-10",

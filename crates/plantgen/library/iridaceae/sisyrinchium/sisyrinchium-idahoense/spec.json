@@ -34,7 +34,7 @@
       "fruit_below": 0,
       "buds_above": 1,
       "nod": 0,
-      "leaf_area": 0.051,
+      "leaf_area": 0.036,
       "basal_area": 0.03,
       "basal_piece_area": 0.055,
       "flower_area": 0.411,
@@ -98,7 +98,7 @@
       "source": "plantgen-authors",
       "note": "The leaf area its `bud` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows: the bud is now its flower closed, where before it drew the fruit ovoid."
     },
-    "generator.params.leaf_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `leaf` look draws on an organ 1 m long (visual forms Skill 1, 2026-10-14; plantc atlas), so it shades with what it shows: the look now takes its card from the taxa's characters, where before it drew the generic card (0.235)."},
+    "generator.params.leaf_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The area its `leaf` look draws on an organ 1 m long (visual forms Skill 5, 2026-10-15; plantc atlas), so it shades with what it shows: its stem leaves now take the monocots' strap rule and draw a linear blade, where before they drew a simple card (0.051)."},
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
