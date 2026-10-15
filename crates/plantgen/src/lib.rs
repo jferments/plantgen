@@ -379,4 +379,8 @@ pub mod venation;
 /// `anther_attachment`) and colour its ovary (`pistil`); common camas's
 /// anthers are versatile and its ovary a pale green bead (62 is camas
 /// detail 3, #120).
-pub const GENERATOR_REVISION: u32 = 63;
+/// 64: a herb's raceme may set each flower, bud and fruit in the axil of a
+/// floral bract (`herb` revision 9, `bract_length`, absent by default);
+/// common camas's bracts are narrow, pale and papery, a little longer
+/// than the flower stalks (63 is camas detail 4, #121).
+pub const GENERATOR_REVISION: u32 = 64;
