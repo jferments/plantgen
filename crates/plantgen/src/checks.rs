@@ -1678,17 +1678,19 @@ fn leaves(grown: &Grown<'_>, drawn: &PlantGraph, looks: &[Look], tally: &mut Tal
     }
 }
 
-/// Degrees past which a frond's rachis has turned further than any
-/// unrolled frond arches and sags (at most from up to down, 180), so it
-/// is still coiled.
-const COILED: f64 = 200.0;
+/// Degrees past which a frond's rachis turns at one joint, more than an
+/// unrolled frond bends along its arch (a few degrees a joint); with
+/// pieces of its blade under half as long as its longest, the frond is
+/// still coiled in its crozier. (A frond lying on the ground bends as
+/// sharply where it meets it, but its pieces are whole.)
+const COILED: f64 = 20.0;
 
 /// A leaf drawn as a structure whose axis is its own segments and whose
 /// leaflets stand on them (a fern's frond: its stipe and rachis, and its
 /// pinnae): the stipe is the axis below the lowest leaflet, the blade the
 /// rest, and the blade's width twice the farthest a leaflet reaches out
-/// from the axis. A frond still in its crozier, its rachis turning through
-/// more than [`COILED`] degrees, has no outline yet.
+/// from the axis. A frond still in its crozier (see [`COILED`]) has no
+/// outline yet.
 fn frond_sizes(
     structure: u32,
     leaflets: &[&GraphOrgan],
@@ -1701,8 +1703,10 @@ fn frond_sizes(
     let mut first = true;
     // How far up the rachis each of its segments starts.
     let mut starts: BTreeMap<u32, f64> = BTreeMap::new();
-    // How far the rachis turns, degrees, segment to segment.
-    let mut turned = 0.0;
+    // The most the rachis turns from one segment to the next, degrees, and
+    // its blade's shortest and longest segments.
+    let mut turned: f64 = 0.0;
+    let (mut shortest, mut longest) = (f64::INFINITY, 0.0_f64);
     let mut heading = None;
     for (index, segment) in (0_u32..).zip(&drawn.segments) {
         if segment.within != Some(structure) {
@@ -1714,7 +1718,7 @@ fn frond_sizes(
         if let Some(before) = heading
             && along != before
         {
-            turned += along.dot(before).clamp(-1.0, 1.0).acos().to_degrees();
+            turned = turned.max(along.dot(before).clamp(-1.0, 1.0).acos().to_degrees());
         }
         heading = Some(along);
         starts.insert(index, stipe + blade);
@@ -1725,6 +1729,8 @@ fn frond_sizes(
         } else {
             first = false;
             blade += length;
+            shortest = shortest.min(length);
+            longest = longest.max(length);
         }
     }
     let mut width: f64 = 0.0;
@@ -1750,7 +1756,7 @@ fn frond_sizes(
         }
     }
     if blade > 0.0
-        && turned <= COILED
+        && (turned <= COILED || shortest >= 0.5 * longest)
         && let Some(words) = outline_shape(&outline, width / blade)
     {
         tally.kind("leaf_shape", &words);
