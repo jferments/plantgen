@@ -25,9 +25,9 @@
       "culm_radius": 0.0008,
       "culm_lean": 8,
       "panicle_nod": 10,
-      "blade_area": 0.014,
-      "tip_area": 0.008,
-      "thatch_area": 0.014,
+      "blade_area": 0.061,
+      "tip_area": 0.033,
+      "thatch_area": 0.061,
       "panicle_area": 0.151
     }
   },

@@ -111,7 +111,7 @@
     "clonal": true,
     "lower_glume_length_m": {"min": 0.004, "max": 0.005},
     "leaf_length_m": {"min": 0.1, "max": 0.2},
-    "leaf_width_m": {"min": 0.005, "max": 0.025},
+    "leaf_width_m": {"min": 0.005, "max": 0.015},
     "flowering_months": [6, 7, 8, 9]
   },
   "evidence": {
@@ -217,8 +217,8 @@
     },
     "traits.leaf_width_m": {
       "evidence": "SourceInferred",
-      "source": "usfs-feis",
-      "note": "FEIS's reed canarygrass review (Waggy 2010, read 2026-10-15): broad, flat leaves 5 to 25 mm wide. It replaces GrassBase's 5-15 mm, seen only as quoted in search results."
+      "source": "kew-grassbase",
+      "note": "GrassBase's entry (as search results quote it; the page itself was not read): leaf-blades 5-15 mm wide."
     },
     "traits.flowering_months": {
       "evidence": "SourceInferred",
