@@ -856,7 +856,7 @@
       "type": "enum",
       "values": ["erect", "ascending", "arching", "spreading", "pendent"],
       "optional": true,
-      "why": "how a long leaf or frond is held: standing up, rising at a slant, bending over toward its tip, held out nearly level, or hanging"
+      "why": "the grown leaf's habit as a whole, its angle and its arch together, as floras word it for a frond or a blade: standing up, rising at a slant, bending over toward its tip, held out nearly level, or hanging"
     },
     "leaf_peltation": {
       "group": "leaves",
