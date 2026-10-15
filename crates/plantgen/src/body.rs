@@ -510,7 +510,14 @@ impl BodyLook {
         } else {
             self.colour
         };
-        (colour, spines::cover(self, spacing * spacing))
+        // Areoles sit along the crests, so each has the skin from its own
+        // crest halfway to the next on either side; without ribs, a square
+        // of the areoles' spacing.
+        let width = self
+            .ribs
+            .as_ref()
+            .map_or(spacing, |ribs| ribs.spacing.max(spacing));
+        (colour, spines::cover(self, spacing * width))
     }
 }
 
