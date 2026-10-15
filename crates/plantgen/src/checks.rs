@@ -152,7 +152,7 @@ pub enum Judged {
 }
 
 /// The size characters measured on grown plants, and how each is judged.
-pub const SIZES: [(&str, Judged); 35] = [
+pub const SIZES: [(&str, Judged); 37] = [
     ("height_typical_m", Judged::Typical),
     ("height_max_m", Judged::Greatest),
     ("crown_width_max_m", Judged::Greatest),
@@ -167,6 +167,7 @@ pub const SIZES: [(&str, Judged); 35] = [
     ("leaf_width_m", Judged::Organs),
     ("petiole_length_m", Judged::Organs),
     ("inflorescence_length_m", Judged::Organs),
+    ("peduncle_length_m", Judged::Organs),
     ("bract_length_m", Judged::Organs),
     ("flower_size_m", Judged::Organs),
     ("spur_length_m", Judged::Organs),
@@ -181,6 +182,7 @@ pub const SIZES: [(&str, Judged); 35] = [
     ("awn_length_m", Judged::Organs),
     ("fruit_size_m", Judged::Organs),
     ("cone_length_m", Judged::Organs),
+    ("cone_width_m", Judged::Organs),
     ("divergence_deg", Judged::Typical),
     ("juvenile_period_years", Judged::Typical),
     ("leaf_life_years", Judged::Organs),
@@ -2068,6 +2070,12 @@ fn reproductive(
                 0,
                 organ.size * layout.length(cluster.unit),
             );
+            tally.add(
+                "peduncle_length_m",
+                organ.id,
+                0,
+                organ.size * layout.peduncle(),
+            );
             tally.count(
                 "units_per_inflorescence",
                 organ.id,
@@ -2297,6 +2305,12 @@ fn unit_sizes(
         Shape::Fruit(fruit) if in_stage(phase, Stage::Ripe) => {
             if term == "cone" {
                 tally.add("cone_length_m", organ, part, length);
+                tally.add(
+                    "cone_width_m",
+                    organ,
+                    part,
+                    length * fruit.aspect.clamp(0.05, 2.0),
+                );
             } else {
                 tally.add("fruit_size_m", organ, part, length);
                 // A fruit card drawn as a cone's scales (an alder's woody

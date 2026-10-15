@@ -154,7 +154,9 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.petal_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453: petals 7-10 mm in the male flowers, 4-5 mm in the female."},
+    "traits.peduncle_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453: peduncle 50-70 cm."}
   },
   "provenance": {
     "sources": [
@@ -165,5 +167,9 @@
     ],
     "contributors": ["Project After"],
     "notes": "Procedural proxy (plant forms milestone F4). Calibration against measurements and photographs comes later."
+  },
+  "traits": {
+    "petal_length_m": {"min": 0.004, "max": 0.01},
+    "peduncle_length_m": {"min": 0.5, "max": 0.7}
   }
 }

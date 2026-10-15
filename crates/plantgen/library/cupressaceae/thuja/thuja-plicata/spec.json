@@ -107,7 +107,8 @@
     "leaf_length_m": {"min": 0.0015, "max": 0.003},
     "leaf_life_years": {"min": 6.8, "max": 10.6, "typical": 8.9},
     "cone_length_m": {"min": 0.01, "max": 0.012},
-    "cone_posture": "erect"
+    "cone_posture": "erect",
+    "pollen_cone_length_m": {"min": 0.003, "max": 0.004}
   },
   "evidence": {
     "traits.height_max_m": {
@@ -188,7 +189,8 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.pollen_cone_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 674: pollen cones 3-4 mm."}
   },
   "provenance": {
     "sources": [

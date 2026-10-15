@@ -56,7 +56,7 @@
     "variation": 0.2,
     "organs": {
       "cone": {
-        "shape": {"template": "fruit", "aspect": 0.42, "cone": 1},
+        "shape": {"template": "fruit", "cone": 1},
         "colour": [0.55, 0.4, 0.25]
       },
       "spray": {
@@ -104,7 +104,8 @@
     "wood_moisture_green_share": {"min": 0.41, "max": 1.42, "typical": 0.91},
     "juvenile_period_years": {"min": 20, "max": 40},
     "leaf_length_m": {"min": 0.015, "max": 0.025},
-    "cone_length_m": {"min": 0.06, "max": 0.1}
+    "cone_length_m": {"min": 0.06, "max": 0.1},
+    "cone_width_m": {"min": 0.025, "max": 0.03}
   },
   "evidence": {
     "traits.height_max_m": {
@@ -175,7 +176,8 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.cone_width_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 462: seed cones 2.5-3 cm across."}
   },
   "provenance": {
     "sources": [

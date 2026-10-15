@@ -139,7 +139,8 @@
       "max": 0.1
     },
     "flowering_months": [5, 6, 7, 8],
-    "fruiting_months": [7, 8, 9, 10, 11]
+    "fruiting_months": [7, 8, 9, 10, 11],
+    "petal_length_m": {"min": 0.0025, "max": 0.0035}
   },
   "evidence": {
     "traits.flowering_months": {
@@ -221,7 +222,8 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Its flowers drawn one by one (spec rework L1b): creamy white flowers 6 to 8 mm across with four pointed petals and four conspicuous stamens, in flat-topped clusters that open together. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life. Its flower laid out whorl by whorl (spec rework P5b): four dull white petals between four small sepals on the inferior ovary, four stamens and a pistil of two carpels, from the characters of Cornaceae by the rules at the flowering plants."
-    }
+    },
+    "traits.petal_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 196: petals 2.5-3.5 mm long, 1.5-2 mm wide, reflexing."}
   },
   "provenance": {
     "sources": [
