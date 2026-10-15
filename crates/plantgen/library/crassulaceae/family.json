@@ -13,13 +13,15 @@
     },
     "leaf_arrangement": {
       "opposite": "often",
-      "alternate": "often"
+      "alternate": "often",
+      "whorled": "sometimes"
     },
     "stipules": false,
     "flower_symmetry": "actinomorphic",
     "perianth": "sepals_and_petals",
     "inflorescence": {
-      "cyme": "usually"
+      "cyme": "usually",
+      "solitary": "sometimes"
     },
     "flower_merosity": {
       "min": 4,
@@ -71,6 +73,8 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 299, 300, family Crassulaceae: sexual system hermaphrodite, usually; read as {\"hermaphrodite\": \"usually\"}."
-    }
+    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add solitary (sometimes): Simpson, Plant Systematics (2019) p. 299, 300: branched cyme, or flowers solitary."},
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add whorled (sometimes): Simpson, Plant Systematics (2019) p. 299, 300: spiral, opposite or whorled."}
   }
 }

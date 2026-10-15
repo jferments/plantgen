@@ -7,7 +7,10 @@
     "flower_merosity": 5,
     "flower_symmetry": "actinomorphic",
     "perianth": "sepals_and_petals",
-    "corolla_shape": "tubular",
+    "corolla_shape": {
+      "tubular": "usually",
+      "salverform": "sometimes"
+    },
     "hypanthium": false,
     "ovary_position": "superior",
     "stamens": {
@@ -93,6 +96,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 390, family Fouquieriaceae: short shoots true; read as true."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add salverform (sometimes): Simpson, Plant Systematics (2019) p. 390: tubular to salverform, 5 lobes."
     }
   }
 }

@@ -23,7 +23,9 @@
     "ovary_position": "superior",
     "fruit_type": {
       "capsule": "usually",
-      "berry": "sometimes"
+      "berry": "sometimes",
+      "drupe": "sometimes",
+      "nut": "sometimes"
     },
     "rosette": "none",
     "phyllotaxis_pattern": {
@@ -63,6 +65,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 427, 428, family Convolvulaceae: sexual system hermaphrodite; read as \"hermaphrodite\"."
-    }
+    },
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add drupe (sometimes), nut (sometimes): Simpson, Plant Systematics (2019) p. 427, 428: capsule, berry, drupe or nut."}
   }
 }

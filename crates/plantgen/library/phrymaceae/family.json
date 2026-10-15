@@ -5,7 +5,10 @@
   "parent": "order/lamiales",
   "traits": {
     "flower_merosity": 5,
-    "flower_symmetry": "zygomorphic",
+    "flower_symmetry": {
+      "zygomorphic": "usually",
+      "actinomorphic": "sometimes"
+    },
     "perianth": "sepals_and_petals",
     "zygomorphy": "bilabiate",
     "corolla_shape": "tubular",
@@ -87,6 +90,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 421, 422, family Phrymaceae: life span annual or perennial; read as {\"annual\": \"often\", \"perennial\": \"often\"}."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add actinomorphic (sometimes): Simpson, Plant Systematics (2019) p. 421, 422: zygomorphic or actinomorphic."
     }
   }
 }

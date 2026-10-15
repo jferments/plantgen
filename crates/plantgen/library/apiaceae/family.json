@@ -8,7 +8,8 @@
     "inflorescence": {
       "compound_umbel": "usually",
       "umbel": "sometimes",
-      "head": "rarely"
+      "head": "rarely",
+      "solitary": "rarely"
     },
     "flower_merosity": 5,
     "flower_symmetry": {
@@ -63,7 +64,7 @@
     "traits.inflorescence": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
-      "note": "Watson and Dallwitz's account of the family, as quoted in search results (the page itself was not read): flowers in umbels nearly always, or in heads. General accounts add that the umbel is usually compound, its rays ending in umbellets, as the family's old name, Umbelliferae, says; a simple umbel is less usual."
+      "note": "Watson and Dallwitz's account of the family, as quoted in search results (the page itself was not read): flowers in umbels nearly always, or in heads. General accounts add that the umbel is usually compound, its rays ending in umbellets, as the family's old name, Umbelliferae, says; a simple umbel is less usual. The books add solitary (rarely): Ingrouille, Diversity and Evolution of Land Plants (1992) p. 165: solitary, umbel reduced to a single floret."
     },
     "traits": {
       "evidence": "SourceInferred",

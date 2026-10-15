@@ -13,7 +13,8 @@
     },
     "leaf_arrangement": {
       "alternate": "usually",
-      "opposite": "rarely"
+      "opposite": "rarely",
+      "whorled": "rarely"
     },
     "leaf_division": "simple",
     "stipules": false,
@@ -72,6 +73,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 445, 447, family Campanulaceae: sexual system hermaphrodite [dioecious], usually; read as {\"dioecious\": \"rarely\", \"hermaphrodite\": \"usually\"}."
-    }
+    },
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add whorled (rarely): Simpson, Plant Systematics (2019) p. 445, 447: alternate (spiral) [opposite, whorled]."}
   }
 }

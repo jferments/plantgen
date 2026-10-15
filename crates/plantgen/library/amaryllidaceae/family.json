@@ -7,7 +7,7 @@
     "hypanthium": {"true": "often", "false": "often"},
     "woodiness": "herbaceous",
     "leaf_venation": "parallel",
-    "flower_symmetry": "actinomorphic",
+    "flower_symmetry": {"actinomorphic": "usually", "zygomorphic": "sometimes"},
     "perianth": "tepals",
     "flower_merosity": 3,
     "stamens": {
@@ -75,6 +75,7 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 229, family Amaryllidaceae: life span perennial; read as \"perennial\"."
-    }
+    },
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add zygomorphic (sometimes): Simpson, Plant Systematics (2019) p. 229: actinomorphic or zygomorphic."}
   }
 }

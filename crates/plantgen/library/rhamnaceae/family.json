@@ -26,7 +26,8 @@
     },
     "fruit_type": {
       "drupe": "usually",
-      "capsule": "sometimes"
+      "capsule": "sometimes",
+      "schizocarp": "sometimes"
     },
     "leaf_venation": {
       "palmate": "often",
@@ -82,7 +83,7 @@
     "traits.fruit_type": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
-      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 201 Rhamnaceae: trees or shrubs, very rarely herbs, sometimes climbing; leaves simple, alternate or opposite; stipules mostly present; fruit of several kinds, often a drupe."
+      "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 201 Rhamnaceae: trees or shrubs, very rarely herbs, sometimes climbing; leaves simple, alternate or opposite; stipules mostly present; fruit of several kinds, often a drupe. The books add schizocarp (sometimes): Simpson, Plant Systematics (2019) p. 325, 326: drupe, circumscissile capsule or schizocarp."
     },
     "traits.leaf_venation": {
       "evidence": "SourceInferred",

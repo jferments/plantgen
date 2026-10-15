@@ -7,8 +7,8 @@
     "leaf_arrangement": "alternate",
     "leaf_division": "simple",
     "leaf_margin": {
-      "entire": "often",
-      "dentate": "often"
+      "serrate": "usually",
+      "entire": "rarely"
     },
     "leaf_venation": {
       "pinnate": "often",
@@ -32,7 +32,8 @@
     "woodiness": "woody",
     "inflorescence": {
       "solitary": "often",
-      "cyme": "often"
+      "cyme": "often",
+      "panicle": "sometimes"
     },
     "flower_symmetry": {
       "actinomorphic": "often",
@@ -70,6 +71,16 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 329, family Ulmaceae: phyllotaxis pattern spiral becoming distichous, usually; read as {\"distichous\": \"often\", \"spiral\": \"often\"}."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add panicle (sometimes): Simpson, Plant Systematics (2019) p. 329: axillary solitary, cyme or panicle."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson (2019) p. 329: margins serrate. Watson and Dallwitz's DELTA gave entire or dentate, its word for any toothed edge; elm and zelkova teeth point forward, so serrate, with entire for the few smooth-edged members. Jay 2026-10-15 ~06:32Z: \"go with your recommendations on disagreements\"."
     }
   }
 }

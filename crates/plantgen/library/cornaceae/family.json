@@ -31,7 +31,8 @@
       "false": "usually"
     },
     "inflorescence": {
-      "cyme": "usually"
+      "cyme": "usually",
+      "head": "sometimes"
     },
     "sexual_system": {
       "hermaphrodite": "usually"
@@ -102,7 +103,7 @@
     "traits.inflorescence": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 384, family Cornaceae: inflorescence cyme (or head of cymes, rarely raceme), usually; read as {\"cyme\": \"usually\"}."
+      "note": "Simpson, Plant Systematics (2019) p. 384, family Cornaceae: inflorescence cyme (or head of cymes, rarely raceme), usually; read as {\"cyme\": \"usually\"}. The books add head (sometimes): Simpson, Plant Systematics (2019) p. 385, 386: cyme, sometimes condensed into heads."
     },
     "traits.sexual_system": {
       "evidence": "SourceInferred",
