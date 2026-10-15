@@ -1014,9 +1014,12 @@ pub struct Flower {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub calyx: Option<[f32; 3]>,
     /// The filaments' and the style's colour; the accent, as the anthers
-    /// and ovary are, if absent.
+    /// are, if absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub filament: Option<[f32; 3]>,
+    /// A single pistil's ovary's colour; the accent if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pistil: Option<[f32; 3]>,
     /// How the petals differ by place.
     #[serde(skip_serializing_if = "Corolla::is_regular")]
     pub corolla: Corolla,
@@ -1066,6 +1069,11 @@ pub struct Flower {
     /// An anther's length over its stamen's.
     #[serde(skip_serializing_if = "is_default_anther")]
     pub anther: f64,
+    /// Degrees an anther turns from its filament's line: 0 along it, as a
+    /// basifixed anther stands; toward 90 across it, as a versatile one
+    /// hangs on the filament's tip.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub anther_tilt: f64,
     /// Sterile stamens, drawn without anthers.
     #[serde(skip_serializing_if = "is_zero_count")]
     pub staminodes: u32,
@@ -1104,6 +1112,7 @@ impl Default for Flower {
             sepals_fused: 0.0,
             calyx: None,
             filament: None,
+            pistil: None,
             corolla: Corolla::Regular,
             petal_whorls: 1,
             banner: BANNER,
@@ -1117,6 +1126,7 @@ impl Default for Flower {
             stamens: 0,
             stamen_length: STAMEN_LENGTH,
             anther: crate::flowers::ANTHER,
+            anther_tilt: 0.0,
             staminodes: 0,
             carpels: 0,
             ovary: Ovary::Superior,
@@ -2116,6 +2126,7 @@ impl Shape {
                     check("taper", taper, 0.2, 3.0)?;
                 }
                 check("anther", s.anther, 0.05, 0.6)?;
+                check("anther_tilt", s.anther_tilt, 0.0, 90.0)?;
                 check("notch", s.notch, 0.0, 0.8)?;
                 check("centre", s.centre, 0.0, 0.8)?;
                 count("sepals", s.sepals, 0, 12)?;
@@ -2124,6 +2135,9 @@ impl Shape {
                 check("odd_rise", s.odd_rise, -90.0, 90.0)?;
                 for channel in s.filament.into_iter().flatten() {
                     check("filament", f64::from(channel), 0.0, 1.0)?;
+                }
+                for channel in s.pistil.into_iter().flatten() {
+                    check("pistil", f64::from(channel), 0.0, 1.0)?;
                 }
                 for channel in s.calyx.into_iter().flatten() {
                     check("calyx", f64::from(channel), 0.0, 1.0)?;
