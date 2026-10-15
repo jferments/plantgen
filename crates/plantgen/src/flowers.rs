@@ -43,6 +43,9 @@ use crate::looks::{Corolla, Flower, Ovary, Perianth};
 use crate::math::{self, Vec3, any_perpendicular};
 use crate::mesh::Mesh;
 
+/// An anther's length over its stamen's, where the flower does not say.
+pub const ANTHER: f64 = 0.16;
+
 /// The golden angle, in degrees: a spiral perianth's and stamens' step.
 const GOLDEN: f64 = 137.507_764;
 /// The cup a closed flower's petals take, in degrees: over the centre.
@@ -149,6 +152,12 @@ pub struct Rod {
 pub struct Stamen {
     pub rod: Rod,
     pub fertile: bool,
+    /// Its anther's length, centred on the filament's tip.
+    pub anther: f64,
+    /// Radians its anther turns from the filament's line toward the
+    /// flower's circumference: 0 along it (basifixed), a right angle
+    /// across it (versatile).
+    pub tilt: f64,
 }
 
 /// A flower's centre.
@@ -220,7 +229,9 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
     let rise = |cup: f64| cup + (CLOSED - cup) * (1.0 - open);
     let grown = 0.5 + 0.5 * open;
     let curl = form.curl * open;
-    let taper = if flower.point >= 0.5 { 1.3 } else { 0.45 };
+    let taper = flower
+        .taper
+        .unwrap_or(if flower.point >= 0.5 { 1.3 } else { 0.45 });
     let psi = math::radians(flower.turn) + if flower.is_zygomorphic() { 0.0 } else { spin };
 
     // The seat: where the perianth stands.
@@ -596,6 +607,8 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
                     width: length * 0.03,
                 },
                 fertile,
+                anther: flower.anther * filament,
+                tilt: math::radians(flower.anther_tilt),
             });
         }
     }
@@ -753,9 +766,10 @@ pub struct Colours {
     pub petal: [f32; 3],
     pub calyx: [f32; 3],
     pub accent: [f32; 3],
-    /// The filaments' and the style's; the anthers and ovary stay in the
-    /// accent.
+    /// The filaments' and the style's; the anthers stay in the accent.
     pub filament: [f32; 3],
+    /// A single pistil's ovary.
+    pub ovary: [f32; 3],
 }
 
 impl Colours {
@@ -866,7 +880,14 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
             piece.width,
             colours.toward_calyx(piece.calyx),
         );
-        let (stations, across) = leaves::detail_of(0, piece.length, piece.width);
+        // A petal is seen close: on the nearest step it takes every
+        // station and both samples across, however short it is, so its
+        // outline curves rather than breaking into a few facets.
+        let (stations, across) = if fine {
+            (most_stations, most_across)
+        } else {
+            leaves::detail_of(0, piece.length, piece.width)
+        };
         leaf.draw(
             &solid,
             stations.min(most_stations),
@@ -890,10 +911,17 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
         let (foot, direction) = frame.rod(&stamen.rod);
         rod_cone(foot, direction, &stamen.rod, colours.filament, part, mesh);
         if fine && stamen.fertile {
+            let along = if stamen.tilt == 0.0 {
+                direction
+            } else {
+                let across = direction.cross(axis).normalize_or(frame.side);
+                (direction * math::cos(stamen.tilt) + across * math::sin(stamen.tilt))
+                    .normalize_or(direction)
+            };
             anther(
                 foot + direction * stamen.rod.length,
-                direction,
-                stamen.rod.length,
+                along,
+                stamen.anther,
                 colours.accent,
                 part,
                 mesh,
@@ -928,7 +956,7 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
                     side,
                     *size,
                     *size,
-                    colours.accent,
+                    colours.ovary,
                     part,
                     mesh,
                 );
@@ -987,7 +1015,7 @@ pub(crate) fn draw(laid: &Floral, frame: Frame, colours: Colours, part: Part, me
             anther(
                 foot + direction * column.length,
                 direction,
-                column.length * 1.5,
+                column.length * 1.5 * ANTHER,
                 colours.accent,
                 part,
                 mesh,
@@ -1278,29 +1306,41 @@ fn rod_cone(foot: Vec3, direction: Vec3, rod: &Rod, colour: [f32; 3], part: Part
     );
 }
 
-/// An anther at a filament's `tip`: a small three-sided double pyramid
-/// along `direction`, sized to a filament `length` long.
+/// An anther at a filament's `tip`: a short three-sided bar `length` long
+/// along `direction`, centred on the tip, its ends pointed.
 fn anther(tip: Vec3, direction: Vec3, length: f64, colour: [f32; 3], part: Part, mesh: &mut Mesh) {
     let side = any_perpendicular(direction);
     let other = direction.cross(side);
-    let (half, wide) = (length * 0.08, length * 0.035);
+    let (half, wide) = (length * 0.5, length * 0.218_75);
     let leaf = part.leaf(tip, direction, side, 0.0, 0.0, colour);
     let first = u32::try_from(mesh.positions.len()).unwrap_or(0);
     mesh.push(leaf.vertex(tip - direction * half, colour));
     mesh.push(leaf.vertex(tip + direction * half, colour));
-    for k in 0..3 {
-        let angle = TAU * f64::from(k) / 3.0;
-        mesh.push(leaf.vertex(
-            tip + (side * math::cos(angle) + other * math::sin(angle)) * wide,
-            colour,
-        ));
+    // Two rings, a little in from each end, so the anther is a bar.
+    for end in [-0.6, 0.6] {
+        for k in 0..3 {
+            let angle = TAU * f64::from(k) / 3.0;
+            mesh.push(leaf.vertex(
+                tip + direction * (half * end)
+                    + (side * math::cos(angle) + other * math::sin(angle)) * wide,
+                colour,
+            ));
+        }
     }
-    let ring = |k: u32| first + 2 + k % 3;
+    let low = |k: u32| first + 2 + k % 3;
+    let high = |k: u32| first + 5 + k % 3;
     for k in 0..3 {
+        mesh.indices.extend_from_slice(&[first, low(k + 1), low(k)]);
         mesh.indices
-            .extend_from_slice(&[first, ring(k + 1), ring(k)]);
-        mesh.indices
-            .extend_from_slice(&[first + 1, ring(k), ring(k + 1)]);
+            .extend_from_slice(&[first + 1, high(k), high(k + 1)]);
+        mesh.indices.extend_from_slice(&[
+            low(k),
+            low(k + 1),
+            high(k + 1),
+            low(k),
+            high(k + 1),
+            high(k),
+        ]);
     }
 }
 
@@ -1320,6 +1360,7 @@ pub fn triangles(flower: &Flower, form: &FlowerForm, coarse: usize) -> usize {
             calyx: CALYX,
             accent: [1.0; 3],
             filament: [1.0; 3],
+            ovary: [1.0; 3],
         },
         Part {
             born: 0.0,
@@ -1953,6 +1994,7 @@ mod tests {
                         calyx: CALYX,
                         accent: [0.9, 0.7, 0.1],
                         filament: [0.9, 0.7, 0.1],
+                        ovary: [0.9, 0.7, 0.1],
                     },
                     Part {
                         born: 1.0,

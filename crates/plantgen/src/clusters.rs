@@ -1891,6 +1891,7 @@ fn draw_laid(
                         ),
                         accent: shown.accent,
                         filament: flower.filament.unwrap_or(shown.accent),
+                        ovary: flower.pistil.unwrap_or(shown.accent),
                     },
                     part,
                     mesh,

@@ -111,7 +111,7 @@
       "map": {"resupinate": {"true": 180, "false": 0}},
       "why": "A resupinate flower is drawn turned half round, so a lip formed toward the axis hangs below."
     },
-    "appearance.organs.*.shape.stamens": {
+    "appearance.organs.*.shape.anther_tilt": {"template": "flower", "map": {"anther_attachment": {"basifixed": 0, "dorsifixed": 45, "versatile": 80}}, "why": "An anther stands along its filament where the filament joins its base, leans where it joins its back, and lies nearly across the filament's tip where it swings free (versatile), as Simpson defines the three."}, "appearance.organs.*.shape.stamens": {
       "template": "flower",
       "rule": "clamp(round(stamens), 0, 200)",
       "why": "A flower draws its stamens, up to 200."

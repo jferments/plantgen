@@ -368,10 +368,21 @@ pub mod venation;
 /// (`filament`), and an unequal corolla's odd petal or tepal may bend down
 /// as well as up (`odd_rise`); common camas is zygomorphic, its lowest
 /// tepal set apart (60 is daisy and camas detail, #116).
-/// 62: flowers take their clades' and families' flower plans from Simpson
+/// 62: a flower may give its petals' taper (`taper`) where `point` alone
+/// does not, and its anthers' length (`anther`); common camas grows one
+/// scape from its bulb, its tepals elliptic, its anthers long, its spent
+/// flowers withered round the young capsule (61 is camas zygomorphy,
+/// #119).
+/// 63: on the nearest level every petal takes all its stations and both
+/// samples across, however short, and anthers are short bars; a flower
+/// may turn its anthers across their filaments (`anther_tilt`, from
+/// `anther_attachment`) and colour its ovary (`pistil`); common camas's
+/// anthers are versatile and its ovary a pale green bead (62 is camas
+/// detail 3, #120).
+/// 64: flowers take their clades' and families' flower plans from Simpson
 /// (2019) and Ronse De Craene (2010): the monocots' tepals, stamens and
 /// carpels, the rosids' two whorls of stamens, the euasterids' five on the
 /// tube and two carpels, and 56 families' stamens, carpels, perianth,
 /// merosity, ovary, floral cup and corolla shape; willows and poplars
-/// draw no perianth (61 is camas filaments and odd tepal, #119).
-pub const GENERATOR_REVISION: u32 = 62;
+/// draw no perianth (63 is camas anthers and ovary, #121).
+pub const GENERATOR_REVISION: u32 = 64;
