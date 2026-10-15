@@ -110,7 +110,10 @@
     "leaf_length_m": {"min": 0.02, "max": 0.03},
     "leaf_life_years": 8,
     "cone_length_m": {"min": 0.05, "max": 0.07, "high": 0.1},
-    "cone_retention_years": 1
+    "cone_retention_years": 1,
+    "leaf_form": "needle",
+    "sexual_system": "monoecious",
+    "cone_posture": "pendent"
   },
   "evidence": {
     "traits.height_max_m": {
@@ -196,7 +199,10 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.leaf_form": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 151, 152, 153, Pseudotsuga menziesii: leaf form needle."},
+    "traits.sexual_system": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 518, Pseudotsuga menziesii: sexual system monoecious."},
+    "traits.cone_posture": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 518, Pseudotsuga menziesii: cone posture pendent."}
   },
   "provenance": {
     "sources": [

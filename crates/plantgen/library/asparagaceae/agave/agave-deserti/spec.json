@@ -230,7 +230,10 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.rosette": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 225, Agave deserti: rosette basal."},
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 225, Agave deserti: inflorescence panicle, terminal on tall stalk."},
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 225, Agave deserti: fruit type capsule, loculicidal, three-valved, brown, oblong."}
   },
   "provenance": {
     "sources": [
@@ -243,5 +246,10 @@
       "Project After"
     ],
     "notes": "Procedural proxy (milestone F2). Calibration against measurements and photographs comes later."
+  },
+  "traits": {
+    "rosette": "basal",
+    "inflorescence": "panicle",
+    "fruit_type": "capsule"
   }
 }
