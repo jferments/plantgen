@@ -54,12 +54,20 @@
 #
 # Revision 7 (visual forms ferns): a frond arches as it unrolls, its
 # rachis bending toward the ground by about `arch` degrees over its length
-# (a pull that eases as it points down, so it never curls back), as fronds do (Hoshizaki and Moran 2001, p. 391: by
-# default fronds bend outward and droop toward the tip), not only by the
-# sag of its later years. A crown rises crown_rise a year on a stump of
-# rhizome crown_radius thick, and each frond's stipe base, thicker than
-# its rachis, outlives the frond by stub_life years, so an erect fern
-# stands on a stump clothed in old stipe bases (Dryopteris, p. 297).
+# (a pull that eases as it points down, so it never curls back), as fronds
+# do (Hoshizaki and Moran 2001, p. 391: by default fronds bend outward and
+# droop toward the tip), not only by the sag of its later years.
+#
+# A crown is no stalk: its growing point rises crown_rise a year unseen,
+# under the bases round it, and each frond stands on its own foot up to
+# crown_radius from the crown's centre, out toward the side it opens to,
+# so the fronds fountain from a compact, uneven clump at the ground and no
+# cylinder joins them to the soil. A frond comes up as a fiddlehead near
+# the centre and its foot moves out as it opens. A coiled piece is short
+# as well as curled back, so the fiddlehead is a tight coil that
+# lengthens as it unrolls. Once a frond dies its stipe base stays stub_life
+# years, a short stub leaning out among the living fronds' feet, so an
+# old crown is clothed in old stipe bases (Dryopteris, p. 297).
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
@@ -95,8 +103,8 @@ param unroll = 0.25;          # share of a year a frond takes to unroll
 param curl = 40;              # degrees each coiled piece turns back
 param droop = 0.02;           # sag per year of a frond's age
 param arch = 60;              # about how far a frond's rachis bends toward the ground over its length once unrolled
-param crown_radius = 0.02;    # the stump of rhizome under a crown
-param crown_rise = 0.002;     # how far a crown rises on its stump each year
+param crown_radius = 0.02;    # fronds stand round a crown up to this far from its centre
+param crown_rise = 0.002;     # how far a crown's growing point rises each year, unseen
 param stub = 0.08;            # a stipe base, as a share of its frond's length
 param stub_life = 3;          # years a stipe base outlives its frond
 param droop_years = 2;        # sag stops growing after this many years
@@ -117,6 +125,8 @@ module Pn(k, s, e, h);        # a pair of pinnae h of a piece along piece k
 module Pq(z);                 # a pair of pinnae z long
 module Cn(n, c);              # a new crown on its rhizome, the n-th, starting c years old
 module Sb(s, a);              # a frond's stipe base, its frond s long, opening at a degrees
+module Fe(l, e);              # a frond l long and its foot, emerging at phase e
+module Fb(r, j, e);           # a frond's foot, r of crown_radius out at j degrees from its side, its frond emerging at phase e
 
 organ pinna leaf as leaflet area pinna_area;
 
@@ -127,27 +137,31 @@ axiom /(uniform(0, 360)) Y(exp(gauss() * vigour_spread), 0, 0);
 # The crown: this year's fronds, and perhaps a new crown on the rhizome.
 rule Y(v, n, c0) : crowns > n && age >= crown_age && rand() < crown_rate ->
     [ Cn(n + 1, (age + c0) * crown_start) ]
-    !(crown_radius) F(crown_rise)
+    f(crown_rise)
     Fc(0, max(1, round(fronds_per_year * v)), (age + c0) * v) Y(v, n + 1, c0);
 rule Y(v, n, c0) ->
-    !(crown_radius) F(crown_rise)
+    f(crown_rise)
     Fc(0, max(1, round(fronds_per_year * v)), (age + c0) * v) Y(v, n, c0);
 
 decompose Fc(i, m, c) : m > 1 ->
     Fc(i, floor(m / 2), c) Fc(i + floor(m / 2), m - floor(m / 2), c);
 decompose Fc(i, m, c) : m == 1 ->
     /(137.5 + gauss() * 4)
-    [ Fr(frond_length * (frond_seed + (1 - frond_seed) * (1 - exp(-c / size_years)))
-         * uniform(1 - frond_spread, 1 + frond_spread),
-         gauss() * angle_spread, uniform(0, emerge_spread)) ]
-    [ Sb(frond_length * (frond_seed + (1 - frond_seed) * (1 - exp(-c / size_years))), old_angle) ];
+    Fe(frond_length * (frond_seed + (1 - frond_seed) * (1 - exp(-c / size_years))),
+       uniform(0, emerge_spread));
 decompose Fc(i, m, c) -> ;
 
+# A frond on its foot, and the stipe base that stays when it dies.
+decompose Fe(l, e) ->
+    [ Fb(uniform(0.3, 1), gauss() * 25, e)
+      [ Fr(l * uniform(1 - frond_spread, 1 + frond_spread), gauss() * angle_spread, e) ]
+      Sb(l, old_angle) ];
 # A frond dies after frond_life years; its rachis pieces with it. Its stipe
 # base stays stub_life years more.
 rule Pc(k, m, s, e) : age + dt >= frond_life -> ;
 rule frond : age + dt >= frond_life -> ;
 rule Sb(s, a) : age + dt >= frond_life + stub_life -> ;
+rule Fb(r, j, e) : age + dt >= frond_life + stub_life -> ;
 
 # A frond: it opens from the vertical with age and sags as it ages, then its
 # rachis, piece by piece.
@@ -167,14 +181,29 @@ interpret Pc(k, m, s, e) -> Pp(k, s, e);
 
 interpret Pp(k, s, e) : (k + 0.5) / pieces < stipe ->
     ^(curl * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1)))
-    F(s / pieces);
+    F(s / pieces * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))));
 interpret Pp(k, s, e) ->
     ^(curl * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1)))
-    F(s / pieces * 0.5) Pn(k, s, e, 0) F(s / pieces * 0.5) Pn(k, s, e, 0.5);
+    F(s / pieces * 0.5 * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))))
+    Pn(k, s, e, 0)
+    F(s / pieces * 0.5 * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))))
+    Pn(k, s, e, 0.5);
 
-# A stipe base: thicker than the rachis it carries, leaning out as the
-# frond opens.
-interpret Sb(s, a) -> &(a * 0.5) !(frond_radius * 2.5) F(s * stub);
+# A frond's foot: out from the crown's centre toward the side the frond
+# opens to (turned j degrees off it), from near the centre while it is a
+# fiddlehead to r of crown_radius once open.
+interpret Fb(r, j, e) ->
+    /(j) &(90)
+    f(crown_radius * r * lerp(0.3, 1, 1 - exp(-max(0, age + season - e) / open_years)))
+    ^(90) \(j);
+
+# A stipe base: once its frond has died, a short stub as thick as the
+# rachis was at its foot, leaning out further than the frond stood and
+# narrowing to its broken end.
+interpret Sb(s, a) : age + dt < frond_life -> ;
+interpret Sb(s, a) ->
+    &(a + 10) !(frond_radius * 1.3) F(s * stub * 0.5)
+    &(8) !(frond_radius * 0.8) F(s * stub * 0.5);
 
 # A pair of pinnae half a piece along: sized along the blade (b from 0 at
 # the stipe's top to 1 at the tip), folded small while coiled.
