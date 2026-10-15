@@ -117,7 +117,10 @@
     "juvenile_period_years": {"min": 4, "max": 13},
     "leaf_arrangement": "opposite",
     "carpels": 5,
-    "flowering_position": "lateral"
+    "flowering_position": "lateral",
+    "leaf_division": "compound",
+    "stipules": true,
+    "fruit_type": "schizocarp"
   },
   "evidence": {
     "traits.height_max_m": {
@@ -190,7 +193,10 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS's creosotebush review (page read): the flowers are solitary and axillary."
-    }
+    },
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 307, 308, Larrea tridentata: leaf division compound, geminate (two leaflets joined at the base)."},
+    "traits.stipules": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 307, 308, Larrea tridentata: stipules true; small, reddish-brown, paired at the nodes."},
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 307, 308, Larrea tridentata: fruit type schizocarp, densely covered in white hairs, style persistent."}
   },
   "provenance": {
     "sources": [

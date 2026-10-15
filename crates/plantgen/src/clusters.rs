@@ -107,6 +107,10 @@ pub const MOST_UNITS: u64 = 5000;
 /// A cluster's stalks unless it sets a colour: green.
 pub const STALK: [f32; 3] = [0.3, 0.38, 0.14];
 
+/// Units of a cluster not laid along its axis (an umbel, a head, a cyme)
+/// whose taxa do not count them.
+pub const UNITS: u32 = 12;
+
 /// The coarse step (`crate::parts`) from which a flower or head is one
 /// flat hexagon and stalks are three-sided.
 pub(crate) const FLAT: usize = 2;
@@ -174,6 +178,15 @@ impl ClusterKind {
         }
     }
 
+    /// Whether its units stand one node after another up its axis, so
+    /// that how many fit depends on their size.
+    fn along_its_axis(self) -> bool {
+        matches!(
+            self,
+            Self::Raceme | Self::Spike | Self::Catkin | Self::Corymb
+        )
+    }
+
     /// The kind of its branches unless set.
     fn branch_kind(self) -> Self {
         match self {
@@ -221,20 +234,22 @@ impl Cluster {
     /// The cluster `spec` describes, its defaults filled in.
     #[must_use]
     pub fn of(spec: &Inflorescence) -> Self {
-        Self::filled(spec, ClusterKind::Raceme, 12, STALK, 1)
+        Self::filled(spec, ClusterKind::Raceme, None, STALK, 1)
     }
 
     /// `spec` at nesting `level`, taking `kind`, `flowers` and `stalk`
-    /// unless it sets its own.
+    /// unless it sets its own. Units left uncounted are counted from their
+    /// size ([`Self::packed`]), and a raceme's flower whose stalk is left
+    /// unset stands on one as long as itself.
     fn filled(
         spec: &Inflorescence,
         kind: ClusterKind,
-        flowers: u32,
+        flowers: Option<u32>,
         stalk: [f32; 3],
         level: usize,
     ) -> Self {
         let kind = spec.kind.unwrap_or(kind);
-        let flowers = spec.flowers.unwrap_or(flowers);
+        let set_flowers = spec.flowers.or(flowers);
         let stalk = spec.stalk.unwrap_or(stalk);
         let branches = if kind.bears_branches() && level < LEVELS {
             spec.branches.unwrap_or_else(|| kind.default_branches())
@@ -246,31 +261,48 @@ impl Cluster {
             Box::new(Self::filled(
                 spec.branch.as_deref().unwrap_or(&empty),
                 kind.branch_kind(),
-                flowers,
+                set_flowers,
                 stalk,
                 level + 1,
             ))
         });
         let bearing = branches > 0;
+        let per_node = spec
+            .per_node
+            .unwrap_or(if kind == ClusterKind::Cyme { 2 } else { 1 });
+        let peduncle = spec.peduncle.unwrap_or(
+            if matches!(kind, ClusterKind::Umbel | ClusterKind::CompoundUmbel) {
+                0.3
+            } else {
+                0.1
+            },
+        );
+        let size = spec.size.unwrap_or(if bearing { 0.4 } else { 0.15 });
+        let along = !bearing && kind.along_its_axis();
+        let flowers = set_flowers.unwrap_or_else(|| {
+            if along {
+                Self::packed(size, peduncle, per_node)
+            } else {
+                UNITS
+            }
+        });
         Self {
             kind,
             flowers,
             branches,
             branch,
-            per_node: spec
-                .per_node
-                .unwrap_or(if kind == ClusterKind::Cyme { 2 } else { 1 }),
+            per_node,
             divergence: spec.divergence.unwrap_or(GOLDEN_DEGREES),
             spread: spec.spread.unwrap_or(35.0),
-            pedicel: spec.pedicel.unwrap_or(if bearing { 0.0 } else { 0.15 }),
-            peduncle: spec.peduncle.unwrap_or(
-                if matches!(kind, ClusterKind::Umbel | ClusterKind::CompoundUmbel) {
-                    0.3
-                } else {
-                    0.1
-                },
-            ),
-            size: spec.size.unwrap_or(if bearing { 0.4 } else { 0.15 }),
+            pedicel: spec.pedicel.unwrap_or(if bearing {
+                0.0
+            } else if along && kind == ClusterKind::Raceme {
+                size
+            } else {
+                0.15
+            }),
+            peduncle,
+            size,
             taper: spec.taper.unwrap_or(0.0),
             droop: spec.droop.unwrap_or(0.0),
             stalk,
@@ -284,6 +316,21 @@ impl Cluster {
             spathe_cup: spec.spathe_cup.unwrap_or(0.5),
             spathe_colour: spec.spathe_colour,
         }
+    }
+
+    /// The units of a cluster laid along its axis whose taxa do not count
+    /// them: as many as stand half a unit's length apart over the axis
+    /// above its peduncle, `per_node` at each node, 1 to 200. A unit 0.15
+    /// of the axis above a peduncle of 0.1 gives 12, the count a cluster
+    /// with neither set has always drawn; a raceme as long as its flora
+    /// measures it, with flowers as wide as it measures them, is as
+    /// crowded as that one, not 12 flowers spread along it.
+    #[must_use]
+    pub fn packed(size: f64, peduncle: f64, per_node: u32) -> u32 {
+        let nodes = (2.0 * (1.0 - peduncle.clamp(0.0, 0.95)) / size.max(0.005)).round();
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let nodes = nodes.max(1.0) as u32;
+        (nodes * per_node.clamp(1, 8)).clamp(1, 200)
     }
 
     /// Units in the whole cluster.
@@ -2353,6 +2400,53 @@ pub fn triangles(look: &Look) -> usize {
 #[allow(clippy::float_cmp, clippy::cast_precision_loss)]
 mod tests {
     use super::*;
+
+    /// A cluster that leaves its units uncounted holds as many as its size
+    /// fits along its axis: the old 12 at the old size, more for smaller
+    /// units, and a raceme's flowers stand on stalks as long as they are.
+    #[test]
+    fn uncounted_units_fill_their_axis_by_their_size() {
+        let plain = Cluster::of(&Inflorescence::default());
+        assert_eq!(plain.flowers, 12);
+        assert_eq!(plain.pedicel, 0.15);
+        // A lupine's raceme: flowers 13 mm in a raceme 37.5 cm long.
+        let lupine = Cluster::of(&Inflorescence {
+            size: Some(0.035),
+            ..Inflorescence::default()
+        });
+        assert_eq!(lupine.flowers, 51);
+        assert_eq!(lupine.pedicel, 0.035);
+        let whorled = Cluster::of(&Inflorescence {
+            size: Some(0.035),
+            per_node: Some(3),
+            ..Inflorescence::default()
+        });
+        assert_eq!(whorled.flowers, 153);
+        // A count the taxa give stands, and a branch takes its cluster's.
+        let counted = Cluster::of(&Inflorescence {
+            size: Some(0.035),
+            flowers: Some(20),
+            ..Inflorescence::default()
+        });
+        assert_eq!(counted.flowers, 20);
+        let panicle = Cluster::of(&Inflorescence {
+            kind: Some(ClusterKind::Panicle),
+            flowers: Some(5),
+            branch: Some(Box::new(Inflorescence {
+                size: Some(0.05),
+                ..Inflorescence::default()
+            })),
+            ..Inflorescence::default()
+        });
+        assert_eq!(panicle.branch.unwrap().flowers, 5);
+        // An umbel's units are not laid along an axis.
+        let umbel = Cluster::of(&Inflorescence {
+            kind: Some(ClusterKind::Umbel),
+            size: Some(0.05),
+            ..Inflorescence::default()
+        });
+        assert_eq!(umbel.flowers, 12);
+    }
     use crate::looks::{Flower, Fruit, FruitKind, Head};
 
     fn spec(kind: ClusterKind, flowers: u32) -> Inflorescence {

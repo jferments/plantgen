@@ -9,6 +9,34 @@
     "shoot_leaves": {"min": 4, "max": 18, "high": 32, "typical": 12}
   },
   "rules": {
+    "appearance.organs.*.inflorescence.pedicel": {
+      "rule": "clamp(pedicel_length_m / inflorescence_length_m, 0, 1)",
+      "why": "A cluster's flower stands on a stalk as long, for the cluster's length, as floras measure the pedicel and the inflorescence."
+    },
+    "appearance.organs.flower.inflorescence": {
+      "needs": ["inflorescence_length_m"],
+      "map": {"inflorescence": {"raceme": {}, "spike": {}, "catkin": {}, "corymb": {}, "umbel": {}, "compound_umbel": {}, "panicle": {}, "cyme": {}, "scorpioid": {}, "head": {}, "spadix": {}}},
+      "why": "A flower borne in a cluster of known length is drawn as the cluster, its units laid out by the cluster rules; a solitary flower stays one flower, and so does one whose cluster's length no source gives."
+    },
+    "appearance.organs.bloom.inflorescence": {
+      "needs": ["inflorescence_length_m"],
+      "map": {"inflorescence": {"raceme": {}, "spike": {}, "catkin": {}, "corymb": {}, "umbel": {}, "compound_umbel": {}, "panicle": {}, "cyme": {}, "scorpioid": {}, "head": {}, "spadix": {}}},
+      "why": "A tree's or shrub's flowers borne in clusters of known length are drawn as the clusters; solitary flowers stay single."
+    },
+    "appearance.organs.*.inflorescence.size": {
+      "rule": "clamp(flower_size_m / inflorescence_length_m, 0.005, 1)",
+      "why": "A cluster's flower is as wide, for the cluster's length, as floras measure the flower and the inflorescence."
+    },
+    "generator.params.flower_size": {
+      "map": {"inflorescence": {"raceme": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "spike": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "catkin": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "corymb": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "umbel": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "compound_umbel": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "panicle": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "cyme": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "scorpioid": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "head": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "spadix": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "solitary": {"rule": "flower_size_m"}}},
+      "else": {"rule": "flower_size_m"},
+      "why": "A herb's flowering organ is as long as its inflorescence where its flowers are in clusters, else as wide as its flower."
+    },
+    "generator.params.bloom_size": {
+      "map": {"inflorescence": {"raceme": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "spike": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "catkin": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "corymb": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "umbel": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "compound_umbel": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "panicle": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "cyme": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "scorpioid": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "head": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "spadix": {"rule": "first(inflorescence_length_m, flower_size_m)"}, "solitary": {"rule": "flower_size_m"}}},
+      "else": {"rule": "flower_size_m"},
+      "why": "A tree's or shrub's bloom is as long as its inflorescence where its flowers are in clusters, else as wide as its flower."
+    },
     "appearance.organs.flower.colour": {
       "colour": "flower_colour",
       "why": "An open flower is drawn in the colour its showiest part is stated in."
@@ -174,6 +202,12 @@
     }
   },
   "evidence": {
+    "rules.appearance.organs.*.inflorescence.pedicel": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower's stalk in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): as long as floras measure the pedicel, for the cluster's length."},
+    "rules.appearance.organs.flower.inflorescence": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
+    "rules.appearance.organs.bloom.inflorescence": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
+    "rules.appearance.organs.*.inflorescence.size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
+    "rules.generator.params.flower_size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
+    "rules.generator.params.bloom_size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
     "rules.appearance.organs.flower.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
     "rules.appearance.organs.bloom.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
     "rules.appearance.organs.fruit.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},

@@ -155,6 +155,13 @@
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 239, 240, Phoenix dactylifera: fruit type drupe."},
+    "traits.sexual_system": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453, Phoenix dactylifera: sexual system dioecious."},
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453, Phoenix dactylifera: flower symmetry actinomorphic."},
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453, Phoenix dactylifera: inflorescence panicle."},
+    "traits.inflorescence_posture": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453, Phoenix dactylifera: inflorescence posture erect, becoming nodding."},
+    "traits.bract_form": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453, Phoenix dactylifera: bract form spathe."},
+    "traits.flowering_position": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453, Phoenix dactylifera: flowering position lateral."},
     "traits.petal_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453: petals 7-10 mm in the male flowers, 4-5 mm in the female."},
     "traits.peduncle_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 453: peduncle 50-70 cm."}
   },
@@ -169,6 +176,13 @@
     "notes": "Procedural proxy (plant forms milestone F4). Calibration against measurements and photographs comes later."
   },
   "traits": {
+    "fruit_type": "drupe",
+    "sexual_system": "dioecious",
+    "flower_symmetry": "actinomorphic",
+    "inflorescence": "panicle",
+    "inflorescence_posture": {"erect": "often", "nodding": "often"},
+    "bract_form": "spathe",
+    "flowering_position": "lateral",
     "petal_length_m": {"min": 0.004, "max": 0.01},
     "peduncle_length_m": {"min": 0.5, "max": 0.7}
   }

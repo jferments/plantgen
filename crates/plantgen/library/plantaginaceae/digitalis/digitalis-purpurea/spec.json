@@ -123,7 +123,8 @@
     },
     "flower_merosity": 5,
     "flower_symmetry": "zygomorphic",
-    "corolla_shape": "campanulate"
+    "corolla_shape": "campanulate",
+    "inflorescence": {"raceme": "usually"}
   },
   "evidence": {
     "generator.params.bud_area": {
@@ -190,7 +191,8 @@
       "evidence": "SourceInferred",
       "source": "flora-nz-iv-1988",
       "note": "Its flower laid out whorl by whorl (spec rework P5): a two-lipped bell from the characters by the rules at the flowering plants. By hand: the tube joined for most of the petals' length and a little swollen, since the Flora of New Zealand gives the lobes short and the tube inflated above its base; the sepals much shorter than the corolla, as King's American Dispensatory has them (as search results quote them; the pages themselves were not read)."
-    }
+    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 423, Digitalis purpurea: inflorescence raceme, one-sided, pendent flowers."}
   },
   "provenance": {
     "sources": [

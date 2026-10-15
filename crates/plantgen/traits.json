@@ -971,6 +971,14 @@
       "optional": true,
       "why": "a sepal from its base to its tip, or a joined calyx's lobe with its tube"
     },
+    "pedicel_length_m": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "number",
+      "unit": "m",
+      "range": [0, 1.5],
+      "why": "a flower's own stalk in a cluster, from the axis that bears it to the flower"
+    },
     "flower_merosity": {
       "group": "flowers",
       "organ": "flower",

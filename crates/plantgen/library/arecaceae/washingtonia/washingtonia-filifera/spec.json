@@ -105,7 +105,11 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "wood_density_basic_kg_m3": 470
+    "wood_density_basic_kg_m3": 470,
+    "inflorescence": "panicle",
+    "inflorescence_posture": "pendent",
+    "bract_form": "spathe",
+    "fruit_type": "drupe"
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Washingtonia filifera (gwddagg_v2.2_species.csv, read): specific gravity 0.47 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.47, branches 0.49. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
@@ -153,7 +157,11 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 709, Washingtonia filifera: inflorescence panicle."},
+    "traits.inflorescence_posture": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 709, Washingtonia filifera: inflorescence posture pendent."},
+    "traits.bract_form": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 709, Washingtonia filifera: bract form spathe."},
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 709, Washingtonia filifera: fruit type drupe."}
   },
   "provenance": {
     "sources": [

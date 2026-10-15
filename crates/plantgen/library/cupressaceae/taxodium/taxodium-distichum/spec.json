@@ -134,7 +134,10 @@
     "wood_density_basic_kg_m3": 410,
     "wood_modulus_green_mpa": 8100,
     "wood_rupture_green_mpa": 46,
-    "wood_moisture_green_share": {"min": 1.21, "max": 1.71, "typical": 1.46}
+    "wood_moisture_green_share": {"min": 1.21, "max": 1.71, "typical": 1.46},
+    "sexual_system": "monoecious",
+    "reproduction": "cones",
+    "cone_length_m": {"min": 0.02, "max": 0.035}
   },
   "evidence": {
     "traits.height_max_m": {
@@ -200,7 +203,10 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.sexual_system": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 665, Taxodium distichum: sexual system monoecious."},
+    "traits.reproduction": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 665, Taxodium distichum: reproduction cones."},
+    "traits.cone_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 665, Taxodium distichum: cone length 20-35 mm, 18-28 mm diameter."}
   },
   "provenance": {
     "sources": [

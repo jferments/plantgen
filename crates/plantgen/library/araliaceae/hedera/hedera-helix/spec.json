@@ -105,6 +105,11 @@
   "traits": {
     "wood_density_basic_kg_m3": 480,
     "juvenile_period_years": 10,
+    "inflorescence": "panicle",
+    "inflorescence_length_m": {"min": 0.06, "max": 0.1},
+    "fruit_type": "drupe",
+    "fruit_size_m": {"min": 0.006, "max": 0.009},
+    "leaf_incision": "lobed",
     "petal_length_m": {"min": 0.003, "max": 0.004}
   },
   "evidence": {
@@ -179,6 +184,11 @@
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 310, 311, Hedera helix: inflorescence panicle."},
+    "traits.inflorescence_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 310, 311, Hedera helix: inflorescence length 6-10 cm."},
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 310, 311, Hedera helix: fruit type drupe."},
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 310, 311, Hedera helix: fruit size 6-9 mm."},
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 12, Hedera helix: leaf incision lobed."},
     "traits.petal_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 310-311: petals 3-4 mm."}
   },
   "provenance": {

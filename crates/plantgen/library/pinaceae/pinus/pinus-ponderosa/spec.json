@@ -102,7 +102,7 @@
     "needles_per_fascicle": 3,
     "leaf_length_m": {"min": 0.12, "max": 0.25},
     "leaf_life_years": {"min": 3, "max": 4},
-    "cone_length_m": {"min": 0.07, "max": 0.15},
+    "cone_length_m": {"min": 0.07, "max": 0.15, "low": 0.05},
     "cone_posture": "deflexed",
     "cone_retention_years": 0,
     "cone_width_m": {"min": 0.04, "max": 0.07},
@@ -136,7 +136,7 @@
     "traits.cone_length_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
-      "note": "Abrams (vol. 1, 1923, p. 56): needles in threes (sometimes twos), 12 to 25 cm, in dense tufts at the branch ends, kept about three years; seed cones 7 to 15 cm, short-stalked, set horizontally or bent somewhat down, shedding seed in their second year and soon falling."
+      "note": "Abrams (vol. 1, 1923, p. 56): needles in threes (sometimes twos), 12 to 25 cm, in dense tufts at the branch ends, kept about three years; seed cones 7 to 15 cm, short-stalked, set horizontally or bent somewhat down, shedding seed in their second year and soon falling. Idžojtić, Dendrology (2019) p. 476: seed cones (5-)7-12(-15) cm. The spec stated {\"min\": 0.07, \"max\": 0.15}. Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."
     },
     "traits.cone_posture": {
       "evidence": "SourceInferred",

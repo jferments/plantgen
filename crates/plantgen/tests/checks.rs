@@ -57,6 +57,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Cornaceae's flowers are in cymes (Simpson 2019), and red-osier dogwood's flat-topped clusters are cymes, but its look draws them as an umbel",
     ),
     (
+        "cornus-sericea",
+        "fruit_size_m",
+        "its drupes are drawn about 1.6 cm across against the 6 to 8 mm Dendrology (2019) p. 196 gives (seen since the book's sizes joined the spec)",
+    ),
+    (
         "cyperus-papyrus",
         "culm_length_m",
         "its umbel's rays are lateral axes, and the measure stops at the first lateral axis below an inflorescence, so it reads a ray, not the culm",
@@ -107,6 +112,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Rhamnaceae's flowers are in cymes or panicles (Simpson 2019), but cascara's axillary clusters are drawn as an umbel",
     ),
     (
+        "hedera-helix",
+        "fruit_size_m",
+        "its fruit is drawn as one card 7 cm long, about 8.4 cm as measured, standing for a whole umbel of berries, against the 6 to 9 mm Dendrology (2019) p. 310 gives one drupe",
+    ),
+    (
         "heracleum-maximum",
         "inflorescence_bracts",
         "a cluster draws its bracts only as a spathe, so the umbel's involucre of 5 to 10 narrow bracts, which fall early, is not drawn",
@@ -117,14 +127,34 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its stem leaves shrink upward in proportion, so the topmost draw about 15 cm against the 2 to 5 dm Abrams gives, which he measures on the main leaves",
     ),
     (
+        "holodiscus-discolor",
+        "flower_size_m",
+        "its flowers are drawn about 5.8 mm across against the 3 to 3.5 mm Dendrology (2019) p. 318 gives",
+    ),
+    (
+        "holodiscus-discolor",
+        "inflorescence_length_m",
+        "its panicles are drawn about 7.5 cm long against the 10 to 25 cm Dendrology (2019) p. 318 gives",
+    ),
+    (
         "jacobaea-vulgaris",
         "leaf_width_m",
         "its stem leaves shrink upward in proportion, so the topmost, 4 to 5 cm long, draw 1.5 cm wide against the 2 to 6 cm Abrams and Ferris give for the blades, which they measure on the main leaves",
     ),
     (
+        "larrea-tridentata",
+        "leaf_division",
+        "each leaf is two leaflets joined at their base, but its sprig cards draw each leaf as one blade",
+    ),
+    (
         "leucanthemum-vulgare",
         "leaf_shape",
         "its stem leaves are drawn oblanceolate, a basal leaf's outline with less width, but Abrams and Ferris give a shape (spatulate or obovate) only for the basal leaves; the stem leaves they call reduced, sessile and clasping",
+    ),
+    (
+        "lonicera-involucrata",
+        "fruit_size_m",
+        "its berries are drawn about 1.6 cm long against the 7 to 8 mm Dendrology (2019) p. 390 gives",
     ),
     (
         "lysichiton-americanus",

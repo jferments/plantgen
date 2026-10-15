@@ -79,13 +79,13 @@ fn rules_and_traits_say_where_they_come_from() {
     let campanulids = "(clade campanulids: _ranks/clade/campanulids.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (274):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (280):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
     for line in [
         format!(
-            "\n  appearance.organs.*.inflorescence.kind  {flowering}\n  appearance.organs.*.inflorescence.peduncle  {flowering}\n  appearance.organs.*.season.bud  {flowering}\n"
+            "\n  appearance.organs.*.inflorescence.kind  {flowering}\n  appearance.organs.*.inflorescence.pedicel  {flowering}\n  appearance.organs.*.inflorescence.peduncle  {flowering}\n  appearance.organs.*.inflorescence.size  {flowering}\n  appearance.organs.*.season.bud  {flowering}\n"
         ),
         format!(
             "\n  appearance.organs.*.season.ripe  {flowering}\n  appearance.organs.*.shape.anther_tilt on `flower` cards  {flowering}\n  appearance.organs.*.shape.belly on `flower` cards  {flowering}\n"
@@ -94,14 +94,14 @@ fn rules_and_traits_say_where_they_come_from() {
             "\n  appearance.organs.*.shape.carpels on `flower` cards  {flowering}\n  appearance.organs.*.shape.confluent on `compound` cards  {flowering}\n"
         ),
         format!(
-            "\n  appearance.organs.*.shape.turn on `flower` cards  {flowering}\n  appearance.organs.bloom.colour  {flowering}\n  appearance.organs.bloom.shape.template  {flowering}\n"
+            "\n  appearance.organs.*.shape.turn on `flower` cards  {flowering}\n  appearance.organs.bloom.colour  {flowering}\n  appearance.organs.bloom.inflorescence  {flowering}\n  appearance.organs.bloom.shape.template  {flowering}\n"
         ),
         // Cards chosen from characters, and sizes for a growth form as
         // defaults that yield to a lineage's program; a vine's from its
         // leaf length and leaf habit; a stem succulent's
         // from its girth and flowers.
         format!(
-            "\n  appearance.organs.leaf.shape.template  {flowering}\n  generator.defaults.crown_base  (clade angiosperms: _ranks/clade/angiosperms.json, forms.decurrent_tree)\n"
+            "\n  appearance.organs.leaf.shape.template  {flowering}\n  generator.params.bloom_size  {flowering}\n  generator.params.flower_size  {flowering}\n  generator.defaults.crown_base  (clade angiosperms: _ranks/clade/angiosperms.json, forms.decurrent_tree)\n"
         ),
         format!(
             "\n  generator.defaults.path_half  (clade angiosperms: _ranks/clade/angiosperms.json, forms.shrub)\n  generator.defaults.flower_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.radius_max  (clade angiosperms: _ranks/clade/angiosperms.json, forms.stem_succulent)\n  generator.defaults.leaf_size  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.defaults.leaf_years  (clade angiosperms: _ranks/clade/angiosperms.json, forms.vine)\n  generator.params.basal_length  {campanulids}\n  generator.params.leaf_base  {campanulids}\n  generator.params.leaf_length  {campanulids}\n  generator.params.leaf_top  {campanulids}\n  generator.params.adult_age  {seed_plants}\n  generator.params.apex_death  {seed_plants}\n  generator.params.bud_base  {seed_plants}\n  generator.params.dioecious  {seed_plants}\n  generator.params.dormant_buds  {seed_plants}\n  generator.params.long_share  {seed_plants}\n  generator.params.shed_ratio  {seed_plants}\n  generator.params.short_share  {seed_plants}\n  generator.params.space_density  {seed_plants}\n  generator.params.space_kill  {seed_plants}\n  generator.params.space_renew  {seed_plants}\n  generator.params.terminal_bloom  {seed_plants}\n  generator.params.unit_nodes  {seed_plants}\n"
@@ -185,7 +185,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
     assert!(
-        rules.starts_with("Rules, by their home (275):\n"),
+        rules.starts_with("Rules, by their home (281):\n"),
         "{rules}"
     );
     assert!(

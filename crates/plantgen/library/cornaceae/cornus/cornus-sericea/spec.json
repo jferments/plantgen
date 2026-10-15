@@ -140,18 +140,24 @@
     },
     "flowering_months": [5, 6, 7, 8],
     "fruiting_months": [7, 8, 9, 10, 11],
+    "inflorescence": "corymb",
+    "leaf_arrangement": "opposite",
+    "leaf_shape": {"elliptic": "often", "ovate": "often"},
+    "flower_size_m": {"min": 0.007, "max": 0.008},
+    "fruit_type": "drupe",
+    "fruit_size_m": {"min": 0.006, "max": 0.008},
     "petal_length_m": {"min": 0.0025, "max": 0.0035}
   },
   "evidence": {
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "gbif-inaturalist",
-      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 78 records annotated as flowering (Apr 4, May 39, Jun 15, Jul 5, Aug 11, Sep 1, Oct 3); stated as the months holding at least a tenth of them, May to August. The Seed Manual (Cornus chapter, printed p. 430) gives April to August for the western subspecies (ssp. occidentalis)."
+      "note": "iNaturalist research-grade records on GBIF in the south and central Puget Sound lowlands (46.7 to 48.0° N, 122.0 to 123.1° W; counted 2026-10-14): 78 records annotated as flowering (Apr 4, May 39, Jun 15, Jul 5, Aug 11, Sep 1, Oct 3); stated as the months holding at least a tenth of them, May to August. The Seed Manual (Cornus chapter, printed p. 430) gives April to August for the western subspecies (ssp. occidentalis). Idžojtić, Dendrology (2019) p. 196: flowers April-June. Not combined: Dendrology's months are for the tree grown in Europe, the spec's for its own range."
     },
     "traits.fruiting_months": {
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",
-      "note": "Seed Manual, Cornus chapter (printed p. 430): ripe from July to November for the western subspecies (ssp. occidentalis, southern British Columbia to northern Idaho and south to California)."
+      "note": "Seed Manual, Cornus chapter (printed p. 430): ripe from July to November for the western subspecies (ssp. occidentalis, southern British Columbia to northern Idaho and south to California). Idžojtić, Dendrology (2019) p. 196: fruit ripe July-September. Not combined: Dendrology's months are for the tree grown in Europe, the spec's for its own range."
     },
     "traits.juvenile_period_years": {
       "evidence": "SourceInferred",
@@ -223,6 +229,12 @@
       "source": "plantgen-authors",
       "note": "Its flowers drawn one by one (spec rework L1b): creamy white flowers 6 to 8 mm across with four pointed petals and four conspicuous stamens, in flat-topped clusters that open together. From general descriptions of the species (OregonFlora, the Flora of North America and nursery and extension pages as quoted in search results; the pages themselves were not read). The size is the flower's width, or a closed corolla's length, over the fruit's length, roughly as in life. Its flower laid out whorl by whorl (spec rework P5b): four dull white petals between four small sepals on the inferior ovary, four stamens and a pistil of two carpels, from the characters of Cornaceae by the rules at the flowering plants."
     },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 386, Cornus sericea: inflorescence corymb."},
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 386, Cornus sericea: leaf arrangement opposite."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 386, Cornus sericea: leaf shape ovate to elliptic, acuminate, with arcuate veins (photo)."},
+    "traits.flower_size_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 196, Cornus sericea: flower size 7-8 mm."},
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 196, Cornus sericea: fruit type drupe."},
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 196, Cornus sericea: fruit size 6-8 mm."},
     "traits.petal_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 196: petals 2.5-3.5 mm long, 1.5-2 mm wide, reflexing."}
   },
   "provenance": {
