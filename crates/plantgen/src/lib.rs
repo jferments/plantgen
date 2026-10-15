@@ -368,4 +368,9 @@ pub mod venation;
 /// (`filament`), and an unequal corolla's odd petal or tepal may bend down
 /// as well as up (`odd_rise`); common camas is zygomorphic, its lowest
 /// tepal set apart (60 is daisy and camas detail, #116).
-pub const GENERATOR_REVISION: u32 = 61;
+/// 62: a flower may give its petals' taper (`taper`) where `point` alone
+/// does not, and its anthers' length (`anther`); common camas grows one
+/// scape from its bulb, its tepals elliptic, its anthers long, its spent
+/// flowers withered round the young capsule (61 is camas zygomorphy,
+/// #119).
+pub const GENERATOR_REVISION: u32 = 62;

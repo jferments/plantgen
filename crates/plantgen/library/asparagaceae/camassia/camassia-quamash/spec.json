@@ -12,7 +12,7 @@
   "growth_form": "forb",
   "generator": {
     "params": {
-      "stems": 3,
+      "stems": 1,
       "stem_rate": 0.5,
       "clump_radius": 0.05,
       "stem_lean": 5,
@@ -24,24 +24,24 @@
       "raceme": 0.35,
       "flowers": 24,
       "flower_size": 0.05,
-      "pedicel": 0.012,
+      "pedicel": 0.018,
       "flower_angle": 50,
       "fruit_below": 0.2,
       "buds_above": 0.55,
       "nod": 5,
-      "fruit_length": 0.012,
+      "fruit_length": 0.03,
       "bud_size": 0.065,
-      "basal_leaves": 5,
+      "basal_leaves": 6,
       "basal_length": 0.35,
-      "basal_angle": 30,
+      "basal_angle": 18,
       "basal_pieces": 4,
-      "basal_arch": 14,
+      "basal_arch": 7,
       "leaf_area": 0.235,
       "basal_area": 0.049,
       "basal_piece_area": 0.091,
       "flower_area": 0.24,
       "bud_area": 0.027,
-      "fruit_area": 0.763,
+      "fruit_area": 0.028,
       "bud_spacing": 0.3,
       "bud_lean": 0.2,
       "bud_stalk": 0.3
@@ -57,7 +57,7 @@
     "seeds": [1]
   },
   "appearance": {
-    "bark": [0.15, 0.25, 0.1],
+    "bark": [0.05, 0.09, 0.04],
     "foliage": [0.08, 0.16, 0.06],
     "foliage_shade": [0.025, 0.05, 0.02],
     "variation": 0.2,
@@ -71,11 +71,13 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petal_width": 0.6,
+          "petal_width": 0.62,
           "point": 0.5,
+          "taper": 0.6,
           "notch": 0.0,
           "centre": 0.12,
           "stamen_length": 0.5,
+          "anther": 0.3,
           "banner": 1.0,
           "odd_rise": -40,
           "turn": 180,
@@ -96,8 +98,15 @@
         "colour": [0.15, 0.15, 0.42]
       },
       "fruit": {
-        "shape": { "template": "fruit", "aspect": 0.5 },
-        "colour": [0.25, 0.3, 0.12]
+        "shape": {
+          "template": "flower",
+          "petals": 6,
+          "perianth": "tepals",
+          "petal_width": 0.45,
+          "point": 0.7,
+          "open": 0.0
+        },
+        "colour": [0.18, 0.15, 0.16]
       }
     }
   },
@@ -120,6 +129,51 @@
     "zygomorphy": "other"
   },
   "evidence": {
+    "generator.params.fruit_area": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The area a spent flower drawn as a closed perianth covers on an organ 1 m long, measured on its drawing, so its shade matches what it draws."
+    },
+    "generator.params.basal_arch": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Leaves rise steeply from the base and arch outward in their upper half, reaching about a third to half the scape's height (observations 116021043, 151395471, 6126457)."
+    },
+    "generator.params.basal_angle": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Leaves rise steeply from the base and arch outward in their upper half, reaching about a third to half the scape's height (observations 116021043, 151395471, 6126457)."
+    },
+    "generator.params.basal_leaves": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Four to eight basal leaves round the scape (observations 116021043, 151395471): six drawn."
+    },
+    "generator.params.stems": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Each bulb sends up one flowering scape (observations 256854545, 29355728, 6126457, 116021043 and the budding photographs): the plant is drawn as one bulb."
+    },
+    "appearance.organs.fruit": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Below the open flowers the spent ones keep their withered tepals, closed and twisted round the young capsule, in a dull violet-grey to olive (fruiting and flowering photographs in project notes, e.g. observations 256853681 and 43531696): drawn as a closed perianth in that colour, about as long as a bud."
+    },
+    "appearance.organs.flower.shape.anther": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Anthers long yellow bars, about a third as long as the filaments (observations 212349274, 115789029, 116021043)."
+    },
+    "appearance.organs.flower.shape.taper": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Tepals narrowly elliptic, widest a little above the middle, their sides curving to an acute tip rather than straight to a point (observations 212349274, 205778790, 115789029)."
+    },
+    "appearance.bark": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "The scape dark green, often tinged purple, darker than the leaves (observations 116021043, 256854545, 29355728, and the budding and fruiting photographs in project notes): about sRGB (60, 85, 55)."
+    },
     "generator.params.flower_area": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -183,7 +237,7 @@
     "appearance.organs.flower.shape.petal_width": {
       "evidence": "Measured",
       "source": "inaturalist-photos-2026-10",
-      "note": "Tepals narrowly elliptic to oblanceolate and acute, about a fifth to a quarter as wide as long (0.15 to 0.25; observations 212349274, 52750451, 205778790), so neighbours stand a little apart in a star."
+      "note": "Tepals about a fifth to a quarter as wide as long (0.15 to 0.25; observations 212349274, 52750451, 205778790); with the elliptic taper the drawn tepal is about that, neighbours a little apart in a star."
     },
     "appearance.organs.bud": {
       "evidence": "Measured",
@@ -191,9 +245,9 @@
       "note": "A bud is the closed perianth: six tepals folded into a narrow point, darker and greyer blue-violet than the open flowers (observations 256854545, 115789029, 29355728, 116021043)."
     },
     "generator.params.fruit_length": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "A green capsule below the flowers, drawn no wider than the bud cone above it; a flora's capsule length should replace it."
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "A spent flower with its withered tepals is about as long as a bud (the same photographs)."
     },
     "generator.params.flower_angle": {
       "evidence": "Measured",
@@ -203,7 +257,7 @@
     "generator.params.pedicel": {
       "evidence": "Measured",
       "source": "inaturalist-photos-2026-10",
-      "note": "Photographs of flowering racemes (observations 151395471, 256853681, 43531696): open flowers on short ascending stalks, about half to one tepal long, held close to the axis so the open part of the raceme is dense."
+      "note": "Open flowers on ascending stalks about one to two centimetres long (observations 205778790, 151395471, 43531696); a model judging photographs and renders found the photographs' stalks longer than the renders' (image-data pilot, 2026-10-14)."
     },
     "generator.params.bud_size": {
       "evidence": "Measured",
