@@ -39,7 +39,7 @@
       "leaf_area": 0.235,
       "basal_area": 0.049,
       "basal_piece_area": 0.091,
-      "flower_area": 0.333,
+      "flower_area": 0.24,
       "bud_area": 0.027,
       "fruit_area": 0.763,
       "bud_spacing": 0.3,
@@ -75,7 +75,11 @@
           "point": 0.5,
           "notch": 0.0,
           "centre": 0.12,
-          "stamen_length": 0.5
+          "stamen_length": 0.5,
+          "banner": 1.0,
+          "odd_rise": -40,
+          "turn": 180,
+          "filament": [0.3, 0.27, 0.66]
         },
         "colour": [0.22, 0.19, 0.64],
         "accent": [0.85, 0.55, 0.03]
@@ -111,9 +115,46 @@
       "min": 0.2,
       "max": 0.6,
       "typical": 0.5
-    }
+    },
+    "flower_symmetry": {"zygomorphic": "usually", "actinomorphic": "sometimes"},
+    "zygomorphy": "other"
   },
   "evidence": {
+    "generator.params.flower_area": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The area an open flower covers on an organ 1 m long, measured on its drawing (narrow tepals, the lowest bent down), so its shade matches what it draws."
+    },
+    "appearance.organs.flower.shape.filament": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "The filaments blue-violet like the tepals, a little paler, with the yellow anthers at their tips (observations 212349274, 224881574, 115789029)."
+    },
+    "appearance.organs.flower.shape.turn": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Photographs of open flowers (observations 212349274, 256854545, 205778790, 116021043): five tepals spread up and to the sides and the lowest stands apart, bent out and down, so most flowers are symmetric about one plane; some are nearly regular (52750451, 43531696). The odd tepal is as wide as the rest. Drawn as an unequal corolla turned half round, its odd tepal below and bent 40 degrees out from the others."
+    },
+    "appearance.organs.flower.shape.odd_rise": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Photographs of open flowers (observations 212349274, 256854545, 205778790, 116021043): five tepals spread up and to the sides and the lowest stands apart, bent out and down, so most flowers are symmetric about one plane; some are nearly regular (52750451, 43531696). The odd tepal is as wide as the rest. Drawn as an unequal corolla turned half round, its odd tepal below and bent 40 degrees out from the others."
+    },
+    "appearance.organs.flower.shape.banner": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Photographs of open flowers (observations 212349274, 256854545, 205778790, 116021043): five tepals spread up and to the sides and the lowest stands apart, bent out and down, so most flowers are symmetric about one plane; some are nearly regular (52750451, 43531696). The odd tepal is as wide as the rest. Drawn as an unequal corolla turned half round, its odd tepal below and bent 40 degrees out from the others."
+    },
+    "traits.zygomorphy": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "The same flowers: one tepal set apart, no lips, banner or keel, so a zygomorphy of no named kind."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "Measured",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Photographs of open flowers (observations 212349274, 256854545, 205778790, 116021043): five tepals spread up and to the sides and the lowest stands apart, bent out and down, so most flowers are symmetric about one plane; some are nearly regular (52750451, 43531696). The odd tepal is as wide as the rest. Drawn as an unequal corolla turned half round, its odd tepal below and bent 40 degrees out from the others."
+    },
     "generator.params.bud_area": {
       "evidence": "Authored",
       "source": "plantgen-authors",
