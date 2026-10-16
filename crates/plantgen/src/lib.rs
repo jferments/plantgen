@@ -487,6 +487,7 @@ pub mod venation;
 /// its fruit, drawn by the fruit's rules (its colour, a cluster's fruit at
 /// its stated size, unripe fruit in the leaf green); a head or spikelet
 /// keeps its look; a herb's bud and fruit organs show only in their own
-/// stages. Forty species that flowered all year and never fruited now
-/// bud, flower, fruit and drop in their months (79 is ferns, #153).
+/// stages. The four Chloranthaceae and Scouler's willow, which flowered
+/// all year and never fruited, now bud, flower, fruit and drop in their
+/// months (79 is ferns, #153).
 pub const GENERATOR_REVISION: u32 = 80;
