@@ -506,4 +506,11 @@ pub mod venation;
 /// without a crownshaft may clasp its stem with its fronds' sheaths
 /// (`sheath_length`), the California fan palm's chestnut leaf bases
 /// (81 is cycads, palms and tree ferns told apart, #154).
-pub const GENERATOR_REVISION: u32 = 82;
+/// 83: a fern's stipe stated scaly (`stipe_scales`) is drawn with its
+/// scales (the new `palea` organ, in `stipe_scale_colour`), largest at
+/// its foot, on its frond and on the stipe bases of an old crown; a
+/// rachis narrows from its foot to its tip, and a small frond's is
+/// thinner (fern program revision 8); the sword fern's stipe is as long
+/// as Flora of North America gives (82 is palms, cycads and tree ferns
+/// in their described shades, #162).
+pub const GENERATOR_REVISION: u32 = 83;
