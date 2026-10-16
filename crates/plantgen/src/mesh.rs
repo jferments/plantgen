@@ -482,7 +482,10 @@ pub(crate) fn build_shaded(
 ) -> (PlantMesh, Vec<f32>) {
     // Pieces of a strap stand on the drawn ends of the pieces before them.
     let seated = seated(graph, looks);
-    let graph = seated.as_ref().unwrap_or(graph);
+    let (graph, twists) = match &seated {
+        Some(seated) => (&seated.graph, &seated.twists[..]),
+        None => (graph, &[][..]),
+    };
     let parts = parts.filter(|_| level == 0);
     let is_part =
         |index: usize| parts.is_some_and(|parts| parts.get(index).copied().unwrap_or(false));
@@ -520,7 +523,7 @@ pub(crate) fn build_shaded(
     if level <= 1 {
         petioles(graph, looks, &mut mesh.wood);
     }
-    mesh.cards = cards(graph, looks, &solid, appearance.variation, lod);
+    mesh.cards = cards(graph, looks, &solid, twists, appearance.variation, lod);
     // Bent cards first, so a renderer draws them as one range.
     let (mut bent, flat): (Vec<Card>, Vec<Card>) =
         mesh.cards.drain(..).partition(|card| !card.bend.is_flat());
@@ -1699,6 +1702,20 @@ pub(crate) fn petioles(graph: &PlantGraph, looks: &[Look], mesh: &mut Mesh) {
     }
 }
 
+/// The most a piece of a strap twists to meet the next at their joint,
+/// degrees: about what a grass blade or basal leaf turns over a fifth of
+/// its length. Where the edge across both midribs lies farther round (a
+/// joint that turns the strap little, or about its own face), the pieces
+/// meet as near it as this reaches.
+const STRAP_TWIST: f64 = 15.0;
+
+/// A graph as its cards are drawn ([`seated`]), and the twist of each
+/// organ's card where it is not its look's, degrees.
+struct Seated {
+    graph: PlantGraph,
+    twists: Vec<Option<f64>>,
+}
+
 /// `graph` with the pieces of every strap turned so their drawn cards
 /// span them, or `None` when no organ changes. A program draws an arching
 /// strap (a grass blade, a basal leaf) as a chain of pieces, each standing
@@ -1713,7 +1730,18 @@ pub(crate) fn petioles(graph: &PlantGraph, looks: &[Look], mesh: &mut Mesh) {
 /// would size it otherwise: its card then runs from where the organ stands
 /// to where the next one stands, as the program arched it. Joints keep the
 /// difference between the program's turn and the droop, a few degrees.
-fn seated(graph: &PlantGraph, looks: &[Look]) -> Option<PlantGraph> {
+///
+/// One strap is one leaf, so its pieces join edge to edge and draw alike.
+/// Each joint's edge lies across both pieces' midribs there (the axis the
+/// strap turns about at the joint): the piece above stands with its left
+/// along it, and the piece below twists to end along it, in place of its
+/// look's twist, and the strap's last piece keeps its look's. The pieces
+/// take the light and id of the piece the strap starts from, so they
+/// draw in one form and one shade of colour. Turned by the program's rolls
+/// and twisted by their looks, lit and varied piece by piece, they had
+/// stepped in width and colour at every joint.
+#[allow(clippy::too_many_lines)]
+fn seated(graph: &PlantGraph, looks: &[Look]) -> Option<Seated> {
     // Ends to the micrometre: the turtle's own sums, so continuing pieces
     // stand on them bit for bit.
     #[allow(clippy::cast_possible_truncation)]
@@ -1749,19 +1777,41 @@ fn seated(graph: &PlantGraph, looks: &[Look]) -> Option<PlantGraph> {
         })
         .collect();
     let mut chained = vec![false; graph.organs.len()];
+    let mut stands_on: Vec<Option<usize>> = vec![None; graph.organs.len()];
     for (number, organ) in candidates() {
         if let Some(&before) = ends.get(&key(organ.within, organ.position))
             && before != number
         {
             chained[before] = true;
             chained[number] = true;
+            stands_on[number] = Some(before);
         }
     }
-    let mut out: Option<PlantGraph> = None;
+    // The piece each chain starts from, the one that stands on no other.
+    let root = |mut number: usize| {
+        for _ in 0..graph.organs.len() {
+            match stands_on[number] {
+                Some(before) => number = before,
+                None => break,
+            }
+        }
+        number
+    };
+    let mut out: Option<Seated> = None;
+    // Each piece seated so far: its card's left as rolled, and its midrib's
+    // heading at its tip.
+    let mut seated: Vec<Option<(Vec3, Vec3)>> = vec![None; graph.organs.len()];
+    let mut twists: Vec<Option<f64>> = vec![None; graph.organs.len()];
     for (number, organ) in graph.organs.iter().enumerate() {
         if !chained[number] {
             continue;
         }
+        let first = &graph.organs[root(number)];
+        let organ = &GraphOrgan {
+            light: first.light,
+            id: first.id,
+            ..organ.clone()
+        };
         let index = usize::from(organ.organ);
         let (drawn, share) = looks[index].forms.of(index, organ);
         let Some(shown) = looks.get(drawn) else {
@@ -1773,20 +1823,63 @@ fn seated(graph: &PlantGraph, looks: &[Look]) -> Option<PlantGraph> {
         } else {
             2.0 * math::sin(0.5 * droop) / droop
         };
-        if droop.abs() < 1e-9 && (share - 1.0).abs() < 1e-12 {
-            continue;
-        }
         // The card droops toward its face as rolled; the piece keeps a left
         // that its roll turns back to the rolled one about its new heading.
+        // A piece standing on another stands with its left along the
+        // joint's edge, and the one below twists to meet it there: the edge
+        // across both midribs where it can within [`STRAP_TWIST`], else as
+        // near it as that twist reaches, the piece above taking what the
+        // one below ends on, less the part along its own midrib.
         let roll = looks[index].roll;
-        let left = rolled(organ.heading, organ.left, roll);
+        let own = rolled(organ.heading, organ.left, roll);
+        let left = match stands_on[number].and_then(|before| Some((before, seated[before]?))) {
+            Some((before, (below, tip))) => {
+                let across = tip.cross(organ.heading).normalize_or(below);
+                let across = if across.dot(below) < 0.0 {
+                    -across
+                } else {
+                    across
+                };
+                let twist = math::atan2(below.cross(across).dot(tip), below.dot(across))
+                    .clamp(-STRAP_TWIST.to_radians(), STRAP_TWIST.to_radians());
+                twists[before] = Some(twist.to_degrees());
+                let edge = below.rotate_about(tip, twist);
+                (edge - organ.heading * edge.dot(organ.heading)).normalize_or(own)
+            }
+            None => own,
+        };
         let face = organ.heading.cross(left);
-        let turned = &mut out.get_or_insert_with(|| graph.clone()).organs[number];
-        turned.heading = organ.heading * math::cos(0.5 * droop) + face * math::sin(0.5 * droop);
-        turned.left = rolled(turned.heading, left, -roll);
-        turned.size = organ.size / (share * chord);
+        let heading = organ.heading * math::cos(0.5 * droop) + face * math::sin(0.5 * droop);
+        let normal = heading.cross(left);
+        seated[number] = Some((left, heading * math::cos(droop) - normal * math::sin(droop)));
+        let drawn = GraphOrgan {
+            heading,
+            left: rolled(heading, left, -roll),
+            size: organ.size / (share * chord),
+            ..organ.clone()
+        };
+        if drawn != graph.organs[number] {
+            seat(&mut out, graph).organs[number] = drawn;
+        }
+    }
+    if twists.iter().any(Option::is_some) {
+        seat(&mut out, graph);
+    }
+    if let Some(out) = &mut out {
+        out.twists = twists;
     }
     out
+}
+
+/// `out`'s graph, made a copy of `graph` the first time a piece of a
+/// strap changes.
+fn seat<'a>(out: &'a mut Option<Seated>, graph: &PlantGraph) -> &'a mut PlantGraph {
+    &mut out
+        .get_or_insert_with(|| Seated {
+            graph: graph.clone(),
+            twists: vec![None; graph.organs.len()],
+        })
+        .graph
 }
 
 /// The organs whose cards float: each organ's index in `graph` and how far
@@ -1801,7 +1894,7 @@ fn seated(graph: &PlantGraph, looks: &[Look]) -> Option<PlantGraph> {
 #[allow(clippy::too_many_lines)]
 pub fn loose_organs(graph: &PlantGraph, looks: &[Look], tolerance: f64) -> Vec<(usize, f64)> {
     let seated = seated(graph, looks);
-    let drawn = seated.as_ref().unwrap_or(graph);
+    let drawn = seated.as_ref().map_or(graph, |seated| &seated.graph);
     // The drawn end of each card that reaches along its organ, by where
     // the organ's straight end was.
     #[allow(clippy::cast_possible_truncation)]
@@ -1952,21 +2045,29 @@ fn cards(
     graph: &PlantGraph,
     looks: &[Look],
     solid: &[bool],
+    twists: &[Option<f64>],
     variation: f32,
     lod: &LodSpec,
 ) -> Vec<Card> {
     if lod.cluster <= 0.0 {
-        organ_cards(graph, looks, solid, variation)
+        organ_cards(graph, looks, solid, twists, variation)
     } else {
         cluster_cards(graph, looks, solid, variation, lod)
     }
 }
 
 /// One card per organ, and a second across it for organs that stand out
-/// all round their axis.
-fn organ_cards(graph: &PlantGraph, looks: &[Look], solid: &[bool], variation: f32) -> Vec<Card> {
+/// all round their axis; a piece of a strap twisted as `twists` holds
+/// ([`seated`]).
+fn organ_cards(
+    graph: &PlantGraph,
+    looks: &[Look],
+    solid: &[bool],
+    twists: &[Option<f64>],
+    variation: f32,
+) -> Vec<Card> {
     let mut cards = Vec::new();
-    for organ in &graph.organs {
+    for (number, organ) in graph.organs.iter().enumerate() {
         if solid
             .get(usize::from(organ.organ))
             .copied()
@@ -1974,7 +2075,13 @@ fn organ_cards(graph: &PlantGraph, looks: &[Look], solid: &[bool], variation: f3
         {
             continue;
         }
+        let start = cards.len();
         organ_card(organ, looks, variation, 1.0, None, &mut cards);
+        if let Some(twist) = twists.get(number).copied().flatten() {
+            for card in &mut cards[start..] {
+                card.bend.twist = twist;
+            }
+        }
     }
     cards
 }
@@ -3841,6 +3948,81 @@ mod tests {
             .0;
         assert!((straight - graph.organs[1].position).length() > 0.01);
         assert!(loose_organs(&graph, &looks, 1e-5).is_empty());
+    }
+
+    /// A strap of three blade pieces, the turtle rolling 4 degrees and
+    /// pitching down 14 between them, as programs draw grass blades and
+    /// basal leaves, each piece lit differently: the pieces meet edge to
+    /// edge, so the strap does not step in width at its joints (on the
+    /// turtle's lefts and twisted by their look, they parted by 4
+    /// degrees), and draw in one shade.
+    #[test]
+    fn the_edges_of_a_strap_meet() {
+        let mut appearance = appearance();
+        appearance.organs.insert(
+            "leaf".into(),
+            look(Shape::Blade(crate::looks::Blade::default()), 0.0),
+        );
+        let looks = appearance.looks([("leaf", OrganKind::Leaf)]);
+        let (mut position, mut left) = (Vec3::new(0.0, 0.05, 0.0), Vec3::X);
+        let mut heading = Vec3::new(0.0, 0.9, 0.44).normalize_or(Vec3::Y);
+        let mut organs = Vec::new();
+        for (k, (size, light)) in [(0.12, 0.0), (0.1, 0.3), (0.088, 0.6)]
+            .into_iter()
+            .enumerate()
+        {
+            organs.push(GraphOrgan {
+                id: k as u64,
+                position,
+                heading,
+                left,
+                size,
+                light,
+                within: Some(0),
+                ..organ(heading, left)
+            });
+            position += heading * size;
+            // Roll 6 degrees about the heading, then pitch down 14.
+            left = left.rotate_about(heading, 4f64.to_radians());
+            heading = heading.rotate_about(left, -14f64.to_radians());
+        }
+        let graph = PlantGraph {
+            age: 1.0,
+            height: 0.3,
+            segments: Vec::new(),
+            organs,
+            structures: Vec::new(),
+        };
+        let cards = build_plain(&graph, &looks, &appearance, &lod(0.0, 0.0, 0.0)).cards;
+        assert_eq!(cards.len(), 3);
+        let edge = |card: &Card, v: f64| {
+            let half = 0.5 * f64::from(card.width);
+            let at = |x: f64| {
+                card.bend
+                    .point(
+                        vector(card.base),
+                        vector(card.heading),
+                        vector(card.left),
+                        half,
+                        f64::from(card.length),
+                        x,
+                        v,
+                    )
+                    .0
+            };
+            at(1.0) - at(-1.0)
+        };
+        for pair in cards.windows(2) {
+            let (tip, foot) = (edge(&pair[0], 1.0), edge(&pair[1], 0.0));
+            let turn = tip.normalize_or(Vec3::X).dot(foot.normalize_or(Vec3::X));
+            assert!(
+                turn > 0.999_999,
+                "the edges meet {} degrees apart",
+                turn.acos().to_degrees()
+            );
+            assert_eq!(pair[0].color, pair[1].color);
+        }
+        assert!(loose_organs(&graph, &looks, 1e-4).is_empty());
     }
 
     /// A strap of three blade pieces turned edgewise (a sword leaf's

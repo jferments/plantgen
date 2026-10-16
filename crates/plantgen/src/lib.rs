@@ -458,9 +458,15 @@ pub mod venation;
 /// revision 8), split four ways so it nests no deeper; both Ferocactus
 /// keep last year's fruit, and F. cylindraceus takes Anderson's rib,
 /// radial and central counts (74 is cactus barrels, #138).
-/// 76: a crownshaft's sheaths are its fronds' (palm program revision 8):
+/// 76: a strap's pieces (a grass blade's, a basal leaf's) meet edge to
+/// edge: each joint's edge lies across both midribs where a piece's
+/// twist of up to 15 degrees reaches it, and the pieces draw in the light
+/// and colour of the strap's first, so camas and other strap leaves no
+/// longer step in width and shade where their pieces join (75 is cactus
+/// fruit rings, #147).
+/// 77: a crownshaft's sheaths are its fronds' (palm program revision 8):
 /// each frond draws its sheath within its `frond` structure, so the royal
-/// palm and every crownshaft palm build again (until 75 a year's sheaths
+/// palm and every crownshaft palm build again (until 76 a year's sheaths
 /// stood within no structure, which the organ check refuses for a piece;
-/// 75 is cactus crown rings, #147).
-pub const GENERATOR_REVISION: u32 = 76;
+/// 76 is strap pieces, #145).
+pub const GENERATOR_REVISION: u32 = 77;
