@@ -453,4 +453,9 @@ pub mod venation;
 /// colour across levels; both Ferocactus take their ribs, wool, flower
 /// rings and central spines from the Primer and Anderson (73 is monocot
 /// leaves, #140).
-pub const GENERATOR_REVISION: u32 = 74;
+/// 75: a column's crown may hold older rings of fruit below this year's
+/// ring (`column` revision 2, `crown_rings`, `ring_step`; `cactaceae`
+/// revision 8), split four ways so it nests no deeper; both Ferocactus
+/// keep last year's fruit, and F. cylindraceus takes Anderson's rib,
+/// radial and central counts (74 is cactus barrels, #138).
+pub const GENERATOR_REVISION: u32 = 75;
