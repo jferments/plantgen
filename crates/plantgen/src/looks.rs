@@ -787,6 +787,17 @@ pub struct Simple {
     pub teeth: u32,
     pub tooth_depth: f64,
     pub petiole: f64,
+    /// How far the blade's two basal lobes reach back past where the
+    /// petiole meets it, beside the petiole, as a share of the blade's
+    /// length: the sinus of a cordate or reniform base. 0 for none. The
+    /// lobes never reach past the petiole's own length.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub sinus: f64,
+    /// Pairs of main veins that leave the midrib's foot with it and fan
+    /// out across the blade (palmate venation); 0 for a pinnately veined
+    /// blade, whose veins all leave the midrib along its length.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub fan: u32,
 }
 
 impl Default for Simple {
@@ -800,6 +811,8 @@ impl Default for Simple {
             teeth: 0,
             tooth_depth: 0.03,
             petiole: 0.15,
+            sinus: 0.0,
+            fan: 0,
         }
     }
 }
@@ -2148,6 +2161,8 @@ impl Shape {
                 check("base", s.base, 0.0, 1.0)?;
                 count("teeth", s.teeth, 0, 60)?;
                 check("tooth_depth", s.tooth_depth, 0.0, 0.2)?;
+                check("sinus", s.sinus, 0.0, 0.5)?;
+                count("fan", s.fan, 0, 4)?;
                 check("petiole", s.petiole, 0.0, 0.7)
             }
             Self::Lobed(s) => {
@@ -2162,7 +2177,7 @@ impl Shape {
                 count("leaves", s.leaves, 2, 15)?;
                 check("angle", s.angle, 20.0, 80.0)?;
                 check("stalk", s.stalk, 0.0, 0.4)?;
-                check("width", s.width, 0.03, 1.2)?;
+                check("width", s.width, 0.03, 1.5)?;
                 let default = Sprig::default();
                 outline(
                     self.name(),

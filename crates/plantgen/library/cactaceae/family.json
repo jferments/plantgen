@@ -42,10 +42,6 @@
       "else": 0.4,
       "why": "A cactus's tepals stand on the rim of a floral tube, the hypanthium grown up round the ovary: barely any in a wheel or a cup, as Opuntia's flowers have none above the pericarpel, short in a bell, longer in a funnel, longest in a tube or under a salver's limb; in flower radii."
     },
-    "generator.params.fruit_size": {
-      "rule": "fruit_size_m",
-      "why": "A ring's fruit are as long as floras measure them ripe."
-    },
     "appearance.organs.*.shape.petal_width": {
       "template": "flower",
       "map": {"corolla_shape": {"rotate": 1.0, "cupped": 1.0, "campanulate": 0.9, "funnelform": 0.9, "tubular": 0.7, "salverform": 0.8, "urceolate": 0.9}}, "between": true,
