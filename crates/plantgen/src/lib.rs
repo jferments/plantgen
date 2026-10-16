@@ -536,4 +536,9 @@ pub mod venation;
 /// conifer's apex lives on shoots down to 5 mm, not 25, so a narrow,
 /// slow crown such as subalpine fir's stays dense along its limbs (84 is
 /// leaf teeth, #157).
-pub const GENERATOR_REVISION: u32 = 85;
+/// 86: a conifer's nodding leader (`pinidae` revision 12, `nod`, as in
+/// hemlocks) carries its year's needles in two sprays, one at the foot of
+/// each half of the shoot, so they follow the bend; the one spray at the
+/// shoot's foot had run on straight and left the nodding tip a bare
+/// stick. Leaders that do not nod grow as before.
+pub const GENERATOR_REVISION: u32 = 86;

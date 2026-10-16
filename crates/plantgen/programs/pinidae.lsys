@@ -134,9 +134,17 @@
 # measured); light still decides which apexes live (shade_death). Fast
 # crowns, whose shoots stay longer than 25 mm, grow as before.
 #
+# Revision 12 (nodding leaders): a leader that nods (nod above 0, as in
+# hemlocks, whose drooping leader is the genus's field mark) carries its
+# year's foliage in two sprays, one where each half of the shoot starts,
+# so the needles follow the bend. The one spray it had stood at the
+# shoot's foot and ran on straight past the bend, which left the nodding
+# tip a bare stick above the crown. The two together have the one's
+# area. A leader that does not nod grows as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem pinidae 11;
+lsystem pinidae 12;
 
 # Height of the leader over time: a Chapman-Richards curve,
 # height = height_max * (1 - exp(-height_rate * age))^height_shape.
@@ -277,6 +285,14 @@ rule C(o, v, s, w) -> G(o, branch_growth * v * pow(side_growth, o - 1) / (1 + po
                             * (0.3 + 0.7 * light));
 
 # One year's leader shoot: its foliage, with the interwhorl branches halfway.
+# A nodding leader (revision 12) carries its foliage in two sprays, one at
+# the foot of each half, so the needles follow the bend: one spray from
+# the foot ran on straight past it and left the nodding tip a bare stick.
+# Each is 1/sqrt(2) of the one spray's size, so the leader's foliage area
+# is unchanged.
+decompose G(o, l, k, w) : o == 0 && nod > 0 ->
+    N [ Y(k) spray((spray_base + spray_length * l) * 0.6 / sqrt(2)) ] F(l * 0.5) I(interwhorl)
+    N [ Y(k) spray((spray_base + spray_length * l) * 0.6 / sqrt(2)) ] F(l * 0.5);
 decompose G(o, l, k, w) : o == 0 ->
     [ Y(k) spray((spray_base + spray_length * l) * 0.6) ]
     N F(l * 0.5) I(interwhorl) N F(l * 0.5);
