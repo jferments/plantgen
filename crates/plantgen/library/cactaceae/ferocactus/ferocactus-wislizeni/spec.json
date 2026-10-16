@@ -35,11 +35,11 @@
       "ring_angle": 30,
       "flower_angle": 25,
       "flower_size": 0.045,
-      "bud_share": 0.15,
-      "fruit_share": 0.5,
+      "bud_share": 0.3,
+      "fruit_share": 0.0,
       "bud_size": 0.03,
       "fruit_size": 0.045,
-      "flower_area": 0.186,
+      "flower_area": 0.366,
       "bud_area": 0.636,
       "fruit_area": 0.89
     }
@@ -62,9 +62,9 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 12,
+          "petals": 32,
           "stamens": 200,
-          "petal_width": 0.6,
+          "petal_width": 0.9,
           "point": 0.0,
           "notch": 0.0,
           "centre": 0.3
@@ -242,7 +242,7 @@
     "generator.params.crown_rings": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Photographs of the crown (iNaturalist, credits in plantgen-claude project-files/cacti/photo-credits-2026-10-15.md): this year's ring of buds and flowers sits inside a ring of last year's yellow fruit, which stay on the plant, so two rings, the older about 14 degrees farther down the dome (by eye)."
+      "note": "Photographs of the crown (iNaturalist, credits in plantgen-claude project-files/cacti/photo-credits-2026-10-15.md): this year's ring of buds and flowers sits inside a ring of last year's yellow fruit, which stay on the plant, so two rings, the older about 14 degrees farther down the dome (by eye). This year's ring therefore holds buds and flowers only (fruit_share 0; bud_share by eye), the fruit being the older ring's."
     },
     "generator.params.ring_step": {
       "evidence": "Authored",
@@ -267,7 +267,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: green skin with 20 to 28 sharp ribs and chins under the areoles; a dense cover of white bristly radials, three reddish cross-shaped centrals and one broad, flattened central hooked like a fishhook, greying with age. Its flower laid out whorl by whorl (spec rework P5b): its tepals on a spiral (their count by hand: no flora counts them) on a floral cup above the inferior ovary, and a style with 13 to 20 stigma lobes, from the characters of Cactaceae and Ferocactus by the rules at the flowering plants. Its 200 stamens by hand, the most a flower draws, for the numerous ones every flora gives."
+      "note": "Colours chosen by eye from photographs: green skin with 20 to 28 sharp ribs and chins under the areoles; a dense cover of white bristly radials, three reddish cross-shaped centrals and one broad, flattened central hooked like a fishhook, greying with age. Its flower laid out whorl by whorl (spec rework P5b): its tepals on a spiral, 32 broad ones by hand (no flora counts them) so it opens as the full funnel Anderson describes (The Cactus Family: funnelform, 4 to 6 cm across), on a floral cup above the inferior ovary, and a style with 13 to 20 stigma lobes, from the characters of Cactaceae and Ferocactus by the rules at the flowering plants. Its 200 stamens by hand, the most a flower draws, for the numerous ones every flora gives."
     },
     "taxon": {
       "evidence": "Authored",
