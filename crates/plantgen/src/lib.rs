@@ -453,14 +453,31 @@ pub mod venation;
 /// colour across levels; both Ferocactus take their ribs, wool, flower
 /// rings and central spines from the Primer and Anderson (73 is monocot
 /// leaves, #140).
-/// 75: a crownshaft's sheaths are its fronds' (palm program revision 8):
+/// 75: a column's crown may hold older rings of fruit below this year's
+/// ring (`column` revision 2, `crown_rings`, `ring_step`; `cactaceae`
+/// revision 8), split four ways so it nests no deeper; both Ferocactus
+/// keep last year's fruit, and F. cylindraceus takes Anderson's rib,
+/// radial and central counts (74 is cactus barrels, #138).
+/// 76: a strap's pieces (a grass blade's, a basal leaf's) meet edge to
+/// edge: each joint's edge lies across both midribs where a piece's
+/// twist of up to 15 degrees reaches it, and the pieces draw in the light
+/// and colour of the strap's first, so camas and other strap leaves no
+/// longer step in width and shade where their pieces join (75 is cactus
+/// fruit rings, #147).
+/// 77: a colour character is sRGB, so a colour rule reads it as linear
+/// light: every stated flower, fruit, leaf and bark colour draws as deep
+/// as it is stated, where it drew paler (76 is strap joints, #145).
+/// 78: a crownshaft's sheaths are its fronds' (palm program revision 8):
 /// each frond draws its sheath within its `frond` structure, so the royal
-/// palm and every crownshaft palm build again (until 74 a year's sheaths
-/// stood within no structure, which the organ check refuses for a piece).
-/// 76: cycads, palms and tree ferns told apart (palm program revision 9):
+/// palm and every crownshaft palm build again (until 77 a year's sheaths
+/// stood within no structure, which the organ check refuses for a piece;
+/// 77 is colour characters read as sRGB, #152).
+/// 79: cycads, palms and tree ferns told apart (palm program revision 9):
 /// cycad and tree fern trunks thicken toward the base with age, cycads
 /// flush their leaves in whorls inside rings of cataphylls, leaves unfold
 /// by group (palm spears pleated, Cycas leaflets coiled, fern croziers
-/// tight), palm leaflets fold induplicate or reduplicate by subfamily, and
-/// plumose palms hold their leaflets in groups.
-pub const GENERATOR_REVISION: u32 = 76;
+/// tight), palm leaflets fold induplicate or reduplicate by subfamily,
+/// plumose palms hold their leaflets in groups, a leaf's petiole and
+/// rachis take the leaf axis's colour, a palm trunk may be ringed by its
+/// leaf scars, and a crownshaft is a closed column.
+pub const GENERATOR_REVISION: u32 = 79;

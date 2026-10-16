@@ -1,0 +1,222 @@
+{
+  "schema": 1,
+  "id": "sarcandra-glabra",
+  "taxon": {
+    "scientific_name": "Sarcandra glabra",
+    "common_name": "glabrous sarcandra",
+    "family": "Chloranthaceae",
+    "genus": "Sarcandra",
+    "plant_name_id": 2484645
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {}
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 1.0,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "leaf_habit": "evergreen",
+    "height_typical_m": {
+      "min": 0.5,
+      "max": 1.5
+    },
+    "height_max_m": 1.5,
+    "leaf_length_m": {
+      "min": 0.06,
+      "max": 0.2
+    },
+    "leaf_width_m": {
+      "min": 0.02,
+      "max": 0.08
+    },
+    "petiole_length_m": {
+      "min": 0.005,
+      "max": 0.02
+    },
+    "leaf_shape": "elliptic",
+    "inflorescence": "spike",
+    "inflorescence_length_m": {
+      "min": 0.015,
+      "max": 0.04
+    },
+    "flower_colour": [
+      200,
+      210,
+      120
+    ],
+    "fruit_size_m": {
+      "min": 0.003,
+      "max": 0.004
+    },
+    "fruit_colour_ripe": [
+      210,
+      30,
+      25
+    ],
+    "flowering_months": [
+      6,
+      7
+    ],
+    "fruiting_months": [
+      11,
+      12,
+      1
+    ],
+    "leaf_colour": [
+      61,
+      96,
+      60
+    ],
+    "bark_colour": [
+      100,
+      110,
+      40
+    ]
+  },
+  "appearance": {
+    "organs": {
+      "leaf": {
+        "shape": {
+          "petiole": 0.09
+        }
+      }
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1 m at 12 years in the open, the middle of Flora of China's 50-150 cm. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The leaf card's petiole share, from Flora of China's petioles 0.5-2 cm on blades 6-20 cm (the middles, 1.25 of 14.25 cm): short-stalked leaves."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 132, Sarcandra glabra (read 2026-10-16): evergreen subshrubs."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 132, Sarcandra glabra (read 2026-10-16): evergreen subshrubs."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 132, Sarcandra glabra (read 2026-10-16): 50-150 cm tall."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 132, Sarcandra glabra (read 2026-10-16): 50-150 cm tall; the top of that range."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 132, Sarcandra glabra (read 2026-10-16): blades 6-20 by 2-8 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 132, Sarcandra glabra (read 2026-10-16): blades 6-20 by 2-8 cm."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 132, Sarcandra glabra (read 2026-10-16): petioles 0.5-2 cm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 132, Sarcandra glabra (read 2026-10-16): blades elliptic or ovate to ovate-lanceolate, or broadly elliptic to oblong; elliptic the first named."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 132, Sarcandra glabra (read 2026-10-16): inflorescences terminal, usually branched, more or less in spikes."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 132, Sarcandra glabra (read 2026-10-16): inflorescences 1.5-4 cm with their peduncles."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 132, Sarcandra glabra (read 2026-10-16): flowers yellowish green; the RGB is the authors' rendering of the word."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 132, Sarcandra glabra (read 2026-10-16): drupes globose, 3-4 mm across, or ovoid, about 4 mm."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 132, Sarcandra glabra (read 2026-10-16): drupes shiny red or yellowish red when ripe; the RGB is the authors' rendering of shiny red."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as Flora of China gives no months."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as Flora of China gives no months."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "A dark, glossy green, the median over each photograph of its green, saturated pixels, then the median over the photographs, in 15 photographs of living plants in iNaturalist research-grade observations 71688619, 101079448, 137144714, 150740140, 238222097, 331395152, 333579646, 383595008 (CC0, CC BY, CC BY-SA)."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "The stems stay green to the base, swollen at the nodes, a yellowish green read from the stem's pixels in observation 383595008 and seen in 137144714 and 331395152."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (Chloranthaceae, 2026-10-16): sizes and looks stated as facts from Flora of China and drawn by the shrub defaults and the angiosperm rules; months from the species-facts estimates."
+  }
+}

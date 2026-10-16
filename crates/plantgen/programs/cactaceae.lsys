@@ -27,10 +27,13 @@
 # column base, which the succulent spurges and stapeliads share; this
 # program keeps the cacti's values. It grows every plant as before.
 #
+# Revision 8 (thread "Cacti"): on column revision 2; one ring in the
+# crown, as before, unless a species asks for more (crown_rings).
+#
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem cactaceae 7 extends column;
+lsystem cactaceae 8 extends column;
 
 param vigour_spread = 0.12;   # an individual grows exp(gauss() * vigour_spread) times as fast
 param lean = 3;               # most degrees a lone stem leans at its foot, in a random direction
@@ -109,3 +112,5 @@ param chain_max = 7;          # most fruit in a chain
 param flower_area = 0.64;
 param bud_area = 0.89;
 param fruit_area = 0.89;
+param crown_rings = 1;        # rings round a column's tip: this year's, then older rings of fruit
+param ring_step = 15;         # degrees each older ring sits below the one above
