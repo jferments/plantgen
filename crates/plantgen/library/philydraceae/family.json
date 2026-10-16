@@ -4,6 +4,7 @@
   "name": "Philydraceae",
   "parent": "order/commelinales",
   "traits": {
+    "phyllotaxis_pattern": "distichous",
     "leaf_arrangement": "alternate",
     "leaf_division": "simple",
     "leaf_margin": "entire",
@@ -30,6 +31,7 @@
     "perennation": {"rhizome": "often", "corm": "often"}
   },
   "evidence": {
+    "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb Commelinales page (read 2026-10-16): Philydraceae leaves two-ranked, sword-shaped."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

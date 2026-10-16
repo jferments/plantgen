@@ -4,6 +4,7 @@
   "name": "Costaceae",
   "parent": "order/zingiberales",
   "traits": {
+    "phyllotaxis_pattern": "spiral",
     "leaf_arrangement": "alternate",
     "leaf_division": "simple",
     "leaf_margin": "entire",
@@ -32,6 +33,7 @@
     "inflorescence": "raceme"
   },
   "evidence": {
+    "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Costaceae (read 2026-10-16): leaves spirally arranged (unlike the two-ranked gingers)."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

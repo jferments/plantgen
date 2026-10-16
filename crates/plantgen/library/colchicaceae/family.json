@@ -4,6 +4,7 @@
   "name": "Colchicaceae",
   "parent": "order/liliales",
   "traits": {
+    "flowering_position": {"terminal": "usually", "lateral": "sometimes"},
     "leaf_arrangement": "alternate",
     "leaf_division": "simple",
     "leaf_margin": "entire",
@@ -38,6 +39,7 @@
     "perennation": {"corm": "usually", "rhizome": "rarely"}
   },
   "evidence": {
+    "traits.flowering_position": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb (read 2026-10-16): racemose or single flowers, flowers axillary in some (Gloriosa in upper leaf axils). Weighting inferred."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

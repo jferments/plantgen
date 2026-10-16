@@ -33,13 +33,28 @@
       "min": 3,
       "max": 5
     },
-    "carpels": 1
+    "carpels": 1,
+    "hypanthium": false,
+    "fruit_type": {
+      "samara": "usually",
+      "nut": "sometimes"
+    }
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Hernandiaceae with Gyrocarpaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves simple or compound; compound leaves palmate; veins palmate; stipules absent; plants hermaphrodite or monoecious, sometimes polygamous; ovary inferior; stems woody; flowers usually in cymes, sometimes in panicles or in corymbs; flowers actinomorphic; perianth sepals and petals or tepals; stamens 3 to 5; carpels 1. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Hernandiaceae page (read 2026-10-16): ovary inferior, no hypanthium described."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Hernandiaceae page (read 2026-10-16): indehiscent fruit either winged (Gyrocarpus, Illigera) or held in an inflated bracteole cup (Hernandia)."
     }
   }
 }

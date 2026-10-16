@@ -4,6 +4,8 @@
   "name": "Cucurbitaceae",
   "parent": "order/cucurbitales",
   "traits": {
+    "perianth": "sepals_and_petals",
+    "hypanthium": true,
     "woodiness": {
       "herbaceous": "usually",
       "semi": "rarely"
@@ -40,6 +42,8 @@
     "perennation": "tuber"
   },
   "evidence": {
+    "traits.perianth": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Cucurbitales page (read 2026-10-16): sepals and petals often connate, valvate. Same as inherited; stated for clarity."},
+    "traits.hypanthium": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Cucurbitales page (read 2026-10-16): hypanthium in many taxa (floral tube above the ovary)."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

@@ -4,9 +4,32 @@
   "name": "Asparagales",
   "parent": "clade/monocots",
   "traits": {
-    "perianth": {
-      "tepals": "usually",
-      "sepals_and_petals": "sometimes"
+    "flowering_position": {
+      "terminal": "usually",
+      "lateral": "sometimes"
+    },
+    "inflorescence": {
+      "raceme": "usually",
+      "panicle": "sometimes",
+      "umbel": "sometimes",
+      "spike": "sometimes"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "rarely"
+    },
+    "hypanthium": {
+      "false": "usually",
+      "true": "sometimes"
+    },
+    "rosette": {
+      "basal": "usually",
+      "none": "sometimes",
+      "terminal": "rarely"
+    },
+    "zygomorphy": {
+      "labellate": "usually",
+      "other": "sometimes"
     }
   },
   "evidence": {
@@ -14,6 +37,36 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
       "note": "Hutchinson (vol. 2, 2nd ed., 1959), families 372 Liliaceae (the asphodels, onions and hyacinths), Amaryllidaceae, 386 Iridaceae and 405 Orchidaceae, the bulk of APG's Asparagales: perianth of six petal-like segments in two whorls of three; an orchid's are unlike (its lip), which its family states."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Asparagales (read 2026-10-16): flowers often clustered at the stem tip; scapes of the geophytes end their shoots. Orchidaceae (which would outweigh this) gets its own value; this weighting is for the families outside it."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Inferred weighting: racemes in Scilloideae, Asphodelaceae and most orchids; panicles in Agave, Yucca; umbels in Amaryllidaceae (which states its own). Asparagaceae is the main family inheriting it."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Orchidaceae (read 2026-10-16) and family states: flowers bisexual through nearly all of the order; dioecy only in some Asparagus, Ruscus and Asteliaceae."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Asparagales (read 2026-10-16): tepals free or joined at base; a floral tube or cup occurs in some Amaryllidaceae and Iridaceae, which state it themselves."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Asparagales (read 2026-10-16): most species have a basal or terminal leaf rosette, a few have leaves along the stem."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb Asparagales page (read 2026-10-16): orchids strongly monosymmetric with a labellum from the inner whorl; Orchidaceae (about 28,000 spp.) sets 'usually'. Other zygomorphic flowers (Amaryllidaceae, Asphodelaceae) overridden to other."
     }
   }
 }

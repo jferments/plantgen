@@ -4,6 +4,7 @@
   "name": "Asphodelaceae",
   "parent": "order/asparagales",
   "traits": {
+    "zygomorphy": "other",
     "hypanthium": false,
     "flower_merosity": 3,
     "flower_symmetry": {"actinomorphic": "usually", "zygomorphic": "sometimes"},
@@ -53,6 +54,7 @@
     }
   },
   "evidence": {
+    "traits.zygomorphy": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Zygomorphic Asphodelaceae (curved tubular flowers of some Aloe and Gasteria) are not labellate. Inferred."},
     "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 229, 505: Simpson (Asphodelaceae s.s.) calls the flowers hypogynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium. Hemerocallidaceae and Xanthorrhoeaceae, which APG adds, are not described."},
     "traits": {
       "evidence": "SourceInferred",

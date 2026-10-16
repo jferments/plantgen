@@ -2,5 +2,111 @@
   "schema": 1,
   "rank": "order",
   "name": "Magnoliales",
-  "parent": "clade/magnoliids"
+  "parent": "clade/magnoliids",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": {
+      "distichous": "usually",
+      "spiral": "sometimes"
+    },
+    "leaf_division": "simple",
+    "leaf_habit": {
+      "evergreen": "usually",
+      "deciduous": "rarely"
+    },
+    "life_span": "perennial",
+    "rosette": "none",
+    "flowering_position": {
+      "lateral": "usually",
+      "terminal": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "flower_merosity": 3,
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "sometimes"
+    },
+    "hypanthium": false,
+    "ovary_position": "superior",
+    "fruit_type": {
+      "aggregate": "usually",
+      "follicle": "sometimes"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): order leaves one per node, two-ranked in most families, spiral in Magnoliaceae and Degeneriaceae; never opposite."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): order characterisation gives two-ranked leaves; Annonaceae (largest family, about 2,400 spp.), Myristicaceae, Himantandraceae and Eupomatiaceae two-ranked; Magnoliaceae and Degeneriaceae spiral. 'usually' weighed by species."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): blades undivided throughout (Liriodendron lobed but one piece)."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): order largely tropical woody plants; deciduous only noted in Liriodendron and some Magnolia. 'usually' inferred from the tropical distribution of Annonaceae and Myristicaceae (a few temperate Annonaceae such as Asimina shed leaves)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): all members trees, shrubs or lianas (Eupomatia rhizomatous shrubs)."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): woody plants with leaves spaced along branches; no rosettes described."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): Annonaceae inflorescences terminal in origin but often displaced to leaf-opposed or axillary positions along the branch; Myristicaceae and Degeneriaceae axillary; Magnoliaceae flowers terminal. 'usually lateral' is our weighting for how the two big families look; medium confidence."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): flowers radially symmetric in all families."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): Annonaceae and Myristicaceae parts in threes; Degeneriaceae three sepals; Liriodendron perianth 3+3."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): Annonaceae sepals 3 plus petals 3+3; Myristicaceae a single connate whorl; Magnoliaceae tepals; Eupomatiaceae none (calyptra). Weighted by Annonaceae."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): receptacle flat or conical in most families; only Eupomatiaceae has a concave receptacle."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): free carpels on a receptacle in most families; Eupomatiaceae carpels sunk in the receptacle."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): Annonaceae stalked berrylets in a cluster; Magnoliaceae follicles on a cone-like axis; Myristicaceae a single dehiscent fleshy fruit; Degeneriaceae a follicle. Weighted by Annonaceae."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): flowers bisexual in Annonaceae (some monoecious tribes), Magnoliaceae and small families; Myristicaceae dioecious."
+    }
+  }
 }

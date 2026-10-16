@@ -2,5 +2,133 @@
   "schema": 1,
   "rank": "order",
   "name": "Fabales",
-  "parent": "clade/fabids"
+  "parent": "clade/fabids",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "distichous": "sometimes"
+    },
+    "leaf_division": {
+      "compound": "usually",
+      "simple": "sometimes"
+    },
+    "division_pattern": {
+      "pinnate": "usually",
+      "palmate": "rarely"
+    },
+    "rosette": "none",
+    "life_span": {
+      "perennial": "usually",
+      "annual": "sometimes"
+    },
+    "inflorescence": {
+      "raceme": "usually",
+      "panicle": "sometimes",
+      "spike": "sometimes",
+      "head": "sometimes"
+    },
+    "flowering_position": {
+      "lateral": "usually",
+      "terminal": "often"
+    },
+    "flower_symmetry": {
+      "zygomorphic": "usually",
+      "actinomorphic": "sometimes"
+    },
+    "hypanthium": {
+      "false": "usually",
+      "true": "sometimes"
+    },
+    "ovary_position": "superior",
+    "carpels": {
+      "min": 1,
+      "max": 5,
+      "typical": 1
+    },
+    "fruit_type": {
+      "legume": "usually",
+      "capsule": "rarely"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "monoecious": "rarely",
+      "polygamous": "rarely"
+    }
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Leguminosae page (read 2026-10-16): leaves mostly alternate, opposite or whorled in a few groups; APweb Fabales page has Quillaja spiral. Fabaceae (~19,600 of ~20,400 order species) sets the weighting."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Leguminosae page (read 2026-10-16): phyllotaxis spiral or two-ranked; APweb Fabales page: Quillajaceae leaves spiral, some legume subfamilies two-ranked. 'usually' spiral is my weighting from the largest groups."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fabales page, Fabaceae characterisation (read 2026-10-16): leaves odd-pinnate with stipules; Quillajaceae simple and toothed. Weighted by Fabaceae's size; Polygalaceae (~1,000 spp.) simple."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fabales page (read 2026-10-16): legume leaves pinnate (odd-pinnate) as a rule; palmate/trifoliolate in a minority of papilionoids (e.g. lupins, clovers)."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Leguminosae page (read 2026-10-16): trees, shrubs, herbs, climbers with leafy stems; basal rosettes not a family feature (only a few stemless Astragalus-type herbs). Inferred, no source states rosettes outright."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Leguminosae page (read 2026-10-16): woody plants and herbs, the herbs annual, biennial or perennial. 'usually' perennial is my weighting: most species are trees, shrubs or perennial herbs."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fabales page, Fabaceae (read 2026-10-16): inflorescence racemose; DELTA Leguminosae: panicles, racemes, spikes or heads, a few solitary (heads mostly mimosoids)."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Leguminosae page (read 2026-10-16): inflorescences terminal, axillary or leaf-opposed. Weighting 'lateral usually' is my inference from papilionoid and mimosoid axillary racemes and heads."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fabales page, Fabaceae (read 2026-10-16): flowers monosymmetric for the family, polysymmetric in parts of Cercidoideae, Detarioideae and the mimosoid clade; Polygalaceae zygomorphic. Weighted by species."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fabales page (read 2026-10-16): hypanthium in some legume subfamilies and in Quillajaceae, not general. Matches what Fabaceae and Polygalaceae state."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fabales page (read 2026-10-16): single stalked carpel in Fabaceae, free carpels in Quillaja; no inferior ovaries in the order."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fabales page (read 2026-10-16): Fabaceae one carpel; Quillajaceae five; Polygalaceae two."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fabales page (read 2026-10-16): legume opening along both sutures in Fabaceae; follicles in Quillaja, capsules mostly in Polygalaceae."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Leguminosae page (read 2026-10-16): mostly hermaphrodite, some andro- or polygamomonoecious (mimosoids). Polygala bisexual (my knowledge, not read on a page)."
+    }
+  }
 }

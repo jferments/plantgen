@@ -68,6 +68,11 @@
       "max": 6,
       "low": 2,
       "high": 20
+    },
+    "flowering_position": "lateral",
+    "life_span": {
+      "perennial": "usually",
+      "annual": "sometimes"
     }
   },
   "evidence": {
@@ -75,6 +80,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Hydrocharitaceae with Najadaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate, opposite or whorled; leaves simple; veins single, pinnate, palmate or parallel; blades obovate, orbicular, oblong or ovate, sometimes linear; stipules present or absent; leaf rosettes basal or none; plants monoecious or dioecious, rarely polygamous; ovary usually inferior, sometimes superior; stems herbaceous; flowers solitary or in cymes; flowers usually actinomorphic, rarely zygomorphic; perianth usually sepals and petals, sometimes tepals or absent; fruit usually capsule, sometimes achene; parts of each whorl 3; stamens 2 to 25; carpels (2-) 3 to 6 (-20). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Hydrocharitaceae (read 2026-10-16): inflorescences axillary, few-flowered cymes."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): mostly perennial."
     }
   }
 }

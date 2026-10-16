@@ -34,13 +34,25 @@
     "carpels": {
       "min": 2,
       "max": 3
-    }
+    },
+    "corolla_shape": "campanulate",
+    "phyllotaxis_pattern": "distichous"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Pentaphragmataceae: leaves alternate; leaves simple; margins entire or dentate; stipules absent; plants usually hermaphrodite, rarely polygamous; ovary inferior; floral cup present or absent; stems herbaceous; flowers in cymes; flowers actinomorphic; perianth sepals and petals; fruit berry; parts of each whorl 5; stamens (4-) 5; carpels 2 to 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Asterales page, Pentaphragmataceae (read 2026-10-16): corolla lobed with marginal wings, sometimes free; flowers bell-like (our reading)."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Asterales page, Pentaphragmataceae (read 2026-10-16): leaves two-ranked."
     }
   }
 }

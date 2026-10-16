@@ -10,7 +10,21 @@
     "stipules": true,
     "sexual_system": "monoecious",
     "perianth": "tepals",
-    "fruit_type": "nut"
+    "fruit_type": "nut",
+    "phyllotaxis_pattern": "distichous",
+    "inflorescence": {
+      "cyme": "usually",
+      "solitary": "sometimes"
+    },
+    "leaf_habit": {
+      "evergreen": "usually",
+      "deciduous": "sometimes"
+    },
+    "stamens": {
+      "min": 8,
+      "max": 40,
+      "typical": 12
+    }
   },
   "forms": {
     "decurrent_tree": {
@@ -31,6 +45,26 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 62 Fagaceae, under which he kept Nothofagus (APG's Nothofagaceae): trees; leaves simple, pinnately veined, with stipules soon falling; flowers unisexual on the same tree, a calyx and no petals; the female in a cup of scales; fruit small nuts in that cup."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fagales page, Nothofagaceae (read 2026-10-16): leaves two-ranked (or spiral)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fagales page, Nothofagaceae (read 2026-10-16): staminate and carpellate flowers in dichasia of 1-3(-5); not catkins, so the order's catkin is wrong here."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb Fagales page notes deciduous species; evergreen majority (New Zealand, New Guinea, Tasmania) is my knowledge. Medium confidence."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fagales page, Nothofagaceae (read 2026-10-16): stamens 10-15 or many."
     }
   }
 }

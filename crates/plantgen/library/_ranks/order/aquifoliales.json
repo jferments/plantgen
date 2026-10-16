@@ -2,5 +2,107 @@
   "schema": 1,
   "rank": "order",
   "name": "Aquifoliales",
-  "parent": "clade/campanulids"
+  "parent": "clade/campanulids",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_division": "simple",
+    "rosette": "none",
+    "leaf_habit": {
+      "evergreen": "usually",
+      "deciduous": "sometimes"
+    },
+    "life_span": "perennial",
+    "inflorescence": {
+      "cyme": "usually",
+      "panicle": "sometimes",
+      "raceme": "sometimes"
+    },
+    "flowering_position": "lateral",
+    "flower_symmetry": "actinomorphic",
+    "corolla_shape": "rotate",
+    "hypanthium": false,
+    "ovary_position": {
+      "superior": "usually",
+      "inferior": "rarely"
+    },
+    "fruit_type": "drupe",
+    "sexual_system": {
+      "dioecious": "usually",
+      "polygamous": "sometimes",
+      "hermaphrodite": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Aquifoliales page, order characterisation (read 2026-10-16): leaves spiral."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Aquifoliales page, order characterisation (read 2026-10-16): leaves spiral."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Aquifoliales page (read 2026-10-16): toothed simple leaves throughout (division not stated; all families state simple)."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Aquifoliales page (read 2026-10-16): shrubs or trees, all woody."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Aquifoliales page (read 2026-10-16): no order statement; Helwingiaceae deciduous or evergreen; Ilex mostly evergreen (stated by family). Weighting ours."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Aquifoliales page (read 2026-10-16): all woody."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Aquifoliales page (read 2026-10-16): Aquifoliaceae cymose, often subumbellate; Phyllonomaceae monochasial cymes. eflora Citronella panicles."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Aquifoliales page, order characterisation (read 2026-10-16): inflorescence axillary. Helwingia and Phyllonoma carry them on the leaf blade (see conflicts)."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Aquifoliales page (read 2026-10-16): small regular flowers in all families (symmetry not stated; all families state actinomorphic)."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Aquifoliales page (read 2026-10-16): Aquifoliaceae petals imbricate, joined only at the base, spreading; our reading as rotate."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Aquifoliales page (read 2026-10-16): no hypanthium described; all families with candidates state false."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Aquifoliales page (read 2026-10-16): Helwingiaceae and Phyllonomaceae have inferior ovaries; Ilex superior (family value)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Aquifoliales page, order characterisation (read 2026-10-16): fruit with separate pyrenes (stones)."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Aquifoliales page (read 2026-10-16): many Ilex dioecious, Helwingia usually dioecious, Phyllonoma perfect. eflora: Citronella moorei dioecious."
+    }
+  }
 }

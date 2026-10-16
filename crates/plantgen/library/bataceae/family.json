@@ -2,5 +2,54 @@
   "schema": 1,
   "rank": "family",
   "name": "Bataceae",
-  "parent": "order/brassicales"
+  "parent": "order/brassicales",
+  "traits": {
+    "leaf_arrangement": "opposite",
+    "phyllotaxis_pattern": "decussate",
+    "leaf_division": "simple",
+    "inflorescence": "spike",
+    "sexual_system": {
+      "dioecious": "usually",
+      "monoecious": "sometimes"
+    },
+    "leaf_habit": "evergreen",
+    "life_span": "perennial"
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Batis maritima (read 2026-10-16): leaves opposite, sessile, succulent."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Batis maritima (read 2026-10-16): opposite leaves; crossing pairs inferred."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Batis (read 2026-10-16): leaves simple, fleshy, club-shaped."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Batis (read 2026-10-16): flowers in inconspicuous spikes."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Batis (read 2026-10-16): B. maritima dioecious, B. argillicola monoecious."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Batis (read 2026-10-16): evergreen low shrubs."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Batis (read 2026-10-16): shrubs."
+    }
+  }
 }

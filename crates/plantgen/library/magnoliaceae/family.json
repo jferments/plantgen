@@ -44,7 +44,12 @@
       "max": 200,
       "low": 2
     },
-    "bract_form": "spathe"
+    "bract_form": "spathe",
+    "phyllotaxis_pattern": "spiral",
+    "flowering_position": {
+      "terminal": "usually",
+      "lateral": "sometimes"
+    }
   },
   "evidence": {
     "traits": {
@@ -56,6 +61,16 @@
       "evidence": "SourceInferred",
       "source": "floral-diagrams",
       "note": "Ronse De Craene, Floral Diagrams (2010) p. 72, family Magnoliaceae: bract form spathe; one or more circular bracts enclose the flower and are shed at anthesis; read as \"spathe\"."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): Magnoliaceae leaves spiral, growth sympodial; differs from the two-ranked order."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): Magnoliaceae flowers terminal; axillary-looking flowers in the Michelia group (our addition, medium confidence)."
     }
   }
 }
