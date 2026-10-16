@@ -232,6 +232,13 @@
       "po": {"id": "PO:0009010", "name": "seed"},
       "why": "a seed borne alone on a shoot, outside any fruit or cone, often in a fleshy cup or coat: the yew's aril, the ginkgo's outer coat"
     },
+    "scale_leaf": {
+      "part_of": "stem",
+      "category": "organ",
+      "when": {"reproduction": ["cones"]},
+      "po": {"id": "PO:0006003", "name": "scale leaf"},
+      "why": "a small leaf that is not a foliage leaf, often guarding a bud: a cycad's cataphylls, which ring its crown at each flush and stay on its trunk among the leaf bases"
+    },
     "capsule": {
       "part_of": "plant",
       "category": "organ",
@@ -752,6 +759,14 @@
       "unit": "m",
       "range": [0, 5],
       "why": "the stalk between blade and shoot"
+    },
+    "plication": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["induplicate", "reduplicate"],
+      "optional": true,
+      "why": "how a pleated leaf, as a palm's, splits into its leaflets or segments: along its upper folds, so each is V-shaped with its trough up (induplicate), or along its lower folds, so each is keeled, Λ-shaped (reduplicate)"
     },
     "vernation": {
       "group": "leaves",

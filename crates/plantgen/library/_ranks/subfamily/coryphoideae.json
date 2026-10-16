@@ -4,11 +4,17 @@
   "name": "Coryphoideae",
   "parent": "family/arecaceae",
   "traits": {
+    "plication": "induplicate",
     "leaf_division": {"simple": "usually", "compound": "rarely"},
     "leaf_incision": "parted",
     "division_pattern": {"palmate": "usually", "pinnate": "rarely"}
   },
   "evidence": {
+    "traits.plication": {
+      "evidence": "SourceInferred",
+      "source": "genera-palmarum-2008",
+      "note": "In every Coryphoideae, fan or feather (Phoenix, and the Caryoteae), the pleated blade splits along its upper folds, so each segment or leaflet is V-shaped, trough up (induplicate); Guihaia alone splits the other way (Dransfield et al. 2008, p. 16; Kaplan 2022, p. 489-492)."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "mabberley-2017",

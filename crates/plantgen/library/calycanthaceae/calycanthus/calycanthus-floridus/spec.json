@@ -1,0 +1,304 @@
+{
+  "schema": 1,
+  "id": "calycanthus-floridus",
+  "taxon": {
+    "scientific_name": "Calycanthus floridus",
+    "common_name": "Carolina allspice",
+    "usda_symbol": "CAFL",
+    "family": "Calycanthaceae",
+    "genus": "Calycanthus",
+    "plant_name_id": 382441
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "crown_radius": 1.4,
+      "crown_base": 0,
+      "crown_rate": 0.22,
+      "space_density": 30,
+      "internode": 0.16,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 40,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 10,
+      "fork_height": 0.03,
+      "fork_stems": 6,
+      "fork_angle": 35,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 1.36,
+      "space_kill": 0.336,
+      "spur_pairs": 1,
+      "leaf_angle": 55,
+      "adult_age": 6,
+      "path_half": 1.9,
+      "spur_leaf": 0.15
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [
+      3,
+      6,
+      12
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.36,
+      0.3,
+      0.25
+    ],
+    "foliage": [
+      0.08,
+      0.18,
+      0.05
+    ],
+    "foliage_shade": [
+      0.026,
+      0.06,
+      0.016
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "petiole": 0.06
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 2.5,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 1.5,
+      "max": 3.5
+    },
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.15
+    },
+    "leaf_width_m": {
+      "min": 0.02,
+      "max": 0.06
+    },
+    "petiole_length_m": {
+      "min": 0.003,
+      "max": 0.01
+    },
+    "leaf_shape": "elliptic",
+    "leaf_habit": "deciduous",
+    "flower_size_m": {
+      "min": 0.04,
+      "max": 0.05,
+      "high": 0.07
+    },
+    "perianth_parts": {
+      "min": 15,
+      "max": 30
+    },
+    "flower_colour": [
+      110,
+      35,
+      30
+    ],
+    "stamens": {
+      "min": 10,
+      "max": 20
+    },
+    "carpels": {
+      "min": 10,
+      "max": 35
+    },
+    "flowering_position": "terminal",
+    "fruit_type": "aggregate",
+    "fruit_size_m": {
+      "min": 0.02,
+      "max": 0.06
+    },
+    "fruit_colour_ripe": [
+      120,
+      105,
+      85
+    ],
+    "flowering_months": [
+      5,
+      6
+    ],
+    "fruiting_months": [
+      9,
+      10,
+      11
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Calycanthus floridus (read on eFloras, 2026-10-16): shrubs to 3.5 m; the lower bound is the model estimate's usual height (species-facts-2026-10-15)."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Calycanthus floridus (read on eFloras, 2026-10-16): blade 5-15 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Calycanthus floridus (read on eFloras, 2026-10-16): blade 2-6 cm wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Calycanthus floridus (read on eFloras, 2026-10-16): petiole 3-10 mm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Calycanthus floridus (read on eFloras, 2026-10-16): blade elliptic, broadly elliptic, oblong or ovate."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 112, Calycanthus floridus: flowers 4-5(-7) cm."
+    },
+    "traits.perianth_parts": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 112, Calycanthus floridus: 15-30 tepals in a spiral; Floral Diagrams (p. 76, 77) draws 26-29."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 112, Calycanthus floridus: tepals dark reddish brown with brown tips. The colour is our reading of the words."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Calycanthus floridus (read on eFloras, 2026-10-16): stamens 10-20."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 112, Calycanthus floridus: carpels 10-35."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 112, Calycanthus floridus: flowers solitary at the ends of short leafy shoots."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 112, Calycanthus floridus: achenes inside a pseudocarp, the ripened hypanthium."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Calycanthus floridus (read on eFloras, 2026-10-16): hypanthium 2-6 cm long at maturity (Dendrology p. 112: pseudocarp 2-6 cm)."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 112, Calycanthus floridus: the ripe pseudocarp greyish brown and wrinkled. The colour is our reading of the words."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 112, Calycanthus floridus: flowers May-June, sometimes July."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 112, Calycanthus floridus: fruit ripe September-November."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Beaked hazelnut's values (a many-stemmed deciduous shrub), with a smaller crown. Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "2.5 m at 12 years in the open, within FNA's 'to 3.5 m'. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after FNA vol. 3: brown stems; elliptic to ovate leaves, green or glaucous below. The leaf card's petiole is 0.06 of its length, the flora's petiole against blade and petiole together."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the Magnoliidae specs (2026-10-16): sizes from FNA vol. 3, flowers from Dendrology, drawing values from beaked hazelnut's."
+  }
+}

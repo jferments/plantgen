@@ -1113,11 +1113,11 @@ fn frame(shot: &Shot, reach: f64, framed: f64, scale_height: f64, gap: f64) -> F
     let target = Vec3::new(center_x, height * 0.5, 0.0);
     #[allow(clippy::cast_possible_truncation)]
     match shot.view {
-        View::Side | View::ThreeQuarter => {
-            let direction = if shot.view == View::Side {
-                Vec3::new(0.0, 0.04, 1.0)
-            } else {
-                Vec3::new(0.7, 0.3, 0.7)
+        View::Side | View::ThreeQuarter | View::Oblique => {
+            let direction = match shot.view {
+                View::Side => Vec3::new(0.0, 0.04, 1.0),
+                View::Oblique => Vec3::new(0.7, 0.99, 0.7),
+                _ => Vec3::new(0.7, 0.3, 0.7),
             }
             .normalize_or(Vec3::Z);
             Framing {

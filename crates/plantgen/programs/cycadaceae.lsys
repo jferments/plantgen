@@ -8,9 +8,14 @@
 # Revision 3: gives palm revision 7's trunk shape, crownshaft, leaflet
 # planes, fan arch and hang, all 0, so a cycad draws as before.
 #
+# Revision 4: palm revision 9's trunk thickening, flushes, scale leaves,
+# leaflet opening and boot angle come from the Cycadales and family rank
+# files (Whitelock 2002), not from here; leaflet groups and coil_short
+# are given as before (none).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem cycadaceae 3 extends palm;
+lsystem cycadaceae 4 extends palm;
 
 param vigour_spread = 0.1; # a palm grows exp(gauss() * vigour_spread) times as fast
 param upturn = 0;          # how strongly a leaning trunk turns back up, radians a metre
@@ -37,3 +42,5 @@ param shaft_cards = 8; param sheath_area = 0.235;
 param leaflet_scatter = 0;   # degrees leaflets stand above and below their V
 param fan_arch = 0;          # degrees a fan's edge rays droop below its middle
 param hang = 0;              # degrees a frond turns down over its life
+param leaflet_groups = 2;
+param coil_short = 0;

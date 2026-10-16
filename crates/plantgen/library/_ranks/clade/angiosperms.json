@@ -167,10 +167,18 @@
       "rule": "clamp(round(carpels), 0, 30)",
       "why": "A flower draws one pistil of up to five carpels, or of any number in an inferior ovary; above five in a superior one, as many free pistils, up to 30."
     },
+    "generator.params.fruit_length": {
+      "rule": "fruit_size_m",
+      "why": "A herb's fruit is as long as floras measure it at its longest."
+    },
+    "generator.params.fruit_size": {
+      "rule": "fruit_size_m",
+      "why": "A fruit is as long as floras measure it at its longest."
+    },
     "appearance.organs.*.shape.kind": {
       "template": "fruit",
-      "map": {"fruit_type": {"berry": "berry", "drupe": "berry", "pome": "pome", "capsule": "capsule", "follicle": "capsule", "pod": "pod", "legume": "pod", "samara": "samara"}},
-      "why": "A berry or drupe is drawn as an ellipsoid; a pome dimpled at its top; a capsule or follicle ribbed lengthwise; a legume or other pod long, flat and bulging over its seeds; a samara as a seed at the base of a wing. A nut's cup or husk, an aggregate's drupelets and a berry's crown are the lineage's to say."
+      "map": {"fruit_type": {"berry": "berry", "drupe": "berry", "pome": "pome", "capsule": "capsule", "follicle": "capsule", "pod": "pod", "legume": "pod", "samara": "samara", "achene": "berry", "cypsela": "berry", "caryopsis": "berry", "nut": "berry", "schizocarp": "capsule", "aggregate": "drupelets", "multiple": "drupelets"}},
+      "why": "A berry or drupe is drawn as an ellipsoid, and so is a dry one-seeded fruit (an achene, cypsela, grain or nut) in its own dull colour; a pome dimpled at its top; a capsule, follicle or schizocarp ribbed lengthwise; a legume or other pod long, flat and bulging over its seeds; a samara as a seed at the base of a wing; an aggregate or multiple fruit as a cluster of drupelets. A nut's cup or husk and a berry's crown are the lineage's to say."
     },
     "appearance.organs.*.inflorescence.peduncle": {
       "rule": "clamp(peduncle_length_m / (peduncle_length_m + inflorescence_length_m), 0, 0.9)",
@@ -227,6 +235,9 @@
     "rules.appearance.organs.flower.inflorescence": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
     "rules.appearance.organs.bloom.inflorescence": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
     "rules.appearance.organs.*.inflorescence.size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
+    "rules.generator.params.fruit_length": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen sizes a fruit (morphology terms to drawing rules, 2026-10-16): a herb's fruit card is as long as the stated ripe fruit at its longest (fruit_size_m), where before every herb drew the program's 6 cm."},
+    "rules.generator.params.fruit_size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen sizes a fruit (morphology terms to drawing rules, 2026-10-16): a climber's, column's or epiphyte's fruit is as long as the stated ripe fruit at its longest (fruit_size_m)."},
+    "rules.appearance.organs.*.shape.kind": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Ingrouille's fruit types (pp. 162-163 of the PDF), with Simpson's Moraceae multiples: an achene, a cypsela (an achene from an inferior ovary) and a caryopsis (a grain) are small dry one-seeded fruits that do not open, a nut the same with a hard wall, so each is drawn as a plain ellipsoid; a schizocarp splits lengthwise into one-seeded mericarps, drawn ribbed lengthwise as a capsule; an aggregate fruit comes from the many free pistils of one flower and a multiple fruit from the flowers of a whole inflorescence, each a cluster of small fleshy units, drawn as drupelets."},
     "rules.generator.params.flower_size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
     "rules.generator.params.bloom_size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a flower borne in a cluster, a choice of the model's (visual forms Skill 4, 2026-10-15): the flowering organ is the cluster, as long as floras measure the inflorescence, its flowers as wide as they measure the flower, laid out by the cluster kind the taxa state."},
     "rules.appearance.organs.flower.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
