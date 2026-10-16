@@ -3791,6 +3791,7 @@ mod tests {
 
     fn look(shape: Shape, face_up: f64) -> OrganLook {
         OrganLook {
+            hairs: None,
             roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             shape,

@@ -91,6 +91,54 @@
       "map": {"leaf_peltation": {"epeltate": "marginal", "latent": "latent", "manifest": "peltate"}},
       "why": "A rosette's leaves are the species' leaves, unless their own are stated: a peltate blade is drawn on its own petiole, held flat across the petiole's tip, centred on it where the petiole meets the blade underneath."
     },
+    "appearance.organs.leaf.hairs.density": {
+      "map": {"leaf_hairs": {"glabrous": 0, "glabrescent": 0.08, "puberulent": 0.3, "pubescent": 0.4, "strigose": 0.45, "sericeous": 0.65, "pilose": 0.35, "villous": 0.6, "hirsute": 0.5, "hispid": 0.45, "tomentose": 0.85, "lanate": 0.9}},
+      "between": true,
+      "why": "How much of a blade's face its hairs hide, from the words floras use (Harris and Harris): none on a glabrous blade, a little where they are few or soon lost, about a third where they are minute or sparse and long, half where they are stiff, most where they are shaggy or silky, nearly all under a felt or a wool."
+    },
+    "appearance.organs.leaf.hairs.lie": {
+      "map": {"leaf_hairs": {"glabrous": 0.5, "glabrescent": 0.3, "puberulent": 0.6, "pubescent": 0.5, "strigose": 0.05, "sericeous": 0.05, "pilose": 0.6, "villous": 0.5, "hirsute": 0.75, "hispid": 0.85, "tomentose": 0.2, "lanate": 0.3}},
+      "between": true,
+      "why": "How a blade's hairs stand: pressed flat toward its tip where they are strigose or silky, matted low in a felt or a wool, spreading where they are soft, and straight out where they are stiff or bristly."
+    },
+    "appearance.organs.leaf.hairs.curl": {
+      "map": {"leaf_hairs": {"glabrous": 0, "glabrescent": 0.1, "puberulent": 0.1, "pubescent": 0.2, "strigose": 0, "sericeous": 0.05, "pilose": 0.15, "villous": 0.45, "hirsute": 0.05, "hispid": 0, "tomentose": 0.8, "lanate": 0.9}},
+      "between": true,
+      "why": "How a blade's hairs bend: straight where they are stiff, pressed flat or minute, a little wavy where they are soft, shaggy where they are villous, curled and tangled in a felt or a wool."
+    },
+    "appearance.organs.leaf.hairs.length": {
+      "map": {"leaf_hairs": {"glabrous": 0.0005, "glabrescent": 0.0005, "puberulent": 0.00015, "pubescent": 0.0005, "strigose": 0.0008, "sericeous": 0.001, "pilose": 0.0015, "villous": 0.0025, "hirsute": 0.0015, "hispid": 0.002, "tomentose": 0.0006, "lanate": 0.003}},
+      "between": true,
+      "why": "A blade's hairs are as long as its words make them where no length is stated (Harris and Harris): a tenth of a millimetre or two where minute, about half a millimetre where short and soft or felted, one to two where long, stiff or silky, two or three where shaggy or woolly."
+    },
+    "appearance.organs.basal.hairs.density": {
+      "map": {"leaf_hairs": {"glabrous": 0, "glabrescent": 0.08, "puberulent": 0.3, "pubescent": 0.4, "strigose": 0.45, "sericeous": 0.65, "pilose": 0.35, "villous": 0.6, "hirsute": 0.5, "hispid": 0.45, "tomentose": 0.85, "lanate": 0.9}},
+      "between": true,
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated. How much of a blade's face its hairs hide, from the words floras use (Harris and Harris): none on a glabrous blade, a little where they are few or soon lost, about a third where they are minute or sparse and long, half where they are stiff, most where they are shaggy or silky, nearly all under a felt or a wool."
+    },
+    "appearance.organs.basal.hairs.lie": {
+      "map": {"leaf_hairs": {"glabrous": 0.5, "glabrescent": 0.3, "puberulent": 0.6, "pubescent": 0.5, "strigose": 0.05, "sericeous": 0.05, "pilose": 0.6, "villous": 0.5, "hirsute": 0.75, "hispid": 0.85, "tomentose": 0.2, "lanate": 0.3}},
+      "between": true,
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated. How a blade's hairs stand: pressed flat toward its tip where they are strigose or silky, matted low in a felt or a wool, spreading where they are soft, and straight out where they are stiff or bristly."
+    },
+    "appearance.organs.basal.hairs.curl": {
+      "map": {"leaf_hairs": {"glabrous": 0, "glabrescent": 0.1, "puberulent": 0.1, "pubescent": 0.2, "strigose": 0, "sericeous": 0.05, "pilose": 0.15, "villous": 0.45, "hirsute": 0.05, "hispid": 0, "tomentose": 0.8, "lanate": 0.9}},
+      "between": true,
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated. How a blade's hairs bend: straight where they are stiff, pressed flat or minute, a little wavy where they are soft, shaggy where they are villous, curled and tangled in a felt or a wool."
+    },
+    "appearance.organs.basal.hairs.length": {
+      "map": {"leaf_hairs": {"glabrous": 0.0005, "glabrescent": 0.0005, "puberulent": 0.00015, "pubescent": 0.0005, "strigose": 0.0008, "sericeous": 0.001, "pilose": 0.0015, "villous": 0.0025, "hirsute": 0.0015, "hispid": 0.002, "tomentose": 0.0006, "lanate": 0.003}},
+      "between": true,
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated. A blade's hairs are as long as its words make them where no length is stated (Harris and Harris): a tenth of a millimetre or two where minute, about half a millimetre where short and soft or felted, one to two where long, stiff or silky, two or three where shaggy or woolly."
+    },
+    "appearance.organs.leaf.hairs.edge": {
+      "map": {"leaf_ciliate": {"true": 0.8, "false": 0}},
+      "why": "A ciliate blade's edge is fringed with hairs, set close along it whatever its faces bear; a blade said not to be has none there."
+    },
+    "appearance.organs.basal.hairs.edge": {
+      "map": {"leaf_ciliate": {"true": 0.8, "false": 0}},
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: a ciliate blade's edge is fringed with hairs, set close along it whatever its faces bear; a blade said not to be has none there."
+    },
     "appearance.organs.leaf.shape.spread": {
       "template": "compound",
       "map": {"leaf_peltation": {"manifest": {"rule": "360 * (leaflets - 1) / leaflets"}}},

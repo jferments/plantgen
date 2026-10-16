@@ -31,6 +31,22 @@
       "map": {"leaf_venation": {"palmate": 2}},
       "why": "A rosette's leaves are the species' leaves, unless their own are stated: a palmately veined blade's main veins fan from the top of its petiole, two a side with the midrib."
     },
+    "appearance.organs.leaf.hairs.length": {
+      "rule": "leaf_hair_length_m",
+      "why": "A blade's hairs are as long as a flora measures them."
+    },
+    "appearance.organs.leaf.hairs.colour": {
+      "colour": "hair_colour",
+      "why": "A blade's hairs are drawn in the colour they are stated in; white where none is."
+    },
+    "appearance.organs.basal.hairs.length": {
+      "rule": "leaf_hair_length_m",
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: a blade's hairs are as long as a flora measures them."
+    },
+    "appearance.organs.basal.hairs.colour": {
+      "colour": "hair_colour",
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: a blade's hairs are drawn in the colour they are stated in; white where none is."
+    },
     "appearance.foliage": {
       "colour": "leaf_colour",
       "why": "The plant's leaves are drawn in the colour a grown leaf's upper side is stated in."

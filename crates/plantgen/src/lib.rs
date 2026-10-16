@@ -46,6 +46,7 @@ pub mod gltf;
 pub mod graph;
 pub mod ground;
 pub mod grow;
+pub mod hairs;
 pub mod impostor;
 pub mod inherit;
 pub mod json;
@@ -498,4 +499,9 @@ pub mod venation;
 /// rachis take the leaf axis's colour, a palm trunk may be ringed by its
 /// leaf scars, and a crownshaft is a closed column (80 is shape and
 /// fruit words, #155).
-pub const GENERATOR_REVISION: u32 = 81;
+/// 82: hairs (`crate::hairs`): a blade's hairs as floras name them
+/// (`leaf_hairs`, `leaf_ciliate`) cast its colour toward theirs, add a
+/// sheen and a backlit glow, fringe its edge, and up close stand from it
+/// as strands of their own; the atlas carries each texel's hair weight in
+/// blue (81 is cycads, palms and tree ferns, #154).
+pub const GENERATOR_REVISION: u32 = 82;

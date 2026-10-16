@@ -808,6 +808,45 @@
       "values": ["entire", "serrate", "dentate", "crenate", "spiny"],
       "why": "a blade's edge: smooth, or toothed (teeth pointing forward, outward, rounded, or ending in spines)"
     },
+    "leaf_hairs": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["glabrous", "glabrescent", "puberulent", "pubescent", "strigose", "sericeous", "pilose", "villous", "hirsute", "hispid", "tomentose", "lanate"],
+      "optional": true,
+      "why": "the hairs on a blade's upper side, as floras name them (Harris and Harris): none (glabrous), few or soon lost (glabrescent), minute (puberulent), short and soft (pubescent), pressed flat and stiff (strigose) or silky (sericeous), long and soft, sparse (pilose) or shaggy (villous), stiff and spreading (hirsute) or bristly (hispid), matted into a felt (tomentose) or a wool (lanate)"
+    },
+    "leaf_hairs_beneath": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["glabrous", "glabrescent", "puberulent", "pubescent", "strigose", "sericeous", "pilose", "villous", "hirsute", "hispid", "tomentose", "lanate"],
+      "optional": true,
+      "why": "the hairs on a blade's underside, in the words of `leaf_hairs`"
+    },
+    "leaf_ciliate": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "bool",
+      "optional": true,
+      "why": "whether a blade's edge is fringed with hairs (ciliate), as floras say where its faces' hairs do not tell it"
+    },
+    "leaf_hair_length_m": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "number",
+      "unit": "m",
+      "range": [0.00002, 0.02],
+      "optional": true,
+      "why": "a hair on a blade's upper side, from its foot to its tip"
+    },
+    "hair_colour": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "colour",
+      "optional": true,
+      "why": "the colour of the hairs on a blade, where they are not white or colourless"
+    },
     "leaf_lobes": {
       "group": "leaves",
       "organ": "leaf",
