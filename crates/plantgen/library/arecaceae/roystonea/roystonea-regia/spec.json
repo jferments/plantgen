@@ -62,7 +62,7 @@
     "seeds": [1, 2, 3, 4]
   },
   "appearance": {
-    "bark": [0.47, 0.43, 0.36],
+    "bark": [0.2, 0.19, 0.16],
     "leaf_axis": [0.09, 0.2, 0.05],
     "bark_pattern": {
       "kind": "ringed",
@@ -79,7 +79,7 @@
     "foliage_shade": [0.022, 0.058, 0.016],
     "variation": 0.1,
     "organs": {
-      "sheath": {"shape": {"template": "blade", "taper": 0, "aspect": 0.14}, "colour": [0.3, 0.45, 0.18]},
+      "sheath": {"shape": {"template": "blade", "taper": 0, "aspect": 0.14}, "colour": [0.12, 0.25, 0.07]},
       "leaflet": {
         "shape": {
           "template": "blade",
