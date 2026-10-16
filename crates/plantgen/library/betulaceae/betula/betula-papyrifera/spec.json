@@ -128,6 +128,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "shade_tolerance": "intolerant",
     "height_max_m": {
       "min": 21,
       "max": 30,
@@ -148,6 +149,7 @@
     "leaf_venation": "pinnate"
   },
   "evidence": {
+    "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's paper birch review (Betula papyrifera, read 2026-10-16): \"Paper birch is shade-intolerant and can regenerate under even-aged silviculture\"; it is restricted to openings in older forests."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "bonner-karrfalt-2008",

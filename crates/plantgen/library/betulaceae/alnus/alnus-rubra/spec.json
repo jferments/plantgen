@@ -139,6 +139,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "shade_tolerance": "intolerant",
     "height_max_m": {
       "min": 15,
       "max": 25
@@ -156,6 +157,7 @@
     "fruiting_months": [8, 9, 10]
   },
   "evidence": {
+    "traits.shade_tolerance": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's red alder review (Alnus rubra, read 2026-10-16): \"Due to red alder's shade intolerance, stands are self-thinning\"; its rapid juvenile growth gives \"the shade-intolerant red alder\" its edge over conifers."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
