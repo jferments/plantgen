@@ -436,4 +436,13 @@ pub mod venation;
 /// branches only on the top `crown_ratio` of its height (rule on
 /// `self_pruning`), so ponderosa pine, self-pruning by FEIS, stands on a
 /// clear bole (71 is broadleaf limbs, #133).
-pub const GENERATOR_REVISION: u32 = 72;
+/// 73: cactus barrels: areoles crowd over the dome and ribs merge toward
+/// the tip, and a woolly cap may top it (`Areoles.apex_wool`); a share of
+/// stems keeps a Fibonacci rib count and winds left or right
+/// (`Ribs.fibonacci`, `Ribs.lean`; The Cactus Primer); spine cards draw
+/// only as many sub-texel spines as their width covers, and the far tint's
+/// cover counts the skin between ribs, so spined succulents keep their
+/// colour across levels; both Ferocactus take their ribs, wool, flower
+/// rings and central spines from the Primer and Anderson (72 is pine
+/// whorls, #136).
+pub const GENERATOR_REVISION: u32 = 73;
