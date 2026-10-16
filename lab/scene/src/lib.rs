@@ -266,6 +266,9 @@ pub enum View {
     Side,
     /// From the south-east, a little above.
     ThreeQuarter,
+    /// From the south-east, 45 degrees down, as `plantc render --view
+    /// oblique` frames it.
+    Oblique,
     /// Straight down.
     Top,
 }
@@ -276,6 +279,7 @@ impl View {
         Some(match name {
             "side" => Self::Side,
             "three-quarter" => Self::ThreeQuarter,
+            "oblique" => Self::Oblique,
             "top" => Self::Top,
             _ => return None,
         })
@@ -286,6 +290,7 @@ impl View {
         match self {
             Self::Side => "side",
             Self::ThreeQuarter => "three-quarter",
+            Self::Oblique => "oblique",
             Self::Top => "top",
         }
     }
