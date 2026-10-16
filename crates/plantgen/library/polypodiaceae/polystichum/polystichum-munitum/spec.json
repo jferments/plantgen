@@ -16,23 +16,15 @@
       "frond_life": 2.5,
       "frond_seed": 0.15,
       "size_years": 4,
-      "young_angle": 12,
-      "old_angle": 50,
       "open_years": 0.6,
       "angle_spread": 10,
       "frond_radius": 0.003,
-      "pieces": 18,
-      "pinna_peak": 0.25,
-      "pinna_base": 0.55,
-      "pinna_tip": 0.15,
       "pinna_angle": 75,
       "pinna_lift": 8,
-      "pinna_area": 0.17,
       "season": 0.5,
       "emerge_spread": 0.35,
       "unroll": 0.3,
       "curl": 38,
-      "droop": 0.03,
       "droop_years": 2.5,
       "crowns": 2,
       "crown_age": 4,
@@ -58,10 +50,6 @@
       "pinna": {
         "shape": {
           "template": "simple",
-          "width": 0.3,
-          "widest": 0.3,
-          "tip": 0.75,
-          "base": 0.7,
           "teeth": 7,
           "tooth_depth": 0.02,
           "petiole": 0.0
@@ -81,6 +69,7 @@
   "traits": {
     "rhizome_habit": {"ascending": "usually", "erect": "often"},
     "leaf_habit": "evergreen",
+    "leaf_posture": "ascending",
     "division_order": 1,
     "leaf_shape": "lanceolate",
     "leaf_margin": "serrate",
@@ -105,7 +94,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a large evergreen fern: a fountain of stiff, arching, once-divided fronds with narrow, pointed, toothed pinnae. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a large evergreen fern: a fountain of stiff, arching, once-divided fronds. Not fitted to measurements. Its angles, droop, pinna count and pinna sizes along the blade are the fern rules', from its stated posture, blade shape and measures."
     },
     "allometry": {
       "evidence": "Authored",
@@ -148,6 +137,7 @@
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
     "traits.indusium": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 460, 461, Polystichum munitum: indusium shield, ciliate."},
+    "traits.leaf_posture": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "Abrams's flora (vol. 1, 1923; ferns by Maxon), Polystichum munitum: fronds \"rigidly ascending in a crown\"; read as ascending."},
     "traits.rhizome_habit": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "The spec's value is from its `traits` note (abrams-1923). Hoshizaki and Moran, Fern Grower's Manual (2001) p. 460-461: rhizome ascending to erect. The spec stated \"ascending\". Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."}
   },
   "provenance": {

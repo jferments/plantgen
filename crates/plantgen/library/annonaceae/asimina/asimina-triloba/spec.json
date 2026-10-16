@@ -1,0 +1,293 @@
+{
+  "schema": 1,
+  "id": "asimina-triloba",
+  "taxon": {
+    "scientific_name": "Asimina triloba",
+    "common_name": "pawpaw",
+    "usda_symbol": "ASTR",
+    "family": "Annonaceae",
+    "genus": "Asimina",
+    "plant_name_id": 2655435
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "params": {
+      "crown_radius": 2.5,
+      "crown_base": 1.5,
+      "crown_rate": 0.045,
+      "space_density": 6,
+      "internode": 0.2,
+      "max_shoot": 4,
+      "bud_break": 1.3,
+      "branch_angle": 55,
+      "apical_young": 0.72,
+      "apical": 0.6,
+      "apical_years": 20,
+      "spur_pairs": 2,
+      "leaf_angle": 55,
+      "droop": 0.02,
+      "lean": 3,
+      "wiggle": 4,
+      "pipe_tip": 0.00245,
+      "pipe_organ": 0.0049,
+      "pipe_rings": 8.98e-08,
+      "extinction": 0.45,
+      "path_half": 6,
+      "fork_stems": 1,
+      "bloom_size": 0.03,
+      "spur_leaf": 0.337
+    }
+  },
+  "growth": {
+    "years": 25,
+    "step": 1,
+    "keyframes": [
+      4,
+      12,
+      25
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.4,
+      0.37,
+      0.33
+    ],
+    "foliage": [
+      0.1,
+      0.2,
+      0.06
+    ],
+    "foliage_shade": [
+      0.033,
+      0.066,
+      0.02
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "petiole": 0.03
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 25,
+      "environment": "open",
+      "height": 7,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 6,
+      "max": 12,
+      "high": 14
+    },
+    "leaf_length_m": {
+      "min": 0.15,
+      "max": 0.3
+    },
+    "leaf_width_m": {
+      "min": 0.06,
+      "max": 0.12
+    },
+    "petiole_length_m": {
+      "min": 0.005,
+      "max": 0.01
+    },
+    "leaf_shape": "obovate",
+    "leaf_habit": "deciduous",
+    "clonal": true,
+    "flower_size_m": {
+      "min": 0.02,
+      "max": 0.04,
+      "high": 0.05
+    },
+    "flower_colour": [
+      110,
+      35,
+      45
+    ],
+    "inflorescence": "solitary",
+    "flowering_position": "lateral",
+    "carpels": {
+      "min": 3,
+      "max": 7,
+      "high": 12
+    },
+    "fruit_type": "berry",
+    "fruit_size_m": {
+      "min": 0.05,
+      "max": 0.15
+    },
+    "fruit_colour_ripe": [
+      175,
+      180,
+      75
+    ],
+    "flowering_months": [
+      4,
+      5
+    ],
+    "fruiting_months": [
+      9,
+      10
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's pawpaw review (Sullivan 1993, read 2026-10-16): \"grows from 20 to 40 feet (6-12 m) tall\". FNA vol. 3 gives shrubs or trees 1.5-11(-14) m."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asimina triloba (read on eFloras, 2026-10-16): blade 15-30 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asimina triloba (read on eFloras, 2026-10-16): petiole 5-10 mm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asimina triloba (read on eFloras, 2026-10-16): blade oblong-obovate to oblanceolate, thin, narrowly wedge-shaped at the base."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's pawpaw review (Sullivan 1993, read 2026-10-16): \"a native, deciduous, large shrub or small tree\"."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's pawpaw review (Sullivan 1993, read 2026-10-16): it grows clonally from root suckers, forming thickets or small colonies."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asimina triloba (read on eFloras, 2026-10-16): flowers 2-4(-5) cm across."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asimina triloba (read on eFloras, 2026-10-16): flowers maroon (Dendrology p. 84: dark purplish brown). The colour is our reading of the words."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 84, Asimina triloba: flowers solitary in the axils, nodding on a stalk 1.5-2 cm."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asimina triloba (read on eFloras, 2026-10-16): flowers from the previous year's shoots, before or as the new leaves come out, on a nodding stalk 1.5-2 cm."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asimina triloba (read on eFloras, 2026-10-16): pistils 3-7(-12)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asimina triloba (read on eFloras, 2026-10-16): berries yellow-green, 5-15 cm."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asimina triloba (read on eFloras, 2026-10-16): berries 5-15 cm."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Asimina triloba (read on eFloras, 2026-10-16): berries yellow-green. The colour is our reading of the word."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 84, Asimina triloba: flowers April-May, before or with the leaves (FEIS: February to May by latitude)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 84, Asimina triloba: fruit ripe September-October (FEIS: July to September)."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Red alder's crown values, changed by hand for a small understory tree: one slender trunk (FEIS: usually single), spreading-ascending branches (FNA), a narrower crown and shorter shoots, flowers drawn 3 cm across (FNA: 2-4 cm), path_half fitted so it reaches its height. Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "7 m at 25 years in the open, within FEIS's 6-12 m. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after FNA vol. 3 and FEIS: thin, shallowly furrowed grey-brown bark; large, thin, drooping obovate leaves. The leaf card's petiole is 0.03 of its length, the flora's petiole against blade and petiole together."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the Magnoliidae specs (2026-10-16): sizes from FEIS and FNA vol. 3, drawing values from red alder's."
+  }
+}
