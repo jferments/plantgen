@@ -79,9 +79,17 @@
 # vertical over its life, so the oldest hang below the crown. Each at 0
 # draws as revision 6 did.
 #
+# Revision 8 (a crownshaft's sheaths are its fronds'): each frond draws
+# its own sheath, within its `frond` structure, as a palm's leaf sheath is
+# the base of its leaf: max(1, round(shaft_cards / fronds_per_year))
+# cards round the crownshaft's core, from the frond's foot down the
+# crownshaft's length, living and dying with the frond. Until revision 7
+# a year's sheaths stood round the trunk's top within no structure, which
+# the organ check refuses for a piece.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem palm 7;
+lsystem palm 8;
 
 # The plant.
 param vigour_spread;          # a palm grows exp(gauss() * vigour_spread) times as fast
@@ -160,8 +168,8 @@ param sucker_rate;
 param sucker_distance;
 
 module Y(v, n);               # a crown: vigour, suckers so far
-module Fc(i, m, c);           # fronds i to i + m - 1 of this year's cohort, on a crown c years old
-module Fr(s, a, e);           # a frond s long at a degrees, emerging at phase e of its year
+module Fc(i, m, c, r);        # fronds i to i + m - 1 of this year's cohort, on a crown c years old, round a crownshaft r in radius
+module Fr(s, a, e, r);        # a frond s long at a degrees, emerging at phase e of its year, its sheath round a crownshaft r in radius
 module Pc(k, m, s, e);        # pieces k to k + m - 1 of a frond's rachis
 module Pp(k, s, e);           # a drawn piece of a rachis
 module Ln(k, s, e, h);        # a pair of leaflets h of a piece along piece k
@@ -172,7 +180,7 @@ module Bt;                    # a boot
 module Cc(z);                 # the crown's cone, z long
 module Sb(n);                 # the plant's foot: suckers sent out so far
 module Sk(n);                 # a sucker on its runner, the n-th
-module Sh(z, r);              # a sheath of the crownshaft, z long, round a trunk r in radius
+module Sh(z, r);              # a sheath card of the crownshaft, z long, round a core r in radius
 module Sc(z);                 # the crownshaft's core, z long
 
 organ leaflet leaf as leaflet area leaflet_area;
@@ -182,23 +190,22 @@ organ boot leaf as piece area boot_area;
 organ cone cone area cone_area;
 organ sheath leaf as piece area sheath_area;
 
-structure frond leaf;         # one frond: its petiole, rachis, leaflets or rays, then its dead frond and boot
+structure frond leaf;         # one frond: its sheath, petiole, rachis, leaflets or rays, then its dead frond and boot
 
 axiom [ Sb(0) ] /(uniform(0, 360)) &(uniform(0, lean)) Y(exp(gauss() * vigour_spread), 0);
 
 # The crown: the trunk's growth and this year's fronds.
 # A crownshaft palm's fronds and cone stand on the shaft's core, which
-# lives as long as they do.
+# lives as long as they do; each frond's sheath clasps the core below it.
 rule Y(v, n) : crownshaft > 0 ->
     !(trunk_radius
       * (1 + flare * exp(-max(0, age - stemless_years) / max(flare_years, 0.001))
          + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0)))
     T(0, 1, 0, upturn * trunk_rate * v)
     F(trunk_rate * v * smoothstep(0, stemless_years, age))
-    [ ring(shaft_cards) [ Sh(crownshaft, trunk_radius
+    [ Sc(crownshaft) Fc(0, max(1, round(fronds_per_year * v)), age * v, trunk_radius
           * (1 + flare * exp(-max(0, age - stemless_years) / max(flare_years, 0.001))
-             + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0))) ] ]
-    [ Sc(crownshaft) Fc(0, max(1, round(fronds_per_year * v)), age * v)
+             + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0)))
       [ Cc(age >= adult_age ? crown_cone : 0) ] ] Y(v, n);
 rule Y(v, n) ->
     !(trunk_radius
@@ -206,7 +213,7 @@ rule Y(v, n) ->
          + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0)))
     T(0, 1, 0, upturn * trunk_rate * v)
     F(trunk_rate * v * smoothstep(0, stemless_years, age))
-    Fc(0, max(1, round(fronds_per_year * v)), age * v)
+    Fc(0, max(1, round(fronds_per_year * v)), age * v, 0)
     [ Cc(age >= adult_age ? crown_cone : 0) ] Y(v, n);
 
 # The foot sends up suckers.
@@ -214,14 +221,14 @@ rule Sb(n) : suckers > n && t >= sucker_age && rand() < sucker_rate -> [ Sk(n + 
 
 # This year's fronds, a little apart up the trunk, each turned on round
 # the spiral.
-decompose Fc(i, m, c) : m > 1 ->
-    Fc(i, floor(m / 2), c) Fc(i + floor(m / 2), m - floor(m / 2), c);
-decompose Fc(i, m, c) : m == 1 ->
+decompose Fc(i, m, c, r) : m > 1 ->
+    Fc(i, floor(m / 2), c, r) Fc(i + floor(m / 2), m - floor(m / 2), c, r);
+decompose Fc(i, m, c, r) : m == 1 ->
     !(trunk_radius) F(internode) /(divergence + gauss() * 3)
     [ Fr(frond_length * (frond_seed + (1 - frond_seed) * (1 - exp(-c / size_years)))
          * uniform(1 - frond_spread, 1 + frond_spread),
-         gauss() * angle_spread, uniform(0, emerge_spread)) ];
-decompose Fc(i, m, c) -> ;
+         gauss() * angle_spread, uniform(0, emerge_spread), r) ];
+decompose Fc(i, m, c, r) -> ;
 
 # A frond dies after frond_life years: it hangs, or falls and leaves its
 # boot, or falls. The first piece stands for the frond; the others go.
@@ -239,8 +246,14 @@ interpret Bt -> &(60) boot(boot_length);
 
 # A frond: its petiole, then its rachis piece by piece, and a fan frond's
 # rays at the end. The rays share the frond's birth, so they die with it.
-decompose Fr(s, a, e) : fan > 0 -> frond Pc(0, max(1, round(pieces)), s, e) Ry(0, max(1, round(rays)), s, e);
-decompose Fr(s, a, e) -> frond Pc(0, max(1, round(pieces)), s, e);
+decompose Fr(s, a, e, r) : crownshaft > 0 && fan > 0 ->
+    frond [ ring(max(1, round(shaft_cards / max(1, fronds_per_year)))) [ Sh(crownshaft, r) ] ]
+    Pc(0, max(1, round(pieces)), s, e) Ry(0, max(1, round(rays)), s, e);
+decompose Fr(s, a, e, r) : crownshaft > 0 ->
+    frond [ ring(max(1, round(shaft_cards / max(1, fronds_per_year)))) [ Sh(crownshaft, r) ] ]
+    Pc(0, max(1, round(pieces)), s, e);
+decompose Fr(s, a, e, r) : fan > 0 -> frond Pc(0, max(1, round(pieces)), s, e) Ry(0, max(1, round(rays)), s, e);
+decompose Fr(s, a, e, r) -> frond Pc(0, max(1, round(pieces)), s, e);
 decompose Ry(j, m, s, e) : m > 1 ->
     Ry(j, floor(m / 2), s, e) Ry(j + floor(m / 2), m - floor(m / 2), s, e);
 rule Ry(j, m, s, e) : age + dt >= frond_life -> ;
@@ -290,10 +303,10 @@ decompose Cc(z) : z <= 0 -> ;
 rule Cc(z) : age + dt >= 1 -> ;
 interpret Cc(z) -> cone(z);
 
-# A sheath of the crownshaft: out to the trunk's surface, then up it. A
-# year's sheaths live as long as its fronds.
+# A sheath card of the crownshaft: out to the core's surface, then down
+# it from the frond's foot. It lives as long as its frond.
 rule Sh(z, r) : age + dt >= frond_life -> ;
-interpret Sh(z, r) -> +(90) f(r) -(90) sheath(z);
+interpret Sh(z, r) -> +(90) f(r) +(90) sheath(z);
 rule Sc(z) : age + dt >= frond_life -> ;
 interpret Sc(z) -> !(trunk_radius * 0.97) F(z);
 

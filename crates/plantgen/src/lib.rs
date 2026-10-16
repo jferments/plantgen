@@ -453,4 +453,8 @@ pub mod venation;
 /// colour across levels; both Ferocactus take their ribs, wool, flower
 /// rings and central spines from the Primer and Anderson (73 is monocot
 /// leaves, #140).
-pub const GENERATOR_REVISION: u32 = 74;
+/// 75: a crownshaft's sheaths are its fronds' (palm program revision 8):
+/// each frond draws its sheath within its `frond` structure, so the royal
+/// palm and every crownshaft palm build again (until 74 a year's sheaths
+/// stood within no structure, which the organ check refuses for a piece).
+pub const GENERATOR_REVISION: u32 = 75;
