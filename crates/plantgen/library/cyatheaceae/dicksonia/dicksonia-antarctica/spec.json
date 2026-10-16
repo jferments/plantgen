@@ -13,11 +13,13 @@
     "params": {
       "lean": 5,
       "trunk_rate": 0.045,
-      "trunk_radius": 0.22,
+      "trunk_radius": 0.13,
+      "thicken": 1.2,
+      "thicken_years": 50,
       "stemless_years": 6,
       "internode": 0.001,
       "fronds_per_year": 14,
-      "frond_life": 1.5,
+      "frond_life": 2,
       "frond_length": 2.4,
       "size_years": 10,
       "young_angle": 12,
@@ -36,7 +38,7 @@
       "season": 0.5,
       "emerge_spread": 0.3,
       "unroll": 0.3,
-      "curl": 45,
+      "curl": 100,
       "droop": 0.03,
       "droop_years": 1.5,
       "skirt": 1,
@@ -102,7 +104,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a thick, fibrous trunk of matted roots growing a few centimetres a year to 4 to 5 m, under a spreading crown of twice-divided fronds 2 to 3 m long that unroll from hairy croziers in spring; dead fronds hang in a skirt. Native to south-eastern Australia and Tasmania. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a thick, fibrous trunk of matted roots growing a few centimetres a year to 4 to 5 m, under a spreading crown of twice-divided fronds 2 to 3 m long that unroll from hairy croziers in spring; dead fronds hang in a skirt. Native to south-eastern Australia and Tasmania. Not fitted to measurements. Refitted from Hoshizaki and Moran (2001, p. 16, 109, 111, 281-283) and the research note's web sources: the trunk is about 25 to 30 cm across below the crown, its mantle of matted roots and old stipe bases widening it toward the foot (to 1 m or more in old plants), so a radius of 0.13 m thickening by 1.2 of itself over about fifty years; fronds live about two years; a crozier coils one and a half to three turns (Kaplan 2022, p. 346), so each coiled piece turns 100 degrees."
     },
     "allometry": {
       "evidence": "Authored",

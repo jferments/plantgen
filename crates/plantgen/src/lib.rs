@@ -457,4 +457,10 @@ pub mod venation;
 /// each frond draws its sheath within its `frond` structure, so the royal
 /// palm and every crownshaft palm build again (until 74 a year's sheaths
 /// stood within no structure, which the organ check refuses for a piece).
-pub const GENERATOR_REVISION: u32 = 75;
+/// 76: cycads, palms and tree ferns told apart (palm program revision 9):
+/// cycad and tree fern trunks thicken toward the base with age, cycads
+/// flush their leaves in whorls inside rings of cataphylls, leaves unfold
+/// by group (palm spears pleated, Cycas leaflets coiled, fern croziers
+/// tight), palm leaflets fold induplicate or reduplicate by subfamily, and
+/// plumose palms hold their leaflets in groups.
+pub const GENERATOR_REVISION: u32 = 76;

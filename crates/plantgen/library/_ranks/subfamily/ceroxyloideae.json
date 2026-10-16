@@ -4,10 +4,16 @@
   "name": "Ceroxyloideae",
   "parent": "family/arecaceae",
   "traits": {
+    "plication": "reduplicate",
     "leaf_division": "compound",
     "division_pattern": "pinnate"
   },
   "evidence": {
+    "traits.plication": {
+      "evidence": "SourceInferred",
+      "source": "genera-palmarum-2008",
+      "note": "Outside Coryphoideae, here too, every palm's pleated blade splits along its lower folds, so each leaflet is keeled, Λ-shaped (reduplicate), and a feather leaf ends in a pair of leaflets (Dransfield et al. 2008, p. 16; Kaplan 2022, p. 489-492)."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "mabberley-2017",

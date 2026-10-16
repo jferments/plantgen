@@ -47,7 +47,8 @@
       "bulge_years": 10,
       "crownshaft": 2.0,
       "shaft_cards": 16,
-      "leaflet_scatter": 18,
+      "leaflet_scatter": 25,
+      "leaflet_groups": 3,
       "hang": 25
     }
   },
@@ -75,7 +76,6 @@
         },
         "colour": [0.2, 0.38, 0.16],
         "bend": {
-          "fold": 8,
           "cup": 0,
           "droop": 30,
           "twist": 0
@@ -106,7 +106,7 @@
     "generator.params": {
       "evidence": "SourceInferred",
       "source": "sargent-1922",
-      "note": "Sargent (1922, Roystonea regia, pp. 107-108): leaves 10 to 12 ft (3 to 3.7 m) long, frond_length 3.5 m; pinnae 2.5 to 3 ft (0.76 to 0.9 m) long, leaflet_length 0.24 of the frond; the green upper part of the stem, the crownshaft of leaf-stalk sheaths, 8 to 10 ft (2.4 to 3 m), drawn as a 2 m shaft plus the trunk the living fronds stand on; a trunk 80 to 100 ft tall and often 2 ft (0.6 m) through, rising from an abruptly enlarged base (flare 0.6) and enlarged near the middle, tapering to both ends (a belly 0.35 wider at 22 years, so trunk_radius 0.22 m is 0.3 m at its widest); a broad head of gracefully drooping leaves (hang 25 degrees over a frond's life). Closely pinnate: 45 pieces of rachis, so about 90 leaflets a side, linear-lanceolate cards 1.5 inches wide on 2.5 to 3 ft (aspect 0.045). Set by eye: twelve fronds a year living a year and a half, about eighteen in the crown, and leaflets standing 18 degrees above and below their V for the plumed look."
+      "note": "Sargent (1922, Roystonea regia, pp. 107-108): leaves 10 to 12 ft (3 to 3.7 m) long, frond_length 3.5 m; pinnae 2.5 to 3 ft (0.76 to 0.9 m) long, leaflet_length 0.24 of the frond; the green upper part of the stem, the crownshaft of leaf-stalk sheaths, 8 to 10 ft (2.4 to 3 m), drawn as a 2 m shaft plus the trunk the living fronds stand on; a trunk 80 to 100 ft tall and often 2 ft (0.6 m) through, rising from an abruptly enlarged base (flare 0.6) and enlarged near the middle, tapering to both ends (a belly 0.35 wider at 22 years, so trunk_radius 0.22 m is 0.3 m at its widest); a broad head of gracefully drooping leaves (hang 25 degrees over a frond's life). Closely pinnate: 45 pieces of rachis, so about 90 leaflets a side, linear-lanceolate cards 1.5 inches wide on 2.5 to 3 ft (aspect 0.045). Set by eye: twelve fronds a year living a year and a half, about eighteen in the crown, and leaflets in groups of three standing 25 degrees above, level with and below their V, the plumed look of leaflets in two to three planes (Dransfield et al. 2008, Genera Palmarum p. 392: leaflets in one plane or variously inserted, crowded or in groups)."
     },
     "allometry": {
       "evidence": "Authored",

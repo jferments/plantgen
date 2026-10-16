@@ -81,7 +81,8 @@
               "template": "blade",
               "taper": 0.4,
               "aspect": 0.06
-            }
+            },
+            "bend": {"fold": 0, "cup": 0, "droop": 20, "twist": 0}
           },
           "ray": {
             "shape": {
@@ -172,6 +173,24 @@
             }
           },
           "why": "A fan's edge segments droop below its middle, as the built-in cabbage and California fan palms' do (30 to 35 degrees)."
+        },
+        "appearance.organs.leaflet.bend.fold": {
+          "map": {
+            "plication": {
+              "induplicate": 30,
+              "reduplicate": -30
+            }
+          },
+          "why": "A palm's leaflet is a fold of its pleated blade: V-shaped, trough up, where the blade split along its upper folds (induplicate), keeled where it split along its lower ones (reduplicate); a cycad's or a fern's is flat."
+        },
+        "appearance.organs.ray.bend.fold": {
+          "map": {
+            "plication": {
+              "induplicate": 20,
+              "reduplicate": -20
+            }
+          },
+          "why": "A fan's segments are folds of its pleated blade too, V-shaped where it split along its upper folds, keeled where along its lower."
         },
         "generator.params.leaflet_scatter": {
           "map": {

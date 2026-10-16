@@ -87,9 +87,47 @@
 # a year's sheaths stood round the trunk's top within no structure, which
 # the organ check refuses for a piece.
 #
+# Revision 9 (cycads, palms and tree ferns told apart; Whitelock 2002,
+# Dransfield et al. 2008, Hoshizaki and Moran 2001, Kaplan 2022):
+#
+# - A trunk may thicken below as it ages, as a cycad's does and as a tree
+#   fern's mantle of roots does: a segment formed with radius r is
+#   r (1 + thicken (1 - exp(-a / thicken_years))) when a years old, so
+#   the oldest, lowest part is widest. A palm's stays as it formed
+#   (thicken 0).
+# - Leaves may come in flushes: every flush_interval years a crown puts out
+#   all of a flush's fronds_per_year fronds at once (a cycad's crown, with
+#   emerge_spread small), and none between. A flush may open with a ring
+#   of `cataphylls` scale leaves, cataphyll_length long, pressed against
+#   the trunk cataphyll_angle degrees out, which stay cataphyll_life
+#   years: with the leaf stubs (boots) they band a cycad's trunk, one band
+#   a flush.
+# - A boot stands boot_angle degrees from the trunk and starts at the
+#   trunk's surface, no longer inside it.
+# - A frond's leaflets open by their place along it: a leaflet at share x
+#   of the rachis has opened g = clamp(2 u - x, 0, 1) when the frond has
+#   unrolled the share u, so the lowest open first. While opening it is
+#   leaflet_young of its size (a Cycas leaflet still coiled) and lies
+#   leaflet_fold of the way from its angle to along the rachis (a palm's
+#   spear, a zamiad's folded leaflets).
+# - A coiled piece is shorter by coil_short of its length, so a tree
+#   fern's crozier is a tight coil.
+# - A feather frond's leaflets may stand in groups of leaflet_groups, the
+#   lifts of a group spread from +leaflet_scatter to -leaflet_scatter, so a
+#   plumose palm's leaflets stand in several planes (2 alternates them,
+#   as before).
+#
+# - The trunk between one frond and the next is as thick as the trunk
+#   below it (until now it was trunk_radius, so a swollen or flared
+#   trunk was notched at each frond).
+#
+# thicken, cataphylls, leaflet_fold and coil_short 0, flush_interval 1,
+# leaflet_young 0.3, leaflet_groups 2 and boot_angle 60 draw as revision 8
+# did, but for boots and the leaflets' order of opening.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem palm 8;
+lsystem palm 9;
 
 # The plant.
 param vigour_spread;          # a palm grows exp(gauss() * vigour_spread) times as fast
@@ -100,6 +138,8 @@ param trunk_rate;             # metres a year once established
 param trunk_radius;
 param stemless_years;         # years before the trunk rises at its full rate
 param internode;              # trunk between one frond and the next
+param thicken;                # how much a trunk segment thickens with age, a share of its radius
+param thicken_years;          # years over which it does
 param flare;                  # the foot's extra girth, a share of trunk_radius
 param flare_years;            # years over which the foot's flare narrows to the trunk
 param bulge;                  # a belly's extra girth, a share of trunk_radius
@@ -109,7 +149,13 @@ param crownshaft;             # a crownshaft's length, metres; 0 none
 param shaft_cards;            # sheaths drawn round it
 param sheath_area;            # leaf area of a sheath 1 m long, m²
 # Fronds.
-param fronds_per_year;
+param fronds_per_year;        # fronds a year, or a flush's
+param flush_interval;         # years from one flush to the next; 1 every year
+param cataphylls;             # scale leaves round the crown at each flush; 0 none
+param cataphyll_length;
+param cataphyll_angle;        # degrees a scale leaf stands out from the trunk
+param cataphyll_life;         # years a scale leaf stays
+param cataphyll_area;         # leaf area of a scale leaf 1 m long, m²
 param frond_life;             # years a frond lives
 param frond_length;           # a full-size frond, petiole included
 param frond_seed;             # a seedling's fronds, as a share of full size
@@ -133,6 +179,9 @@ param leaflet_angle;          # angle of a leaflet to the rachis
 param leaflet_lift;           # degrees the leaflets rise into a V
 param leaflet_scatter;        # degrees the two halves of a piece's leaflets stand above and below it
 param leaflet_area;           # leaf area of a leaflet 1 m long, m²
+param leaflet_young;          # a leaflet's size while it opens, as a share of its own
+param leaflet_fold;           # how far toward the rachis a leaflet lies while it opens, 0 to 1
+param leaflet_groups;         # leaflets a group, their lifts spread over ±leaflet_scatter
 # Fan fronds.
 param rays;                   # segments of a fan
 param fan_spread;             # degrees the segments spread over
@@ -146,6 +195,7 @@ param season;                 # share of the year at the keyframe
 param emerge_spread;          # fronds emerge over this share of the year
 param unroll;                 # share of a year a frond takes to open
 param curl;                   # degrees each coiled piece turns back
+param coil_short;             # share by which a coiled piece is shorter
 param droop;                  # sag per year of a frond's age
 param droop_years;
 param hang;                   # degrees a frond turns further from the vertical over its life
@@ -157,6 +207,7 @@ param dead_area;              # leaf area of a dead frond 1 m long
 param boots;                  # 1: a fallen frond leaves its boot
 param boot_life;              # years a boot stays
 param boot_length;            # a boot, metres
+param boot_angle;             # degrees a boot stands from the trunk
 param boot_area;
 # A cone and suckers.
 param crown_cone;             # length of a cone at the crown's centre; 0 none
@@ -168,12 +219,15 @@ param sucker_rate;
 param sucker_distance;
 
 module Y(v, n);               # a crown: vigour, suckers so far
-module Fc(i, m, c, r);        # fronds i to i + m - 1 of this year's cohort, on a crown c years old, round a crownshaft r in radius
+module Fc(i, m, c, r);        # fronds i to i + m - 1 of this year's cohort, on a crown c years old and a trunk r in radius
 module Fr(s, a, e, r);        # a frond s long at a degrees, emerging at phase e of its year, its sheath round a crownshaft r in radius
 module Pc(k, m, s, e);        # pieces k to k + m - 1 of a frond's rachis
 module Pp(k, s, e);           # a drawn piece of a rachis
 module Ln(k, s, e, h);        # a pair of leaflets h of a piece along piece k
-module Lq(z, w);              # a pair of leaflets z long, raised w (1 or -1) times leaflet_scatter
+module Lq(z, w, q);           # a pair of leaflets z long, raised w (-1 to 1) times leaflet_scatter, folded q toward the rachis
+module Tk(l, r);              # a segment of trunk l long, r in radius as it formed
+module Cw(r);                 # a flush's ring of scale leaves round a trunk r in radius
+module Ct(z, r);              # a scale leaf z long on a trunk r in radius as it formed
 module Ry(j, m, s, e);        # rays j to j + m - 1 of a fan
 module Dh(s);                 # a dead frond hanging
 module Bt;                    # a boot
@@ -189,6 +243,7 @@ organ dead leaf as piece area dead_area;
 organ boot leaf as piece area boot_area;
 organ cone cone area cone_area;
 organ sheath leaf as piece area sheath_area;
+organ cataphyll leaf as scale_leaf area cataphyll_area;
 
 structure frond leaf;         # one frond: its sheath, petiole, rachis, leaflets or rays, then its dead frond and boot
 
@@ -198,23 +253,43 @@ axiom [ Sb(0) ] /(uniform(0, 360)) &(uniform(0, lean)) Y(exp(gauss() * vigour_sp
 # A crownshaft palm's fronds and cone stand on the shaft's core, which
 # lives as long as they do; each frond's sheath clasps the core below it.
 rule Y(v, n) : crownshaft > 0 ->
-    !(trunk_radius
+    T(0, 1, 0, upturn * trunk_rate * v)
+    Tk(trunk_rate * v * smoothstep(0, stemless_years, age), trunk_radius
       * (1 + flare * exp(-max(0, age - stemless_years) / max(flare_years, 0.001))
          + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0)))
-    T(0, 1, 0, upturn * trunk_rate * v)
-    F(trunk_rate * v * smoothstep(0, stemless_years, age))
-    [ Sc(crownshaft) Fc(0, max(1, round(fronds_per_year * v)), age * v, trunk_radius
+    [ Sc(crownshaft) Fc(0, mod(floor(age + 0.5), max(1, round(flush_interval))) == 0
+                             ? max(1, round(fronds_per_year * v)) : 0, age * v, trunk_radius
           * (1 + flare * exp(-max(0, age - stemless_years) / max(flare_years, 0.001))
              + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0)))
       [ Cc(age >= adult_age ? crown_cone : 0) ] ] Y(v, n);
-rule Y(v, n) ->
-    !(trunk_radius
+rule Y(v, n) : mod(floor(age + 0.5), max(1, round(flush_interval))) == 0 ->
+    T(0, 1, 0, upturn * trunk_rate * v)
+    Tk(trunk_rate * v * smoothstep(0, stemless_years, age), trunk_radius
       * (1 + flare * exp(-max(0, age - stemless_years) / max(flare_years, 0.001))
          + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0)))
-    T(0, 1, 0, upturn * trunk_rate * v)
-    F(trunk_rate * v * smoothstep(0, stemless_years, age))
-    Fc(0, max(1, round(fronds_per_year * v)), age * v, 0)
+    [ Cw(trunk_radius) ]
+    Fc(0, max(1, round(fronds_per_year * v)), age * v, trunk_radius
+          * (1 + flare * exp(-max(0, age - stemless_years) / max(flare_years, 0.001))
+             + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0)))
     [ Cc(age >= adult_age ? crown_cone : 0) ] Y(v, n);
+rule Y(v, n) ->
+    T(0, 1, 0, upturn * trunk_rate * v)
+    Tk(trunk_rate * v * smoothstep(0, stemless_years, age), trunk_radius
+      * (1 + flare * exp(-max(0, age - stemless_years) / max(flare_years, 0.001))
+         + (bulge > 0 ? bulge * exp(-pow((age - bulge_age) / max(bulge_years, 0.001), 2)) : 0))) Y(v, n);
+
+# A segment of trunk thickens as it ages by thicken of its radius.
+interpret Tk(l, r) -> !(r * (1 + thicken * (1 - exp(-age / max(thicken_years, 0.001))))) F(l);
+
+# A flush's scale leaves: out to the trunk's surface, then up it, leaning
+# out cataphyll_angle degrees, the surface moving out as the trunk
+# thickens.
+decompose Cw(r) : cataphylls > 0 -> ring(max(1, round(cataphylls))) [ Ct(cataphyll_length, r) ];
+decompose Cw(r) -> ;
+rule Ct(z, r) : age + dt >= cataphyll_life -> ;
+interpret Ct(z, r) ->
+    &(90) f(r * (1 + thicken * (1 - exp(-age / max(thicken_years, 0.001)))))
+    ^(90 - cataphyll_angle) cataphyll(z);
 
 # The foot sends up suckers.
 rule Sb(n) : suckers > n && t >= sucker_age && rand() < sucker_rate -> [ Sk(n + 1) ] Sb(n + 1);
@@ -224,7 +299,7 @@ rule Sb(n) : suckers > n && t >= sucker_age && rand() < sucker_rate -> [ Sk(n + 
 decompose Fc(i, m, c, r) : m > 1 ->
     Fc(i, floor(m / 2), c, r) Fc(i + floor(m / 2), m - floor(m / 2), c, r);
 decompose Fc(i, m, c, r) : m == 1 ->
-    !(trunk_radius) F(internode) /(divergence + gauss() * 3)
+    Tk(internode, crownshaft > 0 ? trunk_radius * 0.97 : r) /(divergence + gauss() * 3)
     [ Fr(frond_length * (frond_seed + (1 - frond_seed) * (1 - exp(-c / size_years)))
          * uniform(1 - frond_spread, 1 + frond_spread),
          gauss() * angle_spread, uniform(0, emerge_spread), r) ];
@@ -242,7 +317,13 @@ rule Bt : age + dt >= boot_life -> ;
 # since what is gone leaves nothing within it.
 rule frond : age >= frond_life + dead_life + boot_life + 4 * dt -> ;
 interpret Dh(s) -> &(dead_angle) dead(s);
-interpret Bt -> &(60) boot(boot_length);
+# A boot starts at the trunk's surface: the trunk below a frond formed
+# frond_life years before the frond died.
+interpret Bt ->
+    &(boot_angle)
+    f(trunk_radius * (1 + thicken * (1 - exp(-(age + frond_life) / max(thicken_years, 0.001))))
+      / max(sin(rad(boot_angle)), 0.3))
+    boot(boot_length);
 
 # A frond: its petiole, then its rachis piece by piece, and a fan frond's
 # rays at the end. The rays share the frond's birth, so they die with it.
@@ -274,20 +355,29 @@ interpret Pc(k, m, s, e) -> Pp(k, s, e);
 interpret Pp(k, s, e) : fan > 0 -> F(s * costa / max(1, pieces));
 interpret Pp(k, s, e) ->
     ^(curl * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1)))
-    F(s * (1 - petiole) / pieces * 0.5) Ln(k, s, e, 0)
-    F(s * (1 - petiole) / pieces * 0.5) Ln(k, s, e, 0.5);
+    F(s * (1 - petiole) / pieces * 0.5
+      * (1 - coil_short * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))))
+    Ln(k, s, e, 0)
+    F(s * (1 - petiole) / pieces * 0.5
+      * (1 - coil_short * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))))
+    Ln(k, s, e, 0.5);
 
-# A pair of leaflets, sized along the rachis, small while the frond opens.
+# A pair of leaflets, sized along the rachis, opening by its place along
+# it: small and folded toward the rachis until it has opened.
 interpret Ln(k, s, e, h) ->
     Lq(s * leaflet_length
        * ((k + h) / pieces < leaflet_peak
           ? lerp(leaflet_base, 1, (k + h) / pieces / leaflet_peak)
           : lerp(1, leaflet_tip, ((k + h) / pieces - leaflet_peak) / (1 - leaflet_peak)))
-       * lerp(0.3, 1, clamp((age + season - e) / unroll, 0, 1)),
-       h > 0 ? -1 : 1);
-interpret Lq(z, w) ->
-    [ +(leaflet_angle) ^(leaflet_lift + leaflet_scatter * w) leaflet(z) ]
-    [ -(leaflet_angle) ^(leaflet_lift + leaflet_scatter * w) leaflet(z) ];
+       * lerp(leaflet_young, 1, clamp(2 * clamp((age + season - e) / unroll, 0, 1) - (k + h) / pieces, 0, 1)),
+       round(leaflet_groups) > 2
+          ? 1 - 2 * mod(round(2 * (k + h)), round(leaflet_groups)) / (round(leaflet_groups) - 1)
+          : (h > 0 ? -1 : 1),
+       leaflet_fold
+          * (1 - clamp(2 * clamp((age + season - e) / unroll, 0, 1) - (k + h) / pieces, 0, 1)));
+interpret Lq(z, w, q) ->
+    [ +(leaflet_angle * (1 - q)) ^((leaflet_lift + leaflet_scatter * w) * (1 - q)) leaflet(z) ]
+    [ -(leaflet_angle * (1 - q)) ^((leaflet_lift + leaflet_scatter * w) * (1 - q)) leaflet(z) ];
 
 # A fan's ray j of m: each from the fan's centre at the rachis' end, spread
 # across the frond's plane and cupped up a little, longest in the middle;
