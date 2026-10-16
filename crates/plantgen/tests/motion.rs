@@ -110,13 +110,11 @@ fn motion_packages_hold_bones_branches_and_bindings() {
 /// third level: every wood vertex and card is borne by a segment bound to a
 /// bone, or by the ground (roots, a rosette's leaves); every branch heads
 /// its own chain of bones; and the rig and its record are found in under
-/// six seconds (two until pinidae 9's full crowns: Sitka spruce and
-/// western hemlock carry about 230,000 segments and take 1.8 to 2.0 s
-/// with every species running at once, against 1.1 s before; three until
-/// conifers shaded with their needles' own area, generator revision 76:
-/// Sitka spruce, western hemlock and Douglas-fir now carry 320,000 to
-/// 350,000 segments and take 6 to 7 s on a machine where they took 3.3
-/// to 3.7 s before).
+/// three seconds of the thread's own CPU time (two until pinidae 9's full
+/// crowns: Sitka spruce and western hemlock carry about 230,000 segments).
+/// Wall-clock time counted every other species' thread and the CI VM's
+/// other jobs too, so it crept past the limit as species were added
+/// (western redcedar 3.5 s on 2026-10-16) with no rig getting slower.
 #[test]
 fn builtin_species_bind_every_vertex_to_a_bone() {
     let species: Vec<&str> = spec::all_species().map(|(id, _)| id).collect();
@@ -158,10 +156,14 @@ fn check_species(id: &str) -> Vec<String> {
     let bodies = bodies_of(&spec, &growth);
     let motion = Motion::of(&Map::new());
     let started = std::time::Instant::now();
+    let cpu_started = thread_cpu_seconds();
     let found = motion.of_graph(graph, &growth.organ_types);
     let record = motion::record(&found, &motion, graph, &growth.organ_types);
-    let took = started.elapsed().as_secs_f64();
-    if took > 6.0 {
+    let took = match (cpu_started, thread_cpu_seconds()) {
+        (Some(start), Some(end)) => end - start,
+        _ => started.elapsed().as_secs_f64(),
+    };
+    if took > 3.0 {
         failures.push(format!("{id}: its rig and record took {took:.1} s"));
     }
     if record.anchorage.moment.partial_cmp(&0.0) != Some(std::cmp::Ordering::Greater)
@@ -208,4 +210,18 @@ fn check_species(id: &str) -> Vec<String> {
         assert_eq!(bound.wood.len(), plant.wood.vertex_count());
     }
     failures
+}
+
+/// The calling thread's user and system CPU time in seconds, from
+/// /proc/thread-self/stat (in clock ticks, 100 a second on Linux), or None
+/// where there is no such file and the caller falls back to wall-clock time.
+fn thread_cpu_seconds() -> Option<f64> {
+    let stat = std::fs::read_to_string("/proc/thread-self/stat").ok()?;
+    let mut fields = stat
+        .get(stat.rfind(')')? + 2..)?
+        .split_whitespace()
+        .skip(11);
+    let user: u32 = fields.next()?.parse().ok()?;
+    let system: u32 = fields.next()?.parse().ok()?;
+    Some((f64::from(user) + f64::from(system)) / 100.0)
 }

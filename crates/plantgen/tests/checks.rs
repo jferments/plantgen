@@ -32,6 +32,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
     ),
     (
+        "ascarina-lucida",
+        "flower_symmetry",
+        "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
+    ),
+    (
+        "ascarina-lucida",
+        "crown_see_through",
+        "the broadleaf program spaces a crown's twigs by the cube root of its short shoots' leaf card, so a bush of 2.5 to 5 cm leaves shows half its outline as sky, where iNaturalist photographs show a dense bush leafy to its core",
+    ),
+    (
         "azorella-compacta",
         "height_typical_m",
         "it is grown 200 years, to a dome 0.6 m tall, but Reiche's mounds 1.5 m tall and more, and the ministry's 1 m, are of cushions centuries older (inferred: no source dates them)",
@@ -40,6 +50,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "azorella-compacta",
         "leaf_shape",
         "its rosette leaves are drawn by hand on a sprig card 0.4 as broad as long, so they read elliptic against the linear leaves Reiche gives",
+    ),
+    (
+        "chloranthus-serratus",
+        "flower_symmetry",
+        "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
     ),
     (
         "cirsium-vulgare",
@@ -110,6 +125,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "hedera-helix",
         "fruit_size_m",
         "its fruit is drawn as one card 7 cm long, about 8.4 cm as measured, standing for a whole umbel of berries, against the 6 to 9 mm Dendrology (2019) p. 310 gives one drupe",
+    ),
+    (
+        "hedyosmum-mexicanum",
+        "flower_symmetry",
+        "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
     ),
     (
         "heracleum-maximum",
@@ -244,7 +264,7 @@ const KNOWN: &[(&str, &str, &str)] = &[
     (
         "program:pinidae",
         "leaf_life_years",
-        "Sitka spruce's needles on shaded branches that die fall at 2 years, past the 7 to 10 it states; the median holds (seen since needle shading, revision 76; the shed limbs carry them)",
+        "Sitka spruce's needles on shaded branches that die fall at 2 years, past the 7 to 10 it states; the median holds (seen since needle shading, revision 79; the shed limbs carry them)",
     ),
     (
         "program:rosette",
@@ -260,6 +280,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "program:typha",
         "fruit_type",
         "Typhaceae's fruit is a tiny achene on a hairy stalk (Simpson 2019), but a cattail's fruiting spike is drawn with the berry card",
+    ),
+    (
+        "sarcandra-glabra",
+        "flower_symmetry",
+        "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
     ),
     (
         "tillandsia-usneoides",

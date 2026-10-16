@@ -1,0 +1,228 @@
+{
+  "schema": 1,
+  "id": "pinus-albicaulis",
+  "taxon": {
+    "scientific_name": "Pinus albicaulis",
+    "common_name": "whitebark pine",
+    "usda_symbol": "PIAL",
+    "family": "Pinaceae",
+    "genus": "Pinus",
+    "plant_name_id": 380705
+  },
+  "growth_form": "excurrent_tree",
+  "generator": {
+    "params": {
+      "cone_chance": 0.1,
+      "cone_pitch": 120,
+      "height_rate": 0.04,
+      "height_shape": 1.4,
+      "whorl": 5,
+      "interwhorl": 0,
+      "branch_angle": 60,
+      "upturn": 0.02,
+      "branch_growth": 0.3,
+      "spray_base": 0.2,
+      "spray_length": 1.1,
+      "shade_death": 0.25,
+      "pipe_organ": 0.009,
+      "pipe_rings": 5e-06,
+      "branch_reach": 4.0,
+      "epi_chance": 0
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [
+      5,
+      15,
+      30,
+      60
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.62,
+      0.6,
+      0.56
+    ],
+    "bark_pattern": {
+      "kind": "smooth",
+      "scale": 0.035,
+      "elongation": 1.1,
+      "fissure": 0.12,
+      "depth": 0.1,
+      "contrast": 0.25,
+      "variation": 0.15,
+      "smooth_below": 0.06,
+      "roughness": 0.3
+    },
+    "foliage": [
+      0.06,
+      0.13,
+      0.07
+    ],
+    "foliage_shade": [
+      0.018,
+      0.035,
+      0.028
+    ],
+    "variation": 0.2,
+    "organs": {
+      "cone": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.75,
+          "cone": 1
+        },
+        "colour": [
+          0.33,
+          0.2,
+          0.35
+        ]
+      },
+      "spray": {
+        "shape": {
+          "template": "needles",
+          "twig_angle": 35,
+          "width": 0.012
+        },
+        "accent": [
+          0.3,
+          0.25,
+          0.18
+        ]
+      }
+    },
+    "ridges": {
+      "spacing": 0.07,
+      "depth": 0.03,
+      "twist": 0,
+      "contrast": 0.4
+    }
+  },
+  "allometry": [
+    {
+      "age": 60,
+      "environment": "open",
+      "height": 8,
+      "dbh": 0.25,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 5,
+      "max": 18,
+      "high": 21
+    },
+    "needles_per_fascicle": 5,
+    "leaf_length_m": {
+      "min": 0.035,
+      "max": 0.075,
+      "high": 0.18
+    },
+    "leaf_life_years": {
+      "min": 7,
+      "max": 8
+    },
+    "cone_length_m": {
+      "min": 0.04,
+      "max": 0.08,
+      "low": 0.035
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's whitebark pine review (Fryer 2002, read 2026-10-16): \"Tree height typically ranges from 40 to 60 feet (12-18 m) at maturity\"; the largest recorded \"is 69 feet (21 m) tall\"; Abrams (vol. 1, 1923, p. 54) gives 5-15 m."
+    },
+    "traits.needles_per_fascicle": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's whitebark pine review (Fryer 2002, read 2026-10-16): \"Needles are in bundles of 5\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 54, Pinus albicaulis: \"Leaves 35-75 mm. long, dark green, stout, stiff, slightly curved\"; FEIS (Fryer 2002) gives 3.8 to 18 cm at the extremes."
+    },
+    "traits.leaf_life_years": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 54, Pinus albicaulis: leaves \"persistent for 7-8 years\"."
+    },
+    "traits.cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's whitebark pine review (Fryer 2002, read 2026-10-16): \"Mature female cones are 1.6 to 3 inches (4-8 cm) long\"; Abrams (vol. 1, 1923, p. 54) gives 35-75 mm."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Western white pine's values, changed by hand for whitebark pine: a shorter tree (height_rate and pipe_rings set so its growth under the lower height_max reaches the reference size) with short, stout, upswept branches (Abrams 1923 p. 54: \"branches short and stout, usually erect\"; FEIS, Fryer 2002: \"Branches of mature trees are ascending\") and a rounded, open crown. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "8 m and 25 cm across at 60 years in the open, a slow subalpine pine short of FEIS's 12-18 m at maturity. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after Abrams (1923 p. 54): thin bark of whitish scales; dark green needles; purple, nearly round cones (FEIS: \"The purple cast of mature cones\")."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion (2026-10-16): sizes from FEIS and Abrams, drawing values from western white pine's."
+  }
+}

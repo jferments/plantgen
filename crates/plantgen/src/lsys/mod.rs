@@ -83,7 +83,7 @@ impl std::error::Error for GrowthError {}
 
 /// Sandbox limits. The defaults allow a large old tree and stop a runaway
 /// program within seconds: a 60-year Sitka spruce, its needles shading by
-/// their own area (generator revision 76), passes a million modules.
+/// their own area (generator revision 79), passes a million modules.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Limits {
     pub max_modules: usize,

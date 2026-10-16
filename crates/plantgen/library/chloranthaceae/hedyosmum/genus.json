@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Hedyosmum",
+  "traits": {
+    "sexual_system": {
+      "monoecious": "often",
+      "dioecious": "often"
+    },
+    "stamens": 1,
+    "perianth": {
+      "absent": "usually",
+      "tepals": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "standley-steyermark-1952",
+      "note": "Standley and Steyermark (1952), Flora of Guatemala III p. 338, genus Hedyosmum: trees or shrubs, monoecious or dioecious, each inflorescence of one sex; male flowers in spikes, without a perianth, each one anther; the female flower's perianth a tube joined to the ovary with a very short 3-toothed limb. Flora of China vol. 4 p. 138 says the same. Read as perianth usually absent (the many male flowers) and sometimes tepals (the few female ones)."
+    }
+  }
+}

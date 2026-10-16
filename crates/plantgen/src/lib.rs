@@ -444,7 +444,35 @@ pub mod venation;
 /// strap pieces joined as rolled; camas states its leaves at the genus
 /// (Watson and Dallwitz), Iridaceae its sword leaves; Oregon iris and
 /// Idaho blue-eyed grass stand edgewise (72 is pine whorls, #136).
-/// 76: the conifers' pipe model takes its exponent from a parameter
+/// 74: cactus barrels: areoles crowd over the dome and ribs merge toward
+/// the tip, and a woolly cap may top it (`Areoles.apex_wool`); a share of
+/// stems keeps a Fibonacci rib count and winds left or right
+/// (`Ribs.fibonacci`, `Ribs.lean`; The Cactus Primer); spine cards draw
+/// only as many sub-texel spines as their width covers, and the far tint's
+/// cover counts the skin between ribs, so spined succulents keep their
+/// colour across levels; both Ferocactus take their ribs, wool, flower
+/// rings and central spines from the Primer and Anderson (73 is monocot
+/// leaves, #140).
+/// 75: a column's crown may hold older rings of fruit below this year's
+/// ring (`column` revision 2, `crown_rings`, `ring_step`; `cactaceae`
+/// revision 8), split four ways so it nests no deeper; both Ferocactus
+/// keep last year's fruit, and F. cylindraceus takes Anderson's rib,
+/// radial and central counts (74 is cactus barrels, #138).
+/// 76: a strap's pieces (a grass blade's, a basal leaf's) meet edge to
+/// edge: each joint's edge lies across both midribs where a piece's
+/// twist of up to 15 degrees reaches it, and the pieces draw in the light
+/// and colour of the strap's first, so camas and other strap leaves no
+/// longer step in width and shade where their pieces join (75 is cactus
+/// fruit rings, #147).
+/// 77: a colour character is sRGB, so a colour rule reads it as linear
+/// light: every stated flower, fruit, leaf and bark colour draws as deep
+/// as it is stated, where it drew paler (76 is strap joints, #145).
+/// 78: a crownshaft's sheaths are its fronds' (palm program revision 8):
+/// each frond draws its sheath within its `frond` structure, so the royal
+/// palm and every crownshaft palm build again (until 77 a year's sheaths
+/// stood within no structure, which the organ check refuses for a piece;
+/// 77 is colour characters read as sRGB, #152).
+/// 79: the conifers' pipe model takes its exponent from a parameter
 /// (`pinidae` revision 11, `pipe_exponent`, 2.4 as before), and ponderosa
 /// pine's stout shoots (0.7 to 2 cm, Farjon 2017) grow on stout limbs that
 /// hold their line at 100 years, where thin limbs under its heavy needle
@@ -456,6 +484,6 @@ pub mod venation;
 /// crossing card's needles again, 2.2 to 4.6 times their area: conifers'
 /// crowns had starved to tufts at their limb tips and now carry foliage
 /// along their limbs, a pine's card is one brush of needles at their
-/// stated length (Pinus rules), and the module limit is 4,000,000 (75 is
-/// ferns, 74 cacti, #138).
-pub const GENERATOR_REVISION: u32 = 76;
+/// stated length (Pinus rules), and the module limit is 4,000,000 (78 is
+/// crownshaft sheaths, #150).
+pub const GENERATOR_REVISION: u32 = 79;
