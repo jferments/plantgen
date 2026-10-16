@@ -536,4 +536,17 @@ pub mod venation;
 /// conifer's apex lives on shoots down to 5 mm, not 25, so a narrow,
 /// slow crown such as subalpine fir's stays dense along its limbs (84 is
 /// leaf teeth, #157).
-pub const GENERATOR_REVISION: u32 = 85;
+/// 86: a flowering look the files leave without a year takes one from the
+/// months its taxa state it flowers and fruits in (`appearance.organs.*.
+/// season`): a flower's look becomes its look in flower and its own look
+/// its fruit, drawn by the fruit's rules (its colour, a cluster's fruit at
+/// its stated size, unripe fruit in the leaf green); a head or spikelet
+/// keeps its look; a herb's bud and fruit organs show only in their own
+/// stages. A lone flower's fruit is drawn at the fruit's size, not the
+/// flower's (`season.fruit_size`), a cluster whose fruit outgrow it grows
+/// to hold them, and a cluster still flowering when its first fruit ripen
+/// opens over those months (`season.opening`). The four Chloranthaceae,
+/// which flowered all year and never fruited, now bud, flower, fruit and
+/// drop in their months, as do the magnoliids that state their months
+/// (85 is conifer foliage along the limbs, #142).
+pub const GENERATOR_REVISION: u32 = 86;

@@ -347,6 +347,13 @@ pub struct Season {
     /// by default.
     #[serde(default, skip_serializing_if = "is_zero")]
     pub opening: f64,
+    /// Its size in fruit as a share of its size as grown, 0.05 to 20; 1
+    /// by default. A lone flower's organ is grown as wide as its flower, so
+    /// its fruit is this share of it, and every stage's size is this share
+    /// of the organ's; a cluster grown as long as its inflorescence is
+    /// drawn this much longer in fruit, where its fruit outgrow it.
+    #[serde(default = "full_size", skip_serializing_if = "is_full_size")]
+    pub fruit_size: f64,
     /// Its look in bud; without one, a third the size of its flower: a
     /// lone flower or head itself, closed; else a closed bud in the
     /// flower's colour half turned to the foliage's, whole where its
@@ -590,6 +597,7 @@ impl Season {
         }
         within("season ripening", self.ripening, 0.0, 200.0)?;
         within("season opening", self.opening, 0.0, 180.0)?;
+        within("season fruit size", self.fruit_size, 0.05, 20.0)?;
         for look in [&self.bud_look, &self.flower_look].into_iter().flatten() {
             look.shape.validate()?;
             for colour in [look.colour, look.accent].into_iter().flatten() {
@@ -3048,8 +3056,23 @@ pub fn staged(graph: &crate::graph::PlantGraph, sizes: &[f64]) -> Option<crate::
     })
 }
 
-/// `look` as it is on `day` of `season`, and its size as a share.
+/// `look` as it is on `day` of `season`, and its size as a share of its
+/// size as grown: a lone organ's every stage, and a cluster in fruit,
+/// scaled by the season's `fruit_size`.
 fn in_season(look: Look, season: &Season, day: f64, foliage: [f32; 3]) -> (Look, f64) {
+    let lone = look.inflorescence.is_none();
+    let fruit = matches!(season.stage(day), Stage::Fruit { .. });
+    let (look, size) = in_stage_of(look, season, day, foliage);
+    if lone || fruit {
+        (look, size * season.fruit_size)
+    } else {
+        (look, size)
+    }
+}
+
+/// `look` as it is on `day` of `season`, and its size as a share of its
+/// size in fruit.
+fn in_stage_of(look: Look, season: &Season, day: f64, foliage: [f32; 3]) -> (Look, f64) {
     let stage = season.stage(day);
     let whole = match stage {
         Stage::Bud => season.bud(&look.shape, look.colour, foliage).whole,
@@ -3990,6 +4013,7 @@ mod tests {
             ripening: 20.0,
             fall: 245.0,
             opening: 0.0,
+            fruit_size: 1.0,
             bud_look: None,
             flower_look: Some(StageLook {
                 shape: Shape::Flower(Flower::default()),
@@ -4121,6 +4145,7 @@ mod tests {
             ripening: 10.0,
             fall: 200.0,
             opening: 10.0,
+            fruit_size: 1.0,
             bud_look: None,
             flower_look: None,
         }
