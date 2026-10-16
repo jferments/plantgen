@@ -32,6 +32,21 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
     ),
     (
+        "aristolochia-macrophylla",
+        "leaf_shape",
+        "its kidney-shaped blades (FNA vol. 3: reniform) are drawn on a simple card, at most as broad as long, so they read ovate; no card draws a reniform blade yet",
+    ),
+    (
+        "asarum-canadense",
+        "leaf_shape",
+        "its kidney-shaped blades (FNA vol. 3: reniform) are drawn on a simple card, at most as broad as long, so they read orbicular or ovate; no card draws a reniform blade yet",
+    ),
+    (
+        "asarum-canadense",
+        "leaf_width_m",
+        "a simple card is at most as broad as long, so its blades are drawn 5.5 to 6.5 cm wide, as wide as long, against FNA's 8 to 14 cm, broader than long",
+    ),
+    (
         "ascarina-lucida",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
@@ -152,6 +167,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its panicles are drawn about 7.5 cm long against the 10 to 25 cm Dendrology (2019) p. 318 gives",
     ),
     (
+        "houttuynia-cordata",
+        "inflorescence_bracts",
+        "a cluster draws at most one bract at its foot, a spathe, so the four white petaloid bracts under fish mint's spike (Flora of China: involucral bracts 10 to 15 mm) are not drawn",
+    ),
+    (
+        "houttuynia-cordata",
+        "leaf_shape",
+        "its heart-shaped blades (Flora of China: cordate) are drawn on a simple card widest near its full base, so they read ovate; no card draws a cordate blade yet",
+    ),
+    (
         "jacobaea-vulgaris",
         "leaf_width_m",
         "its stem leaves shrink upward in proportion, so the topmost, 4 to 5 cm long, draw 1.5 cm wide against the 2 to 6 cm Abrams and Ferris give for the blades, which they measure on the main leaves",
@@ -167,6 +192,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its stem leaves are drawn oblanceolate, a basal leaf's outline with less width, but Abrams and Ferris give a shape (spatulate or obovate) only for the basal leaves; the stem leaves they call reduced, sessile and clasping",
     ),
     (
+        "lindera-benzoin",
+        "inflorescence_length_m",
+        "an umbel's rays reach about 0.57 of its bloom card, and the measure reads the rays, so its clusters, drawn on a card as long as the 5 to 10 mm the model estimate gives, read 3.6 to 4.4 mm",
+    ),
+    (
+        "liriodendron-tulipifera",
+        "carpels",
+        "a flower draws at most 30 free pistils (the angiosperms' carpels rule), so tulip tree's cone of 60 to 100 carpels is drawn with 30",
+    ),
+    (
         "lonicera-involucrata",
         "fruit_size_m",
         "its berries are drawn about 1.6 cm long against the 7 to 8 mm Dendrology (2019) p. 390 gives",
@@ -180,6 +215,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "lysichiton-americanus",
         "units_per_inflorescence",
         "a cluster draws at most 200 units, so the spadix's 350 to 1350 flowers are drawn as 200",
+    ),
+    (
+        "magnolia-grandiflora",
+        "carpels",
+        "a flower draws at most 30 free pistils (the angiosperms' carpels rule), so southern magnolia's cone of 55 to 81 carpels is drawn with 30",
     ),
     (
         "nymphaea-odorata",
@@ -205,6 +245,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "parkinsonia-microphylla",
         "leaf_length_m",
         "a short shoot's leaf card draws a cluster of its small leaves, a branchlet's worth, so the crown keeps within the module limit, against Abrams's pinnae 1 to 3 cm",
+    ),
+    (
+        "piper-nigrum",
+        "fruit_size_m",
+        "the climber draws a fruiting spike as one fruit card, about 10 cm long (Flora of China: spikes to as long as the leaves), so the measure reads the spike against the 3 to 4 mm drupes on it",
+    ),
+    (
+        "piper-nigrum",
+        "shoot_leaves",
+        "a climbing shoot adds one or two nodes a season, each with one leaf, so it bears 1 to 2 leaves a year against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
         "program:broadleaf",
@@ -282,6 +332,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
     ),
     (
+        "sassafras-albidum",
+        "leaf_width_m",
+        "its leaves are drawn on one card, the three-lobed form with broad rounded lobes as photographs show it, 16.9 cm wide, against FNA's 5 to 10 cm, which covers its narrower unlobed and mitten leaves too (inferred: FNA gives one width for all three forms)",
+    ),
+    (
         "tillandsia-usneoides",
         "leaf_shape",
         "its leaves are drawn as cards tapering from the base, an eighth as broad as long, so they read deltate or lanceolate against the linear leaves Bromeliaceae state",
@@ -290,6 +345,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "tillandsia-usneoides",
         "phyllotaxis_pattern",
         "Bromeliaceae's leaves are spiral (Simpson 2019), but Spanish moss's program sets its leaves in crossing pairs",
+    ),
+    (
+        "umbellularia-californica",
+        "inflorescence_length_m",
+        "an umbel's rays reach about 0.57 of its bloom card, and the measure reads the rays, so its umbels, drawn on a card as long as the 1 to 2 cm the model estimate gives, read 7 to 10 mm",
     ),
     (
         "viola-glabella",
