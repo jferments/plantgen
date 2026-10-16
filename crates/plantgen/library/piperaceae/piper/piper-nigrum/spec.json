@@ -1,0 +1,290 @@
+{
+  "schema": 1,
+  "id": "piper-nigrum",
+  "taxon": {
+    "scientific_name": "Piper nigrum",
+    "common_name": "black pepper",
+    "family": "Piperaceae",
+    "genus": "Piper",
+    "plant_name_id": 2569664
+  },
+  "growth_form": "vine",
+  "generator": {
+    "params": {
+      "shoots": 4,
+      "internode": 0.08,
+      "max_shoot": 2,
+      "cling": 0.2,
+      "hug": 0.5,
+      "climb": 0.35,
+      "seek": 0.6,
+      "drape": 0.05,
+      "adult_rise": 0.25,
+      "adult_light": 0.6,
+      "free_years": 1.5,
+      "branch_chance": 0.15,
+      "branch_angle": 50,
+      "max_order": 2,
+      "leaf_angle": 65,
+      "fruiting": 0.15,
+      "fruit_size": 0.1,
+      "leaf_size": 0.15,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 4e-06,
+      "renew": 0.2
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 0.25,
+    "keyframes": [
+      3,
+      8,
+      15
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "host": {
+    "species": "acer-macrophyllum",
+    "age": 30,
+    "environment": "open",
+    "seed": 1
+  },
+  "appearance": {
+    "bark": [
+      0.3,
+      0.33,
+      0.22
+    ],
+    "foliage": [
+      0.05,
+      0.14,
+      0.04
+    ],
+    "foliage_shade": [
+      0.016,
+      0.046,
+      0.013
+    ],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "petiole": 0.11
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 8,
+      "environment": "open",
+      "height": 5,
+      "tolerance": 0.6
+    },
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 8,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 4,
+      "max": 10
+    },
+    "leaf_length_m": {
+      "min": 0.1,
+      "max": 0.15
+    },
+    "leaf_width_m": {
+      "min": 0.05,
+      "max": 0.09
+    },
+    "petiole_length_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "leaf_shape": "ovate",
+    "leaf_venation": "palmate",
+    "leaf_habit": "evergreen",
+    "sexual_system": "monoecious",
+    "inflorescence_length_m": {
+      "min": 0.05,
+      "max": 0.15
+    },
+    "inflorescence_posture": "pendent",
+    "fruit_type": "drupe",
+    "fruit_size_m": {
+      "min": 0.003,
+      "max": 0.004
+    },
+    "fruit_colour_ripe": [
+      185,
+      30,
+      25
+    ],
+    "flowering_months": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "fruiting_months": [
+      11,
+      12,
+      1,
+      2
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: usual 2-6 m, tallest about 10 m on its support."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Piper nigrum (read on eFloras, 2026-10-16): blade 10-15 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Piper nigrum (read on eFloras, 2026-10-16): blade 5-9 cm wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Piper nigrum (read on eFloras, 2026-10-16): petiole 1-2 cm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Piper nigrum (read on eFloras, 2026-10-16): blade ovate to ovate-oblong, rarely nearly round, thick, base rounded and often a little oblique (Simpson p. 205: cordate to broadly ovate)."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 205, Piper nigrum: main veins arching from the base (Flora of China: 5-7 veins, most from the base)."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Piper nigrum (read on eFloras, 2026-10-16): flowers polygamous, usually monoecious."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Piper nigrum (read on eFloras, 2026-10-16): spikes opposite the leaves, up to as long as them; the shortest is the model estimate's (species-facts-2026-10-15)."
+    },
+    "traits.inflorescence_posture": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Piper nigrum (read on eFloras, 2026-10-16): a sessile drupe."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Piper nigrum (read on eFloras, 2026-10-16): drupe globose, 3-4 mm across."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Piper nigrum (read on eFloras, 2026-10-16): drupe red when ripe. The colour is our reading of the word."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Piper nigrum (read on eFloras, 2026-10-16): flowers June-October."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "English ivy's values (a woody climber holding on by roots at its nodes, as Flora of China says pepper does), with fewer shoots and shorter yearly growth, so it climbs to the model's height, and its leaf card set by hand at 0.15 m (the rule's 0.19 m draws the climber's larger leaves past Flora of China's 10-15 cm). Not fitted to measurements. Its host, a 30-year bigleaf maple, stands in for the trees and posts pepper is grown on."
+    },
+    "host": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The host it is grown on for rendering, a built-in tree; not a botanical fact."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "5 m at 8 years and 8 m at 15 on its host, within the model estimate's 10 m. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after Flora of China and Simpson: green, jointed stems with swollen nodes; thick, glossy dark green, ovate leaves. The leaf card's petiole is 0.11 of its length, the flora's petiole against blade and petiole together."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the Magnoliidae specs (2026-10-16): sizes from Flora of China, drawing values from English ivy's."
+  }
+}
