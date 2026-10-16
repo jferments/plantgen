@@ -29,14 +29,14 @@
       "pieces": 45,
       "fan": 0,
       "leaflet_length": 0.24,
-      "leaflet_peak": 0.35,
-      "leaflet_base": 0.5,
+      "leaflet_peak": 0.08,
+      "leaflet_base": 0.85,
       "leaflet_tip": 0.25,
       "leaflet_angle": 60,
       "leaflet_lift": 50,
       "droop": 0.035,
       "droop_years": 1.6,
-      "leaflet_area": 0.04,
+      "leaflet_area": 0.03,
       "ray_area": 0.057,
       "dead_area": 0.235,
       "vigour_spread": 0.06,
@@ -45,9 +45,10 @@
       "bulge": 0.35,
       "bulge_age": 22,
       "bulge_years": 10,
-      "crownshaft": 2.0,
-      "shaft_cards": 16,
-      "leaflet_scatter": 18,
+      "crownshaft": 2.5,
+      "shaft_cards": 8,
+      "leaflet_scatter": 25,
+      "leaflet_groups": 3,
       "hang": 25
     }
   },
@@ -61,23 +62,34 @@
     "seeds": [1, 2, 3, 4]
   },
   "appearance": {
-    "bark": [0.62, 0.6, 0.55],
-    "foliage": [0.2, 0.38, 0.16],
-    "foliage_shade": [0.09, 0.171, 0.072],
+    "bark": [0.47, 0.43, 0.36],
+    "leaf_axis": [0.09, 0.2, 0.05],
+    "bark_pattern": {
+      "kind": "ringed",
+      "scale": 0.04,
+      "elongation": 0.85,
+      "fissure": 0.5,
+      "depth": 0.2,
+      "contrast": 0.45,
+      "variation": 0.35,
+      "smooth_below": 0.05,
+      "roughness": 0.35
+    },
+    "foliage": [0.05, 0.13, 0.035],
+    "foliage_shade": [0.022, 0.058, 0.016],
     "variation": 0.1,
     "organs": {
-      "sheath": {"shape": {"template": "blade", "taper": 0, "aspect": 0.1}, "colour": [0.3, 0.45, 0.18]},
+      "sheath": {"shape": {"template": "blade", "taper": 0, "aspect": 0.14}, "colour": [0.3, 0.45, 0.18]},
       "leaflet": {
         "shape": {
           "template": "blade",
-          "taper": 0.35,
+          "taper": 0.6,
           "aspect": 0.045
         },
-        "colour": [0.2, 0.38, 0.16],
+        "colour": [0.05, 0.13, 0.035],
         "bend": {
-          "fold": 8,
           "cup": 0,
-          "droop": 30,
+          "droop": 50,
           "twist": 0
         }
       }
@@ -106,7 +118,7 @@
     "generator.params": {
       "evidence": "SourceInferred",
       "source": "sargent-1922",
-      "note": "Sargent (1922, Roystonea regia, pp. 107-108): leaves 10 to 12 ft (3 to 3.7 m) long, frond_length 3.5 m; pinnae 2.5 to 3 ft (0.76 to 0.9 m) long, leaflet_length 0.24 of the frond; the green upper part of the stem, the crownshaft of leaf-stalk sheaths, 8 to 10 ft (2.4 to 3 m), drawn as a 2 m shaft plus the trunk the living fronds stand on; a trunk 80 to 100 ft tall and often 2 ft (0.6 m) through, rising from an abruptly enlarged base (flare 0.6) and enlarged near the middle, tapering to both ends (a belly 0.35 wider at 22 years, so trunk_radius 0.22 m is 0.3 m at its widest); a broad head of gracefully drooping leaves (hang 25 degrees over a frond's life). Closely pinnate: 45 pieces of rachis, so about 90 leaflets a side, linear-lanceolate cards 1.5 inches wide on 2.5 to 3 ft (aspect 0.045). Set by eye: twelve fronds a year living a year and a half, about eighteen in the crown, and leaflets standing 18 degrees above and below their V for the plumed look."
+      "note": "Sargent (1922, Roystonea regia, pp. 107-108): leaves 10 to 12 ft (3 to 3.7 m) long, frond_length 3.5 m; pinnae 2.5 to 3 ft (0.76 to 0.9 m) long near the base of the leaf and gradually decreasing in size toward its apex, so leaflet_length 0.24 of the frond is reached near the rachis' foot (leaflet_peak 0.08), the lowest still 0.85 of it (leaflet_base) and the last a quarter (leaflet_tip); the petiole's clasping base 8 to 9 ft (2.4 to 2.7 m), bright green, so crownshaft 2.5 m; the green upper part of the stem, the crownshaft of leaf-stalk sheaths, 8 to 10 ft (2.4 to 3 m); a trunk 80 to 100 ft tall and often 2 ft (0.6 m) through, rising from an abruptly enlarged base (flare 0.6) and enlarged near the middle, tapering to both ends (a belly 0.35 wider at 22 years, so trunk_radius 0.22 m is 0.3 m at its widest); a broad head of gracefully drooping leaves (hang 25 degrees over a frond's life). Closely pinnate: 45 pieces of rachis, so about 90 leaflets a side, linear-lanceolate cards 1.5 inches wide on 2.5 to 3 ft (aspect 0.045). Set by eye: twelve fronds a year living a year and a half, about eighteen in the crown, and leaflets in groups of three standing 25 degrees above, level with and below their V, the plumed look of leaflets in two to three planes (Dransfield et al. 2008, Genera Palmarum p. 392: leaflets in one plane or variously inserted, crowded or in groups)."
     },
     "allometry": {
       "evidence": "Authored",
@@ -114,9 +126,9 @@
       "note": "Rough heights from general knowledge of the species: about 13 m at 25 years and 24 m at 50. Wide tolerances."
     },
     "appearance": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: bright green fronds, pale grey trunk, and the crownshaft's shining green sheaths, drawn as sixteen upright cards round the trunk's top (Sargent 1922: bright green cylinders of densely imbricated sheaths)."
+      "evidence": "SourceInferred",
+      "source": "sargent-1922",
+      "note": "Sargent (1922, Roystonea regia, pp. 107-108): pinnae deep green with slender conspicuous veins, paler below with minute pale dots (foliage and leaflet colour a deep green; the paler underside not drawn, as a card has one colour); the petiole and rachis green with the leaf (leaf_axis), not the trunk's grey; petioles enlarged into bright green cylindrical clasping bases, the crownshaft (sheath colour bright green); the trunk covered with light gray rind tinged with orange (bark a warm grey). Dransfield et al. (2008, Genera Palmarum p. 392): stem tan, grey or white, ringed by prominent or obscure leaf scars; leaflets narrow, tapering to a point (taper 0.6), rather thin (droop 50 degrees, as they hang in photographs). The rings drawn one a leaf, about 3.4 cm apart (0.4 m of trunk a year over twelve leaves), each a darker groove half the gap wide, the bands between them uneven in shade; each frond's sheath drawn as eight cards wrapping the crownshaft, wide enough to close it. Exact shades and the ring pattern set by eye from photographs."
     },
     "taxon": {
       "evidence": "Authored",

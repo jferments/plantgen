@@ -489,13 +489,22 @@ pub mod venation;
 /// cypselas, grains, nuts, schizocarps, aggregate and multiple fruits
 /// take fruit kinds, and a fruit is as long as `fruit_size_m` (79 is
 /// ferns from the Fern Grower's Manual, #153).
-/// 81: a blade's tip and base draw as stated (`leaf_apex`,
+/// 81: cycads, palms and tree ferns told apart (palm program revision 9):
+/// cycad and tree fern trunks thicken toward the base with age, cycads
+/// flush their leaves in whorls inside rings of cataphylls, leaves unfold
+/// by group (palm spears pleated, Cycas leaflets coiled, fern croziers
+/// tight), palm leaflets fold induplicate or reduplicate by subfamily,
+/// plumose palms hold their leaflets in groups, a leaf's petiole and
+/// rachis take the leaf axis's colour, a palm trunk may be ringed by its
+/// leaf scars, and a crownshaft is a closed column (80 is shape and
+/// fruit words, #155).
+/// 82: a blade's tip and base draw as stated (`leaf_apex`,
 /// `leaf_base_shape`): hollow-sided, straight, blunt, rounded or square
 /// over its last and first three tenths (`Simple.apex_taper`,
 /// `Simple.base_taper`), with a tail, cusp, mucro or bristle beyond its
 /// tip (`Simple.apex_point`) or a notch in it (`Simple.apex_notch`); a
 /// petal is as broad for its length as its outline is stated among any
 /// count of petals (`Flower.petal_ratio`, from `petal_shape`) and its tip
-/// as pointed or notched as stated (`petal_apex`) (80 is leaf and fruit
-/// words, #155).
-pub const GENERATOR_REVISION: u32 = 81;
+/// as pointed or notched as stated (`petal_apex`) (81 is cycads,
+/// palms and tree ferns, #154).
+pub const GENERATOR_REVISION: u32 = 82;
