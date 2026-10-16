@@ -528,6 +528,7 @@ const UNRULED: [&str; 6] = [
 /// Checks one rule's shape: `null` (deleting an inherited rule), or an
 /// object with a `rule` (a formula over traits) or a `map` (one trait's
 /// values to spec values), and a `why`.
+#[allow(clippy::too_many_lines)]
 fn check_rule(path: &str, rule: &Value) -> Result<(), String> {
     if path.split('.').any(str::is_empty) {
         return Err("its path is keys joined by dots".into());
@@ -2226,7 +2227,7 @@ fn put_back(
 /// every look (`*`) set what they now reach in it: the season's days,
 /// the fruit's kind, the flower's size for its fruit's. A look whose
 /// season the rules leave without all its days stays as it was.
-#[allow(clippy::too_many_arguments)]
+#[allow(clippy::too_many_arguments, clippy::too_many_lines)]
 fn seasonal_looks(
     rules: &Rules,
     layers: &[(String, &Part)],
