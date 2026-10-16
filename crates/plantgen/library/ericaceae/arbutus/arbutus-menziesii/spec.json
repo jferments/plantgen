@@ -13,9 +13,9 @@
   "generator": {
     "params": {
       "crown_radius": 7,
-      "crown_base": 3,
+      "crown_base": 5,
       "crown_rate": 0.035,
-      "space_density": 7,
+      "space_density": 4,
       "internode": 0.22,
       "max_shoot": 3,
       "pipe_rings": 4.33e-06,
@@ -29,9 +29,9 @@
       "spur_leaf": 0.3,
       "spur_pairs": 2,
       "leaf_angle": 50,
-      "lean": 15,
-      "wiggle": 8,
-      "fork_height": 2.5,
+      "lean": 20,
+      "wiggle": 12,
+      "fork_height": 4,
       "fork_stems": 3,
       "fork_angle": 30,
       "blooms": 2,
@@ -40,7 +40,9 @@
       "extinction": 0.45,
       "leaf_area": 0.285,
       "bloom_area": 0.382,
-      "path_half": 14.4
+      "path_half": 14.4,
+      "bole_clear": 1,
+      "spur_light": 0.25
     }
   },
   "growth": {
@@ -140,6 +142,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "crown_form": "rounded",
     "juvenile_period_years": {
       "min": 4,
       "max": 8,
@@ -160,6 +163,8 @@
     "fruiting_months": [10, 11, 12]
   },
   "evidence": {
+    "generator.params.bole_clear": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Grown stems stand bare of branches for several metres below the crown in iNaturalist photographs (observations 263721768, 1914072): the crown from 5 m (crown_base), the stem forking at 4 m (fork_height), leaning and crooked (lean 20, wiggle 12, were 15 and 8), with fewer, bigger limbs (space_density 4, was 7) and an inner crown that thins (spur_light 0.25)."},
+    "traits.crown_form": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "iNaturalist research-grade photographs (observations 263721768, 1914072, 145154232): leaning, crooked red stems carry a rounded, irregular crown, clear of branches below."},
     "traits.flowering_months": {
       "evidence": "SourceInferred",
       "source": "gbif-inaturalist",
