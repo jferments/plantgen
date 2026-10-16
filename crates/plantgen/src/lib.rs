@@ -467,12 +467,26 @@ pub mod venation;
 /// 77: a colour character is sRGB, so a colour rule reads it as linear
 /// light: every stated flower, fruit, leaf and bark colour draws as deep
 /// as it is stated, where it drew paler (76 is strap joints, #145).
-/// 78: shape and fruit words draw what they mean: a cordate or reniform
+/// 78: a crownshaft's sheaths are its fronds' (palm program revision 8):
+/// each frond draws its sheath within its `frond` structure, so the royal
+/// palm and every crownshaft palm build again (until 77 a year's sheaths
+/// stood within no structure, which the organ check refuses for a piece;
+/// 77 is colour characters read as sRGB, #152).
+/// 79: ferns from the Fern Grower's Manual: a frond arches as it unrolls
+/// (`arch`, from `leaf_posture`), its fiddlehead a tight coil; fronds
+/// stand on their own feet round a compact crown at the ground, among old
+/// stipe bases, with no stalk under them; a rhizome's habit sets its
+/// crowns and how far apart they stand, a blade's outline where its
+/// longest pinnae are, and pinnae are as many, as long and as broad as the
+/// blade fits, lanceolate; evergreen fronds outlast a winter; the curated
+/// ferns arch, and the sword fern's pinnae and angles are the fern rules'
+/// (78 is crownshaft sheaths in their fronds, #150).
+/// 80: shape and fruit words draw what they mean: a cordate or reniform
 /// blade hangs two basal lobes back beside its petiole (`Simple.sinus`),
 /// and cordate, reniform and deltate blades take their outlines and
 /// widths; a palmately veined blade fans two main veins a side from its
 /// base with the midrib (`Simple.fan`, from `leaf_venation`); achenes,
 /// cypselas, grains, nuts, schizocarps, aggregate and multiple fruits
-/// take fruit kinds, and a fruit is as long as `fruit_size_m` (77 is
-/// sRGB colours, #152).
-pub const GENERATOR_REVISION: u32 = 78;
+/// take fruit kinds, and a fruit is as long as `fruit_size_m` (79 is
+/// ferns from the Fern Grower's Manual, #153).
+pub const GENERATOR_REVISION: u32 = 80;
