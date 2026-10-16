@@ -37,13 +37,31 @@
       "max": 20,
       "high": 150
     },
-    "carpels": 4
+    "carpels": 4,
+    "phyllotaxis_pattern": "distichous",
+    "flowering_position": "lateral",
+    "inflorescence": "spadix"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cyclanthaceae: leaves alternate; leaves simple or compound; compound leaves palmate; veins usually single, rarely palmate; leaf rosettes basal or none; plants monoecious; ovary half inferior or inferior; stems woody or herbaceous; perianth tepals or absent; fruit berry; stamens 10 to 20 (-150); carpels 4. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): leaves spirally two-ranked."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): inflorescence axillary in Carludovicioideae."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): inflorescence spadix-like."
     }
   }
 }

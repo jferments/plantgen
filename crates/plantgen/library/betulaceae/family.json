@@ -25,7 +25,15 @@
     "inflorescence_posture": {
       "pendent": "usually",
       "erect": "sometimes"
-    }
+    },
+    "flowering_position": "both",
+    "stamens": {
+      "min": 2,
+      "max": 4,
+      "typical": 4,
+      "high": 13
+    },
+    "carpels": 2
   },
   "forms": {
     "decurrent_tree": {
@@ -103,6 +111,21 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 335, family Betulaceae: inflorescence posture pendent (male catkins); read as \"pendent\". The books add erect (sometimes): Simpson, Plant Systematics (2019) p. 337, 338: pendent to erect."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Betulaceae (read 2026-10-16): inflorescences terminal; male catkins at shoot tips or in lateral buds (Corylus), female on short shoots. 'both' is my reading."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Betulaceae (read 2026-10-16): stamens 2-4 per flower."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Betulaceae (read 2026-10-16): two joined carpels."
     }
   }
 }

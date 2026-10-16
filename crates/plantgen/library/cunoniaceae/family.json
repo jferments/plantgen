@@ -53,13 +53,19 @@
     "carpels": {
       "min": 2,
       "max": 5
-    }
+    },
+    "phyllotaxis_pattern": "decussate"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cunoniaceae with Aphanopetalaceae, Baueraceae, Davidsoniaceae, Eucryphiaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves opposite or whorled, rarely alternate; leaves usually compound, sometimes simple; compound leaves pinnate; stipules usually present, sometimes absent; plants usually hermaphrodite, sometimes dioecious, rarely polygamous; ovary usually superior, rarely half inferior; stems woody; flowers solitary, in cymes, in racemes or in heads, sometimes in panicles; flowers actinomorphic; perianth sepals and petals or tepals; fruit usually capsule, sometimes follicle, rarely drupe or nut; stamens 4 to 40; carpels 2 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Oxalidales page, Cunoniaceae (read 2026-10-16): leaves opposite (some whorled; whorls alternate)."
     }
   }
 }

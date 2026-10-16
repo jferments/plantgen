@@ -4,6 +4,7 @@
   "name": "Convolvulaceae",
   "parent": "order/solanales",
   "traits": {
+    "flowering_position": "lateral",
     "carpels": {"min": 2, "max": 2, "high": 5},
     "hypanthium": false,
     "woodiness": {
@@ -39,6 +40,7 @@
     "sexual_system": "hermaphrodite"
   },
   "evidence": {
+    "traits.flowering_position": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Ipomoea (read 2026-10-16) (largest genus): flowers axillary, solitary or in cymes; APweb Solanales page: Humbertia flowers single and axillary. Would otherwise inherit terminal."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 428: ovary of 2, rarely 3 to 5, carpels."},
     "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 428, 505: Simpson calls the flowers hypogynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {

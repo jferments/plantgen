@@ -22,6 +22,11 @@
       "berry": "often",
       "capsule": "often",
       "drupe": "rarely"
+    },
+    "sexual_system": {
+      "dioecious": "usually",
+      "polygamous": "often",
+      "hermaphrodite": "sometimes"
     }
   },
   "evidence": {
@@ -29,6 +34,11 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 213 Meliaceae: trees or shrubs, mostly with hard scented wood (mahogany, cedrela), very rarely nearly herbaceous; leaves alternate, mostly pinnate; no stipules; flowers regular, mostly bisexual; stamens mostly 8 or 10, their filaments mostly joined in a tube; ovary superior, often of 3 to 5 cells; fruit a berry or capsule, rarely a drupe, the seeds sometimes winged (mahogany)."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Meliaceae (read 2026-10-16): flowers apparently cryptically unisexual. Weighting toward dioecious inferred (Aglaia, Dysoxylum); low confidence."
     }
   }
 }

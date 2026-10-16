@@ -57,8 +57,13 @@
       "why": "A node bears one leaf where the leaves alternate, a pair where they are opposite, and the taxon's count where they are whorled."
     },
     "generator.params.divergence": {
-      "map": {"phyllotaxis_pattern": {"spiral": 137.5, "distichous": 180, "tristichous": 120, "decussate": {"rule": "180 / leaves_per_node"}}},
-      "why": "Each node turns from the one below by the golden angle in a spiral, half a turn in two ranks, a third of a turn in three, and half the gap between its own leaves where pairs or whorls cross."
+      "map": {"phyllotaxis_pattern": {
+        "spiral": {"map": {"leaf_arrangement": {"alternate": 137.5, "opposite": 90, "whorled": {"rule": "180 / leaves_per_node"}}}, "else": 137.5},
+        "distichous": 180,
+        "tristichous": 120,
+        "decussate": {"map": {"leaf_arrangement": {"alternate": 137.5, "opposite": 90, "whorled": {"rule": "180 / leaves_per_node"}}}, "else": {"rule": "180 / leaves_per_node"}}
+      }},
+      "why": "Each node turns from the one below by the golden angle in a spiral, half a turn in two ranks, a third of a turn in three, and half the gap between its own leaves where pairs or whorls cross. Where the turn and the leaves are stated at different ranks and disagree, the leaves decide: pairs and whorls cross even under an order's spiral, and single leaves under an order's crossing pairs turn by the golden angle."
     },
     "generator.params.stem_height": {
       "rule": "height_typical_m",

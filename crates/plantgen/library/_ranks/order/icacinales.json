@@ -2,5 +2,87 @@
   "schema": 1,
   "rank": "order",
   "name": "Icacinales",
-  "parent": "clade/lamiids"
+  "parent": "clade/lamiids",
+  "traits": {
+    "phyllotaxis_pattern": "spiral",
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes"
+    },
+    "leaf_division": "simple",
+    "rosette": "none",
+    "leaf_habit": "evergreen",
+    "life_span": "perennial",
+    "flower_symmetry": "actinomorphic",
+    "corolla_shape": "rotate",
+    "hypanthium": false,
+    "ovary_position": "superior",
+    "fruit_type": "drupe",
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Icacinales page, Icacinaceae (read 2026-10-16): leaves often alternate (spiral); opposite in many vines."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Icacinales page (read 2026-10-16): as Icacinaceae; fills Oncothecaceae (alternate, our knowledge)."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Icacinales page (read 2026-10-16): leaves exstipulate, often entire, simple."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Icacinales page (read 2026-10-16): trees and lianas."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Icacinales page, Icacinaceae (read 2026-10-16): evergreen trees; core-asterid node also woody evergreen."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Icacinales page (read 2026-10-16): woody trees and lianas."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Icacinales page (read 2026-10-16): small flowers with valvate free to basally joined petals; regular."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Icacinales page, Icacinaceae (read 2026-10-16): petals nearly free, valvate, flat (spreading; our reading)."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Icacinales page (read 2026-10-16): none described; Icacinaceae states false."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Icacinales page (read 2026-10-16): no statement; Icacinaceae states superior and Oncotheca ovary superior (our knowledge)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Icacinales page, Icacinaceae (read 2026-10-16): single-seeded drupe with ribbed or pitted stone; core-asterid node drupe."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Icacinales page, Icacinaceae (read 2026-10-16): mostly bisexual; dioecy common in Phytocreneae and some Iodeae."
+    }
+  }
 }

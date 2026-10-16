@@ -28,6 +28,28 @@
       "raceme": "often",
       "head": "often",
       "solitary": "rarely"
+    },
+    "leaf_division": "simple",
+    "perianth": {
+      "tepals": "usually",
+      "sepals_and_petals": "sometimes"
+    },
+    "corolla_shape": "salverform",
+    "stamens": {
+      "min": 2,
+      "max": 10,
+      "typical": 8,
+      "high": 80
+    },
+    "carpels": {
+      "min": 2,
+      "max": 5,
+      "typical": 2
+    },
+    "fruit_type": {
+      "drupe": "usually",
+      "nut": "sometimes",
+      "capsule": "sometimes"
     }
   },
   "evidence": {
@@ -35,6 +57,36 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 85 Thymelaeaceae: trees or shrubs, rarely herbs; leaves opposite or alternate, mostly small; no stipules; flowers often in bracted heads, spikes or racemes, rarely alone, bisexual or of one sex, regular or slightly irregular; calyx a tube, sometimes petal-like, its lobes 4 or 5 (read as a hypanthium crowned by the lobes); petals scale-like or none; ovary superior; fruit staying shut (drupes and nuts in Daphne and kin), left unstated. Head-like clusters from 'terminal bracteate heads' (the OCR is broken there; inferred)."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page, Thymelaeaceae (read 2026-10-16): leaves entire, no stipules."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Thymelaeaceae (read 2026-10-16): sepals, petals and staminodes hard to tell apart; the showy parts are the petal-like calyx lobes on the tube. APweb mentions a corolla in some. Weighting inferred."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page, Thymelaeaceae (read 2026-10-16): long hypanthium tube with lobes spreading at its mouth (Daphne-like flower): a narrow tube with a flat limb."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page, Thymelaeaceae (read 2026-10-16): stamens 2-5 or 10, up to 80 in Gonystyloideae. Wikipedia (read 2026-10-16): once or twice the calyx lobes, 1-2 in Pimelea. Typical 8 (twice four lobes) inferred."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page, Thymelaeaceae (read 2026-10-16): carpels 2-5, often 2 with one locule not developing."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page, Thymelaeaceae (read 2026-10-16): capsule, drupe or achene-like. Wikipedia (read 2026-10-16): fruit olive-like. 'usually' drupe inferred."
     }
   }
 }

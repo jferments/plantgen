@@ -4,6 +4,11 @@
   "name": "Cycadales",
   "parent": "subclass/cycadidae",
   "traits": {
+    "life_span": "perennial",
+    "division_pattern": "pinnate",
+    "leaf_division": "compound",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_arrangement": "alternate",
     "leaf_habit": "evergreen",
     "rosette": "terminal",
     "sexual_system": "dioecious"
@@ -231,6 +236,11 @@
     }
   },
   "evidence": {
+    "traits.life_span": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Cycad (read 2026-10-16): long-lived plants with stout woody trunks."},
+    "traits.division_pattern": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Cycad (read 2026-10-16): pinnate, bipinnate in Bowenia and a few Cycas (still pinnate)."},
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Cycad (read 2026-10-16): leaves pinnate, a central axis with leaflets each side."},
+    "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Cycad (read 2026-10-16): trunk scars helically arranged."},
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Cycad (read 2026-10-16): leaves in a crown at the trunk top, leaf bases helically arranged (one per node)."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-2008",

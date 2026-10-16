@@ -48,7 +48,8 @@
     "carpels": 2,
     "flowering_position": {
       "terminal": "usually"
-    }
+    },
+    "hypanthium": false
   },
   "evidence": {
     "traits": {
@@ -65,6 +66,11 @@
       "evidence": "SourceInferred",
       "source": "floral-diagrams",
       "note": "Ronse De Craene, Floral Diagrams (2010) p. 140, 141, 142, family Sabiaceae: flowering position terminal, usually; read as {\"terminal\": \"usually\"}."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Proteales page, Sabiaceae (read 2026-10-16): nectary receptacular, no floral cup described."
     }
   }
 }

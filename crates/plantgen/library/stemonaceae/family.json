@@ -4,6 +4,7 @@
   "name": "Stemonaceae",
   "parent": "order/pandanales",
   "traits": {
+    "flowering_position": "lateral",
     "leaf_arrangement": {
       "alternate": "often",
       "opposite": "often",
@@ -53,6 +54,7 @@
     "perennation": {"rhizome": "often", "tuber": "often"}
   },
   "evidence": {
+    "traits.flowering_position": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb (read 2026-10-16): inflorescence axillary (sometimes on the leaf), not terminal."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

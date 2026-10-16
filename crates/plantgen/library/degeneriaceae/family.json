@@ -20,13 +20,25 @@
       "min": 20,
       "max": 30
     },
-    "carpels": 1
+    "carpels": 1,
+    "phyllotaxis_pattern": "spiral",
+    "fruit_type": "follicle"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Degeneriaceae: leaves alternate; leaves simple; margins entire; veins pinnate; stipules absent; plants hermaphrodite; ovary superior; floral cup absent; stems woody; flowers solitary; flowers actinomorphic; perianth sepals and petals; stamens 20 to 30; carpels 1. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): Degeneria leaves spiral, entire, no stipules."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): single carpel ripening into a follicle."
     }
   }
 }
