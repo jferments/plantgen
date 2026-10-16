@@ -18,15 +18,15 @@
       "height_shape": 1.4,
       "whorl": 5,
       "interwhorl": 0,
-      "branch_angle": 60,
-      "upturn": 0.02,
+      "branch_angle": 45,
+      "upturn": 0.04,
       "branch_growth": 0.3,
       "spray_base": 0.2,
       "spray_length": 1.1,
-      "shade_death": 0.25,
+      "shade_death": 0.12,
       "pipe_organ": 0.009,
       "pipe_rings": 5e-06,
-      "branch_reach": 4.0,
+      "branch_reach": 3.0,
       "epi_chance": 0
     }
   },
@@ -50,9 +50,9 @@
   },
   "appearance": {
     "bark": [
-      0.62,
-      0.6,
-      0.56
+      0.34,
+      0.32,
+      0.27
     ],
     "bark_pattern": {
       "kind": "smooth",
@@ -200,7 +200,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Western white pine's values, changed by hand for whitebark pine: a shorter tree (height_rate and pipe_rings set so its growth under the lower height_max reaches the reference size) with short, stout, upswept branches (Abrams 1923 p. 54: \"branches short and stout, usually erect\"; FEIS, Fryer 2002: \"Branches of mature trees are ascending\") and a rounded, open crown. Not fitted to measurements."
+      "note": "Western white pine's values, changed by hand for whitebark pine: a shorter tree (height_rate and pipe_rings set so its growth under the lower height_max reaches the reference size) with short, stout, upswept branches (Abrams 1923 p. 54: \"branches short and stout, usually erect\"; FEIS, Fryer 2002: \"Branches of mature trees are ascending\") and a rounded, open crown. Not fitted to measurements. Crown refit (generator revision 85, needles shading by their own area): `branch_angle` 45 and `upturn` 0.04 so the limbs ascend as Abrams and FEIS say, where at 60 and 0.02 they spread level and drooped to the ground; `branch_reach` 3 for his short branches; `shade_death` 0.12 so the 60-year open-grown crown keeps about 3.7 m² of needles per m² of crown, inside the urban tree database's 3.6 to 6.8 for open-grown conifers that shore pine is held to (with the limbs ascending, 0.25 kept 1.8 and left the inner limbs bare)."
     },
     "allometry": {
       "evidence": "Authored",
@@ -210,7 +210,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, after Abrams (1923 p. 54): thin bark of whitish scales; dark green needles; purple, nearly round cones (FEIS: \"The purple cast of mature cones\")."
+      "note": "By eye, after Abrams (1923 p. 54): thin bark of whitish scales (pale grey: the colours are linear light, and 0.62 drew it chalk white, so it is 0.34, a pale grey on screen); dark green needles; purple, nearly round cones (FEIS: \"The purple cast of mature cones\")."
     }
   },
   "provenance": {
