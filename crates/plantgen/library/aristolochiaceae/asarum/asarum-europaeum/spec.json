@@ -1,0 +1,246 @@
+{
+  "schema": 1,
+  "id": "asarum-europaeum",
+  "taxon": {
+    "scientific_name": "Asarum europaeum",
+    "common_name": "European wild ginger",
+    "family": "Aristolochiaceae",
+    "genus": "Asarum",
+    "plant_name_id": 2654312
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 24,
+      "stem_rate": 0.5,
+      "clump_radius": 0.22,
+      "stem_lean": 30,
+      "maturity": 1.2,
+      "adult_age": 0,
+      "stem_radius": 0.0015,
+      "wiggle": 2,
+      "nodes": 1,
+      "leaves_per_node": 2,
+      "bare": 0.7,
+      "leaf_peak": 0.5,
+      "leaf_top": 1,
+      "leaf_base": 1,
+      "leaf_angle": 80,
+      "raceme": 0,
+      "flowers": 0
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.3,
+      0.2,
+      0.17
+    ],
+    "foliage": [
+      0.03,
+      0.09,
+      0.025
+    ],
+    "foliage_shade": [
+      0.01,
+      0.03,
+      0.008
+    ],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "teeth": 0,
+          "petiole": 0
+        },
+        "face_up": 0.85
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.1,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.05,
+      "max": 0.15
+    },
+    "leaf_length_m": {
+      "min": 0.03,
+      "max": 0.08
+    },
+    "leaf_width_m": {
+      "min": 0.04,
+      "max": 0.1
+    },
+    "leaf_venation": "palmate",
+    "leaf_shape": "reniform",
+    "leaf_habit": "evergreen",
+    "perennation": "rhizome",
+    "shoot_leaves": 2,
+    "inflorescence": "solitary",
+    "stamens": 12,
+    "flower_colour": [
+      80,
+      30,
+      45
+    ],
+    "flowering_months": [
+      3,
+      4,
+      5
+    ],
+    "fruiting_months": [
+      6,
+      7
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Asarum europaeum (read 2026-10-16): leaves about 10 cm wide; the lower bound is the model estimate's (species-facts-2026-10-15)."
+    },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Asarum europaeum (read 2026-10-16): reniform leaves; read as palmately veined, as the genus's kidney-shaped blades are, their main veins from the base (inferred, not stated in the article)."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Asarum europaeum (read 2026-10-16): each stem bears two reniform leaves with long petioles, the upper surface shiny."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Asarum europaeum (read 2026-10-16): a creeping evergreen perennial."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Asarum europaeum (read 2026-10-16): a creeping perennial on prostrate stems 10-15 cm long."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Asarum europaeum (read 2026-10-16): each stem bears two leaves; read as one node with its pair each year, as the western species (inferred)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Asarum europaeum (read 2026-10-16): flowers solitary, terminal and nodding, hidden by the leaves."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Asarum europaeum (read 2026-10-16): 12 stamens."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Asarum europaeum (read 2026-10-16): a tube of fused tepals ending in three lobes, dark purple toward the centre and brownish at their ends. The colour is our reading of the words."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Asarum europaeum (read 2026-10-16): flowers emerge in late winter and spring; March-May are the model estimate's months (species-facts-2026-10-15)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Western wild ginger's values (the same genus and habit): a creeping rhizome sends up a pair of long-stalked leaves at each node; more stems in a wider patch than the western species, for the dense, closed mats it forms (iNaturalist photographs, observations listed in the appearance note). Its leaf length comes from the blade. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.1 m at 4 years in the open: prostrate stems 10-15 cm (Wikipedia), within the model's usual 5-15 cm. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after Wikipedia's article: glossy, dark green, kidney-shaped evergreen leaves on long stalks, the outline drawn by the kingdom's rules from the stated reniform shape, held nearly flat in a closed mat, as iNaturalist photographs show it (observations 87548580, 381126740)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the second Magnoliidae batch (2026-10-16): characters from Wikipedia's article, sizes partly model estimates, drawing values from western wild ginger's."
+  }
+}
