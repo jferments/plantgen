@@ -290,6 +290,7 @@ pub fn own_leaf(species: &str) -> Option<Shape> {
             base: sprig.base,
             teeth: sprig.teeth,
             tooth_depth: sprig.tooth_depth,
+            round: sprig.round,
             petiole: sprig.petiole,
         }),
         other => other.clone(),

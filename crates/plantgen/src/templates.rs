@@ -715,7 +715,11 @@ fn simple_width(s: &Simple, length: f64, t: f64, margin: Option<&Margin>) -> f64
     let profile = outline_profile(s.outline.as_deref(), t, s.widest, s.base, s.tip);
     let mut width = s.width * length * 0.5 * profile;
     if let Some(margin) = margin {
-        let fall = margin.fall(t, TOOTH, |share| margins::tooth_flank(share, 0.0));
+        let drawn = Drawn {
+            round: s.round,
+            ..TOOTH
+        };
+        let fall = margin.fall(t, drawn, |share| margins::tooth_flank(share, s.round));
         width -= (s.tooth_depth * blade_fade(t)).min(DEEPEST * width) * fall;
     }
     width
@@ -809,6 +813,11 @@ fn shape_seed(shape: &Shape) -> u64 {
         _ => shape.clone(),
     };
     let mut text = format!("{plain:?}").replace("outline: None, ", "");
+    // A simple leaf's saw teeth are the teeth it had before it could
+    // round them.
+    if matches!(&plain, Shape::Simple(s) if s.round == 0.0) {
+        text = text.replace(", round: 0.0, ", ", ");
+    }
     for field in [
         "pattern",
         "pinnules",

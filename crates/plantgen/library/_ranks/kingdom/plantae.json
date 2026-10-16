@@ -94,6 +94,36 @@
       "template": "compound",
       "map": {"leaf_peltation": {"manifest": {"rule": "360 * (leaflets - 1) / leaflets"}}},
       "why": "A rosette's leaves are the species' leaves, unless their own are stated: a manifestly peltate digitate leaf's leaflets close a ring round the petiole's tip, evenly spaced all round."
+    },
+    "appearance.organs.leaf.shape.teeth": {
+      "template": ["simple", "sprig", "compound"],
+      "map": {"leaf_margin": {"entire": 0, "serrate": 10, "dentate": 10, "crenate": 8, "spiny": 4}},
+      "why": "A blade (or each leaflet) stated entire has no teeth; one stated serrate, dentate or crenate has ten or so small teeth up each side, a crenate one fewer and broader, and a spiny one a few spine-tipped teeth."
+    },
+    "appearance.organs.leaf.shape.tooth_depth": {
+      "template": ["simple", "sprig"],
+      "map": {"leaf_margin": {"serrate": 0.03, "dentate": 0.04, "crenate": 0.03, "spiny": 0.12}},
+      "why": "A toothed blade's teeth are shallow notches, a few hundredths of its length deep; a spiny blade's teeth stand out further, each ending in its spine."
+    },
+    "appearance.organs.leaf.shape.round": {
+      "template": ["simple", "sprig"],
+      "map": {"leaf_margin": {"serrate": 0, "dentate": 0.35, "crenate": 1, "spiny": 0}},
+      "why": "Serrate teeth are saw teeth pointing to the tip; dentate teeth point outward, so they are drawn blunter and more upright; crenate teeth are rounded scallops."
+    },
+    "appearance.organs.basal.shape.teeth": {
+      "template": ["simple", "sprig", "compound"],
+      "map": {"leaf_margin": {"entire": 0, "serrate": 10, "dentate": 10, "crenate": 8, "spiny": 4}},
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: A blade (or each leaflet) stated entire has no teeth; one stated serrate, dentate or crenate has ten or so small teeth up each side, a crenate one fewer and broader, and a spiny one a few spine-tipped teeth."
+    },
+    "appearance.organs.basal.shape.tooth_depth": {
+      "template": ["simple", "sprig"],
+      "map": {"leaf_margin": {"serrate": 0.03, "dentate": 0.04, "crenate": 0.03, "spiny": 0.12}},
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: A toothed blade's teeth are shallow notches, a few hundredths of its length deep; a spiny blade's teeth stand out further, each ending in its spine."
+    },
+    "appearance.organs.basal.shape.round": {
+      "template": ["simple", "sprig"],
+      "map": {"leaf_margin": {"serrate": 0, "dentate": 0.35, "crenate": 1, "spiny": 0}},
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: Serrate teeth are saw teeth pointing to the tip; dentate teeth point outward, so they are drawn blunter and more upright; crenate teeth are rounded scallops."
     }
   },
   "evidence": {
@@ -157,6 +187,36 @@
       "evidence": "SourceInferred",
       "source": "kaplan-2022",
       "note": "Kaplan (2022, pp. 426 and 442-444, Fig. 17.15): most blades are epeltate, the petiole meeting the blade at its basal margin; a peltate blade has the petiole joined on its underside, inside its outline, like an umbrella, and is held near horizontal on the petiole; a latently peltate blade is held so but the petiole still meets its margin. Many digitate leaves are peltate in organisation: with only lateral pairs beside the terminal leaflet the ring of leaflets is open toward the stem (latent), and an extra cross leaflet opposite the terminal one closes it (manifest), as in Lupinus polyphyllus. Evenly spaced all round is the model's choice: the cross leaflet takes the place a leaflet would on the stem's side."
+    },
+    "rules.appearance.organs.leaf.shape.teeth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a stated leaf margin, a choice of the model's (visual forms, 2026-10-16), the words as the trait defines them: serrate teeth point forward, dentate outward, crenate are rounded, spiny end in spines. The counts and depths are calibrated on the curated species whose leaves are drawn toothed (25 simple and sprig leaves: 2 to 18 teeth a side, about 9 in the middle; tooth depth about 0.03 of the blade's length in the middle; Garry oak's rounded lobes 0.8 round, tanoak's teeth 0.3). A species' own drawn teeth win over these."
+    },
+    "rules.appearance.organs.leaf.shape.tooth_depth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a stated leaf margin, a choice of the model's (visual forms, 2026-10-16), the words as the trait defines them: serrate teeth point forward, dentate outward, crenate are rounded, spiny end in spines. The counts and depths are calibrated on the curated species whose leaves are drawn toothed (25 simple and sprig leaves: 2 to 18 teeth a side, about 9 in the middle; tooth depth about 0.03 of the blade's length in the middle; Garry oak's rounded lobes 0.8 round, tanoak's teeth 0.3). A species' own drawn teeth win over these."
+    },
+    "rules.appearance.organs.leaf.shape.round": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a stated leaf margin, a choice of the model's (visual forms, 2026-10-16), the words as the trait defines them: serrate teeth point forward, dentate outward, crenate are rounded, spiny end in spines. The counts and depths are calibrated on the curated species whose leaves are drawn toothed (25 simple and sprig leaves: 2 to 18 teeth a side, about 9 in the middle; tooth depth about 0.03 of the blade's length in the middle; Garry oak's rounded lobes 0.8 round, tanoak's teeth 0.3). A species' own drawn teeth win over these."
+    },
+    "rules.appearance.organs.basal.shape.teeth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a stated leaf margin, a choice of the model's (visual forms, 2026-10-16), the words as the trait defines them: serrate teeth point forward, dentate outward, crenate are rounded, spiny end in spines. The counts and depths are calibrated on the curated species whose leaves are drawn toothed (25 simple and sprig leaves: 2 to 18 teeth a side, about 9 in the middle; tooth depth about 0.03 of the blade's length in the middle; Garry oak's rounded lobes 0.8 round, tanoak's teeth 0.3). A species' own drawn teeth win over these."
+    },
+    "rules.appearance.organs.basal.shape.tooth_depth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a stated leaf margin, a choice of the model's (visual forms, 2026-10-16), the words as the trait defines them: serrate teeth point forward, dentate outward, crenate are rounded, spiny end in spines. The counts and depths are calibrated on the curated species whose leaves are drawn toothed (25 simple and sprig leaves: 2 to 18 teeth a side, about 9 in the middle; tooth depth about 0.03 of the blade's length in the middle; Garry oak's rounded lobes 0.8 round, tanoak's teeth 0.3). A species' own drawn teeth win over these."
+    },
+    "rules.appearance.organs.basal.shape.round": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a stated leaf margin, a choice of the model's (visual forms, 2026-10-16), the words as the trait defines them: serrate teeth point forward, dentate outward, crenate are rounded, spiny end in spines. The counts and depths are calibrated on the curated species whose leaves are drawn toothed (25 simple and sprig leaves: 2 to 18 teeth a side, about 9 in the middle; tooth depth about 0.03 of the blade's length in the middle; Garry oak's rounded lobes 0.8 round, tanoak's teeth 0.3). A species' own drawn teeth win over these."
     }
   }
 }
