@@ -808,7 +808,11 @@ fn shape_seed(shape: &Shape) -> u64 {
         }
         _ => shape.clone(),
     };
-    let mut text = format!("{plain:?}").replace("outline: None, ", "");
+    // A blade without basal lobes or fanned veins grows the veins it grew
+    // before cards had them.
+    let mut text = format!("{plain:?}")
+        .replace("outline: None, ", "")
+        .replace(", sinus: 0.0, fan: 0 }", " }");
     for field in [
         "pattern",
         "pinnules",
@@ -856,12 +860,14 @@ pub fn grow_leaf(shape: &Shape) -> Option<GrownLeaf> {
     let seed = shape_seed(shape);
     match shape {
         Shape::Simple(s) => {
-            let length = 1.0 - s.petiole;
+            let length = 1.0 - junction(s);
+            let (below, lobe) = basal_lobes(s, length);
             Some(pinnate_leaf(
                 (s.teeth, TEETH),
                 &|t| simple_width(s, length, t, None) / length,
                 &|t, margin| simple_width(s, length, t, Some(margin)) / length,
                 (0.5 * s.width + 0.02, Growth::default()),
+                (below, &lobe, s.fan),
                 seed,
             ))
         }
@@ -876,6 +882,7 @@ pub fn grow_leaf(shape: &Shape) -> Option<GrownLeaf> {
                 &|t| lobed_width(s, length, t, None) / length,
                 &|t, margin| lobed_width(s, length, t, Some(margin)) / length,
                 (0.5 * s.width + 0.02, growth),
+                (0.0, &no_lobes, 0),
                 seed,
             ))
         }
@@ -888,6 +895,7 @@ pub fn grow_leaf(shape: &Shape) -> Option<GrownLeaf> {
                     &|t| leaflet_width(s, &form, 1.0, t, None),
                     &|t, margin| leaflet_width(s, &form, 1.0, t, Some(margin)),
                     (0.5 * s.leaflet_width + 0.02, Growth::default()),
+                    (0.0, &no_lobes, 0),
                     seed,
                 )
             })
@@ -897,6 +905,7 @@ pub fn grow_leaf(shape: &Shape) -> Option<GrownLeaf> {
             &|t| sprig_width(s, 1.0, t, None),
             &|t, margin| sprig_width(s, 1.0, t, Some(margin)),
             (0.5 * s.width + 0.02, Growth::default()),
+            (0.0, &no_lobes, 0),
             seed,
         )),
         Shape::Palmate(s) => Some(palmate_leaf(s, fine(shape), seed)),
@@ -913,6 +922,75 @@ fn lean(heading: Option<(f64, f64)>, tangent: (f64, f64)) -> f64 {
     ((heading.0 * tangent.0 + heading.1 * tangent.1) / norm).clamp(0.0, 1.0)
 }
 
+/// Where a simple card's petiole meets its blade, from the card's base:
+/// at the petiole's length, or higher where the blade's basal lobes
+/// (`sinus`, a share of the blade's length) reach back farther than the
+/// petiole is long, so the lobes still fit on the card, hanging to its
+/// foot.
+pub(crate) fn junction(s: &Simple) -> f64 {
+    let sinus = s.sinus.max(0.0);
+    s.petiole.max(sinus / (1.0 + sinus))
+}
+
+/// A blade with no basal lobes, for [`pinnate_leaf`].
+fn no_lobes(_: (f64, f64)) -> bool {
+    false
+}
+
+/// A simple blade's basal lobes, in its frame (blade lengths across, and
+/// `t` along it from where its petiole meets it): how far back past that
+/// point they reach, 0 for none, and whether a point lies in one. Each
+/// lobe is a half ellipse hung from the blade's base, from a twenty-fifth
+/// of its half-width beside the midrib to its edge, so the sinus between them
+/// opens round the petiole and closes at its top.
+fn basal_lobes(s: &Simple, length: f64) -> (f64, impl Fn((f64, f64)) -> bool) {
+    let length = length.max(1e-6);
+    let below = s.sinus.max(0.0);
+    let half = simple_width(s, length, 0.0, None) / length;
+    let lobe = move |(x, t): (f64, f64)| {
+        below > 0.0 && t < 0.0 && t > -below && {
+            let reach = (1.0 - (t / below) * (t / below)).max(0.0).sqrt();
+            (x.abs() - 0.52 * half).abs() < 0.48 * half * reach
+        }
+    };
+    (below, lobe)
+}
+
+/// The main veins a palmately veined blade fans from its midrib's foot,
+/// `fan` a side: spread evenly up to 80° from the midrib, or past the
+/// perpendicular into its basal lobes where it has them, each run to 0.85
+/// of the way to the edge and curving a little toward the tip.
+fn fanned(fan: u32, lobed: bool, inside: &dyn Fn((f64, f64)) -> bool) -> Vec<Vec<(f64, f64)>> {
+    let spread = math::radians(if lobed { 130.0 } else { 80.0 });
+    let mut veins = Vec::new();
+    for k in 1..=fan {
+        let angle = spread * f64::from(k) / (f64::from(fan) + 0.5);
+        for sign in [1.0, -1.0] {
+            let ray = |along: f64, angle: f64| {
+                (sign * along * math::sin(angle), along * math::cos(angle))
+            };
+            let mut reach = 0.0;
+            let mut along = 0.005;
+            while along < 1.5 {
+                if inside(ray(along, angle)) {
+                    reach = along;
+                } else if along > 0.03 {
+                    break;
+                }
+                along += 0.005;
+            }
+            if reach > 0.05 {
+                veins.push(vec![
+                    (0.0, 0.0),
+                    ray(0.5 * reach, angle),
+                    ray(0.85 * reach, 0.88 * angle),
+                ]);
+            }
+        }
+    }
+    veins
+}
+
 /// Grow a pinnately veined blade: `count` teeth or lobes a side in its
 /// `zone`, on a blade whose untoothed half-width is `outline(t)` and whose
 /// half-width with a side's margin is `half(t, margin)`, both blade lengths;
@@ -924,6 +1002,7 @@ fn pinnate_leaf(
     outline: &dyn Fn(f64) -> f64,
     half: &dyn Fn(f64, &Margin) -> f64,
     (widest, growth): (f64, Growth),
+    (below, lobe, fan): (f64, &dyn Fn((f64, f64)) -> bool, u32),
     seed: u64,
 ) -> GrownLeaf {
     let mut margins: Vec<Margin> = (0..2_u64)
@@ -935,7 +1014,8 @@ fn pinnate_leaf(
     let inset = 0.5 * KILL * growth.secondary;
     let veins = {
         let inside = |p: (f64, f64)| {
-            (0.0..=1.0).contains(&p.1) && p.0.abs() < half(p.1, &margins[usize::from(p.0 < 0.0)])
+            ((0.0..=1.0).contains(&p.1) && p.0.abs() < half(p.1, &margins[usize::from(p.0 < 0.0)]))
+                || lobe(p)
         };
         let tips = margins
             .iter()
@@ -947,10 +1027,12 @@ fn pinnate_leaf(
                 })
             })
             .collect();
+        let mut primaries = vec![vec![(0.0, 0.0), (0.0, 0.96)]];
+        primaries.extend(fanned(fan, below > 0.0, &inside));
         let blade = Lamina {
             inside: &inside,
-            bounds: ((-widest, 0.0), (widest, 1.0)),
-            primaries: vec![vec![(0.0, 0.0), (0.0, 0.96)]],
+            bounds: ((-widest, -below), (widest, 1.0)),
+            primaries,
             tips,
         };
         Venation::grow(&blade, &growth, seed)
@@ -1475,12 +1557,19 @@ fn simple(
     veins: Option<&Venation>,
     margins: &[Margin],
 ) -> Paint {
-    let base = s.petiole;
+    let base = junction(s);
     if y < base + 0.01 && x.abs() < fine {
         return Paint::solid(0.9, 1.0);
     }
     let length = 1.0 - base;
     let t = (y - base) / length.max(1e-6);
+    if t < 0.0 {
+        let (_, lobe) = basal_lobes(s, length);
+        if !lobe((x / length.max(1e-6), t)) {
+            return Paint::EMPTY;
+        }
+        return Paint::solid(0.95 + grown(veins, x / length, t, length, || 0.0), 0.0);
+    }
     let width = simple_width(s, length, t, margins.get(usize::from(x < 0.0)));
     if x.abs() >= width {
         return Paint::EMPTY;

@@ -1,0 +1,299 @@
+{
+  "schema": 1,
+  "id": "houttuynia-cordata",
+  "taxon": {
+    "scientific_name": "Houttuynia cordata",
+    "common_name": "fish mint",
+    "family": "Saururaceae",
+    "genus": "Houttuynia",
+    "plant_name_id": 385534
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 14,
+      "clump_radius": 0.25,
+      "nodes": 6,
+      "stem_lean": 10,
+      "leaf_top": 0.7
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.4,
+      0.2,
+      0.2
+    ],
+    "foliage": [
+      0.08,
+      0.15,
+      0.05
+    ],
+    "foliage_shade": [
+      0.026,
+      0.05,
+      0.016
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "width": 0.75,
+          "widest": 0.3,
+          "tip": 0.4,
+          "base": 1.0,
+          "teeth": 0,
+          "petiole": 0.22
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 2,
+      "environment": "open",
+      "height": 0.4,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "low": 0.05,
+      "min": 0.3,
+      "max": 0.6
+    },
+    "leaf_length_m": {
+      "low": 0.015,
+      "min": 0.04,
+      "max": 0.1
+    },
+    "leaf_width_m": {
+      "low": 0.018,
+      "min": 0.025,
+      "max": 0.06
+    },
+    "petiole_length_m": {
+      "low": 0.007,
+      "min": 0.01,
+      "max": 0.035,
+      "high": 0.04
+    },
+    "leaf_shape": "cordate",
+    "leaf_habit": "deciduous",
+    "perennation": "rhizome",
+    "rhizome_habit": "long_creeping",
+    "clonal": true,
+    "inflorescence": "spike",
+    "inflorescence_length_m": {
+      "low": 0.004,
+      "min": 0.015,
+      "max": 0.025,
+      "high": 0.027
+    },
+    "inflorescence_bracts": 4,
+    "bract_form": "petaloid",
+    "bract_length_m": {
+      "low": 0.005,
+      "min": 0.01,
+      "max": 0.015
+    },
+    "flower_colour": [
+      200,
+      205,
+      110
+    ],
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.002,
+      "max": 0.003
+    },
+    "flowering_months": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "fruiting_months": [
+      6,
+      7,
+      8,
+      9,
+      10
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Houttuynia cordata (read on eFloras, 2026-10-16): herbs (5-)30-60 cm high."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Houttuynia cordata (read on eFloras, 2026-10-16): blade (1.5-)4-10 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Houttuynia cordata (read on eFloras, 2026-10-16): blade (1.8-)2.5-6 cm wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Houttuynia cordata (read on eFloras, 2026-10-16): petiole (0.7-)1-3.5(-4) cm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Houttuynia cordata (read on eFloras, 2026-10-16): blade broadly ovate or ovate-cordate, base cordate (Simpson p. 207: cordate)."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Houttuynia cordata (read on eFloras, 2026-10-16): rhizomes creeping, thin; the stems creep and root at the base, then stand erect."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 207, Houttuynia cordata: spreads by its rhizomes into dense carpets."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 207, Houttuynia cordata: spreads by its rhizomes into dense carpets."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Houttuynia cordata (read on eFloras, 2026-10-16): a short dense spike; Simpson (p. 207) says yellow-green."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Houttuynia cordata (read on eFloras, 2026-10-16): inflorescences (0.4-)1.5-2.5(-2.7) cm."
+    },
+    "traits.inflorescence_bracts": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 207, Houttuynia cordata: four white, petal-like bracts below the spike."
+    },
+    "traits.bract_form": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 207, Houttuynia cordata: the involucral bracts white and petal-like."
+    },
+    "traits.bract_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Houttuynia cordata (read on eFloras, 2026-10-16): involucral bracts (5-)10-15 mm, oblong or obovate."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 207, Houttuynia cordata: the spike yellow-green. The colour is our reading of the words."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Houttuynia cordata (read on eFloras, 2026-10-16): capsule 2-3 mm, styles persistent."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Houttuynia cordata (read on eFloras, 2026-10-16): capsule 2-3 mm."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Houttuynia cordata (read on eFloras, 2026-10-16): flowers April-September."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 4, Houttuynia cordata (read on eFloras, 2026-10-16): fruits June-October."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Hand-set: a creeping rhizome sends up many leafy stems in a loose patch (Flora of China: rhizomes creeping; Simpson: forms dense carpets), each with several leaf nodes, its upper leaves little smaller than its lower (Flora of China: blades 4-10 cm). Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.4 m at 2 years in the open, within Flora of China's 30-60 cm. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after Flora of China and Simpson: stems often purplish red; heart-shaped leaves green above, purplish below, drawn on a simple card widest near its full base, 0.75 as broad as long (Flora of China: blades 4-10 x 2.5-6 cm), as no cordate card is drawn yet. The leaf card's petiole is 0.22 of its length, the flora's petiole against blade and petiole together."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the Magnoliidae specs (2026-10-16): sizes from Flora of China, bracts from Simpson."
+  }
+}
