@@ -4,9 +4,23 @@
   "name": "Dasypogonaceae",
   "parent": "order/arecales",
   "traits": {
+    "fruit_type": "capsule",
+    "stamens": 6,
+    "inflorescence": "head",
+    "life_span": "perennial",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_division": "simple",
+    "perianth": "tepals",
     "perennation": "rhizome"
   },
   "evidence": {
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA (read 2026-10-16): dry, capsular or indehiscent."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA (read 2026-10-16): six stamens."},
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA (read 2026-10-16): dense globose heads or loose branched axes of globose partial heads."},
+    "traits.life_span": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA (read 2026-10-16): woody or herbaceous rhizomatous perennials (some pachycaul)."},
+    "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA (read 2026-10-16): leaves usually spiral, sometimes two-ranked."},
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA (read 2026-10-16): leaves simple, linear to needle-like."},
+    "traits.perianth": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Dasypogonaceae (read 2026-10-16): six tepals in two whorls, usually petaloid."},
     "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Dasypogonaceae: how its perennial herbs last from year to year (character 25), coded usually a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

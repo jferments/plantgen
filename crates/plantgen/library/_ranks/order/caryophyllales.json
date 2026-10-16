@@ -2,5 +2,131 @@
   "schema": 1,
   "rank": "order",
   "name": "Caryophyllales",
-  "parent": "clade/superasterids"
+  "parent": "clade/superasterids",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "often",
+      "whorled": "rarely"
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "decussate": "often"
+    },
+    "leaf_division": "simple",
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "ovary_position": {
+      "superior": "usually",
+      "inferior": "sometimes",
+      "half_inferior": "rarely"
+    },
+    "carpels": {
+      "min": 2,
+      "max": 5,
+      "typical": 3,
+      "low": 1
+    },
+    "fruit_type": {
+      "capsule": "usually",
+      "achene": "often",
+      "berry": "sometimes"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "sometimes",
+      "monoecious": "sometimes"
+    },
+    "life_span": {
+      "perennial": "usually",
+      "annual": "often",
+      "biennial": "rarely"
+    },
+    "rosette": {
+      "none": "usually",
+      "basal": "sometimes"
+    },
+    "hypanthium": {
+      "false": "usually",
+      "true": "sometimes"
+    },
+    "flowering_position": {
+      "terminal": "usually",
+      "lateral": "sometimes"
+    },
+    "inflorescence": {
+      "cyme": "usually",
+      "spike": "often",
+      "solitary": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): alternate in Polygonaceae (nearly always), Chenopodiaceae (usually), Tamaricaceae, Plumbaginaceae, Cactaceae (Pereskieae; areoles spiral); opposite in Caryophyllaceae and Nyctaginaceae (usually); Aizoaceae either. Close split; alternate first by summed species, inferred. APweb gives no order-level state."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Polygonaceae, Chenopodiaceae, Tamaricaceae alternate and spiral; opposite pairs in Caryophyllaceae, Nyctaginaceae, much of Aizoaceae (overrides)."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Caryophyllales page, order characterisation (read 2026-10-16): lamina margins entire. DELTA: Tamaricaceae simple (scale-like); all families with candidates state simple."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): flowers regular in Caryophyllaceae, Amaranthaceae, Chenopodiaceae, Nyctaginaceae, Aizoaceae; Cactaceae regular or somewhat zygomorphic."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): superior in Caryophyllaceae, Amaranthaceae, Polygonaceae, Nyctaginaceae, Tamaricaceae; Cactaceae inferior; Aizoaceae superior to inferior."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Caryophyllales page (read 2026-10-16): gynoecium of three carpels, styles long, as the order's starting state. DELTA: Caryophyllaceae 2-5, Polygonaceae (2-)3(-4), Tamaricaceae (2-)3-4(-5), Nyctaginaceae 1; Cactaceae 3-100 (states its own)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Caryophyllales page (read 2026-10-16): fruit a loculicidal capsule at order level. DELTA: capsules in Caryophyllaceae, Aizoaceae, Tamaricaceae; nut or achene-like in Polygonaceae, Chenopodiaceae, Nyctaginaceae; berry in Cactaceae."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): mostly hermaphrodite in Caryophyllaceae, Amaranthaceae, Chenopodiaceae, Polygonaceae, Cactaceae, Aizoaceae; Tamaricaceae hermaphrodite or dioecious; APweb: Nepenthaceae dioecious."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Cactaceae perennial; Aizoaceae, Chenopodiaceae, Caryophyllaceae annual to perennial; Tamaricaceae woody; Polygonaceae herbs, shrubs, trees. 'Usually perennial' inferred by species weight (cacti, mesembs, woody taxa)."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): leafy-stemmed herbs and shrubs in Caryophyllaceae, Chenopodiaceae, Tamaricaceae, Nyctaginaceae; basal rosettes in parts of Plumbaginaceae, Droseraceae, Montiaceae (stated). Inferred."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): hypanthium absent in Tamaricaceae, Nyctaginaceae; present or absent in Polygonaceae, Cactaceae, Aizoaceae."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Caryophyllaceae inflorescence terminal (dichasia); Polygonaceae, Chenopodiaceae, Nyctaginaceae terminal or axillary; cacti lateral from areoles (override). 'Usually terminal' weighted by Caryophyllaceae; medium confidence."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Caryophyllaceae dichasial cymes; Chenopodiaceae and Aizoaceae cymose; Amaranthaceae spikes or heads."
+    }
+  }
 }

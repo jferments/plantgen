@@ -28,7 +28,20 @@
     },
     "leaf_venation": {
       "palmate": "usually"
-    }
+    },
+    "perianth": "tepals",
+    "flower_merosity": {
+      "min": 2,
+      "max": 5,
+      "typical": 2
+    },
+    "stamens": {
+      "min": 10,
+      "max": 100,
+      "typical": 30,
+      "low": 4
+    },
+    "life_span": "perennial"
   },
   "evidence": {
     "traits": {
@@ -50,6 +63,26 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 333, 334, 335, family Begoniaceae: leaf venation palmate, usually; read as {\"palmate\": \"usually\"}."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Begoniaceae (read 2026-10-16): perianth petaloid, no separate calyx and corolla."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Begoniaceae (read 2026-10-16): commonly 2 or 4 tepals (2-5; 10 in Hillebrandia); male flowers two unlike pairs, female often 5. Typical 2 counts one whorl of a male flower."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Begoniaceae (read 2026-10-16): stamens many. Typical 30 is my estimate."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Begoniaceae (read 2026-10-16): mostly perennial succulent herbs."
     }
   }
 }

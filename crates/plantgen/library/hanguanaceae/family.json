@@ -4,9 +4,13 @@
   "name": "Hanguanaceae",
   "parent": "order/commelinales",
   "traits": {
+    "sexual_system": "dioecious",
+    "perianth": "tepals",
     "perennation": "rhizome"
   },
   "evidence": {
+    "traits.sexual_system": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb (read 2026-10-16): Hanguanaceae dioecious."},
+    "traits.perianth": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb (read 2026-10-16): Hanguanaceae flowers small with tepals."},
     "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Hanguanaceae: how its perennial herbs last from year to year (character 25), coded usually a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."}
   }
 }

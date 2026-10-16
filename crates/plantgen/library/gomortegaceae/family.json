@@ -2,5 +2,39 @@
   "schema": 1,
   "rank": "family",
   "name": "Gomortegaceae",
-  "parent": "order/laurales"
+  "parent": "order/laurales",
+  "traits": {
+    "leaf_arrangement": "opposite",
+    "phyllotaxis_pattern": "decussate",
+    "hypanthium": false,
+    "ovary_position": "inferior",
+    "fruit_type": "drupe"
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Laurales page (read 2026-10-16): Gomortega leaves opposite."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Laurales page (read 2026-10-16): leaves opposite."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Laurales page (read 2026-10-16): hypanthium absent."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Laurales page (read 2026-10-16): ovary inferior, carpels 2-3 joined."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Laurales page (read 2026-10-16): drupaceous, usually one seed."
+    }
+  }
 }

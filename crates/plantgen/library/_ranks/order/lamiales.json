@@ -15,13 +15,114 @@
       "actinomorphic": "sometimes"
     },
     "ovary_position": "superior",
-    "carpels": 2
+    "phyllotaxis_pattern": {
+      "decussate": "usually",
+      "spiral": "sometimes"
+    },
+    "stamens": {
+      "min": 2,
+      "max": 4,
+      "typical": 4,
+      "high": 5
+    },
+    "zygomorphy": "bilabiate",
+    "inflorescence": {
+      "cyme": "usually",
+      "raceme": "often",
+      "spike": "sometimes",
+      "solitary": "sometimes"
+    },
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "sometimes"
+    },
+    "division_pattern": {
+      "pinnate": "usually",
+      "palmate": "sometimes"
+    },
+    "rosette": {
+      "none": "usually",
+      "basal": "sometimes"
+    },
+    "life_span": {
+      "perennial": "usually",
+      "annual": "sometimes",
+      "biennial": "rarely"
+    },
+    "corolla_shape": {
+      "tubular": "usually",
+      "funnelform": "sometimes",
+      "campanulate": "sometimes",
+      "salverform": "rarely",
+      "rotate": "rarely"
+    },
+    "hypanthium": false,
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "polygamous": "rarely",
+      "dioecious": "rarely"
+    }
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 231 Oleaceae, 239 Bignoniaceae, 243 Verbenaceae, 324 Scrophulariaceae, 325 Acanthaceae, 326 Gesneriaceae, 327 Orobanchaceae and 342 Labiatae, the bulk of APG's Lamiales: leaves mostly opposite (alternate in many figworts and broomrapes); stipules absent; flowers mostly zygomorphic, often two-lipped (the olive family's regular); the ovary superior, of two carpels."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Lamiales page, order characterisation (read 2026-10-16): leaves opposite at order level. DELTA (Labiatae, Gesneriaceae) and Wikipedia Gesneriaceae: opposite pairs crossing (decussate) in the big families. 'sometimes spiral' added for the alternate-leaved families (Orobanchaceae, Lentibulariaceae, Plantago, Verbascum), which DELTA gives as spiral. Weighting inferred from the largest families."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Corrects the lamiid value (typical 5) inherited from above. DELTA family pages (read 2026-10-16): Labiatae 2 or 4 (mostly 4, didynamous); Scrophulariaceae s.l. (2-)4(-5); Bignoniaceae usually 4; Gesneriaceae 2 or 4; Oleaceae and Lentibulariaceae 2. APweb core Lamiales node: four didynamous stamens. Typical 4 by species weight."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): corolla usually two-lipped in Labiatae, Scrophulariaceae s.l., Gesneriaceae, Lentibulariaceae, often so in Bignoniaceae. Every zygomorphic family with candidates already says bilabiate; this sets the order default."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Lamiales page, order characterisation (read 2026-10-16): inflorescence cymose (determinate). DELTA: Gesneriaceae usually cymose; Wikipedia Gesneriaceae: pair-flowered cymes typical. Racemes and spikes common in Plantaginaceae, Orobanchaceae, Scrophulariaceae."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): simple in Labiatae (rarely pinnate), Gesneriaceae, Scrophulariaceae s.l. (usually); compound common only in Bignoniaceae (usually) and Oleaceae (simple or pinnate/ternate)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): compound leaves pinnate in Labiatae and Oleaceae (pinnate or ternate); Bignoniaceae pinnate, palmate, bipinnate or two-foliolate. Palmate kept at 'sometimes' for the Tabebuia group."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Labiatae without leaf clusters; basal leaf clusters only in some Scrophulariaceae s.l., Gesneriaceae, Lentibulariaceae and Plantago. Inferred 'usually none' for a largely leafy-stemmed order (Verbascum rosettes are the main exception in Scrophulariaceae)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Oleaceae and Bignoniaceae woody; Gesneriaceae mostly perennial herbs and subshrubs (also Wikipedia Gesneriaceae); Lentibulariaceae perennial; Labiatae and Scrophulariaceae s.l. annual to perennial. 'Usually perennial' inferred from the woody and perennial bulk; annuals concentrated in Linderniaceae (override)."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "APweb, Lamiales page (read 2026-10-16): calyx connate, stamens fixed to the corolla (a sympetalous tube). DELTA: Labiatae, Scrophulariaceae s.l., Lentibulariaceae corolla a two-lipped tube; Wikipedia Gesneriaceae: petals fused into a tube. Bell and funnel shapes in Bignoniaceae (override); rotate in Veronica/Plantago and Oleaceae (overrides)."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): free hypanthium absent in Labiatae and Gesneriaceae (disk only); no family with candidates states one."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): hermaphrodite in Scrophulariaceae s.l., Orobanchaceae, Bignoniaceae, Lentibulariaceae; mostly so in Labiatae (a few dioecious or polygamous), Gesneriaceae (rarely monoecious) and Oleaceae (usually, else polygamous)."
     }
   }
 }

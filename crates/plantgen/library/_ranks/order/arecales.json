@@ -2,5 +2,27 @@
   "schema": 1,
   "rank": "order",
   "name": "Arecales",
-  "parent": "clade/commelinids"
+  "parent": "clade/commelinids",
+  "traits": {
+    "division_pattern": {
+      "pinnate": "usually",
+      "palmate": "sometimes"
+    },
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "rarely"
+    }
+  },
+  "evidence": {
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb Arecales page (read 2026-10-16): palm leaves plicate, pinnately pseudocompound, palmate or costapalmate in some subfamilies (mainly Coryphoideae). 'Usually pinnate' is our species weighting (most palm genera are feather palms)."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): palm perianth varies among subfamilies but is generally three sepals and three petals (Arecaceae states sepals_and_petals); DELTA Dasypogonaceae (read 2026-10-16): six tepals. Monocot default tepals is wrong by species weight (about 2,450 palms vs 16 Dasypogonaceae)."
+    }
+  }
 }

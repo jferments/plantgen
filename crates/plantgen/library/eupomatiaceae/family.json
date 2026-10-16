@@ -2,5 +2,33 @@
   "schema": 1,
   "rank": "family",
   "name": "Eupomatiaceae",
-  "parent": "order/magnoliales"
+  "parent": "order/magnoliales",
+  "traits": {
+    "perianth": "absent",
+    "hypanthium": true,
+    "ovary_position": "half_inferior",
+    "fruit_type": "berry"
+  },
+  "evidence": {
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): perianth none; bud covered by a deciduous cap; petal-like inner staminodes."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): concave receptacle surrounding the carpels."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): carpels tightly packed and sunk into the concave receptacle (our reading as half-inferior)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Magnoliales page (read 2026-10-16): fruit fleshy, berry-like."
+    }
+  }
 }

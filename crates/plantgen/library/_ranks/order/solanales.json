@@ -11,13 +11,95 @@
       "zygomorphic": "rarely"
     },
     "perianth": "sepals_and_petals",
-    "ovary_position": "superior"
+    "ovary_position": "superior",
+    "phyllotaxis_pattern": "spiral",
+    "flowering_position": "terminal",
+    "life_span": {
+      "perennial": "usually",
+      "annual": "often"
+    },
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "sometimes"
+    },
+    "division_pattern": {
+      "pinnate": "usually",
+      "palmate": "sometimes"
+    },
+    "inflorescence": {
+      "cyme": "usually",
+      "solitary": "often"
+    },
+    "hypanthium": false,
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "rarely"
+    },
+    "rosette": {
+      "none": "usually",
+      "basal": "sometimes"
+    },
+    "fruit_type": {
+      "capsule": "usually",
+      "berry": "often",
+      "drupe": "sometimes"
+    }
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), order 77 Solanales (Solanaceae, Convolvulaceae and kin): mostly herbs or twiners; leaves alternate; no stipules; corolla regular (a few nightshades irregular); stamens as many as the corolla lobes and alternate with them; ovary superior, often of two cells."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Solanaceae leaves alternate, usually spiral; Convolvulaceae alternate, spiral. APweb Solanales page: Sphenocleaceae spirally arranged. Montiniaceae (opposite in part) is the only exception."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Solanales page, order characterisation (read 2026-10-16): inflorescence terminal. Flora of China Solanaceae: mostly terminal but often looking axillary, extra-axillary or leaf-opposed after sympodial growth, so a drawing may read these as lateral. Convolvulaceae differ (override)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Solanaceae annual, biennial or perennial, many shrubs and trees; Convolvulaceae mostly climbing herbs plus shrubs and lianas. Wikipedia Ipomoea: annual or perennial. 'Usually perennial' inferred from the woody and perennial bulk."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Solanaceae simple or compound (ternate or pinnate); Convolvulaceae entire or lobed; Wikipedia Convolvulaceae: leaves simple."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Solanaceae compound leaves ternate or pinnate (tomato, potato pinnate); Convolvulaceae divided leaves pinnatifid or palmatifid."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Convolvulaceae (read 2026-10-16): flowers solitary or in cymes (dichasia or cincinni); APweb Solanales page: Convolvulaceae cymose, Sphenoclea in dense spikes. Solanaceae states cyme/solitary."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Solanaceae and Convolvulaceae with a hypogynous disk, no hypanthium; every family states false."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Convolvulaceae usually hermaphrodite (dioecious in Hildebrandtia); Solanaceae flowers bisexual. Montiniaceae dioecious (states its own)."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Convolvulaceae climbing or trailing; Solanaceae herbs to trees, rosettes only in a few herbs (Mandragora type). Inferred."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Convolvulaceae usually a capsule; Solanaceae berry, capsule or drupe. Capsule first by species weight (Convolvulaceae plus capsular Solanaceae such as Nicotiana, Petunia, Datura); inferred."
     }
   }
 }

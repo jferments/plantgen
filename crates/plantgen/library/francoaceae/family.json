@@ -4,6 +4,7 @@
   "name": "Francoaceae",
   "parent": "order/geraniales",
   "traits": {
+    "division_pattern": "pinnate",
     "leaf_arrangement": "alternate",
     "leaf_division": "simple",
     "leaf_venation": {
@@ -43,6 +44,7 @@
     "perennation": "rhizome"
   },
   "evidence": {
+    "traits.division_pattern": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Geraniales page, Francoaceae (read 2026-10-16): odd-pinnate in Bersameae, pinnate or simple in Francoeae."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

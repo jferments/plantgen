@@ -4,6 +4,7 @@
   "name": "Orobanchaceae",
   "parent": "order/lamiales",
   "traits": {
+    "phyllotaxis_pattern": "spiral",
     "flower_merosity": 5,
     "flower_symmetry": "zygomorphic",
     "perianth": "sepals_and_petals",
@@ -54,6 +55,7 @@
     }
   },
   "evidence": {
+    "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Orobanchaceae (read 2026-10-16): leaves small, alternate, spiral (often scale-like). Would otherwise inherit decussate."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "jepson-eflora",
