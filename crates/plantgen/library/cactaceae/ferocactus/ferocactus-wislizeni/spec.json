@@ -120,7 +120,7 @@
             "role": "central",
             "count": [3, 3],
             "angle": 35,
-            "length": 0.04,
+            "length": 0.08,
             "width": 0.0018,
             "colour": [0.45, 0.12, 0.06],
             "angle_spread": 10,
@@ -231,6 +231,11 @@
       "evidence": "SourceInferred",
       "source": "cactus-family-anderson",
       "note": "Anderson, The Cactus Family (2001), Ferocactus wislizeni: flowers 4 to 5 cm long and wide; 4.5 cm here."
+    },
+    "appearance.bodies.stem.spines.central.length": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001), Ferocactus wislizeni: the four centrals, in a cross, 8 to 10 cm long; 8 cm here for the three beside the hooked one, as for it."
     },
     "appearance.bodies.stem.ribs.fibonacci": {
       "evidence": "SourceInferred",
