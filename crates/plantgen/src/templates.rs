@@ -808,7 +808,11 @@ fn shape_seed(shape: &Shape) -> u64 {
         }
         _ => shape.clone(),
     };
-    let mut text = format!("{plain:?}").replace("outline: None, ", "");
+    // A blade without basal lobes or fanned veins grows the veins it grew
+    // before cards had them.
+    let mut text = format!("{plain:?}")
+        .replace("outline: None, ", "")
+        .replace(", sinus: 0.0, fan: 0 }", " }");
     for field in [
         "pattern",
         "pinnules",
@@ -923,7 +927,7 @@ fn lean(heading: Option<(f64, f64)>, tangent: (f64, f64)) -> f64 {
 /// (`sinus`, a share of the blade's length) reach back farther than the
 /// petiole is long, so the lobes still fit on the card, hanging to its
 /// foot.
-fn junction(s: &Simple) -> f64 {
+pub(crate) fn junction(s: &Simple) -> f64 {
     let sinus = s.sinus.max(0.0);
     s.petiole.max(sinus / (1.0 + sinus))
 }

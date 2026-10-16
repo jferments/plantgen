@@ -12,27 +12,23 @@
     "appearance.organs.leaf.shape.sinus": {
       "template": "simple",
       "map": {"leaf_shape": {"cordate": 0.15, "reniform": 0.2}},
-      "else": 0,
       "between": true,
       "why": "A cordate blade's two rounded basal lobes reach back past where the petiole meets it, either side of the petiole, leaving a notch between them; a reniform blade's, broader, reach farther; a blade of any other shape has none."
     },
     "appearance.organs.basal.shape.sinus": {
       "template": "simple",
       "map": {"leaf_shape": {"cordate": 0.15, "reniform": 0.2}},
-      "else": 0,
       "between": true,
       "why": "A rosette's leaves are the species' leaves, unless their own are stated: a cordate blade's two rounded basal lobes reach back past where the petiole meets it, a reniform blade's farther; any other has none."
     },
     "appearance.organs.leaf.shape.fan": {
       "template": "simple",
-      "map": {"leaf_venation": {"palmate": 2, "pinnate": 0, "parallel": 0, "dichotomous": 0, "single": 0}},
-      "else": 0,
+      "map": {"leaf_venation": {"palmate": 2}},
       "why": "A palmately veined blade's main veins leave the top of its petiole together, the midrib and two more a side fanning out across it (into its basal lobes where it has them); a pinnately veined blade's leave the midrib along its length."
     },
     "appearance.organs.basal.shape.fan": {
       "template": "simple",
-      "map": {"leaf_venation": {"palmate": 2, "pinnate": 0, "parallel": 0, "dichotomous": 0, "single": 0}},
-      "else": 0,
+      "map": {"leaf_venation": {"palmate": 2}},
       "why": "A rosette's leaves are the species' leaves, unless their own are stated: a palmately veined blade's main veins fan from the top of its petiole, two a side with the midrib."
     },
     "appearance.foliage": {

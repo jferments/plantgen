@@ -1888,6 +1888,27 @@ fn outline_shape(outline: &[(f64, f64)], aspect: f64) -> Option<String> {
     Some(words.into_iter().collect::<Vec<_>>().join("|"))
 }
 
+/// The shape words a leaf card's blade reads as: its outline's
+/// ([`outline_shape`]), and where its basal lobes reach back past the
+/// petiole (`Simple.sinus`), cordate, and reniform too when it is
+/// broader than long (a cordate blade may be).
+fn card_shape(shape: &Shape) -> Option<String> {
+    let (outline, aspect) = card_outline(shape)?;
+    let words = outline_shape(&outline, aspect)?;
+    let Shape::Simple(simple) = shape else {
+        return Some(words);
+    };
+    if simple.sinus <= 0.0 {
+        return Some(words);
+    }
+    let mut all: BTreeSet<&str> = words.split('|').collect();
+    all.insert("cordate");
+    if aspect > 1.0 {
+        all.insert("reniform");
+    }
+    Some(all.into_iter().collect::<Vec<_>>().join("|"))
+}
+
 /// Places a card's blade outline is read at, from its base to its tip.
 const OUTLINE_PLACES: u32 = 100;
 
@@ -1978,9 +1999,7 @@ fn leaf_look<'a>(organ: &GraphOrgan, looks: &'a [Look]) -> Option<(&'a Look, f64
 /// how many times it divides, and what it is made as.
 fn leaf_sizes(shape: &Shape, size: f64, id: u64, tally: &mut Tally) {
     leaf_kinds(shape, tally);
-    if let Some((outline, aspect)) = card_outline(shape)
-        && let Some(words) = outline_shape(&outline, aspect)
-    {
+    if let Some(words) = card_shape(shape) {
         tally.kind("leaf_shape", &words);
     }
     let order = division_order(shape);
@@ -1989,7 +2008,8 @@ fn leaf_sizes(shape: &Shape, size: f64, id: u64, tally: &mut Tally) {
     }
     let (blade, width, petiole) = match shape {
         Shape::Simple(simple) => {
-            let blade = size * (1.0 - simple.petiole);
+            let junction = crate::templates::junction(simple);
+            let blade = size * (1.0 - junction);
             (blade, blade * simple.width, size * simple.petiole)
         }
         Shape::Lobed(lobed) => {
@@ -3259,6 +3279,10 @@ mod tests {
         let rules = &kingdom["rules"];
         let widths = &rules["appearance.organs.leaf.shape.width"]["map"]["leaf_shape"];
         let outlines = &rules["appearance.organs.leaf.shape.outline"]["map"]["leaf_shape"];
+        let phylum: Value =
+            serde_json::from_str(include_str!("../library/_ranks/phylum/tracheophyta.json"))
+                .unwrap();
+        let sinuses = &phylum["rules"]["appearance.organs.leaf.shape.sinus"]["map"]["leaf_shape"];
         // A word's width, or the width its formula falls back to where a
         // flora measures no blade: `first(measured, word's)`.
         let width = |value: &Value| {
@@ -3280,10 +3304,10 @@ mod tests {
                 let simple = Simple {
                     width: width(&widths[word]),
                     outline: Some(serde_json::from_value(points.clone()).unwrap()),
+                    sinus: sinuses[word].as_f64().unwrap_or(0.0),
                     ..Simple::default()
                 };
-                let (outline, aspect) = card_outline(&Shape::Simple(simple)).unwrap();
-                (word.clone(), outline_shape(&outline, aspect).unwrap())
+                (word.clone(), card_shape(&Shape::Simple(simple)).unwrap())
             })
             .collect();
         for (word, words) in &read {

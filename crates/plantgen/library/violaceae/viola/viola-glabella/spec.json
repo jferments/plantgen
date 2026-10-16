@@ -36,7 +36,7 @@
       "buds_above": 1,
       "nod": 0,
       "leaf_area": 0.287,
-      "basal_area": 0.235,
+      "basal_area": 0.547,
       "basal_piece_area": 0.235,
       "flower_area": 0.485,
       "bud_area": 0.07,
@@ -111,6 +111,7 @@
     "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2459999), until a flora read here gives it."},
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2459999), until a flora read here gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2459999), until a flora read here gives it."},
+    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `basal` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows: its rosette leaves now take the species' cordate blade with its basal lobes, where before they drew the generic simple card (0.235)."},
     "generator.params.bud_area": {
       "evidence": "Authored",
       "source": "plantgen-authors",

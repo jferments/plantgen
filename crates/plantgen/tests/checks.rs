@@ -277,11 +277,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
     ),
     (
-        "program:typha",
-        "fruit_type",
-        "Typhaceae's fruit is a tiny achene on a hairy stalk (Simpson 2019), but a cattail's fruiting spike is drawn with the berry card",
-    ),
-    (
         "sarcandra-glabra",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
