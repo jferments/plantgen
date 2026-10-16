@@ -926,7 +926,10 @@ fn every_look(
         {
             continue;
         }
-        if season_day(&at).is_some() && !look.get("season").is_some_and(Value::is_object) {
+        // A season's days and sizes are only a look's that has a season.
+        if (season_day(&at).is_some() || rest.starts_with("season."))
+            && !look.get("season").is_some_and(Value::is_object)
+        {
             continue;
         }
         if let Some(field) = shape_field(&at).map(str::to_string) {
@@ -2118,6 +2121,14 @@ fn fill_looks(
 /// it names the characters it needs, and sets nothing else.
 pub const SEASONAL: &str = "appearance.organs.*.season";
 
+/// Rules run only on the looks [`SEASONAL`] gives a season: a season
+/// written by hand sizes and opens its stages itself.
+pub const SEASONAL_ONLY: [&str; 3] = [
+    "appearance.organs.*.season.flower_look.size",
+    "appearance.organs.*.season.fruit_size",
+    "appearance.organs.*.season.opening",
+];
+
 /// The card templates of a flowering organ's look that [`seasonal_looks`]
 /// gives a season: a lone flower or a cluster's, a head of florets, a
 /// grass's spikelet.
@@ -2615,8 +2626,15 @@ impl Ruled<'_> {
         let mut outcomes = BTreeMap::new();
         let ranged = RefCell::new(BTreeMap::new());
         for (path, waits) in order(rules) {
-            // Its own pass, after the rest ([`seasonal_looks`]).
+            // Its own pass, after the rest ([`seasonal_looks`]), with the
+            // rules only a look it gives a season takes.
             if path == SEASONAL {
+                continue;
+            }
+            if SEASONAL_ONLY.contains(&path) {
+                let file = layers[rules[path].1].0.clone();
+                let why = "not set, only a look the season rule gives a year takes it";
+                outcomes.insert(path.to_string(), (file, Some(why.to_string())));
                 continue;
             }
             let (rule, index) = &rules[path];
@@ -3096,6 +3114,19 @@ fn order(rules: &Rules) -> Vec<(&str, Vec<String>)> {
     // A rule reading a parameter waits on the rule setting it, one on a
     // card's field on the rule choosing that organ's card, and one inside
     // a cluster on the rule making that organ's look a cluster.
+    // A season's day reading its season's opening or ripening waits on
+    // the rule setting it.
+    let seasonal = |path: &str, rule: &Map<String, Value>| -> Vec<String> {
+        let Some((look, _)) = path.split_once(".season.") else {
+            return Vec::new();
+        };
+        reads(rule)
+            .into_iter()
+            .filter(|name| SEASON_READS.iter().any(|(read, _)| read == name))
+            .map(|name| format!("{look}.season.{name}"))
+            .filter(|wait| wait != path && rules.contains_key(wait))
+            .collect()
+    };
     let waits = |path: &str, rule: &Map<String, Value>| -> Vec<String> {
         let cards = rules.keys().filter(|card| {
             shape_field(card) == Some("template")
@@ -3121,6 +3152,7 @@ fn order(rules: &Rules) -> Vec<(&str, Vec<String>)> {
             .filter(|path| rules.contains_key(path))
             .chain(cards.cloned())
             .chain(clusters.cloned())
+            .chain(seasonal(path, rule))
             .collect()
     };
     let mut done: BTreeSet<&str> = BTreeSet::new();

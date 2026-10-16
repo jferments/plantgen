@@ -515,11 +515,19 @@ fn woody_species_bear_their_fruit_when_old() {
             .iter()
             .position(|organ| organ.name == "bloom")
             .unwrap_or_else(|| panic!("{id}: no bloom organ"));
+        // A lone bloom is grown as wide as its flower and drawn in fruit
+        // at its season's share of that.
+        let in_fruit = spec
+            .appearance
+            .organs
+            .get("bloom")
+            .and_then(|look| look.season.as_ref())
+            .map_or(1.0, |season| season.fruit_size);
         let sizes: Vec<f64> = growth.keyframes[0]
             .organs
             .iter()
             .filter(|organ| usize::from(organ.organ) == bloom)
-            .map(|organ| organ.size)
+            .map(|organ| organ.size * in_fruit)
             .collect();
         assert!(!sizes.is_empty(), "{id}: no fruit at {oldest} years");
         assert!(

@@ -504,7 +504,11 @@ pub mod venation;
 /// its fruit, drawn by the fruit's rules (its colour, a cluster's fruit at
 /// its stated size, unripe fruit in the leaf green); a head or spikelet
 /// keeps its look; a herb's bud and fruit organs show only in their own
-/// stages. The four Chloranthaceae, which flowered all year and never
-/// fruited, now bud, flower, fruit and drop in their months (81 is cycads,
-/// palms and tree ferns, #154).
+/// stages. A lone flower's fruit is drawn at the fruit's size, not the
+/// flower's (`season.fruit_size`), a cluster whose fruit outgrow it grows
+/// to hold them, and a cluster still flowering when its first fruit ripen
+/// opens over those months (`season.opening`). The four Chloranthaceae,
+/// which flowered all year and never fruited, now bud, flower, fruit and
+/// drop in their months, as do the magnoliids that state their months
+/// (81 is cycads, palms and tree ferns, #154).
 pub const GENERATOR_REVISION: u32 = 82;
