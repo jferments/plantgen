@@ -498,8 +498,12 @@ pub mod venation;
 /// rachis take the leaf axis's colour, a palm trunk may be ringed by its
 /// leaf scars, and a crownshaft is a closed column (80 is shape and
 /// fruit words, #155).
-/// 82: Phoenix's lowest leaflets are spines (palm program revision 10,
-/// `acanthophylls`), and the royal and date palms' trunks, crownshaft,
-/// fronds and dead fronds draw in their described shades, where they drew
-/// near white (81 is cycads, palms and tree ferns told apart, #154).
+/// 82: palms, cycads and tree ferns in their described shades (palm
+/// program revision 10): colours their authors chose by eye as screen
+/// (sRGB) shades are read as the linear light a colour field holds, so
+/// trunks, fronds, boots and dead fronds no longer draw near white;
+/// Phoenix's lowest leaflets are spines (`acanthophylls`), and a palm
+/// without a crownshaft may clasp its stem with its fronds' sheaths
+/// (`sheath_length`), the California fan palm's chestnut leaf bases
+/// (81 is cycads, palms and tree ferns told apart, #154).
 pub const GENERATOR_REVISION: u32 = 82;

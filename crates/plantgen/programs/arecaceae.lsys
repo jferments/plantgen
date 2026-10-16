@@ -62,6 +62,7 @@ param bulge_age = 0;
 param bulge_years = 1;
 param crownshaft = 0;        # a crownshaft's length; 0 none
 param shaft_cards = 8; param sheath_area = 0.091;
+param sheath_length = 0;     # no sheaths below a frond without a crownshaft
 param leaflet_scatter = 0;   # degrees leaflets stand above and below their V
 param fan_arch = 0;          # degrees a fan's edge rays droop below its middle
 param hang = 0;              # degrees a frond turns down over its life
