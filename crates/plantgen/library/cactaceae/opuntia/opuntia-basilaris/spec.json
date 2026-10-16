@@ -81,7 +81,6 @@
     },
     "bodies": {
       "stem": {
-        "colour": [0.24, 0.25, 0.29],
         "flatten": 0.13,
         "dome": 1.0,
         "base": 1.2,
@@ -121,6 +120,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "stem_colour": [115, 120, 140],
     "flower_colour": [185, 30, 75],
     "flower_size_m": {"min": 0.05, "max": 0.075},
     "fruit_colour_ripe": [130, 130, 80],
@@ -130,6 +130,7 @@
     "radial_spines": 0
   },
   "evidence": {
+    "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 490, Opuntia basilaris: stem segments blue-green, often tinged purple."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 490, Opuntia basilaris: flowers cherry red to yellow, rarely white (cherry red here, as usual), 5 to 7.5 cm long and across; fruit green, dry when ripe, spineless, 2.5 to 3 cm long (a dull dry green here)."},
     "traits.flower_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 490, Opuntia basilaris: flowers cherry red to yellow, rarely white (cherry red here, as usual), 5 to 7.5 cm long and across; fruit green, dry when ripe, spineless, 2.5 to 3 cm long (a dull dry green here)."},
     "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 490, Opuntia basilaris: flowers cherry red to yellow, rarely white (cherry red here, as usual), 5 to 7.5 cm long and across; fruit green, dry when ripe, spineless, 2.5 to 3 cm long (a dull dry green here)."},

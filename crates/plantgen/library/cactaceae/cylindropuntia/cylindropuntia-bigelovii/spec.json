@@ -94,8 +94,7 @@
         },
         "areoles": {
           "spacing": 0.012,
-          "felt_radius": 0.002,
-          "felt": [0.6, 0.55, 0.35]
+          "felt_radius": 0.002
         },
         "spines": [
           {
@@ -104,7 +103,6 @@
             "angle": 50,
             "length": 0.025,
             "width": 0.0008,
-            "colour": [0.85, 0.8, 0.6],
             "angle_spread": 25,
             "length_spread": 0.3,
             "tip": [0.75, 0.7, 0.55]
@@ -121,7 +119,6 @@
           }
         ],
         "greying": {
-          "colour": [0.12, 0.1, 0.08],
           "years": 6
         },
         "cork": {
@@ -150,6 +147,9 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "spine_colour": [215, 180, 80],
+    "spine_colour_aged": [110, 85, 60],
+    "areole_wool_colour": [150, 115, 80],
     "flower_colour": [175, 180, 70],
     "fruit_colour_ripe": [150, 155, 60],
     "fruit_size_m": {"min": 0.025, "max": 0.04},
@@ -157,6 +157,9 @@
     "joint_length_m": {"min": 0.05, "max": 0.15}
   },
   "evidence": {
+    "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 206 to 207, Cylindropuntia bigelovii: spines yellow to golden, becoming brown."},
+    "traits.spine_colour_aged": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 206 to 207, Cylindropuntia bigelovii: spines becoming brown."},
+    "traits.areole_wool_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 206 to 207, Cylindropuntia bigelovii: wool tan to brown, greying."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 206 to 207, Cylindropuntia bigelovii: flowers yellowish green, yellow, gold, bronze, red, rose or magenta (the first named, yellowish green, here); fruit leathery, yellowish green or reddish, 2.5 to 4 cm long. No flower size is given, so it stays set by hand."},
     "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 206 to 207, Cylindropuntia bigelovii: flowers yellowish green, yellow, gold, bronze, red, rose or magenta (the first named, yellowish green, here); fruit leathery, yellowish green or reddish, 2.5 to 4 cm long. No flower size is given, so it stays set by hand."},
     "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 206 to 207, Cylindropuntia bigelovii: flowers yellowish green, yellow, gold, bronze, red, rose or magenta (the first named, yellowish green, here); fruit leathery, yellowish green or reddish, 2.5 to 4 cm long. No flower size is given, so it stays set by hand."},

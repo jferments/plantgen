@@ -52,6 +52,30 @@
       "else": 0.9,
       "why": "A cactus's inner tepals are broad and overlap at their bases in a wheel or a cup, a little narrower in a bell or a funnel, and narrow in a tube."
     },
+    "appearance.bodies.stem.colour": {
+      "colour": "stem_colour",
+      "why": "A cactus's skin is drawn in the colour its flora gives the stem or joints; its ribs' valleys darken it."
+    },
+    "appearance.bodies.stem.spines.radial.colour": {
+      "colour": "spine_colour",
+      "why": "The radial spines are drawn in the colour the flora gives the spines."
+    },
+    "appearance.bodies.stem.spines.central.colour": {
+      "colour": ["central_spine_colour", "spine_colour"],
+      "why": "The central spines take the colour the flora gives them apart, else the spines' colour."
+    },
+    "appearance.bodies.stem.spines.main.colour": {
+      "colour": ["central_spine_colour", "spine_colour"],
+      "why": "The main central is a central spine and is coloured as they are."
+    },
+    "appearance.bodies.stem.greying.colour": {
+      "colour": "spine_colour_aged",
+      "why": "Old spines turn to the colour the flora gives them once grey or dark."
+    },
+    "appearance.bodies.stem.areoles.felt": {
+      "colour": "areole_wool_colour",
+      "why": "An areole's felt is drawn in the colour the flora gives its wool."
+    },
     "appearance.bodies.stem.ribs.count": {
       "rule": [
         "min(ribs)",

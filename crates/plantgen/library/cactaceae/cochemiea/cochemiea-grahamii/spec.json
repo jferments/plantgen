@@ -83,8 +83,6 @@
     },
     "bodies": {
       "stem": {
-        "colour": [0.1, 0.16, 0.07],
-        "valley": [0.05, 0.08, 0.035],
         "dome": 1.0,
         "tubercles": {
           "height": 0.25,
@@ -101,7 +99,6 @@
             "role": "radial",
             "angle": 8,
             "width": 0.00015,
-            "colour": [0.8, 0.78, 0.72],
             "angle_spread": 5,
             "length_spread": 0.25
           },
@@ -110,7 +107,6 @@
             "count": [0, 2],
             "angle": 50,
             "width": 0.0004,
-            "colour": [0.35, 0.25, 0.2],
             "angle_spread": 15,
             "arc": 200,
             "length_spread": 0.3
@@ -120,7 +116,6 @@
             "count": [1, 1],
             "angle": 60,
             "width": 0.0005,
-            "colour": [0.3, 0.18, 0.12],
             "angle_spread": 10,
             "arc": 0,
             "length_spread": 0.2,
@@ -151,6 +146,9 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "stem_colour": [120, 160, 85],
+    "spine_colour": [200, 175, 150],
+    "central_spine_colour": [120, 85, 50],
     "corolla_shape": {"campanulate": "usually", "funnelform": "often"},
     "flower_colour": [200, 90, 150],
     "flower_size_m": {"min": 0.02, "max": 0.045},
@@ -164,6 +162,9 @@
     "central_spine_form": "hooked"
   },
   "evidence": {
+    "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: stems light green."},
+    "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: radial spines white to light brown to reddish; light brown here, the middle of the words."},
+    "traits.central_spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: central spines yellowish brown to dark brown."},
     "appearance.organs.fruit.shape.aspect": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: fruit subglobose, 12 to 25 mm long; nine tenths as wide as long by hand for 'subglobose', as no width is given."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 404 to 405 and 420, as Mammillaria grahamii: the genus's flowers campanulate to funnelform with a short tube; this species' flowers pink to lavender-pink to reddish purple, 20 to 45 mm across; fruit subglobose, red, 12 to 25 mm long. Cochemiea in Anderson's narrow sense (p. 167, red tubular flowers) is not this species' flower, so the genus states no shape. The colours are the middle of the words."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 404 to 405 and 420, as Mammillaria grahamii: the genus's flowers campanulate to funnelform with a short tube; this species' flowers pink to lavender-pink to reddish purple, 20 to 45 mm across; fruit subglobose, red, 12 to 25 mm long. Cochemiea in Anderson's narrow sense (p. 167, red tubular flowers) is not this species' flower, so the genus states no shape. The colours are the middle of the words."},

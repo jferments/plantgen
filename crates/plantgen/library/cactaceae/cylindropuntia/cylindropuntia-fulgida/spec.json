@@ -83,8 +83,6 @@
     },
     "bodies": {
       "stem": {
-        "colour": [0.1, 0.17, 0.07],
-        "valley": [0.05, 0.09, 0.035],
         "dome": 1.0,
         "base": 0.8,
         "tubercles": {
@@ -95,15 +93,13 @@
         },
         "areoles": {
           "spacing": 0.014,
-          "felt_radius": 0.002,
-          "felt": [0.55, 0.5, 0.35]
+          "felt_radius": 0.002
         },
         "spines": [
           {
             "role": "radial",
             "angle": 45,
             "width": 0.0006,
-            "colour": [0.75, 0.68, 0.45],
             "angle_spread": 25,
             "length_spread": 0.35,
             "tip": [0.7, 0.65, 0.5]
@@ -120,7 +116,6 @@
           }
         ],
         "greying": {
-          "colour": [0.25, 0.22, 0.18],
           "years": 6
         },
         "cork": {
@@ -149,6 +144,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "stem_colour": [110, 130, 100],
+    "spine_colour": [215, 190, 100],
+    "spine_colour_aged": [120, 100, 70],
+    "areole_wool_colour": [195, 160, 90],
     "flower_colour": [190, 80, 140],
     "fruit_colour_ripe": [115, 135, 100],
     "fruit_size_m": {"min": 0.02, "max": 0.055},
@@ -160,6 +159,10 @@
     "radial_spine_length_m": {"min": 0.025, "max": 0.035}
   },
   "evidence": {
+    "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: stem segments grey-green, becoming blackish."},
+    "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: spines yellow, ageing darker."},
+    "traits.spine_colour_aged": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: spines ageing darker; a dark yellowish brown here, by hand."},
+    "traits.areole_wool_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: wool gold to tan, becoming grey to black."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: flowers pink to magenta; fruit obconical, fleshy, grey-green, 2 to 5.5 cm long, in long hanging chains. No flower size is given, so it stays set by hand."},
     "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: flowers pink to magenta; fruit obconical, fleshy, grey-green, 2 to 5.5 cm long, in long hanging chains. No flower size is given, so it stays set by hand."},
     "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: flowers pink to magenta; fruit obconical, fleshy, grey-green, 2 to 5.5 cm long, in long hanging chains. No flower size is given, so it stays set by hand."},

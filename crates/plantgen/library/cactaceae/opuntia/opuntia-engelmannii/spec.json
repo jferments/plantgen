@@ -81,7 +81,6 @@
     },
     "bodies": {
       "stem": {
-        "colour": [0.12, 0.2, 0.07],
         "flatten": 0.14,
         "dome": 1.0,
         "base": 1.2,
@@ -95,7 +94,6 @@
             "role": "radial",
             "angle": 30,
             "width": 0.0012,
-            "colour": [0.75, 0.72, 0.6],
             "angle_spread": 15,
             "aim": 180,
             "arc": 140,
@@ -137,6 +135,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "stem_colour": [95, 135, 65],
+    "spine_colour": [215, 200, 130],
     "flower_colour": [225, 190, 45],
     "flower_size_m": {"min": 0.05, "max": 0.08},
     "fruit_colour_ripe": [100, 25, 75],
@@ -147,6 +147,8 @@
     "radial_spine_length_m": 0.05
   },
   "evidence": {
+    "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 498 to 499, Opuntia engelmannii: stem segments green, rarely blue-green."},
+    "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 498 to 499, Opuntia engelmannii: spines yellowish."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 498 to 499, Opuntia engelmannii: flowers yellow, sometimes reddish, 5 to 8 cm across; fruit obovate to elongate, fleshy, purple, 3 to 7 cm long."},
     "traits.flower_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 498 to 499, Opuntia engelmannii: flowers yellow, sometimes reddish, 5 to 8 cm across; fruit obovate to elongate, fleshy, purple, 3 to 7 cm long."},
     "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 498 to 499, Opuntia engelmannii: flowers yellow, sometimes reddish, 5 to 8 cm across; fruit obovate to elongate, fleshy, purple, 3 to 7 cm long."},

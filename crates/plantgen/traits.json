@@ -589,6 +589,36 @@
       "when": {"spines": ["areoles"]},
       "why": "whether each spine wears a papery sheath, as a cholla's do"
     },
+    "stem_colour": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "colour",
+      "optional": true,
+      "why": "a green stem's skin, as a cactus's or a leafless shrub's, where no bark covers it"
+    },
+    "central_spine_colour": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "colour",
+      "optional": true,
+      "when": {"spines": ["areoles"]},
+      "why": "the central spines' colour where a flora gives it apart from the radials'"
+    },
+    "spine_colour_aged": {
+      "group": "stem_and_bark",
+      "organ": "spine",
+      "type": "colour",
+      "optional": true,
+      "when": {"spines": ["areoles"]},
+      "why": "an old spine's colour, once it has greyed or darkened"
+    },
+    "areole_wool_colour": {
+      "group": "stem_and_bark",
+      "organ": "areole",
+      "type": "colour",
+      "optional": true,
+      "why": "an areole's felt or wool"
+    },
     "spine_colour": {
       "group": "stem_and_bark",
       "organ": "spine",

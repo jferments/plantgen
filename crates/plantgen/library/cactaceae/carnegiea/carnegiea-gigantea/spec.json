@@ -93,8 +93,6 @@
     },
     "bodies": {
       "stem": {
-        "colour": [0.11, 0.18, 0.065],
-        "valley": [0.05, 0.085, 0.035],
         "dome": 0.9,
         "ribs": {
           "spacing": 0.075,
@@ -102,8 +100,7 @@
           "sharpness": 0.25
         },
         "areoles": {
-          "felt_radius": 0.004,
-          "felt": [0.25, 0.17, 0.1]
+          "felt_radius": 0.004
         },
         "spines": [
           {
@@ -114,8 +111,7 @@
             "arc": 360,
             "length": 0.02,
             "length_spread": 0.3,
-            "width": 0.0007,
-            "colour": [0.3, 0.2, 0.13]
+            "width": 0.0007
           },
           {
             "role": "central",
@@ -126,12 +122,10 @@
             "arc": 220,
             "length_spread": 0.35,
             "width": 0.0012,
-            "colour": [0.25, 0.15, 0.09],
             "tip": [0.07, 0.05, 0.04]
           }
         ],
         "greying": {
-          "colour": [0.35, 0.34, 0.32],
           "years": 15
         },
         "cork": {
@@ -166,6 +160,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "stem_colour": [110, 135, 95],
+    "spine_colour": [100, 95, 90],
+    "spine_colour_aged": [75, 72, 70],
+    "areole_wool_colour": [170, 130, 80],
     "corolla_shape": {"funnelform": "usually", "campanulate": "sometimes"},
     "flower_colour": [225, 222, 200],
     "flower_size_m": {"min": 0.05, "max": 0.06},
@@ -180,6 +178,10 @@
     "central_spine_length_m": 0.07
   },
   "evidence": {
+    "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 26 and 139, Carnegiea gigantea: stems green, pale grey-green in the plate (p. 26); a pale grey-green here."},
+    "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 139, Carnegiea gigantea: spines grey to blackish; a dark grey here."},
+    "traits.spine_colour_aged": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 139, Carnegiea gigantea: spines grey to blackish; old spines the blackish end, by hand."},
+    "traits.areole_wool_colour": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) pp. 120 to 121 (figure 5.23): a thick mat of tawny wool over the apex; tawny here."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 139, Carnegiea gigantea: flowers funnelform to campanulate, white, 8.5 to 12.5 cm long and 5 to 6 cm across; fruit obovoid, red, fleshy, 5 to 7.5 cm long. The colours are the words' plain white and red."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 139, Carnegiea gigantea: flowers funnelform to campanulate, white, 8.5 to 12.5 cm long and 5 to 6 cm across; fruit obovoid, red, fleshy, 5 to 7.5 cm long. The colours are the words' plain white and red."},
     "traits.flower_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 139, Carnegiea gigantea: flowers funnelform to campanulate, white, 8.5 to 12.5 cm long and 5 to 6 cm across; fruit obovoid, red, fleshy, 5 to 7.5 cm long. The colours are the words' plain white and red."},
