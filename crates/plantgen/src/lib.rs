@@ -484,6 +484,8 @@ pub mod venation;
 /// crossing card's needles again, 2.2 to 4.6 times their area: conifers'
 /// crowns had starved to tufts at their limb tips and now carry foliage
 /// along their limbs, a pine's card is one brush of needles at their
-/// stated length (Pinus rules), and the module limit is 4,000,000 (78 is
+/// stated length (Pinus rules), and the module limit is 4,000,000; a
+/// conifer's apex lives on shoots down to 5 mm, not 25, so a narrow,
+/// slow crown such as subalpine fir's stays dense along its limbs (78 is
 /// crownshaft sheaths, #150).
 pub const GENERATOR_REVISION: u32 = 79;

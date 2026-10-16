@@ -111,7 +111,7 @@
 # metre squared, the area the conifers' cards drew, and a spray that bears
 # less or more takes a pipe that much smaller or larger in its flow. A
 # needle card now shades with its needles' own area (generator revision
-# 76), a quarter to a half of what it drew, so a crown carries two to four
+# 79), a quarter to a half of what it drew, so a crown carries two to four
 # times the sprays, and without this its trunk thickened with them.
 #
 # Short shoots (revision 11 too): a branch shoot of a conifer with short
@@ -122,6 +122,17 @@
 # year's new shoots: Farjon (2017) gives Larix a strong long- and short-
 # shoot dimorphism, the needles mostly in tufts of 15 to 45 on short
 # shoots. With spur_years 0 a shoot leafs out once, as before.
+#
+# Slow shoots (revision 11 too): an apex dies once its shoot would be
+# shorter than min_shoot, now 5 mm where it was 25 mm. A limb's shoots
+# shorten with its reach, so a narrow-crowned conifer (a small
+# branch_reach) lost every side shoot past its first metre to that cut,
+# and its limbs went bare to a tuft at the tip: subalpine fir, whose
+# crown FEIS gives as "extremely narrow and dense ... with short
+# branches", drew poles. Shaded and slow conifer shoots grow a few
+# millimetres to a few centimetres a year (general knowledge, not
+# measured); light still decides which apexes live (shade_death). Fast
+# crowns, whose shoots stay longer than 25 mm, grow as before.
 #
 # One step is one year. Angles are degrees; lengths are metres.
 
@@ -150,7 +161,7 @@ param side_order = 1;          # highest branch order that forms side shoots
 param side_years = 0;          # years a side shoot keeps growing; 0 while its light pays
 param crown_ratio = 0;         # share of its height, from the top, on which a self-pruning tree keeps living branches; 0: all
 param apex_whorl = 0;          # side shoots a branch apex spreads round itself each year (Rauh's model); 0: two flat ones
-param min_shoot = 0.025;       # an apex dies once its shoot would be shorter
+param min_shoot = 0.005;       # an apex dies once its shoot would be shorter (revision 11; 0.025 before)
 param shade_death = 0.1;       # light below which an apex starves
 param shade_years = 3;         # years in a row an apex survives starving
 param ground_gap = 0.1;        # a branch is shed where it comes this close to the ground
