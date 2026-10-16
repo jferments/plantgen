@@ -436,13 +436,21 @@ pub mod venation;
 /// branches only on the top `crown_ratio` of its height (rule on
 /// `self_pruning`), so ponderosa pine, self-pruning by FEIS, stands on a
 /// clear bole (71 is broadleaf limbs, #133).
-/// 73: cactus barrels: areoles crowd over the dome and ribs merge toward
+/// 73: monocot leaves: a linear monocot leaf is an arching strap on the
+/// blade card, as wide for its length as its flora measures, its rosette
+/// leaves as long as the leaves; a flowering stem without leaves
+/// (`cauline_leaves` none) is a scape; a card may roll about its length
+/// (`roll`), and unifacial sword leaves (`leaf_faces`) turn edgewise, their
+/// strap pieces joined as rolled; camas states its leaves at the genus
+/// (Watson and Dallwitz), Iridaceae its sword leaves; Oregon iris and
+/// Idaho blue-eyed grass stand edgewise (72 is pine whorls, #136).
+/// 74: cactus barrels: areoles crowd over the dome and ribs merge toward
 /// the tip, and a woolly cap may top it (`Areoles.apex_wool`); a share of
 /// stems keeps a Fibonacci rib count and winds left or right
 /// (`Ribs.fibonacci`, `Ribs.lean`; The Cactus Primer); spine cards draw
 /// only as many sub-texel spines as their width covers, and the far tint's
 /// cover counts the skin between ribs, so spined succulents keep their
 /// colour across levels; both Ferocactus take their ribs, wool, flower
-/// rings and central spines from the Primer and Anderson (72 is pine
-/// whorls, #136).
-pub const GENERATOR_REVISION: u32 = 73;
+/// rings and central spines from the Primer and Anderson (73 is monocot
+/// leaves, #140).
+pub const GENERATOR_REVISION: u32 = 74;

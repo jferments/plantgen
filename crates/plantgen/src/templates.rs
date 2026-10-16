@@ -3005,6 +3005,7 @@ mod tests {
             organs.insert(
                 name.clone(),
                 OrganLook {
+                    roll: 0.0,
                     insertion: crate::looks::Insertion::Marginal,
                     shape: shape.clone(),
                     colour: Some([0.2, 0.4, 0.1]),
