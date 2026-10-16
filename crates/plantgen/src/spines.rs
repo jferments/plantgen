@@ -651,8 +651,20 @@ pub fn template(look: &BodyLook, view: View, size: usize) -> Drawn {
     let luminance = |c: [f32; 3]| 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
     let mean_luminance = luminance(colour).max(1e-4);
     // Pieces in card units: ends, radii at the ends, colours at the ends.
+    #[allow(clippy::cast_precision_loss)]
+    let widest_texel = 0.55 * aspect.max(1.0) / size as f32;
     let mut pieces = Vec::with_capacity(spines.len() * 3);
-    for spine in &spines {
+    for (index, spine) in spines.iter().enumerate() {
+        // A spine thinner than a texel is drawn a texel wide, so it
+        // survives the alpha cut. Only so many of them are drawn that they
+        // hide what the spines themselves would: a card of hair-fine
+        // radials would otherwise draw white.
+        let mean = spine.radius * (TAPER[0] + TAPER[1] + TAPER[2]) / 3.0 / length;
+        #[allow(clippy::cast_possible_truncation)]
+        let draw = crate::rng::unit(crate::rng::mix64(index as u64 ^ 0x5D1E)) as f32;
+        if draw >= mean / widest_texel {
+            continue;
+        }
         let radii = [
             spine.radius * TAPER[0],
             spine.radius * TAPER[1],

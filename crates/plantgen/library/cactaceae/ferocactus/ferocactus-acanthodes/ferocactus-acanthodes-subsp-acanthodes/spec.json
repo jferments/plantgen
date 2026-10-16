@@ -29,14 +29,14 @@
       "bend": 0.3,
       "dome": 0.6,
       "bloom_age": 25,
-      "flowers": 12,
+      "flowers": 18,
       "ring_angle": 25,
       "flower_angle": 25,
       "flower_size": 0.05,
       "bud_share": 0.2,
       "fruit_share": 0.35,
       "bud_size": 0.025,
-      "fruit_size": 0.035,
+      "fruit_size": 0.03,
       "flower_area": 0.186,
       "bud_area": 0.636,
       "fruit_area": 0.89
@@ -94,7 +94,9 @@
           "count": [18, 30],
           "spacing": 0.045,
           "depth": 0.14,
-          "sharpness": 0.7
+          "sharpness": 0.7,
+          "fibonacci": 0.5,
+          "lean": 30
         },
         "tubercles": {
           "height": 0.03,
@@ -104,7 +106,8 @@
         "areoles": {
           "spacing": 0.025,
           "felt_radius": 0.005,
-          "felt": [0.35, 0.3, 0.22]
+          "felt": [0.35, 0.3, 0.22],
+          "apex_wool": 0.01
         },
         "spines": [
           {
@@ -182,6 +185,31 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Rough heights from general knowledge: about a metre by 60 years, 1.5 to 2 m by 110. Wide tolerances."
+    },
+    "generator.params.flowers": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986), ch. 5: most cacti flower in a ring near the stem tip, one flower to an areole made about a year before, with a few areoles in the ring left unused; 18 here, for 18 to 30 ribs, flowers and fruit together."
+    },
+    "generator.params.fruit_size": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001), Ferocactus cylindraceus: fruit globose, yellow, to 3 cm long; 3 cm here."
+    },
+    "appearance.bodies.stem.ribs.fibonacci": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986), pp. 123-124: Ferocactus rib counts cluster on Fibonacci numbers; in F. acanthodes 51% of plants had one, 21 the commonest. Half the stems here keep to the Fibonacci number in the count."
+    },
+    "appearance.bodies.stem.ribs.lean": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986), pp. 121 and 125: tubercle rows lean about 30 degrees from vertical, so a Fibonacci-ribbed Ferocactus winds slowly round the stem, left-handed in about half the plants and right-handed in the rest; other stems stand straight."
+    },
+    "appearance.bodies.stem.areoles.apex_wool": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986), ch. 5: the young areoles' trichomes crowd at the apex into a woolly mat, in barrel cacti more than 4 cm thick. 1 cm here, less than that, because in photographs this species' apex shows mostly spines over its wool (thickness by eye)."
     },
     "appearance": {
       "evidence": "Authored",
