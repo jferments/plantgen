@@ -479,5 +479,6 @@ pub mod venation;
 /// tight), palm leaflets fold induplicate or reduplicate by subfamily,
 /// plumose palms hold their leaflets in groups, a leaf's petiole and
 /// rachis take the leaf axis's colour, a palm trunk may be ringed by its
-/// leaf scars, and a crownshaft is a closed column.
+/// leaf scars, and a crownshaft is a closed column (78 is crownshaft
+/// sheaths, #150).
 pub const GENERATOR_REVISION: u32 = 79;
