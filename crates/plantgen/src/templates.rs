@@ -106,7 +106,7 @@ pub fn fill_share(look: &Look) -> f64 {
     let shape = &look.shape;
     let key = match &look.inflorescence {
         Some(cluster) => format!("{shape:?} {cluster:?}"),
-        None => format!("{shape:?}"),
+        None => format!("{shape:?} {:?}", look.insertion),
     };
     let shares = SHARES.get_or_init(Default::default);
     if let Some(&share) = shares.lock().ok().as_ref().and_then(|s| s.get(&key)) {
@@ -487,7 +487,15 @@ fn draw_look(
             let (across, along) = drawn_share(&look.shape);
             card.paint(&look.shape, x / across, y / along)
         }
-        None => draw(&look.shape, (look.colour, look.accent), x, y, grew),
+        None => {
+            let paint = draw(&look.shape, (look.colour, look.accent), x, y, grew);
+            // A leaf drawn on a petiole of its own leaves the petiole,
+            // painted in full accent below its blade, off its card.
+            match look.stalk() {
+                Some(stalk) if y < stalk.petiole + 0.01 && paint.accent >= 0.99 => Paint::EMPTY,
+                _ => paint,
+            }
+        }
     }
 }
 
@@ -2952,6 +2960,42 @@ mod tests {
 
     use super::*;
     use crate::looks::{self, OrganLook};
+
+    /// A leaf drawn on a petiole of its own leaves the petiole off its
+    /// card; its blade stays as it was drawn.
+    #[test]
+    fn a_leaf_on_its_own_petiole_leaves_the_petiole_off_its_card() {
+        let shape = Shape::Simple(crate::looks::Simple {
+            petiole: 0.4,
+            ..crate::looks::Simple::default()
+        });
+        let drawn = |insertion| {
+            let own = OrganLook {
+                insertion,
+                ..serde_json::from_value::<OrganLook>(
+                    serde_json::json!({"shape": {"template": "simple"}}),
+                )
+                .unwrap()
+            };
+            let own = OrganLook {
+                shape: shape.clone(),
+                ..own
+            };
+            let looks = looks::resolve(
+                [("leaf", crate::lsys::OrganKind::Leaf)],
+                &BTreeMap::from([("leaf".to_string(), own)]),
+                [0.2, 0.5, 0.2],
+                [0.1, 0.2, 0.1],
+            );
+            let look = looks[0].clone();
+            let petiole = draw_look(&look, None, 0.0, 0.2, None).cover;
+            let blade = draw_look(&look, None, 0.0, 0.7, None).cover;
+            (petiole, blade)
+        };
+        assert_eq!(drawn(looks::Insertion::Marginal), (1.0, 1.0));
+        assert_eq!(drawn(looks::Insertion::Latent), (0.0, 1.0));
+        assert_eq!(drawn(looks::Insertion::Peltate), (0.0, 1.0));
+    }
     use crate::lsys::OrganKind;
 
     fn looks_of(shapes: &[Shape]) -> Vec<Look> {
@@ -2961,6 +3005,7 @@ mod tests {
             organs.insert(
                 name.clone(),
                 OrganLook {
+                    insertion: crate::looks::Insertion::Marginal,
                     shape: shape.clone(),
                     colour: Some([0.2, 0.4, 0.1]),
                     shade: None,

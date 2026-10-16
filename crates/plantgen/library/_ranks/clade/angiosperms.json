@@ -172,6 +172,10 @@
       "map": {"leaf_division": {"compound": "compound", "simple": {"map": {"leaf_incision": {"none": "simple", "lobed": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "cleft": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "parted": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "dissected": "lobed"}}, "else": "simple"}}},
       "why": "A leaf of separate leaflets is drawn on a compound card, whose pattern the leaf rules set; a blade cut from one point on a palmate card, one cut along its midrib on a lobed card, and an uncut one on a simple card."
     },
+    "appearance.organs.basal.shape.template": {
+      "map": {"leaf_division": {"compound": "compound", "simple": {"map": {"leaf_incision": {"none": "simple", "lobed": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "cleft": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "parted": {"map": {"division_pattern": {"palmate": "palmate", "pinnate": "lobed"}}, "else": "lobed"}, "dissected": "lobed"}}, "else": "simple"}}},
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated. A leaf of separate leaflets is drawn on a compound card, whose pattern the leaf rules set; a blade cut from one point on a palmate card, one cut along its midrib on a lobed card, and an uncut one on a simple card."
+    },
     "appearance.organs.bloom.shape.template": {
       "map": {"inflorescence_unit": {"flower": "flower", "capitulum": "head", "spikelet": "spikelet"}}, "else": "flower",
       "why": "Single flowers are drawn on a flower card, heads of florets on a head card and spikelets on a spikelet card; the inflorescence rules lay them out. A flowering plant whose taxa do not say is drawn with single flowers."
@@ -347,6 +351,11 @@
       "note": "A typical count inferred from the few lineages counted in sources read here, until each lineage states its own. Critchfield (1971, read in full) counted 2 to 4 leaf pairs on most long shoots of striped maple and 5 to 9 on the rest, and 12 to 16 pairs on red maple's longest; aspen's first five to eight leaves are preformed in the bud and long shoots add more (from a search excerpt of an American Journal of Botany paper on aspen, not read); and the largest buds of Nothofagus pumilio hold 15 to 20 nodes (Souza and others 2000, abstract)."
     },
     "rules.appearance.organs.leaf.shape.template": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen chooses an organ's card from the characters (species-spec pilot, 2026-10-14): only where no file at least as near chose one by hand."
+    },
+    "rules.appearance.organs.basal.shape.template": {
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "How PlantGen chooses an organ's card from the characters (species-spec pilot, 2026-10-14): only where no file at least as near chose one by hand."

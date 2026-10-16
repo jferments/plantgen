@@ -11,12 +11,12 @@
   "growth_form": "decurrent_tree",
   "generator": {
     "params": {
-      "crown_height": 12,
+      "crown_height": 13,
       "crown_radius": 8,
-      "crown_base": 7,
+      "crown_base": 8,
       "crown_rate": 0.025,
-      "space_density": 4,
-      "internode": 0.45,
+      "space_density": 1.5,
+      "internode": 0.35,
       "max_shoot": 3,
       "branch_angle": 50,
       "apical_young": 0.75,
@@ -29,17 +29,18 @@
       "lean": 3,
       "wiggle": 8,
       "fork_height": 8,
-      "fork_stems": 4,
-      "fork_angle": 40,
+      "fork_stems": 5,
+      "fork_angle": 50,
       "droop": 0.0,
       "pipe_tip": 0.008,
       "pipe_organ": 0.012,
-      "pipe_rings": 4e-05,
+      "pipe_rings": 0.00015,
       "light_cell": 0.6,
       "space_reach": 3.5,
       "space_kill": 1.0,
       "leaf_area": 0.27,
-      "path_half": 30.9
+      "path_half": 30.9,
+      "bole_clear": 1
     }
   },
   "growth": {
@@ -97,9 +98,13 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "crown_form": "spreading",
     "wood_density_basic_kg_m3": 310
   },
   "evidence": {
+    "generator.params.bole_clear": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "The trunk stands bare to the fork about 8 m up (crown_base 8, was 7; crown_height 13, was 12), where five or so thick limbs spread at a wide angle (fork_stems 5, fork_angle 50, were 4 and 40), in iNaturalist photographs (observations 18299511, 185799293). Shorter shoots and sparser attraction points (internode 0.35, space_density 1.5, were 0.45 and 4) keep a crown of few thick limbs."},
+    "generator.params.pipe_rings": {"evidence": "Authored", "source": "plantgen-authors", "note": "A choice of the model's (woody forms, broadleaf revision 16): wood laid down per m² of leaf a year, raised from 4e-5 so the water-storing trunk swells to about 1.6 m across at 100 years (it was 63 cm), as the bottle-shaped trunks in iNaturalist photographs do (observations 18299511, 185799293)."},
+    "traits.crown_form": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "iNaturalist research-grade photographs (observations 18299511, 185799293, 37979372, 142536045): a few thick limbs spread from the top of the swollen trunk into a crown wider than tall."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Adansonia digitata (gwddagg_v2.2_species.csv, read): specific gravity 0.31 (wsg_est, the database's hierarchical-model species mean, from 2 records in 1 source); trunks 0.3, branches 0.37. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "generator.params.path_half": {
       "evidence": "Authored",

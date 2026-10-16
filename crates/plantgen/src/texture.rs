@@ -621,6 +621,7 @@ pub fn organ_templates(shapes: &[Shape]) -> Templates {
     let looks: Vec<Look> = shapes
         .iter()
         .map(|shape| Look {
+            insertion: crate::looks::Insertion::Marginal,
             organ: shape.name().to_owned(),
             shape: shape.clone(),
             colour: [1.0; 3],
