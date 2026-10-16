@@ -1,0 +1,266 @@
+{
+  "schema": 1,
+  "id": "salix-scouleriana",
+  "taxon": {
+    "scientific_name": "Salix scouleriana",
+    "common_name": "Scouler's willow",
+    "usda_symbol": "SASC",
+    "family": "Salicaceae",
+    "genus": "Salix",
+    "plant_name_id": 2920474
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "params": {
+      "crown_radius": 3,
+      "crown_base": 0.3,
+      "crown_rate": 0.07,
+      "space_density": 12,
+      "internode": 0.2,
+      "max_shoot": 4,
+      "branch_angle": 40,
+      "apical_young": 0.62,
+      "apical": 0.52,
+      "leaf_size": 0.22,
+      "spur_leaf": 0.2,
+      "spur_pairs": 2,
+      "leaf_angle": 45,
+      "lean": 10,
+      "wiggle": 7,
+      "fork_height": 0.3,
+      "fork_stems": 5,
+      "fork_angle": 30,
+      "droop": 0.025,
+      "extinction": 0.45,
+      "pipe_rings": 1.4e-05,
+      "path_half": 4.25
+    }
+  },
+  "growth": {
+    "years": 25,
+    "step": 1,
+    "keyframes": [
+      3,
+      8,
+      15,
+      25
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.38,
+      0.34,
+      0.28
+    ],
+    "bark_pattern": {
+      "kind": "smooth",
+      "scale": 0.03,
+      "elongation": 3.0,
+      "fissure": 0.3,
+      "depth": 0.1,
+      "contrast": 0.25,
+      "variation": 0.12,
+      "smooth_below": 0.04,
+      "roughness": 0.45
+    },
+    "foliage": [
+      0.07,
+      0.14,
+      0.035
+    ],
+    "foliage_shade": [
+      0.025,
+      0.05,
+      0.012
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 7,
+          "angle": 35,
+          "width": 0.4,
+          "widest": 0.65,
+          "tip": 0.35,
+          "base": 0.25,
+          "teeth": 0,
+          "tooth_depth": 0.005,
+          "petiole": 0.08
+        },
+        "families": {
+          "plasticity": 0.2
+        },
+        "accent": [
+          0.4,
+          0.35,
+          0.15
+        ]
+      }
+    },
+    "ridges": {
+      "spacing": 0.05,
+      "depth": 0.05,
+      "twist": 0,
+      "contrast": 0.45
+    }
+  },
+  "allometry": [
+    {
+      "age": 25,
+      "environment": "open",
+      "height": 6,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 2,
+      "max": 10.6,
+      "high": 20
+    },
+    "leaf_length_m": {
+      "min": 0.03,
+      "max": 0.1
+    },
+    "leaf_width_m": {
+      "min": 0.01,
+      "max": 0.035
+    },
+    "leaf_habit": "deciduous",
+    "sexual_system": "dioecious",
+    "inflorescence": "catkin",
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.005,
+      "max": 0.008
+    },
+    "flowering_months": [
+      3,
+      4,
+      5
+    ],
+    "fruiting_months": [
+      5,
+      6
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Scouler's willow review (Anderson 2001, read 2026-10-15): \"generally a shrub, reaching 6 to 35 feet (2-10.6 m) in height\"; \"occasionally grows as a tree and may reach 65 feet (20 m)\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as the FEIS review read does not say it in words."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Scouler's willow review (Anderson 2001, read 2026-10-15): \"A dioecious plant\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Scouler's willow review (Anderson 2001, read 2026-10-15): \"Aments, expanding before or with leaves and quickly deciduous\": catkins."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Scouler's willow review (Anderson 2001, read 2026-10-15): \"a capsule 5-8 mm long with dense, short hairs\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Scouler's willow review (Anderson 2001, read 2026-10-15): capsule \"5-8 mm long\"."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), the catkins open before or with the leaves (FEIS, Anderson 2001); the months are the model's."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as the FEIS review read gives no months."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Pacific willow's values, changed by hand for Scouler's willow: a smaller, multistemmed tree-shrub with slender stems from a low fork (FEIS, Anderson 2001: \"may be multistemmed\", \"slender stems and branches\"), and leaves obovate to oblanceolate. path_half fitted so it grows to its reference height. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "6 m at 25 years in the open, within FEIS's 2-10.6 m (Anderson 2001). Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after FEIS (Anderson 2001): smooth to flaky grey bark; leaves obovate to oblanceolate, mostly untoothed, with paler undersides."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion (2026-10-15): sizes from FEIS and model estimates, drawing values from Pacific willow's."
+  }
+}

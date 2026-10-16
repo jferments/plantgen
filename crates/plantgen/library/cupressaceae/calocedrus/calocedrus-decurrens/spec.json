@@ -1,0 +1,224 @@
+{
+  "schema": 1,
+  "id": "calocedrus-decurrens",
+  "taxon": {
+    "scientific_name": "Calocedrus decurrens",
+    "common_name": "incense cedar",
+    "usda_symbol": "CADE27",
+    "family": "Cupressaceae",
+    "genus": "Calocedrus",
+    "plant_name_id": 382424
+  },
+  "growth_form": "scale_leaved_tree",
+  "generator": {
+    "params": {
+      "cone_chance": 0.15,
+      "cone_years": 1,
+      "height_rate": 0.018,
+      "height_shape": 1.4,
+      "whorl": 5,
+      "branch_angle": 70,
+      "upturn": 0.0125,
+      "nod": 35,
+      "nod_years": 2,
+      "spray_droop": 40,
+      "pipe_organ": 0.0095,
+      "branch_reach": 5.0
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [
+      5,
+      15,
+      30,
+      60
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open",
+      "interior"
+    ],
+    "seeds": [
+      1,
+      2
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.42,
+      0.22,
+      0.12
+    ],
+    "bark_pattern": {
+      "kind": "fibrous",
+      "scale": 0.03,
+      "elongation": 15.0,
+      "fissure": 0.35,
+      "depth": 0.45,
+      "contrast": 0.5,
+      "variation": 0.25,
+      "smooth_below": 0.02,
+      "roughness": 0.4
+    },
+    "foliage": [
+      0.08,
+      0.16,
+      0.05
+    ],
+    "foliage_shade": [
+      0.02,
+      0.05,
+      0.015
+    ],
+    "variation": 0.2,
+    "organs": {
+      "cone": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.45,
+          "cone": 1
+        },
+        "colour": [
+          0.55,
+          0.4,
+          0.2
+        ]
+      },
+      "spray": {
+        "shape": {
+          "template": "scales"
+        }
+      }
+    },
+    "ridges": {
+      "spacing": 0.06,
+      "depth": 0.035,
+      "twist": 4,
+      "contrast": 0.35
+    },
+    "flare": {
+      "height": 1.2,
+      "amount": 0.9,
+      "buttresses": 6,
+      "ridge": 0.7
+    }
+  },
+  "allometry": [
+    {
+      "age": 60,
+      "environment": "interior",
+      "height": 19,
+      "dbh": 0.5,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 20,
+      "max": 57,
+      "high": 69
+    },
+    "leaf_length_m": {
+      "min": 0.003,
+      "max": 0.014
+    },
+    "cone_length_m": {
+      "min": 0.02,
+      "max": 0.025,
+      "high": 0.03
+    },
+    "sexual_system": "monoecious",
+    "pollen_cone_length_m": {
+      "min": 0.004,
+      "max": 0.007
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's incense-cedar review (Tollefson 2008, read 2026-10-15): \"an evergreen tree that grows 66 to 187 feet (20-57 m) tall\"; in presettlement giant sequoia forests \"reportedly reached 225 feet (69 m) tall\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's incense-cedar review (Tollefson 2008, read 2026-10-15): \"Leaves are scale-like, 3 to 14 mm long, and form flat sprays\"."
+    },
+    "traits.cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 112, Calocedrus decurrens: seed cones 2-2.5(-3) cm long (FEIS, Tollefson 2008, gives 1.4-4 cm at maturity)."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 112, Calocedrus decurrens: monoecious."
+    },
+    "traits.pollen_cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's incense-cedar review (Tollefson 2008, read 2026-10-15): \"Male cones are terminal on twigs and reach a length of 4 to 7 mm\"."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Western redcedar's values, changed by hand for incense cedar: a dense, symmetrical, pyramid-shaped young crown with branches to the ground and flat sprays held more level (FEIS, Tollefson 2008). height_rate set so it reaches its reference height in a stand. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "19 m tall and 50 cm across at 60 years in a stand, set by hand; FEIS says trees grow slowly (Tollefson 2008). Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye: cinnamon-brown, thick, fibrous and deeply furrowed bark (FEIS: \"thick, fibrous, furrowed, and ridged\"); bright green flat sprays; long narrow cones."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion (2026-10-15): sizes from FEIS and Dendrology, drawing values from western redcedar's."
+  }
+}
