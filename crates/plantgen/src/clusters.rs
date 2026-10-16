@@ -3084,6 +3084,7 @@ mod tests {
             &std::collections::BTreeMap::from([(
                 "bloom".to_string(),
                 crate::looks::OrganLook {
+                    roll: 0.0,
                     insertion: crate::looks::Insertion::Marginal,
                     shape: Shape::Fruit(Fruit {
                         kind: FruitKind::Crowned,
@@ -3168,6 +3169,7 @@ mod tests {
             &std::collections::BTreeMap::from([(
                 "bloom".to_string(),
                 crate::looks::OrganLook {
+                    roll: 0.0,
                     insertion: crate::looks::Insertion::Marginal,
                     shape,
                     inflorescence: Some(cluster),

@@ -833,6 +833,23 @@
       "optional": true,
       "why": "the pinnae of a twice-divided leaf: its primary divisions, each bearing leaflets of its own (a mesquite's one or two pairs)"
     },
+    "cauline_leaves": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["like_basal", "reduced", "none"],
+      "when": {"woodiness": ["herbaceous"]},
+      "optional": true,
+      "why": "the leaves of a herb's flowering stem, as floras describe them: like those at its foot, reduced (fewer and smaller up the stem), or none, a leafless scape from the leaves at its foot"
+    },
+    "leaf_faces": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["bifacial", "unifacial"],
+      "optional": true,
+      "why": "whether a blade has an upper and a lower face, or is unifacial, its one face all round: a sword leaf flattened edgewise to the stem (irises) or a round one (onions, rushes)"
+    },
     "leaf_peltation": {
       "group": "leaves",
       "organ": "leaf",

@@ -1564,6 +1564,16 @@ fn organ_color(look: &Look, variation: f32, light: f64, id: u64) -> [f32; 3] {
     })
 }
 
+/// `left` turned `degrees` about `heading`: a card's roll about its own
+/// length.
+fn rolled(heading: Vec3, left: Vec3, degrees: f64) -> Vec3 {
+    if degrees == 0.0 {
+        left
+    } else {
+        left.rotate_about(heading.normalize_or(Vec3::Y), degrees.to_radians())
+    }
+}
+
 /// Turn a card about its base so its face moves `amount` of the way to
 /// level, toward whichever of up or down it faces more.
 fn face_up(heading: Vec3, left: Vec3, amount: f64) -> (Vec3, Vec3) {
@@ -1610,9 +1620,11 @@ pub(crate) fn place(organ: &GraphOrgan, look: &Look) -> (Vec3, Vec3, Vec3, f64) 
         };
     }
     match look.mount() {
-        // Standing on the organ, reaching along it.
+        // Standing on the organ, reaching along it, turned about its
+        // length by its roll, then toward the sky.
         Mount::Along => {
-            let (heading, left) = face_up(organ.heading, organ.left, look.face_up);
+            let left = rolled(organ.heading, organ.left, look.roll);
+            let (heading, left) = face_up(organ.heading, left, look.face_up);
             (organ.position, heading, left, organ.size)
         }
         // Centred on the organ, its face toward the organ's heading: the
@@ -1764,9 +1776,14 @@ fn seated(graph: &PlantGraph, looks: &[Look]) -> Option<PlantGraph> {
         if droop.abs() < 1e-9 && (share - 1.0).abs() < 1e-12 {
             continue;
         }
-        let face = organ.heading.cross(organ.left);
+        // The card droops toward its face as rolled; the piece keeps a left
+        // that its roll turns back to the rolled one about its new heading.
+        let roll = looks[index].roll;
+        let left = rolled(organ.heading, organ.left, roll);
+        let face = organ.heading.cross(left);
         let turned = &mut out.get_or_insert_with(|| graph.clone()).organs[number];
         turned.heading = organ.heading * math::cos(0.5 * droop) + face * math::sin(0.5 * droop);
+        turned.left = rolled(turned.heading, left, -roll);
         turned.size = organ.size / (share * chord);
     }
     out
@@ -3655,6 +3672,7 @@ mod tests {
 
     fn look(shape: Shape, face_up: f64) -> OrganLook {
         OrganLook {
+            roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             shape,
             colour: None,
@@ -3770,6 +3788,79 @@ mod tests {
         let looks = appearance.looks([("leaf", OrganKind::Leaf)]);
         assert!(looks[0].bend.droop > 0.0 && looks[0].bend.twist > 0.0);
         let (mut position, left) = (Vec3::ZERO, Vec3::X);
+        let mut heading = Vec3::new(0.0, 0.9, 0.44).normalize_or(Vec3::Y);
+        let mut organs = Vec::new();
+        for (k, size) in [0.12, 0.1, 0.088].into_iter().enumerate() {
+            organs.push(GraphOrgan {
+                id: k as u64,
+                position,
+                heading,
+                left,
+                size,
+                within: Some(0),
+                ..organ(heading, left)
+            });
+            position += heading * size;
+            // Pitch down 14 degrees about the left.
+            heading = heading.rotate_about(left, -14f64.to_radians());
+        }
+        let end = position;
+        let graph = PlantGraph {
+            age: 1.0,
+            height: 0.3,
+            segments: Vec::new(),
+            organs,
+            structures: Vec::new(),
+        };
+        let cards = build_plain(&graph, &looks, &appearance, &lod(0.0, 0.0, 0.0)).cards;
+        assert_eq!(cards.len(), 3);
+        let tip = |card: &Card| {
+            let half = 0.5 * f64::from(card.width);
+            card.bend
+                .point(
+                    vector(card.base),
+                    vector(card.heading),
+                    vector(card.left),
+                    half,
+                    f64::from(card.length),
+                    0.0,
+                    1.0,
+                )
+                .0
+        };
+        for pair in cards.windows(2) {
+            let gap = (tip(&pair[0]) - vector(pair[1].base)).length();
+            assert!(gap < 1e-5, "a gap of {gap} m between pieces");
+        }
+        assert!((tip(&cards[2]) - end).length() < 1e-5);
+        // Undrawn, the first piece's droop leaves it short and below.
+        let flat = place(&graph.organs[0], &looks[0]);
+        let straight = looks[0]
+            .bend
+            .point(flat.0, flat.1, flat.2, 0.006, flat.3, 0.0, 1.0)
+            .0;
+        assert!((straight - graph.organs[1].position).length() > 0.01);
+        assert!(loose_organs(&graph, &looks, 1e-5).is_empty());
+    }
+
+    /// A strap of three blade pieces turned edgewise (a sword leaf's
+    /// roll), the turtle pitching down between them: each piece's card,
+    /// bent by its look toward its rolled face, ends where the next one
+    /// starts, and the last ends where the program's line ends.
+    #[test]
+    fn the_pieces_of_a_rolled_strap_join() {
+        let mut appearance = appearance();
+        appearance.organs.insert(
+            "leaf".into(),
+            OrganLook {
+                roll: 90.0,
+                ..look(Shape::Blade(crate::looks::Blade::default()), 0.0)
+            },
+        );
+        let looks = appearance.looks([("leaf", OrganKind::Leaf)]);
+        assert!(looks[0].bend.droop > 0.0 && looks[0].bend.twist > 0.0);
+        // Above the ground, which would turn a card dipping into it.
+        let (mut position, left) = (Vec3::new(0.0, 0.05, 0.0), Vec3::X);
         let mut heading = Vec3::new(0.0, 0.9, 0.44).normalize_or(Vec3::Y);
         let mut organs = Vec::new();
         for (k, size) in [0.12, 0.1, 0.088].into_iter().enumerate() {

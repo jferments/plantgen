@@ -436,4 +436,12 @@ pub mod venation;
 /// branches only on the top `crown_ratio` of its height (rule on
 /// `self_pruning`), so ponderosa pine, self-pruning by FEIS, stands on a
 /// clear bole (71 is broadleaf limbs, #133).
-pub const GENERATOR_REVISION: u32 = 72;
+/// 73: monocot leaves: a linear monocot leaf is an arching strap on the
+/// blade card, as wide for its length as its flora measures, its rosette
+/// leaves as long as the leaves; a flowering stem without leaves
+/// (`cauline_leaves` none) is a scape; a card may roll about its length
+/// (`roll`), and unifacial sword leaves (`leaf_faces`) turn edgewise, their
+/// strap pieces joined as rolled; camas states its leaves at the genus
+/// (Watson and Dallwitz), Iridaceae its sword leaves; Oregon iris and
+/// Idaho blue-eyed grass stand edgewise (72 is pine whorls, #136).
+pub const GENERATOR_REVISION: u32 = 73;

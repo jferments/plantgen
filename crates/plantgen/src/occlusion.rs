@@ -318,6 +318,7 @@ mod tests {
         let organs = std::collections::BTreeMap::from([(
             "leaf".to_string(),
             crate::looks::OrganLook {
+                roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Simple(crate::looks::Simple::default()),
                 colour: None,
