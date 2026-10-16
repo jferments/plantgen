@@ -57,6 +57,9 @@
 # (a pull that eases as it points down, so it never curls back), as fronds
 # do (Hoshizaki and Moran 2001, p. 391: by default fronds bend outward and
 # droop toward the tip), not only by the sag of its later years.
+# Where `blade_tilt` is set, the rachis turns outward by that much at the
+# foot of the blade as it unrolls, so a blade on an upright stipe is held
+# out level (bracken's).
 #
 # A crown is no stalk: its growing point rises crown_rise a year unseen,
 # under the bases round it, and each frond stands on its own foot up to
@@ -103,6 +106,7 @@ param unroll = 0.25;          # share of a year a frond takes to unroll
 param curl = 40;              # degrees each coiled piece turns back
 param droop = 0.02;           # sag per year of a frond's age
 param arch = 60;              # about how far a frond's rachis bends toward the ground over its length once unrolled
+param blade_tilt = 0;         # degrees the rachis turns outward at the foot of its blade once unrolled
 param crown_radius = 0.02;    # fronds stand round a crown up to this far from its centre
 param crown_rise = 0.002;     # how far a crown's growing point rises each year, unseen
 param stub = 0.08;            # a stipe base, as a share of its frond's length
@@ -182,6 +186,13 @@ interpret Pc(k, m, s, e) -> Pp(k, s, e);
 interpret Pp(k, s, e) : (k + 0.5) / pieces < stipe ->
     ^(curl * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1)))
     F(s / pieces * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))));
+interpret Pp(k, s, e) : (k - 0.5) / pieces < stipe ->
+    &(blade_tilt * clamp((age + season - e) / unroll, 0, 1))
+    ^(curl * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1)))
+    F(s / pieces * 0.5 * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))))
+    Pn(k, s, e, 0)
+    F(s / pieces * 0.5 * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))))
+    Pn(k, s, e, 0.5);
 interpret Pp(k, s, e) ->
     ^(curl * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1)))
     F(s / pieces * 0.5 * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))))

@@ -11,7 +11,18 @@
     "leaf_division": "compound",
     "division_pattern": "pinnate"
   },
+  "rules": {
+    "generator.params.blade_tilt": {
+      "rule": "45",
+      "why": "Bracken holds its broad triangular blade out nearly level on top of its upright stipe."
+    }
+  },
   "evidence": {
+    "rules.generator.params.blade_tilt": {
+      "evidence": "SourceInferred",
+      "source": "hoshizaki-moran-2001",
+      "note": "Hoshizaki and Moran, Fern Grower's Manual (2001), fig. 13.104.1 (Pteridium aquilinum var. pubescens): a broad triangular frond seen from above, held horizontal; fig. 13.104.3 A: a long upright stipe under a triangular tripinnate blade. The 45 degrees at the blade's foot, with the bend every frond takes along its length, is the model's reading of nearly level."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
