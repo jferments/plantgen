@@ -12,6 +12,8 @@
   "growth_form": "palm",
   "generator": {
     "params": {
+      "sheath_length": 0.45,
+      "shaft_cards": 4,
       "lean": 2,
       "trunk_rate": 0.23,
       "trunk_radius": 0.42,
@@ -56,18 +58,19 @@
     "seeds": [1, 2, 3, 4]
   },
   "appearance": {
-    "bark": [0.42, 0.36, 0.3],
-    "foliage": [0.36, 0.43, 0.3],
-    "foliage_shade": [0.162, 0.1935, 0.135],
+    "bark": [0.17, 0.11, 0.07],
+    "foliage": [0.1, 0.19, 0.06],
+    "foliage_shade": [0.045, 0.0855, 0.027],
     "variation": 0.1,
     "organs": {
+      "sheath": {"shape": {"template": "blade", "taper": 0.3, "aspect": 0.7}, "colour": [0.2, 0.09, 0.04]},
       "ray": {
         "shape": {
           "template": "blade",
           "taper": 0.5,
           "aspect": 0.09
         },
-        "colour": [0.36, 0.43, 0.3],
+        "colour": [0.1, 0.19, 0.06],
         "bend": {
           "fold": 20,
           "cup": 0,
@@ -85,7 +88,7 @@
           "spread": 1.2,
           "petiole": 0.4
         },
-        "colour": [0.5, 0.42, 0.3]
+        "colour": [0.214, 0.147, 0.073]
       }
     }
   },
@@ -116,7 +119,7 @@
     "generator.params": {
       "evidence": "SourceInferred",
       "source": "sargent-1922",
-      "note": "Sargent (1922, Washingtonia filamentosa, i.e. W. filifera, pp. 104-105): leaves 5 to 6 ft long and 4 to 5 ft wide, divided nearly to the middle into recurved segments, on petioles 4 to 6 ft (1.2 to 1.8 m), so a frond about 3.4 m, 0.45 of it petiole; a short rachis (costa 0.12); a trunk to 50 to 60 ft and 2 to 3 ft through (trunk_radius 0.42 m); a broad crown of erect and spreading, finally pendulous leaves (hang 50 degrees over a frond's life, the segments arching down 30 degrees to the fan's edges), with a thick thatch of dead pendant leaves descending in a cone from the crown nearly to the ground (skirt, dead_life 60). Other values set by hand from general knowledge of the species, not fitted to measurements."
+      "note": "Sargent (1922, Washingtonia filamentosa, i.e. W. filifera, pp. 104-105): leaves 5 to 6 ft long and 4 to 5 ft wide, divided nearly to the middle into recurved segments, on petioles 4 to 6 ft (1.2 to 1.8 m), so a frond about 3.4 m, 0.45 of it petiole; a short rachis (costa 0.12); a trunk to 50 to 60 ft and 2 to 3 ft through (trunk_radius 0.42 m); a broad crown of erect and spreading, finally pendulous leaves (hang 50 degrees over a frond's life, the segments arching down 30 degrees to the fan's edges), with a thick thatch of dead pendant leaves descending in a cone from the crown nearly to the ground (skirt, dead_life 60). Other values set by hand from general knowledge of the species, not fitted to measurements. Sargent (p. 104) gives the petioles' bases as thick, broad, concave, bright chestnut-brown sheaths of a network of fibres, 16 to 18 in long and 12 to 14 in wide (p. 105): each frond clasps the stem 0.45 m below its foot with four cards (sheath_length, shaft_cards), so the crown's leaf bases hide the stem's top where it stood bare."
     },
     "allometry": {
       "evidence": "Authored",
@@ -124,9 +127,9 @@
       "note": "Rough heights from general knowledge of the species: about 8 m at 30 years and 17 m at 60. Wide tolerances."
     },
     "appearance": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: grey-green fans, a straw-brown skirt, a grey trunk."
+      "evidence": "SourceInferred",
+      "source": "sargent-1922",
+      "note": "Colours chosen by eye from photographs: grey-green fans, a straw-brown skirt, a grey trunk. Shades as linear light (2026-10-16), from Sargent (1922, p. 104-105): leaves light green [0.1, 0.19, 0.06], sheaths bright chestnut-brown, the trunk's rind light red-brown, the thatch straw-brown; the by-eye values had been written as screen (sRGB) shades and drew near white."
     },
     "taxon": {
       "evidence": "Authored",
