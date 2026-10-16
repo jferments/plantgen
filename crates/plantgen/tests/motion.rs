@@ -110,9 +110,13 @@ fn motion_packages_hold_bones_branches_and_bindings() {
 /// third level: every wood vertex and card is borne by a segment bound to a
 /// bone, or by the ground (roots, a rosette's leaves); every branch heads
 /// its own chain of bones; and the rig and its record are found in under
-/// three seconds (two until pinidae 9's full crowns: Sitka spruce and
+/// six seconds (two until pinidae 9's full crowns: Sitka spruce and
 /// western hemlock carry about 230,000 segments and take 1.8 to 2.0 s
-/// with every species running at once, against 1.1 s before).
+/// with every species running at once, against 1.1 s before; three until
+/// conifers shaded with their needles' own area, generator revision 76:
+/// Sitka spruce, western hemlock and Douglas-fir now carry 320,000 to
+/// 350,000 segments and take 6 to 7 s on a machine where they took 3.3
+/// to 3.7 s before).
 #[test]
 fn builtin_species_bind_every_vertex_to_a_bone() {
     let species: Vec<&str> = spec::all_species().map(|(id, _)| id).collect();
@@ -157,7 +161,7 @@ fn check_species(id: &str) -> Vec<String> {
     let found = motion.of_graph(graph, &growth.organ_types);
     let record = motion::record(&found, &motion, graph, &growth.organ_types);
     let took = started.elapsed().as_secs_f64();
-    if took > 3.0 {
+    if took > 6.0 {
         failures.push(format!("{id}: its rig and record took {took:.1} s"));
     }
     if record.anchorage.moment.partial_cmp(&0.0) != Some(std::cmp::Ordering::Greater)

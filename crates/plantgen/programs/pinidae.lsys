@@ -106,6 +106,13 @@
 # foliage tufts (pipe_tip, pipe_organ) can carry them on stout limbs
 # without a trunk too thick for its age. Thin limbs under heavy tufts sag
 # into whips; ponderosa pine's shoots are 0.7 to 2 cm thick (Farjon 2017).
+# A spray's pipe carries its leaf area, as sapwood does a tree's foliage:
+# pipe_organ is the pipe radius per metre of a spray bearing 0.25 m² per
+# metre squared, the area the conifers' cards drew, and a spray that bears
+# less or more takes a pipe that much smaller or larger in its flow. A
+# needle card now shades with its needles' own area (generator revision
+# 76), a quarter to a half of what it drew, so a crown carries two to four
+# times the sprays, and without this its trunk thickened with them.
 #
 # Short shoots (revision 11 too): a branch shoot of a conifer with short
 # shoots (spur_years above 0, as in larches) leafs out again from them
@@ -164,7 +171,7 @@ param pipe_exponent = 2.4;     # a parent's radius to this power is its children
 param spur_years = 0;          # years a branch shoot leafs out again from short shoots after its first; 0: none
 param spur_share = 1;          # a short-shoot year's foliage spray, as a share of the shoot's first year's
 param pipe_tip = 0.003;        # radius of the twig behind one living apex
-param pipe_organ = 0.012;      # pipe radius per metre of spray
+param pipe_organ = 0.012;      # pipe radius per metre of spray bearing 0.25 m² a metre squared (revision 11)
 param pipe_rings = 0.000016;   # ring area laid down per m² of foliage a year
 param adult_age = 20;          # the first year it is adult and bears cones
 param cone_chance = 0.1;       # chance a year a well-lit branch apex bears one
@@ -205,7 +212,7 @@ organ cone cone area cone_area;
 
 tool light@1 { cell = 0.4, extinction = 0.35, bud = 0.01 };
 tool vigour@1 { lambda = 0.7, alpha = 2 };
-tool pipe@1 { exponent = pipe_exponent, tip = pipe_tip, organ = pipe_organ, rings = pipe_rings };
+tool pipe@1 { exponent = pipe_exponent, tip = pipe_tip, organ = pipe_organ * pow(spray_area / 0.25, 1 / pipe_exponent), rings = pipe_rings };
 tool substrate@1 {};
 tool bend@1 {
     density = wood_density,

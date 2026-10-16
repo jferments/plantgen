@@ -244,7 +244,7 @@ const KNOWN: &[(&str, &str, &str)] = &[
     (
         "program:pinidae",
         "leaf_life_years",
-        "Sitka spruce's needles live 8 to 10 years at the median, but some fall at 5, against the 7 to 10 it states (seen since the conifer lives, #96; not traced)",
+        "Sitka spruce's needles on shaded branches that die fall at 2 years, past the 7 to 10 it states; the median holds (seen since needle shading, revision 76; the shed limbs carry them)",
     ),
     (
         "program:rosette",

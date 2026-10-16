@@ -20,10 +20,9 @@
       "branch_angle": 45,
       "upturn": 0.006,
       "spray_droop": 25,
-      "spray_area": 0.23,
       "pipe_organ": 0.0095,
       "branch_reach": 6.0,
-      "pipe_rings": 9.8e-06
+      "pipe_rings": 3e-05
     }
   },
   "growth": {
@@ -158,7 +157,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set to give a plausible Douglas-fir: annual whorls of about five branches, upper branches swept up and lower ones level to drooping with upturned tips, a stiff leader, foliage kept about six years, height near 35 m at 50 years on a good site. Spray area matched to the drawn needle sprays. Not fitted to data. Cones (plant forms F3): 5 to 10 cm hang, with three-pointed bracts between the scales; set from general knowledge of the species, not measured. Spec rework E6d: `cone_length`, `cone_pitch`, `cone_years`, `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe, and `pipe_rings` refitted to the dbh references now that the crown holds more foliage."
+      "note": "Hand-set to give a plausible Douglas-fir: annual whorls of about five branches, upper branches swept up and lower ones level to drooping with upturned tips, a stiff leader, foliage kept about six years, height near 35 m at 50 years on a good site. Spray area matched to the drawn needle sprays. Not fitted to data. Cones (plant forms F3): 5 to 10 cm hang, with three-pointed bracts between the scales; set from general knowledge of the species, not measured. Spec rework E6d: `cone_length`, `cone_pitch`, `cone_years`, `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe, and `pipe_rings` refitted to the dbh references now that the crown holds more foliage. Needle shading (generator revision 76): `pipe_rings` raised from 9.8e-06 to 3e-05, refitted to the interior dbh references (0.25 m at 30 years, 0.45 m at 60) now that its sprays shade only their true needle area."
     },
     "allometry": {
       "evidence": "Authored",

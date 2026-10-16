@@ -82,7 +82,8 @@ impl fmt::Display for GrowthError {
 impl std::error::Error for GrowthError {}
 
 /// Sandbox limits. The defaults allow a large old tree and stop a runaway
-/// program within seconds.
+/// program within seconds: a 60-year Sitka spruce, its needles shading by
+/// their own area (generator revision 76), passes a million modules.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Limits {
     pub max_modules: usize,
@@ -98,7 +99,7 @@ pub struct Limits {
 impl Default for Limits {
     fn default() -> Self {
         Self {
-            max_modules: 1_000_000,
+            max_modules: 4_000_000,
             max_steps: 10_000,
             max_decomposition_depth: 32,
             max_interpretation_depth: 8,

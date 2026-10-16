@@ -450,6 +450,12 @@ pub mod venation;
 /// hold their line at 100 years, where thin limbs under its heavy needle
 /// tufts hung as whips; a conifer with short shoots (`spur_years`, as
 /// in larches) leafs out again along its older wood each year, so a
-/// deciduous larch keeps its needle tufts along its branches (75 is ferns,
-/// 74 cacti, #138).
+/// deciduous larch keeps its needle tufts along its branches; and a
+/// needle card shades with its needles' own area, not its painted lines,
+/// which drew each needle at least two texels wide and counted the
+/// crossing card's needles again, 2.2 to 4.6 times their area: conifers'
+/// crowns had starved to tufts at their limb tips and now carry foliage
+/// along their limbs, a pine's card is one brush of needles at their
+/// stated length (Pinus rules), and the module limit is 4,000,000 (75 is
+/// ferns, 74 cacti, #138).
 pub const GENERATOR_REVISION: u32 = 76;
