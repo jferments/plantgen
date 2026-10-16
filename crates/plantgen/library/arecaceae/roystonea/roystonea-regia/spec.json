@@ -46,7 +46,7 @@
       "bulge_age": 22,
       "bulge_years": 10,
       "crownshaft": 2.0,
-      "shaft_cards": 16,
+      "shaft_cards": 8,
       "leaflet_scatter": 25,
       "leaflet_groups": 3,
       "hang": 25
@@ -62,12 +62,23 @@
     "seeds": [1, 2, 3, 4]
   },
   "appearance": {
-    "bark": [0.62, 0.6, 0.55],
+    "bark": [0.46, 0.44, 0.4],
+    "bark_pattern": {
+      "kind": "ringed",
+      "scale": 0.04,
+      "elongation": 0.85,
+      "fissure": 0.5,
+      "depth": 0.2,
+      "contrast": 0.45,
+      "variation": 0.35,
+      "smooth_below": 0.05,
+      "roughness": 0.35
+    },
     "foliage": [0.2, 0.38, 0.16],
     "foliage_shade": [0.09, 0.171, 0.072],
     "variation": 0.1,
     "organs": {
-      "sheath": {"shape": {"template": "blade", "taper": 0, "aspect": 0.1}, "colour": [0.3, 0.45, 0.18]},
+      "sheath": {"shape": {"template": "blade", "taper": 0, "aspect": 0.14}, "colour": [0.3, 0.45, 0.18]},
       "leaflet": {
         "shape": {
           "template": "blade",
@@ -116,7 +127,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye from photographs: bright green fronds, pale grey trunk, and the crownshaft's shining green sheaths, drawn as sixteen upright cards round the trunk's top (Sargent 1922: bright green cylinders of densely imbricated sheaths)."
+      "note": "Colours chosen by eye from photographs: bright green fronds, a pale grey trunk ringed by its leaf scars (Dransfield et al. 2008, Genera Palmarum p. 392: grey to white, with prominent or faint rings), one ring a leaf, about 3.4 cm apart (0.4 m of trunk a year over twelve leaves), each ring a darker groove half the gap wide, the bands between them uneven in shade, and the crownshaft's shining green sheaths, each frond's sheath drawn as eight cards wrapping the crownshaft, wide enough to close it (Sargent 1922: bright green cylinders of densely imbricated sheaths)."
     },
     "taxon": {
       "evidence": "Authored",

@@ -120,6 +120,11 @@
 # - The trunk between one frond and the next is as thick as the trunk
 #   below it (until now it was trunk_radius, so a swollen or flared
 #   trunk was notched at each frond).
+# - A crownshaft's sheath wraps it: each frond's sheath is a ring of
+#   shaft_cards cards (until now shaft_cards / fronds_per_year) standing
+#   just outside the core's surface and lying flat against it, down from
+#   the frond's foot, so the living fronds' sheaths make a closed green
+#   column. Until now each card stood edgewise out from the core, a fin.
 #
 # thicken, cataphylls, leaflet_fold and coil_short 0, flush_interval 1,
 # leaflet_young 0.3, leaflet_groups 2 and boot_angle 60 draw as revision 8
@@ -146,7 +151,7 @@ param bulge;                  # a belly's extra girth, a share of trunk_radius
 param bulge_age;              # the crown's age when the belly's widest part forms
 param bulge_years;            # how long the belly lasts, years either side
 param crownshaft;             # a crownshaft's length, metres; 0 none
-param shaft_cards;            # sheaths drawn round it
+param shaft_cards;            # cards each frond's sheath wraps the crownshaft with
 param sheath_area;            # leaf area of a sheath 1 m long, m²
 # Fronds.
 param fronds_per_year;        # fronds a year, or a flush's
@@ -328,10 +333,10 @@ interpret Bt ->
 # A frond: its petiole, then its rachis piece by piece, and a fan frond's
 # rays at the end. The rays share the frond's birth, so they die with it.
 decompose Fr(s, a, e, r) : crownshaft > 0 && fan > 0 ->
-    frond [ ring(max(1, round(shaft_cards / max(1, fronds_per_year)))) [ Sh(crownshaft, r) ] ]
+    frond [ ring(max(1, round(shaft_cards))) [ Sh(crownshaft, r) ] ]
     Pc(0, max(1, round(pieces)), s, e) Ry(0, max(1, round(rays)), s, e);
 decompose Fr(s, a, e, r) : crownshaft > 0 ->
-    frond [ ring(max(1, round(shaft_cards / max(1, fronds_per_year)))) [ Sh(crownshaft, r) ] ]
+    frond [ ring(max(1, round(shaft_cards))) [ Sh(crownshaft, r) ] ]
     Pc(0, max(1, round(pieces)), s, e);
 decompose Fr(s, a, e, r) : fan > 0 -> frond Pc(0, max(1, round(pieces)), s, e) Ry(0, max(1, round(rays)), s, e);
 decompose Fr(s, a, e, r) -> frond Pc(0, max(1, round(pieces)), s, e);
@@ -393,10 +398,11 @@ decompose Cc(z) : z <= 0 -> ;
 rule Cc(z) : age + dt >= 1 -> ;
 interpret Cc(z) -> cone(z);
 
-# A sheath card of the crownshaft: out to the core's surface, then down
-# it from the frond's foot. It lives as long as its frond.
+# A sheath card of the crownshaft: out to just past the core's surface,
+# then down it from the frond's foot, lying flat against it. It lives as
+# long as its frond.
 rule Sh(z, r) : age + dt >= frond_life -> ;
-interpret Sh(z, r) -> +(90) f(r) +(90) sheath(z);
+interpret Sh(z, r) -> &(90) f(r * 1.1) &(90) sheath(z);
 rule Sc(z) : age + dt >= frond_life -> ;
 interpret Sc(z) -> !(trunk_radius * 0.97) F(z);
 
