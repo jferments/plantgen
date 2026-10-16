@@ -458,4 +458,7 @@ pub mod venation;
 /// revision 8), split four ways so it nests no deeper; both Ferocactus
 /// keep last year's fruit, and F. cylindraceus takes Anderson's rib,
 /// radial and central counts (74 is cactus barrels, #138).
-pub const GENERATOR_REVISION: u32 = 75;
+/// 76: a colour character is sRGB, so a colour rule reads it as linear
+/// light: every stated flower, fruit, leaf and bark colour draws as deep
+/// as it is stated, where it drew paler (75 is cactus crown rings, #147).
+pub const GENERATOR_REVISION: u32 = 76;

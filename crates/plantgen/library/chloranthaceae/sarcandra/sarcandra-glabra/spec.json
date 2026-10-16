@@ -69,6 +69,16 @@
       11,
       12,
       1
+    ],
+    "leaf_colour": [
+      61,
+      96,
+      60
+    ],
+    "bark_colour": [
+      100,
+      110,
+      40
     ]
   },
   "appearance": {
@@ -185,6 +195,16 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high), as Flora of China gives no months."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "A dark, glossy green, the median over each photograph of its green, saturated pixels, then the median over the photographs, in 15 photographs of living plants in iNaturalist research-grade observations 71688619, 101079448, 137144714, 150740140, 238222097, 331395152, 333579646, 383595008 (CC0, CC BY, CC BY-SA)."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "The stems stay green to the base, swollen at the nodes, a yellowish green read from the stem's pixels in observation 383595008 and seen in 137144714 and 331395152."
     }
   },
   "provenance": {

@@ -2934,8 +2934,21 @@ pub fn colour_reads(rule: &Map<String, Value>) -> Vec<String> {
     names
 }
 
-/// The colour of the first of `names` the species states, its channels
-/// (0 to 255) on the looks' 0 to 1 scale, each times its `scale`.
+/// An sRGB channel, 0 to 255, as linear light, 0 to 1: a character's
+/// colour is written as a photograph or a colour chart gives it, and the
+/// looks mix light linearly.
+fn srgb_linear(channel: f64) -> f64 {
+    let c = channel / 255.0;
+    if c <= 0.040_45 {
+        c / 12.92
+    } else {
+        libm::pow((c + 0.055) / 1.055, 2.4)
+    }
+}
+
+/// The colour of the first of `names` the species states, its sRGB
+/// channels (0 to 255) as the looks' linear light, 0 to 1, each times its
+/// `scale`.
 fn colour_of(
     names: &[&str],
     scale: [f64; 3],
@@ -2949,7 +2962,7 @@ fn colour_of(
                 .map(|(channel, by)| {
                     channel
                         .as_f64()
-                        .and_then(|c| written(plain(c / 255.0 * by)))
+                        .and_then(|c| written(plain(srgb_linear(c) * by)))
                 })
                 .collect::<Option<Vec<_>>>()
                 .map(Value::Array)
@@ -4307,7 +4320,7 @@ mod tests {
     }
 
     /// A colour rule sets the first of its colour characters a species
-    /// states, on the looks' 0 to 1 scale, as a rule or as a map's value,
+    /// states, as the looks' linear light, as a rule or as a map's value,
     /// and its `scale` darkens it.
     #[test]
     fn rules_set_colours_from_colour_characters() {
@@ -4342,14 +4355,15 @@ mod tests {
         };
 
         // A radiate head takes its rays' colour, and the foliage's shade
-        // is the leaves' colour scaled; an unstated bark sets nothing.
+        // is the leaves' colour, as linear light, scaled; an unstated bark
+        // sets nothing.
         let rayed = grown(json!({"capitulum_kind": "radiate",
             "ray_colour": [255, 255, 255], "flower_colour": [255, 0, 0],
             "leaf_colour": [102, 204, 51]}));
         assert_eq!(colour(&rayed), json!([1, 1, 1]));
         assert_eq!(
             rayed.spec["appearance"]["foliage_shade"],
-            json!([0.2, 0.4, 0.2])
+            json!([0.066_434_2, 0.301_914, 0.033_104_8])
         );
         assert!(rayed.spec["appearance"].get("bark").is_none());
         assert_eq!(

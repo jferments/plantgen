@@ -16,7 +16,8 @@
       "bare": 0.6,
       "leaf_peak": 1,
       "leaf_top": 1,
-      "leaf_base": 0.9
+      "leaf_base": 0.9,
+      "leaf_angle": 80
     }
   },
   "allometry": [
@@ -77,6 +78,11 @@
       6,
       7,
       8
+    ],
+    "leaf_colour": [
+      94,
+      159,
+      79
     ]
   },
   "evidence": {
@@ -189,6 +195,16 @@
       "evidence": "SourceInferred",
       "source": "flora-of-china-4-chloranthaceae",
       "note": "Flora of China vol. 4 p. 136, Chloranthus serratus (read 2026-10-16): fruits June-August."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "A fresh, light green, the median over each photograph of its green, saturated pixels, then the median over the photographs, in 20 photographs in iNaturalist research-grade observations 12342299, 47114100, 77437026, 116689180, 158677500, 158677562, 165699805, 215207127, 216098007, 292774014, 350756873, 358228476, 358542153, 362210553, 364707277 (CC BY, CC BY-SA)."
+    },
+    "generator.params.leaf_angle": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "The two or three pairs at the stem top spread flat, close to a right angle to the stem, as a false whorl seen from above (observations 47114100, 116689180, 158677500, 215207127, 358542153, 362210553); about 80 degrees read by eye."
     }
   },
   "provenance": {
