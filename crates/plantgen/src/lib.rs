@@ -481,4 +481,9 @@ pub mod venation;
 /// blade fits, lanceolate; evergreen fronds outlast a winter; the curated
 /// ferns arch, and the sword fern's pinnae and angles are the fern rules'
 /// (78 is crownshaft sheaths in their fronds, #150).
-pub const GENERATOR_REVISION: u32 = 79;
+/// 80: a blade stated serrate, dentate, crenate or spiny draws teeth
+/// (`teeth`, `tooth_depth` and the new `round`, from `leaf_margin`, at the
+/// kingdom), where its own look draws none: Chloranthaceae's leaves, and
+/// rosette leaves that take the species' margin; a species' own teeth
+/// stand (79 is ferns, #153).
+pub const GENERATOR_REVISION: u32 = 80;
