@@ -91,6 +91,11 @@
     "frond_dimorphism": "dimorphic"
   },
   "evidence": {
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's deer fern review (Matthews 1993, read 2026-10-15): fronds dimorphic; the sterile ones evergreen, spreading or pressed to the ground, usually 4 to 16 inches (10-40 cm) long; the fertile ones fewer, deciduous and much longer. The stated 13-80 cm spans both."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",

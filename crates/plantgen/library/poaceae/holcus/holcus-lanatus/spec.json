@@ -118,7 +118,7 @@
     "clonal": false,
     "lower_glume_length_m": 0.004,
     "upper_glume_length_m": 0.004,
-    "leaf_length_m": {"min": 0.04, "max": 0.2},
+    "leaf_length_m": {"min": 0.05, "max": 0.2},
     "flowering_months": [6, 7]
   },
   "evidence": {
@@ -214,8 +214,8 @@
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
-      "source": "kew-grassbase",
-      "note": "GrassBase's entry (as search results quote it; the page itself was not read): leaf-blades 4-20 cm long, 3-10 mm wide."
+      "source": "usfs-feis",
+      "note": "FEIS's common velvetgrass review (Gucker 2008, read 2026-10-15): leaf blades flat, 4 to 12 mm wide and 2 to 8 inches (5-20 cm) long. It replaces GrassBase's 4-20 cm, seen only as quoted in search results; the width stays Hitchcock's 4-8 mm."
     },
     "traits.flowering_months": {
       "evidence": "SourceInferred",

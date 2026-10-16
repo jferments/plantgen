@@ -94,7 +94,7 @@ fn a_rule_on_two_ranges_keeps_its_value() {
     );
     // Its leaf and panicle lengths, parameters set from one range each,
     // are sizes of parts, which vary part by part: no plant draws them.
-    assert!((spec.generator.params["leaf_length"] - 0.275).abs() < 1e-12);
+    assert!((spec.generator.params["leaf_length"] - 0.25).abs() < 1e-12);
     assert!(
         spec.generator.spreads.is_empty(),
         "{:?}",
