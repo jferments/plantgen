@@ -235,7 +235,7 @@
     "scale_leaf": {
       "part_of": "stem",
       "category": "organ",
-      "when": {"reproduction": ["flowers", "cones", "solitary_seeds"]},
+      "when": {"reproduction": ["cones"]},
       "po": {"id": "PO:0006003", "name": "scale leaf"},
       "why": "a small leaf that is not a foliage leaf, often guarding a bud: a cycad's cataphylls, which ring its crown at each flush and stay on its trunk among the leaf bases"
     },
