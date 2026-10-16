@@ -458,12 +458,21 @@ pub mod venation;
 /// revision 8), split four ways so it nests no deeper; both Ferocactus
 /// keep last year's fruit, and F. cylindraceus takes Anderson's rib,
 /// radial and central counts (74 is cactus barrels, #138).
-/// 76: shape and fruit words draw what they mean: a cordate or reniform
+/// 76: a strap's pieces (a grass blade's, a basal leaf's) meet edge to
+/// edge: each joint's edge lies across both midribs where a piece's
+/// twist of up to 15 degrees reaches it, and the pieces draw in the light
+/// and colour of the strap's first, so camas and other strap leaves no
+/// longer step in width and shade where their pieces join (75 is cactus
+/// fruit rings, #147).
+/// 77: a colour character is sRGB, so a colour rule reads it as linear
+/// light: every stated flower, fruit, leaf and bark colour draws as deep
+/// as it is stated, where it drew paler (76 is strap joints, #145).
+/// 78: shape and fruit words draw what they mean: a cordate or reniform
 /// blade hangs two basal lobes back beside its petiole (`Simple.sinus`),
 /// and cordate, reniform and deltate blades take their outlines and
 /// widths; a palmately veined blade fans two main veins a side from its
 /// base with the midrib (`Simple.fan`, from `leaf_venation`); achenes,
 /// cypselas, grains, nuts, schizocarps, aggregate and multiple fruits
-/// take fruit kinds, and a fruit is as long as `fruit_size_m` (75 is
-/// cactus crown rings, #147; the merge desk may renumber this).
-pub const GENERATOR_REVISION: u32 = 76;
+/// take fruit kinds, and a fruit is as long as `fruit_size_m` (77 is
+/// sRGB colours, #152).
+pub const GENERATOR_REVISION: u32 = 78;
