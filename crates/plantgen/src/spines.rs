@@ -769,7 +769,9 @@ pub fn cover(look: &BodyLook, area: f64) -> f64 {
     for set in &look.spines {
         let count = f64::from(set.count[0] + set.count[1].max(set.count[0])) * 0.5;
         let lying = crate::math::cos(crate::math::radians(set.angle)).max(0.2);
-        hidden += count * set.length * lying * set.width * 0.7;
+        // Thin spines hide less than their outline: 0.35 keeps the far
+        // levels' mean colour with the nearest level's across the cacti.
+        hidden += count * set.length * lying * set.width * 0.35;
     }
     (hidden / area).clamp(0.0, 0.85)
 }
