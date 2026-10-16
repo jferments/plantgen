@@ -444,4 +444,9 @@ pub mod venation;
 /// strap pieces joined as rolled; camas states its leaves at the genus
 /// (Watson and Dallwitz), Iridaceae its sword leaves; Oregon iris and
 /// Idaho blue-eyed grass stand edgewise (72 is pine whorls, #136).
-pub const GENERATOR_REVISION: u32 = 73;
+/// 76: the conifers' pipe model takes its exponent from a parameter
+/// (`pinidae` revision 11, `pipe_exponent`, 2.4 as before), and ponderosa
+/// pine's stout shoots (0.7 to 2 cm, Farjon 2017) grow on stout limbs that
+/// hold their line at 100 years, where thin limbs under its heavy needle
+/// tufts hung as whips (75 is ferns, 74 cacti, #138).
+pub const GENERATOR_REVISION: u32 = 76;

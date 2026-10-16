@@ -99,9 +99,17 @@
 # stands on a clear bole under a high crown, as ponderosa pine does. The
 # rule at the seed plants sets it from a taxon's self_pruning.
 #
+# Revision 11 (old pine limbs): the pipe model's exponent is a parameter,
+# pipe_exponent (2.4, as before). A parent's radius to that power is the
+# sum of its children's, so a higher exponent keeps a trunk thinner for
+# the twigs it carries, and a species with stout shoots and heavy
+# foliage tufts (pipe_tip, pipe_organ) can carry them on stout limbs
+# without a trunk too thick for its age. Thin limbs under heavy tufts sag
+# into whips; ponderosa pine's shoots are 0.7 to 2 cm thick (Farjon 2017).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem pinidae 10;
+lsystem pinidae 11;
 
 # Height of the leader over time: a Chapman-Richards curve,
 # height = height_max * (1 - exp(-height_rate * age))^height_shape.
@@ -143,6 +151,7 @@ param spray_length = 1.3;      # and how much longer per metre of shoot
 param twig_angle = 42;         # angle of the twig sprays beside each shoot
 param spray_droop = 0;         # degrees the twig sprays hang below their shoot
 param spray_area = 0.3;        # leaf area of a spray 1 m long, m²
+param pipe_exponent = 2.4;     # a parent's radius to this power is its children's summed (revision 11)
 param pipe_tip = 0.003;        # radius of the twig behind one living apex
 param pipe_organ = 0.012;      # pipe radius per metre of spray
 param pipe_rings = 0.000016;   # ring area laid down per m² of foliage a year
@@ -184,7 +193,7 @@ organ cone cone area cone_area;
 
 tool light@1 { cell = 0.4, extinction = 0.35, bud = 0.01 };
 tool vigour@1 { lambda = 0.7, alpha = 2 };
-tool pipe@1 { exponent = 2.4, tip = pipe_tip, organ = pipe_organ, rings = pipe_rings };
+tool pipe@1 { exponent = pipe_exponent, tip = pipe_tip, organ = pipe_organ, rings = pipe_rings };
 tool substrate@1 {};
 tool bend@1 {
     density = wood_density,

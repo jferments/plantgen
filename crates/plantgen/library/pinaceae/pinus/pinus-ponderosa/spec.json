@@ -28,7 +28,10 @@
       "pipe_rings": 1.2e-06,
       "spray_area": 0.471,
       "branch_reach": 6.0,
-      "epi_chance": 0
+      "epi_chance": 0,
+      "pipe_exponent": 3,
+      "pipe_tip": 0.005,
+      "pipe_organ": 0.028
     }
   },
   "growth": {
@@ -110,6 +113,21 @@
     "self_pruning": true
   },
   "evidence": {
+    "generator.params.pipe_tip": {
+      "evidence": "SourceInferred",
+      "source": "farjon-2017",
+      "note": "Farjon's Pinus ponderosa account (printed pp. 761-763): new shoots 0.7 to 2 cm thick. The twig behind each living apex is drawn 1 cm thick, the stout end of the shoots near the thin end of the range, as shaded shoots are thinner."
+    },
+    "generator.params.pipe_organ": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (pinidae revision 11): the pipe radius each metre of needle tuft adds, raised from 0.012 with pipe_tip so the limbs carrying ponderosa's stout shoots and heavy tufts of 15 to 25 cm needles (Farjon 2017, pp. 761-763) hold their line at 100 years. Farjon describes the branches as spreading and assurgent, the lower ones curved down or somewhat pendulous, which the old crown keeps; with the old values they hung as whips to the ground."
+    },
+    "generator.params.pipe_exponent": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (pinidae revision 11): 3 in place of 2.4, so the stout limbs above do not also thicken the trunk; diameter at breast height stays near the old values (about 32 cm at 30 years, 39 cm at 100) inside the 60-year reference's tolerance."
+    },
     "traits.self_pruning": {"evidence": "SourceInferred", "source": "usfs-feis", "note": "FEIS's ponderosa pine review (Pinus ponderosa var. ponderosa, PDF read): \"Ponderosa pine tends to self-prune, although some open-grown trees on unburned sites may have branches nearly reaching the ground\"; its adaptations to fire include a high, open crown and self- and fire-pruned branches."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
