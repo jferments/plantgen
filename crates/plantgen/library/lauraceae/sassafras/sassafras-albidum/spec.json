@@ -34,7 +34,7 @@
       "extinction": 0.45,
       "path_half": 12,
       "fork_stems": 1,
-      "spur_leaf": 0.18
+      "spur_leaf": 0.195
     }
   },
   "growth": {
@@ -76,8 +76,8 @@
         "shape": {
           "template": "palmate",
           "lobes": 3,
-          "depth": 0.72,
-          "lobe_width": 0.4,
+          "depth": 0.5,
+          "lobe_width": 0.8,
           "teeth": 0,
           "spread": 0.4,
           "petiole": 0.2
@@ -268,7 +268,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Red alder's crown values, changed by hand: one trunk with short, stout limbs held out wide (FEIS: a flattened, oblong crown), path_half fitted so it reaches its height. Its spur leaf card is 0.18 m, a little under the rule's 0.195 m, so the three-lobed card's spread lobes keep within FNA's 5-10 cm width. Not fitted to measurements."
+      "note": "Red alder's crown values, changed by hand: one trunk with short, stout limbs held out wide (FEIS: a flattened, oblong crown), path_half fitted so it reaches its height. Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size."
     },
     "allometry": {
       "evidence": "Authored",
@@ -278,7 +278,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, after FEIS and FNA vol. 3: red-brown, deeply furrowed bark; leaves drawn three-lobed, the most distinctive of the unlobed, mitten and three-lobed leaves one tree bears, with deep sinuses and narrow, forward lobes so the blade keeps within FNA's 5-10 cm width."
+      "note": "By eye, after FEIS and FNA vol. 3: red-brown, deeply furrowed bark; leaves drawn three-lobed, the most distinctive of the unlobed, mitten and three-lobed leaves one tree bears, with broad, rounded lobes cut to half the radius, as iNaturalist photographs show them (observations 264729413, 112901363)."
     }
   },
   "provenance": {

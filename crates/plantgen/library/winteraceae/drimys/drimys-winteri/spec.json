@@ -95,6 +95,10 @@
     "leaf_shape": "oblanceolate",
     "leaf_habit": "evergreen",
     "inflorescence": "umbel",
+    "inflorescence_length_m": {
+      "min": 0.03,
+      "max": 0.08
+    },
     "flower_size_m": {
       "min": 0.02,
       "max": 0.04
@@ -186,6 +190,11 @@
       "evidence": "SourceInferred",
       "source": "reiche-1896",
       "note": "Reiche, Flora de Chile vol. 1 (1896) p. 26-27, Drimys Winteri: flowers alone in the upper leaf axils or in stalked umbels, or both on one plant (Simpson p. 202: an umbel-like cyme)."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
     },
     "traits.flower_size_m": {
       "evidence": "Authored",

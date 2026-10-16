@@ -59,14 +59,14 @@
       0.28
     ],
     "foliage": [
-      0.06,
-      0.15,
-      0.05
+      0.04,
+      0.11,
+      0.035
     ],
     "foliage_shade": [
-      0.02,
-      0.05,
-      0.016
+      0.013,
+      0.036,
+      0.012
     ],
     "variation": 0.15,
     "organs": {
@@ -105,6 +105,15 @@
     },
     "leaf_shape": "elliptic",
     "sexual_system": "dioecious",
+    "inflorescence": "cyme",
+    "inflorescence_length_m": {
+      "min": 0.025,
+      "max": 0.05
+    },
+    "flower_size_m": {
+      "min": 0.005,
+      "max": 0.007
+    },
     "flower_colour": [
       235,
       225,
@@ -182,6 +191,21 @@
       "source": "flora-of-china",
       "note": "Flora of China vol. 7, Myristica fragrans (read on eFloras, 2026-10-16): male and female inflorescences, the female 1- or few-flowered; Floral Diagrams p. 70 draws its flowers unisexual."
     },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Myristica fragrans (read on eFloras, 2026-10-16): male inflorescences shortly peduncled, simple or forked, with 4-8 or more flowers on slender branches; the cyme is our reading of that."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Myristica fragrans (read on eFloras, 2026-10-16): male inflorescences 2.5-5 cm."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Myristica fragrans (read on eFloras, 2026-10-16): perianth trigonous-ovoid, 5-7 mm."
+    },
     "traits.flower_colour": {
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
@@ -215,7 +239,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, after Flora of China: grey-brown bark; nearly leathery, glossy elliptic leaves. The leaf card's petiole is 0.13 of its length, the flora's petiole against blade and petiole together."
+      "note": "By eye, after Flora of China: grey-brown bark; nearly leathery, glossy elliptic leaves, their green darkened to the dense, dark crowns of iNaturalist photographs (observations 6747189, 145263246, 281805385). The leaf card's petiole is 0.13 of its length, the flora's petiole against blade and petiole together."
     }
   },
   "provenance": {

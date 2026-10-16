@@ -117,6 +117,14 @@
     "leaf_habit": "deciduous",
     "sexual_system": "dioecious",
     "inflorescence": "umbel",
+    "inflorescence_length_m": {
+      "min": 0.005,
+      "max": 0.01
+    },
+    "flower_size_m": {
+      "min": 0.004,
+      "max": 0.006
+    },
     "flower_colour": [
       235,
       205,
@@ -210,6 +218,16 @@
       "note": "A model estimate (confidence high), as no source read gives it."
     },
     "traits.inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: small clusters at the nodes."
+    },
+    "traits.flower_size_m": {
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high), as no source read gives it."
