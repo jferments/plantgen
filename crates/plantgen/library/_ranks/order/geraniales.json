@@ -2,5 +2,75 @@
   "schema": 1,
   "rank": "order",
   "name": "Geraniales",
-  "parent": "clade/malvids"
+  "parent": "clade/malvids",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes"
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "decussate": "sometimes"
+    },
+    "division_pattern": {
+      "palmate": "usually",
+      "pinnate": "often"
+    },
+    "life_span": {
+      "perennial": "usually",
+      "annual": "sometimes"
+    },
+    "corolla_shape": "rotate",
+    "hypanthium": false,
+    "carpels": {
+      "min": 3,
+      "max": 5,
+      "typical": 5,
+      "low": 2,
+      "high": 7
+    },
+    "sexual_system": "hermaphrodite"
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Geraniales page (read 2026-10-16): leaves spiral in Geraniaceae and Bersameae, opposite in Vivianieae."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Geraniales page (read 2026-10-16): leaves spiral; opposite only in Vivianieae and on upper stems of some Geranieae."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Geraniales page (read 2026-10-16): blades palmate, pinnate or simple. Palmate lobing weighted 'usually' because Geranium (307 spp) and most Pelargonium are palmately lobed; Erodium pinnate."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Geraniales page (read 2026-10-16): mostly herbs; Francoaceae trees to perennial herbs; annuals in Vivianieae and some Geranieae."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Geraniales page (read 2026-10-16): five free petals, mostly regular; inferred as spreading (open saucer)."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Geraniales page (read 2026-10-16): no hypanthium described; Pelargonium has a receptacular nectary tube, not a floral cup."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Geraniales page (read 2026-10-16): carpels 2-7 in the order; (2-)5 in Geranieae."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Geraniales page (read 2026-10-16): flowers perfect."
+    }
+  }
 }

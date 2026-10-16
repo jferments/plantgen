@@ -11,6 +11,41 @@
     "hypanthium": {
       "true": "usually",
       "false": "sometimes"
+    },
+    "phyllotaxis_pattern": {
+      "decussate": "usually",
+      "spiral": "sometimes"
+    },
+    "leaf_division": "simple",
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "zygomorphy": "other",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5,
+      "typical": 4
+    },
+    "ovary_position": {
+      "inferior": "usually",
+      "superior": "sometimes",
+      "half_inferior": "sometimes"
+    },
+    "carpels": {
+      "min": 2,
+      "max": 5
+    },
+    "corolla_shape": "rotate",
+    "life_span": {
+      "perennial": "usually",
+      "annual": "rarely"
+    },
+    "rosette": "none",
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "polygamous": "rarely",
+      "dioecious": "rarely"
     }
   },
   "evidence": {
@@ -18,6 +53,61 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 162 Myrtaceae, 167 Combretaceae, 168 Melastomataceae, 288 Lythraceae and 289 Onagraceae, the bulk of APG's Myrtales: the sepals joined in a tube (a floral cup) round or on the ovary, the petals and stamens borne at its rim; leaves mostly opposite, alternate in some (Combretaceae, Onagraceae in part)."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Myrtales page, order characterisation (read 2026-10-16): leaves of the order given as opposite; opposite pairs crossing is the decussate pattern. 'sometimes spiral' added because Combretaceae and Onagraceae include many alternate-leaved species. Weighting inferred from leaf_arrangement already stated for the order."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Myrtales page (read 2026-10-16): leaves entire-margined and undivided across the families described (Combretaceae, Lythraceae, Onagraceae, Vochysiaceae all simple). Every family with candidates already states simple."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Myrtales page, family notes (read 2026-10-16): most flowers regular; monosymmetry only in some genera (Cuphea, Lopezia) and in Vochysiaceae."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Myrtales page (read 2026-10-16): the zygomorphic members (Cuphea, Lopezia, Vochysiaceae) have neither pea-flower nor two-lipped nor orchid plans."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Myrtales page, order characterisation (read 2026-10-16): flowers often 4-merous; Onagraceae usually 4, Lythraceae typically 4, Combretaceae 4-5. Replaces the pentapetalae typical 5 for this order."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Myrtales page (read 2026-10-16): ovary inferior at order level; Lythraceae more or less superior, Vochysiaceae either. 'usually' because Myrtaceae, Melastomataceae and Onagraceae (most species) are inferior."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Myrtales page, family notes (read 2026-10-16): Combretaceae 2-5(-8), Lythraceae 2-6, Onagraceae usually 4, Vochysiaceae 3(-4)."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Myrtales page (read 2026-10-16): petals free and borne on the hypanthium rim, spreading; no tubular corollas described. Shape inferred from free spreading petals."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Myrtales page (read 2026-10-16): mostly trees and shrubs; herbs (some annual) only in Onagraceae and Lythraceae."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Myrtales page (read 2026-10-16): leafy-stemmed woody plants and herbs; no rosette habit described for the order. Basal rosettes occur in some Oenothera (Onagraceae) only."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Myrtales page (read 2026-10-16): flowers bisexual through most of the order; Combretaceae sometimes monoecious or dioecious (bracketed in source)."
     }
   }
 }

@@ -689,6 +689,22 @@
       "values": ["linear", "lanceolate", "oblanceolate", "elliptic", "oblong", "ovate", "obovate", "orbicular", "deltate", "spatulate", "reniform", "cordate"],
       "why": "a blade's outline, or a compound leaf's leaflets'"
     },
+    "leaf_apex": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["acuminate", "caudate", "cuspidate", "mucronate", "aristate", "acute", "obtuse", "rounded", "truncate", "emarginate", "retuse"],
+      "optional": true,
+      "why": "a blade's tip: drawn out with hollow sides (acuminate) or into a tail (caudate), ending in a short sharp point (cuspidate), a tiny one (mucronate) or a bristle (aristate), narrowing straight to a point (acute), blunt (obtuse), rounded, cut square (truncate), or notched (emarginate, shallowly retuse)"
+    },
+    "leaf_base_shape": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["attenuate", "cuneate", "acute", "obtuse", "rounded", "truncate"],
+      "optional": true,
+      "why": "a blade's base where it meets its petiole: tapering long and gradually (attenuate), a straight wedge (cuneate), narrowing to a point (acute), blunt (obtuse), rounded, or cut square (truncate); a base with lobes either side of the petiole is the blade's shape, cordate or reniform"
+    },
     "leaf_venation": {
       "group": "leaves",
       "organ": "leaf",
@@ -1045,6 +1061,22 @@
       "range": [0.0003, 0.5],
       "optional": true,
       "why": "a petal from its base to its tip, claw included"
+    },
+    "petal_shape": {
+      "group": "flowers",
+      "organ": "petal",
+      "type": "enum",
+      "values": ["linear", "lanceolate", "elliptic", "oblong", "ovate", "obovate", "spatulate", "orbicular"],
+      "optional": true,
+      "why": "a petal's outline, or a tepal's: from a narrow strap (linear) to as broad as long (orbicular)"
+    },
+    "petal_apex": {
+      "group": "flowers",
+      "organ": "petal",
+      "type": "enum",
+      "values": ["acuminate", "acute", "obtuse", "rounded", "truncate", "emarginate", "bilobed"],
+      "optional": true,
+      "why": "a petal's tip, or a tepal's: drawn out to a fine point (acuminate), narrowing straight to a point (acute), blunt (obtuse), rounded, cut square (truncate), notched (emarginate) or cleft into two lobes (bilobed)"
     },
     "sepal_length_m": {
       "group": "flowers",

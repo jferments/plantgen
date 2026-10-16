@@ -1,0 +1,10 @@
+{
+  "id": "britannica",
+  "title": "Encyclopaedia Britannica (online); each note names the article and the date it was read",
+  "authors": "Encyclopaedia Britannica editors",
+  "year": 2026,
+  "url": "https://www.britannica.com/",
+  "licence": "copyrighted text; facts only",
+  "tier": 3,
+  "kind": "text"
+}

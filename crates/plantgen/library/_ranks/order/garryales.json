@@ -2,5 +2,56 @@
   "schema": 1,
   "rank": "order",
   "name": "Garryales",
-  "parent": "clade/lamiids"
+  "parent": "clade/lamiids",
+  "traits": {
+    "rosette": "none",
+    "life_span": "perennial",
+    "sexual_system": "dioecious",
+    "flower_merosity": 4,
+    "stamens": {
+      "min": 4,
+      "max": 10,
+      "typical": 4,
+      "high": 12
+    },
+    "hypanthium": false,
+    "leaf_division": "simple"
+  },
+  "evidence": {
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Garryales page, order characterisation (read 2026-10-16): woody."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Garryales page, order characterisation (read 2026-10-16): woody."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Garryales page, order characterisation (read 2026-10-16): dioecious."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Garryales page (read 2026-10-16): Garryaceae 4-merous; Eucommiaceae has no perianth. Replaces inherited typical 5."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Garryales page (read 2026-10-16): Garryaceae stamens 4 alternating with perianth; Eucommiaceae 4-12. Replaces inherited typical 5."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Garryales page (read 2026-10-16): none described."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Garryales page (read 2026-10-16): both families simple-leaved (family values)."
+    }
+  }
 }

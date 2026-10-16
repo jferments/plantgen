@@ -11,7 +11,11 @@
       "spiral": "often",
       "decussate": "often"
     },
-    "leaf_habit": "evergreen"
+    "leaf_habit": "evergreen",
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    }
   },
   "evidence": {
     "traits": {
@@ -28,6 +32,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 158, family Taxaceae: leaf habit evergreen; read as \"evergreen\"."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Taxaceae (read 2026-10-16): leaves spirally set, often twisted at the base so they look two-ranked; opposite in Amentotaxus (our addition)."
     }
   }
 }

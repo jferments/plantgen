@@ -2,5 +2,142 @@
   "schema": 1,
   "rank": "order",
   "name": "Malvales",
-  "parent": "clade/malvids"
+  "parent": "clade/malvids",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "distichous": "sometimes"
+    },
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "rarely"
+    },
+    "division_pattern": "palmate",
+    "rosette": "none",
+    "life_span": {
+      "perennial": "usually",
+      "annual": "sometimes"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "zygomorphy": "other",
+    "corolla_shape": {
+      "rotate": "usually",
+      "funnelform": "sometimes"
+    },
+    "hypanthium": {
+      "false": "usually",
+      "true": "sometimes"
+    },
+    "ovary_position": {
+      "superior": "usually",
+      "inferior": "rarely"
+    },
+    "stamens": {
+      "min": 15,
+      "max": 100,
+      "low": 2,
+      "high": 200
+    },
+    "carpels": {
+      "min": 2,
+      "max": 5,
+      "typical": 5,
+      "high": 50
+    },
+    "fruit_type": {
+      "capsule": "usually",
+      "schizocarp": "sometimes",
+      "nut": "sometimes",
+      "berry": "rarely"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "rarely",
+      "monoecious": "rarely"
+    }
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page, order characterisation (read 2026-10-16): leaves spiral; opposite leaves only in Thymelaeaceae (often) and Cistaceae."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page (read 2026-10-16): leaves spiral at order level; two-ranked in Muntingiaceae, some Sphaerosepalaceae and Diegodendron. 'sometimes' distichous also covers two-ranked Malvaceae (Grewioideae, Tilioideae), a weighting inferred."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page (read 2026-10-16): blades mostly simple (Thymelaeaceae entire, Neuradaceae toothed to pinnatifid); palmately compound leaves only in part of Malvaceae (Bombacoideae)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page (read 2026-10-16): venation palmate or from the blade base; Cochlospermum palmately lobed; compound Malvaceae leaves are palmate."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page (read 2026-10-16): mostly trees and shrubs with leafy stems; no rosette plants described."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page (read 2026-10-16): mostly trees and shrubs; annuals in Neuradaceae and some herbaceous Thymelaeaceae and Malvaceae."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page (read 2026-10-16): flowers regular across the order; monosymmetry only in Cochlospermum (weak) and oblique in Grielum."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page (read 2026-10-16): the few zygomorphic flowers are weakly or obliquely so, with no lipped or pea plan."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page (read 2026-10-16): corolla of free, often contorted petals that open out; funnel-like corollas (Hibiscus and kin) added as 'sometimes', inferred."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page (read 2026-10-16): a long hypanthium is a mark of Thymelaeaceae; not described for the other families."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page (read 2026-10-16): inferior ovaries only in Cytinaceae, Neuradaceae (more or less) and some Muntingiaceae."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page, order characterisation (read 2026-10-16): stamens usually numerous. Replaces the rosid 5-10 value, which is wrong for this order."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page (read 2026-10-16): Bixaceae 2-5, Cytinaceae 3-14, Muntingiaceae 5(-7), Neuradaceae about 10. Typical 5 weighted by Malvaceae, which states its own typical 5."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page (read 2026-10-16): capsules in Cochlospermum, Cistaceae and most Malvaceae; nut-like winged fruits in Dipterocarpaceae (state their own); fleshy in Cytinaceae and Sphaerosepalaceae."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page (read 2026-10-16): Thymelaeaceae mostly perfect, some dioecious or monoecious; Cytinaceae unisexual. Rest bisexual."
+    }
+  }
 }

@@ -72,7 +72,11 @@
       "high": 20
     },
     "leaf_incision": "none",
-    "flowering_position": "both"
+    "flowering_position": "both",
+    "phyllotaxis_pattern": {
+      "decussate": "usually",
+      "spiral": "sometimes"
+    }
   },
   "evidence": {
     "traits": {
@@ -94,6 +98,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add absent (sometimes): Simpson, Plant Systematics (2019) p. 371, 372: tepals (uniseriate calyx; corolla absent)."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Aizoaceae (read 2026-10-16): alternate or opposite; the large mesemb subfamilies have opposite pairs (weighting inferred)."
     }
   }
 }

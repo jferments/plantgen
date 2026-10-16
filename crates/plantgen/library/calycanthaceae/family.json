@@ -27,13 +27,34 @@
     "carpels": {
       "min": 5,
       "max": 45
-    }
+    },
+    "phyllotaxis_pattern": "decussate",
+    "leaf_habit": {
+      "deciduous": "usually",
+      "evergreen": "sometimes"
+    },
+    "flowering_position": "terminal"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Calycanthaceae with Idiospermaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves opposite; leaves simple; margins entire; veins pinnate; stipules absent; plants hermaphrodite; ovary superior; floral cup present; stems woody; flowers solitary; flowers actinomorphic; perianth usually spiral, sometimes tepals; fruit achene; stamens 5 to 30; carpels 5 to 45. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Laurales page (read 2026-10-16): leaves opposite, entire."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Laurales page (read 2026-10-16): family deciduous or evergreen; Calycanthus and most Chimonanthus deciduous, Idiospermum evergreen (weighting ours)."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Laurales page (read 2026-10-16): large single flowers at shoot ends."
     }
   }
 }

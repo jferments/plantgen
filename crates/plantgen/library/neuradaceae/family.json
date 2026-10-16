@@ -34,13 +34,19 @@
     },
     "flower_merosity": 5,
     "stamens": 10,
-    "carpels": 10
+    "carpels": 10,
+    "division_pattern": "pinnate"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Neuradaceae: leaves alternate; leaves simple; margins serrate or dentate; veins pinnate or palmate; stipules present or absent; plants hermaphrodite; ovary half inferior or inferior; floral cup present; stems herbaceous; flowers solitary; flowers actinomorphic; perianth sepals and petals; fruit capsule or follicle; parts of each whorl 5; stamens 10; carpels 10. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page, Neuradaceae (read 2026-10-16): leaves toothed to pinnatifid."
     }
   }
 }

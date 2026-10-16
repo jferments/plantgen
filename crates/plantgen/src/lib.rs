@@ -506,11 +506,25 @@ pub mod venation;
 /// without a crownshaft may clasp its stem with its fronds' sheaths
 /// (`sheath_length`), the California fan palm's chestnut leaf bases
 /// (81 is cycads, palms and tree ferns told apart, #154).
-/// 83: a fern's stipe stated scaly (`stipe_scales`) is drawn with its
+/// 83: a blade's tip and base draw as stated (`leaf_apex`,
+/// `leaf_base_shape`): hollow-sided, straight, blunt, rounded or square
+/// over its last and first three tenths (`Simple.apex_taper`,
+/// `Simple.base_taper`), with a tail, cusp, mucro or bristle beyond its
+/// tip (`Simple.apex_point`) or a notch in it (`Simple.apex_notch`); a
+/// petal is as broad for its length as its outline is stated among any
+/// count of petals (`Flower.petal_ratio`, from `petal_shape`) and its tip
+/// as pointed or notched as stated (`petal_apex`) (82 is palm, cycad
+/// and tree fern shades, #162).
+/// 84: a blade stated serrate, dentate, crenate or spiny draws teeth
+/// (`teeth`, `tooth_depth` and the new `round`, from `leaf_margin`, at the
+/// kingdom), where its own look draws none: Chloranthaceae's leaves, and
+/// rosette leaves that take the species' margin; a species' own teeth
+/// stand (83 is leaf tip, base and petal words, #161).
+/// 85: a fern's stipe stated scaly (`stipe_scales`) is drawn with its
 /// scales (the new `palea` organ, in `stipe_scale_colour`), largest at
 /// its foot, on its frond and on the stipe bases of an old crown; a
 /// rachis narrows from its foot to its tip, and a small frond's is
 /// thinner (fern program revision 8); the sword fern's stipe is as long
-/// as Flora of North America gives (82 is palms, cycads and tree ferns
-/// in their described shades, #162).
-pub const GENERATOR_REVISION: u32 = 83;
+/// as Flora of North America gives (84 is leaf teeth from stated
+/// margins, #157).
+pub const GENERATOR_REVISION: u32 = 85;

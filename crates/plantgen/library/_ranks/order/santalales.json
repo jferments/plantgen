@@ -2,5 +2,136 @@
   "schema": 1,
   "rank": "order",
   "name": "Santalales",
-  "parent": "clade/superasterids"
+  "parent": "clade/superasterids",
+  "traits": {
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "alternate": "often"
+    },
+    "phyllotaxis_pattern": {
+      "decussate": "usually",
+      "spiral": "often",
+      "distichous": "sometimes"
+    },
+    "leaf_division": "simple",
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "flower_merosity": {
+      "min": 3,
+      "max": 6,
+      "typical": 5,
+      "high": 9
+    },
+    "stamens": {
+      "min": 3,
+      "max": 6,
+      "typical": 5,
+      "high": 18
+    },
+    "carpels": {
+      "min": 2,
+      "max": 5,
+      "typical": 3
+    },
+    "ovary_position": {
+      "inferior": "usually",
+      "half_inferior": "sometimes",
+      "superior": "sometimes"
+    },
+    "fruit_type": {
+      "drupe": "usually",
+      "berry": "often",
+      "nut": "sometimes"
+    },
+    "inflorescence": {
+      "cyme": "usually",
+      "spike": "sometimes",
+      "raceme": "sometimes"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "sometimes",
+      "monoecious": "sometimes"
+    },
+    "leaf_habit": "evergreen",
+    "life_span": {
+      "perennial": "usually",
+      "annual": "rarely"
+    },
+    "rosette": "none"
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Santalaceae usually opposite, or alternate; Viscaceae (now in Santalaceae) opposite; Loranthaceae usually opposite; Olacaceae alternate. Weighting by species (mistletoes dominate); inferred. APweb gives no order-level state."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Follows the leaf arrangement: opposite pairs in Santalaceae/Viscaceae/Loranthaceae (decussate inferred from opposite pairs); DELTA Olacaceae alternate, commonly two-ranked or spiral."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Santalaceae, Viscaceae, Loranthaceae leaves simple and entire; APweb Santalales page: lamina margins entire."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Santalaceae, Viscaceae, Olacaceae regular; Loranthaceae regular to somewhat irregular."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Replaces the Pentapetalae value. DELTA (read 2026-10-16): Santalaceae usually 4-5 (3-8); Viscaceae 3-4; Loranthaceae mostly 5-6 (to 9); Olacaceae 3-5 (APweb: 3-6)."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Santalales page, order characterisation (read 2026-10-16): stamens opposite the petals (so as many as they are). DELTA: Loranthaceae 5-6; Santalaceae 4-5; Viscaceae usually 4; Olacaceae 3-18."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Santalales page (read 2026-10-16): gynoecium of three fused carpels at order level. DELTA: Santalaceae 2-5 (usually 3); Viscaceae 3-4; Olacaceae (2-)3(-5)."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Santalales page (read 2026-10-16): many taxa in the early families have a superior ovary; inferior ovaries arose in the parasitic clade. DELTA: Santalaceae partly inferior to inferior, Viscaceae and Loranthaceae inferior, Olacaceae usually superior. 'Usually inferior' by species weight."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Santalales page (read 2026-10-16): fruit a one-seeded drupe. DELTA: Viscaceae berry; Loranthaceae berry or drupe; Santalaceae and Olacaceae drupe or nut."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Santalales page (read 2026-10-16): inflorescences cymose. DELTA: Loranthaceae cymose units often in threes; Viscaceae small cymes in spikes."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Loranthaceae mostly hermaphrodite; Olacaceae and Santalaceae hermaphrodite, monoecious or dioecious; Viscaceae always unisexual (override on Santalaceae)."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Loranthaceae (read 2026-10-16): evergreen, leathery leaves; mistletoes of Santalaceae (Viscum, Phoradendron) likewise persistent. Partly inferred for Santalaceae and Olacaceae (tropical woody plants)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Loranthaceae, Viscaceae, Olacaceae woody; Santalaceae trees, shrubs or herbs; Balanophoraceae annual to perennial."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): woody hemiparasites and trees; no rosettes described."
+    }
+  }
 }

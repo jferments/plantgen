@@ -6,6 +6,40 @@
   "traits": {
     "inflorescence": {
       "cyme": "usually"
+    },
+    "leaf_arrangement": {
+      "whorled": "usually",
+      "opposite": "often",
+      "alternate": "sometimes"
+    },
+    "phyllotaxis_pattern": "decussate",
+    "division_pattern": "pinnate",
+    "flower_merosity": {
+      "min": 2,
+      "max": 4,
+      "typical": 4
+    },
+    "ovary_position": "inferior",
+    "stamens": {
+      "min": 4,
+      "max": 8,
+      "typical": 8,
+      "low": 2
+    },
+    "carpels": {
+      "min": 2,
+      "max": 4,
+      "typical": 4
+    },
+    "fruit_type": {
+      "schizocarp": "usually",
+      "nut": "often",
+      "drupe": "sometimes"
+    },
+    "flowering_position": "lateral",
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "absent": "sometimes"
     }
   },
   "evidence": {
@@ -13,6 +47,56 @@
       "evidence": "SourceInferred",
       "source": "floral-diagrams",
       "note": "Ronse De Craene, Floral Diagrams (2010) p. 198, family Haloragaceae: inflorescence cyme (dichasial partial inflorescences), usually; read as {\"cyme\": \"usually\"}."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Myriophyllum (half the family) (read 2026-10-16): often whorled, with alternate or opposite exceptions. Opposite leaves in Gonocarpus inferred."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Myriophyllum (read 2026-10-16): whorled leaves; successive whorls alternate. Inferred from whorls."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Myriophyllum (read 2026-10-16): leaves finely pinnately divided."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Haloragaceae (read 2026-10-16): flowers (2-3-)4-parted."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Haloragaceae (read 2026-10-16): ovary inferior."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Haloragaceae (read 2026-10-16): Myriophyllum (2-)4-8 stamens."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Haloragaceae (read 2026-10-16): Myriophyllum (2-)4 carpels."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Haloragaceae (read 2026-10-16): Myriophyllum a schizocarp of nutlets; other genera nuts or drupes."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Myriophyllum (read 2026-10-16): flowers usually in the axils of emergent leaves."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Myriophyllum (read 2026-10-16): female flowers usually lack petals."
     }
   }
 }

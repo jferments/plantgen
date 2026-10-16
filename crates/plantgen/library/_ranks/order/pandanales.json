@@ -2,5 +2,52 @@
   "schema": 1,
   "rank": "order",
   "name": "Pandanales",
-  "parent": "clade/monocots"
+  "parent": "clade/monocots",
+  "traits": {
+    "phyllotaxis_pattern": {
+      "tristichous": "usually",
+      "distichous": "sometimes",
+      "spiral": "sometimes"
+    },
+    "life_span": "perennial",
+    "leaf_habit": "evergreen",
+    "flowering_position": {
+      "terminal": "usually",
+      "lateral": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "hypanthium": false
+  },
+  "evidence": {
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb Pandanales page (read 2026-10-16): Pandanaceae spirally three-ranked, Velloziaceae mostly three-ranked, Cyclanthaceae spirally two-ranked, Stemonaceae two-ranked, spiral or opposite. Pandanaceae (about 1,000 of 1,345 spp.) set 'usually'."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): woody trees and climbers, perennial herbs, resurrection plants and perennial mycoheterotrophs."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): screw pines, Cyclanthaceae and Velloziaceae (resurrection plants keep dried leaves) are evergreen; Triuridaceae have only scales."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): Pandanaceae inflorescence terminal; Velloziaceae terminal though often looking axillary; Stemonaceae and Cyclanthaceae (Carludovicioideae) axillary."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): flowers radial where stated; monosymmetry only in Kupea, Croomia heterosepala and some Cyclanthaceae staminate flowers."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): no floral cup described for any family."
+    }
+  }
 }

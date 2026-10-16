@@ -54,6 +54,14 @@
       "max": 5,
       "low": 1,
       "high": 13
+    },
+    "phyllotaxis_pattern": "decussate",
+    "flowering_position": "terminal",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5,
+      "typical": 4,
+      "high": 9
     }
   },
   "evidence": {
@@ -61,6 +69,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Guttiferae: leaves usually opposite, sometimes alternate or whorled; leaves simple; margins entire; veins pinnate; stipules present or absent; plants hermaphrodite, monoecious, polygamous or dioecious; ovary superior; floral cup absent; stems woody or herbaceous; flowers in cymes, in umbels or in panicles, rarely solitary; flowers actinomorphic; perianth sepals and petals or spiral; fruit capsule, berry or drupe; stamens (3-) 5 to 100; carpels (1-) 3 to 5 (-13). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Guttiferae (read 2026-10-16): leaves mostly opposite."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Guttiferae (read 2026-10-16): inflorescences terminal (Garcinia also axillary, my knowledge)."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Guttiferae (read 2026-10-16): petals 2-6 (to 14). Typical 4 is my weighting from Garcinia (~400 of ~750 spp.)."
     }
   }
 }

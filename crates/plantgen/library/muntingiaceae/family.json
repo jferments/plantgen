@@ -28,13 +28,19 @@
     "carpels": {
       "min": 5,
       "max": 7
-    }
+    },
+    "phyllotaxis_pattern": "distichous"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Muntingiaceae: leaves alternate; leaves simple; margins serrate; veins palmate; stipules present; plants hermaphrodite; ovary superior, half inferior or inferior; floral cup absent; stems woody; flowers actinomorphic; perianth sepals and petals; fruit berry; stamens (11-) 15 to 100; carpels 5 to 7. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Malvales page, Muntingiaceae (read 2026-10-16): leaves two-ranked."
     }
   }
 }

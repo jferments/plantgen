@@ -2,5 +2,87 @@
   "schema": 1,
   "rank": "order",
   "name": "Laurales",
-  "parent": "clade/magnoliids"
+  "parent": "clade/magnoliids",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes"
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "decussate": "sometimes"
+    },
+    "leaf_division": "simple",
+    "leaf_habit": {
+      "evergreen": "usually",
+      "deciduous": "rarely"
+    },
+    "life_span": "perennial",
+    "rosette": "none",
+    "flowering_position": {
+      "lateral": "usually",
+      "terminal": "sometimes"
+    },
+    "hypanthium": true,
+    "fruit_type": {
+      "drupe": "usually",
+      "achene": "sometimes"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Laurales page (read 2026-10-16): order characterisation gives opposite leaves, but Lauraceae plus Hernandiaceae have spiral leaves; Lauraceae (about 2,850 spp.) is most of the order's species, so 'alternate usually' is weighed by species. All other families opposite."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Laurales page (read 2026-10-16): Lauraceae leaves mostly spiral, rarely two-ranked; Hernandiaceae spiral; the opposite-leaved families have crossing pairs."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Laurales page (read 2026-10-16): leaves simple in all families; only Hernandiaceae (Illigera) has some palmately compound leaves (DELTA Hernandiaceae)."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Laurales page (read 2026-10-16): Lauraceae mostly evergreen with some deciduous members (e.g. Lindera, Sassafras); Calycanthaceae both habits; tropical Monimiaceae, Siparunaceae, Atherospermataceae evergreen (inferred from distribution)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Laurales page (read 2026-10-16): trees, shrubs and lianas; even the parasitic Cassytha is a perennial vine."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Laurales page (read 2026-10-16): woody plants with leaves along the stems; no rosettes."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Monimiaceae page (read 2026-10-16): inflorescences mostly axillary; APweb Laurales page: Lauraceae inflorescences on the new flush, typically in leaf axils (our reading); Calycanthaceae flowers terminal on short shoots."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Laurales page (read 2026-10-16): order characterisation: hypanthium usually present; absent in Gomortegaceae."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Laurales page (read 2026-10-16): fruits indehiscent; Lauraceae a fleshy one-seeded fruit; Monimiaceae, Calycanthaceae, Atherospermataceae achenes or drupelets. Weighted by Lauraceae."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Laurales page (read 2026-10-16): Lauraceae flowers mostly perfect, some tribes dioecious; Monimiaceae and Siparunaceae often unisexual. Weighted by Lauraceae."
+    }
+  }
 }
