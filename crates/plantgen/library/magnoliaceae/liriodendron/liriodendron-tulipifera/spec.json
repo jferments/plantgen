@@ -1,0 +1,322 @@
+{
+  "schema": 1,
+  "id": "liriodendron-tulipifera",
+  "taxon": {
+    "scientific_name": "Liriodendron tulipifera",
+    "common_name": "tulip tree",
+    "usda_symbol": "LITU",
+    "family": "Magnoliaceae",
+    "genus": "Liriodendron",
+    "plant_name_id": 113859
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "params": {
+      "crown_radius": 7,
+      "crown_base": 6,
+      "crown_rate": 0.045,
+      "space_density": 3.5,
+      "internode": 0.3,
+      "max_shoot": 4,
+      "bud_break": 1.3,
+      "branch_angle": 50,
+      "apical_young": 0.72,
+      "apical": 0.6,
+      "apical_years": 20,
+      "spur_pairs": 2,
+      "leaf_angle": 55,
+      "droop": 0.02,
+      "lean": 3,
+      "wiggle": 4,
+      "pipe_tip": 0.00245,
+      "pipe_organ": 0.0049,
+      "pipe_rings": 8.98e-08,
+      "extinction": 0.45,
+      "path_half": 22,
+      "fork_stems": 1,
+      "spur_leaf": 0.26
+    }
+  },
+  "growth": {
+    "years": 40,
+    "step": 1,
+    "keyframes": [
+      5,
+      15,
+      40
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.42,
+      0.4,
+      0.36
+    ],
+    "foliage": [
+      0.12,
+      0.22,
+      0.06
+    ],
+    "foliage_shade": [
+      0.04,
+      0.075,
+      0.02
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "palmate",
+          "lobes": 5,
+          "depth": 0.3,
+          "lobe_width": 0.9,
+          "teeth": 0,
+          "spread": 0.55,
+          "petiole": 0.4
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 40,
+      "environment": "open",
+      "height": 27.1,
+      "dbh": 0.37,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 30.5,
+      "max": 45.7,
+      "high": 61
+    },
+    "leaf_length_m": {
+      "low": 0.065,
+      "min": 0.075,
+      "max": 0.15,
+      "high": 0.235
+    },
+    "leaf_width_m": {
+      "low": 0.085,
+      "min": 0.125,
+      "max": 0.185,
+      "high": 0.255
+    },
+    "petiole_length_m": {
+      "min": 0.05,
+      "max": 0.115
+    },
+    "leaf_incision": "lobed",
+    "leaf_lobes": 4,
+    "leaf_habit": "deciduous",
+    "self_pruning": true,
+    "bark_texture": "furrowed",
+    "flower_size_m": {
+      "min": 0.04,
+      "max": 0.06
+    },
+    "flower_merosity": 3,
+    "corolla_shape": "campanulate",
+    "flower_colour": [
+      205,
+      200,
+      95
+    ],
+    "stamens": {
+      "min": 20,
+      "max": 50
+    },
+    "carpels": {
+      "min": 60,
+      "max": 100
+    },
+    "fruit_type": "aggregate",
+    "fruit_size_m": {
+      "min": 0.045,
+      "max": 0.085
+    },
+    "fruit_colour_ripe": [
+      190,
+      160,
+      110
+    ],
+    "flowering_months": [
+      5,
+      6
+    ],
+    "fruiting_months": [
+      9,
+      10
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "silvics-1990-hardwoods",
+      "note": "Silvics of North America vol. 2 (1990), Liriodendron tulipifera (Beck), Growth and Yield p. 410: grown trees are most often 30.5 to 45.7 m tall, and old-growth trees on the best sites nearly 61 m. FNA vol. 3 gives trees to 45 m."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Liriodendron tulipifera (read on eFloras, 2026-10-16): blade (6.5-)7.5-15(-23.5) cm long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Liriodendron tulipifera (read on eFloras, 2026-10-16): blade (8.5-)12.5-18.5(-25.5) cm wide, wider than long."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Liriodendron tulipifera (read on eFloras, 2026-10-16): petiole 5-11.5 cm."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Liriodendron tulipifera (read on eFloras, 2026-10-16): the blade mostly has two shallow lobes at the top and two at its widest part, sometimes squarish and hardly lobed. Simpson p. 200 shows it lobed too."
+    },
+    "traits.leaf_lobes": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Liriodendron tulipifera (read on eFloras, 2026-10-16): 2 upper and 2 lateral lobes."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's tuliptree review (Griffith 1991, read 2026-10-16): \"a tall, deciduous, long-lived, broadleaf tree\"."
+    },
+    "traits.self_pruning": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's tuliptree review (Griffith 1991, read 2026-10-16): in forest stands about 66 percent of the bole is free of lateral branches; Silvics (p. 410) calls the trunk clear of limbs for a considerable height."
+    },
+    "traits.bark_texture": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Liriodendron tulipifera (read on eFloras, 2026-10-16): bark light grey, thick, deeply furrowed."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 383, Liriodendron tulipifera: flowers tulip-shaped, 4-6 cm."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 200, Liriodendron tulipifera: nine tepals in three whorls of three."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Liriodendron tulipifera (read on eFloras, 2026-10-16): flowers campanulate, the tepals erect."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 383, Liriodendron tulipifera: inner tepals yellowish green, orange at the base. The colour is our reading of those words."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Liriodendron tulipifera (read on eFloras, 2026-10-16): stamens 20-50."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Liriodendron tulipifera (read on eFloras, 2026-10-16): pistils 60-100."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Liriodendron tulipifera (read on eFloras, 2026-10-16): a samaracetum, many overlapping samaras round an axis."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Liriodendron tulipifera (read on eFloras, 2026-10-16): samaracetums 4.5-8.5 cm."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 383, Liriodendron tulipifera: ripe fruit light brown. The colour is our reading of the word."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 383, Liriodendron tulipifera: flowers May-June, sometimes July."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it, the books read giving no ripening months."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Red alder's crown values (a fast, straight-stemmed deciduous tree), changed by hand: one trunk, as FNA describes it (single-trunked), a wider crown, short-shoot leaves on the angiosperm default 0.26 m card (its blades and long petioles; a smaller card grows more shoots than the string holds), its shoots spaced more closely than alder's (space_density 3.5) so the crown of narrower lobed cards keeps within the module limit, and path_half fitted so it grows to the Silvics height at 40 years. Not fitted to crown measurements."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "silvics-1990-hardwoods",
+      "note": "Silvics of North America vol. 2 (1990), Liriodendron tulipifera (Beck), table 1 p. 411: dominant trees of unthinned stands on site index 30 m are 27.1 m tall and 37 cm dbh at 40 years. Stand-grown, so a guide for an open tree."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after FNA vol. 3: light grey, deeply furrowed bark; bright green leaves, squarish with two shallow lobes at the tip and two at the sides, on a long petiole (5-11.5 cm against a blade 7.5-15 cm); drawn on the palmate card with five lobes, the card's odd count nearest the leaf's four lobes and notched tip, its broad, short lobes cut 0.3 of the radius, so the blade is drawn a little broader than long (FNA: blade 7.5-15 cm, 12.5-18.5 cm wide), against iNaturalist photographs of its squarish leaf (observations 240131367, 173949336); deeper sinuses fit the width better but draw narrow, pointed lobes the leaf does not have."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the Magnoliidae specs (2026-10-16): sizes from Silvics and FNA vol. 3, flowers from Dendrology, drawing values from red alder's."
+  }
+}

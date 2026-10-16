@@ -1,0 +1,276 @@
+{
+  "schema": 1,
+  "id": "umbellularia-californica",
+  "taxon": {
+    "scientific_name": "Umbellularia californica",
+    "common_name": "California bay laurel",
+    "usda_symbol": "UMCA",
+    "family": "Lauraceae",
+    "genus": "Umbellularia",
+    "plant_name_id": 2446614
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "params": {
+      "crown_radius": 7,
+      "crown_base": 5,
+      "crown_rate": 0.035,
+      "space_density": 3,
+      "internode": 0.22,
+      "max_shoot": 3,
+      "pipe_rings": 4.33e-06,
+      "pipe_organ": 0.0049,
+      "pipe_tip": 0.0024,
+      "branch_angle": 50,
+      "apical_young": 0.65,
+      "apical": 0.52,
+      "spur_pairs": 2,
+      "leaf_angle": 50,
+      "lean": 6,
+      "wiggle": 8,
+      "fork_height": 1.5,
+      "fork_stems": 3,
+      "fork_angle": 30,
+      "extinction": 0.45,
+      "path_half": 12,
+      "spur_leaf": 0.1
+    }
+  },
+  "growth": {
+    "years": 50,
+    "step": 1,
+    "keyframes": [
+      5,
+      20,
+      50
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.4,
+      0.35,
+      0.28
+    ],
+    "foliage": [
+      0.06,
+      0.12,
+      0.035
+    ],
+    "foliage_shade": [
+      0.02,
+      0.04,
+      0.012
+    ],
+    "variation": 0.15
+  },
+  "allometry": [
+    {
+      "age": 50,
+      "environment": "open",
+      "height": 15,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 12,
+      "max": 24,
+      "high": 53.3
+    },
+    "leaf_length_m": {
+      "min": 0.03,
+      "max": 0.1
+    },
+    "leaf_width_m": {
+      "min": 0.015,
+      "max": 0.03
+    },
+    "leaf_shape": "elliptic",
+    "leaf_habit": "evergreen",
+    "bark_texture": "scaly",
+    "sexual_system": "hermaphrodite",
+    "inflorescence": "umbel",
+    "inflorescence_length_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "flower_size_m": {
+      "min": 0.006,
+      "max": 0.01
+    },
+    "flower_colour": [
+      220,
+      215,
+      120
+    ],
+    "fruit_type": "drupe",
+    "fruit_size_m": {
+      "min": 0.02,
+      "max": 0.025
+    },
+    "fruit_colour_ripe": [
+      95,
+      65,
+      85
+    ],
+    "flowering_months": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "fruiting_months": [
+      9,
+      10,
+      11
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "silvics-1990-hardwoods",
+      "note": "Silvics of North America vol. 2 (1990), Umbellularia californica (Stein), Growth and Yield: over most of its range 12 to 24 m tall; 30 m or more on protected bottomlands of southwest Oregon and northern California; 53.3 m the tallest reported. FEIS gives 12-24 m too."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Umbellularia californica (read on eFloras, 2026-10-16): blade 3-10 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Umbellularia californica (read on eFloras, 2026-10-16): blade 1.5-3 cm wide."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Umbellularia californica (read on eFloras, 2026-10-16): blade narrowly oblong or narrowly elliptic, deep yellow-green and shiny."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's California laurel review (Howard 1992, read 2026-10-16): \"a highly-branched native evergreen tree\"."
+    },
+    "traits.bark_texture": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's California laurel review (Howard 1992, read 2026-10-16): bark thin and smooth on young trees; older trees have thin, scaly bark that is shed continually."
+    },
+    "traits.sexual_system": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Umbellularia californica (read on eFloras, 2026-10-16): 5-10 flowers to an inflorescence; the genus is named for its umbels."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it, FNA giving tepals 6-8 mm long."
+    },
+    "traits.flower_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Umbellularia californica (read on eFloras, 2026-10-16): drupe usually solitary, 2 cm or more across."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Umbellularia californica (read on eFloras, 2026-10-16): drupe 2 cm or more across; the largest is the model estimate's (species-facts-2026-10-15)."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Pacific madrone's crown values, changed by hand: several stems from a low fork into a broad, much-branched crown (FEIS: highly branched), path_half fitted so it reaches its height. Its spur leaf card is set by hand at 0.10 m, about the rule's 1.5 times FNA's mean blade, so its leaves keep within FNA's 3-10 cm, and its shoots are spaced more closely than madrone's (space_density 3) so the crown of small leaves keeps within the module limit. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "15 m at 50 years in the open, within the Silvics heights (12 to 24 m over most of its range). Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after FNA vol. 3 and FEIS: thin, scaly grey-brown bark; shiny, deep yellow-green, narrow leaves, their green darkened to the dense, dark crowns of iNaturalist photographs (observations 2103250, 312403, 35530252)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the Magnoliidae specs (2026-10-16): sizes from Silvics and FNA vol. 3, drawing values from Pacific madrone's."
+  }
+}
