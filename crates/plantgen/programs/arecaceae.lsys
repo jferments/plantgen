@@ -9,9 +9,15 @@
 # planes, fan arch and hang, all 0, so a palm draws as before until it
 # states them.
 #
+# Revision 4: gives palm revision 9's new values for a palm: a trunk that
+# keeps its girth, fronds one at a time with no scale leaves, and a spear
+# whose leaflets come up full length, folded along the rachis, and swing
+# out as it opens (Dransfield et al. 2008, p. 7 and 12-16; Kaplan 2022,
+# p. 487-496).
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem arecaceae 3 extends palm;
+lsystem arecaceae 4 extends palm;
 
 param vigour_spread = 0.1;   # a palm grows exp(gauss() * vigour_spread) times as fast
 param upturn = 0;            # how strongly a leaning trunk turns back up, radians a metre
@@ -59,3 +65,16 @@ param shaft_cards = 8; param sheath_area = 0.091;
 param leaflet_scatter = 0;   # degrees leaflets stand above and below their V
 param fan_arch = 0;          # degrees a fan's edge rays droop below its middle
 param hang = 0;              # degrees a frond turns down over its life
+param thicken = 0;            # a palm's trunk keeps the girth it formed with
+param thicken_years = 1;
+param flush_interval = 1;     # fronds every year, one at a time
+param cataphylls = 0;         # no scale leaves
+param cataphyll_length = 0.05;
+param cataphyll_angle = 10;
+param cataphyll_life = 1;
+param cataphyll_area = 0.02;
+param leaflet_groups = 2;     # leaflets alternate above and below their V
+param coil_short = 0;
+param boot_angle = 60;
+param leaflet_young = 1;      # a spear's leaflets are full length, pleated together
+param leaflet_fold = 0.9;     # and lie along the rachis until they open

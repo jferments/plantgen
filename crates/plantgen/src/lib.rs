@@ -481,4 +481,21 @@ pub mod venation;
 /// blade fits, lanceolate; evergreen fronds outlast a winter; the curated
 /// ferns arch, and the sword fern's pinnae and angles are the fern rules'
 /// (78 is crownshaft sheaths in their fronds, #150).
-pub const GENERATOR_REVISION: u32 = 79;
+/// 80: shape and fruit words draw what they mean: a cordate or reniform
+/// blade hangs two basal lobes back beside its petiole (`Simple.sinus`),
+/// and cordate, reniform and deltate blades take their outlines and
+/// widths; a palmately veined blade fans two main veins a side from its
+/// base with the midrib (`Simple.fan`, from `leaf_venation`); achenes,
+/// cypselas, grains, nuts, schizocarps, aggregate and multiple fruits
+/// take fruit kinds, and a fruit is as long as `fruit_size_m` (79 is
+/// ferns from the Fern Grower's Manual, #153).
+/// 81: cycads, palms and tree ferns told apart (palm program revision 9):
+/// cycad and tree fern trunks thicken toward the base with age, cycads
+/// flush their leaves in whorls inside rings of cataphylls, leaves unfold
+/// by group (palm spears pleated, Cycas leaflets coiled, fern croziers
+/// tight), palm leaflets fold induplicate or reduplicate by subfamily,
+/// plumose palms hold their leaflets in groups, a leaf's petiole and
+/// rachis take the leaf axis's colour, a palm trunk may be ringed by its
+/// leaf scars, and a crownshaft is a closed column (80 is shape and
+/// fruit words, #155).
+pub const GENERATOR_REVISION: u32 = 81;
