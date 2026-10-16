@@ -20,13 +20,22 @@
   "forms": {
     "palm": {
       "generator": {
-        "program": "cycadaceae"
+        "program": "cycadaceae",
+        "defaults": {
+          "leaflet_young": 0.15,
+          "leaflet_fold": 0.2
+        }
       },
       "evidence": {
         "generator.program": {
           "evidence": "Authored",
           "source": "plantgen-authors",
           "note": "The lineage's own program (growth plan G2.3a), on the palm base: it gives the values its species leave unset, which the palm program gave as defaults until then."
+        },
+        "generator.defaults": {
+          "evidence": "SourceInferred",
+          "source": "whitelock-2002",
+          "note": "Unique to Cycas among cycads, each leaflet is coiled like a watch-spring along the straight rachis and unrolls from the leaf's foot to its tip as the leaf lengthens, so an opening leaf is a straight rod fringed with small coils (Whitelock 2002, p. 80; Mabberley 2017, under Cycas: circinately involute). Drawn as leaflets 0.15 of their size, lying a little toward the rachis, until their place has opened."
         }
       }
     }
