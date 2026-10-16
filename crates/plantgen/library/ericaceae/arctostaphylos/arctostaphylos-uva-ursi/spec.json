@@ -1,0 +1,321 @@
+{
+  "schema": 1,
+  "id": "arctostaphylos-uva-ursi",
+  "taxon": {
+    "scientific_name": "Arctostaphylos uva-ursi",
+    "common_name": "kinnikinnick",
+    "usda_symbol": "ARUV",
+    "family": "Ericaceae",
+    "genus": "Arctostaphylos",
+    "plant_name_id": 2647407
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "crown_radius": 1.2,
+      "crown_base": 0,
+      "crown_rate": 0.22,
+      "space_density": 400,
+      "internode": 0.05,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 85,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.6,
+      "wiggle": 15,
+      "fork_height": 0.005,
+      "fork_stems": 8,
+      "fork_angle": 85,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 0.595,
+      "space_kill": 0.147,
+      "leaf_size": 0.025,
+      "spur_leaf": 0.02,
+      "spur_pairs": 2,
+      "leaf_angle": 30,
+      "leaf_years": 2,
+      "blooms": 2,
+      "adult_age": 3,
+      "bloom_size": 0.03,
+      "bloom_angle": 110,
+      "path_half": 0.4,
+      "leader_rate": 0.1,
+      "set_point": 85,
+      "incline_rate": 0.6
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [
+      3,
+      6,
+      12
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.4,
+      0.18,
+      0.12
+    ],
+    "foliage": [
+      0.04,
+      0.13,
+      0.03
+    ],
+    "foliage_shade": [
+      0.015,
+      0.045,
+      0.012
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "width": 0.45,
+          "widest": 0.7,
+          "tip": 0.3,
+          "base": 0.6,
+          "teeth": 0,
+          "petiole": 0.05
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "kind": "berry",
+          "aspect": 0.95,
+          "unripe": 0.6
+        },
+        "inflorescence": {
+          "kind": "raceme",
+          "flowers": 6,
+          "size": 0.3,
+          "spread": 40,
+          "pedicel": 0.12
+        },
+        "colour": [
+          0.8,
+          0.08,
+          0.06
+        ],
+        "accent": [
+          0.5,
+          0.4,
+          0.2
+        ],
+        "season": {
+          "ripening": 40,
+          "flower_look": {
+            "shape": {
+              "template": "fruit",
+              "kind": "crowned",
+              "aspect": 0.8
+            },
+            "colour": [
+              0.96,
+              0.9,
+              0.9
+            ],
+            "accent": [
+              0.9,
+              0.55,
+              0.6
+            ],
+            "size": 0.7
+          }
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 0.15,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 0.05,
+      "max": 0.2,
+      "high": 0.3
+    },
+    "leaf_habit": "evergreen",
+    "leaf_length_m": {
+      "min": 0.0127,
+      "max": 0.0254
+    },
+    "inflorescence": "raceme",
+    "units_per_inflorescence": {
+      "min": 4,
+      "max": 7,
+      "high": 10
+    },
+    "corolla_shape": "urceolate",
+    "flower_size_m": {
+      "min": 0.005,
+      "max": 0.006
+    },
+    "fruit_type": "drupe",
+    "fruit_size_m": {
+      "min": 0.006,
+      "max": 0.01
+    },
+    "fruit_colour_ripe": [
+      200,
+      20,
+      15
+    ],
+    "flowering_months": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "fruiting_months": [
+      7,
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), FEIS (Crane 1991) calls it \"a prostrate, evergreen shrub\" with trailing stems but gives no height."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's kinnikinnick review (Crane 1991, read 2026-10-16): \"Kinnikinnick is a prostrate, evergreen shrub\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's kinnikinnick review (Crane 1991, read 2026-10-16): \"The leathery, dark green leaves are about 0.5 to 1 inch (1.27-2.54 cm) long\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) pp. 78-79, Arctostaphylos uva-ursi: racemes terminal, nodding, 4-7(-10)-flowered; FEIS (Crane 1991): flowers in terminal racemes."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) pp. 78-79, Arctostaphylos uva-ursi: 4-7(-10) flowers to a raceme."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) pp. 78-79, Arctostaphylos uva-ursi: corolla urceolate, white to pale pink."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) pp. 78-79, Arctostaphylos uva-ursi: flowers 5-6 mm."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) pp. 78-79, Arctostaphylos uva-ursi: a drupe; FEIS (Crane 1991): \"bright red berrylike drupes\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's kinnikinnick review (Crane 1991, read 2026-10-16): drupes \"0.25 to 0.4 inch (6-10 mm) broad\"; Dendrology (pp. 78-79) gives 6-8 mm."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) pp. 78-79, Arctostaphylos uva-ursi: fruit red, shiny."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) pp. 78-79, Arctostaphylos uva-ursi: flowers April to July."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) pp. 78-79, Arctostaphylos uva-ursi: fruit July to September (they persist through winter, FEIS, Crane 1991)."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Salal's values, changed by hand for kinnikinnick: a prostrate mat of trailing, rooting stems (FEIS, Crane 1991: \"produces extensive trailing stems\") with wide-angled, drooping branches, small leathery leaves and short nodding racemes. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "15 cm at 12 years in the open, a mat within the species-facts estimate's 5-20 cm. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after Dendrology (pp. 78-79, \"Prostrate mats of small obovate leathery leaves with pink-mouthed urns\"): dark green leaves, white urns with pink mouths, shiny red drupes; reddish flaking bark (FEIS: bark \"exfoliates in largish flakes\")."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion (2026-10-16): sizes from FEIS and Dendrology, drawing values from salal's."
+  }
+}
