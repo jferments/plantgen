@@ -515,4 +515,9 @@ pub mod venation;
 /// count of petals (`Flower.petal_ratio`, from `petal_shape`) and its tip
 /// as pointed or notched as stated (`petal_apex`) (82 is palm, cycad
 /// and tree fern shades, #162).
-pub const GENERATOR_REVISION: u32 = 83;
+/// 84: a blade stated serrate, dentate, crenate or spiny draws teeth
+/// (`teeth`, `tooth_depth` and the new `round`, from `leaf_margin`, at the
+/// kingdom), where its own look draws none: Chloranthaceae's leaves, and
+/// rosette leaves that take the species' margin; a species' own teeth
+/// stand (83 is leaf tip, base and petal words, #161).
+pub const GENERATOR_REVISION: u32 = 84;

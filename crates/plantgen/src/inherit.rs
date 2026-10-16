@@ -1032,6 +1032,7 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("base", Number),
                 ("teeth", Count),
                 ("tooth_depth", Number),
+                ("round", Number),
                 ("petiole", Number),
                 ("sinus", Number),
                 ("fan", Count),
