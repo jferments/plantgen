@@ -1036,6 +1036,10 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("petiole", Number),
                 ("sinus", Number),
                 ("fan", Count),
+                ("apex_taper", Number),
+                ("base_taper", Number),
+                ("apex_point", Number),
+                ("apex_notch", Number),
             ],
         ),
         (
@@ -1103,6 +1107,7 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
             &[
                 ("petals", Count),
                 ("petal_width", Number),
+                ("petal_ratio", Number),
                 ("point", Number),
                 ("taper", Number),
                 ("notch", Number),

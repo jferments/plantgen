@@ -498,9 +498,26 @@ pub mod venation;
 /// rachis take the leaf axis's colour, a palm trunk may be ringed by its
 /// leaf scars, and a crownshaft is a closed column (80 is shape and
 /// fruit words, #155).
-/// 82: a blade stated serrate, dentate, crenate or spiny draws teeth
+/// 82: palms, cycads and tree ferns in their described shades (palm
+/// program revision 10): colours their authors chose by eye as screen
+/// (sRGB) shades are read as the linear light a colour field holds, so
+/// trunks, fronds, boots and dead fronds no longer draw near white;
+/// Phoenix's lowest leaflets are spines (`acanthophylls`), and a palm
+/// without a crownshaft may clasp its stem with its fronds' sheaths
+/// (`sheath_length`), the California fan palm's chestnut leaf bases
+/// (81 is cycads, palms and tree ferns told apart, #154).
+/// 83: a blade's tip and base draw as stated (`leaf_apex`,
+/// `leaf_base_shape`): hollow-sided, straight, blunt, rounded or square
+/// over its last and first three tenths (`Simple.apex_taper`,
+/// `Simple.base_taper`), with a tail, cusp, mucro or bristle beyond its
+/// tip (`Simple.apex_point`) or a notch in it (`Simple.apex_notch`); a
+/// petal is as broad for its length as its outline is stated among any
+/// count of petals (`Flower.petal_ratio`, from `petal_shape`) and its tip
+/// as pointed or notched as stated (`petal_apex`) (82 is palm, cycad
+/// and tree fern shades, #162).
+/// 84: a blade stated serrate, dentate, crenate or spiny draws teeth
 /// (`teeth`, `tooth_depth` and the new `round`, from `leaf_margin`, at the
 /// kingdom), where its own look draws none: Chloranthaceae's leaves, and
 /// rosette leaves that take the species' margin; a species' own teeth
-/// stand (81 is cycads, palms and tree ferns, #154).
-pub const GENERATOR_REVISION: u32 = 82;
+/// stand (83 is leaf tip, base and petal words, #161).
+pub const GENERATOR_REVISION: u32 = 84;

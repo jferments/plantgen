@@ -222,7 +222,7 @@ pub fn layout(flower: &Flower, form: &FlowerForm, radius: f64, spin: f64) -> Flo
     let n = flower.petals.max(1);
     let nf = f64::from(n);
     let length = (r - s).max(r * 0.1);
-    let spread = |count: f64, from: f64, to: f64| flower.petal_width * PI * (from + to) / count;
+    let spread = |count: f64, from: f64, to: f64| flower.petal_share() * PI * (from + to) / count;
     let width = spread(nf, s, r).clamp(length * 0.08, length);
     let open = flower.open.clamp(0.0, 1.0);
     // Closing raises every part toward the axis and shortens the petals.
