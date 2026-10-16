@@ -880,6 +880,14 @@
       "optional": true,
       "why": "whether a blade has an upper and a lower face, or is unifacial, its one face all round: a sword leaf flattened edgewise to the stem (irises) or a round one (onions, rushes)"
     },
+    "leaf_posture": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["erect", "ascending", "arching", "spreading", "pendent"],
+      "optional": true,
+      "why": "the grown leaf's habit as a whole, its angle and its arch together, as floras word it for a frond or a blade: standing up, rising at a slant, bending over toward its tip, held out nearly level, or hanging"
+    },
     "leaf_peltation": {
       "group": "leaves",
       "organ": "leaf",

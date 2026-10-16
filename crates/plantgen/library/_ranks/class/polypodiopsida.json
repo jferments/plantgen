@@ -16,28 +16,29 @@
       "why": "The bare share of a frond's length is its stipe's."
     },
     "generator.params.pinna_length": {
-      "rule": "leaf_width_m / (2 * (leaf_length_m + petiole_length_m))",
-      "why": "A blade is as broad as its longest pair of pinnae reach out from the rachis, one each side; pinnae standing well out from the rachis reach nearly their whole length, and the program sizes them by the frond's length."
+      "map": {"leaf_shape": {"linear": {"rule": "first(leaf_width_m / (2 * (leaf_length_m + petiole_length_m)), 0.5 * (1 - stipe) * 0.08)"}, "lanceolate": {"rule": "first(leaf_width_m / (2 * (leaf_length_m + petiole_length_m)), 0.5 * (1 - stipe) * 0.25)"}, "oblanceolate": {"rule": "first(leaf_width_m / (2 * (leaf_length_m + petiole_length_m)), 0.5 * (1 - stipe) * 0.25)"}, "elliptic": {"rule": "first(leaf_width_m / (2 * (leaf_length_m + petiole_length_m)), 0.5 * (1 - stipe) * 0.57)"}, "oblong": {"rule": "first(leaf_width_m / (2 * (leaf_length_m + petiole_length_m)), 0.5 * (1 - stipe) * 0.4)"}, "ovate": {"rule": "first(leaf_width_m / (2 * (leaf_length_m + petiole_length_m)), 0.5 * (1 - stipe) * 0.6)"}, "obovate": {"rule": "first(leaf_width_m / (2 * (leaf_length_m + petiole_length_m)), 0.5 * (1 - stipe) * 0.6)"}, "orbicular": {"rule": "first(leaf_width_m / (2 * (leaf_length_m + petiole_length_m)), 0.5 * (1 - stipe) * 0.95)"}, "deltate": {"rule": "first(leaf_width_m / (2 * (leaf_length_m + petiole_length_m)), 0.5 * (1 - stipe) * 0.9)"}, "spatulate": {"rule": "first(leaf_width_m / (2 * (leaf_length_m + petiole_length_m)), 0.5 * (1 - stipe) * 0.35)"}, "reniform": {"rule": "first(leaf_width_m / (2 * (leaf_length_m + petiole_length_m)), 0.5 * (1 - stipe) * 1.0)"}, "cordate": {"rule": "first(leaf_width_m / (2 * (leaf_length_m + petiole_length_m)), 0.5 * (1 - stipe) * 0.9)"}}}, "between": true, "else": {"rule": "leaf_width_m / (2 * (leaf_length_m + petiole_length_m))"},
+      "why": "A blade is as broad as its longest pair of pinnae reach out from the rachis, one each side; pinnae standing well out from the rachis reach nearly their whole length, and the program sizes them by the frond's length. Where no flora measures the blade, it is as broad for its length as its shape word says (the kingdom's widths; a triangular blade nearly as broad as long)."
     },
+    "appearance.organs.pinna.shape.outline": {"template": "simple", "map": {"division_order": {"1": [[0, 0.2], [0.02, 0.31], [0.05, 0.48], [0.1, 0.7], [0.2, 0.91], [0.3, 1], [0.4, 0.96], [0.5, 0.85], [0.6, 0.74], [0.7, 0.58], [0.8, 0.4], [0.9, 0.21], [0.95, 0.1], [0.98, 0.04], [1, 0]]}}, "else": [[0, 0.2], [0.02, 0.31], [0.05, 0.48], [0.1, 0.7], [0.2, 0.91], [0.3, 1], [0.4, 0.96], [0.5, 0.85], [0.6, 0.74], [0.7, 0.58], [0.8, 0.4], [0.9, 0.21], [0.95, 0.1], [0.98, 0.04], [1, 0]], "why": "A once-pinnate frond's pinnae are lanceolate to linear, widest near their foot and drawn out to a point."},
     "generator.params.pieces": {
-      "rule": "clamp(round(leaflets * (leaf_length_m + petiole_length_m) / (4 * leaf_length_m)), 4, 60)",
-      "why": "The program hangs two pairs of pinnae on each piece of the rachis above the stipe, so a frond with as many pinnae as its flora counts has a quarter as many blade pieces, and the stipe's pieces besides."
+      "rule": "first(clamp(round(leaflets * (leaf_length_m + petiole_length_m) / (4 * leaf_length_m)), 4, 60), clamp(round(2.5 / pinna_length), 12, 40))",
+      "why": "The program hangs two pairs of pinnae on each piece of the rachis above the stipe, so a frond with as many pinnae as its flora counts has a quarter as many blade pieces, and the stipe's pieces besides. Where no flora counts them, as many as stand side by side, each a fifth as wide as long, along the blade (a pinna every half piece, 1 / (2 pieces) of the frond apart)."
     },
     "appearance.organs.*.shape.width": {
       "template": "simple",
-      "rule": "clamp(4 * leaf_length_m / (leaflets * leaf_width_m), 0.05, 1)",
-      "why": "A once-divided frond's pinnae stand side by side along its blade, each as broad as the gap from one pinna to the next, and as long as half the blade is wide."
+      "rule": "clamp(first(4 * leaf_length_m / (leaflets * leaf_width_m), 1 / (2 * pieces * pinna_length)), 0.05, 1)",
+      "why": "A once-divided frond's pinnae stand side by side along its blade, each as broad as the gap from one pinna to the next, and as long as half the blade is wide; where no flora measures the blade, as broad as that gap is on the frond the program draws, a pinna every half piece of its rachis, for its longest pinna's length."
     },
     "generator.params.frond_life": {
       "map": {
         "leaf_habit": {
           "deciduous": 1,
           "evergreen": {
-            "rule": "leaf_life_years"
+            "rule": "first(leaf_life_years, 2.5)"
           }
         }
       },
-      "why": "A deciduous fern's fronds die in their first winter, a year from when they unroll; an evergreen fern's live as long as its leaves are stated to."
+      "why": "A deciduous fern's fronds die in their first winter, a year from when they unroll; an evergreen fern's live as long as its leaves are stated to, or two and a half years, outlasting a winter, where they are not."
     },
     "appearance.organs.*.shape.divided": {
       "template": "frond",
@@ -54,7 +55,7 @@
     "rules": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "What the fern program's parameters and the frond card mean: frond_length is the whole frond, stipe included, and stipe the share of it without pinnae; frond_life is a frond's years; the program draws the frond's first division as pinnae, so the pinna card shows the divisions below it. Floras measure a fern's blade and stipe apart, so the frond is their sum."
+      "note": "What the fern program's parameters and the frond card mean: frond_length is the whole frond, stipe included, and stipe the share of it without pinnae; frond_life is a frond's years; the program draws the frond's first division as pinnae, so the pinna card shows the divisions below it. Floras measure a fern's blade and stipe apart, so the frond is their sum. A pinna's width where no flora measures the blade is the gap between pinnae on the frond the program draws (one every half piece of its rachis) for its longest pinna's length, a choice of the model's (visual forms ferns, 2026-10-15): before, it was the simple card's default, and once-pinnate fronds drew broad overlapping ovals; their count, where no flora gives it, fits pinnae a fifth as wide as long side by side along the blade, and their outline is lanceolate, as the Fern Grower's Manual photographs a sword fern's (Hoshizaki and Moran 2001, p. 454: a single linear, finely toothed pinna)."
     }
   }
 }
