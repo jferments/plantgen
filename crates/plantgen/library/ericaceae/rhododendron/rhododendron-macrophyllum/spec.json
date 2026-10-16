@@ -1,0 +1,338 @@
+{
+  "schema": 1,
+  "id": "rhododendron-macrophyllum",
+  "taxon": {
+    "scientific_name": "Rhododendron macrophyllum",
+    "common_name": "Pacific rhododendron",
+    "usda_symbol": "RHMA3",
+    "family": "Ericaceae",
+    "genus": "Rhododendron",
+    "plant_name_id": 2418031
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "crown_radius": 1.6,
+      "crown_base": 0,
+      "crown_rate": 0.22,
+      "space_density": 120,
+      "internode": 0.15,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 40,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 10,
+      "fork_height": 0.03,
+      "fork_stems": 4,
+      "fork_angle": 30,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 0.68,
+      "space_kill": 0.168,
+      "leaf_years": 2,
+      "leaf_size": 0.16,
+      "spur_leaf": 0.15,
+      "spur_pairs": 1,
+      "leaf_angle": 45,
+      "blooms": 1,
+      "adult_age": 4,
+      "bloom_size": 0.06,
+      "bloom_angle": 20,
+      "path_half": 1.6
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [
+      3,
+      6,
+      12
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.36,
+      0.26,
+      0.2
+    ],
+    "foliage": [
+      0.06,
+      0.15,
+      0.05
+    ],
+    "foliage_shade": [
+      0.01,
+      0.03,
+      0.01
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "width": 0.32,
+          "widest": 0.5,
+          "tip": 0.45,
+          "base": 0.5,
+          "teeth": 0,
+          "petiole": 0.08
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "kind": "capsule",
+          "aspect": 1.6,
+          "unripe": 0.6
+        },
+        "inflorescence": {
+          "kind": "umbel",
+          "flowers": 15,
+          "size": 0.35,
+          "spread": 70,
+          "pedicel": 0.2
+        },
+        "colour": [
+          0.42,
+          0.3,
+          0.2
+        ],
+        "season": {
+          "flower_look": {
+            "shape": {
+              "template": "flower",
+              "petals": 5,
+              "petal_width": 1.1,
+              "point": 0,
+              "notch": 0.05,
+              "centre": 0.35,
+              "sepals": 5,
+              "sepal_length": 0.1
+            },
+            "colour": [
+              0.88,
+              0.45,
+              0.62
+            ],
+            "accent": [
+              0.95,
+              0.75,
+              0.82
+            ],
+            "size": 1.6
+          }
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 2.5,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 1,
+      "max": 5,
+      "high": 9
+    },
+    "leaf_habit": "evergreen",
+    "leaf_arrangement": "alternate",
+    "leaf_length_m": {
+      "min": 0.08,
+      "max": 0.2,
+      "low": 0.06
+    },
+    "leaf_shape": {
+      "ovate": "often",
+      "oblong": "often",
+      "elliptic": "often"
+    },
+    "leaf_margin": "entire",
+    "inflorescence": "umbel",
+    "units_per_inflorescence": {
+      "min": 10,
+      "max": 20
+    },
+    "corolla_shape": "campanulate",
+    "flower_size_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "flower_colour": [
+      230,
+      120,
+      160
+    ],
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.012,
+      "max": 0.02
+    },
+    "flowering_months": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "fruiting_months": [
+      9,
+      10
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Pacific rhododendron review (Duchac 2021, read 2026-10-16): \"generally ranging in height from 1 to 5 m\", \"but it can grow to 8 or 9 m tall\"."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Pacific rhododendron review (Duchac 2021, read 2026-10-16): \"Leaves are alternate [41] and evergreen\"."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Pacific rhododendron review (Duchac 2021, read 2026-10-16): \"Leaves are alternate\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Pacific rhododendron review (Duchac 2021, read 2026-10-16): leaves \"are generally 8 to 20 cm long\", \"though some may be only 6 cm long\"."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Pacific rhododendron review (Duchac 2021, read 2026-10-16): \"Leaves are egg-shaped to oblong with a smooth, leathery texture\"; elliptic between the two is the species-facts estimate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), FEIS (Duchac 2021) calls the leaves smooth and leathery but names no margin."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Pacific rhododendron review (Duchac 2021, read 2026-10-16): \"large, showy terminal clusters of 10 to 20 bell-shaped pale to deep pink flowers\": a truss, read as an umbel (the species-facts estimate says corymb)."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Pacific rhododendron review (Duchac 2021, read 2026-10-16): \"clusters of 10 to 20 bell-shaped ... flowers\"."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Pacific rhododendron review (Duchac 2021, read 2026-10-16): \"bell-shaped\" flowers."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Pacific rhododendron review (Duchac 2021, read 2026-10-16): flowers \"each 2 to 5 cm long\"."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Pacific rhododendron review (Duchac 2021, read 2026-10-16): \"pale to deep pink flowers\", drawn a middle pink."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Pacific rhododendron review (Duchac 2021, read 2026-10-16): \"Fruits are hairy, glandular woody capsules up to 2 cm long\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's Pacific rhododendron review (Duchac 2021, read 2026-10-16): \"woody capsules up to 2 cm long\"; the 12 mm floor is a model estimate (species-facts-2026-10-15, confidence high), as FEIS gives none."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), FEIS (Duchac 2021) says it \"blooms from spring to early summer\"; the months are the model's."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Evergreen huckleberry's values, changed by hand for Pacific rhododendron: a taller, erect to spreading shrub with stout branches (FEIS, Duchac 2021), large leathery leaves crowded toward the shoot tips, and one big terminal truss to a shoot. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "2.5 m at 12 years in the open, within FEIS's 1-5 m (Duchac 2021). Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye: dark green leathery leaves; pink bell-shaped flowers in trusses; brown woody capsules."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion (2026-10-16): sizes from FEIS and model estimates, drawing values from evergreen huckleberry's."
+  }
+}

@@ -602,8 +602,8 @@ fn conifers_bear_cones_once_old() {
         );
     }
     assert_eq!(
-        checked, 13,
-        "the ten conifers of the forest, the bald cypress, and Alaska and incense cedars"
+        checked, 16,
+        "the ten conifers of the forest, the bald cypress, Alaska and incense cedars, whitebark pine, mountain hemlock and subalpine fir"
     );
 }
 
@@ -687,8 +687,8 @@ fn open_conifers_keep_their_lower_crowns() {
         );
     }
     assert_eq!(
-        checked, 9,
-        "the open-grown conifers that are not pines, Alaska and incense cedars among them"
+        checked, 11,
+        "the open-grown conifers that are not pines, Alaska and incense cedars, mountain hemlock and subalpine fir among them"
     );
 }
 
@@ -726,8 +726,8 @@ fn conifers_keep_above_the_ground() {
         }
     }
     assert_eq!(
-        checked, 13,
-        "the ten conifers of the forest, the bald cypress, and Alaska and incense cedars"
+        checked, 16,
+        "the ten conifers of the forest, the bald cypress, Alaska and incense cedars, whitebark pine, mountain hemlock and subalpine fir"
     );
 }
 
@@ -771,8 +771,8 @@ fn needled_species_grow_solid_shoots() {
         }
     }
     assert_eq!(
-        checked, 10,
-        "the needled conifers, the bald cypress and the juniper's juvenile needles"
+        checked, 13,
+        "the needled conifers (whitebark pine, mountain hemlock and subalpine fir among them), the bald cypress and the juniper's juvenile needles"
     );
 }
 
@@ -820,12 +820,12 @@ fn builtin_clusters_draw_as_part_meshes_within_budget() {
         }
     }
     assert_eq!(
-        checked, 72,
+        checked, 77,
         "the 24 fruit clusters that moved in with L1a (broom's flowers stand alone since E4), the 15 clusters of flowers and heads of \
          L1c, the 18 inflorescences of grasses, sedges and rushes of P3, the orchid's spike \
          of P5, the skunk cabbage's spadix of E6b, and desert ironwood's racemes and the umbrella \
          thorn's heads from their taxa (visual forms Skill 4), and the six clusters of the core \
-         expansion's first ten species and five of its second ten"
+         expansion's first ten species, five of its second ten and five of its third"
     );
 }
 
