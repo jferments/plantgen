@@ -8,15 +8,15 @@
     "genus": "Ascarina",
     "plant_name_id": 2654503
   },
-  "growth_form": "decurrent_tree",
+  "growth_form": "shrub",
   "generator": {
     "params": {}
   },
   "allometry": [
     {
-      "age": 30,
+      "age": 12,
       "environment": "open",
-      "height": 5,
+      "height": 4,
       "tolerance": 0.4
     }
   ],
@@ -70,7 +70,22 @@
       12,
       1,
       2
-    ]
+    ],
+    "leaf_colour": [
+      111,
+      136,
+      60
+    ],
+    "bark_colour": [
+      80,
+      42,
+      45
+    ],
+    "crown_form": "rounded",
+    "crown_see_through": {
+      "min": 0.0,
+      "max": 0.15
+    }
   },
   "evidence": {
     "taxon": {
@@ -79,9 +94,9 @@
       "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
     },
     "growth_form": {
-      "evidence": "Authored",
-      "source": "plantgen-authors",
-      "note": "The growth form the spec's authors chose from the plant's habit."
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Cheeseman (1925) has it a shrub or small tree; in iNaturalist research-grade photographs it grows as a dense bush of many stems from the base, leafy nearly to the ground (observations 186249737, 259778304, 358527588), so it is drawn by the shrub form."
     },
     "taxon.family": {
       "evidence": "SourceInferred",
@@ -172,6 +187,26 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high), as Cheeseman had not seen ripe fruit."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "A yellowish green, the median over each photograph of its green, saturated pixels, then the median over the photographs, in 19 photographs in iNaturalist research-grade observations 31869327, 66410877, 105296934, 186249737, 259778304, 261697877, 281699676, 335335726, 344349196, 358527588 (CC0, CC BY)."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "cheeseman-1925",
+      "note": "Cheeseman's Manual of the New Zealand Flora (1925): a shrub or small tree, the branches dark purplish-red. As RGB, the median of the twigs' purplish-red pixels in close-ups in iNaturalist research-grade observation 66410877 (CC BY); the same colour on the twigs in 261697877, 281699676 and 358527588."
+    },
+    "traits.crown_form": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "A dense, rounded bush leafy nearly to the ground, its many twigs crowded with leaves (observations 186249737, 358527588, 259778304)."
+    },
+    "traits.crown_see_through": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Seen from the side, a grown bush shows almost no sky or background through its outline: its leaves overlap from the outer shell inward (observations 186249737, 259778304, 358527588), under a sixth of it read by eye."
     }
   },
   "provenance": {
