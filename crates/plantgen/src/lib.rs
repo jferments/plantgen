@@ -448,5 +448,8 @@ pub mod venation;
 /// (`pinidae` revision 11, `pipe_exponent`, 2.4 as before), and ponderosa
 /// pine's stout shoots (0.7 to 2 cm, Farjon 2017) grow on stout limbs that
 /// hold their line at 100 years, where thin limbs under its heavy needle
-/// tufts hung as whips (75 is ferns, 74 cacti, #138).
+/// tufts hung as whips; a conifer with short shoots (`spur_years`, as
+/// in larches) leafs out again along its older wood each year, so a
+/// deciduous larch keeps its needle tufts along its branches (75 is ferns,
+/// 74 cacti, #138).
 pub const GENERATOR_REVISION: u32 = 76;

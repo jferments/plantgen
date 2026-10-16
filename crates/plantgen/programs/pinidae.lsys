@@ -107,6 +107,15 @@
 # without a trunk too thick for its age. Thin limbs under heavy tufts sag
 # into whips; ponderosa pine's shoots are 0.7 to 2 cm thick (Farjon 2017).
 #
+# Short shoots (revision 11 too): a branch shoot of a conifer with short
+# shoots (spur_years above 0, as in larches) leafs out again from them
+# each year for spur_years after its first, spur_share as fully as in its
+# first year, so a deciduous larch (needle_years under a year) carries its
+# needle tufts along the older wood of its branches, not only on the
+# year's new shoots: Farjon (2017) gives Larix a strong long- and short-
+# shoot dimorphism, the needles mostly in tufts of 15 to 45 on short
+# shoots. With spur_years 0 a shoot leafs out once, as before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
 lsystem pinidae 11;
@@ -152,6 +161,8 @@ param twig_angle = 42;         # angle of the twig sprays beside each shoot
 param spray_droop = 0;         # degrees the twig sprays hang below their shoot
 param spray_area = 0.3;        # leaf area of a spray 1 m long, m²
 param pipe_exponent = 2.4;     # a parent's radius to this power is its children's summed (revision 11)
+param spur_years = 0;          # years a branch shoot leafs out again from short shoots after its first; 0: none
+param spur_share = 1;          # a short-shoot year's foliage spray, as a share of the shoot's first year's
 param pipe_tip = 0.003;        # radius of the twig behind one living apex
 param pipe_organ = 0.012;      # pipe radius per metre of spray
 param pipe_rings = 0.000016;   # ring area laid down per m² of foliage a year
@@ -187,6 +198,7 @@ module Y(n);                            # holds a shoot's foliage, which falls a
 module V(order, wood, n);               # side shoots still to spread round a branch apex (revision 10)
 module E(order, wood) queries light, position, substrate;  # a dormant bud where a branch shoot starts, watching the ground
 module H queries substrate;             # where a branch shoot starts, its bud spent, watching the ground
+module Q(n, s);                         # a branch shoot's short shoots: n more years to leaf out, a spray s long
 
 organ spray foliage area spray_area;
 organ cone cone area cone_area;
@@ -254,6 +266,13 @@ decompose G(o, l, k, w) : o == 0 ->
 # hanging by spray_droop, each with its own turn; a dormant bud at its
 # foot, which watches the ground; possible side shoots at its end. A shaded shoot is short, but its twigs
 # and needles are not much smaller.
+# With short shoots (revision 11) the shoot's sprays keep fixed turns, so
+# the draws below keep their sites, and it leaves its short shoots (Q).
+decompose G(o, l, k, w) : o > 0 && spur_years > 0 ->
+    [ Y(k) spray(spray_base + spray_length * l, 0, spray_droop * 0.5, 1)
+      spray((spray_base + spray_length * l) * 0.75, 90 + spray_droop * 0.6, twig_angle, 1)
+      spray((spray_base + spray_length * l) * 0.75, -90 - spray_droop * 0.6, twig_angle, 1) ]
+    E(o, w) Q(spur_years, (spray_base + spray_length * l) * spur_share) F(l) L(o, w + l) R(o, w + l);
 decompose G(o, l, k, w) ->
     [ Y(k) spray(spray_base + spray_length * l, uniform(-25, 25), spray_droop * 0.5, 1)
       spray((spray_base + spray_length * l) * 0.75, 90 + spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
@@ -311,3 +330,10 @@ decompose V(o, w, n) : n > 0 && rand() < side_chance ->
     V(o, w, n - 1);
 decompose V(o, w, n) : n > 0 -> V(o, w, n - 1);
 decompose V(o, w, n) -> ;
+
+# Short shoots (revision 11): a branch shoot leafs out again each year
+# from its short shoots, spur_years after its first, along its own line.
+# These rules go last so the draws above keep their sites.
+decompose Q(n, s) : n <= 0 -> ;
+rule Q(n, s) : n > 0 ->
+    [ Y(needle_years) spray(s, uniform(-25, 25), spray_droop * 0.5, 1) ] Q(n - 1, s);
