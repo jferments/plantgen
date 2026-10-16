@@ -33,8 +33,8 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "aristolochia-macrophylla",
-        "leaf_shape",
-        "its kidney-shaped blades (FNA vol. 3: reniform) are drawn on a simple card, at most as broad as long, so they read ovate; no card draws a reniform blade yet",
+        "shoot_leaves",
+        "the climber's shoots are drawn with 2 or 3 leaves a year against the angiosperms' 4 to 18 (3 before its blades took their stated breadth, 10 to 35 cm, which drops one more on some shoots); the climber program grows few leaves on a shoot",
     ),
     (
         "asarum-canadense",
@@ -170,11 +170,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "houttuynia-cordata",
         "inflorescence_bracts",
         "a cluster draws at most one bract at its foot, a spathe, so the four white petaloid bracts under fish mint's spike (Flora of China: involucral bracts 10 to 15 mm) are not drawn",
-    ),
-    (
-        "houttuynia-cordata",
-        "leaf_shape",
-        "its heart-shaped blades (Flora of China: cordate) are drawn on a simple card widest near its full base, so they read ovate; no card draws a cordate blade yet",
     ),
     (
         "jacobaea-vulgaris",
