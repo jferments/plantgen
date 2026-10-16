@@ -148,6 +148,36 @@
       "template": "compound",
       "map": {"leaf_peltation": {"manifest": {"rule": "360 * (leaflets - 1) / leaflets"}}},
       "why": "A rosette's leaves are the species' leaves, unless their own are stated: a manifestly peltate digitate leaf's leaflets close a ring round the petiole's tip, evenly spaced all round."
+    },
+    "appearance.organs.leaf.shape.teeth": {
+      "template": ["simple", "sprig", "compound"],
+      "map": {"leaf_margin": {"entire": 0, "serrate": 10, "dentate": 10, "crenate": 8, "spiny": 4}},
+      "why": "A blade (or each leaflet) stated entire has no teeth; one stated serrate, dentate or crenate has ten or so small teeth up each side, a crenate one fewer and broader, and a spiny one a few spine-tipped teeth."
+    },
+    "appearance.organs.leaf.shape.tooth_depth": {
+      "template": ["simple", "sprig"],
+      "map": {"leaf_margin": {"serrate": 0.03, "dentate": 0.04, "crenate": 0.03, "spiny": 0.12}},
+      "why": "A toothed blade's teeth are shallow notches, a few hundredths of its length deep; a spiny blade's teeth stand out further, each ending in its spine."
+    },
+    "appearance.organs.leaf.shape.round": {
+      "template": ["simple", "sprig"],
+      "map": {"leaf_margin": {"serrate": 0, "dentate": 0.35, "crenate": 1, "spiny": 0}},
+      "why": "Serrate teeth are saw teeth pointing to the tip; dentate teeth point outward, so they are drawn blunter and more upright; crenate teeth are rounded scallops."
+    },
+    "appearance.organs.basal.shape.teeth": {
+      "template": ["simple", "sprig", "compound"],
+      "map": {"leaf_margin": {"entire": 0, "serrate": 10, "dentate": 10, "crenate": 8, "spiny": 4}},
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: A blade (or each leaflet) stated entire has no teeth; one stated serrate, dentate or crenate has ten or so small teeth up each side, a crenate one fewer and broader, and a spiny one a few spine-tipped teeth."
+    },
+    "appearance.organs.basal.shape.tooth_depth": {
+      "template": ["simple", "sprig"],
+      "map": {"leaf_margin": {"serrate": 0.03, "dentate": 0.04, "crenate": 0.03, "spiny": 0.12}},
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: A toothed blade's teeth are shallow notches, a few hundredths of its length deep; a spiny blade's teeth stand out further, each ending in its spine."
+    },
+    "appearance.organs.basal.shape.round": {
+      "template": ["simple", "sprig"],
+      "map": {"leaf_margin": {"serrate": 0, "dentate": 0.35, "crenate": 1, "spiny": 0}},
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: Serrate teeth are saw teeth pointing to the tip; dentate teeth point outward, so they are drawn blunter and more upright; crenate teeth are rounded scallops."
     }
   },
   "evidence": {
@@ -221,6 +251,36 @@
     "rules.appearance.organs.basal.hairs.lie": {"evidence": "Authored", "source": "plantgen-authors", "note": "The hair words are the botanical glossary's (Harris and Harris, Plant Identification Terminology): glabrous without hairs, glabrescent nearly so or losing them, puberulent minutely hairy, pubescent with short soft hairs, strigose with stiff hairs pressed flat, sericeous silky with long hairs pressed flat, pilose with long soft sparse hairs, villous with long soft shaggy hairs, hirsute with stiff spreading hairs, hispid bristly, tomentose with a felt of matted curled hairs, lanate woolly. How each word's hairs stand follows its definition (pressed flat, spreading, erect); the numbers are the model's choice."},
     "rules.appearance.organs.basal.hairs.curl": {"evidence": "Authored", "source": "plantgen-authors", "note": "The hair words are the botanical glossary's (Harris and Harris, Plant Identification Terminology): glabrous without hairs, glabrescent nearly so or losing them, puberulent minutely hairy, pubescent with short soft hairs, strigose with stiff hairs pressed flat, sericeous silky with long hairs pressed flat, pilose with long soft sparse hairs, villous with long soft shaggy hairs, hirsute with stiff spreading hairs, hispid bristly, tomentose with a felt of matted curled hairs, lanate woolly. How each word's hairs bend follows its definition (straight, wavy, shaggy, curled into a felt or a wool); the numbers are the model's choice."},
     "rules.appearance.organs.basal.hairs.length": {"evidence": "Authored", "source": "plantgen-authors", "note": "The hair words are the botanical glossary's (Harris and Harris, Plant Identification Terminology): glabrous without hairs, glabrescent nearly so or losing them, puberulent minutely hairy, pubescent with short soft hairs, strigose with stiff hairs pressed flat, sericeous silky with long hairs pressed flat, pilose with long soft sparse hairs, villous with long soft shaggy hairs, hirsute with stiff spreading hairs, hispid bristly, tomentose with a felt of matted curled hairs, lanate woolly. The lengths, from a tenth of a millimetre for minute hairs to a few millimetres for shaggy or woolly ones, are the model's estimates for each word where a flora gives no length."},
-    "rules.appearance.organs.basal.hairs.edge": {"evidence": "Authored", "source": "plantgen-authors", "note": "A ciliate blade is one whose margin is fringed with hairs (Harris and Harris). How thickly the fringe is drawn is the model's choice."}
+    "rules.appearance.organs.basal.hairs.edge": {"evidence": "Authored", "source": "plantgen-authors", "note": "A ciliate blade is one whose margin is fringed with hairs (Harris and Harris). How thickly the fringe is drawn is the model's choice."},
+    "rules.appearance.organs.leaf.shape.teeth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a stated leaf margin, a choice of the model's (visual forms, 2026-10-16), the words as the trait defines them: serrate teeth point forward, dentate outward, crenate are rounded, spiny end in spines. The counts and depths are calibrated on the curated species whose leaves are drawn toothed (25 simple and sprig leaves: 2 to 18 teeth a side, about 9 in the middle; tooth depth about 0.03 of the blade's length in the middle; Garry oak's rounded lobes 0.8 round, tanoak's teeth 0.3). A species' own drawn teeth win over these."
+    },
+    "rules.appearance.organs.leaf.shape.tooth_depth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a stated leaf margin, a choice of the model's (visual forms, 2026-10-16), the words as the trait defines them: serrate teeth point forward, dentate outward, crenate are rounded, spiny end in spines. The counts and depths are calibrated on the curated species whose leaves are drawn toothed (25 simple and sprig leaves: 2 to 18 teeth a side, about 9 in the middle; tooth depth about 0.03 of the blade's length in the middle; Garry oak's rounded lobes 0.8 round, tanoak's teeth 0.3). A species' own drawn teeth win over these."
+    },
+    "rules.appearance.organs.leaf.shape.round": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a stated leaf margin, a choice of the model's (visual forms, 2026-10-16), the words as the trait defines them: serrate teeth point forward, dentate outward, crenate are rounded, spiny end in spines. The counts and depths are calibrated on the curated species whose leaves are drawn toothed (25 simple and sprig leaves: 2 to 18 teeth a side, about 9 in the middle; tooth depth about 0.03 of the blade's length in the middle; Garry oak's rounded lobes 0.8 round, tanoak's teeth 0.3). A species' own drawn teeth win over these."
+    },
+    "rules.appearance.organs.basal.shape.teeth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a stated leaf margin, a choice of the model's (visual forms, 2026-10-16), the words as the trait defines them: serrate teeth point forward, dentate outward, crenate are rounded, spiny end in spines. The counts and depths are calibrated on the curated species whose leaves are drawn toothed (25 simple and sprig leaves: 2 to 18 teeth a side, about 9 in the middle; tooth depth about 0.03 of the blade's length in the middle; Garry oak's rounded lobes 0.8 round, tanoak's teeth 0.3). A species' own drawn teeth win over these."
+    },
+    "rules.appearance.organs.basal.shape.tooth_depth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a stated leaf margin, a choice of the model's (visual forms, 2026-10-16), the words as the trait defines them: serrate teeth point forward, dentate outward, crenate are rounded, spiny end in spines. The counts and depths are calibrated on the curated species whose leaves are drawn toothed (25 simple and sprig leaves: 2 to 18 teeth a side, about 9 in the middle; tooth depth about 0.03 of the blade's length in the middle; Garry oak's rounded lobes 0.8 round, tanoak's teeth 0.3). A species' own drawn teeth win over these."
+    },
+    "rules.appearance.organs.basal.shape.round": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a stated leaf margin, a choice of the model's (visual forms, 2026-10-16), the words as the trait defines them: serrate teeth point forward, dentate outward, crenate are rounded, spiny end in spines. The counts and depths are calibrated on the curated species whose leaves are drawn toothed (25 simple and sprig leaves: 2 to 18 teeth a side, about 9 in the middle; tooth depth about 0.03 of the blade's length in the middle; Garry oak's rounded lobes 0.8 round, tanoak's teeth 0.3). A species' own drawn teeth win over these."
+    }
   }
 }

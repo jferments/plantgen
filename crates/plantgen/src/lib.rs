@@ -516,8 +516,13 @@ pub mod venation;
 /// count of petals (`Flower.petal_ratio`, from `petal_shape`) and its tip
 /// as pointed or notched as stated (`petal_apex`) (82 is palm, cycad
 /// and tree fern shades, #162).
-/// 84: hairs (`crate::hairs`): a blade's hairs as floras name them
+/// 84: a blade stated serrate, dentate, crenate or spiny draws teeth
+/// (`teeth`, `tooth_depth` and the new `round`, from `leaf_margin`, at the
+/// kingdom), where its own look draws none: Chloranthaceae's leaves, and
+/// rosette leaves that take the species' margin; a species' own teeth
+/// stand (83 is leaf tip, base and petal words, #161).
+/// 85: hairs (`crate::hairs`): a blade's hairs as floras name them
 /// (`leaf_hairs`, `leaf_ciliate`) cast its colour toward theirs, add a
 /// sheen and a backlit glow, fringe its edge, and up close stand from it
-/// as strands of their own (83 is leaf tip, base and petal words, #161).
-pub const GENERATOR_REVISION: u32 = 84;
+/// as strands of their own (84 is leaf teeth from stated margins, #157).
+pub const GENERATOR_REVISION: u32 = 85;

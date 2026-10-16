@@ -820,7 +820,11 @@ fn simple_width(s: &Simple, length: f64, t: f64, margin: Option<&Margin>) -> f64
     let mut width = s.width * length * 0.5 * simple_profile(s, t);
     // A point beyond the tip bears no teeth.
     if let Some(margin) = margin.filter(|_| t < 1.0 - s.apex_point) {
-        let fall = margin.fall(t, TOOTH, |share| margins::tooth_flank(share, 0.0));
+        let drawn = Drawn {
+            round: s.round,
+            ..TOOTH
+        };
+        let fall = margin.fall(t, drawn, |share| margins::tooth_flank(share, s.round));
         width -= (s.tooth_depth * blade_fade(t)).min(DEEPEST * width) * fall;
     }
     width
@@ -921,6 +925,11 @@ fn shape_seed(shape: &Shape) -> u64 {
             ", sinus: 0.0, fan: 0, apex_taper: None, base_taper: None, apex_point: 0.0, apex_notch: 0.0 }",
             " }",
         );
+    // A simple leaf's saw teeth are the teeth it had before it could
+    // round them.
+    if matches!(&plain, Shape::Simple(s) if s.round == 0.0) {
+        text = text.replace(", round: 0.0, ", ", ");
+    }
     for field in [
         "pattern",
         "pinnules",

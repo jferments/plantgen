@@ -839,6 +839,10 @@ pub struct Simple {
     /// Teeth on each side; 0 for an entire margin.
     pub teeth: u32,
     pub tooth_depth: f64,
+    /// How rounded the teeth are, from 0 (saw teeth pointing to the tip,
+    /// serrate) to 1 (rounded scallops, crenate), as a sprig's leaves'.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub round: f64,
     pub petiole: f64,
     /// How far the blade's two basal lobes reach back past where the
     /// petiole meets it, beside the petiole, as a share of the blade's
@@ -883,6 +887,7 @@ impl Default for Simple {
             base: 0.5,
             teeth: 0,
             tooth_depth: 0.03,
+            round: 0.0,
             petiole: 0.15,
             sinus: 0.0,
             fan: 0,
@@ -2256,6 +2261,7 @@ impl Shape {
                 check("base", s.base, 0.0, 1.0)?;
                 count("teeth", s.teeth, 0, 60)?;
                 check("tooth_depth", s.tooth_depth, 0.0, 0.2)?;
+                check("round", s.round, 0.0, 1.0)?;
                 check("sinus", s.sinus, 0.0, 0.5)?;
                 count("fan", s.fan, 0, 4)?;
                 if let Some(power) = s.apex_taper {
