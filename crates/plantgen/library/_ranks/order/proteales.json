@@ -2,5 +2,104 @@
   "schema": 1,
   "rank": "order",
   "name": "Proteales",
-  "parent": "clade/eudicots"
+  "parent": "clade/eudicots",
+  "traits": {
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "distichous": "sometimes"
+    },
+    "division_pattern": {
+      "pinnate": "usually",
+      "palmate": "sometimes"
+    },
+    "life_span": "perennial",
+    "leaf_habit": {
+      "evergreen": "usually",
+      "deciduous": "rarely"
+    },
+    "flower_merosity": 4,
+    "perianth": {
+      "tepals": "usually",
+      "sepals_and_petals": "sometimes",
+      "spiral": "rarely"
+    },
+    "corolla_shape": {
+      "tubular": "usually",
+      "rotate": "sometimes"
+    },
+    "ovary_position": "superior",
+    "stamens": {
+      "min": 3,
+      "max": 5,
+      "typical": 4,
+      "high": 400
+    },
+    "carpels": {
+      "min": 1,
+      "max": 2,
+      "typical": 1,
+      "high": 40
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "monoecious": "rarely"
+    }
+  },
+  "evidence": {
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Proteales page (read 2026-10-16): Proteaceae spiral (or opposite); Platanaceae two-ranked or spiral; Sabia two-ranked, Meliosma spiral."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Proteales page (read 2026-10-16): Proteaceae odd-pinnate, rarely palmate; Meliosma imparipinnate."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Proteales page (read 2026-10-16): trees, shrubs, lianes and rhizomatous aquatic herbs."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Proteales page (read 2026-10-16): Proteaceae evergreen, Sabiaceae evergreen trees; Platanaceae deciduous (states its own)."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Proteales page (read 2026-10-16): Proteaceae (over 9/10 of species) 4-merous; Platanaceae 3-4; Meliosma 4."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Proteales page (read 2026-10-16): Proteaceae petaloid tepals 2+2; Sabiaceae calyx and corolla; Nelumbo spiral."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Proteales page (read 2026-10-16): Proteaceae tepals valvate, forming a tube that splits as it opens (tube inferred)."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Proteales page (read 2026-10-16): ovules pendulous in superior carpels; Nelumbo carpels sunk in the receptacle."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Proteales page (read 2026-10-16): Proteaceae 4 opposite tepals; Meliosma 2 fertile + 3 staminodes; Nelumbo many. Proteales sit outside rosids, so nothing inherited."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Proteales page (read 2026-10-16): Proteaceae 1, Sabiaceae 2(-3), Platanus 3-8(-9), Nelumbo 10-30."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Proteales page (read 2026-10-16): Proteaceae bisexual; Platanaceae monoecious (states its own)."
+    }
+  }
 }

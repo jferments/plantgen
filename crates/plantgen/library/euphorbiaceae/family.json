@@ -4,6 +4,7 @@
   "name": "Euphorbiaceae",
   "parent": "order/malpighiales",
   "traits": {
+    "flowering_position": "both",
     "perianth": {"sepals_and_petals": "often", "tepals": "often", "absent": "often"},
     "flower_merosity": {"min": 4, "max": 5, "typical": 5, "low": 3, "high": 8},
     "carpels": {"min": 3, "max": 3, "low": 2, "high": 20},
@@ -47,6 +48,7 @@
     }
   },
   "evidence": {
+    "traits.flowering_position": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Euphorbiaceae (read 2026-10-16): inflorescences terminal or axillary (Euphorbia and Croton often terminal, Acalypha and Macaranga axillary)."},
     "traits.perianth": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 307, 309: perianth biseriate, uniseriate or absent (formula K 5 [0] C 5 [0]); Floral Diagrams p. 259 adds that petals are often missing and Euphorbia's cyathium flowers are naked. A single sepal whorl is mapped to 'tepals'."},
     "traits.flower_merosity": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 259: merism mostly 4- or 5-merous, ranging from 3 to 8; Simpson p. 307 says generally 5-merous."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 309: Simpson's formula: ovary of 3 carpels, rarely 2 to many (Floral Diagrams p. 257 general formula: 3, rarely 1 or up to 20)."},

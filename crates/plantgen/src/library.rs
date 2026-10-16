@@ -3187,8 +3187,12 @@ mod tests {
         // Sedges and alders: three ranks.
         assert_eq!(arrangement("carex-obnupta"), (None, Some(120.0)));
         assert_eq!(arrangement("alnus-rubra"), (Some(1.0), Some(120.0)));
-        // Creosote bush: pairs, which broadleaf crosses at 90 degrees.
-        assert_eq!(arrangement("larrea-tridentata"), (Some(2.0), None));
+        // Creosote bush: pairs, crossing at a quarter turn as its order's
+        // leaves do.
+        assert_eq!(arrangement("larrea-tridentata"), (Some(2.0), Some(90.0)));
+        // Foxglove: single leaves under its order's crossing pairs turn
+        // by the golden angle, as the genus's leaves decide.
+        assert_eq!(arrangement("digitalis-purpurea"), (Some(1.0), Some(137.5)));
         // A daisy family's tie sets nothing where the genus says nothing.
         let daisy = library.inherited("leucanthemum-vulgare").unwrap();
         assert_eq!(

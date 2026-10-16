@@ -2,5 +2,117 @@
   "schema": 1,
   "rank": "order",
   "name": "Zingiberales",
-  "parent": "clade/commelinids"
+  "parent": "clade/commelinids",
+  "traits": {
+    "phyllotaxis_pattern": {
+      "distichous": "usually",
+      "spiral": "sometimes"
+    },
+    "leaf_division": "simple",
+    "life_span": "perennial",
+    "inflorescence": {
+      "raceme": "usually",
+      "spike": "often",
+      "panicle": "sometimes"
+    },
+    "flowering_position": {
+      "terminal": "usually",
+      "lateral": "sometimes"
+    },
+    "perianth": {
+      "sepals_and_petals": "usually",
+      "tepals": "sometimes"
+    },
+    "flower_symmetry": {
+      "zygomorphic": "usually",
+      "asymmetric": "sometimes"
+    },
+    "zygomorphy": {
+      "labellate": "usually",
+      "other": "sometimes"
+    },
+    "ovary_position": "inferior",
+    "stamens": {
+      "min": 1,
+      "max": 5,
+      "typical": 1,
+      "high": 6
+    },
+    "hypanthium": false,
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "monoecious": "rarely"
+    },
+    "rosette": {
+      "none": "usually",
+      "basal": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb Zingiberales page (read 2026-10-16): Strelitziaceae and Heliconiaceae two-ranked, Musaceae and Cannaceae spiral; Wikipedia Zingiberaceae and Marantaceae (read 2026-10-16): leaves in two rows. 'Usually' by Zingiberaceae and Marantaceae weight."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): blades entire with a midrib and S-shaped lateral veins (tearing in bananas does not make leaflets)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): large rhizomatous herbs, rarely trees; Wikipedia Zingiberaceae (read 2026-10-16): perennial herbs with creeping rhizomes."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Zingiberaceae (read 2026-10-16): flowers in racemes with spirally set bracts; Wikipedia Marantaceae: spike or panicle; Wikipedia Costaceae: a terminal spike. Our weighting follows Zingiberaceae (largest family)."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Costaceae (read 2026-10-16): terminal spike in most genera; APweb (read 2026-10-16): Lowiaceae flowers axillary. Gingers bear the inflorescence either at the tip of the leafy shoot or on a separate shoot from the rhizome; we read both as terminal (each ends a shoot)."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): whorls barely differentiated in Musaceae, Strelitziaceae, Heliconiaceae (tepals); the ginger group (Zingiberaceae, Costaceae, Cannaceae, Marantaceae) has calyx and corolla and holds most species, so the monocot value is wrong here."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb Zingiberales page (read 2026-10-16): flowers monosymmetric (order); Cannaceae and Marantaceae asymmetric."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): a labellum (fused staminodes) in Zingiberaceae, Costaceae and Lowiaceae, which together hold most species; banana group otherwise."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb Zingiberales page (read 2026-10-16): ovary inferior throughout."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): one fertile stamen (or half-stamen) in Zingiberaceae, Costaceae, Cannaceae and Marantaceae; five in Musaceae, Heliconiaceae, Lowiaceae and most Strelitziaceae; six in Ravenala. Typical 1 by species weight."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): no floral cup described; the tube above the ovary is perianth."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Marantaceae (read 2026-10-16): flowers usually bisexual; APweb: bisexual flowers throughout except Musaceae (unisexual flowers on one plant)."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): leaf sheaths form pseudostems; Zingiberaceae and Costaceae leafy stems. Basal fans in Strelitzia and bananas' crowded pseudostem leaves are the minority."
+    }
+  }
 }

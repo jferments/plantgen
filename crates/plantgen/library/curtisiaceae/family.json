@@ -2,5 +2,21 @@
   "schema": 1,
   "rank": "family",
   "name": "Curtisiaceae",
-  "parent": "order/cornales"
+  "parent": "order/cornales",
+  "traits": {
+    "leaf_habit": "evergreen",
+    "fruit_type": "drupe"
+  },
+  "evidence": {
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cornales page, Curtisiaceae (read 2026-10-16): evergreen trees."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cornales page, Curtisiaceae (read 2026-10-16): fruit with sclereid-rich endocarp (drupaceous)."
+    }
+  }
 }

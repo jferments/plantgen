@@ -382,7 +382,7 @@ pub(crate) fn build_coarse(
             (Form::Flower(form), Shape::Flower(flower)) if flower.is_plain() => {
                 let petals = Petals {
                     count: flower.petals.max(1),
-                    width: flower.petal_width,
+                    width: flower.petal_share(),
                     centre: flower.centre,
                     pointed: flower.point,
                 };

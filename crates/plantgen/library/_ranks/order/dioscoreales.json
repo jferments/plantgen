@@ -2,5 +2,61 @@
   "schema": 1,
   "rank": "order",
   "name": "Dioscoreales",
-  "parent": "clade/monocots"
+  "parent": "clade/monocots",
+  "traits": {
+    "flowering_position": {
+      "lateral": "usually",
+      "terminal": "sometimes"
+    },
+    "phyllotaxis_pattern": "spiral",
+    "rosette": "none",
+    "leaf_habit": {
+      "deciduous": "usually",
+      "evergreen": "sometimes"
+    },
+    "life_span": "perennial",
+    "hypanthium": false,
+    "ovary_position": {
+      "inferior": "usually",
+      "half_inferior": "sometimes",
+      "superior": "rarely"
+    }
+  },
+  "evidence": {
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Dioscoreaceae (read 2026-10-16): inflorescences axillary; APweb (read 2026-10-16): Dioscoreaceae axillary. Dioscoreaceae hold about 650 of the order's roughly 1,000 species; Nartheciaceae and Burmanniaceae overridden."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Dioscoreaceae (read 2026-10-16): leaves usually alternate and usually spiral; APweb (read 2026-10-16): Nartheciaceae spiral (often two-ranked). APweb also notes two-ranked leaves in parts of Dioscorea, so medium."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Dioscoreaceae (read 2026-10-16): twining climbers with leaves along the stems. Rosette families (Nartheciaceae, Burmanniaceae) state their own."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Dioscoreaceae (read 2026-10-16): tubers giving rise to annual stems (leafy shoots die back). Weighting inferred."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Dioscoreaceae perennial from tubers or rhizomes; Burmanniaceae overridden."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Dioscoreaceae (read 2026-10-16): a short perianth tube, no floral cup described. APweb: tepals persist in fruit."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb Dioscoreales page (read 2026-10-16): inferior in Dioscoreaceae, Burmanniaceae, Thismiaceae; half inferior (sometimes superior) in Nartheciaceae."
+    }
+  }
 }

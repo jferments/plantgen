@@ -2,5 +2,27 @@
   "schema": 1,
   "rank": "family",
   "name": "Grubbiaceae",
-  "parent": "order/cornales"
+  "parent": "order/cornales",
+  "traits": {
+    "leaf_habit": "evergreen",
+    "inflorescence": "head",
+    "fruit_type": "multiple"
+  },
+  "evidence": {
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cornales page, Grubbiaceae (read 2026-10-16): evergreen ericoid shrubs."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cornales page, Grubbiaceae (read 2026-10-16): inflorescences capitate or cone-like."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cornales page, Grubbiaceae (read 2026-10-16): fruit a syncarp."
+    }
+  }
 }

@@ -49,6 +49,7 @@ param bulge_age = 0;
 param bulge_years = 1;
 param crownshaft = 0;        # a crownshaft's length; 0 none
 param shaft_cards = 8; param sheath_area = 0.235;
+param sheath_length = 0;     # no sheaths below a frond without a crownshaft
 param leaflet_scatter = 0;   # degrees leaflets stand above and below their V
 param fan_arch = 0;          # degrees a fan's edge rays droop below its middle
 param hang = 0;              # degrees a frond turns down over its life
@@ -59,5 +60,8 @@ param cataphyll_angle = 10;
 param cataphyll_life = 1;
 param cataphyll_area = 0.02;
 param leaflet_groups = 2;
+param acanthophylls = 0;      # no spines among the leaflets
+param spine_length = 0.1;
+param spine_area = 0.004;
 param leaflet_fold = 0;       # pinnae coil in the frond's plane; they do not fold
 param boot_angle = 60;

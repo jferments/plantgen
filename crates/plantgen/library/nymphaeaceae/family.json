@@ -4,6 +4,7 @@
   "name": "Nymphaeaceae",
   "parent": "order/nymphaeales",
   "traits": {
+    "ovary_position": {"half_inferior": "usually", "superior": "sometimes"},
     "perianth": "spiral",
     "woodiness": "herbaceous",
     "leaf_division": "simple",
@@ -24,6 +25,7 @@
     "program": "nymphaeaceae"
   },
   "evidence": {
+    "traits.ovary_position": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Nymphaeales page (read 2026-10-16): ovary more or less inferior in Nymphaeoideae (Nymphaea, about 60 spp.), carpels free to connate and superior in Nuphar. No order value proposed; the family lacks this key."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "ffpa-2014",

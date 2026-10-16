@@ -41,13 +41,19 @@
       "min": 5,
       "max": 10
     },
-    "carpels": 5
+    "carpels": 5,
+    "flowering_position": "lateral"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Caricaceae: leaves alternate; leaves simple or compound; compound leaves palmate; veins usually palmate, rarely pinnate; stipules usually absent, sometimes present; plants usually polygamous, sometimes monoecious or dioecious; ovary superior; floral cup absent; stems woody or herbaceous; flowers solitary or in cymes; flowers actinomorphic; perianth sepals and petals; fruit berry; parts of each whorl 5; stamens 5 to 10; carpels 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Brassicales page, Caricaceae (read 2026-10-16): axillary cymose inflorescences."
     }
   }
 }

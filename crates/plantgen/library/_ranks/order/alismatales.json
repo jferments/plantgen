@@ -2,5 +2,48 @@
   "schema": 1,
   "rank": "order",
   "name": "Alismatales",
-  "parent": "clade/monocots"
+  "parent": "clade/monocots",
+  "traits": {
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "distichous": "sometimes"
+    },
+    "life_span": {
+      "perennial": "usually",
+      "annual": "sometimes"
+    },
+    "flowering_position": {
+      "terminal": "usually",
+      "lateral": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "hypanthium": false
+  },
+  "evidence": {
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb Alismatales page (read 2026-10-16): Araceae leaves spiral, Tofieldiaceae two-ranked; DELTA (read 2026-10-16): Araceae spiral or two-ranked, Potamogetonaceae two-ranked when alternate. Araceae (about 3,700 of 4,500 spp.) set 'usually'."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Araceae, Potamogetonaceae perennial; Hydrocharitaceae and Alismataceae mostly perennial with a few annuals."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): inflorescence usually scapose; Araceae spadix on a scape ending each sympodial unit (we read terminal); DELTA Alismataceae: on scapes. Axillary in Potamogetonaceae and Hydrocharitaceae (overridden)."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): flowers undistinguished and radial through most families; every family that states symmetry is actinomorphic (Hydrocharitaceae rarely zygomorphic)."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): no floral cup in Araceae, Potamogetonaceae, Alismataceae; Hydrocharitaceae sometimes have a perianth tube above the inferior ovary (not overridden; see conflicts)."
+    }
+  }
 }

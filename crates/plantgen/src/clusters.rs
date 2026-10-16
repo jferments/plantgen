@@ -1962,7 +1962,7 @@ fn draw_laid(
             (Shape::Flower(flower), Form::Flower(form)) => floret(
                 &Petals {
                     count: flower.petals.max(1),
-                    width: flower.petal_width,
+                    width: flower.petal_share(),
                     centre: flower.centre,
                     start: 0.6,
                 },

@@ -24,13 +24,19 @@
     "fruit_type": "drupe",
     "flower_merosity": 5,
     "stamens": 5,
-    "carpels": 2
+    "carpels": 2,
+    "flowering_position": "terminal"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Corynocarpaceae: leaves alternate; leaves simple; margins entire; stipules present or absent; plants hermaphrodite; ovary superior; floral cup present; stems woody; flowers in panicles or in racemes; flowers actinomorphic; perianth sepals and petals; fruit drupe; parts of each whorl 5; stamens 5; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cucurbitales page (read 2026-10-16): flowers in panicles (terminal, from my knowledge of Corynocarpus)."
     }
   }
 }

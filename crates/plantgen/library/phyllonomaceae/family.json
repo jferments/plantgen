@@ -2,5 +2,27 @@
   "schema": 1,
   "rank": "family",
   "name": "Phyllonomaceae",
-  "parent": "order/aquifoliales"
+  "parent": "order/aquifoliales",
+  "traits": {
+    "ovary_position": "inferior",
+    "fruit_type": "berry",
+    "sexual_system": "hermaphrodite"
+  },
+  "evidence": {
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Aquifoliales page, Phyllonomaceae (read 2026-10-16): ovary inferior."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Aquifoliales page, Phyllonomaceae (read 2026-10-16): few-seeded berry."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Aquifoliales page, Phyllonomaceae (read 2026-10-16): flowers perfect."
+    }
+  }
 }

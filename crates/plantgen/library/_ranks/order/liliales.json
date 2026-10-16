@@ -4,20 +4,86 @@
   "name": "Liliales",
   "parent": "clade/monocots",
   "traits": {
-    "perianth": {
-      "tepals": "usually",
-      "sepals_and_petals": "sometimes"
-    },
     "ovary_position": {
       "superior": "usually",
       "inferior": "sometimes"
-    }
+    },
+    "flowering_position": "terminal",
+    "life_span": "perennial",
+    "leaf_habit": {
+      "deciduous": "usually",
+      "evergreen": "sometimes"
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "distichous": "sometimes"
+    },
+    "rosette": {
+      "none": "usually",
+      "basal": "sometimes"
+    },
+    "inflorescence": {
+      "raceme": "usually",
+      "solitary": "sometimes",
+      "umbel": "sometimes"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "sometimes"
+    },
+    "hypanthium": false,
+    "zygomorphy": "other"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
       "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 372 Liliaceae (wide sense, which held the lilies, Melanthiaceae, Colchicaceae and Smilacaceae of APG's Liliales): perianth of six segments in two whorls, mostly alike (petal-like tepals); Trillium and its kin have green sepals and coloured petals. The ovary is superior in most; Alstroemeriaceae, also in the order, have it inferior."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb Liliales page (read 2026-10-16): inflorescence terminal (order character). Smilacaceae overridden."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Liliales (read 2026-10-16): mostly perennial bulbous, rhizomatous or cormous geophytes, some climbers and shrubs; DELTA Smilacaceae (read 2026-10-16): perennial."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): order of geophytes (leafy shoots die back after flowering); DELTA (read 2026-10-16): Smilacaceae leaves persistent, which it states. Weighting inferred."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): Petermanniaceae and Alstroemerieae spiral, Luzuriageae two-ranked, Colchicaceae two-ranked or spiral, Corsiaceae spiral to two-ranked. Liliaceae (largest family) spirally leaved (our reading)."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): leaves mostly on the flowering stem in Liliaceae (Lilium, Fritillaria) and Smilacaceae climbers; basal leaves in Erythronium, some Melanthiaceae. Weighting inferred."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): Melanthiaceae raceme or panicle, Liliaceae racemose or scapose, Colchicaceae racemose or single flowers, Smilacaceae umbels (states its own)."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): Melanthiaceae mostly bisexual, Chamaelirium dioecious; Wikipedia Smilacaceae (read 2026-10-16): dioecious (states its own)."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb Liliales page (read 2026-10-16): tepals free, each with a nectary; no floral cup."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb (read 2026-10-16): monosymmetry where it occurs (Alstroemerieae, Gloriosa, Corsiaceae) is by tepal shape or curvature; no labellum/bilabiate pattern except Corsiaceae's odd tepal."
     }
   }
 }

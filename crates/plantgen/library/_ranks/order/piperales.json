@@ -2,5 +2,72 @@
   "schema": 1,
   "rank": "order",
   "name": "Piperales",
-  "parent": "clade/magnoliids"
+  "parent": "clade/magnoliids",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "phyllotaxis_pattern": {
+      "distichous": "usually",
+      "spiral": "sometimes"
+    },
+    "leaf_division": "simple",
+    "rosette": "none",
+    "life_span": {
+      "perennial": "usually",
+      "annual": "rarely"
+    },
+    "flowering_position": {
+      "lateral": "usually",
+      "terminal": "sometimes"
+    },
+    "hypanthium": false,
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Piperales page (read 2026-10-16): leaves one per node (two-ranked) in the order; Peperomia often opposite or whorled."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Piperales page (read 2026-10-16): order characterisation gives two-ranked leaves (Piper, Aristolochia, Lactoris); Peperomia more varied. Both families with candidates already state 'spiral' (see conflicts), so this mainly fixes the order baseline."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Piperales page (read 2026-10-16): blades undivided, often heart-shaped with palmate veins."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Piperales page (read 2026-10-16): herbs, shrubs, vines and lianas with leafy stems; Asarum rhizomatous with few leaves per shoot, not a true rosette."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Piperales page (read 2026-10-16): Piper woody; Peperomia includes some annual herbs; Aristolochiaceae vines, lianas and rhizomatous herbs."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Piperales page (read 2026-10-16): Piper spikes terminal in origin but end up opposite a leaf as the shoot grows on; Aristolochioideae inflorescences axillary; Asaroideae flowers solitary terminal. Visual weighting ours."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Piperales page (read 2026-10-16): no hypanthium in Piperaceae; Aristolochiaceae ovary inferior with a perianth tube, not a hypanthium (Saruma partly adnate)."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Piperales page (read 2026-10-16): flowers perfect in most of the order; Old World Piper dioecious; Lactoris polygamo-dioecious."
+    }
+  }
 }
