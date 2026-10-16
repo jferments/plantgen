@@ -3364,6 +3364,7 @@ mod tests {
     /// be with no trait stated anywhere, but for the values rules set from
     /// its characters, their spreads and their notes.
     #[test]
+    #[allow(clippy::too_many_lines)]
     fn characters_change_no_spec_until_a_rule_reads_them() {
         let library = Library::builtin();
         let mut stated = 0;
