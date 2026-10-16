@@ -266,6 +266,8 @@ pub enum View {
     Side,
     /// From the south-east, a little above.
     ThreeQuarter,
+    /// From the south-east, looking down at 45 degrees.
+    Above,
     /// Straight down.
     Top,
 }
@@ -276,9 +278,21 @@ impl View {
         Some(match name {
             "side" => Self::Side,
             "three-quarter" => Self::ThreeQuarter,
+            "above" => Self::Above,
             "top" => Self::Top,
             _ => return None,
         })
+    }
+
+    /// From the plant toward the camera, for the views that look across
+    /// it (the top view looks straight down).
+    fn direction(self) -> Vec3 {
+        match self {
+            Self::Side => Vec3::new(0.0, 0.04, 1.0),
+            Self::Above => Vec3::new(0.5, std::f64::consts::FRAC_1_SQRT_2, 0.5),
+            Self::ThreeQuarter | Self::Top => Vec3::new(0.7, 0.3, 0.7),
+        }
+        .normalize_or(Vec3::Z)
     }
 
     #[must_use]
@@ -286,6 +300,7 @@ impl View {
         match self {
             Self::Side => "side",
             Self::ThreeQuarter => "three-quarter",
+            Self::Above => "above",
             Self::Top => "top",
         }
     }
@@ -1078,12 +1093,7 @@ pub fn scale(height: f64, x: f64) -> (SceneMesh, f64, f64) {
 fn frame(shot: &Shot, reach: f64, framed: f64, scale_height: f64, gap: f64) -> Framing {
     if let Some((point, span)) = shot.focus {
         let target = Vec3::new(point[0], point[1], point[2]);
-        let direction = if shot.view == View::Side {
-            Vec3::new(0.0, 0.04, 1.0)
-        } else {
-            Vec3::new(0.7, 0.3, 0.7)
-        }
-        .normalize_or(Vec3::Z);
+        let direction = shot.view.direction();
         let half_fov = (FOV_Y_DEG.to_radians() * 0.5).tan();
         #[allow(clippy::cast_possible_truncation)]
         return Framing {
@@ -1113,13 +1123,8 @@ fn frame(shot: &Shot, reach: f64, framed: f64, scale_height: f64, gap: f64) -> F
     let target = Vec3::new(center_x, height * 0.5, 0.0);
     #[allow(clippy::cast_possible_truncation)]
     match shot.view {
-        View::Side | View::ThreeQuarter => {
-            let direction = if shot.view == View::Side {
-                Vec3::new(0.0, 0.04, 1.0)
-            } else {
-                Vec3::new(0.7, 0.3, 0.7)
-            }
-            .normalize_or(Vec3::Z);
+        View::Side | View::ThreeQuarter | View::Above => {
+            let direction = shot.view.direction();
             Framing {
                 eye: (target + direction * distance).to_f32(),
                 target: target.to_f32(),
@@ -1278,6 +1283,7 @@ pub fn review_sheet(base: &Shot, library: &Library) -> Result<Sheet, String> {
     let mature_row = vec![
         (View::Side, None, "side"),
         (View::ThreeQuarter, None, "from the south-east"),
+        (View::Above, None, "45 degrees down"),
         (View::Top, None, "from above"),
         (
             View::ThreeQuarter,

@@ -120,7 +120,8 @@ a 1.8 m figure beside it (a rod striped in 10 cm bands beside plants under
 | `--size PX` | Picture size, 64 to 4096 pixels square (default 512). |
 | `--day N` | Day of the year, 1 to 365, for organs with seasons (default 196). |
 | `--age YEARS` | The plant's age (default: its oldest keyframe). |
-| `--view three-quarter\|side\|top` | Where the camera stands (default three-quarter). |
+| `--view three-quarter\|side\|above\|top` | Where the camera stands (default three-quarter); `above` looks down at 45 degrees from the south-east. |
+| `--focus X,Y,Z`, `--span M` | A close-up of M metres (default 0.5) round a point of the plant, metres from its foot with +Y up, as `plantc render --focus` frames one. |
 | `--quality draft\|standard` | Detail of the meshes (default standard). |
 | `--look review\|photo` | `review` (default) is fixed, so species compare fairly. `photo` adds soft shadows from the sun's real size, sky light from every direction, ambient occlusion, a filmic tone map and 3×3 supersampling. |
 
@@ -131,8 +132,8 @@ cargo run --release -p plantlab -- review acer-macrophyllum --out sheets
 ```
 
 `sheets/ID-review.png` shows the species' growth ages side by side at one
-scale, the mature plant from the side, the south-east and above and close
-up, and, for a species with seasons, the mature plant at six times of the
+scale, the mature plant from the side, the south-east, 45 degrees down and
+above and close up, and, for a species with seasons, the mature plant at six times of the
 year. A title names the species, its height, conditions and the
 generator's revision; every tile has a caption. `ID-review.json` gives
 each tile's rectangle, caption and what it shows, so photos can be placed
@@ -147,7 +148,7 @@ cargo run --release -p plantlab -- batch jobs.jsonl --out pictures --gpu 1
 A batch file has one JSON object a line, for example
 `{"species": "acer-macrophyllum", "kind": "review", "look": "photo"}`;
 `kind` is `thumb` (the default) or `review`, and `size`, `day`, `age`,
-`view`, `quality` and `look` work as the options above. Lines starting
+`view`, `quality`, `look`, `focus` (`"X,Y,Z"`) and `span` work as the options above. Lines starting
 with `#` are skipped. A picture whose sidecar records the same inputs (the
 spec, the generator's revision and every setting) is skipped, so a
 stopped batch picks up where it stopped; `--force` renders everything
