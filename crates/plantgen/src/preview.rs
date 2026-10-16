@@ -16,6 +16,8 @@ pub enum View {
     Side,
     /// From the south-east, a little above.
     ThreeQuarter,
+    /// From the south-east, looking 45 degrees down.
+    Oblique,
     /// Straight down.
     Top,
 }
@@ -26,6 +28,7 @@ impl View {
         Some(match name {
             "side" => Self::Side,
             "three-quarter" => Self::ThreeQuarter,
+            "oblique" => Self::Oblique,
             "top" => Self::Top,
             _ => return None,
         })
@@ -267,11 +270,11 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
     }
     meshes.extend(items);
     let camera = match (options.view, options.focus) {
-        (View::Side | View::ThreeQuarter, Some((target, span))) => {
-            let direction = if options.view == View::Side {
-                Vec3::new(0.0, 0.04, 1.0)
-            } else {
-                Vec3::new(0.7, 0.3, 0.7)
+        (View::Side | View::ThreeQuarter | View::Oblique, Some((target, span))) => {
+            let direction = match options.view {
+                View::Side => Vec3::new(0.0, 0.04, 1.0),
+                View::Oblique => Vec3::new(0.7, 0.99, 0.7),
+                _ => Vec3::new(0.7, 0.3, 0.7),
             }
             .normalize_or(Vec3::Z);
             Camera {
@@ -281,12 +284,12 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
                 projection: Projection::Perspective { fov_y: fov },
             }
         }
-        (View::Side | View::ThreeQuarter, None) => {
+        (View::Side | View::ThreeQuarter | View::Oblique, None) => {
             let target = Vec3::new(center_x, height * 0.5, 0.0);
-            let direction = if options.view == View::Side {
-                Vec3::new(0.0, 0.04, 1.0)
-            } else {
-                Vec3::new(0.7, 0.3, 0.7)
+            let direction = match options.view {
+                View::Side => Vec3::new(0.0, 0.04, 1.0),
+                View::Oblique => Vec3::new(0.7, 0.99, 0.7),
+                _ => Vec3::new(0.7, 0.3, 0.7),
             }
             .normalize_or(Vec3::Z);
             Camera {

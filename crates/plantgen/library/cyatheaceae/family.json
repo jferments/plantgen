@@ -31,13 +31,39 @@
   "forms": {
     "palm": {
       "generator": {
-        "program": "cyatheaceae"
+        "program": "cyatheaceae",
+        "defaults": {
+          "thicken": 0.5,
+          "thicken_years": 40,
+          "leaflet_young": 0.25,
+          "coil_short": 0.6
+        }
       },
       "evidence": {
         "generator.program": {
           "evidence": "Authored",
           "source": "plantgen-authors",
           "note": "The lineage's own program (growth plan G2.3a), on the palm base: it gives the values its species leave unset, which the palm program gave as defaults until then."
+        },
+        "generator.defaults.thicken": {
+          "evidence": "SourceInferred",
+          "source": "fern-growers-manual",
+          "note": "A tree fern's trunk is an upright rhizome with no wood, at full width just behind its tip; adventitious roots grow down it and mat into a hard outer mantle, thickest on the oldest, lowest part, so the trunk widens toward its base (Hoshizaki and Moran 2001, p. 16, 109, 283; Kaplan 2022, p. 213, 217). No source measures the mantle against height; half again the girth below the crown, over about forty years, is set from photographs of Cyathea, and Dicksonia, whose base is up to two or three times as thick, sets more at its genus."
+        },
+        "generator.defaults.thicken_years": {
+          "evidence": "SourceInferred",
+          "source": "fern-growers-manual",
+          "note": "A tree fern's trunk is an upright rhizome with no wood, at full width just behind its tip; adventitious roots grow down it and mat into a hard outer mantle, thickest on the oldest, lowest part, so the trunk widens toward its base (Hoshizaki and Moran 2001, p. 16, 109, 283; Kaplan 2022, p. 213, 217). No source measures the mantle against height; half again the girth below the crown, over about forty years, is set from photographs of Cyathea, and Dicksonia, whose base is up to two or three times as thick, sets more at its genus."
+        },
+        "generator.defaults.leaflet_young": {
+          "evidence": "SourceInferred",
+          "source": "fern-growers-manual",
+          "note": "A fern's frond unrolls from a crozier from its foot to its tip, and each pinna is coiled in the frond's plane until its part of the rachis has unrolled (Kaplan 2022, p. 345-346, 454; Hoshizaki and Moran 2001, p. 16). So a pinna is a quarter of its size while coiled, and opens by its place along the rachis. A crozier coils one and a half to three turns (Kaplan p. 346), so a coiled piece of rachis is shorter by 0.6 of its length, which draws a tight coil, not a loose hook."
+        },
+        "generator.defaults.coil_short": {
+          "evidence": "SourceInferred",
+          "source": "fern-growers-manual",
+          "note": "A fern's frond unrolls from a crozier from its foot to its tip, and each pinna is coiled in the frond's plane until its part of the rachis has unrolled (Kaplan 2022, p. 345-346, 454; Hoshizaki and Moran 2001, p. 16). So a pinna is a quarter of its size while coiled, and opens by its place along the rachis. A crozier coils one and a half to three turns (Kaplan p. 346), so a coiled piece of rachis is shorter by 0.6 of its length, which draws a tight coil, not a loose hook."
         }
       }
     }
