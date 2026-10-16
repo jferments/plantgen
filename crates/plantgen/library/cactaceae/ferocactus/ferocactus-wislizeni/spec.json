@@ -30,6 +30,8 @@
       "dome": 0.55,
       "bloom_age": 25,
       "flowers": 20,
+      "crown_rings": 2,
+      "ring_step": 14,
       "ring_angle": 30,
       "flower_angle": 25,
       "flower_size": 0.045,
@@ -236,6 +238,16 @@
       "evidence": "SourceInferred",
       "source": "cactus-family-anderson",
       "note": "Anderson, The Cactus Family (2001), Ferocactus wislizeni: the four centrals, in a cross, 8 to 10 cm long; 8 cm here for the three beside the hooked one, as for it."
+    },
+    "generator.params.crown_rings": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Photographs of the crown (iNaturalist, credits in plantgen-claude project-files/cacti/photo-credits-2026-10-15.md): this year's ring of buds and flowers sits inside a ring of last year's yellow fruit, which stay on the plant, so two rings, the older about 14 degrees farther down the dome (by eye)."
+    },
+    "generator.params.ring_step": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye from the same photographs: the older ring of fruit sits just below this year's."
     },
     "appearance.bodies.stem.ribs.fibonacci": {
       "evidence": "SourceInferred",
