@@ -481,4 +481,12 @@ pub mod venation;
 /// blade fits, lanceolate; evergreen fronds outlast a winter; the curated
 /// ferns arch, and the sword fern's pinnae and angles are the fern rules'
 /// (78 is crownshaft sheaths in their fronds, #150).
-pub const GENERATOR_REVISION: u32 = 79;
+/// 80: shape and fruit words draw what they mean: a cordate or reniform
+/// blade hangs two basal lobes back beside its petiole (`Simple.sinus`),
+/// and cordate, reniform and deltate blades take their outlines and
+/// widths; a palmately veined blade fans two main veins a side from its
+/// base with the midrib (`Simple.fan`, from `leaf_venation`); achenes,
+/// cypselas, grains, nuts, schizocarps, aggregate and multiple fruits
+/// take fruit kinds, and a fruit is as long as `fruit_size_m` (79 is
+/// ferns from the Fern Grower's Manual, #153).
+pub const GENERATOR_REVISION: u32 = 80;
