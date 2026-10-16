@@ -489,4 +489,13 @@ pub mod venation;
 /// cypselas, grains, nuts, schizocarps, aggregate and multiple fruits
 /// take fruit kinds, and a fruit is as long as `fruit_size_m` (79 is
 /// ferns from the Fern Grower's Manual, #153).
-pub const GENERATOR_REVISION: u32 = 80;
+/// 81: a blade's tip and base draw as stated (`leaf_apex`,
+/// `leaf_base_shape`): hollow-sided, straight, blunt, rounded or square
+/// over its last and first three tenths (`Simple.apex_taper`,
+/// `Simple.base_taper`), with a tail, cusp, mucro or bristle beyond its
+/// tip (`Simple.apex_point`) or a notch in it (`Simple.apex_notch`); a
+/// petal is as broad for its length as its outline is stated among any
+/// count of petals (`Flower.petal_ratio`, from `petal_shape`) and its tip
+/// as pointed or notched as stated (`petal_apex`) (80 is leaf and fruit
+/// words, #155).
+pub const GENERATOR_REVISION: u32 = 81;
