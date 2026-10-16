@@ -32,11 +32,9 @@
       "bloom_age": 2,
       "joint_flowers": 3,
       "flower_angle": 30,
-      "flower_size": 0.06,
       "bud_share": 0.25,
       "fruit_share": 0.2,
       "bud_size": 0.02,
-      "fruit_size": 0.035,
       "bud_rate": 0.45,
       "flower_area": 0.298,
       "bud_area": 0.7,
@@ -61,14 +59,11 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 16,
           "stamens": 200,
-          "petal_width": 1.0,
           "point": 0.0,
           "notch": 0.0,
           "centre": 0.25
         },
-        "colour": [0.65, 0.07, 0.35],
         "accent": [0.85, 0.75, 0.75]
       },
       "bud": {
@@ -80,10 +75,8 @@
       },
       "fruit": {
         "shape": {
-          "template": "fruit",
-          "aspect": 0.7
-        },
-        "colour": [0.45, 0.4, 0.3]
+          "template": "fruit"
+        }
       }
     },
     "bodies": {
@@ -128,10 +121,20 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "flower_colour": [185, 30, 75],
+    "flower_size_m": {"min": 0.05, "max": 0.075},
+    "fruit_colour_ripe": [130, 130, 80],
+    "fruit_size_m": {"min": 0.025, "max": 0.03},
+    "fruit_width_m": {"min": 0.015, "max": 0.022},
     "joint_length_m": {"min": 0.08, "max": 0.2},
     "radial_spines": 0
   },
   "evidence": {
+    "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 490, Opuntia basilaris: flowers cherry red to yellow, rarely white (cherry red here, as usual), 5 to 7.5 cm long and across; fruit green, dry when ripe, spineless, 2.5 to 3 cm long (a dull dry green here)."},
+    "traits.flower_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 490, Opuntia basilaris: flowers cherry red to yellow, rarely white (cherry red here, as usual), 5 to 7.5 cm long and across; fruit green, dry when ripe, spineless, 2.5 to 3 cm long (a dull dry green here)."},
+    "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 490, Opuntia basilaris: flowers cherry red to yellow, rarely white (cherry red here, as usual), 5 to 7.5 cm long and across; fruit green, dry when ripe, spineless, 2.5 to 3 cm long (a dull dry green here)."},
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 490, Opuntia basilaris: flowers cherry red to yellow, rarely white (cherry red here, as usual), 5 to 7.5 cm long and across; fruit green, dry when ripe, spineless, 2.5 to 3 cm long (a dull dry green here)."},
+    "traits.fruit_width_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 490, Opuntia basilaris: fruit 2.5 to 3 cm long and 1.5 to 2.2 cm in diameter."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",

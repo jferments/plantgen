@@ -14,6 +14,7 @@
       "zygomorphic": "sometimes"
     },
     "perianth": "spiral",
+    "perianth_parts": {"min": 15, "max": 60, "typical": 30},
     "hypanthium": true,
     "ovary_position": "inferior",
     "spines": "areoles",
@@ -31,6 +32,26 @@
     }
   },
   "rules": {
+    "appearance.organs.flower.form.flower.cup": {
+      "map": {"corolla_shape": {"rotate": 10, "cupped": 35, "campanulate": 45, "funnelform": 50, "tubular": 65, "salverform": 15, "urceolate": 70}}, "between": true,
+      "why": "A cactus's tepals are free, on a spiral that runs from the spreading outer ones to the upright inner ones about this mean rise: flat in a wheel, a bowl in a cup, a bell, a funnel, a narrow tube, a flat limb on a tube, an urn."
+    },
+    "appearance.organs.*.shape.tube": {
+      "template": "flower",
+      "map": {"corolla_shape": {"rotate": 0.1, "cupped": 0.2, "campanulate": 0.5, "funnelform": 0.8, "tubular": 1.4, "salverform": 1.6, "urceolate": 0.6}}, "between": true,
+      "else": 0.4,
+      "why": "A cactus's tepals stand on the rim of a floral tube, the hypanthium grown up round the ovary: barely any in a wheel or a cup, as Opuntia's flowers have none above the pericarpel, short in a bell, longer in a funnel, longest in a tube or under a salver's limb; in flower radii."
+    },
+    "generator.params.fruit_size": {
+      "rule": "fruit_size_m",
+      "why": "A ring's fruit are as long as floras measure them ripe."
+    },
+    "appearance.organs.*.shape.petal_width": {
+      "template": "flower",
+      "map": {"corolla_shape": {"rotate": 1.0, "cupped": 1.0, "campanulate": 0.9, "funnelform": 0.9, "tubular": 0.7, "salverform": 0.8, "urceolate": 0.9}}, "between": true,
+      "else": 0.9,
+      "why": "A cactus's inner tepals are broad and overlap at their bases in a wheel or a cup, a little narrower in a bell or a funnel, and narrow in a tube."
+    },
     "appearance.bodies.stem.ribs.count": {
       "rule": [
         "min(ribs)",
@@ -91,6 +112,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Spec rework E6c: the cacti's ribs, areoles and spines grown from the characters their floras state, in each body look that has ribs or a spine set of that role."
+    },
+    "traits.perianth_parts": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001) pp. 19 and 33: the perianth is many segments grading from scale bracts through sepal-like to petal-like tepals; Kubitzki vol. 5 (2003) p. 13: spiral, partly acyclic, the parts indeterminate in number; Gibson and Nobel, The Cactus Primer p. 246: many free perianth parts arranged helically. No source counts them for the family: 15 to 60, typically 30, by hand from those words, where species and genera say no more."
     },
     "traits.life_span": {
       "evidence": "SourceInferred",

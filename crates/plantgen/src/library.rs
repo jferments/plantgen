@@ -3377,6 +3377,26 @@ mod tests {
             {
                 parent.remove(key);
             }
+            // A rule's value may be all its section holds, as a flower's
+            // form is only its cup: the section goes with it.
+            let mut emptied = outer;
+            while let Some((above, key)) = emptied.rsplit_once('.') {
+                let Some(parent) = above
+                    .split('.')
+                    .try_fold(&mut *spec, step)
+                    .and_then(serde_json::Value::as_object_mut)
+                else {
+                    break;
+                };
+                if !parent
+                    .get(key)
+                    .is_some_and(|inside| inside.as_object().is_some_and(serde_json::Map::is_empty))
+                {
+                    break;
+                }
+                parent.remove(key);
+                emptied = above;
+            }
             if let Some(notes) = spec
                 .get_mut("evidence")
                 .and_then(serde_json::Value::as_object_mut)

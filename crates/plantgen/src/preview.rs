@@ -16,6 +16,9 @@ pub enum View {
     Side,
     /// From the south-east, a little above.
     ThreeQuarter,
+    /// From the south-east, 45 degrees above: the crown, the tops of
+    /// pads and leaves, and how far the plant spreads.
+    High,
     /// Straight down.
     Top,
 }
@@ -26,9 +29,21 @@ impl View {
         Some(match name {
             "side" => Self::Side,
             "three-quarter" => Self::ThreeQuarter,
+            "high" => Self::High,
             "top" => Self::Top,
             _ => return None,
         })
+    }
+
+    /// From the target toward the eye of a view in perspective.
+    fn direction(self) -> Vec3 {
+        match self {
+            Self::Side => Vec3::new(0.0, 0.04, 1.0),
+            Self::ThreeQuarter => Vec3::new(0.7, 0.3, 0.7),
+            Self::High => Vec3::new(0.5, 0.707_1, 0.5),
+            Self::Top => Vec3::Y,
+        }
+        .normalize_or(Vec3::Z)
     }
 }
 
@@ -267,13 +282,8 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
     }
     meshes.extend(items);
     let camera = match (options.view, options.focus) {
-        (View::Side | View::ThreeQuarter, Some((target, span))) => {
-            let direction = if options.view == View::Side {
-                Vec3::new(0.0, 0.04, 1.0)
-            } else {
-                Vec3::new(0.7, 0.3, 0.7)
-            }
-            .normalize_or(Vec3::Z);
+        (View::Side | View::ThreeQuarter | View::High, Some((target, span))) => {
+            let direction = options.view.direction();
             Camera {
                 eye: target + direction * (span * 0.5 / half_fov),
                 target,
@@ -281,14 +291,9 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
                 projection: Projection::Perspective { fov_y: fov },
             }
         }
-        (View::Side | View::ThreeQuarter, None) => {
+        (View::Side | View::ThreeQuarter | View::High, None) => {
             let target = Vec3::new(center_x, height * 0.5, 0.0);
-            let direction = if options.view == View::Side {
-                Vec3::new(0.0, 0.04, 1.0)
-            } else {
-                Vec3::new(0.7, 0.3, 0.7)
-            }
-            .normalize_or(Vec3::Z);
+            let direction = options.view.direction();
             Camera {
                 eye: target + direction * distance,
                 target,

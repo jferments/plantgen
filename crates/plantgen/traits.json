@@ -1370,6 +1370,15 @@
       "range": [0.0005, 1],
       "why": "a ripe fruit at its longest"
     },
+    "fruit_width_m": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "number",
+      "unit": "m",
+      "range": [0.0003, 1],
+      "optional": true,
+      "why": "a ripe fruit across at its widest"
+    },
     "fruit_colour_ripe": {
       "group": "fruit_and_cones",
       "organ": "fruit",

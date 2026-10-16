@@ -35,12 +35,10 @@
       "flowers": 3,
       "ring_angle": 85,
       "flower_angle": 55,
-      "flower_size": 0.07,
       "bud_share": 0.2,
       "fruit_share": 0.2,
       "bud_size": 0.02,
-      "fruit_size": 0.03,
-      "flower_area": 0.215,
+      "flower_area": 0.363,
       "bud_area": 0.636,
       "fruit_area": 1.016
     }
@@ -63,14 +61,11 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 12,
           "stamens": 200,
-          "petal_width": 0.7,
           "point": 0.0,
           "notch": 0.0,
           "centre": 0.2
         },
-        "colour": [0.6, 0.06, 0.4],
         "accent": [0.15, 0.3, 0.08]
       },
       "bud": {
@@ -84,8 +79,7 @@
         "shape": {
           "template": "fruit",
           "aspect": 0.8
-        },
-        "colour": [0.6, 0.1, 0.1]
+        }
       }
     },
     "bodies": {
@@ -159,6 +153,10 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "flower_colour": [170, 30, 110],
+    "flower_size_m": 0.07,
+    "fruit_colour_ripe": [170, 30, 35],
+    "fruit_size_m": 0.025,
     "carpels": {"min": 10, "max": 13},
     "ribs": {"min": 11, "max": 14},
     "stem_diameter_max_m": {"min": 0.05, "max": 0.06},
@@ -169,6 +167,10 @@
     "central_spine_form": {"curved": "usually", "twisted": "often"}
   },
   "evidence": {
+    "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 235 to 236, Echinocereus engelmannii: flowers short funnelform, purplish red to magenta to lavender, to 9 cm long and wide; fruit red, juicy, to 3 cm. Anderson gives only the largest sizes; the typical ones, a little short of them, by hand."},
+    "traits.flower_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 235 to 236, Echinocereus engelmannii: flowers short funnelform, purplish red to magenta to lavender, to 9 cm long and wide; fruit red, juicy, to 3 cm. Anderson gives only the largest sizes; the typical ones, a little short of them, by hand."},
+    "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 235 to 236, Echinocereus engelmannii: flowers short funnelform, purplish red to magenta to lavender, to 9 cm long and wide; fruit red, juicy, to 3 cm. Anderson gives only the largest sizes; the typical ones, a little short of them, by hand."},
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 235 to 236, Echinocereus engelmannii: flowers short funnelform, purplish red to magenta to lavender, to 9 cm long and wide; fruit red, juicy, to 3 cm. Anderson gives only the largest sizes; the typical ones, a little short of them, by hand."},
     "traits.ribs": {
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",

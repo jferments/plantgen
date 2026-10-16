@@ -49,6 +49,11 @@
       "colour": "fruit_colour_ripe",
       "why": "A fruit is drawn in the colour it is stated to ripen to; its unripe share keeps the look's accent."
     },
+    "appearance.organs.fruit.shape.aspect": {
+      "template": "fruit",
+      "rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)",
+      "why": "A fruit is as wide for its length as its flora measures it."
+    },
     "appearance.organs.*.inflorescence.kind": {
       "map": {"inflorescence": {"raceme": "raceme", "spike": "spike", "catkin": "catkin", "corymb": "corymb", "umbel": "umbel", "compound_umbel": "compound_umbel", "panicle": "panicle", "cyme": "cyme", "scorpioid": "scorpioid", "head": "head", "spadix": "spike"}},
       "why": "Each kind of inflorescence is laid out as the cluster of its name, and a spadix as a spike; a solitary flower is no cluster."
@@ -215,6 +220,7 @@
     "rules.appearance.organs.flower.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
     "rules.appearance.organs.bloom.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
     "rules.appearance.organs.fruit.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
+    "rules.appearance.organs.fruit.shape.aspect": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a fruit from the measures a source states for the species, a choice of the model's: its width over its length, as the fruit card's aspect."},
     "traits.reproduction": {
       "evidence": "SourceInferred",
       "source": "openstax-biology-2e",
