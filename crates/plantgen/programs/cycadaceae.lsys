@@ -44,3 +44,6 @@ param fan_arch = 0;          # degrees a fan's edge rays droop below its middle
 param hang = 0;              # degrees a frond turns down over its life
 param leaflet_groups = 2;
 param coil_short = 0;
+param acanthophylls = 0;      # no spines among the leaflets
+param spine_length = 0.1;
+param spine_area = 0.004;
