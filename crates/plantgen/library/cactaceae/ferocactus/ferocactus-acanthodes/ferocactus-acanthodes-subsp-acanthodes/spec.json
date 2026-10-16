@@ -29,14 +29,16 @@
       "bend": 0.3,
       "dome": 0.6,
       "bloom_age": 25,
-      "flowers": 12,
+      "flowers": 18,
+      "crown_rings": 2,
+      "ring_step": 14,
       "ring_angle": 25,
       "flower_angle": 25,
       "flower_size": 0.05,
       "bud_share": 0.2,
       "fruit_share": 0.35,
       "bud_size": 0.025,
-      "fruit_size": 0.035,
+      "fruit_size": 0.03,
       "flower_area": 0.186,
       "bud_area": 0.636,
       "fruit_area": 0.89
@@ -91,10 +93,11 @@
         "valley": [0.04, 0.075, 0.03],
         "dome": 0.6,
         "ribs": {
-          "count": [18, 30],
           "spacing": 0.045,
           "depth": 0.14,
-          "sharpness": 0.7
+          "sharpness": 0.7,
+          "fibonacci": 0.5,
+          "lean": 30
         },
         "tubercles": {
           "height": 0.03,
@@ -104,12 +107,12 @@
         "areoles": {
           "spacing": 0.025,
           "felt_radius": 0.005,
-          "felt": [0.35, 0.3, 0.22]
+          "felt": [0.35, 0.3, 0.22],
+          "apex_wool": 0.01
         },
         "spines": [
           {
             "role": "radial",
-            "count": [10, 15],
             "angle": 25,
             "length": 0.035,
             "width": 0.0008,
@@ -121,7 +124,7 @@
           },
           {
             "role": "central",
-            "count": [4, 4],
+            "count": [4, 7],
             "angle": 40,
             "width": 0.0016,
             "colour": [0.6, 0.18, 0.08],
@@ -160,7 +163,10 @@
       "max": 2.5
     },
     "central_spine_length_m": {"min": 0.1, "max": 0.12},
-    "central_spine_form": {"curved": "usually", "twisted": "often"}
+    "central_spine_form": {"curved": "usually", "twisted": "often"},
+    "ribs": {"min": 20, "max": 30},
+    "radial_spines": {"min": 15, "max": 25},
+    "central_spines": {"min": 4, "max": 7}
   },
   "evidence": {
     "traits.height_max_m": {
@@ -173,6 +179,26 @@
       "source": "britton-rose-1919",
       "note": "Britton and Rose's The Cactaceae (vol. 3, 1922, pp. 129 to 130), as Ferocactus acanthodes: the central spines slender, spreading, somewhat flattened, ringed, twisted and somewhat curved, never hooked, the longest 10 to 12 cm. Rib and spine counts are given only as 'numerous', so they are not stated."
     },
+    "traits.ribs": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001), Ferocactus cylindraceus: ribs 20 to 30."
+    },
+    "traits.radial_spines": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001), Ferocactus cylindraceus: radial spines 15 to 25."
+    },
+    "traits.central_spines": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001), Ferocactus cylindraceus: central spines 4 to 7, some round, some flattened, sometimes curved; reddish, dense, hiding the stem near the apex."
+    },
+    "appearance.bodies.stem.spines.central.count": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001), Ferocactus cylindraceus: central spines 4 to 7."
+    },
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -182,6 +208,41 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Rough heights from general knowledge: about a metre by 60 years, 1.5 to 2 m by 110. Wide tolerances."
+    },
+    "generator.params.flowers": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986), ch. 5: most cacti flower in a ring near the stem tip, one flower to an areole made about a year before, with a few areoles in the ring left unused; 18 here, for 18 to 30 ribs, flowers and fruit together."
+    },
+    "generator.params.fruit_size": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001), Ferocactus cylindraceus: fruit globose, yellow, to 3 cm long; 3 cm here."
+    },
+    "generator.params.crown_rings": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Photographs of the crown (iNaturalist, credits in plantgen-claude project-files/cacti/photo-credits-2026-10-15.md): flowers open among a ring of older fruit and buds below them, so two rings, the older about 14 degrees farther down the dome (by eye)."
+    },
+    "generator.params.ring_step": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye from the same photographs: the older ring of fruit sits just below this year's."
+    },
+    "appearance.bodies.stem.ribs.fibonacci": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986), pp. 123-124: Ferocactus rib counts cluster on Fibonacci numbers; in F. acanthodes 51% of plants had one, 21 the commonest. Half the stems here keep to the Fibonacci number in the count."
+    },
+    "appearance.bodies.stem.ribs.lean": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986), pp. 121 and 125: tubercle rows lean about 30 degrees from vertical, so a Fibonacci-ribbed Ferocactus winds slowly round the stem, left-handed in about half the plants and right-handed in the rest; other stems stand straight."
+    },
+    "appearance.bodies.stem.areoles.apex_wool": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986), ch. 5: the young areoles' trichomes crowd at the apex into a woolly mat, in barrel cacti more than 4 cm thick. 1 cm here, less than that, because in photographs this species' apex shows mostly spines over its wool (thickness by eye)."
     },
     "appearance": {
       "evidence": "Authored",

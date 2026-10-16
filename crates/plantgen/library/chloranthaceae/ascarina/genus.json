@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Ascarina",
+  "traits": {
+    "woodiness": "woody",
+    "perianth": "absent",
+    "stamens": 1,
+    "sexual_system": {
+      "dioecious": "often",
+      "monoecious": "often"
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "cheeseman-1925",
+      "note": "Cheeseman (1925), Manual of the New Zealand Flora p. 371, genus Ascarina: aromatic shrubs or small trees; flowers minute, dioecious or monoecious, in simple or branched spikes; no perianth in either sex; male flower one sessile stamen."
+    }
+  }
+}

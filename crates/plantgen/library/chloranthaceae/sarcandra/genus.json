@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Sarcandra",
+  "traits": {
+    "woodiness": "semi",
+    "sexual_system": "hermaphrodite",
+    "perianth": "absent",
+    "stamens": 1
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 (Xia and Jérémie 1999), genus Sarcandra (p. 132, read 2026-10-16 at eFloras): subshrubs; flowers bisexual, without perianth or pedicel; one fleshy stamen. Subshrub read as semi-woody."
+    }
+  }
+}

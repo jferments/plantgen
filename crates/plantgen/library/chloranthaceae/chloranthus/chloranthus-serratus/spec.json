@@ -1,0 +1,206 @@
+{
+  "schema": 1,
+  "id": "chloranthus-serratus",
+  "taxon": {
+    "scientific_name": "Chloranthus serratus",
+    "common_name": "ji ji",
+    "family": "Chloranthaceae",
+    "genus": "Chloranthus",
+    "plant_name_id": 2719171
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 3,
+      "nodes": 2,
+      "bare": 0.6,
+      "leaf_peak": 1,
+      "leaf_top": 1,
+      "leaf_base": 0.9
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.32,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "perennation": "rhizome",
+    "leaf_habit": "deciduous",
+    "height_typical_m": {
+      "min": 0.15,
+      "max": 0.5
+    },
+    "leaf_length_m": {
+      "min": 0.07,
+      "max": 0.15
+    },
+    "leaf_width_m": {
+      "min": 0.03,
+      "max": 0.06
+    },
+    "petiole_length_m": {
+      "min": 0.008,
+      "max": 0.025
+    },
+    "leaf_shape": "elliptic",
+    "inflorescence": "spike",
+    "inflorescence_length_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "flower_colour": [
+      245,
+      245,
+      238
+    ],
+    "fruit_size_m": {
+      "min": 0.003,
+      "max": 0.004
+    },
+    "fruit_colour_ripe": [
+      95,
+      140,
+      60
+    ],
+    "flowering_months": [
+      4,
+      5
+    ],
+    "fruiting_months": [
+      6,
+      7,
+      8
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "32 cm at 4 years in the open, the middle of Flora of China's 15-50 cm. Replace with measured data before calling this species calibrated."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand after Flora of China p. 136: one or several stems in a fascicle (3), each bare below but for scale leaves, with its leaves crowded at the top: two nodes of opposite leaves (four, the usual count of the genus's herbs, p. 133), on the upper share of the stem, nearly alike in size. Not fitted to measurements."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 136, Chloranthus serratus (read 2026-10-16): perennial herbs."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 136, Chloranthus serratus (read 2026-10-16): perennial herbs."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 136, Chloranthus serratus (read 2026-10-16): rhizomes procumbent, thick and short."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as Flora of China does not say; its stems die back each year."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 136, Chloranthus serratus (read 2026-10-16): 15-50 cm high."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 136, Chloranthus serratus (read 2026-10-16): blades 7-15 by 3-6 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 136, Chloranthus serratus (read 2026-10-16): blades 7-15 by 3-6 cm."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 136, Chloranthus serratus (read 2026-10-16): petioles 0.8-2.5 cm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 136, Chloranthus serratus (read 2026-10-16): blades elliptic, obovate, ovate-lanceolate, suborbicular or broadly elliptic; elliptic the first named."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 136, Chloranthus serratus (read 2026-10-16): spikes terminal, sometimes axillary, 1-3-branched, on a 1-3.5 cm peduncle."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as Flora of China gives the peduncle but not the spike's length."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 136, Chloranthus serratus (read 2026-10-16): flowers white (the three white stamen connectives are what shows); the RGB is the authors' rendering."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as Flora of China gives no fruit size."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 136, Chloranthus serratus (read 2026-10-16): drupes green, globose or pear-shaped; the RGB is the authors' rendering of green."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 136, Chloranthus serratus (read 2026-10-16): flowers April-May, rarely to July."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 p. 136, Chloranthus serratus (read 2026-10-16): fruits June-August."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (Chloranthaceae, 2026-10-16): sizes and looks stated as facts from Flora of China and drawn by the forb defaults and the angiosperm rules; spike length and fruit size from the species-facts estimates."
+  }
+}

@@ -1,0 +1,233 @@
+{
+  "schema": 1,
+  "id": "tsuga-mertensiana",
+  "taxon": {
+    "scientific_name": "Tsuga mertensiana",
+    "common_name": "mountain hemlock",
+    "usda_symbol": "TSME",
+    "family": "Pinaceae",
+    "genus": "Tsuga",
+    "plant_name_id": 379433
+  },
+  "growth_form": "excurrent_tree",
+  "generator": {
+    "params": {
+      "cone_chance": 0.15,
+      "cone_years": 1,
+      "height_rate": 0.019,
+      "height_shape": 1.4,
+      "leader_shade": 0.5,
+      "nod": 55,
+      "nod_years": 2,
+      "whorl": 4,
+      "interwhorl": 3,
+      "interwhorl_vigour": 0.6,
+      "branch_angle": 70,
+      "upturn": 0.004,
+      "branch_growth": 0.28,
+      "side_growth": 0.6,
+      "side_chance": 0.85,
+      "side_angle": 55,
+      "needle_years": 5,
+      "spray_droop": 60,
+      "shade_death": 0.06,
+      "shade_years": 5,
+      "pipe_organ": 0.009,
+      "branch_reach": 2.5,
+      "pipe_rings": 6.8e-06
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [
+      5,
+      15,
+      30,
+      60
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open",
+      "interior"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.2,
+      0.12,
+      0.09
+    ],
+    "bark_pattern": {
+      "kind": "furrowed",
+      "scale": 0.035,
+      "elongation": 3.0,
+      "fissure": 0.25,
+      "depth": 0.3,
+      "contrast": 0.45,
+      "variation": 0.15,
+      "smooth_below": 0.05,
+      "roughness": 0.35
+    },
+    "foliage": [
+      0.08,
+      0.15,
+      0.11
+    ],
+    "foliage_shade": [
+      0.02,
+      0.045,
+      0.015
+    ],
+    "variation": 0.2,
+    "organs": {
+      "cone": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.4,
+          "cone": 1
+        },
+        "colour": [
+          0.45,
+          0.33,
+          0.2
+        ]
+      },
+      "spray": {
+        "shape": {
+          "template": "needles",
+          "twigs": 5,
+          "aspect": 0.9,
+          "twig_angle": 70,
+          "width": 0.12
+        },
+        "accent": [
+          0.25,
+          0.17,
+          0.1
+        ]
+      }
+    },
+    "ridges": {
+      "spacing": 0.05,
+      "depth": 0.03,
+      "twist": 2,
+      "contrast": 0.35
+    },
+    "flare": {
+      "height": 0.8,
+      "amount": 0.4,
+      "buttresses": 0,
+      "ridge": 0.3
+    }
+  },
+  "allometry": [
+    {
+      "age": 60,
+      "environment": "interior",
+      "height": 14,
+      "dbh": 0.3,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 23,
+      "max": 30,
+      "high": 46
+    },
+    "foliage_ranks": "all_round",
+    "leaf_length_m": {
+      "min": 0.015,
+      "max": 0.02
+    },
+    "cone_length_m": {
+      "min": 0.025,
+      "max": 0.075
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's mountain hemlock review (Tesky 1992, read 2026-10-16): \"usually 75 to 100 feet (23-30 m) tall\"; in dense stands of the Coast Ranges \"heights up to 150 feet (46 m)\"."
+    },
+    "traits.foliage_ranks": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's mountain hemlock review (Tesky 1992, read 2026-10-16): \"The needles are crowded on all sides of short twigs and curved upward\"; Abrams (vol. 1, 1923, p. 63) has the leaves spreading from all sides of the branchlets."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 63, Tsuga mertensiana: \"more or less curved, 15-20 mm. long, blunt-pointed\"."
+    },
+    "traits.cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 63, Tsuga mertensiana: \"cones sessile, oblong-cylindric, narrowed toward both ends, 25-75 mm. long\"."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Western hemlock's values, changed by hand for mountain hemlock: a shorter tree (height_rate set as for whitebark pine), a narrowly conical crown under a slender drooping leader, slender drooping branches with upturned tips, needles all round the twig (FEIS, Tesky 1992). Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "14 m and 30 cm across at 60 years in a stand; FEIS calls it slow-growing (Tesky 1992). Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after Abrams (1923 p. 63): \"light blue-green\" needles; long narrow cones; furrowed red-brown bark kept from western hemlock's."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion (2026-10-16): sizes from FEIS and Abrams, drawing values from western hemlock's."
+  }
+}

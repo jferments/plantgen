@@ -47,6 +47,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a simple card is at most as broad as long, so its blades are drawn 5.5 to 6.5 cm wide, as wide as long, against FNA's 8 to 14 cm, broader than long",
     ),
     (
+        "ascarina-lucida",
+        "flower_symmetry",
+        "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
+    ),
+    (
         "azorella-compacta",
         "height_typical_m",
         "it is grown 200 years, to a dome 0.6 m tall, but Reiche's mounds 1.5 m tall and more, and the ministry's 1 m, are of cushions centuries older (inferred: no source dates them)",
@@ -55,6 +60,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "azorella-compacta",
         "leaf_shape",
         "its rosette leaves are drawn by hand on a sprig card 0.4 as broad as long, so they read elliptic against the linear leaves Reiche gives",
+    ),
+    (
+        "chloranthus-serratus",
+        "flower_symmetry",
+        "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
     ),
     (
         "cirsium-vulgare",
@@ -125,6 +135,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "hedera-helix",
         "fruit_size_m",
         "its fruit is drawn as one card 7 cm long, about 8.4 cm as measured, standing for a whole umbel of berries, against the 6 to 9 mm Dendrology (2019) p. 310 gives one drupe",
+    ),
+    (
+        "hedyosmum-mexicanum",
+        "flower_symmetry",
+        "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
     ),
     (
         "heracleum-maximum",
@@ -310,6 +325,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "program:typha",
         "fruit_type",
         "Typhaceae's fruit is a tiny achene on a hairy stalk (Simpson 2019), but a cattail's fruiting spike is drawn with the berry card",
+    ),
+    (
+        "sarcandra-glabra",
+        "flower_symmetry",
+        "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
     ),
     (
         "sassafras-albidum",

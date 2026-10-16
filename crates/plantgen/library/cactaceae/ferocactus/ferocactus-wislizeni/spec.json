@@ -29,10 +29,12 @@
       "bend": 0.6,
       "dome": 0.55,
       "bloom_age": 25,
-      "flowers": 16,
+      "flowers": 20,
+      "crown_rings": 2,
+      "ring_step": 14,
       "ring_angle": 30,
       "flower_angle": 25,
-      "flower_size": 0.06,
+      "flower_size": 0.045,
       "bud_share": 0.15,
       "fruit_share": 0.5,
       "bud_size": 0.03,
@@ -93,7 +95,9 @@
         "ribs": {
           "spacing": 0.065,
           "depth": 0.15,
-          "sharpness": 0.75
+          "sharpness": 0.75,
+          "fibonacci": 0.5,
+          "lean": 30
         },
         "tubercles": {
           "height": 0.04,
@@ -102,7 +106,8 @@
         },
         "areoles": {
           "felt_radius": 0.006,
-          "felt": [0.3, 0.25, 0.18]
+          "felt": [0.3, 0.25, 0.18],
+          "apex_wool": 0.015
         },
         "spines": [
           {
@@ -117,7 +122,7 @@
             "role": "central",
             "count": [3, 3],
             "angle": 35,
-            "length": 0.04,
+            "length": 0.08,
             "width": 0.0018,
             "colour": [0.45, 0.12, 0.06],
             "angle_spread": 10,
@@ -175,7 +180,7 @@
     "radial_spines": {"min": 12, "max": 20},
     "radial_spine_length_m": 0.05,
     "central_spines": 4,
-    "central_spine_length_m": {"min": 0.038, "max": 0.05},
+    "central_spine_length_m": {"min": 0.08, "max": 0.1},
     "central_spine_form": "hooked"
   },
   "evidence": {
@@ -206,8 +211,8 @@
     },
     "traits.central_spine_length_m": {
       "evidence": "SourceInferred",
-      "source": "usfs-feis",
-      "note": "FEIS's review of Ferocactus wislizeni (Matthews 1994): the larger central spines 3.8 to 5 cm long."
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001), Ferocactus wislizeni: central spines 4, in a cross, 8 to 10 cm long, the lowest flattened, stoutest and often hooked. FEIS (Matthews 1994) gives 3.8 to 5 cm for the larger centrals; photographs show hooks as long as the radials or longer, as Anderson has it."
     },
     "generator.params": {
       "evidence": "Authored",
@@ -218,6 +223,46 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Rough heights from general knowledge: about half a metre by 30 years, a metre by 60. Wide tolerances."
+    },
+    "generator.params.flowers": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986), ch. 5: most cacti flower in a ring near the stem tip, one flower to an areole made about a year before, with a few areoles in the ring left unused; 20 here, for the 21 to 28 ribs, flowers and fruit together."
+    },
+    "generator.params.flower_size": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001), Ferocactus wislizeni: flowers 4 to 5 cm long and wide; 4.5 cm here."
+    },
+    "appearance.bodies.stem.spines.central.length": {
+      "evidence": "SourceInferred",
+      "source": "cactus-family-anderson",
+      "note": "Anderson, The Cactus Family (2001), Ferocactus wislizeni: the four centrals, in a cross, 8 to 10 cm long; 8 cm here for the three beside the hooked one, as for it."
+    },
+    "generator.params.crown_rings": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Photographs of the crown (iNaturalist, credits in plantgen-claude project-files/cacti/photo-credits-2026-10-15.md): this year's ring of buds and flowers sits inside a ring of last year's yellow fruit, which stay on the plant, so two rings, the older about 14 degrees farther down the dome (by eye)."
+    },
+    "generator.params.ring_step": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye from the same photographs: the older ring of fruit sits just below this year's."
+    },
+    "appearance.bodies.stem.ribs.fibonacci": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986), pp. 123-124: Ferocactus rib counts cluster on Fibonacci numbers; in F. acanthodes 51% of plants had one, 21 the commonest. Half the stems here keep to the Fibonacci number in the count."
+    },
+    "appearance.bodies.stem.ribs.lean": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986), pp. 121 and 125: tubercle rows lean about 30 degrees from vertical, so a Fibonacci-ribbed Ferocactus winds slowly round the stem, left-handed in about half the plants and right-handed in the rest; other stems stand straight."
+    },
+    "appearance.bodies.stem.areoles.apex_wool": {
+      "evidence": "SourceInferred",
+      "source": "cactus-primer-gibson-nobel",
+      "note": "Gibson and Nobel, The Cactus Primer (1986), ch. 5: the young areoles' trichomes crowd at the apex into a woolly mat, in barrel cacti more than 4 cm thick. 1.5 cm here, less than that, because in photographs this species' apex shows mostly spines over its wool (thickness by eye)."
     },
     "appearance": {
       "evidence": "Authored",
