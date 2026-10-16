@@ -113,7 +113,7 @@ fn motion_packages_hold_bones_branches_and_bindings() {
 /// seven seconds of the thread's own CPU time (two until pinidae 9's full
 /// crowns: Sitka spruce and western hemlock carry about 230,000 segments;
 /// three until conifers shaded with their needles' own area, generator
-/// revision 79: Sitka spruce, western hemlock and Douglas-fir now carry
+/// revision 82: Sitka spruce, western hemlock and Douglas-fir now carry
 /// 320,000 to 350,000 segments, and the needle-leaved conifers take 4.0 to
 /// 5.5 s).
 /// Wall-clock time counted every other species' thread and the CI VM's

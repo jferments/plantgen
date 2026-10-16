@@ -472,7 +472,33 @@ pub mod venation;
 /// palm and every crownshaft palm build again (until 77 a year's sheaths
 /// stood within no structure, which the organ check refuses for a piece;
 /// 77 is colour characters read as sRGB, #152).
-/// 79: the conifers' pipe model takes its exponent from a parameter
+/// 79: ferns from the Fern Grower's Manual: a frond arches as it unrolls
+/// (`arch`, from `leaf_posture`), its fiddlehead a tight coil; fronds
+/// stand on their own feet round a compact crown at the ground, among old
+/// stipe bases, with no stalk under them; a rhizome's habit sets its
+/// crowns and how far apart they stand, a blade's outline where its
+/// longest pinnae are, and pinnae are as many, as long and as broad as the
+/// blade fits, lanceolate; evergreen fronds outlast a winter; the curated
+/// ferns arch, and the sword fern's pinnae and angles are the fern rules'
+/// (78 is crownshaft sheaths in their fronds, #150).
+/// 80: shape and fruit words draw what they mean: a cordate or reniform
+/// blade hangs two basal lobes back beside its petiole (`Simple.sinus`),
+/// and cordate, reniform and deltate blades take their outlines and
+/// widths; a palmately veined blade fans two main veins a side from its
+/// base with the midrib (`Simple.fan`, from `leaf_venation`); achenes,
+/// cypselas, grains, nuts, schizocarps, aggregate and multiple fruits
+/// take fruit kinds, and a fruit is as long as `fruit_size_m` (79 is
+/// ferns from the Fern Grower's Manual, #153).
+/// 81: cycads, palms and tree ferns told apart (palm program revision 9):
+/// cycad and tree fern trunks thicken toward the base with age, cycads
+/// flush their leaves in whorls inside rings of cataphylls, leaves unfold
+/// by group (palm spears pleated, Cycas leaflets coiled, fern croziers
+/// tight), palm leaflets fold induplicate or reduplicate by subfamily,
+/// plumose palms hold their leaflets in groups, a leaf's petiole and
+/// rachis take the leaf axis's colour, a palm trunk may be ringed by its
+/// leaf scars, and a crownshaft is a closed column (80 is shape and
+/// fruit words, #155).
+/// 82: the conifers' pipe model takes its exponent from a parameter
 /// (`pinidae` revision 11, `pipe_exponent`, 2.4 as before), and ponderosa
 /// pine's stout shoots (0.7 to 2 cm, Farjon 2017) grow on stout limbs that
 /// hold their line at 100 years, where thin limbs under its heavy needle
@@ -486,6 +512,6 @@ pub mod venation;
 /// along their limbs, a pine's card is one brush of needles at their
 /// stated length (Pinus rules), and the module limit is 4,000,000; a
 /// conifer's apex lives on shoots down to 5 mm, not 25, so a narrow,
-/// slow crown such as subalpine fir's stays dense along its limbs (78 is
-/// crownshaft sheaths, #150).
-pub const GENERATOR_REVISION: u32 = 79;
+/// slow crown such as subalpine fir's stays dense along its limbs (81 is
+/// cycads, palms and tree ferns, #154).
+pub const GENERATOR_REVISION: u32 = 82;

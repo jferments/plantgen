@@ -191,7 +191,7 @@ Usage:
       neighbours' crowns as envelopes; each keyframe then says how much
       of it stands in the place's solids and crowns.
   plantc render <species|spec.json> --out FILE.png [--env ENV] [--seed N]
-                [--age N] [--view side|three-quarter|top] [--lod 0-3]
+                [--age N] [--view side|three-quarter|oblique|top] [--lod 0-3]
                 [--size PIXELS] [--quality draft|standard]
                 [--focus X,Y,Z [--span METRES]] [--parts on]
                 [--conditions FILE|JSON [--from-age N]]
@@ -235,7 +235,7 @@ Usage:
       the organ alone and solid (LOD0) as it is that day, at one scale
       per row; each day's stage printed.
   plantc lineup <species|spec.json>... --out FILE.png [--age N] [--seeds N]
-                [--view side|three-quarter|top] [--size PIXELS]
+                [--view side|three-quarter|oblique|top] [--size PIXELS]
       Render a row per species of its first N seeds (default 4) at one
       age (default its oldest keyframe), each row at one scale.
   plantc mechanics <species|spec.json> [--env ENV] [--seed N] [--years N]

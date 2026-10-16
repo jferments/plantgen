@@ -1,0 +1,292 @@
+{
+  "schema": 1,
+  "id": "persea-americana",
+  "taxon": {
+    "scientific_name": "Persea americana",
+    "common_name": "avocado",
+    "usda_symbol": "PEAM3",
+    "family": "Lauraceae",
+    "genus": "Persea",
+    "plant_name_id": 2529835
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "params": {
+      "crown_radius": 5.5,
+      "crown_base": 1.5,
+      "crown_rate": 0.035,
+      "space_density": 4,
+      "internode": 0.22,
+      "max_shoot": 3,
+      "pipe_rings": 4.33e-06,
+      "pipe_organ": 0.0049,
+      "pipe_tip": 0.0024,
+      "branch_angle": 50,
+      "apical_young": 0.65,
+      "apical": 0.52,
+      "spur_pairs": 2,
+      "leaf_angle": 50,
+      "lean": 6,
+      "wiggle": 8,
+      "fork_height": 1.5,
+      "fork_stems": 3,
+      "fork_angle": 30,
+      "extinction": 0.45,
+      "path_half": 10,
+      "bloom_size": 0.11,
+      "spur_leaf": 0.21
+    }
+  },
+  "growth": {
+    "years": 30,
+    "step": 1,
+    "keyframes": [
+      4,
+      12,
+      30
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.38,
+      0.38,
+      0.32
+    ],
+    "foliage": [
+      0.06,
+      0.15,
+      0.05
+    ],
+    "foliage_shade": [
+      0.02,
+      0.05,
+      0.016
+    ],
+    "variation": 0.15,
+    "organs": {
+      "bloom": {
+        "inflorescence": {
+          "kind": "panicle",
+          "branches": 8,
+          "flowers": 5,
+          "size": 0.4,
+          "spread": 45,
+          "taper": 0.5,
+          "branch": {
+            "size": 0.13,
+            "spread": 40
+          }
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 11,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 10,
+      "max": 20
+    },
+    "leaf_length_m": {
+      "min": 0.08,
+      "max": 0.2
+    },
+    "leaf_width_m": {
+      "min": 0.05,
+      "max": 0.12
+    },
+    "petiole_length_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "leaf_shape": "elliptic",
+    "sexual_system": "hermaphrodite",
+    "inflorescence": "panicle",
+    "inflorescence_length_m": {
+      "min": 0.08,
+      "max": 0.14
+    },
+    "flower_size_m": {
+      "min": 0.005,
+      "max": 0.006
+    },
+    "flower_colour": [
+      205,
+      210,
+      120
+    ],
+    "stamens": 9,
+    "fruit_type": "berry",
+    "fruit_size_m": {
+      "min": 0.08,
+      "max": 0.18
+    },
+    "fruit_colour_ripe": [
+      65,
+      95,
+      40
+    ],
+    "flowering_months": [
+      2,
+      3
+    ],
+    "fruiting_months": [
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Persea americana (read on eFloras, 2026-10-16): evergreen trees about 10 m tall (cultivated in China); the model estimate (species-facts-2026-10-15, confidence high) gives 20 m for grown trees, the range's top."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Persea americana (read on eFloras, 2026-10-16): blade 8-20 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Persea americana (read on eFloras, 2026-10-16): blade 5-12 cm wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Persea americana (read on eFloras, 2026-10-16): petiole 2-5 cm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Persea americana (read on eFloras, 2026-10-16): blade narrowly elliptic, elliptic, ovate or obovate; Simpson (p. 197) shows it elliptic."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 77, 78, Persea americana: its flower diagram holds stamens and a carpel together."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Persea americana (read on eFloras, 2026-10-16): cymose panicles 8-14 cm, mostly on the lower part of the shoot; Dendrology (p. 446) and Simpson (p. 197) call them panicles."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Persea americana (read on eFloras, 2026-10-16): panicles 8-14 cm."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Persea americana (read on eFloras, 2026-10-16): flowers 5-6 mm."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Persea americana (read on eFloras, 2026-10-16): flowers yellow-greenish. The colour is our reading of the words."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "floral-diagrams",
+      "note": "Ronse De Craene, Floral Diagrams (2010) p. 77, 78, Persea americana: nine fertile stamens in three whorls of three, and three staminodes inside them."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 446, Persea americana: fruit a berry."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Persea americana (read on eFloras, 2026-10-16): fruit large, usually pear-shaped, 8-18 cm."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 197, Persea americana: ripe fruit dark green, pebbled. The colour is our reading of the words."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Persea americana (read on eFloras, 2026-10-16): flowers February-March (in cultivation in southern China)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Persea americana (read on eFloras, 2026-10-16): fruits August-September (in cultivation in southern China)."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Pacific madrone's crown values, changed by hand: a short trunk forking low into a broad, dense crown, its panicles drawn 11 cm long (Flora of China: 8-14 cm), path_half fitted so it reaches its height. Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "11 m at 30 years in the open, near Flora of China's 'about 10 m'. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after Flora of China: grey-green, fissured bark; leathery green leaves, paler below. Its panicles are laid out by hand as eight branches, each about 0.4 of the panicle, of five flowers about 0.13 of a branch, so the flowers are drawn 5-6 mm across (Flora of China: flowers 5-6 mm) in panicles 8-14 cm long."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the Magnoliidae specs (2026-10-16): sizes from Flora of China, flowers from Floral Diagrams and Dendrology, drawing values from Pacific madrone's."
+  }
+}
