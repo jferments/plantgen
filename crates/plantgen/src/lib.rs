@@ -458,4 +458,10 @@ pub mod venation;
 /// revision 8), split four ways so it nests no deeper; both Ferocactus
 /// keep last year's fruit, and F. cylindraceus takes Anderson's rib,
 /// radial and central counts (74 is cactus barrels, #138).
-pub const GENERATOR_REVISION: u32 = 75;
+/// 76: a strap's pieces (a grass blade's, a basal leaf's) meet edge to
+/// edge: each joint's edge lies across both midribs where a piece's
+/// twist of up to 15 degrees reaches it, and the pieces draw in the light
+/// and colour of the strap's first, so camas and other strap leaves no
+/// longer step in width and shade where their pieces join (75 is cactus
+/// fruit rings, #147).
+pub const GENERATOR_REVISION: u32 = 76;
