@@ -42,7 +42,7 @@
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
-      "note": "Watson and Dallwitz's DELTA account of the trillium group (Trilliaceae), as search results quote it (the page itself was not read): ovary superior, usually of 3 carpels (3 to 6, rarely 10)."
+      "note": "Watson and Dallwitz's description of the trillium group (Trilliaceae) (the DELTA distribution's own page for it, read 2026-10-15): flowers 3-5(-8)-merous; gynoecium 3-6(-10)-carpelled, as many as the perianth parts, superior. Stated 3, the low end of that range and Trillium's number."
     },
     "traits.perianth": {
       "evidence": "SourceInferred",

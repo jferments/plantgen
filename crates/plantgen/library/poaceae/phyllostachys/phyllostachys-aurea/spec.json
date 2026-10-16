@@ -150,13 +150,13 @@
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
-      "source": "kew-grassbase",
-      "note": "GrassBase's entry (as search results quote it; the page itself was not read): leaf-blades lanceolate, 5-8 cm long, 5-11 mm wide (AusGrass, also as search results quote it, gives 5-15 cm by 5-22 mm)."
+      "source": "usfs-feis",
+      "note": "FEIS's golden bamboo review (Gucker 2009, read 2026-10-15): leaf blades narrow, grass-like, generally 2 to 6 inches (5-15 cm) long and up to 0.8 inch (2 cm) wide, up to 6 on a branch, often in fan-like clusters. It replaces GrassBase's 5-8 cm, seen only as quoted in search results."
     },
     "traits.leaf_width_m": {
       "evidence": "SourceInferred",
-      "source": "kew-grassbase",
-      "note": "GrassBase's entry (as search results quote it; the page itself was not read): leaf-blades 5-11 mm wide."
+      "source": "usfs-feis",
+      "note": "FEIS's golden bamboo review (Gucker 2009, read 2026-10-15): blades up to 0.8 inch (2 cm) wide. The review gives no lower bound; 5 mm is GrassBase's, as search results quote it (the page itself was not read)."
     },
     "traits.spikelet_length_m": {
       "evidence": "SourceInferred",
@@ -188,8 +188,8 @@
     "culm_length_m": {"min": 3, "max": 5, "high": 8},
     "stem_diameter_max_m": 0.03,
     "rhizome_habit": "long_creeping",
-    "leaf_length_m": {"min": 0.05, "max": 0.08},
-    "leaf_width_m": {"min": 0.005, "max": 0.011},
+    "leaf_length_m": {"min": 0.05, "max": 0.15},
+    "leaf_width_m": {"min": 0.005, "max": 0.02},
     "spikelet_length_m": {"min": 0.018, "max": 0.025},
     "florets_per_spikelet": 2,
     "lemma_length_m": 0.015
