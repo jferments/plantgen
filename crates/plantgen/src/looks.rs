@@ -2177,7 +2177,7 @@ impl Shape {
                 count("leaves", s.leaves, 2, 15)?;
                 check("angle", s.angle, 20.0, 80.0)?;
                 check("stalk", s.stalk, 0.0, 0.4)?;
-                check("width", s.width, 0.03, 1.2)?;
+                check("width", s.width, 0.03, 1.5)?;
                 let default = Sprig::default();
                 outline(
                     self.name(),

@@ -3296,6 +3296,57 @@ mod tests {
     }
 
     #[test]
+    fn the_broadest_blade_a_width_rule_sets_is_one_its_card_draws() {
+        use crate::looks::{Compound, Simple, Sprig};
+        let kingdom: Value =
+            serde_json::from_str(include_str!("../library/_ranks/kingdom/plantae.json")).unwrap();
+        // A formula's bounds: `clamp(ratio, low, high)`.
+        let highest = |rule: &Value| -> Vec<f64> {
+            let text = rule.to_string();
+            text.split("clamp(")
+                .skip(1)
+                .map(|clamp| {
+                    let inner = &clamp[..clamp.find(')').unwrap()];
+                    inner.rsplit(',').next().unwrap().trim().parse().unwrap()
+                })
+                .collect()
+        };
+        for organ in ["leaf", "basal"] {
+            let rule = &kingdom["rules"][format!("appearance.organs.{organ}.shape.width")];
+            let highs = highest(rule);
+            assert!(!highs.is_empty(), "{organ}");
+            for width in highs {
+                // A wild ginger's kidney-shaped blade, 1.83 times as broad
+                // as long, draws as broad as the card allows.
+                assert!(width >= 1.5, "{organ} {width}");
+                Shape::Simple(Simple {
+                    width,
+                    ..Simple::default()
+                })
+                .validate()
+                .unwrap();
+                Shape::Sprig(Sprig {
+                    width,
+                    ..Sprig::default()
+                })
+                .validate()
+                .unwrap();
+            }
+        }
+        for organ in ["leaf", "basal"] {
+            let rule = &kingdom["rules"][format!("appearance.organs.{organ}.shape.leaflet_width")];
+            for leaflet_width in highest(rule) {
+                Shape::Compound(Compound {
+                    leaflet_width,
+                    ..Compound::default()
+                })
+                .validate()
+                .unwrap();
+            }
+        }
+    }
+
+    #[test]
     fn each_outline_the_kingdom_draws_reads_as_its_shape_word() {
         use crate::looks::Simple;
         let kingdom: Value =
