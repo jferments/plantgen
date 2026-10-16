@@ -516,6 +516,7 @@ impl Surface<'_> {
 
     /// Depth-test, cut out and shade one pixel of the triangle with vertex
     /// indices `corners` at barycentric weights `k`.
+    #[allow(clippy::too_many_lines)]
     fn fragment(
         &self,
         target: &mut Target,
@@ -551,6 +552,23 @@ impl Surface<'_> {
             if texel.coverage < 0.5 {
                 return;
             }
+            // Up close the edge's hairs are strands of their own.
+            if texel.hair >= 0.999
+                && let Some(hairs) = self
+                    .templates
+                    .templates
+                    .get(template)
+                    .and_then(|drawn| drawn.hairs.as_ref())
+            {
+                let footprint = if self.perspective {
+                    self.pixel * depth
+                } else {
+                    self.pixel
+                };
+                if !crate::hairs::fringe_drawn(hairs, footprint) {
+                    return;
+                }
+            }
             albedo = self.templates.albedo(template, albedo, texel);
             hair = Some((template, texel.hair));
         }
@@ -579,16 +597,7 @@ impl Surface<'_> {
             let lit = self
                 .shadow
                 .map_or(1.0, |map| map.visibility(world, lighting.sun, lighting.sun));
-            let light = crate::hairs::strand_light(
-                albedo,
-                normal,
-                view,
-                lighting.sun,
-                lit,
-                lighting.sun_color,
-                lighting.sky,
-                lighting.ground,
-            );
+            let light = crate::hairs::strand_light(albedo, normal, view, lit, lighting);
             #[allow(clippy::cast_possible_truncation)]
             {
                 target.color[at] = [light[0] as f32, light[1] as f32, light[2] as f32, 1.0];
@@ -626,16 +635,7 @@ impl Surface<'_> {
                 .get(template)
                 .and_then(|drawn| drawn.hairs.as_ref())
         {
-            let sheen = crate::hairs::sheen(
-                hairs,
-                f64::from(weight),
-                normal,
-                view,
-                lighting.sun,
-                lit,
-                lighting.sun_color,
-                lighting.sky,
-            );
+            let sheen = crate::hairs::sheen(hairs, f64::from(weight), normal, view, lit, lighting);
             for channel in 0..3 {
                 #[allow(clippy::cast_possible_truncation)]
                 {

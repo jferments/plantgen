@@ -361,7 +361,10 @@ impl Templates {
             1.0
         };
         let hair = f64::from(texel.hair);
-        let hairs = template.hairs.as_ref().map_or([0.0; 3], |hairs| hairs.colour);
+        let hairs = template
+            .hairs
+            .as_ref()
+            .map_or([0.0; 3], |hairs| hairs.colour);
         std::array::from_fn(|channel| {
             let accent = f64::from(template.accent_colour[channel]) * darkening;
             let face = (colour[channel] + (accent - colour[channel]) * weight) * brightness;
