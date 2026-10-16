@@ -2639,7 +2639,7 @@ mod tests {
             pinidae.home.as_deref(),
             Some("_ranks/subclass/pinidae.json")
         );
-        assert_eq!(pinidae.species.len(), 4);
+        assert_eq!(pinidae.species.len(), 6);
 
         let refused = |files: &[(&str, &str)], expected: &str| {
             let folder = Folder::new("taxon-programs-refused");
