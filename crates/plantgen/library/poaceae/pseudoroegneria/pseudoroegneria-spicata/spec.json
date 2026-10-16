@@ -1,0 +1,305 @@
+{
+  "schema": 1,
+  "id": "pseudoroegneria-spicata",
+  "taxon": {
+    "scientific_name": "Pseudoroegneria spicata",
+    "common_name": "bluebunch wheatgrass",
+    "usda_symbol": "PSSP6",
+    "family": "Poaceae",
+    "genus": "Pseudoroegneria",
+    "plant_name_id": 438370
+  },
+  "growth_form": "graminoid",
+  "generator": {
+    "params": {
+      "tillers": 50,
+      "tiller_rate": 0.5,
+      "tussock_radius": 0.09,
+      "tiller_lean": 10,
+      "leaves": 3,
+      "leaf_length": 0.2,
+      "leaf_spread": 0.3,
+      "leaf_angle": 20,
+      "arch": 10,
+      "pieces": 6,
+      "flowering": 0.4,
+      "culm_radius": 0.001,
+      "culm_leaves": 2,
+      "culm_lean": 6,
+      "panicle_nod": 25
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.3,
+      0.3,
+      0.2
+    ],
+    "foliage": [
+      0.1,
+      0.16,
+      0.12
+    ],
+    "foliage_shade": [
+      0.025,
+      0.045,
+      0.028
+    ],
+    "variation": 0.2,
+    "organs": {
+      "blade": {
+        "shape": {
+          "template": "blade",
+          "taper": 0
+        }
+      },
+      "blade_tip": {
+        "shape": {
+          "template": "blade",
+          "taper": 1
+        }
+      },
+      "thatch": {
+        "shape": {
+          "template": "blade",
+          "taper": 0
+        },
+        "colour": [
+          0.38,
+          0.31,
+          0.18
+        ],
+        "shade": [
+          0.12,
+          0.1,
+          0.05
+        ]
+      },
+      "panicle": {
+        "shape": {
+          "template": "spikelet"
+        },
+        "inflorescence": {
+          "flowers": 14,
+          "per_node": 1,
+          "divergence": 180,
+          "size": 0.1,
+          "spread": 15,
+          "peduncle": 0.05,
+          "stalk": [
+            0.33,
+            0.4,
+            0.28
+          ]
+        },
+        "colour": [
+          0.35,
+          0.42,
+          0.3
+        ],
+        "accent": [
+          0.38,
+          0.42,
+          0.36
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.7,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "culm_length_m": {
+      "min": 0.3,
+      "max": 1.0
+    },
+    "life_span": "perennial",
+    "inflorescence": "spike",
+    "awns": true,
+    "rhizome_habit": "none",
+    "clonal": false,
+    "leaf_length_m": {
+      "min": 0.1,
+      "max": 0.3
+    },
+    "leaf_width_m": {
+      "min": 0.001,
+      "max": 0.002,
+      "high": 0.004
+    },
+    "inflorescence_length_m": {
+      "min": 0.08,
+      "max": 0.15
+    },
+    "flowering_months": [
+      5,
+      6,
+      7
+    ],
+    "awn_length_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "awn_insertion": "apical",
+    "florets_per_spikelet": {
+      "min": 6,
+      "max": 8
+    },
+    "spikelet_length_m": {
+      "min": 0.012,
+      "max": 0.02
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's bluebunch wheatgrass review (Zlatnik 1999, read 2026-10-15): \"a native, cool-season, perennial grass with densely tufted culms, 12-30 in. (30-100 cm) tall\"."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's bluebunch wheatgrass review (Zlatnik 1999, read 2026-10-15): \"perennial grass\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as the FEIS review read names the awns but not the spike; wheatgrass spikelets sit singly on the rachis."
+    },
+    "traits.awns": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's bluebunch wheatgrass review (Zlatnik 1999, read 2026-10-15): the typical subspecies has \"divergent awns\"."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's bluebunch wheatgrass review (Zlatnik 1999, read 2026-10-15): densely tufted; it only \"occasionally produces short rhizomes in more mesic environments\"."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's bluebunch wheatgrass review (Zlatnik 1999, read 2026-10-15): it \"regenerates by tillering\" and from seed, a bunchgrass."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935) p. 240, no. 18, Agropyron spicatum (bluebunch wheatgrass): \"blades flat to loosely involute, 1 to 2 mm, sometimes to 4 mm wide\"."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as the FEIS review read gives no months."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Blue wildrye's values, changed by hand for bluebunch wheatgrass: a dense tuft of narrower blades and slender spikes of single spikelets, flowering in only some years (FEIS, Zlatnik 1999: \"The plants do not flower and produce seeds every year\"). The culm height comes from the stated culm length by the rule. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "70 cm at 4 years, within FEIS's 30-100 cm culms (Zlatnik 1999). Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye: blue-green blades; pale spikes."
+    },
+    "traits.awn_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935) p. 240, no. 18, Agropyron spicatum (bluebunch wheatgrass): \"lemmas about 1 cm long, the awn strongly divergent, 1 to 2 cm long\"."
+    },
+    "traits.awn_insertion": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935) p. 240, no. 18, Agropyron spicatum (bluebunch wheatgrass): the lemma ends in its awn (\"lemmas about 1 cm long, the awn strongly divergent\")."
+    },
+    "traits.florets_per_spikelet": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935) p. 240, no. 18, Agropyron spicatum (bluebunch wheatgrass): spikelets \"mostly 6- to 8-flowered\"."
+    },
+    "traits.spikelet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "hitchcock-1935",
+      "note": "Hitchcock (1935) p. 240, no. 18, Agropyron spicatum: the rachis internodes \"1 to 2 cm long, or the lowermost 2.5 cm\", the spikelets \"not as long (excluding the awns) as the internodes or slightly longer\", read as 1.2 to 2 cm; Abrams (vol. 1, 1923, Agropyron no. 12) gives lemmas 12-15 mm."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion (2026-10-15): sizes from FEIS and model estimates, drawing values from blue wildrye's."
+  }
+}

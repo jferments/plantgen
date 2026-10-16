@@ -37,7 +37,8 @@
       "solitary": "often",
       "spike": "often"
     },
-    "perennation": {"rhizome": "often", "corm": "often", "bulb": "rarely"}
+    "perennation": {"rhizome": "often", "corm": "often", "bulb": "rarely"},
+    "leaf_faces": {"unifacial": "usually", "bifacial": "sometimes"}
   },
   "forms": {
     "forb": {
@@ -74,6 +75,11 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-monocots",
       "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 386 Iridaceae: leaves mostly narrowly linear, flattened sideways and sheathing (equitant); fruit a capsule opening by valves along its cells."
+    },
+    "traits.leaf_faces": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz's DELTA description of Iridaceae: leaves usually distichous, sheathing, with blades borne edgewise to the stem (commonly) or normally orientated, Iris showing both and intermediates; lamina linear or lanceolate, often ensiform. Kaplan (2022, pp. 374-385) names Iris, Gladiolus, Moraea and Sisyrinchium among the sword-leaved, unifacial genera. Usually unifacial, sometimes bifacial."
     },
     "traits.leaf_shape": {
       "evidence": "SourceInferred",

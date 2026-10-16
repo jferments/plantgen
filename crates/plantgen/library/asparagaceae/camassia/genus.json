@@ -2,6 +2,11 @@
   "schema": 1,
   "rank": "genus",
   "name": "Camassia",
+  "traits": {
+    "rosette": "basal",
+    "leaf_shape": "linear",
+    "cauline_leaves": "none"
+  },
   "forms": {
     "forb": {
       "generator": {
@@ -14,6 +19,23 @@
           "note": "The lineage's own program (growth plan G2.3a), on the herb base: it gives the values its species leave unset, which the herb program gave as defaults until then."
         }
       }
+    }
+  },
+  "evidence": {
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz's DELTA family descriptions, Hyacinthaceae, in which they place Camassia: perennial, bulbous, with a basal aggregation of leaves; leaves sessile, sheathing, the lamina linear or lanceolate, parallel-veined; inflorescences scapiflorous, terminal racemes. Linear for Camassia, whose leaves are long and grass-like, is the model's reading."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz's DELTA family descriptions, Hyacinthaceae, in which they place Camassia: perennial, bulbous, with a basal aggregation of leaves; leaves sessile, sheathing, the lamina linear or lanceolate, parallel-veined; inflorescences scapiflorous, terminal racemes. Linear for Camassia, whose leaves are long and grass-like, is the model's reading."
+    },
+    "traits.cauline_leaves": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "Watson and Dallwitz's DELTA family descriptions, Hyacinthaceae, in which they place Camassia: perennial, bulbous, with a basal aggregation of leaves; leaves sessile, sheathing, the lamina linear or lanceolate, parallel-veined; inflorescences scapiflorous, terminal racemes. Linear for Camassia, whose leaves are long and grass-like, is the model's reading."
     }
   }
 }

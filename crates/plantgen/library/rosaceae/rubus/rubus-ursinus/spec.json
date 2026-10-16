@@ -1,0 +1,303 @@
+{
+  "schema": 1,
+  "id": "rubus-ursinus",
+  "taxon": {
+    "scientific_name": "Rubus ursinus",
+    "common_name": "trailing blackberry",
+    "usda_symbol": "RUUR",
+    "family": "Rosaceae",
+    "genus": "Rubus",
+    "plant_name_id": 2989958
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "crown_radius": 1.8,
+      "crown_base": 0,
+      "crown_rate": 0.22,
+      "space_density": 80,
+      "internode": 0.12,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 85,
+      "apical_young": 0.35,
+      "apical": 0.3,
+      "apical_years": 4,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.8,
+      "wiggle": 12,
+      "fork_height": 0.03,
+      "fork_stems": 12,
+      "fork_angle": 80,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 1.275,
+      "space_kill": 0.315,
+      "leaf_years": 2,
+      "leaf_size": 0.14,
+      "spur_leaf": 0.12,
+      "spur_pairs": 1,
+      "leaf_angle": 55,
+      "blooms": 2,
+      "bloom_size": 0.05,
+      "bloom_angle": 80,
+      "path_half": 0.45,
+      "thorns": 4,
+      "thorn_length": 0.003,
+      "thorn_angle": 60,
+      "lean": 40
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [
+      3,
+      6,
+      12
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.3,
+      0.36,
+      0.22
+    ],
+    "foliage": [
+      0.06,
+      0.14,
+      0.035
+    ],
+    "foliage_shade": [
+      0.02,
+      0.045,
+      0.01
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "compound",
+          "teeth": 9,
+          "petiole": 0.3,
+          "spread": 200,
+          "lowest": 0.7,
+          "petiolule": 0.08
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "kind": "drupelets",
+          "aspect": 1.25,
+          "unripe": 0.8
+        },
+        "inflorescence": {
+          "kind": "corymb",
+          "flowers": 6,
+          "size": 0.25,
+          "spread": 45
+        },
+        "colour": [
+          0.06,
+          0.04,
+          0.06
+        ],
+        "accent": [
+          0.6,
+          0.08,
+          0.08
+        ],
+        "season": {
+          "ripening": 30,
+          "flower_look": {
+            "shape": {
+              "template": "flower",
+              "petal_width": 1.1,
+              "point": 0.0,
+              "notch": 0.0,
+              "centre": 0.3,
+              "stamen_length": 0.3
+            },
+            "colour": [
+              0.97,
+              0.97,
+              0.93
+            ],
+            "accent": [
+              0.88,
+              0.85,
+              0.6
+            ],
+            "size": 1.4,
+            "form": {
+              "flower": {
+                "cup": 15,
+                "curl": 15
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.45
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "leaf_habit": "evergreen",
+    "leaf_arrangement": "alternate",
+    "leaf_division": "compound",
+    "inflorescence": "corymb",
+    "units_per_inflorescence": {
+      "min": 2,
+      "max": 15
+    },
+    "fruit_type": "aggregate",
+    "fruit_size_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "height_max_m": {
+      "min": 0.3,
+      "max": 1.0
+    },
+    "flowering_months": [
+      4,
+      5,
+      6
+    ],
+    "fruiting_months": [
+      6,
+      7,
+      8
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's California blackberry review (Tirmenstein 1989, read 2026-10-15): \"a low-growing ... native evergreen shrub\"."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's California blackberry review (Tirmenstein 1989, read 2026-10-15): \"The somewhat prickly, deeply-lobed, alternate leaves\"."
+    },
+    "traits.leaf_division": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), FEIS (Tirmenstein 1989) calls the leaves deeply lobed and palmate; they are leaves of three leaflets."
+    },
+    "traits.inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's California blackberry review (Tirmenstein 1989, read 2026-10-15): \"Perfect flowers ... develop in clusters of 2 to 15 near the ends of leafy branches\"."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's California blackberry review (Tirmenstein 1989, read 2026-10-15): \"Aggregates of druplets, commonly referred to as 'berries'\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's California blackberry review (Tirmenstein 1989, read 2026-10-15): fruit \"oblong or conical, somewhat bristly, and up to 0.8 inches (2 cm) in length\"; the 1 cm least is the model estimate's."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), FEIS gives only the trailing stems' 5-6 m length (Tirmenstein 1989); the mound's height is the model's."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's California blackberry review (Tirmenstein 1989, read 2026-10-15): its phenology table: flowering April-June, fruit ripening June-August."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's California blackberry review (Tirmenstein 1989, read 2026-10-15): its phenology table: fruit ripening June-August."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Himalayan blackberry's values, changed by hand for trailing blackberry: a low mound of slender, wide-angled, drooping canes that trail along the ground (FEIS, Tirmenstein 1989: \"low-growing ... or climbing\", stems to 5-6 m long), fine prickles, three-parted leaves and small clusters of white flowers ripening to oblong black fruit. Weak apical dominance, wide-angled drooping canes and a short path_half make a low mound under 1 m, the species-facts estimate's greatest height. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A mound 60 cm high at 12 years in the open, by eye from photographs of trailing stands. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye: green canes turning brown (FEIS: \"greenish when young but turn brown at maturity\"); leaves paler beneath; white flowers; shiny black oblong fruit."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion (2026-10-15): facts from FEIS and model estimates, drawing values from Himalayan blackberry's."
+  }
+}
