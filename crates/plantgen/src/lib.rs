@@ -520,4 +520,20 @@ pub mod venation;
 /// kingdom), where its own look draws none: Chloranthaceae's leaves, and
 /// rosette leaves that take the species' margin; a species' own teeth
 /// stand (83 is leaf tip, base and petal words, #161).
-pub const GENERATOR_REVISION: u32 = 84;
+/// 85: the conifers' pipe model takes its exponent from a parameter
+/// (`pinidae` revision 11, `pipe_exponent`, 2.4 as before), and ponderosa
+/// pine's stout shoots (0.7 to 2 cm, Farjon 2017) grow on stout limbs that
+/// hold their line at 100 years, where thin limbs under its heavy needle
+/// tufts hung as whips; a conifer with short shoots (`spur_years`, as
+/// in larches) leafs out again along its older wood each year, so a
+/// deciduous larch keeps its needle tufts along its branches; and a
+/// needle card shades with its needles' own area, not its painted lines,
+/// which drew each needle at least two texels wide and counted the
+/// crossing card's needles again, 2.2 to 4.6 times their area: conifers'
+/// crowns had starved to tufts at their limb tips and now carry foliage
+/// along their limbs, a pine's card is one brush of needles at their
+/// stated length (Pinus rules), and the module limit is 4,000,000; a
+/// conifer's apex lives on shoots down to 5 mm, not 25, so a narrow,
+/// slow crown such as subalpine fir's stays dense along its limbs (84 is
+/// leaf teeth, #157).
+pub const GENERATOR_REVISION: u32 = 85;

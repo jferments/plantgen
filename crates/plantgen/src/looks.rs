@@ -2158,7 +2158,14 @@ impl Shape {
         match self {
             Self::Needles(s) => {
                 count("twigs", s.twigs, 0, 12)?;
-                check("needle", s.needle, 0.01, 0.4)?;
+                // A shoot with no side twigs (a pine's tuft) has room across
+                // its card for longer needles.
+                check(
+                    "needle",
+                    s.needle,
+                    0.01,
+                    if s.twigs == 0 { 0.6 } else { 0.4 },
+                )?;
                 check("twig_angle", s.twig_angle, 10.0, 80.0)?;
                 if s.ranks != 0 && s.ranks != 2 {
                     return Err(format!("needles ranks must be 0 or 2, found {}", s.ranks));
