@@ -53,6 +53,116 @@ pub struct Texel {
     pub hair: f32,
     /// Whether the texel is a hair of the edge's fringe rather than face.
     pub fringe: bool,
+    /// Its rank in the look's variegation pattern, 0 to 1: a card paints
+    /// the texels ranked below its share of patches in their colour
+    /// ([`crate::looks::Variegation::weight`]). 1 for a look without one.
+    pub pattern: f32,
+}
+
+impl Texel {
+    /// A texel fully covered, of brightness 1, with `accent` weight and
+    /// no variegation.
+    #[must_use]
+    pub fn plain(accent: f32) -> Self {
+        Self {
+            coverage: 1.0,
+            brightness: 1.0,
+            accent,
+            hair: 0.0,
+            fringe: false,
+            pattern: 1.0,
+        }
+    }
+}
+
+/// Which face of a card a renderer sees, and the card's own number for
+/// its variegation.
+///
+/// A card's upper face is the one that looks more toward the sky: the
+/// side its normal (`heading × left`, the side its triangles wind
+/// counter-clockwise on) points to when that normal points up, the other
+/// side when it points down. Leaves hold their upper (adaxial) faces to
+/// the light; a card's normal points up or down as the program happened
+/// to turn it, so a renderer works out which side is upper per card
+/// ([`card_face`]).
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct Face {
+    /// The lower (abaxial) face, which paints the look's underside colour.
+    pub lower: bool,
+    /// The card's number from 0 to 1 ([`card_seed`]), which sets its
+    /// share of variegated patches.
+    pub seed: f32,
+}
+
+impl Face {
+    /// The upper face of a card of the middling share of patches: what a
+    /// picture of the template paints.
+    pub const UPPER: Self = Self {
+        lower: false,
+        seed: 0.5,
+    };
+}
+
+/// A card's own number from 0 to 1, from its base: the bits of its three
+/// coordinates mixed ([`mix64`]), its top 24 bits over 2^24. A renderer
+/// that reads a package's cards works it out the same way.
+#[must_use]
+pub fn card_seed(base: [f32; 3]) -> f32 {
+    let bits = u64::from(base[0].to_bits())
+        ^ (u64::from(base[1].to_bits()) << 21)
+        ^ (u64::from(base[2].to_bits()) << 42);
+    // The top 24 bits fit an f32 exactly.
+    #[allow(clippy::cast_precision_loss)]
+    let seed = (mix64(bits ^ 0x5645_5249_4547_4154) >> 40) as f32 / 16_777_216.0;
+    seed
+}
+
+/// Whether a card's normal (`heading × left`) points down, so that its
+/// front, the side the normal points to, is its lower face ([`Face`]).
+#[must_use]
+pub fn card_flipped(heading: [f32; 3], left: [f32; 3]) -> bool {
+    // The y of heading × left.
+    heading[2] * left[0] - heading[0] * left[2] < 0.0
+}
+
+/// A card's [`Face`] as packed into the fraction of its vertices' colour
+/// alpha by [`crate::mesh::PlantMesh::card_mesh`] (the template is the
+/// whole number): `CARD_FACE_SPAN` times 0.45 of the card's seed, plus
+/// a half when the card is flipped ([`card_flipped`]), so rounding the
+/// alpha still gives the template.
+#[must_use]
+pub fn pack_face(template: u8, seed: f32, flipped: bool) -> f32 {
+    let flag = if flipped { 0.5 } else { 0.0 };
+    f32::from(template) + CARD_FACE_SPAN * (flag + 0.45 * seed.clamp(0.0, 1.0))
+}
+
+/// The card's template, its seed and whether it is flipped, from a vertex
+/// colour's alpha ([`pack_face`]).
+#[must_use]
+pub fn unpack_face(alpha: f32) -> (usize, f32, bool) {
+    let template = alpha.round();
+    let packed = ((alpha - template) / CARD_FACE_SPAN).clamp(0.0, 1.0);
+    // A gap of 0.05 between the halves keeps the flag clear of rounding.
+    let flipped = packed >= 0.475;
+    let seed = ((packed - if flipped { 0.5 } else { 0.0 }) / 0.45).clamp(0.0, 1.0);
+    // The template is a small whole number.
+    #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+    (template.max(0.0) as usize, seed, flipped)
+}
+
+/// The share of a vertex colour's alpha above its template that holds
+/// its card's face ([`pack_face`]).
+pub const CARD_FACE_SPAN: f32 = 0.4;
+
+/// The face of a card whose `alpha` packs its face ([`pack_face`]) that a
+/// renderer sees: the side its normal points to (`front`) or the other.
+#[must_use]
+pub fn card_face(alpha: f32, front: bool) -> Face {
+    let (_, seed, flipped) = unpack_face(alpha);
+    Face {
+        lower: front == flipped,
+        seed,
+    }
 }
 
 /// One organ type's template.
@@ -68,6 +178,10 @@ pub struct Template {
     /// The look's colour in full light and its accent colour, linear RGB.
     pub colour: [f32; 3],
     pub accent_colour: [f32; 3],
+    /// The look's lower face's colour, if it differs (linear RGB).
+    pub underside: Option<[f32; 3]>,
+    /// The look's variegation, whose ranks `pattern` holds.
+    pub variegation: Option<crate::looks::Variegation>,
     /// How cards of this template bend on the levels that keep a card per
     /// organ (`crate::bend`).
     pub bend: crate::bend::Bend,
@@ -79,6 +193,9 @@ pub struct Template {
     pub fringe: Vec<f32>,
     /// The hairs of its look, where it has any (`crate::hairs`).
     pub hairs: Option<crate::looks::Hairs>,
+    /// Each texel's rank in the variegation pattern ([`Texel::pattern`]);
+    /// empty without variegation.
+    pub pattern: Vec<f32>,
 }
 
 impl Template {
@@ -244,12 +361,15 @@ impl Templates {
                     aspect: drawn.aspect,
                     colour: drawn.colour,
                     accent_colour: body.areoles.felt,
+                    underside: None,
+                    variegation: None,
                     bend: crate::bend::Bend::FLAT,
                     coverage: drawn.coverage,
                     brightness: drawn.brightness,
                     accent: drawn.accent,
                     fringe: Vec::new(),
                     hairs: None,
+                    pattern: Vec::new(),
                 });
             }
         }
@@ -311,6 +431,12 @@ impl Templates {
                         }
                     }
                 }
+                let pattern = look
+                    .variegation
+                    .map(|variegation| {
+                        variegation_ranks(&variegation, &look.organ, &coverage, aspect)
+                    })
+                    .unwrap_or_default();
                 let painted = look.hairs.as_ref().map(|hairs| {
                     crate::hairs::paint(
                         TEMPLATE_SIZE,
@@ -330,12 +456,15 @@ impl Templates {
                     aspect,
                     colour: look.colour,
                     accent_colour: look.accent,
+                    underside: look.underside,
+                    variegation: look.variegation,
                     bend: look.bend,
                     coverage,
                     brightness,
                     accent,
                     fringe,
                     hairs: look.hairs.clone(),
+                    pattern,
                 }
             })
             .collect();
@@ -352,13 +481,7 @@ impl Templates {
     #[must_use]
     pub fn sample(&self, template: usize, u: f32, v: f32) -> Texel {
         let Some(template) = self.templates.get(template) else {
-            return Texel {
-                coverage: 1.0,
-                brightness: 1.0,
-                accent: 0.0,
-                hair: 0.0,
-                fringe: false,
-            };
+            return Texel::plain(0.0);
         };
         let size = self.size;
         let texel = |coordinate: f32| -> usize {
@@ -378,6 +501,7 @@ impl Templates {
             accent: template.accent[at],
             hair: template.hair(),
             fringe: template.fringe.get(at).is_some_and(|&added| added > 0.0),
+            pattern: template.pattern.get(at).copied().unwrap_or(1.0),
         }
     }
 
@@ -386,21 +510,42 @@ impl Templates {
     /// The accent colour is darkened as much as the card's colour is
     /// darker than the look's colour, so shaded flowers stay shaded. Its
     /// hairs then move it toward their colour, darkened alike, by the
-    /// texel's hair weight.
+    /// texel's hair weight. This is [`Self::paint`] of the upper face of a
+    /// middling card.
     #[must_use]
     pub fn albedo(&self, template: usize, colour: [f64; 3], texel: Texel) -> [f64; 3] {
+        self.paint(template, colour, texel, Face::UPPER)
+    }
+
+    /// Albedo of a card texel seen on `face`: the card's colour, or on
+    /// the lower face the look's underside colour darkened as the card's
+    /// colour is darker than the look's; blended toward the look's
+    /// variegated colour, darkened alike, by the texel's variegation
+    /// weight for the card's seed ([`crate::looks::Variegation::weight`]),
+    /// then toward its accent colour, darkened alike, by its accent
+    /// weight; times its brightness.
+    #[must_use]
+    pub fn paint(&self, template: usize, colour: [f64; 3], texel: Texel, face: Face) -> [f64; 3] {
         let brightness = f64::from(texel.brightness);
         let Some(template) = self.templates.get(template) else {
             return colour.map(|channel| channel * brightness);
         };
         let weight = f64::from(texel.accent);
-        let luminance = |c: [f64; 3]| 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
-        let look = luminance(template.colour.map(f64::from));
-        let darkening = if look > 1e-6 {
-            (luminance(colour) / look).clamp(0.0, 2.0)
-        } else {
-            1.0
-        };
+        let darkening = darkening(template, colour);
+        let mut base = colour;
+        if face.lower
+            && let Some(under) = template.underside
+        {
+            base = under.map(|channel| f64::from(channel) * darkening);
+        }
+        if let Some(variegation) = &template.variegation {
+            let share = variegation.share(f64::from(face.seed));
+            let patch = crate::looks::Variegation::weight(f64::from(texel.pattern), share);
+            for (channel, value) in base.iter_mut().enumerate() {
+                let painted = f64::from(variegation.colour[channel]) * darkening;
+                *value += (painted - *value) * patch;
+            }
+        }
         let hair = f64::from(texel.hair);
         let hairs = template
             .hairs
@@ -408,15 +553,16 @@ impl Templates {
             .map_or([0.0; 3], |hairs| hairs.colour);
         std::array::from_fn(|channel| {
             let accent = f64::from(template.accent_colour[channel]) * darkening;
-            let face = (colour[channel] + (accent - colour[channel]) * weight) * brightness;
+            let face = (base[channel] + (accent - base[channel]) * weight) * brightness;
             face + (f64::from(hairs[channel]) * darkening - face) * hair
         })
     }
 
     /// The templates side by side as an RGBA8 image, the package's organ
-    /// atlas: brightness / 2 in red, the accent weight in green, coverage
-    /// in alpha. Blue is 0. A template's hairs (`crate::hairs`) are the
-    /// same over its whole face, so they go with its layer, not its texels.
+    /// atlas: brightness / 2 in red, the accent weight in green, the
+    /// variegation rank in blue (255 for a look without variegation),
+    /// coverage in alpha. A template's hairs (`crate::hairs`) are the same
+    /// over its whole face, so they go with its layer, not its texels.
     /// Row 0 is the cards' base (`v` = 0).
     #[must_use]
     pub fn atlas_rgba(&self) -> (usize, usize, Vec<u8>) {
@@ -425,7 +571,7 @@ impl Templates {
             [
                 crate::raster::to_u8(template.brightness[at] * 0.5),
                 crate::raster::to_u8(template.accent[at]),
-                0,
+                crate::raster::to_u8(template.pattern.get(at).copied().unwrap_or(1.0)),
                 crate::raster::to_u8(template.coverage[at]),
             ]
         })
@@ -475,6 +621,7 @@ impl Templates {
                         accent: template.accent[at],
                         hair: template.hair(),
                         fringe: false,
+                        pattern: template.pattern.get(at).copied().unwrap_or(1.0),
                     };
                     let colour = self.albedo(index, template.colour.map(f64::from), texel);
                     let cover = texel.coverage.clamp(0.0, 1.0);
@@ -3193,6 +3340,147 @@ fn one_fruit(
     }
 }
 
+/// How much a card of `colour` darkens its template's other colours
+/// (accent, underside, variegation): its luminance over the look's,
+/// clamped to 0 to 2; 1 for a black look.
+#[must_use]
+pub fn darkening(template: &Template, colour: [f64; 3]) -> f64 {
+    let luminance = |c: [f64; 3]| 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+    let look = luminance(template.colour.map(f64::from));
+    if look > 1e-6 {
+        (luminance(colour) / look).clamp(0.0, 2.0)
+    } else {
+        1.0
+    }
+}
+
+/// Each texel's rank in `variegation`'s pattern on a template of
+/// `coverage` and `aspect`, 0 to 1 over the covered texels (1 where none
+/// is covered), so a card paints the share of its blade its ranks below
+/// its share fall on ([`crate::looks::Variegation::weight`]). Margins and
+/// centres rank by distance from the blade's edge, made a little uneven;
+/// stripes, bands, spots and mottles by value noise at the pattern's
+/// scale, seeded by the organ's name.
+fn variegation_ranks(
+    variegation: &crate::looks::Variegation,
+    organ: &str,
+    coverage: &[f32],
+    aspect: f64,
+) -> Vec<f32> {
+    use crate::looks::VariegationPattern as P;
+    let size = TEMPLATE_SIZE;
+    let seed = crate::rng::hash_str(organ) ^ 0x7661_7269_6567;
+    let scale = variegation.scale.max(0.005);
+    let covered = |x: isize, y: isize| {
+        let inside = (0..size.cast_signed()).contains(&x) && (0..size.cast_signed()).contains(&y);
+        inside && coverage[y.cast_unsigned() * size + x.cast_unsigned()] >= 0.5
+    };
+    // A texel's centre in card units.
+    let at = |x: usize, y: usize| {
+        (
+            ((to_f64(x) + 0.5) / to_f64(size) - 0.5) * aspect,
+            (to_f64(y) + 0.5) / to_f64(size),
+        )
+    };
+    let edge = matches!(variegation.pattern, P::Margin | P::Centre).then(|| {
+        // Distance from each covered texel to the nearest covered texel
+        // on the blade's edge, over the largest.
+        let mut rim = Vec::new();
+        for y in 0..size {
+            for x in 0..size {
+                let (xi, yi) = (x.cast_signed(), y.cast_signed());
+                if covered(xi, yi)
+                    && [(1, 0), (-1, 0), (0, 1), (0, -1)]
+                        .iter()
+                        .any(|&(dx, dy)| !covered(xi + dx, yi + dy))
+                {
+                    rim.push(at(x, y));
+                }
+            }
+        }
+        let mut distance = vec![0.0; size * size];
+        let mut deepest = 0.0_f64;
+        for y in 0..size {
+            for x in 0..size {
+                if coverage[y * size + x] <= 0.0 {
+                    continue;
+                }
+                let (px, py) = at(x, y);
+                let nearest = rim
+                    .iter()
+                    .map(|&(rx, ry)| (rx - px).powi(2) + (ry - py).powi(2))
+                    .fold(f64::INFINITY, f64::min)
+                    .sqrt();
+                let nearest = if nearest.is_finite() { nearest } else { 0.0 };
+                distance[y * size + x] = nearest;
+                deepest = deepest.max(nearest);
+            }
+        }
+        (distance, deepest.max(1e-9))
+    });
+    let mut values: Vec<(f64, usize)> = Vec::new();
+    for y in 0..size {
+        for x in 0..size {
+            let index = y * size + x;
+            if coverage[index] <= 0.0 {
+                continue;
+            }
+            let (px, py) = at(x, y);
+            let noise = |sx: f64, sy: f64, salt: u64| value_noise(px / sx, py / sy, seed ^ salt);
+            let value = match (&edge, variegation.pattern) {
+                (Some((distance, deepest)), P::Margin) => {
+                    distance[index] / deepest + 0.25 * (noise(scale, scale, 1) - 0.5)
+                }
+                (Some((distance, deepest)), _) => {
+                    1.0 - distance[index] / deepest + 0.25 * (noise(scale, scale, 1) - 0.5)
+                }
+                (None, P::Stripes) => noise(scale * aspect.min(1.0), scale * 12.0, 2),
+                (None, P::Bands) => noise(scale * 12.0, scale, 3),
+                (None, P::Spots) => noise(scale, scale, 4),
+                (None, _) => {
+                    0.55 * noise(scale, scale, 5)
+                        + 0.3 * noise(scale * 0.4, scale * 0.4, 6)
+                        + 0.15 * noise(scale * 0.15, scale * 0.15, 7)
+                }
+            };
+            values.push((value, index));
+        }
+    }
+    values.sort_by(|a, b| a.0.total_cmp(&b.0));
+    let mut ranks = vec![1.0_f32; size * size];
+    let last = to_f64(values.len().saturating_sub(1).max(1));
+    for (rank, &(_, index)) in values.iter().enumerate() {
+        #[allow(clippy::cast_possible_truncation)]
+        {
+            ranks[index] = (to_f64(rank) / last) as f32;
+        }
+    }
+    ranks
+}
+
+/// Smooth value noise from 0 to 1 at `(x, y)`, one lattice cell a unit
+/// wide, its corners' values drawn from `seed`.
+fn value_noise(x: f64, y: f64, seed: u64) -> f64 {
+    let (fx, fy) = (x.floor(), y.floor());
+    // Lattice coordinates are small whole numbers.
+    #[allow(clippy::cast_possible_truncation)]
+    let (ix, iy) = (fx as i64, fy as i64);
+    let corner = |dx: i64, dy: i64| {
+        let key = (ix + dx)
+            .cast_unsigned()
+            .wrapping_mul(0x9e37_79b9_7f4a_7c15)
+            ^ (iy + dy)
+                .cast_unsigned()
+                .wrapping_mul(0xc2b2_ae3d_27d4_eb4f);
+        unit(mix64(key ^ seed))
+    };
+    let smooth = |t: f64| t * t * (3.0 - 2.0 * t);
+    let (tx, ty) = (smooth(x - fx), smooth(y - fy));
+    let bottom = corner(0, 0) + (corner(1, 0) - corner(0, 0)) * tx;
+    let top = corner(0, 1) + (corner(1, 1) - corner(0, 1)) * tx;
+    bottom + (top - bottom) * ty
+}
+
 #[cfg(test)]
 // Tests check exact results: clamped, integral and copied values.
 #[allow(clippy::float_cmp)]
@@ -3247,6 +3535,8 @@ mod tests {
                 name.clone(),
                 OrganLook {
                     hairs: None,
+                    underside: None,
+                    variegation: None,
                     roll: 0.0,
                     insertion: crate::looks::Insertion::Marginal,
                     shape: shape.clone(),
@@ -3618,15 +3908,100 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::cast_precision_loss)]
+    fn a_card_s_face_and_seed_ride_in_its_alpha() {
+        for template in [0_u8, 3, 200] {
+            for seed in [0.0_f32, 0.25, 0.999] {
+                for flipped in [false, true] {
+                    let alpha = pack_face(template, seed, flipped);
+                    let (t, s, f) = unpack_face(alpha);
+                    assert_eq!(t, usize::from(template));
+                    assert!((s - seed).abs() < 1e-3, "{s} {seed}");
+                    assert_eq!(f, flipped);
+                    // The lower face is the back of an upturned card and
+                    // the front of a downturned one.
+                    assert_eq!(card_face(alpha, true).lower, flipped);
+                    assert_eq!(card_face(alpha, false).lower, !flipped);
+                }
+            }
+        }
+        assert!(!card_flipped([0.0, 0.0, 1.0], [1.0, 0.0, 0.0]));
+        assert!(card_flipped([1.0, 0.0, 0.0], [0.0, 0.0, 1.0]));
+        let seeds: Vec<f32> = (0..100)
+            .map(|i| card_seed([0.01 * i as f32, 1.0, 0.0]))
+            .collect();
+        assert!(seeds.iter().all(|s| (0.0..1.0).contains(s)));
+        let mean = seeds.iter().sum::<f32>() / 100.0;
+        assert!((mean - 0.5).abs() < 0.1, "{mean}");
+    }
+
+    #[test]
+    #[allow(clippy::cast_precision_loss)]
+    fn undersides_and_variegation_paint_their_share() {
+        let mut looks = looks_of(&[Shape::Simple(Simple::default())]);
+        looks[0].underside = Some([0.4, 0.5, 0.3]);
+        looks[0].variegation = Some(crate::looks::Variegation {
+            pattern: crate::looks::VariegationPattern::Margin,
+            colour: [0.9, 0.9, 0.7],
+            amount: 0.3,
+            spread: 0.4,
+            scale: 0.08,
+        });
+        let templates = Templates::for_looks(&looks);
+        let template = &templates.templates[0];
+        // The ranks spread evenly over the covered texels, the margin's
+        // lowest: a texel at the blade's edge is ranked below one on its
+        // midrib.
+        let covered: Vec<f32> = template
+            .pattern
+            .iter()
+            .zip(&template.coverage)
+            .filter(|(_, c)| **c >= 0.5)
+            .map(|(p, _)| *p)
+            .collect();
+        let below = covered.iter().filter(|p| **p < 0.3).count();
+        let share = below as f64 / covered.len() as f64;
+        assert!((share - 0.3).abs() < 0.03, "{share}");
+        let rank = |u: f32, v: f32| templates.sample(0, u, v).pattern;
+        let mut edge = 0.5;
+        while templates.sample(0, edge, 0.5).coverage >= 0.5 {
+            edge += 1.0 / TEMPLATE_SIZE as f32;
+        }
+        assert!(rank(edge - 1.5 / TEMPLATE_SIZE as f32, 0.5) < rank(0.5, 0.5));
+        // A card's lower face paints the underside, shaded as the card is.
+        let texel = Texel {
+            pattern: 1.0,
+            ..Texel::plain(0.0)
+        };
+        let lower = Face {
+            lower: true,
+            seed: 0.5,
+        };
+        let shaded = templates.paint(0, [0.1, 0.2, 0.05], texel, lower);
+        for channel in 0..3 {
+            let expected = f64::from([0.4_f32, 0.5, 0.3][channel]) * 0.5;
+            assert!((shaded[channel] - expected).abs() < 1e-6);
+        }
+        // A texel ranked below the card's share is painted in the patches'
+        // colour; a card of the lowest seed covers less of its blade.
+        let low = Texel {
+            pattern: 0.2,
+            ..Texel::plain(0.0)
+        };
+        let middling = templates.paint(0, [0.2, 0.4, 0.1], low, Face::UPPER);
+        assert!((middling[0] - 0.9).abs() < 1e-6);
+        let sparse = Face {
+            lower: false,
+            seed: 0.0,
+        };
+        let plain = templates.paint(0, [0.2, 0.4, 0.1], low, sparse);
+        assert!((plain[0] - 0.2).abs() < 1e-6);
+    }
+
+    #[test]
     fn accents_take_the_card_s_shading() {
         let templates = Templates::for_looks(&looks_of(&[Shape::Flower(Flower::default())]));
-        let accent = Texel {
-            coverage: 1.0,
-            brightness: 1.0,
-            accent: 1.0,
-            hair: 0.0,
-            fringe: false,
-        };
+        let accent = Texel::plain(1.0);
         let lit = templates.albedo(0, [0.2, 0.4, 0.1], accent);
         let shaded = templates.albedo(0, [0.1, 0.2, 0.05], accent);
         // In full light the accent is the accent colour; at half the

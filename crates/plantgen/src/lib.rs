@@ -572,4 +572,10 @@ pub mod venation;
 /// (`leaf_hairs`, `leaf_ciliate`) cast its colour toward theirs, add a
 /// sheen and a backlit glow, fringe its edge, and up close stand from it
 /// as strands of their own (89 is cactus colours, #156).
-pub const GENERATOR_REVISION: u32 = 90;
+/// 91: leaves with two faces and variegation: a look's `underside` colour
+/// paints its cards' lower faces (the side that looks more toward the
+/// ground), and its `variegation` paints pale margins, centres, stripes,
+/// bands, spots or mottles, a different share on every leaf; the royal
+/// palm's pinnae are paler below and the rattlesnake plantain's leaves
+/// carry their pale midvein band (90 is leaf hairs, #166).
+pub const GENERATOR_REVISION: u32 = 91;

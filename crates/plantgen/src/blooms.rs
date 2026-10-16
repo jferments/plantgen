@@ -538,6 +538,7 @@ impl Part {
         colour: [f32; 3],
     ) -> Leaf {
         Leaf {
+            underside: None,
             base,
             heading,
             left,
@@ -1010,6 +1011,8 @@ mod tests {
                 "thorn".to_string(),
                 crate::looks::OrganLook {
                     hairs: None,
+                    underside: None,
+                    variegation: None,
                     roll: 0.0,
                     insertion: crate::looks::Insertion::Marginal,
                     shape: Shape::Blade(crate::looks::Blade {
