@@ -32,7 +32,7 @@
       "raceme": 0,
       "flowers": 0,
       "leaf_area": 0.688,
-      "basal_area": 0.235,
+      "basal_area": 0.664,
       "basal_piece_area": 0.235,
       "flower_area": 0.472,
       "bud_area": 0.057,
@@ -57,10 +57,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 1.0,
-          "widest": 0.3,
-          "tip": 0.3,
-          "base": 1.0,
           "teeth": 0,
           "tooth_depth": 0.03,
           "petiole": 0
@@ -79,9 +75,18 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_shape": "cordate",
+    "leaf_length_m": {"min": 0.04, "max": 0.1},
+    "leaf_width_m": {"min": 0.05, "max": 0.12},
+    "fruit_size_m": {"min": 0.01, "max": 0.02},
     "shoot_leaves": 2
   },
   "evidence": {
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654279), until a flora read here gives it; drawn by the kingdom's leaf-shape rules where before the blade was shaped by eye."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654279), until a flora read here gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654279), until a flora read here gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654279), until a flora read here gives it."},
+    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `basal` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows: its rosette leaves now take the species' cordate blade with its basal lobes, where before they drew the generic simple card (0.235)."},
     "generator.params.bud_area": {
       "evidence": "Authored",
       "source": "plantgen-authors",

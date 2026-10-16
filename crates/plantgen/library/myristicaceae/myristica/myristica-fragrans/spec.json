@@ -1,0 +1,257 @@
+{
+  "schema": 1,
+  "id": "myristica-fragrans",
+  "taxon": {
+    "scientific_name": "Myristica fragrans",
+    "common_name": "nutmeg",
+    "family": "Myristicaceae",
+    "genus": "Myristica",
+    "plant_name_id": 2500629
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "params": {
+      "crown_radius": 3.5,
+      "crown_base": 1.5,
+      "crown_rate": 0.035,
+      "space_density": 6,
+      "internode": 0.18,
+      "max_shoot": 3,
+      "pipe_rings": 4.33e-06,
+      "pipe_organ": 0.0049,
+      "pipe_tip": 0.0024,
+      "branch_angle": 60,
+      "apical_young": 0.65,
+      "apical": 0.52,
+      "spur_pairs": 2,
+      "leaf_angle": 50,
+      "lean": 6,
+      "wiggle": 8,
+      "fork_height": 4,
+      "fork_stems": 1,
+      "fork_angle": 30,
+      "extinction": 0.45,
+      "path_half": 8,
+      "spur_leaf": 0.09
+    }
+  },
+  "growth": {
+    "years": 30,
+    "step": 1,
+    "keyframes": [
+      4,
+      12,
+      30
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.36,
+      0.33,
+      0.28
+    ],
+    "foliage": [
+      0.04,
+      0.11,
+      0.035
+    ],
+    "foliage_shade": [
+      0.013,
+      0.036,
+      0.012
+    ],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "petiole": 0.13
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 10,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 10,
+      "max": 20
+    },
+    "leaf_length_m": {
+      "min": 0.04,
+      "max": 0.08
+    },
+    "leaf_width_m": {
+      "min": 0.02,
+      "max": 0.06
+    },
+    "petiole_length_m": {
+      "min": 0.006,
+      "max": 0.012
+    },
+    "leaf_shape": "elliptic",
+    "sexual_system": "dioecious",
+    "inflorescence": "cyme",
+    "inflorescence_length_m": {
+      "min": 0.025,
+      "max": 0.05
+    },
+    "flower_size_m": {
+      "min": 0.005,
+      "max": 0.007
+    },
+    "flower_colour": [
+      235,
+      225,
+      170
+    ],
+    "fruit_type": "drupe",
+    "fruit_size_m": {
+      "min": 0.035,
+      "max": 0.05
+    },
+    "fruit_colour_ripe": [
+      230,
+      185,
+      70
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Myristica fragrans (read on eFloras, 2026-10-16): small trees to 10 m (cultivated in China); the model estimate (species-facts-2026-10-15, confidence high) gives up to 20 m in its home forests, the range's top."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Myristica fragrans (read on eFloras, 2026-10-16): blade 4-8 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Myristica fragrans (read on eFloras, 2026-10-16): petiole 6-12 mm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Myristica fragrans (read on eFloras, 2026-10-16): blade elliptic or elliptic-lanceolate, nearly leathery."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Myristica fragrans (read on eFloras, 2026-10-16): male and female inflorescences, the female 1- or few-flowered; Floral Diagrams p. 70 draws its flowers unisexual."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Myristica fragrans (read on eFloras, 2026-10-16): male inflorescences shortly peduncled, simple or forked, with 4-8 or more flowers on slender branches; the cyme is our reading of that."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Myristica fragrans (read on eFloras, 2026-10-16): male inflorescences 2.5-5 cm."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Myristica fragrans (read on eFloras, 2026-10-16): perianth trigonous-ovoid, 5-7 mm."
+    },
+    "traits.flower_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it, Flora of China giving none."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: Flora of China describes a fleshy pear-shaped fruit that splits to show the seed in its red aril, a kind the vocabulary does not name."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Myristica fragrans (read on eFloras, 2026-10-16): fruits 3.5-5 cm across."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Myristica fragrans (read on eFloras, 2026-10-16): fruits orange or yellow. The colour is our reading of the words."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Pacific madrone's crown values, changed by hand for a small evergreen tree on one trunk with slender, widely spreading branches (Flora of China: branches slender). Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "10 m at 30 years in the open, Flora of China's height. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after Flora of China: grey-brown bark; nearly leathery, glossy elliptic leaves, their green darkened to the dense, dark crowns of iNaturalist photographs (observations 6747189, 145263246, 281805385). The leaf card's petiole is 0.13 of its length, the flora's petiole against blade and petiole together."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the Magnoliidae specs (2026-10-16): sizes from Flora of China, drawing values from Pacific madrone's."
+  }
+}

@@ -41,6 +41,15 @@
 //! | scaly | small scales, each darker at its foot | spruces |
 //! | smooth | no cells: soft mottling | alder, beech, young maples |
 //! | peeling | patches whose outer bark has peeled | paper birch, madrone |
+//! | ringed | rings round the stem, one a step along it | royal palm, coconut |
+//!
+//! Ringed bark is a palm's leaf scars: a ring round the stem at every whole
+//! step of $`q_z`$ (so `scale` times `elongation` metres apart), wavering
+//! a little round the stem, at
+//! $`z = q_z + 0.3\,(n(0.7 q_x, 0.7 q_y, \tfrac12) - \tfrac12)`$ for value
+//! noise $`n`$; a point $`2|z - \operatorname{round} z|`$ from the nearest
+//! ring takes that for $`F_2 - F_1`$, and each band between two rings is a
+//! cell of its own shade.
 //!
 //! `lenticels` (per square metre) add horizontal dashes on any kind. Below
 //! `smooth_below` (a radius, metres) the bark is smooth, as young bark is,
@@ -89,6 +98,7 @@ pub enum BarkKind {
     Scaly,
     Smooth,
     Peeling,
+    Ringed,
 }
 
 impl BarkKind {
@@ -103,6 +113,7 @@ impl BarkKind {
             Self::Scaly => 4,
             Self::Smooth => 5,
             Self::Peeling => 6,
+            Self::Ringed => 7,
         }
     }
 }
@@ -266,8 +277,8 @@ impl BarkSample {
 
 const TAU: f32 = std::f32::consts::TAU;
 /// Salts of the draws: the cells' points, a cell's brightness, whether a
-/// cell has peeled, the mottling, the lenticels' points, and the grain's
-/// two octaves.
+/// cell has peeled, the mottling, the lenticels' points, the grain's two
+/// octaves, and the rings' wavering.
 const CELL_SALT: u32 = 0x68e3_1da4;
 const SHADE_SALT: u32 = 0x5bd1_e995;
 const PEEL_SALT: u32 = 0x2c1b_3c6d;
@@ -275,6 +286,7 @@ const MOTTLE_SALT: u32 = 0x297a_2d39;
 const LENTICEL_SALT: u32 = 0x7feb_352d;
 const GRAIN_SALT: u32 = 0x1b87_3593;
 const FINE_SALT: u32 = 0xcc9e_2d51;
+const RING_SALT: u32 = 0x3c6e_f372;
 
 /// A draw in `[0, 1)` from a hash, as the shaders' `unit`.
 #[allow(clippy::cast_precision_loss)]
@@ -473,6 +485,9 @@ fn grain(params: &BarkParams, c: [f32; 3], round: (f32, f32), footprint: f32) ->
 /// The height `h` of a cell pattern at `q`, its gradient in pattern space,
 /// and the cells.
 fn height(params: &BarkParams, q: [f32; 3]) -> (f32, [f32; 3], Cells) {
+    if params.kind == BarkKind::Ringed.number() {
+        return rings(params, q);
+    }
     let found = cells(q, CELL_SALT);
     let edge = found.second - found.near;
     let w = params.fissure.max(1.0e-4);
@@ -503,6 +518,39 @@ fn height(params: &BarkParams, q: [f32; 3]) -> (f32, [f32; 3], Cells) {
         gradient[2] += inside;
         h *= factor;
     }
+    (h, gradient, found)
+}
+
+/// Ringed bark's height at `q` and its gradient (see the module): a ring
+/// at each whole step of the wavering `z`, the band above it its cell.
+#[allow(clippy::cast_possible_truncation)]
+fn rings(params: &BarkParams, q: [f32; 3]) -> (f32, [f32; 3], Cells) {
+    let (wave, slope_wave) = noise_gradient([0.7 * q[0], 0.7 * q[1], 0.5], RING_SALT);
+    let z = q[2] + 0.3 * (wave - 0.5);
+    let offset = z - z.round();
+    let edge = 2.0 * offset.abs();
+    let w = params.fissure.max(1.0e-4);
+    let t = (edge / w).clamp(0.0, 1.0);
+    let h = t * t * (3.0 - 2.0 * t);
+    // d h / d z, inside the ring only.
+    let slope = if t > 0.0 && t < 1.0 {
+        6.0 * t * (1.0 - t) / w * 2.0 * offset.signum()
+    } else {
+        0.0
+    };
+    let gradient = [
+        slope * 0.21 * slope_wave[0],
+        slope * 0.21 * slope_wave[1],
+        slope,
+    ];
+    let band = z.floor() as i32;
+    let found = Cells {
+        near: 0.0,
+        second: edge,
+        near_point: q,
+        second_point: q,
+        id: cell_hash([0, 0, band], CELL_SALT),
+    };
     (h, gradient, found)
 }
 
@@ -640,6 +688,7 @@ mod tests {
             BarkKind::Scaly,
             BarkKind::Smooth,
             BarkKind::Peeling,
+            BarkKind::Ringed,
         ]
         .into_iter()
         .flat_map(|kind| {
@@ -694,6 +743,35 @@ mod tests {
     }
 
     #[test]
+    fn rings_lie_round_the_stem_a_step_apart() {
+        // Up a line along a palm's trunk the shade dips once a ring, every
+        // scale times elongation metres, and its relief slopes there.
+        let pattern = BarkPattern {
+            kind: BarkKind::Ringed,
+            scale: 0.05,
+            elongation: 1.0,
+            fissure: 0.2,
+            ..BarkPattern::default()
+        };
+        let params = pattern.params([0.6, 0.6, 0.55]);
+        let shades: Vec<f32> = (0..2000_u16)
+            .map(|k| sample(&params, 0.3, f32::from(k) * 0.0005, 0.25, 0.0).shade)
+            .collect();
+        let dark = |shade: f32| shade < 1.0 - 0.3 * params.contrast;
+        let rings = shades
+            .windows(2)
+            .filter(|pair| !dark(pair[0]) && dark(pair[1]))
+            .count();
+        // One metre: twenty rings, give or take one at either end.
+        assert!((19..=21).contains(&rings), "{rings} rings");
+        let steep = (0..2000_u16)
+            .map(|k| sample(&params, 0.3, f32::from(k) * 0.0005, 0.25, 0.0))
+            .filter(|s| dark(s.shade) && s.slope[1].abs() > 0.05)
+            .count();
+        assert!(steep > 0);
+    }
+
+    #[test]
     fn young_and_far_bark_is_plain() {
         let params = BarkPattern::default().params([0.4, 0.3, 0.2]);
         // A twig below `smooth_below`, and a trunk whose cells are smaller
@@ -742,9 +820,14 @@ mod tests {
     fn the_slope_is_the_reliefs_gradient() {
         // Finite differences of the relief round and along the stem agree
         // with the slope away from the cells' edges, smooth or rough.
-        for roughness in [0.0, 0.5] {
+        for (kind, roughness) in [
+            (BarkKind::Furrowed, 0.0),
+            (BarkKind::Furrowed, 0.5),
+            (BarkKind::Ringed, 0.0),
+            (BarkKind::Ringed, 0.5),
+        ] {
             let params = BarkPattern {
-                kind: BarkKind::Furrowed,
+                kind,
                 fissure: 0.4,
                 roughness,
                 ..BarkPattern::default()
@@ -774,7 +857,7 @@ mod tests {
                 }
             }
             // Points by a cell's edge, where F1 and F2 swap, may differ.
-            assert!(checked > 340, "roughness {roughness}: {checked}");
+            assert!(checked > 340, "{kind:?} roughness {roughness}: {checked}");
         }
     }
 
