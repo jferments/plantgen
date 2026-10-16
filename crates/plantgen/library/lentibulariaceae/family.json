@@ -33,13 +33,19 @@
     "fruit_type": "capsule",
     "flower_merosity": 5,
     "stamens": 2,
-    "carpels": 2
+    "carpels": 2,
+    "phyllotaxis_pattern": "spiral"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Lentibulariaceae with Byblidaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves simple; veins pinnate; stipules absent; leaf rosettes basal or none; plants hermaphrodite; ovary superior; floral cup absent; stems usually herbaceous, sometimes woody; flowers in racemes or in spikes, sometimes solitary; flowers usually zygomorphic, sometimes actinomorphic; irregular flowers bilabiate; perianth sepals and petals; fruit capsule; parts of each whorl 5; stamens 2; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Lentibulariaceae (read 2026-10-16): leaves alternate, spiral, often in a basal cluster."
     }
   }
 }

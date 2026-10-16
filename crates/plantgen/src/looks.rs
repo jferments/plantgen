@@ -786,6 +786,10 @@ pub struct Simple {
     /// Teeth on each side; 0 for an entire margin.
     pub teeth: u32,
     pub tooth_depth: f64,
+    /// How rounded the teeth are, from 0 (saw teeth pointing to the tip,
+    /// serrate) to 1 (rounded scallops, crenate), as a sprig's leaves'.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub round: f64,
     pub petiole: f64,
     /// How far the blade's two basal lobes reach back past where the
     /// petiole meets it, beside the petiole, as a share of the blade's
@@ -798,6 +802,26 @@ pub struct Simple {
     /// blade, whose veins all leave the midrib along its length.
     #[serde(skip_serializing_if = "is_zero_count")]
     pub fan: u32,
+    /// How the blade narrows over its last [`crate::templates::ENDS`] to
+    /// its tip, as the power of that narrowing: 1 straight sides to a
+    /// point (acute), above 1 hollow sides drawn out (acuminate), below 1
+    /// full sides, rounded near 0.35 and cut nearly square near 0.1
+    /// (truncate). Unset, the outline (or `tip`) alone shapes the tip.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub apex_taper: Option<f64>,
+    /// The same, for the blade's first stretch above its base: 1 a
+    /// straight wedge (cuneate), above 1 a long taper (attenuate), below
+    /// 1 rounded or cut square (truncate).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub base_taper: Option<f64>,
+    /// A narrow point beyond the blade's tip, as a share of the blade's
+    /// length: a mucro, a cusp, a tail (caudate). 0 for none.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub apex_point: f64,
+    /// How deep a notch cuts into the blade's tip along the midrib, as a
+    /// share of the blade's length (emarginate, retuse). 0 for none.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub apex_notch: f64,
 }
 
 impl Default for Simple {
@@ -810,9 +834,14 @@ impl Default for Simple {
             base: 0.5,
             teeth: 0,
             tooth_depth: 0.03,
+            round: 0.0,
             petiole: 0.15,
             sinus: 0.0,
             fan: 0,
+            apex_taper: None,
+            base_taper: None,
+            apex_point: 0.0,
+            apex_notch: 0.0,
         }
     }
 }
@@ -1058,6 +1087,11 @@ pub struct Flower {
     /// elliptic petal with an acute tip.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub taper: Option<f64>,
+    /// A petal's width over its length where widest, as its outline is
+    /// stated (`petal_shape`): set, it gives `petal_width` for the
+    /// flower's own count of petals (see [`Flower::petal_share`]).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub petal_ratio: Option<f64>,
     /// Depth of a notch in each petal tip, 0 to 1; a lip's lobes.
     pub notch: f64,
     /// Radius of the centre, in the accent colour, over the flower's.
@@ -1169,6 +1203,7 @@ impl Default for Flower {
             petal_width: 1.0,
             point: 0.0,
             taper: None,
+            petal_ratio: None,
             notch: 0.0,
             centre: 0.18,
             perianth: Perianth::Corolla,
@@ -1203,6 +1238,18 @@ impl Default for Flower {
 }
 
 impl Flower {
+    /// Petal width as `petal_width` gives it, 1 leaving a little gap
+    /// between neighbours: from `petal_ratio` where it is set, a petal as
+    /// wide for its length as its outline is stated, among as many petals
+    /// as the flower draws.
+    #[must_use]
+    pub fn petal_share(&self) -> f64 {
+        self.petal_ratio.map_or(self.petal_width, |ratio| {
+            let half = std::f64::consts::PI / f64::from(self.petals.max(3));
+            (ratio / (1.32 * crate::math::tan(half))).clamp(0.1, 1.5)
+        })
+    }
+
     /// Whether the flower is drawn as before P5: one whorl of alike petals
     /// round a centre dome, nothing that the layout adds.
     #[must_use]
@@ -2168,8 +2215,17 @@ impl Shape {
                 check("base", s.base, 0.0, 1.0)?;
                 count("teeth", s.teeth, 0, 60)?;
                 check("tooth_depth", s.tooth_depth, 0.0, 0.2)?;
+                check("round", s.round, 0.0, 1.0)?;
                 check("sinus", s.sinus, 0.0, 0.5)?;
                 count("fan", s.fan, 0, 4)?;
+                if let Some(power) = s.apex_taper {
+                    check("apex_taper", power, 0.05, 4.0)?;
+                }
+                if let Some(power) = s.base_taper {
+                    check("base_taper", power, 0.05, 4.0)?;
+                }
+                check("apex_point", s.apex_point, 0.0, 0.3)?;
+                check("apex_notch", s.apex_notch, 0.0, 0.2)?;
                 check("petiole", s.petiole, 0.0, 0.7)
             }
             Self::Lobed(s) => {
@@ -2222,6 +2278,9 @@ impl Shape {
                     ));
                 }
                 check("petal_width", s.petal_width, 0.1, 1.5)?;
+                if let Some(ratio) = s.petal_ratio {
+                    check("petal_ratio", ratio, 0.05, 2.0)?;
+                }
                 check("point", s.point, 0.0, 1.0)?;
                 if let Some(taper) = s.taper {
                     check("taper", taper, 0.2, 3.0)?;
@@ -3498,6 +3557,26 @@ impl OrganLook {
 #[allow(clippy::float_cmp)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_petal_drawn_from_its_ratio_is_as_wide_among_any_count() {
+        let ratio = |petals: u32| Flower {
+            petals,
+            petal_ratio: Some(0.5),
+            ..Flower::default()
+        };
+        // The plain card's widest petal over its length (`templates.rs`):
+        // 1.32 tan(pi / petals) times the share.
+        for petals in [3, 5, 8] {
+            let flower = ratio(petals);
+            let drawn = 1.32
+                * crate::math::tan(std::f64::consts::PI / f64::from(petals))
+                * flower.petal_share();
+            assert!((drawn - 0.5).abs() < 1e-9, "{petals}");
+        }
+        let unset = Flower::default();
+        assert_eq!(unset.petal_share(), unset.petal_width);
+    }
 
     /// Only a leaf on a petiole, drawn on a card, has an insertion.
     #[test]

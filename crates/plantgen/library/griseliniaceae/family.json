@@ -23,13 +23,19 @@
     "fruit_type": "berry",
     "flower_merosity": 5,
     "stamens": 5,
-    "carpels": 3
+    "carpels": 3,
+    "phyllotaxis_pattern": "distichous"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Griseliniaceae: leaves alternate; leaves simple; stipules absent; plants dioecious; ovary inferior; floral cup present; stems woody; flowers in racemes or in panicles; flowers actinomorphic; perianth usually sepals and petals, sometimes tepals; fruit berry; parts of each whorl 5; stamens 5; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Apiales page, Griseliniaceae (read 2026-10-16): leaves often two-ranked."
     }
   }
 }

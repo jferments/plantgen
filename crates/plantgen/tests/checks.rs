@@ -309,7 +309,7 @@ const KNOWN: &[(&str, &str, &str)] = &[
     (
         "program:pinidae",
         "leaf_life_years",
-        "Sitka spruce's needles on shaded branches that die fall at 2 years, past the 7 to 10 it states; the median holds (seen since needle shading, revision 82; the shed limbs carry them)",
+        "Sitka spruce's needles on shaded branches that die fall at 2 years, past the 7 to 10 it states; the median holds (seen since needle shading, revision 85; the shed limbs carry them)",
     ),
     (
         "program:rosette",

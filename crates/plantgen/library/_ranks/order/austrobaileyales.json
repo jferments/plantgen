@@ -2,5 +2,93 @@
   "schema": 1,
   "rank": "order",
   "name": "Austrobaileyales",
-  "parent": "clade/angiosperms"
+  "parent": "clade/angiosperms",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes"
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "decussate": "sometimes"
+    },
+    "leaf_division": "simple",
+    "life_span": "perennial",
+    "rosette": "none",
+    "inflorescence": {
+      "solitary": "usually",
+      "cyme": "sometimes"
+    },
+    "flowering_position": "lateral",
+    "flower_symmetry": "actinomorphic",
+    "perianth": "spiral",
+    "hypanthium": false,
+    "ovary_position": "superior",
+    "fruit_type": {
+      "aggregate": "usually",
+      "follicle": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Austrobaileyales page (read 2026-10-16): order characterisation gives opposite leaves, but Schisandraceae (about 90 spp., most of the order) has spiral leaves; Austrobaileyaceae and Trimeniaceae opposite. Weighted by species."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Austrobaileyales page (read 2026-10-16): Schisandraceae spiral (two-ranked in Schisandreae, crowded pseudo-whorls in Illicium); other families opposite."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Austrobaileyales page (read 2026-10-16): blades undivided, entire or toothed."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Austrobaileyales page (read 2026-10-16): lianas, shrubs and trees."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Austrobaileyales page (read 2026-10-16): woody climbers and trees; Illicium leaves crowded at shoot tips (Schisandraceae already states this)."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Austrobaileyales page (read 2026-10-16): Austrobaileya flowers single, axillary, pendulous; Schisandraceae flowers single or few in axils (our reading); Trimeniaceae branched inflorescences."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Austrobaileyales page (read 2026-10-16): flowers axillary in Austrobaileyaceae and Trimeniaceae (rarely terminal); axillary in Schisandraceae."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Austrobaileyales page (read 2026-10-16): perianth, stamens and carpels spiral; flowers radial."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Austrobaileyales page (read 2026-10-16): order characterisation: perianth spiral."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Austrobaileyales page (read 2026-10-16): free parts on a receptacle; no hypanthium described."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Austrobaileyales page (read 2026-10-16): free carpels on the receptacle."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Austrobaileyales page (read 2026-10-16): berrylets (Schisandreae, Austrobaileya); Illicium a star of explosive follicles."
+    }
+  }
 }

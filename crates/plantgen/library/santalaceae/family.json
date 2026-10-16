@@ -19,6 +19,18 @@
     },
     "inflorescence": {
       "cyme": "usually"
+    },
+    "flower_merosity": {
+      "min": 3,
+      "max": 5,
+      "typical": 4,
+      "high": 8
+    },
+    "stamens": {
+      "min": 3,
+      "max": 5,
+      "typical": 4,
+      "high": 8
     }
   },
   "forms": {
@@ -45,6 +57,16 @@
       "evidence": "SourceInferred",
       "source": "floral-diagrams",
       "note": "Ronse De Craene, Floral Diagrams (2010) p. 158, 159, family Santalaceae: inflorescence cyme (dichasial arrangement most common), usually; read as {\"cyme\": \"usually\"}."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Santalaceae s.s. usually 4-5 (3-8); Viscaceae (included in APG Santalaceae) 3-4. Typical 4 inferred from the combined family."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA (read 2026-10-16): Santalaceae 4-5 (3-8), one per perianth lobe; Viscaceae usually 4 (2-4)."
     }
   }
 }

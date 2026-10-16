@@ -2,5 +2,60 @@
   "schema": 1,
   "rank": "order",
   "name": "Nymphaeales",
-  "parent": "clade/angiosperms"
+  "parent": "clade/angiosperms",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_division": "simple",
+    "rosette": {
+      "basal": "usually",
+      "none": "sometimes"
+    },
+    "life_span": {
+      "perennial": "usually",
+      "annual": "sometimes"
+    },
+    "flowering_position": "lateral",
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "monoecious": "rarely"
+    }
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Nymphaeales page (read 2026-10-16): order leaves spiral (one per node); Cabomba submerged leaves opposite or whorled."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Nymphaeales page (read 2026-10-16): order characterisation gives spiral leaves with short internodes."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Nymphaeales page (read 2026-10-16): floating blades whole (cordate to peltate); Hydatellaceae linear; Cabomba submerged blades finely dissected but still one blade."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Nymphaeales page (read 2026-10-16): Nymphaeaceae aquatic rosette plants with little stem; Hydatellaceae small tufted herbs; Cabombaceae long internodes (no rosette)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Nymphaeales page (read 2026-10-16): Nymphaeaceae perennial, rarely annual; Hydatellaceae often annual."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Nymphaeales page (read 2026-10-16): Nymphaeaceae flowers lateral in the leaf spiral; Cabombaceae extra-axillary; Hydatellaceae axillary heads."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Nymphaeales page (read 2026-10-16): Nymphaeaceae and Cabombaceae flowers bisexual (APweb does not say otherwise; perfect flowers with stamens and carpels described); Hydatellaceae monoecious."
+    }
+  }
 }
