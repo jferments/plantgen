@@ -17,18 +17,18 @@
       "cone_area": 0.289,
       "height_rate": 0.02,
       "height_shape": 1.4,
-      "whorl": 5,
+      "whorl": 4,
       "interwhorl": 0,
       "branch_angle": 75,
       "upturn": 0.01,
       "branch_growth": 0.3,
       "spray_base": 0.2,
       "spray_length": 1.1,
-      "shade_death": 0.12,
+      "shade_death": 0.25,
       "pipe_organ": 0.009,
-      "pipe_rings": 3.7e-06,
+      "pipe_rings": 1e-05,
       "spray_area": 0.428,
-      "branch_reach": 7.3,
+      "branch_reach": 4,
       "epi_chance": 0
     }
   },
@@ -142,7 +142,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a tall, straight pine with a narrow crown of slender, level branches and soft needles in fives. Not fitted to measurements. Cones (plant forms F3): 10 to 25 cm, long and slender, hanging from the top; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles. Spec rework E6d: `cone_length`, `cone_years`, `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe, and `pipe_rings` refitted to the dbh references now that the crown holds more foliage; `epi_chance` 0, as pines seldom sprout from dormant buds on their branches (general knowledge, not measured)."
+      "note": "Hand-set from general knowledge of the species: a tall, straight pine with a narrow crown of slender, level branches and soft needles in fives. Not fitted to measurements. Cones (plant forms F3): 10 to 25 cm, long and slender, hanging from the top; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles. Spec rework E6d: `cone_length`, `cone_years`, `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe, and `pipe_rings` refitted to the dbh references now that the crown holds more foliage; `epi_chance` 0, as pines seldom sprout from dormant buds on their branches (general knowledge, not measured). Open crown (2026-10-16): `whorl` 4, `branch_reach` 4 and `shade_death` 0.25 narrow and open the crown to the slender, airy form of an open-grown tree in iNaturalist observation 308301476 (Caleb Catto, CC BY), and `pipe_rings` 1e-5 keeps the dbh reference with the smaller crown."
     },
     "allometry": {
       "evidence": "Authored",
