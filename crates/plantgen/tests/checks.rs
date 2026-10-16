@@ -32,6 +32,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its heads' involucre is drawn 3.5 to 4.1 mm tall against FNA's 5 to 7 mm",
     ),
     (
+        "aristolochia-californica",
+        "leaf_shape",
+        "its heart-shaped blades (FNA vol. 3: ovate to reniform, base cordate with a sinus 2 to 6 cm deep) are drawn on a simple card with no sinus, so they read ovate; no card draws a cordate base yet",
+    ),
+    (
         "aristolochia-macrophylla",
         "leaf_shape",
         "its kidney-shaped blades (FNA vol. 3: reniform) are drawn on a simple card, at most as broad as long, so they read ovate; no card draws a reniform blade yet",
@@ -45,6 +50,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "asarum-canadense",
         "leaf_width_m",
         "a simple card is at most as broad as long, so its blades are drawn 5.5 to 6.5 cm wide, as wide as long, against FNA's 8 to 14 cm, broader than long",
+    ),
+    (
+        "asarum-europaeum",
+        "leaf_shape",
+        "its kidney-shaped blades (reniform) are drawn on a simple card, at most as broad as long, so they read orbicular or ovate; no card draws a reniform blade yet",
     ),
     (
         "ascarina-lucida",
