@@ -72,6 +72,7 @@
       },
       "appearance": {
         "bark": [0.55, 0.52, 0.46],
+        "leaf_axis": [0.16, 0.22, 0.07],
         "foliage": [0.2, 0.36, 0.15],
         "foliage_shade": [0.09, 0.162, 0.068],
         "variation": 0.1,
@@ -253,6 +254,7 @@
           "source": "plantgen-authors",
           "note": "The built-in palms' colours and cards: a grey trunk, mid-green narrow leaflets, segments folded and drooping as the built-in fan palms' are, a green sheath for a crownshaft, a brown boot."
         },
+        "appearance.leaf_axis": {"evidence": "SourceInferred", "source": "sargent-1922", "note": "A palm's petiole and rachis are part of its leaf and coloured with it, not with the trunk: Sargent (1922) gives Thrinax floridana's petioles pale yellow-green or orange toward the base and the royal palm's green clasping bases; a yellow green, which species refine."},
         "rules": {
           "evidence": "Authored",
           "source": "plantgen-authors",
