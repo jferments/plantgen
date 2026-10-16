@@ -1,0 +1,299 @@
+{
+  "schema": 1,
+  "id": "aristolochia-macrophylla",
+  "taxon": {
+    "scientific_name": "Aristolochia macrophylla",
+    "common_name": "Dutchman's pipe",
+    "family": "Aristolochiaceae",
+    "genus": "Aristolochia",
+    "plant_name_id": 2651618
+  },
+  "growth_form": "vine",
+  "generator": {
+    "params": {
+      "shoots": 3,
+      "internode": 0.18,
+      "max_shoot": 3,
+      "cling": 0.3,
+      "hug": 0.45,
+      "climb": 0.3,
+      "seek": 0.6,
+      "drape": 0.12,
+      "free_years": 3,
+      "branch_chance": 0.1,
+      "branch_angle": 45,
+      "max_order": 3,
+      "leaf_angle": 70,
+      "renew": 0,
+      "adult_age": 4,
+      "fruiting": 0.1,
+      "fruit_size": 0.07,
+      "pipe_tip": 0.002,
+      "pipe_organ": 0.004,
+      "pipe_rings": 6e-06
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 0.25,
+    "keyframes": [
+      3,
+      8,
+      15
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "host": {
+    "species": "quercus-garryana",
+    "age": 80,
+    "environment": "open",
+    "seed": 1
+  },
+  "appearance": {
+    "bark": [
+      0.4,
+      0.33,
+      0.24
+    ],
+    "foliage": [
+      0.12,
+      0.25,
+      0.07
+    ],
+    "foliage_shade": [
+      0.04,
+      0.08,
+      0.023
+    ],
+    "variation": 0.15
+  },
+  "allometry": [
+    {
+      "age": 8,
+      "environment": "open",
+      "height": 8,
+      "tolerance": 0.6
+    },
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 12,
+      "tolerance": 0.5
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 5,
+      "max": 20
+    },
+    "leaf_length_m": {
+      "min": 0.07,
+      "max": 0.34
+    },
+    "leaf_width_m": {
+      "min": 0.1,
+      "max": 0.35
+    },
+    "petiole_length_m": {
+      "min": 0.04,
+      "max": 0.06
+    },
+    "leaf_shape": "reniform",
+    "leaf_habit": "deciduous",
+    "inflorescence": "solitary",
+    "flowering_position": "lateral",
+    "flower_symmetry": "zygomorphic",
+    "flower_size_m": {
+      "min": 0.03,
+      "max": 0.04
+    },
+    "flower_colour": [
+      120,
+      75,
+      45
+    ],
+    "corolla_shape": "tubular",
+    "stamens": 6,
+    "fruit_type": "capsule",
+    "fruit_size_m": {
+      "min": 0.06,
+      "max": 0.08
+    },
+    "fruit_colour_ripe": [
+      120,
+      95,
+      60
+    ],
+    "flowering_months": [
+      5,
+      6
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia macrophylla (read on eFloras, 2026-10-16): twining woody lianas to 20 m; the lower bound is the model estimate's usual height (species-facts-2026-10-15)."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia macrophylla (read on eFloras, 2026-10-16): blade 7-34 cm long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia macrophylla (read on eFloras, 2026-10-16): blade 10-35 cm wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia macrophylla (read on eFloras, 2026-10-16): petiole 4-6 cm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia macrophylla (read on eFloras, 2026-10-16): blade reniform with a cordate base (Simpson p. 204: cordate, large)."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia macrophylla (read on eFloras, 2026-10-16): solitary flowers in the leaf axils of new growth, on a stalk 3-7 cm."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia macrophylla (read on eFloras, 2026-10-16): flowers axillary on the new growth."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 82, Aristolochia macrophylla: flowers zygomorphic, a bent calyx tube with a three-lobed limb."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia macrophylla (read on eFloras, 2026-10-16): limb lobes 1.5-2 cm, so a limb 3-4 cm across (Dendrology p. 82: limb about 3 cm)."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia macrophylla (read on eFloras, 2026-10-16): calyx yellow-brown marked red-brown, the limb yellow to brown (Dendrology p. 82: purplish brown). The colour is our reading of the words."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 82, Aristolochia macrophylla: no petals; the calyx a tube 4-5 cm long, bent like a pipe."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia macrophylla (read on eFloras, 2026-10-16): anthers 6."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia macrophylla (read on eFloras, 2026-10-16): capsule ovoid to cylindric, opening from the base in 6 valves."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia macrophylla (read on eFloras, 2026-10-16): capsule 6-8 cm long."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 82, Aristolochia macrophylla: ripe capsule brown. The colour is our reading of the word."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 82, Aristolochia macrophylla: flowers May-June (FNA: late spring to summer)."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "California wild grape's values (a deciduous woody liana that drapes its host), with longer internodes and a closer twining hold (FNA: lianas, twining). Not fitted to measurements. Its host is the grape's, an 80-year Oregon white oak, standing in for the forest trees it climbs."
+    },
+    "host": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The host it is grown on for rendering, a built-in tree; not a botanical fact."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "8 m at 8 years and 12 m at 15 on its host, within FNA's 'to 20 m'. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after FNA vol. 3 and Simpson: ribbed young stems; large, bright green, kidney-shaped leaves on long stalks."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the Magnoliidae specs (2026-10-16): sizes from FNA vol. 3 and Dendrology, drawing values from California wild grape's."
+  }
+}

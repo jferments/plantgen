@@ -1,0 +1,280 @@
+{
+  "schema": 1,
+  "id": "lindera-benzoin",
+  "taxon": {
+    "scientific_name": "Lindera benzoin",
+    "common_name": "northern spicebush",
+    "usda_symbol": "LIBE3",
+    "family": "Lauraceae",
+    "genus": "Lindera",
+    "plant_name_id": 2351827
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "crown_radius": 1.8,
+      "crown_base": 0,
+      "crown_rate": 0.22,
+      "space_density": 30,
+      "internode": 0.16,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "branch_angle": 40,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 10,
+      "fork_height": 0.03,
+      "fork_stems": 6,
+      "fork_angle": 35,
+      "pipe_tip": 0.0015,
+      "pipe_organ": 0.003,
+      "pipe_rings": 3e-06,
+      "space_reach": 1.36,
+      "space_kill": 0.336,
+      "spur_pairs": 1,
+      "leaf_angle": 55,
+      "adult_age": 6,
+      "path_half": 1.9,
+      "spur_leaf": 0.158
+    }
+  },
+  "growth": {
+    "years": 15,
+    "step": 1,
+    "keyframes": [
+      3,
+      7,
+      15
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.36,
+      0.3,
+      0.24
+    ],
+    "foliage": [
+      0.1,
+      0.2,
+      0.06
+    ],
+    "foliage_shade": [
+      0.033,
+      0.066,
+      0.02
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "petiole": 0.09
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 15,
+      "environment": "open",
+      "height": 3,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 2,
+      "max": 5
+    },
+    "leaf_length_m": {
+      "low": 0.04,
+      "min": 0.06,
+      "max": 0.15
+    },
+    "leaf_width_m": {
+      "min": 0.02,
+      "max": 0.06
+    },
+    "petiole_length_m": {
+      "min": 0.008,
+      "max": 0.012
+    },
+    "leaf_shape": "obovate",
+    "leaf_habit": "deciduous",
+    "sexual_system": "dioecious",
+    "inflorescence": "umbel",
+    "flower_colour": [
+      235,
+      205,
+      50
+    ],
+    "flowering_position": "lateral",
+    "fruit_type": "drupe",
+    "fruit_size_m": {
+      "min": 0.008,
+      "max": 0.012
+    },
+    "fruit_colour_ripe": [
+      200,
+      30,
+      25
+    ],
+    "flowering_months": [
+      3,
+      4
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Lindera benzoin (read on eFloras, 2026-10-16): shrubs or small trees to 5 m; the lower bound is the model estimate's usual height (species-facts-2026-10-15)."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Lindera benzoin (read on eFloras, 2026-10-16): blade (4-)6-15 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Lindera benzoin (read on eFloras, 2026-10-16): blade 2-6 cm wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Lindera benzoin (read on eFloras, 2026-10-16): petiole about 10 mm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Lindera benzoin (read on eFloras, 2026-10-16): blade obovate, the smaller ones elliptic."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.sexual_system": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.flower_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.flowering_position": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: the clusters sit at the nodes of last year's twigs, before the leaves."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Lindera benzoin (read on eFloras, 2026-10-16): drupe oblong, about 10 mm."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Lindera benzoin (read on eFloras, 2026-10-16): drupe about 10 mm."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it, FNA saying only spring."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Beaked hazelnut's values (a many-stemmed deciduous understory shrub), with a slightly smaller crown. Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "3 m at 15 years in the open, within FNA's 'to 5 m' and the model's usual 2-4 m. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after FNA vol. 3: slender grey-brown stems; thin obovate leaves held level to ascending. The leaf card's petiole is 0.09 of its length, the flora's petiole against blade and petiole together."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the Magnoliidae specs (2026-10-16): sizes from FNA vol. 3 and model estimates, drawing values from beaked hazelnut's."
+  }
+}

@@ -1,0 +1,273 @@
+{
+  "schema": 1,
+  "id": "laurus-nobilis",
+  "taxon": {
+    "scientific_name": "Laurus nobilis",
+    "common_name": "bay laurel",
+    "family": "Lauraceae",
+    "genus": "Laurus",
+    "plant_name_id": 2349094
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "params": {
+      "crown_radius": 3,
+      "crown_base": 0.8,
+      "crown_rate": 0.035,
+      "space_density": 8,
+      "internode": 0.15,
+      "max_shoot": 3,
+      "pipe_rings": 4.33e-06,
+      "pipe_organ": 0.0049,
+      "pipe_tip": 0.0024,
+      "branch_angle": 35,
+      "apical_young": 0.65,
+      "apical": 0.52,
+      "spur_pairs": 2,
+      "leaf_angle": 50,
+      "lean": 6,
+      "wiggle": 8,
+      "fork_height": 0.3,
+      "fork_stems": 4,
+      "fork_angle": 20,
+      "extinction": 0.45,
+      "path_half": 6,
+      "spur_leaf": 0.131
+    }
+  },
+  "growth": {
+    "years": 30,
+    "step": 1,
+    "keyframes": [
+      4,
+      12,
+      30
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.28,
+      0.25,
+      0.22
+    ],
+    "foliage": [
+      0.05,
+      0.12,
+      0.04
+    ],
+    "foliage_shade": [
+      0.016,
+      0.04,
+      0.013
+    ],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "petiole": 0.09
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 8,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 5,
+      "max": 12
+    },
+    "leaf_length_m": {
+      "min": 0.055,
+      "max": 0.12
+    },
+    "leaf_width_m": {
+      "min": 0.018,
+      "max": 0.032
+    },
+    "petiole_length_m": {
+      "min": 0.007,
+      "max": 0.01
+    },
+    "leaf_shape": "lanceolate",
+    "sexual_system": "dioecious",
+    "inflorescence": "umbel",
+    "flower_merosity": 2,
+    "flower_size_m": {
+      "min": 0.005,
+      "max": 0.008
+    },
+    "flower_colour": [
+      225,
+      225,
+      175
+    ],
+    "fruit_type": "berry",
+    "fruit_size_m": {
+      "min": 0.01,
+      "max": 0.015
+    },
+    "fruit_colour_ripe": [
+      30,
+      25,
+      35
+    ],
+    "flowering_months": [
+      3,
+      4
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Laurus nobilis (read on eFloras, 2026-10-16): evergreen shrub-like or small trees up to 12 m; the lower bound is the model estimate's usual height (species-facts-2026-10-15)."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Laurus nobilis (read on eFloras, 2026-10-16): blade 5.5-12 cm."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Laurus nobilis (read on eFloras, 2026-10-16): blade 1.8-3.2 cm wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Laurus nobilis (read on eFloras, 2026-10-16): petiole 0.7-1 cm, purple-red when fresh."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 197, Laurus nobilis: leaves lanceolate with a wavy margin (Flora of China: oblong or oblong-lanceolate, margin slightly undulate)."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Laurus nobilis (read on eFloras, 2026-10-16): dioecious, as Dendrology (p. 367) says too."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 367, Laurus nobilis: axillary umbels of 5-6 flowers (Flora of China: umbels 1-3 together on a short raceme)."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Laurus nobilis (read on eFloras, 2026-10-16): perianth lobes 4, in two pairs; Dendrology (p. 367) counts 4 too."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 367, Laurus nobilis: flowers 5-8 mm."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 367, Laurus nobilis: flowers yellowish to greenish white. The colour is our reading of the words."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 367, Laurus nobilis: fruit a berry."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 367, Laurus nobilis: fruit 1-1.5 cm."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 367, Laurus nobilis: ripe fruit black and shiny (Flora of China: dark purple). The colour is our reading of the words."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 367, Laurus nobilis: flowers March-April."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "dendrology",
+      "note": "Idžojtić, Dendrology (2019) p. 367, Laurus nobilis: fruit ripe August-October."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Pacific madrone's crown values, changed by hand for a shrub-like small tree: several stems from near the ground, steep branches into a dense, narrow crown (Flora of China: evergreen shrub-like or small trees). Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "8 m at 30 years in the open, within Flora of China's 'up to 12 m'. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after Flora of China and Simpson: blackish-brown bark; dark green, leathery, wavy-edged leaves. The leaf card's petiole is 0.09 of its length, the flora's petiole against blade and petiole together."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the Magnoliidae specs (2026-10-16): sizes from Flora of China and Dendrology, drawing values from Pacific madrone's."
+  }
+}

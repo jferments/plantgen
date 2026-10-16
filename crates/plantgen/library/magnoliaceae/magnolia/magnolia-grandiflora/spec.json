@@ -1,0 +1,303 @@
+{
+  "schema": 1,
+  "id": "magnolia-grandiflora",
+  "taxon": {
+    "scientific_name": "Magnolia grandiflora",
+    "common_name": "southern magnolia",
+    "usda_symbol": "MAGR4",
+    "family": "Magnoliaceae",
+    "genus": "Magnolia",
+    "plant_name_id": 117615
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "params": {
+      "crown_radius": 6,
+      "crown_base": 5,
+      "crown_rate": 0.035,
+      "space_density": 4,
+      "internode": 0.22,
+      "max_shoot": 3,
+      "pipe_rings": 4.33e-06,
+      "pipe_organ": 0.0049,
+      "pipe_tip": 0.0024,
+      "branch_angle": 50,
+      "apical_young": 0.65,
+      "apical": 0.52,
+      "spur_pairs": 2,
+      "leaf_angle": 50,
+      "lean": 6,
+      "wiggle": 8,
+      "fork_height": 4,
+      "fork_stems": 1,
+      "fork_angle": 30,
+      "extinction": 0.45,
+      "path_half": 14.4,
+      "spur_leaf": 0.247
+    }
+  },
+  "growth": {
+    "years": 50,
+    "step": 1,
+    "keyframes": [
+      5,
+      20,
+      50
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.4,
+      0.38,
+      0.34
+    ],
+    "foliage": [
+      0.05,
+      0.13,
+      0.04
+    ],
+    "foliage_shade": [
+      0.016,
+      0.042,
+      0.013
+    ],
+    "variation": 0.15
+  },
+  "allometry": [
+    {
+      "age": 50,
+      "environment": "open",
+      "height": 23,
+      "dbh": 0.38,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 18,
+      "max": 27,
+      "high": 38
+    },
+    "leaf_length_m": {
+      "low": 0.075,
+      "min": 0.13,
+      "max": 0.2,
+      "high": 0.26
+    },
+    "leaf_width_m": {
+      "low": 0.045,
+      "min": 0.06,
+      "max": 0.1,
+      "high": 0.125
+    },
+    "petiole_length_m": {
+      "min": 0.015,
+      "max": 0.04
+    },
+    "leaf_shape": "elliptic",
+    "leaf_habit": "evergreen",
+    "architectural_model": "fagerlind",
+    "flower_size_m": {
+      "min": 0.15,
+      "max": 0.3,
+      "high": 0.45
+    },
+    "flower_merosity": 3,
+    "corolla_shape": "cupped",
+    "flower_colour": [
+      245,
+      240,
+      222
+    ],
+    "stamens": {
+      "low": 179,
+      "min": 213,
+      "max": 383,
+      "high": 405
+    },
+    "carpels": {
+      "low": 45,
+      "min": 55,
+      "max": 81,
+      "high": 89
+    },
+    "fruit_type": "aggregate",
+    "fruit_size_m": {
+      "min": 0.07,
+      "max": 0.1
+    },
+    "fruit_colour_ripe": [
+      150,
+      95,
+      60
+    ],
+    "flowering_months": [
+      4,
+      5,
+      6
+    ],
+    "fruiting_months": [
+      9,
+      10,
+      11
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's southern magnolia review (Coladonato 1991, read 2026-10-16): \"grows 60 to 90 feet (18-27 m) tall\". Silvics (p. 446) reports 30 to 38 m in Florida; FNA vol. 3 gives trees to 37 m."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Magnolia grandiflora (read on eFloras, 2026-10-16): blade (7.5-)13-20(-26) cm long."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Magnolia grandiflora (read on eFloras, 2026-10-16): blade (4.5-)6-10(-12.5) cm wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Magnolia grandiflora (read on eFloras, 2026-10-16): petiole 1.5-4 cm."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Magnolia grandiflora (read on eFloras, 2026-10-16): blade narrowly to broadly elliptic or oblanceolate, thick and leathery."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's southern magnolia review (Coladonato 1991, read 2026-10-16): \"a fast-growing, medium-sized, native evergreen tree\"."
+    },
+    "traits.architectural_model": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 477, Magnolia grandiflora: the book's example of Fagerlind's model."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Magnolia grandiflora (read on eFloras, 2026-10-16): flowers 15-30(-45) cm across."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china",
+      "note": "Flora of China vol. 7, Magnolia grandiflora (read on eFloras, 2026-10-16): tepals 9-12, so three or four whorls of three."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 201, Magnolia grandiflora: a cupped flower of many tepals."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Magnolia grandiflora (read on eFloras, 2026-10-16): tepals creamy white. The colour is our reading of the words."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Magnolia grandiflora (read on eFloras, 2026-10-16): stamens (179-)213-383(-405)."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Magnolia grandiflora (read on eFloras, 2026-10-16): pistils (45-)55-81(-89)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Magnolia grandiflora (read on eFloras, 2026-10-16): a follicetum of beaked follicles; seeds with a red aril."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Magnolia grandiflora (read on eFloras, 2026-10-16): follicetums 7-10 cm long."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "plant-systematics-simpson",
+      "note": "Simpson, Plant Systematics (2019) p. 201, Magnolia grandiflora: the cone-like fruit rusty brown, red seeds hanging from the opened follicles. The colour is our reading of the words."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's southern magnolia review (Coladonato 1991, read 2026-10-16): flowers between April and June."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's southern magnolia review (Coladonato 1991, read 2026-10-16): fruit ripens from September through late fall."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Pacific madrone's crown values (an evergreen broadleaf), changed by hand: one trunk, as FNA describes it (single-trunked), upright rather than leaning. Not fitted to measurements. spur_leaf is the leaf card the angiosperm rule gives leaf_size, 1.5 times the flora's mean blade, so short-shoot leaves are drawn the same size."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "silvics-1990-hardwoods",
+      "note": "Silvics of North America vol. 2 (1990), Magnolia grandiflora (Outcalt), Growth and Yield p. 446: trees free of competition grow about 0.46 m in height and 0.76 cm in diameter a year to age 50, so about 23 m and 38 cm at 50 years."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after FNA vol. 3: grey bark in thick plates; thick, glossy, dark green leaves, rusty felted below."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the Magnoliidae specs (2026-10-16): sizes from FEIS, FNA vol. 3 and Silvics, drawing values from Pacific madrone's."
+  }
+}
