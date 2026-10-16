@@ -1,0 +1,218 @@
+{
+  "schema": 1,
+  "id": "abies-lasiocarpa",
+  "taxon": {
+    "scientific_name": "Abies lasiocarpa",
+    "common_name": "subalpine fir",
+    "usda_symbol": "ABLA",
+    "family": "Pinaceae",
+    "genus": "Abies",
+    "plant_name_id": 381853
+  },
+  "growth_form": "excurrent_tree",
+  "generator": {
+    "params": {
+      "cone_chance": 0.12,
+      "cone_length": 0.08,
+      "height_rate": 0.03,
+      "height_shape": 1.5,
+      "whorl": 5,
+      "interwhorl": 2,
+      "branch_angle": 75,
+      "upturn": 0.005,
+      "spray_droop": 10,
+      "shade_death": 0.07,
+      "shade_years": 4,
+      "pipe_organ": 0.009,
+      "pipe_rings": 6.6e-06,
+      "branch_reach": 1.2
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [
+      5,
+      15,
+      30,
+      60
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open",
+      "interior"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.5,
+      0.5,
+      0.48
+    ],
+    "bark_pattern": {
+      "kind": "smooth",
+      "scale": 0.05,
+      "elongation": 3.0,
+      "fissure": 0.25,
+      "depth": 0.1,
+      "contrast": 0.2,
+      "variation": 0.15,
+      "smooth_below": 0.12,
+      "roughness": 0.35
+    },
+    "foliage": [
+      0.07,
+      0.14,
+      0.11
+    ],
+    "foliage_shade": [
+      0.015,
+      0.045,
+      0.015
+    ],
+    "variation": 0.2,
+    "organs": {
+      "cone": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.4,
+          "cone": 1
+        },
+        "colour": [
+          0.25,
+          0.15,
+          0.3
+        ]
+      },
+      "spray": {
+        "shape": {
+          "template": "needles",
+          "twigs": 6,
+          "aspect": 0.85,
+          "twig_angle": 55,
+          "width": 0.065
+        },
+        "accent": [
+          0.25,
+          0.2,
+          0.12
+        ]
+      }
+    },
+    "ridges": {
+      "spacing": 0.12,
+      "depth": 0.02,
+      "twist": 0,
+      "contrast": 0.25
+    }
+  },
+  "allometry": [
+    {
+      "age": 60,
+      "environment": "interior",
+      "height": 12,
+      "dbh": 0.25,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 18,
+      "max": 30,
+      "high": 40
+    },
+    "foliage_ranks": "all_round",
+    "leaf_length_m": {
+      "min": 0.025,
+      "max": 0.03
+    },
+    "cone_length_m": {
+      "min": 0.06,
+      "max": 0.1
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's subalpine fir review (Uchytil 1991, read 2026-10-16): \"The typical form often grows to heights of 60 to 100 feet (18-30 m)\"; \"Trees up to 130 feet (40 m) tall ... have been found but are rare\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's subalpine fir review (Uchytil 1991, read 2026-10-16): \"Needles are blunt tipped, flattened, and 1 to 1.2 inches (2.5-3 cm) long\"."
+    },
+    "traits.foliage_ranks": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 66, Abies lasiocarpa: leaves \"crowded, becoming erect by the curving of the lower\", not two-ranked."
+    },
+    "traits.cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 66, Abies lasiocarpa: \"cones oblong- cylindric, 6-10 cm. long, dark purple\"."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grand fir's values, changed by hand for subalpine fir: a shorter tree (height_rate set as for whitebark pine), an extremely narrow spire of short branches, the lower ones drooping (FEIS, Uchytil 1991: \"an extremely narrow and dense crown with short branches\"). Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "12 m and 25 cm across at 60 years in a stand; FEIS: \"Subalpine fir grows very slowly\" (Uchytil 1991). Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye: thin, grey, smooth young bark (FEIS: \"Bark on young trees is thin, gray, and smooth\"); bluish green needles (Abrams 1923 p. 66); dark purple cones."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion (2026-10-16): sizes from FEIS and Abrams, drawing values from grand fir's."
+  }
+}

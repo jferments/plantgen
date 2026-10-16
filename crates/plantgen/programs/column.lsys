@@ -51,10 +51,17 @@
 # the values: `cactaceae` the cacti's, and the flowering plants' form
 # default for stem succulents the rest.
 #
+# Revision 2 (thread "Cacti"): a column's crown may hold more than one
+# ring: below this year's ring of buds, flowers and fruit, crown_rings - 1
+# older rings of fruit, each ring_step degrees farther down the dome and
+# turned half a place, as a barrel cactus keeps last year's fruit through
+# the next flowering (The Cactus Primer: one flower to an areole made the
+# year before). One ring, as before, unless a lineage asks for more.
+#
 # The plant frame's +Z is south. One step is one year. Angles are degrees;
 # lengths are metres.
 
-lsystem column 1;
+lsystem column 2;
 
 # The plant.
 param vigour_spread;          # an individual grows exp(gauss() * vigour_spread) times as fast
@@ -141,6 +148,8 @@ param bud_area;
 param fruit_area;
 param dioecious;              # 1: each plant is male or female; 0: every plant bears both
 param sex;                    # this plant's own draw, 0 to 1: below a half, a dioecious plant is male
+param crown_rings;            # rings round a column's tip: this year's, then older rings of fruit
+param ring_step;              # degrees each older ring sits below the one above
 
 module Y(k, v, b);                      # the crown: k stems so far, vigour, arm propensity
 module Ss(k, m, v, b);                  # stems k to k + m - 1 sprouting this year
@@ -152,8 +161,8 @@ module A(v, b, kind, dr, inside, e);
 # radius it fills out to, distance along its column at its end, whether
 # it has an arm, and its column's kind, droop and elbow.
 module P(len, r0, rf, v, b, kind, armed, at, dr, e) queries position;
-module Ri(k, m, r, d);                  # flowers k to k + m - 1 of a ring
-module Fo;                              # one place in a ring: a bud, a flower or a fruit
+module Ri(k, m, r, d);                  # places k to k + m - 1 of a crown's rings
+module Fo;                              # one place in this year's ring: a bud, a flower or a fruit
 # A joint: its length and radius, its place (a trunk joint's number up
 # the trunk, a lateral's depth in its branch), vigour, whether it has
 # sprouted its daughters, and whether it is a lateral.
@@ -266,7 +275,7 @@ interpret P(len, r0, rf, v, b, kind, armed, at, dr, e) ->
 # at the foot of the newest piece, as that piece is drawn, so a pup's
 # first flowers sit on its body and not out where its tip will be.
 interpret A(v, b, kind, dr, inside, e) : flowers > 0 && kind == 0 && t * v >= bloom_age ->
-    Ri(0, flowers,
+    Ri(0, flowers * (dioecious < 0.5 || sex >= 0.5 ? crown_rings : 1),
        radius_min + (radius_max - radius_min)
          * (1 - exp(-(seedling * (1 - exp(-max(0, age - dt))) + richards(max(0, age - dt) * v, height_max, height_rate, height_shape))
                     / radius_height)),
@@ -274,10 +283,17 @@ interpret A(v, b, kind, dr, inside, e) : flowers > 0 && kind == 0 && t * v >= bl
          * (1 - exp(-(seedling * (1 - exp(-max(0, age - dt))) + richards(max(0, age - dt) * v, height_max, height_rate, height_shape))
                     / radius_height))));
 interpret A(v, b, kind, dr, inside, e) : flowers > 0 && kind == 1 && t * v >= bloom_age && age >= 5 ->
-    Ri(0, flowers, arm_radius * radius_max, dome * arm_radius * radius_max);
+    Ri(0, flowers * (dioecious < 0.5 || sex >= 0.5 ? crown_rings : 1), arm_radius * radius_max, dome * arm_radius * radius_max);
+# Places k to k + m - 1 of the crown: this year's ring, then on a plant
+# that fruits older rings of fruit, `flowers` places a ring (the older
+# rings' rule is at the end of the program, so the rules after it keep
+# their places). Split four ways so a crown of several rings nests no
+# deeper than one ring did; a part of no places draws nothing.
 interpret Ri(k, m, r, d) : m > 1 ->
-    Ri(k, floor(m / 2), r, d) Ri(k + floor(m / 2), m - floor(m / 2), r, d);
-interpret Ri(k, m, r, d) : m == 1 ->
+    Ri(k, floor(m / 4), r, d) Ri(k + floor(m / 4), floor((m + 1) / 4), r, d)
+    Ri(k + floor(m / 4) + floor((m + 1) / 4), floor((m + 2) / 4), r, d)
+    Ri(k + floor(m / 4) + floor((m + 1) / 4) + floor((m + 2) / 4), floor((m + 3) / 4), r, d);
+interpret Ri(k, m, r, d) : m == 1 && k < flowers ->
     [ /(k * 360 / flowers + uniform(-12, 12)) f(-d * (1 - cos(rad(ring_angle))))
       &(90) f(r * sin(rad(ring_angle))) ^(90 - flower_angle * uniform(0.8, 1.2)) Fo ];
 interpret Fo : rand(1) < bud_share -> bud(bud_size * uniform(0.8, 1.2));
@@ -376,3 +392,11 @@ decompose Cb(n) -> ;
 rule Ch(n) : n < chain_max -> Cf Ch(n + 1);
 interpret Cf ->
     fruit(fruit_size * uniform(0.9, 1.1)) f(fruit_size * 0.85) +(gauss() * 18) &(gauss() * 10);
+
+# An older ring's place in a column's crown: last year's fruit, ring_step
+# degrees farther down the dome per ring and turned half a place.
+interpret Ri(k, m, r, d) : m == 1 ->
+    [ /((k + 0.5 * floor(k / flowers)) * 360 / flowers + uniform(-12, 12))
+      f(-d * (1 - cos(rad(min(90, ring_angle + floor(k / flowers) * ring_step)))))
+      &(90) f(r * sin(rad(min(90, ring_angle + floor(k / flowers) * ring_step))))
+      ^(90 - flower_angle * uniform(0.8, 1.2)) fruit(fruit_size * uniform(0.85, 1.15)) ];

@@ -123,6 +123,14 @@ pub struct Ribs {
     pub sharpness: f64,
     /// How far the ribs spiral round the axis, degrees per metre.
     pub twist: f64,
+    /// The share of stems whose rib count keeps to the Fibonacci number
+    /// (8, 13, 21, 34) nearest the fitted one within `count`, as the ranks
+    /// of a spiral of areoles do in *Ferocactus*.
+    pub fibonacci: f64,
+    /// How far the ribs lean from the axis, degrees, winding left on half
+    /// the stems and right on the rest. With `fibonacci`, only the stems
+    /// keeping to a Fibonacci number lean; the others stand straight.
+    pub lean: f64,
 }
 
 impl Default for Ribs {
@@ -133,6 +141,8 @@ impl Default for Ribs {
             depth: 0.12,
             sharpness: 0.3,
             twist: 0.0,
+            fibonacci: 0.0,
+            lean: 0.0,
         }
     }
 }
@@ -176,6 +186,12 @@ pub struct Areoles {
     pub felt_radius: f64,
     /// The felt's colour.
     pub felt: [f32; 3],
+    /// Thickness, metres, of the woolly cap the young areoles' felt
+    /// makes over the apex: thickest at the tip and thinning out over the
+    /// dome as the areoles separate, filling the ribs' valleys there. 0
+    /// for none; barrel cacti's can exceed 4 cm (Gibson and Nobel 1986,
+    /// ch. 5).
+    pub apex_wool: f64,
 }
 
 impl Default for Areoles {
@@ -184,6 +200,7 @@ impl Default for Areoles {
             spacing: 0.02,
             felt_radius: 0.003,
             felt: [0.55, 0.5, 0.42],
+            apex_wool: 0.0,
         }
     }
 }
@@ -387,6 +404,8 @@ impl BodyLook {
             within("ribs depth", ribs.depth, 0.0, 0.6)?;
             within("ribs sharpness", ribs.sharpness, 0.0, 1.0)?;
             within("ribs twist", ribs.twist, -720.0, 720.0)?;
+            within("ribs fibonacci", ribs.fibonacci, 0.0, 1.0)?;
+            within("ribs lean", ribs.lean, 0.0, 60.0)?;
         }
         if let Some(tubercles) = &self.tubercles {
             within("tubercles height", tubercles.height, 0.0, 2.0)?;
@@ -399,6 +418,7 @@ impl BodyLook {
             within("areoles spacing", areoles.spacing, 0.001, 0.5)?;
         }
         within("areoles felt_radius", areoles.felt_radius, 0.0, 0.05)?;
+        within("areoles apex_wool", areoles.apex_wool, 0.0, 0.1)?;
         colour_ok("areoles felt", areoles.felt)?;
         if self.spines.len() > MAX_SPINE_SETS {
             return Err(format!(
@@ -490,7 +510,14 @@ impl BodyLook {
         } else {
             self.colour
         };
-        (colour, spines::cover(self, spacing * spacing))
+        // Areoles sit along the crests, so each has the skin from its own
+        // crest halfway to the next on either side; without ribs, a square
+        // of the areoles' spacing.
+        let width = self
+            .ribs
+            .as_ref()
+            .map_or(spacing, |ribs| ribs.spacing.max(spacing));
+        (colour, spines::cover(self, spacing * width))
     }
 }
 
@@ -1187,6 +1214,8 @@ struct Surface<'a> {
     bump_stretch: f64,
     /// Metres added to the radius: the spines' reach on far levels.
     swell: f64,
+    /// Thickness of the woolly cap over the apex, metres.
+    wool: f64,
 }
 
 impl Surface<'_> {
@@ -1240,6 +1269,12 @@ impl Surface<'_> {
             valley = valley.max(1.0 - bump);
         }
         let swell = self.swell * self.line.cap(s);
+        if self.wool > 0.0 {
+            // The cap fills the valleys and rounds over the crests.
+            let wool = apex_wool(self.line, s);
+            radius += (crest - radius) * wool + self.wool * wool;
+            valley *= 1.0 - wool;
+        }
         (radius + swell, valley)
     }
 
@@ -1380,13 +1415,29 @@ impl Hull {
 }
 
 /// Areoles along each rib's crest, `spacing` apart along the skin, the
-/// ribs offset from each other by the golden section. None where the
-/// crests crowd closer than half the spacing, near the apex and a closed
-/// base.
+/// ribs offset from each other by the golden section. Over the dome the
+/// areoles are young and their internodes not yet stretched, so they
+/// crowd toward the apex: the spacing shrinks with the crest's radius
+/// there, to [`APEX_CROWDING`] of it at the tip (Gibson and Nobel 1986;
+/// Kaplan's apical pit, where areoles form and pass over the shoulder).
+/// Where the crests crowd closer than half that spacing only every
+/// second, fourth, ... rib carries on, as ribs merge toward the apex; none
+/// near a closed base.
 fn rib_sites(line: &Centreline, surface: &Surface<'_>, spacing: f64, id: u64) -> Vec<Site> {
     let samples = even_samples(line.length, spacing * 0.25, 40_000);
     let meridian = line.meridian(&samples);
-    let total = meridian.last().copied().unwrap_or(0.0);
+    let crowding = |s: f64| apex_crowding(line, s);
+    // Distance along the skin in local spacings: rows fall at whole steps.
+    let mut warped = Vec::with_capacity(samples.len());
+    let mut total = 0.0;
+    for i in 0..samples.len() {
+        if i > 0 {
+            let middle = f64::midpoint(samples[i], samples[i - 1]);
+            total += (meridian[i] - meridian[i - 1]) / crowding(middle);
+        }
+        warped.push(total);
+    }
+    let meridian = warped;
     let ribs = surface.ribs.max(1);
     let mut sites = Vec::new();
     for rib in 0..ribs {
@@ -1405,8 +1456,19 @@ fn rib_sites(line: &Centreline, surface: &Surface<'_>, spacing: f64, id: u64) ->
             }
             let s = invert(&meridian, &samples, along);
             let crowd = 2.0 * PI * line.crest(s) / f64::from(ribs);
-            if crowd < 0.45 * spacing {
-                continue;
+            let local = spacing * crowding(s);
+            if crowd < 0.45 * local {
+                // Ribs merge toward the apex: every `keep`-th carries on.
+                let near_tip = s > line.length - line.dome;
+                #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                let keep = if near_tip && crowd > 0.0 {
+                    (0.45 * local / crowd).log2().ceil().exp2() as u32
+                } else {
+                    u32::MAX
+                };
+                if keep == u32::MAX || keep >= ribs || rib % keep != 0 {
+                    continue;
+                }
             }
             let t = surface.phase + surface.twist * s + 2.0 * PI * f64::from(rib) / f64::from(ribs);
             sites.push(Site {
@@ -1420,6 +1482,29 @@ fn rib_sites(line: &Centreline, surface: &Surface<'_>, spacing: f64, id: u64) ->
         }
     }
     sites
+}
+
+/// How much of the woolly cap lies at `s`: 1 at the tip, falling to 0
+/// halfway down the dome.
+fn apex_wool(line: &Centreline, s: f64) -> f64 {
+    if line.dome <= 0.0 || s <= line.length - line.dome {
+        return 0.0;
+    }
+    let x = ((s - (line.length - line.dome)) / line.dome).min(1.0);
+    math::smoothstep(0.5, 1.0, x)
+}
+
+/// Least share of an areole's spacing at the apex.
+const APEX_CROWDING: f64 = 0.35;
+
+/// Share of the spacing between areoles at `s`: 1 below the dome, falling
+/// with the crest's radius over it to [`APEX_CROWDING`] at the tip.
+fn apex_crowding(line: &Centreline, s: f64) -> f64 {
+    if line.dome <= 0.0 || s <= line.length - line.dome {
+        return 1.0;
+    }
+    let x = ((s - (line.length - line.dome)) / line.dome).min(1.0);
+    APEX_CROWDING.max(math::sqrt((1.0 - x * x).max(0.0)))
 }
 
 /// Areoles on a golden-angle spiral from the apex down, each with
@@ -1600,16 +1685,40 @@ pub fn build_between(
     }
 }
 
-/// The ribs round an axis of `look` whose widest radius is `widest`: as
-/// many as fit at the ribs' spacing, within their count (0 without ribs).
-fn rib_count(look: &BodyLook, widest: f64) -> u32 {
-    look.ribs.as_ref().map_or(0, |ribs| {
+/// The ribs round `axis` of `look` whose widest radius is `widest`: as
+/// many as fit at the ribs' spacing, within their count (0 without ribs),
+/// and their twist, radians per metre.
+fn rib_plan(look: &BodyLook, axis: &Axis, widest: f64) -> (u32, f64) {
+    look.ribs.as_ref().map_or((0, 0.0), |ribs| {
         // A small whole number of ribs.
         #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
         let fitted = (2.0 * PI * widest / ribs.spacing).round() as u32;
-        fitted.clamp(ribs.count[0], ribs.count[1]).max(3)
+        let fitted = fitted.clamp(ribs.count[0], ribs.count[1]).max(3);
+        // The Fibonacci number nearest the fitted count, within `count`.
+        let fibonacci = FIBONACCI
+            .iter()
+            .copied()
+            .filter(|n| (ribs.count[0]..=ribs.count[1]).contains(n))
+            .min_by_key(|n| n.abs_diff(fitted))
+            .filter(|_| unit(mix64(axis.id ^ 0xF1B0)) < ribs.fibonacci);
+        let count = fibonacci.unwrap_or(fitted);
+        let leans = ribs.fibonacci == 0.0 || fibonacci.is_some();
+        let lean = if leans && ribs.lean > 0.0 && widest > 0.0 {
+            let hand = if unit(mix64(axis.id ^ 0x7A15)) < 0.5 {
+                -1.0
+            } else {
+                1.0
+            };
+            hand * math::tan(math::radians(ribs.lean)) / widest
+        } else {
+            0.0
+        };
+        (count, math::radians(ribs.twist) + lean)
     })
 }
+
+/// The rib counts a spiral of areoles falls into.
+const FIBONACCI: [u32; 8] = [3, 5, 8, 13, 21, 34, 55, 89];
 
 /// One body axis as it is drawn, for the checks (spec rework E6c): a
 /// column, a barrel's stem, an arm or a joint (a tree cholla's trunk
@@ -1669,7 +1778,7 @@ pub fn measure(graph: &PlantGraph, looks: &[BodyLook]) -> Vec<Measured> {
                 tip: !bearing,
                 length: line.length,
                 widest,
-                ribs: rib_count(look, widest),
+                ribs: rib_plan(look, axis, widest).0,
             })
         })
         .collect()
@@ -1680,6 +1789,8 @@ struct Layout {
     /// Ribs round the axis, and whether the level folds them.
     ribs: u32,
     folded: bool,
+    /// The ribs' twist, radians per metre.
+    twist: f64,
     /// Width of a tubercle's foot; 0 for none at this level.
     bump_width: f64,
     /// Vertices round a ring, and the longest step between rings.
@@ -1719,7 +1830,7 @@ impl Body<'_> {
             / f64::from(u32::try_from(line.stations.len()).unwrap_or(1).max(1));
 
         // Ribs round this axis, and whether this level folds them.
-        let ribs = rib_count(look, widest);
+        let (ribs, twist) = rib_plan(look, self.axis, widest);
         let per_rib = if ribs > 0 && detail.per_rib > 0 {
             let per = detail.per_rib.min(detail.max_sides / ribs);
             if per >= 2 { per - per % 2 } else { 0 }
@@ -1757,6 +1868,7 @@ impl Body<'_> {
         Layout {
             ribs,
             folded,
+            twist,
             bump_width,
             sides,
             step,
@@ -1777,6 +1889,7 @@ impl Body<'_> {
         let Layout {
             ribs,
             folded,
+            twist,
             bump_width,
             sides,
             step,
@@ -1787,9 +1900,11 @@ impl Body<'_> {
             .as_ref()
             .filter(|_| detail.per_tubercle > 0.0 && spacing > 0.0);
 
-        let (ribs_depth, sharpness, twist) = look.ribs.as_ref().map_or((0.0, 0.0, 0.0), |ribs| {
-            (ribs.depth, ribs.sharpness, math::radians(ribs.twist))
-        });
+        let (ribs_depth, sharpness) = look
+            .ribs
+            .as_ref()
+            .map_or((0.0, 0.0), |ribs| (ribs.depth, ribs.sharpness));
+
         let mut surface = Surface {
             line,
             flatten: look.flatten,
@@ -1805,6 +1920,7 @@ impl Body<'_> {
             bump_point: tubercles.map_or(1.0, |tubercles| tubercles.point),
             bump_stretch: tubercles.map_or(1.0, |tubercles| tubercles.stretch),
             swell: 0.0,
+            wool: look.areoles.apex_wool,
         };
 
         // Areoles: placed on the plain surface, those inside another
@@ -1914,6 +2030,9 @@ impl Body<'_> {
                 }
                 if cover > 0.0 {
                     colour = mix(colour, tint, cover);
+                }
+                if surface.wool > 0.0 {
+                    colour = mix(colour, look.areoles.felt, apex_wool(self.line, s));
                 }
                 #[allow(clippy::cast_possible_truncation)]
                 let uv = [(f64::from(side) / f64::from(sides)) as f32, s as f32];
@@ -2059,6 +2178,7 @@ impl Surface<'_> {
             bump_point: 1.0,
             bump_stretch: 1.0,
             swell: 0.0,
+            wool: 0.0,
         }
     }
 }
@@ -2203,6 +2323,95 @@ mod tests {
         }
         // Twelve ribs of six sides each.
         assert_eq!(wood.vertex_count() % (12 * 6 + 1), 0);
+    }
+
+    #[test]
+    fn fibonacci_ribs_lean_either_way_and_the_rest_stand_straight() {
+        let look = BodyLook {
+            ribs: Some(Ribs {
+                count: [20, 28],
+                spacing: 0.065,
+                fibonacci: 0.5,
+                lean: 30.0,
+                ..Ribs::default()
+            }),
+            ..BodyLook::default()
+        };
+        let (mut fibonacci, mut left, mut right) = (0, 0, 0);
+        for id in 0..400_u64 {
+            let axis = Axis {
+                body: 1,
+                segments: Vec::new(),
+                id: mix64(id),
+            };
+            let (ribs, twist) = rib_plan(&look, &axis, 0.3);
+            if ribs == 21 {
+                fibonacci += 1;
+                let expected = math::tan(math::radians(30.0)) / 0.3;
+                assert!((twist.abs() - expected).abs() < 1e-9, "{twist}");
+                if twist < 0.0 { left += 1 } else { right += 1 }
+            } else {
+                assert_eq!((ribs, twist), (28, 0.0));
+            }
+        }
+        assert!(
+            (150..250).contains(&fibonacci),
+            "{fibonacci} of 400 keep to 21"
+        );
+        assert!(
+            left > fibonacci / 3 && right > fibonacci / 3,
+            "{left} left, {right} right"
+        );
+    }
+
+    #[test]
+    fn areoles_crowd_over_the_dome_and_wool_caps_the_apex() {
+        let graph = column(1.0, 0.2, 2);
+        let look = ribbed();
+        let near = mesh(&graph, &look, 0);
+        // Young areoles reach the top of the dome (one radius long),
+        // closer together than the spacing below it.
+        let highest = near
+            .tufts
+            .iter()
+            .map(|tuft| f64::from(tuft.position[1]))
+            .fold(0.0, f64::max);
+        assert!(highest > 0.97, "highest areole at {highest}");
+        let on_dome = near
+            .tufts
+            .iter()
+            .filter(|tuft| tuft.position[1] > 0.8)
+            .count();
+        #[allow(clippy::cast_precision_loss)]
+        let even = 12.0 * 0.2 * (std::f64::consts::PI / 2.0) / look.areoles.spacing;
+        #[allow(clippy::cast_precision_loss)]
+        let crowded = on_dome as f64;
+        assert!(
+            crowded > even,
+            "{crowded} areoles on the dome, {even} at even spacing"
+        );
+        // A woolly cap rounds the ribs over the apex and takes the felt's
+        // colour; without it the tip keeps the skin's.
+        let woolly = BodyLook {
+            areoles: Areoles {
+                apex_wool: 0.02,
+                ..look.areoles.clone()
+            },
+            ..look.clone()
+        };
+        let capped = mesh(&graph, &woolly, 0);
+        let tip = |out: &PlantMesh| {
+            out.wood
+                .positions
+                .iter()
+                .zip(&out.wood.colors)
+                .filter(|(position, _)| position[1] > 0.99)
+                .map(|(_, colour)| colour[0])
+                .fold(0.0_f32, f32::max)
+        };
+        assert!((tip(&capped) - woolly.areoles.felt[0]).abs() < 0.02);
+        assert!((tip(&near) - woolly.areoles.felt[0]).abs() > 0.1);
+        woolly.validate().unwrap();
     }
 
     #[test]

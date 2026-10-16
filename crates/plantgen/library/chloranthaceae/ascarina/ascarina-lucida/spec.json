@@ -1,0 +1,224 @@
+{
+  "schema": 1,
+  "id": "ascarina-lucida",
+  "taxon": {
+    "scientific_name": "Ascarina lucida",
+    "common_name": "hutu",
+    "family": "Chloranthaceae",
+    "genus": "Ascarina",
+    "plant_name_id": 2654503
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {}
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 4,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "leaf_habit": "evergreen",
+    "height_typical_m": {
+      "min": 3,
+      "max": 7.6
+    },
+    "height_max_m": 8,
+    "stem_diameter_max_m": {
+      "min": 0.15,
+      "max": 0.3
+    },
+    "leaf_length_m": {
+      "min": 0.025,
+      "max": 0.05
+    },
+    "leaf_width_m": {
+      "min": 0.015,
+      "max": 0.03
+    },
+    "leaf_shape": "oblong",
+    "inflorescence": "spike",
+    "inflorescence_length_m": {
+      "min": 0.02,
+      "max": 0.05
+    },
+    "flower_colour": [
+      190,
+      200,
+      140
+    ],
+    "fruit_size_m": {
+      "min": 0.003,
+      "max": 0.004
+    },
+    "fruit_colour_ripe": [
+      240,
+      240,
+      235
+    ],
+    "flowering_months": [
+      9,
+      10,
+      11
+    ],
+    "fruiting_months": [
+      12,
+      1,
+      2
+    ],
+    "leaf_colour": [
+      111,
+      136,
+      60
+    ],
+    "bark_colour": [
+      80,
+      42,
+      45
+    ],
+    "crown_form": "rounded",
+    "crown_see_through": {
+      "min": 0.0,
+      "max": 0.15
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Cheeseman (1925) has it a shrub or small tree; in iNaturalist research-grade photographs it grows as a dense bush of many stems from the base, leafy nearly to the ground (observations 186249737, 259778304, 358527588), so it is drawn by the shrub form."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "5 m at 30 years in the open, within Cheeseman's 3-7.6 m. Replace with measured data before calling this species calibrated."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "cheeseman-1925",
+      "note": "Cheeseman (1925), Manual of the New Zealand Flora pp. 371-372, Ascarina lucida: a closely branched shrub or small tree."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as Cheeseman does not say."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "cheeseman-1925",
+      "note": "Cheeseman (1925), Manual of the New Zealand Flora pp. 371-372, Ascarina lucida: 10-25 ft (3-7.6 m) high."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), just above Cheeseman's 25 ft."
+    },
+    "traits.stem_diameter_max_m": {
+      "evidence": "SourceInferred",
+      "source": "cheeseman-1925",
+      "note": "Cheeseman (1925), Manual of the New Zealand Flora pp. 371-372, Ascarina lucida: a trunk 6-12 in (15-30 cm) across."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "cheeseman-1925",
+      "note": "Cheeseman (1925), Manual of the New Zealand Flora pp. 371-372, Ascarina lucida: leaves 1-2 in (2.5-5 cm) long with the petiole."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as Cheeseman gives no width."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "cheeseman-1925",
+      "note": "Cheeseman (1925), Manual of the New Zealand Flora pp. 371-372, Ascarina lucida: leaves obovate-oblong to elliptic-oblong or linear-oblong, obtuse or acute."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "cheeseman-1925",
+      "note": "Cheeseman (1925), Manual of the New Zealand Flora pp. 371-372, Ascarina lucida: spikes laxly branched like a raceme, the female more slender and less divided."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as Cheeseman gives no length for this species."
+    },
+    "traits.flower_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as Cheeseman gives no colour; green as the authors render it."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as Cheeseman had not seen ripe fruit."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as Cheeseman had not seen ripe fruit."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "cheeseman-1925",
+      "note": "Cheeseman (1925), Manual of the New Zealand Flora pp. 371-372, Ascarina lucida: flowers September-November."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as Cheeseman had not seen ripe fruit."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "A yellowish green, the median over each photograph of its green, saturated pixels, then the median over the photographs, in 19 photographs in iNaturalist research-grade observations 31869327, 66410877, 105296934, 186249737, 259778304, 261697877, 281699676, 335335726, 344349196, 358527588 (CC0, CC BY)."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "cheeseman-1925",
+      "note": "Cheeseman's Manual of the New Zealand Flora (1925): a shrub or small tree, the branches dark purplish-red. As RGB, the median of the twigs' purplish-red pixels in close-ups in iNaturalist research-grade observation 66410877 (CC BY); the same colour on the twigs in 261697877, 281699676 and 358527588."
+    },
+    "traits.crown_form": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "A dense, rounded bush leafy nearly to the ground, its many twigs crowded with leaves (observations 186249737, 358527588, 259778304)."
+    },
+    "traits.crown_see_through": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Seen from the side, a grown bush shows almost no sky or background through its outline: its leaves overlap from the outer shell inward (observations 186249737, 259778304, 358527588), under a sixth of it read by eye."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (Chloranthaceae, 2026-10-16): sizes and looks stated as facts from Cheeseman's Manual and drawn by the decurrent tree defaults and the angiosperm rules; leaf width, months, spike length and fruit from the species-facts estimates."
+  }
+}

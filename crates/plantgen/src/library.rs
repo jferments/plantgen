@@ -2630,7 +2630,7 @@ mod tests {
         assert_eq!(home.home.as_deref(), Some("pinaceae/family.json"));
         assert_eq!(home.extends.as_deref(), Some("conifer"));
         assert_eq!(home.named_by, ["pinaceae/family.json"]);
-        assert_eq!(home.species.len(), 7);
+        assert_eq!(home.species.len(), 10);
         let base = homes.iter().find(|home| home.name == "conifer").unwrap();
         assert_eq!(base.home, None);
         assert_eq!(base.species.len(), 0);
