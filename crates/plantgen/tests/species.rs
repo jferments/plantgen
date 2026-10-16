@@ -100,7 +100,8 @@ fn builtin_species_grow_to_their_reference_sizes() {
 
 /// Every organ type of every built-in species shades with about the leaf
 /// area its look draws, so the light a plant grows by matches the foliage
-/// a viewer sees.
+/// a viewer sees; a needle card with its needles' own area, which its
+/// painted lines overstate (`templates::shade_area`).
 #[test]
 fn builtin_species_shade_with_the_area_they_draw() {
     let mut failures = Vec::new();
@@ -113,7 +114,7 @@ fn builtin_species_shade_with_the_area_they_draw() {
         // One look per organ type, then its leaves' families' looks.
         assert!(shading.len() <= looks.len());
         for ((look, template), shaded) in looks.iter().zip(&templates.templates).zip(&shading) {
-            let drawn = templates::drawn_area(look, template);
+            let drawn = templates::shade_area(look, template);
             if !spec::areas_agree(drawn, *shaded) {
                 failures.push(format!(
                     "{id} `{}` draws {drawn:.3} m² on an organ 1 m long but shades with {shaded:.3} m²",
@@ -128,7 +129,7 @@ fn builtin_species_shade_with_the_area_they_draw() {
         for (index, look) in looks.iter().enumerate().take(shading.len()) {
             let forms = look.forms;
             let area = |index: usize, size: f64| {
-                templates::drawn_area(&looks[index], &templates.templates[index]) * size * size
+                templates::shade_area(&looks[index], &templates.templates[index]) * size * size
             };
             // Juvenile leaves draw about what the type's own look draws.
             if let Some((juvenile, _)) = forms.juvenile

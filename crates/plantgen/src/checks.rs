@@ -3411,6 +3411,41 @@ mod tests {
     }
 
     #[test]
+    fn a_blade_stated_toothed_draws_teeth() {
+        let kingdom: Value =
+            serde_json::from_str(include_str!("../library/_ranks/kingdom/plantae.json")).unwrap();
+        let rules = &kingdom["rules"];
+        let margin = |organ: &str, field: &str| {
+            rules[format!("appearance.organs.{organ}.shape.{field}")]["map"]["leaf_margin"].clone()
+        };
+        // A rosette's leaves follow the species' margin as its leaves do.
+        for field in ["teeth", "tooth_depth", "round"] {
+            assert_eq!(margin("leaf", field), margin("basal", field), "{field}");
+        }
+        let (teeth, depth, round) = (
+            margin("leaf", "teeth"),
+            margin("leaf", "tooth_depth"),
+            margin("leaf", "round"),
+        );
+        assert_eq!(teeth["entire"], 0);
+        for word in ["serrate", "dentate", "crenate", "spiny"] {
+            assert!(teeth[word].as_u64().unwrap() > 0, "{word}");
+            assert!(depth[word].as_f64().unwrap() > 0.0, "{word}");
+        }
+        // Serrate saw teeth, dentate blunter, crenate scallops.
+        let round = |word: &str| round[word].as_f64().unwrap();
+        assert!(round("serrate") < round("dentate") && round("dentate") < round("crenate"));
+        // Chloranthaceae state their leaves serrate and draw no teeth of
+        // their own: the rule draws them.
+        let spec: Value =
+            serde_json::from_str(crate::library::species("sarcandra-glabra").unwrap().source)
+                .unwrap();
+        let shape = &spec["appearance"]["organs"]["leaf"]["shape"];
+        assert_eq!(shape["teeth"], teeth["serrate"], "{shape}");
+        assert_eq!(shape["round"], 0.0, "{shape}");
+    }
+
+    #[test]
     fn heads_and_awns_read_the_words_their_rules_draw() {
         let map = |file: &str, path: &str, word: &str| -> Vec<(String, f64)> {
             let rank: Value = serde_json::from_str(file).unwrap();

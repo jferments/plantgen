@@ -25,14 +25,13 @@
       "branch_angle": 55,
       "upturn": 0.0125,
       "branch_growth": 0.22,
-      "side_chance": 0.6,
+      "side_chance": 0.8,
       "spray_base": 0.15,
       "spray_length": 0.9,
       "shade_death": 0.15,
       "shade_years": 2,
       "pipe_organ": 0.012,
       "pipe_rings": 1.6e-05,
-      "spray_area": 0.273,
       "branch_reach": 4.2,
       "epi_chance": 0
     }
@@ -70,8 +69,6 @@
       "spray": {
         "shape": {
           "template": "needles",
-          "twigs": 2,
-          "aspect": 0.5,
           "twig_angle": 35,
           "width": 0.03
         },
@@ -139,7 +136,7 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a small, irregular pine with a rounded to flat-topped crown, stout upturned branches and tufts of short, paired needles at the twig ends. Not fitted to measurements. Cones (plant forms F3): 3 to 6 cm, often closed and kept on the tree for years; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles. Spec rework E6d: `cone_length`, `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe, and `pipe_rings` refitted to the dbh references now that the crown holds more foliage; `branch_ageing` is gone with the calendar ageing it set; `epi_chance` 0, as pines seldom sprout from dormant buds on their branches (general knowledge, not measured)."
+      "note": "Hand-set from general knowledge of the species: a small, irregular pine with a rounded to flat-topped crown, stout upturned branches and tufts of short, paired needles at the twig ends. Not fitted to measurements. Cones (plant forms F3): 3 to 6 cm, often closed and kept on the tree for years; set from general knowledge of the species, not measured. Spray area (plant roadmap P4): the area its card draws now that its needles stand in fascicles. Spec rework E6d: `cone_length`, `needle_years` now set by the rules at Pinidae from the stated characters. Conifer form (pinidae revision 5): `branch_reach` fitted so the open-grown crown keeps revision 4's radius at the oldest keyframe, and `pipe_rings` refitted to the dbh references now that the crown holds more foliage; `branch_ageing` is gone with the calendar ageing it set; `epi_chance` 0, as pines seldom sprout from dormant buds on their branches (general knowledge, not measured). Needle shading (generator revision 85): `side_chance` raised from 0.6 to 0.8 so the crown keeps the urban tree database's leaf area per crown area (3.6 to 6.8) now that its needles shade only their true area."
     },
     "allometry": {
       "evidence": "Authored",
