@@ -467,4 +467,9 @@ pub mod venation;
 /// 77: a colour character is sRGB, so a colour rule reads it as linear
 /// light: every stated flower, fruit, leaf and bark colour draws as deep
 /// as it is stated, where it drew paler (76 is strap joints, #145).
-pub const GENERATOR_REVISION: u32 = 77;
+/// 78: a crownshaft's sheaths are its fronds' (palm program revision 8):
+/// each frond draws its sheath within its `frond` structure, so the royal
+/// palm and every crownshaft palm build again (until 77 a year's sheaths
+/// stood within no structure, which the organ check refuses for a piece;
+/// 77 is colour characters read as sRGB, #152).
+pub const GENERATOR_REVISION: u32 = 78;
