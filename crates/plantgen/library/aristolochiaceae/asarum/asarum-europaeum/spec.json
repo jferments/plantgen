@@ -68,12 +68,7 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 1.0,
-          "widest": 0.3,
-          "tip": 0.3,
-          "base": 1.0,
           "teeth": 0,
-          "tooth_depth": 0.03,
           "petiole": 0
         },
         "face_up": 0.85
@@ -102,6 +97,7 @@
       "min": 0.04,
       "max": 0.1
     },
+    "leaf_venation": "palmate",
     "leaf_shape": "reniform",
     "leaf_habit": "evergreen",
     "perennation": "rhizome",
@@ -169,6 +165,11 @@
       "source": "wikipedia",
       "note": "Wikipedia, Asarum europaeum (read 2026-10-16): leaves about 10 cm wide; the lower bound is the model estimate's (species-facts-2026-10-15)."
     },
+    "traits.leaf_venation": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Asarum europaeum (read 2026-10-16): reniform leaves; read as palmately veined, as the genus's kidney-shaped blades are, their main veins from the base (inferred, not stated in the article)."
+    },
     "traits.leaf_shape": {
       "evidence": "SourceInferred",
       "source": "wikipedia",
@@ -227,7 +228,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, after Wikipedia's article: glossy, dark green, kidney-shaped evergreen leaves on long stalks (the western species' card, darker), held nearly flat in a closed mat, as iNaturalist photographs show it (observations 87548580, 381126740)."
+      "note": "By eye, after Wikipedia's article: glossy, dark green, kidney-shaped evergreen leaves on long stalks, the outline drawn by the kingdom's rules from the stated reniform shape, held nearly flat in a closed mat, as iNaturalist photographs show it (observations 87548580, 381126740)."
     }
   },
   "provenance": {

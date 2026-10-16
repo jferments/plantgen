@@ -77,10 +77,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.8,
-          "widest": 0.3,
-          "tip": 0.1,
-          "base": 1.0,
           "teeth": 0,
           "petiole": 0.18
         }
@@ -301,7 +297,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, after FNA vol. 3: young stems ribbed and felted; dull green heart-shaped leaves, felted beneath, drawn on a simple card widest near its full base with a round tip (FNA: apex obtuse to rounded), 0.8 as broad as long (FNA: blade 4-12 x 3-10 cm), as no cordate card is drawn yet. The leaf card's petiole is 0.18 of its length, the flora's petiole against blade and petiole together."
+      "note": "By eye, after FNA vol. 3: young stems ribbed and felted; dull green heart-shaped leaves, felted beneath; the blade's outline, basal lobes and width are drawn by the kingdom's rules from its stated cordate shape, palmate veins and size. The leaf card's petiole is 0.18 of its length, the flora's petiole against blade and petiole together."
     }
   },
   "provenance": {
