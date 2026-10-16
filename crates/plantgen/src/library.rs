@@ -3382,8 +3382,8 @@ mod tests {
                 parent.remove(key);
             }
             // A section a rule filled alone (a look's hairs) goes with it.
-            let mut path = outer;
-            while let Some((above, key)) = path.rsplit_once('.') {
+            let mut section = outer;
+            while let Some((above, key)) = section.rsplit_once('.') {
                 let Some(parent) = above
                     .split('.')
                     .try_fold(&mut *spec, step)
@@ -3395,7 +3395,7 @@ mod tests {
                     break;
                 }
                 parent.remove(key);
-                path = above;
+                section = above;
             }
             if let Some(notes) = spec
                 .get_mut("evidence")
