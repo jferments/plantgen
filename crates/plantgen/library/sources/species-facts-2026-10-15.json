@@ -1,0 +1,10 @@
+{
+  "id": "species-facts-2026-10-15",
+  "title": "PlantGen species facts: language-model estimates of 30 characters for each Library 1.0 species (2026-10-15), from the species' name, family and growth form, with no reference behind each value",
+  "authors": "PlantGen contributors",
+  "year": 2026,
+  "url": "https://data.plantgen.io/private/sources/species-facts/2026-10-15/",
+  "licence": "MIT, as PlantGen",
+  "tier": 4,
+  "kind": "inferred"
+}

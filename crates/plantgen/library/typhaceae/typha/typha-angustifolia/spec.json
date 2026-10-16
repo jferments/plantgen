@@ -1,0 +1,190 @@
+{
+  "schema": 1,
+  "id": "typha-angustifolia",
+  "taxon": {
+    "scientific_name": "Typha angustifolia",
+    "common_name": "narrowleaf cattail",
+    "usda_symbol": "TYAN",
+    "family": "Typhaceae",
+    "genus": "Typha",
+    "plant_name_id": 270931
+  },
+  "growth_form": "graminoid",
+  "generator": {
+    "params": {
+      "leaves": 8,
+      "leaf_length": 1.05,
+      "spike_length": 0.1,
+      "head": 0
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.3,
+      0.32,
+      0.18
+    ],
+    "foliage": [
+      0.08,
+      0.16,
+      0.04
+    ],
+    "foliage_shade": [
+      0.025,
+      0.05,
+      0.015
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.01
+        },
+        "bend": {
+          "fold": 15,
+          "cup": 0,
+          "droop": 25,
+          "twist": 12
+        }
+      },
+      "spike": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.11
+        },
+        "colour": [
+          0.3,
+          0.17,
+          0.08
+        ],
+        "shade": [
+          0.1,
+          0.06,
+          0.03
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 1.5,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "culm_length_m": {
+      "min": 1.0,
+      "max": 2.0
+    },
+    "leaf_length_m": {
+      "min": 0.6,
+      "max": 1.5
+    },
+    "leaf_width_m": {
+      "min": 0.004,
+      "max": 0.012
+    },
+    "clonal": true
+  },
+  "evidence": {
+    "traits.culm_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's narrowleaf cattail review (Snyder 1993, read 2026-10-15): \"an erect, rhizomatous perennial that grows 3 to 6 feet (1-2 m) tall\"; the flowering stem is the plant's tallest part."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's narrowleaf cattail review (Snyder 1993, read 2026-10-15): \"Its leaves are 2 to 5 feet (0.6-1.5 m) long, very narrow, and flattened\"."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives a width; FEIS says only \"very narrow\"."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's narrowleaf cattail review (Snyder 1993, read 2026-10-15): \"once established, colonies are maintained by vegetative reproduction\" from lateral rhizomes."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The cattail program's values, with the leaf and spike lengths the middles of FEIS's ranges (leaves 0.6-1.5 m, fruiting spikes 5-15 cm, Snyder 1993). The organ areas are left to what the looks draw."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.5 m at 4 years in the open, the middle of the 1-2 m FEIS gives the plant (Snyder 1993). Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Broadleaf cattail's colours, chosen by eye; the blade drawn as narrow as the stated leaf width allows."
+    },
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion (2026-10-15): sizes from FEIS, the rest the cattail program's."
+  }
+}

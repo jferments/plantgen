@@ -1,0 +1,271 @@
+{
+  "schema": 1,
+  "id": "actaea-rubra",
+  "taxon": {
+    "scientific_name": "Actaea rubra",
+    "common_name": "red baneberry",
+    "usda_symbol": "ACRU2",
+    "family": "Ranunculaceae",
+    "genus": "Actaea",
+    "plant_name_id": 2620570
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 2,
+      "stem_rate": 0.5,
+      "clump_radius": 0.08,
+      "stem_lean": 6,
+      "maturity": 1.2,
+      "stem_radius": 0.003,
+      "wiggle": 2,
+      "nodes": 3,
+      "bare": 0.25,
+      "leaf_length": 0.3,
+      "leaf_peak": 0.1,
+      "leaf_top": 0.4,
+      "leaf_base": 1.0,
+      "leaf_angle": 55,
+      "basal_leaves": 0,
+      "basal_length": 0.2,
+      "basal_angle": 50,
+      "raceme": 0.06,
+      "flowers": 16,
+      "flower_size": 0.012,
+      "pedicel": 0.012,
+      "flower_angle": 50,
+      "fruit_below": 0.6,
+      "buds_above": 0.2,
+      "nod": 0,
+      "bud_size": 0.004,
+      "fruit_length": 0.009
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.25,
+      0.32,
+      0.15
+    ],
+    "foliage": [
+      0.08,
+      0.15,
+      0.05
+    ],
+    "foliage_shade": [
+      0.022,
+      0.04,
+      0.025
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "compound",
+          "pinnules": 3,
+          "leaflet_width": 0.6,
+          "teeth": 6,
+          "petiole": 0.25,
+          "spread": 130,
+          "lowest": 0.9,
+          "petiolule": 0.1
+        }
+      },
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petal_width": 0.4,
+          "point": 0.3,
+          "notch": 0.0,
+          "centre": 0.6,
+          "sepal_length": 0.6,
+          "stamens": 30
+        },
+        "colour": [
+          0.95,
+          0.95,
+          0.92
+        ],
+        "accent": [
+          0.95,
+          0.95,
+          0.85
+        ],
+        "form": {
+          "flower": {
+            "cup": 20,
+            "curl": 0
+          }
+        }
+      },
+      "fruit": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 1.0
+        },
+        "colour": [
+          0.78,
+          0.08,
+          0.06
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.7,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.4,
+      "max": 1.0
+    },
+    "leaf_division": "compound",
+    "division_order": {
+      "min": 2,
+      "max": 3
+    },
+    "leaf_arrangement": "alternate",
+    "inflorescence": "raceme",
+    "fruit_type": "berry",
+    "fruit_size_m": {
+      "min": 0.006,
+      "max": 0.011
+    },
+    "flowering_months": [
+      5,
+      6
+    ],
+    "fruiting_months": [
+      7,
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's red baneberry review (Crane 1990, read 2026-10-15): \"usually from 1 to 3 feet (4-10 dm) tall with one to several branched stems\"."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's red baneberry review (Crane 1990, read 2026-10-15): \"The leaves are alternate, two to three times compound, sharply toothed and lobed\"."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's red baneberry review (Crane 1990, read 2026-10-15): leaves \"two to three times compound\"."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's red baneberry review (Crane 1990, read 2026-10-15): \"The leaves are alternate\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's red baneberry review (Crane 1990, read 2026-10-15): \"Flowers are borne in a terminal or axillary raceme\"."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's red baneberry review (Crane 1990, read 2026-10-15): \"The fruits are showy, poisonous, red or occasionally white berries\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as the FEIS review read gives no months."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as the FEIS review read gives no months."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Western columbine's values, changed by hand for red baneberry: two stems with three large, twice-compound leaves each and no basal rosette, ending in a short dense raceme of small white flowers that ripens into a cluster of red berries (FEIS, Crane 1990). Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "70 cm at 4 years, the middle of FEIS's 40-100 cm (Crane 1990). Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after FEIS's description (Crane 1990): small white petals with showy stamens (many stamens, a large centre), glossy red berries, sharply toothed leaflets."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion (2026-10-15): sizes from FEIS, drawing values from western columbine's."
+  }
+}
