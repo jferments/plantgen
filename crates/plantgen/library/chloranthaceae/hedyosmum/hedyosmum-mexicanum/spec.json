@@ -1,0 +1,184 @@
+{
+  "schema": 1,
+  "id": "hedyosmum-mexicanum",
+  "taxon": {
+    "scientific_name": "Hedyosmum mexicanum",
+    "common_name": "palo de agua",
+    "family": "Chloranthaceae",
+    "genus": "Hedyosmum",
+    "plant_name_id": 2840911
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "params": {}
+  },
+  "allometry": [
+    {
+      "age": 30,
+      "environment": "open",
+      "height": 11,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "leaf_habit": "evergreen",
+    "height_typical_m": {
+      "min": 8,
+      "max": 12
+    },
+    "height_max_m": {
+      "min": 12,
+      "max": 20
+    },
+    "leaf_length_m": {
+      "min": 0.12,
+      "max": 0.2
+    },
+    "leaf_width_m": {
+      "min": 0.03,
+      "max": 0.06
+    },
+    "leaf_shape": "lanceolate",
+    "inflorescence": "spike",
+    "inflorescence_length_m": {
+      "min": 0.02,
+      "max": 0.08
+    },
+    "flower_colour": [
+      215,
+      210,
+      150
+    ],
+    "fruit_size_m": {
+      "min": 0.004,
+      "max": 0.008
+    },
+    "fruit_colour_ripe": [
+      238,
+      236,
+      225
+    ],
+    "flowering_months": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "fruiting_months": [
+      4,
+      5,
+      6
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "11 m at 30 years in the open, within the Flora of Guatemala's usual 8-12 m or more for grown trees. Replace with measured data before calling this species calibrated."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "standley-steyermark-1952",
+      "note": "Standley and Steyermark (1952), Flora of Guatemala III pp. 338-340, Hedyosmum mexicanum: trees, sometimes shrubs."
+    },
+    "traits.leaf_habit": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as the Flora of Guatemala does not say."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "standley-steyermark-1952",
+      "note": "Standley and Steyermark (1952), Flora of Guatemala III pp. 338-340, Hedyosmum mexicanum: very variable in size, often flowering as a 2 m shrub, but more commonly a tree of 8-12 m or more with a thick trunk and dense crown."
+    },
+    "traits.height_max_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), above the Flora of Guatemala's \"8-12 m or more\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "standley-steyermark-1952",
+      "note": "Standley and Steyermark (1952), Flora of Guatemala III pp. 338-340, Hedyosmum mexicanum: blades mostly 12-20 cm long and 3-6 cm wide."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "standley-steyermark-1952",
+      "note": "Standley and Steyermark (1952), Flora of Guatemala III pp. 338-340, Hedyosmum mexicanum: blades mostly 12-20 cm long and 3-6 cm wide."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "standley-steyermark-1952",
+      "note": "Standley and Steyermark (1952), Flora of Guatemala III pp. 338-340, Hedyosmum mexicanum: blades narrowly lanceolate or oblong-lanceolate, acuminate."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "standley-steyermark-1952",
+      "note": "Standley and Steyermark (1952), Flora of Guatemala III pp. 338-340, Hedyosmum mexicanum: male spikes cylindric and catkin-like; female flowers many, in a dense ovoid or subglobose head."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "standley-steyermark-1952",
+      "note": "Standley and Steyermark (1952), Flora of Guatemala III pp. 338-340, Hedyosmum mexicanum: male spikes 2-8 cm long, 5-8 mm thick."
+    },
+    "traits.flower_colour": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as the Flora of Guatemala gives no colour; the anthers' pale yellow-green as the authors render it."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), for one drupe; the Flora of Guatemala gives the fruiting head, 2-3 cm long and 1.5-2 cm thick."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "standley-steyermark-1952",
+      "note": "Standley and Steyermark (1952), Flora of Guatemala III pp. 338-340, Hedyosmum mexicanum: fruits very fleshy and juicy, whitish when ripe; the RGB is the authors' rendering."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as the Flora of Guatemala gives no months."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as the Flora of Guatemala gives no months."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy (Chloranthaceae, 2026-10-16): sizes and looks stated as facts from the Flora of Guatemala and drawn by the decurrent tree defaults and the angiosperm rules; leaf habit, greatest height, months and drupe size from the species-facts estimates."
+  }
+}
