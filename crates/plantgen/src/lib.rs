@@ -464,4 +464,7 @@ pub mod venation;
 /// and colour of the strap's first, so camas and other strap leaves no
 /// longer step in width and shade where their pieces join (75 is cactus
 /// fruit rings, #147).
-pub const GENERATOR_REVISION: u32 = 76;
+/// 77: a colour character is sRGB, so a colour rule reads it as linear
+/// light: every stated flower, fruit, leaf and bark colour draws as deep
+/// as it is stated, where it drew paler (76 is strap joints, #145).
+pub const GENERATOR_REVISION: u32 = 77;

@@ -10,7 +10,10 @@
   },
   "growth_form": "decurrent_tree",
   "generator": {
-    "params": {}
+    "params": {
+      "crown_base": 4,
+      "fork_height": 3
+    }
   },
   "allometry": [
     {
@@ -70,7 +73,19 @@
       4,
       5,
       6
-    ]
+    ],
+    "leaf_colour": [
+      77,
+      96,
+      39
+    ],
+    "bark_colour": [
+      76,
+      72,
+      63
+    ],
+    "crown_form": "vase",
+    "self_pruning": true
   },
   "evidence": {
     "taxon": {
@@ -167,6 +182,36 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence medium), as the Flora of Guatemala gives no months."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "A mid to dark green, the median over each photograph of its green, saturated pixels, then the median over the photographs, in 19 photographs in iNaturalist research-grade observations 7733707, 14081612, 18404648, 37256404, 74856600, 133534873, 196254464 (CC0, CC BY)."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "A grey-brown trunk, the median of its pixels behind the foliage in observation 7733707; grey trunks and limbs too in 196254464."
+    },
+    "traits.crown_form": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Steeply ascending limbs from a straight trunk spread into a crown narrower below than above, its leaves crowded toward the shoot tips (observations 18404648, 196254464)."
+    },
+    "traits.self_pruning": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "Forest trees stand on tall straight trunks bare of limbs below the crown (observations 7733707, 18404648)."
+    },
+    "generator.params.crown_base": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "The crown starts about a third of the way up an 11-13 m tree, about 4 m, read by eye against the trunk in iNaturalist photographs (observations 18404648, 7733707)."
+    },
+    "generator.params.fork_height": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "The straight trunk forks into its ascending limbs about 3 m up, read by eye in the same photographs (observations 18404648, 7733707)."
     }
   },
   "provenance": {
