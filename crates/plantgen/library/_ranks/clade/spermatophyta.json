@@ -80,6 +80,18 @@
       },
       "why": "Limbs rise from the stem and turn outward as they lengthen: a little in a vase, more in a dome, most where a crown spreads wider than tall, and most of all under an umbrella."
     },
+    "generator.params.crown_ratio": {
+      "map": {
+        "self_pruning": {"true": 0.6, "false": 0}
+      },
+      "why": "A conifer that sheds its own shaded limbs keeps living branches only on the upper part of its height, so it stands on a clear bole."
+    },
+    "generator.params.apex_whorl": {
+      "map": {
+        "architectural_model": {"rauh": 3, "attims": 3, "massart": 0, "roux": 0}
+      },
+      "why": "Where branches are built like the trunk (Rauh's and Attims' models, as in pines), a branch apex spreads a small whorl of its own each year; where they are flat (Massart's and Roux's, as in firs), it forks to each side."
+    },
     "generator.params.flat_top": {
       "map": {
         "crown_form": {"umbrella": 0.75, "rounded": 0, "spreading": 0, "vase": 0, "conical": 0, "columnar": 0, "weeping": 0, "irregular": 0}
@@ -173,6 +185,8 @@
       "source": "plantgen-authors",
       "note": "A choice of the model's (broadleaf revision 16): branches below the crown's base are shed as it rises, never at or above where the stem forks. Checked against iNaturalist photographs of open-grown Garry oak, whose crowns stand on a few metres of clear trunk."
     },
+    "rules.generator.params.crown_ratio": {"evidence": "Authored", "source": "plantgen-authors", "note": "A choice of the model's (pinidae revision 10): a self-pruning conifer keeps living branches on the top 0.6 of its height. Fitted by eye to iNaturalist photographs of ponderosa pine; FEIS notes that some open-grown trees keep branches nearly to the ground, so it is a middling value, not a forest one."},
+    "rules.generator.params.apex_whorl": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) pp. 484-485 (Hallé, Oldeman and Tomlinson's models): in Rauh's model, and Attims' (its continuous form), the branches are built like the trunk; in Massart's, and Roux's, they are horizontal, by symmetry. The count, three side shoots a year, is a choice of the model's (pinidae revision 10), fitted by eye to iNaturalist photographs of ponderosa pine."},
     "rules.generator.params.limb_arch": {
       "evidence": "Authored",
       "source": "plantgen-authors",
