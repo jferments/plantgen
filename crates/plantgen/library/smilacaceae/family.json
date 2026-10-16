@@ -4,6 +4,7 @@
   "name": "Smilacaceae",
   "parent": "order/liliales",
   "traits": {
+    "flowering_position": "lateral",
     "leaf_arrangement": {
       "alternate": "usually",
       "opposite": "sometimes",
@@ -57,6 +58,7 @@
     "perennation": {"rhizome": "often", "tuber": "often"}
   },
   "evidence": {
+    "traits.flowering_position": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Smilax rotundifolia (read 2026-10-16): umbel peduncles from the leaf axils; DELTA Smilacaceae (read 2026-10-16): terminal or axillary (axillary umbels typical of Smilax)."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

@@ -2,5 +2,94 @@
   "schema": 1,
   "rank": "family",
   "name": "Aphloiaceae",
-  "parent": "order/crossosomatales"
+  "parent": "order/crossosomatales",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": "distichous",
+    "leaf_division": "simple",
+    "leaf_habit": "evergreen",
+    "flowering_position": "lateral",
+    "perianth": "tepals",
+    "flower_merosity": {
+      "min": 4,
+      "max": 5,
+      "high": 6
+    },
+    "hypanthium": true,
+    "stamens": {
+      "min": 20,
+      "max": 100
+    },
+    "carpels": 1,
+    "fruit_type": "berry",
+    "sexual_system": "hermaphrodite",
+    "rosette": "none"
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Aphloia (read 2026-10-16): alternate leaves in two rows. APweb (read 2026-10-16): two-ranked."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Aphloia (read 2026-10-16): leaves in two rows."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Aphloia (read 2026-10-16): simple elliptic serrate blades."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Aphloia (read 2026-10-16): evergreen shrub or small tree."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Aphloia (read 2026-10-16): flowers in leaf axils."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Aphloia (read 2026-10-16): undifferentiated perianth of tepals."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Aphloia (read 2026-10-16): usually 4 or 5 tepals, rarely 6."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Crossosomatales page, Aphloiaceae (read 2026-10-16): hypanthium present."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Aphloia (read 2026-10-16): stamens many. APweb (read 2026-10-16): many."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Aphloia (read 2026-10-16): one carpel. APweb (read 2026-10-16): 1."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Aphloia (read 2026-10-16): fleshy white berry."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Aphloia (read 2026-10-16): each flower bears stamens and a carpel."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Aphloia (read 2026-10-16): shrub or small tree with leafy branches."
+    }
+  }
 }

@@ -2,5 +2,33 @@
   "schema": 1,
   "rank": "order",
   "name": "Gleicheniales",
-  "parent": "subclass/polypodiidae"
+  "parent": "subclass/polypodiidae",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "rosette": "none",
+    "leaf_division": "compound",
+    "life_span": "perennial"
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "nz-flora",
+      "note": "NZ Flora, Gleicheniaceae (read 2026-10-16): fronds single from a creeping rhizome; same in Dipteridaceae and Matoniaceae (our knowledge)."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "nz-flora",
+      "note": "NZ Flora, Gleicheniaceae (read 2026-10-16): creeping rhizome, fronds spaced along it; scrambling indeterminate fronds (Gleicheniaceae is about 140 spp., nearly all the order)."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "nz-flora",
+      "note": "NZ Flora, Gleicheniaceae (read 2026-10-16): pinnae forked one or more times, with leaflets; Matonia pedately divided; Dipteris deeply cut fan (one blade, stated simple)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "nz-flora",
+      "note": "NZ Flora, Gleicheniaceae (read 2026-10-16): rhizomatous ferns with indeterminate fronds."
+    }
+  }
 }

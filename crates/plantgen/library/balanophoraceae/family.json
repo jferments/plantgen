@@ -31,13 +31,28 @@
       "min": 1,
       "max": 2,
       "high": 3
-    }
+    },
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "whorled": "sometimes"
+    },
+    "phyllotaxis_pattern": "spiral"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Balanophoraceae with Cynomoriaceae, which APG and WCVP join to it (their extra states read as sometimes): plants monoecious or dioecious, sometimes polygamous; ovary superior, half inferior or inferior; stems herbaceous; perianth usually absent, sometimes tepals; fruit drupe or nut; stamens 1 to 8; carpels 1 to 2 (-3). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Santalales page (read 2026-10-16): leaves (scales) spiral, two-ranked, whorled or none; DELTA: scale-like or absent."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Santalales page (read 2026-10-16): scale leaves spiral (also two-ranked or whorled)."
     }
   }
 }

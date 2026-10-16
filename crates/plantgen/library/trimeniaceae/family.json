@@ -30,13 +30,19 @@
     "carpels": {
       "min": 1,
       "max": 2
-    }
+    },
+    "phyllotaxis_pattern": "decussate"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Trimeniaceae: leaves opposite; leaves simple; margins dentate; veins pinnate; stipules absent; plants hermaphrodite or polygamous; ovary superior; stems woody; flowers in cymes, in racemes or in panicles; flowers actinomorphic; perianth tepals; fruit drupe; stamens 7 to 23; carpels 1 to 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Austrobaileyales page (read 2026-10-16): leaves opposite."
     }
   }
 }

@@ -2,5 +2,27 @@
   "schema": 1,
   "rank": "family",
   "name": "Sciadopityaceae",
-  "parent": "order/cupressales"
+  "parent": "order/cupressales",
+  "traits": {
+    "leaf_arrangement": "whorled",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_habit": "evergreen"
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Sciadopitys verticillata (read 2026-10-16): needle-like cladodes in umbrella-like whorls at branch ends."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Sciadopitys verticillata (read 2026-10-16): the whorls are crowded clusters of cladodes rather than true nodes; the underlying scale leaves are spiral (our addition, medium confidence). Prevents inheriting 'decussate'."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Sciadopitys verticillata (read 2026-10-16): slow-growing evergreen conifer. (Inherited 'evergreen usually' already right; optional.)"
+    }
+  }
 }

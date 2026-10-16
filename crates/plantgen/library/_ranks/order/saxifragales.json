@@ -2,5 +2,146 @@
   "schema": 1,
   "rank": "order",
   "name": "Saxifragales",
-  "parent": "clade/superrosids"
+  "parent": "clade/superrosids",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "sometimes",
+      "whorled": "rarely"
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "decussate": "sometimes",
+      "distichous": "rarely"
+    },
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "rarely"
+    },
+    "division_pattern": {
+      "palmate": "usually",
+      "pinnate": "sometimes"
+    },
+    "rosette": {
+      "none": "usually",
+      "basal": "often"
+    },
+    "life_span": {
+      "perennial": "usually",
+      "annual": "rarely"
+    },
+    "inflorescence": {
+      "cyme": "usually",
+      "raceme": "often",
+      "spike": "sometimes"
+    },
+    "flowering_position": {
+      "terminal": "usually",
+      "lateral": "sometimes"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "zygomorphy": "other",
+    "corolla_shape": "rotate",
+    "ovary_position": {
+      "superior": "usually",
+      "half_inferior": "often",
+      "inferior": "sometimes"
+    },
+    "stamens": {
+      "min": 5,
+      "max": 10,
+      "typical": 10,
+      "low": 1,
+      "high": 150
+    },
+    "carpels": {
+      "min": 2,
+      "max": 5
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "monoecious": "sometimes",
+      "dioecious": "rarely"
+    }
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Saxifragales page (read 2026-10-16): Paeoniaceae, Altingiaceae spiral, Peridiscaceae and Hamamelidaceae two-ranked. Opposite in many Crassulaceae (Crassula), whorled in Myriophyllum (Wikipedia (read 2026-10-16)). Weighting inferred."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Saxifragales page (read 2026-10-16): spiral in Paeoniaceae and Altingiaceae; two-ranked in Hamamelidaceae (states its own) and Peridiscaceae."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Saxifragales page (read 2026-10-16): compound leaves only in Paeoniaceae and a few Peridiscaceae; others simple, lobed in Altingiaceae. Wikipedia, Myriophyllum (read 2026-10-16): finely pinnately cut (still one blade)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Saxifragales page (read 2026-10-16): Altingiaceae palmately lobed; Wikipedia, Ribes (read 2026-10-16): leaves palmately lobed; Saxifragaceae already palmate usually."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Saxifragales page (read 2026-10-16): woody families leafy-stemmed; rosettes in Crassulaceae and Saxifragaceae, which state their own."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Haloragaceae (read 2026-10-16): mostly perennial herbs, some annuals. APweb, Saxifragales page (read 2026-10-16): Paeoniaceae perennial, woody families trees."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Saxifragales page (read 2026-10-16): racemes or spikes in Hamamelidaceae and Peridiscaceae, heads in Altingiaceae. Cymes 'usually' because Crassulaceae (about half the species) state cymes."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Saxifragales page (read 2026-10-16): Paeoniaceae terminal; Peridiscaceae axillary. Terminal cymes of Crassulaceae and Saxifragaceae weighted 'usually' (inferred)."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Haloragaceae (read 2026-10-16): flowers radial. APweb, Saxifragales page (read 2026-10-16): no monosymmetric families described."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Saxifragales page (read 2026-10-16): zygomorphy only in a few Saxifraga (unequal petals)."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Saxifragales page (read 2026-10-16): petals free; Saxifragaceae already rotate; star-like Sedum flowers. Inferred."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Saxifragales page (read 2026-10-16): Altingiaceae semi-inferior; Wikipedia, Haloragaceae and Ribes (read 2026-10-16): inferior. 'usually' superior from Crassulaceae and Paeoniaceae weight."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Saxifragales page (read 2026-10-16): Hamamelidaceae 3-many, Altingiaceae 4-10, Paeoniaceae many. Saxifragales do not inherit the rosid value; typical 10 (two whorls) inferred from Crassulaceae and Saxifragaceae."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Saxifragales page (read 2026-10-16): Hamamelidaceae and Altingiaceae 2, Peridiscaceae 3-4, Paeoniaceae 2-5(-15); Crassulaceae usually 5."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Saxifragales page (read 2026-10-16): Altingiaceae monoecious; Wikipedia, Haloragaceae (read 2026-10-16): most Myriophyllum monoecious, others bisexual; Wikipedia, Ribes (read 2026-10-16): flowers bisexual."
+    }
+  }
 }

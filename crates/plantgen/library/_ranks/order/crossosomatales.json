@@ -2,5 +2,85 @@
   "schema": 1,
   "rank": "order",
   "name": "Crossosomatales",
-  "parent": "clade/malvids"
+  "parent": "clade/malvids",
+  "traits": {
+    "phyllotaxis_pattern": {
+      "decussate": "usually",
+      "spiral": "often"
+    },
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "alternate": "often"
+    },
+    "rosette": "none",
+    "life_span": "perennial",
+    "leaf_habit": {
+      "evergreen": "usually",
+      "deciduous": "often"
+    },
+    "flowering_position": "terminal",
+    "flower_symmetry": "actinomorphic",
+    "ovary_position": "superior",
+    "carpels": {
+      "min": 2,
+      "max": 5,
+      "typical": 3
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "polygamous": "sometimes"
+    }
+  },
+  "evidence": {
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Crossosomatales page (read 2026-10-16): Staphyleaceae (about 45 of 66 species) opposite; Stachyuraceae, Strasburgeriaceae spiral, Aphloia two-ranked."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Crossosomatales page (read 2026-10-16): opposite in Staphyleaceae, Guamatelaceae, Geissolomataceae; spiral or two-ranked in the others."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Crossosomatales page (read 2026-10-16): shrubs and trees only."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Crossosomatales page (read 2026-10-16): all shrubs or trees."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Crossosomatales page (read 2026-10-16): evergreen in Aphloiaceae, Guamatelaceae, Geissolomataceae, Strasburgeriaceae; Staphyleaceae and Stachyuraceae either; Crossosomataceae deciduous."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Crossosomatales page, order characterisation (read 2026-10-16): inflorescence terminal."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Crossosomatales page (read 2026-10-16): no monosymmetric flowers described."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Crossosomatales page (read 2026-10-16): ovary stipitate on the receptacle, superior."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Crossosomatales page (read 2026-10-16): Staphyleaceae 2-3(-4), Guamatela 3, Stachyurus 4, Crossosomataceae 1-5."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Crossosomatales page (read 2026-10-16): flowers mostly perfect; Crossosomataceae polygamo-monoecious; cryptic dioecy possible in Stachyurus."
+    }
+  }
 }

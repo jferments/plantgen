@@ -2,5 +2,21 @@
   "schema": 1,
   "rank": "family",
   "name": "Austrobaileyaceae",
-  "parent": "order/austrobaileyales"
+  "parent": "order/austrobaileyales",
+  "traits": {
+    "leaf_arrangement": "opposite",
+    "phyllotaxis_pattern": "decussate"
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Austrobaileyales page (read 2026-10-16): leaves opposite, entire."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Austrobaileyales page (read 2026-10-16): opposite leaves on a twining liana."
+    }
+  }
 }

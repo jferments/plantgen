@@ -4,6 +4,8 @@
   "name": "Nelumbonaceae",
   "parent": "order/proteales",
   "traits": {
+    "flower_merosity": {"min": 2, "max": 4},
+    "corolla_shape": "cupped",
     "leaf_division": "simple",
     "leaf_venation": "palmate",
     "stipules": true,
@@ -36,6 +38,8 @@
     "perennation": "rhizome"
   },
   "evidence": {
+    "traits.flower_merosity": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Proteales page, Nelumbonaceae (read 2026-10-16): sepals 2-4, petals 10-30 spiral; merosity weak."},
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Proteales page, Nelumbonaceae (read 2026-10-16): large flowers of 10-30 petals; bowl form inferred."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

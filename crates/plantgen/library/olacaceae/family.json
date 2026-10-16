@@ -52,6 +52,14 @@
       "max": 3,
       "low": 2,
       "high": 5
+    },
+    "phyllotaxis_pattern": {
+      "distichous": "usually",
+      "spiral": "sometimes"
+    },
+    "flower_merosity": {
+      "min": 3,
+      "max": 6
     }
   },
   "evidence": {
@@ -59,6 +67,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Olacaceae with Erythropalaceae, Octoknemaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate; leaves simple; margins entire; veins single or pinnate; stipules absent; plants hermaphrodite, monoecious or dioecious; ovary usually superior, sometimes half inferior or inferior; floral cup present or absent; stems woody; flowers in panicles, in racemes or in heads, sometimes in cymes, rarely solitary; flowers actinomorphic; perianth usually sepals and petals, sometimes tepals; fruit drupe or nut; stamens 3 to 18; carpels (2-) 3 (-5). Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Olacaceae (read 2026-10-16): leaves alternate, commonly two-ranked, or spiral. Would otherwise inherit decussate."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Santalales page (read 2026-10-16): Olacaceae flowers 3-6-merous; DELTA 3-5."
     }
   }
 }

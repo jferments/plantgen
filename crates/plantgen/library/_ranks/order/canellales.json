@@ -2,5 +2,63 @@
   "schema": 1,
   "rank": "order",
   "name": "Canellales",
-  "parent": "clade/magnoliids"
+  "parent": "clade/magnoliids",
+  "traits": {
+    "leaf_arrangement": "alternate",
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "distichous": "sometimes"
+    },
+    "leaf_division": "simple",
+    "leaf_habit": "evergreen",
+    "life_span": "perennial",
+    "rosette": "none",
+    "flowering_position": {
+      "lateral": "usually",
+      "terminal": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic"
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Canellales page (read 2026-10-16): Winteraceae spiral, Canellaceae spiral or two-ranked; one leaf per node."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Canellales page (read 2026-10-16): Winteraceae (about 120 spp.) spiral; Canellaceae spiral or two-ranked."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Canellales page (read 2026-10-16): leaves simple, entire."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Canellales page (read 2026-10-16): both families evergreen trees and shrubs."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Canellales page (read 2026-10-16): trees, shrubs, a few epiphytes and a liana."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Canellales page (read 2026-10-16): woody plants with leafy branches; leaves often crowded toward shoot tips but not rosettes."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Canellales page (read 2026-10-16): Winteroideae inflorescences axillary with short axis; Takhtajania terminal; Canellaceae variable."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Canellales page (read 2026-10-16): flowers radially symmetric in both families."
+    }
+  }
 }

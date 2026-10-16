@@ -2,5 +2,24 @@
   "schema": 1,
   "rank": "order",
   "name": "Salviniales",
-  "parent": "subclass/polypodiidae"
+  "parent": "subclass/polypodiidae",
+  "traits": {
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "whorled": "sometimes"
+    },
+    "rosette": "none"
+  },
+  "evidence": {
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Marsileaceae (read 2026-10-16): leaves rise from nodes along a long creeping rhizome; Marsilea (45-65 spp.) is most of the order. Wikipedia, Salvinia: leaves in whorls of three (about 12 spp.); Azolla alternate."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Marsileaceae and Salvinia (read 2026-10-16): creeping rhizomes or floating stems; no rosettes."
+    }
+  }
 }

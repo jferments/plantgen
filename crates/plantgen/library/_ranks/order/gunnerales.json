@@ -2,5 +2,51 @@
   "schema": 1,
   "rank": "order",
   "name": "Gunnerales",
-  "parent": "clade/core-eudicots"
+  "parent": "clade/core-eudicots",
+  "traits": {
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "decussate": "rarely"
+    },
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "division_pattern": "palmate",
+    "life_span": "perennial",
+    "flower_symmetry": "actinomorphic",
+    "flower_merosity": 2
+  },
+  "evidence": {
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Gunnera (read 2026-10-16): rosette herbs whose leaves arise one by one (spiral, inferred); Myrothamnus has opposite leaves."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Gunnerales and Gunnera (read 2026-10-16): Gunnera (about 60 of 65 species) bear single leaves at nodes; Myrothamnus (2 species) opposite."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Gunnera (read 2026-10-16): large reniform leaves, lobed from the petiole top (palmate, inferred)."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Gunnerales (read 2026-10-16): perennial herbs (Gunnera) and resurrection shrubs (Myrothamnus)."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Gunnera (read 2026-10-16): small dimerous flowers, radially built."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Gunnera (read 2026-10-16): flowers dimerous."
+    }
+  }
 }

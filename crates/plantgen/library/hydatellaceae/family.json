@@ -2,5 +2,24 @@
   "schema": 1,
   "rank": "family",
   "name": "Hydatellaceae",
-  "parent": "order/nymphaeales"
+  "parent": "order/nymphaeales",
+  "traits": {
+    "life_span": {
+      "annual": "usually",
+      "perennial": "sometimes"
+    },
+    "sexual_system": "monoecious"
+  },
+  "evidence": {
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Nymphaeales page (read 2026-10-16): mostly small, often annual; perennial taxa sympodial."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Nymphaeales page (read 2026-10-16): plant monoecious."
+    }
+  }
 }

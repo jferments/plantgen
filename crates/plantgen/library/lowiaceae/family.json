@@ -4,12 +4,18 @@
   "name": "Lowiaceae",
   "parent": "order/zingiberales",
   "traits": {
+    "flower_symmetry": "asymmetric",
+    "stamens": 5,
+    "flowering_position": "lateral",
     "phyllotaxis_pattern": {
       "distichous": "usually"
     },
     "perennation": "rhizome"
   },
   "evidence": {
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb (read 2026-10-16): flowers asymmetric with a labellum."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb (read 2026-10-16): five stamens."},
+    "traits.flowering_position": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb (read 2026-10-16): Lowiaceae flowers single in leaf axils (axillary)."},
     "traits.phyllotaxis_pattern": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",

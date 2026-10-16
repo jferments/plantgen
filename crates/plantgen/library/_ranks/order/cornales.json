@@ -5,13 +5,122 @@
   "parent": "clade/asterids",
   "traits": {
     "ovary_position": "inferior",
-    "stipules": false
+    "stipules": false,
+    "leaf_arrangement": {
+      "opposite": "usually",
+      "alternate": "often"
+    },
+    "phyllotaxis_pattern": {
+      "decussate": "usually",
+      "spiral": "often"
+    },
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "rarely"
+    },
+    "division_pattern": "pinnate",
+    "rosette": {
+      "none": "usually",
+      "basal": "rarely"
+    },
+    "leaf_habit": {
+      "deciduous": "usually",
+      "evergreen": "often"
+    },
+    "inflorescence": "cyme",
+    "flowering_position": {
+      "terminal": "usually",
+      "lateral": "sometimes"
+    },
+    "flower_symmetry": "actinomorphic",
+    "corolla_shape": "rotate",
+    "carpels": {
+      "min": 2,
+      "max": 5,
+      "typical": 3,
+      "low": 1,
+      "high": 7
+    },
+    "fruit_type": {
+      "capsule": "usually",
+      "drupe": "often"
+    },
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "dioecious": "rarely",
+      "polygamous": "rarely"
+    }
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 33 Hydrangeaceae, 43 Cornaceae, 46 Nyssaceae and 105 Loasaceae, which make APG's Cornales: leaves without stipules; the calyx tube adnate to an inferior ovary."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cornales page (read 2026-10-16): opposite in Cornus, Grubbiaceae and the Hydrangeaceae+Loasaceae clade; spiral in Alangium, Nyssaceae, Hydrostachyaceae. Weighting ours."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cornales page (read 2026-10-16): opposite pairs in most; spiral in Nyssaceae, Alangium, Hydrostachyaceae."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cornales page (read 2026-10-16): simple leaves typical; Hydrostachyaceae deeply divided; some Loasaceae pinnatisect."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cornales page (read 2026-10-16): lobed blades in Hydrangeaceae+Loasaceae; Loasaceae pinnately cut (family value)."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cornales page (read 2026-10-16): trees, shrubs and herbs; rosettes only in aquatic Hydrostachyaceae (override)."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cornales page (read 2026-10-16): Cornaceae mostly deciduous; Curtisiaceae and Grubbiaceae evergreen; Hydrangeaceae both. Weighting ours."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cornales page, order characterisation (read 2026-10-16): inflorescence cymose."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cornales page (read 2026-10-16): Curtisiaceae inflorescences terminal; Cornus and Hydrangea cymes end shoots (ours). Nyssa axillary."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cornales page (read 2026-10-16): flowers regular with valvate free petals throughout; sterile showy marginal flowers of some Hydrangea are the main exception."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cornales page, order characterisation (read 2026-10-16): petals valvate, apparently free, spreading (rotate is our reading)."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cornales page (read 2026-10-16): Hydrostachyaceae and Grubbiaceae 2, Curtisiaceae 2-4; Hydrangeaceae and Loasaceae mostly 3-5 (family values). Weighting ours."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cornales page (read 2026-10-16): drupes in Cornaceae, Nyssaceae, Curtisiaceae; Hydrangeaceae and Loasaceae (the most species) capsular (family values)."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cornales page (read 2026-10-16): Nyssaceae dioecious, andromonoecious or perfect; Hydrostachyaceae dioecious; others perfect."
     }
   }
 }
