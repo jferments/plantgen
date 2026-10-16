@@ -28,13 +28,28 @@
       "min": 12,
       "max": 50
     },
-    "carpels": 2
+    "carpels": 2,
+    "inflorescence": "head",
+    "leaf_habit": {
+      "deciduous": "usually",
+      "evergreen": "sometimes"
+    }
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Altingiaceae: leaves alternate; leaves simple; margins serrate or dentate, rarely entire; veins pinnate or palmate; stipules present; plants monoecious; ovary inferior; stems woody; perianth tepals or absent; fruit capsule; stamens 12 to 50; carpels 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Saxifragales page, Altingiaceae (read 2026-10-16): inflorescences capitate."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Saxifragales page, Altingiaceae (read 2026-10-16): deciduous trees, some evergreen."
     }
   }
 }

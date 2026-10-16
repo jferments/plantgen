@@ -4,6 +4,11 @@
   "name": "Cycadales",
   "parent": "subclass/cycadidae",
   "traits": {
+    "life_span": "perennial",
+    "division_pattern": "pinnate",
+    "leaf_division": "compound",
+    "phyllotaxis_pattern": "spiral",
+    "leaf_arrangement": "alternate",
     "leaf_habit": "evergreen",
     "rosette": "terminal",
     "sexual_system": "dioecious"
@@ -77,7 +82,7 @@
         "seeds": [1]
       },
       "appearance": {
-        "bark": [0.36, 0.3, 0.22],
+        "bark": [0.107, 0.073, 0.04],
         "leaf_axis": [0.1, 0.17, 0.05],
         "foliage": [0.07, 0.2, 0.07],
         "foliage_shade": [0.0315, 0.09, 0.0315],
@@ -96,7 +101,7 @@
               "taper": 0.3,
               "aspect": 0.6
             },
-            "colour": [0.38, 0.3, 0.2]
+            "colour": [0.119, 0.073, 0.033]
           },
           "cone": {
             "shape": {
@@ -104,7 +109,7 @@
               "aspect": 0.32,
               "cone": 1
             },
-            "colour": [0.72, 0.55, 0.3]
+            "colour": [0.477, 0.263, 0.073]
           },
           "cataphyll": {
             "shape": {
@@ -112,7 +117,7 @@
               "taper": 0.7,
               "aspect": 0.35
             },
-            "colour": [0.46, 0.34, 0.2]
+            "colour": [0.179, 0.095, 0.033]
           }
         }
       },
@@ -231,6 +236,11 @@
     }
   },
   "evidence": {
+    "traits.life_span": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Cycad (read 2026-10-16): long-lived plants with stout woody trunks."},
+    "traits.division_pattern": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Cycad (read 2026-10-16): pinnate, bipinnate in Bowenia and a few Cycas (still pinnate)."},
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Cycad (read 2026-10-16): leaves pinnate, a central axis with leaflets each side."},
+    "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Cycad (read 2026-10-16): trunk scars helically arranged."},
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Cycad (read 2026-10-16): leaves in a crown at the trunk top, leaf bases helically arranged (one per node)."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-2008",

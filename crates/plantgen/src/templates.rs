@@ -671,6 +671,58 @@ pub(crate) fn outline_profile(
     }
 }
 
+/// The share of a simple blade's length at each end that its apex and
+/// base shape (`Simple.apex_taper`, `Simple.base_taper`).
+pub const ENDS: f64 = 0.3;
+
+/// A point's half-width where it leaves the blade, as a share of the
+/// blade's widest.
+const POINT_WIDTH: f64 = 0.06;
+
+/// A simple blade's half-width at `t` along it, as a share of its widest:
+/// its outline (or `widest`, `base` and `tip`), its apex and base narrowed
+/// as their tapers say, and a point beyond its tip.
+fn simple_profile(s: &Simple, t: f64) -> f64 {
+    if !(0.0..=1.0).contains(&t) {
+        return 0.0;
+    }
+    let point = s.apex_point.clamp(0.0, 0.3);
+    let blade = 1.0 - point;
+    let outline = |u: f64| outline_profile(s.outline.as_deref(), u, s.widest, s.base, s.tip);
+    let u = t / blade;
+    let mut width = outline(u.min(1.0));
+    if u > 1.0 {
+        width = 0.0;
+    } else if let Some(power) = s.apex_taper
+        && u > 1.0 - ENDS
+    {
+        // Eased in from the outline, so the margin turns without a corner.
+        let share = (1.0 - u) / ENDS;
+        let tip = outline(1.0 - ENDS) * math::pow(share, power);
+        width += (tip - width) * math::smoothstep(0.0, 1.0, 1.0 - share);
+    }
+    if let Some(power) = s.base_taper
+        && s.sinus <= 0.0
+        && u < ENDS
+    {
+        let share = u / ENDS;
+        let foot = outline(ENDS) * math::pow(share, power);
+        width += (foot - width) * math::smoothstep(0.0, 1.0, 1.0 - share);
+    }
+    if point > 0.0 && t > blade - 0.5 * point {
+        let tail = POINT_WIDTH * (1.0 - (t - blade + 0.5 * point) / (1.5 * point));
+        width = width.max(tail);
+    }
+    width
+}
+
+/// Whether a point `x` across and `t` along a simple blade of `length`
+/// card units falls in the notch cut into its tip (`Simple.apex_notch`).
+fn in_notch(s: &Simple, x: f64, t: f64, length: f64) -> bool {
+    let notch = s.apex_notch;
+    notch > 0.0 && t > 1.0 - notch && x.abs() < 0.9 * (t - (1.0 - notch)) * length
+}
+
 /// Where a blade's teeth fade in from its base and out toward its tip.
 fn blade_fade(t: f64) -> f64 {
     math::smoothstep(0.04, 0.18, t) * (1.0 - math::smoothstep(0.88, 1.0, t))
@@ -712,9 +764,9 @@ const DEEPEST: f64 = 0.85;
 /// A simple leaf's half-width at `t` along its blade of `length` card
 /// units, with the teeth of its side's `margin` if given.
 fn simple_width(s: &Simple, length: f64, t: f64, margin: Option<&Margin>) -> f64 {
-    let profile = outline_profile(s.outline.as_deref(), t, s.widest, s.base, s.tip);
-    let mut width = s.width * length * 0.5 * profile;
-    if let Some(margin) = margin {
+    let mut width = s.width * length * 0.5 * simple_profile(s, t);
+    // A point beyond the tip bears no teeth.
+    if let Some(margin) = margin.filter(|_| t < 1.0 - s.apex_point) {
         let fall = margin.fall(t, TOOTH, |share| margins::tooth_flank(share, 0.0));
         width -= (s.tooth_depth * blade_fade(t)).min(DEEPEST * width) * fall;
     }
@@ -808,11 +860,14 @@ fn shape_seed(shape: &Shape) -> u64 {
         }
         _ => shape.clone(),
     };
-    // A blade without basal lobes or fanned veins grows the veins it grew
-    // before cards had them.
+    // A blade without basal lobes, fanned veins or a shaped apex or base
+    // grows the veins it grew before cards had them.
     let mut text = format!("{plain:?}")
         .replace("outline: None, ", "")
-        .replace(", sinus: 0.0, fan: 0 }", " }");
+        .replace(
+            ", sinus: 0.0, fan: 0, apex_taper: None, base_taper: None, apex_point: 0.0, apex_notch: 0.0 }",
+            " }",
+        );
     for field in [
         "pattern",
         "pinnules",
@@ -1571,10 +1626,10 @@ fn simple(
         return Paint::solid(0.95 + grown(veins, x / length, t, length, || 0.0), 0.0);
     }
     let width = simple_width(s, length, t, margins.get(usize::from(x < 0.0)));
-    if x.abs() >= width {
+    if x.abs() >= width || in_notch(s, x, t, length) {
         return Paint::EMPTY;
     }
-    if t < 0.97 && x.abs() < fine * 0.7 {
+    if t < 0.97 - s.apex_notch && x.abs() < fine * 0.7 {
         return Paint::solid(1.2, 0.5);
     }
     let along = y - base;
@@ -1907,7 +1962,7 @@ fn flower(s: &Flower, colours: Colours, x: f64, y: f64) -> Paint {
     let (along, across) = petal_frame(x, y, s.petals);
     // Half-width of a petal where it is widest, as a share of the circle
     // at that radius.
-    let widest = BLOOM * 0.66 * math::tan(PI / f64::from(s.petals)) * s.petal_width;
+    let widest = BLOOM * 0.66 * math::tan(PI / f64::from(s.petals)) * s.petal_share();
     let notch = s.notch * 0.4 * (1.0 - across.abs() / (0.55 * widest)).max(0.0);
     let reach = BLOOM * (1.0 - notch);
     let u = along / reach;
@@ -3301,6 +3356,52 @@ mod tests {
     /// A blade with an outline is as wide as its points say, its widest
     /// at the card's width, and its sides parallel where theirs are;
     /// without one, it is drawn as before.
+    #[test]
+    fn apex_and_base_words_shape_the_blade_ends() {
+        let plain = Simple::default();
+        let shaped = |apex: Option<f64>, base: Option<f64>| Simple {
+            apex_taper: apex,
+            base_taper: base,
+            ..Simple::default()
+        };
+        // Hollow sides draw a narrower tip than straight ones, and full
+        // sides a broader one; the middle of the blade keeps its width.
+        let near_tip = 0.9;
+        let acuminate = simple_profile(&shaped(Some(2.2), None), near_tip);
+        let acute = simple_profile(&shaped(Some(1.0), None), near_tip);
+        let rounded = simple_profile(&shaped(Some(0.35), None), near_tip);
+        assert!(
+            acuminate < acute && acute < rounded,
+            "{acuminate} {acute} {rounded}"
+        );
+        for t in [0.35, 0.5, 0.65] {
+            let width = simple_profile(&shaped(Some(2.2), Some(2.0)), t);
+            assert!((width - simple_profile(&plain, t)).abs() < 1e-12, "{t}");
+        }
+        // A truncate base is nearly full width just above it, an
+        // attenuate one narrow.
+        let truncate = simple_profile(&shaped(None, Some(0.12)), 0.05);
+        let attenuate = simple_profile(&shaped(None, Some(2.0)), 0.05);
+        assert!(truncate > 0.5 && attenuate < 0.1, "{truncate} {attenuate}");
+        // A tail stands beyond the blade's tip, narrow, with nothing
+        // past it.
+        let caudate = Simple {
+            apex_point: 0.15,
+            ..Simple::default()
+        };
+        let tail = simple_profile(&caudate, 0.92);
+        assert!(tail > 0.0 && tail <= POINT_WIDTH, "{tail}");
+        assert_eq!(simple_profile(&caudate, 1.0), 0.0);
+        // A notch cuts the tip along the midrib only.
+        let notched = Simple {
+            apex_notch: 0.03,
+            ..Simple::default()
+        };
+        assert!(in_notch(&notched, 0.0, 0.995, 1.0));
+        assert!(!in_notch(&notched, 0.0, 0.9, 1.0));
+        assert!(!in_notch(&plain, 0.0, 0.995, 1.0));
+    }
+
     #[test]
     fn outlines_draw_the_blade_through_their_points() {
         let oblong = vec![

@@ -107,6 +107,10 @@
       "map": {"perianth": {"sepals_and_petals": "corolla", "tepals": "tepals", "spiral": "spiral", "absent": "absent"}},
       "why": "A calyx and corolla draws one whorl of petals with sepals below them; like tepals draw two whorls; a spiral, tepals on a spiral; no perianth, none."
     },
+    "appearance.organs.*.shape.petal_ratio": {"template": "flower", "map": {"petal_shape": {"linear": 0.15, "lanceolate": 0.3, "oblong": 0.45, "spatulate": 0.45, "elliptic": 0.5, "ovate": 0.6, "obovate": 0.65, "orbicular": 0.95}}, "between": true, "why": "A petal is as wide for its length as its outline is stated: a narrow strap (linear) to as broad as long (orbicular), drawn among as many petals as the flower has."},
+    "appearance.organs.*.shape.taper": {"template": "flower", "map": {"petal_shape": {"linear": 1.0, "lanceolate": 1.3, "oblong": 0.3, "spatulate": 0.4, "elliptic": 0.8, "ovate": 1.1, "obovate": 0.45, "orbicular": 0.45}}, "between": true, "why": "A petal narrows from its widest to its tip as its outline is stated: straight sides to a point (lanceolate, ovate), a curve (elliptic), or round and full to the tip (obovate, spatulate, orbicular, oblong)."},
+    "appearance.organs.*.shape.point": {"template": "flower", "map": {"petal_apex": {"acuminate": 1.0, "acute": 0.6, "obtuse": 0.25, "rounded": 0.0, "truncate": 0.0, "emarginate": 0.0, "bilobed": 0.0}}, "between": true, "why": "A petal's tip is as pointed as stated: drawn out (acuminate), pointed (acute), blunt (obtuse), or round (rounded, truncate, and a notched tip's lobes)."},
+    "appearance.organs.*.shape.notch": {"template": "flower", "map": {"petal_apex": {"emarginate": 0.15, "bilobed": 0.45}}, "between": true, "why": "An emarginate petal's tip is notched; a bilobed one is cleft into two lobes."},
     "appearance.organs.*.shape.petals": {
       "template": "flower",
       "map": {"perianth": {"sepals_and_petals": {"rule": "clamp(round(flower_merosity), 3, 12)"}, "tepals": {"rule": "clamp(2 * round(flower_merosity), 4, 12)"}, "spiral": {"rule": "clamp(round(perianth_parts), 3, 60)"}}},
@@ -288,6 +292,10 @@
       "source": "plantgen-authors",
       "note": "How PlantGen draws a flower, a choice of the model's (spec rework P5): the flower characters set a flower card's perianth, its parts, how they differ by place, how far the corolla is joined into a tube, a floral cup, where the ovary sits, a resupinate flower's turn, its stamens, staminodes and carpels and its spurs. The rules also set these fields in a season's flower and bud looks that draw a flower, unless set there by hand."
     },
+    "rules.appearance.organs.*.shape.petal_ratio": {"evidence": "SourceInferred", "source": "systematics-association-1962-shapes", "note": "The chart of plane shapes sets each outline word by its length-to-width ratio and where it is widest; a petal or tepal takes the same words. Its width over length (0.15 linear to 0.95 orbicular) is read off the chart's classes, the model's choice within them."},
+    "rules.appearance.organs.*.shape.taper": {"evidence": "SourceInferred", "source": "systematics-association-1962-shapes", "note": "The chart of plane shapes: ovate and lanceolate outlines are widest below the middle and narrow to the tip, obovate and spatulate ones widest above it and full to the tip, elliptic and oblong ones symmetric. Drawn as the flower card's taper powers (0.45 round to 1.3 straight to a point), the model's choice."},
+    "rules.appearance.organs.*.shape.point": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson (Plant Systematics, pp. 526-527 of the PDF) classes apices of any flat part by the angle where the margins meet: acuminate under 45 degrees with hollow sides, acute 45 to 90, obtuse over 90, rounded curved. Drawn on the flower card's point, 1 to 0, the model's choice."},
+    "rules.appearance.organs.*.shape.notch": {"evidence": "SourceInferred", "source": "kaplan-2022", "note": "Kaplan's Principles of Plant Morphology describes petal tips as entire, emarginate (notched) or bilobed. How deep the card draws the notch (0.15 and 0.45 of its notch range) is the model's choice."},
     "rules.appearance.organs.*.shape.petals": {
       "evidence": "Authored",
       "source": "plantgen-authors",

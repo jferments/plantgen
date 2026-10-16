@@ -14,6 +14,50 @@
     "inflorescence": {
       "catkin": "usually",
       "spike": "often"
+    },
+    "phyllotaxis_pattern": {
+      "spiral": "usually",
+      "distichous": "often"
+    },
+    "leaf_division": {
+      "simple": "usually",
+      "compound": "sometimes"
+    },
+    "division_pattern": "pinnate",
+    "rosette": "none",
+    "life_span": "perennial",
+    "flowering_position": {
+      "lateral": "usually",
+      "terminal": "often"
+    },
+    "flower_symmetry": "actinomorphic",
+    "flower_merosity": {
+      "min": 2,
+      "max": 6,
+      "typical": 4
+    },
+    "perianth": {
+      "tepals": "usually",
+      "absent": "often"
+    },
+    "hypanthium": false,
+    "stamens": {
+      "min": 2,
+      "max": 12,
+      "typical": 6,
+      "low": 1,
+      "high": 90
+    },
+    "carpels": {
+      "min": 2,
+      "max": 3,
+      "typical": 3,
+      "high": 12
+    },
+    "fruit_type": {
+      "nut": "usually",
+      "samara": "sometimes",
+      "drupe": "sometimes"
     }
   },
   "evidence": {
@@ -21,6 +65,71 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 59-65 (Myricaceae, Betulaceae, Fagaceae, Corylaceae, Juglandaceae), which with Nothofagaceae and Casuarinaceae make APG's Fagales: trees or shrubs; leaves alternate; flowers unisexual, mostly monoecious (Myricaceae sometimes dioecious); the male flowers in catkins or catkin-like spikes; the female calyx adnate to an inferior ovary (Myricaceae's ovary is naked)."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fagales page (read 2026-10-16): spiral leaves listed for the clade of all families except Nothofagaceae; Fagaceae usually spiral, Fagus and some Quercoideae two-ranked; Nothofagaceae two-ranked. DELTA Betulaceae: spiral to distichous."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fagales page (read 2026-10-16): Fagaceae and Nothofagaceae simple; DELTA Betulaceae simple; Juglandaceae pinnate (family states it)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "Only Juglandaceae has compound leaves (pinnate, stated); oak and birch lobing/venation is pinnate. APweb Fagales page (read 2026-10-16) has pinnately veined serrate blades."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fagales page (read 2026-10-16): trees and shrubs with leafy shoots throughout."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fagales page (read 2026-10-16): woody order (order already states woody)."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Betulaceae (read 2026-10-16): inflorescences terminal; APweb Fagaceae: catkins and cupule-forming dichasia (axillary in oaks and chestnuts from my knowledge). Weighted by Fagaceae (~1,000 of ~1,200 spp.)."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fagales page (read 2026-10-16): small wind-pollinated flowers with an undifferentiated perianth or none."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fagales page (read 2026-10-16): Fagaceae often trimerous (perianth 4-6), Nothofagus carpellate flowers 2-merous; DELTA Betulaceae: male perianth 0 or 2-4. Replaces inherited Pentapetalae 4-5 typical 5, wrong for this order."
+    },
+    "traits.perianth": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fagales page (read 2026-10-16): Fagaceae perianth of 4-6 joined members, Nothofagus reduced or none; DELTA Betulaceae: sepal-like scales or none. No petals anywhere, so inherited sepals_and_petals is wrong."
+    },
+    "traits.hypanthium": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fagales page (read 2026-10-16): no floral cup; the cupule in Fagaceae is a bract structure, not a hypanthium."
+    },
+    "traits.stamens": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fagales page (read 2026-10-16): Fagaceae usually 4-20 (about 12), Nothofagus 10-15; DELTA Betulaceae 2-4; Casuarina 1. Typical 6 is my weighting (Quercus 6)."
+    },
+    "traits.carpels": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fagales page (read 2026-10-16): Fagaceae 3 (6-12 in some), Nothofagus 2-3; DELTA Betulaceae 2."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Fagales page (read 2026-10-16): fruits single-seeded; nuts in cupules (Fagaceae, Nothofagus); DELTA Betulaceae: nut or winged samara; Myrica drupes."
     }
   }
 }

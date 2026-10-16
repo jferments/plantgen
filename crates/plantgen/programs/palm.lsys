@@ -131,9 +131,20 @@
 # leaflet_young 0.3, leaflet_groups 2 and boot_angle 60 draw as revision 8
 # did, but for boots and the leaflets' order of opening.
 #
+# Revision 10 (Phoenix's spines and leaf sheaths):
+# - The lowest `acanthophylls` pairs of leaflets are spines (Phoenix's
+#   acanthophylls; Dransfield et al. 2008, Genera Palmarum p. 242),
+#   `spine_length` long at the highest and 0.4 of that at the lowest,
+#   standing as the leaflets do.
+# - Without a crownshaft, a frond's sheath may clasp the stem
+#   `sheath_length` below its foot (`Sh`, as a crownshaft's does), so a
+#   crown's living leaf bases hide the stem's top (the California fan
+#   palm's chestnut-brown sheaths, Sargent 1922 p. 104).
+# acanthophylls and sheath_length 0 draw as revision 9.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem palm 9;
+lsystem palm 10;
 
 # The plant.
 param vigour_spread;          # a palm grows exp(gauss() * vigour_spread) times as fast
@@ -154,6 +165,7 @@ param bulge_years;            # how long the belly lasts, years either side
 param crownshaft;             # a crownshaft's length, metres; 0 none
 param shaft_cards;            # cards each frond's sheath wraps the crownshaft with
 param sheath_area;            # leaf area of a sheath 1 m long, m²
+param sheath_length;          # without a crownshaft, how far a frond's sheath clasps the stem below its foot, metres; 0 none
 # Fronds.
 param fronds_per_year;        # fronds a year, or a flush's
 param flush_interval;         # years from one flush to the next; 1 every year
@@ -188,6 +200,9 @@ param leaflet_area;           # leaf area of a leaflet 1 m long, m²
 param leaflet_young;          # a leaflet's size while it opens, as a share of its own
 param leaflet_fold;           # how far toward the rachis a leaflet lies while it opens, 0 to 1
 param leaflet_groups;         # leaflets a group, their lifts spread over ±leaflet_scatter
+param acanthophylls;          # lowest leaflet pairs drawn as spines (Phoenix); 0 none
+param spine_length;           # the longest such spine, m
+param spine_area;             # leaf area of a spine 1 m long, m²
 # Fan fronds.
 param rays;                   # segments of a fan
 param fan_spread;             # degrees the segments spread over
@@ -231,6 +246,7 @@ module Pc(k, m, s, e);        # pieces k to k + m - 1 of a frond's rachis
 module Pp(k, s, e);           # a drawn piece of a rachis
 module Ln(k, s, e, h);        # a pair of leaflets h of a piece along piece k
 module Lq(z, w, q);           # a pair of leaflets z long, raised w (-1 to 1) times leaflet_scatter, folded q toward the rachis
+module Ls(z, q);              # a pair of spines z long, folded q toward the rachis
 module Tk(l, r);              # a segment of trunk l long, r in radius as it formed
 module Cw(r);                 # a flush's ring of scale leaves round a trunk r in radius
 module Ct(z, r);              # a scale leaf z long on a trunk r in radius as it formed
@@ -251,6 +267,7 @@ organ boot leaf as piece area boot_area;
 organ cone cone area cone_area;
 organ sheath leaf as piece area sheath_area;
 organ cataphyll leaf as scale_leaf area cataphyll_area;
+organ spine leaf as spine area spine_area;
 
 structure frond leaf;         # one frond: its sheath, petiole, rachis, leaflets or rays, then its dead frond and boot
 
@@ -344,6 +361,12 @@ decompose Fr(s, a, e, r) : crownshaft > 0 && fan > 0 ->
 decompose Fr(s, a, e, r) : crownshaft > 0 ->
     frond [ ring(max(1, round(shaft_cards))) [ Sh(crownshaft, r) ] ]
     Pc(0, max(1, round(pieces)), s, e);
+decompose Fr(s, a, e, r) : sheath_length > 0 && fan > 0 ->
+    frond [ ring(max(1, round(shaft_cards))) [ Sh(sheath_length, r) ] ]
+    Bs(r) Pc(0, max(1, round(pieces)), s, e) Ry(0, max(1, round(rays)), s, e);
+decompose Fr(s, a, e, r) : sheath_length > 0 ->
+    frond [ ring(max(1, round(shaft_cards))) [ Sh(sheath_length, r) ] ]
+    Bs(r) Pc(0, max(1, round(pieces)), s, e);
 decompose Fr(s, a, e, r) : fan > 0 ->
     frond Bs(r) Pc(0, max(1, round(pieces)), s, e) Ry(0, max(1, round(rays)), s, e);
 decompose Fr(s, a, e, r) -> frond Bs(r) Pc(0, max(1, round(pieces)), s, e);
@@ -373,6 +396,18 @@ interpret Pp(k, s, e) ->
     F(s * (1 - petiole) / pieces * 0.5
       * (1 - coil_short * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))))
     Ln(k, s, e, 0.5);
+
+# The lowest acanthophylls pairs of leaflets are spines (Phoenix's
+# acanthophylls), longer toward the leaflets, standing as the leaflets do
+# but rising neither in groups nor apart, and folded as they are while the
+# frond opens.
+interpret Ln(k, s, e, h) : round(2 * (k + h)) < acanthophylls ->
+    Ls(spine_length * lerp(0.4, 1, (round(2 * (k + h)) + 1) / max(1, acanthophylls)),
+       leaflet_fold
+          * (1 - clamp(2 * clamp((age + season - e) / unroll, 0, 1) - (k + h) / pieces, 0, 1)));
+interpret Ls(z, q) ->
+    [ +(leaflet_angle * (1 - q)) ^(leaflet_lift * (1 - q)) spine(z) ]
+    [ -(leaflet_angle * (1 - q)) ^(leaflet_lift * (1 - q)) spine(z) ];
 
 # A pair of leaflets, sized along the rachis, opening by its place along
 # it: small and folded toward the rachis until it has opened.

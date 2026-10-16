@@ -42,7 +42,8 @@
       "lobed": "usually"
     },
     "flowering_position": "terminal",
-    "inflorescence_posture": "pendent"
+    "inflorescence_posture": "pendent",
+    "division_pattern": "palmate"
   },
   "evidence": {
     "traits": {
@@ -64,6 +65,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 291, 293, 294, family Platanaceae: inflorescence posture pendent; read as \"pendent\"."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Proteales page, Platanaceae (read 2026-10-16): subpalmate venation; lobes from one point."
     }
   }
 }

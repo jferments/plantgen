@@ -59,6 +59,12 @@
       "min": 2,
       "max": 10,
       "low": 1
+    },
+    "flower_merosity": {
+      "min": 4,
+      "max": 5,
+      "typical": 4,
+      "high": 6
     }
   },
   "evidence": {
@@ -66,6 +72,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Elaeocarpaceae with Muntingiaceae, Petenaeaceae, Tremandraceae, which APG and WCVP join to it (their extra states read as sometimes): leaves usually alternate, sometimes opposite or whorled; leaves simple; veins usually pinnate, sometimes palmate or single; stipules usually present, sometimes absent; plants hermaphrodite or dioecious; ovary usually superior, sometimes half inferior or inferior; floral cup absent; stems usually woody, sometimes herbaceous; flowers in panicles, in cymes or in racemes; flowers usually actinomorphic, sometimes zygomorphic; perianth usually sepals and petals, sometimes tepals; fruit capsule, drupe or berry; stamens 12 to 100; carpels (1-) 2 to 10. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.flower_merosity": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Oxalidales page, Elaeocarpaceae (read 2026-10-16): flowers often 4-merous."
     }
   }
 }

@@ -7,6 +7,34 @@
     "ovary_position": {
       "inferior": "usually",
       "superior": "rarely"
+    },
+    "leaf_arrangement": {
+      "alternate": "usually",
+      "opposite": "rarely"
+    },
+    "phyllotaxis_pattern": "spiral",
+    "leaf_division": {
+      "compound": "usually",
+      "simple": "often"
+    },
+    "division_pattern": {
+      "pinnate": "usually",
+      "palmate": "sometimes"
+    },
+    "flowering_position": {
+      "terminal": "usually",
+      "lateral": "sometimes"
+    },
+    "flower_symmetry": {
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
+    },
+    "zygomorphy": "other",
+    "corolla_shape": "rotate",
+    "sexual_system": {
+      "hermaphrodite": "usually",
+      "polygamous": "sometimes",
+      "dioecious": "sometimes"
     }
   },
   "evidence": {
@@ -14,6 +42,51 @@
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), families 47 Araliaceae and 311 Umbelliferae, the bulk of APG's Apiales: the calyx adnate to an inferior ovary, the petals and stamens on top of it. Pittosporaceae, also in the order, have a superior ovary."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Apiales page (read 2026-10-16): families described with spiral or two-ranked leaves; opposite leaves rare (a few Araliaceae). Fills Myodocarpaceae and Torricelliaceae."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Apiales page (read 2026-10-16): leaves spiral in most families; Griseliniaceae noted as often two-ranked (override)."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Apiales page (read 2026-10-16): Apiaceae and many Araliaceae compound, Myodocarpaceae pinnately compound; Pittosporaceae, Griseliniaceae, Pennantiaceae, Torricelliaceae simple. 'usually compound' is our weighting by species (Apiaceae ~3,800)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Apiales page (read 2026-10-16): Apiaceae and Myodocarpaceae pinnate; Aralioideae pinnate to palmate. Weighting ours (Apiaceae)."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Apiales page, order characterisation (read 2026-10-16): inflorescence terminal, branched. DELTA Pittosporaceae: at branch tips or in axils."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Apiales page (read 2026-10-16): flowers small, regular; zygomorphy only in the radiant outer flowers of some Apiaceae umbels."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Apiales page (read 2026-10-16): zygomorphic flowers are the enlarged outer-petalled marginal flowers of some Apiaceae umbels, neither bilabiate nor papilionaceous."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Apiales page, order characterisation (read 2026-10-16): petals apparently free, valvate, spreading in Apiaceae/Araliaceae (both state rotate)."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Apiales page (read 2026-10-16): dioecy may be ancestral but perfect flowers and monoecy (andromonoecy) now predominate; Araliaceae flowers often perfect. Weighting ours."
     }
   }
 }

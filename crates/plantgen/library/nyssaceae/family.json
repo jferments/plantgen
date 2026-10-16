@@ -49,13 +49,19 @@
       "min": 2,
       "max": 2,
       "low": 1
-    }
+    },
+    "phyllotaxis_pattern": "spiral"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Nyssaceae: leaves alternate; leaves simple; margins entire or dentate; veins pinnate; leaves evergreen; stipules absent; plants monoecious, dioecious or polygamous; ovary inferior; floral cup absent; stems woody; flowers solitary, in racemes, in heads or in umbels; flowers actinomorphic or zygomorphic; perianth usually sepals and petals, sometimes tepals; fruit drupe or samara; stamens (8-) 10 (-15); carpels (1-) 2. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Cornales page, Nyssaceae (read 2026-10-16): leaves spiral (sometimes opposite)."
     }
   }
 }

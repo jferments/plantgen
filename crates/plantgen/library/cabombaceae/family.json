@@ -4,6 +4,8 @@
   "name": "Cabombaceae",
   "parent": "order/nymphaeales",
   "traits": {
+    "rosette": "none",
+    "phyllotaxis_pattern": {"decussate": "usually", "spiral": "sometimes"},
     "leaf_arrangement": {
       "alternate": "often",
       "opposite": "often",
@@ -42,6 +44,8 @@
     "perennation": "rhizome"
   },
   "evidence": {
+    "traits.rosette": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Nymphaeales page (read 2026-10-16): long internodes, floating stems."},
+    "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Nymphaeales page (read 2026-10-16): Cabomba (5 spp.) submerged leaves opposite or whorled; floating leaves and Brasenia spiral."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

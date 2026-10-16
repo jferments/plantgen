@@ -22,13 +22,25 @@
     "fruit_type": "capsule",
     "flower_merosity": 5,
     "stamens": 10,
-    "carpels": 3
+    "carpels": 3,
+    "phyllotaxis_pattern": "distichous",
+    "flowering_position": "terminal"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Lepidobotryaceae: leaves alternate; leaves usually compound, rarely simple; margins entire; veins pinnate; stipules present; plants dioecious; ovary superior; floral cup absent; stems woody; flowers in racemes; flowers actinomorphic; perianth sepals and petals; fruit capsule; parts of each whorl 5; stamens 10; carpels 3. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.phyllotaxis_pattern": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Celastrales page (read 2026-10-16): leaves two-ranked."
+    },
+    "traits.flowering_position": {
+      "evidence": "SourceInferred",
+      "source": "stevens-apweb",
+      "note": "APweb, Celastrales page (read 2026-10-16): inflorescence terminal, congested (as relayed by the reader; 1 candidate)."
     }
   }
 }
