@@ -479,7 +479,6 @@ pub mod venation;
 /// crowns and how far apart they stand, a blade's outline where its
 /// longest pinnae are, and pinnae are as many, as long and as broad as the
 /// blade fits, lanceolate; evergreen fronds outlast a winter; the curated
-/// ferns arch, the sword fern's pinnae and angles are the fern rules', and
-/// bracken holds its blade out level (`blade_tilt`) (78 is crownshaft
-/// sheaths in their fronds, #150).
+/// ferns arch, and the sword fern's pinnae and angles are the fern rules'
+/// (78 is crownshaft sheaths in their fronds, #150).
 pub const GENERATOR_REVISION: u32 = 79;
