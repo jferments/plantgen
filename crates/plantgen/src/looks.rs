@@ -959,6 +959,19 @@ pub struct Sprig {
     pub round: f64,
     /// Length of each leaf's petiole, as a fraction of the leaf's length.
     pub petiole: f64,
+    /// Each leaf's length, petiole included, as a fraction of the card's
+    /// length: the species' own leaf on a card as long as the twig it
+    /// stands for (a rule sets it from `leaf_length_m`). 0 sizes the
+    /// leaves to fit `leaves` of them along the twig, as before.
+    #[serde(skip_serializing_if = "is_zero")]
+    pub leaf: f64,
+    /// Side twigs, alternating up the main one, each set with leaves of
+    /// that size and one at its tip, so that a twig of small leaves covers
+    /// its card as a shoot with its side shoots does. With `leaf` set,
+    /// leaves stand along every twig a third of a leaf apart and `leaves` is
+    /// not read.
+    #[serde(skip_serializing_if = "is_zero_count")]
+    pub twigs: u32,
 }
 
 impl Default for Sprig {
@@ -976,6 +989,8 @@ impl Default for Sprig {
             tooth_depth: 0.03,
             round: 0.0,
             petiole: 0.12,
+            leaf: 0.0,
+            twigs: 0,
         }
     }
 }
@@ -2160,6 +2175,10 @@ impl Shape {
             Self::Compound(s) => s.validate(),
             Self::Sprig(s) => {
                 count("leaves", s.leaves, 2, 15)?;
+                if s.leaf != 0.0 {
+                    check("leaf", s.leaf, 0.03, 0.45)?;
+                }
+                count("twigs", s.twigs, 0, 12)?;
                 check("angle", s.angle, 20.0, 80.0)?;
                 check("stalk", s.stalk, 0.0, 0.4)?;
                 check("width", s.width, 0.03, 1.2)?;
@@ -2589,23 +2608,48 @@ impl Compound {
     }
 }
 
+/// Degrees a sprig's side twigs stand from its main twig.
+pub const SPRIG_TWIG_ANGLE: f64 = 40.0;
+
 impl Sprig {
     /// Length of the longest leaf, petiole included, as a fraction of the
     /// card's length.
     #[must_use]
     pub fn leaf_length(&self) -> f64 {
+        if self.leaf > 0.0 {
+            return self.leaf;
+        }
         let side = f64::from(self.leaves.saturating_sub(1));
         ((1.0 - self.stalk) * 2.4 / (side / 2.0 + 1.5)).min(0.45)
     }
 
-    /// Card width over card length: room for the side leaves at their
-    /// angle, with their blades' width.
+    /// Whether the leaves stand at their own size along twigs, rather
+    /// than `leaves` of them sized to fit the card.
+    #[must_use]
+    pub fn sized(&self) -> bool {
+        self.leaf > 0.0 || self.twigs > 0
+    }
+
+    /// Length of each side twig, as a fraction of the card's length: half
+    /// the leafy part of the main twig, at most a third of the card.
+    #[must_use]
+    pub fn twig_length(&self) -> f64 {
+        if self.twigs == 0 {
+            return 0.0;
+        }
+        (0.5 * (1.0 - self.leaf_length() - self.stalk)).clamp(0.05, 0.34)
+    }
+
+    /// Card width over card length: room for the side twigs and the side
+    /// leaves at their angle, with their blades' width.
     #[must_use]
     pub fn aspect(&self) -> f64 {
         let length = self.leaf_length();
         let angle = crate::math::radians(self.angle);
         let blade = length * (1.0 - self.petiole) * self.width * 0.5;
-        (2.0 * (length * crate::math::sin(angle) + blade * crate::math::cos(angle)) + 0.03).min(1.6)
+        let twig = self.twig_length() * crate::math::sin(crate::math::radians(SPRIG_TWIG_ANGLE));
+        (2.0 * (twig + length * crate::math::sin(angle) + blade * crate::math::cos(angle)) + 0.03)
+            .min(1.6)
     }
 }
 

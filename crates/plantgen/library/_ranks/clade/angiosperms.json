@@ -9,6 +9,16 @@
     "shoot_leaves": {"min": 4, "max": 18, "high": 32, "typical": 12}
   },
   "rules": {
+    "appearance.organs.leaf.shape.leaf": {
+      "template": "sprig",
+      "rule": "min(0.45, 1.25 * leaf_length_m / leaf_size)",
+      "why": "A sprig card is a leafy twig, so its leaves are the species' own size: as long as floras measure the blade and a quarter again for its stalk, on a card as long as the twig. Larger leaves, fewer of them, make a crown of a few giant leaves with sky between them."
+    },
+    "appearance.organs.leaf.shape.twigs": {
+      "template": "sprig",
+      "rule": "round(clamp(2.4 * 0.45 * leaf_size / (1.25 * leaf_length_m) - 1.1, 0, 12))",
+      "why": "Leaves smaller than the card's longest stand on side twigs as well as the main one, as a shoot's leaves stand on its side shoots, so the twig covers about as much of its card with leaves as before (the area the program shades with): one side twig for each two fifths the leaves are smaller."
+    },
     "generator.params.short_share": {
       "map": {"short_shoots": {"true": {"rule": "min(1 - long_share, 1 / unit_nodes)"}}},
       "else": {"rule": "min(1, 1 / (3 * unit_nodes))"},

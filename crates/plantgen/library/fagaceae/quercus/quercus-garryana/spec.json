@@ -37,7 +37,7 @@
       "droop": 0.02,
       "extinction": 0.4,
       "pipe_rings": 3.47e-06,
-      "leaf_area": 0.303,
+      "leaf_area": 0.229,
       "bloom_area": 0.72,
       "blooms": 1,
       "bloom_size": 0.045,

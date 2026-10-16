@@ -1631,6 +1631,10 @@ fn sprig(
     // (base, unit direction, length, brightness) of each leaf, lowest
     // first, so that a higher leaf covers the one below it.
     let mut leaves = Vec::with_capacity(usize::try_from(s.leaves).unwrap_or(0));
+    if s.sized() {
+        sized_sprig(s, p, half, fine, &mut best, &mut leaves);
+    }
+    let side = if s.sized() { 0 } else { side };
     for j in 0..side {
         let n = u64::from(j);
         let at = (f64::from(j) + 0.5) / f64::from(side);
@@ -1644,7 +1648,9 @@ fn sprig(
         let length = length * fit(base, offset, half, fine * 1.2);
         leaves.push((base, direction, length, 0.86 + 0.12 * hash(n, 1, 22)));
     }
-    leaves.push(((0.0, top), (0.0, 1.0), longest * 0.97, 0.92));
+    if !s.sized() {
+        leaves.push(((0.0, top), (0.0, 1.0), longest * 0.97, 0.92));
+    }
     for (start, direction, length, bright) in leaves {
         let (along, across) = local(p, start, direction);
         if along < 0.0 || along > length {
@@ -1677,6 +1683,89 @@ fn sprig(
         };
     }
     best
+}
+
+/// How far apart, in leaf lengths, a sized sprig's leaves stand along a
+/// twig.
+const SPRIG_GAP: f64 = 0.3;
+
+/// A leaf in a sprig's painting: its base, unit direction, length and
+/// brightness.
+type SprigLeaf = ((f64, f64), (f64, f64), f64, f64);
+
+/// The twigs and leaves of a sprig whose leaves stand at their own size
+/// ([`Sprig::sized`]): the main twig with its side twigs alternating up
+/// it, each set with leaves half a leaf apart, alternating, each at
+/// `angle` to its twig and one at its tip. Paints the twigs at `p` into
+/// `best` and adds the leaves, lowest first, to `leaves`.
+fn sized_sprig(
+    s: &Sprig,
+    p: (f64, f64),
+    half: f64,
+    fine: f64,
+    best: &mut Paint,
+    leaves: &mut Vec<SprigLeaf>,
+) {
+    let longest = s.leaf_length();
+    let top = 1.0 - longest;
+    let reach = s.twig_length();
+    let angle = math::radians(s.angle);
+    // (start, unit direction, length, its thickness in finest widths).
+    let mut twigs = vec![((0.0, s.stalk), (0.0, 1.0), top - s.stalk, 1.2)];
+    let count = s.twigs;
+    for j in 0..count {
+        let n = u64::from(j);
+        let at = (f64::from(j) + 0.5) / f64::from(count);
+        let start = (0.0, s.stalk + (top - s.stalk) * 0.8 * at);
+        let turn = if j % 2 == 0 { 1.0 } else { -1.0 };
+        let tilt = math::radians(crate::looks::SPRIG_TWIG_ANGLE + 10.0 * (hash(n, 3, 23) - 0.5));
+        let direction = (turn * math::sin(tilt), math::cos(tilt));
+        let length = reach * (1.0 - 0.35 * at);
+        let offset = (direction.0 * length, direction.1 * length);
+        let length = length * fit(start, offset, half - longest * math::sin(angle), fine);
+        twigs.push((start, direction, length, 0.8));
+    }
+    for (k, &(start, direction, length, thick)) in (0_u64..).zip(&twigs) {
+        let (along, across) = local(p, start, direction);
+        if (0.0..=length + 0.01).contains(&along) && across.abs() < fine * thick {
+            *best = Paint::solid(0.8, 1.0);
+        }
+        // Leaves a third of a leaf apart along it, alternating sides, as
+        // a shoot's nodes stand about a third of its leaves' length apart.
+        let gap = SPRIG_GAP * longest;
+        let places = (length / gap).floor().max(0.0);
+        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+        let places = places as u32;
+        for i in 0..places {
+            let n = u64::from(i);
+            let up = (f64::from(i) + 0.5) * length / f64::from(places);
+            let base = (start.0 + direction.0 * up, start.1 + direction.1 * up);
+            let turn = if (i + u32::try_from(k).unwrap_or(0)) % 2 == 0 {
+                1.0
+            } else {
+                -1.0
+            };
+            let lean = angle + math::radians(12.0 * (hash(n, k, 24) - 0.5));
+            let (c, sn) = (math::cos(turn * lean), math::sin(turn * lean));
+            // The twig's direction turned by the leaf's angle.
+            let leaf = (
+                direction.0 * c + direction.1 * sn,
+                direction.1 * c - direction.0 * sn,
+            );
+            let size = longest * (0.8 + 0.2 * hash(n, k, 25));
+            let offset = (leaf.0 * size, leaf.1 * size);
+            let size = size * fit(base, offset, half, fine * 1.2);
+            leaves.push((base, leaf, size, 0.86 + 0.12 * hash(n, k, 26)));
+        }
+        let end = (
+            start.0 + direction.0 * length,
+            start.1 + direction.1 * length,
+        );
+        let size = longest * 0.95;
+        let offset = (direction.0 * size, direction.1 * size);
+        let size = size * fit(end, offset, half, fine * 1.2);
+        leaves.push((end, direction, size, 0.92));
+    }
 }
 
 /// A grass or sedge blade card's half-width at `y` along it, from its foot
