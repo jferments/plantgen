@@ -87,7 +87,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.32,
           "widest": 0.5,
           "tip": 0.45,
           "base": 0.5,
@@ -98,13 +97,10 @@
       "bloom": {
         "shape": {
           "template": "fruit",
-          "kind": "capsule",
           "aspect": 1.6,
           "unripe": 0.6
         },
         "inflorescence": {
-          "kind": "umbel",
-          "flowers": 15,
           "size": 0.35,
           "spread": 70,
           "pedicel": 0.2
@@ -199,7 +195,10 @@
     "fruiting_months": [
       9,
       10
-    ]
+    ],
+    "height_typical_m": {"min": 2, "max": 5},
+    "rosette": "none",
+    "leaf_width_m": {"min": 0.03, "max": 0.07}
   },
   "evidence": {
     "taxon": {
@@ -321,7 +320,10 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "By eye: dark green leathery leaves; pink bell-shaped flowers in trusses; brown woody capsules."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2418031), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2418031), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2418031), as no source read gives it."}
   },
   "provenance": {
     "sources": [

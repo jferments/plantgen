@@ -39,7 +39,6 @@
       "bud_share": 0.2,
       "fruit_share": 0.2,
       "bud_size": 0.02,
-      "fruit_size": 0.03,
       "flower_area": 0.215,
       "bud_area": 0.636,
       "fruit_area": 1.016
@@ -64,7 +63,6 @@
         "shape": {
           "template": "flower",
           "petals": 12,
-          "stamens": 200,
           "petal_width": 0.7,
           "point": 0.0,
           "notch": 0.0,
@@ -166,7 +164,14 @@
     "radial_spine_length_m": 0.01,
     "central_spines": {"min": 5, "max": 6},
     "central_spine_length_m": 0.07,
-    "central_spine_form": {"curved": "usually", "twisted": "often"}
+    "central_spine_form": {"curved": "usually", "twisted": "often"},
+    "height_typical_m": {"min": 0.15, "max": 0.45},
+    "height_max_m": 0.6,
+    "woodiness": "semi",
+    "rosette": "none",
+    "flowering_months": [3, 4, 5],
+    "fruit_size_m": {"min": 0.02, "max": 0.035},
+    "fruiting_months": [5, 6, 7]
   },
   "evidence": {
     "traits.ribs": {
@@ -253,7 +258,14 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Herbarium records on SEINet and iDigBio, as quoted in search results; the pages themselves were not read: stigma lobes 10 to 13, dark green (the Flora of North America's genus: 5 to 22); the carpels are as many as the stigma lobes (Hamburg's Botany Online on the family, as quoted in search results; the page itself was not read)."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2782588), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2782588), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2782588), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2782588), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2782588), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2782588), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2782588), as no source read gives it."}
   },
   "provenance": {
     "sources": [

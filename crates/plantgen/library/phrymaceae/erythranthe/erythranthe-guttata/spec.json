@@ -36,9 +36,8 @@
       "bud_spacing": 0.6,
       "nod": 5,
       "bud_size": 0.012,
-      "fruit_length": 0.015,
       "leaf_area": 0.487,
-      "basal_area": 0.235,
+      "basal_area": 0.386,
       "basal_piece_area": 0.235,
       "flower_area": 0.191,
       "bud_area": 0.063,
@@ -63,7 +62,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.9,
           "widest": 0.4,
           "tip": 0.1,
           "base": 0.6,
@@ -108,7 +106,19 @@
       "min": 0.015,
       "max": 0.09
     },
-    "zygomorphy": "bilabiate"
+    "zygomorphy": "bilabiate",
+    "height_max_m": 1,
+    "leaf_habit": "deciduous",
+    "rosette": "none",
+    "perennation": "rhizome",
+    "leaf_width_m": {"min": 0.01, "max": 0.07},
+    "leaf_shape": "ovate",
+    "sexual_system": "hermaphrodite",
+    "inflorescence_length_m": {"min": 0.05, "max": 0.2},
+    "flowering_months": [5, 6, 7, 8],
+    "fruit_type": "capsule",
+    "fruit_size_m": {"min": 0.01, "max": 0.018},
+    "fruiting_months": [7, 8, 9]
   },
   "evidence": {
     "generator.params.bud_area": {
@@ -172,7 +182,20 @@
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
     "generator.params.bud_spacing": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "The few buds above the open flowers sit closer together among the upper bracts, about half to two thirds of the open flowers' spacing by eye (flowering photographs, observations 168612748, 191564139, 129627718, 15834623, 14057275, 338105599, 194561474, 260128512): a bud's internode as a share of a flower's, judged by eye."},
-    "traits.zygomorphy": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 422, Erythranthe guttata: zygomorphy bilabiate, open throat."}
+    "traits.zygomorphy": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 422, Erythranthe guttata: zygomorphy bilabiate, open throat."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3000970), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3000970), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3000970), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3000970), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3000970), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3000970), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3000970), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3000970), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3000970), as no source read gives it."},
+    "traits.fruit_type": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3000970), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3000970), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3000970), as no source read gives it."},
+    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `basal` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.235)."}
   },
   "provenance": {
     "sources": [

@@ -12,8 +12,6 @@
   "growth_form": "fern",
   "generator": {
     "params": {
-      "fronds_per_year": 10,
-      "frond_life": 2.5,
       "frond_seed": 0.2,
       "size_years": 3,
       "young_angle": 30,
@@ -21,18 +19,12 @@
       "open_years": 0.6,
       "angle_spread": 8,
       "frond_radius": 0.0015,
-      "pinna_peak": 0.5,
-      "pinna_base": 0.2,
-      "pinna_tip": 0.3,
       "pinna_angle": 82,
       "pinna_lift": 5,
       "pinna_area": 0.216,
       "droop": 0.03,
       "droop_years": 2,
-      "crowns": 1,
       "crown_age": 4,
-      "crown_rate": 0.15,
-      "rhizome": 0.08,
       "season": 0.5,
       "emerge_spread": 0.3,
       "unroll": 0.3,
@@ -88,7 +80,12 @@
     "petiole_length_m": {"min": 0.02, "max": 0.3},
     "leaf_margin": {"entire": "usually"},
     "rosette": "terminal",
-    "frond_dimorphism": "dimorphic"
+    "frond_dimorphism": "dimorphic",
+    "height_typical_m": {"min": 0.2, "max": 0.5},
+    "height_max_m": 0.75,
+    "woodiness": "herbaceous",
+    "perennation": "rhizome",
+    "leaf_arrangement": "alternate"
   },
   "evidence": {
     "traits.leaf_length_m": {
@@ -160,7 +157,12 @@
     "traits.rosette": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 221, 222, Blechnum spicant: rosette terminal; or clustered."},
     "traits.frond_dimorphism": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 221, 222, Blechnum spicant: frond dimorphism dimorphic."},
     "traits.leaf_shape": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "The spec's value is from its `traits` note (abrams-1923). Hoshizaki and Moran, Fern Grower's Manual (2001) p. 221-222: blades lanceolate to narrowly elliptic. The spec stated {\"linear\": \"usually\", \"oblanceolate\": \"often\"}. Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."},
-    "traits.rhizome_habit": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "The spec's value is from its `traits` note (abrams-1923). Hoshizaki and Moran, Fern Grower's Manual (2001) p. 221-222: rhizome erect, sometimes branched. The spec stated \"short_creeping\". Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."}
+    "traits.rhizome_habit": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "The spec's value is from its `traits` note (abrams-1923). Hoshizaki and Moran, Fern Grower's Manual (2001) p. 221-222: rhizome erect, sometimes branched. The spec stated \"short_creeping\". Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3175779), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3175779), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3175779), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3175779), as no source read gives it."},
+    "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3175779), as no source read gives it."}
   },
   "provenance": {
     "sources": [

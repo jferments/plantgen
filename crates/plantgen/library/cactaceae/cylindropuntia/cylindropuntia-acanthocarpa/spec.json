@@ -34,7 +34,6 @@
       "bud_share": 0.2,
       "fruit_share": 0.3,
       "bud_size": 0.02,
-      "fruit_size": 0.03,
       "bud_rate": 0.5,
       "flower_area": 0.270,
       "bud_area": 0.636,
@@ -60,7 +59,6 @@
         "shape": {
           "template": "flower",
           "petals": 10,
-          "stamens": 200,
           "petal_width": 0.8,
           "point": 0.0,
           "notch": 0.0,
@@ -154,7 +152,14 @@
   "traits": {
     "wood_density_basic_kg_m3": 640,
     "radial_spines": {"min": 8, "max": 25},
-    "radial_spine_length_m": {"min": 0.02, "max": 0.03}
+    "radial_spine_length_m": {"min": 0.02, "max": 0.03},
+    "height_typical_m": {"min": 1, "max": 2},
+    "height_max_m": 3,
+    "woodiness": "woody",
+    "rosette": "none",
+    "flowering_months": [4, 5],
+    "fruit_size_m": {"min": 0.02, "max": 0.04},
+    "fruiting_months": [6, 7, 8]
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Cylindropuntia acanthocarpa (gwddagg_v2.2_species.csv, read): specific gravity 0.64 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.64, branches 0.58. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
@@ -212,7 +217,14 @@
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",
       "note": "Britton and Rose's The Cactaceae (vol. 1, 1919, pp. 42 and 57 to 67): the areoles bear glochids above the spines, here numerous, yellow. Their count, length and angle are set by eye like a prickly pear's, smaller, as no flora measures them."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750346), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750346), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750346), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750346), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750346), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750346), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2750346), as no source read gives it."}
   },
   "provenance": {
     "sources": [

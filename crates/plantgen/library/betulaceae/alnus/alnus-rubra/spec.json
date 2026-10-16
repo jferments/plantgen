@@ -39,7 +39,7 @@
       "bloom_size": 0.07,
       "bloom_angle": 100,
       "leaf_area": 0.302,
-      "bloom_area": 0.379,
+      "bloom_area": 0.295,
       "path_half": 22.0
     }
   },
@@ -70,7 +70,6 @@
           "template": "sprig",
           "leaves": 7,
           "angle": 50,
-          "width": 0.62,
           "widest": 0.45,
           "tip": 0.35,
           "base": 0.55,
@@ -89,7 +88,7 @@
           "cone": 1,
           "aspect": 0.55
         },
-        "inflorescence": { "kind": "raceme", "flowers": 5, "size": 0.3, "spread": 30, "pedicel": 0.27 },
+        "inflorescence": { "flowers": 5, "size": 0.3, "spread": 30, "pedicel": 0.27 },
         "colour": [0.33, 0.22, 0.12],
         "accent": [0.24, 0.33, 0.12],
         "season": {
@@ -153,7 +152,15 @@
     "wood_moisture_green_share": 0.97,
     "juvenile_period_years": {"min": 3, "max": 10},
     "flowering_months": [2, 3, 4, 5],
-    "fruiting_months": [8, 9, 10]
+    "fruiting_months": [8, 9, 10],
+    "height_typical_m": {"min": 12, "max": 25},
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "rosette": "none",
+    "leaf_width_m": {"min": 0.03, "max": 0.08},
+    "leaf_shape": "ovate",
+    "inflorescence_length_m": {"min": 0.06, "max": 0.15},
+    "fruit_size_m": {"min": 0.015, "max": 0.03}
   },
   "evidence": {
     "traits.flowering_months": {
@@ -239,7 +246,16 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L6584), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L6584), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L6584), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L6584), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L6584), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L6584), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L6584), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L6584), as no source read gives it."},
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.379)."}
   },
   "provenance": {
     "sources": [

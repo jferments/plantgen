@@ -74,7 +74,6 @@
           "template": "sprig",
           "leaves": 7,
           "angle": 50,
-          "width": 0.55,
           "widest": 0.4,
           "tip": 0.5,
           "base": 0.5,
@@ -94,16 +93,11 @@
           "aspect": 0.85,
           "unripe": 0.7
         },
-        "inflorescence": { "kind": "umbel", "flowers": 6, "size": 0.3, "spread": 35 },
+        "inflorescence": { "flowers": 6, "size": 0.3, "spread": 35 },
         "colour": [0.85, 0.5, 0.12],
         "accent": [0.45, 0.55, 0.18],
         "season": {
-          "bud": 100,
-          "flower": 115,
-          "fruit": 140,
-          "ripe": 257,
           "ripening": 35,
-          "fall": 320,
           "flower_look": {
             "shape": {
               "template": "flower",
@@ -148,7 +142,17 @@
     },
     "wood_density_basic_kg_m3": 680,
     "carpels": 3,
-    "fruiting_months": [10, 11]
+    "fruiting_months": [10, 11],
+    "height_typical_m": {"min": 4, "max": 10},
+    "woodiness": "woody",
+    "leaf_length_m": {"min": 0.04, "max": 0.1},
+    "leaf_width_m": {"min": 0.02, "max": 0.05},
+    "leaf_margin": "serrate",
+    "sexual_system": "hermaphrodite",
+    "inflorescence": "corymb",
+    "inflorescence_length_m": {"min": 0.04, "max": 0.08},
+    "flowering_months": [4, 6],
+    "fruit_size_m": {"min": 0.01, "max": 0.02}
   },
   "evidence": {
     "traits.fruiting_months": {
@@ -221,7 +225,17 @@
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",
       "note": "Jepson's Manual of the Flowering Plants of California (1925), read in full, as Pyrus rivularis: carpels commonly 3. The Burke Herbarium (as quoted in search results; the page itself was not read): usually 3 styles (or 4), joined in the lower third."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2950658), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2950658), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2950658), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2950658), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2950658), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2950658), as no source read gives it."},
+    "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2950658), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2950658), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2950658), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2950658), as no source read gives it."}
   },
   "provenance": {
     "sources": [

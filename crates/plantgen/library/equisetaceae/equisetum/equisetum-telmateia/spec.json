@@ -32,7 +32,7 @@
       "raceme": 0,
       "flowers": 0,
       "leaf_area": 0.015,
-      "basal_area": 0.235,
+      "basal_area": 0.051,
       "basal_piece_area": 0.235,
       "flower_area": 0.639,
       "bud_area": 0.065,
@@ -119,7 +119,15 @@
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
-    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 329, Equisetum telmateia: leaf habit deciduous."}
+    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 329, Equisetum telmateia: leaf habit deciduous."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2930100), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2930100), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2930100), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2930100), as no source read gives it."},
+    "traits.leaf_division": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2930100), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2930100), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2930100), as no source read gives it."},
+    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `basal` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.235)."}
   },
   "provenance": {
     "sources": [
@@ -132,6 +140,13 @@
     "notes": "Procedural proxy from the step-6 catalogue, authored from general knowledge of the species in the south Puget Sound lowlands. Calibration against measurements and photographs is milestone P4."
   },
   "traits": {
-    "leaf_habit": "deciduous"
+    "leaf_habit": "deciduous",
+    "height_typical_m": {"min": 0.5, "max": 1.5},
+    "height_max_m": 2,
+    "rosette": "none",
+    "perennation": "rhizome",
+    "leaf_division": "simple",
+    "leaf_shape": "linear",
+    "leaf_margin": "dentate"
   }
 }

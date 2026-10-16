@@ -179,7 +179,20 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
-    "wood_density_basic_kg_m3": 410
+    "wood_density_basic_kg_m3": 410,
+    "height_typical_m": {"min": 2, "max": 5},
+    "height_max_m": 9,
+    "woodiness": "woody",
+    "leaf_habit": "evergreen",
+    "leaf_length_m": {"min": 0.3, "max": 0.95},
+    "leaf_arrangement": "alternate",
+    "leaf_shape": "linear",
+    "leaf_margin": "entire",
+    "sexual_system": "hermaphrodite",
+    "inflorescence": "panicle",
+    "flowering_months": [5, 6, 7],
+    "fruit_size_m": {"min": 0.04, "max": 0.08},
+    "fruiting_months": [7, 8, 9]
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Yucca elata (gwddagg_v2.2_species.csv, read): specific gravity 0.41 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.41, branches 0.45. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
@@ -227,7 +240,20 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291773), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291773), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291773), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291773), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291773), as no source read gives it."},
+    "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291773), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291773), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291773), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291773), as no source read gives it."},
+    "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291773), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291773), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291773), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L291773), as no source read gives it."}
   },
   "provenance": {
     "sources": [

@@ -46,7 +46,7 @@
       "bloom_size": 0.08,
       "bloom_angle": 80,
       "leaf_area": 0.412,
-      "bloom_area": 0.521,
+      "bloom_area": 0.185,
       "path_half": 1.23
     }
   },
@@ -75,7 +75,7 @@
           "aspect": 0.85,
           "unripe": 0.8
         },
-        "inflorescence": { "kind": "raceme", "flowers": 8, "size": 0.25, "spread": 40, "pedicel": 0.225 },
+        "inflorescence": { "flowers": 8, "size": 0.25, "spread": 40, "pedicel": 0.225 },
         "colour": [0.06, 0.04, 0.06],
         "accent": [0.6, 0.08, 0.08],
         "season": {
@@ -126,7 +126,14 @@
     "stamens": 100,
     "carpels": 30,
     "flowering_months": [6, 7],
-    "fruiting_months": [7, 8, 9, 10]
+    "fruiting_months": [7, 8, 9, 10],
+    "height_typical_m": {"min": 1.5, "max": 3},
+    "woodiness": "woody",
+    "leaf_length_m": {"min": 0.1, "max": 0.25},
+    "leaf_width_m": {"min": 0.1, "max": 0.2},
+    "leaf_margin": "serrate",
+    "sexual_system": "hermaphrodite",
+    "inflorescence": "panicle"
   },
   "evidence": {
     "traits.flowering_months": {
@@ -213,7 +220,15 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The leaf drawn as a palmately compound leaf (spec rework P4), its leaflets counted, set and shaped from its characters by the rules at the flowering plants and the plants; before, five leaflets stood along a short rachis. By eye from photographs: the outer pair turned back beside the petiole (230 degrees between them) and 0.65 as long as the end leaflet, each leaflet on a short stalk."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2977159), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2977159), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2977159), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2977159), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2977159), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2977159), as no source read gives it."},
+    "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2977159), as no source read gives it."},
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.521)."}
   },
   "provenance": {
     "sources": [

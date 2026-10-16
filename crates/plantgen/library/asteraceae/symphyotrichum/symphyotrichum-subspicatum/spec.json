@@ -216,7 +216,12 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The involucre drawn about 0.6 times as tall as the disc is wide, so its height comes to the flora's 5 to 6 mm (spec rework E1); the daisy family's rule sets it from the involucre's height and width, and no flora read gives this aster's width."
-    }
+    },
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3103843), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3103843), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3103843), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3103843), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L3103843), as no source read gives it."}
   },
   "provenance": {
     "sources": [
@@ -244,6 +249,11 @@
     "ray_florets": {"min": 20, "max": 30},
     "ray_length_m": 0.01,
     "ray_colour": [140, 90, 190],
-    "flowering_months": [6, 7, 8, 9, 10]
+    "flowering_months": [6, 7, 8, 9, 10],
+    "leaf_habit": "deciduous",
+    "rosette": "none",
+    "perennation": "rhizome",
+    "fruit_size_m": {"min": 0.002, "max": 0.004},
+    "fruiting_months": [9, 10]
   }
 }

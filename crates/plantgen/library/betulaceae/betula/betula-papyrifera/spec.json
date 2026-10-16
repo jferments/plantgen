@@ -73,7 +73,6 @@
           "template": "sprig",
           "leaves": 7,
           "angle": 50,
-          "width": 0.7,
           "widest": 0.35,
           "tip": 0.5,
           "base": 0.7,
@@ -145,7 +144,13 @@
     "flowering_months": [4, 5, 6],
     "fruiting_months": [8, 9, 10, 11],
     "leaf_shape": {"ovate": "usually"},
-    "leaf_venation": "pinnate"
+    "leaf_venation": "pinnate",
+    "height_typical_m": {"min": 15, "max": 25},
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "rosette": "none",
+    "leaf_width_m": {"min": 0.03, "max": 0.07},
+    "leaf_arrangement": "alternate"
   },
   "evidence": {
     "traits.flowering_months": {
@@ -233,7 +238,13 @@
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
     "traits.leaf_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 338, Betula papyrifera: leaf shape ovate."},
-    "traits.leaf_venation": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 338, Betula papyrifera: leaf venation pinnate."}
+    "traits.leaf_venation": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 338, Betula papyrifera: leaf venation pinnate."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L21557), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L21557), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L21557), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L21557), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L21557), as no source read gives it."},
+    "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L21557), as no source read gives it."}
   },
   "provenance": {
     "sources": [

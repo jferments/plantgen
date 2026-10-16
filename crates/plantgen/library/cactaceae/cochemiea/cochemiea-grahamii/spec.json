@@ -38,7 +38,6 @@
       "bud_share": 0.2,
       "fruit_share": 0.3,
       "bud_size": 0.01,
-      "fruit_size": 0.02,
       "flower_area": 0.215,
       "bud_area": 0.636,
       "fruit_area": 0.51
@@ -63,7 +62,6 @@
         "shape": {
           "template": "flower",
           "petals": 12,
-          "stamens": 200,
           "petal_width": 0.7,
           "point": 0.3,
           "notch": 0.0,
@@ -162,7 +160,13 @@
     "radial_spine_length_m": {"min": 0.006, "max": 0.012},
     "central_spines": {"min": 1, "max": 3},
     "central_spine_length_m": 0.018,
-    "central_spine_form": "hooked"
+    "central_spine_form": "hooked",
+    "height_max_m": 0.25,
+    "woodiness": "herbaceous",
+    "rosette": "none",
+    "flowering_months": [6, 7, 8],
+    "fruit_size_m": {"min": 0.01, "max": 0.025},
+    "fruiting_months": [8, 9, 10]
   },
   "evidence": {
     "traits.radial_spines": {
@@ -249,7 +253,13 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "LLIFLE's account of the species, as quoted in search results; the page itself was not read: stigma lobes 7 or 8, linear, green; the carpels are as many as the stigma lobes (Hamburg's Botany Online on the family, as quoted in search results; the page itself was not read)."
-    }
+    },
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence medium, record L2729766), as no source read gives it."}
   },
   "provenance": {
     "sources": [

@@ -66,7 +66,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.45,
           "widest": 0.5,
           "tip": 0.6,
           "base": 0.6,
@@ -103,7 +102,15 @@
     "wood_density_basic_kg_m3": 630,
     "flowering_position": "lateral",
     "self_pruning": true,
-    "sexual_system": "dioecious"
+    "sexual_system": "dioecious",
+    "height_typical_m": {"min": 1, "max": 2},
+    "life_span": "perennial",
+    "rosette": "none",
+    "leaf_width_m": {"min": 0.01, "max": 0.02},
+    "inflorescence": "solitary",
+    "flowering_months": [2, 3, 4],
+    "fruit_size_m": {"min": 0.015, "max": 0.02},
+    "fruiting_months": [5, 6, 7]
   },
   "evidence": {
     "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (visual forms Skill 1, 2026-10-14; plantc atlas), so it shades with what it shows: the look now takes its card from the taxa's characters, where before it drew the generic card (-)."},
@@ -188,7 +195,15 @@
       "source": "usfs-feis",
       "note": "FEIS's jojoba review (page read): as the plant ages its lower foliage is shaded out and pruned, leaving a high canopy."
     },
-    "traits.sexual_system": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 368, 370, Simmondsia chinensis: sexual system dioecious."}
+    "traits.sexual_system": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 368, 370, Simmondsia chinensis: sexual system dioecious."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486363), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486363), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486363), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486363), as no source read gives it."},
+    "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486363), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486363), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486363), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2486363), as no source read gives it."}
   },
   "provenance": {
     "sources": [

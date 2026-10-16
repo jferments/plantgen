@@ -114,7 +114,15 @@
     "wood_moisture_green_share": {"min": 0.85, "max": 1.7, "typical": 1.27},
     "juvenile_period_years": {"min": 20, "max": 30},
     "leaf_length_m": {"min": 0.006, "max": 0.02},
-    "cone_length_m": {"min": 0.02, "max": 0.025}
+    "cone_length_m": {"min": 0.02, "max": 0.025},
+    "height_typical_m": {"min": 30, "max": 50},
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "rosette": "none",
+    "leaf_width_m": {"min": 0.0015, "max": 0.002},
+    "leaf_arrangement": "alternate",
+    "leaf_shape": "linear",
+    "leaf_margin": "entire"
   },
   "evidence": {
     "traits.height_max_m": {
@@ -185,7 +193,15 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L379395), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L379395), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L379395), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L379395), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L379395), as no source read gives it."},
+    "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L379395), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L379395), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L379395), as no source read gives it."}
   },
   "provenance": {
     "sources": [

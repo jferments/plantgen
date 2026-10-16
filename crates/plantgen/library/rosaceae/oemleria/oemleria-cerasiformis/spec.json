@@ -44,7 +44,7 @@
       "blooms": 1,
       "bloom_size": 0.035,
       "bloom_angle": 120,
-      "leaf_area": 0.177,
+      "leaf_area": 0.326,
       "bloom_area": 0.355,
       "path_half": 2.12
     }
@@ -74,7 +74,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.32,
           "widest": 0.6,
           "tip": 0.4,
           "base": 0.2,
@@ -88,7 +87,7 @@
           "aspect": 0.7,
           "unripe": 0.4
         },
-        "inflorescence": { "kind": "raceme", "flowers": 4, "size": 0.3, "spread": 45, "pedicel": 0.27 },
+        "inflorescence": { "flowers": 4, "size": 0.3, "spread": 45, "pedicel": 0.27 },
         "colour": [0.08, 0.07, 0.14],
         "accent": [0.85, 0.45, 0.15],
         "season": {
@@ -136,7 +135,13 @@
     },
     "juvenile_period_years": 2,
     "flowering_months": [2, 3, 4],
-    "fruiting_months": [6, 7]
+    "fruiting_months": [6, 7],
+    "height_typical_m": {"min": 1.5, "max": 5},
+    "woodiness": "woody",
+    "leaf_width_m": {"min": 0.02, "max": 0.04},
+    "leaf_margin": "entire",
+    "sexual_system": "dioecious",
+    "inflorescence": "raceme"
   },
   "evidence": {
     "traits.leaf_length_m": {
@@ -233,7 +238,14 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Days from the first flower of a cluster opening to its last: a third of the days from its first flower to its first fruit as they were set by hand before 2026-10-14, a convention (no source gives a raceme's opening time)."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2951813), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2951813), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2951813), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2951813), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2951813), as no source read gives it."},
+    "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2951813), as no source read gives it."},
+    "generator.params.leaf_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `leaf` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.177)."}
   },
   "provenance": {
     "sources": [

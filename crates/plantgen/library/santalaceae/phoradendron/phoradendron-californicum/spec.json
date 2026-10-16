@@ -27,7 +27,6 @@
       "stem_radius": 0.004,
       "fork_angle": 35,
       "fruit_age": 3,
-      "fruit_size": 0.007,
       "scale_area": 0.235,
       "fruit_area": 1.27
     }
@@ -68,7 +67,20 @@
   "traits": {
     "wood_density_basic_kg_m3": 640,
     "leaf_form": {"scale": "usually"},
-    "fruit_type": "berry"
+    "fruit_type": "berry",
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "evergreen",
+    "rosette": "none",
+    "leaf_length_m": {"min": 0.001, "max": 0.002},
+    "leaf_width_m": {"min": 0.001, "max": 0.002},
+    "leaf_arrangement": "opposite",
+    "leaf_shape": "ovate",
+    "sexual_system": "dioecious",
+    "inflorescence_length_m": {"min": 0.005, "max": 0.02},
+    "flowering_months": [1, 2, 3],
+    "fruit_size_m": {"min": 0.003, "max": 0.005},
+    "fruiting_months": [3, 4, 5, 6]
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Phoradendron californicum (gwddagg_v2.2_species.csv, read): specific gravity 0.64 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.64, branches 0.62. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
@@ -123,7 +135,20 @@
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
     "traits.leaf_form": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 366, Phoradendron californicum: leaf form scale."},
-    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 366, Phoradendron californicum: fruit type berry."}
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 366, Phoradendron californicum: fruit type berry."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."},
+    "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2545436), as no source read gives it."}
   },
   "provenance": {
     "sources": [

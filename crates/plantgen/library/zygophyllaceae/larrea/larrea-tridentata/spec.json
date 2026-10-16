@@ -77,7 +77,6 @@
           "leaves": 8,
           "angle": 50,
           "stalk": 0.15,
-          "width": 0.45,
           "widest": 0.5,
           "tip": 0.6,
           "base": 0.6,
@@ -120,7 +119,19 @@
     "flowering_position": "lateral",
     "leaf_division": "compound",
     "stipules": true,
-    "fruit_type": "schizocarp"
+    "fruit_type": "schizocarp",
+    "height_typical_m": {"min": 1, "max": 3},
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "evergreen",
+    "rosette": "none",
+    "leaf_length_m": {"min": 0.007, "max": 0.018},
+    "leaf_width_m": {"min": 0.004, "max": 0.009},
+    "leaf_margin": "entire",
+    "sexual_system": "hermaphrodite",
+    "flowering_months": [2, 3, 4, 5],
+    "fruit_size_m": {"min": 0.004, "max": 0.007},
+    "fruiting_months": [4, 5, 6]
   },
   "evidence": {
     "traits.height_max_m": {
@@ -196,7 +207,19 @@
     },
     "traits.leaf_division": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 307, 308, Larrea tridentata: leaf division compound, geminate (two leaflets joined at the base)."},
     "traits.stipules": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 307, 308, Larrea tridentata: stipules true; small, reddish-brown, paired at the nodes."},
-    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 307, 308, Larrea tridentata: fruit type schizocarp, densely covered in white hairs, style persistent."}
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 307, 308, Larrea tridentata: fruit type schizocarp, densely covered in white hairs, style persistent."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2497190), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2497190), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2497190), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2497190), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2497190), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2497190), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2497190), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2497190), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2497190), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2497190), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2497190), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2497190), as no source read gives it."}
   },
   "provenance": {
     "sources": [

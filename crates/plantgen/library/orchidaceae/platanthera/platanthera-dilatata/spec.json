@@ -30,7 +30,6 @@
       "leaf_angle": 25,
       "raceme": 0.03,
       "flowers": 1,
-      "flower_size": 0.18,
       "pedicel": 0.0,
       "flower_angle": 0,
       "fruit_below": 0,
@@ -58,7 +57,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.2,
           "widest": 0.35,
           "tip": 0.8,
           "base": 0.4,
@@ -71,11 +69,6 @@
         "inflorescence": { "size": 0.067, "spread": 40, "taper": 0.2 },
         "colour": [0.3, 0.38, 0.15],
         "season": {
-          "bud": 170,
-          "flower": 185,
-          "fruit": 197,
-          "ripe": 235,
-          "fall": 280,
           "opening": 25,
           "bud_look": {
             "shape": { "template": "fruit", "aspect": 0.5 },
@@ -121,7 +114,15 @@
     "inflorescence_posture": "erect",
     "units_per_inflorescence": {"min": 10, "max": 60},
     "flower_size_m": {"min": 0.006, "max": 0.013},
-    "spur_length_m": {"min": 0.008, "max": 0.02}
+    "spur_length_m": {"min": 0.008, "max": 0.02},
+    "height_max_m": 1.2,
+    "leaf_width_m": {"min": 0.01, "max": 0.04},
+    "leaf_shape": "lanceolate",
+    "leaf_margin": "entire",
+    "inflorescence_length_m": {"min": 0.05, "max": 0.3},
+    "flowering_months": [6, 7, 8],
+    "fruit_size_m": {"min": 0.008, "max": 0.015},
+    "fruiting_months": [8, 9]
   },
   "evidence": {
     "traits.height_typical_m": {
@@ -218,7 +219,15 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Its flower laid out whorl by whorl (spec rework P5): three sepals and three petals, the median petal the lip, turned half round so the lip hangs below, on an inferior ovary with a column, and a spurred lip, all from the characters of the Orchidaceae and the species by the rules at the flowering plants. By hand, from the Flora of North America as portals quote it and the Wisconsin orchid pages, as search results quote them (the pages themselves were not read): the lip about 1.3 times a petal's length (lip 4 to 11 mm, petals 3 to 8 mm), the sepals about as long as the petals (3 to 9 mm), all lanceolate and pointed; the dilated base of the lip is not drawn."
-    }
+    },
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L157114), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L157114), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L157114), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L157114), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L157114), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L157114), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L157114), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L157114), as no source read gives it."}
   },
   "provenance": {
     "sources": [

@@ -29,7 +29,6 @@
       "leaf_angle": 85,
       "raceme": 0.12,
       "flowers": 1,
-      "flower_size": 0.05,
       "pedicel": 0.005,
       "flower_angle": 0,
       "fruit_below": 0,
@@ -93,7 +92,19 @@
     "leaf_division": "compound",
     "division_pattern": "palmate",
     "division_order": 1,
-    "leaflets": 3
+    "leaflets": 3,
+    "height_max_m": 0.6,
+    "woodiness": "herbaceous",
+    "leaf_habit": "deciduous",
+    "rosette": "basal",
+    "perennation": "rhizome",
+    "leaf_length_m": {"min": 0.1, "max": 0.25},
+    "leaf_width_m": {"min": 0.15, "max": 0.35},
+    "leaf_margin": "dentate",
+    "inflorescence_length_m": {"min": 0.025, "max": 0.05},
+    "flowering_months": [4, 5, 6, 7],
+    "fruit_size_m": {"min": 0.003, "max": 0.004},
+    "fruiting_months": [7, 8, 9]
   },
   "evidence": {
     "generator.params.bud_area": {
@@ -186,7 +197,19 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The leaf drawn as a palmately compound leaf of three leaflets (spec rework P4), set from its characters by the rules at the flowering plants; before, one round blade stood in for it. By eye from photographs: the side leaflets held out level, 190 degrees apart, each leaflet a fan widening from a narrow foot to a broad, flat, toothed edge. The card now holds a stub of the stalk, so the leaf is drawn 15 cm long where its blade was 11 cm."
-    }
+    },
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2617402), as no source read gives it."}
   },
   "provenance": {
     "sources": [

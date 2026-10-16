@@ -176,7 +176,13 @@
     "spikelet_length_m": {
       "min": 0.01,
       "max": 0.014
-    }
+    },
+    "height_typical_m": {"min": 0.3, "max": 0.7},
+    "height_max_m": 1,
+    "leaf_habit": "evergreen",
+    "rosette": "basal",
+    "fruit_size_m": {"min": 0.003, "max": 0.005},
+    "fruiting_months": [7, 8]
   },
   "evidence": {
     "taxon": {
@@ -293,7 +299,13 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Inferred, as no source read gives the spikelet's length: Hitchcock (1935, pp. 76-77) gives lemmas about 7 mm long and spikelets mostly 5 to 7 flowered, and Abrams (vol. 1, 1923, Festuca no. 23) spikelets \"about as in F. rubra\" (lemmas 5-7 mm, 4-6 flowered); overlapping florets make a spikelet of about 10-14 mm, as Roemer's fescue's 9-13.5 mm."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L415407), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L415407), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L415407), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L415407), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L415407), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L415407), as no source read gives it."}
   },
   "provenance": {
     "sources": [

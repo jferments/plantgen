@@ -12,7 +12,6 @@
   "growth_form": "fern",
   "generator": {
     "params": {
-      "fronds_per_year": 1,
       "frond_seed": 0.3,
       "size_years": 1.5,
       "young_angle": 0,
@@ -20,20 +19,12 @@
       "open_years": 0.4,
       "angle_spread": 6,
       "frond_radius": 0.005,
-      "pieces": 12,
-      "pinna_length": 0.26,
-      "pinna_peak": 0.05,
-      "pinna_base": 0.9,
-      "pinna_tip": 0.15,
       "pinna_angle": 70,
       "pinna_lift": 5,
       "pinna_area": 0.151,
       "droop": 0.12,
       "droop_years": 1,
-      "crowns": 6,
       "crown_age": 1,
-      "crown_rate": 0.7,
-      "rhizome": 0.45,
       "season": 0.5,
       "emerge_spread": 0.3,
       "unroll": 0.3,
@@ -86,7 +77,16 @@
     "age_max_years": 1400.0,
     "litter_kind": {"leaves": "usually"},
     "division_pattern": "pinnate",
-    "leaf_division": "compound"
+    "leaf_division": "compound",
+    "height_typical_m": {"min": 0.5, "max": 1.5},
+    "height_max_m": 2.5,
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "rosette": "none",
+    "perennation": "rhizome",
+    "leaf_width_m": {"min": 0.3, "max": 0.8},
+    "leaf_arrangement": "alternate",
+    "leaf_margin": "entire"
   },
   "evidence": {
     "traits": {
@@ -149,7 +149,16 @@
     "traits.age_max_years": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 266, Pteridium aquilinum: age max years 1400 (suggested)."},
     "traits.litter_kind": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 266, Pteridium aquilinum: litter kind leaves."},
     "traits.division_pattern": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 146, Pteridium aquilinum: division pattern pinnate."},
-    "traits.leaf_division": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 146, Pteridium aquilinum: leaf division compound."}
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 146, Pteridium aquilinum: leaf division compound."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2931242), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2931242), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2931242), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2931242), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2931242), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2931242), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2931242), as no source read gives it."},
+    "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2931242), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2931242), as no source read gives it."}
   },
   "provenance": {
     "sources": [

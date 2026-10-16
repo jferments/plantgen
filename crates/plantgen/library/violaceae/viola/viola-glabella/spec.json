@@ -74,7 +74,6 @@
           "notch": 0.0,
           "centre": 0.2,
           "sepal_length": 0.4,
-          "corolla": "bilabiate",
           "spur": 0.4
         },
         "colour": [0.92, 0.8, 0.1],
@@ -104,7 +103,16 @@
     "flower_merosity": 5,
     "flower_symmetry": "zygomorphic",
     "perianth": "sepals_and_petals",
-    "zygomorphy": "other"
+    "zygomorphy": "other",
+    "height_max_m": 0.35,
+    "life_span": "perennial",
+    "woodiness": "herbaceous",
+    "leaf_habit": "deciduous",
+    "perennation": "rhizome",
+    "leaf_margin": "serrate",
+    "sexual_system": "hermaphrodite",
+    "flowering_months": [3, 4, 5, 6, 7],
+    "fruiting_months": [5, 6, 7, 8]
   },
   "evidence": {
     "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2459999), until a flora read here gives it; drawn by the kingdom's leaf-shape rules where before the blade was shaped by eye."},
@@ -176,7 +184,16 @@
       "evidence": "SourceInferred",
       "source": "pnwflowers",
       "note": "Its flower laid out whorl by whorl (spec rework P5). Drawn as two lips by hand: two upper petals, two side ones and the larger lowest, spurred, which is how a violet's petals stand though floras do not call it two-lipped; its spur short, since the search results gave no length (the pages themselves were not read)."
-    }
+    },
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2459999), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2459999), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2459999), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2459999), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2459999), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2459999), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2459999), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2459999), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2459999), as no source read gives it."}
   },
   "provenance": {
     "sources": [

@@ -53,7 +53,6 @@
       "bud_share": 0.3,
       "fruit_share": 0.25,
       "bud_size": 0.035,
-      "fruit_size": 0.06,
       "flower_area": 0.328,
       "bud_area": 0.7,
       "fruit_area": 0.763
@@ -81,9 +80,7 @@
           "petal_width": 0.7,
           "point": 0,
           "notch": 0,
-          "centre": 0.3,
-          "tube": 1.2,
-          "stamens": 200
+          "centre": 0.3
         },
         "colour": [0.85, 0.84, 0.76],
         "accent": [0.8, 0.62, 0.12]
@@ -177,7 +174,14 @@
     "ribs": {"min": 12, "max": 24},
     "stem_diameter_max_m": {"min": 0.3, "max": 0.65},
     "areole_spacing_m": {"min": 0.012, "max": 0.03, "typical": 0.023},
-    "central_spine_length_m": 0.07
+    "central_spine_length_m": 0.07,
+    "height_typical_m": {"min": 4, "max": 12},
+    "height_max_m": 16,
+    "woodiness": "woody",
+    "rosette": "none",
+    "flowering_months": [4, 5, 6],
+    "fruit_size_m": {"min": 0.06, "max": 0.09},
+    "fruiting_months": [6, 7]
   },
   "evidence": {
     "generator.params.flower_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `flower` look draws on an organ 1 m long (visual forms Skill 2, 2026-10-14; plantc atlas), so it shades with what it shows: the flower now takes its family's flower plan from Simpson and Floral Diagrams (before, 0.425)."},
@@ -246,7 +250,14 @@
       "evidence": "SourceInferred",
       "source": "kew-powo",
       "note": "Its flower laid out whorl by whorl (spec rework P5): tepals on a spiral, from green outer ones to waxy white inner ones, on a floral tube and an inferior ovary, from the characters of Cactaceae by the rules at the flowering plants. By hand (as search results quote them; the pages themselves were not read): 24 tepals (no count found); the pericarpel and floral tube, 6 to 10 cm of a flower 8.5 to 12.5 cm long, as 1.2 of the flower's radius; 200 stamens, the most a flower draws, for the thousands floras count."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2701125), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2701125), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2701125), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2701125), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2701125), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2701125), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2701125), as no source read gives it."}
   },
   "provenance": {
     "sources": [

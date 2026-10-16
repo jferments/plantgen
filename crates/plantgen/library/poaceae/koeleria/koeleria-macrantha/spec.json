@@ -59,7 +59,7 @@
         "shade": [0.12, 0.1, 0.05]
       },
       "panicle": {
-        "shape": {"template": "spikelet", "lemma": 0.75},
+        "shape": {"template": "spikelet"},
         "inflorescence": {
           "branches": 30,
           "per_node": 3,
@@ -118,7 +118,12 @@
     "lower_glume_length_m": {"min": 0.003, "max": 0.004},
     "inflorescence_posture": "erect",
     "leaf_length_m": {"min": 0.05, "max": 0.2},
-    "flowering_months": [6, 7]
+    "flowering_months": [6, 7],
+    "height_typical_m": {"min": 0.2, "max": 0.6},
+    "height_max_m": 0.7,
+    "rosette": "basal",
+    "fruit_size_m": {"min": 0.002, "max": 0.003},
+    "fruiting_months": [7, 8]
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -225,7 +230,12 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (Koeleria no. 2, K. cristata, fig. 385): flowers June-July on prairies."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L421574), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L421574), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L421574), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L421574), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L421574), as no source read gives it."}
   },
   "provenance": {
     "sources": [

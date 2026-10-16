@@ -74,7 +74,6 @@
           "template": "sprig",
           "leaves": 7,
           "angle": 50,
-          "width": 0.6,
           "widest": 0.4,
           "tip": 0.6,
           "base": 0.7,
@@ -112,7 +111,19 @@
   "traits": {
     "wood_density_basic_kg_m3": 490,
     "leaf_arrangement": "alternate",
-    "phyllotaxis_pattern": "distichous"
+    "phyllotaxis_pattern": "distichous",
+    "height_typical_m": {"min": 10, "max": 25},
+    "height_max_m": 30,
+    "life_span": "perennial",
+    "leaf_habit": "deciduous",
+    "rosette": "none",
+    "leaf_length_m": {"min": 0.02, "max": 0.04},
+    "leaf_width_m": {"min": 0.012, "max": 0.025},
+    "leaf_margin": "crenate",
+    "inflorescence": "solitary",
+    "flowering_months": [10, 11, 12],
+    "fruit_size_m": {"min": 0.005, "max": 0.007},
+    "fruiting_months": [1, 2, 3]
   },
   "evidence": {
     "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (visual forms Skill 1, 2026-10-14; plantc atlas), so it shades with what it shows: the look now takes its card from the taxa's characters, where before it drew the generic card (0.639)."},
@@ -171,7 +182,19 @@
       "evidence": "SourceInferred",
       "source": "barthelemy-1999-nothofagus",
       "note": "Barthélémy and colleagues' study of the Patagonian species: past the first leaves above the cotyledons, the leaves alternate in two ranks along the stem; unlike its relatives, this species seldom sets them in three."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
+    "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L135793), as no source read gives it."}
   },
   "provenance": {
     "sources": [

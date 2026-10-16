@@ -110,7 +110,15 @@
     "fruit_type": "drupe",
     "fruit_size_m": {"min": 0.006, "max": 0.009},
     "leaf_incision": "lobed",
-    "petal_length_m": {"min": 0.003, "max": 0.004}
+    "petal_length_m": {"min": 0.003, "max": 0.004},
+    "height_typical_m": {"min": 2, "max": 20},
+    "height_max_m": 30,
+    "leaf_habit": "evergreen",
+    "leaf_length_m": {"min": 0.04, "max": 0.1},
+    "leaf_margin": "entire",
+    "sexual_system": "hermaphrodite",
+    "flowering_months": [9, 10, 11],
+    "fruiting_months": [1, 2, 3, 4]
   },
   "evidence": {
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Hedera helix (gwddagg_v2.2_species.csv, read): specific gravity 0.48 (wsg_est, the database's hierarchical-model species mean, from 4 records in 3 sources); trunks 0.47, branches 0.48. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
@@ -189,7 +197,15 @@
     "traits.fruit_type": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 310, 311, Hedera helix: fruit type drupe."},
     "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 310, 311, Hedera helix: fruit size 6-9 mm."},
     "traits.leaf_incision": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 12, Hedera helix: leaf incision lobed."},
-    "traits.petal_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 310-311: petals 3-4 mm."}
+    "traits.petal_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 310-311: petals 3-4 mm."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L96659), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L96659), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L96659), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L96659), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L96659), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L96659), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L96659), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L96659), as no source read gives it."}
   },
   "provenance": {
     "sources": [

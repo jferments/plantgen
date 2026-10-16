@@ -107,7 +107,13 @@
     "awn_insertion": "apical",
     "rhizome_habit": "none",
     "clonal": false,
-    "flowering_months": [6, 7, 8]
+    "flowering_months": [6, 7, 8],
+    "height_typical_m": {"min": 0.3, "max": 1.2},
+    "height_max_m": 1.4,
+    "leaf_habit": "evergreen",
+    "rosette": "none",
+    "fruit_size_m": {"min": 0.002, "max": 0.003},
+    "fruiting_months": [7, 8, 9]
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -204,7 +210,13 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (Dactylis glomerata, fig. 449): flowers June-August as an escape along roadsides and waste places in the Pacific States."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L406640), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L406640), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L406640), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L406640), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L406640), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L406640), as no source read gives it."}
   },
   "provenance": {
     "sources": [

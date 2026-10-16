@@ -125,7 +125,11 @@
     "flowering_position": "lateral",
     "inflorescence_length_m": {"min": 0.005, "max": 0.01},
     "flower_colour": [245, 240, 215],
-    "fruit_size_m": {"min": 0.07, "max": 0.1}
+    "fruit_size_m": {"min": 0.07, "max": 0.1},
+    "rosette": "none",
+    "leaf_margin": "entire",
+    "flowering_months": [4, 5, 6, 7],
+    "fruiting_months": [7, 8, 9, 10]
   },
   "evidence": {
     "generator.params.crown_height": {"evidence": "Authored", "source": "plantgen-authors", "note": "A choice of the model's (woody forms, broadleaf revision 16): the crown's region reaches 13 m, not the species' 21 m maximum, so its umbrella levels out at about 7 m, the height of the grown open trees in iNaturalist photographs (observations 287136128, 135888680). The trunk divides about 2.5 m up (fork_height) under a crown from 3 m (crown_base), and short shoots need 0.3 of the open sky's light (spur_light), so the crown's underside thins as in the photographs."},
@@ -270,7 +274,11 @@
       "evidence": "SourceInferred",
       "source": "icraf-agroforestree",
       "note": "The World Agroforestry (ICRAF) Agroforestree Database's profile of Acacia tortilis, as search results quote it (the page itself was not read): pods spirally twisted or rarely almost straight, 7-10 cm long, 6-10 (to 13) mm broad; flowers white or pale yellowish-white, scented, in heads 0.5-1.1 cm across. Brenan (FTEA 1959) gives pod widths 6-9(-13) mm but no length."
-    }
+    },
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2609119), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2609119), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2609119), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2609119), as no source read gives it."}
   },
   "provenance": {
     "sources": [

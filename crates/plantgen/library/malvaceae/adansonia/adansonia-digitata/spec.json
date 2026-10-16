@@ -99,7 +99,18 @@
   "tier": "procedural_proxy",
   "traits": {
     "crown_form": "spreading",
-    "wood_density_basic_kg_m3": 310
+    "wood_density_basic_kg_m3": 310,
+    "height_typical_m": {"min": 10, "max": 20},
+    "height_max_m": 25,
+    "life_span": "perennial",
+    "woodiness": "woody",
+    "leaf_habit": "deciduous",
+    "rosette": "none",
+    "leaf_length_m": {"min": 0.1, "max": 0.2},
+    "leaf_margin": "entire",
+    "flowering_months": [10, 11, 12],
+    "fruit_size_m": {"min": 0.15, "max": 0.25},
+    "fruiting_months": [4, 5, 6, 7]
   },
   "evidence": {
     "generator.params.bole_clear": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "The trunk stands bare to the fork about 8 m up (crown_base 8, was 7; crown_height 13, was 12), where five or so thick limbs spread at a wide angle (fork_stems 5, fork_angle 50, were 4 and 40), in iNaturalist photographs (observations 18299511, 185799293). Shorter shoots and sparser attraction points (internode 0.35, space_density 1.5, were 0.45 and 4) keep a crown of few thick limbs."},
@@ -155,7 +166,18 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2621135), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2621135), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2621135), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2621135), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2621135), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2621135), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2621135), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2621135), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2621135), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2621135), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2621135), as no source read gives it."}
   },
   "provenance": {
     "sources": [

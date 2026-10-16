@@ -114,7 +114,12 @@
     "clonal": false,
     "awn_insertion": "apical",
     "awn_form": "straight",
-    "flowering_months": [6, 7, 8]
+    "flowering_months": [6, 7, 8],
+    "height_typical_m": {"min": 0.5, "max": 1.2},
+    "height_max_m": 1.6,
+    "rosette": "none",
+    "fruit_size_m": {"min": 0.006, "max": 0.009},
+    "fruiting_months": [7, 8, 9]
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -216,7 +221,12 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (Elymus no. 12, fig. 600): flowers June-August in open woods and dry hillsides."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L411188), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L411188), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L411188), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L411188), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L411188), as no source read gives it."}
   },
   "provenance": {
     "sources": [

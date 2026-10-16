@@ -63,7 +63,6 @@
         "shape": {
           "template": "flower",
           "petals": 16,
-          "stamens": 200,
           "petal_width": 1.0,
           "point": 0.0,
           "notch": 0.0,

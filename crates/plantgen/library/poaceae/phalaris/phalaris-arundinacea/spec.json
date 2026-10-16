@@ -112,7 +112,13 @@
     "lower_glume_length_m": {"min": 0.004, "max": 0.005},
     "leaf_length_m": {"min": 0.1, "max": 0.2},
     "leaf_width_m": {"min": 0.005, "max": 0.015},
-    "flowering_months": [6, 7, 8, 9]
+    "flowering_months": [6, 7, 8, 9],
+    "height_typical_m": {"min": 0.6, "max": 2},
+    "height_max_m": 2.5,
+    "rosette": "none",
+    "perennation": "rhizome",
+    "fruit_size_m": {"min": 0.003, "max": 0.004},
+    "fruiting_months": [7, 8, 9]
   },
   "evidence": {
     "traits.culm_length_m": {
@@ -224,7 +230,13 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (Phalaris no. 3, fig. 254): flowers June-September in swamps and moist places."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L433393), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L433393), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L433393), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L433393), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L433393), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L433393), as no source read gives it."}
   },
   "provenance": {
     "sources": [

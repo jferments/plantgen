@@ -12,7 +12,7 @@
   "growth_form": "shrub",
   "generator": {
     "params": {
-      "bloom_area": 0.478,
+      "bloom_area": 0.144,
       "crown_base": 0,
       "fork_height": 0.03,
       "leaves_per_node": 1,
@@ -108,10 +108,14 @@
     "disc_florets": {"min": 20, "max": 30},
     "fruit_size_m": {"min": 0.004, "max": 0.006},
     "flowering_months": [4, 5, 6, 7, 8, 9, 10, 11],
-    "height_max_m": {"min": 0.2, "max": 0.6}
+    "height_max_m": {"min": 0.2, "max": 0.6},
+    "leaf_habit": "drought_deciduous",
+    "rosette": "none",
+    "leaf_margin": "dentate",
+    "inflorescence_length_m": {"min": 0.02, "max": 0.08},
+    "fruiting_months": [4, 5, 6]
   },
   "evidence": {
-    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (visual forms Skill 1, 2026-10-14; plantc atlas), so it shades with what it shows: the look now takes its card from the taxa's characters, where before it drew the generic card (-)."},
     "traits.height_max_m": {
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",
@@ -252,7 +256,13 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "The blade drawn dissected (spec rework E1), as Abrams and Ferris describe it, twice or thrice pinnately cut into small rounded lobes: a twice-divided card whose segments run together along a winged rachis, the running together from its incision by the rules at the flowering plants. About 3 pairs of primary segments, each cut into 5 lobes, by eye from photographs; before, a three-lobed blade."
-    }
+    },
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3119493), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3119493), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3119493), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3119493), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3119493), as no source read gives it."},
+    "generator.params.bloom_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `bloom` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.478)."}
   },
   "provenance": {
     "sources": [

@@ -27,7 +27,6 @@
       "renew": 0,
       "adult_age": 3,
       "fruiting": 0.1,
-      "fruit_size": 0.055,
       "pipe_tip": 0.0018,
       "pipe_organ": 0.0036,
       "pipe_rings": 5e-06

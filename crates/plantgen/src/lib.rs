@@ -515,4 +515,12 @@ pub mod venation;
 /// count of petals (`Flower.petal_ratio`, from `petal_shape`) and its tip
 /// as pointed or notched as stated (`petal_apex`) (82 is palm, cycad
 /// and tree fern shades, #162).
-pub const GENERATOR_REVISION: u32 = 83;
+/// 84: species draw from the species-facts records: 188 species state the
+/// characters no source of theirs gives (heights, leaf sizes, shapes,
+/// margins and habits, inflorescence and fruit sizes, months, rosettes)
+/// as the records estimate them, and a look a species set by hand gives
+/// way wherever a rule fed by a stated fact now sets it (leaf widths,
+/// inflorescence kinds, flower and fruit sizes and kinds, seasons); a
+/// strap leaf is never narrower than its card draws (83 is leaf tip,
+/// base and petal words, #161).
+pub const GENERATOR_REVISION: u32 = 84;

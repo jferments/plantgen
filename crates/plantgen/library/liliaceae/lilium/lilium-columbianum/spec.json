@@ -38,7 +38,7 @@
       "nod": 0,
       "bud_size": 0.025,
       "leaf_area": 0.124,
-      "basal_area": 0.235,
+      "basal_area": 0.111,
       "basal_piece_area": 0.235,
       "flower_area": 0.352,
       "bud_area": 0.039,
@@ -63,7 +63,6 @@
       "leaf": {
         "shape": {
           "template": "simple",
-          "width": 0.2,
           "widest": 0.5,
           "tip": 0.5,
           "base": 0.3,
@@ -122,7 +121,17 @@
       "min": 5,
       "max": 9,
       "typical": 6
-    }
+    },
+    "height_max_m": 1.5,
+    "woodiness": "herbaceous",
+    "leaf_habit": "deciduous",
+    "rosette": "none",
+    "leaf_width_m": {"min": 0.01, "max": 0.025},
+    "leaf_margin": "entire",
+    "inflorescence_length_m": {"min": 0.1, "max": 0.3},
+    "flowering_months": [6, 7, 8],
+    "fruit_size_m": {"min": 0.03, "max": 0.05},
+    "fruiting_months": [8, 9]
   },
   "evidence": {
     "generator.params.bud_area": {
@@ -200,7 +209,18 @@
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
     },
-    "generator.params.bud_spacing": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "The buds nod on long stalks spread like the open flowers' along the upper stem, not crowded at the tip: spaced as the flowers are (flowering photographs, observations 336315881, 372788972, 170783016, 285649204, 373697814, 296534068, 1527310, 368260500): a bud's internode as a share of a flower's, judged by eye."}
+    "generator.params.bud_spacing": {"evidence": "Measured", "source": "inaturalist-photos-2026-10", "note": "The buds nod on long stalks spread like the open flowers' along the upper stem, not crowded at the tip: spaced as the flowers are (flowering photographs, observations 336315881, 372788972, 170783016, 285649204, 373697814, 296534068, 1527310, 368260500): a bud's internode as a share of a flower's, judged by eye."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L279953), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L279953), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L279953), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L279953), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L279953), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L279953), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L279953), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L279953), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L279953), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L279953), as no source read gives it."},
+    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `basal` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.235)."}
   },
   "provenance": {
     "sources": [

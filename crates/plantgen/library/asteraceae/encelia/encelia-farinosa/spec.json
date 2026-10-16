@@ -130,7 +130,12 @@
     "disc_colour": [245, 200, 30],
     "fruit_size_m": 0.004,
     "pappus": "absent",
-    "flowering_months": [3, 4, 5, 6]
+    "flowering_months": [3, 4, 5, 6],
+    "height_typical_m": {"min": 0.5, "max": 1.2},
+    "leaf_habit": "drought_deciduous",
+    "rosette": "none",
+    "inflorescence_length_m": {"min": 0.1, "max": 0.3},
+    "fruiting_months": [4, 5, 6]
   },
   "evidence": {
     "traits.height_max_m": {
@@ -283,7 +288,12 @@
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",
       "note": "Abrams and Ferris vol. 4, E. farinosa (p. 123): March to June."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3122298), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3122298), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3122298), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3122298), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3122298), as no source read gives it."}
   },
   "provenance": {
     "sources": [

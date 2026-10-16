@@ -17,7 +17,6 @@
       "clump_radius": 0.1,
       "stem_lean": 8,
       "maturity": 1.2,
-      "stem_height": 0.32,
       "young_height": 0.66,
       "stem_radius": 0.002,
       "wiggle": 2,
@@ -33,7 +32,6 @@
       "basal_angle": 60,
       "raceme": 0.05,
       "flowers": 1,
-      "flower_size": 0.3,
       "pedicel": 0.0,
       "flower_angle": 0,
       "fruit_below": 0,
@@ -89,11 +87,6 @@
         "inflorescence": { "flowers": 30, "size": 0.035, "spread": 50, "pedicel": 0.02, "peduncle": 0.15, "taper": 0.2 },
         "colour": [0.35, 0.3, 0.2],
         "season": {
-          "bud": 100,
-          "flower": 115,
-          "fruit": 127,
-          "ripe": 160,
-          "fall": 215,
           "opening": 30,
           "bud_look": {
             "shape": { "template": "fruit", "aspect": 0.6 },
@@ -133,7 +126,15 @@
   "tier": "procedural_proxy",
   "traits": {
     "inflorescence": "raceme",
-    "flowering_months": [4, 5, 6]
+    "flowering_months": [4, 5, 6],
+    "height_typical_m": {"min": 0.3, "max": 0.7},
+    "height_max_m": 0.8,
+    "leaf_habit": "deciduous",
+    "perennation": "rhizome",
+    "leaf_margin": "dentate",
+    "sexual_system": "hermaphrodite",
+    "inflorescence_length_m": {"min": 0.1, "max": 0.3},
+    "fruiting_months": [6, 7, 8]
   },
   "evidence": {
     "traits.flowering_months": {
@@ -200,7 +201,15 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "Its days by eye from the months floras give for flowering (April to August; the Burke Herbarium: May to August), for lowland plants: buds in April, each flower open about 12 days, the raceme opening from its foot over about a month (floras give no time). Its flower laid out whorl by whorl (spec rework P5b): four thread-like petals (by hand; floras count four) between five sepals on its tubular floral cup, three stamens and a pistil of two carpels, from the characters of Saxifragaceae and Tolmiea by the rules at the flowering plants."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2520732), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2520732), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2520732), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2520732), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2520732), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2520732), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2520732), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2520732), as no source read gives it."}
   },
   "provenance": {
     "sources": [

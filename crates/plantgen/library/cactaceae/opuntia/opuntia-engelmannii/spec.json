@@ -36,7 +36,6 @@
       "bud_share": 0.2,
       "fruit_share": 0.3,
       "bud_size": 0.025,
-      "fruit_size": 0.05,
       "bud_rate": 0.5,
       "flower_area": 0.314,
       "bud_area": 0.7,
@@ -62,7 +61,6 @@
         "shape": {
           "template": "flower",
           "petals": 16,
-          "stamens": 200,
           "petal_width": 1.0,
           "point": 0.0,
           "notch": 0.0,
@@ -146,7 +144,14 @@
   "traits": {
     "joint_length_m": {"min": 0.2, "max": 0.3},
     "radial_spines": {"min": 1, "max": 4, "typical": 3, "high": 10},
-    "radial_spine_length_m": 0.05
+    "radial_spine_length_m": 0.05,
+    "height_typical_m": {"min": 1, "max": 2},
+    "height_max_m": 3,
+    "woodiness": "semi",
+    "rosette": "none",
+    "flowering_months": [4, 5, 6],
+    "fruit_size_m": {"min": 0.035, "max": 0.07},
+    "fruiting_months": [7, 8, 9]
   },
   "evidence": {
     "traits": {
@@ -198,7 +203,14 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2608014), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2608014), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2608014), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2608014), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2608014), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2608014), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2608014), as no source read gives it."}
   },
   "provenance": {
     "sources": [

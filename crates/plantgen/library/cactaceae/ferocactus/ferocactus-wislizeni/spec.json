@@ -181,7 +181,14 @@
     "radial_spine_length_m": 0.05,
     "central_spines": 4,
     "central_spine_length_m": {"min": 0.08, "max": 0.1},
-    "central_spine_form": "hooked"
+    "central_spine_form": "hooked",
+    "height_typical_m": {"min": 0.6, "max": 1.6},
+    "height_max_m": 3,
+    "woodiness": "herbaceous",
+    "rosette": "none",
+    "flowering_months": [7, 8, 9],
+    "fruit_size_m": {"min": 0.03, "max": 0.05},
+    "fruiting_months": [1, 9, 10, 11, 12]
   },
   "evidence": {
     "traits": {
@@ -298,7 +305,14 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2808252), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2808252), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2808252), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2808252), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2808252), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2808252), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2808252), as no source read gives it."}
   },
   "provenance": {
     "sources": [
