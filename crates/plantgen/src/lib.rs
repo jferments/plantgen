@@ -481,9 +481,17 @@ pub mod venation;
 /// blade fits, lanceolate; evergreen fronds outlast a winter; the curated
 /// ferns arch, and the sword fern's pinnae and angles are the fern rules'
 /// (78 is crownshaft sheaths in their fronds, #150).
-/// 80: a far level's spine tint greys with each station's age as the near
+/// 80: shape and fruit words draw what they mean: a cordate or reniform
+/// blade hangs two basal lobes back beside its petiole (`Simple.sinus`),
+/// and cordate, reniform and deltate blades take their outlines and
+/// widths; a palmately veined blade fans two main veins a side from its
+/// base with the midrib (`Simple.fan`, from `leaf_venation`); achenes,
+/// cypselas, grains, nuts, schizocarps, aggregate and multiple fruits
+/// take fruit kinds, and a fruit is as long as `fruit_size_m` (79 is
+/// ferns from the Fern Grower's Manual, #153).
+/// 81: a far level's spine tint greys with each station's age as the near
 /// levels' spines do, covers a rib valley half as much as a crest, and
 /// hides half the skin it did, so a spiny cactus keeps its colour and rib
 /// shading from afar; cacti state stem, spine, old spine and wool colours,
-/// which the family's rules draw (79 is ferns, #153).
-pub const GENERATOR_REVISION: u32 = 80;
+/// which the family's rules draw (80 is leaf and fruit words, #155).
+pub const GENERATOR_REVISION: u32 = 81;
