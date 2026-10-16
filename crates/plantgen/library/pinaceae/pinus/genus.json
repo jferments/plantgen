@@ -3,6 +3,7 @@
   "rank": "genus",
   "name": "Pinus",
   "traits": {
+    "architectural_model": "rauh",
     "foliage_ranks": "all_round",
     "cone_maturation_years": {"min": 2, "max": 3, "typical": 2}
   },
@@ -13,6 +14,7 @@
     }
   },
   "evidence": {
+    "traits.architectural_model": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 485 names Pinus among the trees of Rauh's model: a monopodial trunk with rhythmic tiers of branches built like the trunk; Ingrouille, Diversity and Evolution of Land Plants (1992) p. 207 says the same of pines."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",

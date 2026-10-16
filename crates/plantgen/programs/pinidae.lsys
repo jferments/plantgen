@@ -84,9 +84,24 @@
 # from the stem still end it. side_years 0 sets no calendar limit; a
 # species whose branchlets fall sooner (bald cypress) still states one.
 #
+# Revision 10 (woody forms: architecture models): a branch apex may lay
+# down a whorl of its own each year, as the trunk does, where the
+# branches of Rauh's model (pines) are built like the trunk: apex_whorl
+# side shoots spread round it at side_angle, turning up toward the sky,
+# with the chance side_chance each, in place of the two flat side shoots
+# (L and R) of Massart's model (firs, spruces), which every conifer grows
+# unless its lineage sets apex_whorl. The rules at the seed plants set it
+# from a taxon's architectural_model.
+#
+# A self-pruning conifer (crown_ratio above 0) keeps living branches only
+# on the top crown_ratio of its height: a branch whose foot falls below
+# that, as the tree grows, dies and falls dead_years later, so the tree
+# stands on a clear bole under a high crown, as ponderosa pine does. The
+# rule at the seed plants sets it from a taxon's self_pruning.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem pinidae 9;
+lsystem pinidae 10;
 
 # Height of the leader over time: a Chapman-Richards curve,
 # height = height_max * (1 - exp(-height_rate * age))^height_shape.
@@ -109,6 +124,8 @@ param side_chance = 0.75;      # chance of a side shoot on each side each year
 param side_angle = 50;         # angle between a branch and its side shoots
 param side_order = 1;          # highest branch order that forms side shoots
 param side_years = 0;          # years a side shoot keeps growing; 0 while its light pays
+param crown_ratio = 0;         # share of its height, from the top, on which a self-pruning tree keeps living branches; 0: all
+param apex_whorl = 0;          # side shoots a branch apex spreads round itself each year (Rauh's model); 0: two flat ones
 param min_shoot = 0.025;       # an apex dies once its shoot would be shorter
 param shade_death = 0.1;       # light below which an apex starves
 param shade_years = 3;         # years in a row an apex survives starving
@@ -149,7 +166,7 @@ param reaction = 0.1;          # how far a year's ring turns a limb back up (ben
 module A queries light;                 # the leader's apex
 module N;                               # nods a young leader shoot over
 module C(order, vigour, starved, wood) queries light, position, substrate;  # a branch apex, wood metres from the stem
-module S queries vigour, substrate;     # the base of a living branch
+module S queries vigour, substrate, position;  # the base of a living branch
 module K;                               # the base of a dead branch
 module W(n);                            # whorl branches still to be formed
 module I(n);                            # interwhorl branches still to be formed
@@ -158,6 +175,7 @@ module L(order, wood);                  # a possible side shoot on the left
 module R(order, wood);                  # and on the right
 module Z(light);                        # a cone, perhaps, at a branch apex
 module Y(n);                            # holds a shoot's foliage, which falls after n years
+module V(order, wood, n);               # side shoots still to spread round a branch apex (revision 10)
 module E(order, wood) queries light, position, substrate;  # a dormant bud where a branch shoot starts, watching the ground
 module H queries substrate;             # where a branch shoot starts, its bud spent, watching the ground
 
@@ -232,10 +250,10 @@ decompose G(o, l, k, w) ->
       spray((spray_base + spray_length * l) * 0.75, 90 + spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
       spray((spray_base + spray_length * l) * 0.75, -90 - spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1) ]
     E(o, w) F(l) L(o, w + l) R(o, w + l);
-decompose L(o, w) : o <= side_order && rand() < side_chance -> [ +(side_angle) S C(o + 1, 1, 0, w) ];
-decompose L(o, w) -> ;
-decompose R(o, w) : o <= side_order && rand() < side_chance -> [ -(side_angle) S C(o + 1, 1, 0, w) ];
-decompose R(o, w) -> ;
+decompose L(o, w) : apex_whorl <= 0 && o <= side_order && rand() < side_chance -> [ +(side_angle) S C(o + 1, 1, 0, w) ];
+decompose L(o, w) : apex_whorl <= 0 -> ;
+decompose R(o, w) : apex_whorl <= 0 && o <= side_order && rand() < side_chance -> [ -(side_angle) S C(o + 1, 1, 0, w) ];
+decompose R(o, w) : apex_whorl <= 0 -> ;
 
 # Foliage falls after its shoot's keep years: needle_years on average,
 # needle_low times as long at the crown's foot as at its top (revision 5).
@@ -252,6 +270,7 @@ rule cone(s) : age + dt >= cone_years -> ;
 # A branch with no living apex dies, and falls dead_years later.
 rule S : sd < ground_gap -> %;
 rule S : age > 2 && ntip == 0 -> K;
+rule S : crown_ratio > 0 && age > 2 && py < (1 - crown_ratio) * height -> K;
 rule K : age >= dead_years -> %;
 
 # Revision 5: a branch that sags to within ground_gap of the ground (or
@@ -269,3 +288,17 @@ rule E(o, w) : sd < ground_gap -> %;
 rule E(o, w) : epi_delay <= 0 || age >= epi_years || o > side_order -> H;
 rule E(o, w) : w > 0 && age >= epi_delay && light >= epi_light && rand() < epi_chance ->
     [ /(uniform(0, 360)) &(side_angle) S C(o + 1, 1, 0, w) ] H;
+
+# Revision 10: with apex_whorl, a branch apex spreads its side shoots
+# round itself, as the trunk spreads a whorl, each turning up toward the
+# sky (Rauh's model). These rules go last so the draws above keep their
+# sites.
+decompose L(o, w) : o <= side_order -> V(o, w, apex_whorl);
+decompose L(o, w) -> ;
+decompose R(o, w) -> ;
+decompose V(o, w, n) : n > 0 && rand() < side_chance ->
+    [ /(360 * n / max(apex_whorl, 1) + uniform(-30, 30)) &(side_angle + uniform(-8, 8))
+      T(0, 1, 0, upturn) S C(o + 1, 1, 0, w) ]
+    V(o, w, n - 1);
+decompose V(o, w, n) : n > 0 -> V(o, w, n - 1);
+decompose V(o, w, n) -> ;

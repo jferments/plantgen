@@ -1,0 +1,320 @@
+{
+  "schema": 1,
+  "id": "chrysolepis-chrysophylla",
+  "taxon": {
+    "scientific_name": "Chrysolepis chrysophylla",
+    "common_name": "golden chinquapin",
+    "usda_symbol": "CHCH7",
+    "family": "Fagaceae",
+    "genus": "Chrysolepis",
+    "plant_name_id": 39927
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "params": {
+      "crown_radius": 5,
+      "crown_base": 2.5,
+      "crown_rate": 0.025,
+      "space_density": 8,
+      "internode": 0.2,
+      "max_shoot": 3,
+      "pipe_organ": 0.0048,
+      "pipe_tip": 0.0024,
+      "bud_break": 1.4,
+      "branch_angle": 70,
+      "apical_young": 0.7,
+      "apical": 0.62,
+      "apical_years": 20,
+      "leaf_size": 0.3,
+      "spur_leaf": 0.3,
+      "spur_pairs": 2,
+      "leaf_angle": 55,
+      "lean": 6,
+      "wiggle": 5,
+      "fork_height": 6,
+      "fork_stems": 1,
+      "fork_angle": 35,
+      "droop": 0.02,
+      "extinction": 0.4,
+      "pipe_rings": 3.47e-06,
+      "blooms": 1,
+      "bloom_size": 0.03,
+      "bloom_angle": 60,
+      "path_half": 11,
+      "spur_light": 0.14,
+      "leaf_years": 3
+    }
+  },
+  "growth": {
+    "years": 80,
+    "step": 1,
+    "keyframes": [
+      8,
+      25,
+      50,
+      80
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.35,
+      0.3,
+      0.26
+    ],
+    "bark_pattern": {
+      "kind": "furrowed",
+      "scale": 0.035,
+      "elongation": 3.0,
+      "fissure": 0.25,
+      "depth": 0.4,
+      "contrast": 0.45,
+      "variation": 0.15,
+      "smooth_below": 0.04,
+      "roughness": 0.5
+    },
+    "foliage": [
+      0.08,
+      0.13,
+      0.04
+    ],
+    "foliage_shade": [
+      0.028,
+      0.045,
+      0.014
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 7,
+          "angle": 50,
+          "stalk": 0.1,
+          "width": 0.32,
+          "widest": 0.45,
+          "tip": 0.2,
+          "base": 0.35,
+          "teeth": 0,
+          "petiole": 0.06
+        },
+        "families": {
+          "plasticity": 0.8
+        },
+        "accent": [
+          0.62,
+          0.5,
+          0.15
+        ]
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "kind": "husked",
+          "aspect": 0.95
+        },
+        "inflorescence": {
+          "kind": "raceme",
+          "flowers": 2,
+          "per_node": 2,
+          "divergence": 90,
+          "pedicel": 0.15,
+          "peduncle": 1,
+          "size": 0.6,
+          "spread": 25
+        },
+        "colour": [
+          0.55,
+          0.45,
+          0.2
+        ],
+        "accent": [
+          0.45,
+          0.42,
+          0.18
+        ],
+        "season": {
+          "ripening": 30,
+          "flower_look": {
+            "shape": {
+              "template": "spike",
+              "florets": 20,
+              "aspect": 0.12,
+              "plume": 0.4,
+              "stalk": 0.05
+            },
+            "colour": [
+              0.88,
+              0.84,
+              0.6
+            ],
+            "size": 1.0,
+            "whole": true
+          }
+        }
+      }
+    },
+    "ridges": {
+      "spacing": 0.06,
+      "depth": 0.05,
+      "twist": 0,
+      "contrast": 0.4
+    },
+    "moss": {
+      "colour": [
+        0.25,
+        0.3,
+        0.18
+      ],
+      "amount": 0.4,
+      "min_radius": 0.04
+    }
+  },
+  "allometry": [
+    {
+      "age": 80,
+      "environment": "open",
+      "height": 18,
+      "dbh": 0.45,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 5,
+      "max": 30,
+      "high": 45
+    },
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.15
+    },
+    "leaf_width_m": {
+      "min": 0.015,
+      "max": 0.04
+    },
+    "leaf_habit": "evergreen",
+    "leaf_life_years": 3,
+    "leaf_margin": "entire",
+    "flowering_months": [
+      6,
+      7
+    ],
+    "fruiting_months": [
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's giant chinquapin review (Meyer 2012, read 2026-10-15): \"ranging from 16 to 100 feet tall (5-30 m)\"; \"The largest trees are up to 150 feet (45 m) tall\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's giant chinquapin review (Meyer 2012, read 2026-10-15): \"Leaves range from 2 to 6 inches (5-15 cm) long\"."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's giant chinquapin review (Meyer 2012, read 2026-10-15): \"sclerophyllous evergreen leaves\"."
+    },
+    "traits.leaf_life_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's giant chinquapin review (Meyer 2012, read 2026-10-15): \"Leaves remain on trees for about 3 years\"."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's giant chinquapin review (Meyer 2012, read 2026-10-15): leaves \"lanceolate to oblong and have entire margins\"."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives a width."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's giant chinquapin review (Meyer 2012, read 2026-10-15): on the H. J. Andrews Experimental Forest (western Oregon Cascades), flowering \"from mid-June to mid-July\" over 3 years; rangewide April into July."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's giant chinquapin review (Meyer 2012, read 2026-10-15): on the H. J. Andrews Experimental Forest \"its fruit ripened from mid-August to early September\"; fruits take 2 growing seasons."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Oregon white oak's values, changed by hand for golden chinquapin: a straight trunk with a cone-shaped crown of stout branches at right angles to the bole (FEIS, Meyer 2012), so a stronger leader, wide branch angles and no fork. path_half fitted so the tree grows to its reference height. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "18 m tall and 45 cm across at breast height at 80 years in the open, within FEIS's 5-30 m and its trunks up to 1.5 m (Meyer 2012); open-grown trees taper more and spread wider than the stand averages FEIS gives. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after FEIS's description (Meyer 2012): dark green lanceolate leaves with entire margins and golden undersides (the accent); cream catkins; the spiny 4-valved bur drawn as a husked nut, the nearest card to a bur. Bark thick and furrowed."
+    },
+    "generator.params.leaf_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's giant chinquapin review (Meyer 2012, read 2026-10-15): \"Leaves remain on trees for about 3 years\"."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion (2026-10-15): sizes and dates from FEIS, drawing values from Oregon white oak's."
+  }
+}

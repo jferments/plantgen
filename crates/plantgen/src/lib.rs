@@ -427,4 +427,13 @@ pub mod venation;
 /// fullness from its `crown_form`; Garry oak spreads, umbrella thorn is
 /// flat-topped, Pacific madrone leans on a clear stem and the baobab
 /// swells, from photographs (70 is leaves on petioles, #134).
-pub const GENERATOR_REVISION: u32 = 71;
+/// 72: a pine's branch apex spreads a small whorl of its own each year,
+/// as the trunk does (`pinidae` revision 10, `apex_whorl`), where its
+/// genus follows Rauh's model; the rule at the seed plants sets it from
+/// `architectural_model`, which Pinus (Rauh) and Abies (Massart) now
+/// state from Simpson; lodgepole, western white and ponderosa pines grow
+/// clumped, upturned branch ends; a self-pruning conifer keeps living
+/// branches only on the top `crown_ratio` of its height (rule on
+/// `self_pruning`), so ponderosa pine, self-pruning by FEIS, stands on a
+/// clear bole (71 is broadleaf limbs, #133).
+pub const GENERATOR_REVISION: u32 = 72;
