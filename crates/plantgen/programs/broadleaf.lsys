@@ -136,9 +136,24 @@
 # light comes from the side there, more so on a stand's side, so the crown
 # grows narrower, and toward open sky at an edge.
 #
+# Revision 16 (woody forms: scaffold limbs and silhouettes): limbs rise
+# from the stem and arch outward as they lengthen, as open-grown oaks'
+# do: a shoot on a limb holds a set point limb_arch degrees farther from
+# upright for each metre of limb wood below it, up to limb_set_max, so
+# the crown rounds into a dome where it drew a cone. Near the crown's top
+# (above flat_top of its height) every shoot, the stem's too, levels out,
+# as all the axes of an umbrella thorn do (Troll's model), and the crown
+# spreads into a flat top. With bole_clear, a branch whose base stands
+# below the crown's base as it rises is shed, so the tree stands on a
+# clear trunk; never at or above where the stem forks. The region's
+# profile, an ellipse widest at its middle until now, is widest at
+# crown_widest of its depth and fills toward a cylinder with
+# crown_fullness. All are off, or as before, unless a lineage or species
+# sets them, so every crown grows as it did.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 15;
+lsystem broadleaf 16;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -231,12 +246,19 @@ param leaf_mass;              # kg per m² of leaf
 param bend_set;               # share of each year's sag the wood keeps
 param stem_bend;              # share of its sag the stem and a fork's stems take: reaction wood holds them up
 param straighten;             # share of its kept bend the wood straightens each year
+# Scaffold limbs and silhouettes (revision 16).
+param limb_arch = 0;          # degrees a limb's held angle grows per metre of limb wood: limbs arch outward
+param limb_set_max = 95;      # the most a limb's held angle grows to, from straight up
+param flat_top = 0;           # share of the crown's height above which every shoot levels out (Troll's model); 0: none
+param bole_clear = 0;         # 1: the stem sheds every branch below the crown's base
+param crown_widest = 0.5;     # share of the region's depth at which it is widest
+param crown_fullness = 2;     # the region's profile: 2 an ellipse, more toward a flat-ended cylinder
 
 # An active bud. `split` is the height at which the stem forks: only the
 # first stem carries one; every other bud carries 0.
 module A(split) queries light, vigour, space, position;
 module B queries light, vigour, space;    # a lateral bud or short shoot
-module S queries vigour;                  # the base of a branch
+module S queries vigour, position;                  # the base of a branch
 module M(n, u, l);                        # n nodes still to form this year, of u in the growth unit, each l long
 module Fk(n);                             # n stems still to start at a fork
 module Q(n, k);                           # n leaf pairs still to unfold on a short shoot, its k-th pair first
@@ -256,8 +278,8 @@ tool space@4 {
     radius = room_width * crown_radius * (1 - exp(-crown_rate * (t + 3))),
     ratio = room_width * crown_radius / max(room_height * crown_height - crown_base, 0.01),
     phototropism = crown_phototropism,
-    widest = 0.5,
-    fullness = 2,
+    widest = crown_widest,
+    fullness = crown_fullness,
     density = space_density,
     influence = space_reach,
     kill = space_kill,
@@ -315,6 +337,25 @@ rule A(split) : terminal_bloom > 0 && blooms > 0 && t >= adult_age && split <= 0
       internode / unit_nodes / (path_half > 0 ? 1 + pow((path + (limb_path - 1) * limb) / path_half, 2) : 1))
     Bo(blooms) /(divergence) [ &(twin_angle) S A(0) ] [ /(180) &(twin_angle) S A(0) ];
 
+# Near the crown's top, every shoot levels out (flat_top, revision 16),
+# the stem too: umbrella crowns whose axes all turn to spread.
+rule A(split) : flat_top > 0 && split <= 0 && py > flat_top * crown_height * (1 - exp(-crown_rate * (t + 3)))
+                && vigour >= 1 && space > 0 ->
+    incline(limb_set_max, incline_rate)
+    steer(sx, sy, sz, steer_weight)
+    M(min(floor(vigour), max_shoot) * unit_nodes,
+      min(floor(vigour), max_shoot) * unit_nodes,
+      internode / unit_nodes / (path_half > 0 ? 1 + pow((path + (limb_path - 1) * limb) / path_half, 2) : 1)) A(split);
+
+# On a limb, a shoot holds a set point that grows with the limb's wood
+# (limb_arch, revision 16), so limbs rise from the stem and arch outward.
+rule A(split) : limb_arch > 0 && limb > 0 && vigour >= 1 && space > 0 ->
+    incline(min(set_point + limb_arch * limb, limb_set_max), incline_rate)
+    steer(sx, sy, sz, steer_weight)
+    M(min(floor(vigour), max_shoot) * unit_nodes,
+      min(floor(vigour), max_shoot) * unit_nodes,
+      internode / unit_nodes / (path_half > 0 ? 1 + pow((path + (limb_path - 1) * limb) / path_half, 2) : 1)) A(split);
+
 # An active bud with vigour and free space ahead grows a shoot; far out
 # along the wood its nodes are shorter (path_half, revision 11).
 rule A(split) : vigour >= 1 && space > 0 ->
@@ -366,6 +407,12 @@ decompose Q(n, k) -> ;
 rule leaf(s) : age + dt >= leaf_years -> ;
 rule bloom(s) : age + dt >= 1 -> ;
 rule bloom_male(s) : age + dt >= 1 -> ;
+
+# A clear bole (revision 16): a branch whose base stands below the
+# crown's base, as it rises with the tree, is shed; never at or above
+# where the stem forks, so a fork's stems stand.
+rule S : bole_clear > 0 && age > 2
+         && py < min(crown_base * (1 - exp(-crown_rate * (t + 3))), fork_height > 0 ? 0.7 * fork_height : crown_base) -> %;
 
 # A branch with no living bud is shed; on a dead plant, one by one (the
 # last rules).

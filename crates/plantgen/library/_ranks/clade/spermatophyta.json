@@ -68,6 +68,42 @@
       },
       "why": "Where a shed limb leaves a gap, the crown can grow back into it."
     },
+    "generator.params.bole_clear": {
+      "map": {
+        "self_pruning": {"true": 1, "false": 0}
+      },
+      "why": "A tree that sheds its own shaded limbs stands on a clear trunk below its crown."
+    },
+    "generator.params.limb_arch": {
+      "map": {
+        "crown_form": {"rounded": 3, "spreading": 5, "umbrella": 10, "vase": 1, "conical": 0, "columnar": 0, "weeping": 0, "irregular": 0}
+      },
+      "why": "Limbs rise from the stem and turn outward as they lengthen: a little in a vase, more in a dome, most where a crown spreads wider than tall, and most of all under an umbrella."
+    },
+    "generator.params.flat_top": {
+      "map": {
+        "crown_form": {"umbrella": 0.75, "rounded": 0, "spreading": 0, "vase": 0, "conical": 0, "columnar": 0, "weeping": 0, "irregular": 0}
+      },
+      "why": "Every axis of an umbrella crown, the stem's too, levels out near the top, so the crown spreads flat."
+    },
+    "generator.params.crown_widest": {
+      "map": {
+        "crown_form": {"rounded": 0.5, "spreading": 0.6, "umbrella": 0.8, "vase": 0.75}
+      },
+      "why": "A dome is widest at its middle, a spreading crown a little above it, a vase and an umbrella near the top."
+    },
+    "generator.params.crown_fullness": {
+      "map": {
+        "crown_form": {"umbrella": 3}
+      },
+      "why": "An umbrella's region fills out toward a flat-ended drum."
+    },
+    "generator.params.room_height": {
+      "map": {
+        "crown_form": {"umbrella": 1}
+      },
+      "why": "An umbrella stops at its flat top: its free space reaches no higher than the crown."
+    },
     "generator.params.terminal_bloom": {
       "map": {
         "flowering_position": {"terminal": 0.35, "both": 0.15, "lateral": 0}
@@ -131,6 +167,36 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "A choice of the model's: where a self-pruning plant sheds a limb, the space the limb held frees again, as old trees rebuild their crowns from sprouts."
+    },
+    "rules.generator.params.bole_clear": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (broadleaf revision 16): branches below the crown's base are shed as it rises, never at or above where the stem forks. Checked against iNaturalist photographs of open-grown Garry oak, whose crowns stand on a few metres of clear trunk."
+    },
+    "rules.generator.params.limb_arch": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (broadleaf revision 16): degrees a limb's held angle grows per metre of limb wood. Fitted by eye to iNaturalist photographs of open-grown Garry oak (spreading) and umbrella thorn (umbrella), not measured."
+    },
+    "rules.generator.params.flat_top": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (broadleaf revision 16), after Troll's model in Halle, Oldeman and Tomlinson's architectural models, whose axes are all plagiotropic: shoots level out above three quarters of the crown's height. Fitted by eye to iNaturalist photographs of umbrella thorn."
+    },
+    "rules.generator.params.crown_widest": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (broadleaf revision 16): where each crown form's region is widest, by eye from photographs of open-grown trees."
+    },
+    "rules.generator.params.crown_fullness": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (broadleaf revision 16): an umbrella's region fills toward a drum, by eye from photographs of umbrella thorn."
+    },
+    "rules.generator.params.room_height": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A choice of the model's (broadleaf revision 16): an umbrella's free space stops at its crown's height, so nothing grows above the flat top."
     },
     "rules.generator.params.terminal_bloom": {
       "evidence": "Authored",

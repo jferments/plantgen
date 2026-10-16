@@ -451,6 +451,13 @@
       "values": ["excurrent", "decurrent", "columnar", "cane", "unbranched"],
       "why": "the crown's habit: a leading stem, a spreading one, a column, canes or none"
     },
+    "crown_form": {
+      "group": "form",
+      "organ": "plant",
+      "type": "enum",
+      "values": ["rounded", "spreading", "umbrella", "vase", "conical", "columnar", "weeping", "irregular"],
+      "why": "the outline of a grown, open-grown crown seen from the side: a dome, wider than tall on arching limbs, flat-topped, narrow below and wide above, a cone, a column, hanging, or none of these. It is the shape, where branching is the axes' habit that grows it: an excurrent tree is usually conical and a decurrent one rounded or spreading, and branching columnar goes with crown_form columnar"
+    },
     "bark_texture": {
       "group": "stem_and_bark",
       "organ": "bark",
