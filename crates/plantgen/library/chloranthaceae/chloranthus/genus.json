@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Chloranthus",
+  "traits": {
+    "sexual_system": "hermaphrodite",
+    "perianth": "absent",
+    "stamens": {
+      "min": 3,
+      "max": 3,
+      "low": 1
+    }
+  },
+  "evidence": {
+    "traits": {
+      "evidence": "SourceInferred",
+      "source": "flora-of-china-4-chloranthaceae",
+      "note": "Flora of China vol. 4 (Xia and Jérémie 1999), genus Chloranthus (p. 133, read 2026-10-16 at eFloras): flowers small and bisexual, with no perianth; stamens usually 3, rarely 1, on one side of the ovary's top."
+    }
+  }
+}
