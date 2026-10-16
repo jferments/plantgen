@@ -472,4 +472,21 @@ pub mod venation;
 /// palm and every crownshaft palm build again (until 77 a year's sheaths
 /// stood within no structure, which the organ check refuses for a piece;
 /// 77 is colour characters read as sRGB, #152).
-pub const GENERATOR_REVISION: u32 = 78;
+/// 79: ferns from the Fern Grower's Manual: a frond arches as it unrolls
+/// (`arch`, from `leaf_posture`), its fiddlehead a tight coil; fronds
+/// stand on their own feet round a compact crown at the ground, among old
+/// stipe bases, with no stalk under them; a rhizome's habit sets its
+/// crowns and how far apart they stand, a blade's outline where its
+/// longest pinnae are, and pinnae are as many, as long and as broad as the
+/// blade fits, lanceolate; evergreen fronds outlast a winter; the curated
+/// ferns arch, and the sword fern's pinnae and angles are the fern rules'
+/// (78 is crownshaft sheaths in their fronds, #150).
+/// 80: a flowering look the files leave without a year takes one from the
+/// months its taxa state it flowers and fruits in (`appearance.organs.*.
+/// season`): a flower's look becomes its look in flower and its own look
+/// its fruit, drawn by the fruit's rules (its colour, a cluster's fruit at
+/// its stated size, unripe fruit in the leaf green); a head or spikelet
+/// keeps its look; a herb's bud and fruit organs show only in their own
+/// stages. Forty species that flowered all year and never fruited now
+/// bud, flower, fruit and drop in their months (79 is ferns, #153).
+pub const GENERATOR_REVISION: u32 = 80;
