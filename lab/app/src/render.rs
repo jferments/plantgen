@@ -171,7 +171,7 @@ fn card_material(
     }
     let mut hairs = [Vec4::ZERO; MAX_TEMPLATES];
     for (slot, hair) in hairs.iter_mut().zip(&scene.template_hairs) {
-        *slot = Vec3::from_array(*hair).extend(1.0);
+        *slot = Vec4::from_array(*hair);
     }
     cards.add(ExtendedMaterial {
         base: StandardMaterial {

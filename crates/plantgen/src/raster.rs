@@ -553,7 +553,7 @@ impl Surface<'_> {
                 return;
             }
             // Up close the edge's hairs are strands of their own.
-            if texel.hair >= 0.999
+            if texel.fringe
                 && let Some(hairs) = self
                     .templates
                     .templates
@@ -570,7 +570,7 @@ impl Surface<'_> {
                 }
             }
             albedo = self.templates.albedo(template, albedo, texel);
-            hair = Some((template, texel.hair));
+            hair = Some(template);
         }
         target.depth[at] = depth;
         let Some(lighting) = self.lighting else {
@@ -628,14 +628,14 @@ impl Surface<'_> {
                 color[channel] = (albedo[channel] * light) as f32;
             }
         }
-        if let Some((template, weight)) = hair
+        if let Some(template) = hair
             && let Some(hairs) = self
                 .templates
                 .templates
                 .get(template)
                 .and_then(|drawn| drawn.hairs.as_ref())
         {
-            let sheen = crate::hairs::sheen(hairs, f64::from(weight), normal, view, lit, lighting);
+            let sheen = crate::hairs::sheen(hairs, normal, view, lit, lighting);
             for channel in 0..3 {
                 #[allow(clippy::cast_possible_truncation)]
                 {

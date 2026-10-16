@@ -18,8 +18,8 @@
 //!   card's colour moved toward its template's accent colour
 //!   ([`Scene::template_accents`]) darkened for this card
 //!   ([`SceneMesh::darkening`]), times the texel's brightness, then moved
-//!   toward its hairs' colour ([`Scene::template_hairs`]) darkened alike
-//!   by the texel's hair weight (blue). That is [`Templates::albedo`]
+//!   toward its hairs' colour darkened alike by their weight
+//!   ([`Scene::template_hairs`]). That is [`Templates::albedo`]
 //!   exactly (a test holds it so). Cards are two-sided. The hairs' sheen
 //!   and their strands up close (`plantgen::hairs`) are the preview
 //!   renderer's alone.
@@ -116,8 +116,8 @@ impl SceneMesh {
 }
 
 /// The organ templates as layers of one texture array: per texel,
-/// brightness / 2 in red, the accent weight in green, the hair weight in
-/// blue and coverage in alpha (the package atlas's encoding), row 0 at the cards'
+/// brightness / 2 in red, the accent weight in green, 0 in blue and
+/// coverage in alpha (the package atlas's encoding), row 0 at the cards'
 /// base. Sampled nearest, as [`Templates::sample`] does.
 #[derive(Debug, Clone, PartialEq)]
 pub struct TemplateLayers {
@@ -143,7 +143,7 @@ impl TemplateLayers {
                 rgba.extend([
                     plantgen::raster::to_u8(template.brightness[at] * 0.5),
                     plantgen::raster::to_u8(template.accent[at]),
-                    plantgen::raster::to_u8(template.hair.get(at).copied().unwrap_or(0.0)),
+                    0,
                     plantgen::raster::to_u8(template.coverage[at]),
                 ]);
             }
@@ -162,6 +162,7 @@ pub fn card_accent(templates: &Templates, template: usize, colour: [f32; 3]) -> 
         brightness: 1.0,
         accent: 1.0,
         hair: 0.0,
+        fringe: false,
     };
     // Colours are small; f32 keeps them.
     #[allow(clippy::cast_possible_truncation)]
@@ -208,17 +209,21 @@ pub fn template_accents(templates: &Templates) -> Vec<[f32; 3]> {
         .collect()
 }
 
-/// Each template's hairs' colour, linear RGB, one per layer: black for a
-/// template without hairs, whose hair weight is 0 everywhere.
+/// Each template's hairs, one per layer: their colour, linear RGB, and
+/// how far they move its face's colour toward theirs
+/// ([`plantgen::templates::Template::hair`]); 0 for a template without.
 #[must_use]
-pub fn template_hairs(templates: &Templates) -> Vec<[f32; 3]> {
+pub fn template_hairs(templates: &Templates) -> Vec<[f32; 4]> {
     if templates.templates.is_empty() {
-        return vec![[0.0; 3]];
+        return vec![[0.0; 4]];
     }
     templates
         .templates
         .iter()
-        .map(|template| template.hairs.as_ref().map_or([0.0; 3], |hairs| hairs.colour))
+        .map(|template| {
+            let colour = template.hairs.as_ref().map_or([0.0; 3], |hairs| hairs.colour);
+            [colour[0], colour[1], colour[2], template.hair()]
+        })
         .collect()
 }
 
@@ -430,8 +435,8 @@ pub struct Scene {
     pub templates: TemplateLayers,
     /// Each layer's accent colour, linear RGB.
     pub template_accents: Vec<[f32; 3]>,
-    /// Each layer's hairs' colour, linear RGB ([`template_hairs`]).
-    pub template_hairs: Vec<[f32; 3]>,
+    /// Each layer's hairs' colour and weight ([`template_hairs`]).
+    pub template_hairs: Vec<[f32; 4]>,
     /// The bark pattern drawn on the wood ([`SceneMesh::bark_radius`]);
     /// `None` for plain bark.
     pub bark: Option<plantgen::bark::BarkParams>,
@@ -1589,14 +1594,14 @@ mod tests {
             let dark = darkening(templates, template, colour);
             let accent: [f32; 3] = std::array::from_fn(|c| base[c] * dark);
             let hairs = template_hairs(templates)[template];
-            for (brightness, weight, hair) in
-                [(1.0_f32, 0.0_f32, 0.0_f32), (1.3, 0.4, 0.3), (0.7, 1.0, 1.0)]
-            {
+            let hair = hairs[3];
+            for (brightness, weight) in [(1.0_f32, 0.0_f32), (1.3, 0.4), (0.7, 1.0)] {
                 let texel = Texel {
                     coverage: 1.0,
                     brightness,
                     accent: weight,
                     hair,
+                    fringe: false,
                 };
                 let want = templates.albedo(template, colour.map(f64::from), texel);
                 let got: [f64; 3] = std::array::from_fn(|c| {

@@ -6,11 +6,13 @@
 //!   a few hairs barely tint it; [`cast`]), and a sheen ([`sheen`]):
 //!   hairs catch light where the
 //!   face is seen edge on and glow where the sun is behind them, as a
-//!   velvet does (asperity scattering; Koenderink and Pont, 2003). Its
-//!   weight is each texel's [`Texel::hair`](crate::templates::Texel).
+//!   velvet does (asperity scattering; Koenderink and Pont, 2003). Both
+//!   are the same over the face, so a renderer needs only the template's
+//!   hairs (`crate::package::AtlasLayer::hairs`), no texels of their own.
 //! - **Along the edge**, a fringe of hairs painted out from the outline
-//!   ([`paint`]), which shows a hairy leaf's soft rim against what lies
-//!   behind it. Floras say so for a ciliate edge; every hairy blade has
+//!   ([`paint`]), pale where they catch the light and show the face's
+//!   colour through them, which shows a hairy leaf's soft rim against what
+//!   lies behind it. Floras say so for a ciliate edge; every hairy blade has
 //!   some. The fringe is no part of the leaf's area, and a renderer leaves
 //!   it out where the strands draw the edge's hairs ([`fringe_drawn`]).
 //! - **Up close**, where a hair is longer than a couple of pixels, each
@@ -49,6 +51,10 @@ pub fn cast(density: f64) -> f64 {
     CAST * density * density * density
 }
 
+/// How much brighter than the face a fringe's hair is: clear hairs show
+/// the face's colour through them and catch the light.
+pub const FRINGE_BRIGHTNESS: f32 = 1.5;
+
 /// Strands one plant draws at most ([`strand_mesh`]), each nine
 /// triangles: a close-up's budget.
 pub const MAX_STRANDS: usize = 60_000;
@@ -58,22 +64,14 @@ fn hash(a: u64, b: u64, salt: u64) -> f64 {
     unit(mix64(mix64(a ^ salt.rotate_left(17)) ^ b.rotate_left(31)))
 }
 
-/// What [`paint`] adds to a template: each texel's hair weight (how much
-/// of its colour is the hairs'), and the coverage its edge's fringe added,
-/// which the leaf's area leaves out.
-#[derive(Debug, Clone, PartialEq, Default)]
-pub struct Painted {
-    pub hair: Vec<f32>,
-    pub fringe: Vec<f32>,
-}
-
 /// Paint `hairs` onto a `size` by `size` template of a card `aspect` wide
-/// for its length, in place: the hair weight of every covered texel, and
-/// a fringe of hairs out from its edge into the texels around it, each a
+/// for its length, in place: a fringe of hairs out from its edge into the
+/// texels around it, each a
 /// stroke a texel wide standing out from the outline and curving toward
 /// the tip (FNA's "marginal hairs perpendicular to margin or curved toward
 /// apex", Asarum). Texels within `border` of the template's sides and tip
-/// stay clear.
+/// stay clear. Returns the coverage the fringe added to each texel, which
+/// the leaf's area leaves out.
 #[must_use]
 #[allow(clippy::too_many_arguments)]
 pub fn paint(
@@ -85,25 +83,15 @@ pub fn paint(
     coverage: &mut [f32],
     brightness: &mut [f32],
     accent: &mut [f32],
-) -> Painted {
+) -> Vec<f32> {
     let texels = size * size;
-    let mut hair = vec![0.0_f32; texels];
     let mut fringe = vec![0.0_f32; texels];
     if !hairs.drawn() || size < 4 {
-        return Painted { hair, fringe };
+        return fringe;
     }
     let density = hairs.density.clamp(0.0, 1.0);
     let lie = hairs.lie.clamp(0.0, 1.0);
     let curl = hairs.curl.clamp(0.0, 1.0);
-    // Even over the face: a texel holds many hairs, and up close the
-    // strands draw them one by one.
-    #[allow(clippy::cast_possible_truncation)]
-    let face = cast(density) as f32;
-    for at in 0..texels {
-        if coverage[at] >= 0.5 {
-            hair[at] = face;
-        }
-    }
     // The fringe, from the edge texels: covered, beside one that is not.
     let covered = |x: isize, y: isize| -> f64 {
         if x < 0 || y < 0 || x >= size as isize || y >= size as isize {
@@ -179,42 +167,26 @@ pub fn paint(
             }
             fringe[at] += 1.0 - coverage[at];
             coverage[at] = 1.0;
-            brightness[at] = 1.0;
+            brightness[at] = FRINGE_BRIGHTNESS;
             accent[at] = 0.0;
-            hair[at] = 1.0;
         }
     }
-    Painted { hair, fringe }
+    fringe
 }
 
-/// The light a face's hairs add where its texel's hair weight is `weight`
-/// (see [`CAST`]), seen along `view` with its normal `normal` turned
+/// The light a face's hairs add, seen along `view` with its normal
+/// `normal` turned
 /// toward the eye: a sheen where the face is seen edge on, stronger for
 /// hairs pressed flat (silky, sericeous), and a glow where the sun shines
 /// through them toward the eye, stronger for hairs standing up (a backlit
 /// halo), in `lighting`; `lit` is the sun's share that reaches the point.
 #[must_use]
-pub fn sheen(
-    hairs: &Hairs,
-    weight: f64,
-    normal: Vec3,
-    view: Vec3,
-    lit: f64,
-    lighting: &Lighting,
-) -> [f64; 3] {
+pub fn sheen(hairs: &Hairs, normal: Vec3, view: Vec3, lit: f64, lighting: &Lighting) -> [f64; 3] {
     let (sun, sun_colour, sky) = (lighting.sun, lighting.sun_color, lighting.sky);
-    if weight <= 0.0 {
-        return [0.0; 3];
-    }
-    // A fringe's texel is all hair; a face's sheen goes with the square
-    // of how much of it its hairs cover: a few hairs catch little light,
-    // a felt shines.
+    // It goes with the square of how much of the face the hairs cover: a
+    // few hairs catch little light, a felt shines.
     let density = hairs.density.clamp(0.0, 1.0);
-    let weight = if weight >= 0.999 {
-        1.0
-    } else {
-        density * density
-    };
+    let weight = density * density;
     let lie = hairs.lie.clamp(0.0, 1.0);
     let edge_on = 1.0 - normal.dot(view).abs().min(1.0);
     let graze = edge_on * edge_on * edge_on;
@@ -434,7 +406,7 @@ pub fn strand_mesh(
             let (u, v) = (hash(tries, 2, seed), hash(tries, 3, seed));
             #[allow(clippy::cast_possible_truncation)]
             let texel = templates.sample(template, u as f32, v as f32);
-            if texel.coverage < 0.5 || texel.hair >= 0.999 {
+            if texel.coverage < 0.5 || texel.fringe {
                 continue;
             }
             placed += 1;
@@ -613,41 +585,28 @@ mod tests {
     fn hairs_tint_the_face_and_fringe_the_edge_but_add_no_leaf() {
         let bare = Templates::for_looks(&[leaf(None)]);
         let hairy = Templates::for_looks(&[leaf(Some(villous()))]);
-        let (bare, hairy) = (&bare.templates[0], &hairy.templates[0]);
-        assert!(bare.hair.is_empty() && bare.fringe.is_empty());
+        let (bare_one, hairy_one) = (&bare.templates[0], &hairy.templates[0]);
+        assert!(bare_one.fringe.is_empty() && bare_one.hair() == 0.0);
         // The fringe covers texels the bare blade leaves open, and only
         // those: the blade's own texels are the same.
-        let fringed = hairy.fringe.iter().filter(|&&f| f > 0.0).count();
+        let fringed = hairy_one.fringe.iter().filter(|&&f| f > 0.0).count();
         assert!(fringed > 20, "{fringed} fringe texels");
-        for at in 0..bare.coverage.len() {
-            if bare.coverage[at] >= 0.5 {
-                assert_eq!(hairy.coverage[at], bare.coverage[at]);
-                assert!(hairy.hair[at] > 0.0 && hairy.hair[at] < CAST as f32 + 1e-6);
-            } else if hairy.fringe[at] > 0.0 {
-                assert_eq!(hairy.hair[at], 1.0);
+        for at in 0..bare_one.coverage.len() {
+            if bare_one.coverage[at] >= 0.5 {
+                assert_eq!(hairy_one.coverage[at], bare_one.coverage[at]);
+                assert_eq!(hairy_one.fringe[at], 0.0);
+            } else if hairy_one.fringe[at] > 0.0 {
+                assert_eq!(hairy_one.brightness[at], FRINGE_BRIGHTNESS);
             }
         }
-        assert!((hairy.area() - bare.area()).abs() < 1e-9);
+        assert!((hairy_one.area() - bare_one.area()).abs() < 1e-9);
+        let weight = hairy_one.hair();
+        assert!(weight > 0.05 && f64::from(weight) <= CAST);
         // A hairy face is paler: its colour moves toward the hairs'.
-        let at = (0..bare.coverage.len())
-            .find(|&at| bare.coverage[at] >= 0.5 && hairy.hair[at] > 0.1)
-            .unwrap();
-        let templates = Templates {
-            templates: vec![hairy.clone()],
-            ..Templates::default()
-        };
-        let texel = crate::templates::Texel {
-            coverage: 1.0,
-            brightness: hairy.brightness[at],
-            accent: hairy.accent[at],
-            hair: hairy.hair[at],
-        };
-        let tinted = templates.albedo(0, [0.1, 0.2, 0.05], texel);
-        let plain = templates.albedo(
-            0,
-            [0.1, 0.2, 0.05],
-            crate::templates::Texel { hair: 0.0, ..texel },
-        );
+        let middle = hairy.sample(0, 0.5, 0.5);
+        assert!(middle.coverage >= 0.5 && !middle.fringe && middle.hair == weight);
+        let tinted = hairy.albedo(0, [0.1, 0.2, 0.05], middle);
+        let plain = bare.albedo(0, [0.1, 0.2, 0.05], bare.sample(0, 0.5, 0.5));
         assert!(tinted[0] > plain[0] && tinted[2] > plain[2]);
     }
 
@@ -662,10 +621,9 @@ mod tests {
             sky: [0.3; 3],
             ground: [0.1; 3],
         };
-        let face_on = sheen(&hairs, 0.4, up, up, 1.0, &lighting);
+        let face_on = sheen(&hairs, up, up, 1.0, &lighting);
         let edge_on = sheen(
             &hairs,
-            0.4,
             up,
             Vec3::new(1.0, 0.05, 0.0).normalize_or(up),
             1.0,
@@ -673,7 +631,6 @@ mod tests {
         );
         let backlit = sheen(
             &hairs,
-            0.4,
             up,
             Vec3::new(0.3, -1.0, 0.0).normalize_or(up),
             1.0,
@@ -681,7 +638,11 @@ mod tests {
         );
         assert!(face_on[1] < 1e-3);
         assert!(edge_on[1] > 0.05 && backlit[1] > 0.05);
-        assert_eq!(sheen(&hairs, 0.0, up, up, 1.0, &lighting), [0.0; 3]);
+        let bare = Hairs {
+            density: 0.0,
+            ..villous()
+        };
+        assert_eq!(sheen(&bare, up, up, 1.0, &lighting), [0.0; 3]);
     }
 
     #[test]

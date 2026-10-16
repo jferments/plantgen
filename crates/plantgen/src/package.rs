@@ -33,7 +33,7 @@
 //! | `mesh` | one level of detail, `APMESH1` (below) |
 //! | `impostor-albedo` | PNG, sRGB colour with coverage in alpha |
 //! | `impostor-normal-depth` | PNG, world normal · 0.5 + 0.5, depth in alpha |
-//! | `organ-atlas` | PNG, one template per organ type, side by side in the program's order: brightness / 2 in red, accent weight in green, hair weight in blue, coverage in alpha |
+//! | `organ-atlas` | PNG, one template per organ type, side by side in the program's order: brightness / 2 in red, accent weight in green, coverage in alpha |
 //! | `parts` | the part meshes, `APPARTS2` (below) |
 //! | `part-steps` | the part meshes' coarser steps, `APSTEPS2` (below) |
 //! | `mechanics` | one keyframe's bones and branches, JSON, in motion packages only ([`crate::motion`]) |
@@ -304,10 +304,10 @@ pub struct AtlasLayer {
     /// (`crate::bend`); absent for flat cards.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bend: Option<crate::bend::Bend>,
-    /// The hairs on the template's face (`crate::hairs`): a texel's colour
-    /// then moves toward theirs, darkened alike, by its hair weight, and
-    /// they add their sheen ([`crate::hairs::sheen`]); absent for a bare
-    /// face.
+    /// The hairs on the template's face (`crate::hairs`): each texel's
+    /// colour then moves toward theirs, darkened alike, by
+    /// [`crate::hairs::cast`] of their density, and they add their sheen
+    /// ([`crate::hairs::sheen`]); absent for a bare face.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub hairs: Option<crate::looks::Hairs>,
 }

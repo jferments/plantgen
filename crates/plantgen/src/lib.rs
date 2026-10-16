@@ -502,6 +502,5 @@ pub mod venation;
 /// 82: hairs (`crate::hairs`): a blade's hairs as floras name them
 /// (`leaf_hairs`, `leaf_ciliate`) cast its colour toward theirs, add a
 /// sheen and a backlit glow, fringe its edge, and up close stand from it
-/// as strands of their own; the atlas carries each texel's hair weight in
-/// blue (81 is cycads, palms and tree ferns, #154).
+/// as strands of their own (81 is cycads, palms and tree ferns, #154).
 pub const GENERATOR_REVISION: u32 = 82;
