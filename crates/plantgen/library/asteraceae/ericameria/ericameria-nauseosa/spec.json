@@ -1,0 +1,254 @@
+{
+  "schema": 1,
+  "id": "ericameria-nauseosa",
+  "taxon": {
+    "scientific_name": "Ericameria nauseosa",
+    "common_name": "rubber rabbitbrush",
+    "usda_symbol": "ERNA10",
+    "family": "Asteraceae",
+    "genus": "Ericameria",
+    "plant_name_id": 3094181
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "crown_base": 0,
+      "fork_height": 0.03,
+      "leaves_per_node": 1,
+      "max_shoot": 4,
+      "bud_break": 1.2,
+      "apical_young": 0.56,
+      "apical": 0.5,
+      "apical_years": 4,
+      "flux": 4,
+      "spur_light": 0.08,
+      "shade_death": 0.03,
+      "steer_weight": 0.4,
+      "droop": 0.02,
+      "wiggle": 10,
+      "crown_radius": 0.5,
+      "crown_rate": 0.22,
+      "space_density": 500,
+      "internode": 0.04,
+      "branch_angle": 25,
+      "bud_years": 4,
+      "spur_leaf": 0.05,
+      "spur_pairs": 3,
+      "leaf_angle": 35,
+      "fork_stems": 8,
+      "fork_angle": 25,
+      "pipe_tip": 0.0012,
+      "pipe_organ": 0.002,
+      "pipe_rings": 1.5e-06,
+      "space_reach": 0.425,
+      "space_kill": 0.105,
+      "blooms": 3,
+      "adult_age": 2,
+      "bloom_size": 0.06,
+      "bloom_angle": 5,
+      "path_half": 0.757
+    }
+  },
+  "growth": {
+    "years": 12,
+    "step": 1,
+    "keyframes": [
+      2,
+      5,
+      12
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1,
+      2,
+      3
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.62,
+      0.62,
+      0.55
+    ],
+    "foliage": [
+      0.4,
+      0.47,
+      0.36
+    ],
+    "foliage_shade": [
+      0.14,
+      0.165,
+      0.126
+    ],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "blade",
+          "taper": 0.6,
+          "aspect": 0.015
+        }
+      },
+      "bloom": {
+        "shape": {
+          "template": "head"
+        },
+        "inflorescence": {
+          "kind": "corymb",
+          "flowers": 12,
+          "size": 0.35,
+          "spread": 45
+        },
+        "colour": [
+          0.95,
+          0.8,
+          0.1
+        ],
+        "accent": [
+          0.85,
+          0.7,
+          0.1
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 12,
+      "environment": "open",
+      "height": 1.2,
+      "tolerance": 0.45
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 0.31,
+      "max": 2.29,
+      "high": 3.6
+    },
+    "crown_width_max_m": {
+      "min": 0.6,
+      "max": 1.0
+    },
+    "leaf_shape": "linear",
+    "leaf_width_m": {
+      "min": 0.001,
+      "max": 0.001
+    },
+    "leaf_length_m": {
+      "min": 0.02,
+      "max": 0.07
+    },
+    "capitulum_kind": "discoid",
+    "inflorescence": "corymb",
+    "flowering_months": [
+      8,
+      9,
+      10
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's rubber rabbitbrush review (Tirmenstein 1999, read 2026-10-15): \"typically reaches 12 to 90 inches (31-229 cm) in height\"; some populations reach 10 to 12 feet (3.3-3.6 m)."
+    },
+    "traits.crown_width_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's rubber rabbitbrush review (Tirmenstein 1999, read 2026-10-15): \"Plant spread is generally between 0.2 and 3.3 feet (0.6-1 m)\"."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's rubber rabbitbrush review (Tirmenstein 1999, read 2026-10-15): \"Leaves are linear\"."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's rubber rabbitbrush review (Tirmenstein 1999, read 2026-10-15): leaves \"less than 0.04 inch (0.1 cm) wide\", stated here as about 1 mm."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.capitulum_kind": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as the FEIS review read does not describe the heads; rabbitbrush heads have disc florets only."
+    },
+    "traits.inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), seed ripens in autumn (FEIS, Tirmenstein 1999); the flowering months are the model's."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Brittlebush's values, changed by hand for rubber rabbitbrush: several upright stems from the base branching into a rounded bush (FEIS, Tirmenstein 1999), crowded thread-like leaves, and flat-topped clusters of small yellow heads at the stem tips. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.2 m at 12 years in the open, within FEIS's 31-229 cm; plants may be \"full grown\" within 4 years (Tirmenstein 1999). Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye: the grey form's felted grey-green stems and leaves (FEIS: \"covered with a felt-like layer of trichomes\"); golden-yellow heads. Leaves drawn on a narrow blade card (aspect 0.015), as no simple card draws one under 1 mm wide."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion (2026-10-15): sizes from FEIS, drawing values from brittlebush's."
+  }
+}

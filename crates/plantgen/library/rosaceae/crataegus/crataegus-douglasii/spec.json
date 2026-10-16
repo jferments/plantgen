@@ -1,0 +1,307 @@
+{
+  "schema": 1,
+  "id": "crataegus-douglasii",
+  "taxon": {
+    "scientific_name": "Crataegus douglasii",
+    "common_name": "black hawthorn",
+    "usda_symbol": "CRDO2",
+    "family": "Rosaceae",
+    "genus": "Crataegus",
+    "plant_name_id": 2945426
+  },
+  "growth_form": "decurrent_tree",
+  "generator": {
+    "params": {
+      "crown_radius": 2.5,
+      "crown_base": 0.3,
+      "crown_rate": 0.06,
+      "space_density": 18,
+      "internode": 0.12,
+      "max_shoot": 3,
+      "branch_angle": 45,
+      "apical_young": 0.6,
+      "apical": 0.5,
+      "leaf_size": 0.11,
+      "spur_leaf": 0.1,
+      "spur_pairs": 2,
+      "leaf_angle": 55,
+      "lean": 8,
+      "wiggle": 9,
+      "fork_height": 0.3,
+      "fork_stems": 5,
+      "fork_angle": 30,
+      "blooms": 3,
+      "adult_age": 5,
+      "bloom_size": 0.045,
+      "bloom_angle": 90,
+      "space_reach": 1.6,
+      "space_kill": 0.45,
+      "extinction": 0.45,
+      "pipe_rings": 1.2e-05,
+      "path_half": 8.0,
+      "thorns": 2,
+      "thorn_length": 0.018,
+      "thorn_angle": 50
+    }
+  },
+  "growth": {
+    "years": 25,
+    "step": 1,
+    "keyframes": [
+      3,
+      8,
+      15,
+      25
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.3,
+      0.27,
+      0.24
+    ],
+    "bark_pattern": {
+      "kind": "scaly",
+      "scale": 0.025,
+      "elongation": 1.6,
+      "fissure": 0.12,
+      "depth": 0.2,
+      "contrast": 0.35,
+      "variation": 0.15,
+      "smooth_below": 0.04,
+      "roughness": 0.3
+    },
+    "foliage": [
+      0.07,
+      0.14,
+      0.04
+    ],
+    "foliage_shade": [
+      0.025,
+      0.05,
+      0.015
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "sprig",
+          "leaves": 7,
+          "angle": 50,
+          "width": 0.75,
+          "widest": 0.65,
+          "tip": 0.3,
+          "base": 0.4,
+          "teeth": 10,
+          "tooth_depth": 0.05,
+          "petiole": 0.15
+        },
+        "families": {
+          "plasticity": 0.3
+        },
+        "accent": [
+          0.35,
+          0.25,
+          0.15
+        ]
+      },
+      "bloom": {
+        "shape": {
+          "template": "fruit",
+          "kind": "pome",
+          "aspect": 0.85,
+          "unripe": 0.7
+        },
+        "inflorescence": {
+          "kind": "corymb",
+          "flowers": 10,
+          "size": 0.3,
+          "spread": 40
+        },
+        "colour": [
+          0.1,
+          0.06,
+          0.08
+        ],
+        "accent": [
+          0.55,
+          0.15,
+          0.12
+        ],
+        "season": {
+          "ripening": 35,
+          "flower_look": {
+            "shape": {
+              "template": "flower",
+              "petal_width": 1.1,
+              "point": 0.0,
+              "notch": 0.0,
+              "centre": 0.2,
+              "stamen_length": 0.35
+            },
+            "colour": [
+              0.97,
+              0.96,
+              0.92
+            ],
+            "accent": [
+              0.9,
+              0.82,
+              0.45
+            ],
+            "size": 1.5,
+            "form": {
+              "flower": {
+                "cup": 25
+              }
+            }
+          }
+        }
+      }
+    },
+    "ridges": {
+      "spacing": 0.03,
+      "depth": 0.02,
+      "twist": 0,
+      "contrast": 0.35
+    }
+  },
+  "allometry": [
+    {
+      "age": 25,
+      "environment": "open",
+      "height": 4,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 1,
+      "max": 4
+    },
+    "spines": "thorns",
+    "leaf_length_m": {
+      "min": 0.03,
+      "max": 0.06
+    },
+    "fruit_size_m": 0.011,
+    "fruit_type": "pome",
+    "inflorescence": "corymb",
+    "flowering_months": [
+      5,
+      6
+    ],
+    "fruiting_months": [
+      7,
+      8
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's black hawthorn review (Habeck 1991, read 2026-10-15): \"a large shrub or small tree ranging from 3.5 to 13.0 feet (1-4 m) tall\"."
+    },
+    "traits.spines": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's black hawthorn review (Habeck 1991, read 2026-10-15): \"possessing straight, strong thorns 0.5 to 1.0 inch (1.00-2.50 cm) long\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's black hawthorn review (Habeck 1991, read 2026-10-15): \"Leaves are generally 1.5 to 2.5 inches (3-6 cm) long, broad, and serrated at the tip\"."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's black hawthorn review (Habeck 1991, read 2026-10-15): fruit from Rainbow Creek, southeastern Washington: mean diameter 11.11 mm (\"about 0.5 inch (1 cm) long\")."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as the FEIS review read says only \"fruits\"; a hawthorn's fruit is a pome."
+    },
+    "traits.inflorescence": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as the FEIS review read gives no flowering months."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's black hawthorn review (Habeck 1991, read 2026-10-15): fruit dispersed in Washington from July 15 to 30 and in Oregon from August 16 to 31."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Pacific crabapple's values, changed by hand for black hawthorn: a smaller, many-stemmed shrubby tree with stems clustered from the base (FEIS, Habeck 1991), straight thorns, and flat-topped clusters of white flowers ripening to black fruit. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "4 m at 25 years in the open, the top of FEIS's 1-4 m (Habeck 1991). Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye: grey bark carrying moss and lichen (FEIS: \"Numerous mosses and lichens are present upon the entire bark system\"); broad leaves toothed toward the tip; white flowers; shiny black fruit."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion (2026-10-15): sizes from FEIS, drawing values from Pacific crabapple's."
+  }
+}
