@@ -129,6 +129,10 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "What the broadleaf program's crown_height means: the top of the space the crown may fill, which rises with age at crown_rate toward it and never passes it, so the tallest the plant grows, the height a flora gives as its greatest. Where that greatest is a rare record, the plant grows a little tall; a check of the grown plant against its usual height (spec rework M8) will show it."
-    }
+    },
+    "rules.appearance.organs.leaf.hairs.length": {"evidence": "Authored", "source": "plantgen-authors", "note": "A blade's hairs are drawn as long as the species' stated leaf_hair_length_m; that the stated length is the drawn one is the model's choice."},
+    "rules.appearance.organs.leaf.hairs.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "A blade's hairs are drawn in the species' stated hair_colour; white where none is stated, as most hairs are colourless or white. The model's choice."},
+    "rules.appearance.organs.basal.hairs.length": {"evidence": "Authored", "source": "plantgen-authors", "note": "A blade's hairs are drawn as long as the species' stated leaf_hair_length_m; that the stated length is the drawn one is the model's choice."},
+    "rules.appearance.organs.basal.hairs.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "A blade's hairs are drawn in the species' stated hair_colour; white where none is stated, as most hairs are colourless or white. The model's choice."}
   }
 }

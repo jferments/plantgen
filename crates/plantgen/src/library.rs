@@ -3377,6 +3377,22 @@ mod tests {
             {
                 parent.remove(key);
             }
+            // A section a rule filled alone (a look's hairs) goes with it.
+            let mut path = outer;
+            while let Some((above, key)) = path.rsplit_once('.') {
+                let Some(parent) = above
+                    .split('.')
+                    .try_fold(&mut *spec, step)
+                    .and_then(serde_json::Value::as_object_mut)
+                else {
+                    break;
+                };
+                if parent.get(key) != Some(&serde_json::json!({})) {
+                    break;
+                }
+                parent.remove(key);
+                path = above;
+            }
             if let Some(notes) = spec
                 .get_mut("evidence")
                 .and_then(serde_json::Value::as_object_mut)
