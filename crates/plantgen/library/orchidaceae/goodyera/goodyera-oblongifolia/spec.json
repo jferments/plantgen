@@ -1,0 +1,315 @@
+{
+  "schema": 1,
+  "id": "goodyera-oblongifolia",
+  "taxon": {
+    "scientific_name": "Goodyera oblongifolia",
+    "common_name": "western rattlesnake plantain",
+    "usda_symbol": "GOOB2",
+    "family": "Orchidaceae",
+    "genus": "Goodyera",
+    "plant_name_id": 91873
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 1,
+      "stem_rate": 1,
+      "clump_radius": 0.01,
+      "stem_lean": 3,
+      "maturity": 1.5,
+      "adult_age": 3,
+      "young_height": 0.25,
+      "stem_radius": 0.002,
+      "wiggle": 1,
+      "nodes": 3,
+      "bare": 0.1,
+      "leaf_length": 0.05,
+      "leaf_peak": 0,
+      "leaf_top": 0.7,
+      "leaf_base": 1,
+      "leaf_angle": 30,
+      "raceme": 0.04,
+      "flowers": 14,
+      "flower_size": 0.16,
+      "pedicel": 0.0,
+      "flower_angle": 0,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0,
+      "basal_leaves": 5,
+      "basal_length": 0.065,
+      "basal_angle": 75
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.3,
+      0.38,
+      0.22
+    ],
+    "foliage": [
+      0.06,
+      0.13,
+      0.05
+    ],
+    "foliage_shade": [
+      0.022,
+      0.05,
+      0.015
+    ],
+    "variation": 0.15,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "width": 0.35,
+          "widest": 0.45,
+          "tip": 0.7,
+          "base": 0.5,
+          "teeth": 0,
+          "petiole": 0.0
+        }
+      },
+      "flower": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.3
+        },
+        "inflorescence": {
+          "size": 0.067,
+          "spread": 40,
+          "taper": 0.2
+        },
+        "colour": [
+          0.4,
+          0.45,
+          0.25
+        ],
+        "season": {
+          "opening": 25,
+          "bud_look": {
+            "shape": {
+              "template": "fruit",
+              "aspect": 0.5
+            },
+            "colour": [
+              0.7,
+              0.78,
+              0.6
+            ],
+            "size": 0.6
+          },
+          "flower_look": {
+            "shape": {
+              "template": "flower",
+              "petal_width": 0.8,
+              "point": 0.5,
+              "centre": 0.1,
+              "sepal_length": 0.9,
+              "lip": 1.1
+            },
+            "colour": [
+              0.92,
+              0.93,
+              0.88
+            ],
+            "accent": [
+              0.85,
+              0.88,
+              0.75
+            ]
+          }
+        }
+      },
+      "basal": {
+        "shape": {
+          "template": "simple",
+          "width": 0.4,
+          "widest": 0.45,
+          "tip": 0.6,
+          "base": 0.5,
+          "teeth": 0,
+          "petiole": 0.15
+        },
+        "accent": [
+          0.82,
+          0.86,
+          0.78
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.4,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.1,
+      "max": 0.45
+    },
+    "leaf_length_m": {
+      "min": 0.03,
+      "max": 0.1
+    },
+    "leaf_habit": "evergreen",
+    "rosette": "basal",
+    "perennation": "rhizome",
+    "inflorescence": "raceme",
+    "units_per_inflorescence": {
+      "min": 10,
+      "max": 15,
+      "high": 30
+    },
+    "inflorescence_length_m": {
+      "min": 0.05,
+      "max": 0.12
+    },
+    "fruit_size_m": 0.01,
+    "flowering_months": [
+      7,
+      8
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's western rattlesnake plantain review (Reeves 2006, read 2026-10-15): stems \"are 4 to 18 inches (10-45 cm) tall\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's western rattlesnake plantain review (Reeves 2006, read 2026-10-15): leaves \"thick, entire, and broadly lance-shaped, 1 to 4 inches (3-10 cm) long on winged petioles\"."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's western rattlesnake plantain review (Reeves 2006, read 2026-10-15): \"a native perennial, evergreen forb\" whose leaves persist."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's western rattlesnake plantain review (Reeves 2006, read 2026-10-15): \"The persistent leaves are arranged in a basal rosette\"."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's western rattlesnake plantain review (Reeves 2006, read 2026-10-15): \"arising from short creeping rhizomes\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's western rattlesnake plantain review (Reeves 2006, read 2026-10-15): flowers \"borne on a 1-sided or spiraled raceme\"."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's western rattlesnake plantain review (Reeves 2006, read 2026-10-15): \"There are as many as 30 flowers/raceme, but 10 to 15 are more common\"."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high) of 5-13 cm, its top held to the 12 cm FEIS gives as the most (\"up to 5 inches (12 cm) long\", Reeves 2006)."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's western rattlesnake plantain review (Reeves 2006, read 2026-10-15): \"The fruit is an erect, pubescent capsule about 0.4 inch (1 cm) long\"."
+    },
+    "traits.flowering_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as the FEIS review read gives no months for the Northwest."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "White bog orchid's values, changed by hand for rattlesnake plantain: a basal rosette of five leaves (FEIS, Reeves 2006), 2-5 small leaves low on the stem drawn as 3, and a dense raceme of 14 small flowers. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "40 cm to the top of the flowering stem at 4 years, within FEIS's 10-45 cm stems (Reeves 2006). Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after FEIS's description (Reeves 2006): dark green rosette leaves with white mottling along the midvein (the basal leaves' accent); small greenish-white hooded flowers."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as the FEIS review read gives no months."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion (2026-10-15): sizes from FEIS, drawing values from white bog orchid's."
+  }
+}

@@ -97,11 +97,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its most vigorous shoots grow one to three of the four internodes a year they may, two nodes each, so they bear 2 to 6 leaves against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
     ),
     (
-        "equisetum-telmateia",
-        "leaf_form",
-        "horsetails' leaves are small scales joined in a sheath at each node (Simpson 2019), but its whorled branches are drawn on blade cards",
-    ),
-    (
         "ferocactus-acanthodes-subsp-acanthodes",
         "stem_form",
         "Ferocactus states its stems globose, but Britton and Rose's 'globular to cylindric' allows a column, and its longest stem grows at least three times as long as wide",
@@ -197,6 +192,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its crowns still fill the envelope of the space tool (an ellipsoid), so from the side they fit an ellipse at about 0.90 to 0.95 against open-grown trees' 0.82 to 0.84; crown form step B grows the shape from light and space with no outline",
     ),
     (
+        "program:equisetaceae",
+        "leaf_form",
+        "horsetails' leaves are small scales joined in a sheath at each node (Simpson 2019), but their whorled branches are drawn on blade cards",
+    ),
+    (
         "program:grass",
         "leaf_length_m",
         "a culm's leaves are drawn 0.35 to 0.6 as long as its tiller's blades, so where a flora's blades span less than about three-fold (California oatgrass, Roemer's fescue, reed canarygrass) the shortest culm leaves fall below its least",
@@ -215,6 +215,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "program:grass",
         "shoot_leaves",
         "a culm's own leaves are its 1 to 3 culm leaves and a tiller's blades stand at the ground on no stem, against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
+    ),
+    (
+        "program:herb",
+        "leaf_habit",
+        "a herb's stems and their leaves live one season, so an evergreen herb (western rattlesnake plantain, common beargrass) draws its leaves as deciduous until the herb program keeps a leaf through winter",
     ),
     (
         "program:herb",
@@ -252,6 +257,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a maple's crown fills its lobed envelope (space@2) closely, so from the side it fits an ellipse at about 0.91; crown form step B grows the shape from light and space with no outline",
     ),
     (
+        "program:typha",
+        "fruit_type",
+        "Typhaceae's fruit is a tiny achene on a hairy stalk (Simpson 2019), but a cattail's fruiting spike is drawn with the berry card",
+    ),
+    (
         "tillandsia-usneoides",
         "leaf_shape",
         "its leaves are drawn as cards tapering from the base, an eighth as broad as long, so they read deltate or lanceolate against the linear leaves Bromeliaceae state",
@@ -260,11 +270,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "tillandsia-usneoides",
         "phyllotaxis_pattern",
         "Bromeliaceae's leaves are spiral (Simpson 2019), but Spanish moss's program sets its leaves in crossing pairs",
-    ),
-    (
-        "typha-latifolia",
-        "fruit_type",
-        "Typhaceae's fruit is a tiny achene on a hairy stalk (Simpson 2019), but its fruiting spike is drawn with the berry card",
     ),
     (
         "viola-glabella",
