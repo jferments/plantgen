@@ -9,6 +9,32 @@
     "leaf_bearing": true
   },
   "rules": {
+    "appearance.organs.leaf.shape.sinus": {
+      "template": "simple",
+      "map": {"leaf_shape": {"cordate": 0.15, "reniform": 0.2}},
+      "else": 0,
+      "between": true,
+      "why": "A cordate blade's two rounded basal lobes reach back past where the petiole meets it, either side of the petiole, leaving a notch between them; a reniform blade's, broader, reach farther; a blade of any other shape has none."
+    },
+    "appearance.organs.basal.shape.sinus": {
+      "template": "simple",
+      "map": {"leaf_shape": {"cordate": 0.15, "reniform": 0.2}},
+      "else": 0,
+      "between": true,
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: a cordate blade's two rounded basal lobes reach back past where the petiole meets it, a reniform blade's farther; any other has none."
+    },
+    "appearance.organs.leaf.shape.fan": {
+      "template": "simple",
+      "map": {"leaf_venation": {"palmate": 2, "pinnate": 0, "parallel": 0, "dichotomous": 0, "single": 0}},
+      "else": 0,
+      "why": "A palmately veined blade's main veins leave the top of its petiole together, the midrib and two more a side fanning out across it (into its basal lobes where it has them); a pinnately veined blade's leave the midrib along its length."
+    },
+    "appearance.organs.basal.shape.fan": {
+      "template": "simple",
+      "map": {"leaf_venation": {"palmate": 2, "pinnate": 0, "parallel": 0, "dichotomous": 0, "single": 0}},
+      "else": 0,
+      "why": "A rosette's leaves are the species' leaves, unless their own are stated: a palmately veined blade's main veins fan from the top of its petiole, two a side with the midrib."
+    },
     "appearance.foliage": {
       "colour": "leaf_colour",
       "why": "The plant's leaves are drawn in the colour a grown leaf's upper side is stated in."
@@ -44,6 +70,26 @@
     }
   },
   "evidence": {
+    "rules.appearance.organs.leaf.shape.sinus": {
+      "evidence": "SourceInferred",
+      "source": "systematics-association-1962-shapes",
+      "note": "The chart of plane shapes names cordate and reniform blades by their bases: two rounded lobes either side of a notch where the petiole joins, a reniform blade broader than long. How far the lobes reach back (0.15 and 0.2 of the blade's length) is the model's choice."
+    },
+    "rules.appearance.organs.basal.shape.sinus": {
+      "evidence": "SourceInferred",
+      "source": "systematics-association-1962-shapes",
+      "note": "The chart of plane shapes names cordate and reniform blades by their bases: two rounded lobes either side of a notch where the petiole joins, a reniform blade broader than long. How far the lobes reach back (0.15 and 0.2 of the blade's length) is the model's choice."
+    },
+    "rules.appearance.organs.leaf.shape.fan": {
+      "evidence": "SourceInferred",
+      "source": "diversity-evolution-land-plants",
+      "note": "Ingrouille (Diversity and Evolution of Land Plants, p. 15 of the PDF): in palmate venation several main veins fan out from the blade's base, where in pinnate venation the laterals leave a midrib along its length. Two a side beside the midrib (five main veins) is the model's choice of a common count."
+    },
+    "rules.appearance.organs.basal.shape.fan": {
+      "evidence": "SourceInferred",
+      "source": "diversity-evolution-land-plants",
+      "note": "Ingrouille (Diversity and Evolution of Land Plants, p. 15 of the PDF): in palmate venation several main veins fan out from the blade's base, where in pinnate venation the laterals leave a midrib along its length. Two a side beside the midrib (five main veins) is the model's choice of a common count."
+    },
     "rules.appearance.foliage": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
     "rules.appearance.foliage_shade": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen shades foliage in the colour a source states for the species' leaves, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour darkened by the generator's own shade factors (0.35, 0.42 and 0.55 of red, green and blue, as a look with a colour of its own is shaded, src/looks.rs)."},
     "rules.appearance.bark": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},

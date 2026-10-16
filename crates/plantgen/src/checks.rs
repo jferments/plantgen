@@ -2326,24 +2326,25 @@ fn unit_sizes(
 
 /// The fruit types a fruit drawn as `kind` may be (`fruit_type`), joined
 /// by `|` where the drawing does not tell them apart: an ellipsoid is a
-/// berry or a drupe; one crowned by its calyx a berry or a pome, as a
-/// fleshy fruit from an inferior ovary is; drupelets an aggregate; a rose
-/// hip the achenes in its cup, an aggregate; a wing a samara, or the
-/// pair of them a maple's schizocarp splits into; a nut in a cup or a
-/// husk a nut; a pod a legume or another pod; a ribbed fruit a capsule
-/// or a follicle.
+/// berry or a drupe, or a dry one-seeded fruit (an achene, a cypsela, a
+/// grain or a nut); one crowned by its calyx a berry or a pome, as a
+/// fleshy fruit from an inferior ovary is; drupelets an aggregate or a
+/// multiple fruit; a rose hip the achenes in its cup, an aggregate; a
+/// wing a samara, or the pair of them a maple's schizocarp splits into;
+/// a nut in a cup or a husk a nut; a pod a legume or another pod; a
+/// ribbed fruit a capsule, a follicle or a schizocarp of ribbed mericarps.
 fn fruit_types(kind: crate::looks::FruitKind) -> &'static str {
     use crate::looks::FruitKind;
     match kind {
-        FruitKind::Berry => "berry|drupe",
+        FruitKind::Berry => "berry|drupe|achene|cypsela|caryopsis|nut",
         FruitKind::Crowned => "berry|pome",
         FruitKind::Pome => "pome",
-        FruitKind::Drupelets => "aggregate",
+        FruitKind::Drupelets => "aggregate|multiple",
         FruitKind::Hip => "aggregate|achene",
         FruitKind::Samara => "samara|schizocarp",
         FruitKind::Acorn | FruitKind::Husked => "nut",
         FruitKind::Pod => "legume|pod",
-        FruitKind::Capsule => "capsule|follicle",
+        FruitKind::Capsule => "capsule|follicle|schizocarp",
     }
 }
 

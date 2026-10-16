@@ -458,4 +458,12 @@ pub mod venation;
 /// revision 8), split four ways so it nests no deeper; both Ferocactus
 /// keep last year's fruit, and F. cylindraceus takes Anderson's rib,
 /// radial and central counts (74 is cactus barrels, #138).
-pub const GENERATOR_REVISION: u32 = 75;
+/// 76: shape and fruit words draw what they mean: a cordate or reniform
+/// blade hangs two basal lobes back beside its petiole (`Simple.sinus`),
+/// and cordate, reniform and deltate blades take their outlines and
+/// widths; a palmately veined blade fans two main veins a side from its
+/// base with the midrib (`Simple.fan`, from `leaf_venation`); achenes,
+/// cypselas, grains, nuts, schizocarps, aggregate and multiple fruits
+/// take fruit kinds, and a fruit is as long as `fruit_size_m` (75 is
+/// cactus crown rings, #147; the merge desk may renumber this).
+pub const GENERATOR_REVISION: u32 = 76;
