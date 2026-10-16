@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "rank": "genus",
+  "name": "Betula",
+  "traits": {
+    "short_shoots": true
+  },
+  "evidence": {
+    "traits.short_shoots": {"evidence": "SourceInferred", "source": "halle-oldeman-tomlinson-1978", "note": "Hallé, Oldeman and Tomlinson 1978, pp. 59-60: Acer, Betula, Corylus, Fagus and rosaceous fruit trees such as Pyrus have a well-developed short-shoot system, whose short shoots fill most of the crown and bear most of its leaves (Wilson's red maple)."}
+  }
+}

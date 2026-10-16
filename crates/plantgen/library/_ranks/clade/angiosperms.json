@@ -9,6 +9,15 @@
     "shoot_leaves": {"min": 4, "max": 18, "high": 32, "typical": 12}
   },
   "rules": {
+    "generator.params.short_share": {
+      "map": {"short_shoots": {"true": {"rule": "min(1 - long_share, 1 / unit_nodes)"}}},
+      "else": {"rule": "min(1, 1 / (3 * unit_nodes))"},
+      "why": "Where a taxon grows short shoots, they fill most of its crown and bear most of its leaves (Wilson's red maple, Hall\u00e9, Oldeman and Tomlinson 1978, pp. 59-60): as many of a growth unit's buds grow short shoots as grow long ones, from the nodes behind them, so each year's growth ends in long shoots with tufts of leaves behind. Elsewhere a third as many as the long ones, as at the seed plants."
+    },
+    "generator.params.bud_years": {
+      "map": {"short_shoots": {"true": 10}},
+      "why": "A short shoot lives far longer than its leaves but far less than the wood, perhaps 20 years at most (Hall\u00e9, Oldeman and Tomlinson 1978, p. 60), and many die younger: almond spurs at 5 to 27 percent a year (Lampinen et al. 2011). So leaves crowd the last ten years' wood behind each tip, and older wood is bare."
+    },
     "appearance.organs.*.inflorescence.pedicel": {
       "rule": "clamp(pedicel_length_m / inflorescence_length_m, 0, 1)",
       "why": "A cluster's flower stands on a stalk as long, for the cluster's length, as floras measure the pedicel and the inflorescence."
