@@ -322,6 +322,7 @@ mod tests {
                 hairs_beneath: None,
                 underside: None,
                 variegation: None,
+                sori: None,
                 roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Simple(crate::looks::Simple::default()),

@@ -623,6 +623,7 @@ pub fn organ_templates(shapes: &[Shape]) -> Templates {
         .map(|shape| Look {
             underside: None,
             variegation: None,
+            sori: None,
             roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             organ: shape.name().to_owned(),
