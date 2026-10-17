@@ -46,9 +46,11 @@ pub mod gltf;
 pub mod graph;
 pub mod ground;
 pub mod grow;
+pub mod hairs;
 pub mod impostor;
 pub mod inherit;
 pub mod json;
+pub mod lace;
 pub mod leaves;
 pub mod library;
 pub mod litter;
@@ -536,7 +538,65 @@ pub mod venation;
 /// conifer's apex lives on shoots down to 5 mm, not 25, so a narrow,
 /// slow crown such as subalpine fir's stays dense along its limbs (84 is
 /// leaf teeth, #157).
-/// 86: a conifer's nodding leader (`pinidae` revision 12, `nod`, as in
+/// 86: a flowering look the files leave without a year takes one from the
+/// months its taxa state it flowers and fruits in (`appearance.organs.*.
+/// season`): a flower's look becomes its look in flower and its own look
+/// its fruit, drawn by the fruit's rules (its colour, a cluster's fruit at
+/// its stated size, unripe fruit in the leaf green); a head or spikelet
+/// keeps its look; a herb's bud and fruit organs show only in their own
+/// stages. A lone flower's fruit is drawn at the fruit's size, not the
+/// flower's (`season.fruit_size`), a cluster whose fruit outgrow it grows
+/// to hold them, and a cluster still flowering when its first fruit ripen
+/// opens over those months (`season.opening`). The four Chloranthaceae,
+/// which flowered all year and never fruited, now bud, flower, fruit and
+/// drop in their months, as do the magnoliids that state their months
+/// (85 is conifer foliage along the limbs, #142).
+/// 87: a flower with no perianth (no petals, tube, calyx or cup) spreads
+/// its stamens and pistil over the reach its pieces would have taken, and
+/// the reduced drawing shows them as small blunt stamens in the flower's
+/// colour on a ring at any distance, not as bare sticks; seventeen
+/// species state their fruiting months from their sources, so their year
+/// now bears fruit.
+/// 88: a fern's stipe stated scaly (`stipe_scales`) is drawn with its
+/// scales (the new `palea` organ, in `stipe_scale_colour`), largest at
+/// its foot, on its frond and on the stipe bases of an old crown; a
+/// rachis narrows from its foot to its tip, and a small frond's is
+/// thinner (fern program revision 8); the sword fern's stipe is as long
+/// as Flora of North America gives (87 is flowers with no perianth,
+/// #168).
+/// 89: a far level's spine tint greys with each station's age as the near
+/// levels' spines do, covers a rib valley half as much as a crest, and
+/// hides half the skin it did, so a spiny cactus keeps its colour and rib
+/// shading from afar; cacti state stem, spine, old spine and wool colours,
+/// which the family's rules draw (88 is scaly fern stipes, #163).
+/// 90: hairs (`crate::hairs`): a blade's hairs as floras name them
+/// (`leaf_hairs`, `leaf_ciliate`) cast its colour toward theirs, add a
+/// sheen and a backlit glow, fringe its edge, and up close stand from it
+/// as strands of their own (89 is cactus colours, #156).
+/// 91: leaves with two faces and variegation: a look's `underside` colour
+/// paints its cards' lower faces (the side that looks more toward the
+/// ground), and its `variegation` paints pale margins, centres, stripes,
+/// bands, spots or mottles, a different share on every leaf; the royal
+/// palm's pinnae are paler below and the rattlesnake plantain's leaves
+/// carry their pale midvein band (90 is leaf hairs, #166).
+/// 92: stem hairs (`stem_hairs`, `crate::hairs::Tube`): the hairs on
+/// young stems and leaf stalks, in a blade's words and `crisped`, cast
+/// the first year's wood toward their colour, wear off in its second and
+/// up close stand from it as strands (91 is leaves with two faces, #164).
+/// 93: a hooked spine curls into an open J at its tip: its shaft runs
+/// further and its hook turns over its last two pieces, not folded flat on
+/// the shaft over the last one (92 is stem hairs, #173).
+/// 94: slender pedicels and short-shoot tufts (`Unit::stalk_width`): a
+/// flower's pedicel is drawn 0.35 as thick as before, and a needle look's
+/// bundle of more than five, up to 45, is a short shoot's tuft spread all
+/// round, the tufts half a needle apart (93 is hooked spines, #176).
+/// 95: lacy leaves: a compound leaf divides up to three times (`segments`,
+/// `inner`); one whose taxa say how its divisions are held
+/// (`division_planes`) is drawn on the two nearest levels as geometry, its
+/// divisions lifted, scattered or set all round their rachis
+/// (`crate::lace`); a pinnate leaf's laterals reach no farther than its
+/// stated blade width (`blade_width`) (94 is pedicels and tufts, #177).
+/// 96: a conifer's nodding leader (`pinidae` revision 12, `nod`, as in
 /// hemlocks) carries its year's needles in two sprays, one at the foot of
 /// each half of the shoot, so they follow the bend; the one spray at the
 /// shoot's foot had run on straight and left the nodding tip a bare
@@ -544,5 +604,5 @@ pub mod venation;
 /// several stems from one foot (`stems`, `stem_angle`), and a needle card
 /// may lean its needles forward (`lean`) and leave the foot of each axis
 /// bare (`bare`) so they crowd in a tuft near its end; both default to
-/// what was drawn before.
-pub const GENERATOR_REVISION: u32 = 86;
+/// what was drawn before (95 is lacy leaves, #180).
+pub const GENERATOR_REVISION: u32 = 96;

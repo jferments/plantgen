@@ -4,6 +4,7 @@
   "name": "Ericaceae",
   "parent": "order/ericales",
   "traits": {
+    "leaf_incision": "none",
     "hypanthium": false,
     "inflorescence": {
       "raceme": "often",
@@ -58,10 +59,7 @@
       "deciduous": "often"
     },
     "leaf_venation": "pinnate",
-    "sexual_system": {
-      "dioecious": "often",
-      "hermaphrodite": "often"
-    },
+    "sexual_system": {"hermaphrodite": "usually", "dioecious": "rarely"},
     "life_span": "perennial"
   },
   "forms": {
@@ -91,6 +89,7 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Ericaceae (read 2026-10-17): lamina given as undivided only."},
     "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 389, 505: Simpson calls the flowers hypogynous or epigynous, neither of which has a hypanthium. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits.inflorescence": {
       "evidence": "SourceInferred",
@@ -137,11 +136,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 389, 390, family Ericaceae: leaf venation pinnate (broad-leaved taxa); read as \"pinnate\"."
     },
-    "traits.sexual_system": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 389, 390, family Ericaceae: sexual system hermaphrodite or dioecious; read as {\"dioecious\": \"often\", \"hermaphrodite\": \"often\"}."
-    },
+    "traits.sexual_system": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Ericaceae (read 2026-10-16): plants are hermaphrodite in nearly all cases, with dioecy cited only for a single genus (Epigaea); the current tie between dioecious and hermaphrodite is wrong."},
     "traits.life_span": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",

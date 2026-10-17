@@ -79,13 +79,13 @@ fn rules_and_traits_say_where_they_come_from() {
     let campanulids = "(clade campanulids: _ranks/clade/campanulids.json)";
     assert!(
         built_in.starts_with(&format!(
-            "Rules, by their home (357):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
+            "Rules, by their home (405):\n  appearance.organs.*.inflorescence.branches  {flowering}\n"
         )),
         "{built_in}"
     );
     for line in [
         format!(
-            "\n  appearance.organs.*.inflorescence.kind  {flowering}\n  appearance.organs.*.inflorescence.pedicel  {flowering}\n  appearance.organs.*.inflorescence.peduncle  {flowering}\n  appearance.organs.*.inflorescence.size  {flowering}\n  appearance.organs.*.season.bud  {flowering}\n"
+            "\n  appearance.organs.*.inflorescence.kind  {flowering}\n  appearance.organs.*.inflorescence.pedicel  {flowering}\n  appearance.organs.*.inflorescence.peduncle  {flowering}\n  appearance.organs.*.inflorescence.size  {flowering}\n  appearance.organs.*.season  {flowering}\n  appearance.organs.*.season.bud  {flowering}\n"
         ),
         format!(
             "\n  appearance.organs.*.season.ripe  {flowering}\n  appearance.organs.*.shape.anther_tilt on `flower` cards  {flowering}\n  appearance.organs.*.shape.belly on `flower` cards  {flowering}\n"
@@ -166,7 +166,7 @@ fn rules_and_traits_say_where_they_come_from() {
         "{built_in}"
     );
     assert!(
-        built_in.contains("General, with no taxonomic home: 16 rules at all plants;"),
+        built_in.contains("General, with no taxonomic home: 30 rules at all plants;"),
         "{built_in}"
     );
     // The maples' program is named for their family, so it is homed.
@@ -197,7 +197,7 @@ fn rules_and_traits_say_where_they_come_from() {
     let library = dir.to_str().unwrap();
     let rules = stdout(&plantc(&["--library", library, "rules"]));
     assert!(
-        rules.starts_with("Rules, by their home (358):\n"),
+        rules.starts_with("Rules, by their home (406):\n"),
         "{rules}"
     );
     assert!(

@@ -14,7 +14,10 @@
     "ovary_position": "inferior",
     "hypanthium": false,
     "woodiness": "woody",
-    "inflorescence": "catkin",
+    "inflorescence": {
+      "catkin": "usually",
+      "cyme": "sometimes"
+    },
     "flower_symmetry": "actinomorphic",
     "perianth": {
       "tepals": "often",
@@ -46,6 +49,11 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 400, 401, family Garryaceae: inflorescence posture pendent; read as \"pendent\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Garrya and Aucuba (read 2026-10-16): Garrya (18 species listed) bears its flowers in catkins, while Aucuba (up to 10 species) has loose cymes, not panicles; so catkin usually and cyme sometimes, changing the proposed 'panicle' to what the page says."
     }
   }
 }

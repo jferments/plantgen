@@ -4,6 +4,8 @@
   "name": "Orchidaceae",
   "parent": "order/asparagales",
   "traits": {
+    "leaf_incision": "none",
+    "leaf_margin": "entire",
     "flowering_position": {"lateral": "usually", "terminal": "sometimes"},
     "hypanthium": false,
     "flower_merosity": 3,
@@ -67,6 +69,8 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Orchidaceae (read 2026-10-17): lamina undivided (simple, unlobed)."},
+    "traits.leaf_margin": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Orchidaceae (read 2026-10-17): margins entire, the usual condition; Wikipedia Orchidaceae: leaves simple and untoothed."},
     "traits.flowering_position": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Orchidaceae (read 2026-10-16): inflorescences terminal or axillary. Weighting inferred: the large sympodial epiphytic lineages (Epidendroideae) mostly flower from lateral buds or pseudobulb bases; terrestrial orchids terminal."},
     "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 232, 505: Simpson calls the flowers epigynous (perianth on top of the inferior ovary). Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {

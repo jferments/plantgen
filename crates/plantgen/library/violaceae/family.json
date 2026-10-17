@@ -37,6 +37,18 @@
     },
     "inflorescence": {
       "solitary": "often"
+    },
+    "leaf_shape": {
+      "cordate": "usually",
+      "reniform": "sometimes",
+      "linear": "rarely"
+    },
+    "leaf_margin": {
+      "crenate": "usually"
+    },
+    "leaf_incision": {
+      "none": "usually",
+      "lobed": "sometimes"
     }
   },
   "forms": {
@@ -73,6 +85,21 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 315, 317, 318, family Violaceae: inflorescence solitary (axillary; or heads, panicles, racemes), often; read as {\"solitary\": \"often\"}."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Viola (read 2026-10-17): most species heart-shaped or kidney-shaped leaves, some linear or palmate. Weighted by Viola (500-680 species, over half the family); the woody Rinorea and allies (elliptic blades) are not covered by a page read."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Viola (read 2026-10-17): leaves scalloped (rounded teeth). DELTA, Violaceae (read 2026-10-17): mentions glandular hairs on leaf teeth in Viola. Weighted by Viola."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Violaceae (read 2026-10-17): lamina usually undivided, sometimes dissected and pinnatifid. Wikipedia Viola: some species palmate."
     }
   }
 }

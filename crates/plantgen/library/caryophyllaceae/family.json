@@ -4,6 +4,8 @@
   "name": "Caryophyllaceae",
   "parent": "order/caryophyllales",
   "traits": {
+    "leaf_incision": "none",
+    "leaf_shape": {"lanceolate": "usually", "linear": "often", "elliptic": "sometimes", "ovate": "sometimes"},
     "phyllotaxis_pattern": "decussate",
     "flower_merosity": {"min": 4, "max": 5, "typical": 5},
     "carpels": {"min": 2, "max": 5, "high": 10},
@@ -19,10 +21,7 @@
     "stipules": false,
     "flower_symmetry": "actinomorphic",
     "perianth": "sepals_and_petals",
-    "stamens": {
-      "min": 1,
-      "max": 10
-    },
+    "stamens": {"min": 5, "max": 10, "low": 1},
     "ovary_position": "superior",
     "inflorescence": {
       "cyme": "usually",
@@ -36,6 +35,9 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "wikipedia", "note": "German Wikipedia, Nelkengewächse (read 2026-10-17): blades undivided and entire. DELTA, Caryophyllaceae (read 2026-10-17): lamina entire, simple."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "wikipedia", "note": "German Wikipedia (read 2026-10-17): family leaves elongate (Nelkengewächse); Silene, the largest genus, awl-shaped, linear, lanceolate to ovate-lanceolate or elliptic (Leimkräuter); Dianthus narrow, linear, lanceolate to ovate (Nelken); English Wikipedia, Dianthus: mostly linear. Weighted by Silene then Dianthus."},
+    "traits.stamens": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Caryophyllaceae (read 2026-10-16): stamens (1-)5, 8 or 10; so the range is 5 to 10 with 1 as the rare low. The page does not say which count is commonest, so the proposed typical 10 is not added."},
     "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Caryophyllaceae (read 2026-10-16): leaves usually opposite (rarely whorled or alternate); successive pairs crossing inferred. Would otherwise inherit spiral."},
     "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 374, 378: 5, rarely 4, sepals and petals; usually pentamerous."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 374, 378: ovary of 2 to 5 or more carpels (Floral Diagrams p. 179 general formula: 2 to 5, rarely to 10)."},

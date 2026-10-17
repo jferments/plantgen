@@ -118,7 +118,8 @@
     "lower_glume_length_m": {"min": 0.003, "max": 0.004},
     "inflorescence_posture": "erect",
     "leaf_length_m": {"min": 0.05, "max": 0.2},
-    "flowering_months": [6, 7]
+    "flowering_months": [6, 7],
+    "fruiting_months": [7, 8]
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -225,6 +226,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (Koeleria no. 2, K. cristata, fig. 385): flowers June-July on prairies."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's prairie Junegrass review (Simonin 2000, read 2026-10-16): in southern Idaho \"seed ripening occurring mid-July\" and dissemination from mid-July to mid-August (it also says seed \"ripens late summer to fall\" in general); read as July and August."
     }
   },
   "provenance": {

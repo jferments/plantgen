@@ -1873,7 +1873,16 @@ fn template_albedo(template: &Template) -> Vec<[f64; 3]> {
         .map(|at| {
             let weight = f64::from(template.accent[at]);
             let brightness = f64::from(template.brightness[at]);
-            std::array::from_fn(|c| (look[c] + (accent[c] - look[c]) * weight) * brightness)
+            // The upper face of a card of middling variegation: a glTF
+            // texture is one picture for every card and both faces.
+            let base = template.variegation.map_or(look, |variegation| {
+                let rank = f64::from(template.pattern.get(at).copied().unwrap_or(1.0));
+                let patch = crate::looks::Variegation::weight(rank, variegation.share(0.5));
+                std::array::from_fn(|c| {
+                    look[c] + (f64::from(variegation.colour[c]) - look[c]) * patch
+                })
+            });
+            std::array::from_fn(|c| (base[c] + (accent[c] - base[c]) * weight) * brightness)
         })
         .collect()
 }

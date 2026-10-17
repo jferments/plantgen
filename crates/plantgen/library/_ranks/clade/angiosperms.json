@@ -49,6 +49,28 @@
       "colour": "fruit_colour_ripe",
       "why": "A fruit is drawn in the colour it is stated to ripen to; its unripe share keeps the look's accent."
     },
+    "appearance.organs.fruit.shape.aspect": {
+      "template": "fruit",
+      "rule": "clamp(fruit_width_m / fruit_size_m, 0.05, 2)",
+      "why": "A fruit is as wide for its length as its flora measures it."
+    },
+    "appearance.organs.fruit.accent": {
+      "colour": "leaf_colour",
+      "why": "A fruit's unripe share, and its stalk, are drawn in the green of the plant's leaves until a colour of its own is stated."
+    },
+    "appearance.organs.fruit.inflorescence.size": {
+      "rule": "clamp(fruit_size_m / inflorescence_length_m, 0.005, 1)",
+      "why": "A cluster's fruit is as long, for the cluster's length, as floras measure the fruit and the inflorescence."
+    },
+    "appearance.organs.*.season.flower_look.size": {
+      "rule": "clamp(flower_size_m / fruit_size_m, 0.05, 4)",
+      "why": "A flower is as wide, for its fruit's length, as floras measure the flower and the fruit: a cluster's flower against its fruit, a lone flower against the fruit it becomes."
+    },
+    "appearance.organs.*.season.fruit_size": {
+      "map": {"inflorescence": {"raceme": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m, 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "spike": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m, 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "catkin": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m, 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "corymb": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m, 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "umbel": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m, 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "compound_umbel": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m, 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "panicle": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m, 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "cyme": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m, 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "scorpioid": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m, 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "head": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m, 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "spadix": {"rule": "first(inflorescence_length_m, 0) > 0 ? clamp(1.3 * fruit_size_m / first(inflorescence_length_m, 1), 1, 20) : clamp(fruit_size_m / first(flower_size_m, fruit_size_m), 0.05, 20)"}, "solitary": {"rule": "clamp(fruit_size_m / flower_size_m, 0.05, 20)"}}},
+      "else": {"rule": "clamp(fruit_size_m / flower_size_m, 0.05, 20)"},
+      "why": "A lone flower's organ is grown as wide as its flower, so its fruit is drawn at the fruit's stated length; a cluster grown as long as its inflorescence grows in fruit where its fruit outgrow it, to hold them on their stalks (a third again their length, as an umbel's rays need)."
+    },
     "appearance.organs.*.inflorescence.kind": {
       "map": {"inflorescence": {"raceme": "raceme", "spike": "spike", "catkin": "catkin", "corymb": "corymb", "umbel": "umbel", "compound_umbel": "compound_umbel", "panicle": "panicle", "cyme": "cyme", "scorpioid": "scorpioid", "head": "head", "spadix": "spike"}},
       "why": "Each kind of inflorescence is laid out as the cluster of its name, and a spadix as a spike; a solitary flower is no cluster."
@@ -77,8 +99,48 @@
     },
     "appearance.organs.*.shape.pinnules": {
       "template": "compound",
-      "map": {"division_pattern": {"pinnate": {"rule": "division_order >= 2 ? (terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40)) : 0"}, "palmate": {"rule": "division_order >= 2 ? clamp(round(leaflets), 3, 17) : 0"}}},
-      "why": "Each pinna of a twice-divided leaf (or each division of a biternate one) bears the leaflets floras count on it, odd or even as the leaf ends; a leaf divided three times or more is drawn divided twice. A leaf divided once bears none."
+      "map": {"inner_division_pattern": {"pinnate": {"rule": "division_order >= 3 ? first((terminal_leaflet ? clamp(2 * round((pinnules - 1) / 2) + 1, 3, 41) : clamp(2 * round(pinnules / 2), 2, 40)), (terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40))) : (division_order >= 2 ? (terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40)) : 0)"}, "palmate": {"rule": "division_order >= 3 ? first(clamp(round(pinnules), 3, 17), clamp(round(leaflets), 3, 17)) : (division_order >= 2 ? clamp(round(leaflets), 3, 17) : 0)"}}}, "else": {"map": {"division_pattern": {"pinnate": {"rule": "division_order >= 3 ? first((terminal_leaflet ? clamp(2 * round((pinnules - 1) / 2) + 1, 3, 41) : clamp(2 * round(pinnules / 2), 2, 40)), (terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40))) : (division_order >= 2 ? (terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40)) : 0)"}, "palmate": {"rule": "division_order >= 3 ? first(clamp(round(pinnules), 3, 17), clamp(round(leaflets), 3, 17)) : (division_order >= 2 ? clamp(round(leaflets), 3, 17) : 0)"}}}},
+      "why": "Each pinna of a twice-divided leaf (or each division of a biternate one) bears the leaflets floras count on it, and each of a thrice-divided one its pinnules, odd or even as the division ends, set as its divisions after the first are; a leaf divided four times or more is drawn divided three times, and one whose pinnules floras do not count, twice. A leaf divided once bears none."
+    },
+    "appearance.organs.*.shape.segments": {
+      "template": "compound",
+      "map": {"inner_division_pattern": {"pinnate": {"rule": "division_order >= 3 ? first((terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40)) + 0 * pinnules, 0) : 0"}, "palmate": {"rule": "division_order >= 3 ? first(clamp(round(leaflets), 3, 17) + 0 * pinnules, 0) : 0"}}}, "else": {"map": {"division_pattern": {"pinnate": {"rule": "division_order >= 3 ? first((terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40)) + 0 * pinnules, 0) : 0"}, "palmate": {"rule": "division_order >= 3 ? first(clamp(round(leaflets), 3, 17) + 0 * pinnules, 0) : 0"}}}},
+      "why": "Each pinnule of a thrice-divided leaf bears the leaflets or segments floras count on it, odd or even as it ends, where floras count its pinnules too. A leaf divided once or twice has none."
+    },
+    "appearance.organs.*.shape.inner": {
+      "template": "compound",
+      "map": {"inner_division_pattern": {"pinnate": "pinnate", "palmate": "palmate"}},
+      "why": "A compound leaf whose later divisions are set otherwise than its first (a ternate-pinnate leaf) draws them as its inner division pattern says."
+    },
+    "appearance.organs.*.shape.blade_width": {
+      "template": "compound",
+      "rule": "clamp(leaf_width_m / leaf_length_m, 0.02, 3)",
+      "why": "A pinnate leaf's laterals reach no farther than the blade's edge, its width over its length as floras measure them: a strap-shaped leaf's pinnae are short for their spacing."
+    },
+    "appearance.organs.*.shape.lace": {
+      "template": "compound",
+      "map": {"division_planes": {"flat": 2, "spray": 2, "all_round": 2}},
+      "why": "A divided leaf whose taxa say how its divisions are held is drawn up close as geometry, its rachises and each leaflet or segment where it stands, on the two nearest levels; farther off, on its card."
+    },
+    "appearance.organs.*.shape.lift": {
+      "template": "compound",
+      "map": {"division_planes": {"flat": 0, "spray": 25, "all_round": 0}},
+      "why": "A spray's primary divisions rise a quarter of a right angle out of the leaf's plane; a flat leaf's and a bottlebrush's do not."
+    },
+    "appearance.organs.*.shape.scatter": {
+      "template": "compound",
+      "map": {"division_planes": {"flat": 4, "spray": 30, "all_round": 20}},
+      "why": "Each division turns a little at random about its rachis: hardly in a flat leaf, up to 30 degrees either way in a spray, 20 round a bottlebrush."
+    },
+    "appearance.organs.*.shape.roll": {
+      "template": "compound",
+      "map": {"division_planes": {"flat": 0, "spray": 0, "all_round": 137.5}},
+      "why": "A bottlebrush's primary divisions turn round the rachis by the golden angle from one to the next, so they stand all round it; a flat leaf's and a spray's keep two ranks."
+    },
+    "appearance.organs.*.shape.inner_roll": {
+      "template": "compound",
+      "map": {"division_planes": {"flat": 0, "spray": 0, "all_round": 137.5}},
+      "why": "A bottlebrush's leaflets or segments turn round their division's rachis by the golden angle too; a flat leaf's and a spray's lie in their division's plane."
     },
     "appearance.organs.*.shape.confluent": {
       "template": "compound",
@@ -196,6 +258,10 @@
       "map": {"inflorescence_unit": {"flower": "flower", "capitulum": "head", "spikelet": "spikelet"}}, "else": "flower",
       "why": "Single flowers are drawn on a flower card, heads of florets on a head card and spikelets on a spikelet card; the inflorescence rules lay them out. A flowering plant whose taxa do not say is drawn with single flowers."
     },
+    "appearance.organs.*.season": {
+      "needs": ["flowering_months", "fruiting_months"],
+      "why": "A plant whose flowering and fruiting months are stated flowers and fruits in them: each flowering look its files leave without a year is a bud, a flower and fruit on the days its months give, and gone outside them. A flower's look becomes its look in flower and its own look its fruit, which the fruit's rules draw; a head or a spikelet is drawn as itself in each stage."
+    },
     "appearance.organs.*.season.bud": {
       "rule": "month_start(min(flowering_months)) - 15 + (min(flowering_months) == 1 ? 365 : 0)",
       "why": "A look's buds show half a month before the first month it flowers in; for one that flowers from January, in the December before, its whole year counted from then."
@@ -205,11 +271,16 @@
       "why": "Its first flowers open as the first month it flowers in begins."
     },
     "appearance.organs.*.season.fruit": {
-      "rule": "max(month_start(min(flowering_months)) + 1, min(month_start(max(flowering_months) + 1), max(month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), round((month_start(max(flowering_months) + 1) + month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0))) / 2))) - opening) + (min(flowering_months) == 1 ? 365 : 0)",
-      "why": "Its last flowers go to fruit as the last month it flowers in ends, or where it is ripe before then, in the middle of the months it both flowers and is ripe in; a cluster's first go its units' opening days before."
+      "rule": "max(month_start(min(flowering_months)) + 1, (opening > 0 ? month_start(max(flowering_months) + 1) : min(month_start(max(flowering_months) + 1), max(month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), round((month_start(max(flowering_months) + 1) + month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0))) / 2)))) - opening) + (min(flowering_months) == 1 ? 365 : 0)",
+      "why": "Its last flowers go to fruit as the last month it flowers in ends, or where it is ripe before then, in the middle of the months it both flowers and is ripe in; a cluster's first go its units' opening days before, and a cluster that opens on as its first fruit ripen keeps flowering to the end of its months."
+    },
+    "appearance.organs.*.season.opening": {
+      "needs": ["inflorescence_length_m"],
+      "map": {"inflorescence": {"raceme": {"rule": "clamp(month_start(max(flowering_months) + 1) - month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), 0, 180)"}, "spike": {"rule": "clamp(month_start(max(flowering_months) + 1) - month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), 0, 180)"}, "catkin": {"rule": "clamp(month_start(max(flowering_months) + 1) - month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), 0, 180)"}, "corymb": {"rule": "clamp(month_start(max(flowering_months) + 1) - month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), 0, 180)"}, "umbel": {"rule": "clamp(month_start(max(flowering_months) + 1) - month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), 0, 180)"}, "compound_umbel": {"rule": "clamp(month_start(max(flowering_months) + 1) - month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), 0, 180)"}, "panicle": {"rule": "clamp(month_start(max(flowering_months) + 1) - month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), 0, 180)"}, "cyme": {"rule": "clamp(month_start(max(flowering_months) + 1) - month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), 0, 180)"}, "scorpioid": {"rule": "clamp(month_start(max(flowering_months) + 1) - month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), 0, 180)"}, "head": {"rule": "clamp(month_start(max(flowering_months) + 1) - month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), 0, 180)"}, "spadix": {"rule": "clamp(month_start(max(flowering_months) + 1) - month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), 0, 180)"}}},
+      "why": "A cluster still flowering in the months its first fruit are ripe opens its flowers one after another over those months, so it flowers to the end of its months while its first fruit ripen."
     },
     "appearance.organs.*.season.ripe": {
-      "rule": "max(max(month_start(min(flowering_months)) + 1, min(month_start(max(flowering_months) + 1), max(month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), round((month_start(max(flowering_months) + 1) + month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0))) / 2))) - opening), max(min(month_start(max(flowering_months) + 1), max(month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), round((month_start(max(flowering_months) + 1) + month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0))) / 2))), month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0))) - ripening / 2) + (min(flowering_months) == 1 ? 365 : 0)",
+      "rule": "max(max(month_start(min(flowering_months)) + 1, (opening > 0 ? month_start(max(flowering_months) + 1) : min(month_start(max(flowering_months) + 1), max(month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), round((month_start(max(flowering_months) + 1) + month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0))) / 2)))) - opening), (opening > 0 ? month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)) : max(min(month_start(max(flowering_months) + 1), max(month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)), round((month_start(max(flowering_months) + 1) + month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0))) / 2))), month_start(min(fruiting_months) + (min(fruiting_months) < min(flowering_months) ? 12 : 0)))) - ripening / 2) + (min(flowering_months) == 1 ? 365 : 0)",
       "why": "Its fruit is half ripe as the first month it is ripe in begins (one before its flowers' is in the next year), or where its last flowers are still open then, as they go to fruit; it ripens only once it is fruit."
     },
     "appearance.organs.*.season.fall": {
@@ -230,6 +301,13 @@
     "rules.appearance.organs.flower.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
     "rules.appearance.organs.bloom.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
     "rules.appearance.organs.fruit.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
+    "rules.appearance.organs.fruit.shape.aspect": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a fruit from the measures a source states for the species, a choice of the model's: its width over its length, as the fruit card's aspect."},
+    "rules.appearance.organs.*.season": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a plant's year from the months floras give, a choice of the model's (seasonal looks, 2026-10-16): its flowers show in the months it flowers in and its fruit in the months it is ripe in, as the season rules set their days, where they had shown all year and never fruited."},
+    "rules.appearance.organs.fruit.accent": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours unripe fruit, a choice of the model's (seasonal looks, 2026-10-16): green as the leaves are, since floras state the ripe colour and seldom the unripe one."},
+    "rules.appearance.organs.fruit.inflorescence.size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a cluster in fruit, a choice of the model's (seasonal looks, 2026-10-16): each fruit as long, for the cluster's length, as floras measure the fruit, as its flowers are drawn as wide as they measure the flower."},
+    "rules.appearance.organs.*.season.flower_look.size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen sizes a flower against its fruit, a choice of the model's (seasonal looks, 2026-10-16): a stage's look is sized as a share of the organ in fruit, so a flower is the ratio of the stated flower and fruit sizes (flower_size_m, fruit_size_m), whether it is a cluster's unit or a lone flower."},
+    "rules.appearance.organs.*.season.opening": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen draws a cluster that flowers and fruits at once, a choice of the model's (seasonal looks, 2026-10-16): where the stated fruiting months (fruiting_months) begin before the flowering months (flowering_months) end, a cluster's units open one after another from the first ripe month to the end of flowering, so the plant shows flowers and ripe fruit together as the floras describe."},
+    "rules.appearance.organs.*.season.fruit_size": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen sizes an organ in fruit, a choice of the model's (seasonal looks, 2026-10-16): the programs grow a lone flowering organ as wide as its flower (flower_size_m) and a cluster as long as its inflorescence (inflorescence_length_m), so in fruit the organ is scaled to the stated fruit (fruit_size_m): a lone one by the ratio of fruit to flower, a cluster only where its fruit outgrow it, to 1.3 times the fruit's length, the room an umbel's rays leave a unit on its stalk."},
     "traits.reproduction": {
       "evidence": "SourceInferred",
       "source": "openstax-biology-2e",
@@ -249,6 +327,46 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind."
+    },
+    "rules.appearance.organs.*.shape.segments": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind."
+    },
+    "rules.appearance.organs.*.shape.inner": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind."
+    },
+    "rules.appearance.organs.*.shape.blade_width": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen fits a divided leaf's laterals to its blade, a choice of the model's (lacy leaves, 2026-10-17): a flora's leaf length and width bound the blade, so a lateral standing at its angle to the rachis reaches no farther than the width allows. The middle of each range is read."
+    },
+    "rules.appearance.organs.*.shape.lace": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a divided leaf's divisions in three dimensions, a choice of the model's (lacy leaves, 2026-10-17): iNaturalist photos of yarrow, lomatiums and fennel show their segments spread in several planes, and FEIS (Aleksoff 1999) describes native yarrows' narrow segments as set in various planes, making the leaf three-dimensional. The angles are set by eye from the photos."
+    },
+    "rules.appearance.organs.*.shape.lift": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a divided leaf's divisions in three dimensions, a choice of the model's (lacy leaves, 2026-10-17): iNaturalist photos of yarrow, lomatiums and fennel show their segments spread in several planes, and FEIS (Aleksoff 1999) describes native yarrows' narrow segments as set in various planes, making the leaf three-dimensional. The angles are set by eye from the photos."
+    },
+    "rules.appearance.organs.*.shape.scatter": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a divided leaf's divisions in three dimensions, a choice of the model's (lacy leaves, 2026-10-17): iNaturalist photos of yarrow, lomatiums and fennel show their segments spread in several planes, and FEIS (Aleksoff 1999) describes native yarrows' narrow segments as set in various planes, making the leaf three-dimensional. The angles are set by eye from the photos."
+    },
+    "rules.appearance.organs.*.shape.roll": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a divided leaf's divisions in three dimensions, a choice of the model's (lacy leaves, 2026-10-17): iNaturalist photos of yarrow, lomatiums and fennel show their segments spread in several planes, and FEIS (Aleksoff 1999) describes native yarrows' narrow segments as set in various planes, making the leaf three-dimensional. The angles are set by eye from the photos."
+    },
+    "rules.appearance.organs.*.shape.inner_roll": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a divided leaf's divisions in three dimensions, a choice of the model's (lacy leaves, 2026-10-17): iNaturalist photos of yarrow, lomatiums and fennel show their segments spread in several planes, and FEIS (Aleksoff 1999) describes native yarrows' narrow segments as set in various planes, making the leaf three-dimensional. The angles are set by eye from the photos."
     },
     "rules.appearance.organs.*.shape.confluent": {
       "evidence": "Authored",

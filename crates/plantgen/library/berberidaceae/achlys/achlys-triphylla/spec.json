@@ -38,7 +38,7 @@
       "leaf_area": 0.473,
       "basal_area": 0.381,
       "basal_piece_area": 0.235,
-      "flower_area": 0.037,
+      "flower_area": 0.06,
       "bud_area": 0.0,
       "fruit_area": 0.89
     }
@@ -85,6 +85,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "leaf_margin": "dentate",
     "height_typical_m": {
       "min": 0.25,
       "max": 0.4
@@ -96,6 +97,7 @@
     "leaflets": 3
   },
   "evidence": {
+    "traits.leaf_margin": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America, Achlys triphylla (floranorthamerica.org, read 2026-10-17): the leaflets' lower edges are entire and their outer edges cut into a few (usually 3 or 4) coarse lobes; read as coarse outward teeth, so the species does not take Berberidaceae's spiny margin."},
     "generator.params.bud_area": {
       "evidence": "Authored",
       "source": "plantgen-authors",

@@ -49,11 +49,9 @@
       "flowers": 14,
       "ring_angle": 30,
       "flower_angle": 30,
-      "flower_size": 0.09,
       "bud_share": 0.3,
       "fruit_share": 0.25,
       "bud_size": 0.035,
-      "fruit_size": 0.06,
       "flower_area": 0.328,
       "bud_area": 0.7,
       "fruit_area": 0.763
@@ -77,15 +75,12 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "petals": 24,
-          "petal_width": 0.7,
           "point": 0,
           "notch": 0,
           "centre": 0.3,
           "tube": 1.2,
           "stamens": 200
         },
-        "colour": [0.85, 0.84, 0.76],
         "accent": [0.8, 0.62, 0.12]
       },
       "bud": {
@@ -93,14 +88,11 @@
         "colour": [0.16, 0.24, 0.07]
       },
       "fruit": {
-        "shape": { "template": "fruit", "aspect": 0.6 },
-        "colour": [0.5, 0.06, 0.05]
+        "shape": { "template": "fruit" }
       }
     },
     "bodies": {
       "stem": {
-        "colour": [0.11, 0.18, 0.065],
-        "valley": [0.05, 0.085, 0.035],
         "dome": 0.9,
         "ribs": {
           "spacing": 0.075,
@@ -108,8 +100,7 @@
           "sharpness": 0.25
         },
         "areoles": {
-          "felt_radius": 0.004,
-          "felt": [0.25, 0.17, 0.1]
+          "felt_radius": 0.004
         },
         "spines": [
           {
@@ -120,8 +111,7 @@
             "arc": 360,
             "length": 0.02,
             "length_spread": 0.3,
-            "width": 0.0007,
-            "colour": [0.3, 0.2, 0.13]
+            "width": 0.0007
           },
           {
             "role": "central",
@@ -132,12 +122,10 @@
             "arc": 220,
             "length_spread": 0.35,
             "width": 0.0012,
-            "colour": [0.25, 0.15, 0.09],
             "tip": [0.07, 0.05, 0.04]
           }
         ],
         "greying": {
-          "colour": [0.35, 0.34, 0.32],
           "years": 15
         },
         "cork": {
@@ -172,6 +160,16 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "stem_colour": [110, 135, 95],
+    "spine_colour": [100, 95, 90],
+    "spine_colour_aged": [75, 72, 70],
+    "areole_wool_colour": [170, 130, 80],
+    "corolla_shape": {"funnelform": "usually", "campanulate": "sometimes"},
+    "flower_colour": [225, 222, 200],
+    "flower_size_m": {"min": 0.05, "max": 0.06},
+    "fruit_colour_ripe": [165, 25, 25],
+    "fruit_size_m": {"min": 0.05, "max": 0.075},
+    "fruit_width_m": {"min": 0.025, "max": 0.044},
     "wood_density_basic_kg_m3": 340,
     "juvenile_period_years": {"min": 30, "max": 50, "typical": 40},
     "ribs": {"min": 12, "max": 24},
@@ -180,6 +178,16 @@
     "central_spine_length_m": 0.07
   },
   "evidence": {
+    "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 26 and 139, Carnegiea gigantea: stems green, pale grey-green in the plate (p. 26); a pale grey-green here."},
+    "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 139, Carnegiea gigantea: spines grey to blackish; a dark grey here."},
+    "traits.spine_colour_aged": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 139, Carnegiea gigantea: spines grey to blackish; old spines the blackish end, by hand."},
+    "traits.areole_wool_colour": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) pp. 120 to 121 (figure 5.23): a thick mat of tawny wool over the apex; tawny here."},
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 139, Carnegiea gigantea: flowers funnelform to campanulate, white, 8.5 to 12.5 cm long and 5 to 6 cm across; fruit obovoid, red, fleshy, 5 to 7.5 cm long. The colours are the words' plain white and red."},
+    "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 139, Carnegiea gigantea: flowers funnelform to campanulate, white, 8.5 to 12.5 cm long and 5 to 6 cm across; fruit obovoid, red, fleshy, 5 to 7.5 cm long. The colours are the words' plain white and red."},
+    "traits.flower_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 139, Carnegiea gigantea: flowers funnelform to campanulate, white, 8.5 to 12.5 cm long and 5 to 6 cm across; fruit obovoid, red, fleshy, 5 to 7.5 cm long. The colours are the words' plain white and red."},
+    "traits.fruit_colour_ripe": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 139, Carnegiea gigantea: flowers funnelform to campanulate, white, 8.5 to 12.5 cm long and 5 to 6 cm across; fruit obovoid, red, fleshy, 5 to 7.5 cm long. The colours are the words' plain white and red."},
+    "traits.fruit_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 139, Carnegiea gigantea: flowers funnelform to campanulate, white, 8.5 to 12.5 cm long and 5 to 6 cm across; fruit obovoid, red, fleshy, 5 to 7.5 cm long. The colours are the words' plain white and red."},
+    "traits.fruit_width_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 139, Carnegiea gigantea: fruit 5 to 7.5 cm long and 2.5 to 4.4 cm in diameter."},
     "generator.params.flower_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `flower` look draws on an organ 1 m long (visual forms Skill 2, 2026-10-14; plantc atlas), so it shades with what it shows: the flower now takes its family's flower plan from Simpson and Floral Diagrams (before, 0.425)."},
     "traits.wood_density_basic_kg_m3": {"evidence": "SourceInferred", "source": "gwdd-v2", "note": "GWDD v.2.2 species aggregate for Carnegiea gigantea (gwddagg_v2.2_species.csv, read): specific gravity 0.34 (wsg_est, the database's hierarchical-model species mean, from 1 record in 1 source); trunks 0.34, branches 0.4. Basic density (oven-dry mass over green volume) is the specific gravity times 1000 kg/m3."},
     "traits.juvenile_period_years": {
@@ -245,7 +253,7 @@
     "appearance.organs.flower.shape": {
       "evidence": "SourceInferred",
       "source": "kew-powo",
-      "note": "Its flower laid out whorl by whorl (spec rework P5): tepals on a spiral, from green outer ones to waxy white inner ones, on a floral tube and an inferior ovary, from the characters of Cactaceae by the rules at the flowering plants. By hand (as search results quote them; the pages themselves were not read): 24 tepals (no count found); the pericarpel and floral tube, 6 to 10 cm of a flower 8.5 to 12.5 cm long, as 1.2 of the flower's radius; 200 stamens, the most a flower draws, for the thousands floras count."
+      "note": "Its flower laid out whorl by whorl (spec rework P5): tepals on a spiral, from green outer ones to waxy white inner ones, on a floral tube and an inferior ovary, from the characters of Cactaceae by the rules at the flowering plants. By hand (as search results quote them; the pages themselves were not read): the pericarpel and floral tube, 6 to 10 cm of a flower 8.5 to 12.5 cm long, as 1.2 of the flower's radius; 200 stamens, the most a flower draws, for the thousands floras count."
     }
   },
   "provenance": {

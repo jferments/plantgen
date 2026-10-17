@@ -39,7 +39,7 @@
       "nod": 10,
       "bud_size": 0.008,
       "leaf_area": 0.228,
-      "basal_area": 0.235,
+      "basal_area": 0.154,
       "basal_piece_area": 0.235,
       "flower_area": 0.657,
       "bud_area": 0.08,
@@ -106,6 +106,7 @@
     }
   },
   "evidence": {
+    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The area its `basal` look draws on an organ 1 m long (plantc atlas, 2026-10-17), so it shades with what it shows: Berberidaceae's spiny margin now cuts its leaflets' teeth, where before it drew the generic simple card (0.235)."},
     "generator.params.bud_area": {
       "evidence": "Authored",
       "source": "plantgen-authors",

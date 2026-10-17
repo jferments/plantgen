@@ -87,6 +87,7 @@
           "aspect": 0.045
         },
         "colour": [0.05, 0.13, 0.035],
+        "underside": [0.09, 0.19, 0.07],
         "bend": {
           "cup": 0,
           "droop": 50,
@@ -128,7 +129,7 @@
     "appearance": {
       "evidence": "SourceInferred",
       "source": "sargent-1922",
-      "note": "Sargent (1922, Roystonea regia, pp. 107-108): pinnae deep green with slender conspicuous veins, paler below with minute pale dots (foliage and leaflet colour a deep green; the paler underside not drawn, as a card has one colour); the petiole and rachis green with the leaf (leaf_axis), not the trunk's grey; petioles enlarged into bright green cylindrical clasping bases, the crownshaft (sheath colour bright green); the trunk covered with light gray rind tinged with orange (bark a warm grey). Dransfield et al. (2008, Genera Palmarum p. 392): stem tan, grey or white, ringed by prominent or obscure leaf scars; leaflets narrow, tapering to a point (taper 0.6), rather thin (droop 50 degrees, as they hang in photographs). The rings drawn one a leaf, about 3.4 cm apart (0.4 m of trunk a year over twelve leaves), each a darker groove half the gap wide, the bands between them uneven in shade; each frond's sheath drawn as eight cards wrapping the crownshaft, wide enough to close it. Exact shades and the ring pattern set by eye from photographs."
+      "note": "Sargent (1922, Roystonea regia, pp. 107-108): pinnae deep green with slender conspicuous veins, paler below with minute pale dots (foliage and leaflet colour a deep green; the leaflets' underside a paler, greyer green, the dots too small to draw); the petiole and rachis green with the leaf (leaf_axis), not the trunk's grey; petioles enlarged into bright green cylindrical clasping bases, the crownshaft (sheath colour bright green); the trunk covered with light gray rind tinged with orange (bark a warm grey). Dransfield et al. (2008, Genera Palmarum p. 392): stem tan, grey or white, ringed by prominent or obscure leaf scars; leaflets narrow, tapering to a point (taper 0.6), rather thin (droop 50 degrees, as they hang in photographs). The rings drawn one a leaf, about 3.4 cm apart (0.4 m of trunk a year over twelve leaves), each a darker groove half the gap wide, the bands between them uneven in shade; each frond's sheath drawn as eight cards wrapping the crownshaft, wide enough to close it. Exact shades and the ring pattern set by eye from photographs."
     },
     "taxon": {
       "evidence": "Authored",

@@ -114,7 +114,8 @@
     "clonal": false,
     "awn_insertion": "apical",
     "awn_form": "straight",
-    "flowering_months": [6, 7, 8]
+    "flowering_months": [6, 7, 8],
+    "fruiting_months": [7, 8]
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -216,6 +217,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (Elymus no. 12, fig. 600): flowers June-August in open woods and dry hillsides."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's blue wildrye review (Johnson 1999, read 2026-10-16): in California \"seed ripens in early July in the foothills and in late August at higher elevations\"; read as July and August."
     }
   },
   "provenance": {

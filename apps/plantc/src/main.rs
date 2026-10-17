@@ -2409,6 +2409,7 @@ fn on_host(host: PlantMesh, guest: PlantMesh, host_types: usize) -> PlantMesh {
         card.template = card.template.saturating_add(shift);
         card
     }));
+    plant.hair_tubes.extend(guest.hair_tubes);
     plant
 }
 

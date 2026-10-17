@@ -5,7 +5,8 @@
   "parent": "order/rosales",
   "traits": {
     "fruit_type": {
-      "achene": "usually"
+      "drupe": "usually",
+      "achene": "sometimes"
     },
     "perianth": "tepals",
     "hypanthium": false,
@@ -15,13 +16,15 @@
       "polygamous": "usually",
       "monoecious": "often",
       "dioecious": "often"
-    }
+    },
+    "leaf_shape": "ovate",
+    "leaf_apex": "acuminate"
   },
   "evidence": {
     "traits.fruit_type": {
       "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 327, family Cannabaceae: fruit type achene (per cladogram), usually; read as {\"achene\": \"usually\"}."
+      "source": "wikipedia",
+      "note": "Wikipedia, Cannabaceae (read 2026-10-16): fruit an achene or a drupe, and Celtis is by far the largest genus (about 100 species); Wikipedia's Celtis page calls its fruit a small drupe, so drupe leads and the achenes of Cannabis and Humulus come second."
     },
     "traits.perianth": {
       "evidence": "SourceInferred",
@@ -47,6 +50,16 @@
       "evidence": "SourceInferred",
       "source": "wikipedia",
       "note": "Wikipedia Cannabaceae (read 2026-10-16): often dioecious (Cannabis, Humulus). Celtis (~100 of ~170 spp.) polygamo-monoecious from my knowledge, hence polygamous first; medium confidence."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Celtis (read 2026-10-17): simple leaves ovate with drawn-out tip. Celtis is the largest genus of Cannabaceae s.l., so it decides (genus weighting)."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Celtis (read 2026-10-17): ovate-acuminate leaves."
     }
   }
 }

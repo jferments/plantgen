@@ -150,7 +150,8 @@
       8,
       9,
       10
-    ]
+    ],
+    "fruiting_months": [9, 10, 11]
   },
   "evidence": {
     "taxon": {
@@ -222,6 +223,11 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high), seed ripens in autumn (FEIS, Tirmenstein 1999); the flowering months are the model's."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's rubber rabbitbrush review (Tirmenstein 1999, read 2026-10-16): near Millican, Oregon, \"seed disseminated\" early September to mid-November (it also says seed ripens \"from late fall to early winter\", late September at high elevations to late November in the Mojave); read as September to November."
     },
     "generator.params": {
       "evidence": "Authored",

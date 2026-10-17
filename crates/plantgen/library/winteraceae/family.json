@@ -9,11 +9,7 @@
     "leaf_margin": "entire",
     "leaf_venation": "pinnate",
     "stipules": false,
-    "sexual_system": {
-      "hermaphrodite": "often",
-      "monoecious": "often",
-      "polygamous": "often"
-    },
+    "sexual_system": {"hermaphrodite": "usually", "dioecious": "often"},
     "ovary_position": "superior",
     "hypanthium": false,
     "woodiness": "woody",
@@ -21,10 +17,7 @@
       "solitary": "often",
       "cyme": "often"
     },
-    "flower_symmetry": {
-      "actinomorphic": "often",
-      "zygomorphic": "often"
-    },
+    "flower_symmetry": {"actinomorphic": "usually", "zygomorphic": "rarely"},
     "zygomorphy": "other",
     "perianth": "sepals_and_petals",
     "fruit_type": {
@@ -46,6 +39,8 @@
     "leaf_habit": "evergreen"
   },
   "evidence": {
+    "traits.sexual_system": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Canellales page, Winteraceae (read 2026-10-16): Tasmannia (about 50 of about 105 species) is usually dioecious, while Drimys has perfect flowers and DELTA codes the rest as hermaphrodite; hermaphrodite is the slight majority, and dioecious is close to half, so 'often' rather than the proposed 'sometimes'."},
+    "traits.flower_symmetry": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Winteraceae (read 2026-10-16): flowers regular to somewhat irregular, the perianth unequal but never two-lipped; radial is the usual state (qualified rather than bare because of the 'somewhat irregular' state)."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

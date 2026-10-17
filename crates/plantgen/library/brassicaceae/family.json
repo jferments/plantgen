@@ -4,6 +4,7 @@
   "name": "Brassicaceae",
   "parent": "order/brassicales",
   "traits": {
+    "leaf_margin": {"entire": "usually", "dentate": "often", "serrate": "sometimes"},
     "ovary_position": "superior",
     "corolla_shape": "rotate",
     "hypanthium": false,
@@ -49,6 +50,7 @@
     }
   },
   "evidence": {
+    "traits.leaf_margin": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Cruciferae (read 2026-10-17): margins entire, serrate or dentate. German Wikipedia (read 2026-10-17): Draba (largest genus, c. 400 spp.) smooth or toothed; Erysimum cauline leaves entire or toothed; Lepidium entire, lobed, crenate, toothed or serrate. English Wikipedia: blade usually simple, entire or dissected. Weighted toward Draba and Erysimum, where entire leads."},
     "traits.ovary_position": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 350, 352: gynoecium of 2 carpels with a superior ovary (formula G (2), superior)."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 350: 4 free, often clawed petals set as a cross (cruciate perianth). Free petals: rotate by PlantGen's free-petal rule; the book names no other corolla form."},
     "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 350, 505: Simpson calls the flowers hypogynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},

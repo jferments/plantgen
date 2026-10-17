@@ -112,7 +112,8 @@
     "lower_glume_length_m": {"min": 0.004, "max": 0.005},
     "leaf_length_m": {"min": 0.1, "max": 0.2},
     "leaf_width_m": {"min": 0.005, "max": 0.015},
-    "flowering_months": [6, 7, 8, 9]
+    "flowering_months": [6, 7, 8, 9],
+    "fruiting_months": [7, 8]
   },
   "evidence": {
     "traits.culm_length_m": {
@@ -224,6 +225,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (Phalaris no. 3, fig. 254): flowers June-September in swamps and moist places."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's reed canarygrass review (Waggy 2010, read 2026-10-16): \"In the Pacific Northwest, reed canarygrass seed matures in late July and early August\"; read as July and August."
     }
   },
   "provenance": {

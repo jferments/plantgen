@@ -4,6 +4,7 @@
   "name": "Opuntioideae",
   "parent": "family/cactaceae",
   "traits": {
+    "corolla_shape": {"cupped": "usually", "rotate": "sometimes"},
     "glochids": true,
     "ribs": 0
   },
@@ -27,6 +28,7 @@
     }
   },
   "evidence": {
+    "traits.corolla_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 25 to 27, 96 to 98 and 486: the prickly pears' and chollas' flowers cupped to disk-shaped, with many perianth parts and no floral tube above the pericarpel; Anderson's photographs of Cylindropuntia acanthocarpa and Opuntia engelmannii show the same cups."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",

@@ -5,9 +5,9 @@
   "parent": "order/cornales",
   "traits": {
     "leaf_arrangement": {
-      "alternate": "often",
-      "opposite": "often",
-      "whorled": "sometimes"
+      "opposite": "usually",
+      "whorled": "rarely",
+      "alternate": "rarely"
     },
     "leaf_division": "simple",
     "leaf_margin": {
@@ -50,8 +50,8 @@
       "panicle": "sometimes"
     },
     "flower_symmetry": {
-      "actinomorphic": "often",
-      "zygomorphic": "often"
+      "actinomorphic": "usually",
+      "zygomorphic": "rarely"
     },
     "perianth": "sepals_and_petals",
     "fruit_type": {
@@ -70,6 +70,10 @@
       "min": 3,
       "max": 5,
       "low": 2
+    },
+    "leaf_incision": {
+      "none": "usually",
+      "lobed": "rarely"
     }
   },
   "evidence": {
@@ -77,6 +81,21 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Hydrangeaceae with Philadelphaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate or opposite, sometimes whorled; leaves simple; margins entire, serrate or dentate; veins pinnate or palmate; leaves evergreen or deciduous; stipules absent; plants hermaphrodite, rarely polygamous; ovary half inferior or inferior, sometimes superior; floral cup present or absent; stems woody or herbaceous; flowers in cymes, in heads, in corymbs or in racemes, sometimes solitary or in panicles; flowers actinomorphic or zygomorphic; perianth sepals and petals; fruit usually capsule, sometimes berry; parts of each whorl 4 to 10; stamens 4 to 100; carpels (2-) 3 to 5. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Hydrangeaceae (read 2026-10-16): leaves are borne in opposite pairs, only rarely whorled or alternate; so opposite is the usual state, not tied with alternate."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Hydrangeaceae (read 2026-10-16): flowers regular or only somewhat irregular, the corolla regular and the calyx irregular only in sterile outer flowers; Wikipedia also calls the flowers regular."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Hydrangeaceae (read 2026-10-17): lamina usually undivided, dissected and palmatifid in Kirengeshoma; Hydrangea quercifolia (oakleaf) is lobed."
     }
   }
 }

@@ -59,8 +59,9 @@
       "max": 3
     },
     "phyllotaxis_pattern": {
-      "distichous": "rarely",
-      "spiral": "usually"
+      "distichous": "usually",
+      "spiral": "rarely",
+      "decussate": "rarely"
     },
     "leaf_incision": "lobed"
   },
@@ -72,8 +73,8 @@
     },
     "traits.phyllotaxis_pattern": {
       "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 299, family Hamamelidaceae: phyllotaxis pattern spiral [rarely distichous], usually; read as {\"distichous\": \"rarely\", \"spiral\": \"usually\"}."
+      "source": "stevens-apweb",
+      "note": "APweb, Saxifragales page, Hamamelidaceae (read 2026-10-16): leaves two-ranked, only exceptionally opposite or spiral; DELTA gives spiral or distichous; distichous leads, with spiral and opposite (decussate) as rare exceptions."
     },
     "traits.leaf_incision": {
       "evidence": "SourceInferred",

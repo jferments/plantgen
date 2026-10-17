@@ -187,11 +187,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its stem leaves are drawn oblanceolate, a basal leaf's outline with less width, but Abrams and Ferris give a shape (spatulate or obovate) only for the basal leaves; the stem leaves they call reduced, sessile and clasping",
     ),
     (
-        "lindera-benzoin",
-        "inflorescence_length_m",
-        "an umbel's rays reach about 0.57 of its bloom card, and the measure reads the rays, so its clusters, drawn on a card as long as the 5 to 10 mm the model estimate gives, read 3.6 to 4.4 mm",
-    ),
-    (
         "liriodendron-tulipifera",
         "carpels",
         "a flower draws at most 30 free pistils (the angiosperms' carpels rule), so tulip tree's cone of 60 to 100 carpels is drawn with 30",
@@ -340,11 +335,6 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "tillandsia-usneoides",
         "phyllotaxis_pattern",
         "Bromeliaceae's leaves are spiral (Simpson 2019), but Spanish moss's program sets its leaves in crossing pairs",
-    ),
-    (
-        "umbellularia-californica",
-        "inflorescence_length_m",
-        "an umbel's rays reach about 0.57 of its bloom card, and the measure reads the rays, so its umbels, drawn on a card as long as the 1 to 2 cm the model estimate gives, read 7 to 10 mm",
     ),
     (
         "viola-glabella",

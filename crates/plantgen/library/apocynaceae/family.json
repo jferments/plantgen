@@ -4,6 +4,8 @@
   "name": "Apocynaceae",
   "parent": "order/gentianales",
   "traits": {
+    "leaf_incision": "none",
+    "leaf_shape": {"elliptic": "usually", "ovate": "often", "lanceolate": "often", "oblong": "sometimes", "cordate": "sometimes", "linear": "sometimes"},
     "hypanthium": false,
     "woodiness": {
       "woody": "usually",
@@ -42,6 +44,8 @@
     "leaf_habit": "evergreen"
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Apocynaceae (read 2026-10-17): leaves simple, lamina entire (not cut); Wikipedia (read 2026-10-17): leaves simple."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "lucid-ffpa", "note": "Lucid family key, Apocynaceae (read 2026-10-17): simple symmetric blades, linear, lanceolate, ovate, elliptic, oblanceolate, oblong or orbicular, bases sometimes cordate or lobed. Ranking ours, by genus size: the woody genera (Tabernaemontana, Rauvolfia, Alstonia) and Hoya are mostly elliptic; ovate to heart-shaped blades in many twining milkweeds (Cynanchum, Marsdenia); narrow in Asclepias."},
     "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 406, 505: Simpson calls the flowers hypogynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {
       "evidence": "SourceInferred",

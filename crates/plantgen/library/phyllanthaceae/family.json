@@ -4,6 +4,8 @@
   "name": "Phyllanthaceae",
   "parent": "order/malpighiales",
   "traits": {
+    "leaf_incision": "none",
+    "leaf_margin": "entire",
     "phyllotaxis_pattern": {"distichous": "usually", "spiral": "sometimes"},
     "perianth": {"tepals": "often", "sepals_and_petals": "often"},
     "flower_merosity": {"min": 5, "max": 5, "low": 3, "high": 9},
@@ -28,6 +30,8 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Phyllanthaceae (read 2026-10-17): leaves simple (compound only in Bischofia) with entire margins; no lobing mentioned. DELTA has no separate Phyllanthaceae page."},
+    "traits.leaf_margin": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Phyllanthaceae (read 2026-10-17): margin almost always entire, only rarely toothed. Phyllanthus holds over half the family's species."},
     "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Phyllanthaceae (read 2026-10-16): spiral or distichous. 'distichous usually' is my weighting: Phyllanthus (~1,200 spp.) bears two-ranked leaves on flattened leafy branchlets."},
     "traits.perianth": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 260, 261: flowers unisexual, petals generally smaller than the sepals or absent (general formula K2-8, C0 or 3-9). A sepal-only flower is mapped to 'tepals'."},
     "traits.flower_merosity": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 261: perianth mostly 5-merous, sometimes 3- to 9-merous."},
