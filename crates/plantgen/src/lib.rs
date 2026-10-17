@@ -585,4 +585,9 @@ pub mod venation;
 /// 93: a hooked spine curls into an open J at its tip: its shaft runs
 /// further and its hook turns over its last two pieces, not folded flat on
 /// the shaft over the last one (92 is stem hairs, #173).
-pub const GENERATOR_REVISION: u32 = 93;
+/// 94: a spine set can keep to the upper areoles of a pad or joint
+/// (`SpineSet::distal`, from `lower_areole_spines`): its lower areoles
+/// carry fewer spines or none and draw smaller far cards, and a tuft
+/// stores where it sits along its segment (93 is cactus tubercles and
+/// hooks, #176).
+pub const GENERATOR_REVISION: u32 = 94;
