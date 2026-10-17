@@ -28,6 +28,12 @@
     "life_span": "perennial",
     "rhizome_habit": {
       "short_creeping": "often"
+    },
+    "stipe_scales": {
+      "sparse": "usually"
+    },
+    "stipe_scale_extent": {
+      "base": "usually"
     }
   },
   "evidence": {
@@ -50,6 +56,16 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 118, 120, family Aspleniaceae: rhizome habit short_creeping (creeping, climbing, ascending or suberect), often; read as {\"short_creeping\": \"often\"}."
+    },
+    "traits.stipe_scales": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (vol. 2) on the families the Library joins to Aspleniaceae: Blechnaceae, \"Petiole ... generally scaly at least at base\"; Athyrium (in its Dryopteridaceae), petiole base \"scales light to dark brown\" (A. filix-femina); Aspleniaceae proper, stems scaly with \"clathrate stem scales\". Read as sparse; a genus or species that states its own wins."
+    },
+    "traits.stipe_scale_extent": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (vol. 2), Blechnaceae: \"generally scaly at least at base\". Read as base."
     }
   }
 }

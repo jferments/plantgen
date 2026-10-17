@@ -66,6 +66,9 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "stipe_scales": "sparse",
+    "stipe_scale_extent": "base",
+    "stipe_scale_colour": [125, 85, 50],
     "rhizome_habit": {"ascending": "usually", "erect": "often", "short_creeping": "sometimes"},
     "division_order": {"min": 2, "max": 3, "typical": 3},
     "leaf_shape": {"deltate": "usually", "ovate": "often"},
@@ -83,6 +86,9 @@
     "leaf_margin": "serrate"
   },
   "evidence": {
+    "traits.stipe_scales": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Dryopteris expansa: \"Petiole 1/3 length of leaf, scaly at least at base; scales scattered, brown with dark brown stripe.\" Scattered, read as sparse."},
+    "traits.stipe_scale_extent": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Dryopteris expansa: \"Petiole 1/3 length of leaf, scaly at least at base; scales scattered, brown with dark brown stripe.\" Read as base."},
+    "traits.stipe_scale_colour": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Dryopteris expansa: \"Petiole 1/3 length of leaf, scaly at least at base; scales scattered, brown with dark brown stripe.\" Read as a mid brown; the dark stripe is not drawn."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",

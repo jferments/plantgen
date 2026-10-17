@@ -78,10 +78,18 @@
 # fern's scales, "gradually diminishing in size distally" (Flora of
 # North America, Polystichum munitum). A stipe base that outlives its
 # frond keeps its scales, so an old crown is a shaggy clump of them.
+#
+# Revision 9 (visual forms fern stipes): a stipe's scales may stand only
+# on its foot, as floras word most ferns' ("scales usually persistent at
+# base", Flora of North America, Dryopteridaceae): they go scale_reach of
+# the way up it, diminishing to scale_top of their size there.
+# A scaly piece is drawn as one segment, as a bare one is, so scales no
+# longer make a stipe bend further (three segments took the tropism
+# three times).
 
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem polypodiidae 8;
+lsystem polypodiidae 9;
 
 param vigour_spread = 0.12;   # a fern grows exp(gauss() * vigour_spread) times as fast
 # Fronds.
@@ -102,7 +110,8 @@ param rachis_tip = 0.35;      # the rachis' radius at its tip, as a share of its
 # Scales on the stipe.
 param scales = 0;             # scales round each piece of the stipe; none by default
 param scale_length = 0.012;   # a scale at the stipe's foot, m
-param scale_top = 0.4;        # a scale at the stipe's top, as a share of one at its foot
+param scale_top = 0.4;        # a scale at the top of the scaly share, as a share of one at its foot
+param scale_reach = 1;        # share of the stipe, from its foot, that bears scales
 param scale_angle = 12;       # how far a scale stands off the stipe
 param palea_area;             # leaf area of a scale 1 m long, m²; its look's by default
 # Pinnae.
@@ -199,12 +208,16 @@ interpret Pc(k, m, s, e) : k == 0 ->
     Pp(k, s, e);
 interpret Pc(k, m, s, e) -> Pp(k, s, e);
 
+interpret Pp(k, s, e) : (k + 0.5) / pieces < stipe * scale_reach ->
+    ^(curl * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1)))
+    !(frond_radius * sqrt(min(1, s / frond_length)) * lerp(1, rachis_tip, (k + 0.5) / pieces))
+    Sq(scale_length * lerp(1, scale_top, (k + 0.5) / pieces / (stipe * scale_reach)),
+       frond_radius * sqrt(min(1, s / frond_length)) * lerp(1, rachis_tip, (k + 0.5) / pieces),
+       s / pieces * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))));
 interpret Pp(k, s, e) : (k + 0.5) / pieces < stipe ->
     ^(curl * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1)))
     !(frond_radius * sqrt(min(1, s / frond_length)) * lerp(1, rachis_tip, (k + 0.5) / pieces))
-    Sq(scale_length * lerp(1, scale_top, (k + 0.5) / pieces / stipe),
-       frond_radius * sqrt(min(1, s / frond_length)) * lerp(1, rachis_tip, (k + 0.5) / pieces),
-       s / pieces * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))));
+    F(s / pieces * lerp(1, 0.15, smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1))));
 interpret Pp(k, s, e) ->
     !(frond_radius * sqrt(min(1, s / frond_length)) * lerp(1, rachis_tip, (k + 0.5) / pieces))
     ^(curl * smoothstep(0, 0.15, (k + 0.5) / pieces - clamp((age + season - e) / unroll, 0, 1)))
@@ -230,11 +243,16 @@ interpret Sb(s, a) ->
     &(8) !(frond_radius * 0.8) Sq(scale_length * 0.8, frond_radius * 0.8, s * stub * 0.5);
 
 # A piece of stipe clothed in its scales: three rings of a third of them
-# along it, each turned from the last, so they overlap like shingles.
+# along it, each turned from the last, so they overlap like shingles. The
+# piece is drawn whole and the rings set back along it in a branch, so a
+# scaly stipe bends as a bare one does (a tropism acts once a segment)
+# and its scales stand on the piece that bears them.
 interpret Sq(z, r, l) : scales >= 1 ->
-    Sk(z, r, ceil(scales / 3), 0) F(l / 3)
-    Sk(z, r, ceil(scales / 3), 40) F(l / 3)
-    Sk(z, r, ceil(scales / 3), 80) F(l / 3);
+    F(l)
+    [ ^(180) f(l) ^(180)
+      Sk(z, r, ceil(scales / 3), 0) f(l / 3)
+      Sk(z, r, ceil(scales / 3), 40) f(l / 3)
+      Sk(z, r, ceil(scales / 3), 80) ];
 interpret Sq(z, r, l) -> F(l);
 
 # A ring of scales round a stipe, each from its surface and pressed toward
