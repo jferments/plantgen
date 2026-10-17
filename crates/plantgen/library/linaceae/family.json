@@ -36,9 +36,9 @@
     },
     "perianth": "sepals_and_petals",
     "fruit_type": {
-      "capsule": "often",
-      "drupe": "often",
-      "nut": "often"
+      "capsule": "usually",
+      "drupe": "sometimes",
+      "nut": "sometimes"
     },
     "flower_merosity": 5,
     "stamens": {
@@ -51,6 +51,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Linaceae with Erythroxylaceae, Hugoniaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves alternate or opposite; leaves simple; margins entire; stipules present or absent; plants usually hermaphrodite, sometimes dioecious; ovary superior; floral cup absent; stems woody or herbaceous; flowers usually in cymes, sometimes in racemes, in spikes or in panicles; flowers usually actinomorphic, sometimes zygomorphic; perianth sepals and petals; fruit capsule, drupe or nut; parts of each whorl 5; stamens 5 to 15. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py); a state the authors qualify (rarely, usually, a share) keeps its word, an unqualified one beside a usual state reads as sometimes."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America, Linaceae (read 2026-10-17): 10-14 genera, ca. 260 spp, of which the herbaceous subfamily Linoideae holds about 240 in 8 genera, its fruits capsules opening along the septa (a few indehiscent or splitting into 4 nutlets); the woody tropical Hugonioideae, the drupe-bearers, are the small remainder. Wikipedia Linum (read 2026-10-17): about 200 spp, so flax alone is most of the family."
     }
   }
 }

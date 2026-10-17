@@ -31,8 +31,8 @@
     "flower_symmetry": "actinomorphic",
     "perianth": "sepals_and_petals",
     "fruit_type": {
-      "capsule": "often",
-      "berry": "often"
+      "capsule": "usually",
+      "berry": "sometimes"
     },
     "flower_merosity": 5,
     "stamens": 5,
@@ -73,6 +73,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA Pittosporaceae (read 2026-10-16): at branch tips or in leaf axils. Same as order; recorded for completeness."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "trees-and-shrubs-online",
+      "note": "Trees and Shrubs Online, Pittosporum (read 2026-10-17): about 150 spp, the family's largest genus by far; fruit a woody or leathery capsule of two to five valves, seeds set in sticky resin. Berries belong to the smaller Australian climbing genera (Billardiera and kin), which no page read counted, so capsule leads on Pittosporum's size alone."
     }
   }
 }
