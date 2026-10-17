@@ -26,6 +26,10 @@
       "rule": "clamp(1.7 * clamp(leaf_length_m / (1.2 * spray_base), 0.01, 0.6) + 0.05, 0.3, 1.2)",
       "template": "needles",
       "why": "A brush's needles lean out about 58 degrees from its shoot, so they reach 0.85 of their length to each side: the card is as wide as its needles reach."
+    },
+    "generator.params.bend_set": {
+      "rule": "0.1",
+      "why": "A pine's limbs keep a tenth of each year's sag, as a broadleaf tree's do, not the half other conifers keep: Farjon gives first-order pine branches as spreading and assurgent or ascending, and keeping half drew old ponderosa and whitebark pines' limbs hanging to the ground."
     }
   },
   "evidence": {
@@ -38,7 +42,7 @@
     "rules": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Conifer lives (M6): the ratio of the longest to the shortest needle life a species states, in place of the Pinidae program's 1.56 (a western redcedar's, Harlow et al. 2005), which kept western white and ponderosa pines' lowest needles up to 5 and 6 years against their stated 2 to 3 and 3 to 4. Long-needled pines (conifers, needle shading): a long-needled pine's spray card is a single brush with no side twigs (Abrams' needles in bundles on dwarf shoots, standing out all round the twig), its needles their stated length up to 0.6 of the card and the card as wide as they reach; the 0.4 cap at the Pinidae drew ponderosa pine's 12 to 25 cm needles 9.8 cm long."
+      "note": "Conifer lives (M6): the ratio of the longest to the shortest needle life a species states, in place of the Pinidae program's 1.56 (a western redcedar's, Harlow et al. 2005), which kept western white and ponderosa pines' lowest needles up to 5 and 6 years against their stated 2 to 3 and 3 to 4. Long-needled pines (conifers, needle shading): a long-needled pine's spray card is a single brush with no side twigs (Abrams' needles in bundles on dwarf shoots, standing out all round the twig), its needles their stated length up to 0.6 of the card and the card as wide as they reach; the 0.4 cap at the Pinidae drew ponderosa pine's 12 to 25 cm needles 9.8 cm long. Pine limbs (pinidae revision 13): bend_set 0.1, from Farjon (2017)'s pine branches, spreading and assurgent (ponderosa) or ascending; at the Pinidae's 0.5, limbs grown 150 years hung in a skirt below the crown."
     }
   }
 }

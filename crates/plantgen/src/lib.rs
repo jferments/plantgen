@@ -605,4 +605,12 @@ pub mod venation;
 /// may lean its needles forward (`lean`) and leave the foot of each axis
 /// bare (`bare`) so they crowd in a tuft near its end; both default to
 /// what was drawn before (95 is lacy leaves, #180).
-pub const GENERATOR_REVISION: u32 = 96;
+/// 97: old conifers (`pinidae` revision 13): a limb whose tips catch too
+/// little light for the wood it carries is shed (`shed_ratio`, scaled by
+/// `shade_death`), so Douglas-fir, western hemlock and Sitka spruce grow
+/// past 150 years under the module limit; a shoot shorter than
+/// `bud_length` sets proportionally fewer side buds, so a slow crown no
+/// longer smothers itself; and a pine's limbs keep a tenth of each year's
+/// sag, not half, so old pines' limbs no longer hang to the ground (96 is
+/// nodding leaders, #167).
+pub const GENERATOR_REVISION: u32 = 97;
