@@ -73,6 +73,10 @@
       "map": {"lower_areole_spines": {"as_upper": 0.0, "fewer": 0.4, "sometimes_none": 0.5, "none": 1.0}},
       "why": "The main central keeps to the upper areoles as the other centrals do."
     },
+    "generator.params.flank": {
+      "map": {"flower_zone": {"crown": 0, "crown_and_flanks": 6, "upper_half": 15}},
+      "why": "A column's flowers open in a ring round its apex, or also down its flank: near the tip and along the upper sides, on the last six years' growth, or from the upper half of a short, slow stem, on its last fifteen years'."
+    },
     "appearance.bodies.stem.colour": {
       "colour": "stem_colour",
       "why": "A cactus's skin is drawn in the colour its flora gives the stem or joints; its ribs' valleys darken it."

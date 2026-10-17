@@ -1813,6 +1813,14 @@
       "values": ["terminal", "lateral", "both"],
       "why": "whether flowers end a shoot or sit beside its leaves"
     },
+    "flower_zone": {
+      "group": "architecture",
+      "organ": "inflorescence",
+      "type": "enum",
+      "values": ["crown", "crown_and_flanks", "upper_half"],
+      "when": {"spines": ["areoles"]},
+      "why": "where a cactus column's flowers open: in a ring round its apex, near the apex and down the upper flanks, or along the upper half of the stem, below the apex"
+    },
     "short_shoots": {
       "group": "architecture",
       "organ": "stem",
