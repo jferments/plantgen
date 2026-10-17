@@ -50,6 +50,7 @@ pub mod hairs;
 pub mod impostor;
 pub mod inherit;
 pub mod json;
+pub mod lace;
 pub mod leaves;
 pub mod library;
 pub mod litter;
@@ -589,12 +590,18 @@ pub mod venation;
 /// flower's pedicel is drawn 0.35 as thick as before, and a needle look's
 /// bundle of more than five, up to 45, is a short shoot's tuft spread all
 /// round, the tufts half a needle apart (93 is hooked spines, #176).
-/// 95: species draw from the species-facts records: 189 species state the
+/// 95: lacy leaves: a compound leaf divides up to three times (`segments`,
+/// `inner`); one whose taxa say how its divisions are held
+/// (`division_planes`) is drawn on the two nearest levels as geometry, its
+/// divisions lifted, scattered or set all round their rachis
+/// (`crate::lace`); a pinnate leaf's laterals reach no farther than its
+/// stated blade width (`blade_width`) (94 is pedicels and tufts, #177).
+/// 96: species draw from the species-facts records: 189 species state the
 /// characters no source of theirs gives (heights, leaf sizes, shapes,
 /// margins and habits, inflorescence and fruit sizes, months, rosettes)
 /// as the records estimate them, and a look a species set by hand gives
 /// way wherever a rule fed by a stated fact now sets it (leaf widths,
 /// inflorescence kinds, flower and fruit sizes and kinds, seasons); a
-/// strap leaf is never narrower than its card draws (94 is four more
-/// Pacific Northwest natives, #177).
-pub const GENERATOR_REVISION: u32 = 95;
+/// strap leaf is never narrower than its card draws (95 is lacy
+/// leaves, #180).
+pub const GENERATOR_REVISION: u32 = 96;

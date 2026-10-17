@@ -22,6 +22,7 @@
       "bare": 1.0,
       "raceme": 0.02,
       "flowers": 1,
+      "flower_size": 0.09,
       "pedicel": 0.0,
       "flower_angle": 0,
       "fruit_below": 0,
@@ -32,6 +33,8 @@
       "basal_leaves": 3,
       "basal_length": 0.3,
       "basal_angle": 12,
+      "basal_pieces": 4,
+      "basal_arch": 10,
       "bud_spacing": 0.3,
       "bud_lean": 0.2,
       "bud_stalk": 0.3,
@@ -76,13 +79,15 @@
       "basal": {
         "shape": {
           "template": "blade",
-          "taper": 1
+          "taper": 1,
+          "aspect": 0.02
         }
       },
       "basal_piece": {
         "shape": {
           "template": "blade",
-          "taper": 0
+          "taper": 0,
+          "aspect": 0.02
         }
       },
       "flower": {
@@ -122,6 +127,7 @@
           0.95
         ],
         "inflorescence": {
+          "kind": "umbel",
           "flowers": 6,
           "size": 0.4,
           "spread": 40,
@@ -136,6 +142,8 @@
       "bud": {
         "shape": {
           "template": "flower",
+          "petals": 6,
+          "perianth": "tepals",
           "petal_width": 0.5,
           "point": 0.7,
           "open": 0.0
@@ -149,6 +157,8 @@
       "fruit": {
         "shape": {
           "template": "flower",
+          "petals": 6,
+          "perianth": "tepals",
           "petal_width": 0.45,
           "point": 0.7,
           "open": 0.0

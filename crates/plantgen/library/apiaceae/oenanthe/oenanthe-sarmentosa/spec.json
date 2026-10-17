@@ -31,8 +31,8 @@
       "fruit_below": 0,
       "buds_above": 1,
       "nod": 0,
-      "leaf_area": 0.312,
-      "basal_area": 0.335,
+      "leaf_area": 0.247,
+      "basal_area": 0.226,
       "basal_piece_area": 0.235,
       "flower_area": 0.673,
       "bud_area": 0.89,
@@ -112,7 +112,6 @@
     "fruiting_months": [8, 9, 10]
   },
   "evidence": {
-    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The area its `basal` look draws on an organ 1 m long (visual forms leaf blades, 2026-10-15; plantc atlas), so it shades with what it shows: its rosette leaves now take the species' leaf rules and draw its compound leaf, where before they drew the generic simple card (0.235)."},
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "abrams-1951",
@@ -248,7 +247,9 @@
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2390732), as no source read gives it."},
     "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2390732), as no source read gives it."},
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2390732), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2390732), as no source read gives it."}
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2390732), as no source read gives it."},
+    "generator.params.leaf_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `leaf` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.312)."},
+    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `basal` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.335)."}
   },
   "provenance": {
     "sources": [

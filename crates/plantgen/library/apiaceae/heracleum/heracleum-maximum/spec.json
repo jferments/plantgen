@@ -27,6 +27,7 @@
       "basal_angle": 45,
       "raceme": 0.08,
       "flowers": 1,
+      "flower_size": 0.11,
       "pedicel": 0.0,
       "flower_angle": 0,
       "fruit_below": 0,
@@ -58,6 +59,7 @@
       "leaf": {
         "shape": {
           "leaflet_width": 0.9,
+          "teeth": 8,
           "petiole": 0.35,
           "angle": 70,
           "petiolule": 0.08,
@@ -68,6 +70,7 @@
         "shape": {
           "template": "compound",
           "leaflet_width": 0.9,
+          "teeth": 8,
           "petiole": 0.45,
           "angle": 70,
           "petiolule": 0.08,
@@ -79,7 +82,8 @@
           "petal_width": 0.9,
           "point": 0.0,
           "notch": 0.35,
-          "centre": 0.2
+          "centre": 0.2,
+          "sepals": 0
         },
         "inflorescence": {
           "flowers": 20,
@@ -88,6 +92,7 @@
           "peduncle": 0.05,
           "branch": { "size": 0.14, "spread": 50, "peduncle": 0.5 }
         },
+        "colour": [0.95, 0.95, 0.9],
         "accent": [0.85, 0.85, 0.75]
       }
     }
@@ -117,12 +122,7 @@
     "flower_colour": [245, 245, 240],
     "fruit_size_m": {"min": 0.008, "max": 0.012},
     "flowering_months": [2, 3, 4, 5, 6],
-    "fruiting_months": [8, 9],
-    "height_max_m": 3,
-    "leaf_habit": "deciduous",
-    "rosette": "none",
-    "leaf_width_m": {"min": 0.2, "max": 0.5},
-    "inflorescence_length_m": {"min": 0.1, "max": 0.3}
+    "fruiting_months": [8, 9]
   },
   "evidence": {
     "traits.height_typical_m": {
@@ -244,12 +244,7 @@
       "evidence": "SourceInferred",
       "source": "abrams-1951",
       "note": "Its basal leaves as its stem leaves (Abrams 1951: ternate, the leaflets broad and lobed), on longer petioles, by eye."
-    },
-    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2846060), as no source read gives it."},
-    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2846060), as no source read gives it."},
-    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2846060), as no source read gives it."},
-    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2846060), as no source read gives it."},
-    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2846060), as no source read gives it."}
+    }
   },
   "provenance": {
     "sources": [

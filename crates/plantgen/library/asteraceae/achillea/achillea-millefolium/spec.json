@@ -33,8 +33,8 @@
       "nod": 0,
       "basal_leaves": 4,
       "basal_angle": 60,
-      "leaf_area": 0.054,
-      "basal_area": 0.048,
+      "leaf_area": 0.034,
+      "basal_area": 0.027,
       "basal_piece_area": 0.235,
       "flower_area": 0.171,
       "bud_area": 0.89,
@@ -57,10 +57,10 @@
     "variation": 0.2,
     "organs": {
       "leaf": {
-        "shape": { "template": "compound", "leaflets": 21, "pinnules": 5, "leaflet_width": 0.22, "teeth": 0, "petiole": 0.05, "angle": 70, "pinnule_angle": 50, "largest": 0.4, "lowest": 0.35, "widest": 0.35, "tip": 0.6, "base": 0.5 }
+        "shape": { "template": "compound", "leaflets": 61, "pinnules": 7, "leaflet_width": 0.3, "teeth": 0, "petiole": 0.05, "angle": 60, "pinnule_angle": 45, "largest": 0.4, "lowest": 0.35, "widest": 0.35, "tip": 0.6, "base": 0.5 }
       },
       "basal": {
-        "shape": { "template": "compound", "leaflets": 25, "pinnules": 7, "leaflet_width": 0.22, "teeth": 0, "petiole": 0.15, "angle": 70, "pinnule_angle": 50, "largest": 0.4, "lowest": 0.35, "widest": 0.35, "tip": 0.6, "base": 0.5 }
+        "shape": { "template": "compound", "leaflets": 81, "pinnules": 7, "leaflet_width": 0.3, "teeth": 0, "petiole": 0.15, "angle": 60, "pinnule_angle": 45, "largest": 0.4, "lowest": 0.35, "widest": 0.35, "tip": 0.6, "base": 0.5 }
       },
       "flower": {
         "shape": { "ray_width": 1.1, "disc": 0.5, "involucre": 1.8 },
@@ -85,6 +85,7 @@
     "leaf_incision": "dissected",
     "division_pattern": "pinnate",
     "division_order": {"min": 1, "max": 2},
+    "division_planes": "all_round",
     "leaf_shape": {"oblong": "often", "lanceolate": "often"},
     "inflorescence": "corymb",
     "units_per_inflorescence": {"min": 10, "max": 100},
@@ -95,6 +96,7 @@
     "receptacle_shape": "convex",
     "fruit_size_m": {"min": 0.001, "max": 0.002},
     "leaf_length_m": {"min": 0.05, "max": 0.2, "high": 0.4},
+    "leaf_width_m": {"min": 0.006, "max": 0.025},
     "ray_colour": [250, 250, 245],
     "disc_colour": [240, 236, 220],
     "involucre_height_m": {"min": 0.004, "max": 0.007, "high": 0.009},
@@ -110,6 +112,11 @@
     "inflorescence_length_m": {"min": 0.04, "max": 0.1}
   },
   "evidence": {
+    "traits.division_planes": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's common yarrow review (Aleksoff 1999, read 2026-10-17), after Gleason and Cronquist: the native forms' narrow leaf segments stand in several planes, so the leaf is three-dimensional, where the European form's lie flat. iNaturalist photos of Pacific Northwest plants agree."
+    },
     "traits.height_typical_m": {
       "evidence": "SourceInferred",
       "source": "usfs-feis",
@@ -183,12 +190,17 @@
     "appearance.organs.leaf.shape": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "The blade drawn dissected (spec rework P4): a twice-divided leaf whose segments run together along a winged rachis, its pattern and the running together from its characters by the rules at the flowering plants; before, separate toothed leaflets stood along a rachis. Counts and form by eye from photographs: about 10 to 12 pairs of primary segments, each cut into 5 to 7 narrow lobes; the segments longest 0.4 of the way up, the blade's oblong to lanceolate outline (its shape word is the blade's, so the card sets its segments' own form by hand)."
+      "note": "The blade drawn dissected (spec rework P4): a twice-divided leaf whose segments run together along a winged rachis, its pattern and the running together from its characters by the rules at the flowering plants; before, separate toothed leaflets stood along a rachis. Counts and form by eye from iNaturalist photographs (2026-10-17): a narrow strap of many short primary segments set close, about one segment's width apart, 30 pairs on a stem leaf and 40 on a basal one, at about 60 degrees to the rachis, each cut into about 7 short lobes, each about a third as wide as long; the segments longest 0.4 of the way up and shorter toward both ends, the blade's oblong to lanceolate outline (its shape word is the blade's, so the card sets its segments' own form by hand)."
     },
     "appearance.organs.basal.shape": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "The blade drawn dissected (spec rework P4): a twice-divided leaf whose segments run together along a winged rachis, its pattern and the running together from its characters by the rules at the flowering plants; before, separate toothed leaflets stood along a rachis. Counts and form by eye from photographs: about 10 to 12 pairs of primary segments, each cut into 5 to 7 narrow lobes; the segments longest 0.4 of the way up, the blade's oblong to lanceolate outline (its shape word is the blade's, so the card sets its segments' own form by hand)."
+      "note": "The blade drawn dissected (spec rework P4): a twice-divided leaf whose segments run together along a winged rachis, its pattern and the running together from its characters by the rules at the flowering plants; before, separate toothed leaflets stood along a rachis. Counts and form by eye from iNaturalist photographs (2026-10-17): a narrow strap of many short primary segments set close, about one segment's width apart, 30 pairs on a stem leaf and 40 on a basal one, at about 60 degrees to the rachis, each cut into about 7 short lobes, each about a third as wide as long; the segments longest 0.4 of the way up and shorter toward both ends, the blade's oblong to lanceolate outline (its shape word is the blade's, so the card sets its segments' own form by hand)."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand from iNaturalist photos (2026-10-17): a leaf about 10 cm long held against a hand is a strap 1.2 to 1.5 cm wide, about 7 times as long as wide; the range runs from the shortest leaves, 5 cm long at that shape, to the longer ones. Abrams and Ferris give lengths only."
     },
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
