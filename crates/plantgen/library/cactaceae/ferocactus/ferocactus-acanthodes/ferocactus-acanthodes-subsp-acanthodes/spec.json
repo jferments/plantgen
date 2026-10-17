@@ -60,7 +60,6 @@
       "flower": {
         "shape": {
           "template": "flower",
-          "stamens": 200,
           "point": 0.0,
           "notch": 0.0,
           "centre": 0.3

@@ -45,7 +45,7 @@
       "adult_age": 3,
       "bloom_size": 0.02,
       "bloom_angle": 60,
-      "leaf_area": 0.199,
+      "leaf_area": 0.152,
       "bloom_area": 1.279,
       "path_half": 1.04
     }
@@ -83,7 +83,6 @@
           "template": "compound",
           "leaflets": 3,
           "leaflet_width": 0.6,
-          "teeth": 10,
           "petiole": 0.25
         }
       },
@@ -131,7 +130,14 @@
     "stamens": {"min": 75, "max": 100},
     "flowering_position": "lateral",
     "flowering_months": [3, 4],
-    "fruiting_months": [5, 6, 7]
+    "fruiting_months": [5, 6, 7],
+    "height_typical_m": {"min": 1, "max": 3},
+    "woodiness": "woody",
+    "leaf_length_m": {"min": 0.08, "max": 0.18},
+    "leaf_width_m": {"min": 0.08, "max": 0.16},
+    "sexual_system": "hermaphrodite",
+    "inflorescence": "solitary",
+    "fruit_size_m": {"min": 0.015, "max": 0.02}
   },
   "evidence": {
     "traits.flowering_months": {
@@ -208,7 +214,15 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS's salmonberry review (page read): the flowers are borne on short, leafy lateral stalks."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2988426), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2988426), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2988426), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2988426), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2988426), as no source read gives it."},
+    "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2988426), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2988426), as no source read gives it."},
+    "generator.params.leaf_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `leaf` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.199)."}
   },
   "provenance": {
     "sources": [

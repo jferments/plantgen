@@ -160,7 +160,13 @@
     "flowering_position": "terminal",
     "fruit_type": "berry",
     "flowering_months": [4, 5],
-    "fruiting_months": [10, 11, 12]
+    "fruiting_months": [10, 11, 12],
+    "height_typical_m": {"min": 10, "max": 25},
+    "rosette": "none",
+    "leaf_width_m": {"min": 0.04, "max": 0.07},
+    "leaf_shape": "elliptic",
+    "leaf_margin": "entire",
+    "inflorescence_length_m": {"min": 0.1, "max": 0.15}
   },
   "evidence": {
     "generator.params.bole_clear": {"evidence": "SourceInferred", "source": "inaturalist-photos-2026-10", "note": "Grown stems stand bare of branches for several metres below the crown in iNaturalist photographs (observations 263721768, 1914072): the crown from 5 m (crown_base), the stem forking at 4 m (fork_height), leaning and crooked (lean 20, wiggle 12, were 15 and 8), with fewer, bigger limbs (space_density 4, was 7) and an inner crown that thins (spur_light 0.25)."},
@@ -260,7 +266,13 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS's Arbutus menziesii review (page read): the fruit is a pea-sized berry of mealy pulp and numerous seeds, against the capsule most of the heath family bear."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2646696), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2646696), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2646696), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2646696), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2646696), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2646696), as no source read gives it."}
   },
   "provenance": {
     "sources": [
