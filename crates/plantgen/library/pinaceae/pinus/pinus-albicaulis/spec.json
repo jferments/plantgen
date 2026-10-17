@@ -14,8 +14,8 @@
     "params": {
       "cone_chance": 0.1,
       "cone_pitch": 120,
-      "height_rate": 0.04,
-      "height_shape": 1.4,
+      "height_rate": 0.018,
+      "height_shape": 1.6,
       "whorl": 5,
       "interwhorl": 0,
       "branch_angle": 45,
@@ -25,7 +25,8 @@
       "spray_length": 1.1,
       "shade_death": 0.12,
       "pipe_organ": 0.009,
-      "pipe_rings": 5e-06,
+      "pipe_rings": 2e-05,
+      "limb_light": 0.003,
       "branch_reach": 3.0,
       "epi_chance": 0
     }
@@ -50,9 +51,9 @@
   },
   "appearance": {
     "bark": [
-      0.34,
-      0.32,
-      0.27
+      0.2,
+      0.19,
+      0.17
     ],
     "bark_pattern": {
       "kind": "smooth",
@@ -113,9 +114,9 @@
     {
       "age": 60,
       "environment": "open",
-      "height": 8,
-      "dbh": 0.25,
-      "tolerance": 0.4
+      "height": 6,
+      "dbh": 0.12,
+      "tolerance": 0.5
     }
   ],
   "tier": "procedural_proxy",
@@ -200,17 +201,17 @@
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Western white pine's values, changed by hand for whitebark pine: a shorter tree (height_rate and pipe_rings set so its growth under the lower height_max reaches the reference size) with short, stout, upswept branches (Abrams 1923 p. 54: \"branches short and stout, usually erect\"; FEIS, Fryer 2002: \"Branches of mature trees are ascending\") and a rounded, open crown. Not fitted to measurements. Crown refit (generator revision 85, needles shading by their own area): `branch_angle` 45 and `upturn` 0.04 so the limbs ascend as Abrams and FEIS say, where at 60 and 0.02 they spread level and drooped to the ground; `branch_reach` 3 for his short branches; `shade_death` 0.12 so the 60-year open-grown crown keeps about 3.7 m² of needles per m² of crown, inside the urban tree database's 3.6 to 6.8 for open-grown conifers that shore pine is held to (with the limbs ascending, 0.25 kept 1.8 and left the inner limbs bare)."
+      "note": "Western white pine's values, changed by hand for whitebark pine: a shorter tree (height_rate and pipe_rings set so its growth under the lower height_max reaches the reference size) with short, stout, upswept branches (Abrams 1923 p. 54: \"branches short and stout, usually erect\"; FEIS, Fryer 2002: \"Branches of mature trees are ascending\") and a rounded, open crown. Not fitted to measurements. Crown refit (generator revision 85, needles shading by their own area): `branch_angle` 45 and `upturn` 0.04 so the limbs ascend as Abrams and FEIS say, where at 60 and 0.02 they spread level and drooped to the ground; `branch_reach` 3 for his short branches; `shade_death` 0.12 so the 60-year open-grown crown keeps about 3.7 m² of needles per m² of crown, inside the urban tree database's 3.6 to 6.8 for open-grown conifers that shore pine is held to (with the limbs ascending, 0.25 kept 1.8 and left the inner limbs bare). Old trees (pinidae revision 13): `height_rate` 0.018 and `height_shape` 1.6 so the leader grows about 1 m in 15 years, 6 m by 60 and 10 m by 150, after FEIS's slow seedlings (about 2 cm a year), where the old curve reached 3 m at 15; `limb_light` 0.003, a third of the Pinidae's, as a pine carries most of its long limbs bare behind 4 to 8 years of needles at their ends, and at 0.01 the crown was shed away by 300 years; `pipe_rings` 2e-5 so the trunk thickens to about 55 cm by 300 years, inside FEIS's mature trees. Grown to 300 years the crown stays broad and rounded, about as tall as wide (photographs, inaturalist-crowns-2026-10: 1.2 to 1.5 times as tall as wide), the upswept limbs overtopping the slow leader."
     },
     "allometry": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "8 m and 25 cm across at 60 years in the open, a slow subalpine pine short of FEIS's 12-18 m at maturity. Replace with measured data before calling this species calibrated."
+      "note": "6 m at 60 years in the open, on the slow growth FEIS gives (seedlings about 2 cm a year; 12-18 m only at maturity, over centuries), and 12 cm across: the stems divide low, so the leader's own diameter at breast height is small. Old conifers (pinidae revision 13): was 8 m and 25 cm, which held the growth curve to 3 m at 15 years. Replace with measured data before calling this species calibrated."
     },
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, after Abrams (1923 p. 54): thin bark of whitish scales (pale grey: the colours are linear light, and 0.62 drew it chalk white, so it is 0.34, a pale grey on screen); dark green needles; purple, nearly round cones (FEIS: \"The purple cast of mature cones\")."
+      "note": "By eye, after Abrams (1923 p. 54): thin bark of whitish scales (pale grey: the colours are linear light, and 0.62 drew it chalk white, so it was 0.34; at 0.34 the trunk still drew chalk white in the photographic look beside photographs of old trees, whose trunks are grey-brown, as Abrams' scales age (Farjon: bark on old trees breaking into scales), so it is 0.2); dark green needles; purple, nearly round cones (FEIS: \"The purple cast of mature cones\")."
     }
   },
   "provenance": {
