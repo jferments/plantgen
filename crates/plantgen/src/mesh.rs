@@ -871,6 +871,24 @@ fn shaded(colour: [f32; 4], light: f64) -> [f32; 4] {
     ]
 }
 
+/// `colour` (RGB and alpha) of wood drawn with youth `youth` and `age`
+/// years old, moved toward the appearance's young axis colour as far as
+/// it is young ([`crate::spec::YoungAxis`]).
+fn young_colour(appearance: &Appearance, colour: [f32; 4], youth: f32, age: f64) -> [f32; 4] {
+    let Some(young) = &appearance.young_axis else {
+        return colour;
+    };
+    // Weights are between 0 and 1.
+    #[allow(clippy::cast_possible_truncation)]
+    let weight = young.weight(youth, age) as f32;
+    [
+        colour[0] + (young.colour[0] - colour[0]) * weight,
+        colour[1] + (young.colour[1] - colour[1]) * weight,
+        colour[2] + (young.colour[2] - colour[2]) * weight,
+        colour[3],
+    ]
+}
+
 /// A bark vertex's colour: `colour` with minus the radius of the wood it
 /// lies on, metres, in alpha, which a renderer drawing a bark pattern
 /// (`crate::bark`) reads; other wood keeps alpha 1 (see [`Mesh::colors`]).
@@ -1345,6 +1363,12 @@ fn wood(
                     angle,
                     furrow,
                 );
+                let surface_colour = young_colour(
+                    appearance,
+                    surface_colour,
+                    graph.segments[current.segment as usize].young,
+                    graph.age - current.born,
+                );
                 let [r, g, b] = crate::hairs::cast_wood(
                     [surface_colour[0], surface_colour[1], surface_colour[2]],
                     crate::hairs::youth(graph.age - current.born),
@@ -1776,6 +1800,13 @@ fn stem_tubes(
             .leaf_axis
             .filter(|_| segment.within.is_some())
             .unwrap_or(appearance.bark);
+        let [r, g, b, _] = young_colour(
+            appearance,
+            [colour[0], colour[1], colour[2], 1.0],
+            segment.young,
+            graph.age - segment.born,
+        );
+        let colour = [r, g, b];
         tubes.extend(crate::hairs::Tube::new(
             segment.start,
             segment.end,
@@ -3185,6 +3216,7 @@ mod tests {
             roots: None,
             bark_pattern: None,
             leaf_axis: None,
+            young_axis: None,
             stem_hairs: None,
             bodies: BTreeMap::new(),
             spreads: serde_json::Map::new(),
@@ -3226,6 +3258,7 @@ mod tests {
             body: 0,
             left: Vec3::ZERO,
             within: None,
+            young: 0.0,
         }
     }
 

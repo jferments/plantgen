@@ -117,9 +117,16 @@
 # low and rises on its lengthening stipe. Fronds that are not circinate
 # (coil_turns 0) open straight. `curl`, a coiled piece's turn, is gone.
 
+# Revision 12 (visual forms croziers): a frond is drawn young (`young`)
+# until it has unrolled and turns to its stipe's colour over as long
+# again, so a form whose appearance gives a young_axis colour draws its
+# croziers and new stipes green and its summer stipes as before. A
+# crozier carries rings of scales only where the stipe is scaly all
+# along, so a fern scaly at its base alone has a smooth coil.
+
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem polypodiidae 11;
+lsystem polypodiidae 12;
 
 param vigour_spread = 0.12;   # a fern grows exp(gauss() * vigour_spread) times as fast
 # Fronds.
@@ -255,19 +262,23 @@ decompose Fr(s, a, e, fe) ->
 decompose Pc(k, m, s, e, fe) : m > 1 ->
     Pc(k, floor(m / 2), s, e, fe) Pc(k + floor(m / 2), m - floor(m / 2), s, e, fe);
 
-# One piece: the first opens and sags the frond; a piece beyond the unrolled
-# share coils back, and its pinnae are folded small.
+# One piece: the first opens and sags the frond, and marks it young (green,
+# where the form gives a young_axis colour) until it has unrolled, fading
+# over as long again; a piece beyond the unrolled share coils back, and its
+# pinnae are folded small.
 interpret Pc(k, m, s, e, fe) : k == 0 && fe > 0.5 ->
     &(lerp(min(young_angle, fertile_angle < 0 ? old_angle : fertile_angle),
            fertile_angle < 0 ? old_angle : fertile_angle,
            1 - exp(-max(0, age + season - e) / open_years)))
     T(0, -1, 0, (fertile_arch < 0 ? arch : fertile_arch) * pi / 180 / (1.5 * pieces) * clamp((age + season - e) / unroll, 0, 1)
                + (fertile_droop < 0 ? droop : fertile_droop) * min(max(0, age + season - e), droop_years)) rest(rest_gap)
+    young(1 - smoothstep(1, 2, (age + season - e) / unroll))
     Pp(k, s, e, fe);
 interpret Pc(k, m, s, e, fe) : k == 0 ->
     &(lerp(young_angle, old_angle, 1 - exp(-max(0, age + season - e) / open_years)))
     T(0, -1, 0, arch * pi / 180 / (1.5 * pieces) * clamp((age + season - e) / unroll, 0, 1)
                + droop * min(max(0, age + season - e), droop_years)) rest(rest_gap)
+    young(1 - smoothstep(1, 2, (age + season - e) / unroll))
     Pp(k, s, e, fe);
 interpret Pc(k, m, s, e, fe) -> Pp(k, s, e, fe);
 
@@ -310,9 +321,10 @@ interpret Pr(k, s, fe, d, w, r) ->
     Pn(k, s, fe, 0.5, d, w);
 
 # Half a coiled piece: two segments q long, each turned a degrees, with a
-# ring of crozier scales z long at the end of each.
+# ring of crozier scales z long at the end of each where the stipe is
+# scaly all along, so its scales go on up the rachis.
 interpret Pw(a, q, r, z) -> ^(a) F(q) Ck(z, r) ^(a) F(q) Ck(z, r);
-interpret Ck(z, r) : scales >= 1 -> [ Sk(z, r, ceil(scales / 6), 0) ];
+interpret Ck(z, r) : scales >= 1 && scale_reach >= 1 -> [ Sk(z, r, ceil(scales / 6), 0) ];
 interpret Ck(z, r) -> ;
 
 # A frond's foot: out from the crown's centre toward the side the frond
