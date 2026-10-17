@@ -32,7 +32,7 @@
 use crate::blooms::{self, FruitForm, Part};
 use crate::graph::GraphOrgan;
 use crate::leaves::{self, Section, SolidLeaf};
-use crate::looks::{Fruit, FruitKind};
+use crate::looks::{Armed, Fruit, FruitKind};
 use crate::math::{self, Vec3, any_perpendicular};
 use crate::mesh::Mesh;
 use crate::rng::{mix64, unit};
@@ -41,10 +41,13 @@ use crate::rng::{mix64, unit};
 pub const GOLDEN_DEGREES: f64 = 137.507_764;
 
 /// Whether `fruit` is one plain berry or cone, drawn as it was before P4
-/// (`crate::blooms`).
+/// (`crate::blooms`): ripe, with no calyx kept under it and nothing on it.
 #[must_use]
 pub fn is_single(fruit: &Fruit) -> bool {
-    fruit.kind == FruitKind::Berry && fruit.unripe <= 0.0
+    fruit.kind == FruitKind::Berry
+        && fruit.unripe <= 0.0
+        && fruit.kept_calyx <= 0.0
+        && fruit.armed == Armed::None
 }
 
 /// How finely one fruit is drawn: facets round and rings along.
@@ -222,6 +225,7 @@ pub(crate) fn draw_unit(
         return;
     }
     one.draw(fruit.kind, body, accent, part, mesh);
+    one.dress(fruit, body, accent, part, mesh);
 }
 
 /// An ellipsoid at `centre`, half-lengths `(a, b, c)` along `axis`,
@@ -410,6 +414,53 @@ impl One {
             }
         }
         leaves::smooth_normals(mesh, first, first_index);
+    }
+
+    /// What the fruit keeps or bears beyond its kind: a calyx under it, in
+    /// the accent, clasping its foot where its lobes are short and
+    /// spreading in a star where they are long; prickles or bristles over
+    /// it, drawn only at the finer steps.
+    fn dress(&self, fruit: &Fruit, body: [f32; 3], accent: [f32; 3], part: Part, mesh: &mut Mesh) {
+        if fruit.kept_calyx > 0.0 {
+            let rise = if fruit.kept_calyx < 0.6 { 0.12 } else { -0.04 };
+            self.calyx(
+                0.06,
+                fruit.kept_lobes,
+                fruit.kept_calyx,
+                rise,
+                accent,
+                part,
+                mesh,
+            );
+        }
+        let (count, reach, thick) = match fruit.armed {
+            Armed::None => return,
+            Armed::Prickles => (48_u32, 0.2, 0.05),
+            Armed::Bristles => (80, 0.12, 0.015),
+        };
+        if self.detail.around < 8 {
+            return;
+        }
+        let other = self.direction.cross(self.across);
+        let colour = blooms::shade(body, 0.8);
+        for k in 0..count {
+            // On a Fibonacci spiral over the body, its ends left bare.
+            let along = 0.12 + 0.76 * (f64::from(k) + 0.5) / f64::from(count);
+            let angle = math::radians(137.507_764 * f64::from(k));
+            let radial = self.across * math::cos(angle) + other * math::sin(angle);
+            let half = self.width * 0.5 * math::sqrt((1.0 - (2.0 * along - 1.0).powi(2)).max(0.0));
+            let foot = self.at(along) + radial * half;
+            let side = self.direction * (self.width * thick);
+            blooms::wedge(
+                foot - side,
+                foot + side,
+                foot + radial * (self.width * reach),
+                radial.cross(self.direction) * (self.width * thick * 0.5),
+                colour,
+                part,
+                mesh,
+            );
+        }
     }
 
     /// `count` lobes round the fruit at `at` of its length, each `reach`

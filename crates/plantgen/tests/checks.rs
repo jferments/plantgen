@@ -142,6 +142,21 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "Rhamnaceae's flowers are in cymes or panicles (Simpson 2019), but cascara's axillary clusters are drawn as an umbel",
     ),
     (
+        "fuchsia-excorticata",
+        "petiole_length_m",
+        "Hooker (p. 75) has the blade twice the petiole, but no rule sets a broadleaf's petiole from a trait yet, so it is drawn at the library's default share",
+    ),
+    (
+        "fuchsia-magellanica",
+        "leaf_arrangement",
+        "its leaves are in threes (Bailey, Bean), but the broadleaf program draws at most two leaves a node, so it draws them opposite",
+    ),
+    (
+        "fuchsia-magellanica",
+        "shoot_leaves",
+        "a cut-back plant's shoots grow 3 to 5 ft a season (Bean) with some 15 to 25 whorls, but in the open at six years its shoots grow no more than a few vigour units, bearing about 8 leaves",
+    ),
+    (
         "hedera-helix",
         "fruit_size_m",
         "its fruit is drawn as one card 7 cm long, about 8.4 cm as measured, standing for a whole umbel of berries, against the 6 to 9 mm Dendrology (2019) p. 310 gives one drupe",

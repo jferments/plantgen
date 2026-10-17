@@ -2290,8 +2290,14 @@ fn unit_sizes(
     tally: &mut Tally,
 ) {
     match shape {
-        Shape::Flower(_) if in_stage(phase, Stage::Open) => {
-            tally.add("flower_size_m", organ, part, length);
+        Shape::Flower(flower) if in_stage(phase, Stage::Open) => {
+            // Across its sepals where they outreach its petals.
+            let reach = if flower.sepals > 0 {
+                flower.sepal_length.max(1.0)
+            } else {
+                1.0
+            };
+            tally.add("flower_size_m", organ, part, length * reach);
         }
         Shape::Head(head) => {
             let d = crate::capitula::dimensions(head);
@@ -2485,7 +2491,11 @@ fn flower_parts(
     }
     tally.kind(
         "hypanthium",
-        if flower.tube > 0.0 { "true" } else { "false" },
+        if flower.tube > 0.0 || flower.floral_tube > 0.0 {
+            "true"
+        } else {
+            "false"
+        },
     );
     // A resupinate flower is drawn turned half round.
     tally.kind(

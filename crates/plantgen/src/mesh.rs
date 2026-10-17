@@ -1345,9 +1345,14 @@ fn wood(
                     angle,
                     furrow,
                 );
+                let youth = crate::hairs::youth(graph.age - current.born);
                 let [r, g, b] = crate::hairs::cast_wood(
-                    [surface_colour[0], surface_colour[1], surface_colour[2]],
-                    crate::hairs::youth(graph.age - current.born),
+                    young_wood(
+                        [surface_colour[0], surface_colour[1], surface_colour[2]],
+                        youth,
+                        appearance.young_wood,
+                    ),
+                    youth,
                     stem_hairs,
                 );
                 let colour = sky.colour([r, g, b, surface_colour[3]], light);
@@ -1379,6 +1384,18 @@ fn wood(
             first_ring = Some(base);
         }
     }
+}
+
+/// The wood's colour `colour` cast toward the plant's young wood's, by
+/// how young it is ([`crate::hairs::youth`]); unchanged where the plant
+/// states none.
+fn young_wood(colour: [f32; 3], youth: f64, young: Option<[f32; 3]>) -> [f32; 3] {
+    let Some(young) = young else {
+        return colour;
+    };
+    #[allow(clippy::cast_possible_truncation)]
+    let weight = youth as f32;
+    std::array::from_fn(|c| colour[c] + (young[c] - colour[c]) * weight)
 }
 
 /// The point `out` from `centre` on a ring of an axis, a `stem`'s cut
@@ -3186,6 +3203,7 @@ mod tests {
             bark_pattern: None,
             leaf_axis: None,
             stem_hairs: None,
+            young_wood: None,
             bodies: BTreeMap::new(),
             spreads: serde_json::Map::new(),
         }

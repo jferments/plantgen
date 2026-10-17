@@ -686,6 +686,8 @@ pub enum Field {
     Word,
     /// Points along a blade, `[u, w]` pairs: a leaf's outline.
     Outline,
+    /// Three channels, 0 to 1: a flower's calyx colour.
+    Colour,
 }
 
 /// The fields of a card that replace others where set, and those they
@@ -1002,7 +1004,7 @@ fn every_look(
 /// the template may set inside a look's `shape`. The looks module's tests
 /// hold this to the templates.
 pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
-    use Field::{Count, Number, Outline, Word};
+    use Field::{Colour, Count, Number, Outline, Word};
     [
         (
             "needles",
@@ -1148,8 +1150,16 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("tube_reach", Number),
                 ("spur", Number),
                 ("tube", Number),
+                ("floral_tube", Number),
+                ("sepal_rise", Number),
+                ("petal_rise", Number),
+                ("calyx", Colour),
+                ("tube_colour", Colour),
+                ("filament", Colour),
                 ("stamens", Count),
                 ("stamen_length", Number),
+                ("style_length", Number),
+                ("stamen_lean", Number),
                 ("odd_rise", Number),
                 ("anther", Number),
                 ("anther_tilt", Number),
@@ -1225,6 +1235,9 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("cone", Number),
                 ("kind", Word),
                 ("unripe", Number),
+                ("kept_calyx", Number),
+                ("kept_lobes", Count),
+                ("armed", Word),
             ],
         ),
     ]
@@ -3114,6 +3127,15 @@ fn fits(field: Option<Field>, value: &Value) -> Result<(), String> {
                 })
             }),
             "`[u, w]` points",
+        ),
+        Some(Field::Colour) => (
+            value.as_array().is_some_and(|channels| {
+                channels.len() == 3
+                    && channels
+                        .iter()
+                        .all(|c| c.as_f64().is_some_and(|c| (0.0..=1.0).contains(&c)))
+            }),
+            "three channels 0 to 1",
         ),
     };
     if fits {

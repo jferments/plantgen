@@ -95,7 +95,8 @@
       7,
       8,
       9
-    ]
+    ],
+    "calyx_in_fruit": "persistent"
   },
   "provenance": {
     "sources": [
@@ -224,6 +225,11 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high), as no source read gives it: flowers June-September."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 2 (1914-17), Capsicum annuum, p. 659 (read on the Internet Archive, 2026-10-17): the calyx cup-shaped, usually embracing the fruit's base (var. conoides) or saucer-shaped (var. longum); Flora of British India (p. 238): campanulate, much shorter than the fruit."
     }
   }
 }

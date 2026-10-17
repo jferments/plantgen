@@ -151,9 +151,14 @@
 # crown_fullness. All are off, or as before, unless a lineage or species
 # sets them, so every crown grows as it did.
 #
+# Revision 17 (nightshades round 2): a bloom may hang on a stalk of its
+# own, bloom_stalk long, as a fuchsia's flowers hang on their long
+# peduncles. Off (0) unless a lineage or species sets it, so every plant
+# grows as it did.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
-lsystem broadleaf 16;
+lsystem broadleaf 17;
 
 # Crown envelope at maturity; it approaches this size at crown_rate per year.
 param crown_height;
@@ -253,6 +258,7 @@ param flat_top = 0;           # share of the crown's height above which every sh
 param bole_clear = 0;         # 1: the stem sheds every branch below the crown's base
 param crown_widest = 0.5;     # share of the region's depth at which it is widest
 param crown_fullness = 2;     # the region's profile: 2 an ellipse, more toward a flat-ended cylinder
+param bloom_stalk = 0;        # a solitary bloom's own stalk, metres; 0 for none
 
 # An active bud. `split` is the height at which the stem forks: only the
 # first stem carries one; every other bud carries 0.
@@ -263,6 +269,7 @@ module M(n, u, l);                        # n nodes still to form this year, of 
 module Fk(n);                             # n stems still to start at a fork
 module Q(n, k);                           # n leaf pairs still to unfold on a short shoot, its k-th pair first
 module Bo(n);                             # n blooms still to place at a short shoot's tip
+module Bs;                                # a bloom's own stalk, if it has one
 module K(s) queries light, vigour;        # a short-shoot bud (s 1): leafs out, never grows out; s 0: latent
 module D queries light, space;            # a dormant bud
 
@@ -433,15 +440,15 @@ decompose M(n, u, l) : n > 0 && leaves_per_node < 2 && thorns <= 0 && dormant_bu
 # Blooms spread round a short shoot's tip: a male plant's are male, set
 # with no random draws (they vary by their place), so every rule's draws
 # keep their sites.
-decompose Bo(n) : n > 0 && dioecious >= 0.5 && sex < 0.5 ->
+decompose Bo(n) : n > 0 && dioecious >= 0.5 && sex < 0.5 && bloom_stalk <= 0 ->
     [ /(n * 137.5 + 40 * frac(n * 0.618) - 20) &(bloom_angle * (0.8 + 0.4 * frac(n * 0.382)))
       bloom_male(bloom_size * (0.85 + 0.3 * frac(n * 0.754))) ]
     Bo(n - 1);
-decompose Bo(n) : n > 0 ->
+decompose Bo(n) : n > 0 && bloom_stalk <= 0 ->
     [ /(n * 137.5 + uniform(-20, 20)) &(bloom_angle * uniform(0.8, 1.2))
       bloom(bloom_size * uniform(0.85, 1.15)) ]
     Bo(n - 1);
-decompose Bo(n) -> ;
+decompose Bo(n) : bloom_stalk <= 0 -> ;
 
 # Revision 4 (plant forms F5). A thorny species' internodes: as above, with
 # a thorn beside each bud.
@@ -551,3 +558,20 @@ decompose M(n, u, l) : n > 0 && leaves_per_node < 2 ->
     [ /(70) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
     [ /(-70) &(thorn_angle) thorn(thorn_length * uniform(0.8, 1.2)) ]
     /(divergence) M(n - 1, u, l);
+
+# Blooms on stalks of their own (revision 17): as the blooms above, each
+# on a thin stalk bloom_stalk long, hanging from its short shoot as its
+# angle leans it. A plant without stalks places its blooms by the rules
+# above, as it did. These spread their blooms by the bloom's place in the
+# shoot, as the male blooms do, with no draw of their own: a draw here
+# would renumber the draws of every program that extends this one.
+decompose Bo(n) : n > 0 && dioecious >= 0.5 && sex < 0.5 ->
+    [ /(n * 137.5 + 40 * frac(n * 0.618) - 20) &(bloom_angle * (0.8 + 0.4 * frac(n * 0.382)))
+      Bs bloom_male(bloom_size * (0.85 + 0.3 * frac(n * 0.754))) ]
+    Bo(n - 1);
+decompose Bo(n) : n > 0 ->
+    [ /(n * 137.5 + 40 * frac(n * 0.618) - 20) &(bloom_angle * (0.8 + 0.4 * frac(n * 0.382)))
+      Bs bloom(bloom_size * (0.85 + 0.3 * frac(n * 0.754))) ]
+    Bo(n - 1);
+decompose Bo(n) -> ;
+decompose Bs -> !(bloom_size * 0.03) F(bloom_stalk);

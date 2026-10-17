@@ -1967,6 +1967,9 @@ fn draw_laid(
                         accent: shown.accent,
                         filament: flower.filament.unwrap_or(shown.accent),
                         ovary: flower.pistil.unwrap_or(shown.accent),
+                        tube: flower
+                            .tube_colour
+                            .map(|tube| crate::blooms::with_shading(tube, look.colour, colour)),
                     },
                     part,
                     mesh,

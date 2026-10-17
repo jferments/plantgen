@@ -114,7 +114,8 @@
       7,
       8,
       9
-    ]
+    ],
+    "calyx_in_fruit": "accrescent"
   },
   "provenance": {
     "sources": [
@@ -268,6 +269,11 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high), as no source read gives it: flowers June-September."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "flora-british-india-4",
+      "note": "Flora of British India vol. 4 (Clarke, 1883-85), Solanum Melongena, p. 235 (read on the Internet Archive, 2026-10-17): the calyx lobes enlarge in fruit, usually much shorter than the fruit and often prickly."
     }
   }
 }

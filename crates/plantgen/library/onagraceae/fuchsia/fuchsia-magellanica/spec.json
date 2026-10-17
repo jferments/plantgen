@@ -1,0 +1,399 @@
+{
+  "schema": 1,
+  "id": "fuchsia-magellanica",
+  "taxon": {
+    "scientific_name": "Fuchsia magellanica",
+    "common_name": "hardy fuchsia",
+    "family": "Onagraceae",
+    "genus": "Fuchsia",
+    "plant_name_id": 2814960
+  },
+  "growth_form": "shrub",
+  "generator": {
+    "params": {
+      "fork_stems": 9
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "allometry": [
+    {
+      "age": 6,
+      "environment": "open",
+      "height": 2.0,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "life_span": "perennial",
+    "height_typical_m": {
+      "min": 1,
+      "max": 3
+    },
+    "height_max_m": 3,
+    "leaf_habit": "deciduous",
+    "leaf_arrangement": "whorled",
+    "shoot_leaves": {
+      "min": 30,
+      "max": 75,
+      "typical": 45
+    },
+    "leaves_per_whorl": 3,
+    "leaf_shape": "ovate",
+    "leaf_apex": "acuminate",
+    "leaf_margin": "serrate",
+    "leaf_length_m": {
+      "min": 0.025,
+      "max": 0.06
+    },
+    "leaf_width_m": {
+      "min": 0.01,
+      "max": 0.02
+    },
+    "petiole_length_m": {
+      "min": 0.005,
+      "max": 0.01
+    },
+    "leaf_colour": [
+      60,
+      100,
+      45
+    ],
+    "leaf_hairs": "glabrous",
+    "twig_colour": [
+      150,
+      40,
+      55
+    ],
+    "bark_colour": [
+      135,
+      120,
+      105
+    ],
+    "bark_texture": "peeling",
+    "bark_inner_colour": [
+      175,
+      140,
+      110
+    ],
+    "pedicel_length_m": {
+      "min": 0.03,
+      "max": 0.045
+    },
+    "flower_size_m": {
+      "min": 0.03,
+      "max": 0.045
+    },
+    "hypanthium_length_m": {
+      "min": 0.01,
+      "max": 0.013
+    },
+    "sepal_length_m": {
+      "min": 0.02,
+      "max": 0.025
+    },
+    "sepal_posture": "spreading",
+    "calyx_colour": [
+      200,
+      25,
+      45
+    ],
+    "petal_length_m": {
+      "min": 0.01,
+      "max": 0.013
+    },
+    "corolla_lobe_posture": "erect",
+    "flower_colour": [
+      85,
+      30,
+      105
+    ],
+    "stamen_length_m": {
+      "min": 0.025,
+      "max": 0.03
+    },
+    "stamen_colour": [
+      195,
+      30,
+      50
+    ],
+    "style_length_m": {
+      "min": 0.035,
+      "max": 0.045
+    },
+    "flowering_months": [
+      7,
+      8,
+      9,
+      10
+    ],
+    "fruit_size_m": {
+      "min": 0.01,
+      "max": 0.015
+    },
+    "fruit_width_m": {
+      "min": 0.007,
+      "max": 0.009
+    },
+    "fruit_colour_ripe": [
+      120,
+      15,
+      40
+    ],
+    "fruiting_months": [
+      8,
+      9,
+      10,
+      11
+    ]
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the nightshades work (2026-10-17): every character from the floras in the nightshades notes (plantgen-claude project-files/nightshades/SOURCES.md), drawn by the rules its taxa hold; drawing values only where no character says them."
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 accepted name Fuchsia magellanica, plant_name_id 2814960 (Library 1.0 list, read 2026-10-17)."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 family Onagraceae."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16 plant_name_id."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Its habit as the floras describe it, drawn by the shrub form."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Grown to the age it is drawn at: an annual's one season, a perennial's or shrub's few years."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "One seed in the open, as the built-in species."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Drawing values no character gives (fuchsias, 2026-10-17): many stems from the foot, as the dense, arching shrub in a photograph (iNaturalist 349007151) and Bailey's twiggy, cross-branched gracilis (vol. 3 p. 1301)."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia magellanica' (read 2026-10-17): 1-3 m tall and wide where there is no frost; Bailey (vol. 3 p. 1301): 'Riccartonii' 6-10 ft. Its reference height is the middle of that range, 2.0 m, at its last keyframe."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia magellanica' (read 2026-10-17): a sub-shrub; Bean (vol. 1 p. 576): in mild places trees 10 ft high with trunks 6 in through."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia magellanica' (read 2026-10-17): 1-3 m tall and wide where there is no frost; Bailey (vol. 3 p. 1301): 'Riccartonii' 6-10 ft."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 3 (1914), Fuchsia magellanica 'Riccartonii', p. 1301 (read on the Internet Archive, 2026-10-17): 6-10 ft, making a trunk 3 in. diam."
+    },
+    "traits.leaf_habit": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia magellanica' (read 2026-10-17): deciduous where frosts are light; Bean (vol. 1 p. 577): the genus's leaves deciduous."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 3 (1914), Fuchsia magellanica, p. 1301 (read on the Internet Archive, 2026-10-17): leaves opposite or in 3s; Wikipedia: whorls of 3-4 a node, sometimes opposite; Bean (p. 577): mostly in threes at each joint."
+    },
+    "traits.shoot_leaves": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Leaves on a vigorous year's shoot, which no source counts: Bean (vol. 1 p. 576) has shoots grow 3 to 5 ft in a season, and a photograph (iNaturalist 126164319) shows whorls of 3 leaves about 4-6 cm apart up such a stem, so some 15 to 25 whorls"
+    },
+    "traits.leaves_per_whorl": {
+      "evidence": "SourceInferred",
+      "source": "bean-1914",
+      "note": "Bean, Trees and Shrubs Hardy in the British Isles vol. 1 (1914), Fuchsia macrostemma, p. 577 (read on the Internet Archive, 2026-10-17): leaves mostly in threes at each joint; Bailey: opposite or in 3s."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 3 (1914), Fuchsia magellanica, p. 1301 (read on the Internet Archive, 2026-10-17): leaves lance-ovate; Wikipedia: ovate to lanceolate."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "iNaturalist observation 201803461 (CC-licensed photograph, viewed 2026-10-17): the leaves taper to a fine point; Bailey (vol. 3 p. 1301) globosa: acute. No text read gives it."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia magellanica' (read 2026-10-17): serrate margins; Bailey (vol. 3 p. 1301): dentate."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia magellanica' (read 2026-10-17): 2.5-6 cm; Bean (vol. 1 p. 577) globosa: 1-2 in."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia magellanica' (read 2026-10-17): 1-2 cm wide."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia magellanica' (read 2026-10-17): petiole 0.5-1 cm. Bailey's 'very short-petioled' (vol. 3 p. 1301) is shorter."
+    },
+    "traits.leaf_colour": {
+      "evidence": "SourceInferred",
+      "source": "bean-1914",
+      "note": "Bean, Trees and Shrubs Hardy in the British Isles vol. 1 (1914), Fuchsia magellanica, p. 577 (read on the Internet Archive, 2026-10-17): leaves dark green, in some forms red-purple along the stalk and veins. The colour is our reading of the words."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 3 (1914), Fuchsia magellanica var. globosa, p. 1301 (read on the Internet Archive, 2026-10-17): leaves glabrous."
+    },
+    "traits.twig_colour": {
+      "evidence": "SourceInferred",
+      "source": "bean-1914",
+      "note": "Bean, Trees and Shrubs Hardy in the British Isles vol. 1 (1914), Fuchsia magellanica, p. 577 (read on the Internet Archive, 2026-10-17): red young wood (pumila), short-jointed red shoots (conica); Bailey (p. 1301): deep purple branches (discolor). The colour is our reading of the words."
+    },
+    "traits.bark_colour": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "iNaturalist observation 159408070 (CC-licensed photograph, viewed 2026-10-17): older stems pale grey-brown; no text read describes the bark. No text read gives it."
+    },
+    "traits.bark_texture": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "iNaturalist observation 159408070 (CC-licensed photograph, viewed 2026-10-17): the older stems' thin bark flakes; no text read describes it. No text read gives it."
+    },
+    "traits.bark_inner_colour": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "iNaturalist observation 159408070 (CC-licensed photograph, viewed 2026-10-17): paler tan where the bark has flaked; no text read describes it. No text read gives it."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia magellanica' (read 2026-10-17): peduncle 3-4.5 cm; Bean (vol. 1 p. 577) gracilis: very slender, 1.5-2 in."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Across its sepals, which no source measures: two spreading sepals of 20-25 mm (Wikipedia 'Fuchsia magellanica') a little more than their length apart; Bean (vol. 1 p. 577) globosa's calyx 1 in."
+    },
+    "traits.hypanthium_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia magellanica' (read 2026-10-17): hypanthium magenta, 10-13 mm; Bailey (vol. 3 p. 1301): little longer than the ovary, short-cylindrical."
+    },
+    "traits.sepal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia magellanica' (read 2026-10-17): 4 sepals, 20-25 mm; Bean (vol. 1 p. 577) globosa: 3/4 in."
+    },
+    "traits.sepal_posture": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 3 (1914), Fuchsia magellanica, p. 1301 (read on the Internet Archive, 2026-10-17): sepals spread wide (discolor), spreading (gracilis); photograph iNaturalist 133411246: flaring out and down."
+    },
+    "traits.calyx_colour": {
+      "evidence": "SourceInferred",
+      "source": "bean-1914",
+      "note": "Bean, Trees and Shrubs Hardy in the British Isles vol. 1 (1914), Fuchsia magellanica, p. 577 (read on the Internet Archive, 2026-10-17): sepals rich scarlet; Bailey (vol. 3 p. 1301): red; Wikipedia: magenta. The colour is our reading of the words."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia magellanica' (read 2026-10-17): 4 petals, dark purple, 10-13 mm, convolute."
+    },
+    "traits.corolla_lobe_posture": {
+      "evidence": "SourceInferred",
+      "source": "bailey-cyclopedia-1914",
+      "note": "Bailey, Standard Cyclopedia of Horticulture vol. 3 (1914), Fuchsia magellanica var. globosa, p. 1301 (read on the Internet Archive, 2026-10-17): petals erect; conica: erect; Wikipedia: convolute after anthesis, the skirt."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia magellanica' (read 2026-10-17): petals dark purple; Bean (vol. 1 p. 577): rich purple; Bailey: 'blue'. The colour is our reading of the words."
+    },
+    "traits.stamen_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia magellanica' (read 2026-10-17): filaments 25-30 mm; Bailey (vol. 3 p. 1301): long-exserted."
+    },
+    "traits.stamen_colour": {
+      "evidence": "SourceInferred",
+      "source": "bean-1914",
+      "note": "Bean, Trees and Shrubs Hardy in the British Isles vol. 1 (1914), Fuchsia corallina, p. 577 (read on the Internet Archive, 2026-10-17): the stamens red, standing 3/4 in beyond the petals; photograph iNaturalist 133411246: red filaments."
+    },
+    "traits.style_length_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Longer than the stamens, which no source measures: Bean (vol. 1 p. 577) 'much protruded stamens, and still more protruded style'; the stamens' 25-30 mm (Wikipedia) and the photograph's style about a third longer (iNaturalist 133411246)"
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "bean-1914",
+      "note": "Bean, Trees and Shrubs Hardy in the British Isles vol. 1 (1914), Fuchsia, p. 576 (read on the Internet Archive, 2026-10-17): in Britain from July until frost; Bailey (vol. 3 p. 1301): 'Riccartonii' flowers best in autumn."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia magellanica' (read 2026-10-17): berry ellipsoid, 10-15 mm long."
+    },
+    "traits.fruit_width_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Fuchsia magellanica' (read 2026-10-17): printed 0.7-0.9 mm wide, surely 7-9 mm, as the photographs show a berry about two thirds as wide as long."
+    },
+    "traits.fruit_colour_ripe": {
+      "evidence": "SourceInferred",
+      "source": "inaturalist-photos-2026-10",
+      "note": "iNaturalist observation 43195696 (CC-licensed photograph, viewed 2026-10-17): glossy, deep red berries; no text read gives the colour. No text read gives it."
+    },
+    "traits.fruiting_months": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: berries ripening from August to November in Britain, after the flowers."
+    }
+  }
+}

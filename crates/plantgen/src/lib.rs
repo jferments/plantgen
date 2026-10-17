@@ -620,4 +620,10 @@ pub mod venation;
 /// long as stated (`corolla_tube_length_m`, a flower's `tube_reach`); a
 /// flower's posture turns a sympodium's flowers and a woody plant's blooms
 /// (`flower_posture`); a panicle's cluster size is its branches' length.
-pub const GENERATOR_REVISION: u32 = 105;
+/// 106 (provisional; the merge desk assigns it): a lone bloom may hang on
+/// a stalk of its own (`pedicel_length_m`; broadleaf program revision 17);
+/// a flower's sepals, petals, floral tube, stamens and style are drawn at
+/// their stated lengths and postures and in their own colours; a fruit
+/// keeps its calyx or bears prickles or bristles; young wood takes its
+/// twig colour; bark texture sets the bark pattern.
+pub const GENERATOR_REVISION: u32 = 106;

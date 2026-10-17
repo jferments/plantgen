@@ -106,7 +106,9 @@
       7,
       8,
       9
-    ]
+    ],
+    "anthers_connivent": true,
+    "calyx_in_fruit": "persistent"
   },
   "provenance": {
     "sources": [
@@ -270,6 +272,16 @@
       "evidence": "SourceInferred",
       "source": "britton-brown-1913",
       "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Lycopersicon, c. pp. 167-168 (read on the Internet Archive, 2026-10-17): flowers June-September (as an escape)."
+    },
+    "traits.anthers_connivent": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Lycopersicon, c. pp. 167-168 (read on the Internet Archive, 2026-10-17): anthers elongated, joined or touching; Bailey (vol. 4 p. 1931): the stamens joined round the single style; Wikipedia 'Tomato': fused at their edges into a cone."
+    },
+    "traits.calyx_in_fruit": {
+      "evidence": "SourceInferred",
+      "source": "britton-brown-1913",
+      "note": "Britton and Brown, Illustrated Flora, 2nd ed. vol. 3 (1913), Lycopersicon, c. pp. 167-168 (read on the Internet Archive, 2026-10-17): the calyx persists at the berry's base."
     }
   }
 }
