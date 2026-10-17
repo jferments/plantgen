@@ -604,4 +604,9 @@ pub mod venation;
 /// inflorescence kinds, flower and fruit sizes and kinds, seasons); a
 /// strap leaf is never narrower than its card draws (95 is lacy
 /// leaves, #180).
-pub const GENERATOR_REVISION: u32 = 96;
+/// 97: lacy leaves drawn as geometry: a segment at least ten times as long
+/// as it is wide is a round thread, bowed a little (`lace::THREAD`), and a
+/// thrice-divided leaf whose divisions roll round their rachis sets its
+/// segments round each pinnule's too; a leaflet may be as narrow as a
+/// hundredth of its length (96 is the species-facts records, #171).
+pub const GENERATOR_REVISION: u32 = 97;
