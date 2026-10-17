@@ -1,0 +1,323 @@
+{
+  "schema": 1,
+  "id": "hydrophyllum-tenuipes",
+  "taxon": {
+    "scientific_name": "Hydrophyllum tenuipes",
+    "common_name": "Pacific waterleaf",
+    "family": "Boraginaceae",
+    "genus": "Hydrophyllum",
+    "plant_name_id": 2856575
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 4,
+      "clump_radius": 0.12,
+      "stem_lean": 20,
+      "nodes": 4,
+      "basal_leaves": 0,
+      "bare": 0.1,
+      "leaf_peak": 0.0,
+      "leaf_angle": 55,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_angle": 0,
+      "pedicel": 0
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.42,
+      0.5,
+      0.3
+    ],
+    "foliage": [
+      0.24,
+      0.4,
+      0.18
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "petiole": 0.33
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.42,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.2,
+      "max": 0.6
+    },
+    "life_span": "perennial",
+    "perennation": "rhizome",
+    "rhizome_habit": "short_creeping",
+    "rosette": "none",
+    "leaf_length_m": {
+      "min": 0.08,
+      "max": 0.2
+    },
+    "petiole_length_m": {
+      "min": 0.05,
+      "max": 0.15
+    },
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 1,
+    "leaflets": 5,
+    "terminal_leaflet": true,
+    "leaflet_length_m": {
+      "min": 0.05,
+      "max": 0.1
+    },
+    "leaf_shape": "ovate",
+    "leaf_margin": "serrate",
+    "leaf_hairs": "strigose",
+    "inflorescence": "cyme",
+    "inflorescence_length_m": {
+      "min": 0.02,
+      "max": 0.04
+    },
+    "units_per_inflorescence": {
+      "min": 10,
+      "max": 25
+    },
+    "pedicel_length_m": {
+      "min": 0.005,
+      "max": 0.012
+    },
+    "flower_symmetry": "actinomorphic",
+    "corolla_shape": "campanulate",
+    "flower_size_m": {
+      "min": 0.005,
+      "max": 0.007
+    },
+    "flower_colour": [
+      228,
+      232,
+      205
+    ],
+    "fruit_type": "capsule",
+    "flowering_months": [
+      4,
+      5,
+      6
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: plants 2 dm to 6 dm tall."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: a perennial from a rhizome."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: the rhizome bearing fleshy-fibrous roots."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: a rhizome bearing fleshy-fibrous roots; short, as the photos' clumps show."
+    },
+    "traits.rosette": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Long-stalked leaves along a few stems, with no rosette at the ground, set by hand from iNaturalist photos of flowering plants (observations 75518377, 11651666, 260680073, 351601164, 216043262, 216426119, 216414038, 6166662): the flora gives no count or measure."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: leaves semi-orbicular, 8 cm to 20 cm in diameter."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: petioles 5 cm to 15 cm long, about as long as the blade, from the photos; Abrams (1951 p. 478) gives no length."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: leaves pinnately divided, the principal divisions 5."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: pinnately divided, the lowest pair usually distinct."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: the divisions coarsely serrate or incised but not divided again, so the leaf is divided once."
+    },
+    "traits.leaflets": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: the principal divisions 5, the terminal 3-cleft."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: the terminal division 3-cleft."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: principal divisions ovate-lanceolate to ovate, 5 cm to 10 cm long."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: divisions ovate-lanceolate to ovate."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: all coarsely serrate or incised with ovate lobes."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: sparsely strigose on both surfaces."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: cymes several, open."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: each cyme 2 cm to 4 cm across with its exserted styles, from the photos."
+    },
+    "traits.units_per_inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "10 to 25 flowers in a cyme, set by hand from iNaturalist photos of flowering plants (observations 75518377, 11651666, 260680073, 351601164, 216043262, 216426119, 216414038, 6166662): the flora gives no count or measure."
+    },
+    "traits.pedicel_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: pedicels 5 mm to 12 mm long."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Five equal corolla lobes: a regular flower, set by hand from iNaturalist photos of flowering plants (observations 75518377, 11651666, 260680073, 351601164, 216043262, 216426119, 216414038, 6166662): the flora gives no count or measure."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: corolla 5 mm to 7 mm long, its lobes oblong, 3 mm to 4 mm: bell-shaped."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: corolla 5 mm to 7 mm long."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: corolla cream, greenish, purple or blue; drawn greenish cream, as in most of the photos; sRGB by eye."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: capsule 3 mm to 5 mm in diameter."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 478, Hydrophyllum tenuipes: flowering April to June."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: green hairy stems; large, deep green leaves of five coarsely toothed divisions on long stalks, the flower clusters near or under the leaves."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for Pacific waterleaf from Abrams's description and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Its inflorescence is drawn as one cluster at each stem's tip, sized by the traits, so the stem ends where the cluster begins. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.42 m tall at 3 years in the open, within the flora's range. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C batch 2 (2026-10-17): sizes and forms from Abrams, counts from photos."
+  }
+}

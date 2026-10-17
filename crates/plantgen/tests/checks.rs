@@ -244,7 +244,7 @@ const KNOWN: &[(&str, &str, &str)] = &[
     (
         "program:herb",
         "leaf_habit",
-        "a herb's stems and their leaves live one season, so an evergreen herb (western rattlesnake plantain, common beargrass) draws its leaves as deciduous until the herb program keeps a leaf through winter",
+        "a herb's stems and their leaves live one season, so an evergreen herb (western rattlesnake plantain, common beargrass, yerba buena, the stonecrops) draws its leaves as deciduous until the herb program keeps a leaf through winter",
     ),
     (
         "program:herb",
@@ -290,6 +290,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "sassafras-albidum",
         "leaf_width_m",
         "its leaves are drawn on one card, the three-lobed form with broad rounded lobes as photographs show it, 16.9 cm wide, against FNA's 5 to 10 cm, which covers its narrower unlobed and mitten leaves too (inferred: FNA gives one width for all three forms)",
+    ),
+    (
+        "sedum-spathulifolium",
+        "inflorescence_length_m",
+        "its cyme is drawn about 4 cm across against Abrams' 5 to 8 cm broad: a herb's cluster is drawn at about three fifths of the length its traits give (so are yarrow's corymbs, the waterleaf's and the other stonecrops' cymes, and the bluebells' coils), until the cluster layout fills its organ",
     ),
     (
         "tillandsia-usneoides",
