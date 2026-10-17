@@ -4,6 +4,7 @@
   "name": "Rhamnaceae",
   "parent": "order/rosales",
   "traits": {
+    "leaf_incision": "none",
     "flower_merosity": 5,
     "flower_symmetry": "actinomorphic",
     "perianth": "sepals_and_petals",
@@ -55,6 +56,7 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Rhamnaceae (read 2026-10-17): lamina entire, simple; English Wikipedia (read 2026-10-17): blades not divided."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "jepson-1925-manual",

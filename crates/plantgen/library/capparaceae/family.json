@@ -33,7 +33,9 @@
       "low": 4,
       "high": 200
     },
-    "leaf_habit": "evergreen"
+    "leaf_habit": "evergreen",
+    "leaf_margin": "entire",
+    "leaf_incision": "none"
   },
   "evidence": {
     "traits": {
@@ -50,6 +52,16 @@
       "evidence": "SourceInferred",
       "source": "wikipedia",
       "note": "Wikipedia, Caper (read 2026-10-16): thick shiny leaves on a perennial shrub; evergreen inferred."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Capparis (read 2026-10-17) (largest genus, ~140 species): leaves simple and entire."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Capparis (read 2026-10-17): leaves simple, entire. Weighted by Capparis and allies (Morisonia, Maerua, Boscia)."
     }
   }
 }

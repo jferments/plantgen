@@ -4,6 +4,7 @@
   "name": "Hypericaceae",
   "parent": "order/malpighiales",
   "traits": {
+    "leaf_incision": "none",
     "flowering_position": "terminal",
     "phyllotaxis_pattern": "decussate",
     "flower_merosity": {"min": 4, "max": 5},
@@ -41,6 +42,7 @@
     "sexual_system": "hermaphrodite"
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Guttiferae incl. Hypericaceae (read 2026-10-17): lamina undivided, margins entire."},
     "traits.flowering_position": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Guttiferae (read 2026-10-16): inflorescences terminal, cymose."},
     "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Guttiferae (incl. Hypericaceae, read 2026-10-16): leaves mostly opposite; family states opposite usually, so crossing pairs."},
     "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 312: 4 to 5 sepals and petals."},

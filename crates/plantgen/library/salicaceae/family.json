@@ -4,6 +4,9 @@
   "name": "Salicaceae",
   "parent": "order/malpighiales",
   "traits": {
+    "leaf_incision": {"none": "usually", "lobed": "rarely"},
+    "leaf_apex": {"acute": "usually", "acuminate": "often", "obtuse": "sometimes"},
+    "leaf_shape": {"lanceolate": "usually", "elliptic": "often", "ovate": "sometimes", "deltate": "sometimes", "obovate": "rarely"},
     "carpels": {"min": 2, "max": 4, "typical": 2},
     "perianth": {"absent": "often", "tepals": "often", "sepals_and_petals": "sometimes"},
     "flower_merosity": {"min": 4, "max": 7, "low": 3, "high": 12},
@@ -47,6 +50,9 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Salicaceae (read 2026-10-17): lamina mainly entire, dissected (pinnatifid or palmatifid) only in some Populus (e.g. P. alba sucker shoots); German Wikipedia, Pappeln: blades entire or lobed."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "wikipedia", "note": "English Wikipedia, Salix (read 2026-10-17): tips acute or acuminate; German Wikipedia, Weiden (read 2026-10-17): tapered-pointed to pointed or blunt."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "wikipedia", "note": "English Wikipedia, Salix (read 2026-10-17): typically linear-lanceolate, some rounded to oval; German Wikipedia, Weiden (read 2026-10-17): nearly round to narrowly elliptic-lanceolate, lanceolate or obovate-lanceolate; Pappeln (read 2026-10-17): Populus triangular, heart-shaped or egg-shaped. Weighted by Salix (far the largest genus) over Populus."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, DELTA family Salicaceae (Salix and Populus; read 2026-10-16): gynoecium of 2 to 4 joined carpels, usually 2. Stated here so the willows do not take Malpighiales' typical 3."},
     "traits.perianth": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 315: perianth lacking, uniseriate or biseriate (formula K 0-8, C 0-8); Floral Diagrams p. 257: calyx valvate, corolla rare, perianth reduced to glands in Salix and Populus."},
     "traits.flower_merosity": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 256, 257: merism variable, general formula 3 to 7 or more sepals; Simpson p. 315 allows up to 15. Simpson's rare 15 is capped at the vocabulary's 12."},

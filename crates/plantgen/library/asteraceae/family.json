@@ -4,6 +4,7 @@
   "name": "Asteraceae",
   "parent": "order/asterales",
   "traits": {
+    "leaf_incision": {"none": "usually", "lobed": "often", "dissected": "sometimes"},
     "inflorescence_unit": "capitulum",
     "leaf_arrangement": {
       "alternate": "often",
@@ -47,6 +48,7 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Asteraceae (read 2026-10-17): leaves usually simple but often deeply lobed or otherwise cut; DELTA Compositae (read 2026-10-17): lamina dissected or entire, the dissected kinds pinnatifid, palmatifid, runcinate or spiny. Wikipedia Centaurea (read 2026-10-17): lower leaves usually deeply divided. Weighted by genus: Artemisia, Achillea, Centaurea, Cirsium and the dandelion group are cut; most Senecio, Vernonia, Helichrysum, Solidago, asters are not."},
     "rules.appearance.organs.flower.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
     "rules.appearance.organs.bloom.colour": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
     "rules.appearance.organs.flower.accent": {"evidence": "Authored", "source": "plantgen-authors", "note": "How PlantGen colours an organ from the colour a source states for the species, a choice of the model's (visual forms Skill 3, 2026-10-14): the stated colour itself, on the looks' 0 to 1 scale."},
