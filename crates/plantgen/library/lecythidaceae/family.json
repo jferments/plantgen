@@ -30,7 +30,7 @@
       "zygomorphic": "often",
       "asymmetric": "sometimes"
     },
-    "zygomorphy": "bilabiate",
+    "zygomorphy": "other",
     "perianth": {
       "sepals_and_petals": "usually",
       "tepals": "sometimes"
@@ -79,6 +79,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA Lecythidaceae (read 2026-10-16): petals usually free, falling with the stamens; spreading (our reading)."
+    },
+    "traits.zygomorphy": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Lecythidaceae (read 2026-10-16): irregular flowers owe their zygomorphy mainly to the androecium, which may form a one-sided ligule or hood, and the petals are unequal but not two-lipped; so 'other', not 'bilabiate'."
     }
   }
 }
