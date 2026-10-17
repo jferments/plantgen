@@ -1,0 +1,204 @@
+{
+  "schema": 1,
+  "id": "cyclamen-hederifolium",
+  "taxon": {
+    "scientific_name": "Cyclamen hederifolium",
+    "common_name": "ivy-leaved cyclamen",
+    "family": "Primulaceae",
+    "genus": "Cyclamen",
+    "plant_name_id": 2749760
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 5,
+      "stem_rate": 0.6,
+      "clump_radius": 0.04,
+      "stem_lean": 25,
+      "maturity": 1.5,
+      "adult_age": 2,
+      "scape": 1,
+      "stem_height": 0.13,
+      "stem_radius": 0.0012,
+      "wiggle": 2,
+      "nodes": 0,
+      "bare": 0,
+      "leaf_peak": 0.5,
+      "leaf_top": 1,
+      "leaf_base": 1,
+      "leaf_angle": 60,
+      "basal_leaves": 3,
+      "basal_length": 0.1,
+      "basal_angle": 70,
+      "raceme": 0.1,
+      "flowers": 1,
+      "flower_size": 0.035,
+      "pedicel": 0.012,
+      "flower_angle": 160,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [2, 4, 6]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.3, 0.12, 0.14],
+    "foliage": [0.035, 0.085, 0.04],
+    "foliage_shade": [0.012, 0.03, 0.014],
+    "variation": 0.15,
+    "organs": {
+      "basal": {
+        "shape": {
+          "template": "simple",
+          "width": 0.85,
+          "outline": [[0, 0.8], [0.08, 0.95], [0.18, 1], [0.28, 0.8], [0.4, 0.68], [0.52, 0.62], [0.65, 0.48], [0.8, 0.3], [0.92, 0.13], [1, 0]],
+          "sinus": 0.12,
+          "teeth": 0,
+          "petiole": 0.45
+        },
+        "face_up": 0.7,
+        "underside": [0.16, 0.035, 0.07],
+        "variegation": {
+          "pattern": "zone",
+          "colour": [0.24, 0.31, 0.27],
+          "amount": 0.3,
+          "spread": 0.4,
+          "at": 0.65,
+          "faces": "upper"
+        }
+      },
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petal_width": 0.9,
+          "point": 0.3,
+          "centre": 0.15,
+          "fused": 0.1,
+          "sepal_length": 0.3
+        },
+        "form": {
+          "flower": {
+            "cup": -50,
+            "curl": 30
+          }
+        },
+        "colour": [0.72, 0.28, 0.46],
+        "accent": [0.45, 0.04, 0.2]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.13,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "leaf_length_m": {
+      "min": 0.025,
+      "max": 0.08
+    },
+    "perennation": "tuber",
+    "rosette": "basal",
+    "inflorescence": "solitary",
+    "flower_colour": [215, 120, 170]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit: a low herb whose leaves and single flowers rise on long stalks from a tuber."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name; wcvp_names.csv of the v16 zip, read 2026-10-17)."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Cyclamen hederifolium (read 2026-10-17, after Thorogood's Kew field guide of 2016 and Blamey and Grey-Wilson 1989): leaves 2.5 to 8 cm long, from heart-shaped to long and arrow-shaped, usually with two or three angled lobes each side like a young ivy leaf."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Cyclamen hederifolium (read 2026-10-17): a tuberous perennial; leaves and flowers grow from buds on the tuber's upper face, roots from its top and sides."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Cyclamen hederifolium (read 2026-10-17): every leaf and flower stalk rises from the tuber, none from a stem."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Cyclamen hederifolium (read 2026-10-17): each flower on its own stalk from the tuber, which coils down after flowering."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, Cyclamen hederifolium (read 2026-10-17): petals usually pink or purple, with a streaked magenta V at the throat, sometimes white. The colour is our reading of the words."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand: a tuber sending up long-stalked leaves held nearly level and single nodding flowers on bare stalks, about 13 cm tall, within the 30 cm Wikipedia gives as the most (Cyclamen hederifolium, read 2026-10-17); flowers about 3.5 cm across with petals 1.2 to 2.5 cm (the same page), turned back. The leaf card is 10 cm, its blade about 5.5 cm on a stalk as long, by eye from iNaturalist photos (read 2026-10-17). Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "13 cm at 4 years, below the 30 cm Wikipedia gives as the most (Cyclamen hederifolium, read 2026-10-17). Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye from research-grade iNaturalist photos (read 2026-10-17): dark green ivy-shaped leaves, broadest near the cordate base with an angled shoulder each side, drawn as an outline; purplish-red undersides on many plants; pink petals turned back and up from a short tube, the flower hanging from the bent tip of its stalk, deep magenta at the mouth (Wikipedia, read 2026-10-17)."
+    },
+    "appearance.organs.basal.variegation": {
+      "evidence": "Authored",
+      "source": "inaturalist-photos-2026-10",
+      "note": "By eye from research-grade iNaturalist leaf photos (6 to 12 plants without flowers, read 2026-10-17; for example observation 190064589): a silver-grey band, air space under the upper skin, that follows the outline about 0.5 to 0.8 of the way from the midrib to the margin, leaving a dark centre and a dark rim, its edges a little toothed; how wide it is varies between plants, some nearly all silver. Drawn as the zone variegation at 0.65 of the way out, on the upper face only. Wikipedia (Cyclamen hederifolium, read 2026-10-17) has the leaves marked with a hastate pattern in silver to grey-green."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "PlantGen contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["PlantGen"],
+    "notes": "Procedural proxy added to show the zone variegation (2026-10-17): sizes from Wikipedia, the pattern from iNaturalist photos."
+  }
+}

@@ -12,10 +12,7 @@
       "alternate": "often",
       "opposite": "often"
     },
-    "leaf_division": {
-      "simple": "often",
-      "compound": "often"
-    },
+    "leaf_division": {"simple": "usually", "compound": "sometimes"},
     "stipules": true,
     "flower_symmetry": {
       "actinomorphic": "usually",
@@ -48,6 +45,7 @@
     "perennation": {"corm": "often", "rhizome": "often", "tuber": "often"}
   },
   "evidence": {
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Geraniaceae (read 2026-10-17): simple or compound; simple blades usually palmately cut. Geranium and most Pelargonium carry deeply cut but single blades (simple by our rule); compound leaves mainly in some Erodium and Pelargonium."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",

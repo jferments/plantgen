@@ -5,8 +5,8 @@
   "parent": "order/caryophyllales",
   "traits": {
     "leaf_arrangement": {
+      "opposite": "usually",
       "alternate": "often",
-      "opposite": "often",
       "whorled": "sometimes"
     },
     "leaf_division": "simple",
@@ -30,9 +30,9 @@
       "polygamous": "sometimes"
     },
     "ovary_position": {
-      "superior": "often",
+      "inferior": "usually",
       "half_inferior": "often",
-      "inferior": "often"
+      "superior": "often"
     },
     "hypanthium": {
       "true": "often",
@@ -43,9 +43,9 @@
       "herbaceous": "often"
     },
     "inflorescence": {
+      "cyme": "usually",
       "solitary": "often",
-      "cyme": "often",
-      "head": "often",
+      "head": "sometimes",
       "raceme": "sometimes"
     },
     "flower_symmetry": "actinomorphic",
@@ -55,10 +55,10 @@
       "absent": "sometimes"
     },
     "fruit_type": {
-      "capsule": "often",
-      "berry": "often",
+      "capsule": "usually",
+      "berry": "sometimes",
       "drupe": "sometimes",
-      "samara": "sometimes"
+      "samara": "rarely"
     },
     "stamens": {
       "min": 5,
@@ -103,6 +103,26 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA Aizoaceae (read 2026-10-16): alternate or opposite; the large mesemb subfamilies have opposite pairs (weighting inferred)."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Aizoaceae incl. the mesembs (read 2026-10-17; ~1,100 spp, 126 genera): fruit usually a capsule, fleshy only rarely (berry sometimes). Wikipedia Aizoaceae (read 2026-10-17; ~1,800 spp, 135 genera) adds that the capsules are often hygrochastic. Berries mainly Carpobrotus; nut-like or drupe-like fruits in Tetragonia."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Aizoaceae (read 2026-10-17): grouped flowers usually in cymes or heads, the ultimate units cymose, flowers otherwise single. Wikipedia Aizoaceae (read 2026-10-17): flowers axillary, single or in few-flowered cymes. Both put cymes ahead; heads are only a minority state (Sesuvioideae and Aizooideae), so lowered to sometimes."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Aizoaceae (read 2026-10-17): leaves opposite or alternate, and the family is dominated by the Ruschioideae radiation; DELTA (read 2026-10-17) lists alternate or opposite, with false whorls. Weighted by species (approximate, not read this session): Ruschioideae (~1,500 of ~1,800 spp; Ruschia, Delosperma, Lampranthus, Conophytum, Drosanthemum) have opposite, often basally joined leaves; alternate leaves are in Tetragonia, Aizoon, Galenia and part of Mesembryanthemum (~200)."
+    },
+    "traits.ovary_position": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Aizoaceae (read 2026-10-17): ovary superior to inferior, no usual state. Our weighting by subfamily size (approximate, not read this session): the inferior ovary of Ruschioideae and Mesembryanthemoideae (~1,600 spp) outweighs the half-inferior ovaries of Aizooideae and Tetragonia and the superior ovary of Sesuvioideae (~200 together)."
     }
   }
 }

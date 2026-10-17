@@ -31,16 +31,8 @@
       "alternate": "often",
       "opposite": "often"
     },
-    "leaf_venation": {
-      "palmate": "often",
-      "pinnate": "often"
-    },
-    "inflorescence": {
-      "cyme": "often",
-      "head": "often",
-      "solitary": "often",
-      "spike": "often"
-    }
+    "leaf_venation": {"palmate": "usually", "pinnate": "often"},
+    "inflorescence": {"cyme": "usually", "head": "often", "spike": "often", "solitary": "rarely"}
   },
   "forms": {
     "forb": {
@@ -101,15 +93,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 329, family Urticaceae: leaf arrangement alternate (spiral) or opposite; read as {\"alternate\": \"often\", \"opposite\": \"often\"}."
     },
-    "traits.leaf_venation": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 329, family Urticaceae: leaf venation pinnate, palmate or unequally ternate; read as {\"palmate\": \"often\", \"pinnate\": \"often\"}."
-    },
-    "traits.inflorescence": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 329, family Urticaceae: inflorescence axillary cyme, globose head, spike or solitary; read as {\"cyme\": \"often\", \"head\": \"often\", \"solitary\": \"often\", \"spike\": \"often\"}."
-    }
+    "traits.leaf_venation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Urticaceae (read 2026-10-17): veins pinnate or palmate, lobed blades palmatifid; no ranking. Our genus weighting (approximate sizes, not read this session): three-nerved or palmate blades in Pilea (~700), Urtica, Boehmeria, Laportea, Pouzolzia and Cecropia outweigh pinnate-veined Elatostema (~500, partly triplinerved) and Dendrocnide. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Urticaceae (read 2026-10-17): flowers usually grouped and solitary only rarely; ultimate units cymose, borne as loose, glomerate, spiciform, racemose, paniculate or capitate cymes, often condensed into heads or on a shared receptacle. Weighting: Pilea (~700) has axillary cymes; Elatostema (~500) bears flowers on capitate receptacles (head); Boehmeria and Urtica carry glomerules on spike-like axes. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."}
   }
 }

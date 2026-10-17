@@ -79,7 +79,8 @@
       100,
       110,
       40
-    ]
+    ],
+    "rosette": "none"
   },
   "appearance": {
     "organs": {
@@ -205,7 +206,8 @@
       "evidence": "SourceInferred",
       "source": "inaturalist-photos-2026-10",
       "note": "The stems stay green to the base, swollen at the nodes, a yellowish green read from the stem's pixels in observation 383595008 and seen in 137144714 and 331395152."
-    }
+    },
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2484645), as no source read gives it."}
   },
   "provenance": {
     "sources": [

@@ -25,8 +25,6 @@
       "basal_leaves": 4,
       "basal_length": 0.4,
       "basal_angle": 15,
-      "basal_pieces": 4,
-      "basal_arch": 8,
       "raceme": 0.1,
       "flowers": 1,
       "flower_size": 0.07,
@@ -36,8 +34,8 @@
       "buds_above": 1,
       "nod": 0,
       "leaf_area": 0.036,
-      "basal_area": 0.025,
-      "basal_piece_area": 0.046,
+      "basal_area": 0.079,
+      "basal_piece_area": 0.146,
       "flower_area": 0.586,
       "bud_area": 0.065,
       "fruit_area": 0.89
@@ -59,10 +57,10 @@
     "variation": 0.2,
     "organs": {
       "basal": {
-        "shape": { "template": "blade", "taper": 1, "aspect": 0.05 }
+        "shape": { "template": "blade", "taper": 1 }
       },
       "basal_piece": {
-        "shape": { "template": "blade", "taper": 0, "aspect": 0.05 }
+        "shape": { "template": "blade", "taper": 0 }
       },
       "flower": {
         "shape": {
@@ -137,7 +135,9 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `basal` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.025)."},
+    "generator.params.basal_piece_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `basal_piece` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.046)."}
   },
   "provenance": {
     "sources": [

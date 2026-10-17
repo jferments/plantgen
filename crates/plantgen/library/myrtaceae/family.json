@@ -24,10 +24,7 @@
     },
     "hypanthium": true,
     "ovary_position": "inferior",
-    "fruit_type": {
-      "berry": "often",
-      "capsule": "often"
-    },
+    "fruit_type": {"berry": "usually", "capsule": "often"},
     "leaf_habit": {
       "evergreen": "usually",
       "deciduous": "rarely"
@@ -38,6 +35,7 @@
     }
   },
   "evidence": {
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Myrtaceae (read 2026-10-17): ~5,950 spp in ~132 genera; capsules in the old Leptospermoideae (Eucalyptus, Corymbia, Angophora, Leptospermum, Melaleuca), fleshy fruits in Myrtoideae, which include the big neotropical genera Eugenia and Myrcia and the Australasian Syzygium. The page gives no genus counts; by general knowledge Syzygium (~1,200), Eugenia (~1,100) and Myrcia (~750) together far outnumber Eucalyptus (~800) plus Melaleuca (~300) and the other capsular genera, so fleshy fruit (berry; Syzygium's is drupe-like) leads."},
     "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Myrtaceae (read 2026-10-17): lamina entire; German Wikipedia, Myrtengewächse (read 2026-10-17): blade simple and entire-margined."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 347: stamens many, centripetal, free or joined in 4-5 groups (Floral Diagrams p. 212: 4 to many). Book writes ∞ (numerous); 200 is our stand-in for the upper bound and 20 for 'numerous' with no stated lower bound."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 347: carpels 2 to 5, up to 16."},

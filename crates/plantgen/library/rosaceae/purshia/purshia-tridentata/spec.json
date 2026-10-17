@@ -42,7 +42,6 @@
       "spur_pairs": 4,
       "leaf_angle": 50,
       "blooms": 1,
-      "adult_age": 8,
       "bloom_size": 0.02,
       "bloom_angle": 40,
       "path_half": 2.25
@@ -100,12 +99,9 @@
           "leaves": 9,
           "angle": 40,
           "stalk": 0.15,
-          "width": 0.5,
           "widest": 0.75,
           "tip": 0.2,
           "base": 0.5,
-          "teeth": 2,
-          "tooth_depth": 0.2,
           "petiole": 0.02
         }
       },
@@ -170,7 +166,11 @@
       7,
       8,
       9
-    ]
+    ],
+    "height_typical_m": {"min": 0.5, "max": 2.5},
+    "woodiness": "woody",
+    "leaf_width_m": {"min": 0.003, "max": 0.01},
+    "sexual_system": "hermaphrodite"
   },
   "evidence": {
     "taxon": {
@@ -262,7 +262,11 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "By eye: grey-brown bark; small wedge-shaped leaves, three-toothed at the tip, grey-green; pale yellow five-petalled flowers."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2962482), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2962482), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2962482), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2962482), as no source read gives it."}
   },
   "provenance": {
     "sources": [
