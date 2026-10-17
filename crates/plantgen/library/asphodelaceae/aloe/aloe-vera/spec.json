@@ -28,13 +28,13 @@
       "trunk_radius": 0.02,
       "flower_age": 4,
       "bloom": 0.9,
-      "stalk_height": 0.9,
+      "stalk_height": 0.65,
       "stalk_radius": 0.01,
-      "stalk_head": 0.2,
+      "stalk_head": 0.02,
       "stalk_branches": 0,
-      "flowers": 40,
-      "flower_size": 0.045,
-      "flower_angle": 150,
+      "flowers": 1,
+      "flower_size": 0.22,
+      "flower_angle": 0,
       "stalk_life": 2,
       "pups": 6,
       "pup_age": 3,
@@ -133,6 +133,7 @@
         ]
       },
       "flower": {
+        "inflorescence": { "flowers": 40, "size": 0.12, "spread": 80, "pedicel": 0.03 },
         "shape": {
           "template": "flower",
           "petal_width": 0.5,
@@ -191,14 +192,14 @@
     "leaf_habit": "evergreen",
     "leaf_arrangement": "alternate",
     "sexual_system": "hermaphrodite",
-    "inflorescence_length_m": {"min": 0.6, "max": 0.9},
+    "inflorescence_length_m": {"min": 0.1, "max": 0.3},
     "fruit_size_m": {"min": 0.015, "max": 0.025}
   },
   "evidence": {
     "generator.params": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Hand-set from general knowledge of the species: a stemless clump of thick, fleshy, grey-green leaves 30 to 50 cm long (Britton and Millspaugh 1920: 3 dm to 6 dm; a pup's first leaves are far shorter, so the length is not checked over every leaf) and 6 to 7 cm wide at the base, triangular in section, with small soft teeth along the margins. Its flowering follows Britton (1918) and Britton and Millspaugh (1920): a stout scape about 0.8 m to 1.2 m high ends in a dense raceme 10 cm to 30 cm long (stalk_height 0.9, stalk_head 0.2, 40 flowers) of yellow flowers about 2.5 cm long, hanging on short pedicels (flower_angle 150, nodding). Britton (1918) calls the plant stoloniferous, and garden plants crowd with offsets: a crown that flowers may also send out a pup that year, and pups send out up to two of their own (bloom_pup 1, pup_pups 2), so the clump spreads outward. Not fitted to measurements."
+      "note": "Hand-set from general knowledge of the species: a stemless clump of thick, fleshy, grey-green leaves 30 to 50 cm long (Britton and Millspaugh 1920: 3 dm to 6 dm; a pup's first leaves are far shorter, so the length is not checked over every leaf) and 6 to 7 cm wide at the base, triangular in section, with small soft teeth along the margins. Its flowering follows Britton (1918) and Britton and Millspaugh (1920): a stout scape about 0.8 m to 1.2 m high ends in a dense raceme 10 cm to 30 cm long of 40 yellow flowers about 2.5 cm long, drawn as one cluster on the stalk's tip (flowers 1, flower_size 0.22, its look's inflorescence 40 flowers each 0.12 of its length, spread 80, nearly level, on short pedicels 0.03 of its length). Britton (1918) calls the plant stoloniferous, and garden plants crowd with offsets: a crown that flowers may also send out a pup that year, and pups send out up to two of their own (bloom_pup 1, pup_pups 2), so the clump spreads outward. Not fitted to measurements."
     },
     "allometry": {
       "evidence": "Authored",
@@ -253,17 +254,17 @@
     "generator.params.stalk_height": {
       "evidence": "SourceInferred",
       "source": "britton-1918-bermuda",
-      "note": "Britton (1918), Flora of Bermuda, under Aloe vera: scape stout, 0.6 m to 1.1 m high (2 to 3.5 feet; Britton and Millspaugh 1920 give 8 dm to 12 dm), above a nearly stemless, stoloniferous rosette. Converted from feet; in our own words."
+      "note": "Britton (1918), Flora of Bermuda, under Aloe vera: scape stout, 0.6 m to 1.1 m high (2 to 3.5 feet; Britton and Millspaugh 1920 give 8 dm to 12 dm), above a nearly stemless, stoloniferous rosette. Converted from feet; in our own words. The stalk is drawn 0.65 m to the raceme's foot, and the raceme as one cluster above it, so the whole stands about 0.85 m."
     },
     "generator.params.stalk_head": {
       "evidence": "SourceInferred",
       "source": "britton-1918-bermuda",
-      "note": "Britton (1918): raceme dense, 10 cm to 30 cm long (4 to 12 inches), a fifth of a 0.9 m stalk. The count of 40 flowers is ours, for a dense raceme."
+      "note": "Britton (1918): raceme dense, 10 cm to 30 cm long (4 to 12 inches). The raceme is drawn as one cluster on the stalk's tip (the look's inflorescence), so the stalk's own flowering share is only the node that bears it. The count of 40 flowers is ours, for a dense raceme."
     },
     "generator.params.flower_angle": {
       "evidence": "SourceInferred",
       "source": "britton-1918-bermuda",
-      "note": "Britton (1918), for the genus Aloe: flowers nodding in racemes, the perianth near cylindric with its tips somewhat spreading; for Aloe vera, flowers yellow, about 2.5 cm long, on pedicels shorter than their bracts. 150 degrees hangs each flower down from the stalk."
+      "note": "Britton (1918), for the genus Aloe: flowers nodding in racemes, the perianth near cylindric with its tips somewhat spreading; for Aloe vera, flowers yellow, about 2.5 cm long, on pedicels shorter than their bracts. The raceme stands straight on its stalk (0); within it a flower spreads at 80 degrees, the most a cluster's flower may, so it nearly hangs level."
     },
     "generator.params.bloom_pup": {
       "evidence": "SourceInferred",
@@ -275,7 +276,7 @@
     "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L298116), as no source read gives it."},
     "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L298116), as no source read gives it."},
     "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L298116), as no source read gives it."},
-    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L298116), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "SourceInferred", "source": "britton-1918-bermuda", "note": "Britton (1918), Flora of Bermuda, under Aloe vera: raceme dense, 10 cm to 30 cm long (4 to 12 inches), on a scape 0.6 m to 1.1 m high. Converted from inches; in our own words. Replaces a model estimate of 0.6 m to 0.9 m (species-facts record L298116), which is the scape's height, not the raceme's."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L298116), as no source read gives it."}
   },
   "provenance": {
