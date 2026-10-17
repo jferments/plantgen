@@ -655,7 +655,10 @@ pub mod venation;
 /// shape and height facts held back from 96; broom's stated obovate
 /// leaflets draw where a hand-drawn profile stood (102 is fern sori,
 /// #182).
-/// 104: hairs beneath a blade (`hairs_beneath`, from `leaf_hairs_beneath`)
+/// 104: a flowering herb's top leaf nodes may each bear a side branch
+/// ending in a raceme (`flowering_branches`; herb program revision 10)
+/// (103 is held-back species facts, #192).
+/// 105: hairs beneath a blade (`hairs_beneath`, from `leaf_hairs_beneath`)
 /// and hairs gathered on its main veins (`Hairs::veins`, from
 /// `leaf_hairs_on_veins`); a face's strands stand on the face that wears
 /// them and on the drawn cells of a bent card, and a stated hair length
@@ -664,6 +667,6 @@ pub mod venation;
 /// drawn as stars, little trees and winding strands, white with air;
 /// glandular and stinging hairs among them (`glandular_hairs`,
 /// `stinging_hairs`), with round heads and glass needles on green feet;
-/// the strand budget spent on the hairs nearest the eye first (103 is
-/// the held-back facts, #192).
-pub const GENERATOR_REVISION: u32 = 104;
+/// the strand budget spent on the hairs nearest the eye first (104 is
+/// flowering branches, #188).
+pub const GENERATOR_REVISION: u32 = 105;

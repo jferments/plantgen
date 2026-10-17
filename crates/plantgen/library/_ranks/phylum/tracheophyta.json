@@ -85,6 +85,10 @@
       }},
       "why": "Each node turns from the one below by the golden angle in a spiral, half a turn in two ranks, a third of a turn in three, and half the gap between its own leaves where pairs or whorls cross. Where the turn and the leaves are stated at different ranks and disagree, the leaves decide: pairs and whorls cross even under an order's spiral, and single leaves under an order's crossing pairs turn by the golden angle."
     },
+    "generator.params.flower_branches": {
+      "rule": "flowering_branches",
+      "why": "A herb's flowering stem bears a flowering side branch in the axil of each of its top leaves, as many as the taxon states."
+    },
     "generator.params.stem_height": {
       "rule": "height_typical_m",
       "why": "A herb's stems grow back each year to about the plant's usual height."
@@ -139,6 +143,11 @@
       "evidence": "SourceInferred",
       "source": "okabe-2019-phyllotaxis",
       "note": "What the words mean, as accounts of phyllotaxis such as Okabe and colleagues' use them: a spiral or two-ranked shoot bears one leaf at a node, a decussate one a pair and a whorled one three or more. A spiral turns about the golden angle (137.5 degrees) from node to node and two ranks half a turn; pairs and whorls alternate, each standing over the gaps of the one below, half the gap between its own leaves round (90 degrees for pairs). Three ranks turn a third of a turn, as their name says."
+    },
+    "rules.generator.params.flower_branches": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "What the herb program's flowering side branches mean: a branched herb such as fennel or poison hemlock (Abrams 1951 pp. 231, 241: branched, much branched) carries an inflorescence at the end of each side branch from its upper leaf axils, as many as the taxon states; a herb that states none keeps one inflorescence to a stem."
     },
     "rules.generator.params.stem_height": {
       "evidence": "Authored",
