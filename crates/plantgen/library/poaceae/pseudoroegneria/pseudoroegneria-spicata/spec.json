@@ -159,6 +159,7 @@
       6,
       7
     ],
+    "fruiting_months": [7, 8],
     "awn_length_m": {
       "min": 0.01,
       "max": 0.02
@@ -253,6 +254,11 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high), as the FEIS review read gives no months."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's bluebunch wheatgrass review (Zlatnik 1999, read 2026-10-16), central Utah: \"seed ripe\" July 17, disseminating July 23, disseminated August 6; read as July and August."
     },
     "generator.params": {
       "evidence": "Authored",

@@ -549,9 +549,15 @@ pub mod venation;
 /// which flowered all year and never fruited, now bud, flower, fruit and
 /// drop in their months, as do the magnoliids that state their months
 /// (85 is conifer foliage along the limbs, #142).
-/// 87: a far level's spine tint greys with each station's age as the near
+/// 87: a flower with no perianth (no petals, tube, calyx or cup) spreads
+/// its stamens and pistil over the reach its pieces would have taken, and
+/// the reduced drawing shows them as small blunt stamens in the flower's
+/// colour on a ring at any distance, not as bare sticks; seventeen
+/// species state their fruiting months from their sources, so their year
+/// now bears fruit.
+/// 88: a far level's spine tint greys with each station's age as the near
 /// levels' spines do, covers a rib valley half as much as a crest, and
 /// hides half the skin it did, so a spiny cactus keeps its colour and rib
 /// shading from afar; cacti state stem, spine, old spine and wool colours,
-/// which the family's rules draw (86 is flowering years, #159).
-pub const GENERATOR_REVISION: u32 = 87;
+/// which the family's rules draw (87 is flowers without a perianth, #168).
+pub const GENERATOR_REVISION: u32 = 88;

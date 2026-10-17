@@ -28,10 +28,7 @@
       "deciduous": "usually",
       "evergreen": "sometimes"
     },
-    "rosette": {
-      "basal": "often",
-      "none": "often"
-    },
+    "rosette": {"none": "usually", "basal": "sometimes"},
     "life_span": "perennial",
     "phyllotaxis_pattern": {
       "spiral": "usually"
@@ -97,11 +94,7 @@
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Rosaceae as that work draws it, there coded together with Guamatelaceae, Quillajaceae, Stylobasiaceae: how long the leaves last (character 37), coded usually deciduous, sometimes evergreen. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
     },
-    "traits.rosette": {
-      "evidence": "SourceInferred",
-      "source": "watson-dallwitz-1992",
-      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Rosaceae as that work draws it, there coded together with Guamatelaceae, Quillajaceae, Stylobasiaceae: whether the leaves gather in rosettes (character 22), coded often a basal rosette, often no rosette. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
-    },
+    "traits.rosette": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Rosales page, Rosaceae (read 2026-10-16): of about 2,805 species, Amygdaloideae (about 1,540) are woody and Rosoideae run from herbs to shrubs; DELTA Rosaceae says only some herbs have a basal cluster of leaves; so no rosette is usual and a basal one sometimes."},
     "traits.life_span": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

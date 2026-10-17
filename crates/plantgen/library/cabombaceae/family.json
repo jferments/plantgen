@@ -6,11 +6,7 @@
   "traits": {
     "rosette": "none",
     "phyllotaxis_pattern": {"decussate": "usually", "spiral": "sometimes"},
-    "leaf_arrangement": {
-      "alternate": "often",
-      "opposite": "often",
-      "whorled": "sometimes"
-    },
+    "leaf_arrangement": {"opposite": "usually", "whorled": "sometimes", "alternate": "rarely"},
     "leaf_division": {
       "simple": "often",
       "compound": "often"
@@ -67,10 +63,6 @@
       "note": "Simpson, Plant Systematics (2019) p. 193, family Cabombaceae: rhizome habit long_creeping (rhizomes give rise to elongate leafy shoots), usually; read as {\"long_creeping\": \"usually\"}."
     },
     "traits.perennation": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Cabombaceae: how its perennial herbs last from year to year (character 25), coded usually a rhizome. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 25 added); states the authors do not qualify, side by side, read as often."},
-    "traits.leaf_arrangement": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add whorled (sometimes): Simpson, Plant Systematics (2019) p. 193: alternate, opposite or whorled."
-    }
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Nymphaeales page, Cabombaceae (read 2026-10-16): Cabomba (about 7 of 8 species) has submerged leaves opposite or in whorls of three, while the peltate floating leaves (all of Brasenia's) are spiral; so opposite usually, whorled sometimes, alternate rarely (rarely rather than the proposed sometimes, since only one species relies on them)."}
   }
 }
