@@ -148,11 +148,13 @@
           "teeth": 0,
           "petiole": 0.15
         },
-        "accent": [
-          0.82,
-          0.86,
-          0.78
-        ]
+        "variegation": {
+          "pattern": "centre",
+          "colour": [0.5, 0.56, 0.45],
+          "amount": 0.14,
+          "spread": 0.3,
+          "scale": 0.06
+        }
       }
     }
   },
@@ -292,7 +294,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "By eye, after FEIS's description (Reeves 2006): dark green rosette leaves with white mottling along the midvein (the basal leaves' accent); small greenish-white hooded flowers."
+      "note": "By eye, after FEIS's description (Reeves 2006): dark green rosette leaves with white mottling along the midvein (the basal leaves' variegation: a pale band down the middle of each blade, its edge a little uneven, wider on some leaves than others); small greenish-white hooded flowers."
     },
     "traits.fruiting_months": {
       "evidence": "Authored",

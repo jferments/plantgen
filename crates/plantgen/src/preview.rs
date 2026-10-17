@@ -308,6 +308,31 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
             },
         },
     };
+    // Hairs long enough to see one by one, as strands of their own.
+    #[allow(clippy::cast_precision_loss)]
+    let samples = (options.height * options.supersample.max(1)).max(1) as f64;
+    let forward = (camera.target - camera.eye).normalize_or(Vec3::Z);
+    let pixel = |at: Vec3| match camera.projection {
+        Projection::Perspective { fov_y } => {
+            (at - camera.eye).dot(forward).max(1e-6)
+                * 2.0
+                * crate::math::tan(crate::math::radians(fov_y * 0.5))
+                / samples
+        }
+        Projection::Orthographic { half_height } => 2.0 * half_height / samples,
+    };
+    let strands = if templates
+        .templates
+        .iter()
+        .any(|template| template.hairs.is_some())
+    {
+        crate::hairs::strand_mesh(plant, templates, &pixel)
+    } else {
+        Mesh::default()
+    };
+    if !strands.indices.is_empty() {
+        meshes.push((&strands, Material::Hair));
+    }
     let mut shaded = vec![(&figure_mesh, Material::Opaque)];
     shaded.extend(items);
     // A close-up's shadow map covers only a box round what it frames, so its

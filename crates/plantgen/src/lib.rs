@@ -46,6 +46,7 @@ pub mod gltf;
 pub mod graph;
 pub mod ground;
 pub mod grow;
+pub mod hairs;
 pub mod impostor;
 pub mod inherit;
 pub mod json;
@@ -567,4 +568,14 @@ pub mod venation;
 /// hides half the skin it did, so a spiny cactus keeps its colour and rib
 /// shading from afar; cacti state stem, spine, old spine and wool colours,
 /// which the family's rules draw (88 is scaly fern stipes, #163).
-pub const GENERATOR_REVISION: u32 = 89;
+/// 90: hairs (`crate::hairs`): a blade's hairs as floras name them
+/// (`leaf_hairs`, `leaf_ciliate`) cast its colour toward theirs, add a
+/// sheen and a backlit glow, fringe its edge, and up close stand from it
+/// as strands of their own (89 is cactus colours, #156).
+/// 91: leaves with two faces and variegation: a look's `underside` colour
+/// paints its cards' lower faces (the side that looks more toward the
+/// ground), and its `variegation` paints pale margins, centres, stripes,
+/// bands, spots or mottles, a different share on every leaf; the royal
+/// palm's pinnae are paler below and the rattlesnake plantain's leaves
+/// carry their pale midvein band (90 is leaf hairs, #166).
+pub const GENERATOR_REVISION: u32 = 91;

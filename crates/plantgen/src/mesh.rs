@@ -245,12 +245,7 @@ impl PlantMesh {
             let normal = heading.cross(left);
             let half = left * f64::from(card.width * 0.5);
             let tip = heading * f64::from(card.length);
-            let color = [
-                card.color[0],
-                card.color[1],
-                card.color[2],
-                f32::from(card.template),
-            ];
+            let color = card_color(card);
             let shed = card.shed.is_finite().then_some(f64::from(card.shed));
             let corners = [
                 (base - half, [0.0, 0.0]),
@@ -285,15 +280,22 @@ impl PlantMesh {
     }
 }
 
+/// A card's vertex colour: its colour, and in alpha its template plus its
+/// face ([`crate::templates::pack_face`]): its seed, from its base, and
+/// whether its normal points down.
+fn card_color(card: &Card) -> [f32; 4] {
+    let alpha = crate::templates::pack_face(
+        card.template,
+        crate::templates::card_seed(card.base),
+        crate::templates::card_flipped(card.heading, card.left),
+    );
+    [card.color[0], card.color[1], card.color[2], alpha]
+}
+
 /// A bent card as the renderer draws it: [`crate::bend::VERTICES`]
 /// corners of its grid, each its own vertex.
 fn bent_card(card: &Card, base: Vec3, heading: Vec3, left: Vec3, out: &mut Mesh) {
-    let color = [
-        card.color[0],
-        card.color[1],
-        card.color[2],
-        f32::from(card.template),
-    ];
+    let color = card_color(card);
     let shed = card.shed.is_finite().then_some(f64::from(card.shed));
     let half = f64::from(card.width) * 0.5;
     let length = f64::from(card.length);
@@ -3791,6 +3793,9 @@ mod tests {
 
     fn look(shape: Shape, face_up: f64) -> OrganLook {
         OrganLook {
+            hairs: None,
+            underside: None,
+            variegation: None,
             roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             shape,
