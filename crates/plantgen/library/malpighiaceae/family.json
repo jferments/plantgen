@@ -30,17 +30,17 @@
       "umbel": "often"
     },
     "flower_symmetry": {
-      "actinomorphic": "often",
-      "zygomorphic": "often"
+      "zygomorphic": "usually",
+      "actinomorphic": "sometimes"
     },
     "zygomorphy": "other",
     "perianth": "sepals_and_petals",
     "fruit_type": {
+      "samara": "usually",
       "drupe": "often",
-      "nut": "often",
-      "samara": "often",
-      "aggregate": "often",
-      "schizocarp": "often"
+      "schizocarp": "sometimes",
+      "nut": "sometimes",
+      "aggregate": "rarely"
     },
     "flower_merosity": 5,
     "stamens": {
@@ -75,6 +75,16 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA, Malpighiaceae (read 2026-10-17): lamina undivided, margins entire."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Malpighiaceae (read 2026-10-17): flowers regular to strongly irregular, without weighting. Wikipedia Malpighiaceae (read 2026-10-17): about nine tenths of the ~1,300 species are New World. Acevedo-Rodriguez and Pace, climbing Malpighiaceae treatment (Smithsonian PDF, read 2026-10-17): New World flowers weakly to strongly bilateral with a distinct posterior flag petal, Psychopterys the radial exception; most Old World genera radially symmetric. So bilateral flowers cover roughly 90% of species."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA Malpighiaceae (read 2026-10-17): fruit mostly dry, a schizocarp of often samaroid mericarps, else drupes or nuts. Genus tally: the Smithsonian climbing-Malpighiaceae treatment (read 2026-10-17) gives samaras for Heteropterys (>140 spp), Hiraea (70-80), Banisteriopsis (62), Mascagnia (~45), Gaudichaudia (~25), Janusia (18) and Tetrapterys; Britannica (read 2026-10-17) adds Stigmaphyllon (100, samara per the Smithsonian text). That is over 500 counted winged-fruit species against at most ~355 in the fleshy-fruited Byrsonima (150), Malpighia (130 per Britannica) and Bunchosia, whose fruits were not read here. Dicella's nutlike fruit kept as nut; schizocarp kept lower since the drawn unit is the winged mericarp."
     }
   }
 }

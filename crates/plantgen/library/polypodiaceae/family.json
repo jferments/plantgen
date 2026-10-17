@@ -24,7 +24,14 @@
       "dimorphic": "sometimes"
     },
     "life_span": "perennial",
-    "rhizome_habit": "short_creeping"
+    "rhizome_habit": "short_creeping",
+    "stipe_scales": {
+      "sparse": "usually",
+      "absent": "sometimes"
+    },
+    "stipe_scale_extent": {
+      "base": "usually"
+    }
   },
   "evidence": {
     "traits": {
@@ -46,6 +53,16 @@
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",
       "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add oblong (sometimes): Simpson, Plant Systematics (2019) p. 122, 123: round, oblong or elliptic."
+    },
+    "traits.stipe_scales": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (vol. 2), Dryopteridaceae, most of the species the Library joins to this family: \"Petiole usually not articulate to stem, scales usually persistent at base\"; Polypodiaceae proper: \"Petiole ... lacking scales or sometimes scaly\". Read as sparse usually, absent sometimes; a genus or species that states its own wins."
+    },
+    "traits.stipe_scale_extent": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (vol. 2), Dryopteridaceae: \"scales usually persistent at base\". Read as base."
     }
   }
 }

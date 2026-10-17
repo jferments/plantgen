@@ -8,10 +8,7 @@
     "leaf_arrangement": "alternate",
     "leaf_division": "simple",
     "leaf_venation": "parallel",
-    "leaf_shape": {
-      "linear": "often",
-      "lanceolate": "often"
-    },
+    "leaf_shape": {"linear": "usually", "lanceolate": "sometimes"},
     "sexual_system": {"dioecious": "usually", "polygamous": "sometimes"},
     "ovary_position": "superior",
     "woodiness": "woody",
@@ -51,6 +48,7 @@
     "perennation": "rhizome"
   },
   "evidence": {
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Pandanus (read 2026-10-17): leaves strap-shaped, may be spiny, i.e. long and narrow (linear). Pandanus is by far the largest genus (the page gives no count; it is roughly three quarters of the family), so linear leads; lanceolate kept as sometimes for broader-bladed Freycinetia and Sararanga (not read)."},
     "traits.sexual_system": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Pandanaceae (read 2026-10-17): dioecious or polygamodioecious, flowers unisexual. Pandanus and Freycinetia are dioecious (genus knowledge); polygamy is the exception."},
     "traits.perianth": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Pandanaceae (read 2026-10-17): no perianth in Pandanus and Freycinetia; tepals only, and queried, in Sararanga (a couple of species) of c. 700."},
     "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Pandanaceae (read 2026-10-17): lamina entire, simple; German Wikipedia, Schraubenbäume (read 2026-10-17): large simple linear leaves."},

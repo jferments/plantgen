@@ -19,7 +19,8 @@
 //!   underside colour times the darkening, moved toward the template's
 //!   variegated colour times the darkening by the variegation weight of
 //!   the texel's rank (`texel.b`) for the card's seed
-//!   ([`Scene::template_paints`], [`SceneMesh::faces`]); the accent is
+//!   ([`Scene::template_paints`], [`SceneMesh::faces`]), or where it
+//!   bears sori, toward its sorus's colour on its lower face; the accent is
 //!   its template's accent colour ([`Scene::template_accents`]) and the
 //!   darkening this card's ([`SceneMesh::darkening`]); then moved toward
 //!   its hairs' colour darkened alike by their weight
@@ -198,11 +199,20 @@ pub struct CardPaint {
     /// The variegated colour, linear RGB, and 1; all 0 for a template
     /// without variegation.
     pub patches: [f32; 4],
-    /// The variegation's amount and spread, then 0 and 0: a card of seed
-    /// `s` paints the texels ranked below `clamp(amount + spread * (s -
-    /// 0.5), 0, 1)`, with an edge [`plantgen::looks::VARIEGATION_EDGE`]
-    /// wide.
+    /// The variegation's amount and spread, then 1 when only the upper
+    /// face is variegated (else 0), then 0: a card of seed `s` paints the
+    /// texels ranked below `clamp(amount + spread * (s - 0.5), 0, 1)`,
+    /// with an edge [`plantgen::looks::VARIEGATION_EDGE`] wide.
     pub share: [f32; 4],
+    /// The sori's sporangia colour, linear RGB, and the share of cards
+    /// that bear them ([`plantgen::looks::Sori::borne`]); all 0 for a
+    /// template without sori.
+    pub sporangia: [f32; 4],
+    /// The sori's indusium colour, linear RGB, and 1; all 0 for a template
+    /// without sori. On a bearing card's lower face a texel's blue `b`
+    /// above 0 is its sorus: the sporangia colour times the darkening by
+    /// `min(2b, 1)`, moving to the indusium's by `2b - 1` above one half.
+    pub indusium: [f32; 4],
 }
 
 /// Each template's [`CardPaint`], one per layer.
@@ -223,13 +233,29 @@ pub fn template_paints(templates: &Templates) -> Vec<CardPaint> {
                 #[allow(clippy::cast_possible_truncation)]
                 (
                     [v.colour[0], v.colour[1], v.colour[2], 1.0],
-                    [v.amount as f32, v.spread as f32, 0.0, 0.0],
+                    [
+                        v.amount as f32,
+                        v.spread as f32,
+                        if v.faces.is_both() { 0.0 } else { 1.0 },
+                        0.0,
+                    ],
+                )
+            });
+            let (sporangia, indusium) = template.sori.map_or(([0.0; 4], [0.0; 4]), |s| {
+                let c = s.indusium_colour;
+                // Shares are between 0 and 1; f32 keeps them.
+                #[allow(clippy::cast_possible_truncation)]
+                (
+                    [s.colour[0], s.colour[1], s.colour[2], s.amount as f32],
+                    [c[0], c[1], c[2], 1.0],
                 )
             });
             CardPaint {
                 underside,
                 patches,
                 share,
+                sporangia,
+                indusium,
             }
         })
         .collect()
@@ -1683,17 +1709,33 @@ mod tests {
         let drawing = drawing::draw(&request).expect("draws");
         let mut templates = drawing.templates.clone();
         templates.templates[0].underside = Some([0.3, 0.35, 0.2]);
-        templates.templates[0].variegation = Some(plantgen::looks::Variegation {
-            pattern: plantgen::looks::VariegationPattern::Margin,
-            colour: [0.8, 0.8, 0.6],
-            amount: 0.3,
-            spread: 0.5,
-            scale: 0.08,
-        });
-        let paint = template_paints(&templates)[0];
+        for faces in [
+            plantgen::looks::VariegationFaces::Both,
+            plantgen::looks::VariegationFaces::Upper,
+        ] {
+            templates.templates[0].variegation = Some(plantgen::looks::Variegation {
+                pattern: plantgen::looks::VariegationPattern::Margin,
+                colour: [0.8, 0.8, 0.6],
+                amount: 0.3,
+                spread: 0.5,
+                scale: 0.08,
+                lines: 3,
+                cross: 0.07,
+                rim: 0.0,
+                faces,
+                at: 0.6,
+                from: plantgen::looks::ZoneFrom::Midrib,
+                slant: 0.0,
+            });
+            the_card_paint_matches(&templates);
+        }
+    }
+
+    fn the_card_paint_matches(templates: &Templates) {
+        let paint = template_paints(templates)[0];
         let colour = [0.08_f32, 0.2, 0.05];
-        let dark = f64::from(darkening(&templates, 0, colour));
-        let hairs = template_hairs(&templates)[0];
+        let dark = f64::from(darkening(templates, 0, colour));
+        let hairs = template_hairs(templates)[0];
         let accent: [f64; 3] =
             std::array::from_fn(|c| f64::from(templates.templates[0].accent_colour[c]) * dark);
         for flipped in [false, true] {
@@ -1709,6 +1751,7 @@ mod tests {
                             hair: hairs[3],
                             fringe: false,
                             pattern: rank,
+                            sorus: 0.0,
                         };
                         let face = plantgen::templates::card_face(alpha, front);
                         let want = templates.paint(0, colour.map(f64::from), texel, face);
@@ -1720,7 +1763,9 @@ mod tests {
                             base = std::array::from_fn(|c| f64::from(paint.underside[c]) * dark);
                         }
                         let share = (paint.share[0] + paint.share[1] * (s - 0.5)).clamp(0.0, 1.0);
-                        let patch = if share <= 0.0 {
+                        let patch = if front == flip && paint.share[2] > 0.5 {
+                            0.0
+                        } else if share <= 0.0 {
                             0.0
                         } else if share >= 1.0 {
                             1.0
@@ -1733,6 +1778,86 @@ mod tests {
                         }
                         for c in 0..3 {
                             let face = (base[c] + (accent[c] - base[c]) * f64::from(weight)) * 1.2;
+                            let h = f64::from(hairs[c]) * dark;
+                            let got = face + (h - face) * f64::from(hairs[3]);
+                            assert!((want[c] - got).abs() < 1e-4, "{want:?} {c} {got}");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn the_sorus_paint_is_the_generators() {
+        // A template with an underside and sori, painted as the card shader
+        // paints it from `CardPaint`, a vertex's face and a texel.
+        let spec = Library::builtin().spec("acer-macrophyllum").expect("maple");
+        let quality = quality::DRAFT;
+        let mut request = Request::typical(&spec, Library::builtin(), &quality);
+        request.age = 6.0;
+        let drawing = drawing::draw(&request).expect("draws");
+        let mut templates = drawing.templates.clone();
+        templates.templates[0].underside = Some([0.3, 0.35, 0.2]);
+        templates.templates[0].variegation = None;
+        templates.templates[0].sori = Some(plantgen::looks::Sori {
+            amount: 0.6,
+            ..plantgen::looks::Sori::default()
+        });
+        let paint = template_paints(&templates)[0];
+        let colour = [0.08_f32, 0.2, 0.05];
+        let dark = f64::from(darkening(&templates, 0, colour));
+        let hairs = template_hairs(&templates)[0];
+        let accent: [f64; 3] =
+            std::array::from_fn(|c| f64::from(templates.templates[0].accent_colour[c]) * dark);
+        for flipped in [false, true] {
+            for seed in [0.0_f32, 0.1, 0.3, 0.9] {
+                let alpha = plantgen::templates::pack_face(0, seed, flipped);
+                let packed = (alpha - alpha.round()) / plantgen::templates::CARD_FACE_SPAN;
+                for front in [true, false] {
+                    for sorus in [0.0_f32, 0.2, 0.5, 0.7, 1.0] {
+                        let texel = Texel {
+                            coverage: 1.0,
+                            brightness: 1.2,
+                            accent: 0.1,
+                            hair: hairs[3],
+                            fringe: false,
+                            pattern: 1.0,
+                            sorus,
+                        };
+                        let face = plantgen::templates::card_face(alpha, front);
+                        let want = templates.paint(0, colour.map(f64::from), texel, face);
+                        // card.wgsl, line for line.
+                        let flip = packed >= 0.475;
+                        let s = ((packed - if flip { 0.5 } else { 0.0 }) / 0.45).clamp(0.0, 1.0);
+                        let mut base = colour.map(f64::from);
+                        if front == flip && paint.underside[3] > 0.5 {
+                            base = std::array::from_fn(|c| f64::from(paint.underside[c]) * dark);
+                        }
+                        if front == flip
+                            && paint.indusium[3] > 0.5
+                            && sorus > 0.0
+                            && (s * 7.31 + 0.37).fract() < paint.sporangia[3]
+                        {
+                            let ripe = paint.sporangia;
+                            let (colour, weight): ([f32; 3], f32) = if sorus > 0.5 {
+                                let v = (2.0 * (sorus - 0.5)).min(1.0);
+                                (
+                                    std::array::from_fn(|c| {
+                                        ripe[c] + (paint.indusium[c] - ripe[c]) * v
+                                    }),
+                                    1.0,
+                                )
+                            } else {
+                                ([ripe[0], ripe[1], ripe[2]], (2.0 * sorus).min(1.0))
+                            };
+                            for (c, value) in base.iter_mut().enumerate() {
+                                let p = f64::from(colour[c]) * dark;
+                                *value += (p - *value) * f64::from(weight);
+                            }
+                        }
+                        for c in 0..3 {
+                            let face = (base[c] + (accent[c] - base[c]) * 0.1) * 1.2;
                             let h = f64::from(hairs[c]) * dark;
                             let got = face + (h - face) * f64::from(hairs[3]);
                             assert!((want[c] - got).abs() < 1e-4, "{want:?} {c} {got}");

@@ -609,7 +609,46 @@ pub mod venation;
 /// thrice-divided leaf whose divisions roll round their rachis sets its
 /// segments round each pinnule's too; a leaflet may be as narrow as a
 /// hundredth of its length (96 is the species-facts records, #171).
+/// 98: variegation along a parallel-veined blade's veins (`veins`: a
+/// midrib stripe, then veinlet dashes, then a net round dark islands as
+/// the share grows; `slant` turns the cross veins into a pinnate blade's
+/// lateral veins), its inverse `between` (silver fields between the veins),
+/// `zone` (a band along the outline, or a V from the base), a rim the
+/// pattern never reaches, and patches on the upper face only (`faces`);
+/// a compound leaf's pattern lies on each leaflet; the rattlesnake
+/// plantain's leaves are drawn so, dark blue-green, six to a flat rosette
+/// (97 is lacy leaves as geometry, #183).
+/// 99: a fern's stipe scales stand only on its base where its flora says
+/// so (`stipe_scale_extent`, fern program revision 9), as long as stated
+/// (`stipe_scale_length_m`), and its stipe and rachis are drawn in its
+/// stated `stipe_colour`; the fern families state whether their stipes are
+/// scaly as Flora of North America gives (scaly at the base in
+/// Polypodiaceae, Aspleniaceae and Pteridaceae as the Library joins them,
+/// bare in Dennstaedtiaceae and Osmundaceae), so the lady, spreading wood
+/// and deer ferns grow scaly stipe bases; the lady fern's frond and stipe
+/// are as long as its flora gives (98 is variegation along the
+/// veins, #175).
+/// 100: a dimorphic fern bears fertile fronds as well as sterile ones (fern
+/// program revision 10): `frond_dimorphism` dimorphic makes about three in
+/// ten fertile, standing nearer the crown's centre, as long, as stalked and
+/// as upright as their stated `fertile_*` characters give, with their own
+/// pinnae (`fertile_pinna`, as narrow as stated); the deer fern's erect
+/// fertile fronds rise from its spreading rosette as Flora of North America
+/// gives, and its reference height is theirs (99 is fern stipes scaly at
+/// their base, #174).
+/// 101: a fern's frond comes up as a crozier (fern program revision 11): a
+/// circinate frond's blade winds `coil_turns` turns (2.5 by `vernation`)
+/// into a tight inward spiral of shortening pieces, its pinnae small and
+/// folded inside, its scales on the coil if its stipe is scaly; it unrolls
+/// from its foot, and its stipe rises uncoiled as it lengthens (100 is
+/// dimorphic ferns, #178).
+/// 102: a fern's pinnae bear sori on their lower faces (`looks::Sori`):
+/// round, oblong, linear or marginal as `sorus_shape` says, where
+/// `sorus_position` puts them on each segment the card's outline gives,
+/// under the `indusium` stated; most pinnae of a fern whose fronds are
+/// alike, and only the fertile pinnae of a dimorphic one (101 is fern
+/// fiddleheads, #181).
 /// 103: a flowering herb's top leaf nodes may each bear a side branch
 /// ending in a raceme (`flowering_branches`; herb program revision 10)
-/// (98 to 102 are held for #175, #174, #178, #181 and #182).
+/// (102 is fern sori, #182).
 pub const GENERATOR_REVISION: u32 = 103;

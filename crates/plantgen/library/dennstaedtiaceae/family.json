@@ -14,13 +14,19 @@
     "indusium": {
       "margin": "often",
       "flap": "often"
-    }
+    },
+    "stipe_scales": "absent"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "mabberley-2017",
       "note": "Mabberley's Plant-book (4th ed., 2017), under Dennstaedtiaceae: terrestrial ferns, mostly on creeping rhizomes with jointed hairs and no scales; leaves small to large and much divided, the stalks often with buds; sori at or just inside the margin, the indusium a line, a cup, or the margin turned back over the sorus."
+    },
+    "traits.stipe_scales": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America (vol. 2), Dennstaedtiaceae: \"Petiole ... hairy or glabrous\", stems \"bearing hairs (or less often scales)\"; Pteridium: stem \"scales absent\", \"Petiole glabrous to short-hairy\". Read as absent."
     }
   }
 }
