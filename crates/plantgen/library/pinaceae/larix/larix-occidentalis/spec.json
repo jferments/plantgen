@@ -1,0 +1,239 @@
+{
+  "schema": 1,
+  "id": "larix-occidentalis",
+  "taxon": {
+    "scientific_name": "Larix occidentalis",
+    "common_name": "western larch",
+    "usda_symbol": "LAOC",
+    "family": "Pinaceae",
+    "genus": "Larix",
+    "plant_name_id": 379096
+  },
+  "growth_form": "excurrent_tree",
+  "generator": {
+    "params": {
+      "cone_chance": 0.1,
+      "cone_pitch": -60,
+      "height_rate": 0.02,
+      "height_shape": 1.4,
+      "whorl": 4,
+      "interwhorl": 0,
+      "branch_angle": 80,
+      "upturn": 0.01,
+      "branch_growth": 0.22,
+      "spray_base": 0.12,
+      "spray_length": 0.6,
+      "shade_death": 0.15,
+      "pipe_organ": 0.009,
+      "pipe_rings": 1e-05,
+      "branch_reach": 2.5,
+      "epi_chance": 0,
+      "spur_years": 12,
+      "spur_share": 0.6,
+      "spray_droop": 25,
+      "side_chance": 0.5
+    }
+  },
+  "growth": {
+    "years": 60,
+    "step": 1,
+    "keyframes": [
+      5,
+      15,
+      30,
+      60
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.24,
+      0.19,
+      0.16
+    ],
+    "bark_pattern": {
+      "kind": "plated",
+      "scale": 0.035,
+      "elongation": 1.1,
+      "fissure": 0.12,
+      "depth": 0.3,
+      "contrast": 0.5,
+      "variation": 0.15,
+      "smooth_below": 0.06,
+      "roughness": 0.3
+    },
+    "foliage": [
+      0.18,
+      0.32,
+      0.08
+    ],
+    "foliage_shade": [
+      0.06,
+      0.11,
+      0.03
+    ],
+    "variation": 0.2,
+    "organs": {
+      "cone": {
+        "shape": {
+          "template": "fruit",
+          "aspect": 0.22,
+          "cone": 1
+        },
+        "colour": [
+          0.55,
+          0.4,
+          0.25
+        ]
+      },
+      "spray": {
+        "shape": {
+          "template": "needles",
+          "twigs": 2,
+          "aspect": 0.5,
+          "twig_angle": 35,
+          "width": 0.03,
+          "bundle": 30
+        },
+        "accent": [
+          0.3,
+          0.25,
+          0.18
+        ]
+      }
+    },
+    "ridges": {
+      "spacing": 0.07,
+      "depth": 0.03,
+      "twist": 0,
+      "contrast": 0.4
+    }
+  },
+  "allometry": [
+    {
+      "age": 60,
+      "environment": "open",
+      "height": 26,
+      "dbh": 0.4,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_max_m": {
+      "min": 30,
+      "max": 55,
+      "high": 60
+    },
+    "juvenile_period_years": {
+      "min": 8,
+      "max": 25
+    },
+    "leaf_length_m": {
+      "min": 0.025,
+      "max": 0.05,
+      "low": 0.015,
+      "high": 0.06
+    },
+    "leaf_life_years": {
+      "min": 0.5,
+      "max": 1
+    },
+    "cone_length_m": {
+      "min": 0.025,
+      "max": 0.04,
+      "high": 0.06
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_max_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's western larch review (Scher 2002, read 2026-10-17): \"typically grows 100 to 180 feet tall (30-55 m) but can be over 200 feet (60 m) tall\"; Farjon (2017, printed pp. 509-510) gives 45-55(-65) m."
+    },
+    "traits.juvenile_period_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's western larch review (Scher 2002, read 2026-10-17): \"cone production may begin as early as age 8 though it is unusual on trees less than 25 years old\"."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's western larch review (Scher 2002, read 2026-10-17): \"Clusters of 15 to 30 slender, soft, spirally-arranged needles 1 to 2 inches (2.5-5.0 cm) long arise from dwarf twigs\"; Abrams (vol. 1, 1923, p. 60) gives 25-50 mm, Farjon (2017, printed pp. 509-510) (1.5-)2-4(-4.5) cm on short shoots and to 6 cm on long shoots."
+    },
+    "traits.leaf_life_years": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's western larch review (Scher 2002, read 2026-10-17): \"Western larch foliage is replaced annually\"; each needle lives from its spring flush to its fall, half a year to a year (the half year the model's inference from a deciduous needle's season)."
+    },
+    "traits.cone_length_m": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's western larch review (Scher 2002, read 2026-10-17): \"Ovulate cones are papery, 1 to 1.5 inches long (2.5-3.5 cm)\"; Abrams (vol. 1, 1923, p. 60) gives 25-35 mm, Farjon (2017, printed pp. 509-510) 2.5-4(-6) cm."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Western white pine's values, changed by hand for western larch: needles in tufts on short shoots that leaf out again for years (spur_years 12, at 0.6 of the first year's spray; Farjon 2017: short shoots with (15-)30-40(-45) needles), short, nearly level branches in an open, narrowly conical crown (FEIS, Scher 2002: \"Crowns are generally short, open, and pyramidal with nearly horizontal branches\"; Farjon: crown narrowly conical) with drooping twigs, and erect cones. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "26 m and 40 cm across at 60 years in the open; FEIS calls it \"fast growing\" and says it \"grows faster than any other Rocky Mountain conifer until 100 years of age\" (Scher 2002). Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after Farjon (2017, printed pp. 509-510): bright green needles in tufts of 30 on the short shoots; dark, scaly bark in large plates (Abrams 1923 p. 60: \"bark dark colored, divided into large irregularly scaly plates\"; FEIS: \"thick and furrowed into large, flaky plates\"); light brown cones. The autumn yellow and the bare winter crown are not drawn: no species has a look by day of year for its leaves yet."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion (2026-10-17): sizes from FEIS, Abrams and Farjon, drawing values from western white pine's with the short shoots of pinidae revision 11."
+  }
+}

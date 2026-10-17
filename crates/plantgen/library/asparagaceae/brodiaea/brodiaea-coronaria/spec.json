@@ -1,0 +1,289 @@
+{
+  "schema": 1,
+  "id": "brodiaea-coronaria",
+  "taxon": {
+    "scientific_name": "Brodiaea coronaria",
+    "common_name": "harvest brodiaea",
+    "family": "Asparagaceae",
+    "genus": "Brodiaea",
+    "plant_name_id": 301056
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 1,
+      "stem_rate": 0.5,
+      "clump_radius": 0.05,
+      "stem_lean": 5,
+      "maturity": 1.5,
+      "stem_radius": 0.002,
+      "wiggle": 1,
+      "nodes": 0,
+      "bare": 1.0,
+      "raceme": 0.02,
+      "flowers": 1,
+      "flower_size": 0.09,
+      "pedicel": 0.0,
+      "flower_angle": 0,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0,
+      "fruit_length": 0.03,
+      "bud_size": 0.065,
+      "basal_leaves": 3,
+      "basal_length": 0.3,
+      "basal_angle": 12,
+      "basal_pieces": 4,
+      "basal_arch": 10,
+      "bud_spacing": 0.3,
+      "bud_lean": 0.2,
+      "bud_stalk": 0.3,
+      "bract_length": 0
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.05,
+      0.09,
+      0.04
+    ],
+    "foliage": [
+      0.08,
+      0.16,
+      0.06
+    ],
+    "foliage_shade": [
+      0.025,
+      0.05,
+      0.02
+    ],
+    "variation": 0.2,
+    "organs": {
+      "basal": {
+        "shape": {
+          "template": "blade",
+          "taper": 1,
+          "aspect": 0.02
+        }
+      },
+      "basal_piece": {
+        "shape": {
+          "template": "blade",
+          "taper": 0,
+          "aspect": 0.02
+        }
+      },
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petal_width": 0.5,
+          "point": 0.15,
+          "taper": 0.3,
+          "notch": 0.0,
+          "centre": 0.12,
+          "stamen_length": 0.5,
+          "anther": 0.3,
+          "banner": 1.0,
+          "odd_rise": 0,
+          "turn": 0,
+          "filament": [
+            0.92,
+            0.9,
+            0.95
+          ],
+          "pistil": [
+            0.5,
+            0.72,
+            0.22
+          ],
+          "fused": 0.35,
+          "throat": 0.25
+        },
+        "colour": [
+          0.33,
+          0.16,
+          0.56
+        ],
+        "accent": [
+          0.92,
+          0.9,
+          0.95
+        ],
+        "inflorescence": {
+          "kind": "umbel",
+          "flowers": 6,
+          "size": 0.4,
+          "spread": 40,
+          "peduncle": 0.05,
+          "stalk": [
+            0.12,
+            0.2,
+            0.08
+          ]
+        }
+      },
+      "bud": {
+        "shape": {
+          "template": "flower",
+          "petals": 6,
+          "perianth": "tepals",
+          "petal_width": 0.5,
+          "point": 0.7,
+          "open": 0.0
+        },
+        "colour": [
+          0.15,
+          0.15,
+          0.42
+        ]
+      },
+      "fruit": {
+        "shape": {
+          "template": "flower",
+          "petals": 6,
+          "perianth": "tepals",
+          "petal_width": 0.45,
+          "point": 0.7,
+          "open": 0.0
+        },
+        "colour": [
+          0.45,
+          0.38,
+          0.22
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.35,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.2,
+      "max": 0.5,
+      "typical": 0.35
+    },
+    "perennation": "corm",
+    "inflorescence": "umbel",
+    "flower_size_m": {
+      "min": 0.025,
+      "max": 0.04
+    },
+    "leaf_width_m": {
+      "min": 0.002,
+      "max": 0.002
+    }
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 405, Hookera coronaria: \"scapes stout, 2-5 dm. high\"."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 405, Hookera coronaria: \"Corm sub-globose, 18-25 mm. broad\"."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 405, Hookera coronaria: \"umbels open, 2-11- flowered\"."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 405, Hookera coronaria: \"perianth violet-purple, 25-40 mm. long; the tube funnel-form, about half the length of the narrowly oblong, thick and persistent, segments\"."
+    },
+    "traits.leaf_width_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 405, Hookera coronaria: \"Leaves usually about equalling the scape. 2 mm. wide, thick or somewhat terete\"."
+    },
+    "appearance.organs.flower": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1923",
+      "note": "Abrams vol. 1 (1923) p. 405, Hookera coronaria: an open umbel of 2 to 11 violet-purple flowers on stout, unequal pedicels (the scan reads \"3S cm. long\", taken as 3-8 cm), each a funnel-form tube about half as long as its six segments, with white staminodia. Drawn as 6 flowers about 3.5 cm long on pedicels of about 5 cm, the tube a third of each tepal."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Camas's values, changed by hand for harvest brodiaea: one stout scape from a corm ending in an open umbel, with three narrow, thick leaves about as long as the scape (Abrams 1923 p. 405). Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.35 m tall at 4 years in the open, the middle of Abrams's 2-5 dm scapes. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after Abrams (1923 p. 405): violet-purple flowers with white staminodia; green scape and leaves; a straw-brown capsule."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion (2026-10-17): sizes from Abrams, drawing values from camas's."
+  }
+}

@@ -859,8 +859,8 @@ pub struct Needles {
     /// pine's long thin ones. The card draws needles as fine lines.
     pub width: f64,
     /// Needles in a fascicle, which fan a little round the shoot from one
-    /// place on it: 2, 3 or 5 for a pine; 1 for needles borne singly. Only
-    /// all round a shoot.
+    /// place on it: 2, 3 or 5 for a pine; 1 for needles borne singly; up
+    /// to 45 for a short shoot's tuft, a larch's. Only all round a shoot.
     pub bundle: u32,
 }
 
@@ -2341,7 +2341,7 @@ impl Shape {
                     return Err(format!("needles ranks must be 0 or 2, found {}", s.ranks));
                 }
                 check("width", s.width, 0.003, 0.3)?;
-                count("bundle", s.bundle, 1, 5)?;
+                count("bundle", s.bundle, 1, 45)?;
                 if s.bundle > 1 && s.ranks != 0 {
                     return Err(
                         "needles in bundles stand all round the shoot: ranks must be 0".to_string(),
