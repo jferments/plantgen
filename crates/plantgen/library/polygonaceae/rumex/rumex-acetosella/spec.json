@@ -1,0 +1,282 @@
+{
+  "schema": 1,
+  "id": "rumex-acetosella",
+  "taxon": {
+    "scientific_name": "Rumex acetosella",
+    "common_name": "sheep sorrel",
+    "family": "Polygonaceae",
+    "genus": "Rumex",
+    "plant_name_id": 2424185
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 9,
+      "clump_radius": 0.15,
+      "stem_lean": 12,
+      "nodes": 4,
+      "basal_leaves": 6,
+      "basal_angle": 55,
+      "bare": 0.1,
+      "leaf_peak": 0.0,
+      "leaf_top": 0.5,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_angle": 0,
+      "pedicel": 0,
+      "dioecious": 1
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.55,
+      0.25,
+      0.2
+    ],
+    "foliage": [
+      0.2,
+      0.32,
+      0.15
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "petiole": 0.6
+        }
+      },
+      "flower": {
+        "inflorescence": {
+          "branches": 8,
+          "size": 0.35,
+          "spread": 30,
+          "branch": {
+            "kind": "raceme",
+            "flowers": 12,
+            "size": 0.045,
+            "pedicel": 0.05
+          }
+        }
+      },
+      "basal": {
+        "shape": {
+          "petiole": 0.6
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.3,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.2,
+      "max": 0.4
+    },
+    "life_span": "perennial",
+    "perennation": "rhizome",
+    "rhizome_habit": "long_creeping",
+    "clonal": true,
+    "rosette": "basal",
+    "leaf_length_m": {
+      "low": 0.01,
+      "min": 0.025,
+      "max": 0.08
+    },
+    "leaf_shape": "lanceolate",
+    "leaf_hairs": "glabrous",
+    "inflorescence": "panicle",
+    "inflorescence_length_m": {
+      "min": 0.05,
+      "max": 0.15
+    },
+    "flower_size_m": {
+      "min": 0.001,
+      "max": 0.002
+    },
+    "flower_colour": [
+      170,
+      60,
+      55
+    ],
+    "sexual_system": "dioecious",
+    "fruit_type": "achene",
+    "flowering_months": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 54, Rumex acetosella: stems slender, erect or bent at the base, 2 dm to 4 dm high."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 54, Rumex acetosella: a perennial."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 54, Rumex acetosella: spreading by slender running rootstocks."
+    },
+    "traits.rhizome_habit": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 54, Rumex acetosella: slender running rootstocks."
+    },
+    "traits.clonal": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 54, Rumex acetosella: spreading by slender running rootstocks."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 54, Rumex acetosella: the lower leaves on petioles often longer than their blades, the uppermost nearly without lobes."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 54, Rumex acetosella: leaves 2.5 cm to 8 cm long, the uppermost smaller and nearly without lobes; set from 1 cm for those."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 54, Rumex acetosella: leaves narrowly hastate; drawn lanceolate, as the shapes have no hastate base."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 54, Rumex acetosella: the stems hairless."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 54, Rumex acetosella: narrow, leafless panicles."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: panicles 5 cm to 15 cm long, a third to a half of the stem, from the photos."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 54, Rumex acetosella: calyx 1 mm long; set to 2 mm for the exserted stamens and, in fruit, the valves."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 54, Rumex acetosella: calyx green, 1 mm long, the panicles turning red with age; sRGB by eye from the photos of red flowering panicles."
+    },
+    "traits.sexual_system": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 54, Rumex acetosella: dioecious."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 54, Rumex acetosella: the achene granular, the valves scarcely as long."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 54, Rumex acetosella: flowering February to September."
+    },
+    "appearance.organs.flower.inflorescence": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A narrow panicle of about 8 ascending branches, each about a third of the panicle's length and bearing about a dozen flowers along it; each flower 1 mm to 2 mm (the trait) of a branch about 2.8 cm long, set to the middle of that as drawn. The cluster rule sizes a flower against the whole cluster, which a panicle's branches would shrink, so these are set by hand, set by hand from iNaturalist photos of flowering plants (observations 259330367, 48737586, 216536690, 286359494, 208051379, 80656661, 275915467, 309626293): the flora gives no count or measure."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: reddish stems; narrow green leaves widest near the base, on petioles often longer than the blade."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for sheep sorrel from Abrams's description and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Its inflorescence is drawn as one cluster at each stem's tip, sized by the traits, so the stem ends where the cluster begins. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.3 m tall at 3 years in the open, within the flora's range. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C (2026-10-17): sizes and forms from Abrams, counts from photos."
+  }
+}

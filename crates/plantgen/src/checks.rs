@@ -1421,7 +1421,8 @@ fn arrangement(grown: &Grown<'_>, looks: &[Look], tally: &mut Tally) {
     // born there later are a short shoot's, from a bud at the node, which
     // crowds each year's leaves at one place (with last year's until they
     // fall); floras state the arrangement of the long shoots' leaves, so
-    // where a plant's stems bear leaves of their own, only those count.
+    // where a plant's stems bear leaves of their own, only those count,
+    // and not its rosette's at the ground.
     let own = |segment: Option<usize>, organ: &GraphOrgan| {
         segment
             .and_then(|index| segments.get(index))
@@ -1431,7 +1432,7 @@ fn arrangement(grown: &Grown<'_>, looks: &[Look], tally: &mut Tally) {
         .iter()
         .any(|(segment, _, _, organ, _)| segment.is_some() && own(*segment, organ))
     {
-        holders.retain(|(segment, _, _, organ, _)| own(*segment, organ));
+        holders.retain(|(segment, _, _, organ, _)| segment.is_some() && own(*segment, organ));
     }
     // A step is a year, so an axis's segments born in one step are a
     // year's growth of it: the most leaves of their own any one bears are
@@ -2968,8 +2969,13 @@ pub fn judge_plants(
         }
         findings.push(judge(character, judged, stated, &mut values, with));
     }
+    let vocabulary = crate::traits::Vocabulary::builtin();
     let kinds = KINDS
         .iter()
+        // A state inherited for flowers of another kind, such as a
+        // family's two-lipped corolla on a species with regular flowers,
+        // does not apply to the species.
+        .filter(|&&character| vocabulary.applies(character, traits) != crate::traits::Applies::No)
         .filter_map(|&character| {
             let stated = states_of(traits.get(character)?);
             let drawn: BTreeSet<String> = plants
@@ -3011,7 +3017,6 @@ pub fn judge_plants(
             Some(Timing::judge(character, stated, drawn))
         })
         .collect();
-    let vocabulary = crate::traits::Vocabulary::builtin();
     let unmeasured = traits
         .keys()
         .filter(|key| {

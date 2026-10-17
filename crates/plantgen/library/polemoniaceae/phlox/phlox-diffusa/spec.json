@@ -1,0 +1,256 @@
+{
+  "schema": 1,
+  "id": "phlox-diffusa",
+  "taxon": {
+    "scientific_name": "Phlox diffusa",
+    "common_name": "spreading phlox",
+    "family": "Polemoniaceae",
+    "genus": "Phlox",
+    "plant_name_id": 2567306
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 40,
+      "clump_radius": 0.08,
+      "stem_lean": 70,
+      "stem_height": 0.07,
+      "stem_radius": 0.0008,
+      "wiggle": 5,
+      "nodes": 14,
+      "leaves_per_node": 2,
+      "leaf_angle": 45,
+      "basal_leaves": 0,
+      "bare": 0.05,
+      "leaf_peak": 0.5,
+      "leaf_top": 0.8,
+      "raceme": 0.05,
+      "flowers": 1
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.45,
+      0.4,
+      0.3
+    ],
+    "foliage": [
+      0.2,
+      0.3,
+      0.15
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "template": "simple",
+          "petiole": 0.0
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.08,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.05,
+      "max": 0.1
+    },
+    "woodiness": "semi",
+    "life_span": "perennial",
+    "rosette": "none",
+    "leaf_arrangement": "opposite",
+    "leaf_length_m": {
+      "min": 0.01,
+      "max": 0.015
+    },
+    "leaf_shape": "linear",
+    "inflorescence": "solitary",
+    "flower_symmetry": "actinomorphic",
+    "corolla_shape": "salverform",
+    "petal_length_m": {
+      "min": 0.006,
+      "max": 0.007
+    },
+    "flower_size_m": {
+      "min": 0.014,
+      "max": 0.018
+    },
+    "petal_shape": "obovate",
+    "flower_colour": [
+      235,
+      190,
+      225
+    ],
+    "fruit_type": "capsule",
+    "flowering_months": [
+      5,
+      6,
+      7,
+      8
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Drawn as a forb: a mat of woody-based, spreading or prostrate branches (Abrams 1951 p. 412), which the herb program draws as many low, outward-leaning stems."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: a mat 5 cm to 10 cm high; Abrams (1951 p. 412) gives the prostrate branches as 1 dm to 3 dm long, drawn as short ascending stems, 7 cm long and leaning out, as the herb program cannot lay a stem down and turn its tip up."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 412, Phlox diffusa: freely branching from a stout woody base, the branches woody."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 412, Phlox diffusa: a perennial from a stout woody base."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 412, Phlox diffusa: leaves along the spreading branches, with no basal rosette."
+    },
+    "traits.leaf_arrangement": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Opposite, as Phlox's leaves are and the photos show: Abrams (1951 p. 412) does not say for the species."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 412, Phlox diffusa: leaves 10 mm to 15 mm long."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 412, Phlox diffusa: leaves narrowly linear to awl-shaped, only moderately stiff and sharp."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 412, Phlox diffusa: flowers usually single at the ends of short leafy branches."
+    },
+    "traits.flower_symmetry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Five equal corolla lobes round the tube: a regular flower, set by hand from iNaturalist photos of flowering plants (observations 121108, 118597832, 19156581, 227539949, 227635345, 182159147, 173991364, 129771749): the flora gives no count or measure."
+    },
+    "traits.corolla_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 412, Phlox diffusa: a corolla tube 10 mm to 13 mm long with spreading lobes: salver-shaped."
+    },
+    "traits.petal_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 412, Phlox diffusa: corolla lobes 6 mm to 7 mm long."
+    },
+    "traits.flower_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 412, Phlox diffusa: corolla lobes 6 mm to 7 mm long, spreading from a narrow tube, so the limb about twice that across."
+    },
+    "traits.petal_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 412, Phlox diffusa: lobes broadly obovate to obovate-spatulate."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 412, Phlox diffusa: corolla pink, lilac or sometimes white; sRGB by eye from the photos."
+    },
+    "traits.fruit_type": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "A capsule, as in the family (Abrams 1951): the species account does not describe its fruit."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 412, Phlox diffusa: flowering May to August."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: woody brown branches densely set with dark green needle-like leaves."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for spreading phlox from Abrams's description and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.08 m tall at 3 years in the open, within the flora's range. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C (2026-10-17): sizes and forms from Abrams, counts from photos."
+  }
+}

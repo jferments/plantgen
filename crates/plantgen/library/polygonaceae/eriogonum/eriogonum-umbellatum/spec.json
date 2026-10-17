@@ -1,0 +1,278 @@
+{
+  "schema": 1,
+  "id": "eriogonum-umbellatum",
+  "taxon": {
+    "scientific_name": "Eriogonum umbellatum",
+    "common_name": "sulphur-flower buckwheat",
+    "family": "Polygonaceae",
+    "genus": "Eriogonum",
+    "plant_name_id": 2796723
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 14,
+      "clump_radius": 0.12,
+      "stem_lean": 25,
+      "nodes": 1,
+      "scape": 1,
+      "basal_leaves": 6,
+      "basal_angle": 70,
+      "raceme": 0.03,
+      "flowers": 1,
+      "flower_angle": 0,
+      "pedicel": 0
+    }
+  },
+  "growth": {
+    "years": 4,
+    "step": 1,
+    "keyframes": [
+      1,
+      2,
+      4
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.5,
+      0.42,
+      0.3
+    ],
+    "foliage": [
+      0.36,
+      0.45,
+      0.3
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "petiole": 0.5
+        }
+      },
+      "flower": {
+        "inflorescence": {
+          "size": 0.5,
+          "spread": 70,
+          "branch": {
+            "kind": "head",
+            "flowers": 25,
+            "size": 0.19
+          }
+        }
+      },
+      "basal": {
+        "shape": {
+          "petiole": 0.5
+        }
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 3,
+      "environment": "open",
+      "height": 0.2,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.1,
+      "max": 0.3
+    },
+    "woodiness": "semi",
+    "life_span": "perennial",
+    "rosette": "basal",
+    "leaf_length_m": {
+      "min": 0.01,
+      "max": 0.025
+    },
+    "petiole_length_m": {
+      "min": 0.01,
+      "max": 0.025
+    },
+    "leaf_shape": "spatulate",
+    "leaf_hairs_beneath": "tomentose",
+    "leaf_hairs": "glabrescent",
+    "inflorescence": "compound_umbel",
+    "inflorescence_branches": {
+      "min": 5,
+      "max": 10
+    },
+    "inflorescence_length_m": {
+      "min": 0.04,
+      "max": 0.1
+    },
+    "flower_size_m": {
+      "min": 0.005,
+      "max": 0.008
+    },
+    "flower_colour": [
+      245,
+      215,
+      45
+    ],
+    "fruit_type": "achene",
+    "flowering_months": [
+      6,
+      7,
+      8,
+      9
+    ]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Drawn as a forb: a low perennial whose short, branched woody caudex (Abrams 1944 p. 27) bears tufts of leaves and leafless flowering stems; the herb program draws the tufts as a clump of stems."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 27, Eriogonum umbellatum: flowering stems leafless and fairly stout, 10 cm to 30 cm high."
+    },
+    "traits.woodiness": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 27, Eriogonum umbellatum: a caudex of a few short branches, leafy at their tips."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 27, Eriogonum umbellatum: a perennial with a branched caudex."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 27, Eriogonum umbellatum: the leaves crowded at the tips of the caudex branches, the flowering stems leafless."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 27, Eriogonum umbellatum: blades 10 mm to 25 mm long, on a petiole about as long."
+    },
+    "traits.petiole_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 27, Eriogonum umbellatum: the blade tapering to a petiole about as long as itself."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 27, Eriogonum umbellatum: leaves obovate-spatulate."
+    },
+    "traits.leaf_hairs_beneath": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 27, Eriogonum umbellatum: leaves white-woolly beneath."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 27, Eriogonum umbellatum: leaves green and nearly hairless above."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 27, Eriogonum umbellatum: a simple umbel above a few leafy bracts, each ray ending in a cup-shaped involucre of usually 20 to 30 flowers: drawn as a compound umbel, the involucres its umbellets."
+    },
+    "traits.inflorescence_branches": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 27, Eriogonum umbellatum: usually 5 to 10 rays, 2 cm to 5 cm long."
+    },
+    "traits.inflorescence_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 27, Eriogonum umbellatum: rays 2 cm to 5 cm long, so the umbel spans about 4 cm to 10 cm."
+    },
+    "traits.flower_size_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence medium), as no source read gives it: each flower about 5 mm to 8 mm across, from the photos; Abrams (1944 p. 27) gives the involucre's tube as 3 mm to 4 mm."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 27, Eriogonum umbellatum: flowers bright yellow; sRGB by eye from the photos."
+    },
+    "traits.fruit_type": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 27, Eriogonum umbellatum: achenes sharply three-angled."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 27, Eriogonum umbellatum: flowering June to September."
+    },
+    "appearance.organs.flower.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1944",
+      "note": "Abrams vol. 2 (1944) p. 27, Eriogonum umbellatum: rays 2 cm to 5 cm long, about half the umbel's span, each ending in an involucre of usually 20 to 30 flowers, drawn as a head; each flower about 6.5 mm (the trait) of a 3.5 cm ray. The cluster rule sizes a flower against the whole cluster, which a compound umbel's rays would shrink, so these are set by hand."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, from the photos the traits cite: grey-green leaves, woolly beneath, on reddish-brown stems; the blade spoon-shaped, widest near its rounded tip and narrowed into a petiole about as long."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand for sulphur-flower buckwheat from Abrams's description and the photos the traits cite: the herb program's structure (stems, nodes, basal leaves, how the flowers are borne). Its inflorescence is drawn as one cluster at each stem's tip, sized by the traits, so the stem ends where the cluster begins. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.2 m tall at 3 years in the open, within the flora's range. Replace with measured data before calling this species calibrated."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the core-species expansion, phase C (2026-10-17): sizes and forms from Abrams, counts from photos."
+  }
+}
