@@ -1,0 +1,346 @@
+{
+  "schema": 1,
+  "id": "daucus-carota",
+  "taxon": {
+    "scientific_name": "Daucus carota",
+    "common_name": "wild carrot",
+    "family": "Apiaceae",
+    "genus": "Daucus",
+    "plant_name_id": 2757936
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 1,
+      "stem_rate": 0.5,
+      "clump_radius": 0.03,
+      "stem_lean": 6,
+      "maturity": 1.2,
+      "stem_radius": 0.004,
+      "wiggle": 2,
+      "nodes": 5,
+      "bare": 0.2,
+      "leaf_peak": 0.0,
+      "leaf_angle": 50,
+      "basal_leaves": 8,
+      "basal_angle": 55,
+      "raceme": 0.06,
+      "flowers": 1,
+      "flower_size": 0.09,
+      "pedicel": 0.0,
+      "flower_angle": 0,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.32,
+      0.4,
+      0.22
+    ],
+    "foliage": [
+      0.1,
+      0.2,
+      0.06
+    ],
+    "foliage_shade": [
+      0.022,
+      0.05,
+      0.012
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "teeth": 0,
+          "petiole": 0.25,
+          "angle": 55,
+          "pinnule_angle": 60,
+          "largest": 0.1,
+          "lowest": 0.3
+        }
+      },
+      "basal": {
+        "shape": {
+          "teeth": 0,
+          "petiole": 0.35,
+          "angle": 55,
+          "pinnule_angle": 60,
+          "largest": 0.1,
+          "lowest": 0.3,
+          "template": "compound"
+        }
+      },
+      "flower": {
+        "shape": {
+          "petal_width": 0.9,
+          "point": 0.0,
+          "notch": 0.35,
+          "centre": 0.2,
+          "sepals": 0
+        },
+        "inflorescence": {
+          "flowers": 20,
+          "size": 0.35,
+          "spread": 60,
+          "peduncle": 0.05,
+          "branch": {
+            "size": 0.12,
+            "spread": 50,
+            "peduncle": 0.5
+          }
+        },
+        "colour": [
+          0.96,
+          0.96,
+          0.92
+        ],
+        "accent": [
+          0.85,
+          0.85,
+          0.78
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 2,
+      "environment": "open",
+      "height": 0.6,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.3,
+      "max": 1.0,
+      "typical": 0.6
+    },
+    "inflorescence": "compound_umbel",
+    "leaf_length_m": {
+      "min": 0.05,
+      "max": 0.2
+    },
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 3,
+    "pinnae": 15,
+    "pinnules": 7,
+    "leaflets": 5,
+    "terminal_leaflet": true,
+    "division_planes": "flat",
+    "leaf_incision": "dissected",
+    "leaf_shape": "lanceolate",
+    "leaflet_length_m": {
+      "min": 0.002,
+      "max": 0.012
+    },
+    "leaflet_width_m": {
+      "min": 0.001,
+      "max": 0.0015
+    },
+    "leaf_hairs": "pubescent",
+    "flower_colour": [
+      245,
+      245,
+      235
+    ],
+    "fruit_size_m": {
+      "min": 0.003,
+      "max": 0.004
+    },
+    "flowering_months": [
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "life_span": "biennial"
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: stems 30 cm to 1 m tall, 1.5 m at most."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 228, Daucus carota: rays 3 cm to 7.5 cm long, each ending in an umbellet: a compound umbel, compact in fruit (genus, p. 227)."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves 5 cm to 20 cm long."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 228, Daucus carota: leaves finely cut into linear or lanceolate segments 2 mm to 12 mm long; the genus has pinnately decompound leaves (p. 227)."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 227, Daucus: pinnately decompound leaves."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 216, Daucus, in the key to genera: leaves three or four times pinnately cut; drawn three times divided, the last division the lobes of each pinnule."
+    },
+    "traits.pinnae": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Fifteen primary divisions, seven pairs and a terminal one (6 to 9 pairs in the photos), set by hand from iNaturalist photos (observations 111603572, 200104113, 288552142, 329573306, 357823924, 363817289, 370479050, 44929874, 72299212): the floras give no count or measure."
+    },
+    "traits.pinnules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Seven pinnules to each primary division, each pinna itself ovate-deltoid, set by hand from iNaturalist photos (observations 111603572, 200104113, 288552142, 329573306, 357823924, 363817289, 370479050, 44929874, 72299212): the floras give no count or measure."
+    },
+    "traits.leaflets": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Five lobes to each pinnule (3 to 7 in the photos), set by hand from iNaturalist photos (observations 111603572, 200104113, 288552142, 329573306, 357823924, 363817289, 370479050, 44929874, 72299212): the floras give no count or measure."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Each division ending in one, set by hand from the photos: Abrams (1951 p. 228) does not say."
+    },
+    "traits.division_planes": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Mostly flat sprays, each pinna close to one plane, set by hand from iNaturalist photos (observations 111603572, 200104113, 288552142, 329573306, 357823924, 363817289, 370479050, 44929874, 72299212): the floras give no count or measure."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 228, Daucus carota: linear or lanceolate last segments."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 228, Daucus carota: leaves finely cut (dissected) into segments; in the photos the lobes of each pinnule join at their base along a narrow wing of its midrib."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 228, Daucus carota: linear or lanceolate segments 2 mm to 12 mm long."
+    },
+    "traits.leaflet_width_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Lobes 1 mm to 1.5 mm wide, set by hand from iNaturalist photos (observations 111603572, 200104113, 288552142, 329573306, 357823924, 363817289, 370479050, 44929874, 72299212): the floras give no count or measure."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 216, Daucus, in the key to genera: leaves more or less hairy; the genus is pubescent (p. 227)."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 228, Daucus carota: flowers white, yellow or pinkish, the umbel's central flower purple or pink; drawn white, sRGB by eye."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 228, Daucus carota: fruit ovoid, 3 mm to 4 mm long."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 228, Daucus carota: introduced from Europe and well established in western Washington and Oregon, flowering May to September."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 228, Daucus carota: biennial from a slender spindle-shaped taproot."
+    },
+    "appearance.organs.flower": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 228, Daucus carota: rays 3 cm to 7.5 cm long, white flowers. Drawn as a flat-topped umbel of umbellets of 20 small white flowers; the purple central flower is not drawn."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Cow parsnip's values, changed by hand for wild carrot: a rosette of finely divided basal leaves and one stem with smaller leaves, ending in a white compound umbel (Abrams 1951 p. 228). Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "0.6 m tall in its second (flowering) year in the open, the middle of the model's 0.3-1 m. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after Abrams (1951 pp. 227-228): mid-green, hairy, finely divided leaves; green hairy stems; white flowers. The leaves narrowly triangular, the pinnae longest near the foot and narrowing evenly to a small tip (largest 0.1, lowest 0.3), from iNaturalist photos (observations 111603572, 200104113, 288552142, 329573306, 357823924, 363817289, 370479050, 44929874, 72299212)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the lacy-leaf work (2026-10-17): sizes from Abrams and the model's estimate, leaf divisions from photos, drawing values from cow parsnip's."
+  }
+}

@@ -1,0 +1,350 @@
+{
+  "schema": 1,
+  "id": "conium-maculatum",
+  "taxon": {
+    "scientific_name": "Conium maculatum",
+    "common_name": "poison hemlock",
+    "family": "Apiaceae",
+    "genus": "Conium",
+    "plant_name_id": 2734165
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 1,
+      "stem_rate": 0.5,
+      "clump_radius": 0.04,
+      "stem_lean": 5,
+      "maturity": 1.2,
+      "stem_radius": 0.012,
+      "wiggle": 2,
+      "nodes": 7,
+      "bare": 0.15,
+      "leaf_peak": 0.15,
+      "leaf_angle": 50,
+      "basal_leaves": 5,
+      "basal_angle": 50,
+      "raceme": 0.06,
+      "flowers": 1,
+      "flower_size": 0.07,
+      "pedicel": 0.0,
+      "flower_angle": 0,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [
+      2,
+      4,
+      6
+    ]
+  },
+  "variants": {
+    "environments": [
+      "open"
+    ],
+    "seeds": [
+      1
+    ]
+  },
+  "appearance": {
+    "bark": [
+      0.3,
+      0.4,
+      0.22
+    ],
+    "foliage": [
+      0.06,
+      0.16,
+      0.05
+    ],
+    "foliage_shade": [
+      0.022,
+      0.05,
+      0.012
+    ],
+    "variation": 0.2,
+    "organs": {
+      "leaf": {
+        "shape": {
+          "teeth": 0,
+          "petiole": 0.25,
+          "angle": 60,
+          "pinnule_angle": 55,
+          "largest": 0.0,
+          "lowest": 0.2
+        }
+      },
+      "basal": {
+        "shape": {
+          "teeth": 0,
+          "petiole": 0.35,
+          "angle": 60,
+          "pinnule_angle": 55,
+          "largest": 0.0,
+          "lowest": 0.2,
+          "template": "compound"
+        }
+      },
+      "flower": {
+        "shape": {
+          "petal_width": 0.9,
+          "point": 0.0,
+          "notch": 0.35,
+          "centre": 0.2,
+          "sepals": 0
+        },
+        "inflorescence": {
+          "flowers": 15,
+          "size": 0.3,
+          "spread": 55,
+          "peduncle": 0.05,
+          "branch": {
+            "size": 0.12,
+            "spread": 50,
+            "peduncle": 0.5
+          }
+        },
+        "colour": [
+          0.96,
+          0.96,
+          0.92
+        ],
+        "accent": [
+          0.85,
+          0.85,
+          0.78
+        ]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 2,
+      "environment": "open",
+      "height": 1.5,
+      "tolerance": 0.35
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.5,
+      "max": 3.0,
+      "typical": 1.5
+    },
+    "inflorescence": "compound_umbel",
+    "leaf_length_m": {
+      "min": 0.2,
+      "max": 0.5
+    },
+    "leaf_division": "compound",
+    "division_pattern": "pinnate",
+    "division_order": 3,
+    "pinnae": 11,
+    "pinnules": 7,
+    "leaflets": 7,
+    "terminal_leaflet": true,
+    "division_planes": "flat",
+    "leaf_incision": "dissected",
+    "leaf_shape": "lanceolate",
+    "leaf_margin": "dentate",
+    "leaflet_length_m": {
+      "min": 0.003,
+      "max": 0.008
+    },
+    "leaflet_width_m": {
+      "min": 0.0015,
+      "max": 0.003
+    },
+    "leaf_hairs": "glabrous",
+    "flower_colour": [
+      245,
+      245,
+      235
+    ],
+    "fruit_size_m": {
+      "min": 0.002,
+      "max": 0.0025
+    },
+    "flowering_months": [
+      5,
+      6,
+      7
+    ],
+    "life_span": "biennial"
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names (and USDA symbol, where given) as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 231, Conium maculatum: stems upright, much branched, 5 dm to 30 dm tall."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 231, Conium maculatum: umbels 2.5 cm to 7.5 cm across on slender rays 2.5 cm to 4 cm long; the genus has many-rayed compound umbels (p. 230)."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "Authored",
+      "source": "species-facts-2026-10-15",
+      "note": "A model estimate (confidence high), as no source read gives it: leaves 20 cm to 50 cm long."
+    },
+    "traits.leaf_division": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 231, Conium maculatum: all the leaves pinnately cut, the divisions ovate in outline and thin."
+    },
+    "traits.division_pattern": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 231, Conium maculatum: all the leaves pinnately cut, the divisions ovate in outline and thin."
+    },
+    "traits.division_order": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 216, Conium, in the key to genera: leaves cut again and again into small segments; drawn three times divided (three to four in the photos)."
+    },
+    "traits.pinnae": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Eleven primary divisions, five pairs and a terminal one (4 to 6 pairs in the photos), set by hand from iNaturalist photos (observations 107741349, 202447808, 243333317, 25579621, 304969302, 312417, 40221962, 75390188): the floras give no count or measure."
+    },
+    "traits.pinnules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Seven pinnules to each primary division, each pinna deltoid-lanceolate, set by hand from iNaturalist photos (observations 107741349, 202447808, 243333317, 25579621, 304969302, 312417, 40221962, 75390188): the floras give no count or measure."
+    },
+    "traits.leaflets": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Seven lobes to each pinnule, which is deeply pinnately cut, set by hand from iNaturalist photos (observations 107741349, 202447808, 243333317, 25579621, 304969302, 312417, 40221962, 75390188): the floras give no count or measure."
+    },
+    "traits.terminal_leaflet": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Each division ending in one elongated segment, set by hand from the photos: Abrams (1951 p. 231) does not say."
+    },
+    "traits.division_planes": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Flat, fern-like sprays, each pinna close to one plane, set by hand from iNaturalist photos (observations 107741349, 202447808, 243333317, 25579621, 304969302, 312417, 40221962, 75390188): the floras give no count or measure."
+    },
+    "traits.leaf_shape": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Lanceolate last lobes, set by hand from iNaturalist photos (observations 107741349, 202447808, 243333317, 25579621, 304969302, 312417, 40221962, 75390188): the floras give no count or measure."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 231, Conium maculatum: all the leaves pinnately cut (dissected); in the photos the lobes of each pinnule join at their base along a narrow wing."
+    },
+    "traits.leaf_margin": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 231, Conium maculatum: the last divisions toothed or cut."
+    },
+    "traits.leaflet_length_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Lobes 3 mm to 8 mm long, set by hand from iNaturalist photos (observations 107741349, 202447808, 243333317, 25579621, 304969302, 312417, 40221962, 75390188): the floras give no count or measure."
+    },
+    "traits.leaflet_width_m": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Lobes 1.5 mm to 3 mm wide, set by hand from iNaturalist photos (observations 107741349, 202447808, 243333317, 25579621, 304969302, 312417, 40221962, 75390188): the floras give no count or measure."
+    },
+    "traits.leaf_hairs": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 230, Conium: tall, hairless, poisonous biennials with spotted stems."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 230, Conium: small white flowers; sRGB by eye."
+    },
+    "traits.fruit_size_m": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 231, Conium maculatum: fruit 2 mm to 2.5 mm long."
+    },
+    "traits.flowering_months": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 231, Conium maculatum: in waste places, mostly damp ground, through the Pacific States, flowering May to July."
+    },
+    "traits.life_span": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 230, Conium: tall biennials."
+    },
+    "appearance.organs.flower": {
+      "evidence": "SourceInferred",
+      "source": "abrams-1951",
+      "note": "Abrams vol. 3 (1951) p. 231, Conium maculatum: umbels 2.5 cm to 7.5 cm across, slender rays 2.5 cm to 4 cm long, small white flowers. Drawn as umbellets of 15 small white flowers."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Cow parsnip's values, changed by hand for poison hemlock: a tall stem over a few large basal leaves, its leaves on petioles sheathing at the base (Abrams 1951 p. 231), ending in a white compound umbel. Abrams's stems are much branched, each branch ending in an umbel; the herb program grows no side branches, so the stem is drawn unbranched with its one umbel. Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "1.5 m tall in its second (flowering) year in the open, within Abrams's 5-30 dm. Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye, after Abrams (1951 pp. 230-231): hairless, dark green, finely divided leaves; green stems (their purple spots are not drawn); white flowers. The leaves broadly triangular, the lowest pinnae longest and the topmost a fifth as long (largest 0, lowest 0.2), from iNaturalist photos (observations 107741349, 202447808, 243333317, 25579621, 304969302, 312417, 40221962, 75390188)."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "Project After contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": [
+      "Project After"
+    ],
+    "notes": "Procedural proxy added with the lacy-leaf work (2026-10-17): sizes from Abrams, leaf divisions from photos, drawing values from cow parsnip's."
+  }
+}
