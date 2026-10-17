@@ -54,6 +54,22 @@
       "map": {"fruit_surface": {"naked": "crowned", "scaly": "scaly", "areolate": "areolate", "spiny": "spiny"}},
       "why": "A cactus's fruit is its pericarpel grown on, crowned by the dried perianth, and its bud the same pericarpel under the closed tepals: naked in a pincushion's, under broad scales in a barrel's or the saguaro's, studded with felted areoles in a prickly pear's, and with spines on those areoles in a hedgehog's, the organ pipe's or a spiny cholla's (Anderson, The Cactus Family pp. 31 to 33)."
     },
+    "appearance.bodies.stem.dome": {
+      "map": {"stem_apex": {"tapering": 1.6, "rounded": 1.0, "broad": 0.8}},
+      "why": "A cactus stem closes over as many of its tip's radii as its tip's shape says: over a length and a half where it tapers to its apex, a half sphere where it is rounded, and a short shoulder under a broad top."
+    },
+    "appearance.bodies.stem.shoulder": {
+      "map": {"stem_apex": {"tapering": 1.4, "rounded": 2.0, "broad": 2.8}},
+      "why": "A tapering tip narrows steadily toward its apex, a rounded one follows a quarter circle, and a broad one keeps its width into a full shoulder before turning in under its flattish top."
+    },
+    "generator.params.dome": {
+      "map": {"stem_apex": {"tapering": 1.6, "rounded": 1.0, "broad": 0.8}},
+      "why": "The program sets the crown's ring of flowers on the shoulder of the dome the body draws, so it takes the same length."
+    },
+    "generator.params.fill": {
+      "map": {"stem_outline": {"cylindrical": 0.95, "club_shaped": 0.75}},
+      "why": "A column's old pieces, laid down narrow while the plant was young, fill out toward a share of the adult width: nearly all of it on a cylindrical stem, three quarters on a club-shaped one, which stays narrower at its foot than above (Gibson and Nobel, The Cactus Primer p. 79: a stem that elongates faster than it widens becomes club-shaped)."
+    },
     "appearance.bodies.stem.tubercles.height": {
       "map": {"tubercle_relief": {"barely": 0.01, "low": 0.03, "distinct": 0.2, "prominent": 0.42}},
       "why": "A tubercle stands from the stem as far as a flora's word for it says, as a share of the stem's radius: barely a swelling under each areole of a ribbed barrel (Anderson's Ferocactus wislizeni), low knobs along undulate ribs (F. cylindraceus), distinct knobs, or the prominent ones a cholla's joint is knobbly with."

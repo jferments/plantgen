@@ -12,8 +12,10 @@
 //!    cubic through the segments' radii (Fritsch and Carlson 1980), which
 //!    never swells past them.
 //! 2. A dome closes its tip, and a rounded base its foot if the look asks:
-//!    the radius times `sqrt(1 - x²)` over the last `dome` and the first
-//!    `base` radii of its length.
+//!    the radius times `(1 - xⁿ)^(1/n)` over the last `dome` radii of its
+//!    length, n the look's `shoulder` (2 a quarter ellipse, less a tip
+//!    that tapers, more a broad shoulder under a flat top), and times
+//!    `sqrt(1 - x²)` over its first `base` radii.
 //! 3. A cross-section is a circle, or an ellipse `flatten` times as thick as
 //!    it is wide across the turtle's left vector: a pad. [`Ribs`] fold it
 //!    into crests and valleys; [`Tubercles`] raise a bump under each
@@ -66,6 +68,11 @@ pub struct BodyLook {
     /// Length of the dome that closes the tip, in radii of the tip: 1 a
     /// half sphere, less a flatter top, more a pointed one.
     pub dome: f64,
+    /// How the dome rounds: the exponent of the superellipse it follows, 2
+    /// a quarter ellipse, toward 1 a tip that tapers to its apex, more a
+    /// broad shoulder under a flatter top.
+    #[serde(skip_serializing_if = "is_round")]
+    pub shoulder: f64,
     /// Length of a rounded base, in radii of the foot: 0 leaves the foot
     /// open, as a stem standing in the ground; a joint of a cholla or a
     /// prickly pear's pad is rounded at both ends.
@@ -94,6 +101,7 @@ impl Default for BodyLook {
             valley: None,
             flatten: 1.0,
             dome: 1.0,
+            shoulder: 2.0,
             base: 0.0,
             ribs: None,
             tubercles: None,
@@ -309,6 +317,18 @@ fn is_zero(value: &f64) -> bool {
     *value == 0.0
 }
 
+#[allow(clippy::trivially_copy_pass_by_ref, clippy::float_cmp)]
+fn is_round(value: &f64) -> bool {
+    *value == 2.0
+}
+
+/// A dome's radius over its foot's at `x` of the way up it, 0 to 1: the
+/// superellipse `(1 - xⁿ)^(1/n)` of exponent `shoulder`.
+fn dome_profile(x: f64, shoulder: f64) -> f64 {
+    let x = x.clamp(0.0, 1.0);
+    math::pow((1.0 - math::pow(x, shoulder)).max(0.0), 1.0 / shoulder)
+}
+
 /// Spines bleach or grey as they age.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(default, deny_unknown_fields)]
@@ -405,6 +425,7 @@ impl BodyLook {
         }
         within("flatten", self.flatten, 0.05, 1.0)?;
         within("dome", self.dome, 0.05, 4.0)?;
+        within("shoulder", self.shoulder, 1.0, 4.0)?;
         within("base", self.base, 0.0, 4.0)?;
         if let Some(ribs) = &self.ribs {
             let [low, high] = ribs.count;
@@ -841,6 +862,8 @@ struct Centreline {
     /// Lengths of the dome at the tip and the rounded base at the foot.
     dome: f64,
     base: f64,
+    /// The dome's exponent ([`BodyLook::shoulder`]).
+    shoulder: f64,
 }
 
 impl Centreline {
@@ -981,6 +1004,7 @@ impl Centreline {
             length,
             dome,
             base,
+            shoulder: look.shoulder,
         })
     }
 
@@ -1018,8 +1042,8 @@ impl Centreline {
     fn cap(&self, s: f64) -> f64 {
         let mut cap = 1.0;
         if self.dome > 0.0 && s > self.length - self.dome {
-            let x = ((s - (self.length - self.dome)) / self.dome).min(1.0);
-            cap *= math::sqrt((1.0 - x * x).max(0.0));
+            let x = (s - (self.length - self.dome)) / self.dome;
+            cap *= dome_profile(x, self.shoulder);
         }
         if self.base > 0.0 && s < self.base {
             let x = ((self.base - s) / self.base).min(1.0);
@@ -1529,8 +1553,8 @@ fn apex_crowding(line: &Centreline, s: f64) -> f64 {
     if line.dome <= 0.0 || s <= line.length - line.dome {
         return 1.0;
     }
-    let x = ((s - (line.length - line.dome)) / line.dome).min(1.0);
-    APEX_CROWDING.max(math::sqrt((1.0 - x * x).max(0.0)))
+    let x = (s - (line.length - line.dome)) / line.dome;
+    APEX_CROWDING.max(dome_profile(x, line.shoulder))
 }
 
 /// Areoles on a golden-angle spiral from the apex down, each with
@@ -2224,6 +2248,22 @@ impl Surface<'_> {
 #[allow(clippy::float_cmp)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_dome_tapers_rounds_or_shoulders_by_its_exponent() {
+        for x in [0.0, 0.3, 0.6, 0.9, 1.0] {
+            let round = dome_profile(x, 2.0);
+            assert!((round - math::sqrt(1.0 - x * x)).abs() < 1e-9, "{x}");
+        }
+        let (taper, round, broad) = (
+            dome_profile(0.5, 1.4),
+            dome_profile(0.5, 2.0),
+            dome_profile(0.5, 2.8),
+        );
+        assert!(taper < round && round < broad, "{taper} {round} {broad}");
+        assert!(dome_profile(1.0, 1.4).abs() < 1e-9);
+        assert!((dome_profile(0.0, 2.8) - 1.0).abs() < 1e-9);
+    }
     use crate::graph::GraphSegment;
 
     fn segment(

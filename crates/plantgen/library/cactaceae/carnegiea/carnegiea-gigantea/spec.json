@@ -20,7 +20,6 @@
       "height_shape": 3,
       "radius_min": 0.01,
       "radius_height": 2.0,
-      "fill": 0.95,
       "fill_years": 30,
       "pinch": 0.04,
       "pinch_depth": 0.1,
@@ -44,7 +43,6 @@
       "elbow_spread": 0.35,
       "droop": 0.07,
       "droop_length": 1.2,
-      "dome": 0.9,
       "bloom_age": 50,
       "flowers": 14,
       "ring_angle": 30,
@@ -92,7 +90,6 @@
     },
     "bodies": {
       "stem": {
-        "dome": 0.9,
         "ribs": {
           "spacing": 0.075,
           "depth": 0.12,

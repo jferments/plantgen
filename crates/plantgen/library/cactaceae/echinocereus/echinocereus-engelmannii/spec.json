@@ -30,7 +30,6 @@
       "pinch_depth": 0.06,
       "wiggle": 1.2,
       "bend": 1.5,
-      "dome": 0.9,
       "bloom_age": 6,
       "flowers": 3,
       "ring_angle": 85,
@@ -83,7 +82,6 @@
     },
     "bodies": {
       "stem": {
-        "dome": 0.9,
         "ribs": {
           "spacing": 0.02,
           "depth": 0.18,

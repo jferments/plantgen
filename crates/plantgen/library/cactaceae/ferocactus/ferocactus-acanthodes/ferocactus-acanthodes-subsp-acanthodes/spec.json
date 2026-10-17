@@ -27,7 +27,6 @@
       "wiggle": 0.4,
       "sun_tilt": 12,
       "bend": 0.3,
-      "dome": 0.6,
       "bloom_age": 25,
       "flowers": 18,
       "crown_rings": 2,
@@ -84,7 +83,6 @@
       "stem": {
         "colour": [0.08, 0.15, 0.06],
         "valley": [0.04, 0.075, 0.03],
-        "dome": 0.6,
         "ribs": {
           "spacing": 0.045,
           "depth": 0.14,

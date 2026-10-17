@@ -25,9 +25,8 @@
       "pinch": 0.02,
       "pinch_depth": 0.06,
       "wiggle": 0.3,
-      "sun_tilt": 22,
+      "sun_tilt": 17,
       "bend": 0.6,
-      "dome": 0.55,
       "bloom_age": 25,
       "flowers": 20,
       "crown_rings": 2,
@@ -84,7 +83,6 @@
       "stem": {
         "colour": [0.08, 0.16, 0.06],
         "valley": [0.04, 0.08, 0.03],
-        "dome": 0.55,
         "ribs": {
           "spacing": 0.065,
           "depth": 0.15,
@@ -187,6 +185,7 @@
     "fruiting_months": [1, 9, 10, 11, 12]
   },
   "evidence": {
+    "generator.params.sun_tilt": {"evidence": "SourceInferred", "source": "cactus-primer-gibson-nobel", "note": "Gibson and Nobel, The Cactus Primer (1986) p. 195: Ferocactus wislizenii stems lean 17 degrees toward the equator at 33 degrees north."},
     "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 337, Ferocactus wislizeni: barely tuberculate, the ribs with at most a swelling under each areole."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 337, Ferocactus wislizeni: flowers funnelform, yellow to yellowish orange to red (yellowish orange, the middle of the words), 4 to 5 cm long and wide; fruit ovoid, yellow, to 5 cm long (typical a little short of it, by hand)."},
     "traits.flower_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 337, Ferocactus wislizeni: flowers funnelform, yellow to yellowish orange to red (yellowish orange, the middle of the words), 4 to 5 cm long and wide; fruit ovoid, yellow, to 5 cm long (typical a little short of it, by hand)."},

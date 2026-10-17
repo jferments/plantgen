@@ -624,6 +624,8 @@ pub mod venation;
 /// `Areolate` and `Spiny`, from the new `fruit_surface`): broad scales on
 /// a barrel's or the saguaro's, felted areoles with glochids on a prickly
 /// pear's, areoles with short spines on a hedgehog's, the organ pipe's or
-/// a spiny cholla's, each crowned by its dried perianth (104 is flank
-/// flowers).
+/// a spiny cholla's, each crowned by its dried perianth; and a cactus
+/// stem's tip tapers, rounds or broadens into a shoulder as the new
+/// `stem_apex` says (`BodyLook::shoulder`), and a club-shaped column
+/// stays narrower at its foot (`stem_outline`) (104 is flank flowers).
 pub const GENERATOR_REVISION: u32 = 105;
