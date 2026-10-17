@@ -581,7 +581,7 @@ impl Surface<'_> {
             }
             let face = crate::templates::card_face(alpha, normal.dot(view) >= 0.0);
             albedo = self.templates.paint(template, albedo, texel, face);
-            hair = Some(template);
+            hair = Some((template, face.lower));
         }
         target.depth[at] = depth;
         let Some(lighting) = self.lighting else {
@@ -629,12 +629,12 @@ impl Surface<'_> {
                 color[channel] = (albedo[channel] * light) as f32;
             }
         }
-        if let Some(template) = hair
+        if let Some((template, lower)) = hair
             && let Some(hairs) = self
                 .templates
                 .templates
                 .get(template)
-                .and_then(|drawn| drawn.hairs.as_ref())
+                .and_then(|drawn| drawn.hairs_on(lower))
         {
             let sheen = crate::hairs::sheen(hairs, normal, view, lit, lighting);
             for channel in 0..3 {

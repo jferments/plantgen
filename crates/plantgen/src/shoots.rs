@@ -320,6 +320,7 @@ mod tests {
         let shape = Shape::Needles(s.clone());
         Look {
             hairs: None,
+            hairs_beneath: None,
             underside: None,
             variegation: None,
             roll: 0.0,

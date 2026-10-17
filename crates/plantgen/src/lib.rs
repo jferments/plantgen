@@ -596,4 +596,9 @@ pub mod venation;
 /// divisions lifted, scattered or set all round their rachis
 /// (`crate::lace`); a pinnate leaf's laterals reach no farther than its
 /// stated blade width (`blade_width`) (94 is pedicels and tufts, #177).
-pub const GENERATOR_REVISION: u32 = 95;
+/// 96: hairs beneath a blade (`hairs_beneath`, from `leaf_hairs_beneath`)
+/// and hairs gathered on its main veins (`Hairs::veins`, from
+/// `leaf_hairs_on_veins`); a face's strands stand on the face that wears
+/// them and on the drawn cells of a bent card, and a stated hair length
+/// wins over the word's (95 is lacy leaves, #180).
+pub const GENERATOR_REVISION: u32 = 96;

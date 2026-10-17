@@ -1011,6 +1011,7 @@ mod tests {
                 "thorn".to_string(),
                 crate::looks::OrganLook {
                     hairs: None,
+                    hairs_beneath: None,
                     underside: None,
                     variegation: None,
                     roll: 0.0,

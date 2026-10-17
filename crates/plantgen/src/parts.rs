@@ -824,6 +824,7 @@ mod tests {
     fn look(shape: Shape) -> Look {
         Look {
             hairs: None,
+            hairs_beneath: None,
             underside: None,
             variegation: None,
             roll: 0.0,

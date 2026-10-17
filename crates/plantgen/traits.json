@@ -892,6 +892,13 @@
       "optional": true,
       "why": "the hairs on a blade's underside, in the words of `leaf_hairs`"
     },
+    "leaf_hairs_on_veins": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "bool",
+      "optional": true,
+      "why": "whether a blade's upper side's hairs gather along its main veins, as floras say ('hairy along the veins', 'at least along main veins')"
+    },
     "leaf_ciliate": {
       "group": "leaves",
       "organ": "leaf",
