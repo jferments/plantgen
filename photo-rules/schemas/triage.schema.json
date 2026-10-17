@@ -72,7 +72,8 @@
         "flowering",
         "fruiting",
         "leafless",
-        "mixed"
+        "mixed",
+        "cannot tell"
       ]
     },
     "leaf_state": {
@@ -128,6 +129,7 @@
         "direct sun",
         "shade",
         "overcast",
+        "dim",
         "flash",
         "studio",
         "render"

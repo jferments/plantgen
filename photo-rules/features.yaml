@@ -111,7 +111,7 @@ features:
   scale: habit
   question: What share of the crown's outline shows sky through it?
   type: share
-  views: [V1]
+  views: [V1, V3]
   maps_to: {trait: crown_see_through, measure: sky}
   reliability: fair (masks are better)
   notes: Answer in tenths. In leaf only; a leafless crown is V2.
@@ -120,7 +120,7 @@ features:
   scale: habit
   question: How regular is the plant's shape?
   type: state
-  views: [V1]
+  views: [V1, V3]
   maps_to: {measure: "outline fit"}
   states:
     regular: close to a symmetrical geometric shape
@@ -142,6 +142,7 @@ features:
     cane: arching unbranched canes from the base
     unbranched: a single unbranched stem
   reliability: good
+  notes: "A single unbranched succulent stem (a barrel or column cactus) is `columnar`; `unbranched` is for a single woody or herbaceous stem."
 
 - id: arch.trunk_form
   scale: architecture
@@ -241,7 +242,7 @@ features:
   scale: foliage
   question: Where does the foliage sit in the crown?
   type: state
-  views: [V1, V2]
+  views: [V1, V2, V3]
   maps_to: {proposed: foliage_clumping, related_trait: short_shoots}
   states:
     even_shell: an even skin over the whole crown outline
@@ -255,7 +256,7 @@ features:
   scale: foliage
   question: How dense and opaque are the foliage masses themselves?
   type: ordinal
-  views: [V1, V4]
+  views: [V1, V3, V4]
   maps_to: {proposed: foliage_density}
   states:
     sparse: twigs and sky show through each clump
@@ -267,7 +268,7 @@ features:
   scale: foliage
   question: Colour of the foliage mass on a lit part of the crown.
   type: colour
-  views: [V1, V4]
+  views: [V1, V3, V4]
   maps_to: {trait: leaf_colour}
   reliability: fair
   notes: Mass colour includes shading between leaves; leaf.colour_upper is the single leaf.
@@ -452,6 +453,7 @@ features:
   views: [V5]
   maps_to: {trait: leaf_lobes}
   reliability: good
+  notes: "1 on an unlobed leaf. If the plant mixes leaf forms, give the commonest and list the others with rough counts in the note."
 
 - id: leaf.shape
   scale: leaf
@@ -473,7 +475,7 @@ features:
     reniform: kidney-shaped, wider than long, notched base
     cordate: heart-shaped, notched at the base with two rounded lobes
   reliability: good
-  notes: Shade leaves are often broader than sun leaves.
+  notes: "Shade leaves are often broader than sun leaves. For a lobed leaf, give the outline of the envelope round the lobe tips, and say \"lobed\" in the note."
 
 - id: leaf.length_over_width
   scale: leaf
@@ -556,6 +558,7 @@ features:
   views: [V5]
   maps_to: {proposed: teeth_per_side}
   reliability: fair up to 15; points beyond
+  notes: "0 on a smooth (entire) margin."
 
 - id: leaf.tooth_depth
   scale: leaf
@@ -645,6 +648,7 @@ features:
     spots: dots or speckles
     edge: a different-coloured margin
   reliability: good
+  notes: "Type `states`: list every pattern you see."
 
 - id: flower.symmetry
   scale: flower
@@ -670,7 +674,7 @@ features:
   scale: flower
   question: Side view of one flower. Its shape.
   type: state
-  views: [V7, V6]
+  views: [V7]
   maps_to: {trait: corolla_shape}
   states:
     rotate: flat, parts spread in one plane like a wheel
@@ -879,12 +883,12 @@ features:
 
 - id: fruit.colour
   scale: fruit
-  question: Colour of ripe fruit.
+  question: Colour of the fruit as seen. Say in the note whether it looks ripe (full size, coloured, soft or splitting) or unripe.
   type: colour
   views: [V8, V4]
   maps_to: {trait: fruit_colour_ripe}
   reliability: fair
-  notes: Unripe fruit colour goes in the note with the stage.
+  notes: Ripe and unripe answers are aggregated separately, by the note.
 
 - id: fruit.posture
   scale: fruit
@@ -1000,9 +1004,10 @@ features:
   scale: surface
   question: Cacti and ribbed stems. Number of ribs around the stem.
   type: count
-  views: [V3, V8]
+  views: [V1, V3, V8]
   maps_to: {trait: ribs}
   reliability: fair up to 15; bins beyond (from above is best)
+  notes: "Count ribs from above where the image shows the apex; from the side, count from edge to edge and double (ground rule 6), noting it."
 
 - id: surface.tubercle_relief
   scale: surface
@@ -1028,7 +1033,7 @@ features:
 
 - id: surface.spine_cover
   scale: surface
-  question: Cacti. Share of the stem's skin hidden by spines, from about 1 m away.
+  question: Cacti. Share of the stem's skin hidden by spines, on the middle of the stem, at whatever distance the image gives.
   type: share
   views: [V8, V1]
   maps_to: {proposed: spine_cover}
@@ -1082,5 +1087,7 @@ features:
     leafless: no leaves
     flushing: new leaves expanding
     full: full foliage
+    none: no leaves by nature (most cacti); not a season
     autumn_colour: leaves turning colour
   reliability: good
+  notes: "A plant with no leaves by nature (most cacti, leafless stems) is `none`, not `leafless`."

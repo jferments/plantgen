@@ -42,14 +42,22 @@ close-up, always.
 
 | View | PlantGen | Notes |
 | --- | --- | --- |
-| V1 whole, side | `plantc render <id> --view side --quality standard --size 1536` | camera at about eye height; the 1.8 m figure or striped rod gives scale; PlantLab's photo look on a GPU where available |
+| V1 whole, side | `plantc render <id> --view side --quality standard --size 1536` | camera at about eye height; the orange post is a 1.8 m figure for scale (observers record it as a pole); PlantLab's photo look on a GPU where available |
 | V2 leafless | V1 on a leafless `--day` for deciduous plants | evergreens: V1 is all there is |
 | V3 from above, 45 degrees | `--view oblique` (and `--view top` for rosettes and cacti) | `top` ignores `--focus` today |
-| V4 shoot close-up | `--focus X,Y,Z --span 1.0 --parts on` on a typical mid-crown shoot | pick the point from `plantc grow`'s crown size |
-| V5 leaf | `plantc parts <id>` (the leaf card alone, median size) | compare with face-on photos and herbarium sheets |
+| V4 shoot close-up | `--focus X,Y,Z --span 1.0 --parts on` on a typical outer-crown shoot | pick the point from `plantc grow`'s crown size, then look at the image: a frame that is mostly sky or ground answers nothing, so move the focus onto foliage. `--parts on` can run out of memory on large conifers; leave it off there |
+| V5 leaf | `plantc parts <id>` (the leaf card alone, median size) | compare with face-on photos and herbarium sheets. A parts sheet is a grid of panels: cut it into one image per panel before triage, or observers rightly reject it as a collage |
 | V6-V7 flower | `plantc parts` for the face; `--focus ... --span 0.3 --parts on` on a flowering shoot for posture and clusters | |
 | V8 fruit, cone, bark | `plantc parts`; `--focus` on the trunk at 1.3 m for bark | |
 | Through the year | `plantc year <id>` | for colour and stage by month |
+
+Observe at least three render images per view and species (three seeds, or
+three focus points for close-ups): one render image is one vote, and a
+single odd frame then decides the verdict. Check that renders made on
+different days actually differ (`plantc year <id>`): a species with no
+seasonal organs draws the same plant every day, so leafless and autumn
+photos cannot be matched and are compared only on what the season does not
+change.
 
 `plantc organs <id> --age N --day N` gives exact counts of every organ in a
 render: use them as the answer key when your AI counts render parts, and as

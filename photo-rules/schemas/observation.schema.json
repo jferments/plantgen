@@ -60,6 +60,7 @@
                       "direct sun",
                       "shade",
                       "overcast",
+                      "dim",
                       "flash",
                       "studio",
                       "render"
@@ -113,6 +114,7 @@
               "vlm",
               "points",
               "mask",
+              "pixels",
               "ruler",
               "hand"
             ]

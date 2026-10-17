@@ -30,10 +30,17 @@ or damaged parts, several plants overlapping, a label or ruler.
 - Each feature lists its allowed states. Use one of them, spelled exactly.
 - Use `"cannot tell"` whenever the image does not show the feature clearly
   enough: wrong view, too small, blurred, hidden, out of frame, or the organ
-  is absent. "Cannot tell" is a correct answer, not a failure. A guess is
-  counted as a vote and spoils the result.
-- If two states are both visible on the plant, give the commoner one, and
-  mention the other in the feature's `"note"`.
+  is not in the image. "Cannot tell" is a correct answer, not a failure. A
+  guess is counted as a vote and spoils the result.
+- If the organ is clearly visible and simply lacks what a count asks for,
+  the answer is a number, not "cannot tell": 0 teeth on a smooth edge, 1 lobe
+  on an unlobed leaf, 0 main limbs on a single unbranched stem.
+- If no listed state fits what you clearly see, answer `"cannot tell"` and
+  describe what you see in the `"note"`: the note is how missing states are
+  found.
+- For a `state` feature, if two states are both visible on the plant, give
+  the commoner one, and mention the other in the `"note"` with rough
+  counts. For a `states` feature, list every state you see.
 
 ## 4. Give evidence and confidence
 
@@ -66,6 +73,13 @@ For every answer other than "cannot tell", give:
   points.
 - Never estimate a count you cannot see. Parts hidden behind others are not
   counted; say so.
+- Parts set evenly around an axis (ribs on a stem, tepals in a flower,
+  needles in a whorl) are never all visible from one side. Count those you
+  can see from one edge of the organ to the other, double it, and write
+  "doubled from N visible" in the note. If a view down the axis shows them
+  all (a cactus from above, a flower face-on), count there instead.
+- If a repeated organ is partly hidden in one place, count it where it shows
+  whole (another flower, another leaf).
 
 ## 7. Ratios, not sizes
 
@@ -77,10 +91,14 @@ For every answer other than "cannot tell", give:
 ## 8. Colours from the palette
 
 - Name the colour with a family from `palette.yaml` (for example
-  `"yellow-green"`, `"maroon"`, `"grey-brown"`).
+  `"yellow-green"`, `"maroon"`, `"grey-brown"`), choosing it by eye, the way
+  a botanist would name the colour. Do not pick the family by the nearest
+  hex anchor: in shade or dim light that turns green stems grey-brown.
 - Add an approximate hex of a lit, in-focus, unshaded patch (`"#6b8e23"`).
-- Name the lighting: `"direct sun"`, `"shade"`, `"overcast"`, `"flash"`,
-  `"studio"`, `"render"`.
+  The hex is the measurement; the family is the word. If you sampled the hex
+  from pixels, set `"method": "pixels"`.
+- Name the lighting: `"direct sun"`, `"shade"`, `"overcast"`, `"dim"`
+  (dusk, deep shade, indoors), `"flash"`, `"studio"`, `"render"`.
 - Do not correct for lighting in your head; report what is there and the
   lighting, and the comparison takes care of it.
 

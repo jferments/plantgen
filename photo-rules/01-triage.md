@@ -16,16 +16,16 @@ Do not use that knowledge for anything else.
   "usable": true,
   "unusable_reason": null,
   "species_match": "yes | no | unsure",
-  "kind": "photo | herbarium_sheet | drawing | render",
+  "kind": "photo | herbarium_sheet | drawing | render (optional; see below)",
   "views": ["V1", "V4"],
   "organs_visible": ["leaf", "flower"],
-  "stage": "vegetative | bud | flowering | fruiting | leafless | mixed",
+  "stage": "vegetative | bud | flowering | fruiting | leafless | mixed | cannot tell",
   "leaf_state": "none | flushing | full | autumn_colour | leafless | cannot tell",
   "setting": "open_grown | forest | garden_or_street | pot_or_indoor | pruned_or_hedge | cannot tell",
   "cultivar_look": "yes | no | cannot tell",
   "age_class": "seedling | juvenile | young | mature | old | cannot tell",
   "scale_cue": "none | ruler | colour_card | hand | person | pole | other",
-  "lighting": "direct sun | shade | overcast | flash | studio | render",
+  "lighting": "direct sun | shade | overcast | dim | flash | studio | render",
   "quality": "sharp | soft | blurred"
 }
 ```
@@ -33,16 +33,24 @@ Do not use that knowledge for anything else.
 ## How to answer
 
 - **usable**: `false` if the plant is tiny in the frame, blurred, mostly
-  hidden, heavily filtered or edited, a collage, or not a plant. Give the
-  reason in `"unusable_reason"`.
+  hidden, heavily filtered or edited, a collage of different plants or
+  photos, not a plant, or clear but showing no view in the table below
+  (reason `"no view fits"`). Give the reason in `"unusable_reason"`. A sheet
+  of panels that each show one organ of the same plant (a herbarium sheet,
+  PlantGen's `plantc parts` sheet) is not a collage: the person running the
+  rules cuts it into its panels, and each panel is triaged on its own.
+- **kind**: what the image is. When the person running the rules already
+  knows (they made the renders, they fetched the herbarium sheets), they
+  record it themselves and leave this out of the request; an observer that
+  is not asked does not guess.
 - **views**: every view code this image shows clearly enough to measure:
 
   | Code | The image shows |
   | --- | --- |
-  | V1 | the whole plant from the side at about eye level, base and top in frame |
+  | V1 | the whole plant from the side, base and top in frame (from eye level; from below or above, say so in the description) |
   | V2 | the whole plant with its branches visible (leafless, or a see-through crown) |
   | V3 | the whole plant from above or 30-60 degrees down |
-  | V4 | a branch or shoot, 0.3-2 m of it, with its leaves in place |
+  | V4 | a branch or shoot, up to 2 m of it, with its leaves (or needles, buds, flowers) in place |
   | V5 | one or more leaves face-on and flat (herbarium sheets usually) |
   | V6 | one or more flowers or flower heads face-on |
   | V7 | flowers or an inflorescence from the side |

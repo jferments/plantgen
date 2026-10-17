@@ -128,5 +128,6 @@ If your platform has them, these tools beat any model's eye:
 | Colour | the mean CIELAB of masked organ pixels after white balance | removes guesswork about tint |
 | Absolute sizes | herbarium sheets with a ruler | photos without a scale give only ratios |
 
-Record which method answered each feature (`"method": "vlm" | "points" |
-"mask" | "ruler"`) in the answer's note, so aggregation can weigh them.
+Record which method answered each feature in the answer's `"method"` field
+(`"vlm"`, `"points"`, `"mask"`, `"pixels"` for a colour sampled from pixels,
+`"ruler"`, `"hand"`), so aggregation can weigh them.
