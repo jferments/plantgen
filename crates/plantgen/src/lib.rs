@@ -619,4 +619,10 @@ pub mod venation;
 /// folded inside, its scales on the coil if its stipe is scaly; it unrolls
 /// from its foot, and its stipe rises uncoiled as it lengthens (97 is
 /// dimorphic ferns, #178).
-pub const GENERATOR_REVISION: u32 = 98;
+/// 99: a fern's pinnae bear sori on their lower faces (`looks::Sori`):
+/// round, oblong, linear or marginal as `sorus_shape` says, where
+/// `sorus_position` puts them on each segment the card's outline gives,
+/// under the `indusium` stated; most pinnae of a fern whose fronds are
+/// alike, and only the fertile pinnae of a dimorphic one (98 is fern
+/// fiddleheads).
+pub const GENERATOR_REVISION: u32 = 99;
