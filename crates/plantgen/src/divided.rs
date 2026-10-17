@@ -22,9 +22,14 @@
 //! In a **twice-divided** leaf (`pinnules` above 0) each of those
 //! divisions bears `pinnules` leaflets the same way: a pinna along its own
 //! rachis at `pinnule_angle`, a palmate division from the tip of a stalk
-//! 0.4 of its length. A **dissected** blade (`confluent` above 0) has
-//! segments instead of leaflets: their bases broaden and run together
-//! along a winged rachis.
+//! 0.4 of its length. In a **thrice-divided** one (`segments` above 0)
+//! each pinnule is divided once more into `segments`, along its own
+//! rachis at `segment_angle` or fanned from its stalk's tip. Divisions
+//! after the first are set as `inner` says, or as `pattern` if it is
+//! unset: a ternate-pinnate leaf is palmate of three, then pinnate. A
+//! **dissected** blade (`confluent` above 0) has segments instead of
+//! leaflets: their bases broaden and run together along a winged rachis,
+//! the rachis of the last division.
 //!
 //! Where the leaf would leave its card it is shrunk about its petiole's
 //! foot (pinnate) or tip (palmate) until it fits: the card is at most 1.6
@@ -39,22 +44,28 @@ use crate::math;
 /// A point or direction in the card's frame.
 pub type Point = (f64, f64);
 
-/// A stretch of a leaf's axes: its petiole and rachis (order 0), or a
-/// pinna's rachis or a division's stalk (order 1), from its foot to its
+/// A stretch of a leaf's axes: its petiole and rachis (order 0), a
+/// pinna's rachis or a division's stalk (order 1), or a pinnule's (order
+/// 2), from its foot to its
 /// end, with the half-width at its foot of the wing a dissected blade's
-/// rachis bears (0 for none).
+/// rachis bears (0 for none), and, as its leaflets have them, the division
+/// it is (or is in) and, for a pinnule's, its place in it.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Axis {
     pub from: Point,
     pub to: Point,
     pub order: u8,
     pub wing: f64,
+    pub division: Option<u32>,
+    pub within: Option<u32>,
 }
 
 /// One leaflet, or one segment of a dissected blade: where it leaves its
 /// rachis, which way it points (a unit vector), its length, stalk
-/// included, its division (from the foot, the terminal one first) and, in
-/// a twice-divided leaf, its place in that division.
+/// included, its division (from the foot, the terminal one first), in a
+/// leaf divided twice or more its place in that division (its pinnule's
+/// in a thrice-divided leaf) and, in a thrice-divided one, its place in
+/// its pinnule.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Leaflet {
     pub base: Point,
@@ -62,6 +73,7 @@ pub struct Leaflet {
     pub length: f64,
     pub division: u32,
     pub within: Option<u32>,
+    pub segment: Option<u32>,
 }
 
 /// A compound leaf laid out: its form, its axes, its leaflets in the order
@@ -80,11 +92,14 @@ pub struct Layout {
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Form {
     pub pattern: Pattern,
+    pub inner: Pattern,
     pub leaflets: u32,
     pub pinnules: u32,
+    pub segments: u32,
     pub confluent: f64,
     pub angle: f64,
     pub pinnule_angle: f64,
+    pub segment_angle: f64,
     pub spread: f64,
     pub largest: f64,
     pub lowest: f64,
@@ -95,6 +110,7 @@ pub struct Form {
     pub base: f64,
     pub petiolule: f64,
     pub petiole: f64,
+    pub blade_width: Option<f64>,
     /// The blade's half-width as a share of its widest at [`ALONG`], where
     /// the leaf is bounded: for a leaf divided as only pinnate leaves once
     /// were and drawn without an outline, none, so it keeps its old fit.
@@ -115,6 +131,12 @@ impl Form {
         let blade_base = base + (1.0 - base) * confluent;
         let pattern = c.pattern.unwrap_or_default();
         let pinnules = c.pinnules.unwrap_or(0);
+        let segments = if pinnules > 0 {
+            c.segments.unwrap_or(0)
+        } else {
+            0
+        };
+        let pinnule_angle = c.pinnule_angle.unwrap_or(angle);
         let once_pinnate = pattern == Pattern::Pinnate && pinnules == 0 && confluent <= 0.0;
         let profile = (c.outline.is_some() || !once_pinnate).then(|| {
             ALONG.map(|t| {
@@ -123,11 +145,14 @@ impl Form {
         });
         Self {
             pattern,
+            inner: c.inner.unwrap_or(pattern),
             leaflets: c.leaflets,
             pinnules,
+            segments,
             confluent,
             angle,
-            pinnule_angle: c.pinnule_angle.unwrap_or(angle),
+            pinnule_angle,
+            segment_angle: c.segment_angle.unwrap_or(pinnule_angle),
             spread: c.spread.unwrap_or_else(|| {
                 open_enough(pattern, c.leaflets, pinnules, c.leaflet_width, |t| {
                     crate::templates::outline_profile(
@@ -148,7 +173,24 @@ impl Form {
             base: blade_base,
             petiolule: c.petiolule.unwrap_or(0.0) * (1.0 - confluent),
             petiole: c.petiole,
+            blade_width: c.blade_width,
             profile,
+        }
+    }
+
+    /// The longest lateral leaflet (or pinna) of a pinnate leaf, as a
+    /// share of its rachis: as long as their spacing allows ([`longest`]),
+    /// or, where the blade's width is set, no longer than reaches its edge
+    /// at `angle` to the rachis.
+    #[must_use]
+    pub fn primary_longest(&self) -> f64 {
+        let spaced = longest(self.leaflets, self.petiole);
+        match self.blade_width {
+            Some(width) if self.pattern == Pattern::Pinnate => {
+                let reach = 0.5 * width * (1.0 - self.petiole);
+                spaced.min((reach / math::sin(math::radians(self.angle)).max(0.2)).max(0.01))
+            }
+            _ => spaced,
         }
     }
 
@@ -235,13 +277,13 @@ pub fn longest(count: u32, stalk: f64) -> f64 {
 type Placed = (Point, Point, f64);
 
 /// A pinnate group of `count` leaflets along a rachis from `(0, 0)` to
-/// `(0, 1)`, its first `stalk` bare, each lateral `angle` radians from it:
+/// `(0, 1)`, its first `stalk` bare, each lateral `angle` radians from it
+/// and the longest `longest` long:
 /// where its rachis ends, and its leaflets, the terminal one first, then
 /// its pairs from the foot up, right before left.
-fn pinnate(form: &Form, count: u32, stalk: f64, angle: f64) -> (f64, Vec<Placed>) {
+fn pinnate(form: &Form, count: u32, stalk: f64, angle: f64, longest: f64) -> (f64, Vec<Placed>) {
     let pairs = count / 2;
     let span = f64::from(pairs.max(1));
-    let longest = longest(count, stalk);
     let (sin, cos) = (math::sin(angle), math::cos(angle));
     let terminal = count % 2 == 1;
     let top = if terminal {
@@ -321,6 +363,7 @@ const DIVISION_STALK: f64 = 0.4;
 pub fn layout(c: &Compound) -> Layout {
     let form = Form::of(c);
     let mut axes = Vec::new();
+    let once = form.pinnules == 0;
     // Where the leaf is shrunk about if it does not fit.
     let (primary, about) = match form.pattern {
         Pattern::Pinnate => {
@@ -329,9 +372,10 @@ pub fn layout(c: &Compound) -> Layout {
                 form.leaflets,
                 form.petiole,
                 math::radians(form.angle),
+                form.primary_longest(),
             );
-            let wing = if form.pinnules == 0 {
-                0.5 * form.confluent * 0.35 * form.width * longest(form.leaflets, form.petiole)
+            let wing = if once {
+                0.5 * form.confluent * 0.35 * form.width * form.primary_longest()
             } else {
                 0.0
             };
@@ -340,6 +384,8 @@ pub fn layout(c: &Compound) -> Layout {
                 to: (0.0, end),
                 order: 0,
                 wing,
+                division: None,
+                within: None,
             });
             (group, (0.0, 0.0))
         }
@@ -349,6 +395,8 @@ pub fn layout(c: &Compound) -> Layout {
                 to: (0.0, form.petiole + 0.01),
                 order: 0,
                 wing: 0.0,
+                division: None,
+                within: None,
             });
             (
                 palmate(
@@ -362,26 +410,21 @@ pub fn layout(c: &Compound) -> Layout {
         }
     };
     let mut leaflets = Vec::new();
-    for (division, (base, direction, length)) in (0_u32..).zip(primary) {
-        if form.pinnules == 0 {
-            leaflets.push(Leaflet {
-                base,
-                direction,
-                length,
-                division,
-                within: None,
-            });
+    for (division, placed) in (0_u32..).zip(primary) {
+        if once {
+            leaflets.push(leaflet(placed, division, None, None));
             continue;
         }
-        let group = divide(&form, (base, direction, length), &mut axes);
-        for (within, (b, d, l)) in (0_u32..).zip(group) {
-            leaflets.push(Leaflet {
-                base: frame(base, direction, length, b),
-                direction: turn(direction, d),
-                length: l * length,
-                division,
-                within: Some(within),
-            });
+        let on = (division, None);
+        for (within, pinnule) in (0_u32..).zip(divide(&form, 1, on, placed, &mut axes)) {
+            if form.segments == 0 {
+                leaflets.push(leaflet(pinnule, division, Some(within), None));
+                continue;
+            }
+            let on = (division, Some(within));
+            for (segment, placed) in (0_u32..).zip(divide(&form, 2, on, pinnule, &mut axes)) {
+                leaflets.push(leaflet(placed, division, Some(within), Some(segment)));
+            }
         }
     }
     let mut laid = Layout {
@@ -394,28 +437,60 @@ pub fn layout(c: &Compound) -> Layout {
     laid
 }
 
-/// A division of a twice-divided leaf placed at `base`, pointing along
-/// `direction` and `length` long: its axis added to `axes`, and its
-/// leaflets in its own frame.
-fn divide(form: &Form, (base, direction, length): Placed, axes: &mut Vec<Axis>) -> Vec<Placed> {
-    match form.pattern {
+fn leaflet(
+    (base, direction, length): Placed,
+    division: u32,
+    within: Option<u32>,
+    segment: Option<u32>,
+) -> Leaflet {
+    Leaflet {
+        base,
+        direction,
+        length,
+        division,
+        within,
+        segment,
+    }
+}
+
+/// A division of order `order` (1 a pinna, 2 a pinnule), `on` a division
+/// and in a pinna's place in it, placed at `base`,
+/// pointing along `direction` and `length` long: its axis added to
+/// `axes`, and its leaflets or segments placed in the card's frame. Only
+/// the last division's rachis bears a dissected blade's wing.
+fn divide(
+    form: &Form,
+    order: u8,
+    (division, within): (u32, Option<u32>),
+    (base, direction, length): Placed,
+    axes: &mut Vec<Axis>,
+) -> Vec<Placed> {
+    let (count, angle, last) = if order == 1 {
+        (form.pinnules, form.pinnule_angle, form.segments == 0)
+    } else {
+        (form.segments, form.segment_angle, true)
+    };
+    let group = match form.inner {
         Pattern::Pinnate => {
             let (end, group) = pinnate(
                 form,
-                form.pinnules,
+                count,
                 PINNA_STALK,
-                math::radians(form.pinnule_angle),
+                math::radians(angle),
+                longest(count, PINNA_STALK),
             );
+            let wing = if last {
+                0.5 * form.confluent * 0.5 * form.width * length * longest(count, PINNA_STALK)
+            } else {
+                0.0
+            };
             axes.push(Axis {
                 from: base,
                 to: frame(base, direction, length, (0.0, end)),
-                order: 1,
-                wing: 0.5
-                    * form.confluent
-                    * 0.5
-                    * form.width
-                    * length
-                    * longest(form.pinnules, PINNA_STALK),
+                order,
+                wing,
+                division: Some(division),
+                within,
             });
             group
         }
@@ -423,17 +498,24 @@ fn divide(form: &Form, (base, direction, length): Placed, axes: &mut Vec<Axis>) 
             axes.push(Axis {
                 from: base,
                 to: frame(base, direction, length, (0.0, DIVISION_STALK + 0.01)),
-                order: 1,
+                order,
                 wing: 0.0,
+                division: Some(division),
+                within,
             });
-            palmate(
-                form,
-                form.pinnules,
-                DIVISION_STALK,
-                math::radians(form.spread),
-            )
+            palmate(form, count, DIVISION_STALK, math::radians(form.spread))
         }
-    }
+    };
+    group
+        .into_iter()
+        .map(|(b, d, l)| {
+            (
+                frame(base, direction, length, b),
+                turn(direction, d),
+                l * length,
+            )
+        })
+        .collect()
 }
 
 /// How far either side of its midline `c`'s layout reaches, remembered
@@ -503,12 +585,15 @@ pub fn dimensions(c: &Compound) -> Dimensions {
 }
 
 /// A compound leaf's counts as floras give them (spec rework M8A): its
-/// leaflets, one count for a leaf divided once and one for each pinna of a
-/// twice-divided leaf; its pinnae, 0 for a leaf divided once; and for a
-/// pinnate leaf whether it, or each pinna, ends in a single leaflet.
+/// leaflets, one count for a leaf divided once, one for each pinna of a
+/// twice-divided leaf and one for each pinnule of a thrice-divided one;
+/// its pinnules, one count for each pinna of a thrice-divided leaf and
+/// none otherwise; its pinnae, 0 for a leaf divided once; and, where its
+/// last division is pinnate, whether it ends in a single leaflet.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Counts {
     pub leaflets: Vec<u32>,
+    pub pinnules: Vec<u32>,
     pub pinnae: u32,
     pub terminal: Option<bool>,
 }
@@ -517,26 +602,48 @@ pub struct Counts {
 #[must_use]
 pub fn counts(c: &Compound) -> Counts {
     let laid = layout(c);
-    let mut per_division: BTreeMap<u32, u32> = BTreeMap::new();
+    let mut per_group: BTreeMap<(u32, Option<u32>), u32> = BTreeMap::new();
+    let mut per_division: BTreeMap<u32, std::collections::BTreeSet<Option<u32>>> = BTreeMap::new();
     for leaflet in &laid.leaflets {
-        *per_division.entry(leaflet.division).or_default() += 1;
+        let thrice = leaflet.segment.is_some();
+        let group = if thrice { leaflet.within } else { None };
+        *per_group.entry((leaflet.division, group)).or_default() += 1;
+        per_division
+            .entry(leaflet.division)
+            .or_default()
+            .insert(leaflet.within);
     }
     let once = laid.form.pinnules == 0;
+    let thrice = laid.form.segments > 0;
     let leaflets = if once {
         vec![u32::try_from(laid.leaflets.len()).unwrap_or(u32::MAX)]
     } else {
-        per_division.values().copied().collect()
+        per_group.values().copied().collect()
+    };
+    let pinnules = if thrice {
+        per_division
+            .values()
+            .map(|within| u32::try_from(within.len()).unwrap_or(u32::MAX))
+            .collect()
+    } else {
+        Vec::new()
     };
     let pinnae = if once {
         0
     } else {
         u32::try_from(per_division.len()).unwrap_or(u32::MAX)
     };
+    let last = if once {
+        laid.form.pattern
+    } else {
+        laid.form.inner
+    };
     // An odd count ends in a leaflet, an even one in a pair.
-    let terminal = (laid.form.pattern == Pattern::Pinnate)
-        .then(|| leaflets.first().is_some_and(|count| count % 2 == 1));
+    let terminal =
+        (last == Pattern::Pinnate).then(|| leaflets.first().is_some_and(|count| count % 2 == 1));
     Counts {
         leaflets,
+        pinnules,
         pinnae,
         terminal,
     }
@@ -819,6 +926,71 @@ mod tests {
         }));
         assert_eq!(laid.leaflets.len(), 9);
         assert_eq!(laid.axes.len(), 4);
+    }
+
+    #[test]
+    fn a_thrice_divided_leaf_bears_segments_on_each_pinnule() {
+        // A tripinnate leaf: 7 pinnae of 5 pinnules of 3 segments.
+        let c = compound(|c| {
+            c.leaflets = 7;
+            c.pinnules = Some(5);
+            c.segments = Some(3);
+            c.leaflet_width = 0.2;
+        });
+        let laid = layout(&c);
+        assert_eq!(laid.leaflets.len(), 7 * 5 * 3);
+        assert_eq!(laid.axes.len(), 1 + 7 + 7 * 5);
+        assert_eq!(laid.axes.iter().filter(|a| a.order == 2).count(), 35);
+        assert!(laid.leaflets.iter().all(|l| l.segment.is_some()));
+        // Each segment is shorter than the pinnule it divides.
+        let twice = layout(&compound(|c| {
+            c.leaflets = 7;
+            c.pinnules = Some(5);
+            c.leaflet_width = 0.2;
+        }));
+        let longest = |laid: &Layout| laid.leaflets.iter().map(|l| l.length).fold(0.0, f64::max);
+        assert!(longest(&laid) < 0.6 * longest(&twice));
+        let points = laid.bounds();
+        assert!(
+            points
+                .iter()
+                .all(|p| p.1 <= 1.0 + 1e-9 && p.0.abs() <= laid.reach + 1e-9)
+        );
+        let counted = counts(&c);
+        assert_eq!(counted.pinnae, 7);
+        assert_eq!(counted.pinnules, vec![5; 7]);
+        assert_eq!(counted.leaflets, vec![3; 35]);
+        assert_eq!(counted.terminal, Some(true));
+        // Segments without pinnules are not a third division.
+        let none = Form::of(&compound(|c| c.segments = Some(3)));
+        assert_eq!(none.segments, 0);
+    }
+
+    #[test]
+    fn a_ternate_pinnate_leaf_is_pinnate_after_its_first_division() {
+        let c = compound(|c| {
+            c.pattern = Some(Pattern::Palmate);
+            c.inner = Some(Pattern::Pinnate);
+            c.leaflets = 3;
+            c.pinnules = Some(7);
+        });
+        let laid = layout(&c);
+        assert_eq!(laid.leaflets.len(), 21);
+        // Three pinnae fanned from the petiole's tip, each a rachis with a
+        // terminal leaflet and three pairs.
+        let pinnae: Vec<_> = laid.axes.iter().filter(|a| a.order == 1).collect();
+        assert_eq!(pinnae.len(), 3);
+        assert!(pinnae.iter().all(|a| a.from == pinnae[0].from));
+        let counted = counts(&c);
+        assert_eq!(counted.leaflets, vec![7; 3]);
+        assert_eq!(counted.terminal, Some(true));
+        // Unset, the inner pattern is the first's: biternate.
+        let biternate = Form::of(&compound(|c| {
+            c.pattern = Some(Pattern::Palmate);
+            c.leaflets = 3;
+            c.pinnules = Some(3);
+        }));
+        assert_eq!(biternate.inner, Pattern::Palmate);
     }
 
     #[test]

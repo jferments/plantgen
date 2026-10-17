@@ -4,6 +4,8 @@
   "name": "Acanthaceae",
   "parent": "order/lamiales",
   "traits": {
+    "leaf_incision": {"none": "usually", "lobed": "rarely"},
+    "leaf_margin": {"entire": "usually", "crenate": "sometimes", "serrate": "sometimes", "dentate": "rarely", "spiny": "rarely"},
     "corolla_shape": "tubular",
     "hypanthium": false,
     "flower_merosity": 5,
@@ -57,6 +59,8 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "wikipedia", "note": "DELTA, Acanthaceae (read 2026-10-17): blade undivided or dissected. Wikipedia: lobed only as an occasional margin form. Large genera (Justicia, Strobilanthes, Ruellia, Barleria) have undivided blades."},
+    "traits.leaf_margin": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Acanthaceae (read 2026-10-17): margins mostly smooth, at times toothed, lobed or spiny (Acanthus). DELTA, Acanthaceae (read 2026-10-17): margins entire, crenate, serrate or dentate. Order among the toothed states is my weighting (Strobilanthes, Ruellia often crenate-serrate)."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 331: flowers mostly monosymmetric with a long petal tube and an elaborate lower lip; Simpson p. 414 calls the corolla usually bilabiate."},
     "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 412: Simpson states the hypanthium is absent; flowers hypogynous."},
     "traits": {

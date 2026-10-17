@@ -4,6 +4,7 @@
   "name": "Campanulaceae",
   "parent": "order/asterales",
   "traits": {
+    "leaf_incision": {"none": "usually", "cleft": "rarely"},
     "stamens": {"min": 5, "max": 5, "low": 3, "high": 10},
     "carpels": {"min": 2, "max": 5},
     "hypanthium": {"false": "usually", "true": "rarely"},
@@ -51,6 +52,7 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Campanulaceae (read 2026-10-17): blades entire or pinnatifid/palmatifid; Wikipedia: mostly simple, Cyanea repeatedly divided."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 445, 447: stamens 5, rarely 3 to 10, free but pressed together or joined round the style."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 445, 447: ovary of 2 to 5 carpels."},
     "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 445, 505: flowers epigynous, rarely perigynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},

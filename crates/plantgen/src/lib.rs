@@ -50,6 +50,7 @@ pub mod hairs;
 pub mod impostor;
 pub mod inherit;
 pub mod json;
+pub mod lace;
 pub mod leaves;
 pub mod library;
 pub mod litter;
@@ -585,15 +586,24 @@ pub mod venation;
 /// 93: a hooked spine curls into an open J at its tip: its shaft runs
 /// further and its hook turns over its last two pieces, not folded flat on
 /// the shaft over the last one (92 is stem hairs, #173).
-/// 94: a spine set can keep to the upper areoles of a pad or joint
+/// 94: slender pedicels and short-shoot tufts (`Unit::stalk_width`): a
+/// flower's pedicel is drawn 0.35 as thick as before, and a needle look's
+/// bundle of more than five, up to 45, is a short shoot's tuft spread all
+/// round, the tufts half a needle apart (93 is hooked spines, #176).
+/// 95: lacy leaves: a compound leaf divides up to three times (`segments`,
+/// `inner`); one whose taxa say how its divisions are held
+/// (`division_planes`) is drawn on the two nearest levels as geometry, its
+/// divisions lifted, scattered or set all round their rachis
+/// (`crate::lace`); a pinnate leaf's laterals reach no farther than its
+/// stated blade width (`blade_width`) (94 is pedicels and tufts, #177).
+/// 96: a spine set can keep to the upper areoles of a pad or joint
 /// (`SpineSet::distal`, from `lower_areole_spines`): its lower areoles
 /// carry fewer spines or none and draw smaller far cards, and a tuft
-/// stores where it sits along its segment (93 is cactus tubercles and
-/// hooks, #176).
-/// 95: a cactus column's flowers may open down its flank as well as round
+/// stores where it sits along its segment (95 is lacy leaves, #180).
+/// 97: a cactus column's flowers may open down its flank as well as round
 /// its crown (`column` revision 3, `flank`: the pieces of its last flank
 /// years open a few on their sides; `cactaceae` revision 9), from the new
 /// `flower_zone`: a hedgehog's along the upper half of its stems, an organ
-/// pipe's near the tips and down their sides (94 is spines on the upper
+/// pipe's near the tips and down their sides (96 is spines on the upper
 /// areoles).
-pub const GENERATOR_REVISION: u32 = 95;
+pub const GENERATOR_REVISION: u32 = 97;
