@@ -549,4 +549,10 @@ pub mod venation;
 /// which flowered all year and never fruited, now bud, flower, fruit and
 /// drop in their months, as do the magnoliids that state their months
 /// (85 is conifer foliage along the limbs, #142).
-pub const GENERATOR_REVISION: u32 = 86;
+/// 87: a flower with no perianth (no petals, tube, calyx or cup) spreads
+/// its stamens and pistil over the reach its pieces would have taken, and
+/// the reduced drawing shows them as small blunt stamens in the flower's
+/// colour on a ring at any distance, not as bare sticks; seventeen
+/// species state their fruiting months from their sources, so their year
+/// now bears fruit.
+pub const GENERATOR_REVISION: u32 = 87;

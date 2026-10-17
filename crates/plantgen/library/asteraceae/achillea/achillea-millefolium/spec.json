@@ -99,6 +99,7 @@
     "disc_colour": [240, 236, 220],
     "involucre_height_m": {"min": 0.004, "max": 0.007, "high": 0.009},
     "flowering_months": [3, 4, 5, 6, 7, 8, 9, 10, 11],
+    "fruiting_months": [8, 9],
     "rhizome_habit": {"short_creeping": "often", "long_creeping": "often"}
   },
   "evidence": {
@@ -206,6 +207,11 @@
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",
       "note": "Abrams and Ferris vol. 4, varieties of A. millefolium (pp. 390-391): flowering periods given per variety run from March (vars. californica, arenicola) to November (var. arenicola); most varieties May to August."
+    },
+    "traits.fruiting_months": {
+      "evidence": "SourceInferred",
+      "source": "usfs-feis",
+      "note": "FEIS's common yarrow review (Aleksoff 1999, read 2026-10-16), table of average dates at five elevations in Utah (Ephraim Canyon): \"seeds ripe\" from August 26 to September 28; read as August and September. It gives no Pacific Northwest dates."
     },
     "traits.rhizome_habit": {
       "evidence": "SourceInferred",
