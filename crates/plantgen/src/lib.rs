@@ -562,4 +562,9 @@ pub mod venation;
 /// thinner (fern program revision 8); the sword fern's stipe is as long
 /// as Flora of North America gives (87 is flowers with no perianth,
 /// #168).
-pub const GENERATOR_REVISION: u32 = 88;
+/// 89: a far level's spine tint greys with each station's age as the near
+/// levels' spines do, covers a rib valley half as much as a crest, and
+/// hides half the skin it did, so a spiny cactus keeps its colour and rib
+/// shading from afar; cacti state stem, spine, old spine and wool colours,
+/// which the family's rules draw (88 is scaly fern stipes, #163).
+pub const GENERATOR_REVISION: u32 = 89;
