@@ -49,7 +49,6 @@
       "flower_angle": 30,
       "bud_share": 0.3,
       "fruit_share": 0.25,
-      "bud_size": 0.035,
       "flower_area": 0.328,
       "bud_area": 0.7,
       "fruit_area": 0.763
@@ -79,10 +78,6 @@
           "tube": 1.2
         },
         "accent": [0.8, 0.62, 0.12]
-      },
-      "bud": {
-        "shape": { "template": "fruit", "aspect": 0.55 },
-        "colour": [0.16, 0.24, 0.07]
       },
       "fruit": {
         "shape": { "template": "fruit" }
@@ -156,6 +151,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "fruit_shape": "obovoid",
     "stem_colour": [110, 135, 95],
     "spine_colour": [100, 95, 90],
     "spine_colour_aged": [75, 72, 70],
@@ -180,6 +176,7 @@
     "fruiting_months": [6, 7]
   },
   "evidence": {
+    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 139, Carnegiea gigantea: fruit obovoid, red, fleshy, with scales, 5 to 7.5 cm long."},
     "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 26 and 139, Carnegiea gigantea: stems green, pale grey-green in the plate (p. 26); a pale grey-green here."},
     "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 139, Carnegiea gigantea: spines grey to blackish; a dark grey here."},
     "traits.spine_colour_aged": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 139, Carnegiea gigantea: spines grey to blackish; old spines the blackish end, by hand."},

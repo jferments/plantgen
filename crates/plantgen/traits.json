@@ -1189,6 +1189,12 @@
       "type": "colour",
       "why": "an open flower's showiest part"
     },
+    "stigma_colour": {
+      "group": "flowers",
+      "organ": "flower",
+      "type": "colour",
+      "why": "the stigma lobes', where they differ from the style and stamens"
+    },
     "flower_size_m": {
       "group": "flowers",
       "organ": "flower",
@@ -1589,6 +1595,13 @@
       "values": ["naked", "scaly", "areolate", "spiny"],
       "when": {"spines": ["areoles"]},
       "why": "what a cactus's pericarpel, and the fruit it grows into, bears on its skin: nothing (naked), broad scales, felted areoles (with glochids but no spines), or areoles with spines"
+    },
+    "fruit_shape": {
+      "group": "fruit_and_cones",
+      "organ": "fruit",
+      "type": "enum",
+      "values": ["globose", "ellipsoid", "ovoid", "obovoid", "obconic", "club_shaped"],
+      "why": "a ripe fruit's outline along its length: round (globose), oval and even (ellipsoid), widest toward its base (ovoid), widest toward its tip (obovoid), narrowing to a point at its base (obconic), or swelling from a long narrow base (club_shaped)"
     },
     "fruit_size_m": {
       "group": "fruit_and_cones",

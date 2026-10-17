@@ -36,7 +36,6 @@
       "flower_angle": 55,
       "bud_share": 0.2,
       "fruit_share": 0.2,
-      "bud_size": 0.02,
       "flower_area": 0.363,
       "bud_area": 0.636,
       "fruit_area": 1.016
@@ -65,13 +64,6 @@
           "centre": 0.2
         },
         "accent": [0.15, 0.3, 0.08]
-      },
-      "bud": {
-        "shape": {
-          "template": "fruit",
-          "aspect": 0.5
-        },
-        "colour": [0.45, 0.1, 0.25]
       },
       "fruit": {
         "shape": {
@@ -148,6 +140,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "stigma_colour": [30, 100, 45],
     "stem_colour": [85, 120, 60],
     "flower_colour": [170, 30, 110],
     "flower_size_m": 0.07,
@@ -169,6 +162,7 @@
     "fruiting_months": [5, 6, 7]
   },
   "evidence": {
+    "traits.stigma_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 235 to 236, Echinocereus engelmannii: stigma deep green; a dark leaf green by hand."},
     "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 235 to 236, Echinocereus engelmannii: stems green (the spines extremely variable in colour, so they stay set by hand)."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 235 to 236, Echinocereus engelmannii: flowers short funnelform, purplish red to magenta to lavender, to 9 cm long and wide; fruit red, juicy, to 3 cm. Anderson gives only the largest sizes; the typical ones, a little short of them, by hand."},
     "traits.flower_size_m": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 235 to 236, Echinocereus engelmannii: flowers short funnelform, purplish red to magenta to lavender, to 9 cm long and wide; fruit red, juicy, to 3 cm. Anderson gives only the largest sizes; the typical ones, a little short of them, by hand."},

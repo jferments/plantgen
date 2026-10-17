@@ -34,7 +34,6 @@
       "flower_angle": 30,
       "bud_share": 0.2,
       "fruit_share": 0.3,
-      "bud_size": 0.025,
       "bud_rate": 0.5,
       "flower_area": 0.314,
       "bud_area": 0.7,
@@ -64,13 +63,6 @@
           "centre": 0.3
         },
         "accent": [0.6, 0.65, 0.2]
-      },
-      "bud": {
-        "shape": {
-          "template": "fruit",
-          "aspect": 0.55
-        },
-        "colour": [0.3, 0.35, 0.1]
       },
       "fruit": {
         "shape": {
@@ -134,6 +126,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "fruit_shape": "obovoid",
     "lower_areole_spines": "sometimes_none",
     "stem_colour": [95, 135, 65],
     "spine_colour": [215, 200, 130],
@@ -153,6 +146,7 @@
     "fruiting_months": [7, 8, 9]
   },
   "evidence": {
+    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 498 to 499, Opuntia engelmannii: fruit obovate to elongate, fleshy, purple, 3 to 7 cm long."},
     "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 498 to 499, Opuntia engelmannii: stem segments green, rarely blue-green."},
     "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 498 to 499, Opuntia engelmannii: spines yellowish."},
     "traits.flower_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 498 to 499, Opuntia engelmannii: flowers yellow, sometimes reddish, 5 to 8 cm across; fruit obovate to elongate, fleshy, purple, 3 to 7 cm long."},

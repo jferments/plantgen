@@ -1338,6 +1338,13 @@ pub struct Flower {
     /// A single pistil's ovary's colour; the accent if absent.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pistil: Option<[f32; 3]>,
+    /// The stigma lobes' colour; the filaments' if absent.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub stigma: Option<[f32; 3]>,
+    /// What a cactus flower's pericarpel (the inferior ovary's skin) bears,
+    /// as its fruit will ([`Skin`]).
+    #[serde(skip_serializing_if = "Skin::is_naked")]
+    pub pericarpel: Skin,
     /// How the petals differ by place.
     #[serde(skip_serializing_if = "Corolla::is_regular")]
     pub corolla: Corolla,
@@ -1432,6 +1439,8 @@ impl Default for Flower {
             calyx: None,
             filament: None,
             pistil: None,
+            stigma: None,
+            pericarpel: Skin::Naked,
             corolla: Corolla::Regular,
             petal_whorls: 1,
             banner: BANNER,
@@ -1883,6 +1892,11 @@ pub struct Fruit {
     /// (which also draws stalks, and the cup or husk of a nut).
     #[serde(skip_serializing_if = "is_zero")]
     pub unripe: f64,
+    /// How much wider the fruit is toward its tip than toward its base,
+    /// -0.8 to 0.8: 0 an ellipsoid, above 0 obovoid to obconic or
+    /// club-shaped, below 0 ovoid ([`crate::fruit`]).
+    #[serde(skip_serializing_if = "is_zero")]
+    pub flare: f64,
 }
 
 impl Default for Fruit {
@@ -1892,6 +1906,7 @@ impl Default for Fruit {
             cone: 0.0,
             kind: FruitKind::Berry,
             unripe: 0.0,
+            flare: 0.0,
         }
     }
 }
@@ -1905,6 +1920,7 @@ struct FruitCard {
     cone: f64,
     kind: FruitKind,
     unripe: f64,
+    flare: f64,
     count: Option<serde::de::IgnoredAny>,
     cluster: Option<serde::de::IgnoredAny>,
     size: Option<serde::de::IgnoredAny>,
@@ -1919,6 +1935,7 @@ impl Default for FruitCard {
             cone: fruit.cone,
             kind: fruit.kind,
             unripe: fruit.unripe,
+            flare: fruit.flare,
             count: None,
             cluster: None,
             size: None,
@@ -1948,6 +1965,7 @@ impl TryFrom<FruitCard> for Fruit {
             cone: card.cone,
             kind: card.kind,
             unripe: card.unripe,
+            flare: card.flare,
         })
     }
 }
@@ -1995,6 +2013,41 @@ impl FruitKind {
     #[allow(clippy::trivially_copy_pass_by_ref)]
     fn is_berry(&self) -> bool {
         *self == Self::Berry
+    }
+
+    /// The skin a cactus fruit wears, if it is one.
+    #[must_use]
+    pub fn skin(self) -> Option<Skin> {
+        match self {
+            Self::Scaly => Some(Skin::Scaly),
+            Self::Areolate => Some(Skin::Areolate),
+            Self::Spiny => Some(Skin::Spiny),
+            _ => None,
+        }
+    }
+}
+
+/// What a cactus's pericarpel bears on its skin, on the flower and on the
+/// fruit it grows into (Anderson, The Cactus Family pp. 31 to 33): the
+/// states of the `fruit_surface` character.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Skin {
+    /// Nothing (pincushions).
+    #[default]
+    Naked,
+    /// Broad scales (barrels, saguaro).
+    Scaly,
+    /// Felted areoles, with glochids but no spines (prickly pears).
+    Areolate,
+    /// Areoles with spines (hedgehogs, organ pipe).
+    Spiny,
+}
+
+impl Skin {
+    #[allow(clippy::trivially_copy_pass_by_ref)]
+    fn is_naked(&self) -> bool {
+        *self == Self::Naked
     }
 }
 
@@ -2527,6 +2580,9 @@ impl Shape {
                 for channel in s.pistil.into_iter().flatten() {
                     check("pistil", f64::from(channel), 0.0, 1.0)?;
                 }
+                for channel in s.stigma.into_iter().flatten() {
+                    check("stigma", f64::from(channel), 0.0, 1.0)?;
+                }
                 for channel in s.calyx.into_iter().flatten() {
                     check("calyx", f64::from(channel), 0.0, 1.0)?;
                 }
@@ -2680,7 +2736,8 @@ impl Shape {
             Self::Fruit(s) => {
                 check("aspect", s.aspect, 0.1, 2.0)?;
                 check("cone", s.cone, 0.0, 1.0)?;
-                check("unripe", s.unripe, 0.0, 1.0)
+                check("unripe", s.unripe, 0.0, 1.0)?;
+                check("flare", s.flare, -0.8, 0.8)
             }
         }
     }
@@ -4814,6 +4871,11 @@ mod tests {
                         assert!(with(field, points).is_ok(), "{at}");
                         assert!(with(field, 2.5.into()).is_err(), "{at} takes a number");
                     }
+                    Field::Colour => {
+                        let rgb = serde_json::json!([0.2, 0.5, 0.1]);
+                        assert!(with(field, rgb).is_ok(), "{at}");
+                        assert!(with(field, 2.5.into()).is_err(), "{at} takes a number");
+                    }
                 }
             }
             // Every field the template writes is listed.
@@ -4861,6 +4923,7 @@ mod tests {
                     assert!(error.contains("unknown variant"), "{key}: {error}");
                 }
                 Field::Outline => panic!("{key} takes no outline"),
+                Field::Colour => panic!("{key} takes no colour"),
             }
         }
     }

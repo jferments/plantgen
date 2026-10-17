@@ -628,4 +628,12 @@ pub mod venation;
 /// stem's tip tapers, rounds or broadens into a shoulder as the new
 /// `stem_apex` says (`BodyLook::shoulder`), and a club-shaped column
 /// stays narrower at its foot (`stem_outline`) (104 is flank flowers).
-pub const GENERATOR_REVISION: u32 = 105;
+/// 106: a cactus flower's pericarpel wears its fruit's skin
+/// (`Flower::pericarpel`, from `fruit_surface`), its bud is the flower
+/// closed (no hand bud looks; `bud_size` seven tenths of the flower's), a
+/// prickly pear's or cholla's flower sits on a pericarpel longer than its
+/// radius, a fruit narrows toward its base or tip (`Fruit::flare`, from
+/// the new `fruit_shape`), and stigma lobes take their own colour
+/// (`Flower::stigma`, from the new `stigma_colour`) (105 is fruit skins
+/// and stem tips).
+pub const GENERATOR_REVISION: u32 = 106;

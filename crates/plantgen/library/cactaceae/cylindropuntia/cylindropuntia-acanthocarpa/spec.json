@@ -33,7 +33,6 @@
       "flower_size": 0.05,
       "bud_share": 0.2,
       "fruit_share": 0.3,
-      "bud_size": 0.02,
       "bud_rate": 0.5,
       "flower_area": 0.368,
       "bud_area": 0.636,
@@ -63,13 +62,6 @@
           "centre": 0.3
         },
         "accent": [0.55, 0.45, 0.2]
-      },
-      "bud": {
-        "shape": {
-          "template": "fruit",
-          "aspect": 0.5
-        },
-        "colour": [0.45, 0.3, 0.1]
       },
       "fruit": {
         "shape": {
@@ -142,6 +134,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "fruit_shape": "obconic",
     "lower_areole_spines": "fewer",
     "tubercle_relief": "prominent",
     "spine_colour": [175, 130, 75],
@@ -161,6 +154,7 @@
     "fruiting_months": [6, 7, 8]
   },
   "evidence": {
+    "traits.fruit_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: fruit dry, obconical to ellipsoidal (the first named here), tan at maturity."},
     "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: tubercles prominent."},
     "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: spines yellow to tan to deep reddish brown, greying; tan here."},
     "traits.spine_colour_aged": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 205, Cylindropuntia acanthocarpa: the spines grey with age."},

@@ -35,7 +35,6 @@
       "flower_angle": 25,
       "bud_share": 0.25,
       "fruit_share": 0.0,
-      "bud_size": 0.025,
       "flower_area": 0.366,
       "bud_area": 0.636,
       "fruit_area": 0.89
@@ -64,13 +63,6 @@
           "centre": 0.3
         },
         "accent": [0.6, 0.3, 0.05]
-      },
-      "bud": {
-        "shape": {
-          "template": "fruit",
-          "aspect": 0.5
-        },
-        "colour": [0.55, 0.3, 0.06]
       },
       "fruit": {
         "shape": {

@@ -49,10 +49,19 @@
       "else": 0.9,
       "why": "A cactus's inner tepals are broad and overlap at their bases in a wheel or a cup, a little narrower in a bell or a funnel, and narrow in a tube."
     },
+    "appearance.organs.*.shape.pericarpel": {
+      "template": "flower",
+      "map": {"fruit_surface": {"naked": "naked", "scaly": "scaly", "areolate": "areolate", "spiny": "spiny"}},
+      "why": "A cactus's ovary is sunk in its stem tissue, the pericarpel, which wears on the flower and on the bud below the closed tepals what it will wear as a fruit: nothing on a pincushion's, broad scales on a barrel's or the saguaro's, felted areoles on a prickly pear's, spiny areoles on a hedgehog's (Anderson, The Cactus Family pp. 27 to 33, 139, 231, 328 and 486)."
+    },
     "appearance.organs.*.shape.kind": {
       "template": "fruit",
       "map": {"fruit_surface": {"naked": "crowned", "scaly": "scaly", "areolate": "areolate", "spiny": "spiny"}},
-      "why": "A cactus's fruit is its pericarpel grown on, crowned by the dried perianth, and its bud the same pericarpel under the closed tepals: naked in a pincushion's, under broad scales in a barrel's or the saguaro's, studded with felted areoles in a prickly pear's, and with spines on those areoles in a hedgehog's, the organ pipe's or a spiny cholla's (Anderson, The Cactus Family pp. 31 to 33)."
+      "why": "A cactus's fruit is its pericarpel grown on, crowned by the dried perianth: naked in a pincushion's, under broad scales in a barrel's or the saguaro's, studded with felted areoles in a prickly pear's, and with spines on those areoles in a hedgehog's, the organ pipe's or a spiny cholla's (Anderson, The Cactus Family pp. 31 to 33)."
+    },
+    "generator.params.bud_size": {
+      "rule": "flower_size * 0.7",
+      "why": "A cactus's bud is its flower closed, its pericarpel and floral tube already near their full size and its tepals swelling to open: drawn seven tenths of the open flower's width."
     },
     "appearance.bodies.stem.dome": {
       "map": {"stem_apex": {"tapering": 1.6, "rounded": 1.0, "broad": 0.8}},

@@ -686,6 +686,8 @@ pub enum Field {
     Word,
     /// Points along a blade, `[u, w]` pairs: a leaf's outline.
     Outline,
+    /// A colour, `[r, g, b]` from 0 to 1: a flower's stigma lobes'.
+    Colour,
 }
 
 /// The fields of a card that replace others where set, and those they
@@ -1002,7 +1004,7 @@ fn every_look(
 /// the template may set inside a look's `shape`. The looks module's tests
 /// hold this to the templates.
 pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
-    use Field::{Count, Number, Outline, Word};
+    use Field::{Colour, Count, Number, Outline, Word};
     [
         (
             "needles",
@@ -1155,6 +1157,8 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("staminodes", Count),
                 ("carpels", Count),
                 ("ovary", Word),
+                ("stigma", Colour),
+                ("pericarpel", Word),
                 ("column", Number),
                 ("turn", Number),
                 ("open", Number),
@@ -1224,6 +1228,7 @@ pub const TEMPLATES: [(&str, &[(&str, Field)]); 16] = {
                 ("cone", Number),
                 ("kind", Word),
                 ("unripe", Number),
+                ("flare", Number),
             ],
         ),
     ]
@@ -3104,6 +3109,15 @@ fn fits(field: Option<Field>, value: &Value) -> Result<(), String> {
         Some(Field::Count) => (value.is_u64(), "a whole number, 0 or more"),
         Some(Field::Number) => (value.is_number(), "a number"),
         Some(Field::Word) => (value.is_string(), "a word"),
+        Some(Field::Colour) => (
+            value.as_array().is_some_and(|rgb| {
+                rgb.len() == 3
+                    && rgb
+                        .iter()
+                        .all(|c| c.as_f64().is_some_and(|c| (0.0..=1.0).contains(&c)))
+            }),
+            "a colour, `[r, g, b]` from 0 to 1",
+        ),
         Some(Field::Outline) => (
             value.as_array().is_some_and(|points| {
                 points.iter().all(|point| {
