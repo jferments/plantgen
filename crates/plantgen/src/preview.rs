@@ -344,7 +344,7 @@ pub fn render(plant: &PlantMesh, templates: &Templates, options: &PreviewOptions
         || templates
             .templates
             .iter()
-            .any(|template| template.hairs.is_some())
+            .any(|template| template.hairs.is_some() || template.hairs_beneath.is_some())
     {
         crate::hairs::strand_mesh(plant, templates, &pixel)
     } else {

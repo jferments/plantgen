@@ -341,14 +341,39 @@ fn card_point(card: &Card, u: f64, v: f64) -> (Vec3, Vec3) {
     )
 }
 
+/// A bent card's point at `u` across and `v` along on the surface a
+/// renderer draws, its [`crate::bend::ACROSS`] by [`crate::bend::ALONG`]
+/// cells of two triangles each, rather than on the curve they stand for:
+/// roots set on the curve sink under a cupped card's flat cells.
+fn drawn_point(card: &Card, u: f64, v: f64) -> Vec3 {
+    let across = f64::from(crate::bend::ACROSS);
+    let along = f64::from(crate::bend::ALONG);
+    let (su, sv) = (u.clamp(0.0, 1.0) * across, v.clamp(0.0, 1.0) * along);
+    let (column, row) = (su.floor().min(across - 1.0), sv.floor().min(along - 1.0));
+    let (a, b) = (su - column, sv - row);
+    let at = |i: f64, j: f64| card_point(card, (column + i) / across, (row + j) / along).0;
+    let (p00, p11) = (at(0.0, 0.0), at(1.0, 1.0));
+    // Each cell is cut along its diagonal from (0, 0) to (1, 1), as
+    // `crate::bend::corner` lays its triangles.
+    if a >= b {
+        let p10 = at(1.0, 0.0);
+        p00 + (p10 - p00) * a + (p11 - p10) * b
+    } else {
+        let p01 = at(0.0, 1.0);
+        p00 + (p01 - p00) * b + (p11 - p01) * a
+    }
+}
+
 /// One strand, before it is meshed: its root, its two directions (the
-/// second for its far half), its length and its root's radius.
+/// second for its far half), its length, its root's radius, and the
+/// normal of the face it stands on (zero for an edge's or a stalk's).
 struct Strand {
     root: Vec3,
     first: Vec3,
     second: Vec3,
     length: f64,
     radius: f64,
+    rest: Vec3,
 }
 
 /// An edge texel: its `u`, `v` and its outward normal across and along
@@ -434,27 +459,36 @@ pub fn strand_mesh(
     let bent = plant.bent_cards();
     let mut edge_lists: Vec<Option<Vec<Edge>>> = vec![None; templates.templates.len()];
     // Count first, to share the budget out.
-    let wanted: Vec<(usize, f64, f64)> = plant.cards[..bent]
+    let mut vein_maps: Vec<Option<Vec<f32>>> = vec![None; templates.templates.len()];
+    let wanted: Vec<(usize, [f64; 2], f64)> = plant.cards[..bent]
         .iter()
         .map(|card| {
-            let Some(hairs) = templates
-                .templates
-                .get(usize::from(card.template))
-                .and_then(|template| template.hairs.as_ref())
-            else {
-                return (0, 0.0, 0.0);
+            let Some(template) = templates.templates.get(usize::from(card.template)) else {
+                return (0, [0.0; 2], 0.0);
             };
-            let template = &templates.templates[usize::from(card.template)];
-            if !pixel(card_point(card, 0.5, 0.5).0).is_finite() {
-                return (0, 0.0, 0.0);
+            if (template.hairs.is_none() && template.hairs_beneath.is_none())
+                || !nearest_pixel(card, pixel).is_finite()
+            {
+                return (0, [0.0; 2], 0.0);
             }
             let area = f64::from(card.length) * f64::from(card.length) * template.area();
-            let spacing = (hairs.length * 0.9).max(1e-4);
-            let face = hairs.density * area / (spacing * spacing);
-            let perimeter = 3.5 * math::sqrt(area);
-            let edge = hairs.edge.unwrap_or(hairs.density) * perimeter / (spacing * 0.7);
+            let on = |hairs: Option<&Hairs>| {
+                hairs.map_or(0.0, |hairs| {
+                    let spacing = (hairs.length * 0.9).max(1e-4);
+                    hairs.density * area / (spacing * spacing)
+                })
+            };
+            let faces = [
+                on(template.hairs.as_ref()),
+                on(template.hairs_beneath.as_ref()),
+            ];
+            let edge = template.hairs.as_ref().map_or(0.0, |hairs| {
+                let spacing = (hairs.length * 0.9).max(1e-4);
+                let perimeter = 3.5 * math::sqrt(area);
+                hairs.edge.unwrap_or(hairs.density) * perimeter / (spacing * 0.7)
+            });
             #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-            ((face + edge).round() as usize, face, edge)
+            ((faces[0] + faces[1] + edge).round() as usize, faces, edge)
         })
         .collect();
     let tube_counts: Vec<usize> = plant
@@ -481,113 +515,154 @@ pub fn strand_mesh(
     let mut mesh = Mesh::default();
     let mut strands = Vec::new();
     for (index, card) in plant.cards[..bent].iter().enumerate() {
-        let (count, face, edge) = wanted[index];
+        let (count, faces, edge) = wanted[index];
         if count == 0 {
             continue;
         }
         let template = usize::from(card.template);
         let drawn = &templates.templates[template];
-        let Some(hairs) = drawn.hairs.as_ref() else {
-            continue;
-        };
-        // Too short to see: none drawn one by one.
-        let (middle, _) = card_point(card, 0.5, 0.5);
-        if fringe_drawn(hairs, pixel(middle)) {
-            continue;
-        }
+        // The finest pixel over the card's part in view.
+        let finest = nearest_pixel(card, pixel);
         let seed = mix64(index as u64 ^ 0x5354_5241_4e44);
-        let lie = hairs.lie.clamp(0.0, 1.0);
-        let curl = hairs.curl.clamp(0.0, 1.0);
-        strands.clear();
-        let length_of = |k: u64| hairs.length * (0.6 + 0.8 * hash(k, 1, seed));
         let turn = |k: u64, salt: u64| hash(k, salt, seed) - 0.5;
-        // Hairs on the face, at random points the template covers.
-        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-        let on_face = (face * share).round() as u64;
-        let mut tries = 0_u64;
-        let mut placed = 0_u64;
-        while placed < on_face && tries < on_face * 4 + 16 {
-            tries += 1;
-            let (u, v) = (hash(tries, 2, seed), hash(tries, 3, seed));
-            #[allow(clippy::cast_possible_truncation)]
-            let texel = templates.sample(template, u as f32, v as f32);
-            if texel.coverage < 0.5 || texel.fringe {
+        // The upper face is the side the card's normal points to unless
+        // the card is flipped (`crate::templates::card_flipped`).
+        let upward = if crate::templates::card_flipped(card.heading, card.left) {
+            -1.0
+        } else {
+            1.0
+        };
+        for (lower, wanted_on_face) in [(false, faces[0]), (true, faces[1])] {
+            let Some(hairs) = drawn.hairs_on(lower) else {
+                continue;
+            };
+            // Too short to see: none drawn one by one.
+            if wanted_on_face <= 0.0 || fringe_drawn(hairs, finest) {
                 continue;
             }
-            placed += 1;
-            let (root, normal) = card_point(card, u, v);
-            let (ahead, _) = card_point(card, u, (v + 0.01).min(1.0));
-            let (behind, _) = card_point(card, u, (v - 0.01).max(0.0));
-            let tipward = (ahead - behind).normalize_or(math::any_perpendicular(normal));
-            let side = normal
-                .cross(tipward)
-                .normalize_or(math::any_perpendicular(tipward));
-            let rise = math::radians((lie * 80.0 + turn(tries, 4) * 24.0).clamp(3.0, 88.0));
-            let swing = math::radians(turn(tries, 5) * (40.0 + curl * 120.0));
-            let first = (tipward * (math::cos(rise) * math::cos(swing))
-                + side * (math::cos(rise) * math::sin(swing))
-                + normal * math::sin(rise))
-            .normalize_or(normal);
-            // Soft, long hairs bow over; curled ones turn on.
-            let bow = (1.0 - lie) * 0.3 + curl * 0.8;
-            let second = (first
-                + side * (turn(tries, 6) * 2.0 * curl)
-                + (tipward - normal * 0.5) * (bow * 0.5))
-                .normalize_or(first);
-            strands.push(Strand {
-                root: root + normal * 1e-5,
-                first,
-                second,
-                length: length_of(tries),
-                radius: 0.0,
-            });
-        }
-        // Hairs along the edge, standing out of it in the face's plane.
-        if edge > 0.0 {
-            let list = edge_lists[template].get_or_insert_with(|| edges(templates, template));
-            if !list.is_empty() {
-                #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-                let on_edge = (edge * share).round() as u64;
-                for k in 0..on_edge {
-                    let pick = hash(k, 7, seed) * list.len() as f64;
+            let side_sign = if lower { -upward } else { upward };
+            let lie = hairs.lie.clamp(0.0, 1.0);
+            let curl = hairs.curl.clamp(0.0, 1.0);
+            let gathered = hairs.veins.unwrap_or(0.0).clamp(0.0, 1.0);
+            let veins = if gathered > 0.0 {
+                Some(
+                    vein_maps[template]
+                        .get_or_insert_with(|| vein_map(drawn, templates.size))
+                        .as_slice(),
+                )
+            } else {
+                None
+            };
+            let salt = if lower { 0x42_454e_4541_5448 } else { 0 };
+            strands.clear();
+            // Hairs on the face, at random points the template covers,
+            // gathered on the veins as much as they are said to be.
+            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+            let on_face = (wanted_on_face * share).round() as u64;
+            let mut tries = 0_u64;
+            let mut placed = 0_u64;
+            while placed < on_face && tries < on_face * 8 + 16 {
+                tries += 1;
+                let k = tries ^ salt;
+                let (u, v) = (hash(k, 2, seed), hash(k, 3, seed));
+                #[allow(clippy::cast_possible_truncation)]
+                let texel = templates.sample(template, u as f32, v as f32);
+                if texel.coverage < 0.5 || texel.fringe {
+                    continue;
+                }
+                if let Some(veins) = veins {
+                    let on_vein = f64::from(veins[texel_index(templates.size, u, v)]);
+                    if hash(k, 10, seed) >= 1.0 - gathered * (1.0 - on_vein) {
+                        continue;
+                    }
+                }
+                placed += 1;
+                let (_, normal) = card_point(card, u, v);
+                let root = drawn_point(card, u, v);
+                let normal = normal * side_sign;
+                let (ahead, _) = card_point(card, u, (v + 0.01).min(1.0));
+                let (behind, _) = card_point(card, u, (v - 0.01).max(0.0));
+                let tipward = (ahead - behind).normalize_or(math::any_perpendicular(normal));
+                let side = normal
+                    .cross(tipward)
+                    .normalize_or(math::any_perpendicular(tipward));
+                let rise = math::radians((lie * 80.0 + turn(k, 4) * 24.0).clamp(3.0, 88.0));
+                let swing = math::radians(turn(k, 5) * (40.0 + curl * 120.0));
+                let first = (tipward * (math::cos(rise) * math::cos(swing))
+                    + side * (math::cos(rise) * math::sin(swing))
+                    + normal * math::sin(rise))
+                .normalize_or(normal);
+                // Soft, long hairs bow over; curled ones turn on.
+                let bow = (1.0 - lie) * 0.3 + curl * 0.8;
+                let second = (first
+                    + side * (turn(k, 6) * 2.0 * curl)
+                    + (tipward - normal * 0.5) * (bow * 0.5))
+                    .normalize_or(first);
+                strands.push(Strand {
+                    root,
+                    first,
+                    second,
+                    length: hairs.length * (0.6 + 0.8 * hash(k, 1, seed)),
+                    radius: 0.0,
+                    rest: normal,
+                });
+            }
+            // Hairs along the edge, standing out of it in the face's plane.
+            if !lower && edge > 0.0 {
+                let list = edge_lists[template].get_or_insert_with(|| edges(templates, template));
+                if !list.is_empty() {
                     #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-                    let (u, v, nx, ny) = list[(pick as usize).min(list.len() - 1)];
-                    let (root, normal) = card_point(card, u, v);
-                    let (ahead, _) = card_point(card, u, (v + 0.01).min(1.0));
-                    let (behind, _) = card_point(card, u, (v - 0.01).max(0.0));
-                    let (right, _) = card_point(card, (u + 0.01).min(1.0), v);
-                    let (left, _) = card_point(card, (u - 0.01).max(0.0), v);
-                    let tipward = (ahead - behind).normalize_or(math::any_perpendicular(normal));
-                    let rightward = (right - left).normalize_or(math::any_perpendicular(tipward));
-                    let out = (rightward * nx + tipward * ny).normalize_or(rightward);
-                    let lean = 0.25 + 0.5 * (1.0 - lie) + turn(k, 8) * (0.4 + curl);
-                    let first =
-                        (out + tipward * lean.max(0.0) + normal * (0.15 * lie)).normalize_or(out);
-                    let second =
-                        (first + tipward * (0.3 * (1.0 - lie)) + normal * turn(k, 9) * curl)
-                            .normalize_or(first);
-                    strands.push(Strand {
-                        root,
-                        first,
-                        second,
-                        length: length_of(k + 1_000_003),
-                        radius: 0.0,
-                    });
+                    let on_edge = (edge * share).round() as u64;
+                    for k in 0..on_edge {
+                        let pick = hash(k, 7, seed) * list.len() as f64;
+                        #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
+                        let (u, v, nx, ny) = list[(pick as usize).min(list.len() - 1)];
+                        let (_, normal) = card_point(card, u, v);
+                        let root = drawn_point(card, u, v);
+                        let (ahead, _) = card_point(card, u, (v + 0.01).min(1.0));
+                        let (behind, _) = card_point(card, u, (v - 0.01).max(0.0));
+                        let (right, _) = card_point(card, (u + 0.01).min(1.0), v);
+                        let (left, _) = card_point(card, (u - 0.01).max(0.0), v);
+                        let tipward =
+                            (ahead - behind).normalize_or(math::any_perpendicular(normal));
+                        let rightward =
+                            (right - left).normalize_or(math::any_perpendicular(tipward));
+                        let out = (rightward * nx + tipward * ny).normalize_or(rightward);
+                        let lean = 0.25 + 0.5 * (1.0 - lie) + turn(k, 8) * (0.4 + curl);
+                        let first = (out + tipward * lean.max(0.0) + normal * (0.15 * lie))
+                            .normalize_or(out);
+                        let second =
+                            (first + tipward * (0.3 * (1.0 - lie)) + normal * turn(k, 9) * curl)
+                                .normalize_or(first);
+                        strands.push(Strand {
+                            root,
+                            first,
+                            second,
+                            length: hairs.length * (0.6 + 0.8 * hash(k + 1_000_003, 1, seed)),
+                            radius: 0.0,
+                            rest: Vec3::ZERO,
+                        });
+                    }
                 }
             }
-        }
-        // A hair is clear: it shows the face's green through it.
-        let colour: [f32; 3] =
-            std::array::from_fn(|c| 0.45 * hairs.colour[c] + 0.55 * card.color[c].max(0.0));
-        let lifetime = (
-            f64::from(card.born),
-            card.shed.is_finite().then_some(f64::from(card.shed)),
-        );
-        for strand in &mut strands {
-            // Real hairs are a fiftieth of their length thick or less;
-            // narrower than half a pixel, a camera blurs them to that.
-            strand.radius = (strand.length * 0.012).max(0.5 * pixel(strand.root));
-            push_strand(&mut mesh, strand, colour, lifetime, card.segment);
+            // A hair is clear: it shows the face's green through it.
+            let colour: [f32; 3] =
+                std::array::from_fn(|c| 0.45 * hairs.colour[c] + 0.55 * card.color[c].max(0.0));
+            let lifetime = (
+                f64::from(card.born),
+                card.shed.is_finite().then_some(f64::from(card.shed)),
+            );
+            for strand in &mut strands {
+                if !pixel(strand.root).is_finite() {
+                    continue;
+                }
+                // Real hairs are a fiftieth of their length thick or less;
+                // narrower than half a pixel, a camera blurs them to that.
+                strand.radius = (strand.length * 0.012).max(0.5 * pixel(strand.root));
+                // A hair pressed flat lies on the face, not in it.
+                strand.root += strand.rest * (strand.radius * 1.2 + 1e-5);
+                push_strand(&mut mesh, strand, colour, lifetime, card.segment);
+            }
         }
     }
     // Hairs on the young stems and the stalks, standing out of the wood
@@ -635,11 +710,71 @@ pub fn strand_mesh(
                 second,
                 length,
                 radius: (length * 0.012).max(0.5 * pixel(root)),
+                rest: Vec3::ZERO,
             };
             push_strand(&mut mesh, &strand, colour, lifetime, tube.segment);
         }
     }
     mesh
+}
+
+/// The width of a pixel at the nearest of a few points over `card` (its
+/// corners, its middle and the middles of its sides), infinite where none
+/// is in view.
+fn nearest_pixel(card: &Card, pixel: &dyn Fn(Vec3) -> f64) -> f64 {
+    [
+        (0.5, 0.5),
+        (0.0, 0.0),
+        (1.0, 0.0),
+        (0.0, 1.0),
+        (1.0, 1.0),
+        (0.5, 0.0),
+        (0.5, 1.0),
+        (0.0, 0.5),
+        (1.0, 0.5),
+    ]
+    .iter()
+    .map(|&(u, v)| pixel(card_point(card, u, v).0))
+    .fold(f64::INFINITY, f64::min)
+}
+
+/// The texel of a `size` by `size` template under `u`, `v`.
+fn texel_index(size: usize, u: f64, v: f64) -> usize {
+    let at = |c: f64| ((c.clamp(0.0, 0.999_999) * size as f64) as usize).min(size - 1);
+    at(v) * size + at(u)
+}
+
+/// How much each texel of `template` lies on one of its main veins, 0 to
+/// 1: how much brighter it is than the face round it, as its veins are
+/// drawn lighter (`crate::templates`), full at a main vein's lightening.
+fn vein_map(template: &crate::templates::Template, size: usize) -> Vec<f32> {
+    let reach = 3_isize;
+    let mut out = vec![0.0_f32; size * size];
+    for y in 0..size as isize {
+        for x in 0..size as isize {
+            let at = y as usize * size + x as usize;
+            if template.coverage[at] < 0.5 {
+                continue;
+            }
+            let (mut sum, mut count) = (0.0_f64, 0.0_f64);
+            for dy in -reach..=reach {
+                for dx in -reach..=reach {
+                    let (nx, ny) = (x + dx, y + dy);
+                    if nx < 0 || ny < 0 || nx >= size as isize || ny >= size as isize {
+                        continue;
+                    }
+                    let near = ny as usize * size + nx as usize;
+                    if template.coverage[near] >= 0.5 {
+                        sum += f64::from(template.brightness[near]);
+                        count += 1.0;
+                    }
+                }
+            }
+            let above = f64::from(template.brightness[at]) - sum / count.max(1.0);
+            out[at] = (above / 0.06).clamp(0.0, 1.0) as f32;
+        }
+    }
+    out
 }
 
 /// A point of a [`Tube`] or [`Card`], in double precision.
@@ -844,6 +979,126 @@ mod tests {
             let y = f64::from(p[1]);
             assert!(y <= reach && y >= -1e-3, "{p:?}");
         }
+    }
+
+    #[test]
+    fn each_face_wears_its_own_hairs_whichever_way_a_card_turns() {
+        use crate::mesh::Card;
+        let flat = |left: [f32; 3]| Card {
+            base: [0.0; 3],
+            heading: [0.0, 0.0, 1.0],
+            left,
+            length: 0.1,
+            width: 0.06,
+            color: [0.1, 0.2, 0.05],
+            template: 0,
+            born: 0.0,
+            shed: f32::INFINITY,
+            bend: crate::bend::Bend {
+                cup: 0.0001,
+                ..crate::bend::Bend::FLAT
+            },
+            segment: crate::mesh::NO_SEGMENT,
+        };
+        let bare_edge = Hairs {
+            edge: Some(0.0),
+            ..villous()
+        };
+        let mut above = leaf(Some(bare_edge.clone()));
+        let mut below = leaf(None);
+        below.hairs_beneath = Some(bare_edge);
+        above.hairs_beneath = None;
+        // Its normal up (`heading × left`), then down: the upper face is
+        // the one toward the sky either way.
+        for left in [[1.0, 0.0, 0.0], [-1.0, 0.0, 0.0]] {
+            for (look, up) in [(&above, true), (&below, false)] {
+                let templates = Templates::for_looks(std::slice::from_ref(look));
+                let plant = PlantMesh {
+                    cards: vec![flat(left)],
+                    ..PlantMesh::default()
+                };
+                let near = strand_mesh(&plant, &templates, &|_| 0.0001);
+                assert!(near.indices.len() / 27 > 100);
+                for p in &near.positions {
+                    let y = f64::from(p[1]);
+                    assert!(
+                        if up { y >= -1e-4 } else { y <= 1e-4 },
+                        "{left:?} {up} {p:?}"
+                    );
+                }
+            }
+        }
+        // A lower face paints its own hairs' cast, or none.
+        let templates = Templates::for_looks(&[above.clone()]);
+        let texel = templates.sample(0, 0.5, 0.5);
+        let lower = crate::templates::Face {
+            lower: true,
+            seed: 0.5,
+        };
+        let colour = [0.1, 0.2, 0.05];
+        let top = templates.paint(0, colour, texel, crate::templates::Face::UPPER);
+        let bottom = templates.paint(0, colour, texel, lower);
+        assert!(
+            top[0] > bottom[0] && top[2] > bottom[2],
+            "{top:?} {bottom:?}"
+        );
+    }
+
+    #[test]
+    fn hairs_said_to_lie_along_the_veins_gather_there() {
+        use crate::mesh::Card;
+        let gathered = Hairs {
+            veins: Some(1.0),
+            edge: Some(0.0),
+            ..villous()
+        };
+        let mut look = leaf(Some(gathered));
+        look.shape = Shape::Simple(Simple::default());
+        let templates = Templates::for_looks(&[look]);
+        let veins = vein_map(&templates.templates[0], templates.size);
+        assert!(veins.iter().any(|&v| v > 0.5), "the blade draws veins");
+        let card = Card {
+            base: [0.0; 3],
+            heading: [0.0, 0.0, 1.0],
+            left: [1.0, 0.0, 0.0],
+            length: 0.1,
+            width: 0.06,
+            color: [0.1, 0.2, 0.05],
+            template: 0,
+            born: 0.0,
+            shed: f32::INFINITY,
+            bend: crate::bend::Bend {
+                cup: 0.0001,
+                ..crate::bend::Bend::FLAT
+            },
+            segment: crate::mesh::NO_SEGMENT,
+        };
+        let covered: Vec<f32> = (0..veins.len())
+            .filter(|&at| templates.templates[0].coverage[at] >= 0.5)
+            .map(|at| veins[at])
+            .collect();
+        let mean = covered.iter().sum::<f32>() / covered.len() as f32;
+        let plant = PlantMesh {
+            cards: vec![card],
+            ..PlantMesh::default()
+        };
+        let near = strand_mesh(&plant, &templates, &|_| 0.0001);
+        // Each strand's root is its first vertex; the card lies in x, z.
+        let mut on = 0.0_f32;
+        let mut count = 0.0_f32;
+        for strand in near.positions.chunks(7) {
+            let root = strand[0];
+            let u = f64::from(root[0]) / 0.06 + 0.5;
+            let v = f64::from(root[2]) / 0.1;
+            on += veins[texel_index(templates.size, u, v)];
+            count += 1.0;
+        }
+        assert!(count > 50.0);
+        assert!(
+            on / count > 2.0 * mean,
+            "{} on veins, {mean} over the face",
+            on / count
+        );
     }
 
     #[test]

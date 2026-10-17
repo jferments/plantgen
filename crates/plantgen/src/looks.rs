@@ -102,6 +102,11 @@ pub struct OrganLook {
     /// absent.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub hairs: Option<Hairs>,
+    /// The hairs on its lower (abaxial) face, where they differ from its
+    /// upper face's: the felted undersides of many leaves. A lower face
+    /// without them is bare.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hairs_beneath: Option<Hairs>,
 }
 
 /// The hairs on an organ's face, its indumentum (Harris and Harris, *Plant
@@ -130,6 +135,11 @@ pub struct Hairs {
     /// the face's `density`: a ciliate edge on a bare blade.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub edge: Option<f64>,
+    /// How much of the face's hairs gather along its main veins, 0 (spread
+    /// evenly) to 1 (on the veins alone): FNA's "at least along main
+    /// veins". Absent for an even spread.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub veins: Option<f64>,
 }
 
 impl Default for Hairs {
@@ -141,6 +151,7 @@ impl Default for Hairs {
             curl: 0.0,
             colour: [0.8, 0.8, 0.76],
             edge: None,
+            veins: None,
         }
     }
 }
@@ -2892,6 +2903,8 @@ pub struct Look {
     pub varieties: Vec<Look>,
     /// The hairs on its face, where it has any to draw.
     pub hairs: Option<Hairs>,
+    /// The hairs on its lower face, where it has any to draw.
+    pub hairs_beneath: Option<Hairs>,
 }
 
 /// The varieties of each look that varies (spec rework VARY): as many as
@@ -3088,6 +3101,7 @@ pub fn resolve<'a>(
                     shape: drawn,
                     varieties: Vec::new(),
                     hairs: look.hairs.clone().filter(Hairs::drawn),
+                    hairs_beneath: look.hairs_beneath.clone().filter(Hairs::drawn),
                 }
             }
             None => Look {
@@ -3108,6 +3122,7 @@ pub fn resolve<'a>(
                 inflorescence: None,
                 varieties: Vec::new(),
                 hairs: None,
+                hairs_beneath: None,
             },
         })
         .collect::<Vec<_>>()
@@ -3452,6 +3467,7 @@ fn in_stage(look: &Look, stage: &StageLook) -> Look {
         inflorescence: None,
         varieties: Vec::new(),
         hairs: None,
+        hairs_beneath: None,
     }
 }
 
@@ -3905,6 +3921,7 @@ mod tests {
             "leaf".to_string(),
             OrganLook {
                 hairs: None,
+                hairs_beneath: None,
                 underside: None,
                 variegation: None,
                 roll: 0.0,
@@ -4162,6 +4179,7 @@ mod tests {
             "bloom".to_string(),
             OrganLook {
                 hairs: None,
+                hairs_beneath: None,
                 underside: None,
                 variegation: None,
                 roll: 0.0,
@@ -4257,6 +4275,7 @@ mod tests {
         let types = [("leaf", OrganKind::Leaf), ("bloom", OrganKind::Flower)];
         let fruit = |season: Option<Season>| OrganLook {
             hairs: None,
+            hairs_beneath: None,
             underside: None,
             variegation: None,
             roll: 0.0,
@@ -4350,6 +4369,7 @@ mod tests {
             "bloom".to_string(),
             OrganLook {
                 hairs: None,
+                hairs_beneath: None,
                 underside: None,
                 variegation: None,
                 roll: 0.0,
@@ -4470,6 +4490,7 @@ mod tests {
     fn clustered(kind: ClusterKind, flowers: u32, season: Season) -> OrganLook {
         OrganLook {
             hairs: None,
+            hairs_beneath: None,
             underside: None,
             variegation: None,
             roll: 0.0,

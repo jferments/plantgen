@@ -640,6 +640,7 @@ pub fn organ_templates(shapes: &[Shape]) -> Templates {
             inflorescence: None,
             varieties: Vec::new(),
             hairs: None,
+            hairs_beneath: None,
         })
         .collect();
     Templates::for_looks(&looks)
