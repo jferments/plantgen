@@ -150,7 +150,6 @@
     "leaflets": 5,
     "terminal_leaflet": true,
     "division_planes": "flat",
-    "leaf_incision": "dissected",
     "leaf_shape": "lanceolate",
     "leaflet_length_m": {
       "min": 0.002,
@@ -269,11 +268,6 @@
       "evidence": "SourceInferred",
       "source": "abrams-1951",
       "note": "Abrams vol. 3 (1951) p. 228, Daucus carota: linear or lanceolate last segments."
-    },
-    "traits.leaf_incision": {
-      "evidence": "SourceInferred",
-      "source": "abrams-1951",
-      "note": "Abrams vol. 3 (1951) p. 228, Daucus carota: leaves finely cut (dissected) into segments; in the photos the lobes of each pinnule join at their base along a narrow wing of its midrib."
     },
     "traits.leaflet_length_m": {
       "evidence": "SourceInferred",
