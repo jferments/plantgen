@@ -540,5 +540,9 @@ pub mod venation;
 /// hemlocks) carries its year's needles in two sprays, one at the foot of
 /// each half of the shoot, so they follow the bend; the one spray at the
 /// shoot's foot had run on straight and left the nodding tip a bare
-/// stick. Leaders that do not nod grow as before.
+/// stick. Leaders that do not nod grow as before. A conifer may grow
+/// several stems from one foot (`stems`, `stem_angle`), and a needle card
+/// may lean its needles forward (`lean`) and leave the foot of each axis
+/// bare (`bare`) so they crowd in a tuft near its end; both default to
+/// what was drawn before.
 pub const GENERATOR_REVISION: u32 = 86;

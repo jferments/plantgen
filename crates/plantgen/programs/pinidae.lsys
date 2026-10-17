@@ -142,6 +142,12 @@
 # tip a bare stick above the crown. The two together have the one's
 # area. A leader that does not nod grows as before.
 #
+# Several stems (revision 12 too): a clump of stems leaders grows from one
+# foot, the second and later ones leaning stem_angle out, as whitebark pine
+# grows 2 to 5 stems together from a nutcracker's seed cache (Farjon 2017;
+# FEIS: 6 to 47% of trees single-stemmed, by site). One stem grows as
+# before.
+#
 # One step is one year. Angles are degrees; lengths are metres.
 
 lsystem pinidae 12;
@@ -158,6 +164,8 @@ param nod_years = 2;           # years a leader shoot takes to stand up straight
 param whorl = 5;               # branches per annual whorl
 param interwhorl = 2;          # smaller branches along each year's leader shoot
 param interwhorl_vigour = 0.5; # their growth relative to whorl branches
+param stems = 1;               # stems from one foot, as a clump grows from a bird's seed cache
+param stem_angle = 15;         # degrees each stem of a clump leans out
 param branch_angle = 64;       # angle between the leader and a new branch
 param upturn = 0.0075;         # how strongly shoots bend toward the sky
 param branch_growth = 0.3;     # yearly shoot of a first-order branch in full light
@@ -225,6 +233,7 @@ module V(order, wood, n);               # side shoots still to spread round a br
 module E(order, wood) queries light, position, substrate;  # a dormant bud where a branch shoot starts, watching the ground
 module H queries substrate;             # where a branch shoot starts, its bud spent, watching the ground
 module Q(n, s);                         # a branch shoot's short shoots: n more years to leaf out, a spray s long
+module B(n);                            # n stems still to start
 
 organ spray foliage area spray_area;
 organ cone cone area cone_area;
@@ -244,7 +253,8 @@ tool bend@1 {
     reaction = reaction
 };
 
-axiom !(0.003) A;
+axiom !(0.003) A B(stems - 1);
+
 
 # The leader: this year's height growth with its foliage, then a whorl.
 rule A -> G(0, (richards(t + dt, height_max, height_rate, height_shape)
@@ -371,3 +381,11 @@ decompose V(o, w, n) -> ;
 decompose Q(n, s) : n <= 0 -> ;
 rule Q(n, s) : n > 0 ->
     [ Y(needle_years) spray(s, uniform(-25, 25), spray_droop * 0.5, 1) ] Q(n - 1, s);
+
+# Several stems (revision 12; these rules go last, so the draws above keep
+# their sites): a clump grows stems - 1 more leaders from the first one's
+# foot, each leaning stem_angle out, spread evenly round; one stem grows as
+# before.
+decompose B(n) : n > 0 ->
+    [ /(360 * n / stems + uniform(-25, 25)) &(stem_angle + uniform(-5, 5)) A ] B(n - 1);
+decompose B(n) -> ;

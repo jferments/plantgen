@@ -1370,14 +1370,14 @@ pub(crate) fn needle_at(
     half: f64,
     fine: f64,
 ) -> NeedleDraw {
-    let lean = math::radians(58.0);
+    let lean = math::radians(s.lean);
     let pitch = needle_pitch(s, axis.needle);
     let salt = u64::try_from(index).unwrap_or(0);
     let n = u64::try_from(i).unwrap_or(0);
     #[allow(clippy::cast_precision_loss)]
     let shift = between as f64 / steps.max(1) as f64;
     #[allow(clippy::cast_precision_loss)]
-    let along = (i as f64 + 0.5 + shift) * pitch;
+    let along = s.bare * axis.length + (i as f64 + 0.5 + shift) * pitch;
     let shorten = 1.0 - 0.35 * along / axis.length;
     // A fascicle's needles share their place's draw of its azimuth.
     let per_place = needles_per_place(s);
@@ -1423,7 +1423,7 @@ pub(crate) fn needle_at(
 /// How many places along an axis needles leave it at.
 pub(crate) fn needle_count(s: &Needles, axis: &NeedleAxis) -> i64 {
     #[allow(clippy::cast_possible_truncation)]
-    let count = (axis.length / needle_pitch(s, axis.needle))
+    let count = (axis.length * (1.0 - s.bare) / needle_pitch(s, axis.needle))
         .floor()
         .max(0.0) as i64;
     count
@@ -1448,9 +1448,11 @@ fn needles(s: &Needles, x: f64, y: f64, fine: f64) -> Paint {
         let pitch = needle_pitch(s, axis.needle);
         let count = needle_count(s, axis);
         #[allow(clippy::cast_possible_truncation)]
-        let first = (((along - axis.needle) / pitch).floor() as i64).max(0);
+        let foot = s.bare * axis.length;
         #[allow(clippy::cast_possible_truncation)]
-        let last = (((along + 0.01) / pitch).ceil() as i64).min(count - 1);
+        let first = (((along - foot - axis.needle) / pitch).floor() as i64).max(0);
+        #[allow(clippy::cast_possible_truncation)]
+        let last = (((along - foot + 0.01) / pitch).ceil() as i64).min(count - 1);
         for i in first..=last {
             for k in 0..needles_per_place(s) {
                 let needle = needle_at(s, index, axis, i, k, (0, 1), half, fine);
