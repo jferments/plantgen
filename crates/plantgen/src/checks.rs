@@ -3254,7 +3254,8 @@ mod tests {
         let states = |key: &str| kinds[key].iter().cloned().collect::<Vec<_>>();
         assert_eq!(states("perianth"), ["sepals_and_petals", "spiral"]);
         assert_eq!(states("ovary_position"), ["inferior", "superior"]);
-        assert_eq!(states("zygomorphy"), ["other", "papilionaceous"]);
+        // The cactus's regular flower has no zygomorphy to draw.
+        assert_eq!(states("zygomorphy"), ["papilionaceous"]);
     }
 
     #[test]
