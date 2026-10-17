@@ -17,13 +17,11 @@
       "clump_radius": 0.02,
       "stem_lean": 0,
       "maturity": 1.5,
-      "stem_height": 0.35,
       "stem_radius": 0.02,
       "wiggle": 1,
       "nodes": 0,
       "bare": 1.0,
       "basal_leaves": 9,
-      "basal_length": 0.9,
       "basal_angle": 35,
       "raceme": 0.6,
       "flowers": 1,
@@ -59,11 +57,9 @@
       "basal": {
         "shape": {
           "template": "simple",
-          "width": 0.45,
           "widest": 0.6,
           "tip": 0.3,
           "base": 0.2,
-          "teeth": 0,
           "tooth_depth": 0.03,
           "petiole": 0.1
         }
@@ -97,7 +93,17 @@
     "leaf_shape": {"oblong": "usually", "lanceolate": "often"},
     "inflorescence_length_m": {"min": 0.06, "max": 0.15},
     "units_per_inflorescence": {"min": 350, "max": 1350, "typical": 690},
-    "bract_length_m": {"min": 0.15, "max": 0.25}
+    "bract_length_m": {"min": 0.15, "max": 0.25},
+    "height_typical_m": {"min": 0.3, "max": 1},
+    "height_max_m": 1.5,
+    "woodiness": "herbaceous",
+    "leaf_habit": "deciduous",
+    "leaf_width_m": {"min": 0.2, "max": 0.5},
+    "leaf_arrangement": "alternate",
+    "leaf_margin": "entire",
+    "flowering_months": [3, 5],
+    "fruit_size_m": {"min": 0.005, "max": 0.01},
+    "fruiting_months": [6, 8]
   },
   "evidence": {
     "generator.params.bud_area": {
@@ -169,7 +175,17 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name)."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L116108), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L116108), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L116108), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L116108), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L116108), as no source read gives it."},
+    "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L116108), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L116108), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L116108), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L116108), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L116108), as no source read gives it."}
   },
   "provenance": {
     "sources": [

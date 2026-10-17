@@ -82,12 +82,9 @@
           "leaves": 7,
           "angle": 50,
           "stalk": 0.1,
-          "width": 0.7,
           "widest": 0.4,
           "tip": 0.3,
           "base": 0.5,
-          "teeth": 7,
-          "tooth_depth": 0.08,
           "petiole": 0.08
         }
       },
@@ -135,7 +132,15 @@
     "inflorescence": "panicle",
     "inflorescence_length_m": {"min": 0.1, "max": 0.25},
     "inflorescence_posture": "nodding",
-    "fruit_type": "aggregate"
+    "fruit_type": "aggregate",
+    "height_typical_m": {"min": 1, "max": 4},
+    "woodiness": "woody",
+    "leaf_length_m": {"min": 0.03, "max": 0.08},
+    "leaf_width_m": {"min": 0.02, "max": 0.06},
+    "sexual_system": "hermaphrodite",
+    "flowering_months": [6, 7, 8],
+    "fruit_size_m": 0.002,
+    "fruiting_months": [8, 9]
   },
   "evidence": {
     "traits.height_max_m": {
@@ -203,7 +208,15 @@
     "traits.inflorescence": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 318, Holodiscus discolor: inflorescence panicle."},
     "traits.inflorescence_length_m": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 318, Holodiscus discolor: inflorescence length 10-25 cm."},
     "traits.inflorescence_posture": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 318, Holodiscus discolor: inflorescence posture nodding."},
-    "traits.fruit_type": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 318, Holodiscus discolor: fruit type aggregate."}
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 318, Holodiscus discolor: fruit type aggregate."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2949767), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2949767), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2949767), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2949767), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2949767), as no source read gives it."},
+    "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2949767), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2949767), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2949767), as no source read gives it."}
   },
   "provenance": {
     "sources": [

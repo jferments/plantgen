@@ -596,7 +596,29 @@ pub mod venation;
 /// divisions lifted, scattered or set all round their rachis
 /// (`crate::lace`); a pinnate leaf's laterals reach no farther than its
 /// stated blade width (`blade_width`) (94 is pedicels and tufts, #177).
-/// 96: a fern's stipe scales stand only on its base where its flora says
+/// 96: species draw from the species-facts records: 189 species state the
+/// characters no source of theirs gives (heights, leaf sizes, shapes,
+/// margins and habits, inflorescence and fruit sizes, months, rosettes)
+/// as the records estimate them, and a look a species set by hand gives
+/// way wherever a rule fed by a stated fact now sets it (leaf widths,
+/// inflorescence kinds, flower and fruit sizes and kinds, seasons); a
+/// strap leaf is never narrower than its card draws (95 is lacy
+/// leaves, #180).
+/// 97: lacy leaves drawn as geometry: a segment at least ten times as long
+/// as it is wide is a round thread, bowed a little (`lace::THREAD`), and a
+/// thrice-divided leaf whose divisions roll round their rachis sets its
+/// segments round each pinnule's too; a leaflet may be as narrow as a
+/// hundredth of its length (96 is the species-facts records, #171).
+/// 98: variegation along a parallel-veined blade's veins (`veins`: a
+/// midrib stripe, then veinlet dashes, then a net round dark islands as
+/// the share grows; `slant` turns the cross veins into a pinnate blade's
+/// lateral veins), its inverse `between` (silver fields between the veins),
+/// `zone` (a band along the outline, or a V from the base), a rim the
+/// pattern never reaches, and patches on the upper face only (`faces`);
+/// a compound leaf's pattern lies on each leaflet; the rattlesnake
+/// plantain's leaves are drawn so, dark blue-green, six to a flat rosette
+/// (97 is lacy leaves as geometry, #183).
+/// 99: a fern's stipe scales stand only on its base where its flora says
 /// so (`stipe_scale_extent`, fern program revision 9), as long as stated
 /// (`stipe_scale_length_m`), and its stipe and rachis are drawn in its
 /// stated `stipe_colour`; the fern families state whether their stipes are
@@ -604,13 +626,14 @@ pub mod venation;
 /// Polypodiaceae, Aspleniaceae and Pteridaceae as the Library joins them,
 /// bare in Dennstaedtiaceae and Osmundaceae), so the lady, spreading wood
 /// and deer ferns grow scaly stipe bases; the lady fern's frond and stipe
-/// are as long as its flora gives (95 is lacy leaves, #180).
-/// 97: a dimorphic fern bears fertile fronds as well as sterile ones
-/// (fern program revision 10): `frond_dimorphism` dimorphic makes about
-/// three in ten fertile, standing nearer the crown's centre, as long, as
-/// stalked and as upright as their stated `fertile_*` characters give, with
-/// their own pinnae (`fertile_pinna`, as narrow as stated); the deer fern's
-/// erect fertile fronds rise from its spreading rosette as Flora of North
-/// America gives, and its reference height is theirs (96 is fern stipes
-/// scaly at their base, #174).
-pub const GENERATOR_REVISION: u32 = 97;
+/// are as long as its flora gives (98 is variegation along the
+/// veins, #175).
+/// 100: a dimorphic fern bears fertile fronds as well as sterile ones (fern
+/// program revision 10): `frond_dimorphism` dimorphic makes about three in
+/// ten fertile, standing nearer the crown's centre, as long, as stalked and
+/// as upright as their stated `fertile_*` characters give, with their own
+/// pinnae (`fertile_pinna`, as narrow as stated); the deer fern's erect
+/// fertile fronds rise from its spreading rosette as Flora of North America
+/// gives, and its reference height is theirs (99 is fern stipes scaly at
+/// their base, #174).
+pub const GENERATOR_REVISION: u32 = 100;

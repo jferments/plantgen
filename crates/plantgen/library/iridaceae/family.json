@@ -24,10 +24,7 @@
       "linear": "usually"
     },
     "fruit_type": "capsule",
-    "leaf_habit": {
-      "evergreen": "often",
-      "deciduous": "often"
-    },
+    "leaf_habit": {"deciduous": "usually", "evergreen": "often"},
     "rosette": {
       "basal": "often",
       "none": "often"
@@ -95,11 +92,7 @@
       "source": "hutchinson-1959-monocots",
       "note": "Hutchinson (vol. 2, 2nd ed., 1959), family 386 Iridaceae: leaves mostly narrowly linear, flattened sideways and sheathing (equitant); fruit a capsule opening by valves along its cells."
     },
-    "traits.leaf_habit": {
-      "evidence": "SourceInferred",
-      "source": "watson-dallwitz-1992",
-      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data, items edited May 2026), family Iridaceae as that work draws it, there coded together with Geosiridaceae: how long the leaves last (character 37), coded often evergreen, often deciduous. Read from the coded states by script (spec-rework/b1/delta/mapdelta.py with character 21 added); states the authors do not qualify, side by side, read as often."
-    },
+    "traits.leaf_habit": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Iridaceae (read 2026-10-17): ~2,500-2,600 spp in 69 genera; most species die back to a corm or bulb while dormant (Tigridieae too), while evergreen members are limited to subtropical forest and savanna, temperate grassland and moist fynbos (and the shrubby Nivenioideae). The cormous Crocoideae (Gladiolus, Moraea's kin, Romulea, Crocus, Ixia) carry most species, so leaves dying back seasonally lead. Re-ranks the earlier value, from watson-dallwitz-1992, whose top states were tied."},
     "traits.rosette": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",

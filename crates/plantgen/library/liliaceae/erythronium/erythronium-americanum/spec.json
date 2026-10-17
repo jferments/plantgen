@@ -1,0 +1,219 @@
+{
+  "schema": 1,
+  "id": "erythronium-americanum",
+  "taxon": {
+    "scientific_name": "Erythronium americanum",
+    "common_name": "yellow trout lily",
+    "family": "Liliaceae",
+    "genus": "Erythronium",
+    "plant_name_id": 305739
+  },
+  "growth_form": "forb",
+  "generator": {
+    "params": {
+      "stems": 5,
+      "stem_rate": 0.6,
+      "clump_radius": 0.08,
+      "stem_lean": 4,
+      "maturity": 1.2,
+      "adult_age": 3,
+      "flowering_share": 0.4,
+      "scape": 1,
+      "stem_radius": 0.0015,
+      "wiggle": 1,
+      "nodes": 0,
+      "bare": 0,
+      "leaf_peak": 0.5,
+      "leaf_top": 1,
+      "leaf_base": 1,
+      "leaf_angle": 60,
+      "basal_leaves": 2,
+      "basal_angle": 65,
+      "raceme": 0.08,
+      "flowers": 1,
+      "flower_size": 0.045,
+      "pedicel": 0.015,
+      "flower_angle": 150,
+      "fruit_below": 0,
+      "buds_above": 1,
+      "nod": 0
+    }
+  },
+  "growth": {
+    "years": 6,
+    "step": 1,
+    "keyframes": [2, 4, 6]
+  },
+  "variants": {
+    "environments": ["open"],
+    "seeds": [1]
+  },
+  "appearance": {
+    "bark": [0.22, 0.2, 0.12],
+    "foliage": [0.07, 0.12, 0.065],
+    "foliage_shade": [0.022, 0.04, 0.02],
+    "variation": 0.15,
+    "organs": {
+      "basal": {
+        "shape": {
+          "template": "simple",
+          "width": 0.3,
+          "widest": 0.45,
+          "tip": 0.55,
+          "base": 0.1,
+          "teeth": 0,
+          "petiole": 0
+        },
+        "face_up": 0.3,
+        "variegation": {
+          "pattern": "mottle",
+          "colour": [0.06, 0.04, 0.035],
+          "amount": 0.35,
+          "spread": 0.3,
+          "scale": 0.06,
+          "faces": "upper"
+        }
+      },
+      "flower": {
+        "shape": {
+          "template": "flower",
+          "petal_width": 0.7,
+          "point": 0.6,
+          "centre": 0.12
+        },
+        "form": {
+          "flower": {
+            "cup": -35,
+            "curl": 40
+          }
+        },
+        "colour": [0.85, 0.6, 0.05],
+        "accent": [0.55, 0.3, 0.06]
+      }
+    }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.18,
+      "tolerance": 0.4
+    }
+  ],
+  "tier": "procedural_proxy",
+  "traits": {
+    "height_typical_m": {
+      "min": 0.1,
+      "max": 0.3
+    },
+    "leaf_length_m": {
+      "min": 0.1,
+      "max": 0.15
+    },
+    "leaf_shape": {
+      "oblong": "often",
+      "elliptic": "often"
+    },
+    "perennation": "corm",
+    "rosette": "basal",
+    "inflorescence": "solitary",
+    "flower_colour": [235, 190, 40]
+  },
+  "evidence": {
+    "taxon": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Scientific and common names as the spec's authors wrote them, and the genus the scientific name is written in."
+    },
+    "growth_form": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth form the spec's authors chose from the plant's habit: a low spring herb with basal leaves and a leafless flowering stalk."
+    },
+    "growth": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The growth plan (years, step, keyframes) chosen for growing and rendering, not a botanical fact."
+    },
+    "variants": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "The environments, conditions and seeds chosen for growing and rendering, not a botanical fact."
+    },
+    "taxon.family": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's family for the accepted name."
+    },
+    "taxon.plant_name_id": {
+      "evidence": "SourceInferred",
+      "source": "wcvp-v16",
+      "note": "WCVP v16's plant_name_id for the accepted species the name resolves to (the accepted name; wcvp_names.csv of the v16 zip, read 2026-10-17)."
+    },
+    "traits.height_typical_m": {
+      "evidence": "SourceInferred",
+      "source": "small-1913",
+      "note": "Small (1913), Erythronium americanum: the flowering stalk 1 to 3 dm tall, simple."
+    },
+    "traits.leaf_length_m": {
+      "evidence": "SourceInferred",
+      "source": "small-1913",
+      "note": "Small (1913), Erythronium americanum: blades 10 to 15 cm long."
+    },
+    "traits.leaf_shape": {
+      "evidence": "SourceInferred",
+      "source": "small-1913",
+      "note": "Small (1913), Erythronium americanum: blades oblong to elliptic, pointed, entire, sheathing where they meet the ground; read as oblong and elliptic alike."
+    },
+    "traits.perennation": {
+      "evidence": "SourceInferred",
+      "source": "small-1913",
+      "note": "Small (1913), Erythronium americanum: lasts from an ovoid corm 1 to 2.5 cm long, new ones formed at the ends of offshoots (the key to the genus)."
+    },
+    "traits.rosette": {
+      "evidence": "SourceInferred",
+      "source": "small-1913",
+      "note": "Small (1913), Erythronium americanum: the leaves seemingly all at the foot, usually two."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "small-1913",
+      "note": "Small (1913), Erythronium americanum: one flower on a simple stalk, nodding as in the genus."
+    },
+    "traits.flower_colour": {
+      "evidence": "SourceInferred",
+      "source": "small-1913",
+      "note": "Small (1913), Erythronium americanum: tepals pale to greenish yellow inside, spotted near the base. The colour is our reading of the words."
+    },
+    "generator.params": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand: a small colony of corm shoots, each with two basal leaves held low and spreading, two shoots in five sending up a leafless stalk with one nodding flower (Small 1913: leaves usually 2, one flower; the one-leaved sterile shoots of a colony are drawn with two). Flower about 4.5 cm across, its tepals 3 to 3.5 cm long and turned back (Small 1913). Not fitted to measurements."
+    },
+    "allometry": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "18 cm to the top of the flowering stalk at 4 years, within Small's 1 to 3 dm stalks (1913). Replace with measured data before calling this species calibrated."
+    },
+    "appearance": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "By eye: grey-green, glossy leaves (Small 1913: lustrous on both faces, commonly mottled above); yellow tepals reflexed, browner at the centre where Small has them spotted within."
+    },
+    "appearance.organs.basal.variegation": {
+      "evidence": "Authored",
+      "source": "inaturalist-photos-2026-10",
+      "note": "By eye from research-grade iNaturalist leaf photos (6 to 12 plants, without flowers, read 2026-10-17; for example observation 112742035): brownish-purple blotches, a pigment, over a fifth to a half of the grey-green upper face, soft edged and stretched along the parallel veins, some leaves plain. Drawn as the mottle variegation on the upper face, about a third of the blade on an average leaf; the stretch along the veins is not drawn (the mottle is round). Small (1913) has the blades commonly mottled above."
+    }
+  },
+  "provenance": {
+    "sources": [
+      {
+        "title": "PlantGen contributors: hand-set species values",
+        "licence": "project contribution under the repository's terms"
+      }
+    ],
+    "contributors": ["PlantGen"],
+    "notes": "Procedural proxy added to show the mottle variegation (2026-10-17): sizes from Small (1913), the pattern from iNaturalist photos."
+  }
+}

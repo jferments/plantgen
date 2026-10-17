@@ -101,7 +101,10 @@
     "leaf_incision": {"cleft": "often", "none": "often"},
     "division_pattern": "pinnate",
     "leaf_margin": "dentate",
-    "flowering_months": [4, 5, 6, 7, 8, 9, 10, 11]
+    "flowering_months": [4, 5, 6, 7, 8, 9, 10, 11],
+    "height_max_m": 0.8,
+    "fruit_size_m": {"min": 0.006, "max": 0.012},
+    "fruiting_months": [6, 7, 8, 9, 10]
   },
   "evidence": {
     "traits.height_typical_m": {
@@ -203,7 +206,10 @@
       "evidence": "SourceInferred",
       "source": "abrams-ferris-1960",
       "note": "Abrams and Ferris vol. 4, H. radicata (p. 587): April to November."
-    }
+    },
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3074657), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3074657), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3074657), as no source read gives it."}
   },
   "provenance": {
     "sources": [

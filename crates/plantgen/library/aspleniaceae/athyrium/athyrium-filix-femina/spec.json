@@ -12,8 +12,6 @@
   "growth_form": "fern",
   "generator": {
     "params": {
-      "fronds_per_year": 10,
-      "frond_life": 1,
       "frond_seed": 0.2,
       "size_years": 2,
       "young_angle": 8,
@@ -21,17 +19,11 @@
       "open_years": 0.5,
       "angle_spread": 8,
       "frond_radius": 0.0025,
-      "pieces": 14,
-      "pinna_length": 0.13,
-      "pinna_peak": 0.4,
-      "pinna_base": 0.4,
-      "pinna_tip": 0.2,
       "pinna_angle": 75,
       "pinna_lift": 10,
       "pinna_area": 0.129,
       "droop": 0.04,
       "droop_years": 1,
-      "crowns": 1,
       "crown_age": 3,
       "crown_rate": 0.2,
       "rhizome": 0.12,
@@ -90,7 +82,15 @@
     "division_pattern": "pinnate",
     "clonal": {"true": "usually"},
     "leaf_habit": "deciduous",
-    "indusium": {"flap": "usually"}
+    "indusium": {"flap": "usually"},
+    "height_typical_m": {"min": 0.4, "max": 1},
+    "height_max_m": 1.5,
+    "woodiness": "herbaceous",
+    "rosette": "basal",
+    "perennation": "rhizome",
+    "leaf_width_m": {"min": 0.1, "max": 0.5},
+    "leaf_arrangement": "alternate",
+    "leaf_margin": "serrate"
   },
   "evidence": {
     "traits.leaf_length_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Athyrium filix-femina var. cyclosorum, the northwestern lady fern of the Puget Sound lowlands: \"Petiole 15--45(--60) cm, base densely scaly; scales brown or dark brown, lanceolate or ovate-lanceolate, (7--)10--20 × (1--)2--5 mm, ± crisped. Blade elliptic to oblanceolate, 1--2-pinnate-pinnatifid, 25--120 × 10--50 cm\"; the species: \"Petiole straw-colored distally ... base dark red-brown or black, swollen\". Read as 25 to 120 cm."},
@@ -156,7 +156,15 @@
     "traits.clonal": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 207, 209, 210, Athyrium filix-femina: clonal true (clumps)."},
     "traits.leaf_habit": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 207, 209, 210, Athyrium filix-femina: leaf habit deciduous."},
     "traits.indusium": {"evidence": "SourceInferred", "source": "fern-growers-manual", "note": "Hoshizaki and Moran, Fern Grower's Manual (2001) p. 207, 209, 210, Athyrium filix-femina: indusium flap (elongated or hooked)."},
-    "traits.rhizome_habit": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "The spec's value is from its `traits` note (abrams-1923). Hoshizaki and Moran, Fern Grower's Manual (2001) p. 207-210: rhizome short-creeping to erect, clump-forming. The spec stated {\"erect\": \"usually\", \"ascending\": \"often\"}. Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."}
+    "traits.rhizome_habit": {"evidence": "SourceInferred", "source": "abrams-1923", "note": "The spec's value is from its `traits` note (abrams-1923). Hoshizaki and Moran, Fern Grower's Manual (2001) p. 207-210: rhizome short-creeping to erect, clump-forming. The spec stated {\"erect\": \"usually\", \"ascending\": \"often\"}. Combined on the owner's rule (2026-10-15): where two sources differ, both are kept and the range spans them."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3149492), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3149492), as no source read gives it."},
+    "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3149492), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3149492), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3149492), as no source read gives it."},
+    "traits.leaf_width_m": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America (vol. 2), Athyrium filix-femina var. cyclosorum: \"Blade elliptic to oblanceolate, 1--2-pinnate-pinnatifid, 25--120 × 10--50 cm\". Read as 10 to 50 cm, in place of the species-facts estimate of 10 to 35 cm."},
+    "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3149492), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L3149492), as no source read gives it."}
   },
   "provenance": {
     "sources": [

@@ -144,7 +144,10 @@
     "fruiting_months": [
       9,
       10
-    ]
+    ],
+    "life_span": "perennial",
+    "rosette": "none",
+    "sexual_system": "hermaphrodite"
   },
   "evidence": {
     "taxon": {
@@ -276,7 +279,10 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "By eye, after FNA vol. 3 and FEIS: thin, shallowly furrowed grey-brown bark; large, thin, drooping obovate leaves. The leaf card's petiole is 0.03 of its length, the flora's petiole against blade and petiole together."
-    }
+    },
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2655435), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2655435), as no source read gives it."},
+    "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2655435), as no source read gives it."}
   },
   "provenance": {
     "sources": [
