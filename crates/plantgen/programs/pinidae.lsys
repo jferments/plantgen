@@ -164,6 +164,9 @@ param nod_years = 2;           # years a leader shoot takes to stand up straight
 param whorl = 5;               # branches per annual whorl
 param interwhorl = 2;          # smaller branches along each year's leader shoot
 param interwhorl_vigour = 0.5; # their growth relative to whorl branches
+param limb_age = 20;           # TRIAL years before a limb may be shed
+param shed_ratio = 0.01;       # TRIAL a limb older than limb_age is shed when the light its tips catch, qsum, falls under this per segment it carries
+param bud_length = 0.1;        # TRIAL a shoot shorter than this sets proportionally fewer lateral buds; 0: off
 param stems = 1;               # stems from one foot, as a clump grows from a bird's seed cache
 param stem_angle = 15;         # degrees each stem of a clump leans out
 param branch_angle = 64;       # angle between the leader and a new branch
@@ -222,14 +225,14 @@ module N;                               # nods a young leader shoot over
 module C(order, vigour, starved, wood) queries light, position, substrate;  # a branch apex, wood metres from the stem
 module S queries vigour, substrate, position;  # the base of a living branch
 module K;                               # the base of a dead branch
-module W(n);                            # whorl branches still to be formed
+module W(n, m);                         # whorl branches still to be formed, of m
 module I(n);                            # interwhorl branches still to be formed
 module G(order, length, keep, wood);    # this year's shoot, its foliage kept keep years, wood metres from the stem
-module L(order, wood);                  # a possible side shoot on the left
-module R(order, wood);                  # and on the right
+module L(order, wood, l);                # a possible side shoot on the left
+module R(order, wood, l);                # and on the right
 module Z(light);                        # a cone, perhaps, at a branch apex
 module Y(n);                            # holds a shoot's foliage, which falls after n years
-module V(order, wood, n);               # side shoots still to spread round a branch apex (revision 10)
+module V(order, wood, n, l);             # side shoots still to spread round a branch apex (revision 10)
 module E(order, wood) queries light, position, substrate;  # a dormant bud where a branch shoot starts, watching the ground
 module H queries substrate;             # where a branch shoot starts, its bud spent, watching the ground
 module Q(n, s);                         # a branch shoot's short shoots: n more years to leaf out, a spray s long
@@ -260,13 +263,17 @@ axiom !(0.003) A B(stems - 1);
 rule A -> G(0, (richards(t + dt, height_max, height_rate, height_shape)
                 - richards(t, height_max, height_rate, height_shape))
                * (leader_shade + (1 - leader_shade) * light), needle_years * 2 / (1 + needle_low), 0)
-          W(whorl) /(137.5) A;
+          W((bud_length > 0 ? round(whorl * min(1, (richards(t + dt, height_max, height_rate, height_shape)
+                - richards(t, height_max, height_rate, height_shape))
+               * (leader_shade + (1 - leader_shade) * light) / bud_length)) : whorl), (bud_length > 0 ? round(whorl * min(1, (richards(t + dt, height_max, height_rate, height_shape)
+                - richards(t, height_max, height_rate, height_shape))
+               * (leader_shade + (1 - leader_shade) * light) / bud_length)) : whorl)) /(137.5) A;
 
-decompose W(n) : n > 0 ->
-    [ /(360 * n / whorl + uniform(-20, 20)) &(branch_angle + uniform(-8, 8))
+decompose W(n, m) : n > 0 ->
+    [ /(360 * n / m + uniform(-20, 20)) &(branch_angle + uniform(-8, 8))
       T(0, 1, 0, upturn) S C(1, 1, 0, 0) ]
-    W(n - 1);
-decompose W(n) -> ;
+    W(n - 1, m);
+decompose W(n, m) -> ;
 decompose I(n) : n > 0 ->
     [ /(uniform(0, 360)) &(branch_angle + uniform(-8, 8))
       T(0, 1, 0, upturn) S C(1, interwhorl_vigour, 0, 0) ]
@@ -316,16 +323,16 @@ decompose G(o, l, k, w) : o > 0 && spur_years > 0 ->
     [ Y(k) spray(spray_base + spray_length * l, 0, spray_droop * 0.5, 1)
       spray((spray_base + spray_length * l) * 0.75, 90 + spray_droop * 0.6, twig_angle, 1)
       spray((spray_base + spray_length * l) * 0.75, -90 - spray_droop * 0.6, twig_angle, 1) ]
-    E(o, w) Q(spur_years, (spray_base + spray_length * l) * spur_share) F(l) L(o, w + l) R(o, w + l);
+    E(o, w) Q(spur_years, (spray_base + spray_length * l) * spur_share) F(l) L(o, w + l, l) R(o, w + l, l);
 decompose G(o, l, k, w) ->
     [ Y(k) spray(spray_base + spray_length * l, uniform(-25, 25), spray_droop * 0.5, 1)
       spray((spray_base + spray_length * l) * 0.75, 90 + spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1)
       spray((spray_base + spray_length * l) * 0.75, -90 - spray_droop * 0.6 + uniform(-20, 20), twig_angle, 1) ]
-    E(o, w) F(l) L(o, w + l) R(o, w + l);
-decompose L(o, w) : apex_whorl <= 0 && o <= side_order && rand() < side_chance -> [ +(side_angle) S C(o + 1, 1, 0, w) ];
-decompose L(o, w) : apex_whorl <= 0 -> ;
-decompose R(o, w) : apex_whorl <= 0 && o <= side_order && rand() < side_chance -> [ -(side_angle) S C(o + 1, 1, 0, w) ];
-decompose R(o, w) : apex_whorl <= 0 -> ;
+    E(o, w) F(l) L(o, w + l, l) R(o, w + l, l);
+decompose L(o, w, l) : apex_whorl <= 0 && o <= side_order && rand() < side_chance * (bud_length > 0 ? min(1, l / bud_length) : 1) -> [ +(side_angle) S C(o + 1, 1, 0, w) ];
+decompose L(o, w, l) : apex_whorl <= 0 -> ;
+decompose R(o, w, l) : apex_whorl <= 0 && o <= side_order && rand() < side_chance * (bud_length > 0 ? min(1, l / bud_length) : 1) -> [ -(side_angle) S C(o + 1, 1, 0, w) ];
+decompose R(o, w, l) : apex_whorl <= 0 -> ;
 
 # Foliage falls after its shoot's keep years: needle_years on average,
 # needle_low times as long at the crown's foot as at its top (revision 5).
@@ -365,15 +372,15 @@ rule E(o, w) : w > 0 && age >= epi_delay && light >= epi_light && rand() < epi_c
 # round itself, as the trunk spreads a whorl, each turning up toward the
 # sky (Rauh's model). These rules go last so the draws above keep their
 # sites.
-decompose L(o, w) : o <= side_order -> V(o, w, apex_whorl);
-decompose L(o, w) -> ;
-decompose R(o, w) -> ;
-decompose V(o, w, n) : n > 0 && rand() < side_chance ->
+decompose L(o, w, l) : o <= side_order -> V(o, w, apex_whorl, l);
+decompose L(o, w, l) -> ;
+decompose R(o, w, l) -> ;
+decompose V(o, w, n, l) : n > 0 && rand() < side_chance * (bud_length > 0 ? min(1, l / bud_length) : 1) ->
     [ /(360 * n / max(apex_whorl, 1) + uniform(-30, 30)) &(side_angle + uniform(-8, 8))
       T(0, 1, 0, upturn) S C(o + 1, 1, 0, w) ]
-    V(o, w, n - 1);
-decompose V(o, w, n) : n > 0 -> V(o, w, n - 1);
-decompose V(o, w, n) -> ;
+    V(o, w, n - 1, l);
+decompose V(o, w, n, l) : n > 0 -> V(o, w, n - 1, l);
+decompose V(o, w, n, l) -> ;
 
 # Short shoots (revision 11): a branch shoot leafs out again each year
 # from its short shoots, spur_years after its first, along its own line.
@@ -389,3 +396,5 @@ rule Q(n, s) : n > 0 ->
 decompose B(n) : n > 0 ->
     [ /(360 * n / stems + uniform(-25, 25)) &(stem_angle + uniform(-5, 5)) A ] B(n - 1);
 decompose B(n) -> ;
+
+rule S : shed_ratio > 0 && age > limb_age && qsum < shed_ratio * shade_death / 0.1 * nseg -> K;
