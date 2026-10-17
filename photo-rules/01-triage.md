@@ -49,7 +49,7 @@ Do not use that knowledge for anything else.
   | --- | --- |
   | V1 | the whole plant from the side, base and top in frame (from eye level; from below or above, say so in the description) |
   | V2 | the whole plant with its branches visible (leafless, or a see-through crown) |
-  | V3 | the whole plant from above or 30-60 degrees down |
+  | V3 | the whole plant from 30-60 degrees above (under 30 degrees, it is V1) |
   | V4 | a branch or shoot, up to 2 m of it, with its leaves (or needles, buds, flowers) in place |
   | V5 | one or more leaves face-on and flat (herbarium sheets usually) |
   | V6 | one or more flowers or flower heads face-on |

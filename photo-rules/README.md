@@ -1,4 +1,4 @@
-# PlantGen photo rules (v0, 2026-10-17)
+# PlantGen photo rules (v1, 2026-10-17)
 
 Rules that let any vision-capable AI look at plant photos, describe what
 they show in a fixed vocabulary, look at PlantGen's renders the same way,

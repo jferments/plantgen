@@ -35,6 +35,13 @@ or damaged parts, several plants overlapping, a label or ruler.
 - If the organ is clearly visible and simply lacks what a count asks for,
   the answer is a number, not "cannot tell": 0 teeth on a smooth edge, 1 lobe
   on an unlobed leaf, 0 main limbs on a single unbranched stem.
+- Some features name the plants they are for ("Cacti.", "Pines only",
+  "Conifers", "Daisy-type"). On a plant that clearly lacks that kind of
+  organ (no spines, no needles, no ray florets), answer
+  `"not applicable"`; aggregation drops it, like "cannot tell". The same
+  goes for a feature about a part that is absent by nature: tooth depth on a
+  smooth edge, needle bundles on single needles. Cones answer the `cone.*`
+  features, not `fruit.*`.
 - If no listed state fits what you clearly see, answer `"cannot tell"` and
   describe what you see in the `"note"`: the note is how missing states are
   found.
@@ -84,7 +91,8 @@ For every answer other than "cannot tell", give:
 ## 7. Ratios, not sizes
 
 - Give proportions: length over width of the same organ, part over whole.
-  Measure along the stated axes. Round to 0.05.
+  Measure along the stated axes. Round to 0.05, or to two significant
+  figures below 0.1 (0.02, not 0).
 - Give absolute sizes only if a scale is in frame (ruler, colour card, hand,
   person, pole of known length), and name the scale you used.
 
@@ -98,7 +106,9 @@ For every answer other than "cannot tell", give:
   The hex is the measurement; the family is the word. If you sampled the hex
   from pixels, set `"method": "pixels"`.
 - Name the lighting: `"direct sun"`, `"shade"`, `"overcast"`, `"dim"`
-  (dusk, deep shade, indoors), `"flash"`, `"studio"`, `"render"`.
+  (dusk, deep shade, indoors), `"flash"`, `"studio"` (a plain backdrop).
+  `"render"` is set by the person running the rules for their own renders;
+  an observer never chooses it.
 - Do not correct for lighting in your head; report what is there and the
   lighting, and the comparison takes care of it.
 

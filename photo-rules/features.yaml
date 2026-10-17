@@ -1,4 +1,4 @@
-# PlantGen photo features (v0, 2026-10-17)
+# PlantGen photo features (v1, 2026-10-17)
 #
 # Each feature is one question an observer answers about one image.
 # - id:          scale.name, stable; answers use it as the key.
@@ -23,7 +23,7 @@
 #
 # Trait names and states checked against plantgen main ca5feba.
 
-version: 0
+version: 1
 features:
 
 # ---------------------------------------------------------------- 1. habit
@@ -114,7 +114,7 @@ features:
   views: [V1, V3]
   maps_to: {trait: crown_see_through, measure: sky}
   reliability: fair (masks are better)
-  notes: Answer in tenths. In leaf only; a leafless crown is V2.
+  notes: "Answer in tenths. In leaf only; a leafless crown is V2. not applicable on a plant with no leaves by nature (cacti)."
 
 - id: habit.symmetry
   scale: habit
@@ -445,6 +445,7 @@ features:
   views: [V5]
   maps_to: {trait: leaflets}
   reliability: good up to 15
+  notes: "1 on a simple leaf."
 
 - id: leaf.lobes
   scale: leaf
@@ -571,6 +572,7 @@ features:
     medium: a tenth to a quarter
     deep: over a quarter
   reliability: fair
+  notes: "not applicable on a smooth (entire) edge."
 
 - id: leaf.venation
   scale: leaf

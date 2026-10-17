@@ -34,11 +34,31 @@ Render answers are aggregated the same way over seeds.
 | state, states | the render's state has 25% or more of the photo answers | 10-25% | under 10%, while the photo majority has 60% or more |
 | ordinal | same state as the majority, or a neighbour with 25% or more | one step from the majority | two or more steps |
 | ratio, share, angle, count | render median inside the photo IQR | within 1.5 x IQR of the photo median | further |
-| colour (same lighting) | ΔE2000 under 10 | 10-20 | over 20 |
+| colour (same lighting) | ΔE2000 under 15 | 15-25 | over 25 |
 
 If photos are split with no majority (no state over 60%), a render showing
 any state with 25% or more passes: the plant varies, and so may the
-drawing. These thresholds are v0 and are tuned against hand verdicts.
+drawing.
+
+Two more rules from the first replay against hand verdicts (v1):
+
+- **Renders need numbers too.** Compare a feature only when at least three
+  render answers exist (three images: seeds, focus points, panels). With one
+  or two, the verdict is "render insufficient": make more renders. A single
+  render frame decided most of v0's false misses.
+- **Missing organs.** A render that shows no flowers or fruit gives no
+  answer to flower and fruit features, so nothing gets compared. Check
+  presence separately: among the photos taken within a month of the render
+  day (at least five), if 25% or more show an organ (triage
+  `organs_visible`) and no whole-plant or shoot render does, that is a ✗
+  "organ missing on the render day".
+- ✗ is a claim that the drawing misses; ~ is a lead to look at, not a
+  claim. Report them apart.
+
+Colour thresholds were widened from 10/20 to 15/25 in v1: in the replay, a
+typical photo sat ΔE 8-12 from the median of its own species, feature and
+lighting label (49 groups), so ΔE 10 flagged renders as close as a typical
+photo.
 
 ## 3. Bring in the text
 
@@ -55,6 +75,10 @@ Then read the four together:
 | state X | mostly X | Y | the drawing misses a stated fact: find why (`05-diagnose.md`) |
 | silent | mostly X | Y | the drawing misses an unstated feature: the character may need stating (Part 1) or adding |
 | state X | mostly Y | X or Y | **conflict**: check the photos (cultivars, age, region) and re-read the source; never change the drawing on photos alone |
+
+This step can be a script: map each feature's `maps_to` trait to the
+species' stated value; when the render's state is the stated one and the
+photos differ, the verdict becomes "conflict", not ✗.
 | state X | insufficient | Y | the drawing misses a stated fact; no photos needed to say so |
 
 ## 4. Severity and order
