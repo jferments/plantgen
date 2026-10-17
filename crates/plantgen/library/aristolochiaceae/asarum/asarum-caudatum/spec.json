@@ -49,7 +49,7 @@
     "seeds": [1]
   },
   "appearance": {
-    "bark": [0.25, 0.2, 0.15],
+    "bark": [0.09, 0.12, 0.045],
     "foliage": [0.03, 0.1, 0.03],
     "foliage_shade": [0.01, 0.032, 0.01],
     "variation": 0.2,
@@ -119,7 +119,7 @@
     "appearance": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Colours chosen by eye: glossy dark green leaves."
+      "note": "Colours chosen by eye: glossy dark green leaves on green stalks, as iNaturalist photographs show them (observations 25917800, 280686655, 367588554)."
     },
     "taxon": {
       "evidence": "Authored",
