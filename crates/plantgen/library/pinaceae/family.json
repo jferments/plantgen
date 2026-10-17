@@ -14,7 +14,18 @@
     },
     "reproduction": "cones"
   },
+  "rules": {
+    "generator.params.apical": {
+      "rule": "0.6",
+      "why": "A fir, spruce, hemlock or Douglas-fir holds its branches under its leader (apical control): a branch's yearly shoot stays under about six tenths of the leader's, so as the leader slows near the tree's height the top branches slow too and the crown stays pointed and conical."
+    }
+  },
   "evidence": {
+    "rules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Old conifers (pinidae revision 13): apical control as Wilson (2000) describes it, the leader holding its branches' growth below its own. The share, 0.6, is fitted by eye at 150 years to Farjon's crowns: Sitka spruce pyramidal or broad conical, Douglas-fir columnar when old with a pointed top. Uncapped, the branches kept their pace while the leader slowed and the crowns stood as tubes with flat heads."
+    },
     "traits": {
       "evidence": "SourceInferred",
       "source": "abrams-1923",
