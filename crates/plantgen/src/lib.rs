@@ -585,7 +585,11 @@ pub mod venation;
 /// 93: a hooked spine curls into an open J at its tip: its shaft runs
 /// further and its hook turns over its last two pieces, not folded flat on
 /// the shaft over the last one (92 is stem hairs, #173).
-/// 94: a fern's stipe scales stand only on its base where its flora says
+/// 94: slender pedicels and short-shoot tufts (`Unit::stalk_width`): a
+/// flower's pedicel is drawn 0.35 as thick as before, and a needle look's
+/// bundle of more than five, up to 45, is a short shoot's tuft spread all
+/// round, the tufts half a needle apart (93 is hooked spines, #176).
+/// 95: a fern's stipe scales stand only on its base where its flora says
 /// so (`stipe_scale_extent`, fern program revision 9), as long as stated
 /// (`stipe_scale_length_m`), and its stipe and rachis are drawn in its
 /// stated `stipe_colour`; the fern families state whether their stipes are
@@ -593,6 +597,5 @@ pub mod venation;
 /// Polypodiaceae, Aspleniaceae and Pteridaceae as the Library joins them,
 /// bare in Dennstaedtiaceae and Osmundaceae), so the lady, spreading wood
 /// and deer ferns grow scaly stipe bases; the lady fern's frond and stipe
-/// are as long as its flora gives (93 is hooked spines that curl,
-/// #176).
-pub const GENERATOR_REVISION: u32 = 94;
+/// are as long as its flora gives (94 is slender pedicels, #177).
+pub const GENERATOR_REVISION: u32 = 95;
