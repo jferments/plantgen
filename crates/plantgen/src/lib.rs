@@ -590,4 +590,10 @@ pub mod venation;
 /// flower's pedicel is drawn 0.35 as thick as before, and a needle look's
 /// bundle of more than five, up to 45, is a short shoot's tuft spread all
 /// round, the tufts half a needle apart (93 is hooked spines, #176).
-pub const GENERATOR_REVISION: u32 = 94;
+/// 95: lacy leaves: a compound leaf divides up to three times (`segments`,
+/// `inner`); one whose taxa say how its divisions are held
+/// (`division_planes`) is drawn on the two nearest levels as geometry, its
+/// divisions lifted, scattered or set all round their rachis
+/// (`crate::lace`); a pinnate leaf's laterals reach no farther than its
+/// stated blade width (`blade_width`) (94 is pedicels and tufts, #177).
+pub const GENERATOR_REVISION: u32 = 95;
