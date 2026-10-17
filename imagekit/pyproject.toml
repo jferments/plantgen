@@ -14,6 +14,7 @@ dependencies = ["Pillow>=10", "PyYAML>=6"]
 [project.optional-dependencies]
 parquet = ["pyarrow>=15"]
 claude = ["anthropic>=1.15"]
+local = ["numpy>=1.26", "torch>=2.4", "transformers>=4.49", "open_clip_torch>=3.0", "huggingface_hub>=0.30"]
 test = ["jsonschema>=4", "anthropic>=1.15"]
 
 [project.scripts]

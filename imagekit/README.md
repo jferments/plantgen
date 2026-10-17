@@ -19,7 +19,9 @@ What it does now:
   image that already has an answer from the same model, rules and settings;
 - **run** a `photo-rules/` task (triage, observe, describe) on the images
   that lack it, through a model on your own machine, OpenRouter, the Claude
-  API or a chat window, with the cost estimated first and capped.
+  API or a chat window, with the cost estimated first and capped;
+- **embed** each image once per model (SigLIP2, DINOv2, BioCLIP-2) and
+  **search** the library by words or by a photo.
 
 ## Install
 
@@ -31,8 +33,9 @@ uv tool install ./imagekit            # or: pipx install ./imagekit
 imagekit --help
 ```
 
-Extras: `[parquet]` writes each batch as Parquet too, and `[claude]` adds
-the Claude API's SDK (`uv tool install './imagekit[claude]'`).
+Extras: `[parquet]` writes each batch as Parquet too, `[claude]` adds
+the Claude API's SDK, and `[local]` adds torch and the image models for
+`embed` and `search` (`uv tool install './imagekit[local,claude]'`).
 
 ## Fetch
 
@@ -185,6 +188,31 @@ imagekit run describe --backend chat --model "Claude app" --chat-dir ~/chat-desc
 writes the system text, and each image with its prompt, to the folder. Paste
 them into a chat, save each answer as `<photo id>.json` beside them, and run
 the same command again to read them in.
+
+## Search by look
+
+```sh
+imagekit embed --model siglip2,dinov2-small          # every image that lacks these vectors
+imagekit search --model siglip2 --text "lacy, finely divided fern-like leaves"
+imagekit search --model siglip2,dinov2-small --image yarrow.jpg --by-species --exclude-genus Achillea
+imagekit search --model siglip2 --image leaf.jpg --box 0.2,0.1,0.7,0.6 --html near.html
+```
+
+`embed` stores one L2-normalised vector per image and model under
+`sources/image-analyses/<run>/vectors/`, keyed like any other analysis, so
+a rerun embeds nothing and a stopped run picks up where it left off.
+
+| Model | Good for | Text queries | CPU, s per image |
+| --- | --- | --- | --- |
+| `siglip2` (so400m, 384 px) | words and photos | yes | ~2.5 |
+| `siglip2-base` (224 px) | the same, faster | yes | ~0.14 |
+| `dinov2-small`, `dinov2` | shape and texture: "looks like this one" | no | ~0.05 |
+| `bioclip2` | trained on organisms; species look-alikes | yes | ~0.5 |
+
+`search` is exact cosine search with numpy. Several models are merged by
+reciprocal-rank fusion. `--by-species` ranks species by the mean of their
+best three images, and `--html` writes a contact sheet with each photo's
+credit and licence.
 
 ## Tests
 
