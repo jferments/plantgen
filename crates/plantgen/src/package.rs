@@ -304,6 +304,12 @@ pub struct AtlasLayer {
     /// (`crate::bend`); absent for flat cards.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub bend: Option<crate::bend::Bend>,
+    /// The hairs on the template's face (`crate::hairs`): each texel's
+    /// colour then moves toward theirs, darkened alike, by
+    /// [`crate::hairs::cast`] of their density, and they add their sheen
+    /// ([`crate::hairs::sheen`]); absent for a bare face.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hairs: Option<crate::looks::Hairs>,
 }
 
 /// Sizes of the plant at one keyframe.
@@ -1572,6 +1578,7 @@ fn assemble(
                     colour: template.colour,
                     accent: template.accent_colour,
                     bend: (!template.bend.is_flat()).then_some(template.bend),
+                    hairs: template.hairs.clone(),
                 })
                 .collect(),
         },

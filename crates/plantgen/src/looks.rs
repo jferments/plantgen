@@ -87,6 +87,59 @@ pub struct OrganLook {
     /// juvenile leaves on a young plant. Without them every leaf is alike.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub families: Option<Families>,
+    /// The hairs on its face (its indumentum, [`Hairs`]); a bare face if
+    /// absent.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hairs: Option<Hairs>,
+}
+
+/// The hairs on an organ's face, its indumentum (Harris and Harris, *Plant
+/// Identification Terminology*: glabrous, pubescent, pilose, villous,
+/// tomentose and the rest), as a renderer draws them: a sheen and a soft
+/// grey cast on its card where they are too fine to see one by one, a
+/// fringe along its edge, and up close, strands of their own
+/// (`crate::hairs`).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(default, deny_unknown_fields)]
+pub struct Hairs {
+    /// How much of the face the hairs hide, 0 (bare) to 1 (a felt that
+    /// hides it).
+    pub density: f64,
+    /// A hair's length, metres.
+    pub length: f64,
+    /// How a hair stands, 0 (pressed flat, pointing toward the organ's
+    /// tip) to 1 (straight out from the face).
+    pub lie: f64,
+    /// How a hair bends along its length, 0 (straight) to 1 (curled and
+    /// tangled, as wool).
+    pub curl: f64,
+    /// Their colour, linear RGB: white hairs unless stated.
+    pub colour: [f32; 3],
+    /// How thickly they fringe its edge, 0 to 1, where that differs from
+    /// the face's `density`: a ciliate edge on a bare blade.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub edge: Option<f64>,
+}
+
+impl Default for Hairs {
+    fn default() -> Self {
+        Self {
+            density: 0.0,
+            length: 0.001,
+            lie: 0.5,
+            curl: 0.0,
+            colour: [0.8, 0.8, 0.76],
+            edge: None,
+        }
+    }
+}
+
+impl Hairs {
+    /// Whether there are any to draw.
+    #[must_use]
+    pub fn drawn(&self) -> bool {
+        (self.density > 0.0 || self.edge.is_some_and(|edge| edge > 0.0)) && self.length > 0.0
+    }
 }
 
 /// Where a leaf's petiole meets its blade (Kaplan, ch. 18: epeltate and
@@ -2725,6 +2778,8 @@ pub struct Look {
     /// drawn as one ([`Look::of`]). Empty for a look that does not vary;
     /// its card is always drawn with the look itself.
     pub varieties: Vec<Look>,
+    /// The hairs on its face, where it has any to draw.
+    pub hairs: Option<Hairs>,
 }
 
 /// The varieties of each look that varies (spec rework VARY): as many as
@@ -2918,6 +2973,7 @@ pub fn resolve<'a>(
                     }),
                     shape: drawn,
                     varieties: Vec::new(),
+                    hairs: look.hairs.clone().filter(Hairs::drawn),
                 }
             }
             None => Look {
@@ -2935,6 +2991,7 @@ pub fn resolve<'a>(
                 forms: Forms::default(),
                 inflorescence: None,
                 varieties: Vec::new(),
+                hairs: None,
             },
         })
         .collect::<Vec<_>>()
@@ -3276,6 +3333,7 @@ fn in_stage(look: &Look, stage: &StageLook) -> Look {
         // A stage look draws the whole organ.
         inflorescence: None,
         varieties: Vec::new(),
+        hairs: None,
     }
 }
 
@@ -3722,6 +3780,7 @@ mod tests {
         let organs = BTreeMap::from([(
             "leaf".to_string(),
             OrganLook {
+                hairs: None,
                 roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Lobed(Lobed::default()),
@@ -3976,6 +4035,7 @@ mod tests {
         organs.insert(
             "bloom".to_string(),
             OrganLook {
+                hairs: None,
                 roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Head(Head::default()),
@@ -4068,6 +4128,7 @@ mod tests {
     fn an_organ_looks_as_it_is_on_the_day() {
         let types = [("leaf", OrganKind::Leaf), ("bloom", OrganKind::Flower)];
         let fruit = |season: Option<Season>| OrganLook {
+            hairs: None,
             roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             shape: Shape::Fruit(Fruit::default()),
@@ -4158,6 +4219,7 @@ mod tests {
         organs.insert(
             "bloom".to_string(),
             OrganLook {
+                hairs: None,
                 roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Head(Head::default()),
@@ -4275,6 +4337,7 @@ mod tests {
     /// A cherry's umbel of six (or `kind` of `flowers`), with `season`.
     fn clustered(kind: ClusterKind, flowers: u32, season: Season) -> OrganLook {
         OrganLook {
+            hairs: None,
             roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             shape: Shape::Fruit(Fruit::default()),

@@ -82,6 +82,7 @@ pub struct CardExtension {
 #[derive(ShaderType, Reflect, Debug, Clone)]
 struct CardAccents {
     accents: [Vec4; MAX_TEMPLATES],
+    hairs: [Vec4; MAX_TEMPLATES],
 }
 
 impl MaterialExtension for CardExtension {
@@ -168,6 +169,10 @@ fn card_material(
     for (slot, accent) in accents.iter_mut().zip(&scene.template_accents) {
         *slot = Vec3::from_array(*accent).extend(1.0);
     }
+    let mut hairs = [Vec4::ZERO; MAX_TEMPLATES];
+    for (slot, hair) in hairs.iter_mut().zip(&scene.template_hairs) {
+        *slot = Vec4::from_array(*hair);
+    }
     cards.add(ExtendedMaterial {
         base: StandardMaterial {
             base_color: Color::WHITE,
@@ -180,7 +185,7 @@ fn card_material(
             ..default()
         },
         extension: CardExtension {
-            accents: CardAccents { accents },
+            accents: CardAccents { accents, hairs },
             templates: images.add(templates_image(scene)),
         },
     })

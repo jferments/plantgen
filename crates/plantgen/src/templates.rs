@@ -1,7 +1,7 @@
 //! Organ card textures.
 //!
-//! Every organ card samples one square template: coverage, brightness and
-//! accent weight per texel. A species' templates are drawn from its looks
+//! Every organ card samples one square template: coverage, brightness,
+//! accent weight per texel, and the hairs on its face (`crate::hairs`). A species' templates are drawn from its looks
 //! (see [`crate::looks`]), one per organ type of its program, by a small
 //! procedural generator per [`Shape`]: needle shoots, scale sprays,
 //! palmate, simple, lobed and compound leaves, leafy sprigs, grass blades,
@@ -48,6 +48,11 @@ pub struct Texel {
     /// How far the texel's colour moves from the card's colour to the
     /// look's accent colour, 0 to 1: a flower's centre, a petiole.
     pub accent: f32,
+    /// How much of the texel's colour is its hairs', 0 on a bare face
+    /// (`crate::hairs::cast`, the same over a template's whole face).
+    pub hair: f32,
+    /// Whether the texel is a hair of the edge's fringe rather than face.
+    pub fringe: bool,
 }
 
 /// One organ type's template.
@@ -69,6 +74,11 @@ pub struct Template {
     pub coverage: Vec<f32>,
     pub brightness: Vec<f32>,
     pub accent: Vec<f32>,
+    /// The coverage the edge's fringe of hairs added to each texel, which
+    /// is no leaf; empty for a template without hairs.
+    pub fringe: Vec<f32>,
+    /// The hairs of its look, where it has any (`crate::hairs`).
+    pub hairs: Option<crate::looks::Hairs>,
 }
 
 impl Template {
@@ -77,7 +87,17 @@ impl Template {
     #[must_use]
     pub fn area(&self) -> f64 {
         let covered: f64 = self.coverage.iter().map(|&value| f64::from(value)).sum();
-        self.aspect * covered / to_f64(self.coverage.len().max(1))
+        let fringe: f64 = self.fringe.iter().map(|&value| f64::from(value)).sum();
+        self.aspect * (covered - fringe) / to_f64(self.coverage.len().max(1))
+    }
+
+    /// How much of its face's colour its hairs' is ([`Texel::hair`]).
+    #[must_use]
+    pub fn hair(&self) -> f32 {
+        #[allow(clippy::cast_possible_truncation)]
+        self.hairs
+            .as_ref()
+            .map_or(0.0, |hairs| crate::hairs::cast(hairs.density) as f32)
     }
 }
 
@@ -228,6 +248,8 @@ impl Templates {
                     coverage: drawn.coverage,
                     brightness: drawn.brightness,
                     accent: drawn.accent,
+                    fringe: Vec::new(),
+                    hairs: None,
                 });
             }
         }
@@ -289,6 +311,19 @@ impl Templates {
                         }
                     }
                 }
+                let painted = look.hairs.as_ref().map(|hairs| {
+                    crate::hairs::paint(
+                        TEMPLATE_SIZE,
+                        aspect,
+                        2,
+                        hairs,
+                        mix64(shape_seed(&look.shape) ^ 0x4841_4952),
+                        &mut coverage,
+                        &mut brightness,
+                        &mut accent,
+                    )
+                });
+                let fringe = painted.unwrap_or_default();
                 Template {
                     organ: look.organ.clone(),
                     shape: look.shape.name(),
@@ -299,6 +334,8 @@ impl Templates {
                     coverage,
                     brightness,
                     accent,
+                    fringe,
+                    hairs: look.hairs.clone(),
                 }
             })
             .collect();
@@ -319,6 +356,8 @@ impl Templates {
                 coverage: 1.0,
                 brightness: 1.0,
                 accent: 0.0,
+                hair: 0.0,
+                fringe: false,
             };
         };
         let size = self.size;
@@ -337,13 +376,17 @@ impl Templates {
             coverage: template.coverage[at],
             brightness: template.brightness[at],
             accent: template.accent[at],
+            hair: template.hair(),
+            fringe: template.fringe.get(at).is_some_and(|&added| added > 0.0),
         }
     }
 
     /// Albedo of a card texel: the card's colour, blended toward the look's
     /// accent colour by the texel's accent weight, times its brightness.
     /// The accent colour is darkened as much as the card's colour is
-    /// darker than the look's colour, so shaded flowers stay shaded.
+    /// darker than the look's colour, so shaded flowers stay shaded. Its
+    /// hairs then move it toward their colour, darkened alike, by the
+    /// texel's hair weight.
     #[must_use]
     pub fn albedo(&self, template: usize, colour: [f64; 3], texel: Texel) -> [f64; 3] {
         let brightness = f64::from(texel.brightness);
@@ -358,15 +401,23 @@ impl Templates {
         } else {
             1.0
         };
+        let hair = f64::from(texel.hair);
+        let hairs = template
+            .hairs
+            .as_ref()
+            .map_or([0.0; 3], |hairs| hairs.colour);
         std::array::from_fn(|channel| {
             let accent = f64::from(template.accent_colour[channel]) * darkening;
-            (colour[channel] + (accent - colour[channel]) * weight) * brightness
+            let face = (colour[channel] + (accent - colour[channel]) * weight) * brightness;
+            face + (f64::from(hairs[channel]) * darkening - face) * hair
         })
     }
 
     /// The templates side by side as an RGBA8 image, the package's organ
     /// atlas: brightness / 2 in red, the accent weight in green, coverage
-    /// in alpha. Blue is 0. Row 0 is the cards' base (`v` = 0).
+    /// in alpha. Blue is 0. A template's hairs (`crate::hairs`) are the
+    /// same over its whole face, so they go with its layer, not its texels.
+    /// Row 0 is the cards' base (`v` = 0).
     #[must_use]
     pub fn atlas_rgba(&self) -> (usize, usize, Vec<u8>) {
         self.image(|index, at| {
@@ -422,6 +473,8 @@ impl Templates {
                         coverage: template.coverage[at],
                         brightness: template.brightness[at],
                         accent: template.accent[at],
+                        hair: template.hair(),
+                        fringe: false,
                     };
                     let colour = self.albedo(index, template.colour.map(f64::from), texel);
                     let cover = texel.coverage.clamp(0.0, 1.0);
@@ -3193,6 +3246,7 @@ mod tests {
             organs.insert(
                 name.clone(),
                 OrganLook {
+                    hairs: None,
                     roll: 0.0,
                     insertion: crate::looks::Insertion::Marginal,
                     shape: shape.clone(),
@@ -3570,6 +3624,8 @@ mod tests {
             coverage: 1.0,
             brightness: 1.0,
             accent: 1.0,
+            hair: 0.0,
+            fringe: false,
         };
         let lit = templates.albedo(0, [0.2, 0.4, 0.1], accent);
         let shaded = templates.albedo(0, [0.1, 0.2, 0.05], accent);

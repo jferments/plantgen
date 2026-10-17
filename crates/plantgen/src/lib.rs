@@ -46,6 +46,7 @@ pub mod gltf;
 pub mod graph;
 pub mod ground;
 pub mod grow;
+pub mod hairs;
 pub mod impostor;
 pub mod inherit;
 pub mod json;
@@ -567,4 +568,8 @@ pub mod venation;
 /// hides half the skin it did, so a spiny cactus keeps its colour and rib
 /// shading from afar; cacti state stem, spine, old spine and wool colours,
 /// which the family's rules draw (88 is scaly fern stipes, #163).
-pub const GENERATOR_REVISION: u32 = 89;
+/// 90: hairs (`crate::hairs`): a blade's hairs as floras name them
+/// (`leaf_hairs`, `leaf_ciliate`) cast its colour toward theirs, add a
+/// sheen and a backlit glow, fringe its edge, and up close stand from it
+/// as strands of their own (89 is cactus colours, #156).
+pub const GENERATOR_REVISION: u32 = 90;

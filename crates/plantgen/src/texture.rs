@@ -637,6 +637,7 @@ pub fn organ_templates(shapes: &[Shape]) -> Templates {
             forms: crate::looks::Forms::default(),
             inflorescence: None,
             varieties: Vec::new(),
+            hairs: None,
         })
         .collect();
     Templates::for_looks(&looks)

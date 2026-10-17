@@ -79,9 +79,15 @@
     "leaf_length_m": {"min": 0.04, "max": 0.1},
     "leaf_width_m": {"min": 0.05, "max": 0.12},
     "fruit_size_m": {"min": 0.01, "max": 0.02},
-    "shoot_leaves": 2
+    "shoot_leaves": 2,
+    "leaf_hairs": {"glabrous": "often", "strigose": "often"},
+    "leaf_hairs_beneath": "strigose",
+    "leaf_ciliate": true
   },
   "evidence": {
+    "traits.leaf_hairs": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Asarum caudatum (read on eFloras, 2026-10-16): surfaces adaxially glabrous or sparsely appressed-hirsute (strigose), neither said to be the more usual."},
+    "traits.leaf_hairs_beneath": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Asarum caudatum (read on eFloras, 2026-10-16): surfaces abaxially sparsely appressed-hirsute, at least proximally (strigose)."},
+    "traits.leaf_ciliate": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Asarum caudatum (read on eFloras, 2026-10-16): marginal hairs perpendicular to margin or curved toward apex."},
     "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654279), until a flora read here gives it; drawn by the kingdom's leaf-shape rules where before the blade was shaped by eye."},
     "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654279), until a flora read here gives it."},
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2654279), until a flora read here gives it."},

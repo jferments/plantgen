@@ -117,6 +117,11 @@
     },
     "leaf_shape": "cordate",
     "leaf_venation": "palmate",
+    "leaf_apex": {
+      "obtuse": "often",
+      "rounded": "often"
+    },
+    "leaf_hairs_beneath": "tomentose",
     "leaf_habit": "deciduous",
     "inflorescence": "solitary",
     "flowering_position": "lateral",
@@ -213,6 +218,16 @@
       "evidence": "SourceInferred",
       "source": "fna-online",
       "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): venation palmate-pinnate; read as palmate, the main veins from the base."
+    },
+    "traits.leaf_apex": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): blade apex obtuse to rounded."
+    },
+    "traits.leaf_hairs_beneath": {
+      "evidence": "SourceInferred",
+      "source": "fna-online",
+      "note": "Flora of North America vol. 3 (1997), Aristolochia californica (read on eFloras, 2026-10-16): surfaces abaxially tomentose. The upper face is not described as hairy, so it is left unstated."
     },
     "traits.leaf_habit": {
       "evidence": "Authored",

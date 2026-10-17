@@ -4,7 +4,9 @@
 // cuts a card), the card's colour its RGB, and the darkening of the template's
 // accent colour for this card (`Templates::albedo`, computed on the CPU in
 // `plantlab-scene`) the second texture coordinate's x. The texel holds
-// brightness / 2 in red, the accent weight in green and coverage in alpha.
+// brightness / 2 in red, the accent weight in green and coverage in alpha. The
+// face then moves toward the template's hairs' colour, darkened alike, by
+// their weight.
 // The blend below is `Templates::albedo` exactly; nothing else about the
 // plant is computed here.
 
@@ -21,6 +23,9 @@
 struct CardAccents {
     // Per template: its look's accent colour, linear RGB.
     accents: array<vec4<f32>, 64>,
+    // Per template: its hairs' colour, linear RGB, and their weight (0 for
+    // none).
+    hairs: array<vec4<f32>, 64>,
 }
 
 @group(#{MATERIAL_BIND_GROUP}) @binding(100) var<uniform> card: CardAccents;
@@ -52,7 +57,9 @@ fn fragment(in: VertexOutput, @builtin(front_facing) is_front: bool) -> Fragment
     var pbr_input = pbr_input_from_standard_material(in, is_front);
     let layer = u32(round(in.color.a)) - 1u;
     let accent = card.accents[layer].rgb * in.uv_b.x;
-    let albedo = mix(in.color.rgb, accent, t.g) * (2.0 * t.r);
+    let face = mix(in.color.rgb, accent, t.g) * (2.0 * t.r);
+    let hairs = card.hairs[layer];
+    let albedo = mix(face, hairs.rgb * in.uv_b.x, hairs.a);
     pbr_input.material.base_color = vec4<f32>(albedo, 1.0);
     var out: FragmentOutput;
     out.color = apply_pbr_lighting(pbr_input);
