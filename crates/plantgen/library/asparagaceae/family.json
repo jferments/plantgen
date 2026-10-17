@@ -4,6 +4,9 @@
   "name": "Asparagaceae",
   "parent": "order/asparagales",
   "traits": {
+    "leaf_incision": "none",
+    "leaf_margin": {"entire": "usually", "spiny": "sometimes"},
+    "leaf_shape": {"linear": "usually", "lanceolate": "often", "ovate": "sometimes"},
     "flower_merosity": 3,
     "flower_symmetry": "actinomorphic",
     "perianth": "tepals",
@@ -53,6 +56,9 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Agavaceae (read 2026-10-17): lamina undivided; Hyacinthaceae and Convallariaceae simple, entire blades."},
+    "traits.leaf_margin": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA (read 2026-10-17): Hyacinthaceae and Convallariaceae margins entire; Agavaceae entire or serrate with sharp lateral spines; Wikipedia Agave: most species with sharp marginal teeth. Spiny weighted to Agave and Dasylirion."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA (read 2026-10-17) on the segregates now in Asparagaceae: Agavaceae blades linear, lanceolate or awl-like; Hyacinthaceae linear or lanceolate, rarely ovate/orbicular; Convallariaceae lanceolate, oblong or ovate. Weighted by the big strap-leaved groups (Agave, Ornithogalum, Scilla, Yucca, Dracaena)."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "kew-powo",

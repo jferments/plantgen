@@ -6,9 +6,11 @@
   "traits": {
     "stem_form": "globose",
     "ribs": 0,
-    "tubercles": true
+    "tubercles": true,
+    "tubercle_relief": "distinct"
   },
   "evidence": {
+    "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 404 to 405, Cochemiea: tubercles distinct, spirally arranged, without grooves."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "britton-rose-1919",
