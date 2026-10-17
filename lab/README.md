@@ -120,7 +120,7 @@ a 1.8 m figure beside it (a rod striped in 10 cm bands beside plants under
 | `--size PX` | Picture size, 64 to 4096 pixels square (default 512). |
 | `--day N` | Day of the year, 1 to 365, for organs with seasons (default 196). |
 | `--age YEARS` | The plant's age (default: its oldest keyframe). |
-| `--view three-quarter\|side\|above\|top` | Where the camera stands (default three-quarter); `above` looks down at 45 degrees from the south-east. |
+| `--view three-quarter\|side\|oblique\|top` | Where the camera stands (default three-quarter); `oblique` (or `above`) looks down at 45 degrees from the south-east. |
 | `--focus X,Y,Z`, `--span M` | A close-up of M metres (default 0.5) round a point of the plant, metres from its foot with +Y up, as `plantc render --focus` frames one. |
 | `--quality draft\|standard` | Detail of the meshes (default standard). |
 | `--look review\|photo` | `review` (default) is fixed, so species compare fairly. `photo` adds soft shadows from the sun's real size, sky light from every direction, ambient occlusion, a filmic tone map and 3×3 supersampling. |

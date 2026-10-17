@@ -319,6 +319,8 @@ mod tests {
             "leaf".to_string(),
             crate::looks::OrganLook {
                 hairs: None,
+                underside: None,
+                variegation: None,
                 roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Simple(crate::looks::Simple::default()),

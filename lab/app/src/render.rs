@@ -83,6 +83,10 @@ pub struct CardExtension {
 struct CardAccents {
     accents: [Vec4; MAX_TEMPLATES],
     hairs: [Vec4; MAX_TEMPLATES],
+    /// Per template: `plantlab_scene::CardPaint`.
+    undersides: [Vec4; MAX_TEMPLATES],
+    patches: [Vec4; MAX_TEMPLATES],
+    shares: [Vec4; MAX_TEMPLATES],
 }
 
 impl MaterialExtension for CardExtension {
@@ -173,6 +177,14 @@ fn card_material(
     for (slot, hair) in hairs.iter_mut().zip(&scene.template_hairs) {
         *slot = Vec4::from_array(*hair);
     }
+    let mut undersides = [Vec4::ZERO; MAX_TEMPLATES];
+    let mut patches = [Vec4::ZERO; MAX_TEMPLATES];
+    let mut shares = [Vec4::ZERO; MAX_TEMPLATES];
+    for (k, paint) in scene.template_paints.iter().take(MAX_TEMPLATES).enumerate() {
+        undersides[k] = Vec4::from_array(paint.underside);
+        patches[k] = Vec4::from_array(paint.patches);
+        shares[k] = Vec4::from_array(paint.share);
+    }
     cards.add(ExtendedMaterial {
         base: StandardMaterial {
             base_color: Color::WHITE,
@@ -185,7 +197,13 @@ fn card_material(
             ..default()
         },
         extension: CardExtension {
-            accents: CardAccents { accents, hairs },
+            accents: CardAccents {
+                accents,
+                hairs,
+                undersides,
+                patches,
+                shares,
+            },
             templates: images.add(templates_image(scene)),
         },
     })
@@ -605,7 +623,12 @@ fn bevy_mesh(mesh: &SceneMesh) -> Mesh {
     out.insert_attribute(Mesh::ATTRIBUTE_UV_0, mesh.uvs.clone());
     out.insert_attribute(Mesh::ATTRIBUTE_COLOR, mesh.colors.clone());
     if !mesh.darkening.is_empty() {
-        let uv_b: Vec<[f32; 2]> = mesh.darkening.iter().map(|&d| [d, 0.0]).collect();
+        let uv_b: Vec<[f32; 2]> = mesh
+            .darkening
+            .iter()
+            .zip(mesh.faces.iter().chain(std::iter::repeat(&0.0)))
+            .map(|(&d, &face)| [d, face])
+            .collect();
         out.insert_attribute(Mesh::ATTRIBUTE_UV_1, uv_b);
     } else if !mesh.bark_radius.is_empty() {
         let uv_b: Vec<[f32; 2]> = mesh.bark_radius.iter().map(|&r| [r, 0.0]).collect();

@@ -51,6 +51,17 @@ pub struct OrganLook {
     /// centre, a leaf's petiole. The main colour if absent.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub accent: Option<[f32; 3]>,
+    /// Colour of its lower (abaxial) face in full light, where it differs
+    /// from the upper: the pale, waxy or hairy undersides of many leaves
+    /// (a royal palm's pinnae "paler below", whitebeam, silver maple). The
+    /// same as the upper face if absent. A card's upper face is the one
+    /// that looks more toward the sky (see [`crate::templates::Face`]).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub underside: Option<[f32; 3]>,
+    /// Patches of another colour on its blades ([`Variegation`]): pale
+    /// margins, centres, stripes, bands or spots, different on every leaf.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub variegation: Option<Variegation>,
     /// How far a card that lies along its organ turns flat to face the
     /// sky, from 0 (as the program placed it) to 1 (level). Broad leaves
     /// held toward the light form the layered crowns of shade-tolerant
@@ -141,6 +152,104 @@ impl Hairs {
         (self.density > 0.0 || self.edge.is_some_and(|edge| edge > 0.0)) && self.length > 0.0
     }
 }
+
+/// Patches of a second colour on an organ's blades: variegation, where
+/// part of a leaf lacks chlorophyll or another pigment masks it, in the
+/// patterns horticulture names (marginata, medio-picta, striata, zebrina,
+/// maculata), and natural mottling (cyclamen, trout lily). Every card
+/// draws its own share of patches, so leaves differ, as on a variegated
+/// plant, some nearly plain where `spread` is wide.
+#[derive(Debug, Clone, Copy, PartialEq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Variegation {
+    pub pattern: VariegationPattern,
+    /// The patches' colour in full light, linear RGB; darkened in shade
+    /// as the organ's colour is.
+    pub colour: [f32; 3],
+    /// Share of the blade the patches cover on an average leaf, 0 to 1.
+    pub amount: f64,
+    /// How much that share differs from leaf to leaf, 0 to 2: each card's
+    /// share is `amount` plus `spread` times a number of its own from -0.5
+    /// to 0.5.
+    #[serde(default = "default_variegation_spread")]
+    pub spread: f64,
+    /// Size of the stripes, bands, spots or mottles, as a share of the
+    /// card's length; margins and centres follow the blade's outline.
+    #[serde(default = "default_variegation_scale")]
+    pub scale: f64,
+}
+
+fn default_variegation_spread() -> f64 {
+    0.3
+}
+
+fn default_variegation_scale() -> f64 {
+    0.08
+}
+
+/// Where a [`Variegation`]'s patches lie on a blade.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum VariegationPattern {
+    /// Along the margin, narrowest at the tips of lobes and teeth
+    /// (marginata: variegated hollies, hostas, Dracaena marginata).
+    Margin,
+    /// In the middle of the blade, the margin left green (medio-picta).
+    Centre,
+    /// Stripes along the blade (striata: spider plant, variegated grasses
+    /// and irises, Pandanus).
+    Stripes,
+    /// Bands across the blade (zebrina: zebra grass, snake plant).
+    Bands,
+    /// Round spots (maculata: Aucuba, lungwort, Dieffenbachia).
+    Spots,
+    /// Irregular mottling and marbling, fine and coarse together
+    /// (cyclamen, trout lily, Pothos 'Marble Queen').
+    Mottle,
+}
+
+impl Variegation {
+    /// The share of the blade a card with `seed` (0 to 1, see
+    /// [`crate::templates::card_seed`]) covers in patches, 0 to 1.
+    #[must_use]
+    pub fn share(&self, seed: f64) -> f64 {
+        (self.amount + self.spread * (seed - 0.5)).clamp(0.0, 1.0)
+    }
+
+    /// How far a texel of pattern value `pattern` (its rank among the
+    /// blade's texels, 0 to 1; see `crate::templates`) is painted in the
+    /// patches' colour on a card whose patches cover `share` of its blade:
+    /// the texels ranked below `share`, with an edge a fiftieth of the
+    /// blade wide.
+    #[must_use]
+    pub fn weight(pattern: f64, share: f64) -> f64 {
+        if share <= 0.0 {
+            0.0
+        } else if share >= 1.0 {
+            1.0
+        } else {
+            ((share - pattern) / VARIEGATION_EDGE + 0.5).clamp(0.0, 1.0)
+        }
+    }
+
+    /// Whether its values are in range.
+    ///
+    /// # Errors
+    /// Names the first value out of range.
+    pub fn validate(&self) -> Result<(), String> {
+        within("variegation amount", self.amount, 0.0, 1.0)?;
+        within("variegation spread", self.spread, 0.0, 2.0)?;
+        within("variegation scale", self.scale, 0.005, 1.0)?;
+        for channel in self.colour {
+            within("variegation colour", f64::from(channel), 0.0, 1.0)?;
+        }
+        Ok(())
+    }
+}
+
+/// Width of a variegated patch's edge, in the pattern's ranks: a
+/// fiftieth of the blade fades from one colour to the other.
+pub const VARIEGATION_EDGE: f64 = 0.02;
 
 /// Where a leaf's petiole meets its blade (Kaplan, ch. 18: epeltate and
 /// peltate blades). A blade that is not `marginal` is drawn on a petiole
@@ -2804,6 +2913,9 @@ pub struct Look {
     pub colour: [f32; 3],
     pub shade: [f32; 3],
     pub accent: [f32; 3],
+    /// Its lower face's colour ([`OrganLook::underside`]), if it differs.
+    pub underside: Option<[f32; 3]>,
+    pub variegation: Option<Variegation>,
     pub face_up: f64,
     /// Degrees its card turns about its own length ([`OrganLook::roll`]).
     pub roll: f64,
@@ -2992,6 +3104,8 @@ pub fn resolve<'a>(
                     colour,
                     shade,
                     accent: look.accent.unwrap_or(colour),
+                    underside: look.underside,
+                    variegation: look.variegation,
                     face_up: look.face_up,
                     roll: look.roll,
                     insertion: look.insertion,
@@ -3021,6 +3135,8 @@ pub fn resolve<'a>(
                 }
             }
             None => Look {
+                underside: None,
+                variegation: None,
                 organ: name.to_string(),
                 bend: crate::bend::Bend::default_for(&Shape::default_for(kind)),
                 form: crate::blooms::Form::default_for(&Shape::default_for(kind)),
@@ -3361,6 +3477,8 @@ fn in_units(
 fn in_stage(look: &Look, stage: &StageLook) -> Look {
     let colour = stage.colour.unwrap_or(look.colour);
     Look {
+        underside: None,
+        variegation: None,
         organ: look.organ.clone(),
         shape: stage.shape.clone(),
         colour,
@@ -3635,10 +3753,16 @@ impl OrganLook {
                 );
             }
         }
-        for colour in [self.colour, self.shade, self.accent].into_iter().flatten() {
+        for colour in [self.colour, self.shade, self.accent, self.underside]
+            .into_iter()
+            .flatten()
+        {
             for channel in colour {
                 within("colours", f64::from(channel), 0.0, 1.0)?;
             }
+        }
+        if let Some(variegation) = &self.variegation {
+            variegation.validate()?;
         }
         if let Some(season) = &self.season {
             season.validate()?;
@@ -3825,6 +3949,8 @@ mod tests {
             "leaf".to_string(),
             OrganLook {
                 hairs: None,
+                underside: None,
+                variegation: None,
                 roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Lobed(Lobed::default()),
@@ -4080,6 +4206,8 @@ mod tests {
             "bloom".to_string(),
             OrganLook {
                 hairs: None,
+                underside: None,
+                variegation: None,
                 roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Head(Head::default()),
@@ -4173,6 +4301,8 @@ mod tests {
         let types = [("leaf", OrganKind::Leaf), ("bloom", OrganKind::Flower)];
         let fruit = |season: Option<Season>| OrganLook {
             hairs: None,
+            underside: None,
+            variegation: None,
             roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             shape: Shape::Fruit(Fruit::default()),
@@ -4264,6 +4394,8 @@ mod tests {
             "bloom".to_string(),
             OrganLook {
                 hairs: None,
+                underside: None,
+                variegation: None,
                 roll: 0.0,
                 insertion: crate::looks::Insertion::Marginal,
                 shape: Shape::Head(Head::default()),
@@ -4382,6 +4514,8 @@ mod tests {
     fn clustered(kind: ClusterKind, flowers: u32, season: Season) -> OrganLook {
         OrganLook {
             hairs: None,
+            underside: None,
+            variegation: None,
             roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             shape: Shape::Fruit(Fruit::default()),

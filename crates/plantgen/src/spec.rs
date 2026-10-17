@@ -508,6 +508,12 @@ pub struct Appearance {
     /// moss or furrows. The bark's colour and bark if none.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub leaf_axis: Option<[f32; 3]>,
+    /// The hairs on the young stems and the leaf stalks
+    /// (`crate::hairs`): they cast the young wood toward their colour,
+    /// wearing off as it ages past [`crate::hairs::YOUNG_YEARS`], and
+    /// up close stand from it as strands. None where none are stated.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub stem_hairs: Option<crate::looks::Hairs>,
     /// Colour of organs in full light, unless their look gives one.
     pub foliage: [f32; 3],
     /// Colour of organs in deep shade; shaded organs blend toward it.

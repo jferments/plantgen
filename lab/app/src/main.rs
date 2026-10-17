@@ -81,8 +81,8 @@ usage:
 options:
   --day N              day of the year, 1 to 365 (default 196)
   --age YEARS          the plant's age (default: its oldest keyframe)
-  --view three-quarter|side|above|top
-                       above looks down at 45 degrees from the south-east
+  --view three-quarter|side|oblique|top
+                       oblique (or above) looks down at 45 degrees from the south-east
   --focus X,Y,Z        a close-up round this point, metres from the plant's
                        foot with +Y up (`thumbs` and `batch`)
   --span METRES        how much of it the close-up shows, bottom to top
@@ -592,7 +592,7 @@ mod tests {
             "acer-macrophyllum --out /tmp/x --view above --focus 1,6.5,-0.5 --span 3",
         ))
         .expect("parses");
-        assert_eq!(parsed.shot.view, View::Above);
+        assert_eq!(parsed.shot.view, View::Oblique);
         assert_eq!(parsed.shot.focus, Some(([1.0, 6.5, -0.5], 3.0)));
         assert!(parse(&args("x --out /tmp/x --focus 1,2")).is_err());
         assert!(parse(&args("x --out /tmp/x --span 0")).is_err());

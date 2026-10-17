@@ -824,6 +824,8 @@ mod tests {
     fn look(shape: Shape) -> Look {
         Look {
             hairs: None,
+            underside: None,
+            variegation: None,
             roll: 0.0,
             insertion: crate::looks::Insertion::Marginal,
             organ: "bloom".to_string(),

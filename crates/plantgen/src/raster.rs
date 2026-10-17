@@ -541,12 +541,22 @@ impl Surface<'_> {
                     shaded + (f64::from(params.inner[channel]) - shaded) * f64::from(sample.inner);
             }
         }
+        let normals = corners.map(|i| vec3(mesh.normals[i]));
+        let positions = corners.map(|i| vec3(mesh.positions[i]));
+        let mut normal =
+            (normals[0] * k[0] + normals[1] * k[1] + normals[2] * k[2]).normalize_or(Vec3::Y);
+        let world = positions[0] * k[0] + positions[1] * k[1] + positions[2] * k[2];
+        let view = if self.perspective {
+            (self.eye - world).normalize_or(-self.forward)
+        } else {
+            -self.forward
+        };
         if self.material == Material::Card {
             let u = mix(corners.map(|i| f64::from(mesh.uvs[i][0])));
             let v = mix(corners.map(|i| f64::from(mesh.uvs[i][1])));
-            // The template index is a small whole number in alpha.
-            #[allow(clippy::cast_possible_truncation, clippy::cast_sign_loss)]
-            let template = mesh.colors[corners[0]][3].round() as usize;
+            // The template, and the card's face, are packed in alpha.
+            let alpha = mesh.colors[corners[0]][3];
+            let (template, _, _) = crate::templates::unpack_face(alpha);
             #[allow(clippy::cast_possible_truncation)]
             let texel = self.templates.sample(template, u as f32, v as f32);
             if texel.coverage < 0.5 {
@@ -569,29 +579,20 @@ impl Surface<'_> {
                     return;
                 }
             }
-            albedo = self.templates.albedo(template, albedo, texel);
+            let face = crate::templates::card_face(alpha, normal.dot(view) >= 0.0);
+            albedo = self.templates.paint(template, albedo, texel, face);
             hair = Some(template);
         }
         target.depth[at] = depth;
         let Some(lighting) = self.lighting else {
             return;
         };
-        let normals = corners.map(|i| vec3(mesh.normals[i]));
-        let positions = corners.map(|i| vec3(mesh.positions[i]));
-        let mut normal =
-            (normals[0] * k[0] + normals[1] * k[1] + normals[2] * k[2]).normalize_or(Vec3::Y);
         if let Some((sample, round, along)) = bark {
             // The relief tilts the normal against its slope.
             normal =
                 (normal - round * f64::from(sample.slope[0]) - along * f64::from(sample.slope[1]))
                     .normalize_or(normal);
         }
-        let world = positions[0] * k[0] + positions[1] * k[1] + positions[2] * k[2];
-        let view = if self.perspective {
-            (self.eye - world).normalize_or(-self.forward)
-        } else {
-            -self.forward
-        };
         if self.material == Material::Hair {
             // A strand's normal is its tangent.
             let lit = self
