@@ -136,7 +136,8 @@
     "leaf_division": "compound",
     "division_pattern": "pinnate",
     "division_order": 3,
-    "pinnae": 7,
+    "pinnae": 9,
+    "pinnules": 5,
     "leaflets": 5,
     "terminal_leaflet": true,
     "leaf_shape": "linear",
@@ -225,12 +226,17 @@
     "traits.pinnae": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Seven primary divisions, set by hand from general knowledge of the species: Abrams (1951 p. 255) gives no count."
+      "note": "Nine primary divisions, four pairs and one at the tip, set by hand from iNaturalist photos, which show three to five pairs: Abrams (1951 p. 255) gives no count."
+    },
+    "traits.pinnules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Five divisions to each primary division, set by hand from iNaturalist photos: Abrams (1951 p. 255) gives no count."
     },
     "traits.leaflets": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Five divisions to each primary division, set by hand from general knowledge of the species: Abrams (1951 p. 255) gives no count."
+      "note": "Five linear segments to each last division, set by hand from iNaturalist photos, which show three to seven spread like fingers: Abrams (1951 p. 255) gives no count."
     },
     "traits.terminal_leaflet": {
       "evidence": "Authored",

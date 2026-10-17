@@ -99,8 +99,18 @@
     },
     "appearance.organs.*.shape.pinnules": {
       "template": "compound",
-      "map": {"division_pattern": {"pinnate": {"rule": "division_order >= 2 ? (terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40)) : 0"}, "palmate": {"rule": "division_order >= 2 ? clamp(round(leaflets), 3, 17) : 0"}}},
-      "why": "Each pinna of a twice-divided leaf (or each division of a biternate one) bears the leaflets floras count on it, odd or even as the leaf ends; a leaf divided three times or more is drawn divided twice. A leaf divided once bears none."
+      "map": {"inner_division_pattern": {"pinnate": {"rule": "division_order >= 3 ? first((terminal_leaflet ? clamp(2 * round((pinnules - 1) / 2) + 1, 3, 41) : clamp(2 * round(pinnules / 2), 2, 40)), (terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40))) : (division_order >= 2 ? (terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40)) : 0)"}, "palmate": {"rule": "division_order >= 3 ? first(clamp(round(pinnules), 3, 17), clamp(round(leaflets), 3, 17)) : (division_order >= 2 ? clamp(round(leaflets), 3, 17) : 0)"}}}, "else": {"map": {"division_pattern": {"pinnate": {"rule": "division_order >= 3 ? first((terminal_leaflet ? clamp(2 * round((pinnules - 1) / 2) + 1, 3, 41) : clamp(2 * round(pinnules / 2), 2, 40)), (terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40))) : (division_order >= 2 ? (terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40)) : 0)"}, "palmate": {"rule": "division_order >= 3 ? first(clamp(round(pinnules), 3, 17), clamp(round(leaflets), 3, 17)) : (division_order >= 2 ? clamp(round(leaflets), 3, 17) : 0)"}}}},
+      "why": "Each pinna of a twice-divided leaf (or each division of a biternate one) bears the leaflets floras count on it, and each of a thrice-divided one its pinnules, odd or even as the division ends, set as its divisions after the first are; a leaf divided four times or more is drawn divided three times, and one whose pinnules floras do not count, twice. A leaf divided once bears none."
+    },
+    "appearance.organs.*.shape.segments": {
+      "template": "compound",
+      "map": {"inner_division_pattern": {"pinnate": {"rule": "division_order >= 3 ? first((terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40)) + 0 * pinnules, 0) : 0"}, "palmate": {"rule": "division_order >= 3 ? first(clamp(round(leaflets), 3, 17) + 0 * pinnules, 0) : 0"}}}, "else": {"map": {"division_pattern": {"pinnate": {"rule": "division_order >= 3 ? first((terminal_leaflet ? clamp(2 * round((leaflets - 1) / 2) + 1, 3, 41) : clamp(2 * round(leaflets / 2), 2, 40)) + 0 * pinnules, 0) : 0"}, "palmate": {"rule": "division_order >= 3 ? first(clamp(round(leaflets), 3, 17) + 0 * pinnules, 0) : 0"}}}},
+      "why": "Each pinnule of a thrice-divided leaf bears the leaflets or segments floras count on it, odd or even as it ends, where floras count its pinnules too. A leaf divided once or twice has none."
+    },
+    "appearance.organs.*.shape.inner": {
+      "template": "compound",
+      "map": {"inner_division_pattern": {"pinnate": "pinnate", "palmate": "palmate"}},
+      "why": "A compound leaf whose later divisions are set otherwise than its first (a ternate-pinnate leaf) draws them as its inner division pattern says."
     },
     "appearance.organs.*.shape.confluent": {
       "template": "compound",
@@ -284,6 +294,16 @@
       "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind."
     },
     "rules.appearance.organs.*.shape.pinnules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind."
+    },
+    "rules.appearance.organs.*.shape.segments": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind."
+    },
+    "rules.appearance.organs.*.shape.inner": {
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "How PlantGen draws a divided leaf, a choice of the model's (spec rework P4): the leaf characters set a compound card's pattern, its leaflets or pinnae, the leaflets on each pinna, and whether its segments run together. A pinnate leaf's count says how it ends (odd-pinnate odd, even-pinnate even), so a flora's range is drawn as the nearest count of the right kind."

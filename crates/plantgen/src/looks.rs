@@ -1067,6 +1067,15 @@ pub struct Compound {
     /// 0 for a leaf divided once.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pinnules: Option<u32>,
+    /// Segments on each pinnule of a thrice-divided leaf (tripinnate,
+    /// triternate, ternate-pinnate), set as `inner` says; unset or 0 for
+    /// a leaf divided twice or once.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub segments: Option<u32>,
+    /// How the divisions after the first are set, where not as `pattern`
+    /// says: a ternate-pinnate leaf's three divisions are each pinnate.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub inner: Option<Pattern>,
     /// How far each division's base runs along its rachis as a wing: 0
     /// separate leaflets, 1 a dissected blade's segments.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -1078,6 +1087,9 @@ pub struct Compound {
     /// Degrees between a pinna's leaflets and its rachis.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pinnule_angle: Option<f64>,
+    /// Degrees between a pinnule's segments and its rachis.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub segment_angle: Option<f64>,
     /// Degrees between a palmate leaf's outermost leaflets.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub spread: Option<f64>,
@@ -1117,9 +1129,12 @@ impl Default for Compound {
             petiole: 0.15,
             pattern: None,
             pinnules: None,
+            segments: None,
+            inner: None,
             confluent: None,
             angle: None,
             pinnule_angle: None,
+            segment_angle: None,
             spread: None,
             largest: None,
             lowest: None,
@@ -2787,15 +2802,33 @@ impl Compound {
                 _ => Ok(()),
             }
         };
+        let inner = |field: &str, n: u32| -> Result<(), String> {
+            match form.inner {
+                Pattern::Pinnate if !(2..=41).contains(&n) => Err(format!(
+                    "compound {field} of a pinnate division must be 2 to 41, found {n}"
+                )),
+                Pattern::Palmate if !(3..=17).contains(&n) => Err(format!(
+                    "compound {field} of a palmate division must be 3 to 17, found {n}"
+                )),
+                _ => Ok(()),
+            }
+        };
         divisions("leaflets", self.leaflets)?;
+        if self.segments.unwrap_or(0) > 0 && form.pinnules == 0 {
+            return Err("compound segments are borne on pinnules: set `pinnules`".to_owned());
+        }
         if form.pinnules > 0 {
-            divisions("pinnules", form.pinnules)?;
-            if self.leaflets * form.pinnules > 1200 {
+            inner("pinnules", form.pinnules)?;
+            let segments = form.segments.max(1);
+            if self.leaflets * form.pinnules * segments > 1200 {
                 return Err(format!(
-                    "a compound leaf has at most 1200 leaflets, found {} pinnae of {}",
+                    "a compound leaf has at most 1200 leaflets, found {} pinnae of {} of {segments}",
                     self.leaflets, form.pinnules
                 ));
             }
+        }
+        if form.segments > 0 {
+            inner("segments", form.segments)?;
         }
         check("leaflet_width", self.leaflet_width, 0.05, 1.0)?;
         if self.teeth > 30 {
@@ -2810,6 +2843,7 @@ impl Compound {
             ("confluent", self.confluent, 0.0, 1.0),
             ("angle", self.angle, 20.0, 90.0),
             ("pinnule_angle", self.pinnule_angle, 20.0, 90.0),
+            ("segment_angle", self.segment_angle, 20.0, 90.0),
             ("spread", self.spread, 30.0, 340.0),
             ("largest", self.largest, 0.0, 1.0),
             ("lowest", self.lowest, 0.2, 1.0),
