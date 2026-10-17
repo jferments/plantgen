@@ -24,13 +24,19 @@
       "solitary": "sometimes"
     },
     "ovary_position": "superior",
-    "fruit_type": "capsule"
+    "fruit_type": "capsule",
+    "leaf_incision": "none"
   },
   "evidence": {
     "traits": {
       "evidence": "SourceInferred",
       "source": "hutchinson-1959-dicots",
       "note": "Hutchinson (vol. 1, 2nd ed., 1959), family 97 Tamaricaceae: shrubs or trees with slender branches and small, scale-like, alternate leaves; no stipules; flowers very small, regular, usually bisexual, in slender catkin-like spikes or racemes (alone in Reaumuria); sepals 4 to 6, petals as many, free; stamens 5 to 10; ovary superior; fruit a capsule, the seeds tufted with hairs."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Tamaricaceae (read 2026-10-17): lamina undivided, leaves tiny, awl-like or scale-like."
     }
   }
 }

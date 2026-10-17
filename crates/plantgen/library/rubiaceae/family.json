@@ -4,6 +4,9 @@
   "name": "Rubiaceae",
   "parent": "order/gentianales",
   "traits": {
+    "leaf_incision": {"none": "usually", "lobed": "rarely"},
+    "leaf_base_shape": {"cuneate": "usually"},
+    "leaf_apex": {"acute": "usually"},
     "carpels": {"min": 2, "max": 2, "high": 5},
     "hypanthium": false,
     "woodiness": {
@@ -79,6 +82,9 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "wikipedia", "note": "English Wikipedia, Rubiaceae (read 2026-10-17): leaves simple, undivided and entire; German Wikipedia, Rötegewächse (read 2026-10-17): pinnately lobed leaves only in a few Pentagonia and Simira species, called unusual. DELTA (read 2026-10-17): lamina entire."},
+    "traits.leaf_base_shape": {"evidence": "SourceInferred", "source": "wikipedia", "note": "English Wikipedia, Rubiaceae (read 2026-10-17): typical blade has a wedge-shaped (cuneate) base."},
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "wikipedia", "note": "English Wikipedia, Rubiaceae (read 2026-10-17): typical blade has a pointed (acute) tip."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 412: Simpson's formula: ovary of 2 carpels, rarely 3 to 5 or more (Floral Diagrams p. 318 gives 2 to 5, rarely up to 9)."},
     "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 412, 505: Simpson calls the flowers usually epigynous (perianth on top of the inferior ovary). Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
     "traits": {

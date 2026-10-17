@@ -4,6 +4,7 @@
   "name": "Pandanaceae",
   "parent": "order/pandanales",
   "traits": {
+    "leaf_incision": "none",
     "leaf_arrangement": "alternate",
     "leaf_division": "simple",
     "leaf_venation": "parallel",
@@ -59,6 +60,7 @@
     "perennation": "rhizome"
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Pandanaceae (read 2026-10-17): lamina entire, simple; German Wikipedia, Schraubenbäume (read 2026-10-17): large simple linear leaves."},
     "traits": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
