@@ -3383,9 +3383,13 @@ mod tests {
                 parent.remove(key);
             }
             // A rule's value may be all its section holds, as a flower's
-            // form is only its cup: the section goes with it.
+            // form is only its cup: the section goes with it, but a look
+            // stays, so later paths still find its notes.
             let mut emptied = outer;
             while let Some((above, key)) = emptied.rsplit_once('.') {
+                if above == "appearance.organs" {
+                    break;
+                }
                 let Some(parent) = above
                     .split('.')
                     .try_fold(&mut *spec, step)
