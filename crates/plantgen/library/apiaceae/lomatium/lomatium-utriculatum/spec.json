@@ -136,9 +136,11 @@
     "leaf_division": "compound",
     "division_pattern": "pinnate",
     "division_order": 3,
-    "pinnae": 7,
+    "pinnae": 9,
+    "pinnules": 5,
     "leaflets": 5,
     "terminal_leaflet": true,
+    "division_planes": "spray",
     "leaf_shape": "linear",
     "leaflet_length_m": {
       "min": 0.002,
@@ -225,12 +227,22 @@
     "traits.pinnae": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Seven primary divisions, set by hand from general knowledge of the species: Abrams (1951 p. 255) gives no count."
+      "note": "Nine primary divisions, four pairs and one at the tip, set by hand from iNaturalist photos, which show three to five pairs: Abrams (1951 p. 255) gives no count."
+    },
+    "traits.pinnules": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Five divisions to each primary division, set by hand from iNaturalist photos: Abrams (1951 p. 255) gives no count."
     },
     "traits.leaflets": {
       "evidence": "Authored",
       "source": "plantgen-authors",
-      "note": "Five divisions to each primary division, set by hand from general knowledge of the species: Abrams (1951 p. 255) gives no count."
+      "note": "Five linear segments to each last division, set by hand from iNaturalist photos, which show three to seven spread like fingers: Abrams (1951 p. 255) gives no count."
+    },
+    "traits.division_planes": {
+      "evidence": "Authored",
+      "source": "plantgen-authors",
+      "note": "Set by hand from iNaturalist photos: the segments lie in their division's plane, but the divisions rise out of the leaf's, a loose spray rather than a flat blade. Abrams (1951 p. 255) does not say."
     },
     "traits.terminal_leaflet": {
       "evidence": "Authored",

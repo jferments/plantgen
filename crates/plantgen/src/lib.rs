@@ -50,6 +50,7 @@ pub mod hairs;
 pub mod impostor;
 pub mod inherit;
 pub mod json;
+pub mod lace;
 pub mod leaves;
 pub mod library;
 pub mod litter;
@@ -589,7 +590,13 @@ pub mod venation;
 /// flower's pedicel is drawn 0.35 as thick as before, and a needle look's
 /// bundle of more than five, up to 45, is a short shoot's tuft spread all
 /// round, the tufts half a needle apart (93 is hooked spines, #176).
-/// 95: a fern's stipe scales stand only on its base where its flora says
+/// 95: lacy leaves: a compound leaf divides up to three times (`segments`,
+/// `inner`); one whose taxa say how its divisions are held
+/// (`division_planes`) is drawn on the two nearest levels as geometry, its
+/// divisions lifted, scattered or set all round their rachis
+/// (`crate::lace`); a pinnate leaf's laterals reach no farther than its
+/// stated blade width (`blade_width`) (94 is pedicels and tufts, #177).
+/// 96: a fern's stipe scales stand only on its base where its flora says
 /// so (`stipe_scale_extent`, fern program revision 9), as long as stated
 /// (`stipe_scale_length_m`), and its stipe and rachis are drawn in its
 /// stated `stipe_colour`; the fern families state whether their stipes are
@@ -597,5 +604,5 @@ pub mod venation;
 /// Polypodiaceae, Aspleniaceae and Pteridaceae as the Library joins them,
 /// bare in Dennstaedtiaceae and Osmundaceae), so the lady, spreading wood
 /// and deer ferns grow scaly stipe bases; the lady fern's frond and stipe
-/// are as long as its flora gives (94 is slender pedicels, #177).
-pub const GENERATOR_REVISION: u32 = 95;
+/// are as long as its flora gives (95 is lacy leaves, #180).
+pub const GENERATOR_REVISION: u32 = 96;

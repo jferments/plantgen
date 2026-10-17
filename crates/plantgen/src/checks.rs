@@ -195,7 +195,7 @@ pub const SIZES: [(&str, Judged); 37] = [
 /// The count characters counted on grown plants (spec rework M8A), each
 /// on every organ that holds what it counts and judged as an organ's size
 /// is.
-pub const COUNTS: [&str; 24] = [
+pub const COUNTS: [&str; 25] = [
     "ray_florets",
     "disc_florets",
     "ligulate_florets",
@@ -207,6 +207,7 @@ pub const COUNTS: [&str; 24] = [
     "inflorescence_branches",
     "inflorescence_bracts",
     "leaflets",
+    "pinnules",
     "pinnae",
     "division_order",
     "leaves_per_whorl",
@@ -1807,13 +1808,17 @@ fn leaf_kinds(shape: &Shape, tally: &mut Tally) {
 }
 
 /// How many times a leaf drawn as `shape` divides (`division_order`): a
-/// divided leaf once, or twice where it bears pinnae; lobes once; a frond
+/// divided leaf once, twice where it bears pinnae, three times where
+/// their pinnules bear segments; lobes once; a frond
 /// card once, and again where its pinnae are cut at least halfway to
 /// their midribs (its `divided` cuts them three quarters of the way at
 /// 1); a leaf drawn whole 0.
 fn division_order(shape: &Shape) -> u32 {
     match shape {
-        Shape::Compound(compound) => 1 + u32::from(compound.pinnules.unwrap_or(0) > 0),
+        Shape::Compound(compound) => {
+            let form = crate::divided::Form::of(compound);
+            1 + u32::from(form.pinnules > 0) + u32::from(form.segments > 0)
+        }
         Shape::Frond(frond) => 1 + u32::from(frond.divided >= 0.5),
         Shape::Lobed(_) | Shape::Palmate(_) => 1,
         _ => 0,
@@ -2044,6 +2049,9 @@ fn leaf_sizes(shape: &Shape, size: f64, id: u64, tally: &mut Tally) {
             let counts = crate::divided::counts(compound);
             for (part, leaflets) in (0_u32..).zip(&counts.leaflets) {
                 tally.count("leaflets", id, part, *leaflets);
+            }
+            for (part, pinnules) in (0_u32..).zip(&counts.pinnules) {
+                tally.count("pinnules", id, part, *pinnules);
             }
             if counts.pinnae > 0 {
                 tally.count("pinnae", id, 0, counts.pinnae);
