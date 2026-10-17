@@ -20,7 +20,7 @@
     },
     "inflorescence": {
       "spike": "often",
-      "raceme": "often",
+      "raceme": "sometimes",
       "solitary": "sometimes"
     },
     "ovary_position": "superior",
@@ -37,6 +37,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA, Tamaricaceae (read 2026-10-17): lamina undivided, leaves tiny, awl-like or scale-like."
+    },
+    "traits.inflorescence": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia Tamarix (read 2026-10-17): 50-60 spp, flowers dense on spikes 5-10 cm long at branch tips. Tamarix is most of the family; Myricaria's racemes and Reaumuria's single flowers (Hutchinson) are the minority."
     }
   }
 }

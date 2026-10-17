@@ -12,10 +12,7 @@
       "woody": "usually",
       "herbaceous": "rarely"
     },
-    "leaf_division": {
-      "simple": "often",
-      "compound": "often"
-    },
+    "leaf_division": {"compound": "usually", "simple": "often"},
     "stipules": false,
     "flower_symmetry": {
       "actinomorphic": "usually",
@@ -34,15 +31,13 @@
       "capsule": "rarely",
       "schizocarp": "sometimes"
     },
-    "inflorescence": {
-      "cyme": "often",
-      "raceme": "often"
-    },
+    "inflorescence": {"cyme": "usually", "raceme": "sometimes"},
     "sexual_system": {
       "hermaphrodite": "usually"
     }
   },
   "evidence": {
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Rutaceae (read 2026-10-17): ~900 spp in ~150 genera (an old count); leaves simple or, in most, compound (ternate, pinnate, bipinnate or unifoliolate). Fits the largest genera by general knowledge: Zanthoxylum (pinnate) and Melicope (trifoliolate or unifoliolate) outweigh simple-leaved Agathosma, Haplophyllum and Correa. Citrus's unifoliolate leaf counts as compound here."},
     "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Rutaceae (read 2026-10-16) does not give arrangement; opposite-leaved genera (Melicope, Boronia, Correa) are a sizeable minority, so decussate kept as 'sometimes'. Inferred."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 359, 362: stamens 8-10 to many, usually in two whorls. Book writes ∞ (numerous); 200 is our stand-in for the upper bound and 20 for 'numerous' with no stated lower bound."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 359, 362: carpels 4 to 5, rarely 1 to many. Book writes ∞; 50 is our stand-in for the upper bound."},
@@ -57,11 +52,7 @@
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Rutaceae with Cneoraceae, Ptaeroxylaceae, Rhabdodendraceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
     },
-    "traits.inflorescence": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 359, family Rutaceae: inflorescence cyme or raceme (rarely solitary), usually; read as {\"cyme\": \"often\", \"raceme\": \"often\"}."
-    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Rutaceae (read 2026-10-17): flowers seldom single, grouped in cymes, racemes, heads, corymbs or panicles whose ultimate units are cymose in most and racemose in some. So cyme leads and raceme drops to a minority. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits.sexual_system": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",

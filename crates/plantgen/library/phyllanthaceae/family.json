@@ -7,7 +7,7 @@
     "leaf_incision": "none",
     "leaf_margin": "entire",
     "phyllotaxis_pattern": {"distichous": "usually", "spiral": "sometimes"},
-    "perianth": {"tepals": "often", "sepals_and_petals": "often"},
+    "perianth": {"tepals": "usually", "sepals_and_petals": "often"},
     "flower_merosity": {"min": 5, "max": 5, "low": 3, "high": 9},
     "stamens": {"min": 2, "max": 35},
     "carpels": {"min": 2, "max": 3, "typical": 3, "low": 1, "high": 15},
@@ -18,10 +18,7 @@
     "leaf_arrangement": "alternate",
     "leaf_division": "simple",
     "stipules": true,
-    "sexual_system": {
-      "monoecious": "often",
-      "dioecious": "often"
-    },
+    "sexual_system": {"monoecious": "usually", "dioecious": "often"},
     "ovary_position": "superior",
     "fruit_type": {
       "capsule": "usually",
@@ -30,10 +27,11 @@
     }
   },
   "evidence": {
+    "traits.sexual_system": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Phyllanthaceae (read 2026-10-17): plants hermaphrodite, monoecious or dioecious, flowers mostly unisexual; no ranking given. Our genus weighting (approximate sizes, not read this session): Phyllanthus s.l. incl. Glochidion and Breynia (~1,200, chiefly monoecious) plus Cleistanthus and Bridelia exceed the dioecious Antidesma, Baccaurea, Aporosa, Uapaca, Flueggea and Margaritaria (~400)."},
     "traits.leaf_incision": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Phyllanthaceae (read 2026-10-17): leaves simple (compound only in Bischofia) with entire margins; no lobing mentioned. DELTA has no separate Phyllanthaceae page."},
     "traits.leaf_margin": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Phyllanthaceae (read 2026-10-17): margin almost always entire, only rarely toothed. Phyllanthus holds over half the family's species."},
     "traits.phyllotaxis_pattern": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Phyllanthaceae (read 2026-10-16): spiral or distichous. 'distichous usually' is my weighting: Phyllanthus (~1,200 spp.) bears two-ranked leaves on flattened leafy branchlets."},
-    "traits.perianth": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 260, 261: flowers unisexual, petals generally smaller than the sepals or absent (general formula K2-8, C0 or 3-9). A sepal-only flower is mapped to 'tepals'."},
+    "traits.perianth": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Phyllanthaceae (read 2026-10-17; ~2,050 spp, 56 genera, a preliminary draft): perianth either calyx plus corolla or calyx only, petals often lacking. Weighted by genus size (approximate, not read this session): apetalous Phyllanthus s.l. with Glochidion and Breynia (~1,200), Antidesma, Baccaurea, Aporosa and Uapaca (~350 together) far outweigh the petalled Cleistanthus, Bridelia, Andrachne and Amanoa (~250). A calyx-only flower maps to tepals. Re-ranks the earlier value, from floral-diagrams, whose top states were tied."},
     "traits.flower_merosity": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 261: perianth mostly 5-merous, sometimes 3- to 9-merous."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 260: Ronse De Craene general formula: stamens 2 to 35, one whorl usually alternating with the petals."},
     "traits.carpels": {"evidence": "SourceInferred", "source": "floral-diagrams", "note": "Ronse De Craene, Floral Diagrams (2010) p. 260, 261: carpels 3 or 2, always 3 in 5-merous flowers; general formula 1 to 15."},

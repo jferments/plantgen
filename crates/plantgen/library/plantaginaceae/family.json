@@ -40,11 +40,7 @@
       "biennial": "often",
       "perennial": "often"
     },
-    "leaf_arrangement": {
-      "alternate": "often",
-      "opposite": "often",
-      "whorled": "often"
-    },
+    "leaf_arrangement": {"opposite": "usually", "alternate": "often", "whorled": "sometimes"},
     "inflorescence": {
       "head": "often",
       "panicle": "often",
@@ -114,11 +110,7 @@
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Plantaginaceae with Globulariaceae and Hippuridaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple; the simple blade none usually, lobed sometimes; lobes or leaflets pinnate. Read from the coded leaf form and dissection by script (spec-rework/b1/delta). Watson and Dallwitz's Plantaginaceae is Plantago alone; APG's family also takes in Veronica, Penstemon, Antirrhinum and their kin from the old Scrophulariaceae, whose leaves are simple and mostly unlobed (toothed or entire), so the reading stands for them (inferred, not traced)."
     },
-    "traits.leaf_arrangement": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 421, 423, 424, family Plantaginaceae: leaf arrangement spiral, opposite or whorled; read as {\"alternate\": \"often\", \"opposite\": \"often\", \"whorled\": \"often\"}."
-    },
+    "traits.leaf_arrangement": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Plantaginaceae (read 2026-10-17): ~1,900 species in 107 genera, leaves spiral to opposite; Veronica the biggest genus (~460-500 spp, Wikipedia Veronica). Wikipedia Penstemon (read 2026-10-17): ~280 spp, leaves mostly opposite, rarely alternate or whorled. Veronica's leaves are opposite (general knowledge; its page is silent), so the two largest genera give ~740 opposite-leaved species against the alternate or rosette leaves of Plantago (~200) and Linaria and kin (~200). Whorls are confined to a few (Hippuris, some Linaria, Veronicastrum). Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits.inflorescence": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",

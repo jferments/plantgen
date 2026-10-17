@@ -146,7 +146,10 @@
       12,
       1,
       2
-    ]
+    ],
+    "height_typical_m": {"min": 2, "max": 6},
+    "life_span": "perennial",
+    "rosette": "none"
   },
   "evidence": {
     "taxon": {
@@ -273,7 +276,10 @@
       "evidence": "Authored",
       "source": "plantgen-authors",
       "note": "By eye, after Flora of China and Simpson: green, jointed stems with swollen nodes; thick, glossy dark green, ovate leaves. The leaf card's petiole is 0.11 of its length, the flora's petiole against blade and petiole together."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2569664), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2569664), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2569664), as no source read gives it."}
   },
   "provenance": {
     "sources": [

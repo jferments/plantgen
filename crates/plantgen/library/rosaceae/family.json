@@ -38,13 +38,7 @@
     "stipules": {
       "true": "usually"
     },
-    "fruit_type": {
-      "aggregate": "often",
-      "drupe": "often",
-      "pome": "often",
-      "follicle": "sometimes",
-      "capsule": "sometimes"
-    }
+    "fruit_type": {"aggregate": "often", "pome": "sometimes", "achene": "sometimes", "drupe": "sometimes", "follicle": "rarely", "capsule": "rarely"}
   },
   "forms": {
     "decurrent_tree": {
@@ -114,11 +108,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 325, 327, 328, family Rosaceae: stipules true, often fused to petiole base, usually; read as {\"true\": \"usually\"}."
     },
-    "traits.fruit_type": {
-      "evidence": "SourceInferred",
-      "source": "diversity-evolution-land-plants",
-      "note": "Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type follicle (Spiraeoideae), usually. Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type drupe (Prunoideae). Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type aggregate (Rosoideae), often. Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164, family Rosaceae: fruit type pome (Maloideae). Read together as {\"aggregate\": \"often\", \"drupe\": \"often\", \"pome\": \"often\", \"follicle\": \"sometimes\"}. The books add capsule (sometimes): Simpson, Plant Systematics (2019) p. 325, 327, 328: drupe, pome, hip, follicetum, achenecetum or capsule."
-    },
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia Rosaceae and Rubus (read 2026-10-17): genus sizes there put the aggregates first: Rubus (250 to over 1,000 spp, drupelet aggregate) with Potentilla (~500, a head of achenes), Fragaria and Geum, against pomes of Sorbus, Crataegus and Cotoneaster (~260 each, ~800-900 with Malus, Pyrus) and Prunus drupes (~340). Single achenes (Alchemilla ~270, Rosa hips ~100) added as sometimes. Margin depends on Rubus's count. Re-ranks the earlier value, from diversity-evolution-land-plants, whose top states were tied."},
     "traits.ovary_position": {"evidence": "SourceInferred", "source": "diversity-evolution-land-plants", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add half_inferior (sometimes): Ingrouille, Diversity and Evolution of Land Plants (1992) p. 161, 163, 164: superior, half_inferior or inferior."}
   }
 }
