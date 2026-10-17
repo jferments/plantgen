@@ -210,7 +210,7 @@ module Un(d, q, len, wd, h);    # sympodial unit of order d from the height shar
 module Uk(i, m, len, q, h);      # its nodes i to i + m - 1
 module Ju(d, q, len, wd, h);    # where unit d ends: its inflorescence, and the shoots growing on
 module Ic(wd);                  # an inflorescence on its peduncle
-module Lq(q, g);                 # the leaves at a node at height share q; g 1: with a geminate leaf
+module Lq(q, g);                 # the leaves at a node at height share q; g > 0: a geminate leaf g above
 module Lz(s, g);                 # those leaves, the longest s long
 module Sd(i, h);                 # a side shoot from the axil of main-stem node i
 
@@ -376,7 +376,8 @@ decompose Uk(i, m, len, q, h) : m > 1 ->
     Uk(i, floor(m / 2), len, q, h) Uk(i + floor(m / 2), m - floor(m / 2), len, q, h);
 decompose Uk(i, m, len, q, h) : m == 1 ->
     ^(gauss() * wiggle) +(gauss() * wiggle) steer(0, 1, 0, upright)
-    F(len) Lq(q + (i + 0.5) * len / h, geminate > 0 ? 1 : 0) /(divergence);
+    F(len * (geminate > 0 ? 0.85 : 1)) Lq(q + (i + 0.5) * len / h, geminate > 0 ? len * 0.15 : 0)
+    /(divergence);
 decompose Uk(i, m, len, q, h) -> ;
 
 # The end of a unit. Its inflorescence stands across from the last leaf
@@ -398,12 +399,13 @@ decompose Ic(wd) : t >= adult_age ->
 decompose Ic(wd) -> ;
 
 # The leaves at a node, sized by the node's height on the plant as herb's
-# are along its leafy part; a geminate leaf stands a little round the stem.
+# are along its leafy part. A geminate leaf is the next node's leaf on the
+# spiral, carried up to stand g above the larger one (concaulescence).
 decompose Lq(q, g) ->
     Lz(leaf_length * (1 - exp(-t / maturity))
        * (q < leaf_peak ? lerp(leaf_base, 1, q / leaf_peak)
                         : lerp(1, leaf_top, clamp((q - leaf_peak) / (1 - leaf_peak), 0, 1))), g);
-decompose Lz(s, g) : g > 0 -> Lf(s) [ /(70 + uniform(-15, 15)) Lf(s * geminate) ];
+decompose Lz(s, g) : g > 0 -> Lf(s) F(g) /(divergence + uniform(-15, 15)) Lf(s * geminate);
 decompose Lz(s, g) -> Lf(s);
 
 # Side shoots from the upper leaves' axils of the main stem, in the leaf's

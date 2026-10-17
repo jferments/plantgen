@@ -220,6 +220,19 @@
       "evidence": "Authored",
       "source": "species-facts-2026-10-15",
       "note": "A model estimate (confidence high), as no source read gives it: fruit July-September."
+    },
+    "allometry": {
+      "evidence": "SourceInferred",
+      "source": "wikipedia",
+      "note": "Wikipedia, 'Circaea lutetiana' (read 2026-10-17): 20-60 cm tall; Hooker p. 159: 1-2 ft. A patch four years from its rootstock stands about the middle of that."
     }
-  }
+  },
+  "allometry": [
+    {
+      "age": 4,
+      "environment": "open",
+      "height": 0.4,
+      "tolerance": 0.5
+    }
+  ]
 }

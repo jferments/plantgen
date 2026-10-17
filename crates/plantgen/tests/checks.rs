@@ -57,9 +57,24 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "its rosette leaves are drawn by hand on a sprig card 0.4 as broad as long, so they read elliptic against the linear leaves Reiche gives",
     ),
     (
+        "capsicum-annuum",
+        "leaf_length_m",
+        "the smaller leaf of each geminate pair is drawn half the larger (Kilmer's ratio for belladonna) and the sympodium's leaves shrink to three quarters upward, so the least draw about 2 cm long, against the 5 to 10 cm Bailey gives the leaves of its varieties, which are not the smaller of a pair",
+    ),
+    (
+        "capsicum-annuum",
+        "leaf_width_m",
+        "the smaller leaf of each geminate pair is drawn half the larger and the sympodium's leaves shrink to three quarters upward, so the least draw about 1.2 cm wide, against the 2 to 6.4 cm Bailey gives the leaves of its varieties",
+    ),
+    (
         "chloranthus-serratus",
         "flower_symmetry",
         "Chloranthaceae's flowers are zygomorphic by reduction, their stamens to one side of the ovary (Floral Diagrams), but they have no perianth, and a flower card makes zygomorphy only from its petals or tepals, so it draws them regular",
+    ),
+    (
+        "circaea-lutetiana",
+        "leaf_length_m",
+        "its stem leaves shrink upward to 0.4 of the longest (the forb's default), so the topmost blades draw about 2.3 cm against the 2.5 cm least Hooker gives",
     ),
     (
         "cirsium-vulgare",
@@ -90,6 +105,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "cytisus-scoparius",
         "leaf_shape",
         "its leaflets are drawn by hand on a sprig card widest at the middle, so they read elliptic against the obovate leaflets Abrams gives",
+    ),
+    (
+        "datura-stramonium",
+        "leaf_shape",
+        "its sinuate-lobed blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate, against the ovate blades Britton and Brown give",
     ),
     (
         "deschampsia-cespitosa",
@@ -192,6 +212,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "a flower draws at most 30 free pistils (the angiosperms' carpels rule), so southern magnolia's cone of 55 to 81 carpels is drawn with 30",
     ),
     (
+        "nicotiana-tabacum",
+        "leaf_length_m",
+        "its stem leaves shrink upward to a quarter of the longest (King's: smaller upward), so the topmost draw about 9 cm against the 1 to 2 ft King's gives, which it measures on the main leaves",
+    ),
+    (
+        "nicotiana-tabacum",
+        "leaf_width_m",
+        "its stem leaves shrink upward to a quarter of the longest, so the topmost draw about 4 cm wide against the 6 to 8 in King's gives the main leaves",
+    ),
+    (
         "nymphaea-odorata",
         "shoot_leaves",
         "its rhizome is not drawn and each pad's petiole is, as a stem of its own, so each reads as a shoot of one leaf against the 4 to 18 the angiosperms state, from maples' long shoots, until each lineage states its own",
@@ -263,6 +293,11 @@ const KNOWN: &[(&str, &str, &str)] = &[
     ),
     (
         "program:herb",
+        "petiole_length_m",
+        "a leaf card's petiole is the card's own share of the leaf (0.15 of a simple card's length), not read from petiole_length_m, so jimsonweed's and enchanter's nightshade's long petioles draw under a centimetre and tobacco's sessile leaves draw one",
+    ),
+    (
+        "program:herb",
         "phyllotaxis_pattern",
         "each basal leaf's roll is jittered ±30°, so a fan of two ranks (irises, blue-eyed grass) turns about 140° to 150° from one leaf to the next",
     ),
@@ -305,6 +340,16 @@ const KNOWN: &[(&str, &str, &str)] = &[
         "sassafras-albidum",
         "leaf_width_m",
         "its leaves are drawn on one card, the three-lobed form with broad rounded lobes as photographs show it, 16.9 cm wide, against FNA's 5 to 10 cm, which covers its narrower unlobed and mitten leaves too (inferred: FNA gives one width for all three forms)",
+    ),
+    (
+        "solanum-melongena",
+        "inflorescence_length_m",
+        "a cyme of one flower is drawn as long as the flower is wide, about 1.6 cm, against the 3 to 6 cm the model gives a cyme of several",
+    ),
+    (
+        "solanum-melongena",
+        "leaf_shape",
+        "its sinuate-lobed blades are drawn on lobed cards whose outline, lobes and all, reads elliptic or obovate, against the ovate blades Bailey and Wikipedia give",
     ),
     (
         "tillandsia-usneoides",

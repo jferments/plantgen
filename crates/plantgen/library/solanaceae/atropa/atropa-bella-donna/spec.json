@@ -52,12 +52,13 @@
     "leaf_length_m": {
       "min": 0.1,
       "max": 0.15,
-      "low": 0.075,
+      "low": 0.02,
       "high": 0.2
     },
     "leaf_width_m": {
       "min": 0.05,
-      "max": 0.1
+      "max": 0.1,
+      "low": 0.01
     },
     "leaf_colour": [
       85,
@@ -204,12 +205,12 @@
     "traits.leaf_length_m": {
       "evidence": "SourceInferred",
       "source": "kings-american-dispensatory-1898",
-      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 1, Belladonna, p. 332 (read on the Internet Archive, 2026-10-17): 10-15 cm long, 5-10 cm broad (Pharmacopoeia); Hooker: the larger 3-8 in."
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 1, Belladonna, p. 332 (read on the Internet Archive, 2026-10-17): 10-15 cm long, 5-10 cm broad (Pharmacopoeia); Hooker: the larger 3-8 in. The smaller of each pair is about half the larger (Kilmer, King's p. 332) and can be so small it looks like a stipule (Bentham p. 319), hence the low 2 cm, our reading of 'like a stipule'."
     },
     "traits.leaf_width_m": {
       "evidence": "SourceInferred",
       "source": "kings-american-dispensatory-1898",
-      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 1, Belladonna, p. 332 (read on the Internet Archive, 2026-10-17): 5-10 cm broad."
+      "note": "King's American Dispensatory (1898 text, 1905 printing), vol. 1, Belladonna, p. 332 (read on the Internet Archive, 2026-10-17): 5-10 cm broad. The low 1 cm is the smaller leaf of a pair, as for the length (Kilmer; Bentham p. 319)."
     },
     "traits.leaf_colour": {
       "evidence": "SourceInferred",
