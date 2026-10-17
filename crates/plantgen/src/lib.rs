@@ -555,4 +555,11 @@ pub mod venation;
 /// colour on a ring at any distance, not as bare sticks; seventeen
 /// species state their fruiting months from their sources, so their year
 /// now bears fruit.
-pub const GENERATOR_REVISION: u32 = 87;
+/// 88: a fern's stipe stated scaly (`stipe_scales`) is drawn with its
+/// scales (the new `palea` organ, in `stipe_scale_colour`), largest at
+/// its foot, on its frond and on the stipe bases of an old crown; a
+/// rachis narrows from its foot to its tip, and a small frond's is
+/// thinner (fern program revision 8); the sword fern's stipe is as long
+/// as Flora of North America gives (87 is flowers with no perianth,
+/// #168).
+pub const GENERATOR_REVISION: u32 = 88;

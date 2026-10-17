@@ -78,6 +78,12 @@
       "po": {"id": "PO:0025359", "name": "sorus"},
       "why": "a cluster of sporangia on a fern's leaf, on its underside or along its edge"
     },
+    "palea": {
+      "part_of": "leaf",
+      "category": "organ",
+      "when": {"stipe_scales": ["sparse", "dense"]},
+      "why": "a fern's scale: a thin, flat, often brown plate a few cells thick on its stipe, rachis and rhizome, largest and thickest at the frond's foot"
+    },
     "areole": {
       "part_of": "stem",
       "category": "organ",
@@ -889,6 +895,14 @@
       "optional": true,
       "why": "the grown leaf's habit as a whole, its angle and its arch together, as floras word it for a frond or a blade: standing up, rising at a slant, bending over toward its tip, held out nearly level, or hanging"
     },
+    "stipe_scales": {
+      "group": "leaves",
+      "organ": "leaf",
+      "type": "enum",
+      "values": ["absent", "sparse", "dense"],
+      "optional": true,
+      "why": "how scaly a fern's stipe is, as floras word it: bare, a few scales, or densely scaly, its foot shaggy with them"
+    },
     "leaf_peltation": {
       "group": "leaves",
       "organ": "leaf",
@@ -932,6 +946,13 @@
       "organ": "leaf",
       "type": "colour",
       "why": "a grown leaf's upper side in summer"
+    },
+    "stipe_scale_colour": {
+      "group": "leaves",
+      "organ": "palea",
+      "type": "colour",
+      "optional": true,
+      "why": "the scales on a fern's stipe, at its foot"
     },
     "leaf_colour_autumn": {
       "group": "leaves",
