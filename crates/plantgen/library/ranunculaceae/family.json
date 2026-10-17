@@ -23,19 +23,13 @@
       "alternate": "usually",
       "opposite": "sometimes"
     },
-    "leaf_division": {
-      "simple": "often",
-      "compound": "often"
-    },
+    "leaf_division": {"simple": "usually", "compound": "often"},
     "leaf_incision": {
       "dissected": "often",
       "none": "often",
       "lobed": "sometimes"
     },
-    "division_pattern": {
-      "palmate": "often",
-      "pinnate": "often"
-    },
+    "division_pattern": {"palmate": "usually", "pinnate": "often"},
     "stipules": {"false": "usually", "true": "sometimes"},
     "fruit_type": {
       "achene": "usually",
@@ -120,21 +114,13 @@
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Ranunculaceae with Hydrastidaceae: its irregular flowers are of no named kind (pea flower, two lips, orchid lip), read from the coded corolla symmetry (spec-rework/b1/delta): zygomorphy other. Its flowers are not mostly zygomorphic, so a plant of it states its own symmetry; one that is zygomorphic draws this kind, and one stating none is drawn regular."
     },
-    "traits.leaf_division": {
-      "evidence": "SourceInferred",
-      "source": "watson-dallwitz-1992",
-      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Ranunculaceae with Hydrastidaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple often, compound often; the simple blade dissected often, none often, lobed sometimes; lobes or leaflets palmate often, pinnate often. Read from the coded leaf form and dissection by script (spec-rework/b1/delta). The simple leaves are mostly palmately lobed or divided (Ranunculus, Aconitum, Delphinium), the compound ones ternate or pinnate (Clematis, Thalictrum)."
-    },
+    "traits.leaf_division": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Ranunculaceae (read 2026-10-17): blades simple (palmatifid, much-divided or entire) or compound (pinnate, palmate, multiply compound). Weighted by Wikipedia Ranunculaceae genus sizes: simple, palmately divided blades in Ranunculus (>1,600 spp) and Delphinium (>500) outweigh the compound leaves of Clematis (~400) plus smaller Thalictrum and Aquilegia."},
     "traits.leaf_incision": {
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Ranunculaceae with Hydrastidaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple often, compound often; the simple blade dissected often, none often, lobed sometimes; lobes or leaflets palmate often, pinnate often. Read from the coded leaf form and dissection by script (spec-rework/b1/delta). The simple leaves are mostly palmately lobed or divided (Ranunculus, Aconitum, Delphinium), the compound ones ternate or pinnate (Clematis, Thalictrum)."
     },
-    "traits.division_pattern": {
-      "evidence": "SourceInferred",
-      "source": "watson-dallwitz-1992",
-      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Ranunculaceae with Hydrastidaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple often, compound often; the simple blade dissected often, none often, lobed sometimes; lobes or leaflets palmate often, pinnate often. Read from the coded leaf form and dissection by script (spec-rework/b1/delta). The simple leaves are mostly palmately lobed or divided (Ranunculus, Aconitum, Delphinium), the compound ones ternate or pinnate (Clematis, Thalictrum)."
-    },
+    "traits.division_pattern": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Ranunculaceae (read 2026-10-17): simple blades palmatifid or much-divided, compound ones pinnate, palmate or multiply compound. The palmately cut buttercups (Ranunculus, >1,600 spp per Wikipedia) and larkspurs (Delphinium, >500) far outnumber pinnate Clematis (~400)."},
     "traits.inflorescence": {
       "evidence": "SourceInferred",
       "source": "plant-systematics-simpson",

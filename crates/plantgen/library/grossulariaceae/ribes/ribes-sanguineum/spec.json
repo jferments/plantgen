@@ -137,7 +137,16 @@
     },
     "flowering_months": [3, 4],
     "fruiting_months": [7, 8, 9],
-    "inflorescence": "raceme"
+    "inflorescence": "raceme",
+    "height_typical_m": {"min": 1.5, "max": 3},
+    "life_span": "perennial",
+    "leaf_habit": "deciduous",
+    "rosette": "none",
+    "leaf_length_m": {"min": 0.03, "max": 0.07},
+    "leaf_arrangement": "alternate",
+    "leaf_shape": "orbicular",
+    "leaf_margin": "crenate",
+    "inflorescence_length_m": {"min": 0.03, "max": 0.08}
   },
   "evidence": {
     "traits.flowering_months": {
@@ -225,7 +234,16 @@
       "source": "plantgen-authors",
       "note": "Days from the first flower of a cluster opening to its last: about three weeks for a raceme, as described."
     },
-    "traits.inflorescence": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 569, Ribes sanguineum: inflorescence raceme."}
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "dendrology", "note": "Idžojtić, Dendrology (2019) p. 569, Ribes sanguineum: inflorescence raceme."},
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2426680), as no source read gives it."},
+    "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2426680), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2426680), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2426680), as no source read gives it."},
+    "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2426680), as no source read gives it."},
+    "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2426680), as no source read gives it."},
+    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2426680), as no source read gives it."},
+    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2426680), as no source read gives it."},
+    "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2426680), as no source read gives it."}
   },
   "provenance": {
     "sources": [

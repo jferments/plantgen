@@ -118,7 +118,14 @@
     "awn_insertion": "apical",
     "awn_form": "straight",
     "inflorescence_posture": "erect",
-    "flowering_months": [6, 7, 8]
+    "flowering_months": [6, 7, 8],
+    "height_typical_m": {"min": 0.2, "max": 0.7},
+    "height_max_m": 0.9,
+    "leaf_habit": "evergreen",
+    "rosette": "basal",
+    "perennation": "rhizome",
+    "fruit_size_m": {"min": 0.003, "max": 0.004},
+    "fruiting_months": [6, 7, 8]
   },
   "evidence": {
     "traits.culm_length_m": {
@@ -230,7 +237,14 @@
       "evidence": "SourceInferred",
       "source": "abrams-1923",
       "note": "Abrams vol. 1 (Festuca no. 20): flowers June-August."
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L416502), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L416502), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L416502), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L416502), as no source read gives it."},
+    "traits.perennation": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L416502), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L416502), as no source read gives it."},
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L416502), as no source read gives it."}
   },
   "provenance": {
     "sources": [

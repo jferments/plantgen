@@ -108,7 +108,12 @@
     "rhizome_habit": "none",
     "clonal": false,
     "flowering_months": [6, 7, 8],
-    "fruiting_months": [8]
+    "fruiting_months": [8],
+    "height_typical_m": {"min": 0.3, "max": 1.2},
+    "height_max_m": 1.4,
+    "leaf_habit": "evergreen",
+    "rosette": "none",
+    "fruit_size_m": {"min": 0.002, "max": 0.003}
   },
   "evidence": {
     "traits.leaf_width_m": {
@@ -210,7 +215,12 @@
       "evidence": "SourceInferred",
       "source": "usfs-feis",
       "note": "FEIS's orchardgrass review (Sullivan 1992, read 2026-10-16): \"Seed shattering takes place in late summer\"; read as August. Flora of China gives \"Fl. and fr. May-Aug.\""
-    }
+    },
+    "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L406640), as no source read gives it."},
+    "traits.height_max_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L406640), as no source read gives it."},
+    "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L406640), as no source read gives it."},
+    "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L406640), as no source read gives it."},
+    "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L406640), as no source read gives it."}
   },
   "provenance": {
     "sources": [

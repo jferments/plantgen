@@ -46,10 +46,7 @@
     },
     "zygomorphy": "bilabiate",
     "stipules": false,
-    "inflorescence": {
-      "cyme": "often",
-      "solitary": "often"
-    },
+    "inflorescence": {"cyme": "usually", "solitary": "sometimes"},
     "stem_cross_section": {"square": "usually"}
   },
   "evidence": {
@@ -86,11 +83,7 @@
       "source": "plant-systematics-simpson",
       "note": "Simpson, Plant Systematics (2019) p. 416, 417, 418, family Lamiaceae: stipules false; read as false."
     },
-    "traits.inflorescence": {
-      "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 416, 417, 418, family Lamiaceae: inflorescence lateral cymes grouped into verticillasters or thyrses, or flowers solitary in leaf axils, usually; read as {\"cyme\": \"often\", \"solitary\": \"often\"}."
-    },
+    "traits.inflorescence": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Labiatae (read 2026-10-17): flowers usually in verticils built from axillary pairs of cymes, the ultimate units cymose; solitary flowers also listed. Weighted by Wikipedia Lamiaceae genus sizes: whorl-of-cymes genera Salvia (~900), Stachys (~300), Plectranthus (~300), Hyptis (~280), Teucrium (~250), Vitex (~250), Thymus (~220), Nepeta (~200) far outnumber Scutellaria (~360), whose flowers sit singly or paired in the axils. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."},
     "traits.fruit_type": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Added kinds only; the usual kind's source is the family's `traits` note. The books add berry (sometimes): Simpson, Plant Systematics (2019) p. 416, 417, 418: schizocarp of usually 4 (1-3) nutlets, or drupe or berry."},
     "traits.stem_cross_section": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 416, 417, 418, family Lamiaceae: stems four-sided (square), at least when young; Ronse De Craene, Floral Diagrams (2010) agrees (square); read as {\"square\": \"usually\"}."}
   }

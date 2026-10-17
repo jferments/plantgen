@@ -18,13 +18,11 @@
       "panicle": "often"
     },
     "ovary_position": "inferior",
-    "fruit_type": {
-      "capsule": "often",
-      "berry": "often"
-    },
+    "fruit_type": {"capsule": "usually", "berry": "sometimes"},
     "perennation": "rhizome"
   },
   "evidence": {
+    "traits.fruit_type": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA Marantaceae (read 2026-10-17): fruit usually a loculicidal capsule, at times capsule-like but closed, or a berry; c. 400 spp."},
     "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Marantaceae (read 2026-10-17): simple, undivided lamina."},
     "traits.leaf_margin": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Marantaceae (read 2026-10-17): margins entire."},
     "traits": {

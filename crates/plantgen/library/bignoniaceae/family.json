@@ -22,8 +22,8 @@
     "stipules": false,
     "fruit_type": "capsule",
     "leaf_division": {
-      "compound": "often",
-      "simple": "often"
+      "compound": "usually",
+      "simple": "sometimes"
     },
     "inflorescence": {
       "cyme": "often",
@@ -74,8 +74,8 @@
     },
     "traits.leaf_division": {
       "evidence": "SourceInferred",
-      "source": "plant-systematics-simpson",
-      "note": "Simpson, Plant Systematics (2019) p. 414, family Bignoniaceae: leaf division compound, pinnate or ternate; less often simple or palmate, usually; read as {\"compound\": \"often\", \"simple\": \"often\"}."
+      "source": "wikipedia",
+      "note": "Wikipedia Bignoniaceae (read 2026-10-17): about 810 to 860 species; leaves usually compound (two- or three-foliolate, pinnate or palmate), rarely simple. The liana tribe Bignonieae, the family's largest, carries the compound habit; simple leaves (Catalpa, Crescentia and kin) kept as sometimes so those genera stay drawable. Re-ranks the earlier value, from plant-systematics-simpson, whose top states were tied."
     },
     "traits.inflorescence": {
       "evidence": "SourceInferred",

@@ -13,12 +13,12 @@
     "carpels": 1,
     "leaf_arrangement": "alternate",
     "leaf_division": {
-      "simple": "often",
+      "simple": "usually",
       "compound": "often"
     },
     "leaf_incision": {
-      "lobed": "often",
-      "none": "often"
+      "none": "usually",
+      "lobed": "often"
     },
     "division_pattern": {
       "palmate": "often",
@@ -76,13 +76,13 @@
     },
     "traits.leaf_division": {
       "evidence": "SourceInferred",
-      "source": "watson-dallwitz-1992",
-      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Berberidaceae with Leonticaceae, Nandinaceae and Podophyllaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple often, compound often; the simple blade lobed often, none often; lobes or leaflets palmate often, pinnate often. Read from the coded leaf form and dissection by script (spec-rework/b1/delta)."
+      "source": "wikipedia",
+      "note": "Wikipedia Berberidaceae (read 2026-10-17): ~700 spp in 18 genera, most of them in Berberis (with Mahonia reinstated as separate). Berberis s.s. (~500, approximate) has simple leaves; compound leaves are in Mahonia (~100, pinnate), Epimedium (~60, ternate), Nandina, Vancouveria, Achlys, Caulophyllum and Leontice. Re-ranks the earlier value, from watson-dallwitz-1992, whose top states were tied."
     },
     "traits.leaf_incision": {
       "evidence": "SourceInferred",
-      "source": "watson-dallwitz-1992",
-      "note": "Watson and Dallwitz, The Families of Flowering Plants (DELTA data), family Berberidaceae with Leonticaceae, Nandinaceae and Podophyllaceae, which APG and WCVP join to it (their extra states read as sometimes): leaves simple often, compound often; the simple blade lobed often, none often; lobes or leaflets palmate often, pinnate often. Read from the coded leaf form and dissection by script (spec-rework/b1/delta)."
+      "source": "wikipedia",
+      "note": "Wikipedia Berberidaceae (read 2026-10-17): most species are Berberis, whose simple blades are unlobed (entire or spiny-toothed; approximate count ~500). Lobed simple blades are confined to the small podophylloid genera (Podophyllum, Dysosma, Sinopodophyllum, Diphylleia, Jeffersonia; a few dozen spp). Re-ranks the earlier value, from watson-dallwitz-1992, whose top states were tied."
     },
     "traits.division_pattern": {
       "evidence": "SourceInferred",
