@@ -582,12 +582,15 @@ pub mod venation;
 /// young stems and leaf stalks, in a blade's words and `crisped`, cast
 /// the first year's wood toward their colour, wear off in its second and
 /// up close stand from it as strands (91 is leaves with two faces, #164).
-/// 93: species draw from the species-facts records: 189 species state the
+/// 93: a hooked spine curls into an open J at its tip: its shaft runs
+/// further and its hook turns over its last two pieces, not folded flat on
+/// the shaft over the last one (92 is stem hairs, #173).
+/// 94: species draw from the species-facts records: 189 species state the
 /// characters no source of theirs gives (heights, leaf sizes, shapes,
 /// margins and habits, inflorescence and fruit sizes, months, rosettes)
 /// as the records estimate them, and a look a species set by hand gives
 /// way wherever a rule fed by a stated fact now sets it (leaf widths,
 /// inflorescence kinds, flower and fruit sizes and kinds, seasons); a
-/// strap leaf is never narrower than its card draws (92 is stem
-/// hairs, #173).
-pub const GENERATOR_REVISION: u32 = 93;
+/// strap leaf is never narrower than its card draws (93 is cactus
+/// tubercles and hooked spines, #176).
+pub const GENERATOR_REVISION: u32 = 94;

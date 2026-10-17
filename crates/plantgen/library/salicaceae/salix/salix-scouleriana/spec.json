@@ -88,6 +88,7 @@
           "template": "sprig",
           "leaves": 7,
           "angle": 35,
+          "width": 0.4,
           "widest": 0.65,
           "tip": 0.35,
           "base": 0.25,

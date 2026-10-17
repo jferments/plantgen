@@ -127,13 +127,13 @@
     "leaf_hairs": "strigose",
     "leaf_hairs_beneath": "strigose",
     "leaf_ciliate": true,
+    "stem_hairs": "crisped",
     "height_max_m": 0.3,
     "life_span": "perennial",
     "woodiness": "herbaceous",
     "rosette": "basal",
     "leaf_margin": "entire",
-    "fruit_size_m": {"min": 0.01, "max": 0.02},
-    "stem_hairs": "crisped"
+    "fruit_size_m": {"min": 0.01, "max": 0.02}
   },
   "evidence": {
     "taxon": {

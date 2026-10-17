@@ -135,7 +135,6 @@
     "woodiness": "woody",
     "leaf_length_m": {"min": 0.08, "max": 0.18},
     "leaf_width_m": {"min": 0.08, "max": 0.16},
-    "leaf_margin": "serrate",
     "sexual_system": "hermaphrodite",
     "inflorescence": "solitary",
     "fruit_size_m": {"min": 0.015, "max": 0.02}
@@ -220,7 +219,6 @@
     "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2988426), as no source read gives it."},
     "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2988426), as no source read gives it."},
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2988426), as no source read gives it."},
-    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2988426), as no source read gives it."},
     "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2988426), as no source read gives it."},
     "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2988426), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2988426), as no source read gives it."}

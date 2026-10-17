@@ -113,7 +113,6 @@
     "height_typical_m": {"min": 4, "max": 10},
     "life_span": "perennial",
     "rosette": "none",
-    "leaf_shape": "lanceolate",
     "inflorescence_length_m": {"min": 0.03, "max": 0.1},
     "flower_symmetry": "actinomorphic",
     "fruit_size_m": {"min": 0.004, "max": 0.008}
@@ -193,7 +192,6 @@
     "traits.height_typical_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
     "traits.life_span": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
-    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
     "traits.flower_symmetry": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2918186), as no source read gives it."},

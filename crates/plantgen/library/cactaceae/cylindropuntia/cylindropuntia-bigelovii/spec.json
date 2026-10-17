@@ -86,10 +86,7 @@
         "dome": 1.0,
         "base": 0.8,
         "tubercles": {
-          "height": 0.15,
-          "width": 0.6,
-          "point": 0.8,
-          "stretch": 1.3
+          "width": 0.6
         },
         "areoles": {
           "spacing": 0.012,
@@ -146,6 +143,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "tubercle_relief": "prominent",
+    "tubercle_shape": "elongate",
     "spine_colour": [215, 180, 80],
     "spine_colour_aged": [110, 85, 60],
     "areole_wool_colour": [150, 115, 80],
@@ -162,6 +161,8 @@
     "fruiting_months": [5, 6, 7]
   },
   "evidence": {
+    "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 206, Cylindropuntia bigelovii: tubercles prominent, elongate."},
+    "traits.tubercle_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 206, Cylindropuntia bigelovii: tubercles prominent, elongate."},
     "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 206 to 207, Cylindropuntia bigelovii: spines yellow to golden, becoming brown."},
     "traits.spine_colour_aged": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 206 to 207, Cylindropuntia bigelovii: spines becoming brown."},
     "traits.areole_wool_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 206 to 207, Cylindropuntia bigelovii: wool tan to brown, greying."},

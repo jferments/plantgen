@@ -521,6 +521,22 @@
       "when": {"spines": ["areoles"]},
       "why": "whether a cactus's areoles sit on tubercles, knobs of the stem, alone (a pincushion's) or along its ribs"
     },
+    "tubercle_relief": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["barely", "low", "distinct", "prominent"],
+      "when": {"spines": ["areoles"]},
+      "why": "how far a cactus's tubercles stand from its stem: barely (ribs with at most a swelling under each areole), low, distinct knobs, or prominent ones"
+    },
+    "tubercle_shape": {
+      "group": "stem_and_bark",
+      "organ": "stem",
+      "type": "enum",
+      "values": ["rounded", "conical", "cylindrical", "elongate", "broad"],
+      "when": {"spines": ["areoles"]},
+      "why": "a tubercle's shape: rounded (ovoid), conical, cylindrical (standing out as a steep-sided nipple), elongate along the stem, or broad (broadly oval)"
+    },
     "joint_length_m": {
       "group": "size",
       "organ": "stem",

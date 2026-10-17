@@ -39,7 +39,7 @@
       "nod": 10,
       "bud_size": 0.008,
       "leaf_area": 0.228,
-      "basal_area": 0.147,
+      "basal_area": 0.154,
       "basal_piece_area": 0.235,
       "flower_area": 0.657,
       "bud_area": 0.08,
@@ -108,13 +108,13 @@
     "rosette": "terminal",
     "leaf_length_m": {"min": 0.2, "max": 0.45},
     "leaf_width_m": {"min": 0.1, "max": 0.2},
-    "leaf_margin": "spiny",
     "inflorescence": "raceme",
     "flowering_months": [3, 4, 5],
     "fruit_size_m": {"min": 0.007, "max": 0.01},
     "fruiting_months": [7, 8, 9]
   },
   "evidence": {
+    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The area its `basal` look draws on an organ 1 m long (plantc atlas, 2026-10-17), so it shades with what it shows: Berberidaceae's spiny margin now cuts its leaflets' teeth, where before it drew the generic simple card (0.235)."},
     "generator.params.bud_area": {
       "evidence": "Authored",
       "source": "plantgen-authors",
@@ -195,12 +195,10 @@
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2674193), as no source read gives it."},
     "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2674193), as no source read gives it."},
     "traits.leaf_width_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2674193), as no source read gives it."},
-    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2674193), as no source read gives it."},
     "traits.inflorescence": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2674193), as no source read gives it."},
     "traits.flowering_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2674193), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2674193), as no source read gives it."},
-    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2674193), as no source read gives it."},
-    "generator.params.basal_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `basal` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.235)."}
+    "traits.fruiting_months": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2674193), as no source read gives it."}
   },
   "provenance": {
     "sources": [

@@ -4,6 +4,8 @@
   "name": "Oxalidaceae",
   "parent": "order/oxalidales",
   "traits": {
+    "leaf_apex": "emarginate",
+    "leaf_shape": "obovate",
     "corolla_shape": {"funnelform": "usually", "rotate": "sometimes"},
     "division_pattern": {"palmate": "usually", "pinnate": "sometimes"},
     "flower_merosity": 5,
@@ -40,6 +42,8 @@
     }
   },
   "evidence": {
+    "traits.leaf_apex": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Oxalis (read 2026-10-17): leaflets notched at the top (obcordate in some sections)."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "wikipedia", "note": "Wikipedia, Oxalis (read 2026-10-17): leaflets generally obovate, obcordate in some sections. Oxalis is nearly all of the family."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Oxalidales page (read 2026-10-16): corolla contorted, petals clawed; claws held together form a funnel (my reading)."},
     "traits.division_pattern": {"evidence": "SourceInferred", "source": "stevens-apweb", "note": "APweb, Oxalidales page, Oxalidaceae (read 2026-10-16): Oxalis trifoliolate or palmate; pinnate in Averrhoideae and Biophytum."},
     "traits": {

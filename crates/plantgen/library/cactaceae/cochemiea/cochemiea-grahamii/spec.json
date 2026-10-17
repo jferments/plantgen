@@ -85,9 +85,7 @@
       "stem": {
         "dome": 1.0,
         "tubercles": {
-          "height": 0.25,
-          "width": 0.55,
-          "point": 1.6
+          "width": 0.55
         },
         "areoles": {
           "spacing": 0.008,
@@ -146,6 +144,8 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "tubercle_relief": "prominent",
+    "tubercle_shape": "cylindrical",
     "stem_colour": [120, 160, 85],
     "spine_colour": [200, 175, 150],
     "central_spine_colour": [120, 85, 50],
@@ -167,6 +167,8 @@
     "fruiting_months": [8, 9, 10]
   },
   "evidence": {
+    "traits.tubercle_relief": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: tubercles ovoid to cylindrical, often four-angled; standing out from the stem, so prominent here."},
+    "traits.tubercle_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: tubercles ovoid to cylindrical, often four-angled."},
     "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: stems light green."},
     "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: radial spines white to light brown to reddish; light brown here, the middle of the words."},
     "traits.central_spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 420, as Mammillaria grahamii: central spines yellowish brown to dark brown."},

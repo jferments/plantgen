@@ -34,7 +34,7 @@
       "pipe_organ": 0.00465,
       "pipe_rings": 1.67e-07,
       "extinction": 0.45,
-      "leaf_area": 0.207,
+      "leaf_area": 0.075,
       "bloom_area": 0.05,
       "path_half": 17.7
     }
@@ -70,7 +70,6 @@
           "template": "sprig",
           "leaves": 5,
           "angle": 45,
-          "width": 0.7,
           "widest": 0.3,
           "tip": 0.5,
           "base": 0.9,
@@ -165,7 +164,8 @@
       "evidence": "SourceInferred",
       "source": "wcvp-v16",
       "note": "The genus WCVP v16's accepted name is written in."
-    }
+    },
+    "generator.params.leaf_area": {"evidence": "Authored", "source": "plantgen-authors", "note": "The leaf area its `leaf` look draws on an organ 1 m long (plantc's shading-area test), so it shades with what it shows, now that the look follows the species' stated facts (was 0.207)."}
   },
   "provenance": {
     "sources": [

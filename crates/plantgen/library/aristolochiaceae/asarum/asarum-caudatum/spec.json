@@ -82,6 +82,7 @@
     "leaf_hairs": {"glabrous": "often", "strigose": "often"},
     "leaf_hairs_beneath": "strigose",
     "leaf_ciliate": true,
+    "stem_hairs": {"glabrous": "often", "crisped": "often"},
     "height_typical_m": {"min": 0.1, "max": 0.25},
     "height_max_m": 0.3,
     "life_span": "perennial",
@@ -91,8 +92,7 @@
     "leaf_arrangement": "opposite",
     "leaf_margin": "entire",
     "flowering_months": [4, 5, 6, 7],
-    "fruiting_months": [6, 7, 8],
-    "stem_hairs": {"glabrous": "often", "crisped": "often"}
+    "fruiting_months": [6, 7, 8]
   },
   "evidence": {
     "traits.leaf_hairs": {"evidence": "SourceInferred", "source": "fna-online", "note": "Flora of North America vol. 3 (1997), Asarum caudatum (read on eFloras, 2026-10-16): surfaces adaxially glabrous or sparsely appressed-hirsute (strigose), neither said to be the more usual."},

@@ -107,7 +107,6 @@
     "leaf_habit": "deciduous",
     "rosette": "none",
     "leaf_length_m": {"min": 0.1, "max": 0.2},
-    "leaf_margin": "entire",
     "fruit_size_m": {"min": 0.15, "max": 0.25}
   },
   "evidence": {
@@ -172,7 +171,6 @@
     "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2621135), as no source read gives it."},
     "traits.rosette": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2621135), as no source read gives it."},
     "traits.leaf_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2621135), as no source read gives it."},
-    "traits.leaf_margin": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2621135), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L2621135), as no source read gives it."}
   },
   "provenance": {

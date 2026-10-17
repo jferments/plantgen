@@ -4,6 +4,8 @@
   "name": "Boraginaceae",
   "parent": "order/boraginales",
   "traits": {
+    "leaf_incision": "none",
+    "leaf_shape": {"lanceolate": "usually", "linear": "often"},
     "flower_merosity": 5,
     "stamens": {"min": 5, "max": 5, "low": 4, "high": 6},
     "corolla_shape": {"rotate": "often", "salverform": "often", "funnelform": "often", "campanulate": "often"},
@@ -48,6 +50,8 @@
     "leaf_margin": "entire"
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Boraginaceae (read 2026-10-17): leaves simple, lamina undivided. Caveat: if the library's Boraginaceae includes Hydrophylloideae (Phacelia), some of those are pinnatifid; DELTA treats them separately."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Boraginaceae (read 2026-10-17): blades mostly narrow, linear to lanceolate; Wikipedia Boraginaceae likewise: usually narrow, many linear or lance-shaped. Weighted to the herbaceous genera (Myosotis, Cryptantha, Onosma, Lithospermum); woody Cordia (broader, ovate) not weighted."},
     "traits.flower_merosity": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 400: calyx and corolla both 5-merous (Floral Diagrams p. 315: rarely 4 or up to 8)."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 400, 404: stamens 5, rarely 4 to 6, on the corolla tube alternating with the lobes."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 400: corolla sympetalous and rotate, salverform, funnel-shaped (infundibular) or campanulate; no order of frequency given, so each is 'often'."},

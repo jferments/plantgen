@@ -85,10 +85,7 @@
         "dome": 1.0,
         "base": 0.8,
         "tubercles": {
-          "height": 0.18,
-          "width": 0.6,
-          "point": 0.9,
-          "stretch": 1.5
+          "width": 0.6
         },
         "areoles": {
           "spacing": 0.014,
@@ -143,6 +140,7 @@
   ],
   "tier": "procedural_proxy",
   "traits": {
+    "tubercle_shape": "broad",
     "stem_colour": [110, 130, 100],
     "spine_colour": [215, 190, 100],
     "spine_colour_aged": [120, 100, 70],
@@ -164,6 +162,7 @@
     "fruiting_months": [9, 10, 11, 12]
   },
   "evidence": {
+    "traits.tubercle_shape": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) p. 209, Cylindropuntia fulgida: tubercles broadly oval."},
     "traits.stem_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: stem segments grey-green, becoming blackish."},
     "traits.spine_colour": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: spines yellow, ageing darker."},
     "traits.spine_colour_aged": {"evidence": "SourceInferred", "source": "cactus-family-anderson", "note": "Anderson, The Cactus Family (2001) pp. 209 to 210, Cylindropuntia fulgida: spines ageing darker; a dark yellowish brown here, by hand."},

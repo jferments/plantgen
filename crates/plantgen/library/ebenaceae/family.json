@@ -34,7 +34,8 @@
       "typical": 4,
       "high": 16
     },
-    "leaf_habit": "evergreen"
+    "leaf_habit": "evergreen",
+    "leaf_incision": "none"
   },
   "evidence": {
     "traits": {
@@ -61,6 +62,11 @@
       "evidence": "SourceInferred",
       "source": "watson-dallwitz-1992",
       "note": "DELTA Ebenaceae (read 2026-10-16): leathery leaves of mostly tropical trees; a few temperate Diospyros deciduous. Same as order's most usual; recorded for completeness."
+    },
+    "traits.leaf_incision": {
+      "evidence": "SourceInferred",
+      "source": "watson-dallwitz-1992",
+      "note": "DELTA, Ebenaceae (read 2026-10-17): lamina entire, simple; German Wikipedia, Diospyros (read 2026-10-17): blades simple and entire-margined."
     }
   }
 }

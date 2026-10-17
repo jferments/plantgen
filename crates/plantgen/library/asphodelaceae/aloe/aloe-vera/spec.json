@@ -190,7 +190,6 @@
     "woodiness": "herbaceous",
     "leaf_habit": "evergreen",
     "leaf_arrangement": "alternate",
-    "leaf_shape": "lanceolate",
     "sexual_system": "hermaphrodite",
     "inflorescence_length_m": {"min": 0.6, "max": 0.9},
     "fruit_size_m": {"min": 0.015, "max": 0.025}
@@ -275,7 +274,6 @@
     "traits.woodiness": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L298116), as no source read gives it."},
     "traits.leaf_habit": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L298116), as no source read gives it."},
     "traits.leaf_arrangement": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L298116), as no source read gives it."},
-    "traits.leaf_shape": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L298116), as no source read gives it."},
     "traits.sexual_system": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L298116), as no source read gives it."},
     "traits.inflorescence_length_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L298116), as no source read gives it."},
     "traits.fruit_size_m": {"evidence": "Authored", "source": "species-facts-2026-10-15", "note": "A model estimate (confidence high, record L298116), as no source read gives it."}

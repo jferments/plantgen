@@ -4,6 +4,8 @@
   "name": "Gentianaceae",
   "parent": "order/gentianales",
   "traits": {
+    "leaf_incision": "none",
+    "leaf_shape": {"lanceolate": "usually", "ovate": "often", "elliptic": "often", "oblanceolate": "sometimes", "linear": "sometimes"},
     "stamens": {"min": 4, "max": 5, "high": 12},
     "corolla_shape": {"rotate": "often", "salverform": "often"},
     "hypanthium": false,
@@ -34,6 +36,8 @@
     }
   },
   "evidence": {
+    "traits.leaf_incision": {"evidence": "SourceInferred", "source": "watson-dallwitz-1992", "note": "DELTA, Gentianaceae (read 2026-10-17): leaves simple, lamina entire; Lucid key (read 2026-10-17): no lobing."},
+    "traits.leaf_shape": {"evidence": "SourceInferred", "source": "lucid-ffpa", "note": "Lucid family key, Gentianaceae (read 2026-10-17): simple symmetric blades, lanceolate, ovate, elliptic, oblanceolate, obovate or oblong. Ranking ours, weighted by Gentiana (over 300 species, Wikipedia (read 2026-10-17)), Gentianella and Swertia, whose stem leaves are mostly lance-shaped."},
     "traits.stamens": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 409: stamens 4 to 5, up to 12, as many as the corolla lobes."},
     "traits.corolla_shape": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 409: corolla sympetalous, rotate to salverform."},
     "traits.hypanthium": {"evidence": "SourceInferred", "source": "plant-systematics-simpson", "note": "Simpson, Plant Systematics (2019) p. 409, 505: Simpson calls the flowers hypogynous. Simpson p. 505 defines hypogynous and epigynous as flowers without a hypanthium."},
